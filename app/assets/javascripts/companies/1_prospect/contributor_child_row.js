@@ -1,22 +1,34 @@
 
-function contributorDetailsListeners () {
+function contributorChildRowListeners () {
 
   var contributionPath = function (contributionId) {
         return '/contributions/' + contributionId;
       },
-      getContributor = function (contributionId) {
-        return $.ajax({
-                  url: contributionPath(contributionId),
-                  method: 'GET',
-                  data: {
-                    get_contributor: true
-                  },
-                  dataType: 'json'
-                });
-      };
+      // getContributor = function (contributionId) {
+      //   return $.ajax({
+      //             url: contributionPath(contributionId),
+      //             method: 'GET',
+      //             data: {
+      //               get_contributor: true
+      //             },
+      //             dataType: 'json'
+      //           });
+      // },
+      LI2Observer = function ($badge) {
+        if ($badge.length === 0) return null;
+        var $container = $badge.closest('.LI-profile__container'),
+            timeoutId = setTimeout(function () {
+              $container.addClass('error')
+            }, 3000);
+        new ResizeSensor($badge, function() {
+          clearTimeout(timeoutId);
+          $container.addClass('loaded');
+        });
+        initLinkedIn();
+      }
 
   $(document)
-    .on('click', 'td.contributor-details', function () {
+    .on('click', 'td.toggle-contributor-child', function () {
       var $table = $(this).closest('table'),
           $trContribution = $(this).closest('tr'),
           $trContributor, // child row
@@ -34,7 +46,7 @@ function contributorDetailsListeners () {
         // dt.draw();
       } else {
         dtRow.child(
-          _.template($('#contributor-details-template').html())({
+          _.template($('#contributor-child-row-template').html())({
             contributionPath: contributionPath(contribution.id),
             contribution: contribution,
             contributor: contribution.contributor,
@@ -50,26 +62,26 @@ function contributorDetailsListeners () {
           if (dt.row($(this)).child.isShown()) {
             dt.row($(this)).child.hide();
             $(this).removeClass('shown active');
-            $(this).children('td.contributor-details').children().toggle();
+            $(this).children('td.contributor-child-toggle').children().toggle();
           }
         });
 
         // scroll to center
         window.scrollTo(0, $trContribution.offset().top - (window.innerHeight / 2) + (($trContributor.outerHeight() + $trContribution.outerHeight()) / 2));
 
-        // $trContribution.children().last().css('color', 'white');
-        getContributor(contribution.id).done(function (contributor) {
-          if (contributor.linkedin_url) {
-            // loadCspOrPlaceholderWidget($trContributor, contributor);
-            loadLinkedinWidget($trContributor, contributor);
-          }
+        // handle LI profile badge
+        LI2Observer($trContributor.find('.LI-profile-badge'));
 
-          // enable save button on input or change
-          $trContributor.one('input change', function () {
-            $(this).find('button[type="submit"]').prop('disabled', false);
-          });
-          $("input[type='tel']").inputmask("999-999-9999");
+        // observer = LI2Observer();
+        // $('td.toggle-contributor-child').one('click', function () {
+        //   observer.disconnect();
+        // })
+
+        // enable save button on input or change
+        $trContributor.one('input change', function () {
+          $(this).find('button[type="submit"]').prop('disabled', false);
         });
+        $("input[type='tel']").inputmask("999-999-9999");
       }
     })
 

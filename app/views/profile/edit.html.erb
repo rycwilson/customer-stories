@@ -123,12 +123,11 @@
       <%= f.text_field :title, class: 'form-control' %>
     </div>
 
-    <div class="form-group linkedin-url <%= current_user.linkedin_url.present? ? 'url-present' : 'url-absent' %>">
+    <!-- <div class="form-group linkedin-url <%#= current_user.linkedin_url.present? ? 'url-present' : 'url-absent' %>">
 
-      <%= f.label :linkedin_url, "LinkedIn URL", class: 'control-label' %>
+      <%#= f.label :linkedin_url, "LinkedIn URL", class: 'control-label' %>
       <div class="input-group">
-        <!-- readonly instead of disabled so value comes through in params -->
-        <%= f.text_field :linkedin_url, class: 'form-control',
+        <%#= f.text_field :linkedin_url, class: 'form-control',
                           readonly: true %>
         <div class="input-group-btn">
           <button type='button' class='btn btn-default linkedin-edit'>
@@ -141,20 +140,18 @@
         </div>
       </div>
 
-      <%= link_to "Connect to LinkedIn",
-            current_user.company_registered? ? linkedin_connect_path : linkedin_connect_no_company_path,
-            class: 'linkedin-connect btn btn-secondary',
-            data: { turbolinks: false } %>
+      <%# if current_user.company_registered? %>
 
-    </div>
+        <%#= link_to(
+              "Connect to LinkedIn",
+              linkedin_auth_path,
+              class: 'linkedin-connect btn btn-secondary',
+              data: { turbolinks: false }
+            ) %>
 
-    <% if current_user.linkedin_url.present? %>
+      <%# end %>
 
-      <div class="text-center linkedin-container">
-        <script type="IN/MemberProfile" data-id="<%= current_user.linkedin_url %>" data-format="inline" data-width='390px' data-related="false"></script>
-      </div>
-
-    <% end %>
+    </div> -->
 
   </div> <!-- .col-sm-6 -->
 </div> <!-- .row -->

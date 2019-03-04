@@ -42,7 +42,6 @@ function constructPlugins () {
       };
 
   initSelect2Sortable();
-
   initLinkedIn();
   initDateRangePicker();
   initGoogleCharts(false, null);  // false => just load library; don't draw any charts

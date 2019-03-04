@@ -116,8 +116,9 @@ function cspInitOverlays ($, $container, subdomain, isDemo, env) {
         if ($storyCard.hasClass('has-video')) {
           cspInitVideo($, $storyOverlay);
         }
-        linkedinListener($storyOverlay);
-        initLinkedIn();
+        // linkedinListener($storyOverlay);  // old plugins
+        LI2Observer($storyOverlay);
+        // initLinkedIn();
         trackStoryVisitor($storyCard);
       },
       initPreselected = function () {
@@ -271,24 +272,61 @@ function cspInitOverlays ($, $container, subdomain, isDemo, env) {
   }
 
   function initLinkedIn () {
-    if (typeof(IN) !== 'object') {
-      // console.log('IN not defined')
-      $.ajax({
-        url: 'https://platform.linkedin.com/in.js',
-        method: 'get',
-        dataType: 'script',
-        timeout: 5000
-      })
-        .done(function () {
-          // console.log('IN loaded')
-        })
-        .fail(function () {
-          // console.log('in.js timed out');
+    var $badges = $('.LI-profile-badge');
+    if ($badges.length === 0) return false;
+    typeof 'LIRenderAll' !== 'function' ?
+      $.getScript("<%= LINKEDIN_PROFILE_JS %>") :
+      LIRenderAll();
+
+    // if (typeof(IN) !== 'object') {
+    //   // console.log('IN not defined')
+    //   $.ajax({
+    //     url: 'https://platform.linkedin.com/in.js',
+    //     method: 'get',
+    //     dataType: 'script',
+    //     timeout: 5000
+    //   })
+    // } else {
+    //   // console.log('IN already defined');
+    //   IN.parse();
+    // }
+  }
+
+  function LI2Observer ($storyOverlay) {
+    var $contributors = $('.story-contributors'),
+        $badges = $contributors.find('.LI-profile-badge'),
+        MutationObserver = window.MutationObserver || window.WebKitMutationObserver || window.MozMutationObserver,
+        badgeAdded = function (mutation) {
+          return mutation.type === 'attributes' && mutation.attributeName === 'data-uid'
+        };
+        observer = new MutationObserver(function (mutations) {
+          mutations.forEach(function (mutation) {
+            if (mutation.type === 'attributes') {
+              // console.log('attributes, attributeName: ', mutation.attributeName, $(mutation.target).data('uid'));
+            } else if (mutation.type === 'childList') {
+              // console.log('childList, addedNodes: ', mutation.addedNodes[0], $(mutation.target).data('uid'));
+              // this would be the last mutation, but it doesn't always happen
+              // if ($(mutation.addedNodes[0]).hasClass('resize-sensor')) {
+            } else {
+              // console.log('other')
+            }
+            if (badgeAdded(mutation)) {
+              // console.log('badge added', $(mutation.target).data('uid'))
+
+              // this is a reliable indicator that the badge has displayed
+              // if at least one displays, show the section, with a brief timeout to allow for other badges and style settings
+              new ResizeSensor($(mutation.target), function() {
+                // console.log('badge rendered', $(mutation.target).data('uid'))
+                setTimeout(function () {
+                  $contributors.css({ visibility: 'visible' })
+                }, 200)
+              });
+            }
+          });
         });
-    } else {
-      // console.log('IN already defined');
-      IN.parse();
-    }
+    $badges.each(function () {
+      observer.observe(this, { attributes: true, childList: true });
+    });
   }
 
   function linkedinListener ($storyOverlay) {

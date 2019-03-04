@@ -76,11 +76,11 @@ class ContributionsController < ApplicationController
           }
         }
       )
-    elsif params[:get_contributor]
-      respond_with(
-        @contribution.contributor,
-        only: [:id, :first_name, :last_name, :title, :email, :phone, :linkedin_url]
-      )
+    # elsif params[:get_contributor]
+    #   respond_with(
+    #     @contribution.contributor,
+    #     only: [:id, :first_name, :last_name, :title, :email, :phone, :linkedin_url]
+    #   )
     else
       respond_with @contribution, include: {
             contributor: {}, referrer: {}, success: { include: :customer } }
@@ -160,7 +160,7 @@ class ContributionsController < ApplicationController
   end
 
   def update
-    # puts params.permit(params.keys).to_h
+    puts params.permit(params.keys).to_h
 
     if params[:data]  # invitation template (datatables inline editor)
       @contribution.invitation_template_id = params[:data].values[0][:invitation_template][:id]
@@ -217,11 +217,11 @@ class ContributionsController < ApplicationController
       #   params[:contribution][:contribution] = consolidate_answers(params[:answers])
       # end
       if @contribution.update(contribution_params)
-        if connect_to_linkedin?(@contribution)
-          redirect_to(connect_to_linkedin_url(@contribution))
-        else
+        # if @contribution.publish_contributor?
+        #   redirect_to(linkedin_auth_url(contribution_id: @contribution.id))
+        # else
           redirect_to(confirm_submission_path(@contribution.access_token))
-        end
+        # end
       else
         @submission_type = params[:contribution][:status].split('_')[0]
         flash.now[:danger] = @contribution.errors.full_messages.join(', ')
@@ -345,17 +345,17 @@ class ContributionsController < ApplicationController
     return contribution
   end
 
-  def connect_to_linkedin? (contribution)
-    contribution.publish_contributor? && contribution.contributor.linkedin_url.blank?
-  end
+  # def connect_to_linkedin? (contribution)
+  #   contribution.publish_contributor? && contribution.contributor.linkedin_url.blank?
+  # end
 
-  def connect_to_linkedin_url (contribution)
-    url_for({
-      subdomain: contribution.company.subdomain,
-      controller: 'profile', action: 'linkedin_connect',
-      params: { contribution_id: contribution.id }
-    })
-  end
+  # def connect_to_linkedin_url (contribution)
+  #   url_for({
+  #     subdomain: contribution.company.subdomain,
+  #     controller: 'profile', action: 'linkedin_connect',
+  #     params: { contribution_id: contribution.id }
+  #   })
+  # end
 
   def referrer_included?(contribution)
     contribution.has_key?(:referrer_attributes) &&

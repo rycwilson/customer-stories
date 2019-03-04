@@ -69,7 +69,6 @@ function openPromotedStoriesEditor (promotedStoriesEditor, $row) {
 }
 
 function newContributorsEditor (workflowStage, templateSelectOptions) {
-
   return new $.fn.dataTable.Editor({
     table: '#' + workflowStage + '-contributors-table',
     ajax: {

@@ -8,6 +8,20 @@
   @import 'social_share_buttons';
   @import 'testimonial';
   @import 'blockquote';
+
+  .LI-profile-badge {
+    @include LI-profile-badge(#f2f2f2);
+    &:last-child {
+      .LI-badge-container {
+        margin-bottom: 0;
+      }
+    }
+    @media screen and (max-width: 767px) {
+      max-width: 400px;
+      margin: 0 auto;
+    }
+  }
+
   &.cs-overlay-container {
     @import 'preview';
   }
@@ -107,11 +121,14 @@
       }
     }
 
+    .LI-profile-badge {
+      @media screen and (max-width: 767px) {
+        @include LI-profile-badge(#fff);
+      }
+    }
+
   }
 
-  .well, .cs-well {
-    background-color: #fff;
-  }
 
   .story-content, .cs-story-content {
     background-color: if(variable-exists(bg-color), $bg-color, $csp-bg-gray);
@@ -133,13 +150,27 @@
           }
         }
       }
+      section {
+        @media only screen and (max-width: 767px) {
+          background-color: transparent;
+        }
+      }
+    }
+    section {
+      padding: 20px;
+      border: 1px solid #e3e3e3;
+      background-color: #fff;
+      margin-bottom: 25px;
+      @media only screen and (max-width: 767px) {
+        border: none;
+        padding: 0;
+      }
     }
     .section-title h4 {
       margin-top: 5px;
       font-size: 22px !important;
     }
     .narrative {
-      margin-bottom: 25px;
       .story-title h3 {
         margin-top: 0;
       }
@@ -161,7 +192,6 @@
       // }
     }
     .story-results, .story-ctas {
-      margin-bottom: 25px;
       a {
         font-weight: 600;
         color: #999;
@@ -219,7 +249,6 @@
       }
     }
     .related-stories {
-      margin-bottom: 25px;
       // padding-bottom: 0;
       // line-height: 1.5;
       ul {
@@ -242,41 +271,10 @@
     }
     .story-contributors {
       visibility: hidden;  // can't use display: none because it will preclude ResizeSensor
-      margin-bottom: 25px;
-      > .well:first-child, .cs-well:first-child {
-        margin-bottom: 0;
-        position:relative;
-        background-image: linear-gradient(to bottom, #ffffff 72%, if(variable-exists(bg-color), $bg-color, $csp-bg-gray) 100%);
-        // background-repeat: repeat-x;
-        border-top: 1px solid #e3e3e3;
-        border-left: 0;
-        border-right: 0;
-        border-bottom: 0;
-        border-bottom-right-radius: 0;
-        border-bottom-left-radius: 0;
-        .section-title h4 {
-          // font-size: 20px !important;
-          margin-bottom: 6px;
-        }
-        // the fading borders...
-        &:before, &:after {
-          content: "";
-          position: absolute;
-          // background-image: -webkit-gradient(linear, 0 0, 0 100%, from(#e3e3e3), to(transparent));
-          // background-image: -webkit-linear-gradient(#e3e3e3, transparent);
-          // background-image: -moz-linear-gradient(#e3e3e3, transparent);
-          // background-image: -o-linear-gradient(#e3e3e3, transparent);
-          background-image: linear-gradient(to bottom, #e3e3e3 0, transparent 90%);
-          top: 3px;
-          bottom: -1px;
-          width: 1px;
-        }
-        &:before {
-          left: -1px;
-        }
-        &:after {
-          right: -1px;
-        }
+    }
+    &.cs-story-content {
+      @media only screen and (max-width: 767px) {
+        @include LI-profile-badge(#fff);
       }
     }
   }

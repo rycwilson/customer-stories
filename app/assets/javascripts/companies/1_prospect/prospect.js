@@ -4,7 +4,7 @@
 //= require ./new_contributor
 //= require ./success_child_row
 //= require ./success_actions/success_actions
-//= require ./contributor_details
+//= require ./contributor_child_row
 //= require ./contributor_actions/contributor_actions
 //= require ./linkedin_util
 
@@ -46,9 +46,9 @@ function prospectListeners () {
   prospectFiltersListeners();
   newSuccessListeners();
   newContributorListeners();
-  successDetailsListeners();
+  successChildRowListeners();
   successActionsListeners();
-  contributorDetailsListeners();
+  contributorChildRowListeners();
   contributorActionsListeners();
   contributorInvitationListeners();
 
@@ -175,8 +175,8 @@ function prospectListeners () {
 
     // close a child row
     .on('click', 'div.success-child-row button[type="reset"], ' +
-                 'div.contributor-details button[type="reset"]', function () {
-        $(this).closest('tr').prev().find('td.toggle-success-child, td[class*="details"]').trigger('click');
+                 'div.contributor-child-row button[type="reset"]', function () {
+        $(this).closest('tr').prev().find('td.toggle-success-child, td.toggle-contributor-child"]').trigger('click');
       })
 
     // validate form inputs

@@ -17,25 +17,40 @@ ADWORDS_SHORT_HEADLINE_CHAR_LIMIT = 25
 ADWORDS_LONG_HEADLINE_CHAR_LIMIT = 90
 
 # the parameters can be hard-coded here because this will be used in a simple re-direct
-LINKEDIN_AUTHORIZE_BASE_URL = "https://www.linkedin.com/oauth/v2/authorization?\
+CURATOR_LINKEDIN_AUTH_URL = "https://www.linkedin.com/oauth/v2/authorization?\
                                client_id=#{ENV['LINKEDIN_KEY']}&\
                                response_type=code&\
-                               scope=r_basicprofile&\
-                               state=#{ENV['LINKEDIN_STATE']}&".gsub(/\s+/, '')
+                               scope=r_basicprofile%20w_member_social&\
+                               state=#{ENV['LINKEDIN_STATE']}".gsub(/\s+/, '')
+                               # redirect_uri=  included by application#linkedin_auth
+
+CONTRIBUTOR_LINKEDIN_AUTH_URL = "https://www.linkedin.com/oauth/v2/authorization?\
+                                  client_id=#{ENV['LINKEDIN_KEY']}&\
+                                  response_type=code&\
+                                  scope=r_liteprofile&\
+                                  state=#{ENV['LINKEDIN_STATE']}".gsub(/\s+/, '')
+
+# LINKEDIN_AUTHORIZE_BASE_URL = "https://www.linkedin.com/oauth/v2/authorization?\
+#                                client_id=#{ENV['LINKEDIN_KEY']}&\
+#                                response_type=code&\
+#                                scope=r_basicprofile%20w_member_social%20rw_company_admin\
+#                                state=#{ENV['LINKEDIN_STATE']}&".gsub(/\s+/, '')
                                # redirect_uri=  included by profile/contributions controller
 
 # separate url needed for companies because specifics information is displayed
 # "Pixlee would like to access your data..."
-PIXLEE_LINKEDIN_AUTHORIZE_BASE_URL = "https://www.linkedin.com/oauth/v2/authorization?\
-                                      client_id=#{ ENV['PIXLEE_LINKEDIN_KEY'] }&\
-                                      response_type=code&\
-                                      scope=r_liteprofile%20w_share%20w_member_social&\
-                                      state=#{ENV['LINKEDIN_STATE']}&".gsub(/\s+/, '')
+# CONTRIBUTOR_LINKEDIN_AUTH_URL =
+# PIXLEE_LINKEDIN_AUTHORIZE_BASE_URL = "https://www.linkedin.com/oauth/v2/authorization?\
+#                                       client_id=#{ ENV['PIXLEE_LINKEDIN_KEY'] }&\
+#                                       response_type=code&\
+#                                       scope=r_liteprofile%20w_share%20w_member_social&\
+#                                       state=#{ENV['LINKEDIN_STATE']}&".gsub(/\s+/, '')
 
 
-# the parameters must be defined in the typhoeus request (see profile controller)
-LINKEDIN_GETTOKEN_BASE_URL = "https://www.linkedin.com/oauth/v2/accessToken"
-LINKEDIN_PEOPLE_BASE_URL = "https://api.linkedin.com/v1/people/~"
+# the parameters must be defined in the typhoeus request
+LINKEDIN_TOKEN_BASE_URL = "https://www.linkedin.com/oauth/v2/accessToken"
+LINKEDIN_PROFILES_BASE_URL = "https://api.linkedin.com/v2/me"
+LINKEDIN_PROFILE_JS = "https://platform.linkedin.com/badges/js/profile.js"
 
 LINKEDIN_SHARE_URL = "https://www.linkedin.com/shareArticle?mini=true&url="
 TWITTER_SHARE_URL = "https://twitter.com/share?url="

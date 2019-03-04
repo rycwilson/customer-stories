@@ -28,7 +28,7 @@
       $modal = $('#new-contributor-modal'),
       isCurateView = $('a[href="#story-contributors"]').parent().hasClass('active'),
       openContributorForm = function ($tr) {
-        $tr.find('td.contributor-details').trigger('click');
+        $tr.find('td.toggle-contributor-child').trigger('click');
         // scroll to center (but only for the current table view)
         if ($tr.closest('table').is('#prospect-contributors-table') && !isCurateView ||
             $tr.closest('table').is('#curate-contributors-table') && isCurateView) {

@@ -1,6 +1,8 @@
 
 #cs-carousel {
 
+  @import '../../../base/mixins';;
+
   @import '../../../views/plugins/carousel';
 
   @import '../../fonts';

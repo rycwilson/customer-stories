@@ -1,0 +1,39 @@
+
+function initLinkedIn () {
+
+  var $badges = $('.LI-profile-badge');
+
+  if ($badges.length === 0) return false;
+
+  typeof 'LIRenderAll' !== 'function' ?
+    $.getScript("<%= LINKEDIN_PROFILE_JS %>") :
+    LIRenderAll();
+
+  // if ($('body').hasClass('stories show')) {
+  //   if (CSP.screenSize === 'xs') {
+  //     $('.hidden-xs .linkedin-widget').remove();
+
+  //   } else {
+  //     $('.visible-xs-block .linkedin-widget').remove();
+  //   }
+  //   if (CSP.screenSize === 'lg') {
+  //     $('.linkedin-widget').not('.linkedin-widget-wide').remove();
+  //   } else {
+  //     $('.linkedin-widget-wide').remove();
+  //   }
+  // }
+
+  // if (typeof(IN) !== 'object') {
+  //   // console.log('IN not defined')
+  //   $.ajax({
+  //     url: 'https://platform.linkedin.com/in.js',
+  //     method: 'get',
+  //     dataType: 'script',
+  //     timeout: 6000
+  //   })
+  // } else {
+  //   IN.parse();
+  // }
+
+
+}

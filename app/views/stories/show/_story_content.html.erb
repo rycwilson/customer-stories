@@ -55,9 +55,9 @@
           <hr>
 
           <%= render(
-              'stories/show/contributors',
-              { company: company, contributors: contributors, is_plugin: is_plugin, window_width: window_width }
-            ) unless company.subdomain == 'pixlee' %>
+                'stories/show/contributors',
+                { company: company, contributors: contributors, is_plugin: is_plugin, window_width: window_width }
+              ) unless company.subdomain == 'pixlee' %>
 
         <% end %>
 
@@ -137,7 +137,7 @@
 
       <% elsif is_plugin %>
 
-        <div class="well" style="margin-bottom: 25px">
+        <section style="margin-bottom: 25px">
           <div class="cs-row" style="margin: auto; height: 42px; margin-bottom: 0">
               <div class="col-sm-1" style="display: flex; align-items: center; justify-content: center; height: 100%; padding: 0">
                 <i class="fa fa-fw fa-share" style="font-size: 14px;"></i>
@@ -174,19 +174,24 @@
 
               </div>
             </div>
-        </div>
+        </section>
 
       <% end %>
 
-
-      <% if contributors.present? && (window_width.nil? || window_width.to_i >= 768) %>
-
+      <% if contributors.present? &&
+            (window_width.nil? || window_width.to_i >= 768) &&
+            company.subdomain != 'pixlee' %>
         <%# cache("#{company.subdomain}/stories/#{story.id}/contributors", skip_digest: true) do %>
 
           <%= render(
                 'stories/show/contributors',
-                { company: company, contributors: contributors, is_plugin: is_plugin, window_width: window_width }
-              ) unless company.subdomain == 'pixlee' %>
+                {
+                  company: company,
+                  contributors: contributors,
+                  is_plugin: is_plugin,
+                  window_width: window_width
+                }
+              ) %>
 
         <%# end %>
 

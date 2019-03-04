@@ -191,7 +191,7 @@ function initContributorsTable (workflowStage, dtContributorsInit) {
       // note: these indices won't align with *index variables,
       // as these are only the unhidden columns
       // $(row).children().eq(0).attr('data-filter', data.success.id);
-      $(row).children().eq(0).addClass('contributor-details');
+      $(row).children().eq(0).addClass('toggle-contributor-child');
       $(row).children().eq(1).addClass('contributor');
       $(row).children().eq(2)
         .addClass('invitation-template')
@@ -225,11 +225,11 @@ function initContributorsTable (workflowStage, dtContributorsInit) {
 
       // this is for the question mark icons that go with status= opt_out or remove
       $('[data-toggle="tooltip"]').tooltip();
-
       if (workflowStage === 'prospect') {
         // global so can be accessed from prospectListeners
         prospectContributorsEditor = newContributorsEditor(
-          'prospect', invitationTemplateSelectOptions
+          'prospect',
+          invitationTemplateSelectOptions
         );
         dtContributorsInit.resolve();
 
@@ -238,7 +238,8 @@ function initContributorsTable (workflowStage, dtContributorsInit) {
       } else {
         // global so can be accessed from prospectListeners
         curateContributorsEditor = newContributorsEditor(
-          'curate', invitationTemplateSelectOptions
+          'curate',
+          invitationTemplateSelectOptions
         );
 
         // no row grouping for curate-contributors

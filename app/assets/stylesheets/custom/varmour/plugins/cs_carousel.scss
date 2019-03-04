@@ -2,6 +2,9 @@
 @import '../variables';
 
 #cs-carousel, #cs-varmour-container {
+
+  @import '../../../base/mixins';
+
   // varmour was the original, so doesn't need to inherit from the standard carousel
   // @import '../../../views/plugins/carousel';
   @import 'carousel';

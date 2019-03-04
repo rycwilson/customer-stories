@@ -8,7 +8,8 @@ function storiesShow () {
   loadVideoThumbnail(function () { $('.story-wrapper').removeClass('hidden'); });
 
   if (!$('body').hasClass('pixlee')) {
-    linkedinListener($('.story-wrapper'));
+    // linkedinListener($('.story-wrapper'));
+    LI2Observer();
     initMoreStories();
   }
 
@@ -153,6 +154,50 @@ function clickyListeners () {
     //   });
 }
 
+function LI2Observer () {
+  var $contributors = $('.story-contributors'),
+      $badges = $contributors.find('.LI-profile-badge'),
+      MutationObserver = window.MutationObserver || window.WebKitMutationObserver || window.MozMutationObserver,
+      badgeAdded = function (mutation) {
+        return mutation.type === 'attributes' && mutation.attributeName === 'data-uid'
+      };
+      observer = new MutationObserver(function (mutations) {
+        mutations.forEach(function (mutation) {
+          if (mutation.type === 'attributes') {
+            console.log('attributes, attributeName: ', mutation.attributeName, $(mutation.target).data('uid'));
+          } else if (mutation.type === 'childList') {
+            console.log('childList, addedNodes: ', mutation.addedNodes[0], $(mutation.target).data('uid'));
+            // this would be the last mutation, but it doesn't always happen
+            // if ($(mutation.addedNodes[0]).hasClass('resize-sensor')) {
+          } else {
+            console.log('other')
+          }
+          if (badgeAdded(mutation)) {
+            console.log('badge added', $(mutation.target).data('uid'))
+
+            // this is a reliable indicator that the badge has displayed
+            // if at least one displays, show the section, with a brief timeout to allow for other badges and style settings
+            new ResizeSensor($(mutation.target), function() {
+              console.log('badge rendered', $(mutation.target).data('uid'))
+
+              // give it a brief delay to allow for multiple contributors being rendered,
+              // and for local style changes to take effect
+              setTimeout(function () {
+                $contributors.css({ visibility: 'visible' })
+              }, 200)
+            });
+          }
+        });
+      });
+  $badges.each(function () {
+    observer.observe(this, { attributes: true, childList: true });
+  });
+  // $(document).one('turbolinks:before-cache', function () {
+  //   console.log('observer.disconnect()');
+  //   observer.disconnect();
+  // });
+}
+
 /*
  *  There are two timers, after each of which the widgets are all checked for
  *  successful load, and replaced with a substitute widget if not
@@ -170,85 +215,85 @@ function clickyListeners () {
  */
 
 // this function is a copy the one in cs_overlays
-function linkedinListener ($story) {
-  var $contributors = $story.find('.story-contributors'),
-      $widgets = $contributors.find('.linkedin-widget'),
-      // firstWidgetLoaded = false,
-      // firstWidgetIndex = null, currentWidgetIndex = null, relativeWidgetIndex = null,
-      widgetStore = {},
-      numWidgets = $widgets.length,
-      numWidgetsRendered = 0,
-      widgetTimeoutId, widgetTimeoutDelay = 10000,
-      setWidgetTimeout = function (delay, handler) {
-        widgetTimeoutId = setTimeout(function () {
-          window.removeEventListener('message', handler, false);
-          $contributors.remove();
-        }, delay);
-      },
-      // profiles that linkedin can't find will still load, need to detect and remove them
-      removeIfNotFound = function ($widget, resizedWidgetWidth) {
-        if (resizedWidgetWidth !== $widget.data('width')) {
-          $widget.remove();
-          numWidgets--;
-        }
-      },
-      postMessageHandler = function (mesg) {
-        var origin = mesg.origin || mesg.originalEvent.origin,  // latter for chrome
-            isLinkedIn = origin.includes('linkedin'),
-            mesgData = JSON.parse(mesg.data),
-            widgetId = mesgData['rpc.channel'],
-            isReady = isLinkedIn && mesgData.method === 'ready',
-            isResize = isLinkedIn && mesgData.method === 'resize',
-            publicProfileUrl = isReady && decodeURIComponent(
-                mesgData.params[0].source.match(
-                  /\?public_profile_url=(https%3A%2F%2Fwww\.linkedin\.com%2Fin%2F.+)&format=/
-                )[1]
-              ),
-            $widget = $widgets.filter(
-                '[data-linkedin-url="' + (publicProfileUrl ? publicProfileUrl : widgetStore[widgetId]) + '"]'
-              ),
-            resizedWidgetWidth;
+// function linkedinListener ($story) {
+//   var $contributors = $story.find('.story-contributors'),
+//       $widgets = $contributors.find('.linkedin-widget'),
+//       // firstWidgetLoaded = false,
+//       // firstWidgetIndex = null, currentWidgetIndex = null, relativeWidgetIndex = null,
+//       widgetStore = {},
+//       numWidgets = $widgets.length,
+//       numWidgetsRendered = 0,
+//       widgetTimeoutId, widgetTimeoutDelay = 10000,
+//       setWidgetTimeout = function (delay, handler) {
+//         widgetTimeoutId = setTimeout(function () {
+//           window.removeEventListener('message', handler, false);
+//           $contributors.remove();
+//         }, delay);
+//       },
+//       // profiles that linkedin can't find will still load, need to detect and remove them
+//       removeIfNotFound = function ($widget, resizedWidgetWidth) {
+//         if (resizedWidgetWidth !== $widget.data('width')) {
+//           $widget.remove();
+//           numWidgets--;
+//         }
+//       },
+//       postMessageHandler = function (mesg) {
+//         var origin = mesg.origin || mesg.originalEvent.origin,  // latter for chrome
+//             isLinkedIn = origin.includes('linkedin'),
+//             mesgData = JSON.parse(mesg.data),
+//             widgetId = mesgData['rpc.channel'],
+//             isReady = isLinkedIn && mesgData.method === 'ready',
+//             isResize = isLinkedIn && mesgData.method === 'resize',
+//             publicProfileUrl = isReady && decodeURIComponent(
+//                 mesgData.params[0].source.match(
+//                   /\?public_profile_url=(https%3A%2F%2Fwww\.linkedin\.com%2Fin%2F.+)&format=/
+//                 )[1]
+//               ),
+//             $widget = $widgets.filter(
+//                 '[data-linkedin-url="' + (publicProfileUrl ? publicProfileUrl : widgetStore[widgetId]) + '"]'
+//               ),
+//             resizedWidgetWidth;
 
-        if (isReady) {
-          widgetStore[widgetId] = publicProfileUrl;
+//         if (isReady) {
+//           widgetStore[widgetId] = publicProfileUrl;
 
-          // this is a reliable indicator that the widget has rendered
-          new ResizeSensor($widget, function() {
-            if ((++numWidgetsRendered === numWidgets)) {
-              clearTimeout(widgetTimeoutId);
-              $contributors.css('visibility', 'visible');
-            }
-          });
-        }
-        if (isResize) {
-          resizedWidgetWidth = mesgData.params[0].width;
-          removeIfNotFound($widget, resizedWidgetWidth);
-        }
-      };
+//           // this is a reliable indicator that the widget has rendered
+//           new ResizeSensor($widget, function() {
+//             if ((++numWidgetsRendered === numWidgets)) {
+//               clearTimeout(widgetTimeoutId);
+//               $contributors.css('visibility', 'visible');
+//             }
+//           });
+//         }
+//         if (isResize) {
+//           resizedWidgetWidth = mesgData.params[0].width;
+//           removeIfNotFound($widget, resizedWidgetWidth);
+//         }
+//       };
 
-  window.addEventListener("message", postMessageHandler, false);
-  setWidgetTimeout(widgetTimeoutDelay, postMessageHandler);
-  // $(document).one('click', '.cs-content.content--show .close-button', function () {
-  //   window.removeEventListener('message', postMessageHandler, false);
-  // });
-}
+//   window.addEventListener("message", postMessageHandler, false);
+//   setWidgetTimeout(widgetTimeoutDelay, postMessageHandler);
+//   // $(document).one('click', '.cs-content.content--show .close-button', function () {
+//   //   window.removeEventListener('message', postMessageHandler, false);
+//   // });
+// }
 
-function addCspWidget (contributor, index) {
-  var template = _.template($('#csp-linkedin-widget-template').html()),
-      widgetWidth = (CSP.screenSize === 'lg') ? 420 : 340;
+// function addCspWidget (contributor, index) {
+//   var template = _.template($('#csp-linkedin-widget-template').html()),
+//       widgetWidth = (CSP.screenSize === 'lg') ? 420 : 340;
 
-  if (contributor.linkedin_photo_url && contributor.linkedin_title &&
-      contributor.linkedin_company) {
-    $('.linkedin-widget')
-      .eq(index)
-      .empty()
-      .append(template({ contributor: contributor,
-                         widgetWidth: widgetWidth }));
-    return true;
-  } else {
-    return false;
-  }
-}
+//   if (contributor.linkedin_photo_url && contributor.linkedin_title &&
+//       contributor.linkedin_company) {
+//     $('.linkedin-widget')
+//       .eq(index)
+//       .empty()
+//       .append(template({ contributor: contributor,
+//                          widgetWidth: widgetWidth }));
+//     return true;
+//   } else {
+//     return false;
+//   }
+// }
 
 
 

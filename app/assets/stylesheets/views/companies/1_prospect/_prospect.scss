@@ -29,7 +29,7 @@
 }
 
 #successes-table, #prospect-contributors-table, #curate-contributors-table {
-  th.toggle-success-child, td.toggle-success-child, th[class*="details"], td[class*="details"] {
+  th.toggle-success-child, td.toggle-success-child, th.toggle-contributor-child, td.toggle-contributor-child {
     // padding necessary to override datatables css that adds padding-right: 30px to the th,
     // thus preventing text from centering horizontally
     padding: 8px;
@@ -45,7 +45,7 @@
     // border: 1px solid #08c;
     .form-group {
       width: 100%;
-      margin-bottom: 15px;
+      margin-bottom: 20px;
       .form-control {
         width: 100%;
         font-size: 13px;
@@ -56,13 +56,6 @@
     }
     .col-sm-9 {
       padding: 0;
-    }
-   .linkedin-profile {
-
-      // publish checkbox
-      > div:first-child {
-        margin-bottom: 10px;
-      }
     }
   }
   tr.group,

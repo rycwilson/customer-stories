@@ -2,6 +2,7 @@
 @import '../variables';
 
 #cs-gallery {
+  @import '../../../base/mixins';
   @import '../../../views/plugins/gallery';
   @import 'gallery';
   @import '../show';

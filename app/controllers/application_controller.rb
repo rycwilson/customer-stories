@@ -2,12 +2,11 @@ class ApplicationController < ActionController::Base
 
   layout(:layout)
 
-
   # Prevent CSRF attacks by raising an exception.
   # For APIs, you may want to use :null_session instead.
   protect_from_forgery with: :exception
 
-  before_action { }
+  # before_action { binding.remote_pry }
 
   # Devise - whitelist User params
   before_action :configure_permitted_parameters, if: :devise_controller?
@@ -24,6 +23,8 @@ class ApplicationController < ActionController::Base
     end
   )
 
+  before_action({ only: [:linkedin_auth_callback] }) { linkedin_authenticated?(params[:state]) }
+
   helper_method :company_curator?
 
   def auth_test
@@ -39,86 +40,97 @@ class ApplicationController < ActionController::Base
   end
 
   def linkedin_auth
-    auth_url = PIXLEE_LINKEDIN_AUTHORIZE_BASE_URL
-    if params[:share_url].present?
-      auth_url.sub!(
-        /state=(\w+)&$/,
-        'state=\1' + "cs-share#{ ERB::Util.url_encode(params[:share_url]) }cs-share&" +
-        "redirect_uri=#{ ERB::Util.url_encode('https://customerstories.org/linkedin_auth_callback') }"
-      )
+    auth_url = user_signed_in? && current_user.company_registered? ?
+      CURATOR_LINKEDIN_AUTH_URL :
+      CONTRIBUTOR_LINKEDIN_AUTH_URL
+
+    # embed any data needed in the callback in the state param
+    # (adding a separate param will cause a failure, won't match registered callback urls)
+    if params[:contribution_id].present?
+      csp_data = "csp-contribution-#{params[:contribution_id]}"
+    elsif params[:share_url].present?
+      # bookend the data since we don't know enough about it to delimit it
+      csp_data = "csp-share-#{ ERB::Util.url_encode(params[:share_url]) }-csp-share"
     end
-    # puts auth_url
-    redirect_to auth_url
+    auth_url.sub!(/state=(.+)$/, 'state=\1' + (csp_data || ''))
+    redirect_to(
+      auth_url + "&redirect_uri=#{ ERB::Util.url_encode(linkedin_auth_callback_url) }"
+    )
   end
 
   def linkedin_auth_callback
     # puts params.permit(params.keys).to_h
-    if share_url = params[:state].match(/cs-share(.+)cs-share/).try(:[], 1)
-      redirect_url = share_url
-    else
-      # ...
-    end
-    if params[:code]
-      token_response = get_linkedin_token(
-                         params[:code],
-                         url_for({
-                           subdomain: nil,
-                           controller: 'application',
-                           action: 'linkedin_auth_callback'
-                         })
-                       )
-      if token_response['error']
-        # puts "TOKEN ERROR"
-        # puts token_response['error']
-        # redirect_to redirect_url
-        # flash messaging depends on source
-      else
-        token = token_response['access_token']
-        # puts "TOKEN SUCCESS"
-        # puts token
-        # puts token_response
-        if share_url
-          profile_request = Typhoeus::Request.new(
-            'https://api.linkedin.com/v2/me',
-            method: 'GET',
-            headers: { Authorization: "Bearer #{token}" }
+    # share_url = params[:state].match(/csp-share(.+)csp-share/).try(:[], 1)
+    # profile_type = # lite or basic
+
+    # contribution submission
+    if contribution = Contribution.find_by(
+          id: params[:state].match(/csp-contribution-(\d+)$/).try(:[], 1)
+        )
+      puts "CONTRIBUTION #{contribution.id}"
+      if request.subdomain.empty?  # insert subdomain and re-direct
+        redirect_to(
+          url_for({ subdomain: company.subdomain, params: request.params })
+        ) and return
+      end
+      if params[:error]
+        redirect_to(
+          confirm_submission_path(contribution.access_token),
+          flash: { warning: params[:error_description] }
+        )
+      elsif params[:code]
+        token_response = get_linkedin_token(params[:code])
+        if token_response['error']
+          redirect_to(
+            confirm_submission_path(contribution.access_token),
+            flash: { danger: 'LinkedIn error: ' + token_response['error_description'] }
           )
-          profile_request.run
-          profile_response = JSON.parse(profile_request.response.response_body)
-          # puts "PROFILE"
-          # puts profile_response
-          share_request = Typhoeus::Request.new(
-            'https://api.linkedin.com/v2/ugcPosts',
-            method: 'POST',
-            headers: {
-              Authorization: "Bearer #{token}",
-              'X-Restli-Protocol-Version': '2.0.0'
-            },
-            body: {
-              "author": profile_response[:id],
-              "lifecycleState": "PUBLISHED",
-              "specificContent": {
-                "com.linkedin.ugc.ShareContent": {
-                  "shareCommentary": {
-                    "text": "This is share commentary"
-                  },
-                  "shareMediaCategory": "NONE"
-                }
-              },
-              "visibility": {
-                "com.linkedin.ugc.MemberNetworkVisibility": "PUBLIC"
-              }
-            }
-          )
-          share_request.run
-          share_response = JSON.parse(share_request.response.response_body)
-          # puts "SHARE"
-          # puts share_response
+        else
+          token = token_response['access_token']
+          # save token to User model
+          # linkedin_data = get_linkedin_profile(token, 'lite')
         end
       end
-      redirect_to redirect_url
-    else
-      # error?
+
+    else  # signed in user (likely curator, could be contributor)
+      if params[:error]
+        redirect_to(
+          edit_profile_path,
+          flash: { warning: params[:error_description] }
+        )
+      elsif params[:code] # code returned, now get access token
+        token_response = get_linkedin_token(params[:code])
+        if token_response['error']
+          redirect_to(
+            edit_profile_path,
+            flash: { danger: 'LinkedIn error: ' + token_response['error_description'] }
+          )
+        else
+          token = token_response['access_token']
+          puts "TOKEN"
+          puts token
+          # save token to User model
+          get_linkedin_profile(token, 'lite')
+
+          if false # errors
+            # what if linkedin api is down?  timeout?
+            # since this is all happening in the same flow, a 401 response won't happen;
+            # but further authenticated requests (from linkedin_connect action)
+            # need to account for possibility of 401, re-direct to beginning of auth process
+          else
+
+          # not checking for errors here,
+          # what's the point of telling contributor?
+          # if update_user_linkedin_data(contributor, linkedin_data)
+          #   redirect_to confirm_submission_path(contribution.access_token)
+          # else
+          #   redirect_to confirm_submission_path(contribution.access_token),
+          #       flash: {
+          #         warning: "Submission successful, but errors saving LinkedIn data: #{contributor.errors.full_messages.join(', ')}"
+          #       }
+          end
+        end
+      end
     end
   end
 
@@ -279,20 +291,55 @@ class ApplicationController < ActionController::Base
     # end
   end
 
-  def get_linkedin_token(code, callback)
+  def get_linkedin_token(code)
     token_request = Typhoeus::Request.new(
-      LINKEDIN_GETTOKEN_BASE_URL,
+      LINKEDIN_TOKEN_BASE_URL,
       method: 'POST',
       params: {
         grant_type: 'authorization_code',
         code: code,
-        client_id: ENV['PIXLEE_LINKEDIN_KEY'],
-        client_secret: ENV['PIXLEE_LINKEDIN_SECRET'],
-        redirect_uri: callback
+        client_id: ENV['LINKEDIN_KEY'],
+        client_secret: ENV['LINKEDIN_SECRET'],
+        redirect_uri: linkedin_auth_callback_url
       }
     )
     token_request.run
     JSON.parse(token_request.response.response_body)
   end
 
+  def get_linkedin_profile(token, type)  # type is 'lite' or 'basic'
+    data_request = Typhoeus::Request.new(
+      LINKEDIN_PROFILES_BASE_URL,
+        # ":(location:(name),\
+        #    positions,\
+        #    public-profile-url,\
+        #    picture-urls::(original))".gsub(/\s+/, ''),
+      method: 'GET',
+      headers: { Authorization: "Bearer #{token}" }
+    )
+    data_request.run
+    puts "PROFILE"
+    puts JSON.parse(data_request.response.response_body)
+    JSON.parse(data_request.response.response_body)
+  end
+
+  def linkedin_authenticated?(state_param)
+    if state_param == ENV['LINKEDIN_STATE'] ||
+      # if contribution submission, state param tagged with contribution
+      ( state_param.match(/csp-contribution(\d+)/) &&
+        state_param.sub(/csp-contribution-(\d+)/, '' ) == ENV['LINKEDIN_STATE'] )
+      true
+    else
+      render file: 'public/401', status: 401, layout: false
+      false
+    end
+  end
+
+  def linkedin_auth_callback_url
+    url_for({
+      subdomain: nil,
+      controller: 'application',
+      action: 'linkedin_auth_callback'
+    })
+  end
 end

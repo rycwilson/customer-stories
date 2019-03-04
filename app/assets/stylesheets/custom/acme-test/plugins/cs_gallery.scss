@@ -1,6 +1,8 @@
 
 #cs-gallery {
 
+  @import '../../../base/mixins';
+
   @import '../../../views/plugins/gallery';
 
   @import '../../fonts';

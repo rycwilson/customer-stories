@@ -50,24 +50,6 @@
     }
   }
 
-  .well, .cs-well {
-    border: none;
-    box-shadow: 0 0;
-    border-radius: 0;
-    &.narrative {
-      padding: 5px 10px;
-    }
-    &:not(.narrative) {
-      background-color: $fg-color;
-      // border: 1px solid $border-color;
-    }
-    &.contributors {
-      // border: none;
-      // border-top: 1px solid $border-color;
-    }
-  }
-
-
   .cta__image {
     height: 200px;
     background: url('http://assets.pixlee.com/website/webinar/webinar-hero.png') center / cover no-repeat;
@@ -181,21 +163,31 @@
     background-color: $bg-color;
     .section-title h4 {
     }
+    section {
+      border: none;
+    }
+    section:not(.narrative) {
+      background-color: $fg-color;
+      // border: 1px solid $border-color;
+      @media only screen and (max-width: 767px) {
+        background-color: #fff;
+      }
+    }
     .narrative {
-      padding-top: 5px;
+      padding: 5px 20px 0 0;
+      border: none;
+      @media only screen and (max-width: 767px) {
+        padding: 0
+      }
     }
     .related-stories ul {
       background-color: $fg-color;
+      border: none;
+      @media only screen and (max-width: 767px) {
+        background-color: #fff;
+      }
     }
     .story-contributors {
-      > .well:first-child, .cs-well:first-child {
-        background-image: linear-gradient(to bottom, $fg-color 72%, #ffffff 100%);
-        border-top: none;
-        &:before, &:after {
-          content: none;
-          // background-image: linear-gradient(to bottom, $border-color 0, transparent 90%);
-        }
-      }
     }
     &.story-content {
       .narrative {
