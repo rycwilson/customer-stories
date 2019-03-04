@@ -57,7 +57,7 @@ GEM
       i18n (~> 0.7)
       minitest (~> 5.1)
       tzinfo (~> 1.1)
-    addressable (2.5.2)
+    addressable (2.6.0)
       public_suffix (>= 2.0.2, < 4.0)
     akami (1.3.1)
       gyoku (>= 0.4.0)
@@ -128,7 +128,7 @@ GEM
     ethon (0.9.0)
       ffi (>= 1.3.0)
     execjs (2.7.0)
-    faraday (0.14.0)
+    faraday (0.15.4)
       multipart-post (>= 1.2, < 3)
     ffaker (2.2.0)
     ffi (1.9.14)
@@ -145,7 +145,7 @@ GEM
       json
       multi_json
       request_store (>= 1.0)
-    google-ads-common (1.0.1)
+    google-ads-common (1.0.2)
       google-ads-savon (~> 1.0, >= 1.0.2)
       httpclient (~> 2.7)
       httpi (~> 2.3)
@@ -158,7 +158,7 @@ GEM
       nokogiri (~> 1.6)
       nori (~> 2.6)
       wasabi (~> 3.4)
-    google-adwords-api (1.1.1)
+    google-adwords-api (1.4.0)
       google-ads-common (~> 1.0.0)
       nori (~> 2.6)
     googlecharts (1.6.12)
@@ -174,7 +174,7 @@ GEM
     html_to_plain_text (1.0.5)
       nokogiri (>= 1.4.0)
     httpclient (2.8.3)
-    httpi (2.4.3)
+    httpi (2.4.4)
       rack
       socksify
     i18n (0.9.5)
@@ -208,14 +208,14 @@ GEM
     method_source (0.8.2)
     mime-types (1.25.1)
     mini_mime (1.0.1)
-    mini_portile2 (2.3.0)
+    mini_portile2 (2.4.0)
     minitest (5.11.3)
-    multi_json (1.12.1)
+    multi_json (1.13.1)
     multipart-post (2.0.0)
     nested_form (0.3.2)
     nio4r (1.2.1)
-    nokogiri (1.8.5)
-      mini_portile2 (~> 2.3.0)
+    nokogiri (1.10.1)
+      mini_portile2 (~> 2.4.0)
     nori (2.6.0)
     order_as_specified (1.3)
       activerecord (>= 4.0.1)
@@ -247,9 +247,9 @@ GEM
     pry-theme (1.1.3)
       coderay (~> 1.1)
       json (~> 1.8)
-    public_suffix (3.0.2)
+    public_suffix (3.0.3)
     puma (3.6.0)
-    rack (2.0.5)
+    rack (2.0.6)
     rack-pjax (1.0.0)
       nokogiri (~> 1.5)
       rack (>= 1.1)
@@ -329,7 +329,7 @@ GEM
       sprockets (> 2.11)
       sprockets-rails
       tilt
-    signet (0.8.1)
+    signet (0.11.0)
       addressable (~> 2.3)
       faraday (~> 0.9)
       jwt (>= 1.5, < 3.0)
@@ -398,7 +398,7 @@ DEPENDENCIES
   font-awesome-rails
   friendly_id (~> 5.1.0)
   gon
-  google-adwords-api (= 1.1.1)
+  google-adwords-api (= 1.4.0)
   googlecharts
   html_to_plain_text
   jazz_hands!

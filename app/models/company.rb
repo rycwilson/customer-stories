@@ -1,7 +1,7 @@
 class Company < ApplicationRecord
 
   require 'adwords_api'
-  ADWORDS_API_VERSION = :v201802
+  ADWORDS_API_VERSION = :v201809
 
   CSP = self.find(5)
 
