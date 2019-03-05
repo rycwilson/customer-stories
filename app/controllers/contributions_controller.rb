@@ -76,11 +76,6 @@ class ContributionsController < ApplicationController
           }
         }
       )
-    # elsif params[:get_contributor]
-    #   respond_with(
-    #     @contribution.contributor,
-    #     only: [:id, :first_name, :last_name, :title, :email, :phone, :linkedin_url]
-    #   )
     else
       respond_with @contribution, include: {
             contributor: {}, referrer: {}, success: { include: :customer } }

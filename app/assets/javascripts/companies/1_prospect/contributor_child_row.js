@@ -4,16 +4,6 @@ function contributorChildRowListeners () {
   var contributionPath = function (contributionId) {
         return '/contributions/' + contributionId;
       },
-      // getContributor = function (contributionId) {
-      //   return $.ajax({
-      //             url: contributionPath(contributionId),
-      //             method: 'GET',
-      //             data: {
-      //               get_contributor: true
-      //             },
-      //             dataType: 'json'
-      //           });
-      // },
       LI2Observer = function ($badge) {
         if ($badge.length === 0) return null;
         var $container = $badge.closest('.LI-profile__container'),
@@ -72,11 +62,6 @@ function contributorChildRowListeners () {
         // handle LI profile badge
         LI2Observer($trContributor.find('.LI-profile-badge'));
 
-        // observer = LI2Observer();
-        // $('td.toggle-contributor-child').one('click', function () {
-        //   observer.disconnect();
-        // })
-
         // enable save button on input or change
         $trContributor.one('input change', function () {
           $(this).find('button[type="submit"]').prop('disabled', false);
@@ -84,10 +69,6 @@ function contributorChildRowListeners () {
         $("input[type='tel']").inputmask("999-999-9999");
       }
     })
-
-    // .on('change', '[name="contribution[contributor_attributes][linkedin_url]"]', function () {
-
-    // })
 
 }
 

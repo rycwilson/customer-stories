@@ -6,7 +6,6 @@
 //= require ./success_actions/success_actions
 //= require ./contributor_child_row
 //= require ./contributor_actions/contributor_actions
-//= require ./linkedin_util
 
 function prospect () {
 

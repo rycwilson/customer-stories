@@ -11,7 +11,7 @@
 
   .LI-profile-badge {
     @include LI-profile-badge(#f2f2f2);
-    &:last-child {
+    &:last-child {   // does this apply to contributor view?
       .LI-badge-container {
         margin-bottom: 0;
       }

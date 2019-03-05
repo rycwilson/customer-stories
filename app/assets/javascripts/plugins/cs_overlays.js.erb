@@ -116,7 +116,6 @@ function cspInitOverlays ($, $container, subdomain, isDemo, env) {
         if ($storyCard.hasClass('has-video')) {
           cspInitVideo($, $storyOverlay);
         }
-        // linkedinListener($storyOverlay);  // old plugins
         LI2Observer($storyOverlay);
         // initLinkedIn();
         trackStoryVisitor($storyCard);
@@ -277,19 +276,6 @@ function cspInitOverlays ($, $container, subdomain, isDemo, env) {
     typeof 'LIRenderAll' !== 'function' ?
       $.getScript("<%= LINKEDIN_PROFILE_JS %>") :
       LIRenderAll();
-
-    // if (typeof(IN) !== 'object') {
-    //   // console.log('IN not defined')
-    //   $.ajax({
-    //     url: 'https://platform.linkedin.com/in.js',
-    //     method: 'get',
-    //     dataType: 'script',
-    //     timeout: 5000
-    //   })
-    // } else {
-    //   // console.log('IN already defined');
-    //   IN.parse();
-    // }
   }
 
   function LI2Observer ($storyOverlay) {
@@ -326,67 +312,6 @@ function cspInitOverlays ($, $container, subdomain, isDemo, env) {
         });
     $badges.each(function () {
       observer.observe(this, { attributes: true, childList: true });
-    });
-  }
-
-  function linkedinListener ($storyOverlay) {
-    var $contributors = $storyOverlay.find('.story-contributors'),
-        $widgets = $contributors.find('.linkedin-widget'),
-        widgetStore = {},
-        numWidgets = $widgets.length,
-        numWidgetsRendered = 0,
-        widgetTimeoutId, widgetTimeoutDelay = 10000,
-        setWidgetTimeout = function (delay, handler) {
-          widgetTimeoutId = setTimeout(function () {
-            window.removeEventListener('message', handler, false);
-            $contributors.remove();
-          }, delay);
-        },
-        // profiles that linkedin can't find will still load, need to detect and remove them
-        removeIfNotFound = function ($widget, resizedWidgetWidth) {
-          if (resizedWidgetWidth !== $widget.data('width')) {
-            $widget.remove();
-            numWidgets--;
-          } else {
-          }
-        },
-        postMessageHandler = function (mesg) {
-          var origin = mesg.origin || mesg.originalEvent.origin,  // latter for chrome
-              isLinkedIn = origin.includes('linkedin'),
-              mesgData = JSON.parse(mesg.data),
-              widgetId = mesgData['rpc.channel'],
-              isReady = isLinkedIn && mesgData.method === 'ready',
-              isResize = isLinkedIn && mesgData.method === 'resize',
-              publicProfileUrl = isReady && decodeURIComponent(
-                  mesgData.params[0].source.match(
-                    /\?public_profile_url=(https%3A%2F%2Fwww\.linkedin\.com%2Fin%2F.+)&format=/
-                  )[1]
-                ),
-              $widget = $widgets.filter(
-                  '[data-linkedin-url="' + (publicProfileUrl ? publicProfileUrl : widgetStore[widgetId]) + '"]'
-                ),
-              resizedWidgetWidth;
-
-          if (isReady) {
-            widgetStore[widgetId] = publicProfileUrl;
-
-            // this is a reliable indicator that the widget has rendered
-            new ResizeSensor($widget, function() {
-              if ((++numWidgetsRendered === numWidgets)) {
-                clearTimeout(widgetTimeoutId);
-                $contributors.css('visibility', 'visible');
-              }
-            });
-          }
-          if (isResize) {
-            resizedWidgetWidth = mesgData.params[0].width;
-            removeIfNotFound($widget, resizedWidgetWidth);
-          }
-        };
-    window.addEventListener("message", postMessageHandler, false);
-    setWidgetTimeout(widgetTimeoutDelay, postMessageHandler);
-    $(document).one('click', '.cs-content.content--show .close-button', function () {
-      window.removeEventListener('message', postMessageHandler, false);
     });
   }
 
