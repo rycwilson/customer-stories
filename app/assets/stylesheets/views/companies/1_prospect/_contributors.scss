@@ -80,9 +80,9 @@
       color: #456f59;
     }
   }
-// foo
+
   .contributor-child-row {
-    @include LI-profile-badge(#f9f9f9);
+    @include LI-profile-badge(#fff);
     .LI-badge-container {
       // margin-bottom: 0;  // override the mixin
     }

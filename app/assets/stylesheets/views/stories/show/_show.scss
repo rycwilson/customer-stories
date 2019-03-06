@@ -10,7 +10,7 @@
   @import 'blockquote';
 
   .LI-profile-badge {
-    @include LI-profile-badge(#f2f2f2);
+    @include LI-profile-badge(#fff);
     &:last-child {   // does this apply to contributor view?
       .LI-badge-container {
         margin-bottom: 0;
@@ -121,11 +121,11 @@
       }
     }
 
-    .LI-profile-badge {
-      @media screen and (max-width: 767px) {
-        @include LI-profile-badge(#fff);
-      }
-    }
+    // .LI-profile-badge {
+    //   @media screen and (max-width: 767px) {
+    //     @include LI-profile-badge(#fff);
+    //   }
+    // }
 
   }
 
@@ -274,7 +274,7 @@
     }
     &.cs-story-content {
       @media only screen and (max-width: 767px) {
-        @include LI-profile-badge(#fff);
+        // @include LI-profile-badge(#fff);
       }
     }
   }
