@@ -29,6 +29,13 @@
 
 .site.index {
 
+  .LI-profile-badge {
+    @include LI-profile-badge(#fff);
+    width: 100%;
+    position: absolute;
+    bottom: 0;
+  }
+
   #cs-rel-container {
     margin: 0 160px;
   }
