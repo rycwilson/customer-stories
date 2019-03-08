@@ -24,16 +24,4 @@
 
   toggleFormDone($('#story-content-form'), true)
 
-  // old:
-  /*
-   *  TODO: user-supplied html is scrubbed on input;
-   *  should .sanitize also be called here?
-   */
-  // var newContent = "<%#= j @new_content.html_safe %>",
-  //     $storyContentEditor = $('#story-content-editor'),
-  //     $summernote = $storyContentEditor.next(),
-  //     $formButtons = $("[form='story-content-form']"),
-  //     $editor = $summernote.find('.note-editable'),
-  //     $toolbarButtons = $summernote.find('.note-toolbar > .note-btn-group > button, .note-toolbar > .note-btn-group > .note-btn-group > button');
-
 }());

@@ -60,11 +60,37 @@ function initNarrativeEditor () {
     buttons: {
       showContributions: showContributions
     },
+    callbacks: {
+      onInit: function (summernote) {
+        summernote.editor
+          .find('.modal.link-dialog + .modal')
+            .addClass('image-dialog')  // add a missing class name
+            .end()
+          .find('.note-group-select-from-files')
+            .find('label')
+              .text('Select a file')
+              .attr('for', 'summernote-file-input')
+              .end()
+            .find('input')
+              .attr('id', 'summernote-file-input')
+              .hide()
+              .end()
+            .after('<div class="or"><h5><span>OR</span></h5></div>')
+            .end()
+          .find('.note-image-btn')
+            .toggleClass('btn-primary btn-success')
+            .text('Insert');
+      },
+      onImageUpload: function (files) {
+        // this will trigger $.fileupload
+        $('#narrative__img-upload')[0].files = files;
+      }
+    }
   });
 
-    $('#narrative-editor').next().find('.note-editing-area').prepend(
-      _.template($('#show-contributions-template').html())()
-    )
+  $('#narrative-editor').next().find('.note-editing-area').prepend(
+    _.template($('#show-contributions-template').html())()
+  )
 
 }
 

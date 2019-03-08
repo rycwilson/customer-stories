@@ -155,19 +155,15 @@ class StoriesController < ApplicationController
       @story.update(story_params)
       # html response necessary for uploading customer logo image
       respond_to do |format|
-        format.html do
-          redirect_to(
-            curate_story_path(@story.customer.slug, @story.slug, tab: 'settings'),
-            flash: { success: "Story Settings updated" }
-          )
-        end
         format.js { render({ action: 'edit/settings/update' }) }
       end
     elsif params[:story][:form] == 'content'
       # the video url in standardized format is sent in a hidden field
       params[:story][:video_url] = params[:story][:formatted_video_url]
       @story.update(story_params)
-      respond_to { |format| format.js { render({ action: 'edit/content/update' }) } }
+      respond_to do |format|
+        format.js { render({ action: 'edit/content/update' }) }
+      end
     end
   end
 

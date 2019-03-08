@@ -38,6 +38,13 @@ function curateListeners () {
 
   $(document)
 
+    // summernote auto-focuses on url input when the modal opens; cancel this...
+    .on('show.bs.modal', '.image-dialog', function () {
+      $(this).find('.note-image-url').one('focus', function () {
+        $(this).blur();
+      });
+    })
+
     .on('show.bs.tab', 'a[href="#curate-stories"]', cancelLoading)
 
     .on('click', '#curate-gallery > li > a', function (e) {

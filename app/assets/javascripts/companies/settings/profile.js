@@ -32,8 +32,15 @@ function companyProfileListeners() {
 
   $(document)
 
-    .on('click', '#company-profile-form .fileinput button', function () {
-      $(this).closest('.fileinput').find('img').click();
+    .on('click', '#company-profile-form .fileinput button', function (e) {
+      var $previewImg = $(this).closest('.fileinput').find('.fileinput-preview img');
+      if ($previewImg.attr('src')) {
+        // click on the preview
+        $(this).closest('.fileinput').find('.thumbnail')[1].click();
+      } else {
+        // click on the placeholder
+        $(this).closest('.fileinput').find('.thumbnail')[0].click();
+      }
     })
 
     .on('change', '.color-picker .upper', function () {

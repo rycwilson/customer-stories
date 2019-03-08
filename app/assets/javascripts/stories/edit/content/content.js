@@ -125,6 +125,7 @@ function storiesEditContentListeners () {
 
   $(document)
 
+
     // get and show contributions
     .on('click', 'button[data-original-title="Show/Hide Contributions"]', function () {
       $.ajax({
@@ -176,7 +177,8 @@ function storiesEditContentListeners () {
       if ($(document).scrollTop() > (($('.narrative').offset().top + 200) - $(window).height())) {
         openFormControls();
       }
-    });
+    })
+
 }
 
 function initStoriesEditContent () {

@@ -63,8 +63,7 @@ class CompaniesController < ApplicationController
     end
     respond_to do |format|
       format.html do
-        redirect_to edit_company_path(@company),
-          flash: { success: "Company Profile updated" }
+        redirect_to(edit_company_path(@company), flash: { success: "Company Profile updated" })
       end
       format.js {}
     end
