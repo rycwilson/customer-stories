@@ -70,6 +70,8 @@ function initS3Upload () {
           // if the input buffer's value isn't set to blank, it will force a request with data-type=html
           $('#narrative__img-upload').val('');
         } else {
+          // if the input buffer's value isn't set to blank, it will force a request with data-type=html
+          $(this).val('');
 
           // create hidden field
           var $hiddenInput = $("<input />", { type:'hidden', name: $fileInput.attr('name'), value: url });

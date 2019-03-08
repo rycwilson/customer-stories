@@ -17,17 +17,27 @@ function flashDisplay (mesg, status, callback) {
              .addClass('alert-' + status)
              .append(mesg)
              .hide().append(flash).fadeIn('fast');
-  setTimeout(function () { $('#flash').slideUp(400, callback); }, 3000);
-  setTimeout(function () {
-    $('#flash').addClass('hidden')
-               .removeClass('alert-' + status);
-    $('#flash div').empty();
+  setTimeout(
+    function () {
+      $('#flash').slideUp(400, function () {
+        if (callback) callback();
+      });
+    },
+    3000
+  );
+  setTimeout(
+    function () {
+      $('#flash').addClass('hidden')
+                 .removeClass('alert-' + status);
+      $('#flash div').empty();
 
-    // dispay:none setting appears after first click-cycle,
-    // leads to subsequent failures
-    // solution...
-    $('#flash').css('display', '');
-    // remove all text, leave child elements
-    $('#flash').html($('#flash').children());
-  }, 3500);
+      // dispay:none setting appears after first click-cycle,
+      // leads to subsequent failures
+      // solution...
+      $('#flash').css('display', '');
+      // remove all text, leave child elements
+      $('#flash').html($('#flash').children());
+    },
+    3500
+  );
 }

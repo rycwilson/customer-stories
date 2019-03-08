@@ -34,30 +34,27 @@ function companyProfileListeners() {
 
     .on('click', '#company-profile-form .fileinput button', function (e) {
       var $previewImg = $(this).closest('.fileinput').find('.fileinput-preview img');
-      if ($previewImg.attr('src')) {
+      $previewImg.attr('src') ?
         // click on the preview
-        $(this).closest('.fileinput').find('.thumbnail')[1].click();
-      } else {
+        $(this).closest('.fileinput').find('.thumbnail')[1].click() :
         // click on the placeholder
         $(this).closest('.fileinput').find('.thumbnail')[0].click();
-      }
     })
 
     .on('change', '.color-picker .upper', function () {
-      $('#company-profile-form .logo-upload .thumbnail').css({ background: $(this).val() });
+      $('#company-profile-form .logo-upload .thumbnail').css('background-color', $(this).val());
     })
 
     .on('change', '.color-picker .lower', function () {
-      var $nav = $('#company-profile-form .stories-header');
-      $nav.css({ background: $(this).val() });
+      var $storiesHeader = $('#company-profile-form .stories-header');
+      $storiesHeader.css('background-color', $(this).val());
       if (colorContrast(hexToRgb($(this).val())) === 'light') {
-        $nav.find('h3').addClass('light').removeClass('dark');
-        $nav.find('i').css({ color: $(this).val() });
+        $storiesHeader.find('h4').removeClass('dark').addClass('light')
         $('input[name="company[header_text_color]"]').minicolors('value', { color: '#ffffff' });
       } else {
-        $nav.find('i').css({ color: 'rgba(255, 255, 255, 0.9)' });
-        $nav.find('h3').addClass('dark').removeClass('light');
+        $storiesHeader.find('h4').addClass('dark').removeClass('light');
         $('input[name="company[header_text_color]"]').minicolors('value', { color: '#333333' });
+        // $storiesHeader.find('i').css({ color: 'rgba(255, 255, 255, 0.9)' });
       }
     })
 
@@ -67,19 +64,8 @@ function companyProfileListeners() {
 
     // Dynamically change the max-height of the select box
     //   (a static setting doesn't work for some reason)
-    .on('select2:open', '#edit-company-profile',
-      function () {
-        $(".select2-container--bootstrap .select2-results > .select2-results__options").css('max-height', 0);
-      })
-
-    .on('click', 'button[type="submit"][form="company-profile-form"]', function (e) {
-      var $form = $('#company-profile-form'), $button = $(this);
-      if ($form.data('submitted')) {
-        e.preventDefault();
-        return false;
-      }
-      $form.data('submitted', '1');
-      $button.find('span, .fa-spin').toggle();
-    });
+    .on('select2:open', '#edit-company-profile', function () {
+      $(".select2-container--bootstrap .select2-results > .select2-results__options").css('max-height', 0);
+    })
 
 }

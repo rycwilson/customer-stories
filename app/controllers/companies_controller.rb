@@ -46,31 +46,20 @@ class CompaniesController < ApplicationController
 
   end
 
-  # two response formats needed to handle the s3 upload
   def update
     if params[:tags]
       @company.update_tags(params[:category_tags] || [], params[:product_tags] || [])
-    elsif params[:ctas]
-
+      @flash = {}
     else
-      if @company.update(company_params)
-        @flash_mesg = "Company Profile updated"
-        @flash_status = "success"
-      else
-        @flash_mesg = @company.errors.full_messages.join(', ')
-        @flash_status = "danger"
-      end
+      @company.update(company_params) ?
+        @flash = {} :
+        @flash = { mesg: @company.errors.full_messages.join(', '), status: 'danger' }
     end
-    respond_to do |format|
-      format.html do
-        redirect_to(edit_company_path(@company), flash: { success: "Company Profile updated" })
-      end
-      format.js {}
-    end
+    respond_to { |format| format.js }
   end
 
   def promote
-    # puts "companies#promote()"
+    # puts "companies#promote"
     # pp params
     # capture deleted image data (associated ads) prior to destroying image
     if removed_adwords_images?(params[:company][:adwords_images_attributes])
@@ -166,15 +155,16 @@ class CompaniesController < ApplicationController
         id: 'company-profile-form',
         class: 'directUpload',
         data: {
-          'form-data' => (@s3_direct_post.fields),
-          'url' => @s3_direct_post.url,
-          'host' => URI.parse(@s3_direct_post.url).host
+          url: @s3_direct_post.url,
+          host: URI.parse(@s3_direct_post.url).host,
+          'form-data' => (@s3_direct_post.fields)
         }
       }
     }
     if params[:action] == 'edit'
-      options.merge({ url: company_path(company), method: 'put', remote: 'true', authenticity_token: true })
-    else
+      # why auth token? # https://github.com/rails/rails/issues/22807
+      options.merge({ url: company_path(company), method: 'PUT', remote: 'true', authenticity_token: true })
+    else  # new
       options.merge({ url: create_company_path })
     end
   end

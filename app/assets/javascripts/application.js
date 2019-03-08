@@ -88,7 +88,9 @@ function attachAppListeners () {
       var $form = ($(this).closest('form').length && $(this).closest('form')) ||
                   $('#' + $(this).attr('form')),
           $button = $(this);
-      if ($form.is('#customer-form') ||
+      if ($form.is('#company-profile-form') ||
+          $form.is('#company-tags-form') ||
+          $form.is('#customer-form') ||
           $form.is('#contribution-request-form') ||
           // $form.is('[id*="success-form-"]') ||
           $form.is('[id*="contribution-form-"]') ||
@@ -97,7 +99,6 @@ function attachAppListeners () {
           $form.is('#story-content-form') ||
           $form.is('#promote-settings-form') ||
           $form.is('#adwords-sync-form') ||
-          $form.is('#company-tags-form') ||
           $form.is('#new-cta-form') ||
           $form.is('[id*="cta-"]') ||
           $form.is('#submission-form')) {
@@ -112,7 +113,6 @@ function attachAppListeners () {
 
   //
   window.onpopstate = function (e) {
-    // console.log('popstate')
     var workflowMatch = window.location.pathname.match(
             /(prospect|curate|promote|measure)(\/(\w|-)+)?/
           ),
