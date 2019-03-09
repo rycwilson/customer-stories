@@ -83,6 +83,7 @@ function initNarrativeEditor () {
       },
       onImageUpload: function (files) {
         // this will trigger $.fileupload
+        // https://stackoverflow.com/questions/1696877
         $('#narrative__img-upload')[0].files = files;
       }
     }
