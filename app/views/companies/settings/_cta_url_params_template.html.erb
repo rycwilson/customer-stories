@@ -9,9 +9,13 @@
 
       <div class="cta-url-params__checkbox" style="{{= index === 0 ? 'height: 34px; margin: auto auto 0 auto; position: relative;' : '' }}">
         {{ if (isFirstParam) { }}
-          <div class="btn-group" style="position: absolute; top: -32px;">
-            <button type="button" class="dropdown-toggle" style="background: none; border: none; padding: 7px" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-              <span class="caret"></span>
+          <div class="btn-group">
+            <button type="button" class="dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+              <!-- <div> -->
+              <i class="fa fa-fw fa-caret-down"></i>
+              <!-- <span class="caret"></span> -->
+
+              <!-- </div> -->
             </button>
             <ul class="dropdown-menu">
               <li><a href="javascript:;">All</a></li>
