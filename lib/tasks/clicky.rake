@@ -43,6 +43,7 @@ namespace :clicky do
   end
 
   task update: :environment do
+    return if ENV['HOST_NAME'] == 'customerstories.org'
     # for added redundancy and because heroku scheduler is "best effort",
     # we're downloading an hour's worth of data every ten minutes
     visitors_list = get_data_since('visitors', '7200')  # range in seconds relative to now (last hour)
