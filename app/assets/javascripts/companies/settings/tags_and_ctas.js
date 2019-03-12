@@ -186,47 +186,12 @@ function storyCTAsListeners () {
         $('.cta-url-params__apply').prop('disabled', false);
       }
     })
-    .on('change', '.cta-url-params__labels--remove input[type="checkbox"]', function () {
-      $(this).prop('checked') ?
+    .on('click', '.cta-url-params__labels--remove button', function () {
+      $(this).toggleClass('active');
+      $(this).hasClass('active') ?
         $('.cta-url-params__checkbox input').prop('checked', true).trigger('change') :
         $('.cta-url-params__checkbox input').prop('checked', false).trigger('change');
-      // (({
-      //   'All': function () {
-      //     $('.cta-url-params__checkbox input').prop('checked', true);
-      //   },
-      //   'None': function () {
-      //     $('.cta-url-params__checkbox input').prop('checked', false);
-      //   },
-      //   'Remove': function () {
-      //     if ($('.cta-url-params__checkbox input:checked').length > 0) {
-      //       $('.cta-url-params__apply').prop('disabled', false);
-      //     }
-      //     $('.cta-url-params__checkbox input:checked').each(function () {
-      //       var $param = $(this).closest('.cta-url-params__param');
-
-      //       // if removing the first from among > 1 params, avoid removing the header (dropdown, labels);
-      //       // (but don't bother if all are being removed)
-      //       if ($param.is(':first-of-type') &&
-      //           $('.cta-url-params__param').length > 1 &&
-      //           $('.cta-url-params__checkbox input:checked').length !== $('.cta-url-params__param').length) {
-
-      //         // copy the second param's values into the first, then remove the second
-      //         $param.find('[type="checkbox"]').prop('checked', $param.next().find('[type="checkbox"]').prop('checked'));
-      //         // [1, 2] => the 1-index (key) and 2-index (value) inputs
-      //         [1, 2].forEach(function (index) {
-      //           $param.find('input').eq(index).val(
-      //             $param.next().find('input').eq(index).val()
-      //           )
-      //         });
-      //         $param.next().remove();
-      //       } else {
-      //         $param.remove();
-      //       }
-      //     })
-      //   },
-      // })[$(this).text()])();
     })
-
     .on('change', '.cta-url-params__checkbox input', function () {
       $('.cta-url-params__apply').prop('disabled', false);
       if ($(this).prop('checked')) {

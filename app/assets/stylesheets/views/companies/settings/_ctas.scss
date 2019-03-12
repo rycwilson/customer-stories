@@ -120,21 +120,23 @@
       }
       .cta-url-params__labels--remove {
         width: 40px;
-        label {
-          width: 100%;
+        button {
+          background: none;
+          border: none;
+          margin: 0 5px;
           display: flex;
           justify-content: center;
           align-items: center;
-          padding: 4px;
+          padding: 6px 4px;
+          outline: none;
+          border-radius: 4px;
           i {
             font-size: 16px;
           }
-          input[type="checkbox"] {
-            display: none;
+          &.active {
+            background-color: #ccc;
           }
-          &:hover, input:hover {
-            cursor: pointer;
-          }
+
         }
       }
       // .cta-url-params__labels--dropdown.btn-group {
