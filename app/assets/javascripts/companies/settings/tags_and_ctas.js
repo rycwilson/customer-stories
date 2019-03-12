@@ -63,21 +63,16 @@ function storyCTAsListeners () {
         return params;
       }
       renderCtaUrlParams = function ($urlInputs) {
+        var params = parseExistingParams($urlInputs)
         $('#cta-url-params > div').prepend(
           _.template($('#cta-url-params-template').html())({
-            isNew: false,
-            isFirstParam: $('.cta-url-params__param').length === 0,
-            params: parseExistingParams($urlInputs)
+            shouldRenderLabels: Object.keys(params).length,
+            params: params
           })
-        );
+        )
       };
 
   $(document)
-    .on('shown.bs.tab', 'a[href="#edit-ctas"]', function () {
-      var $urlInputs = $('[name*="cta"][name*="[link_url]"]');
-      if ($urlInputs.length) renderCtaUrlParams($urlInputs);
-    })
-
     /**
      *  help text
      */
@@ -176,6 +171,10 @@ function storyCTAsListeners () {
     /**
      *  URL Params
      */
+    .on('shown.bs.tab', 'a[href="#edit-ctas"]', function () {
+      var $urlInputs = $('[name*="cta"][name*="[link_url]"]');
+      if ($urlInputs.length) renderCtaUrlParams($urlInputs);
+    })
     .on('shown.bs.collapse hidden.bs.collapse', '#cta-url-params', function () {
       $('button[class*="__params"] >  i').toggle();
     })
@@ -187,49 +186,61 @@ function storyCTAsListeners () {
         $('.cta-url-params__apply').prop('disabled', false);
       }
     })
-    .on('click', '.cta-url-params__checkbox .dropdown-menu a', function () {
-      (({
-        'All': function () {
-          $('.cta-url-params__checkbox input').prop('checked', true);
-        },
-        'None': function () {
-          $('.cta-url-params__checkbox input').prop('checked', false);
-        },
-        'Remove': function () {
-          if ($('.cta-url-params__checkbox input:checked').length > 0) {
-            $('.cta-url-params__apply').prop('disabled', false);
-          }
-          $('.cta-url-params__checkbox input:checked').each(function () {
-            var $param = $(this).closest('.cta-url-params__param');
+    .on('change', '.cta-url-params__labels--remove input[type="checkbox"]', function () {
+      $(this).prop('checked') ?
+        $('.cta-url-params__checkbox input').prop('checked', true).trigger('change') :
+        $('.cta-url-params__checkbox input').prop('checked', false).trigger('change');
+      // (({
+      //   'All': function () {
+      //     $('.cta-url-params__checkbox input').prop('checked', true);
+      //   },
+      //   'None': function () {
+      //     $('.cta-url-params__checkbox input').prop('checked', false);
+      //   },
+      //   'Remove': function () {
+      //     if ($('.cta-url-params__checkbox input:checked').length > 0) {
+      //       $('.cta-url-params__apply').prop('disabled', false);
+      //     }
+      //     $('.cta-url-params__checkbox input:checked').each(function () {
+      //       var $param = $(this).closest('.cta-url-params__param');
 
-            // if removing the first from among > 1 params, avoid removing the header (dropdown, labels);
-            // (but don't bother if all are being removed)
-            if ($param.is(':first-of-type') &&
-                $('.cta-url-params__param').length > 1 &&
-                $('.cta-url-params__checkbox input:checked').length !== $('.cta-url-params__param').length) {
+      //       // if removing the first from among > 1 params, avoid removing the header (dropdown, labels);
+      //       // (but don't bother if all are being removed)
+      //       if ($param.is(':first-of-type') &&
+      //           $('.cta-url-params__param').length > 1 &&
+      //           $('.cta-url-params__checkbox input:checked').length !== $('.cta-url-params__param').length) {
 
-              // copy the second param's values into the first, then remove the second
-              $param.find('[type="checkbox"]').prop('checked', $param.next().find('[type="checkbox"]').prop('checked'));
-              // [1, 2] => the 1-index (key) and 2-index (value) inputs
-              [1, 2].forEach(function (index) {
-                $param.find('input').eq(index).val(
-                  $param.next().find('input').eq(index).val()
-                )
-              });
-              $param.next().remove();
-            } else {
-              $param.remove();
-            }
-          })
-        },
-      })[$(this).text()])();
+      //         // copy the second param's values into the first, then remove the second
+      //         $param.find('[type="checkbox"]').prop('checked', $param.next().find('[type="checkbox"]').prop('checked'));
+      //         // [1, 2] => the 1-index (key) and 2-index (value) inputs
+      //         [1, 2].forEach(function (index) {
+      //           $param.find('input').eq(index).val(
+      //             $param.next().find('input').eq(index).val()
+      //           )
+      //         });
+      //         $param.next().remove();
+      //       } else {
+      //         $param.remove();
+      //       }
+      //     })
+      //   },
+      // })[$(this).text()])();
+    })
+
+    .on('change', '.cta-url-params__checkbox input', function () {
+      $('.cta-url-params__apply').prop('disabled', false);
+      if ($(this).prop('checked')) {
+        $(this).closest('.cta-url-params__param').addClass('to-be-removed');
+      } else {
+        $(this).closest('.cta-url-params__param').removeClass('to-be-removed');
+        $('.cta-url-params__labels--remove input[type="checkbox"]').prop('checked', false);
+      }
     })
     .on('click', 'button.cta-url-params__new', function () {
       $.when(
         $(this).closest('div').before(
           _.template($('#cta-url-params-template').html())({
-            isNew: true,
-            isFirstParam: $('.cta-url-params__param').length === 0,
+            shouldRenderLabels: $('.cta-url-params__param').length === 0,
             params: { '': '' }
           })
         )
@@ -240,7 +251,6 @@ function storyCTAsListeners () {
     })
 
     .on('click', '[id*="cta-form-"] [type="submit"]', function (e) {
-      // console.log('well?')
       e.preventDefault();
       var $form = $(this).closest('form');
       $.ajax({
@@ -255,28 +265,39 @@ function storyCTAsListeners () {
       var $applyBtn = $(this),
           params = new URLSearchParams(),
           requests = [];
+          // nothingToDo = function (params) {
+          //   return params.length === 0 &&
+          //          $('.cta-url-params__param.to-be-removed').length === 0;
+          // };
 
-      // add the params to a URLSearchParams object
-      $('.cta-url-params__param').each(function () {
-        var key = $(this).find('[class*="__key"] input').val(),
+      // add the params to a URLSearchParams object; ignore to-be-removed
+      $('.cta-url-params__param:not(.to-be-removed)').each(function () {
+        var param = $(this),
+            key = $(this).find('[class*="__key"] input').val(),
             value = $(this).find('[class*="__value"] input').val();
-        if (key && value) params.append(key, value);
+        if (key && value && !param.hasClass('to-be-removed')) params.append(key, value);
       })
 
-      if (Array.from(params.entries()).length === 0) return false;
-      $applyBtn.find('span, .fa-spin').toggle();
+      // if (nothingTodo(Array.from(params.entries()) return false;
 
+      $applyBtn.find('span, .fa-spin').toggle();
       // update each CTA and prepare parallel ajax requests
       $('[name="cta[link_url]"]').each(function () {
         // skip if this is a web form CTA
         var $input = $(this),
             $form = $input.closest('form'),
             ctaId = Number( $form.attr('id').match(/\d+/)[0] );
-        $input.val( $input.val().replace(/($|\?.+$)/, '?' + params.toString()) );
+            console.log(Array.from(URLSearchParams))
+        $input.val(
+          $input.val().replace(
+            /($|\?.+$)/,
+            Array.from(params).length ? '?' + params.toString() : ''
+          )
+        );
         requests.push(
           $.ajax({
             url: '/ctas/' + ctaId,
-            method: 'POST',
+            method: 'PUT',
             data: $form.serialize(),
             dataType: 'json'
           })
@@ -289,8 +310,14 @@ function storyCTAsListeners () {
           // console.log(arguments); // logs all results, arguments is the results here
           return [].slice.call(arguments);
         })
-        .then(function(responses){
+        .then(function(responses) {
           // console.log(responses)
+          $.when( $('.cta-url-params__param.to-be-removed').remove() )
+            .done(function () {
+              if ($('.cta-url-params__param').length === 0) {
+                $('.cta-url-params__labels').remove();
+              }
+            })
           $applyBtn.find('.fa-spin, .fa-check').toggle();
           setTimeout(function () {
             $applyBtn.find('.fa-check, span').toggle();

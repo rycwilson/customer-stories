@@ -107,51 +107,96 @@
   #cta-url-params {
     width: 500px;
     > div {
-      padding: 15px 7.5px 10px 7.5px;
+      padding: 10px 7.5px 10px 7.5px;
       background-color: #efefef;
       margin-bottom: 15px;
     }
-    .cta-url-params__param {
+    .cta-url-params__labels {
       display: flex;
-      margin-bottom: 10px;
-      .cta-url-params__checkbox {
-        display: flex;
-        align-items: center;
-        .btn-group {
-          position: absolute;
-          top: -32px;
-        }
-        i.fa-chevron-down {
-          color: #555;
-        }
-        .btn-group .dropdown-toggle {
-          background: none;
-          border: none;
-          padding: 7px;
-          &:hover {
-            background-color: #ddd;
-            box-shadow: 0 2px 2px 0 rgba(0,0,0,.14), 0 3px 1px -2px rgba(0,0,0,.12), 0 1px 5px 0 rgba(0,0,0,.2);
-          }
-        }
-        .btn-group.open .dropdown-toggle {  // overrides bootstrap
-          background-color: #ddd;
-          box-shadow: 0 2px 2px 0 rgba(0,0,0,.14), 0 3px 1px -2px rgba(0,0,0,.12), 0 1px 5px 0 rgba(0,0,0,.2);
-          i.fa-chevron-down {
-            color: #222;
-          }
-        }
+      align-items: center;
+      height: 30px;
+      label {
+        margin-bottom: 0;
+      }
+      .cta-url-params__labels--remove {
+        width: 40px;
         label {
-          margin-bottom: 0;
-          padding: 0 10px;
+          width: 100%;
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          padding: 4px;
+          i {
+            font-size: 16px;
+          }
+          input[type="checkbox"] {
+            display: none;
+          }
           &:hover, input:hover {
             cursor: pointer;
           }
+        }
+      }
+      // .cta-url-params__labels--dropdown.btn-group {
+      //   width: 50px;
+      //   i.fa-chevron-down {
+      //     color: #555;
+      //   }
+      //   .dropdown-toggle {
+      //     background: none;
+      //     border: none;
+      //     width: 50px;
+      //     padding: 8px 2px;
+      //     &:hover {
+      //       background-color: #ddd;
+      //       box-shadow: 0 2px 2px 0 rgba(0,0,0,.14), 0 3px 1px -2px rgba(0,0,0,.12), 0 1px 5px 0 rgba(0,0,0,.2);
+      //     }
+      //   }
+      //   &.open .dropdown-toggle {  // overrides bootstrap
+      //     background-color: #ddd;
+      //     box-shadow: 0 2px 2px 0 rgba(0,0,0,.14), 0 3px 1px -2px rgba(0,0,0,.12), 0 1px 5px 0 rgba(0,0,0,.2);
+      //   }
+      // }
+      .cta-url-params__labels--key, .cta-url-params__labels--value {
+        margin: 0 7.5px;
+        &[class*="key"] {
+          width: 191px;
+        }
+        &[class*="value"] {
+          width: 224px;
+        }
+      }
+    }
+    .cta-url-params__param {
+      display: flex;
+      // margin-bottom: 5px;
+      padding: 5px 0;
+      margin-left: -7.5px;
+      padding-left: 7.5px;
+      margin-right: -7.5px;
+      padding-right: 7.5px;
+      .cta-url-params__checkbox {
+        display: flex;
+        justify-content: center;
+        width: 40px;
+        label {
+          margin: 0;
+          padding: 8px 10px;
+          &:hover, input:hover {
+            cursor: pointer;
+          }
+        }
+        input[type="checkbox"] {
+          margin: 0;
         }
       }
       .cta-url-params__key, .cta-url-params__value {
         // flex-basis: 0;
         flex-grow: 1;
         margin: 0 7.5px
+      }
+      &.to-be-removed {
+        background-color: #d9534f;
       }
     }
     button.cta-url-params__new {

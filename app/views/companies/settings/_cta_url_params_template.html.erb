@@ -1,43 +1,42 @@
 
 <script type="text/template" id="cta-url-params-template">
 
-  {{ Object.keys(params).forEach(function (key, index) { }}
+  {{ if (shouldRenderLabels) { }}
 
-    {{ if (index > 0) isFirstParam = false; }}
+    <div class="cta-url-params__labels">
+      <div class="cta-url-params__labels--key">
+        <label>Parameter</label>
+      </div>
+      <div class="cta-url-params__labels--value">
+        <label>Value</label>
+      </div>
+      <div class="cta-url-params__labels--remove">
+     <!--    <button type="button" class="dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+          <i class="fa fa-fw fa-caret-down"></i>
+        </button> -->
+        <label>
+          <i class="fa fa-fw fa-trash-o"></i>
+          <input type="checkbox">
+        </label>
+      <!--   <ul class="dropdown-menu">
+          <li><a href="javascript:;">All</a></li>
+          <li><a href="javascript:;">None</a></li>
+          <li><a href="javascript:;">Remove</a></li>
+        </ul> -->
+      </div>
+    </div>
+
+  {{ } }}
+
+  {{ Object.keys(params).forEach(function (key, index) { }}
 
     <div class="cta-url-params__param">
 
-      <div class="cta-url-params__checkbox" style="{{= index === 0 ? 'height: 34px; margin: auto auto 0 auto; position: relative;' : '' }}">
-        {{ if (isFirstParam) { }}
-          <div class="btn-group">
-            <button type="button" class="dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-              <!-- <div> -->
-              <i class="fa fa-fw fa-caret-down"></i>
-              <!-- <span class="caret"></span> -->
-
-              <!-- </div> -->
-            </button>
-            <ul class="dropdown-menu">
-              <li><a href="javascript:;">All</a></li>
-              <li><a href="javascript:;">None</a></li>
-              <li><a href="javascript:;">Remove</a></li>
-            </ul>
-          </div>
-        {{ } }}
-        <label><input type="checkbox"></label>
-      </div>
-
       <div class="cta-url-params__key">
-        {{ if (isFirstParam) { }}
-          <label>Parameter</label>
-        {{ } }}
         <input class="form-control" value="{{= key }}">
       </div>
 
       <div class="cta-url-params__value">
-        {{ if (isFirstParam) { }}
-          <label>Value</label>
-        {{ } }}
         <div class="input-group">
           <input type="text" class="form-control" value="{{= params[key] }}">
           <div class="input-group-btn">
@@ -51,6 +50,10 @@
           </div>
 
         </div>
+      </div>
+
+      <div class="cta-url-params__checkbox">
+        <label><input type="checkbox"></label>
       </div>
 
     </div>
