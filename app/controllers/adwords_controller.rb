@@ -6,62 +6,10 @@ class AdwordsController < ApplicationController
   before_action { @promote_enabled = @company.promote_tr? }
   after_action({ except: [:preview, :sync_company] }) { flash.discard if request.xhr? }
 
-  def create_story_ads
-    if @promote_enabled && @story.ads.all? { |ad| ad.delay.adwords_create }
-      flash[:notice] = 'Story published and Promoted Story created'
-    else
-      # TODO: attach errors to @story
-    end
-    respond_to { |format| format.js }
-  end
-
-  def update_story_ads
-    # use .present? to get boolean instead of string
-    @image_changed = params[:image_changed].present?
-    @status_changed = params[:status_changed].present?
-    @long_headline_changed = params[:long_headline_changed].present?
-
-    if @promote_enabled && @status_changed
-      if @story.ads.all?() { |ad| ad.delay.adwords_update }
-        flash[:notice] = "Promoted Story #{@story.ads.enabled? ? 'enabled' : 'paused'}"
-      else
-        # TODO: attach errors to @story
-      end
-
-    elsif @promote_enabled && (@image_changed || @long_headline_changed)
-      if @story.ads.all?() { |ad| ad.delay.adwords_remove }
-        if @story.ads.all?() { |ad| ad.delay.adwords_create }
-          # reload to get the new ad_id
-          if @story.ads.reload.all? { |ad| ad.delay.adwords_update }
-            flash[:notice] = 'Promoted Story updated'
-          else
-            # TODO: attach errors to @story
-          end
-        else
-          # TODO: attach errors to @story
-        end
-      else
-        # TODO: attach errors to @story
-      end
-    end
-    respond_to { |format| format.js }
-  end
-
-  def remove_story_ads
-    if @promote_enabled
-      @story.ads.each { |ad| ad.delay.adwords_remove }
-    end
-    respond_to { |format| format.json { head :no_content } }
-  end
 
   def update_company
-    # puts 'adwords#update_company'
-    company_params = JSON.parse(params.permit(:company)[:company])
-
-    # changes to default image
-    @swapped_default_image = company_params['swapped_default_image'].present?
-    @uploaded_default_image = company_params['uploaded_default_image'].present?
-
+    @company_params = company_params.to_h
+    pp @company_params
     ##
     ##  method updates any ads that were affected by a removed image;
     ##  csp changes apply to subscribers and non-subscribers alike;
@@ -70,55 +18,49 @@ class AdwordsController < ApplicationController
     # (this is for subscribers and non-subscribers alike => ad id and ad group id may be nil)
     # (affected ads have already been assigned default image)
     # if promote isn't enabled, still need to respond with affected stories for table update
-    if company_params['removed_images_ads'].present?
-      # keep track of story ids to update promoted stories table
-      # every two successive ads (topic and retarget) will be associated with the same story,
-      # so put in a Set to prevent duplicates
-      @removed_images_stories = Set.new
-      company_params['removed_images_ads'].each do |image|
-        image['ads_params'].each do |ad_params|
-          ad = AdwordsAd.includes(:story).find(ad_params['csp_ad_id'])
-          @removed_images_stories << { csp_image_id: ad.adwords_image.id, story_id: ad.story.id }
-          if @promote_enabled
-            puts "removing and re-creating ad #{ad.id} associated with destroyed image #{ad_params['csp_image_id']}..."
-            ad.delay.adwords_remove
-            ad.delay.adwords_create
-            ad.delay.adwords_update
-          end
-        end
-      end
+    if @company_params[:removed_images_ads].present?
+      # puts "removed_images_ads are present"
+      # # keep track of story ids to update promoted stories table
+      # # every two successive ads (topic and retarget) will be associated with the same story,
+      # # so put in a Set to prevent duplicates
+      # @removed_images_stories = Set.new
+      # @company_params[:removed_images_ads].each do |image|
+      #   image[:ads_params].each do |ad_params|
+      #     ad = AdwordsAd.includes(:story).find(ad_params[:csp_ad_id])
+      #     @removed_images_stories << { csp_image_id: ad.adwords_image.id, story_id: ad.story.id }
+      #     if @promote_enabled
+      #       puts "removing and re-creating ad #{ad.id} associated with destroyed image #{ad_params['csp_image_id']}..."
+      #       # ad.delay.remove_ad
+      #       # ad.delay.create_ad
+      #       # ad.delay.update_ad
+      #       ad.remove_ad
+      #       ad.create_ad
+      #       ad.update_ad
+      #     end
+      #   end
+      # end
     end
 
-    # upload any new images
-    if @promote_enabled && new_images?(company_params)
-      # puts "NEW IMAGES"
-      # pp get_new_images(company_params)
-      get_new_images(company_params).each do |image_params|  # { type: , url: }
-        @company.delay.upload_adwords_image_or_logo(image_params) or return # return if error
-      end
-    end
+
 
     # update company logo or short headline
-    if @promote_enabled &&
-       ( company_params.dig('previous_changes', 'adwords_short_headline') ||
-         company_params['adwords_logo_url'] )
-      @company.ads.each do |ad|
-        ad.delay.adwords_remove
-        ad.delay.adwords_create
-        ad.delay.adwords_update
-      end
-    end
+    # if @promote_enabled # &&
+      #  (@company_params.dig('previous_changes', 'adwords_short_headline') || @company_params['adwords_logo_url'])
+      # @company.ads.each do |ad|
+      #   # ad.delay.remove_ad
+      #   # ad.delay.create_ad
+      #   # ad.delay.update_ad
+      #   ad.remove_ad
+      #   ad.create_ad
+      #   ad.update_ad
+      # end
+    # end
 
     @flash_status = "success"
     @flash_mesg = "Promoted Stories updated"
-
     respond_to do |format|
-      format.html do
-        cookies[:workflow_stage] = 'promote'
-        cookies[:workflow_substage] = 'promote-settings'
-        redirect_to(company_main_path('promote'), flash: { success: @flash_mesg })
+      format.js do
       end
-      format.js {}
     end
   end
 
@@ -131,23 +73,22 @@ class AdwordsController < ApplicationController
     @long_headline = @story.ads.long_headline
     @image_url = @story.ads.adwords_image.try(:image_url) ||
                  @company.adwords_images.default.try(:image_url) ||
-                 ADWORDS_IMAGE_PLACEHOLDER_URL
+                 RESPONSIVE_AD_LANDSCAPE_IMAGE_PLACEHOLDER
     @logo_url = @company.adwords_logo_url || LOGO_PLACEHOLDER_URL
     set_ad_dimensions(@long_headline)
     render :ads_preview, layout: false
   end
 
-  def sync_company
-    if @company.ready_for_adwords_sync?()
-      @company.adwords_sync()
-      flash = { notice: "Successfully sync'ed with AdWords" }
-    else
-      flash = { alert: "Company not ready for sync'ing with AdWords" }
-    end
-    redirect_to('/promote', flash: flash)
-  end
-
   private
+
+  def company_params
+    params.require(:company).permit(
+      :adwords_short_headline, :adwords_logo_url, :default_ad_image_url,
+      # { adwords_images_attributes: [:id, :image_url, :default, :_destroy] },
+      :default_was_uploaded, :required_ad_images_are_missing, :removed_ad_image_id,
+      { new_ad_image: [:id, :image_url, :default] },
+    )
+  end
 
   def set_company (params)
     if ['update_company', 'data'].include?(params[:action])
@@ -164,30 +105,6 @@ class AdwordsController < ApplicationController
       @story = Story.includes(adwords_ads: { adwords_image: {} }).find_by_id(params[:id]) ||
                Story.includes(adwords_ads: { adwords_image: {} }).friendly.find(params[:story_slug])
     end
-  end
-
-  def new_images? (company_params)
-    company_params['adwords_logo_url'].present? ||
-    company_params['default_adwords_image_url'].present? ||
-    company_params['adwords_images_attributes'].try(:any?) do |index, attrs|
-      attrs.include?('image_url')
-    end
-  end
-
-  def get_new_images (company_params)
-    new_images = []
-    if company_params['adwords_logo_url'].present?
-      new_images << { type: 'logo', url: company_params['adwords_logo_url'] }
-    end
-    if company_params['default_adwords_image_url'].present?
-      new_images << { type: 'landscape', url: company_params['default_adwords_image_url'] }
-    end
-    if company_params['adwords_images_attributes'].present?
-      company_params['adwords_images_attributes']
-        .select { |index, attrs| attrs['image_url'].present? }
-        .each { |index, attrs| new_images << { type: 'landscape', url: attrs['image_url'] } }
-    end
-    new_images
   end
 
   # padding for the lower half is 25px 11px

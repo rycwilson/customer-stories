@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20190116022249) do
+ActiveRecord::Schema.define(version: 20190415230011) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -53,6 +53,8 @@ ActiveRecord::Schema.define(version: 20190116022249) do
     t.string   "long_headline"
     t.datetime "created_at",                                null: false
     t.datetime "updated_at",                                null: false
+    t.string   "main_color",          default: "#ffffff"
+    t.string   "accent_color",        default: "#ffffff"
     t.index ["adwords_ad_group_id"], name: "index_adwords_ads_on_adwords_ad_group_id", using: :btree
     t.index ["story_id"], name: "index_adwords_ads_on_story_id", using: :btree
   end
@@ -80,10 +82,13 @@ ActiveRecord::Schema.define(version: 20190116022249) do
   create_table "adwords_images", force: :cascade do |t|
     t.integer  "company_id"
     t.string   "image_url"
-    t.datetime "created_at",                      null: false
-    t.datetime "updated_at",                      null: false
-    t.boolean  "company_default", default: false
+    t.datetime "created_at",                 null: false
+    t.datetime "updated_at",                 null: false
+    t.boolean  "default",    default: false
     t.bigint   "media_id"
+    t.string   "type"
+    t.string   "google_url"
+    t.bigint   "asset_id"
     t.index ["company_id"], name: "index_adwords_images_on_company_id", using: :btree
   end
 

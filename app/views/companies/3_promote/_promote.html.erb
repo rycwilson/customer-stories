@@ -1,5 +1,5 @@
 
-<div id='promote'
+<div id="promote"
      class="<%= workflow_stage == 'promote' ? 'active tab-pane fade in' : 'tab-pane fade' %>"
      role='tabpanel'>
   <div class="container clip">
@@ -26,47 +26,44 @@
           </li>
         </ul>
 
-    <% if admin_signed_in? %>
+        <% if admin_signed_in? %>
 
-      <div class="text-center">
-        <%= form_tag adwords_sync_company_path(company.id), method: :put, id: 'adwords-sync-form' do %>
-
-          <% if company.ready_for_adwords_sync? %>
-            <button type="submit" class="btn btn-success text-center" style='width:152px'>
-              <span>Sync with AdWords</span>
-              <i class='fa fa-spin fa-circle-o-notch' style='display:none'></i>
+          <div id="gads-set-reset" class="text-center">
+            <button type="button" class="btn btn-success" data-action="/companies/<%= company.id %>/set_reset_gads">
+              <span>Set/Reset</span>
+              <i class="fa fa-spin fa-circle-o-notch" style="display:none"></i>
             </button>
-          <% else %>
-            <%= submit_tag 'Sync with AdWords', class: 'btn btn-success', disabled: true %>
-          <% end %>
+          </div>
+
+          <label>Checklist</label>
+          <ul id="gads-checklist">
+            <li>company.promote_tr = true</li>
+            <li>default headline</li>
+            <li>default images w/ valid asset_id</li>
+          </ul>
+
+          <div id="gads-results__wrapper">
+            <label>Results</label>
+            <ul id="gads-results">
+            </ul>
+          </div>
 
         <% end %>
-      </div> <br>
-      <label for='adwords-sync-checklist'>
-        Checklist
-      </label>
-      <ul id='adwords-sync-checklist'>
-        <li>company.promote_tr = true</li>
-        <li>headline, logo, and default image in place</li>
-        <li>AdWords campaigns given proper labels</li>
-        <li>Adwords ads given story.id label (ok to skip if long headline matches story title)</li>
-      </ul>
-
-    <% end %>
 
       </div>
 
       <div class="col-md-9 col-sm-8 layout-main">
 
-        <div class="tab-content stacked-content">
+        <div class="tab-content stacked-content" style="padding-top: 8px">
 
-          <div id='promoted-stories' class="tab-pane fade <%= tab == '#promoted-stories' ? 'active in' : '' %>">
+          <div id="promoted-stories" class="tab-pane fade <%= tab == '#promoted-stories' ? 'active in' : '' %>">
             <%= render 'companies/3_promote/promoted_stories_table', { company: company } %>
           </div>
 
-          <div id='promote-settings' class="tab-pane fade <%= tab == '#promote-settings' ? 'active in' : '' %>">
-            <%= render 'companies/3_promote/promote_settings', { company: company } %>
+          <div id="promote-settings" class="tab-pane fade <%= tab == '#promote-settings' ? 'active in' : '' %>">
+            <%= render 'companies/3_promote/gads_form', { company: company } %>
           </div>
+
         </div>
 
       </div>

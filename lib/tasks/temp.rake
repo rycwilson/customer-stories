@@ -2,6 +2,38 @@ namespace :temp do
 
   desc "temp stuff"
 
+  task create_local_campaigns: :environment do
+    Company.all.each do |company|
+      if company.topic_campaign.blank?
+        company.create_topic_campaign(name: "#{company.subdomain} display topic")
+        company.topic_campaign.create_adwords_ad_group(name: 'ad group display topic')
+      end
+      if company.retarget_campaign.blank?
+        company.create_retarget_campaign(name: "#{company.subdomain} display retarget")
+        company.retarget_campaign.create_adwords_ad_group(name: 'ad group display retarget')
+      end
+    end
+  end
+
+  task update_images: :environment do
+    AdwordsImage.all.each do |image|
+      image.type = 'LandscapeImage'
+      GoogleAds::upload_image_asset(image)
+      image.save
+    end
+    Company.where.not(adwords_logo_url: [nil, ''])
+           .each do |company|
+              # don't include media_id as it's going to upload to adwords on create
+              logo = SquareLogo.new(
+                image_url: company.adwords_logo_url,
+                default: true,
+                company_id: company.id
+              )
+              GoogleAds::upload_image_asset(logo)
+              logo.save
+            end
+  end
+
   task convert_win_story_html: :environment do
     Success.where.not(win_story_html: [nil, '']).each do |success|
       html = success.win_story_html

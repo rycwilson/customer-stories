@@ -3,7 +3,7 @@ class CompaniesController < ApplicationController
   before_action :authenticate_user!, only: [:show]
   # application#check_subdomain takes care of this...
   # before_action :user_authorized?, only: [:edit, :show]
-  before_action :set_company, except: [:new, :create, :get_curators, :get_invitation_templates]
+  before_action :set_company, except: [:new, :create, :promote, :get_curators, :get_invitation_templates]
   before_action only: [:show, :edit] { set_gon(@company) }
   before_action :set_s3_direct_post, only: [:new, :edit, :show, :create]
 
@@ -58,40 +58,97 @@ class CompaniesController < ApplicationController
     respond_to { |format| format.js }
   end
 
-  def promote
-    # puts "companies#promote"
-    # pp params
+  def update_gads
+    company = Company.find(params[:id])
+
     # capture deleted image data (associated ads) prior to destroying image
-    if removed_adwords_images?(params[:company][:adwords_images_attributes])
-      params[:company][:removed_images_ads] =
-        removed_images_ads(@company, params[:company][:adwords_images_attributes])
-    end
-    # make this check before updating anything
-    # this will check for either uploaded or swapped default image
-    default_image_changed = default_adwords_image_changed?(company_params, @company.adwords_images.default.try(:id))
-    if @company.update(company_params)
-      # if a new default image was uploaded (param won't be present if it wasn't)
-      # TODO: what about a new logo?
-      if default_image_changed && company_params[:default_adwords_image_url].present?
-        @company.update_uploaded_default_adwords_image(company_params[:default_adwords_image_url])
-        params[:company][:uploaded_default_image] = true
-      elsif default_image_changed  # swapping images
-        params[:company][:swapped_default_image] = true
-      end
+    # if ad_images_removed?(company_params.to_h)
+    #   params[:company][:removed_images_ads] =
+    #     removed_images_ads(company, params[:company][:adwords_images_attributes])
+    # end
+
+    @company_params = company_params.to_h
+    pp company_params.to_h
+
+    if company.update(company_params)
+      # if company.promote_tr? && ads must be modified (e.g. short headline changed, images removed)
+      # end
     else
-      @flash_mesg = @company.errors.full_messages.join(', ')
-      @flash_status = "danger"
+      @errors = company.errors.full_messages
     end
     respond_to do |format|
-      # image uploads are always synchronous
-      format.html do
-        # forward params so new image urls can be uploaded to adwords api
-        redirect_to(adwords_company_path(@company, company: company_params.to_h.to_json))
+      format.js do
+        # TODO: this will have to be separate for images and logos lists
+        # @company_params[:defaultImagesAreMissing] =
+        @company_params[:prevDefaultImage] = previous_default_ad_image(@company_params[:adwords_images_attributes])
+        @company_params[:swappedDefaultImage] = swapped_default_ad_image(@company_params[:adwords_images_attributes])
+
+        # this needs to be here regardless of promote being enabled
+        @company_params[:newImage] = new_ad_image(@company_params[:adwords_images_attributes])
+        @company_params[:removedImageId] = removed_ad_image_id(@company_params[:adwords_images_attributes])
+        @company_params.delete(:adwords_images_attributes)
+        @company_params.delete_if { |k, v| v.blank? }
       end
-      # js response will PUT the adwords update
-      format.js {
-        @company_params = params[:company].except(:adwords_images_attributes)
-      }
+    end
+  end
+
+  def set_reset_gads
+    company = Company.find(params[:id])
+    if company.ready_for_gads?
+
+      # force to get campaigns by label => because staging won't match production!
+      campaigns = GoogleAds::get_campaigns([ nil, nil ], company.subdomain)
+
+      new_campaigns = nil
+      # create campaigns if they don't exist on google
+      # if campaigns.blank? || campaigns.length < 2
+      #   new_campaigns = GoogleAds::create_campaigns(company.subdomain)
+      #   new_ad_groups = GoogleAds::create_ad_groups(new_campaigns[:topic][:id], new_campaigns[:retarget][:id])
+      # end
+      topic_campaign_id = (new_campaigns && new_campaigns[:topic][:id]) ||  # just created it
+          campaigns.select { |c| c[:name].match('display topic') }.try(:first).try(:[], :id)
+      if company.topic_campaign.campaign_id != topic_campaign_id
+        company.topic_campaign.update(campaign_id: topic_campaign_id)
+      end
+
+      retarget_campaign_id = (new_campaigns && new_campaigns[:retarget][:id]) ||  # just created it
+          campaigns.select { |c| c[:name].match('display retarget') }.try(:first).try(:[], :id)
+      if company.retarget_campaign.campaign_id != retarget_campaign_id
+        company.retarget_campaign.update(campaign_id: retarget_campaign_id)
+      end
+
+      ad_groups = GoogleAds::get_ad_groups([ topic_campaign_id, retarget_campaign_id ])
+      topic_ad_group_id = ad_groups.select { |g| g[:campaign_id] == topic_campaign_id }.try(:first).try(:[], :id)
+      if company.topic_ad_group.ad_group_id != topic_ad_group_id
+        company.topic_ad_group.update(ad_group_id: topic_ad_group_id)
+      end
+      retarget_ad_group_id = ad_groups.select { |g| g[:campaign_id] == retarget_campaign_id }.try(:first).try(:[], :id)
+      if company.retarget_ad_group.ad_group_id != retarget_ad_group_id
+        company.retarget_ad_group.update(ad_group_id: retarget_ad_group_id)
+      end
+
+      gads_data_is_missing = topic_campaign_id.nil? || retarget_campaign_id.nil? || topic_ad_group_id.nil? || retarget_ad_group_id.nil?
+      unless gads_data_is_missing
+        company.topic_campaign.update(campaign_id: topic_campaign_id)
+        company.topic_ad_group.update(ad_group_id: topic_ad_group_id)
+        company.retarget_campaign.update(campaign_id: retarget_campaign_id)
+        company.retarget_ad_group.update(ad_group_id: retarget_ad_group_id)
+        company.ads.with_google_id.update_all(ad_id: nil)
+
+        # story ads will be added one-by-one from the client
+        company.remove_all_gads(topic_ad_group_id, retarget_ad_group_id)
+      end
+    end
+    respond_to do |format|
+      format.json do
+        render({
+          json: {
+            gadsDataIsMissing: gads_data_is_missing,
+            requirementsChecklist: company.gads_requirements_checklist,
+            publishedStoryIds: company.stories.published.pluck(:id)
+          }
+        })
+      end
     end
   end
 
@@ -125,10 +182,12 @@ class CompaniesController < ApplicationController
   private
 
   def company_params
-    params.require(:company)
-      .permit(:name, :subdomain, :logo_url, :website, :gtm_id, :header_color_1, :header_color_2, :header_text_color,
-              :adwords_short_headline, :adwords_logo_url, :default_adwords_image_url,
-              { adwords_images_attributes: [:id, :image_url, :company_default, :_destroy] } )
+    params.require(:company).permit(
+      :name, :subdomain, :logo_url, :website, :gtm_id,
+      :header_color_1, :header_color_2, :header_text_color,
+      :adwords_short_headline,
+      { adwords_images_attributes: [:id, :type, :image_url, :default, :is_default_card, :_destroy] }
+    )
   end
 
   def plugin_params
@@ -163,15 +222,17 @@ class CompaniesController < ApplicationController
     }
     if params[:action] == 'edit'
       # why auth token? # https://github.com/rails/rails/issues/22807
-      options.merge({ url: company_path(company), method: 'PUT', remote: 'true', authenticity_token: true })
+      options.merge({ url: company_path(company), method: 'put', remote: 'true', authenticity_token: true })
     else  # new
       options.merge({ url: create_company_path })
     end
   end
 
-  def removed_adwords_images? (images_attributes)
-    return false if images_attributes.nil?
-    images_attributes.any? { |index, attrs| attrs[:_destroy] == 'true' }
+  def ad_images_removed?(company_params)
+    return false if company_params[:adwords_images_attributes].blank?
+    company_params[:adwords_images_attributes].any? do |index, attrs|
+      attrs[:_destroy] == 'true'
+    end
   end
 
   # returns a hash containing ad/ad_group/campaign data associated with removed images
@@ -197,10 +258,61 @@ class CompaniesController < ApplicationController
       .delete_if { |image_ads| image_ads[:ads_params].empty? }  # no affected ads
   end
 
-  def default_adwords_image_changed? (company_params, default_image_id)
-      company_params[:default_adwords_image_url].present? ||  # uploaded
-    (company_params[:adwords_images_attributes]
-      .try(:select) { |index, image| image[:company_default] == 'true' }[:id] != default_image_id)
+  def new_ad_image(images_attrs)
+    new_image = images_attrs.try(:select) { |index, image| image[:id].blank? }
+    new_image = new_image.try(:[], new_image.try(:keys).try(:first))
+    if new_image.present?
+      AdwordsImage.where(image_url: new_image[:image_url])
+                  .take.try(:slice, :id, :type, :image_url, :default)
+    else
+      nil
+    end
+  end
+
+  def previous_default_ad_image(images_attrs)
+    new_image_is_present = images_attrs.try(:select) { |index, image| image[:id].blank? }.present?
+
+    # 1 - new image uploaded over existing default => last key
+    # 2 - new image added to list and 'make default' selected => first key
+    if images_attrs.try(:length) == 2 && new_image_is_present
+      images_attrs[images_attrs.keys.first][:default] == 'true' ?
+        images_attrs[images_attrs.keys.last] :
+        images_attrs[images_attrs.keys.first]
+
+    # 3 - existing image swapped in as new default => first key
+    elsif images_attrs.try(:length) == 2 && !new_image_is_present
+      images_attrs[images_attrs.keys.first]
+    else
+      nil
+    end
+  end
+
+  # the swapped-in image (not swapped-out; that's the previous_default)
+  def swapped_default_ad_image(images_attrs)
+    # no default present, assign one
+    if images_attrs.try(:length) == 1 &&
+       !removed_ad_image_id(images_attrs) &&
+       images_attrs[images_attrs.keys.first][:id].present?
+       images_attrs[images_attrs.keys.first][:default] == 'true'
+      images_attrs[images_attrs.keys.first]
+    # default is present, assign a new one (could be new or existing)
+    # if it's new, get the id
+    elsif images_attrs.try(:length) == 2 &&
+          images_attrs[images_attrs.keys.last][:default] == 'true'
+      images_attrs[images_attrs.keys.last][:id].present? ?
+        images_attrs[images_attrs.keys.last] :
+        new_ad_image(images_attrs)
+    else
+      nil
+    end
+  end
+
+
+  def removed_ad_image_id(images_attrs)
+    images_attrs.try(:length) == 1 &&
+    images_attrs[images_attrs.keys.first][:_destroy] == 'true' ?
+      images_attrs[images_attrs.keys.first][:id] :
+      nil
   end
 
 end

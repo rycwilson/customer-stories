@@ -1,7 +1,38 @@
 
 @import 'image_select_modal';
+@import 'promoted_stories_table';
+@import 'gads_form';
 
 #promote {
+
+  #gads-set-reset {
+    margin: 20px 0;
+    button {
+      width: 150px;
+    }
+  }
+
+
+  #gads-checklist, #gads-results {
+    padding-left: 20px;
+    font-size: 12px;
+    margin-bottom: 15px;
+    li {
+      margin-bottom: 5px;
+    }
+    li.checked, li.success {
+      color: #3c763d;
+    }
+    li.unchecked, li.errors {
+       color: #a94442;
+    }
+    p {
+      margin-bottom: 0;
+    }
+  }
+  #gads-results__wrapper {
+    display: none;
+  }
 
   .enable-promote-type {
     margin-top: 1px;  // line up with Promoted Stories text-align: left;
@@ -16,102 +47,6 @@
 
   #promoted-stories {
     margin-top: -6px;
-
-    td.promoted-story-title {
-      cursor: pointer;
-      textarea {
-        width: 100%;
-        margin-bottom: 4px;
-      }
-      .DTE_Form_Buttons {
-        .help-block {
-          display: inline-block;
-          margin-top: 0;
-          text-decoration: none;
-        }
-        .btn {
-          float: right;
-        }
-        .btn:first-of-type {
-          margin-left: 8px;  // matches td padding
-        }
-      }
-      .DTE_Form_Buttons > :nth-child(2) {
-        width: 48px;
-      }
-    }
-    td.promoted-story-title:hover {
-      text-decoration: underline;
-    }
-
-    td.promoted-story-image {
-      text-align: center;
-      vertical-align: middle;
-      padding: 8px 14px;
-      .fileinput {
-        margin: 0;
-        .thumbnail {
-          height: 80px;
-          width: 153px;
-          cursor: pointer;
-          margin: 0;
-          // backup image
-          // ref: http://stackoverflow.com/questions/980855
-          img:before {
-            content: ' ';
-            display: block;
-            position: absolute;
-            height: 70px;
-            width: 143px;
-            background-image: url('<%= ADWORDS_IMAGE_PLACEHOLDER_URL %>');
-            background-size: contain;
-          }
-        }
-      }
-    }
-
-    td.status.dropdown {
-      a.dropdown-toggle {
-        i.fa-play, i.fa-pause {
-          font-size: 16px;
-        }
-      }
-      a.dropdown-toggle.enabled {
-        color: #4d8664;
-      }
-      a.dropdown-toggle.enabled:hover {
-        color: #456f59;
-        text-decoration: none;
-      }
-      a.dropdown-toggle:focus {
-        color: #222;
-        text-decoration: none
-      }
-      a.dropdown-toggle.paused {
-        color: #666;
-      }
-      a.dropdown-toggle.paused:hover {
-        color: #222;
-        text-decoration: none;
-      }
-    }
-    td.status.dropdown.open {
-      a.dropdown-toggle.enabled {
-        color: #456f59;
-      }
-      a.dropdown-toggle.paused {
-        color: #222;
-      }
-      .dropdown-menu {
-        i.fa-play {
-          color: #4d8664;
-        }
-        i.fa-pause {
-          color: #666;
-        }
-      }
-    }
-
   }
 
   #promote-settings {
@@ -120,156 +55,6 @@
       padding-right: 25px;
     }
 
-    // headline
-    .form-inline {
-      .form-group:first-of-type {
-        margin-top: 6px;
-      }
-      .help-block {
-        margin-bottom: 0;
-        ul { margin-bottom: 0; }
-      }
-    }
-
-    .form-group {
-      margin-bottom: 30px;  // bootstrap default, also covers div.form-inline (normally 0)
-    }
-
-    label[for="company_adwords_short_headline"] {
-      margin-right: 10px;
-    }
-
-    label.adwords-logo, label.adwords-image {
-      margin-bottom: 10px;
-    }
-
-    .fileinput, .fileinput-preview {
-      margin: 0;
-    }
-
-    .fileinput.adwords-logo, .fileinput.adwords-image {
-      position: relative;
-      padding-top: 14px;
-      padding-bottom: 0;
-      div.image-requirements {
-        margin-bottom: 10px;
-      }
-      .change-image {
-        position: absolute;
-        top: 5px;
-        right: 10px;
-        padding: 6px;
-        font-size: 18px;
-        color: #666;
-        cursor: pointer;
-      }
-      .change-image:hover {
-        color: #222;
-      }
-      .thumbnail {
-        margin: 0;
-      }
-      .help-block {
-        margin: 6px 0;
-      }
-    }
-
-    .fileinput.adwords-logo {
-      width: 180px;
-      .thumbnail {
-        height: 110px;
-        width: 110px;
-      }
-    }
-
-    .fileinput.adwords-image {
-      width: 278px;
-      .thumbnail {
-        height: 110px;
-        width: 210px;
-      }
-    }
-
-    .new-adwords-image-icon {
-      margin-right: 6px;
-      color: #6685a4;
-    }
-    .new-adwords-image-icon:hover:not(.disabled) {
-      color: #516c87;
-      cursor: pointer;
-    }
-
-    li.adwords-image {
-      position: relative;
-      vertical-align: top;
-      width: 250px;
-      margin: 0 15px 20px 15px;
-      padding-top: 42px;
-      padding-bottom: 0;
-
-      label.checkbox-inline {
-        position: absolute;
-        left: 19px;
-        top: 14px;
-        margin: 0;
-      }
-      .fileinput {
-        margin-bottom: 5px;
-      }
-      .fileinput .thumbnail {
-        height: 110px;
-        width: 210px;
-      }
-
-      .to-be-removed {
-        border-color: #cc2d2d;
-      }
-
-      .remove-image {
-        position: absolute;
-        top: 6px;
-        right: 12px;
-        padding: 6px;
-        font-size: 18px;
-        color: #666;
-        cursor: pointer;
-      }
-      .remove-image:hover {
-        color: #222;
-      }
-      .cancel-remove-image, .cancel-add-image {
-        cursor: pointer;
-      }
-      .adwords-image-form-control-bottom {
-        height: 18px;
-        margin-bottom: 6px;
-      }
-    }
-
-    li.adwords-image.to-be-removed {
-      background-color: #f2dede;
-      border-color: #ebccd1;
-      .adwords-image-form-control-top {
-        opacity: 0.5;
-        pointer-events: none;
-      }
-      .adwords-image-form-control-bottom {
-        color: #a94442
-      }
-    }
-
-    li.adwords-image.to-be-added {
-      background-color: #dff0d8;
-      border-color: #d6e9c6;
-      .adwords-image-form-control-top {
-        .remove-image {
-          display: none;
-        }
-      }
-      .adwords-image-form-control-bottom {
-        color: #3c763d;
-      }
-    }
 
 
   }

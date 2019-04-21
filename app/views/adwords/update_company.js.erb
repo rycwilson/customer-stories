@@ -1,80 +1,118 @@
 
 (function () {
 
+  console.log('company params', <%= raw @company_params[:previous_default_ad_image].to_json %>)
+
   var flashMesg = "<%= @flash_mesg %>",
       flashStatus = "<%= @flash_status %>",
-      $form = $('#promote-settings-form'),
+      $form = $('#gads-form'),
+      $submitBtn = $form.find('button[type="submit"][data-submitted="true"]'),
+      $formGroup = $submitBtn.closest('.form-group'),
       $table = $('#promoted-stories-table'),
       $modal = $('#ad-image-select-modal'),
-      $removedImages = $('li.adwords-image.to-be-removed'),
-      removedImagesStories = <%= raw @removed_images_stories.to_json %> || [],
-      swappedDefaultImage = <%= @swapped_default_image %>,
-      uploadedDefaultImage = <%= @uploaded_default_image %>,
-      defaultImageUrl = "<%= @company.adwords_images.default.image_url %>";
+      requiredImagesAreMissing = <%= @company_params[:required_ad_images_are_missing] %> || false,
+      prevDefaultImage = <%= raw @company_params[:previous_default_ad_image].to_json %> || null,
+      swappedDefaultImage = <%= raw @company_params[:swapped_default_ad_image].to_json %> || null,
+      newImage = <%= raw @new_ad_image.to_json %> || null,
+      // $removedImages = $('li.adwords-image.to-be-removed'),
+      removedImageId = <%= @removed_ad_image_id %> || null,
+      // removedImagesStories = <%= raw @removed_images_stories.to_json %> || [],
+      isCompanyInput = function (index, input) {
+        return input.name.match(/company\[\w+\]/);
+      },
+      reEnableAllInputs = function () {
+        $form.find('input').filter(isCompanyInput).each(function () {
+          $(this).prop('disabled', false);
+        });
+      },
+      resetCompanyDefaultInputs = function () {
+        $('li.adwords-image input:checkbox[name*="default"]').prop('checked', false)
+      };
 
+  // console.log('$submitBtn', $submitBtn)
+  // console.log('$formGroup', $formGroup)
+  console.log('prevDefaultImage', prevDefaultImage)
+  console.log('swappedDefaultImage', swappedDefaultImage)
+  console.log('newImage', newImage)
+  console.log('removedImageId', removedImageId)
+
+  // cleanup
+  reEnableAllInputs();
+  resetCompanyDefaultInputs();
+
+  //
+  if (requiredImagesAreMissing) {
+    $form.addClass('required-missing')
+    // TODO disable add'l images button
+  } else {
+    $form.removeClass('required-missing');
+    // TODO enable add'l images button
+  }
+
+  // $.fileupload created a hidden input field for the uploaded image url; copy its src and remove it
+  // BUT! keep it for the default image; we'll need it if a new default is uploaded
+  if ($formGroup.is('.fileinput:not(.adwords-default.adwords-image)')) {
+    var $imgUrlInput = $formGroup.children('input:hidden[name*="image_url"]');
+    // console.log('$imgUrlInput', $imgUrlInput, $imgUrlInput.val());
+    $formGroup.find('.fileinput-preview img').attr('src', $imgUrlInput.val());
+    $imgUrlInput.remove();
+  }
+
+  // going from the placeholder to a new image
+  // if (initialDefaultImage) {
+    // Update any promoted stories that are using a placeholder image,
+    // but don't bother updating existing ads unless an image has been removed
+    // old approach: (see company.update_default_adwords_image)
+  // }
+
+  if (newImage) {
+    $('.form-group').has('img[src="' + newImage.image_url + '"]')
+                    .find('input:hidden[name*="[id]"]')
+                    .val(newImage.id)
+    // add to the image select modal
+
+    if (prevDefaultImage) {
+      // move the previous default to the list and remove hidden inputs
+      // (look for input[name="company[replaced_default_ad_image]"])
+    }
+  }
+
+  // assigned an existing image as default
   if (swappedDefaultImage) {
-    var $newDefaultImage = $('li.adwords-image img[src="' + defaultImageUrl + '"]'),
-        newDefaultImageId = $newDefaultImage.closest('li').next().val(),
-        $currentDefaultImage = $('.adwords-default.adwords-image .fileinput-exists img'),
-        currentDefaultImageUrl = $currentDefaultImage.attr('src');
-
-    // uncheck 'make default for all
-    $('li.adwords-image input[name*="company_default"]').each(
-      function () { $(this).prop('checked', false) })
-
-    // swap the current default image with the new default image
-    $newDefaultImage.attr('src', currentDefaultImageUrl);
-    // update hidden input that contains the AdwordsImage id
-    $newDefaultImage.closest('li').next().val($currentDefaultImage.data('id'))
-
-    $currentDefaultImage.attr({
-      src: defaultImageUrl,
-      // "data-id": newDefaultImageId  // doesn't work!
-    });
-    // do this instead
-    $currentDefaultImage.data('id', newDefaultImageId)
-
-    // update the hidden default image in the list
-    $('ul.adwords-images li[class*="hidden"]').next().val(newDefaultImageId)
-    $('ul.adwords-images li[class*="hidden"]')
-      .find('input[name*="company_default"]')
-      .prop('checked', true)
+    var $defaultImageCard = $('.adwords-default.adwords-image'),
+        $swappedImageCard = $('li.adwords-image')
+                              .has('input:hidden[name*="[id]"][value="' + swappedDefaultImage.id + '"]'),
+        $lastCardInList = $('li.adwords-image').get($('li.adwords-image').length - 1);
+    console.log('swappedImageCard', $swappedImageCard[0])
+    $swappedImageCard
+      .hide()
+      .find('input:hidden[name*="[id]"]').val(prevDefaultImage.id).end()
+      .find('img').attr('src', prevDefaultImage.image_url).end()
+      .insertAfter($lastCardInList)
+      .show();
+    $defaultImageCard
+      .find('input:hidden[name*="[id]"]').val(swappedDefaultImage.id).end()
+      .find('img').attr('src', swappedDefaultImage.image_url);
   }
 
-  if (uploadedDefaultImage) {
-    // update the table
-    // any missing images can be replaced with the new default,
-    // as these ads will have had the new default image assigned to them
-    // (see company.update_default_adwords_image)
-    $table.find('img').each(function () {
-      if ( $(this).attr('src') === '' ) {
-        $(this).attr('src', defaultImageUrl)
-      }
-      // old: looking for the old default and replacing it with new
-      // if ( $(this).attr('src')
-      //         .match(new RegExp(currentDefaultImageUrl + '(\\?\\d*)?$')) ) {
-      //   $(this).attr('src', newDefaultImageUrl);
-      // }
-    })
-  }
 
-  if ($removedImages.length) {
-    // remove deleted images
-    $removedImages.each(function (index, li) {
-      // remove images from the image select modal
-      $modal.find('li[data-image-id="' + $(this).next().val() + '"]')
-            .each( function (index, li) { $(this).remove(); })
-      $(this).next().remove();  // hidden input containing adword image id
-      $(this).remove();
-    })
-    // update the table for stories affected by deleted images
-    removedImagesStories.forEach(function (imageStory) {
-      $table.find('tr[data-story-id="' + imageStory['story_id'] + '"]')
-            .each(function (index, tr) {
-              $(this).find('img').attr('src', defaultImageUrl)
-            } )
-    })
-  }
+  // if ($removedImages.length) {
+  //   // remove deleted images
+  //   $removedImages.each(function (index, li) {
+  //     // remove images from the image select modal
+  //     $modal.find('li[data-image-id="' + $(this).next().val() + '"]')
+  //           .each( function (index, li) { $(this).remove(); })
+  //     $(this).next().remove();  // hidden input containing adword image id
+  //     $(this).remove();
+  //   })
+  //   // update the table for stories affected by deleted images
+  //   removedImagesStories.forEach(function (imageStory) {
+  //     $table.find('tr[data-story-id="' + imageStory['story_id'] + '"]')
+  //           .each(function (index, tr) {
+  //             $(this).find('img').attr('src', defaultImageUrl)
+  //           } )
+  //   })
+  // }
 
   // refresh table images - any that have been deleted will have a
   // default background image that points to ADWORDS_IMAGE_PLACEHOLDER_URL
@@ -86,7 +124,20 @@
   //     thisUrl.slice(0, thisUrl.lastIndexOf('?') == -1 ? thisUrl.length : thisUrl.lastIndexOf('?')) + '?' + d.getTime())
   // })
 
-  $form.find('button[type="submit"]').find('span, .fa-spin').toggle();
-  flashDisplay(flashMesg, flashStatus, function () { $form.data('submitted', ''); });
+  if (removedImageId) {
+    $modal.find('li[data-image-id="' + removedImageId + '"]').remove();
+  //           .each( function (index, li) { $(this).remove(); })
+    // update any stories affected by removed image
+  } else {
+    toggleFormDone($form, true, function () {
+      if ($formGroup.is('.short-headline')) {
+        $submitBtn.hide();
+      } else {
+        $formGroup.removeClass('to-be-added to-be-default')
+      }
+    }, $submitBtn);
+  }
+
+  // flashDisplay(flashMesg, flashStatus);
 
 }());

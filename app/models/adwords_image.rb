@@ -1,12 +1,24 @@
 class AdwordsImage < ApplicationRecord
 
+  attr_accessor :is_default_card  # for distinguishing default (static) image cards from dynamic
+
   belongs_to :company
   has_many :adwords_ads_images, dependent: :destroy
   has_many :adwords_ads, through: :adwords_ads_images
   alias_attribute :ads, :adwords_ads
   has_many :stories, through: :adwords_ads
 
+  validates_presence_of :company  # https://launchacademy.com/blog/validating-associations-in-rails
+  # validates_presence_of :type, # SquareLogo, LandscapeLogo, SquareImage, LandscapeImage
+  # validates_presence_of :image_url  # check for specific format (csp or maybe google)
+  validates_presence_of :asset_id
+
+  # upload to gads regardless of company.promote_tr
+  before_validation :upload_to_gads, on: :create
+
   before_destroy(:s3_delete) if ENV['HOST_NAME'] == 'customerstories.net'
+
+  before_destroy :replace_image_in_ads, if: :promote_enabled?
 
   # don't delete these default adwords images; may be used to seed adwords
   NO_DELETE = [
@@ -15,7 +27,25 @@ class AdwordsImage < ApplicationRecord
     "https://csp-production-assets.s3-us-west-1.amazonaws.com/uploads/413d1bfd-a71d-4f11-9af2-0cd886fadaba/acme_landscape.png"
   ]
 
-  def s3_delete ()
+  private
+
+  def upload_to_gads
+    GoogleAds::upload_image_asset(self)
+  end
+
+  def replace_image_in_ads
+    # only required images need to be replaced => SquareImage or LandscapeImage
+    # self.ads.each do |ad|
+    #   # if ad.
+    # end
+  end
+
+
+  def promote_enabled?
+    self.company.promote_tr?
+  end
+
+  def s3_delete
     S3_BUCKET.delete_objects(
       delete: {
         objects: [
@@ -23,7 +53,8 @@ class AdwordsImage < ApplicationRecord
         ]
       }
     ) unless (
-      !self.image_url.is_a?(String) || !self.image_url.include?('https') ||
+      !self.image_url.is_a?(String) ||
+      !self.image_url.include?('https') ||
       NO_DELETE.include?(self.image_url)
     )
   end

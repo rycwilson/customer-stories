@@ -149,14 +149,23 @@ class StoriesController < ApplicationController
   end
 
   def update
+    pp story_params.to_h
     if params[:settings]
-      # pp params
+      @story_params = story_params.to_h
       @story.success.cta_ids = params[:ctas]
-      @story.update(story_params)
+      if @story.update(story_params)
+      else
+        # @errors =
+      end
       # html response necessary for uploading customer logo image
       respond_to do |format|
-        format.js { render({ action: 'edit/settings/update' }) }
+        format.js do
+          @story_params[:newAds] = new_ads(@story_params, @story.id)
+          @story_params[:adsWereRemoved] = ads_were_removed?(@story_params)
+          render({ action: 'edit/settings/update' })
+        end
       end
+
     elsif params[:story][:form] == 'content'
       # the video url in standardized format is sent in a hidden field
       params[:story][:video_url] = params[:story][:formatted_video_url]
@@ -178,7 +187,7 @@ class StoriesController < ApplicationController
                     success: {
                       only: [],
                       include: {
-                        customer: { only: [:name, :slug] },
+                        customer: { only: [:name, :slug] }
                       }
                     }
                   }
@@ -243,6 +252,42 @@ class StoriesController < ApplicationController
     respond_to { |format| format.js {} }
   end
 
+  def set_reset_gad
+    story = Story.find params[:id]
+
+    # if missing local ad data, the gads will be created separately via AdwordsAd callback
+    # if they already exist (expected), create them together
+    if story.topic_ad.blank? || story.retarget_ad.blank?
+      if story.topic_ad.blank?
+        story.create_topic_ad(adwords_ad_group_id: story.company.topic_ad_group.id, status: 'ENABLED')
+      end
+      if story.retarget_ad.blank?
+        story.create_retarget_ad(adwords_ad_group_id: story.company.retarget_ad_group.id, status: 'ENABLED')
+      end
+    else
+      add_missing_default_images(story)
+      new_gads = GoogleAds::create_story_ads(story)
+      if new_gads[:errors]
+        new_gads[:errors] = customize_gads_errors(new_gads)
+      else
+        story.topic_ad.update(ad_id: new_gads[:topic][:ad_id])
+        story.retarget_ad.update(ad_id: new_gads[:retarget][:ad_id])
+      end
+    end
+    respond_to do |format|
+      format.json do
+        render({
+          json: {
+            story: { id: story.id, title: story.title.truncate(30, separator: '...') },
+            newGads: new_gads,
+            # topicAd: story.topic_ad.slice(:id, :status),
+            # retargetAd: story.retarget_ad.slice(:id, :status)
+          }
+        })
+      end
+    end
+  end
+
   ##
   ##  this action is a catch-all for promote changes related to a given story
   ##  - create ads for a story (POST)
@@ -252,16 +297,7 @@ class StoriesController < ApplicationController
   def promote
     response = {}  # this will be necessary if ads for an unpublished story are removed
     if request.method == 'POST'
-      @company.create_shell_campaigns if @company.campaigns.empty?
-      @story.ads.create({
-        adwords_ad_group_id: @company.campaigns.topic.ad_group.id,
-        long_headline: @story.title.truncate(ADWORDS_LONG_HEADLINE_CHAR_LIMIT, { omission: '' })
-      })
-      @story.ads.create({
-        adwords_ad_group_id: @company.campaigns.retarget.ad_group.id,
-        long_headline: @story.title.truncate(ADWORDS_LONG_HEADLINE_CHAR_LIMIT, { omission: '' })
-      })
-      @story.ads.adwords_image = @company.adwords_images.default
+      # ...
     elsif request.method == 'PUT'
       if params[:adwords_image_id].present?
         @story.ads.each { |ad| ad.adwords_image = AdwordsImage.find(params[:adwords_image_id]) }
@@ -293,15 +329,7 @@ class StoriesController < ApplicationController
         end
       end and return
     elsif request.method == 'DELETE'  # js response
-      if @story.ads.all? do |ad|
-        ad.update(status:'REMOVED')
-        # this must go in the delayed job queue, so it happens after ad.adwords_remove (already queued)
-        ad.delay.destroy
-      end
-        flash.now[:notice] = 'Story unpublished and Promoted Story removed'
-      else
-        flash.now[:alert] = 'Error removing Promoted Story'
-      end
+      # ...
     end
     respond_to do |format|
       # this works for all but long_headline:
@@ -345,14 +373,34 @@ class StoriesController < ApplicationController
         success_attributes: [
           :id, :name, :customer_id, :curator_id,
           product_ids: [], story_category_ids: [],
-          results_attributes: [:id, :description, :_destroy] ,
+          results_attributes: [:id, :description, :_destroy],
           customer_attributes: [:id, :name, :logo_url, :show_name_with_logo, :company_id]
-        ]
+        ],
+        topic_ad_attributes: [:id, :adwords_ad_group_id, :_destroy],
+        retarget_ad_attributes: [:id, :adwords_ad_group_id, :_destroy]
       )
   end
 
-  def adwords_params
-    params.require(:adwords).permit(:status, :long_headline)
+  # def adwords_params
+  #   params.require(:adwords).permit(:status, :long_headline)
+  # end
+
+  def new_ads(story_params, story_id)
+    [story_params.try(:[], :topic_ad_attributes), story_params.try(:[], :retarget_ad_attributes)]
+      .all? { |ad_attrs| ad_attrs.present? && ad_attrs[:id].blank? } &&
+    {
+      topic: AdwordsAd.joins(:adwords_campaign)
+                      .where(adwords_campaigns: { type: 'TopicCampaign'}, story_id: story_id)
+                      .take.try(:slice, :id),
+      retarget: AdwordsAd.joins(:adwords_campaign)
+                         .where(adwords_campaigns: { type: 'RetargetCampaign'}, story_id: story_id)
+                         .take.try(:slice, :id)
+    }
+  end
+
+  def ads_were_removed?(story_params)
+    story_params.try(:[], :topic_ad_attributes).try(:[], :_destroy) == 'true' &&
+    story_params.try(:[], :retarget_ad_attributes).try(:[], :_destroy) == 'true'
   end
 
   def set_company
@@ -439,18 +487,41 @@ class StoriesController < ApplicationController
     end
   end
 
-  def remove_video? ()
+  def remove_video?
     # request.xhr? &&  && params[:remove_video].present?
   end
 
   # one or both will be present
-  def filters_results (category_stories, product_stories)
+  def filters_results(category_stories, product_stories)
     if category_stories.empty?
       "#{product_stories.size} #{'story'.pluralize(product_stories.size)} found"
     elsif product_stories.empty?
       "#{category_stories.size} #{'story'.pluralize(category_stories.size)} found"
     else
       "#{(category_stories & product_stories).size} #{'story'.pluralize((category_stories & product_stories).size)} found"
+    end
+  end
+
+  def customize_gads_errors(new_gads)
+    errors = []
+    new_gads[:errors].each do |error|
+      case error[:type]
+      when 'REQUIRED'
+        errors << "Required: #{error[:field].underscore.humanize.downcase.singularize}"
+      # when something else
+      else
+      end
+    end
+    errors
+  end
+
+  def add_missing_default_images(story)
+    default_images = story.company.adwords_images.default
+    story.ads.each do |ad|
+      ad.square_images << default_images.square_images unless ad.square_images.present?
+      ad.landscape_images << default_images.landscape_images unless ad.landscape_images.present?
+      ad.square_logos << default_images.square_logos unless ad.square_logos.present?
+      ad.landscape_logos << default_images.landscape_logos unless ad.landscape_logos.present?
     end
   end
 

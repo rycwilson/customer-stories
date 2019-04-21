@@ -104,16 +104,7 @@ Rails.application.routes.draw do
         end
         resources :stories, only: [:edit, :create, :update, :destroy], shallow: true do
           get '/promoted', on: :collection, to: 'stories#promoted'
-          member do
-            post '/promote', to: 'stories#promote'
-            put '/promote', to: 'stories#promote'
-            delete '/promote', to: 'stories#promote'
-            post '/adwords', to: 'adwords#create_story_ads'
-            put '/adwords', to: 'adwords#update_story_ads'
-            delete '/adwords', to: 'adwords#remove_story_ads'
-            put :ctas
-            put :tags
-          end
+          member { put :set_reset_gad }
         end
         # resources :stories, only: [:create]
         resources :contributions, except: [:new, :edit, :update], shallow: true do
@@ -124,14 +115,15 @@ Rails.application.routes.draw do
         end
         resources :ctas, only: [:show, :create, :update, :destroy], shallow: true
         resources :invitation_templates, except: [:index]
+        member { put :update_gads }
+        member { get :set_reset_gads }
         member { get '/promote-settings', to: 'companies#show' }
         member { put :widget }
-        member { put :promote }
         # need :get for the sync. response (redirect_to)
         # and :put for the async. response (see companies/promote.js.erb)
         member { get '/adwords', to: 'adwords#update_company' }
         member { put '/adwords', to: 'adwords#update_company' }
-        member { put '/adwords/sync', to: 'adwords#sync_company', as: 'adwords_sync' }
+        member { put '/adwords/reset', to: 'adwords#sync_company', as: 'adwords_sync' }
       end
 
       get '/successes', to: 'successes#index'

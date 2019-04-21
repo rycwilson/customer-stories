@@ -1,7 +1,10 @@
 
 <div class="hidden">
 
-  <%= form_for(story, url: story_path(story.id), authenticity_token: true,
+  <%= form_for(
+        story,
+        url: story_path(story.id),
+        authenticity_token: true,
         html: {
           id: 'story-settings-form',
           method: 'put',
@@ -9,6 +12,33 @@
           class: 'form-horizontal'
         }
       ) do |story_form| %>
+
+    <div id="story-settings__ads-inputs">
+      <input type="hidden"
+             name="story[topic_ad_attributes][id]"
+             value="<%= story.topic_ad.try(:id) %>" disabled>
+      <input type="hidden"
+             name="story[topic_ad_attributes][_destroy]"
+             value="false" disabled>
+      <input type="checkbox" class="hidden"
+             name="story[topic_ad_attributes][_destroy]"
+             value="true" disabled>
+      <input type="hidden"
+             name="story[topic_ad_attributes][adwords_ad_group_id]"
+             value="<%= story.company.topic_campaign.ad_group.id %>" disabled>
+      <input type="hidden"
+             name="story[retarget_ad_attributes][id]"
+             value="<%= story.retarget_ad.try(:id) %>" disabled>
+      <input type="hidden"
+             name="story[retarget_ad_attributes][_destroy]"
+             value="false" disabled>
+      <input type="checkbox" class="hidden"
+             name="story[retarget_ad_attributes][_destroy]"
+             value="true" disabled>
+      <input type="hidden"
+             name="story[retarget_ad_attributes][adwords_ad_group_id]"
+             value="<%= story.company.retarget_campaign.ad_group.id %>" disabled>
+    </div>
 
     <%= story_form.fields_for(:success) do |success_form| %>
     <%= success_form.fields_for(:customer) do |customer_form| %>

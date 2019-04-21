@@ -10,41 +10,54 @@ function storiesEditSettingsListeners () {
   $(document)
 
     // ensure only valid logo/story publish states
-    .on('switchChange.bootstrapSwitch', 'input', function (e, data) {
+    .on('switchChange.bootstrapSwitch', '.form-group.publish input', function (e, data) {
       // note the jquery indexing => necessary for bootstrap switch to work properly
-      var $publishLogo = $('input[name="story[logo_published]"]').eq(1),
-          $publishPreview = $('input[name="story[preview_published]"]').eq(1),
-          $publishStory = $('input[name="story[published]"]').eq(1),
-          $current = $(this);
+      var $current = $(this),
+          $logoInput = $('input:checkbox[name="story[logo_published]"]'),
+          unpublishingLogo = $current.is($logoInput) && $logoInput.bootstrapSwitch('state') === false,
+          $previewInput = $('input:checkbox[name="story[preview_published]"]'),
+          publishingPreview = $current.is($previewInput) && $previewInput.bootstrapSwitch('state') === true,
+          $storyInput = $('input:checkbox[name="story[published]"]'),
+          publishingStory = $current.is($storyInput) && $storyInput.bootstrapSwitch('state') === true,
+          unpublishingStory = $current.is($storyInput) && $storyInput.bootstrapSwitch('state') === false;
 
-      if ($current.is($publishLogo) && $publishLogo.bootstrapSwitch('state') === false) {
-        if ($publishPreview.bootstrapSwitch('state') === true) {
-          $publishPreview.bootstrapSwitch('toggleState');
+      if (unpublishingLogo) {
+        if ($previewInput.bootstrapSwitch('state') === true) {
+          $previewInput.bootstrapSwitch('toggleState');
         }
-        if ($publishStory.bootstrapSwitch('state') === true) {
-          $publishStory.bootstrapSwitch('toggleState');
+        if ($storyInput.bootstrapSwitch('state') === true) {
+          $storyInput.bootstrapSwitch('toggleState');
         }
-      } else if ($current.is($publishPreview) && $publishPreview.bootstrapSwitch('state') === true) {
 
-        if ( $('#story_summary').val() === '') {
+      } else if (publishingPreview) {
+        if ($('#story_summary').val() === '') {
           flashDisplay('There is no Summary for this Story. Create one under Story Content.', 'danger');
-          $publishPreview.bootstrapSwitch('toggleState');
+          $previewInput.bootstrapSwitch('toggleState');
         } else {
-          if ($publishLogo.bootstrapSwitch('state') === false) {
-            $publishLogo.bootstrapSwitch('toggleState');
+          if ($logoInput.bootstrapSwitch('state') === false) {
+            $logoInput.bootstrapSwitch('toggleState');
           }
-          if ($publishStory.bootstrapSwitch('state') === true) {
-            $publishStory.bootstrapSwitch('toggleState');
+          if ($storyInput.bootstrapSwitch('state') === true) {
+            $storyInput.bootstrapSwitch('toggleState');
           }
         }
 
-      } else if ($current.is($publishStory) && $publishStory.bootstrapSwitch('state') === true) {
-        if ($publishLogo.bootstrapSwitch('state') === false) {
-          $publishLogo.bootstrapSwitch('toggleState');
+      } else if (publishingStory) {
+        if ($logoInput.bootstrapSwitch('state') === false) {
+          $logoInput.bootstrapSwitch('toggleState');
         }
-        if ($publishPreview.bootstrapSwitch('state') === true) {
-          $publishPreview.bootstrapSwitch('toggleState');
+        if ($previewInput.bootstrapSwitch('state') === true) {
+          $previewInput.bootstrapSwitch('toggleState');
         }
+        $('#story-settings__ads-inputs')
+          .find(':not([name*="[_destroy]"])').prop('disabled', false);
+
+      } else if (unpublishingStory) {
+        $('#story-settings__ads-inputs')
+          .find('[name*="[id]"]').prop('disabled', false).end()
+          .find('[name*="[_destroy]"]')
+            .prop('disabled', false)
+            .prop('checked', true)
       }
     })
 

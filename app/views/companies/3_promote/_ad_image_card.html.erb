@@ -1,0 +1,106 @@
+
+<!-- no longer need this to update after changes, but it's good for styling  -->
+<li class="ad-image-card <%= ad_image_card_class_attr(ad_image) %>" <%= ad_image[:default] && ad_image[:image_url] ? "data-image-url=#{ ad_image[:image_url] }" : '' %>>
+
+  <input type="hidden" name="company[adwords_images_attributes][<%= image_index %>][id]" value="<%= ad_image[:id] %>" >
+  <input type="hidden" name="company[adwords_images_attributes][<%= image_index %>][type]" value="<%= ad_image[:type] %>">
+  <input type="hidden"
+         name="company[adwords_images_attributes][<%= image_index %>][image_url]"
+         value="<%= ad_image[:image_url] || '' %>">
+
+  <% if ad_image[:default] %>
+
+    <input type="hidden" name="company[adwords_images_attributes][<%= image_index %>][is_default_card]" value="true">
+    <input type="hidden" name="company[adwords_images_attributes][<%= image_index %>][default]" value="false">
+    <input type="checkbox" class="hidden" name="company[adwords_images_attributes][<%= image_index %>][default]" value="true" <%= ad_image[:default] ? 'checked' : '' %>>
+
+  <% else %>
+
+    <input type="hidden" value="false" name="company[adwords_images_attributes][<%= image_index %>][_destroy]">
+    <input type="checkbox" value="true" class="hidden" name="company[adwords_images_attributes][<%= image_index %>][_destroy]">
+
+  <% end %>
+
+  <div class="form-group fileinput fileinput-exists has-feedback" data-provides="fileinput">
+
+    <div class="ad-image-card__header">
+
+      <% if ad_image[:default] %>
+
+        <label><%= ad_image[:type].split(/(?=[A-Z])/).join(' ') %>&nbsp;<span>*</span></label>
+        <button type="button" data-trigger="fileinput">
+          <i class="fa fa-fw fa-upload"></i>
+        </button>
+
+      <% else %>
+
+        <label class="checkbox-inline">
+          <input type="hidden" name="company[adwords_images_attributes][<%= image_index %>][default]" value="false">
+          <input type="checkbox" name="company[adwords_images_attributes][<%= image_index %>][default]" value="true">
+          Make default
+        </label>
+
+        <button type="button" class="remove-image">
+          <i class='fa fa-fw fa-remove'></i>
+        </button>
+
+      <% end %>
+
+    </div>
+
+    <div class="ad-image-card__frame">
+
+      <% if ad_image[:default] %>
+
+        <div class="thumbnail-wrapper">
+
+          <div class="ad-image-card__errors--wrapper">
+            <div class="ad-image-card__errors">
+              <i class="fa fa-warning"></i>
+              <span class="help-block with-errors"></span>
+            </div>
+          </div>
+
+          <div class="fileinput-preview thumbnail" data-trigger="fileinput">
+            <img src="<%= ad_image[:image_url] || ad_image[:placeholder_image_url] %>" alt="<%= ad_image[:type].split(/(?=[A-Z])/).join(' ') %>">
+          </div>
+
+        </div>
+
+        <div class="btn-file">
+          <input type="file" accept="image/*" name="company[adwords_images_attributes][<%= image_index %>][image_url]" data-max-file-size="5242880" data-img-size-error="<%= ad_image_min_dimensions(ad_image[:type]) %>" data-fileupload-init-error="">
+        </div>
+
+      <% else %>
+
+        <div class="fileinput-preview thumbnail">
+          <img src="<%= ad_image[:image_url] %>" alt="<%= ad_image[:type].split(/(?=[A-Z])/).join(' ') %>">
+        </div>
+
+      <% end %>
+
+    </div>
+
+    <div class="ad-image-card__footer">
+
+      <% if ad_image[:default] %>
+        <label>*&nbsp;<span>required default</span><span>optional default</span><span>default</span></label>
+      <% end %>
+
+      <div>
+        <button type="button" class="btn btn-sm btn-default btn-cancel">Cancel</button>
+        <% unless ad_image[:default] %>
+          <button type="submit" class="btn btn-sm btn-primary btn-remove">Remove</button>
+        <% end %>
+        <button type="submit" class="btn btn-sm btn-success" form="gads-form" style="width: 59px">
+          <span>Save</span>
+          <i class="fa fa-spin fa-circle-o-notch" style="display:none"></i>
+          <i class="fa fa-check" style="display:none"></i>
+        </button>
+      </div>
+
+    </div>
+
+  </div>
+
+</li>

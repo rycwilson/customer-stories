@@ -53,6 +53,7 @@ function attachAppListeners () {
   xScrollBoundaries();
 
   $(document)
+
     .on('click', '#workflow-tabs a', function (e) {
       e.preventDefault();
       var currentWorkflowPath = window.location.pathname,
@@ -77,9 +78,9 @@ function attachAppListeners () {
       })
 
     /**
-     * some forms excluded as they have their own handler, e.g. #new-success-form
+     * some forms excluded as they have their own handler, e.g. #new-success-form, #gads-form
      */
-    .on('click', 'button[type="submit"]', function (e) {
+    .on('click', 'button:submit', function (e) {
       if ($(this).hasClass('disabled')) {
         e.preventDefault();
         e.stopImmediatePropagation();
@@ -97,8 +98,6 @@ function attachAppListeners () {
           $form.is('#new-story-form') ||
           $form.is('#story-settings-form') ||
           $form.is('#story-content-form') ||
-          $form.is('#promote-settings-form') ||
-          $form.is('#adwords-sync-form') ||
           $form.is('#new-cta-form') ||
           $form.is('[id*="cta-"]') ||
           $form.is('#submission-form')) {
@@ -106,7 +105,7 @@ function attachAppListeners () {
           e.preventDefault();
           return false;
         } else {
-          toggleFormWorking($form);
+          toggleFormWorking($form, $button);
         }
       }
     });

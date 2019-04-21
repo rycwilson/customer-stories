@@ -3,7 +3,7 @@
 
   var params = <%= raw @company_params.to_json %>,
       errors = <%= raw @errors.to_json %>,
-      $form = $('#promote-settings-form'),
+      $form = $('#gads-form'),
       $submitBtn = $form.find('button[type="submit"][data-submitted="true"]'),
       $formGroup = $submitBtn.closest('.form-group'),
       $thisList = $formGroup.closest('ul'),
@@ -122,21 +122,19 @@
     $modal.find('li[data-image-id="' + params.removedImageId + '"]').remove();
     $form.attr('data-submitted', '');
     // TODO update any stories affected by removed image
+
+  } else {
+    toggleFormDone($form, true, function () {
+          $formGroup.removeClass('to-be-added');
+          $submitBtn.hide();
+        }, $submitBtn);
   }
+
+
 
   /**
    *  cleanup
    */
   reEnableAllInputs();
-
-
-  // $.ajax({
-  //   url: '<%#= adwords_company_path(@company) %>',
-  //   method: 'put',
-  //   data: {
-  //     company: $.extend(params, company)
-  //   },
-  //   dataType: 'script'
-  // });
 
 }());

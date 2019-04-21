@@ -8,13 +8,22 @@ INDUSTRIES = ['Education', 'Government', 'Financial Services', 'Healthcare', 'Ho
 LOGO_PLACEHOLDER_URL = "https://s3-us-west-1.amazonaws.com/csp-production-assets/shared/logo-placeholder.png"
 VIDEO_PLACEHOLDER_URL = "https://s3-us-west-1.amazonaws.com/csp-production-assets/video_placeholder.jpg"
 
-# AdWords accounts
+# Google Ads
 ADWORDS_CSP_TEST_MANAGER_CUSTOMER_ID = '811-996-7666'
 ADWORDS_CSP_TEST_CLIENT_CUSTOMER_ID = '266-136-8280'
 ADWORDS_CSP_PRODUCTION_MANAGER_CUSTOMER_ID = '569-145-2274'
 ADWORDS_CSP_PRODUCTION_CLIENT_CUSTOMER_ID = '836-316-8926'
-ADWORDS_SHORT_HEADLINE_CHAR_LIMIT = 25
-ADWORDS_LONG_HEADLINE_CHAR_LIMIT = 90
+
+RESPONSIVE_AD_SHORT_HEADLINE_MAX = 30
+RESPONSIVE_AD_LONG_HEADLINE_MAX = 90
+RESPONSIVE_AD_SQUARE_IMAGE_MIN = '300x300'
+RESPONSIVE_AD_SQUARE_IMAGE_PLACEHOLDER = 'https://s3-us-west-1.amazonaws.com/csp-production-assets/placeholders/300x300.png'
+RESPONSIVE_AD_LANDSCAPE_IMAGE_MIN = '600x314'
+RESPONSIVE_AD_LANDSCAPE_IMAGE_PLACEHOLDER = 'https://s3-us-west-1.amazonaws.com/csp-production-assets/placeholders/600x314.png'
+RESPONSIVE_AD_SQUARE_LOGO_MIN = '128x128'
+RESPONSIVE_AD_SQUARE_LOGO_PLACEHOLDER = 'https://s3-us-west-1.amazonaws.com/csp-production-assets/placeholders/128x128.png'
+RESPONSIVE_AD_LANDSCAPE_LOGO_MIN = '512x128'
+RESPONSIVE_AD_LANDSCAPE_LOGO_PLACEHOLDER = 'https://s3-us-west-1.amazonaws.com/csp-production-assets/placeholders/512x128.png'
 
 # the parameters can be hard-coded here because this will be used in a simple re-direct
 CURATOR_LINKEDIN_AUTH_URL = "https://www.linkedin.com/oauth/v2/authorization?\

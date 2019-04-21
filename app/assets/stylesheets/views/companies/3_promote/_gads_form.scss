@@ -1,0 +1,362 @@
+//
+.popover.image-requirements {
+  max-width: 500px;
+  .popover-content {
+    padding: 25px;
+    h4 {
+      display: inline-block;
+      margin-bottom: 10px;
+    }
+    ul {
+      margin-bottom: 0;
+      padding-left: 30px;
+      &:first-of-type {
+        margin-bottom: 20px;
+      }
+    }
+  }
+}
+
+#gads-form {
+
+  // TODO: if there are any pending defaults, don't allow any activity in the lists
+  // &.required-missing {
+  //   ul.ad-image-cards {
+  //     opacity: 0.5;
+  //     pointer-events: none;
+  //     cursor: not-allowed;
+  //   }
+  // }
+
+  // override jasny bootstrap
+  .fileinput, .fileinput-preview {
+    margin: 0;
+  }
+
+  .form-group {
+    // position: relative;
+    margin-bottom: 0;
+    .help-block {
+      margin: 0;
+    }
+    &.short-headline {
+      position: relative;
+    }
+    &:not(.short-headline) {
+      padding: 0 15px;
+      // margin: 0 -20px 0 -20px;
+      // padding: 0 20px 0 20px;
+    }
+  }
+
+  .form-group.short-headline {
+    display: flex;
+    align-items: center;
+    margin-bottom: 50px;
+    position: relative;
+    label {
+      margin-right: 10px;
+      margin: 0 10px 0 0;
+    }
+    button {
+      font-size: 13px;
+    }
+    .help-block ul {
+      margin-bottom: 0;
+    }
+  }
+
+  .image-library__header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 20px;
+    width: 400px;
+    label {
+      font-size: 20px;
+      font-weight: 400;
+      color: #666;
+      margin-bottom: 0;
+    }
+    a {
+      padding: 8px 16px;
+    }
+  }
+
+  .image-library__sub-header {
+    display: flex;
+    align-items: center;
+    margin-bottom: 12px;
+    padding: 0 12px;
+    label {
+      margin: 0 20px 0 0;
+    }
+    button {
+      display: flex;
+      align-items:center;
+      background:none;
+      border: none;
+      outline: none;
+      color: #666;
+      font-size: 12px;
+      padding: 4px;
+      &:hover {
+        color: #222;
+      }
+      i {
+        -webkit-text-stroke: 1px #f9f9f9;  // should match background color
+        &.fa-question {
+          -webkit-text-stroke: 0.5px #f9f9f9;
+          top: -1px;
+          left: -0.5px;
+        }
+      }
+    }
+  }
+
+  .ad-image-card {
+    display: inline-block;  // children elements dictate width
+    background-color: #efefef;
+    padding: 0;
+    box-shadow: 0 2px 2px 0 rgba(0,0,0,0.16), 0 0 0 1px rgba(0,0,0,0.08);
+    margin: 0 12px 24px 12px;
+    .form-group {
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      &.fileinput .ad-image-card__frame {
+        margin: 0 auto;
+      }
+    }
+    &.gads-image--square, &.gads-logo--square {
+      width: 190px;
+      .ad-image-card__frame {
+        width: 115px;
+        height: 115px;
+      }
+    }
+    &.gads-image--landscape {
+      .ad-image-card__frame {
+        width: 210px;  // adjust from 220 to account for padding that affects y-axis disproportionately
+        height: 115px;
+      }
+    }
+    &.gads-logo--landscape {
+      .ad-image-card__frame {
+        width: 290px;  // adjust from 340 to account for padding that affects y-axis disproportionately
+        height: 80px;
+      }
+    }
+    // if image is incorrect size, make the card a square
+    &:not(.gads-image--square):not(.gads-image--landscape):not(.gads-logo--square):not(.gads-logo--landscape) {
+     .ad-image-card__frame {
+        width: 185px;
+        height: 115px;
+      }
+    }
+    .ad-image-card__header {
+      height: 50px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 8px 0;
+      label {
+        margin: 0;
+        font-weight: 400;
+        color: #333;  // overrides has-success, has-error
+      }
+      button {
+        background: none;
+        outline: none;
+        border: none;
+        padding: 8px;
+        margin-right: -10px;
+      }
+      i {
+        font-size: 20px;
+        color: #666;
+        &:hover {
+          color: #222;
+        }
+      }
+    }
+    .thumbnail {
+      width: 100%;
+      height: 100%
+    }
+    .thumbnail-wrapper {
+      position: relative;
+      height: 100%;
+      // height: 115px;  // jasny needs the parent of the image to have a defined height
+      width: 100%;
+      margin: 0 auto;
+      .ad-image-card__errors--wrapper {
+        display: none;
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        width: 100%;
+        height: 100%;
+      }
+      .ad-image-card__errors {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        height: 100%;
+        color: #a94442;
+        i {
+          font-size: 20px;
+          margin-bottom: 8px;
+        }
+        span {
+          text-align: center;
+          font-size: 13px;
+        }
+        li {
+          margin: 0
+        }
+      }
+    }
+    .ad-image-card__footer {
+      height: 50px;
+      // display: flex;
+      // align-items: center;
+      // justify-content: flex-end;
+      position: relative;
+      label, > div {
+        position: absolute;
+        top: 50%;
+        transform: translate(0, -50%);
+      }
+      label {
+        font-size: 11px;
+        font-weight: 400;
+        margin: 0;
+        span:nth-child(1), span:nth-child(3) {
+          display: none;
+        }
+      }
+      > div {
+        right: 0;
+        button {
+          // display: none leads to mysterious extra height in the footer
+          // (but only inside a flex container, so changed that)
+          display: none;
+          outline: none;
+          margin-left: 5px;
+          &:focus {
+            outline: none;
+          }
+        }
+      }
+    }
+    &.gads-required:not([data-image-url]) .form-group:not(.to-be-added) .ad-image-card__header label span {
+      color: #a94442;
+    }
+    &.gads-required .ad-image-card__footer label {
+      color: #a94442;
+      span:nth-child(1) {
+        display: initial;
+      }
+      span:nth-child(2), span:nth-child(3) {
+        display: none;
+      }
+    }
+    &.gads-default[data-image-url] .ad-image-card__footer label {
+      color: initial;
+      span:nth-child(1), span:nth-child(2) {
+        display: none;
+      }
+      span:nth-child(3) {
+        display: initial
+      }
+    }
+  }
+
+  .ad-image-card .form-group {
+    width: 100%;
+    height: 100%;
+
+    // don't show a freshly uploaded image that hasn't been validated;
+    // ignore existing images as indicated by src attribute
+    &.has-feedback:not(.to-be-added) {
+      .fileinput-preview img:not([src*="http"]) {
+        visibility: hidden;  // show img only if valid
+      }
+    }
+    &.to-be-added, &.has-error {
+      .ad-image-card__footer label {
+        display: none;
+      }
+    }
+    &.to-be-added {
+      background-color: #ddd;
+      .btn-cancel, .btn-success {
+        display: initial;
+      }
+    }
+    &.has-error {
+      .ad-image-card__header > .checkbox-inline,
+      .ad-image-card__header > button.remove-image {
+        opacity: 0.5;
+        pointer-events: none;
+      }
+      .ad-image-card__errors--wrapper {
+        display: initial;
+      }
+      .fileinput-preview img {
+        display: none;
+      }
+      .btn-cancel {
+        display: initial;
+      }
+    }
+  }
+
+  .ad-image-card.gads-default .form-group {
+    &.to-be-added {
+      .ad-image-card__header label span {
+        display: none;
+      }
+    }
+  }
+
+  .ad-image-card:not(.gads-default) .form-group {
+    &.to-be-added {
+      .ad-image-card__header > button.remove-image {
+        opacity: 0.5;
+        pointer-events: none;
+      }
+    }
+    &.to-be-default, &.to-be-removed {
+      background-color: #ddd;
+    }
+    &.to-be-default {
+      .remove-image {
+        opacity: 0.5;
+        pointer-events: none;
+      }
+      .btn-cancel, .btn-success {
+        display: initial;
+      }
+    }
+    &.to-be-removed {
+      .ad-image-card__header {
+        opacity: 0.5;
+        pointer-events: none;
+      }
+      .btn-cancel, .btn-remove {
+        display: initial;
+      }
+    }
+    &.has-error {
+      .ad-image-card__header > button.remove-image {
+        display: none;
+      }
+    }
+  }
+
+
+}

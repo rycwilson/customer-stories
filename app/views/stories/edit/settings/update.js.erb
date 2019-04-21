@@ -1,7 +1,8 @@
 
 (function () {
 
-  var story = <%= raw @story.to_json({
+  var storyParams = <%= raw @story_params.to_json %>
+      story = <%= raw @story.to_json({
                     only: [:id, :title, :logo_published, :preview_published, :published],
                     methods: [:previous_changes, :csp_story_path],
                     include: {
@@ -13,6 +14,7 @@
                       }
                     }
                   }) %>,
+      $hiddenAdInputs = $('#story-settings__ads-inputs'),
       createAds = function () {
         return (story.published && story.previous_changes.published) ? true : false;
       },
@@ -30,37 +32,23 @@
         $('#story-edit-header > div.story-title > span:nth-of-type(2)').text(story.title);
       };
 
+  console.log('storyParams', storyParams)
+
   updateStory();
+  toggleFormDone($('#story-settings-form'), true)
 
+  $hiddenAdInputs.find('input').prop('disabled', true);
 
-  // create the ad
-  if (createAds()) {
-    $.post('/stories/' + story.id + '/promote')
-      .done(function () {
-        $.post({
-          url: '/stories/' + story.id + '/adwords',
-          dataType: 'script'
-        });
-      })
+  if (storyParams.newAds) {
+    $hiddenAdInputs
+      .find('[name*="topic"][name*="[id]"]').val(storyParams.newAds.topic.id).end()
+      .find('[name*="retarget"][name*="[id]"]').val(storyParams.newAds.retarget.id);
 
-  // remove ad if story unpublished;
-  // remove the adwords ad first, as ad.ad_id will be necessary to make the api call
-  } else if (removeAds()) {
-    $.ajax({
-      url: '/stories/' + story.id + '/adwords',
-      method: 'delete',
-      dataType: 'json'
-    })
-      .done(function () {
-        $.ajax({
-          url: '/stories/' + story.id + '/promote',
-          method: 'delete',
-          dataType: 'script'
-        })
-      })
-
-  } else {
-    toggleFormDone($('#story-settings-form'), true)
+  } else if (storyParams.adsWereRemoved) {
+    $hiddenAdInputs
+      .find('[name*="[id]"]').val('').end()
+      .find('[name*="[_destroy]"]').prop('checked', false);
   }
+
 
 }());

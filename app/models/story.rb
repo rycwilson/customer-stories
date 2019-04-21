@@ -42,14 +42,21 @@ class Story < ApplicationRecord
     end
   end
   alias_attribute :ads, :adwords_ads
-  has_one :topic_ad, -> (story) {
-    where(adwords_ad_group_id: story.company.campaigns.present? &&
-                               story.company.campaigns.topic.ad_group.id)
-  }, class_name: 'AdwordsAd'
-  has_one :retarget_ad, -> (story) {
-    where(adwords_ad_group_id: story.company.campaigns.present? &&
-                               story.company.campaigns.retarget.ad_group.id)
-  }, class_name: 'AdwordsAd'
+  has_one(
+    :topic_ad,
+    -> (ad) { where(adwords_ad_group_id: ad.company.topic_campaign.ad_group.id) },
+    class_name: 'AdwordsAd',
+    dependent: :destroy
+  )
+  has_one(
+    :retarget_ad,
+    -> (ad) { where(adwords_ad_group_id: ad.company.retarget_campaign.ad_group.id) },
+    class_name: 'AdwordsAd',
+    dependent: :destroy
+  )
+
+  accepts_nested_attributes_for(:topic_ad, allow_destroy: true)
+  accepts_nested_attributes_for(:retarget_ad, allow_destroy: true)
 
   accepts_nested_attributes_for(:success)
   # virtual attribute for accepting a standard format video url
@@ -141,7 +148,7 @@ class Story < ApplicationRecord
   # that exist in both
 
   # on change of publish state
-  after_commit(on: :update) do
+  after_update_commit do
     expire_story_card_fragment_cache
     expire_filter_select_fragment_cache
     self.company.increment_stories_gallery_fragments_memcache_iterator
@@ -154,7 +161,7 @@ class Story < ApplicationRecord
   # for any published (title overlay) or preview-published (summary, quote) stories,
   # expire stories gallery cache on change of title/summary/quote data;
   # also json cache
-  after_commit(on: :update) do
+  after_update_commit do
     expire_story_card_fragment_cache
     self.company.increment_stories_gallery_fragments_memcache_iterator
     self.company.expire_stories_json_cache
@@ -163,24 +170,24 @@ class Story < ApplicationRecord
              (story.previous_changes.keys & ['title', 'summary', 'quote']).any? )
          }
 
-  after_commit(on: :update) do
+  after_update_commit do
     expire_story_video_info_cache
     expire_story_video_xs_fragment_cache
   end if Proc.new { |story| story.previous_changes.key?('video_url') }
 
-  after_commit(on: :update) do
+  after_update_commit do
     expire_story_testimonial_fragment_cache
   end if Proc.new { |story|
             (story.previous_changes.keys &
             ['video_url', 'quote', 'quote_attr_name', 'quote_attr_title']).any?
           }
 
-  after_commit(on: :update) do
+  after_update_commit do
     expire_csp_story_path_cache
     expire_story_narrative_fragment_cache
   end if Proc.new { |story| story.previous_changes.key?('title') }
 
-  after_commit(on: :update) do
+  after_update_commit do
     expire_story_narrative_fragment_cache
   end if Proc.new { |story| (story.previous_changes.keys & ['title', 'narrative']).any? }
 
@@ -439,22 +446,6 @@ class Story < ApplicationRecord
                             end
   end
 
-  # not currently used, maybe include with json api
-  # def published_tags
-  #   return nil unless self.published?
-  #   { categories: self.success.story_categories.map { |c| { name: c.name, slug: c.slug } },
-  #     products: self.success.products.map { |p| { name: p.name, slug: p.slug } }}
-  # end
-
-  # # not currently used, maybe include with json api
-  # def published_content
-  #   return nil unless self.published?
-  #   { title: title,
-  #     quote: quote,
-  #     quote_attr: quote_attr,
-  #     content: content }
-  # end
-
   def preview_contributor
     self.contributions.find { |contribution| contribution.preview_contributor? }
         .try(:contributor)
@@ -524,7 +515,7 @@ class Story < ApplicationRecord
   end
 
   def ads_image_url
-    self.ads.first.adwords_image.try(:image_url)  # same for each ad
+    self.ads.first.landscape_images.try(:image_url)  # same for each ad
   end
 
   def update_publish_state
