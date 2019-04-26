@@ -149,12 +149,11 @@ class StoriesController < ApplicationController
   end
 
   def update
-    puts 'stories#update'
-    awesome_print(story_params.to_h)
-    @story = Story.find_by_id params[:id]
+    # puts 'stories#update'
+    # awesome_print(story_params.to_h)
+    story = Story.find_by_id params[:id]
     if params[:settings]
-      @story_params = story_params.to_h
-      @story.success.cta_ids = params[:ctas]
+      story.success.cta_ids = params[:ctas]
       if @story.update(story_params)
 
         # TODO: a better way of handling google errors
@@ -164,22 +163,24 @@ class StoriesController < ApplicationController
         # => adding errors to self.story.errors[:base] doesn't seem to work
         # => if all companies push to google regardless of promote_tr?,
         #     model validations can be made easier by checking for AdwordsAd.ad_id on create
-        if @story.company.promote_tr? && @story.was_published?
-          @gads_errors = gads_errors(@story, @story.company.gads_requirements_checklist)
+        if story.company.promote_tr? && story.was_published?
+          gads_errors = gads_errors(story, story.company.gads_requirements_checklist)
         end
       else
-        @story_errors = @story.errors.full_messages
+        story_errors = @story.errors.full_messages
       end
       # html response necessary for uploading customer logo image
       respond_to do |format|
         format.js do
           @response_data = {}
-          @response_data[:storyErrors] = @story_errors.present? ? @story_errors : nil
-          @response_data[:gadsErrors] = @gads_errors.present? ? @gads_errors : nil
-          @response_data[:newAds] = new_ads(@story_params, @story.id)
-          @response_data[:adsWereDestroyed] = ads_were_destroyed?(@story_params)
-          @response_data[:gadsWereCreated] = gads_were_created?(new_ads(@story_params, @story.id))
-          @response_data[:gadsWereRemoved] = ads_were_destroyed?(@story_params) && @story.company.promote_tr?
+          @response_data[:storyErrors] = story_errors.present? ? story_errors : nil
+          @response_data[:gadsErrors] = gads_errors.present? ? gads_errors : nil
+          @response_data[:newAds] = new_ads(story_params.to_h, story.id)
+          @response_data[:adsWereDestroyed] = ads_were_destroyed?(story_params.to_h)
+          @response_data[:gadsWereCreated] = gads_errors.blank? &&
+                                             gads_were_created?(new_ads(story_params.to_h, story.id))
+          @response_data[:gadsWereRemoved] = story.company.promote_tr? &&
+                                             ads_were_destroyed?(story_params.to_h)
           render({ action: 'edit/settings/update' })
         end
       end
@@ -436,7 +437,7 @@ class StoriesController < ApplicationController
 
   def gads_were_created?(new_ads)
     new_ads.present? &&
-    new_ads.all? { |campaign_type, ad_data| ad_data[:ad_id].present? }
+    new_ads.all? { |campaign_type, ad_data| ad_data.try(:[], :ad_id).present? }
   end
 
   def ads_were_destroyed?(story_params)

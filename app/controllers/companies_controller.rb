@@ -107,7 +107,7 @@ class CompaniesController < ApplicationController
       # end
 
       # this will ensure local objects have correct campaign_id/ad_group_id
-      company.sync_google_campaigns
+      company.sync_gads_campaigns
 
       # remove all ads from google
       company.remove_all_gads
@@ -116,7 +116,7 @@ class CompaniesController < ApplicationController
       format.json do
         render({
           json: {
-            gadsDataIsMissing: gads_data_is_missing,
+            # gadsDataIsMissing: gads_data_is_missing,
             requirementsChecklist: company.gads_requirements_checklist,
             publishedStoryIds: company.stories.published.pluck(:id)
           }
