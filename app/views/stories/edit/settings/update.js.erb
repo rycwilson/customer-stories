@@ -1,7 +1,7 @@
 
 (function () {
 
-  var storyParams = <%= raw @story_params.to_json %>
+  var resData = <%= raw @response_data.to_json %>,
       story = <%= raw @story.to_json({
                     only: [:id, :title, :logo_published, :preview_published, :published],
                     methods: [:previous_changes, :csp_story_path],
@@ -15,12 +15,7 @@
                     }
                   }) %>,
       $hiddenAdInputs = $('#story-settings__ads-inputs'),
-      createAds = function () {
-        return (story.published && story.previous_changes.published) ? true : false;
-      },
-      removeAds = function () {
-        return (!story.published && story.previous_changes.published) ? true : false;
-      },
+
       // update any story attributes that fall under Settings
       updateStory = function () {
         var storyIndex = CSP.stories.findIndex(function (st) { return st.id === story.id });
@@ -32,23 +27,34 @@
         $('#story-edit-header > div.story-title > span:nth-of-type(2)').text(story.title);
       };
 
-  console.log('storyParams', storyParams)
+  console.log('resData', resData);
 
   updateStory();
   toggleFormDone($('#story-settings-form'), true)
 
+  if (resData.storyErrors) {
+    flashDisplay("Failed to update Story:\xa0\xa0" + resData.storyErrors.join(', '), 'danger');
+  } else if (resData.gadsErrors) {
+    flashDisplay("Failed to create Promoted Story:\xa0\xa0" + resData.gadsErrors.join(', '), 'danger');
+  } else if (resData.gadsWereCreated) {
+    flashDisplay('Promoted Story was created successfully', 'success');
+  } else if (resData.gadsWereRemoved) {
+    flashDisplay('Promoted Story was removed successfully', 'success');
+  }
+
+  /**
+   *  update the hidden ad inputs
+   */
   $hiddenAdInputs.find('input').prop('disabled', true);
-
-  if (storyParams.newAds) {
+  if (resData.newAds) {
     $hiddenAdInputs
-      .find('[name*="topic"][name*="[id]"]').val(storyParams.newAds.topic.id).end()
-      .find('[name*="retarget"][name*="[id]"]').val(storyParams.newAds.retarget.id);
+      .find('[name*="topic"][name*="[id]"]').val(resData.newAds.topic.id).end()
+      .find('[name*="retarget"][name*="[id]"]').val(resData.newAds.retarget.id);
 
-  } else if (storyParams.adsWereRemoved) {
+  } else if (resData.adsWereDestroyed) {
     $hiddenAdInputs
       .find('[name*="[id]"]').val('').end()
       .find('[name*="[_destroy]"]').prop('checked', false);
   }
-
 
 }());

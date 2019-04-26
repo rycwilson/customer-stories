@@ -21,7 +21,7 @@ function promote () {
               }
             },
             'img-size-error': function ($fileInput, justChecking) {
-              console.log('img-size-error()')
+              // console.log('img-size-error()')
               // only want to validate new images; a url indicates an existing image
               // => will need to manually trigger validation on successful upload
               var $img = $fileInput.closest('.form-group').find('img');
@@ -62,7 +62,7 @@ function promote () {
               if (!justChecking) initS3Upload();
             },
             'fileupload-init-error': function ($fileInput) {
-              console.log('fileupload-init-error()')
+              // console.log('fileupload-init-error()')
               var validator = this,
                   $formGroup = $fileInput.closest('.form-group'),
                   $img = $formGroup.find('img'),
@@ -174,7 +174,6 @@ function promoteListeners () {
             requirementsChecklist.valid_defaults ? 'checked' : 'unchecked'
           );
         return $items.toArray().every(function (item) {
-                  console.log(item);
                   return $(item).hasClass('checked') ? true : false;
                 });
       };
@@ -193,7 +192,7 @@ function promoteListeners () {
                       // '<p>retarget ad: ' + (errors ? errors[1] : newGads.retarget.ad_id) + '</p>' +
                    '</li>'
           },
-          resetGad = function () {
+          resetGads = function () {
             if (storyIds.length === 0) {
               $btn.prop('disabled', false).children().toggle();
               $('#gads-checklist li').removeClass('checked');
@@ -202,7 +201,7 @@ function promoteListeners () {
             } else if (storyIds.length)
 
             $.ajax({
-              url: '/stories/' + storyIds.shift() + '/set_reset_gad',
+              url: '/stories/' + storyIds.shift() + '/set_reset_gads',
               method: 'put',
               dataType: 'json'
             })
@@ -218,6 +217,9 @@ function promoteListeners () {
                 resetGad();
               })
           };
+
+      $('#gads-checklist li').removeClass('checked unchecked');
+      $('#gads-results__wrapper').find('li').remove().end().hide();
       $btn.prop('disabled', true).children().toggle();
       $.ajax({
         url: $btn.data('action'),
@@ -228,7 +230,7 @@ function promoteListeners () {
           console.log(data)
           if (readyForGads(data.requirementsChecklist)) {
             storyIds = data.publishedStoryIds;
-            resetGad();
+            resetGads();
           } else {
             $btn.prop('disabled', false).children().toggle();
           }

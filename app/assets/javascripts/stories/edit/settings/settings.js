@@ -19,7 +19,23 @@ function storiesEditSettingsListeners () {
           publishingPreview = $current.is($previewInput) && $previewInput.bootstrapSwitch('state') === true,
           $storyInput = $('input:checkbox[name="story[published]"]'),
           publishingStory = $current.is($storyInput) && $storyInput.bootstrapSwitch('state') === true,
-          unpublishingStory = $current.is($storyInput) && $storyInput.bootstrapSwitch('state') === false;
+          unpublishingStory = $current.is($storyInput) && $storyInput.bootstrapSwitch('state') === false,
+          toggleHiddenAdInputs = function (shouldCreateAds) {
+            if (shouldCreateAds) {
+              $('#story-settings__ads-inputs')
+                .find(':not([name*="[_destroy]"])').prop('disabled', false).end()
+                .find('[name*="[_destroy]"]')
+                  .prop('checked', false)
+                  .prop('disabled', true)
+            } else {
+              $('#story-settings__ads-inputs')
+                .find('input').prop('disabled', true).end()
+                .find('[name*="[id]"]').prop('disabled', false).end()
+                .find('[name*="[_destroy]"]')
+                  .prop('disabled', false)
+                  .prop('checked', true)
+            }
+          };
 
       if (unpublishingLogo) {
         if ($previewInput.bootstrapSwitch('state') === true) {
@@ -27,6 +43,7 @@ function storiesEditSettingsListeners () {
         }
         if ($storyInput.bootstrapSwitch('state') === true) {
           $storyInput.bootstrapSwitch('toggleState');
+          toggleHiddenAdInputs(false)
         }
 
       } else if (publishingPreview) {
@@ -49,15 +66,10 @@ function storiesEditSettingsListeners () {
         if ($previewInput.bootstrapSwitch('state') === true) {
           $previewInput.bootstrapSwitch('toggleState');
         }
-        $('#story-settings__ads-inputs')
-          .find(':not([name*="[_destroy]"])').prop('disabled', false);
+        toggleHiddenAdInputs(true)
 
       } else if (unpublishingStory) {
-        $('#story-settings__ads-inputs')
-          .find('[name*="[id]"]').prop('disabled', false).end()
-          .find('[name*="[_destroy]"]')
-            .prop('disabled', false)
-            .prop('checked', true)
+        toggleHiddenAdInputs(false)
       }
     })
 

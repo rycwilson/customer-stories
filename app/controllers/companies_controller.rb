@@ -96,48 +96,21 @@ class CompaniesController < ApplicationController
     company = Company.find(params[:id])
     if company.ready_for_gads?
 
-      # force to get campaigns by label => because staging won't match production!
+      # force to get campaigns by name => because staging won't match production
       campaigns = GoogleAds::get_campaigns([ nil, nil ], company.subdomain)
 
-      new_campaigns = nil
+      # new_campaigns = nil
       # create campaigns if they don't exist on google
       # if campaigns.blank? || campaigns.length < 2
       #   new_campaigns = GoogleAds::create_campaigns(company.subdomain)
       #   new_ad_groups = GoogleAds::create_ad_groups(new_campaigns[:topic][:id], new_campaigns[:retarget][:id])
       # end
-      topic_campaign_id = (new_campaigns && new_campaigns[:topic][:id]) ||  # just created it
-          campaigns.select { |c| c[:name].match('display topic') }.try(:first).try(:[], :id)
-      if company.topic_campaign.campaign_id != topic_campaign_id
-        company.topic_campaign.update(campaign_id: topic_campaign_id)
-      end
 
-      retarget_campaign_id = (new_campaigns && new_campaigns[:retarget][:id]) ||  # just created it
-          campaigns.select { |c| c[:name].match('display retarget') }.try(:first).try(:[], :id)
-      if company.retarget_campaign.campaign_id != retarget_campaign_id
-        company.retarget_campaign.update(campaign_id: retarget_campaign_id)
-      end
+      # this will ensure local objects have correct campaign_id/ad_group_id
+      company.sync_google_campaigns
 
-      ad_groups = GoogleAds::get_ad_groups([ topic_campaign_id, retarget_campaign_id ])
-      topic_ad_group_id = ad_groups.select { |g| g[:campaign_id] == topic_campaign_id }.try(:first).try(:[], :id)
-      if company.topic_ad_group.ad_group_id != topic_ad_group_id
-        company.topic_ad_group.update(ad_group_id: topic_ad_group_id)
-      end
-      retarget_ad_group_id = ad_groups.select { |g| g[:campaign_id] == retarget_campaign_id }.try(:first).try(:[], :id)
-      if company.retarget_ad_group.ad_group_id != retarget_ad_group_id
-        company.retarget_ad_group.update(ad_group_id: retarget_ad_group_id)
-      end
-
-      gads_data_is_missing = topic_campaign_id.nil? || retarget_campaign_id.nil? || topic_ad_group_id.nil? || retarget_ad_group_id.nil?
-      unless gads_data_is_missing
-        company.topic_campaign.update(campaign_id: topic_campaign_id)
-        company.topic_ad_group.update(ad_group_id: topic_ad_group_id)
-        company.retarget_campaign.update(campaign_id: retarget_campaign_id)
-        company.retarget_ad_group.update(ad_group_id: retarget_ad_group_id)
-        company.ads.with_google_id.update_all(ad_id: nil)
-
-        # story ads will be added one-by-one from the client
-        company.remove_all_gads(topic_ad_group_id, retarget_ad_group_id)
-      end
+      # remove all ads from google
+      company.remove_all_gads
     end
     respond_to do |format|
       format.json do

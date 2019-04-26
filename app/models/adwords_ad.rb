@@ -80,7 +80,11 @@ class AdwordsAd < ApplicationRecord
     if new_gad[:ad].present?
       self[:ad_id] = new_gad[:ad][:id]
     else
-      new_gad[:errors].each { |error| self.errors[:base] << error }
+      # don't want to trigger invalidation because we want the model even if the ad fails
+      # the failure can be ignored when updating the story (publishing, unpublishing),
+      # and flagged in the promoted stories table
+
+      new_gad[:errors].each { |error| self.story.errors[:base] << google_error(error) }
     end
   end
 
@@ -100,6 +104,17 @@ class AdwordsAd < ApplicationRecord
   def assign_defaults
     self.long_headline = self.story.title.truncate(RESPONSIVE_AD_LONG_HEADLINE_MAX, { omission: '' })
     self.adwords_images << self.story.company.adwords_images.default
+  end
+
+  def google_error(error)
+    case error[:type]
+    when 'INVALID_ID'
+      "Not found: #{ error[:field].underscore.humanize.downcase.singularize }"
+    when 'REQUIRED'
+      "Required: #{ error[:field].underscore.humanize.downcase.singularize }"
+    # when something else
+    else
+    end
   end
 
 end

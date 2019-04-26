@@ -104,7 +104,7 @@ Rails.application.routes.draw do
         end
         resources :stories, only: [:edit, :create, :update, :destroy], shallow: true do
           get '/promoted', on: :collection, to: 'stories#promoted'
-          member { put :set_reset_gad }
+          member { put :set_reset_gads }
         end
         # resources :stories, only: [:create]
         resources :contributions, except: [:new, :edit, :update], shallow: true do

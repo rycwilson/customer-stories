@@ -7,7 +7,7 @@ class StoriesController < ApplicationController
   skip_before_action(:verify_authenticity_token, only: [:show], if: Proc.new { params[:is_plugin] })
 
   before_action :set_company
-  before_action :set_story, only: [:edit, :update, :ctas, :tags, :promote, :approval, :destroy]
+  before_action :set_story, only: [:edit, :ctas, :tags, :promote, :approval, :destroy]
   before_action only: [:show] do
     @is_social_share_redirect = true if params[:redirect_uri].present?
     @is_curator = @company.curator?(current_user)
@@ -149,19 +149,37 @@ class StoriesController < ApplicationController
   end
 
   def update
-    pp story_params.to_h
+    puts 'stories#update'
+    awesome_print(story_params.to_h)
+    @story = Story.find_by_id params[:id]
     if params[:settings]
       @story_params = story_params.to_h
       @story.success.cta_ids = params[:ctas]
       if @story.update(story_params)
+
+        # TODO: a better way of handling google errors
+        # => only way to get errors back from the associated ad is to validate it,
+        #    but present scheme dictates that the ad exists even if it has no ad_id
+        #    (and that's how it would be validated: presence of ad_id)
+        # => adding errors to self.story.errors[:base] doesn't seem to work
+        # => if all companies push to google regardless of promote_tr?,
+        #     model validations can be made easier by checking for AdwordsAd.ad_id on create
+        if @story.company.promote_tr? && @story.was_published?
+          @gads_errors = gads_errors(@story, @story.company.gads_requirements_checklist)
+        end
       else
-        # @errors =
+        @story_errors = @story.errors.full_messages
       end
       # html response necessary for uploading customer logo image
       respond_to do |format|
         format.js do
-          @story_params[:newAds] = new_ads(@story_params, @story.id)
-          @story_params[:adsWereRemoved] = ads_were_removed?(@story_params)
+          @response_data = {}
+          @response_data[:storyErrors] = @story_errors.present? ? @story_errors : nil
+          @response_data[:gadsErrors] = @gads_errors.present? ? @gads_errors : nil
+          @response_data[:newAds] = new_ads(@story_params, @story.id)
+          @response_data[:adsWereDestroyed] = ads_were_destroyed?(@story_params)
+          @response_data[:gadsWereCreated] = gads_were_created?(new_ads(@story_params, @story.id))
+          @response_data[:gadsWereRemoved] = ads_were_destroyed?(@story_params) && @story.company.promote_tr?
           render({ action: 'edit/settings/update' })
         end
       end
@@ -252,18 +270,36 @@ class StoriesController < ApplicationController
     respond_to { |format| format.js {} }
   end
 
-  def set_reset_gad
+  def set_reset_gads
     story = Story.find params[:id]
-
+    new_gads = {}
     # if missing local ad data, the gads will be created separately via AdwordsAd callback
     # if they already exist (expected), create them together
     if story.topic_ad.blank? || story.retarget_ad.blank?
       if story.topic_ad.blank?
         story.create_topic_ad(adwords_ad_group_id: story.company.topic_ad_group.id, status: 'ENABLED')
+      else
+        new_topic_gad = GoogleAds::create_ad(story.topic_ad)
+        if new_topic_gad[:ad].present?
+          story.topic_ad.update(ad_id: new_topic_gad[:ad][:id])
+        else
+          # error
+        end
       end
+      new_gads[:topic] = story.topic_ad.slice(:ad_id, :long_headline)
+
       if story.retarget_ad.blank?
         story.create_retarget_ad(adwords_ad_group_id: story.company.retarget_ad_group.id, status: 'ENABLED')
+      else
+        new_retarget_gad = GoogleAds::create_ad(story.retarget_ad)
+        if new_retarget_gad[:ad].present?
+          story.retarget_ad.update(ad_id: new_retarget_gad[:ad][:id])
+        else
+          # error
+        end
       end
+      new_gads[:retarget] = story.retarget_ad.slice(:ad_id, :long_headline)
+
     else
       add_missing_default_images(story)
       new_gads = GoogleAds::create_story_ads(story)
@@ -391,16 +427,41 @@ class StoriesController < ApplicationController
     {
       topic: AdwordsAd.joins(:adwords_campaign)
                       .where(adwords_campaigns: { type: 'TopicCampaign'}, story_id: story_id)
-                      .take.try(:slice, :id),
+                      .take.try(:slice, :id, :ad_id),
       retarget: AdwordsAd.joins(:adwords_campaign)
                          .where(adwords_campaigns: { type: 'RetargetCampaign'}, story_id: story_id)
-                         .take.try(:slice, :id)
+                         .take.try(:slice, :id, :ad_id)
     }
   end
 
-  def ads_were_removed?(story_params)
-    story_params.try(:[], :topic_ad_attributes).try(:[], :_destroy) == 'true' &&
-    story_params.try(:[], :retarget_ad_attributes).try(:[], :_destroy) == 'true'
+  def gads_were_created?(new_ads)
+    new_ads.present? &&
+    new_ads.all? { |campaign_type, ad_data| ad_data[:ad_id].present? }
+  end
+
+  def ads_were_destroyed?(story_params)
+    story_params.any? do |param, value|
+      param.match(/ad_attributes/) && value.try(:[], :_destroy) == 'true'
+    end
+  end
+
+  def gads_errors(story, checklist)
+    return [] if story.ads.all? { |ad| ad.ad_id.present? }
+    checklist.reject { |requirement, is_met| is_met }
+             .map do |requirement, is_met|
+      case requirement
+      when :default_headline
+        "Short headline is missing"
+      when :square_image
+        "Square marketing image is missing"
+      when :landscape_image
+        "Landscape marketing image is missing"
+      when :valid_defaults
+        "Default image(s) missing valid asset id"
+      else
+        "Unknown error"
+      end
+    end
   end
 
   def set_company
@@ -506,8 +567,10 @@ class StoriesController < ApplicationController
     errors = []
     new_gads[:errors].each do |error|
       case error[:type]
+      when 'INVALID_ID'
+        errors << "Not found: #{ error[:field].underscore.humanize.downcase.singularize }"
       when 'REQUIRED'
-        errors << "Required: #{error[:field].underscore.humanize.downcase.singularize}"
+        errors << "Required: #{ error[:field].underscore.humanize.downcase.singularize }"
       # when something else
       else
       end

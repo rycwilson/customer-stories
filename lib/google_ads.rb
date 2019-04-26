@@ -91,12 +91,11 @@ module GoogleAds
       new_gads = {}
       begin
         result = service.mutate(operations)
-        # awesome_print result[:value]
         if result[:value].length > 0
           result[:value].each do |new_gad|
             campaign_type = (new_gad[:ad_group_id] == story.topic_ad.ad_group.ad_group_id) ? :topic : :retarget
             new_gads[campaign_type] = {
-              ad_group_id: new_gad[:ad_group_id],
+              # ad_group_id: new_gad[:ad_group_id],
               ad_id: new_gad[:ad][:id],
               long_headline: new_gad[:ad][:long_headline][:asset][:asset_text]
             }
@@ -211,6 +210,7 @@ module GoogleAds
         :ad_group_id => ad.ad_group.ad_group_id
       }
       ad_group_operation = { :operator => 'ADD', :operand => ad_group_ad }
+      new_gad = {}
       begin
         result = service.mutate([ad_group_operation])
         awesome_print result
@@ -227,15 +227,11 @@ module GoogleAds
           new_gad[:errors] = ["unknown"]
         end
       rescue Exception => e
-        if e.message
-          new_gad[:errors] = [e.message]
-        elsif e.errors  # adwords exception will produce this
-          new_gad[:errors] = e.errors.map do |error|
-            {
-              type: error[:error_string].split('.').last,
-              field: error[:field_path].split('.').last
-            }
-          end
+        new_gad[:errors] = e.errors.map do |error|
+          {
+            type: error[:error_string].split('.').last,
+            field: error[:field_path].split('.').last
+          }
         end
         puts 'Failed to create responsive display ad v2'
       end

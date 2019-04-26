@@ -12,7 +12,7 @@ function promoteSettingsListeners () {
           // console.log('ready to upload')
           $fileInput.trigger('change');  // triggers upload to s3
           return true;
-        } catch {
+        } catch (error) {
           return false;
         }
       },

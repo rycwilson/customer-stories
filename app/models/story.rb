@@ -203,6 +203,10 @@ class Story < ApplicationRecord
       .order("stories.published DESC, stories.preview_published DESC, stories.updated_at DESC")
   end
 
+  def was_published?
+    self.previous_changes.try(:[], :published).try(:[], 1)
+  end
+
   def should_generate_new_friendly_id?
     new_record? || title_changed? || slug.blank?
   end

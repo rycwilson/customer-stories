@@ -2,20 +2,58 @@ namespace :temp do
 
   desc "temp stuff"
 
-  task create_local_campaigns: :environment do
+  # at this point, ads are still invalid due to missing square image
+  # => add a square image and reset
+
+  # this needs to be a permananent method for copying production db
+  task reset_all_gads_campaigns: :environment do
     Company.all.each do |company|
-      if company.topic_campaign.blank?
-        company.create_topic_campaign(name: "#{company.subdomain} display topic")
-        company.topic_campaign.create_adwords_ad_group(name: 'ad group display topic')
-      end
-      if company.retarget_campaign.blank?
-        company.create_retarget_campaign(name: "#{company.subdomain} display retarget")
-        company.retarget_campaign.create_adwords_ad_group(name: 'ad group display retarget')
+      if company.promote_tr?
+
+        # ensure these values match google (or set them to nil):
+        # comany.topic/retarget_campaign.campaign_id
+        # company.topic/retarget_ad_group.ad_group_id
+        company.sync_gads_campaigns
+
+        if [company.topic_campaign, company.retarget_campaign].all? do |c|
+              c.campaign_id.present? && c.ad_group.ad_group_id.present?
+            end
+
+          # TODO: keep existing ads, re-use assets as much as possible
+          # => give ads a name: "story 123 topic" => correlate between environments
+          # => api for comparing images?
+          company.remove_all_gads(false)
+
+          result = company.create_all_gads
+          puts "***\n*** #{ company.subdomain }\n***"
+          awesome_print(result)
+        end
+
       end
     end
   end
 
-  task update_images: :environment do
+
+  # TODO: would be nice to avoid having to re-upload images every time production db is copied,
+  # but as things stand this will be necessary:
+  # AdwordsImage.all.each { |ad_image| GoogleAds::upload_image_asset(ad_image) }
+  # => presently don't need this as the one-time migrate_images method below handles it
+  # => possible to compare images using the url?
+  # => could potentially correlate production and staging images this way
+  # NOTE: adwords images are always uploaded to google, regardless of company.promote_tr
+
+
+  # Create any missing campaigns / ad groups / ads
+  task create_missing_campaigns: :environment do
+    Company.all.each do |company|
+
+      # the ad group will be created by association
+      company.create_topic_campaign(name: "#{company.subdomain} display topic") if company.topic_campaign.blank?
+      company.create_retarget_campaign(name: "#{company.subdomain} display retarget") if company.retarget_campaign.blank?
+    end
+  end
+
+  task migrate_images: :environment do
     AdwordsImage.all.each do |image|
       image.type = 'LandscapeImage'
       GoogleAds::upload_image_asset(image)
@@ -23,14 +61,11 @@ namespace :temp do
     end
     Company.where.not(adwords_logo_url: [nil, ''])
            .each do |company|
-              # don't include media_id as it's going to upload to adwords on create
-              logo = SquareLogo.new(
+              SquareLogo.create(
                 image_url: company.adwords_logo_url,
                 default: true,
                 company_id: company.id
               )
-              GoogleAds::upload_image_asset(logo)
-              logo.save
             end
   end
 
