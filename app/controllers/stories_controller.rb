@@ -151,9 +151,9 @@ class StoriesController < ApplicationController
   def update
     # puts 'stories#update'
     # awesome_print(story_params.to_h)
-    story = Story.find_by_id params[:id]
+    @story = Story.find_by_id params[:id]
     if params[:settings]
-      story.success.cta_ids = params[:ctas]
+      @story.success.cta_ids = params[:ctas]
       if @story.update(story_params)
 
         # TODO: a better way of handling google errors
@@ -163,8 +163,8 @@ class StoriesController < ApplicationController
         # => adding errors to self.story.errors[:base] doesn't seem to work
         # => if all companies push to google regardless of promote_tr?,
         #     model validations can be made easier by checking for AdwordsAd.ad_id on create
-        if story.company.promote_tr? && story.was_published?
-          gads_errors = gads_errors(story, story.company.gads_requirements_checklist)
+        if @story.company.promote_tr? && @story.was_published?
+          gads_errors = gads_errors(@story, @story.company.gads_requirements_checklist)
         end
       else
         story_errors = @story.errors.full_messages
@@ -175,11 +175,11 @@ class StoriesController < ApplicationController
           @response_data = {}
           @response_data[:storyErrors] = story_errors.present? ? story_errors : nil
           @response_data[:gadsErrors] = gads_errors.present? ? gads_errors : nil
-          @response_data[:newAds] = new_ads(story_params.to_h, story.id)
+          @response_data[:newAds] = new_ads(story_params.to_h, @story.id)
           @response_data[:adsWereDestroyed] = ads_were_destroyed?(story_params.to_h)
           @response_data[:gadsWereCreated] = gads_errors.blank? &&
-                                             gads_were_created?(new_ads(story_params.to_h, story.id))
-          @response_data[:gadsWereRemoved] = story.company.promote_tr? &&
+                                             gads_were_created?(new_ads(story_params.to_h, @story.id))
+          @response_data[:gadsWereRemoved] = @story.company.promote_tr? &&
                                              ads_were_destroyed?(story_params.to_h)
           render({ action: 'edit/settings/update' })
         end
@@ -196,12 +196,12 @@ class StoriesController < ApplicationController
   end
 
   def promoted
-    respond_to() do |format|
+    respond_to do |format|
       format.json do
         render({
           json: @company.stories.with_ads.to_json({
                   only: [:id, :title, :slug],
-                  methods: [:ads_status, :ads_long_headline, :ads_image_url, :csp_story_path],
+                  methods: [:ads_status, :ads_long_headline, :ads_images, :csp_story_path],
                   include: {
                     success: {
                       only: [],
@@ -269,60 +269,6 @@ class StoriesController < ApplicationController
     )
     @story_ids.uniq!
     respond_to { |format| format.js {} }
-  end
-
-  def set_reset_gads
-    story = Story.find params[:id]
-    new_gads = {}
-    # if missing local ad data, the gads will be created separately via AdwordsAd callback
-    # if they already exist (expected), create them together
-    if story.topic_ad.blank? || story.retarget_ad.blank?
-      if story.topic_ad.blank?
-        story.create_topic_ad(adwords_ad_group_id: story.company.topic_ad_group.id, status: 'ENABLED')
-      else
-        new_topic_gad = GoogleAds::create_ad(story.topic_ad)
-        if new_topic_gad[:ad].present?
-          story.topic_ad.update(ad_id: new_topic_gad[:ad][:id])
-        else
-          # error
-        end
-      end
-      new_gads[:topic] = story.topic_ad.slice(:ad_id, :long_headline)
-
-      if story.retarget_ad.blank?
-        story.create_retarget_ad(adwords_ad_group_id: story.company.retarget_ad_group.id, status: 'ENABLED')
-      else
-        new_retarget_gad = GoogleAds::create_ad(story.retarget_ad)
-        if new_retarget_gad[:ad].present?
-          story.retarget_ad.update(ad_id: new_retarget_gad[:ad][:id])
-        else
-          # error
-        end
-      end
-      new_gads[:retarget] = story.retarget_ad.slice(:ad_id, :long_headline)
-
-    else
-      add_missing_default_images(story)
-      new_gads = GoogleAds::create_story_ads(story)
-      if new_gads[:errors]
-        new_gads[:errors] = customize_gads_errors(new_gads)
-      else
-        story.topic_ad.update(ad_id: new_gads[:topic][:ad_id])
-        story.retarget_ad.update(ad_id: new_gads[:retarget][:ad_id])
-      end
-    end
-    respond_to do |format|
-      format.json do
-        render({
-          json: {
-            story: { id: story.id, title: story.title.truncate(30, separator: '...') },
-            newGads: new_gads,
-            # topicAd: story.topic_ad.slice(:id, :status),
-            # retargetAd: story.retarget_ad.slice(:id, :status)
-          }
-        })
-      end
-    end
   end
 
   ##
@@ -577,16 +523,6 @@ class StoriesController < ApplicationController
       end
     end
     errors
-  end
-
-  def add_missing_default_images(story)
-    default_images = story.company.adwords_images.default
-    story.ads.each do |ad|
-      ad.square_images << default_images.square_images unless ad.square_images.present?
-      ad.landscape_images << default_images.landscape_images unless ad.landscape_images.present?
-      ad.square_logos << default_images.square_logos unless ad.square_logos.present?
-      ad.landscape_logos << default_images.landscape_logos unless ad.landscape_logos.present?
-    end
   end
 
 end

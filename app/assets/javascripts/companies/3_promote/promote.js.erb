@@ -1,7 +1,6 @@
 
 //= require ./promoted_stories
 //= require ./gads_form
-//= require ./image_select
 
 function promote () {
 
@@ -162,7 +161,6 @@ function promoteListeners () {
 
   promotedStoriesListeners();
   promoteSettingsListeners();
-  imageSelectModalListeners();
 
   var readyForGads = function (requirementsChecklist) {
         var $items = $('#gads-checklist li');
@@ -201,7 +199,7 @@ function promoteListeners () {
             } else if (storyIds.length)
 
             $.ajax({
-              url: '/stories/' + storyIds.shift() + '/set_reset_gads',
+              url: '/stories/' + storyIds.shift() + '/create_gads',
               method: 'put',
               dataType: 'json'
             })

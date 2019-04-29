@@ -9,7 +9,7 @@
       $submitBtn = $form.find('button[type="submit"][data-submitted="true"]'),
       $formGroup = $submitBtn.closest('.form-group'),
       $table = $('#promoted-stories-table'),
-      $modal = $('#ad-image-select-modal'),
+      $modal = $('#ads-images-modal'),
       requiredImagesAreMissing = <%= @company_params[:required_ad_images_are_missing] %> || false,
       prevDefaultImage = <%= raw @company_params[:previous_default_ad_image].to_json %> || null,
       swappedDefaultImage = <%= raw @company_params[:swapped_default_ad_image].to_json %> || null,

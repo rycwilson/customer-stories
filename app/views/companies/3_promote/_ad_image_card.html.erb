@@ -1,6 +1,6 @@
 
 <!-- no longer need this to update after changes, but it's good for styling  -->
-<li class="ad-image-card <%= ad_image_card_class_attr(ad_image) %>" <%= ad_image[:default] && ad_image[:image_url] ? "data-image-url=#{ ad_image[:image_url] }" : '' %>>
+<li class="ad-image-card <%= ad_image_card_class_name(ad_image) %>" <%= ad_image[:default] && ad_image[:image_url] ? "data-image-url=#{ ad_image[:image_url] }" : '' %>>
 
   <input type="hidden" name="company[adwords_images_attributes][<%= image_index %>][id]" value="<%= ad_image[:id] %>" >
   <input type="hidden" name="company[adwords_images_attributes][<%= image_index %>][type]" value="<%= ad_image[:type] %>">

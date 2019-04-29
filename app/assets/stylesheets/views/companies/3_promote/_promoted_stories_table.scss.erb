@@ -1,5 +1,57 @@
-#promoted-stories-table {
 
+#ads-images-modal {
+  .modal-title {
+    margin-bottom: 5px;
+  }
+  .story-title {
+    margin-bottom: 0;
+    color: #888;
+  }
+  .modal-body {
+    background-color: #fff;
+    min-height: 400px;
+    // overflow-y: scroll;
+    padding: 20px 15px 15px 15px;
+  }
+  .gads-image--square {
+    height: 85px;
+  }
+  .gads-image--landscape {
+    height: 85px;
+  }
+  .gads-logo--square {
+    height: 85px;
+  }
+  .gads-logo--landscape {
+    height: 80px;
+  }
+  img {
+    max-height: 100%;
+    cursor: pointer;
+  }
+  li {
+    padding: 5px;
+    margin: 10px;
+    border: 2px solid transparent;
+    .check {
+      display: none;
+      align-items: center;
+      color: #5E9ED6;
+      font-size: 12px;
+      padding: 4px;
+      i {
+        -webkit-text-stroke: 1px #fff;  // should match background color
+      }
+    }
+    &.selected {
+      .check {
+        display: flex;
+      }
+    }
+  }
+}
+
+#promoted-stories-table {
   td.promoted-story-title {
     cursor: pointer;
     textarea {

@@ -1,6 +1,6 @@
 module CompaniesHelper
 
-  def ad_image_card_class_attr(ad_image)
+  def ad_image_card_class_name(ad_image)
     case ad_image[:type]
     when 'SquareLogo'
       "gads-logo gads-logo--square #{ ad_image[:default] ? 'gads-default' : '' }"

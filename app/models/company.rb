@@ -48,10 +48,8 @@ class Company < ApplicationRecord
       self.select { |story| story.published? }
     end
     def with_ads
-      # any ads with status 'REMOVED' have .destroy() calls in the delayed job queue
       self.select do |story|
-        story.topic_ad.present? && story.topic_ad.status != 'REMOVED' &&
-        story.retarget_ad.present? && story.retarget_ad.status != 'REMOVED'
+        story.topic_ad.try(:id).present? && story.retarget_ad.try(:id).present?
       end
       .sort_by { |story| story.publish_date }.reverse
     end

@@ -33,6 +33,62 @@ namespace :temp do
     end
   end
 
+  task create_missing_images: :environment do
+    pixlee = Company.find_by subdomain: 'pixlee'
+    varmour = Company.find_by subdomain: 'varmour'
+    acme = Company.find_by subdomain: 'acme-test'
+    retailnext = Company.find_by subdomain: 'retailnext'
+    [
+      {
+        type: 'SquareImage',
+        image_url: 'https://csp-production-assets.s3-us-west-1.amazonaws.com/uploads/e204f5c5-4745-4c6f-a37a-6c2fed256a14/square_image.png',
+        company_id: varmour.id
+      },
+      {
+        type: 'LandscapeLogo',
+        image_url: 'https://csp-production-assets.s3-us-west-1.amazonaws.com/uploads/06fbaa6c-84bc-4b7d-9feb-bd2336d6c8a6/logo_landscape.png',
+        company_id: varmour.id
+      },
+      {
+        type: 'SquareImage',
+        image_url: 'https://csp-production-assets.s3-us-west-1.amazonaws.com/uploads/8345e900-5968-405f-9372-4205e6961c97/acme_square_image.png',
+        company_id: acme.id
+      },
+      {
+        type: 'SquareImage',
+        image_url: 'https://csp-production-assets.s3-us-west-1.amazonaws.com/uploads/706e3c69-8723-4e5a-9c8a-1db8830ca96d/retailnext_300x300.png',
+        company_id: retailnext.id
+      },
+      {
+        type: 'SquareLogo',
+        image_url: 'https://csp-production-assets.s3-us-west-1.amazonaws.com/uploads/706e3c69-8723-4e5a-9c8a-1db8830ca96d/square_logo_400x400.png',
+        company_id: retailnext.id
+      },
+      {
+        type: 'LandscapeLogo',
+        image_url: 'https://csp-production-assets.s3-us-west-1.amazonaws.com/uploads/706e3c69-8723-4e5a-9c8a-1db8830ca96d/landscape_logo.png',
+        company_id: retailnext.id
+      },
+      {
+        type: 'SquareImage',
+        image_url: 'https://csp-production-assets.s3-us-west-1.amazonaws.com/uploads/3e86900e-58db-466e-b599-be7e361bb904/gads_square_default.png',
+        company_id: pixlee.id
+      },
+      {
+        type: 'LandscapeLogo',
+        image_url: 'https://csp-production-assets.s3-us-west-1.amazonaws.com/uploads/3e86900e-58db-466e-b599-be7e361bb904/gads_landscape_logo.png',
+        company_id: pixlee.id
+      }
+    ].each do |image|
+      AdwordsImage.create(
+        type: image[:type],
+        image_url: image[:image_url],
+        company_id: image[:company_id],
+        default: true
+      )
+    end
+  end
+
 
   # TODO: would be nice to avoid having to re-upload images every time production db is copied,
   # but as things stand this will be necessary:

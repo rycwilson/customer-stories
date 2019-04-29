@@ -11,7 +11,7 @@
                   (params.newImage || params.swappedDefaultImage).type,
       $defaultImageCard = imageType && $('.gads-default').has('input[name*="[type]"][value="' + imageType + '"]'),
       $swappedImageCard = params.swappedDefaultImage && $formGroup.closest('.ad-image-card'),
-      $modal = $('#ad-image-select-modal'),
+      $modal = $('#ads-images-modal'),
       reEnableAllInputs = function () {
         var isCompanyInput = function (index, input) {
               return input.name.match(/company\[\w+\]/);

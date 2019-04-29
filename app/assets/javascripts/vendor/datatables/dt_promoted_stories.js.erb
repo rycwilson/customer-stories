@@ -20,12 +20,15 @@ function initPromotedStoriesTable () {
 
     columns: [
       {
-        name: 'image_url',
-        data: 'ads_image_url',
-        render: function (image_url, type, row, meta) {
-          return '<div class="fileinput fileinput-exists" data-provides="fileinput">' +
+        name: 'ads_images',
+        data: 'ads_images',
+        render: function (ads_images, type, row, meta) {
+          var landscapeImages = ads_images.filter(function (image) {
+                                  return image.type === 'LandscapeImage'
+                                });
+          return '<div class="fileinput fileinput-exists">' +
                    '<div class="fileinput-preview thumbnail">' +
-                     '<img src="' + image_url + '" alt="promoted story image">' +
+                     '<img src="' + (landscapeImages.length ? landscapeImages[0].image_url : '') + '" alt="promoted story image">' +
                    '</div>' +
                    '<input type="file" name="image_url" id="image_url" class="hidden" ' +
                  '</div>';
@@ -101,7 +104,7 @@ function initPromotedStoriesTable () {
             // add a tooltip message to stories that don't have an image
             $table.find('img[src=""]').each(
               function () {
-                if ($('#ad-image-select-modal li').length === 0) {
+                if ($('#ads-images-modal li').length === 0) {
                   $(this).closest('.fileinput')
                     .tooltip({
                       container: 'body',

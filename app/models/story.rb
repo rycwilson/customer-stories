@@ -518,8 +518,10 @@ class Story < ApplicationRecord
     self.ads.first.long_headline  # same for each ad
   end
 
-  def ads_image_url
-    self.ads.first.landscape_images.try(:image_url)  # same for each ad
+  def ads_images
+    self.ads.first.adwords_images.map do |ad_image|   # same for each ad
+      { id: ad_image.id, image_url: ad_image.image_url, type: ad_image.type }
+    end
   end
 
   def update_publish_state
