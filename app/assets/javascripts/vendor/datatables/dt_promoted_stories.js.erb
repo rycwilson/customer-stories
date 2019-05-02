@@ -56,33 +56,35 @@ function initPromotedStoriesTable () {
           }
         }
       },
-      {
-        name: 'actions',
-        data: null,
-        render: function (data, type, row, meta) {
-          return _.template( $('#promoted-story-actions-dropdown-template').html() )({
-            viewStoryPath: row.csp_story_path
-          });
-        }
-      },
+      // {
+      //   name: 'actions',
+      //   data: null,
+      //   render: function (data, type, row, meta) {
+      //     return _.template( $('#promoted-story-actions-dropdown-template').html() )({
+      //       viewStoryPath: row.csp_story_path
+      //     });
+      //   }
+      // },
     ],
 
     columnDefs: [
       {
-        targets: [imageIndex, titleIndex, actionsIndex],
+        // targets: [imageIndex, titleIndex, actionsIndex],
+        targets: [imageIndex, titleIndex],
         orderable: false
       },
       {
-        targets: [statusIndex, titleIndex, actionsIndex],
+        // targets: [statusIndex, titleIndex, actionsIndex],
+        targets: [statusIndex, titleIndex],
         searchable: false
       },
       // { width: '31%', targets: storyTitleIndex },
       // { width: '22%', targets: [imageIndex, customerIndex] },
-      { width: '20%', targets: imageIndex },
-      { width: '44%', targets: titleIndex },
-      { width: '20%', targets: customerIndex },
-      { width: '8%', targets: statusIndex },
-      { width: '8%', targets: actionsIndex },
+      { width: '22%', targets: imageIndex },
+      { width: '46%', targets: titleIndex },
+      { width: '22%', targets: customerIndex },
+      { width: '10%', targets: statusIndex },
+      // { width: '8%', targets: promoted-story-actions-dropdown-templateIndex },
     ],
 
     createdRow: function (row, data, index) {
@@ -92,7 +94,7 @@ function initPromotedStoriesTable () {
                              .attr('data-title', data.title);
       $(row).children().eq(2).addClass('promoted-story-customer');
       $(row).children().eq(3).addClass('status dropdown');
-      $(row).children().eq(4).addClass('actions dropdown');
+      // $(row).children().eq(4).addClass('actions dropdown');
     },
 
     initComplete: function (settings, json) {

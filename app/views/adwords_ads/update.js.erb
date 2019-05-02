@@ -1,0 +1,12 @@
+
+(function () {
+
+  var $modal = $('#ads-images-modal'),
+      $form = $('#ads-images-form');
+
+  $('#promoted-stories-table').DataTable().ajax.reload(function (promotedStories) {
+    $modal.modal('hide');
+    toggleFormDone($form, false);
+  });
+
+}());

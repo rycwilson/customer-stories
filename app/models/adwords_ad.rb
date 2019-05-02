@@ -63,12 +63,70 @@ class AdwordsAd < ApplicationRecord
   #
 
   before_create :assign_defaults
-
   before_create :create_gad, if: :promote_enabled?
-
-  # after_update_commit { GoogleAds::update_multi_asset_ad(self) }
-
+  after_update_commit :update_gad, if: :promote_enabled?
   before_destroy :remove_gad, if: :promote_enabled?
+
+  def google_ad
+    campaign_type = self.ad_group.campaign.type.match('Topic') ? 'topic' : 'retarget'
+    default_images = self.story.company.adwords_images.default
+    square_images = (self.new_record? ? default_images.square_images : self.square_images).to_a
+    landscape_images = (self.new_record? ? default_images.landscape_images : self.landscape_images).to_a
+    square_logos = (self.new_record? ? default_images.square_logos : self.square_logos).to_a
+    landscape_logos = (self.new_record? ? default_images.landscape_logos : self.landscape_logos).to_a
+    [square_images, landscape_images, square_logos, landscape_logos].each do |images|
+      images.map! do |image|
+        {
+          asset: {
+            xsi_type: 'ImageAsset',
+            asset_id: image.asset_id
+          }
+        }
+      end
+    end
+    {
+      xsi_type: 'MultiAssetResponsiveDisplayAd',
+      headlines: [
+        {
+          asset: {
+            xsi_type: 'TextAsset',
+            asset_text: self.story.company.adwords_short_headline  # get company via story in case ad is new record
+          }
+        }
+      ],
+      descriptions: [
+        {
+          asset: {
+            xsi_type: 'TextAsset',
+            asset_text: self.long_headline
+          }
+        },
+      ],
+      business_name: self.story.company.name,
+      long_headline: {
+        asset: {
+          xsi_type: 'TextAsset',
+          asset_text: self.long_headline
+        }
+      },
+      # the association methods (e.g. ad.landscape_images) don't work here
+      # because the ad hasn't been saved yet
+      marketing_images: landscape_images,
+      square_marketing_images: square_images,
+      final_urls: [
+        self.story.csp_story_url + "?utm_campaign=promote&utm_content=#{ campaign_type }"
+      ],
+      call_to_action_text: 'Learn More',
+      main_color: self.main_color,
+      accent_color: self.accent_color,
+      allow_flexible_color: false,
+      # format_setting: 'NON_NATIVE',
+      # dynamic_settings_price_prefix: 'as low as',
+      # dynamic_settings_promo_text: 'Free shipping!',
+      logo_images: square_logos,
+      landscape_logo_images: landscape_logos
+    }
+  end
 
   private
 
@@ -77,7 +135,7 @@ class AdwordsAd < ApplicationRecord
   end
 
   def create_gad
-    new_gad = GoogleAds::create_ad(self, self.story.company.adwords_images.default)
+    new_gad = GoogleAds::create_ad(self)
     if new_gad[:ad].present?
       self[:ad_id] = new_gad[:ad][:id]
     else
@@ -85,8 +143,16 @@ class AdwordsAd < ApplicationRecord
       # the failure can be ignored when updating the story (publishing, unpublishing),
       # and flagged in the promoted stories table
 
+      # this doesn't seem to work
       new_gad[:errors].each { |error| self.story.errors[:base] << google_error(error) }
     end
+  end
+
+  def update_gad
+
+  end
+
+  def change_gad_status
   end
 
   def validate_images

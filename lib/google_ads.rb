@@ -10,83 +10,14 @@ module GoogleAds
       return false if story.topic_ad.nil? || story.retarget_ad.nil?
       # return false unless company.promote_tr?
       service = create_api.service(:AdGroupAdService, API_VERSION)
-      retarget_ad_group_id =
       operations = [story.topic_ad, story.retarget_ad].map do |ad|
-        campaign_type = ad.campaign.type.match('Topic') ? 'topic' : 'retarget'
-        gad = {
-          xsi_type: 'MultiAssetResponsiveDisplayAd',
-          headlines: [
-            {
-              asset: {
-                xsi_type: 'TextAsset',
-                asset_text: ad.try(:short_headlines).try(:[], 0) || story.company.adwords_short_headline
-              }
-            }
-          ],
-          descriptions: [
-            {
-              asset: {
-                xsi_type: 'TextAsset',
-                asset_text: ad.try(:descriptions).try(:[], 0) || ad.long_headline
-              }
-            },
-          ],
-          business_name: story.company.name,
-          long_headline: {
-            asset: {
-              xsi_type: 'TextAsset',
-              asset_text: ad.long_headline
-            }
-          },
-          marketing_images: ad.landscape_images.map do |image|
-                                {
-                                  asset: {
-                                    xsi_type: 'ImageAsset',
-                                    asset_id: image.asset_id
-                                  }
-                                }
-                              end,
-          square_marketing_images: ad.square_images.map do |image|
-                                      {
-                                        asset: {
-                                          xsi_type: 'ImageAsset',
-                                          asset_id: image.asset_id
-                                        }
-                                      }
-                                    end,
-          final_urls: [
-            ad.story.csp_story_url + "?utm_campaign=promote&utm_content=#{ campaign_type }"
-          ],
-          call_to_action_text: 'Learn More',
-          main_color: ad.main_color,
-          accent_color: ad.accent_color,
-          allow_flexible_color: false,
-          # :format_setting: 'NON_NATIVE',
-          # :dynamic_settings_price_prefix: 'as low as',
-          # :dynamic_settings_promo_text: 'Free shipping!',
-          logo_images: ad.square_logos.map do |image|
-                          {
-                            asset: {
-                              xsi_type: 'ImageAsset',
-                              asset_id: image.asset_id
-                            }
-                          }
-                        end,
-          landscape_logo_images: ad.landscape_logos.map do |image|
-                                    {
-                                      asset: {
-                                        xsi_type: 'ImageAsset',
-                                        asset_id: image.asset_id
-                                      }
-                                    }
-                                  end
-        }
+        gad = ad.google_ad
         ad_group_ad = {
           ad_group_id: ad.ad_group.ad_group_id,
           ad: gad,
-          status: 'ENABLED'
+          status: ad.status
         }
-        ad_group_operation = { operator: 'ADD', operand: ad_group_ad }
+        operation = { operator: 'ADD', operand: ad_group_ad }
       end
       new_gads = {}
       begin
@@ -121,99 +52,20 @@ module GoogleAds
 
     # this method is called from an AdwordsAd before_create callback
     # => always a new ad
-    # => pass in the default images instead of relying on associations
-    def create_ad(ad, default_images)
-      company = ad.ad_group.campaign.company  # necessary since the ad hasn't been saved yet (can't just use ad.company)
-      campaign_type = ad.ad_group.campaign.type.match('Topic') ? 'topic' : 'retarget'
+    def create_ad(ad)
       service = create_api.service(:AdGroupAdService, API_VERSION)
-      gad = {
-        :xsi_type => 'MultiAssetResponsiveDisplayAd',
-        :headlines => [
-          {
-            :asset => {
-              :xsi_type => 'TextAsset',
-              :asset_text => ad.try(:short_headlines).try(:[], 0) || company.adwords_short_headline
-            }
-          }
-        ],
-        :descriptions => [
-          {
-            :asset => {
-              :xsi_type => 'TextAsset',
-              :asset_text => ad.try(:descriptions).try(:[], 0) || ad.long_headline
-            }
-          },
-        ],
-        :business_name => company.name,
-        :long_headline => {
-          :asset => {
-            :xsi_type => 'TextAsset',
-            :asset_text => ad.long_headline
-          }
-        },
-        # the association methods (e.g. ad.landscape_images) don't work here
-        # because the ad hasn't been saved yet
-        :marketing_images => default_images
-                                .select { |image| image.type == 'LandscapeImage' }
-                                .map do |image|
-                                  {
-                                    asset: {
-                                      xsi_type: 'ImageAsset',
-                                      asset_id: image.asset_id
-                                    }
-                                  }
-                                end,
-        :square_marketing_images => default_images
-                                      .select { |image| image.type == 'SquareImage' }
-                                      .map do |image|
-                                        {
-                                          asset: {
-                                            xsi_type: 'ImageAsset',
-                                            asset_id: image.asset_id
-                                          }
-                                        }
-                                      end,
-        :final_urls => [
-          ad.story.csp_story_url + "?utm_campaign=promote&utm_content=#{ campaign_type }"
-        ],
-        :call_to_action_text => 'Learn More',
-        :main_color => ad.main_color,
-        :accent_color => ad.accent_color,
-        :allow_flexible_color => false,
-        # :format_setting => 'NON_NATIVE',
-        # :dynamic_settings_price_prefix => 'as low as',
-        # :dynamic_settings_promo_text => 'Free shipping!',
-        :logo_images => default_images
-                          .select { |image| image.type == 'SquareLogo' }
-                          .map do |image|
-                            {
-                              asset: {
-                                xsi_type: 'ImageAsset',
-                                asset_id: image.asset_id
-                              }
-                            }
-                          end,
-        :landscape_logo_images => default_images
-                                    .select { |image| image.type == 'LandscapeLogo' }
-                                    .map do |image|
-                                      {
-                                        asset: {
-                                          xsi_type: 'ImageAsset',
-                                          asset_id: image.asset_id
-                                        }
-                                      }
-                                    end
-      }
+      gad = ad.google_ad
       ad_group_ad = {
-        :xsi_type => 'AdGroupAd',
-        :ad => gad,
-        :ad_group_id => ad.ad_group.ad_group_id
+        xsi_type: 'AdGroupAd',
+        ad: gad,
+        ad_group_id: ad.ad_group.ad_group_id,
+        status: 'ENABLED'
       }
-      ad_group_operation = { :operator => 'ADD', :operand => ad_group_ad }
+      operation = { operator: 'ADD', operand: ad_group_ad }
       new_gad = {}
       begin
-        result = service.mutate([ad_group_operation])
-        awesome_print result
+        result = service.mutate([operation])
+        # awesome_print result
         if result[:value].present?
           new_gad = result[:value].first
           puts 'Created responsive display ad v2'
@@ -239,46 +91,42 @@ module GoogleAds
     end
 
     def update_ad(ad)
-      return false unless ad.company.promote_tr?
-      service = create_api.service(:AdGroupAdService, API_VERSION)
-      ad_group_ad = {
-        :ad_group_id => ad.ad_group.ad_group_id,
-        :status => ad.status,
-        :ad => { id: ad.ad_id }
+      campaign_type = ad.campaign.type.match('Topic') ? 'topic' : 'retarget'
+      service = create_api.service(:AdService, API_VERSION)
+      gad = ad.google_ad
+      operation = {
+        operator: 'SET',
+        operand: gad
       }
-      ad_group_operation = { :operator => 'SET', :operand => ad_group_ad }
+      updated_gad = {}
       begin
-        response = service.mutate([ad_group_operation])
-
-      # Authorization error.
-      rescue AdsCommon::Errors::OAuth2VerificationRequired => e
-        # flash[:alert] = Rails.env.development? ? 'Invalid Adwords API credentials' : 'Error updating Promoted Story status'
-      # HTTP errors.
-      rescue AdsCommon::Errors::HttpError => e
-        puts "HTTP Error: %s" % e
-        # flash[:alert] = Rails.env.development? ? "HTTP error: #{e}" : 'Error updating Promoted Story status'
-      # API errors.
-      rescue AdwordsApi::Errors::ApiException => e
-        puts "Message: %s" % e.message
-        puts 'Errors:'
-        e.errors.each_with_index do |error, index|
-          puts "\tError [%d]:" % (index + 1)
-          error.each do |field, value|
-            puts "\t\t%s: %s" % [field, value]
-          end
+        result = service.mutate([operation])
+        if result[:value].present?
+          updated_gad = result[:value].first
+          puts 'Updated responsive display ad v2'
+          awesome_print({
+              ad_group_id: updated_gad[:ad_group_id],
+              ad_id: updated_gad[:ad][:id],
+              long_headline: updated_gad[:ad][:long_headline][:asset][:asset_text]
+            })
+        else
+          puts 'Failed to update responsive display ad v2'
+          updated_gad[:errors] = ["unknown"]
         end
-      end
 
-      # response
-      if response and response[:value]
-        updated_ad = response[:value].first
-        puts "Ad ID %d was successfully updated, status set to '%s'." %
-              [adwords_ad[:ad][:id], adwords_ad[:status]]
-        return true
-      else
-        puts 'No ads were updated.'
-        return false
+      rescue AdwordsApi::Errors::ApiException => e
+        updated_gad[:errors] = e.errors.map do |error|
+          {
+            type: error[:error_string].split('.').last,
+            field: error[:field_path].split('.').last
+          }
+        end
+        puts 'Failed to update responsive display ad v2'
       end
+      updated_gad
+    end
+
+    def update_ad_status
     end
 
     # this could potentially be a google ad that's not structured like a csp ad

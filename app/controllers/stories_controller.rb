@@ -149,8 +149,8 @@ class StoriesController < ApplicationController
   end
 
   def update
-    # puts 'stories#update'
-    # awesome_print(story_params.to_h)
+    puts 'stories#update'
+    awesome_print(story_params.to_h)
     @story = Story.find_by_id params[:id]
     if params[:settings]
       @story.success.cta_ids = params[:ctas]
@@ -208,6 +208,12 @@ class StoriesController < ApplicationController
                       include: {
                         customer: { only: [:name, :slug] }
                       }
+                    },
+                    topic_ad: {
+                      only: [:id]
+                    },
+                    retarget_ad: {
+                      only: [:id]
                     }
                   }
                 })
@@ -349,19 +355,18 @@ class StoriesController < ApplicationController
   private
 
   def story_params
-    params.require(:story)
-      .permit(
-        :title, :summary, :quote, :quote_attr_name, :quote_attr_title, :video_url, :success_id,
-        :formatted_video_url, :narrative, :published, :logo_published, :preview_published,
-        success_attributes: [
-          :id, :name, :customer_id, :curator_id,
-          product_ids: [], story_category_ids: [],
-          results_attributes: [:id, :description, :_destroy],
-          customer_attributes: [:id, :name, :logo_url, :show_name_with_logo, :company_id]
-        ],
-        topic_ad_attributes: [:id, :adwords_ad_group_id, :_destroy],
-        retarget_ad_attributes: [:id, :adwords_ad_group_id, :_destroy]
-      )
+    params.require(:story).permit(
+      :title, :summary, :quote, :quote_attr_name, :quote_attr_title, :video_url, :success_id,
+      :formatted_video_url, :narrative, :published, :logo_published, :preview_published,
+      success_attributes: [
+        :id, :name, :customer_id, :curator_id,
+        product_ids: [], story_category_ids: [],
+        results_attributes: [:id, :description, :_destroy],
+        customer_attributes: [:id, :name, :logo_url, :show_name_with_logo, :company_id]
+      ],
+      topic_ad_attributes: [:id, :adwords_ad_group_id, :_destroy],
+      retarget_ad_attributes: [:id, :adwords_ad_group_id, :_destroy]
+    )
   end
 
   # def adwords_params
@@ -508,21 +513,6 @@ class StoriesController < ApplicationController
     else
       "#{(category_stories & product_stories).size} #{'story'.pluralize((category_stories & product_stories).size)} found"
     end
-  end
-
-  def customize_gads_errors(new_gads)
-    errors = []
-    new_gads[:errors].each do |error|
-      case error[:type]
-      when 'INVALID_ID'
-        errors << "Not found: #{ error[:field].underscore.humanize.downcase.singularize }"
-      when 'REQUIRED'
-        errors << "Required: #{ error[:field].underscore.humanize.downcase.singularize }"
-      # when something else
-      else
-      end
-    end
-    errors
   end
 
 end

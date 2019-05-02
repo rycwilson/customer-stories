@@ -28,17 +28,34 @@
   img {
     max-height: 100%;
     cursor: pointer;
+    // border: 1px solid #ddd;
+    box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.16), 0 0 0 1px rgba(0, 0, 0, 0.08)
   }
   li {
+    position: relative;
     padding: 5px;
     margin: 10px;
-    border: 2px solid transparent;
     .check {
       display: none;
+      position: absolute;
+      bottom: -10px;
+      right: -10px;
       align-items: center;
       color: #5E9ED6;
       font-size: 12px;
       padding: 4px;
+      > div {
+        position: relative;
+        > div {
+          position: absolute;
+          top: 2px;
+          left: 4px;
+          height: 24px;
+          width: 24px;
+          background: #fff;
+          border-radius: 14px;
+        }
+      }
       i {
         -webkit-text-stroke: 1px #fff;  // should match background color
       }

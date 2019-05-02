@@ -59,6 +59,8 @@ class CompaniesController < ApplicationController
   end
 
   def update_gads
+    # puts 'companies#update_gads'
+    # awesome_print(company_params.to_h)
     company = Company.find(params[:id])
 
     # capture deleted image data (associated ads) prior to destroying image
@@ -67,8 +69,6 @@ class CompaniesController < ApplicationController
     #     removed_images_ads(company, params[:company][:adwords_images_attributes])
     # end
 
-    @company_params = company_params.to_h
-    pp company_params.to_h
 
     if company.update(company_params)
       # if company.promote_tr? && ads must be modified (e.g. short headline changed, images removed)
@@ -78,16 +78,22 @@ class CompaniesController < ApplicationController
     end
     respond_to do |format|
       format.js do
+        @response_data = {}
         # TODO: this will have to be separate for images and logos lists
         # @company_params[:defaultImagesAreMissing] =
-        @company_params[:prevDefaultImage] = previous_default_ad_image(@company_params[:adwords_images_attributes])
-        @company_params[:swappedDefaultImage] = swapped_default_ad_image(@company_params[:adwords_images_attributes])
+        @response_data[:prevDefaultImage] = previous_default_ad_image(company_params.to_h[:adwords_images_attributes])
+        @response_data[:swappedDefaultImage] = swapped_default_ad_image(company_params.to_h[:adwords_images_attributes])
 
         # this needs to be here regardless of promote being enabled
-        @company_params[:newImage] = new_ad_image(@company_params[:adwords_images_attributes])
-        @company_params[:removedImageId] = removed_ad_image_id(@company_params[:adwords_images_attributes])
-        @company_params.delete(:adwords_images_attributes)
-        @company_params.delete_if { |k, v| v.blank? }
+        @response_data[:newImage] = new_ad_image(company_params.to_h[:adwords_images_attributes])
+        @response_data[:removedImageId] = removed_ad_image_id(company_params.to_h[:adwords_images_attributes])
+        @response_data[:imageClassName] = @response_data[:newImage] &&
+                                          helpers.ad_image_card_class_name({
+                                            type: @response_data[:newImage][:type],
+                                            default: @response_data[:newImage][:default]
+                                          })
+        # @response_data.delete(:adwords_images_attributes)
+        # @company_params.delete_if { |k, v| v.blank? }
       end
     end
   end

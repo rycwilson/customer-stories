@@ -54,12 +54,41 @@ class AdwordsAdsController < ApplicationController
     end
   end
 
+  # update the story with topic_ad_attributes and retarget_ad_attributes
   def update
+    puts 'adwords_ads#update'
     # binding.remote_pry
-    respond_to { |format| format.json { head :ok } }
+    # awesome_print(story_params.to_h)
+    story = Story.find(params[:id])
+    # if story.update(story_params)
+    #   [story.topic_ad, story.retarget_ad].each do |ad|
+    #     # update status
+    #     GoogleAds::update_ad_status(ad)
+
+    #     # update assets
+
+    #     GoogleAds::update_ad(ad)
+    #   end
+    # else
+    #   # error
+    # end
+    respond_to { |format| format.js {} }
   end
 
   private
+
+  # def topic_ad_params
+  # end
+
+  # def retarget_ad_params
+  # end
+
+  def story_params
+    params.require(:story).permit(
+      topic_ad_attributes: [ :id, :long_headline, adwords_image_ids: [] ],
+      retarget_ad_attributes: [ :id, :long_headline, adwords_image_ids: [] ]
+    )
+  end
 
   def add_missing_default_images(story)
     default_images = story.company.adwords_images.default
@@ -70,6 +99,21 @@ class AdwordsAdsController < ApplicationController
       ad.landscape_logos << default_images.landscape_logos unless ad.landscape_logos.present?
       ad.save
     end
+  end
+
+  def customize_gads_errors(new_gads)
+    errors = []
+    new_gads[:errors].each do |error|
+      case error[:type]
+      when 'INVALID_ID'
+        errors << "Not found: #{ error[:field].underscore.humanize.downcase.singularize }"
+      when 'REQUIRED'
+        errors << "Required: #{ error[:field].underscore.humanize.downcase.singularize }"
+      # when something else
+      else
+      end
+    end
+    errors
   end
 
 end

@@ -3,13 +3,21 @@ function newPromotedStoriesEditor() {
   return new $.fn.dataTable.Editor({
     table: '#promoted-stories-table',
     ajax: {
-      url: '/stories/_id_/promote',
-      type: 'PUT',
+      url: '/stories/_id_/update_gads',
+      type: 'put',
       data: function (data) {
+        console.log(data)
         var storyId = Object.keys(data.data)[0];
         return {
-          adwords: {
-            long_headline: data.data[storyId].long_headline
+          story: {
+            topic_ad_attributes: {
+              // id: ,
+              long_headline: data.data[storyId].long_headline
+            },
+            retarget_ad_attributes: {
+              // id: ,
+              long_headline: data.data[storyId].long_headline
+            }
           }
         };
       }
@@ -43,12 +51,12 @@ function openPromotedStoriesEditor (promotedStoriesEditor, $row) {
         dt.row($row).data(rowData).draw();
 
         // update adwords
-        $.ajax({
-          url: '/stories/' + storyId + '/adwords',
-          method: 'put',
-          data: { long_headline_changed: true },
-          dataType: 'script'
-        });
+        // $.ajax({
+        //   url: '/stories/' + storyId + '/adwords',
+        //   method: 'put',
+        //   data: { long_headline_changed: true },
+        //   dataType: 'script'
+        // });
       },
       drawType: true,
       // buttons are in reverse order of how they're diplayed because they both have float:right
