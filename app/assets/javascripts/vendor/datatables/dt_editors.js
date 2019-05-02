@@ -6,16 +6,19 @@ function newPromotedStoriesEditor() {
       url: '/stories/_id_/update_gads',
       type: 'put',
       data: function (data) {
-        console.log(data)
         var storyId = Object.keys(data.data)[0];
         return {
           story: {
             topic_ad_attributes: {
-              // id: ,
+              id: $('#promoted-stories-table').DataTable()
+                    .row('[data-story-id="' + storyId + '"]').data()
+                    .topic_ad.id,
               long_headline: data.data[storyId].long_headline
             },
             retarget_ad_attributes: {
-              // id: ,
+              id: $('#promoted-stories-table').DataTable()
+                    .row('[data-story-id="' + storyId + '"]').data()
+                    .retarget_ad.id,
               long_headline: data.data[storyId].long_headline
             }
           }

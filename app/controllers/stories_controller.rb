@@ -300,7 +300,7 @@ class StoriesController < ApplicationController
         JSON.parse(
           @story.to_json({
             only: [:id, :title, :slug],
-            methods: [:ads_status, :ads_long_headline, :ads_image_url, :csp_story_path],
+            methods: [:ads_status, :ads_long_headline, :ads_images, :csp_story_path],
             include: {
               success: {
                 only: [],

@@ -1,12 +1,16 @@
 
 (function () {
 
-  var $modal = $('#ads-images-modal'),
-      $form = $('#ads-images-form');
+  var resData = <%= raw @response_data.to_json %>,
+      // $modal = $('#ads-images-modal'),
+      // $form = $('#ads-images-form');
 
-  $('#promoted-stories-table').DataTable().ajax.reload(function (promotedStories) {
-    $modal.modal('hide');
-    toggleFormDone($form, false);
-  });
+
+  console.log(resData.previous_changes)
+
+  // $('#promoted-stories-table').DataTable().ajax.reload(function (promotedStories) {
+  //   $modal.modal('hide');
+  //   toggleFormDone($form, false);
+  // });
 
 }());

@@ -91,12 +91,11 @@ module GoogleAds
     end
 
     def update_ad(ad)
-      campaign_type = ad.campaign.type.match('Topic') ? 'topic' : 'retarget'
       service = create_api.service(:AdService, API_VERSION)
       gad = ad.google_ad
       operation = {
         operator: 'SET',
-        operand: gad
+        operand: gad.merge({ id: ad.ad_id }),
       }
       updated_gad = {}
       begin
@@ -104,11 +103,10 @@ module GoogleAds
         if result[:value].present?
           updated_gad = result[:value].first
           puts 'Updated responsive display ad v2'
+          # TODO: log the fields that were updated => for now just the id
           awesome_print({
-              ad_group_id: updated_gad[:ad_group_id],
-              ad_id: updated_gad[:ad][:id],
-              long_headline: updated_gad[:ad][:long_headline][:asset][:asset_text]
-            })
+            id: updated_gad[:id],
+          })
         else
           puts 'Failed to update responsive display ad v2'
           updated_gad[:errors] = ["unknown"]
@@ -126,7 +124,17 @@ module GoogleAds
       updated_gad
     end
 
-    def update_ad_status
+    def change_ad_status(ad)
+      service = create_api.service(:AdGroupAdService, API_VERSION)
+      operation = {
+        operator: 'SET',
+        operand: {
+          ad_group_id: ad.ad_group.ad_group_id,
+          status: ad.status,
+          ad: { id: ad.ad_id }
+        }
+      }
+      service.mutate([operation])
     end
 
     # this could potentially be a google ad that's not structured like a csp ad

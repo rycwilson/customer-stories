@@ -57,22 +57,49 @@ class AdwordsAdsController < ApplicationController
   # update the story with topic_ad_attributes and retarget_ad_attributes
   def update
     puts 'adwords_ads#update'
-    # binding.remote_pry
-    # awesome_print(story_params.to_h)
+    awesome_print(story_params.to_h)
     story = Story.find(params[:id])
-    # if story.update(story_params)
-    #   [story.topic_ad, story.retarget_ad].each do |ad|
-    #     # update status
-    #     GoogleAds::update_ad_status(ad)
-
-    #     # update assets
-
-    #     GoogleAds::update_ad(ad)
-    #   end
-    # else
-    #   # error
-    # end
-    respond_to { |format| format.js {} }
+    if story.update(story_params)
+      [story.topic_ad, story.retarget_ad].each do |ad|
+        (ad.previous_changes.keys & ['status']).any? ?
+          GoogleAds::change_ad_status(ad) :
+          GoogleAds::update_ad(ad)
+      end
+    else
+      # error
+    end
+    respond_to do |format|
+      format.json do
+        # data needed for a promoted story row (see promoted method above)
+        dt_data = [
+          JSON.parse(
+            story.to_json({
+              only: [:id, :title, :slug],
+              methods: [:ads_status, :ads_long_headline, :ads_images, :csp_story_path],
+              include: {
+                success: {
+                  only: [],
+                  include: {
+                    customer: { only: [:name, :slug] }
+                  }
+                },
+                topic_ad: {
+                  only: [:id]
+                },
+                retarget_ad: {
+                  only: [:id]
+                }
+              }
+            })
+          )
+        ]
+        render({ json: { data: dt_data }.to_json })
+      end
+      format.js do
+        response_data = {}
+        response_data[:previousChanges] = story.ads.first.previous_changes
+      end
+    end
   end
 
   private
