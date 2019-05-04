@@ -1,8 +1,6 @@
 
 function promotedStoriesListeners () {
 
-
-
   $(document)
 
     // story image select
@@ -118,39 +116,33 @@ function promotedStoriesListeners () {
       openPromotedStoriesEditor(promotedStoriesEditor, $row);
     })
 
+
     // change status
-    .on('click', 'td.status.dropdown .dropdown-menu a.pause, ' +
-                 'td.status.dropdown .dropdown-menu a.enable', function () {
-      var storyId = $(this).closest('tr').data('story-id');
+    // 1 - toggle the hidden checkbox (retarget ad)
+    // 2 - submit the form
+    // TODO: error handling
+    .on('switchChange.bootstrapSwitch', 'input.promote-control', function () {
+      var $switch = $(this),
+          $switchContainer = $switch.closest('.bootstrap-switch-container'),
+          isEnabled = $switch.bootstrapSwitch('state');  // true or false
+      $switchContainer
+        .find(isEnabled ? '.bootstrap-switch-handle-on' : '.bootstrap-switch-handle-off')
+        .find('.fa-spin, ' + (isEnabled ? '.fa-play' : '.fa-pause')).toggle()
+      $switch.closest('.bootstrap-switch')
+             .nextAll('input[type="checkbox"]')
+             .prop('checked', isEnabled)
+             .closest('form')
+               // .data('submitted', true)
+               .find('.help-block').hide().end()
+               .submit();
+    })
+    .on('click', '.bootstrap-switch-wrapper', function (e) {
+      var $form = $(this).find('form');
+      if ($form.data('submitted')) e.preventDefault();
+      $form.attr('data-submitted', 'true');
 
-      $(this).closest('.dropdown')
-             .find('a.dropdown-toggle')
-             .toggleClass('enabled paused')
-             .children(':first')
-             .toggleClass('fa-play fa-pause');
-      $(this).closest('.dropdown-menu').children('li').toggle();
-
-      // first update story.promote and return positive json response,
-      // then send a request to update adwords
-      $.ajax({
-        url: '/stories/' + storyId + '/promote',
-        method: 'put',
-        data: {
-          adwords: {
-            status: $(this).attr('class') === 'enable' ? 'ENABLED' : 'PAUSED',
-          }
-        },
-        dataType: 'json',
-        success: function (data, status, xhr) {
-          $.ajax({
-            url: '/stories/' + storyId + '/adwords',
-            method: 'put',
-            data: { status_changed: true },
-            dataType: 'script'
-          });
-        },
-      });
-
+      // it will show when the response reinitializes bs-switch
+      $(this).next().children('.help-block').hide();
     })
 
     // ad previews - separate window

@@ -56,64 +56,74 @@ class AdwordsAdsController < ApplicationController
 
   # update the story with topic_ad_attributes and retarget_ad_attributes
   def update
-    puts 'adwords_ads#update'
-    awesome_print(story_params.to_h)
+    # puts 'adwords_ads#update'
+    # awesome_print(story_params.to_h)
     story = Story.find(params[:id])
     if story.update(story_params)
       [story.topic_ad, story.retarget_ad].each do |ad|
-        (ad.previous_changes.keys & ['status']).any? ?
-          GoogleAds::change_ad_status(ad) :
+        if (ad.previous_changes.keys & ['status']).any?
+          if GoogleAds::change_ad_status(ad)
+            # sucess
+          else
+            errors = ["Sorry, there was an error when changing Promoted Story status"]
+          end
+        else
           GoogleAds::update_ad(ad)
+        end
       end
     else
       # error
     end
+
+    # datatables updated row data (mirrors stories#promoted)
+    dt_data = [
+      JSON.parse(
+        story.to_json({
+          only: [:id, :title, :slug],
+          methods: [:ads_status, :ads_long_headline, :ads_images, :csp_story_path],
+          include: {
+            success: {
+              only: [],
+              include: {
+                customer: { only: [:name, :slug] }
+              }
+            },
+            topic_ad: {
+              only: [:id]
+            },
+            retarget_ad: {
+              only: [:id]
+            }
+          }
+        })
+      )
+    ]
     respond_to do |format|
       format.json do
-        # data needed for a promoted story row (see promoted method above)
-        dt_data = [
-          JSON.parse(
-            story.to_json({
-              only: [:id, :title, :slug],
-              methods: [:ads_status, :ads_long_headline, :ads_images, :csp_story_path],
-              include: {
-                success: {
-                  only: [],
-                  include: {
-                    customer: { only: [:name, :slug] }
-                  }
-                },
-                topic_ad: {
-                  only: [:id]
-                },
-                retarget_ad: {
-                  only: [:id]
-                }
-              }
-            })
-          )
-        ]
         render({ json: { data: dt_data }.to_json })
       end
+
+      # in most case it's sufficient to get data from a single ad (e.g. topic)),
+      # since topic and retarget are supposed to be sync'ed
       format.js do
-        response_data = {}
-        response_data[:previousChanges] = story.ads.first.previous_changes
+        @response_data = {}
+
+        # presently only one attribute will change at a time
+        @response_data[:previousChanges] = story.topic_ad.previous_changes.first
+        @response_data[:promotedStory] = dt_data[0]
+        # @response_data[:errors] = errors.present? ? errors : nil
+        @response_data[:isImagesUpdate] = story_params.to_h[:topic_ad_attributes][:adwords_image_ids].present?
+        # @response_date[:isStatusUpdate] = story_params.to_h[:topic_ad_attributes][:status].present?
       end
     end
   end
 
   private
 
-  # def topic_ad_params
-  # end
-
-  # def retarget_ad_params
-  # end
-
   def story_params
     params.require(:story).permit(
-      topic_ad_attributes: [ :id, :long_headline, adwords_image_ids: [] ],
-      retarget_ad_attributes: [ :id, :long_headline, adwords_image_ids: [] ]
+      topic_ad_attributes: [ :id, :status, :long_headline, adwords_image_ids: [] ],
+      retarget_ad_attributes: [ :id, :status, :long_headline, adwords_image_ids: [] ]
     )
   end
 

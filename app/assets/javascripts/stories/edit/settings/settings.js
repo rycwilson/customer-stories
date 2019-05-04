@@ -84,18 +84,6 @@ function storiesEditSettingsListeners () {
       }
 
     })
-
-    // moved to #edit-customer-modal
-    // .on('click', '.customer-logo .change-image', function () {
-    //   var $previewImg = $(this).closest('.fileinput').find('.fileinput-preview img');
-    //   if ($previewImg.attr('src')) {
-    //     // click on the preview
-    //     $(this).closest('.fileinput').find('.thumbnail')[1].click();
-    //   } else {
-    //     // click on the placeholder
-    //     $(this).closest('.fileinput').find('.thumbnail')[0].click();
-    //   }
-    // });
 }
 
 // the select2 boxes initialize synchronously, i.e. subsequent code doesn't
@@ -115,19 +103,23 @@ function initStoriesEditSettings (cbShowTab) {
     placeholder: 'Select'
   });
 
-  $('.bs-switch').bootstrapSwitch({
+  $('#story-settings-form').parent().removeClass('hidden')
+  if (cbShowTab) cbShowTab();
+
+  $('.bs-switch.publish-control').bootstrapSwitch({
     size: 'small',
-    onInit: function () {
-      // without the timeout, one switch is briefly on (?)
-      setTimeout(function () {
-        $('#story-settings-form').parent().removeClass('hidden');
-        if (cbShowTab) {
-          $(window).one('shown.bs.tab', function () {
-            window.scrollTo(0,0);
-          });
-          cbShowTab();
-        }
-      }, 0);
+    onInit: function (e) {
+      // TODO: not sure why this was necessary, probably remove it
+      // // without the timeout, one switch is briefly on (?)
+      // setTimeout(function () {
+      //   $('#story-settings-form').parent().removeClass('hidden');
+      //   if (cbShowTab) {
+      //     $(window).one('shown.bs.tab', function () {
+      //       window.scrollTo(0,0);
+      //     });
+      //     cbShowTab();
+      //   }
+      // }, 0);
     }
   });
 

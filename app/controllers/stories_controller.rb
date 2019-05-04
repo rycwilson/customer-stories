@@ -210,10 +210,10 @@ class StoriesController < ApplicationController
                       }
                     },
                     topic_ad: {
-                      only: [:id]
+                      only: [:id, :status]
                     },
                     retarget_ad: {
-                      only: [:id]
+                      only: [:id, :status]
                     }
                   }
                 })
@@ -275,59 +275,6 @@ class StoriesController < ApplicationController
     )
     @story_ids.uniq!
     respond_to { |format| format.js {} }
-  end
-
-  ##
-  ##  this action is a catch-all for promote changes related to a given story
-  ##  - create ads for a story (POST)
-  ##  - modify ads for a story (PUT)
-  ##  - remove ads for a story (DELETE)
-  ##
-  def promote
-    response = {}  # this will be necessary if ads for an unpublished story are removed
-    if request.method == 'POST'
-      # ...
-    elsif request.method == 'PUT'
-      if params[:adwords_image_id].present?
-        @story.ads.each { |ad| ad.adwords_image = AdwordsImage.find(params[:adwords_image_id]) }
-      elsif @story.ads.all? { |ad| ad.update(adwords_params) }
-        # nothing to do here
-      else
-        # errors
-      end
-      # this is the datatables data needed for a promoted story row (see promoted method above)
-      dt_data = [
-        JSON.parse(
-          @story.to_json({
-            only: [:id, :title, :slug],
-            methods: [:ads_status, :ads_long_headline, :ads_images, :csp_story_path],
-            include: {
-              success: {
-                only: [],
-                include: {
-                  customer: { only: [:name, :slug] }
-                }
-              }
-            }
-          })
-        )
-      ]
-      respond_to do |format|
-        format.json do
-          render({ json: { data: dt_data }.to_json })
-        end
-      end and return
-    elsif request.method == 'DELETE'  # js response
-      # ...
-    end
-    respond_to do |format|
-      # this works for all but long_headline:
-      #   format.json { head :no_content }  (or head :ok)
-      # but x-editable wants a json response with status 200
-      format.json { render json: response, status: 200 }  # success
-      # js response for removed ads
-      format.js {}
-    end
   end
 
   def share_on_linkedin

@@ -2,15 +2,44 @@
 (function () {
 
   var resData = <%= raw @response_data.to_json %>,
-      // $modal = $('#ads-images-modal'),
-      // $form = $('#ads-images-form');
+      $table = $('#promoted-stories-table'),
+      $row = $table.find('[data-story-id="' + resData.promotedStory.id + '"]'),
+      dt = $table.DataTable(),
+      dtRow = dt.row('[data-story-id="' + resData.promotedStory.id + '"]'),
+      isStatusUpdate = resData.previousChanges[0] === 'status';
+  console.log('resData', resData);
 
+  if (resData.isImagesUpdate) {
+    toggleFormDone($('#ads-images-form'), false);
+    $('#ads-images-modal').modal('hide');
 
-  console.log(resData.previous_changes)
+  } else if (isStatusUpdate) {
+    var $switchContainer = (
+          $table.find('tr[data-story-id="' + resData.promotedStory.id + '"] .bootstrap-switch-container')
+        ),
+        prevStatus = resData.previousChanges[1][0],
+        newStatus = resData.previousChanges[1][1];
 
-  // $('#promoted-stories-table').DataTable().ajax.reload(function (promotedStories) {
-  //   $modal.modal('hide');
-  //   toggleFormDone($form, false);
-  // });
+    if (resData.errors){
+      // return to previous state
+    } else {
+      $switchContainer
+        .find(newStatus === 'ENABLED' ? '.bootstrap-switch-handle-on' : '.bootstrap-switch-handle-off')
+        .find('.fa-spin, .fa-check').toggle();
+      setTimeout(function () {
+        dtRow.data(resData.promotedStory);
+        $switchContainer.closest('form')
+                        .attr('data-submitted', '');
+        $row.find('.bs-switch.promote-control').bootstrapSwitch({ size: 'small' });
+      }, 2000)
+
+    }
+  }
+
+  if (resData.errors) {
+    flashDisplay(errors[0], 'danger')
+  } else {
+    // flashDisplay('Promoted Story updated successfully', 'success');
+  }
 
 }());

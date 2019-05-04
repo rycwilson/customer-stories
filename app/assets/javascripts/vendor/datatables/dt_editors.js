@@ -23,6 +23,9 @@ function newPromotedStoriesEditor() {
             }
           }
         };
+      },
+      success: function () {
+        // console.log('editor success')
       }
     },
     idSrc: 'id',
@@ -52,14 +55,6 @@ function openPromotedStoriesEditor (promotedStoriesEditor, $row) {
         // the drawType option isn't forcing a re-draw (?), so re-draw the individual row(s)
         // forum discussion: https://datatables.net/forums/discussion/45189
         dt.row($row).data(rowData).draw();
-
-        // update adwords
-        // $.ajax({
-        //   url: '/stories/' + storyId + '/adwords',
-        //   method: 'put',
-        //   data: { long_headline_changed: true },
-        //   dataType: 'script'
-        // });
       },
       drawType: true,
       // buttons are in reverse order of how they're diplayed because they both have float:right

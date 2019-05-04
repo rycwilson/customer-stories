@@ -87,9 +87,9 @@
       .btn:first-of-type {
         margin-left: 8px;  // matches td padding
       }
-    }
-    .DTE_Form_Buttons > :nth-child(2) {
-      width: 48px;
+      .btn-success {
+        width: 59px;
+      }
     }
     &:hover {
       text-decoration: underline;
@@ -122,45 +122,24 @@
     }
   }
 
-  td.status.dropdown {
-    a.dropdown-toggle {
-      i.fa-play, i.fa-pause {
-        font-size: 16px;
+  td.status {
+    padding: 8px;
+    form.ads-status {
+      cursor: pointer;
+      &[data-submitted="true"] {
+        pointer-events: none;
+        cursor: not-allowed;
       }
     }
-    a.dropdown-toggle.enabled {
-      color: #4d8664;
+    .bootstrap-switch-wrapper {
+      margin-bottom: 5px;
     }
-    a.dropdown-toggle.enabled:hover {
-      color: #456f59;
-      text-decoration: none;
+    .bootstrap-switch .bootstrap-switch-handle-off.bootstrap-switch-default {
+      color: #555;
     }
-    a.dropdown-toggle:focus {
-      color: #222;
-      text-decoration: none
+    .bootstrap-switch .bootstrap-switch-handle-on {
+      background: #449d44; //#36a829;
     }
-    a.dropdown-toggle.paused {
-      color: #666;
-    }
-    a.dropdown-toggle.paused:hover {
-      color: #222;
-      text-decoration: none;
-    }
-    &.open {
-      a.dropdown-toggle.enabled {
-        color: #456f59;
-      }
-      a.dropdown-toggle.paused {
-        color: #222;
-      }
-      .dropdown-menu {
-        i.fa-play {
-          color: #4d8664;
-        }
-        i.fa-pause {
-          color: #666;
-        }
-      }
-    }
+
   }
 }

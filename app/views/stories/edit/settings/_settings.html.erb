@@ -122,15 +122,15 @@
         <div class="col-sm-8">
           <div class="publish-control">
             <label>Logo</label>
-            <%= story_form.check_box(:logo_published, class: 'bs-switch form-control') %>
+            <%= story_form.check_box(:logo_published, class: 'bs-switch publish-control form-control') %>
           </div>
           <div class="publish-control">
             <label>Preview</label>
-            <%= story_form.check_box(:preview_published, class: "bs-switch form-control") %>
+            <%= story_form.check_box(:preview_published, class: "bs-switch publish-control form-control") %>
           </div>
           <div class="publish-control" style="position: relative">
             <label>Story</label>
-            <%= story_form.check_box(:published, class: "bs-switch form-control") %>
+            <%= story_form.check_box(:published, class: "bs-switch publish-control form-control") %>
 
             <span style="position: absolute; top: 1px; right: 0">
               <%= link_to('Approval', story_approval_path(story.id, format: :pdf),

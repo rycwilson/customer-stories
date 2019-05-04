@@ -46,10 +46,30 @@ function initPromotedStoriesTable () {
         name: 'status',
         data: 'ads_status',
         render: function (data, type, row, meta) {
+          // console.log(data, type, row, meta)
+          var $switch = $('#promoted-stories-table tr[data-story-id="' + row.id + '"]')
+                          .find('.bs-switch.promote-control')
+
+          // when the inline editor gets a response and updates the row,
+          // it destroys the bootstrap switch instance
+          // => re-init as necessary:
+          setTimeout(
+            function () {
+              if (typeof $switch.data('bootstrapSwitch') !== 'object') {
+                $('#promoted-stories-table tr[data-story-id="' + row.id + '"]')
+                  .find('.bs-switch.promote-control')
+                  .bootstrapSwitch({ size: 'small' });
+
+              }
+            },
+            100
+          )
           if (type === 'display') {
-            return _.template( $('#adwords-status-dropdown-template').html() )({
-                     promoteEnabled: CSP.company.promote_tr,
-                     adsEnabled: data === 'ENABLED' ? true : false
+            return _.template($('#ads-status-form-template').html())({
+                     status: data,
+                     storyId: row.id,
+                     topicAdId: row.topic_ad.id,
+                     retargetAdId: row.retarget_ad.id
                    });
           } else {
             return data;
@@ -78,8 +98,6 @@ function initPromotedStoriesTable () {
         targets: [statusIndex, titleIndex],
         searchable: false
       },
-      // { width: '31%', targets: storyTitleIndex },
-      // { width: '22%', targets: [imageIndex, customerIndex] },
       { width: '22%', targets: imageIndex },
       { width: '46%', targets: titleIndex },
       { width: '22%', targets: customerIndex },
@@ -98,8 +116,7 @@ function initPromotedStoriesTable () {
     },
 
     initComplete: function (settings, json) {
-      // console.log($table.find('[data-toggle="tooltip"]'))
-
+      // console.log('initComplete')
       var $table = $(this),
           initTooltips = function() {
             $table.find('[data-toggle="tooltip"]').tooltip({ container: 'body' });
@@ -115,15 +132,25 @@ function initPromotedStoriesTable () {
                     });
                 }
               });
-          };
+          },
+          initBsSwitch = function () {
+            $('.bs-switch.promote-control').bootstrapSwitch({
+              size: 'small',
+              onInit: function (e) {}
+            });
+          }
 
       initTooltips();
+      initBsSwitch();  // leave this or there's a delay when init'ing via timeout
       promotedStoriesEditor = newPromotedStoriesEditor();
-      promotedStoriesEditor.on('open', function() {
-        $('#DTE_Field_long_headline').attr('maxlength', <%= RESPONSIVE_AD_LONG_HEADLINE_MAX.to_s %>);
+      promotedStoriesEditor.on('open', function () {
+        $('#DTE_Field_long_headline').attr('maxlength', '<%= RESPONSIVE_AD_LONG_HEADLINE_MAX.to_s %>');
         $('.DTE_Form_Buttons')
           .prepend('<span class="help-block">' + storyTitleRequirements + '</span>');
       });
+      promotedStoriesEditor.on('postEdit', function (e, data, rowData) {
+        // console.log('postEdit')
+      })
       $(this).css('visibility', 'visible');
 
     },

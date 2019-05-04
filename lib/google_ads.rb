@@ -1,5 +1,17 @@
 module GoogleAds
 
+  # Here's what an exception looks like when the api is down:
+  # [
+  #   [0] {
+  #     :api_error_type => "InternalApiError",
+  #       :error_string => "InternalApiError.UNEXPECTED_INTERNAL_API_ERROR",
+  #         :field_path => "",
+  #             :reason => "UNEXPECTED_INTERNAL_API_ERROR",
+  #            :trigger => "",
+  #           :xsi_type => "InternalApiError"
+  #   }
+  # ]
+
   require 'adwords_api'
   API_VERSION = :v201809
 
@@ -134,7 +146,14 @@ module GoogleAds
           ad: { id: ad.ad_id }
         }
       }
-      service.mutate([operation])
+      begin
+        service.mutate([operation])
+        return true
+      rescue AdwordsApi::Errors::ApiException => e
+        puts "When changing status of google ad #{ad.ad_id}"
+        awesome_print(e.errors)
+        return false
+      end
     end
 
     # this could potentially be a google ad that's not structured like a csp ad
