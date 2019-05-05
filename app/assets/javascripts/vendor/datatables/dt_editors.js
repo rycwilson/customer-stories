@@ -45,7 +45,9 @@ function openPromotedStoriesEditor (promotedStoriesEditor, $row) {
     $row.find('td.promoted-story-title')[0],
     'long_headline',
     { // default options: https://editor.datatables.net/reference/option/formOptions.inline
-      onComplete: function (editor) {
+      submit: 'all',
+      onComplete: function (editor, something, somethingElse) {
+        // console.log('onComplete')
         var storyId = $row.data('story-id'),
             $table = $(editor.s.table),
             dt = $table.DataTable(),
@@ -55,13 +57,29 @@ function openPromotedStoriesEditor (promotedStoriesEditor, $row) {
         // the drawType option isn't forcing a re-draw (?), so re-draw the individual row(s)
         // forum discussion: https://datatables.net/forums/discussion/45189
         dt.row($row).data(rowData).draw();
+        $row.find('td.promoted-story-title').addClass('save-disabled');
+
+        // re-init bootstrapSwitch
+        $row.find('.bs-switch.promote-control')
+            .bootstrapSwitch({ size: 'small' });
+
+        // flash success
+        $row.find('td.promoted-story-title')
+            .html('<i class="fa fa-fw fa-check"></i>&nbsp&nbsp;<span>Updated successfully</span>')
+            .addClass('has-success');
+        setTimeout(function () {
+          $row.find('td.promoted-story-title')
+              .removeClass('has-success')
+              .empty()
+              .text(rowData.ads_long_headline)
+        }, 2000)
       },
       drawType: true,
       // buttons are in reverse order of how they're diplayed because they both have float:right
       buttons: [
         {
           label: '<span>Save</span><i class="fa fa-spin fa-circle-o-notch" style="display:none"></i>',
-          className: 'btn btn-sm btn-success',
+          className: 'btn btn-sm btn-success disabled',
           fn: function () { this.submit(); }
         },
         {
@@ -97,7 +115,6 @@ function newContributorsEditor (workflowStage, templateSelectOptions) {
       },
     ]
   });
-
 }
 
 function openContributorsEditor (contributorsEditor, $row) {

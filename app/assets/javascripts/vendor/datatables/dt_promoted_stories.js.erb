@@ -47,23 +47,6 @@ function initPromotedStoriesTable () {
         data: 'ads_status',
         render: function (data, type, row, meta) {
           // console.log(data, type, row, meta)
-          var $switch = $('#promoted-stories-table tr[data-story-id="' + row.id + '"]')
-                          .find('.bs-switch.promote-control')
-
-          // when the inline editor gets a response and updates the row,
-          // it destroys the bootstrap switch instance
-          // => re-init as necessary:
-          setTimeout(
-            function () {
-              if (typeof $switch.data('bootstrapSwitch') !== 'object') {
-                $('#promoted-stories-table tr[data-story-id="' + row.id + '"]')
-                  .find('.bs-switch.promote-control')
-                  .bootstrapSwitch({ size: 'small' });
-
-              }
-            },
-            100
-          )
           if (type === 'display') {
             return _.template($('#ads-status-form-template').html())({
                      status: data,
@@ -108,51 +91,40 @@ function initPromotedStoriesTable () {
     createdRow: function (row, data, index) {
       $(row).attr('data-story-id', data.id);
       $(row).children().eq(0).addClass('promoted-story-image');
-      $(row).children().eq(1).addClass('promoted-story-title')
+      $(row).children().eq(1).addClass('promoted-story-title save-disabled')
                              .attr('data-title', data.title);
       $(row).children().eq(2).addClass('promoted-story-customer');
       $(row).children().eq(3).addClass('status dropdown');
       // $(row).children().eq(4).addClass('actions dropdown');
     },
-
     initComplete: function (settings, json) {
       // console.log('initComplete')
       var $table = $(this),
           initTooltips = function() {
             $table.find('[data-toggle="tooltip"]').tooltip({ container: 'body' });
-            // add a tooltip message to stories that don't have an image
-            $table.find('img[src=""]').each(
-              function () {
-                if ($('#ads-images-modal li').length === 0) {
-                  $(this).closest('.fileinput')
-                    .tooltip({
-                      container: 'body',
-                      placement: 'top',
-                      title: 'To assign an image to this Promoted Story, upload images under Settings'
-                    });
-                }
-              });
           },
-          initBsSwitch = function () {
+          initSwitch = function () {
             $('.bs-switch.promote-control').bootstrapSwitch({
               size: 'small',
               onInit: function (e) {}
             });
           }
-
       initTooltips();
-      initBsSwitch();  // leave this or there's a delay when init'ing via timeout
+      initSwitch();  // leave this or there's a delay when init'ing via timeout
       promotedStoriesEditor = newPromotedStoriesEditor();
       promotedStoriesEditor.on('open', function () {
         $('#DTE_Field_long_headline').attr('maxlength', '<%= RESPONSIVE_AD_LONG_HEADLINE_MAX.to_s %>');
         $('.DTE_Form_Buttons')
           .prepend('<span class="help-block">' + storyTitleRequirements + '</span>');
       });
+      promotedStoriesEditor.on('preSubmit', function (e, data, action) {
+        // console.log('preSubmit')
+        if ($('.DTE_Inline').closest('td').hasClass('save-disabled')) return false;
+      })
       promotedStoriesEditor.on('postEdit', function (e, data, rowData) {
         // console.log('postEdit')
       })
       $(this).css('visibility', 'visible');
-
     },
 
   });

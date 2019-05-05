@@ -6,7 +6,7 @@
       $row = $table.find('[data-story-id="' + resData.promotedStory.id + '"]'),
       dt = $table.DataTable(),
       dtRow = dt.row('[data-story-id="' + resData.promotedStory.id + '"]'),
-      isStatusUpdate = resData.previousChanges[0] === 'status';
+      isStatusUpdate = resData.previousChanges && (resData.previousChanges[0] === 'status');
   console.log('resData', resData);
 
   if (resData.isImagesUpdate) {

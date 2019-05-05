@@ -144,6 +144,12 @@ function promotedStoriesListeners () {
       // it will show when the response reinitializes bs-switch
       $(this).next().children('.help-block').hide();
     })
+    .on('input', 'td.promoted-story-title textarea', function (e) {
+      $(this).closest('td')
+             .removeClass('save-disabled')
+             .find('.btn-success')
+             .removeClass('disabled');
+    })
 
     // ad previews - separate window
     .on('click', '.promoted-story-actions .preview', function () {

@@ -94,6 +94,23 @@
     &:hover {
       text-decoration: underline;
     }
+    &.has-success {
+      background-color: #449d44;
+      color: #fff;
+      text-align: center;
+      text-decoration: none;
+      transition: background-color 0.2s ease;
+      pointer-events: none;
+    }
+    &.save-disabled {
+      .DTE_Form_Buttons .btn-success {
+        outline: none;
+        &:active {
+          background-color: #4d8664;  // disallow color change on click
+        }
+      }
+    }
+
   }
 
   td.promoted-story-image {
