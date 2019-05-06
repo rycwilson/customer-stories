@@ -26,7 +26,7 @@ function initPromotedStoriesTable () {
           var landscapeImages = ads_images.filter(function (image) {
                                   return image.type === 'LandscapeImage'
                                 });
-          return '<div class="fileinput fileinput-exists">' +
+          return '<div class="fileinput">' +
                    '<div class="fileinput-preview thumbnail">' +
                      '<img src="' + (landscapeImages.length ? landscapeImages[0].image_url : '') + '" alt="promoted story image">' +
                    '</div>' +
@@ -90,7 +90,7 @@ function initPromotedStoriesTable () {
 
     createdRow: function (row, data, index) {
       $(row).attr('data-story-id', data.id);
-      $(row).children().eq(0).addClass('promoted-story-image');
+      $(row).children().eq(0).addClass('promoted-story-images');
       $(row).children().eq(1).addClass('promoted-story-title save-disabled')
                              .attr('data-title', data.title);
       $(row).children().eq(2).addClass('promoted-story-customer');

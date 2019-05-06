@@ -305,7 +305,7 @@ function promoteSettingsListeners () {
           typeClassName = $imageCard &&
               $imageCard.attr('class').match(/(gads-image|gads-logo)--(square|landscape)/)[0],
           isPrevDefaultInput = function (input) {
-            var $defaultImageCard = $('.gads-default.' + typeClassName),
+            var $defaultImageCard = $('.ad-image-card.gads-default.' + typeClassName),
                 defaultImageIsPresent = $defaultImageCard.data('image-url');
             return $('#previous-default-hidden-inputs').find(input).length ||
                    (defaultImageIsPresent &&
@@ -331,7 +331,7 @@ function promoteSettingsListeners () {
       }
 
       $form.find('input').filter(isCompanyInput).each(disableInactiveInput);
-      console.log('form inputs', decodeURIComponent($form.serialize()).split('&'))
+      // console.log('form inputs', decodeURIComponent($form.serialize()).split('&'))
       submitForm();
 
       if ($formGroup.is('.to-be-removed')) $imageCard.remove();

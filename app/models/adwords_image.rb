@@ -14,11 +14,12 @@ class AdwordsImage < ApplicationRecord
   validates_presence_of :asset_id
 
   # upload to gads regardless of company.promote_tr
-  before_validation :upload_to_gads, on: :create
+  before_validation :upload_to_google, on: :create
 
-  before_destroy(:s3_delete) if ENV['HOST_NAME'] == 'customerstories.net'
+  # https://medium.com/appaloosa-store-engineering/caution-when-using-before-destroy-with-model-association-71600b8bfed2
+  before_destroy :update_ads, prepend: true, if: :promote_enabled?
 
-  before_destroy :replace_image_in_ads, if: :promote_enabled?
+  after_destroy_commit(:s3_delete) if ENV['HOST_NAME'] == 'customerstories.net'
 
   # don't delete these default adwords images; may be used to seed adwords
   NO_DELETE = [
@@ -29,20 +30,25 @@ class AdwordsImage < ApplicationRecord
 
   private
 
-  def upload_to_gads
+  def promote_enabled?
+    self.company.promote_tr?
+  end
+
+  def upload_to_google
     GoogleAds::upload_image_asset(self)
   end
 
-  def replace_image_in_ads
+  def update_ads
     # only required images need to be replaced => SquareImage or LandscapeImage
-    # self.ads.each do |ad|
-    #   # if ad.
-    # end
-  end
-
-
-  def promote_enabled?
-    self.company.promote_tr?
+    self.ads.each do |ad|
+      ad.images.delete(self)
+      if ad.square_images.blank?
+        ad.images << ad.company.adwords_images.square_images.default.take
+      elsif ad.landscape_images.blank?
+        ad.images << ad.company.adwords_images.landscape_images.default.take
+      end
+      GoogleAds::update_ad(ad.reload)
+    end
   end
 
   def s3_delete

@@ -4,7 +4,7 @@ function promotedStoriesListeners () {
   $(document)
 
     // story image select
-    .on('click', 'td.promoted-story-image .thumbnail', function () {
+    .on('click', 'td.promoted-story-images .thumbnail', function () {
       var $modal = $('#ads-images-modal'),
           formTemplate = _.template($('#ads-images-form-template').html()),
           dt = $('#promoted-stories-table').DataTable();
@@ -13,13 +13,13 @@ function promotedStoriesListeners () {
           topicAdId = dt.row($tr).data().topic_ad.id,
           retargetAdId = dt.row($tr).data().retarget_ad.id,
           selectedImageIds = [],
-          adsImages = $('#promoted-stories-table').DataTable().row($tr).data().ads_images,
-          currentImageUrl = $(this).children('img').attr('src');
+          adsImages = $('#promoted-stories-table').DataTable().row($tr).data().ads_images;
+          // currentImageUrl = $(this).children('img').attr('src');
 
       // remove any query param that was used to refresh an image
-      if (currentImageUrl.match(/\?\d+/)) {
-        currentImageUrl = currentImageUrl.slice(0, currentImageUrl.lastIndexOf('?'));
-      }
+      // if (currentImageUrl.match(/\?\d+/)) {
+      //   currentImageUrl = currentImageUrl.slice(0, currentImageUrl.lastIndexOf('?'));
+      // }
       $modal.find('.modal-header .story-title')
               .text($tr.find('td.promoted-story-title').text()).end()
             .find('li')

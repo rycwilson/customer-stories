@@ -59,20 +59,13 @@ class CompaniesController < ApplicationController
   end
 
   def update_gads
-    # puts 'companies#update_gads'
-    # awesome_print(company_params.to_h)
+    puts 'companies#update_gads'
+    awesome_print(company_params.to_h)
     company = Company.find(params[:id])
-
-    # capture deleted image data (associated ads) prior to destroying image
-    # if ad_images_removed?(company_params.to_h)
-    #   params[:company][:removed_images_ads] =
-    #     removed_images_ads(company, params[:company][:adwords_images_attributes])
-    # end
-
-
     if company.update(company_params)
       # if company.promote_tr? && ads must be modified (e.g. short headline changed, images removed)
       # end
+
     else
       @errors = company.errors.full_messages
     end

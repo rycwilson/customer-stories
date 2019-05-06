@@ -65,7 +65,7 @@ function openPromotedStoriesEditor (promotedStoriesEditor, $row) {
 
         // flash success
         $row.find('td.promoted-story-title')
-            .html('<i class="fa fa-fw fa-check"></i>&nbsp&nbsp;<span>Updated successfully</span>')
+            .html('<i class="fa fa-fw fa-check"></i>&nbsp&nbsp;<span>Updated</span>')
             .addClass('has-success');
         setTimeout(function () {
           $row.find('td.promoted-story-title')

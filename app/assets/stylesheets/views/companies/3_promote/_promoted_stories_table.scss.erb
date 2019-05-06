@@ -69,6 +69,32 @@
 }
 
 #promoted-stories-table {
+  td.promoted-story-images {
+    text-align: center;
+    vertical-align: middle;
+    padding: 8px 14px;
+    height: 97px;  // so it doesn't collapse when showing flash success
+    .fileinput {
+      margin: 0;
+      .thumbnail {
+        height: 80px;
+        width: 153px;
+        cursor: pointer;
+        margin: 0;
+        // backup image
+        // ref: http://stackoverflow.com/questions/980855
+        img:before {
+          content: ' ';
+          display: block;
+          position: absolute;
+          height: 70px;
+          width: 143px;
+          background-image: url('<%= RESPONSIVE_AD_LANDSCAPE_IMAGE_PLACEHOLDER %>');
+          background-size: contain;
+        }
+      }
+    }
+  }
   td.promoted-story-title {
     cursor: pointer;
     textarea {
@@ -94,14 +120,6 @@
     &:hover {
       text-decoration: underline;
     }
-    &.has-success {
-      background-color: #449d44;
-      color: #fff;
-      text-align: center;
-      text-decoration: none;
-      transition: background-color 0.2s ease;
-      pointer-events: none;
-    }
     &.save-disabled {
       .DTE_Form_Buttons .btn-success {
         outline: none;
@@ -113,36 +131,12 @@
 
   }
 
-  td.promoted-story-image {
-    text-align: center;
-    vertical-align: middle;
-    padding: 8px 14px;
-    .fileinput {
-      margin: 0;
-      .thumbnail {
-        height: 80px;
-        width: 153px;
-        cursor: pointer;
-        margin: 0;
-        // backup image
-        // ref: http://stackoverflow.com/questions/980855
-        img:before {
-          content: ' ';
-          display: block;
-          position: absolute;
-          height: 70px;
-          width: 143px;
-          background-image: url('<%= RESPONSIVE_AD_LANDSCAPE_IMAGE_PLACEHOLDER %>');
-          background-size: contain;
-        }
-      }
-    }
-  }
 
   td.status {
     padding: 8px;
     form.ads-status {
       cursor: pointer;
+      margin-bottom: -4px;
       &[data-submitted="true"] {
         pointer-events: none;
         cursor: not-allowed;
@@ -158,5 +152,16 @@
       background: #449d44; //#36a829;
     }
 
+  }
+
+  td.promoted-story-images, td.promoted-story-title {
+    &.has-success {
+      background-color: #449d44;
+      color: #fff;
+      text-align: center;
+      text-decoration: none;
+      transition: background-color 0.2s ease;
+      pointer-events: none;
+    }
   }
 }

@@ -3,15 +3,45 @@
 
   var resData = <%= raw @response_data.to_json %>,
       $table = $('#promoted-stories-table'),
-      $row = $table.find('[data-story-id="' + resData.promotedStory.id + '"]'),
       dt = $table.DataTable(),
+      $row = $table.find('[data-story-id="' + resData.promotedStory.id + '"]'),
       dtRow = dt.row('[data-story-id="' + resData.promotedStory.id + '"]'),
-      isStatusUpdate = resData.previousChanges && (resData.previousChanges[0] === 'status');
+      isStatusUpdate = resData.previousChanges && (resData.previousChanges[0] === 'status'),
+      updateRowData = function () { dtRow.data(resData.promotedStory); },
+      initStatusSwitch = function () {
+        $row.find('.bs-switch.promote-control').bootstrapSwitch({ size: 'small' });
+      },
+      flashSuccessImages = function () {
+        var landscapeImages = dtRow.data().ads_images.filter(function (image) {
+                                return image.type === 'LandscapeImage'
+                              });
+        $row.find('td.promoted-story-images')
+            .html('<i class="fa fa-fw fa-check"></i>&nbsp&nbsp;<span>Updated</span>')
+            .addClass('has-success');
+        setTimeout(function () {
+          $row.find('td.promoted-story-images')
+              .removeClass('has-success')
+              .empty()
+              .html(
+                '<div class="fileinput">' +
+                   '<div class="fileinput-preview thumbnail">' +
+                     '<img src="' + (landscapeImages.length ? landscapeImages[0].image_url : '') + '" alt="promoted story image">' +
+                   '</div>' +
+                   '<input type="file" name="image_url" id="image_url" class="hidden" ' +
+                 '</div>'
+              )
+        }, 2000)
+      }
+
   console.log('resData', resData);
 
   if (resData.isImagesUpdate) {
     toggleFormDone($('#ads-images-form'), false);
-    $('#ads-images-modal').modal('hide');
+    $('#ads-images-modal')
+      .one('hidden.bs.modal', flashSuccessImages)
+      .modal('hide');
+    updateRowData();
+    initStatusSwitch();
 
   } else if (isStatusUpdate) {
     var $switchContainer = (
@@ -27,10 +57,9 @@
         .find(newStatus === 'ENABLED' ? '.bootstrap-switch-handle-on' : '.bootstrap-switch-handle-off')
         .find('.fa-spin, .fa-check').toggle();
       setTimeout(function () {
-        dtRow.data(resData.promotedStory);
-        $switchContainer.closest('form')
-                        .attr('data-submitted', '');
-        $row.find('.bs-switch.promote-control').bootstrapSwitch({ size: 'small' });
+        $switchContainer.closest('form').attr('data-submitted', '');
+        updateRowData();
+        initStatusSwitch();
       }, 2000)
 
     }
