@@ -576,7 +576,7 @@ function successChildRowListeners () {
       $form.submit();
     })
 
-    .on('click', '.customer-logo .upload-image', function () {
+    .on('click', '.customer-logo .customer-logo__upload', function () {
       var $previewImg = $(this).closest('.fileinput').find('.fileinput-preview img');
       if ($previewImg.attr('src')) {
         // click on the preview

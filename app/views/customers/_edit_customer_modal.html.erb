@@ -58,11 +58,16 @@
         <div class="col-sm-10">
           <div class="fileinput customer-logo {{= customer.logo_url ? 'fileinput-exists' : 'fileinput-new' }}" data-provides="fileinput">
 
-            <div class="upload-image text-center">
-              <span>
-                <i class="fa fa-fw fa-upload"></i>
-                <span>Upload an image</span>
-              </span>
+            <div class="customer-logo__header">
+              <div class="customer-logo__flash">
+                <span>Spaces in file name not allowed</span>
+              </div>
+              <div class="customer-logo__upload text-center">
+                <span>
+                  <i class="fa fa-fw fa-upload"></i>
+                  <span>Upload an image</span>
+                </span>
+              </div>
             </div>
 
             <div class="text-center">
@@ -92,7 +97,7 @@
               <input type="file" name="customer[logo_url]">
             </div>
 
-            <div class="show-name text-center">
+            <div class="customer-logo__show-name text-center">
               <label class="checkbox-inline">
                 <input name="customer[show_name_with_logo]" type="hidden" value="false">
                 <input type="checkbox" value="true" checked="{{= customer.show_name_with_logo ? 'checked' : '' }}" name="customer[show_name_with_logo]">

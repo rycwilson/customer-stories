@@ -59,7 +59,7 @@
 
       <div class="image-library__sub-header">
         <label>Marketing Images</label>
-        <button type="button" class="btn-add">
+        <button type="button" class="btn-add" <%= missing_default_google_images?(company, 'marketing') ? 'disabled' : '' %>>
           <span class="fa-stack fa-lg">
           <i class="fa fa-circle-o fa-stack-2x"></i>
           <i class="fa fa-plus fa-stack-1x"></i>

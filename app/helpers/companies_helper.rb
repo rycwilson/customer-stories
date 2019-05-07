@@ -26,6 +26,17 @@ module CompaniesHelper
     end
   end
 
+  def missing_default_google_images?(company, image_type)
+    false
+    # if image_type == 'marketing'
+    #   company.adwords_images.square_images.default.blank? ||
+    #   company.adwords_images.landscape_images.default.blank?
+    # else
+    #   company.adwords_images.square_logos.default.blank? ||
+    #   company.adwords_images.landscape_logos.default.blank?
+    # end
+  end
+
   def gads_logos_index_offset(company, offset)
     (company.adwords_images.marketing.length + 2 - company.adwords_images.marketing.default.length + offset).to_s
   end

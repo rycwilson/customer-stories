@@ -42,8 +42,22 @@ function initS3Upload ($form) {
           var filePath = $(e.target).val(),
               fileName = filePath.slice(filePath.lastIndexOf('/') + 1, filePath.length);
           if (fileName.indexOf(' ') !== -1) {
-            flashDisplay('File name can not contain spaces', 'danger');
-            $('.fileinput').fileinput('reset');  // jasny bootstrap
+            if ($fileInput.is('[name*="images_attributes"]')) {
+              $fileInput.closest('.form-group')
+                        .addClass('has-error')
+                        .find('.help-block.with-errors')
+                        .text('Spaces in file name not allowed')
+            } else if ($('#customer-form').has($fileInput).length) {
+              $('.customer-logo__header').addClass('has-error');
+              setTimeout(function () {
+                $('.customer-logo__header').removeClass('has-error');
+              }, 3000)
+            } else {
+              flashDisplay('File name can not contain spaces', 'danger');
+            }
+
+            // TODO: this is reverting back to the placeholder instead of the existing image
+            $fileInput.closest('.fileinput').fileinput('reset');  // jasny bootstrap
             return false;
           }
         },

@@ -111,6 +111,12 @@
           left: -0.5px;
         }
       }
+      &[disabled] {
+        &:hover {
+          color: #666;
+          cursor: not-allowed;
+        }
+      }
     }
   }
 
