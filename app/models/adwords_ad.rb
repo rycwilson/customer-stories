@@ -145,6 +145,7 @@ class AdwordsAd < ApplicationRecord
 
       # this doesn't seem to work
       new_gad[:errors].each { |error| self.story.errors[:base] << google_error(error) }
+
     end
   end
 

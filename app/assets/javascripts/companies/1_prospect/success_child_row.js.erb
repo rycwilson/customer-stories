@@ -339,7 +339,7 @@ function successChildRowListeners () {
       e.stopImmediatePropagation();
       $.ajax({
         url: customerPath($(this).data('customer-id')),
-        method: 'GET',
+        method: 'get',
         dataType: 'json'
       })
         .done(function (customer, status, xhr) {
@@ -349,7 +349,7 @@ function successChildRowListeners () {
                 customer: customer
               })
             )
-          ).done(function () { initS3Upload(true) })
+          ).done(function () { initS3Upload($('#customer-form')) })
         })
     })
 
