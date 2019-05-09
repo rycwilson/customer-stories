@@ -69,8 +69,9 @@ hr {
 }
 
 .alert-success {
-  background-color: #4d8664 !important;
-  border-color: #45715a !important;
+//   background-color: #4d8664 !important;
+//   border-color: #45715a !important;
+  border-radius: 0;
 }
 
 .required-input label:not(.radio-inline):not(.checkbox-inline):not([for="csv-file-input"]):after {

@@ -131,6 +131,7 @@ module GoogleAds
             field: error[:field_path].split('.').last
           }
         end
+        binding.remote_pry
         puts 'Failed to update responsive display ad v2'
       end
       updated_gad

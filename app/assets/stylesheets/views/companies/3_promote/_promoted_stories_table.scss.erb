@@ -155,13 +155,19 @@
   }
 
   td.promoted-story-images, td.promoted-story-title {
-    &.has-success {
-      background-color: #449d44;
+    &.has-feedback {
       color: #fff;
       text-align: center;
       text-decoration: none;
-      transition: background-color 0.2s ease;
       pointer-events: none;
+    }
+    &.has-success {
+      background-color: #449d44;
+      transition: background-color 0.3s ease;
+    }
+    &.has-error {
+      background-color: #d9534f;
+      transition: background-color 0.3s ease;
     }
   }
 }

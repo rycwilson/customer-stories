@@ -11,34 +11,49 @@
       initStatusSwitch = function () {
         $row.find('.bs-switch.promote-control').bootstrapSwitch({ size: 'small' });
       },
-      flashSuccessImages = function () {
-        var landscapeImages = dtRow.data().ads_images.filter(function (image) {
+      flash = function ($td, status) {
+        var landscapeImages = $td.is('.promoted-story-images') &&
+                              dtRow.data().ads_images.filter(function (image) {
                                 return image.type === 'LandscapeImage'
                               });
-        $row.find('td.promoted-story-images')
-            .html('<i class="fa fa-fw fa-check"></i>&nbsp&nbsp;<span>Updated</span>')
-            .addClass('has-success');
+
+        $td.addClass(status)
+           .html(
+             status.includes('has-success') ?
+                '<span>Updated successfully</span>' :
+                '<span>Sorry, there was an error</span>'
+           )
         setTimeout(function () {
-          $row.find('td.promoted-story-images')
-              .removeClass('has-success')
-              .empty()
-              .html(
+          $td.removeClass(status).empty();
+          if ($td.is('.promoted-story-images')) {
+            $td.html(
                 '<div class="fileinput">' +
-                   '<div class="fileinput-preview thumbnail">' +
-                     '<img src="' + (landscapeImages.length ? landscapeImages[0].image_url : '') + '" alt="promoted story image">' +
-                   '</div>' +
-                   '<input type="file" name="image_url" id="image_url" class="hidden" ' +
-                 '</div>'
+                  '<div class="fileinput-preview thumbnail">' +
+                    '<img src="' + (landscapeImages.length ? landscapeImages[0].image_url : '') + '" alt="promoted story image">' +
+                  '</div>' +
+                  '<input type="file" name="image_url" id="image_url" class="hidden" ' +
+                '</div>'
               )
+
+          } else if ($td.is('.status')) {
+
+          }
         }, 2000)
-      }
+      };
 
   console.log('resData', resData);
 
   if (resData.isImagesUpdate) {
     toggleFormDone($('#ads-images-form'), false);
     $('#ads-images-modal')
-      .one('hidden.bs.modal', flashSuccessImages)
+      .one('hidden.bs.modal', function () {
+        var $td = $row.find('td.promoted-story-images');
+        if (resData.errors) {
+          flash($td, 'has-feedback has-error')
+        } else {
+          flash($td, 'has-feedback has-success')
+        }
+      })
       .modal('hide');
     updateRowData();
     initStatusSwitch();
@@ -52,6 +67,7 @@
 
     if (resData.errors){
       // return to previous state
+
     } else {
       $switchContainer
         .find(newStatus === 'ENABLED' ? '.bootstrap-switch-handle-on' : '.bootstrap-switch-handle-off')
@@ -63,12 +79,6 @@
       }, 2000)
 
     }
-  }
-
-  if (resData.errors) {
-    flashDisplay(errors[0], 'danger')
-  } else {
-    // flashDisplay('Promoted Story updated successfully', 'success');
   }
 
 }());

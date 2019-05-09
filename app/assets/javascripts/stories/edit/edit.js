@@ -24,6 +24,8 @@ function storiesEditListeners () {
   storiesEditContentListeners();
   storiesEditContributorsListeners();
 
+  var storyHeaderTop = $('#story-header').offset().top;
+
   $(document)
 
     .on('click', '#curate a.all-stories', function (e) {
@@ -41,7 +43,30 @@ function storiesEditListeners () {
         $('#curate-filters .curator').children('[value="' + CSP.current_user.id.toString() + '"]').val()
       ).trigger('change', { auto: true });
 
-    });
+    })
+
+    // .on('scroll', function () {
+    //   console.log('scroll')
+    //   var currentScroll = $(window).scrollTop();
+    //   if (currentScroll > storyHeaderTop - 25) {
+    //     $('#story-header').css({
+    //       position: 'fixed',
+    //       // height: '100px',
+    //       width: $('#curate .layout-main').first().width().toString() + 'px',
+    //       top: '25px',
+    //       left: ($('#curate .layout-main').first().offset().left +
+    //              parseInt($('#curate .layout-main').first().css('padding-left'), 10))
+    //                 .toString() + 'px'
+    //     });
+    //   } else {
+    //     $('#story-header').css({
+    //       position: 'relative',
+    //       // width: '100%',
+    //       top: 0,
+    //       left: 0
+    //     });
+    //   }
+    // })
 
 }
 

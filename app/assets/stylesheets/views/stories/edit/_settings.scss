@@ -5,6 +5,25 @@
   // TODO this (or something like it) needs to be implemented more broadly
   min-height: 100vh;
 
+
+  #story-settings-form {
+    .col-sm-3 {
+      width: 20%;
+    }
+    .col-sm-7 {
+      width: 60%;
+    }
+    .col-sm-7.col-sm-offset-3 {
+      margin-left: 20%;
+    }
+    .col-sm-2 {
+      width: 20%;
+    }
+    hr {
+      margin-bottom: 25px;
+    }
+  }
+
   .form-group.publish {
     .publish-control {
       display: inline-block;
@@ -13,6 +32,9 @@
         vertical-align: middle;
         font-weight: normal;
         margin: 0 5px 0 0;
+      }
+      .bootstrap-switch .bootstrap-switch-handle-on {
+        background: #449d44;
       }
     }
     #approval-pdf {

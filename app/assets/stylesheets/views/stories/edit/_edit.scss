@@ -8,11 +8,34 @@
   @import 'contributions';
   @import 'results';
 
-  #story-edit-header {
-    margin: 0 0 25px 0;
+  #story-header__wrapper {
+    position: relative;
+    height: 100px;
+    margin-bottom: 25px;
+  }
+  #story-header__spacekeeper {
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 100%;
+    width: 100%;
+    background-color: transparent;
+  }
+  #story-header {
+
+    // #test {
+    //   flex: 0 0 100%;
+    //   z-index: -100;
+    // }
+
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
     background: #efefef;
-    padding: 15px;
-    > div {
+    padding: 15px 25px;
+    z-index: 100;  // needed for fixed positioning (see stories/edit.js)
+    > div:not(#story-header__flash):not(#fart) {
       display: flex;
       align-items: center;
       &:first-child {
@@ -32,6 +55,28 @@
       > span:nth-of-type(3) {
         width: 15%;
       }
+    }
+  }
+
+  #story-header__flash {
+    position: absolute;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    z-index: 100;
+    top: 0;
+    left: 0;
+    height: 100%;
+    width: 100%;
+    visibility: hidden;
+    opacity: 0;
+    transition: visibility 0s, opacity 0.25s ease;
+    font-size: 14px;
+    &.alert {
+      visibility: visible;
+      opacity: 1;
+      margin: 0;
     }
   }
 

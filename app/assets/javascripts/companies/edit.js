@@ -17,20 +17,25 @@ function companiesEdit () {
   $('.layout-main').show();
 
   $(document)
+
     .one('turbolinks:before-visit', function () {
       if ($('.dropdown.company-settings').hasClass('active')) {
         $('.dropdown.company-settings').removeClass('active');
       }
     })
+
     .one('click', '.workflow-tabs', function () {
       if ($('.dropdown.company-settings').hasClass('active')) {
         $('.dropdown.company-settings').removeClass('active');
       }
     })
+
     .on('shown.bs.tab', '.nav-layout-sidebar a', function (e) {
       window.location.hash = e.target.hash.replace('edit-', '');
       window.scrollTo(0, 0);
-    });
+    })
+
+
 }
 
 function companiesEditListeners () {

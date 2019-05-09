@@ -65,10 +65,11 @@ class AdwordsAdsController < ApplicationController
           if GoogleAds::change_ad_status(ad)
             # sucess
           else
-            errors = ["Sorry, there was an error when changing Promoted Story status"]
+            @errors = ["Sorry, there was an error"]
           end
         else
-          GoogleAds::update_ad(ad)
+          updated_gad = GoogleAds::update_ad(ad)
+          @errors = updated_gad[:errors].present? ? updated_gad[:errors] : nil
         end
       end
     else
@@ -100,7 +101,7 @@ class AdwordsAdsController < ApplicationController
     ]
     respond_to do |format|
       format.json do
-        render({ json: { data: dt_data }.to_json })
+        render({ json: { data: dt_data, errors: @errors }.to_json })
       end
 
       # in most case it's sufficient to get data from a single ad (e.g. topic)),
@@ -111,9 +112,8 @@ class AdwordsAdsController < ApplicationController
         # presently only one attribute will change at a time
         @response_data[:previousChanges] = story.topic_ad.previous_changes.first
         @response_data[:promotedStory] = dt_data[0]
-        # @response_data[:errors] = errors.present? ? errors : nil
+        @response_data[:errors] = @errors.present? ? errors : nil
         @response_data[:isImagesUpdate] = story_params.to_h[:topic_ad_attributes][:adwords_image_ids].present?
-        # @response_date[:isStatusUpdate] = story_params.to_h[:topic_ad_attributes][:status].present?
       end
     end
   end

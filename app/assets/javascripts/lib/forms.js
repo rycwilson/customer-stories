@@ -27,7 +27,7 @@ function toggleFormDone ($form, useCheckIcon, cb, $btn) {
       if ($btn) $button.attr('data-submitted', '');
       $button.find('.fa-check, span').toggle();
       if (cb) cb();
-    }, 2000);
+    }, 2500);
   } else {
     $form.attr('data-submitted', '');
     if ($btn) $button.attr('data-submitted', '');

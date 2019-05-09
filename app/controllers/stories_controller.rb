@@ -1,3 +1,4 @@
+
 require 'stories_and_plugins'
 class StoriesController < ApplicationController
   include StoriesHelper
@@ -164,21 +165,19 @@ class StoriesController < ApplicationController
         # => if all companies push to google regardless of promote_tr?,
         #     model validations can be made easier by checking for AdwordsAd.ad_id on create
         if @story.company.promote_tr? && @story.was_published?
-          gads_errors = gads_errors(@story, @story.company.gads_requirements_checklist)
         end
       else
-        story_errors = @story.errors.full_messages
       end
       # html response necessary for uploading customer logo image
       respond_to do |format|
         format.js do
           @response_data = {}
-          @response_data[:storyErrors] = story_errors.present? ? story_errors : nil
-          @response_data[:gadsErrors] = gads_errors.present? ? gads_errors : nil
+          @response_data[:previousChanges] = @story.previous_changes
+          @response_data[:storyErrors] = @story.errors.full_messages
           @response_data[:newAds] = new_ads(story_params.to_h, @story.id)
+          @response_data[:gadsWereCreated] = gads_were_created?(new_ads(story_params.to_h, @story.id))
+          @response_data[:gadsErrors] = gads_errors?(@story, @story.company.gads_requirements_checklist)
           @response_data[:adsWereDestroyed] = ads_were_destroyed?(story_params.to_h)
-          @response_data[:gadsWereCreated] = gads_errors.blank? &&
-                                             gads_were_created?(new_ads(story_params.to_h, @story.id))
           @response_data[:gadsWereRemoved] = @story.company.promote_tr? &&
                                              ads_were_destroyed?(story_params.to_h)
           render({ action: 'edit/settings/update' })
@@ -344,23 +343,23 @@ class StoriesController < ApplicationController
     end
   end
 
-  def gads_errors(story, checklist)
-    return [] if story.ads.all? { |ad| ad.ad_id.present? }
-    checklist.reject { |requirement, is_met| is_met }
-             .map do |requirement, is_met|
-      case requirement
-      when :default_headline
-        "Short headline is missing"
-      when :square_image
-        "Square marketing image is missing"
-      when :landscape_image
-        "Landscape marketing image is missing"
-      when :valid_defaults
-        "Default image(s) missing valid asset id"
-      else
-        "Unknown error"
-      end
-    end
+  def gads_errors?(story, checklist)
+    return false unless story.company.promote_tr?
+    return story.ads.all? { |ad| ad.ad_id.present? } ? false : true
+    # checklist.reject { |requirement, is_met| requirement == :promote_enabled || is_met }
+    #          .map do |requirement, is_met|
+    #   case requirement
+    #   when :default_headline
+    #     "Short headline is missing"
+    #   when :square_image
+    #     "Square marketing image is missing"
+    #   when :landscape_image
+    #     "Landscape marketing image is missing"
+    #   when :valid_defaults
+    #     "Default image(s) missing valid asset id"
+    #   end
+
+    # end
   end
 
   def set_company
