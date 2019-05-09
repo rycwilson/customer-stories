@@ -5,6 +5,10 @@ $stories-header-height: 40px;
 $csp-bg-gray: #f2f2f2;
 $csp-fg-gray: #efefef;
 
+a, a:hover {
+  color: #3367d6;
+}
+
 @mixin bs-xs {
   @media screen and (max-width: 767px) {
     @content;

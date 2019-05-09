@@ -24,7 +24,6 @@ function storiesEditListeners () {
   storiesEditContentListeners();
   storiesEditContributorsListeners();
 
-  var storyHeaderTop = $('#story-header').offset().top;
 
   $(document)
 
@@ -46,6 +45,7 @@ function storiesEditListeners () {
     })
 
     // .on('scroll', function () {
+  // var storyHeaderTop = $('#story-header').offset().top;
     //   console.log('scroll')
     //   var currentScroll = $(window).scrollTop();
     //   if (currentScroll > storyHeaderTop - 25) {

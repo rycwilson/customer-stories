@@ -29,14 +29,14 @@
     font-size: 16px;
     li.active {
       a {
-        color: #d74b4b;  // #4885ed;
+        color: #4285f4; // #d74b4b;  // #4885ed;
         font-weight: bold;
         border: transparent;
-        border-bottom: 1px solid #d74b4b;  // #4885ed;
+        border-bottom: 1px solid #4285f4; //#d74b4b;  // #4885ed;
       }
       a:hover, a:focus {
-        color: #d74b4b;  // #4885ed;
-        border-bottom: 1px solid #d74b4b;  // #4885ed;
+        color: #4285f4; // #d74b4b;  // #4885ed;
+        border-bottom: 1px solid #4285f4; //  #d74b4b;  // #4885ed;
       }
     }
     li {
@@ -82,7 +82,7 @@
           border-top: transparent;
           border-right: transparent;
           border-left: transparent;
-          border-bottom: 1px solid #d74b4b;  // #4885ed;
+          border-bottom: 1px solid #4285f4; // #d74b4b;  // #4885ed;
         }
         // remove the caret from dropdown
         .dropdown-menu::after, .dropdown-menu::before {

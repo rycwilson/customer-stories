@@ -58,10 +58,10 @@ table.dataTable tr.group td {
 
   tr.active {
     td:first-child {
-      border-left: 1px solid #08c;
+      // border-left: 1px solid #4285f4; // #08c;
     }
     td:last-child {
-      border-right: 1px solid #08c;
+      // border-right: 1px solid #4285f4; // #08c;
     }
     i:not(.action) {
       color: white;
@@ -70,15 +70,15 @@ table.dataTable tr.group td {
   }
   tr.active:hover {
     td:first-child {
-      border-left-color: #0075b0 !important;
+      // border-left-color: #4285f4 !important;  // #0075b0
     }
     td:last-child {
-      border-right-color: #0075b0 !important;
+      // border-right-color: #4285f4 !important;  // #0075b0
     }
   }
   // child row
   tr.active:hover + tr:not(.group) > td[colspan]:not(.dataTables_empty) {
-    border-color: #0075b0 !important
+    // border-color: #4285f4 !important; // #0075b0
   }
 
   td {
@@ -116,7 +116,7 @@ table.dataTable tr.group td {
     }
   }
   td.status.dropdown.open, td.actions.dropdown.open {
-    border-bottom: 1px solid #d74b4b;
+    border-bottom: 1px solid #4285f4;  // #d74b4b;
     .dropdown-menu {
       border-top-right-radius: 0;
       margin: 1px 0;
