@@ -23,14 +23,20 @@ function storiesEditSettingsListeners () {
           toggleHiddenAdInputs = function (shouldCreateAds) {
             if (shouldCreateAds) {
               $('#story-settings__ads-inputs')
-                .find(':not([name*="[_destroy]"])').prop('disabled', false).end()
+                .find(':not([name*="[_destroy]"]):not([name*="[ad_id]"])')
+                  .prop('disabled', false)
+                  .end()
                 .find('[name*="[_destroy]"]')
                   .prop('checked', false)
                   .prop('disabled', true)
-            } else {
+            } else {  // destroy ads
               $('#story-settings__ads-inputs')
-                .find('input').prop('disabled', true).end()
-                .find('[name*="[id]"]').prop('disabled', false).end()
+                .find('input')
+                  .prop('disabled', true)
+                  .end()
+                .find('[name*="[id]"], [name*="[ad_id]"]')
+                  .prop('disabled', false)
+                  .end()
                 .find('[name*="[_destroy]"]')
                   .prop('disabled', false)
                   .prop('checked', true)

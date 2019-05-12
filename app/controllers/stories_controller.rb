@@ -156,7 +156,6 @@ class StoriesController < ApplicationController
     if params[:settings]
       @story.success.cta_ids = params[:ctas]
       if @story.update(story_params)
-
         # TODO: a better way of handling google errors
         # => only way to get errors back from the associated ad is to validate it,
         #    but present scheme dictates that the ad exists even if it has no ad_id
@@ -164,22 +163,18 @@ class StoriesController < ApplicationController
         # => adding errors to self.story.errors[:base] doesn't seem to work
         # => if all companies push to google regardless of promote_tr?,
         #     model validations can be made easier by checking for AdwordsAd.ad_id on create
-        if @story.company.promote_tr? && @story.was_published?
-        end
       else
       end
-      # html response necessary for uploading customer logo image
       respond_to do |format|
         format.js do
           @response_data = {}
           @response_data[:previousChanges] = @story.previous_changes
           @response_data[:storyErrors] = @story.errors.full_messages
-          @response_data[:newAds] = new_ads(story_params.to_h, @story.id)
-          @response_data[:gadsWereCreated] = gads_were_created?(new_ads(story_params.to_h, @story.id))
-          @response_data[:gadsErrors] = gads_errors?(@story, @story.company.gads_requirements_checklist)
+          @response_data[:newAds] = new_ads(@story, story_params.to_h)
+          @response_data[:gadsWereCreated] = gads_were_created?(@story, story_params.to_h)
+          @response_data[:gadsErrors] = gads_errors?(@story, story_params.to_h)
           @response_data[:adsWereDestroyed] = ads_were_destroyed?(story_params.to_h)
-          @response_data[:gadsWereRemoved] = @story.company.promote_tr? &&
-                                             ads_were_destroyed?(story_params.to_h)
+          @response_data[:gadsWereRemoved] = gads_were_removed?(@story, story_params.to_h)
           render({ action: 'edit/settings/update' })
         end
       end
@@ -310,31 +305,22 @@ class StoriesController < ApplicationController
         results_attributes: [:id, :description, :_destroy],
         customer_attributes: [:id, :name, :logo_url, :show_name_with_logo, :company_id]
       ],
-      topic_ad_attributes: [:id, :adwords_ad_group_id, :_destroy],
-      retarget_ad_attributes: [:id, :adwords_ad_group_id, :_destroy]
+      topic_ad_attributes: [:id, :adwords_ad_group_id, :ad_id, :_destroy],
+      retarget_ad_attributes: [:id, :adwords_ad_group_id, :ad_id, :_destroy]
     )
   end
 
-  # def adwords_params
-  #   params.require(:adwords).permit(:status, :long_headline)
-  # end
-
-  def new_ads(story_params, story_id)
+  def new_ads(story, story_params)
     [story_params.try(:[], :topic_ad_attributes), story_params.try(:[], :retarget_ad_attributes)]
-      .all? { |ad_attrs| ad_attrs.present? && ad_attrs[:id].blank? } &&
+      .all? { |ad_attrs| ad_attrs.present? && ad_attrs[:id].blank? }
     {
       topic: AdwordsAd.joins(:adwords_campaign)
-                      .where(adwords_campaigns: { type: 'TopicCampaign'}, story_id: story_id)
+                      .where(adwords_campaigns: { type: 'TopicCampaign'}, story_id: story.id)
                       .take.try(:slice, :id, :ad_id),
       retarget: AdwordsAd.joins(:adwords_campaign)
-                         .where(adwords_campaigns: { type: 'RetargetCampaign'}, story_id: story_id)
+                         .where(adwords_campaigns: { type: 'RetargetCampaign'}, story_id: story.id)
                          .take.try(:slice, :id, :ad_id)
     }
-  end
-
-  def gads_were_created?(new_ads)
-    new_ads.present? &&
-    new_ads.all? { |campaign_type, ad_data| ad_data.try(:[], :ad_id).present? }
   end
 
   def ads_were_destroyed?(story_params)
@@ -343,23 +329,32 @@ class StoriesController < ApplicationController
     end
   end
 
-  def gads_errors?(story, checklist)
-    return false unless story.company.promote_tr?
-    return story.ads.all? { |ad| ad.ad_id.present? } ? false : true
-    # checklist.reject { |requirement, is_met| requirement == :promote_enabled || is_met }
-    #          .map do |requirement, is_met|
-    #   case requirement
-    #   when :default_headline
-    #     "Short headline is missing"
-    #   when :square_image
-    #     "Square marketing image is missing"
-    #   when :landscape_image
-    #     "Landscape marketing image is missing"
-    #   when :valid_defaults
-    #     "Default image(s) missing valid asset id"
-    #   end
+  # checking for successfully created ads is easy: just look for the ad_id
+  def gads_were_created?(story, story_params)
+    new_ads = new_ads(story, story_params)
+    new_ads.present? &&
+    new_ads.all? { |campaign_type, ad_data| ad_data.try(:[], :ad_id).present? }
+  end
 
-    # end
+  # checking for successfully removed ads is a bit different:
+  # => ads are destroyed whether or not company.promote_tr?, so check for that
+  def gads_were_removed?(story, story_params)
+    story.company.promote_tr? &&
+    ads_were_destroyed?(story_params.to_h) &&
+    !gads_errors?(story_params.to_h)
+  end
+
+  def gads_errors?(story, story_params)
+    return false unless story.company.promote_tr?
+    if story.was_published?
+      return story.ads.all? { |ad| ad.ad_id.present? } ? false : true
+
+    # check if the ads still exist on google
+    # => this won't work if the ad_id is bad
+    elsif story.was_unpublished?
+      return [story_params[:topic_ad_attributes][:ad_id], story_params[:retarget_ad_attributes][:ad_id]]
+                .any? { |ad_id| GoogleAds::get_ad(ad_id) }
+    end
   end
 
   def set_company

@@ -194,7 +194,9 @@ function promoteListeners () {
             if (storyIds.length === 0) {
               $btn.prop('disabled', false).children().toggle();
               $('#gads-checklist li').removeClass('checked');
-              // TODO: add a results section (# stories created, etc)
+              $('#promoted-stories-table').DataTable().ajax.reload(function () {
+                console.log('set/reset complete')
+              });
               return;  // terminate if array exhausted
             } else if (storyIds.length)
 

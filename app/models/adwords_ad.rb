@@ -64,7 +64,6 @@ class AdwordsAd < ApplicationRecord
 
   before_create :assign_defaults
   before_create :create_gad, if: :promote_enabled?
-  after_update_commit :update_gad, if: :promote_enabled?
   before_destroy :remove_gad, if: :promote_enabled?
 
   def google_ad
@@ -136,8 +135,8 @@ class AdwordsAd < ApplicationRecord
 
   def create_gad
     new_gad = GoogleAds::create_ad(self)
-    if new_gad[:ad].present?
-      self[:ad_id] = new_gad[:ad][:id]
+    if new_gad[:id].present?
+      self[:ad_id] = new_gad[:id]
     else
       # don't want to trigger invalidation because we want the model even if the ad fails
       # the failure can be ignored when updating the story (publishing, unpublishing),
@@ -145,15 +144,7 @@ class AdwordsAd < ApplicationRecord
 
       # this doesn't seem to work
       new_gad[:errors].each { |error| self.story.errors[:base] << google_error(error) }
-
     end
-  end
-
-  def update_gad
-
-  end
-
-  def change_gad_status
   end
 
   def validate_images
@@ -165,8 +156,9 @@ class AdwordsAd < ApplicationRecord
     #     ).length == ?
   end
 
+
   def remove_gad
-    GoogleAds::remove_ad(self.ad_group.ad_group_id, self.ad_id) unless self.ad_id.blank?
+    GoogleAds::remove_ad(self.ad_group.ad_group_id, self.ad_id)
   end
 
   def assign_defaults

@@ -73,9 +73,15 @@ function curateListeners () {
         dataType: 'html'
       })
         .done(function (html, status, xhr) {
-          var showTab = function () { $('a[href="#curate-story"]').tab('show'); };
+          var showTab = function () {
+            $('a[href="#curate-story"]')
+              .one('shown.bs.tab', function () { window.scrollTo(0, 0); })
+              .tab('show');
+          };
           $.when( $('#curate-story').empty().append(html) )
-            .done(function () { initStoriesEdit(showTab); });
+            .done(function () {
+              initStoriesEdit(showTab);
+            });
         });
     })
 

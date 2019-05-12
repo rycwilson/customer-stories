@@ -46,33 +46,8 @@ function openPromotedStoriesEditor (promotedStoriesEditor, $row) {
     'long_headline',
     { // default options: https://editor.datatables.net/reference/option/formOptions.inline
       submit: 'all',
-      onComplete: function (editor, something, somethingElse) {
+      onComplete: function (editor) {
         // console.log('onComplete')
-        var storyId = $row.data('story-id'),
-            $table = $(editor.s.table),
-            dt = $table.DataTable(),
-            rowData = dt.row($row).data();
-        editor.close();
-
-        // the drawType option isn't forcing a re-draw (?), so re-draw the individual row(s)
-        // forum discussion: https://datatables.net/forums/discussion/45189
-        dt.row($row).data(rowData).draw();
-        $row.find('td.promoted-story-title').addClass('save-disabled');
-
-        // re-init bootstrapSwitch
-        $row.find('.bs-switch.promote-control')
-            .bootstrapSwitch({ size: 'small' });
-
-        // flash success
-        $row.find('td.promoted-story-title')
-            .html('<i class="fa fa-fw fa-check"></i>&nbsp&nbsp;<span>Updated</span>')
-            .addClass('has-success');
-        setTimeout(function () {
-          $row.find('td.promoted-story-title')
-              .removeClass('has-success')
-              .empty()
-              .text(rowData.ads_long_headline)
-        }, 2000)
       },
       drawType: true,
       // buttons are in reverse order of how they're diplayed because they both have float:right

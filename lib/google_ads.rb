@@ -34,20 +34,19 @@ module GoogleAds
       new_gads = {}
       begin
         result = service.mutate(operations)
-        if result[:value].length > 0
+        if result[:value].present?
           result[:value].each do |new_gad|
             campaign_type = (new_gad[:ad_group_id] == story.topic_ad.ad_group.ad_group_id) ? :topic : :retarget
             new_gads[campaign_type] = {
-              # ad_group_id: new_gad[:ad_group_id],
               ad_id: new_gad[:ad][:id],
               long_headline: new_gad[:ad][:long_headline][:asset][:asset_text]
             }
-            puts 'Created responsive display ad v2:'
-            awesome_print(new_gads[campaign_type])
+            puts "***\n*** Created responsive display ad (#{campaign_type})\n***"
+            log_result([ new_gad[:ad] ])
           end
         else
-          new_gads[:errors] = ['No results returned from api']
-          puts 'Failed to create responsive display ad v2:'
+          # should be exception; why here?
+          new_gad[:errors] = ["unknown"]
         end
       rescue Exception => e
         new_gads[:errors] = e.errors.map do |error|
@@ -56,8 +55,9 @@ module GoogleAds
             field: error[:field_path].split('.').last
           }
         end
-        puts 'Failed to create responsive display ad v2:'
-        awesome_print(new_gads)
+        puts "***\n*** Failed to create responsive display ad for story:"
+        puts "*** #{story.title}\n***"
+        awesome_print(new_gads[:errors])
       end
       new_gads
     end
@@ -77,27 +77,29 @@ module GoogleAds
       new_gad = {}
       begin
         result = service.mutate([operation])
-        # awesome_print result
         if result[:value].present?
-          new_gad = result[:value].first
-          puts 'Created responsive display ad v2'
-          awesome_print({
-              ad_group_id: new_gad[:ad_group_id],
-              ad_id: new_gad[:ad][:id],
-              long_headline: new_gad[:ad][:long_headline][:asset][:asset_text]
-            })
+          new_gad = result[:value].first[:ad]
+          puts "***\n*** Created responsive display ad #{new_gad[:id]}"
+          log_result([new_gad])
         else
-          puts 'Failed to create responsive display ad v2'
+          # should be exception; why here?
           new_gad[:errors] = ["unknown"]
         end
-      rescue Exception => e
+      rescue AdwordsApi::Errors::ApiException => e
         new_gad[:errors] = e.errors.map do |error|
           {
             type: error[:error_string].split('.').last,
             field: error[:field_path].split('.').last
           }
         end
-        puts 'Failed to create responsive display ad v2'
+        puts "***\n*** Failed to create responsive display ad for story:"
+        puts "*** #{ad.story.title}\n***"
+        awesome_print(new_gad[:errors])
+      rescue AdsCommon::Errors::ApiException => e
+        new_gad[:errors] = e.message
+        puts "***\n*** Failed to create responsive display ad for story:"
+        puts "*** #{ad.story.title}\n***"
+        awesome_print(new_gad[:errors])
       end
       new_gad
     end
@@ -114,16 +116,9 @@ module GoogleAds
         result = service.mutate([operation])
         if result[:value].present?
           updated_gad = result[:value].first
-          puts 'Updated responsive display ad v2'
-          # TODO: log the fields that were updated => for now just the id
-          awesome_print({
-            id: updated_gad[:id],
-          })
-        else
-          puts 'Failed to update responsive display ad v2'
-          updated_gad[:errors] = ["unknown"]
+          puts "***\n*** Updated responsive display ad #{updated_gad[:id]}\n***"
+          log_result([updated_gad])
         end
-
       rescue AdwordsApi::Errors::ApiException => e
         updated_gad[:errors] = e.errors.map do |error|
           {
@@ -131,12 +126,19 @@ module GoogleAds
             field: error[:field_path].split('.').last
           }
         end
-        binding.remote_pry
-        puts 'Failed to update responsive display ad v2'
+        puts "***\n*** Failed to update responsive display ad #{updated_gad[:id]}\n***"
+        awesome_print(updated_gad[:errors])
+
+      # a missing ad_id will raise this exception
+      rescue AdsCommon::Errors::ApiException => e
+        updated_gad[:errors] = e.message
+        puts "***\n*** Failed to update responsive display ad #{updated_gad[:id]}\n***"
+        awesome_print(updated_gad[:errors])
       end
       updated_gad
     end
 
+    # note the different service needed to update ad status
     def change_ad_status(ad)
       service = create_api.service(:AdGroupAdService, API_VERSION)
       operation = {
@@ -147,14 +149,29 @@ module GoogleAds
           ad: { id: ad.ad_id }
         }
       }
+      updated_gad = {}
       begin
-        service.mutate([operation])
-        return true
+        result = service.mutate([operation])
+        if result[:value].present?
+          updated_gad = result[:value].first[:ad]
+          puts "***\n*** Updated responsive display ad (#{ ad.campaign.type.match('Topic') ? 'topic' : 'retarget' })\n***"
+          log_result([updated_gad])
+        end
       rescue AdwordsApi::Errors::ApiException => e
-        puts "When changing status of google ad #{ad.ad_id}"
-        awesome_print(e.errors)
-        return false
+        updated_gad[:errors] = e.errors.map do |error|
+          {
+            type: error[:error_string].split('.').last,
+            field: error[:field_path].split('.').last
+          }
+        end
+        puts "***\n*** Failed to update responsive display ad (#{ ad.campaign.type.match('Topic') ? 'topic' : 'retarget' })\n***"
+        awesome_print(updated_gad[:errors])
+
+      # a missing ad_id will raise this exception
+      rescue AdsCommon::Errors::ApiException => e
+        updated_gad[:errors] = e.message
       end
+      updated_gad
     end
 
     # this could potentially be a google ad that's not structured like a csp ad
@@ -173,35 +190,32 @@ module GoogleAds
           }
         }
       }
+      removed_gad = { ad_id: ad_id }
       begin
         response = service.mutate([operation])
-      # Authorization error.
-      rescue AdsCommon::Errors::OAuth2VerificationRequired => e
-        # flash[:alert] = Rails.env.development? ? 'Invalid Adwords API credentials' : 'Error removing Promoted Story'
-      # HTTP errors.
-      rescue AdsCommon::Errors::HttpError => e
-        puts "HTTP Error: %s" % e
-        # flash[:alert] = Rails.env.development? ? "HTTP error: #{e}" : 'Error removing Promoted Story'
-      # API errors.
-      rescue AdwordsApi::Errors::ApiException => e
-        puts "Message: %s" % e.message
-        puts 'Errors:'
-        e.errors.each_with_index do |error, index|
-          puts "\tError [%d]:" % (index + 1)
-          error.each do |field, value|
-            puts "\t\t%s: %s" % [field, value]
-          end
-        end
-      end
+        puts "***\n*** Removed responsive display ad #{ ad_id }\n***"
 
-      if response and response[:value]
-        ad = response[:value].first
-        puts "Ad ID %d was successfully removed." % ad[:ad][:id]
-        ad[:ad][:id]
-      else
-        puts 'No ads were removed.'
-        nil
+      # Authorization error
+      rescue AdsCommon::Errors::OAuth2VerificationRequired => e
+      # HTTP errors
+      rescue AdsCommon::Errors::HttpError => e
+
+      # API errors
+      rescue AdwordsApi::Errors::ApiException => e
+        removed_gad[:errors] = e.errors.map do |error|
+          {
+            type: error[:error_string].split('.').last,
+            field: error[:field_path].split('.').last
+          }
+        end
+        puts "***\n*** Failed to remove responsive display ad #{ ad_id }\n***"
+        awesome_print(removed_gad[:errors])
+      rescue AdsCommon::Errors::ApiException => e
+        removed_gad[:errors] = e.message
+        puts e.message
+        puts "***\n*** Failed to remove responsive display ad #{ ad_id }\n***"
       end
+      removed_gad
     end
 
     # ads = [ { ad_group_id: 1, ad_id: 1 }, ... ]
@@ -218,7 +232,6 @@ module GoogleAds
         response = service.mutate(operations)
       # Authorization error.
       rescue AdsCommon::Errors::OAuth2VerificationRequired => e
-        # flash[:alert] = Rails.env.development? ? 'Invalid Adwords API credentials' : 'Error removing Promoted Story'
       # HTTP errors.
       rescue AdsCommon::Errors::HttpError => e
         puts "HTTP Error: %s" % e
@@ -233,7 +246,6 @@ module GoogleAds
             puts "\t\t%s: %s" % [field, value]
           end
         end
-        # flash[:alert] = Rails.env.development? ? "Adwords API error: #{e.message}" : 'Error removing Promoted Story'
       end
 
       if response and response[:value]
@@ -498,16 +510,12 @@ module GoogleAds
       result[:entries]
     end
 
-    # def get_story_ads(story)
-    #   service = create_api.service(:AdGroupAdService, API_VERSION)
-    # end
-
-    def get_ad(ad)
+    def get_ad(ad_id)
       service = create_api.service(:AdGroupAdService, API_VERSION)
       selector = {
         fields: ['Id', 'Name', 'Status', 'LongHeadline', 'Labels'],
         ordering: [{ field: 'Id', sort_order: 'ASCENDING' }],
-        predicates: [{ field: 'Id', operator: 'IN', values: [ad.ad_id] }]
+        predicates: [{ field: 'Id', operator: 'IN', values: [ad_id] }]
       }
       begin
         result = service.get(selector)
@@ -595,6 +603,23 @@ module GoogleAds
     end
 
     private
+
+    def log_result(gads)
+      gads.each do |gad|
+        awesome_print({
+          id: gad[:id],
+          # status: gad[:status],  # not included with AdService
+          long_headline: gad[:long_headline][:asset][:asset_text],
+          short_headlines: gad[:headlines].map { |h| h[:asset][:asset_text] },
+          descriptions: gad[:descriptions].map { |d| d[:asset][:asset_text] },
+          square_marketing_images: gad[:square_marketing_images].map { |i| i[:asset][:asset_id] },
+          landscape_marketing_images: gad[:marketing_images].map { |i| i[:asset][:asset_id] },
+          square_logos: gad[:logo_images].try(:map) { |i| i[:asset][:asset_id] },
+          landscape_logos: gad[:landscape_logo_images].try(:map) { |i| i[:asset][:asset_id] },
+          final_urls: gad[:final_urls]
+        })
+      end
+    end
 
     def create_label(label)
       service = create_api.service(:LabelService, API_VERSION)

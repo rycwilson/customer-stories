@@ -1,72 +1,79 @@
 
 (function () {
 
-  var resData = <%= raw @response_data.to_json %>,
+  var res = <%= raw @response_data.to_json %>,
       $table = $('#promoted-stories-table'),
       dt = $table.DataTable(),
-      $row = $table.find('[data-story-id="' + resData.promotedStory.id + '"]'),
-      dtRow = dt.row('[data-story-id="' + resData.promotedStory.id + '"]'),
-      isStatusUpdate = resData.previousChanges && (resData.previousChanges[0] === 'status'),
-      updateRowData = function () { dtRow.data(resData.promotedStory); },
+      $row = $table.find('[data-story-id="' + res.promotedStory.id + '"]'),
+      dtRow = dt.row('[data-story-id="' + res.promotedStory.id + '"]'),
+      isStatusUpdate = res.previousChanges && (res.previousChanges[0] === 'status'),
+      updateRowData = function () { dtRow.data(res.promotedStory); },
       initStatusSwitch = function () {
         $row.find('.bs-switch.promote-control').bootstrapSwitch({ size: 'small' });
       },
-      flash = function ($td, status) {
-        var landscapeImages = $td.is('.promoted-story-images') &&
-                              dtRow.data().ads_images.filter(function (image) {
+      flashError = function () {
+        $row.children().toggle().end()
+            .find('td.flash > div')
+            .addClass('alert alert-danger')
+            .text('Sorry, there was an error when updating the Promoted Story');
+        setTimeout(function () {
+          $row.find('td.flash > div')
+              .empty()
+              .removeClass('alert alert-danger')
+                .end()
+              .children().toggle();
+        }, 2500);
+      },
+      flashImagesSuccess = function () {
+        var $td = $row.find('td.promoted-story-images'),
+            landscapeImages = dtRow.data().ads_images.filter(function (image) {
                                 return image.type === 'LandscapeImage'
                               });
-
-        $td.addClass(status)
-           .html(
-             status.includes('has-success') ?
-                '<span>Updated successfully</span>' :
-                '<span>Sorry, there was an error</span>'
-           )
+        $td.addClass('alert alert-success')
+           .html('<i class="fa fa-fw fa-check"></i>&nbsp;&nbsp;<span>Updated</span>');
         setTimeout(function () {
-          $td.removeClass(status).empty();
-          if ($td.is('.promoted-story-images')) {
-            $td.html(
-                '<div class="fileinput">' +
-                  '<div class="fileinput-preview thumbnail">' +
-                    '<img src="' + (landscapeImages.length ? landscapeImages[0].image_url : '') + '" alt="promoted story image">' +
-                  '</div>' +
-                  '<input type="file" name="image_url" id="image_url" class="hidden" ' +
-                '</div>'
-              )
-
-          } else if ($td.is('.status')) {
-
-          }
-        }, 2000)
+          $td.empty()
+             .removeClass('alert alert-success')
+             .html(
+               '<div class="fileinput">' +
+                 '<div class="fileinput-preview thumbnail">' +
+                   '<img src="' + (landscapeImages.length ? landscapeImages[0].image_url : '') + '" alt="promoted story image">' +
+                 '</div>' +
+                 '<input type="file" name="image_url" id="image_url" class="hidden" ' +
+               '</div>'
+             )
+        }, 2500);
       };
 
-  console.log('resData', resData);
+  console.log('res', res);
 
-  if (resData.isImagesUpdate) {
+  if (res.isImagesUpdate) {
     toggleFormDone($('#ads-images-form'), false);
     $('#ads-images-modal')
       .one('hidden.bs.modal', function () {
-        var $td = $row.find('td.promoted-story-images');
-        if (resData.errors) {
-          flash($td, 'has-feedback has-error')
-        } else {
-          flash($td, 'has-feedback has-success')
-        }
+        res.gadsErrors ?
+          flashError() :
+          flashImagesSuccess();
       })
       .modal('hide');
-    updateRowData();
+    if (!res.gadsErrors) updateRowData();
     initStatusSwitch();
 
   } else if (isStatusUpdate) {
-    var $switchContainer = (
-          $table.find('tr[data-story-id="' + resData.promotedStory.id + '"] .bootstrap-switch-container')
-        ),
-        prevStatus = resData.previousChanges[1][0],
-        newStatus = resData.previousChanges[1][1];
+    var $switchContainer = $row.find('.bootstrap-switch-container'),
+        prevStatus = res.previousChanges[1][0],
+        newStatus = res.gadsErrors ? prevStatus : res.previousChanges[1][1];
 
-    if (resData.errors){
-      // return to previous state
+    if (res.gadsErrors){
+      flashError();
+      $switchContainer
+        .find(newStatus === 'ENABLED' ? '.bootstrap-switch-handle-on' : '.bootstrap-switch-handle-off')
+          .find('.fa-spin, ' + (newStatus === 'ENABLED' ? '.fa-play' : '.fa-pause'))
+            .toggle()
+            .end()
+          .end()
+        .find('.bs-switch.promote-control')
+          .bootstrapSwitch('toggleState');
 
     } else {
       $switchContainer
@@ -76,8 +83,7 @@
         $switchContainer.closest('form').attr('data-submitted', '');
         updateRowData();
         initStatusSwitch();
-      }, 2000)
-
+      }, 2500)
     }
   }
 

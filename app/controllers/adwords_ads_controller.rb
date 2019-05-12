@@ -59,17 +59,24 @@ class AdwordsAdsController < ApplicationController
     # puts 'adwords_ads#update'
     # awesome_print(story_params.to_h)
     story = Story.find(params[:id])
+
+    # in case there's an error and we need to revert association changes
+    existing_ads_image_ids = story.ads.first.adwords_image_ids
     if story.update(story_params)
       [story.topic_ad, story.retarget_ad].each do |ad|
-        if (ad.previous_changes.keys & ['status']).any?
-          if GoogleAds::change_ad_status(ad)
-            # sucess
+        @updated_gad = (ad.previous_changes.keys & ['status']).any? ?
+          GoogleAds::change_ad_status(ad) :
+          GoogleAds::update_ad(ad)
+
+        # revert changes if google errors (update_columns => no callbacks)
+        if @updated_gad[:errors]
+          if (ad.previous_changes.keys & ['long_headline', 'status']).any?
+            ad.update_columns(
+              ad.previous_changes.map { |attr, val| [attr, val.shift] }.to_h
+            )
           else
-            @errors = ["Sorry, there was an error"]
+            ad.adwords_image_ids = existing_ads_image_ids  # saves immediately, skips the callback
           end
-        else
-          updated_gad = GoogleAds::update_ad(ad)
-          @errors = updated_gad[:errors].present? ? updated_gad[:errors] : nil
         end
       end
     else
@@ -99,20 +106,26 @@ class AdwordsAdsController < ApplicationController
         })
       )
     ]
+
     respond_to do |format|
       format.json do
-        render({ json: { data: dt_data, errors: @errors }.to_json })
+        render({
+          json: {
+            data: dt_data,
+            error: '',  # datatables will look here for it's own flash message system
+            errors: @updated_gad[:errors] ? 'Sorry, there was an error when updating the Promoted Story' : ''
+          }.to_json
+        })
       end
 
       # in most case it's sufficient to get data from a single ad (e.g. topic)),
       # since topic and retarget are supposed to be sync'ed
       format.js do
         @response_data = {}
-
         # presently only one attribute will change at a time
         @response_data[:previousChanges] = story.topic_ad.previous_changes.first
         @response_data[:promotedStory] = dt_data[0]
-        @response_data[:errors] = @errors.present? ? errors : nil
+        @response_data[:gadsErrors] = @updated_gad[:errors]
         @response_data[:isImagesUpdate] = story_params.to_h[:topic_ad_attributes][:adwords_image_ids].present?
       end
     end
@@ -151,6 +164,11 @@ class AdwordsAdsController < ApplicationController
       end
     end
     errors
+  end
+
+  def gads_errors?(story, checklist)
+    return false unless story.company.promote_tr?
+    return story.ads.all? { |ad| ad.ad_id.present? } ? false : true
   end
 
 end

@@ -207,6 +207,10 @@ class Story < ApplicationRecord
     self.previous_changes.try(:[], :published).try(:[], 1)
   end
 
+  def was_unpublished?
+    self.previous_changes.try(:[], :published).try(:[], 0)
+  end
+
   def should_generate_new_friendly_id?
     new_record? || title_changed? || slug.blank?
   end

@@ -41,7 +41,7 @@
       bottom: -10px;
       right: -10px;
       align-items: center;
-      color: #449d44; // mac blue: #5E9ED6;
+      color: #4285f4;  // #449d44; // mac blue: #5E9ED6;
       font-size: 12px;
       padding: 4px;
       > div {
@@ -69,6 +69,30 @@
 }
 
 #promoted-stories-table {
+  td.flash {
+    display: none;
+    border-right-width: 0;
+    border-radius: 0;
+    padding: 0;
+    pointer-events: none;
+    > div {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      height: 100%;
+      width: 100%;
+      border-radius: 0;
+      visibility: hidden;
+      opacity: 0;
+      transition: visibility 0s, opacity 0.25s ease;
+      &.alert {
+        visibility: visible;
+        opacity: 1;
+        margin: 0;
+        border: none;
+      }
+    }
+  }
   td.promoted-story-images {
     text-align: center;
     vertical-align: middle;
@@ -130,8 +154,15 @@
     }
 
   }
-
-
+  td.promoted-story-images, td.promoted-story-title {
+    &.alert {
+      transition: background-color 0.25s ease;
+      text-decoration: none;
+      text-align: center;
+      pointer-events: none;
+      border-radius: 0;
+    }
+  }
   td.status {
     padding: 8px;
     form.ads-status {
@@ -154,20 +185,4 @@
 
   }
 
-  td.promoted-story-images, td.promoted-story-title {
-    &.has-feedback {
-      color: #fff;
-      text-align: center;
-      text-decoration: none;
-      pointer-events: none;
-    }
-    &.has-success {
-      background-color: #449d44;
-      transition: background-color 0.3s ease;
-    }
-    &.has-error {
-      background-color: #d9534f;
-      transition: background-color 0.3s ease;
-    }
-  }
 }

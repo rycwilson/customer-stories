@@ -14,6 +14,7 @@
       ) do |story_form| %>
 
     <div id="story-settings__ads-inputs">
+      <!-- topic -->
       <input type="hidden"
              name="story[topic_ad_attributes][id]"
              value="<%= story.topic_ad.try(:id) %>" disabled>
@@ -27,6 +28,10 @@
              name="story[topic_ad_attributes][adwords_ad_group_id]"
              value="<%= story.company.topic_campaign.ad_group.id %>" disabled>
       <input type="hidden"
+             name="story[topic_ad_attributes][ad_id]"
+             value="<%= story.topic_ad.try(:ad_id) %>" disabled>
+      <!-- retarget -->
+      <input type="hidden"
              name="story[retarget_ad_attributes][id]"
              value="<%= story.retarget_ad.try(:id) %>" disabled>
       <input type="hidden"
@@ -38,6 +43,9 @@
       <input type="hidden"
              name="story[retarget_ad_attributes][adwords_ad_group_id]"
              value="<%= story.company.retarget_campaign.ad_group.id %>" disabled>
+      <input type="hidden"
+             name="story[retarget_ad_attributes][ad_id]"
+             value="<%= story.retarget_ad.try(:ad_id) %>" disabled>
     </div>
 
     <%= story_form.fields_for(:success) do |success_form| %>
