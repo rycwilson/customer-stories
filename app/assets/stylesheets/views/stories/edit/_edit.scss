@@ -77,6 +77,23 @@
       visibility: visible;
       opacity: 1;
       margin: 0;
+      .fa-ul {
+        margin: 0;
+        p {
+          display: inline-block;
+          margin: 0;
+        }
+      }
+    }
+    &.alert.promote-enabled {
+      .fa-ul li:first-child p {
+        margin-bottom: 10px;
+      }
+    }
+    &.alert:not(.promote-enabled) {
+      .fa-ul li:nth-of-type(2) {
+        display: none;
+      }
     }
   }
 

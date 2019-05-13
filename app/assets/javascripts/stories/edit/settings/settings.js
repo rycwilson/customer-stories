@@ -54,7 +54,20 @@ function storiesEditSettingsListeners () {
 
       } else if (publishingPreview) {
         if ($('#story_summary').val() === '') {
-          flashDisplay('There is no Summary for this Story. Create one under Story Content.', 'danger');
+          // flashDisplay('There is no Summary for this Story. Create one under Story Content.', 'danger');
+          $('#story-header__flash')
+            .addClass('alert alert-warning')
+            .html(
+              '<ul class="fa-ul">' +
+                '<li>' +
+                  '<strong><i class="fa fa-fw fa-warning"></i></strong>&nbsp;&nbsp;' +
+                  '<p>There is no Summary for this Story. Create one under Story Content.</p>' +
+                '</li>' +
+              '</ul>'
+            )
+            setTimeout(function () {
+              $('#story-header__flash').removeClass('alert alert-warning')
+            }, 2500);
           $previewInput.bootstrapSwitch('toggleState');
         } else {
           if ($logoInput.bootstrapSwitch('state') === false) {

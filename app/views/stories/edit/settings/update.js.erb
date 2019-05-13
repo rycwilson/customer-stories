@@ -2,6 +2,7 @@
 (function () {
 
   var res = <%= raw @response_data.to_json %>,
+      $table = $('#promoted-stories-table'),
       story = <%= raw @story.to_json({
                     only: [:id, :title, :logo_published, :preview_published, :published],
                     methods: [:previous_changes, :csp_story_path],
@@ -56,20 +57,19 @@
          *  limit flash to publish state / google ads
          */
         if (storyWasPublished || storyWasUnpublished) {
-          $('#promoted-stories-table').DataTable().ajax.reload(function () {
-            // $('.bs-switch.promote-control').bootstrapSwitch({ size: 'small' });
+          $table.DataTable().ajax.reload(function () {
           });
           $('#story-header__flash')
             .addClass('alert ' + (res.gadsErrors ? 'alert-warning' : 'alert-success'))
             .html(
-              '<ul class="fa-ul" style="margin: 0">' +
+              '<ul class="fa-ul">' +
                 '<li>' +
                   '<strong><i class="fa fa-fw fa-check"></i></strong>&nbsp;&nbsp;' +
-                  '<p style="display: inline-block">' + (storyWasPublished || storyWasUnpublished) + ' successfully' + '</p>' +
+                  '<p>' + (storyWasPublished || storyWasUnpublished) + ' successfully' + '</p>' +
                 '</li>' +
                 '<li>' +
                   '<strong><i class="fa fa-fw ' + (res.gadsErrors ? 'fa-warning' : 'fa-check') + '"></i></strong>&nbsp;&nbsp;' +
-                  '<p style="display: inline-block; margin-bottom: 0">' +
+                  '<p>' +
                     (res.gadsErrors ?
                       'Errors when ' + (storyWasPublished ? 'creating' : 'removing') + ' Promoted Story' :
                       'Promoted Story ' + (storyWasPublished ? 'created' : 'removed') + ' successfully') +
@@ -79,10 +79,16 @@
             );
 
         } else if (logoWasPublished || logoWasUnpublished || previewWasPublished || previewWasUnpublished) {
-          $('#story-header__flash').html(
-            '<strong><i class="fa fa-fw fa-check></i></strong>&nbsp;' +
-            '<p>' + (logoWasPublished || logoWasUnpublished || previewWasPublished || previewWasUnpublished) + ' successfully</p>'
-          );
+          $('#story-header__flash')
+            .addClass('alert alert-success')
+            .html(
+              '<ul class="fa-ul">' +
+                '<li>' +
+                  '<strong><i class="fa fa-fw fa-check"></i></strong>&nbsp;&nbsp;' +
+                  '<p>' + (logoWasPublished || logoWasUnpublished || previewWasPublished || previewWasUnpublished) + ' successfully</p>' +
+                '</li>' +
+              '</ul>'
+            );
         }
 
         if (flashIsPresent) {

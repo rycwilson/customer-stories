@@ -64,12 +64,16 @@ class AdwordsAdsController < ApplicationController
     existing_ads_image_ids = story.ads.first.adwords_image_ids
     if story.update(story_params)
       [story.topic_ad, story.retarget_ad].each do |ad|
+
+        # for non-promoted-enabled companies, changing status will be blocked,
+        # but other ad parameters can be changed
+        # => confirm presence of ad_id before updating google
         @updated_gad = (ad.previous_changes.keys & ['status']).any? ?
           GoogleAds::change_ad_status(ad) :
-          GoogleAds::update_ad(ad)
+          (ad.ad_id.present? ? GoogleAds::update_ad(ad) : nil)
 
         # revert changes if google errors (update_columns => no callbacks)
-        if @updated_gad[:errors]
+        if @updated_gad.try(:[], :errors)
           if (ad.previous_changes.keys & ['long_headline', 'status']).any?
             ad.update_columns(
               ad.previous_changes.map { |attr, val| [attr, val.shift] }.to_h
@@ -113,7 +117,7 @@ class AdwordsAdsController < ApplicationController
           json: {
             data: dt_data,
             error: '',  # datatables will look here for it's own flash message system
-            errors: @updated_gad[:errors] ? 'Sorry, there was an error when updating the Promoted Story' : ''
+            errors: @updated_gad.try(:[], :errors) ? 'Sorry, there was an error when updating the Promoted Story' : ''
           }.to_json
         })
       end
@@ -125,7 +129,7 @@ class AdwordsAdsController < ApplicationController
         # presently only one attribute will change at a time
         @response_data[:previousChanges] = story.topic_ad.previous_changes.first
         @response_data[:promotedStory] = dt_data[0]
-        @response_data[:gadsErrors] = @updated_gad[:errors]
+        @response_data[:gadsErrors] = @updated_gad.try(:[], :errors)
         @response_data[:isImagesUpdate] = story_params.to_h[:topic_ad_attributes][:adwords_image_ids].present?
       end
     end

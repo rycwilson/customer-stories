@@ -168,6 +168,7 @@ class StoriesController < ApplicationController
       respond_to do |format|
         format.js do
           @response_data = {}
+          @response_data[:promoteEnabled] = @story.company.promote_tr?
           @response_data[:previousChanges] = @story.previous_changes
           @response_data[:storyErrors] = @story.errors.full_messages
           @response_data[:newAds] = new_ads(@story, story_params.to_h)

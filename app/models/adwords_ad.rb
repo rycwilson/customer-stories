@@ -119,7 +119,8 @@ class AdwordsAd < ApplicationRecord
       main_color: self.main_color,
       accent_color: self.accent_color,
       allow_flexible_color: false,
-      # format_setting: 'NON_NATIVE',
+      # https://developers.google.com/adwords/api/docs/reference/v201809/AdGroupAdService.ResponsiveDisplayAd#formatsetting
+      format_setting: 'ALL_FORMATS',  # 'NATIVE', 'NON_NATIVE'
       # dynamic_settings_price_prefix: 'as low as',
       # dynamic_settings_promo_text: 'Free shipping!',
       logo_images: square_logos,

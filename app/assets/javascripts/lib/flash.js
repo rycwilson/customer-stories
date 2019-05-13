@@ -1,6 +1,5 @@
 
 function flashTimeout () {
-  // console.log('flashTimeout()')
   setTimeout(function () {
     $('#flash').slideUp();
   }, 3000);

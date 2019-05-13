@@ -116,11 +116,6 @@ function promotedStoriesListeners () {
       openPromotedStoriesEditor(promotedStoriesEditor, $row);
     })
 
-
-    // change status
-    // 1 - toggle the hidden checkbox (retarget ad)
-    // 2 - submit the form
-    // TODO: error handling
     .on('switchChange.bootstrapSwitch', 'input.promote-control', function () {
       var $switch = $(this),
           $switchContainer = $switch.closest('.bootstrap-switch-container'),
@@ -136,7 +131,8 @@ function promotedStoriesListeners () {
                .find('.help-block').hide().end()
                .submit();
     })
-    .on('click', '.bootstrap-switch-wrapper', function (e) {
+
+    .on('click', '.bootstrap-switch', function (e) {
       var $form = $(this).find('form');
       if ($form.data('submitted')) e.preventDefault();
       $form.attr('data-submitted', 'true');
