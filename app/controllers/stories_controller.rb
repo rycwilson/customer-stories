@@ -191,29 +191,28 @@ class StoriesController < ApplicationController
   end
 
   def promoted
+    data = Rails.cache.fetch("#{@company.subdomain}/promoted-stories") do
+      @company.stories.with_ads.to_json({
+        only: [:id, :title, :slug],
+        methods: [:ads_status, :ads_long_headline, :ads_images, :csp_story_path],
+        include: {
+          success: {
+            only: [],
+            include: {
+              customer: { only: [:name, :slug] }
+            }
+          },
+          topic_ad: {
+            only: [:id, :status]
+          },
+          retarget_ad: {
+            only: [:id, :status]
+          }
+        }
+      })
+    end
     respond_to do |format|
-      format.json do
-        render({
-          json: @company.stories.with_ads.to_json({
-                  only: [:id, :title, :slug],
-                  methods: [:ads_status, :ads_long_headline, :ads_images, :csp_story_path],
-                  include: {
-                    success: {
-                      only: [],
-                      include: {
-                        customer: { only: [:name, :slug] }
-                      }
-                    },
-                    topic_ad: {
-                      only: [:id, :status]
-                    },
-                    retarget_ad: {
-                      only: [:id, :status]
-                    }
-                  }
-                })
-        })
-      end
+      format.json { render({ json: data }) }
     end
   end
 
@@ -306,14 +305,14 @@ class StoriesController < ApplicationController
         results_attributes: [:id, :description, :_destroy],
         customer_attributes: [:id, :name, :logo_url, :show_name_with_logo, :company_id]
       ],
-      topic_ad_attributes: [:id, :adwords_ad_group_id, :ad_id, :_destroy],
-      retarget_ad_attributes: [:id, :adwords_ad_group_id, :ad_id, :_destroy]
+      topic_ad_attributes: [:id, :adwords_ad_group_id, :ad_id, :status, :_destroy],
+      retarget_ad_attributes: [:id, :adwords_ad_group_id, :ad_id, :status, :_destroy]
     )
   end
 
   def new_ads(story, story_params)
-    [story_params.try(:[], :topic_ad_attributes), story_params.try(:[], :retarget_ad_attributes)]
-      .all? { |ad_attrs| ad_attrs.present? && ad_attrs[:id].blank? }
+    [ story_params[:topic_ad_attributes], story_params[:retarget_ad_attributes] ]
+      .all? { |ad_attrs| ad_attrs.present? && ad_attrs[:id].blank? } &&
     {
       topic: AdwordsAd.joins(:adwords_campaign)
                       .where(adwords_campaigns: { type: 'TopicCampaign'}, story_id: story.id)
@@ -342,7 +341,7 @@ class StoriesController < ApplicationController
   def gads_were_removed?(story, story_params)
     story.company.promote_tr? &&
     ads_were_destroyed?(story_params.to_h) &&
-    !gads_errors?(story_params.to_h)
+    !gads_errors?(story, story_params.to_h)
   end
 
   def gads_errors?(story, story_params)
@@ -353,8 +352,11 @@ class StoriesController < ApplicationController
     # check if the ads still exist on google
     # => this won't work if the ad_id is bad
     elsif story.was_unpublished?
-      return [story_params[:topic_ad_attributes][:ad_id], story_params[:retarget_ad_attributes][:ad_id]]
-                .any? { |ad_id| GoogleAds::get_ad(ad_id) }
+      return [
+               story_params[:topic_ad_attributes].try(:[], :ad_id),
+               story_params[:retarget_ad_attributes].try(:[], :ad_id)
+             ]
+               .any? { |ad_id| ad_id.present? ? GoogleAds::get_ad(ad_id) : false }
     end
   end
 

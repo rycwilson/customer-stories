@@ -5,8 +5,16 @@ $stories-header-height: 40px;
 $csp-bg-gray: #f2f2f2;
 $csp-fg-gray: #efefef;
 
-a, a:hover {
-  color: #3367d6;
+a {
+  color: #07c;  // #3367d6;
+  &:hover, &:active {
+    color: #3af;
+  }
+}
+
+.turbolinks-progress-bar {
+  height: 1px;
+  background-color: #0095ff;
 }
 
 @mixin bs-xs {

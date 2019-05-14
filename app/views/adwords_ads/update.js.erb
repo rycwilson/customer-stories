@@ -9,7 +9,6 @@
       isStatusUpdate = res.previousChanges && (res.previousChanges[0] === 'status'),
       updateRowData = function () { dtRow.data(res.promotedStory); },
       initStatusSwitch = function () {
-        console.log('wtf')
         $row.find('.bs-switch.promote-control')
               .bootstrapSwitch({ size: 'small', disabled: !$table.data('promote-tr') })
               .end()

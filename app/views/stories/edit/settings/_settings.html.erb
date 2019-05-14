@@ -30,6 +30,7 @@
       <input type="hidden"
              name="story[topic_ad_attributes][ad_id]"
              value="<%= story.topic_ad.try(:ad_id) %>" disabled>
+
       <!-- retarget -->
       <input type="hidden"
              name="story[retarget_ad_attributes][id]"
@@ -46,6 +47,17 @@
       <input type="hidden"
              name="story[retarget_ad_attributes][ad_id]"
              value="<%= story.retarget_ad.try(:ad_id) %>" disabled>
+
+      <!-- new stories start in ENABLED state -->
+      <% if story.company.promote_tr? %>
+        <input type="hidden"
+               name="story[topic_ad_attributes][status]"
+               value="ENABLED" disabled>
+        <input type="hidden"
+               name="story[retarget_ad_attributes][status]"
+               value="ENABLED" disabled>
+      <% end %>
+
     </div>
 
     <%= story_form.fields_for(:success) do |success_form| %>

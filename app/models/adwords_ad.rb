@@ -7,7 +7,12 @@ class AdwordsAd < ApplicationRecord
   alias_attribute :campaign, :adwords_campaign
   has_one :company, through: :adwords_campaign
   has_many :adwords_ads_images, dependent: :destroy
-  has_many(:adwords_images, through: :adwords_ads_images) { def default; where(default: true); end }
+  has_many(
+    :adwords_images,
+    through: :adwords_ads_images,
+    after_add: :clear_promoted_stories_cache,
+    after_remove: :clear_promoted_stories_cache
+  ) { def default; where(default: true); end }
   alias_attribute :images, :adwords_images
   has_many(
     :marketing_images,
@@ -65,6 +70,8 @@ class AdwordsAd < ApplicationRecord
   before_create :assign_defaults
   before_create :create_gad, if: :promote_enabled?
   before_destroy :remove_gad, if: :promote_enabled?
+
+  after_commit :clear_promoted_stories_cache, on: [:create, :update, :destroy]
 
   def google_ad
     campaign_type = self.ad_group.campaign.type.match('Topic') ? 'topic' : 'retarget'
@@ -176,6 +183,11 @@ class AdwordsAd < ApplicationRecord
     # when something else
     else
     end
+  end
+
+  # after_add and after_remove callbacks will pass the AdwordsImage object
+  def clear_promoted_stories_cache(image=nil)
+    Rails.cache.clear("#{self.company.subdomain}/promoted-stories")
   end
 
 end

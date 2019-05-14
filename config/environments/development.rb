@@ -23,21 +23,25 @@ Rails.application.configure do
   config.consider_all_requests_local = true
 
   # Enable/disable caching. By default caching is disabled.
-  if Rails.root.join('tmp/caching-dev.txt').exist?
+  if Rails.root.join('tmp/caching-dev.txt').exist?  # run rails
     config.action_controller.perform_caching = true
-    # config.cache_store = :memory_store  # default
-    config.cache_store = dalli_store,
-                         'localhost:11211',
-                         {
-                            :failover => true,
-                            :socket_timeout => 1.5,
-                            :socket_failure_delay => 0.2,
-                            :down_retry_delay => 60,
-                            :pool_size => 5  # server threads/concurrency
-                         }
     config.public_file_server.headers = {
       'Cache-Control' => 'public, max-age=172800'
     }
+    # config.cache_store = :memory_store  # default
+    config.cache_store = :mem_cache_store
+
+    # Rails 4:
+    # config.static_cache_control = "public, max-age=172800"
+    # config.cache_store = dalli_store,
+    #                      'localhost:11211',
+    #                      {
+    #                         :failover => true,
+    #                         :socket_timeout => 1.5,
+    #                         :socket_failure_delay => 0.2,
+    #                         :down_retry_delay => 60,
+    #                         :pool_size => 5  # server threads/concurrency
+    #                      }
   else
     config.action_controller.perform_caching = false
     config.cache_store = :null_store

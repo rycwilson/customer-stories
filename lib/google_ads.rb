@@ -79,7 +79,7 @@ module GoogleAds
         result = service.mutate([operation])
         if result[:value].present?
           new_gad = result[:value].first[:ad]
-          puts "***\n*** Created responsive display ad #{new_gad[:id]}"
+          puts "***\n*** Created responsive display ad (#{ ad.ad_group.campaign.type.match('topic') ? 'topic' : 'retarget' })\n***"
           log_result([new_gad])
         else
           # should be exception; why here?

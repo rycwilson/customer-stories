@@ -35,7 +35,7 @@
     background: #efefef;
     padding: 15px 25px;
     z-index: 100;  // needed for fixed positioning (see stories/edit.js)
-    > div:not(#story-header__flash):not(#fart) {
+    > div:not(#story-header__flash) {
       display: flex;
       align-items: center;
       &:first-child {

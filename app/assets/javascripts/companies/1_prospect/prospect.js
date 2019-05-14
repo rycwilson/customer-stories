@@ -175,7 +175,7 @@ function prospectListeners () {
     // close a child row
     .on('click', 'div.success-child-row button[type="reset"], ' +
                  'div.contributor-child-row button[type="reset"]', function () {
-        $(this).closest('tr').prev().find('td.toggle-success-child, td.toggle-contributor-child"]').trigger('click');
+        $(this).closest('tr').prev().find('td.toggle-success-child, td.toggle-contributor-child').trigger('click');
       })
 
     // validate form inputs
