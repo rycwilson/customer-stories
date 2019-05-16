@@ -78,7 +78,7 @@ function attachAppListeners () {
       })
 
     /**
-     * some forms excluded as they have their own handler, e.g. #new-success-form, #gads-form
+     * some forms excluded as they have their own handler, e.g. #new-success-form, #image-assets-form
      */
     .on('click', 'button:submit', function (e) {
       if ($(this).hasClass('disabled')) {

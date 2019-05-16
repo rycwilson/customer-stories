@@ -10,6 +10,7 @@ class AdwordsAd < ApplicationRecord
   has_many(
     :adwords_images,
     through: :adwords_ads_images,
+    # http://vaidehijoshi.github.io/blog/2015/12/01/functions-to-call-upon-activerecord-association-callbacks/
     after_add: :clear_promoted_stories_cache,
     after_remove: :clear_promoted_stories_cache
   ) { def default; where(default: true); end }
@@ -50,6 +51,9 @@ class AdwordsAd < ApplicationRecord
     through: :adwords_ads_images,
     source: :adwords_image
   ) { def default; where(default: true); end }
+
+  has_and_belongs_to_many :google_ads_headlines
+  has_and_belongs_to_many :google_ads_descriptions
 
   validates_presence_of :story
   validates_presence_of :ad_group

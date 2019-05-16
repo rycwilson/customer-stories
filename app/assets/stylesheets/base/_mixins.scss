@@ -62,3 +62,30 @@
     }
   }
 }
+@mixin fa-button () {
+  display: flex;
+  align-items:center;
+  background:none;
+  border: none;
+  outline: none;
+  color: #666;
+  font-size: 12px;
+  padding: 4px;
+  &:hover {
+    color: #222;
+  }
+  i {
+    -webkit-text-stroke: 1px #f9f9f9;  // should match background color
+    &.fa-question {
+      -webkit-text-stroke: 0.5px #f9f9f9;
+      top: -1px;
+      left: -0.5px;
+    }
+  }
+  &[disabled] {
+    &:hover {
+      color: #666;
+      cursor: not-allowed;
+    }
+  }
+}

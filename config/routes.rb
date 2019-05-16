@@ -118,7 +118,7 @@ Rails.application.routes.draw do
         resources :invitation_templates, except: [:index]
         member { put :update_gads }
         member { get :set_reset_gads }
-        member { get '/promote-settings', to: 'companies#show' }
+        # member { get '/promote-settings', to: 'companies#show' }
         member { put :widget }
         # need :get for the sync. response (redirect_to)
         # and :put for the async. response (see companies/promote.js.erb)
