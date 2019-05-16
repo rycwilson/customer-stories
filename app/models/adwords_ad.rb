@@ -187,7 +187,8 @@ class AdwordsAd < ApplicationRecord
 
   # after_add and after_remove callbacks will pass the AdwordsImage object
   def clear_promoted_stories_cache(image=nil)
-    Rails.cache.clear("#{self.company.subdomain}/promoted-stories")
+    # reference the company through the story for newly created ads
+    Rails.cache.clear("#{self.story.company.subdomain}/promoted-stories")
   end
 
 end

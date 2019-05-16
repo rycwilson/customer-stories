@@ -121,7 +121,6 @@
         .val(res.newAds.retarget.ad_id);
 
   } else if (res.adsWereDestroyed) {
-    debugger;
     $hiddenAdInputs
       .find('[name*="[id]"]').val('').end()
       .find('[name*="[_destroy]"]').prop('checked', false);
