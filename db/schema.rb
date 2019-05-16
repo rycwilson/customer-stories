@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20190515180434) do
+ActiveRecord::Schema.define(version: 20190415230011) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -107,8 +107,8 @@ ActiveRecord::Schema.define(version: 20190515180434) do
 
   create_table "companies", force: :cascade do |t|
     t.string   "name"
-    t.datetime "created_at",                                          null: false
-    t.datetime "updated_at",                                          null: false
+    t.datetime "created_at",                                       null: false
+    t.datetime "updated_at",                                       null: false
     t.string   "logo_file_name"
     t.string   "logo_content_type"
     t.integer  "logo_file_size"
@@ -128,10 +128,6 @@ ActiveRecord::Schema.define(version: 20190515180434) do
     t.boolean  "promote_tr",                   default: false
     t.boolean  "promote_crm",                  default: false
     t.bigint   "adwords_logo_media_id"
-    t.string   "gads_business_name"
-    t.string   "gads_default_cta_text",        default: "Learn More"
-    t.string   "gads_default_main_color",      default: "#ffffff"
-    t.string   "gads_default_accent_color",    default: "#ffffff"
     t.index ["subdomain"], name: "index_companies_on_subdomain", unique: true, using: :btree
   end
 
@@ -251,22 +247,6 @@ ActiveRecord::Schema.define(version: 20190515180434) do
     t.index ["slug", "sluggable_type"], name: "index_friendly_id_slugs_on_slug_and_sluggable_type", using: :btree
     t.index ["sluggable_id"], name: "index_friendly_id_slugs_on_sluggable_id", using: :btree
     t.index ["sluggable_type"], name: "index_friendly_id_slugs_on_sluggable_type", using: :btree
-  end
-
-  create_table "google_ads_descriptions", force: :cascade do |t|
-    t.string   "description"
-    t.integer  "company_id"
-    t.datetime "created_at",  null: false
-    t.datetime "updated_at",  null: false
-    t.index ["company_id"], name: "index_google_ads_descriptions_on_company_id", using: :btree
-  end
-
-  create_table "google_ads_headlines", force: :cascade do |t|
-    t.string   "headline"
-    t.integer  "company_id"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.index ["company_id"], name: "index_google_ads_headlines_on_company_id", using: :btree
   end
 
   create_table "invitation_templates", force: :cascade do |t|
@@ -551,8 +531,6 @@ ActiveRecord::Schema.define(version: 20190515180434) do
   add_foreign_key "customers", "companies"
   add_foreign_key "email_contribution_requests", "contributions"
   add_foreign_key "email_templates", "companies"
-  add_foreign_key "google_ads_descriptions", "companies"
-  add_foreign_key "google_ads_headlines", "companies"
   add_foreign_key "invitation_templates", "companies"
   add_foreign_key "oauth_access_grants", "oauth_applications", column: "application_id"
   add_foreign_key "oauth_access_tokens", "oauth_applications", column: "application_id"
