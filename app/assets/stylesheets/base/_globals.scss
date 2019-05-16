@@ -9,12 +9,13 @@ a {
   color: #07c;  // #3367d6;
   &:hover, &:active {
     color: #3af;
+    text-decoration: none;
   }
 }
 
 .turbolinks-progress-bar {
   height: 1px;
-  background-color: #0095ff;
+  background-color: #77b6ff;
 }
 
 @mixin bs-xs {

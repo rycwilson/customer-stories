@@ -126,9 +126,10 @@ class AdwordsAdsController < ApplicationController
       # since topic and retarget are supposed to be sync'ed
       format.js do
         @response_data = {}
+        @response_data[:promotedStory] = dt_data[0]
+
         # presently only one attribute will change at a time
         @response_data[:previousChanges] = story.topic_ad.previous_changes.first
-        @response_data[:promotedStory] = dt_data[0]
         @response_data[:gadsErrors] = @updated_gad.try(:[], :errors)
         @response_data[:isImagesUpdate] = story_params.to_h[:topic_ad_attributes][:adwords_image_ids].present?
       end

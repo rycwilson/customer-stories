@@ -102,6 +102,7 @@ function promotedStoriesListeners () {
       listIsFull() ? $list.addClass('max-selected') : $list.removeClass('max-selected');
     })
 
+
     // reset the modal
     .on('hidden.bs.modal', '#ads-images-modal', function () {
       $(this)
@@ -116,30 +117,35 @@ function promotedStoriesListeners () {
       openPromotedStoriesEditor(promotedStoriesEditor, $row);
     })
 
-    .on('switchChange.bootstrapSwitch', 'input.promote-control', function () {
-      var $switch = $(this),
-          $switchContainer = $switch.closest('.bootstrap-switch-container'),
-          isEnabled = $switch.bootstrapSwitch('state');  // true or false
-      $switchContainer
+    .on('switchChange.bootstrapSwitch', 'input.promote-control', function (e) {
+      // console.log('switchChange')
+      var $input = $(this),
+          isEnabled = $input.bootstrapSwitch('state'),  // true or false
+          $switch = $input.closest('.bootstrap-switch'),
+          $form = $switch.closest('form');
+      $switch
         .find(isEnabled ? '.bootstrap-switch-handle-on' : '.bootstrap-switch-handle-off')
-        .find('.fa-spin, ' + (isEnabled ? '.fa-play' : '.fa-pause')).toggle()
-      $switch.closest('.bootstrap-switch')
-             .nextAll('input[type="checkbox"]')
-             .prop('checked', isEnabled)
-             .closest('form')
-               // .data('submitted', true)
-               .find('.help-block').hide().end()
-               .submit();
+          .find('.fa-spin, ' + (isEnabled ? '.fa-play' : '.fa-pause'))
+            .toggle()
+            .end()
+          .end()
+        .next()
+          .children('.help-block')
+            .hide()  // will show when the row gets drawn
+            .end()
+          .end()
+        .nextAll('input[type="checkbox"]')
+          .prop('checked', isEnabled)
+          .end()
+        .closest('td')
+          .prepend('<div class="switch-stopper"></div>');  // block double-clicking
+      $form.submit();
     })
 
-    .on('click', '.bootstrap-switch', function (e) {
-      var $form = $(this).find('form');
-      if ($form.data('submitted')) e.preventDefault();
-      $form.attr('data-submitted', 'true');
+    // .on('click', '.bootstrap-switch-wrapper', function () {
+    //   => click only registers when it's on .bootstrap-switch-label (not .bootstrap-switch-handle)
+    // })
 
-      // it will show when the response reinitializes bs-switch
-      $(this).next().children('.help-block').hide();
-    })
     .on('input', 'td.promoted-story-title textarea', function (e) {
       $(this).closest('td')
              .removeClass('save-disabled')

@@ -278,7 +278,6 @@ class ApplicationController < ActionController::Base
           .delete_if { |c| c.id == story.curator.id }
   end
 
-
   private
 
   def layout
