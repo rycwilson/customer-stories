@@ -1,0 +1,57 @@
+
+#content-settings-form {
+
+  .col-sm-3 {
+    // width: 22%;
+  }
+  .col-sm-6 {
+    // width: 56%;
+  }
+
+  .btn-help {
+    @include fa-button();
+  }
+
+  .form-group.custom-colors {
+    .col-sm-6 {
+      display: flex;
+      align-items: center;
+      justify-content: space-evenly;
+      label, .minicolors {
+        display: inline-block;
+        &.minicolors {
+          margin: 0 10px
+        }
+      }
+      input:not(.minicolors-input) {
+        margin: 0 10px;  // match minicolors, but only before the plugin inits
+        width: 109px;
+      }
+      label {
+        font-weight: normal;
+        margin: 0;
+      }
+    }
+  }
+
+  .help-block {
+    margin-bottom: 0;
+  }
+
+}
+
+.popover.headline, .popover.description, .popover.custom-colors {
+  max-width: 400px;
+  .popover-content {
+    padding: 25px;
+    p:last-child {
+      margin-bottom: 0;
+    }
+  }
+  &:not(.custom-colors) {
+    // left: 60% !important;
+    .arrow {
+      // left: 72% !important;
+    }
+  }
+}

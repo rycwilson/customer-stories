@@ -3,7 +3,7 @@ function promoteSettingsListeners () {
 
   var checkImageLoaded, checkInputInitialized, checkForNewImage, // some timer ids to handle image upload
       validateForm = function () {
-        $('#gads-form').validator('update').validator('validate');
+        $('#image-assets-form').validator('update').validator('validate');
       },
       fileInputWasInitialized = function ($fileInput) {
         try {
@@ -153,7 +153,7 @@ function promoteSettingsListeners () {
                     ' value="true">' +
             '</div>');
         if (prevDefaultId === '') return false;
-        $('#gads-form').append($prevDefaultHiddenInputs);
+        $('#image-assets-form').append($prevDefaultHiddenInputs);
       },
       imageIsNew = function ($imageCard, $img) {
         if ($img.attr('src').includes('data:')) {
@@ -256,11 +256,11 @@ function promoteSettingsListeners () {
       handleS3Upload($(this));
     })
 
-    .on('valid.bs.validator', '#gads-form', function (e) {
+    .on('valid.bs.validator', '#image-assets-form', function (e) {
       // console.log('valid.bs.validator', e.relatedTarget)
     })
 
-    .on('invalid.bs.validator', '#gads-form', function (e) {
+    .on('invalid.bs.validator', '#image-assets-form', function (e) {
       var $input = $(e.relatedTarget);
       // console.log('invalid.bs.validator', e.relatedTarget, e.detail)
       if ($input.is('[name*="short_headline"]')) {
@@ -334,7 +334,7 @@ function promoteSettingsListeners () {
     /**
      *  cancel
      */
-    .on('click', '#gads-form .btn-cancel', function () {
+    .on('click', '#image-assets-form .btn-cancel', function () {
       // console.log('cancel')
       var $imageCard = $(this).closest('.ad-image-card'),
           $formGroup = $imageCard.find('.form-group'),
@@ -362,7 +362,7 @@ function promoteSettingsListeners () {
     /**
      *  submit the form
      */
-    .on('click', '#gads-form button:submit', function (e) {
+    .on('click', '#image-assets-form button:submit', function (e) {
       if ($(this).is('.disabled') || $(this).data('submitted')) {
         e.preventDefault();
         e.stopImmediatePropagation();
@@ -370,7 +370,7 @@ function promoteSettingsListeners () {
       }
       e.preventDefault();
       var $submitBtn = $(this),
-          $form = $('#gads-form'),
+          $form = $('#image-assets-form'),
           $formGroup = $(this).closest('.form-group'),  // the submitted form group
           $imageCard = $formGroup.closest('.ad-image-card').length ?
                          $formGroup.closest('.ad-image-card') : null,

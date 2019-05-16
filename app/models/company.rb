@@ -294,6 +294,13 @@ class Company < ApplicationRecord
   end
   accepts_nested_attributes_for :adwords_images, allow_destroy: true
 
+  has_many :google_ads_headlines, dependent: :destroy
+  alias_attribute :gads_headlines, :google_ads_headlines
+  has_many :google_ads_descriptions, dependent: :destroy
+  alias_attribute :gads_descriptions, :google_ads_descriptions
+  accepts_nested_attributes_for :google_ads_headlines, allow_destroy: true
+  accepts_nested_attributes_for :google_ads_descriptions, allow_destroy: true
+
   after_commit(on: [:create]) do
     self.create_plugin
 

@@ -1,0 +1,121 @@
+
+<%= form_for(
+      company,
+      url: update_gads_company_path(company),
+      method: 'put',
+      remote: 'true',
+      authenticity_token: true,
+      html: {
+        id: 'content-settings-form',
+        class: 'form-horizontal'
+      }
+    ) do |f| %>
+
+  <div class="row">
+
+    <div class="form-group">
+      <label class="control-label col-sm-3">Business Name</label>
+      <div class="col-sm-6">
+        <%= f.text_field(
+              :gads_business_name,
+              class: 'form-control',
+              value: f.object.gads_business_name || company.name
+            ) %>
+        <span class="help-block with-errors">Max 25 characters</span>
+      </div>
+      <div class="col-sm-3">
+
+      </div>
+    </div>
+
+    <div class="form-group headline">
+      <label class="control-label col-sm-3">Headline</label>
+      <div class="col-sm-6">
+        <input type="hidden" name="company[google_ads_headlines_attributes][0][id]" value="<%= company.gads_headlines.first.try(:id) %>">
+        <input type="text" class="form-control" name="company[google_ads_headlines_attributes][0][headline]" value="<%= company.gads_headlines.first.try(:headline) || company.name + ' Customer Stories' %>">
+        <span class="help-block with-errors">Max 30 characters</span>
+        <button type="button" role="button" class="btn-help" style="position: absolute; top: -4px; right: -40px" data-toggle="popover" data-placement="top" data-trigger="focus">
+          <span class="fa-stack fa-lg">
+            <i class="fa fa-circle-o fa-stack-2x"></i>
+            <i class="fa fa-question fa-stack-1x"></i>
+          </span>
+        </button>
+      </div>
+      <div class="col-sm-3"><!-- filler --></div>
+    </div>
+
+    <div class="form-group description">
+      <label class="control-label col-sm-3">Description</label>
+      <div class="col-sm-6">
+        <input type="hidden" name="company[google_ads_descriptions_attributes][0][id]" value="<%= company.gads_descriptions.first.try(:id) %>">
+        <input type="text" class="form-control" name="company[google_ads_descriptions_attributes][0][description]">
+        <span class="help-block with-errors">Max 90 characters</span>
+        <button type="button" role="button" class="btn-help" style="position: absolute; top: -3px; right: -40px" data-toggle="popover" data-placement="top" data-trigger="focus">
+          <span class="fa-stack fa-lg">
+            <i class="fa fa-circle-o fa-stack-2x"></i>
+            <i class="fa fa-question fa-stack-1x"></i>
+          </span>
+        </button>
+      </div>
+      <div class="col-sm-3"><!-- filler --></div>
+    </div>
+
+    <div class="form-group">
+      <label class="control-label col-sm-3">CTA Text</label>
+      <div class="col-sm-6">
+
+        <%= f.select(
+              :gads_default_cta_text,
+              [['Learn More', 'Learn More'], ['Visit Site', 'Visit Site'], ['See More', 'See More']],
+            ) %>
+
+      </div>
+      <div class="col-sm-3"></div>
+    </div>
+
+    <div class="form-group custom-colors">
+      <label class="control-label col-sm-3">Custom Colors</label>
+      <div class="col-sm-6">
+        <div class="form-inline">
+          <%= f.label(:gads_default_main_color, 'Main', class: 'help-block') %>
+          <%= f.text_field(:gads_default_main_color, class: 'form-control mini-colors') %>
+        </div>
+        <div class="form-inline">
+          <%= f.label(:gads_default_accent_color, 'Accent', class: 'help-block') %>
+          <%= f.text_field(:gads_default_accent_color, class: 'form-control mini-colors') %>
+        </div>
+        <button type="button" role="button" class="btn-help" data-toggle="popover" data-placement="top" data-trigger="focus" style="position: absolute; top: -3px; right: -40px">
+          <span class="fa-stack fa-lg">
+            <i class="fa fa-circle-o fa-stack-2x"></i>
+            <i class="fa fa-question fa-stack-1x"></i>
+          </span>
+        </button>
+      </div>
+      <div class="col-sm-3"><!-- filler --></div>
+    </div>
+
+
+  </div>
+
+  <div class="row">
+    <div class="col-sm-6 col-sm-offset-3" style="padding: 0; margin-top: 0">
+      <hr style="margin-top: 0">
+    </div>
+
+  </div>
+
+  <div class="row">
+    <div class="col-sm-6 col-sm-offset-3">
+      <div class="form-group text-right">
+
+        <button type="submit" class="btn btn-success text-center" style="width: 114px">
+          <span>Save changes</span>
+          <i class="fa fa-spin fa-circle-o-notch" style="display: none"></i>
+          <i class="fa fa-check" style="display: none"></i>
+        </button>
+
+      </div>
+    </div>
+  </div>
+
+<% end %>

@@ -1,6 +1,7 @@
 
 //= require ./promoted_stories
-//= require ./gads_form
+//= require ./content_settings
+//= require ./image_assets
 
 function promote () {
 
@@ -10,7 +11,7 @@ function promote () {
   // http://stackoverflow.com/questions/39488774
   var initFormValidator = function () {
         // console.log('initFormValidator()')
-        $('#gads-form').validator({
+        $('#image-assets-form').validator({
           focus: false,
           disable: false,
           custom: {
@@ -119,7 +120,7 @@ function promote () {
         })
       },
       initPopovers = function () {
-        $('#gads-form button.image-requirements')
+        $('#image-assets-form button.image-requirements')
           .popover({
             html: true,
             container: 'body',
@@ -149,6 +150,40 @@ function promote () {
                      '</ul>';
             }
           });
+        $('#content-settings-form .form-group.headline .btn-help').popover({
+          html: true,
+          container: 'body',
+          template: '<div class="popover headline" role="tooltip"><div class="arrow"></div><h3 class="popover-title label-secondary"></h3><div class="popover-content"></div></div>',
+          content: function () {
+            return '<p>The headline is the first line of your Promoted Story and can be up to 30 characters. ' +
+                     'It appears in smaller spaces where the title doesn\'t fit, ' +
+                     'and may appear with or without the description.</p>';
+                     // 'The length of the rendered headline will depend on the site it appears on. ' +
+                     // 'If it\'s shortened, it will end with an ellipsis.</p>';
+          }
+        }),
+        $('#content-settings-form .form-group.description .btn-help').popover({
+          html: true,
+          container: 'body',
+          template: '<div class="popover description" role="tooltip"><div class="arrow"></div><h3 class="popover-title label-secondary"></h3><div class="popover-content"></div></div>',
+          content: function () {
+            return '<p>The description adds to the headline. It may provide additional context or details, or invite people to take action.'
+                    'It can be up to 90 characters, and may appear after the headline or title.</p>';
+                   // '<p>The length of the rendered description will depend on the site it appears on. ' +
+                   //  'If it\'s shortened, it will end with an ellipsis. ' +
+                   //  'The description doesn\'t show in all sizes and formats.</p>';
+          }
+        }),
+        $('#content-settings-form .form-group.custom-colors .btn-help').popover({
+          html: true,
+          container: 'body',
+          template: '<div class="popover custom-colors" role="tooltip"><div class="arrow"></div><h3 class="popover-title label-secondary"></h3><div class="popover-content"></div></div>',
+          content: function () {
+            return '<p>The main color is used primarily for backgrounds and large areas of color ' +
+                    'and the accent color is used mostly for buttons and calls to action.</p>';
+
+          }
+        })
       };
 
   initFormValidator();
@@ -244,18 +279,18 @@ function promoteListeners () {
 
     // changing the scroll-on-focus offset for bootstrap validator isn't working,
     // so do this instead...
-    .on('click', 'a[href="#promote-settings"]', function () {
-      if ($('#company_adwords_short_headline').val() === '') {
-        var position = $(window).scrollTop();
-        $('#company_adwords_short_headline').focus();
-        $(window).scrollTop(position);
-      }
-    })
+    // .on('click', 'a[href="#promote-settings"]', function () {
+    //   if ($('#company_adwords_short_headline').val() === '') {
+    //     var position = $(window).scrollTop();
+    //     $('#company_adwords_short_headline').focus();
+    //     $(window).scrollTop(position);
+    //   }
+    // })
 
     // manually hide the tooltip when navigating away (since it has container: body)
-    .on('mouseout', '#promote-settings', function () {
-      $('[data-toggle="tooltip"]').tooltip('hide');
-    })
+    // .on('mouseout', '#promote-settings', function () {
+    //   $('[data-toggle="tooltip"]').tooltip('hide');
+    // })
 
 }
 

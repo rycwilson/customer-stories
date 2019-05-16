@@ -18,10 +18,17 @@
               &nbsp;&nbsp;Promoted Stories
             </a>
           </li>
-          <li class="<%= tab == '#promote-settings' ? 'active' : '' %>">
-            <a href="#promote-settings" data-toggle="tab">
+          <li class="<%= tab == '#content-settings' ? 'active' : '' %>">
+            <a href="#content-settings" data-toggle="tab">
               <i class="fa fa-gear"></i>
-              &nbsp;&nbsp;Settings
+              &nbsp;&nbsp;Content Settings
+            </a>
+          </li>
+          <li class="<%= tab == '#image-assets' ? 'active' : '' %>">
+            <a href="#image-assets" data-toggle="tab" style="position: relative">
+              <i class="fa fa-image" style="position: absolute; top: 16px; left: 14px; transform: rotate(-15deg)"></i>
+              <i class="fa fa-image" style="background-color: #fff; transform: rotate(15deg)"></i>
+              &nbsp;&nbsp;Image Assets
             </a>
           </li>
         </ul>
@@ -61,8 +68,12 @@
             <%= render 'companies/3_promote/promoted_stories_table', { company: company } %>
           </div>
 
-          <div id="promote-settings" class="tab-pane fade <%= tab == '#promote-settings' ? 'active in' : '' %>">
-            <%= render 'companies/3_promote/gads_form', { company: company } %>
+          <div id="content-settings" class="tab-pane fade <%= tab == '#content-settings' ? 'active in' : '' %>">
+            <%= render 'companies/3_promote/content_settings', { company: company } %>
+          </div>
+
+          <div id="image-assets" class="tab-pane fade <%= tab == '#image-assets' ? 'active in' : '' %>">
+            <%= render 'companies/3_promote/image_assets', { company: company } %>
           </div>
 
         </div>

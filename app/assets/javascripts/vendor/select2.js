@@ -322,6 +322,12 @@ function initSelect2 () {
       width: 'style'
     });
 
+  $('#company_gads_default_cta_text').select2({
+    theme: "bootstrap",
+    placeholder: 'Select',
+    width: 'style'
+  });
+
   // this works, but only hides options on removing a tag
   // for hiding options whether adding or removing a tag, css is used to hide the results
   // ref: https://github.com/select2/select2/issues/3320
