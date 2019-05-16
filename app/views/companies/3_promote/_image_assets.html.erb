@@ -16,10 +16,10 @@
       }
     ) do |f| %>
 
-  <div class="form-group short-headline">
+<!--   <div class="form-group short-headline">
 
-    <%= f.label(:adwords_short_headline, "Headline", class: 'control-label') %>
-    <%= f.text_field(
+    <%#= f.label(:adwords_short_headline, "Headline", class: 'control-label') %>
+    <%#= f.text_field(
           :adwords_short_headline,
           required: true,
           class: 'form-control',
@@ -27,7 +27,6 @@
           maxlength: RESPONSIVE_AD_SHORT_HEADLINE_MAX.to_s,
           data: { 'required-error': 'Required field' }
         ) %>
-    <!-- <span class="glyphicon form-control-feedback" aria-hidden="true"></span> -->
     <button type="submit" class="btn btn-success" style="display: none; width: 59px; margin-left: 10px">
       <span>Save</span>
       <i class="fa fa-spin fa-circle-o-notch" style="display:none"></i>
@@ -36,7 +35,7 @@
 
     <span class="help-block with-errors" style="position: absolute; left: 72px; bottom: -25px">Max 30 characters</span>
 
-  </div>
+  </div> -->
 
   <div class="image-library__header">
     <label>Image Library</label>

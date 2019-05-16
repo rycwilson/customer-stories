@@ -34,14 +34,19 @@
     display: none;
   }
 
-  .enable-promote-type {
-    margin-top: 1px;  // line up with Promoted Stories text-align: left;
-    label {
-      margin-right: 30px;
+  // some tweaks to accommodate the stacked image icons
+  a[href="#image-assets"] {
+    padding-left: 13px;
+    i:first-child {
+      position: absolute;
+      top: 12px;
+      left: 16px;
+      transform: rotate(10deg);
     }
-    label.checkbox-inline {
-      margin-right: 15px;
-      margin-bottom: 4px;
+    i:last-child {
+      background-color: #fff;
+      transform: rotate(-5deg);
+      margin-right: 7px;
     }
   }
 
