@@ -49,7 +49,7 @@ function openPromotedStoriesEditor (promotedStoriesEditor, $row) {
       onComplete: function (editor) {
         // console.log('onComplete')
       },
-      drawType: true,
+      drawType: 'none',
       // buttons are in reverse order of how they're diplayed because they both have float:right
       buttons: [
         {

@@ -150,8 +150,8 @@ class StoriesController < ApplicationController
   end
 
   def update
-    puts 'stories#update'
-    awesome_print(story_params.to_h)
+    # puts 'stories#update'
+    # awesome_print(story_params.to_h)
     @story = Story.find_by_id params[:id]
     if params[:settings]
       @story.success.cta_ids = params[:ctas]

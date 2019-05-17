@@ -45,17 +45,17 @@ function initPromotedStoriesTable () {
       {
         name: 'status',
         data: 'ads_status',
-        render: function (data, type, row, meta) {
+        render: function (ads_status, type, row, meta) {
           if (type === 'display') {
             return _.template($('#ads-status-form-template').html())({
                      promoteEnabled: $('#promoted-stories-table').data('promote-tr'),
-                     status: data,
+                     status: ads_status,
                      storyId: row.id,
                      topicAdId: row.topic_ad.id,
                      retargetAdId: row.retarget_ad.id
                    });
           } else {
-            return data;
+            return ads_status;
           }
         }
       },
@@ -88,20 +88,17 @@ function initPromotedStoriesTable () {
       // { width: '8%', targets: promoted-story-actions-dropdown-templateIndex },
     ],
 
-    createdRow: function (row, data, index) {
-      $(row).attr('data-story-id', data.id);
-      $(row).children().eq(0).addClass('promoted-story-images');
-      $(row).children().eq(1).addClass('promoted-story-title save-disabled')
-                             .attr('data-title', data.title);
-      $(row).children().eq(2).addClass('promoted-story-customer');
-      $(row).children().eq(3).addClass('status dropdown');
+    createdRow: function (row, promotedStory, index) {
+      var $table = $(this), $row = $(row);
+      $row.attr('data-story-id', promotedStory.id);
+      $row.children().eq(0).addClass('promoted-story-images');
+      $row.children().eq(1).addClass('promoted-story-title form-is-clean')
+                           .attr('data-title', promotedStory.title);
+      $row.children().eq(2).addClass('promoted-story-customer');
+      $row.children().eq(3).addClass('status dropdown');
 
-      $(row).css('position', 'relative')
-      // $(row).children().eq(4).addClass('actions dropdown');
-
-      // flash errors
-      $(row).addClass('position', 'relative')
-      $(row).prepend(
+      // add a flash message container
+      $row.prepend(
         '<td colspan="4" class="flash">' +
           '<div>Sorry, there was an error when updating the Promoted Story</div>' +
         '</td>'
@@ -110,19 +107,50 @@ function initPromotedStoriesTable () {
     initComplete: function (settings, json) {
       // console.log('initComplete')
       var $table = $(this),
-          initTooltips = function() {
-            $table.find('[data-toggle="tooltip"]').tooltip({
-                      container: 'body',
-                      delay: { show: 500, hide: 0 }
-                    });
-          },
-          initStatusSwitch = function () {
-            $('.bs-switch.promote-control').bootstrapSwitch({
-              size: 'small',
-              disabled: !$table.data('promote-tr'),
-              onInit: function (e) {}
+          addClickBlockers = function ($row) {
+            var $rows = $row ? $row : $table.find('tr[data-story-id]');
+            $rows.each(function () {
+              $(this).find('td.promoted-story-images, td.promoted-story-title, td.status')
+                       .prepend('<div class="click-blocker"></div>');
             });
           },
+          addStatusTooltip = function ($row) {
+            // console.log('addStatusTooltip()')
+            $row.find('td.status .click-blocker')
+                  .attr({
+                    'data-toggle': 'tooltip',
+                    'data-placement': 'left',
+                    'data-title': 'Contact Customer Stories to enable this feature'
+                  })
+                  .tooltip({
+                    container: 'body',
+                    delay: { show: 500, hide: 0 }
+                  })
+          }
+          initStatusSwitch = function ($row) {
+            // console.log('initStatusSwitch()')
+            var $rows = $row ? $row : $table.find('tr[data-story-id]'),
+                promoteIsDisabled = !$table.data('promote-tr');
+            $rows.each(function () {
+              $(this).find('.bs-switch.promote-control')
+                       .bootstrapSwitch({
+                         size: 'small',
+                         disabled: promoteIsDisabled,
+                         onInit: function (e) {}
+                       })
+              if (promoteIsDisabled) addStatusTooltip($(this));
+            })
+          },
+          updateRow = function (dt, $row, promotedStory) {
+            dt.row($row).data(promotedStory);  // .draw();
+            addClickBlockers($row);
+            initStatusSwitch($row);  // this will take care of tooltip
+            $row.find('td.promoted-story-title')
+                  .addClass('form-is-clean')
+                  .removeClass('editor-open')  // this doesn't work when it's done by the close event after submission
+                  .end()
+                .attr('data-submitted', '');
+          }
           initEditorFlash = function () {
             $table.find('td.flash').each(function () {
               $(this).css('height', $(this).parent().css('height'));
@@ -158,39 +186,42 @@ function initPromotedStoriesTable () {
               }, 2500)
             }
           };
-      initTooltips();
-      initStatusSwitch();  // leave this or there's a delay when init'ing via timeout
+
+      addClickBlockers();
+      initStatusSwitch();
       initEditorFlash();
       promotedStoriesEditor = newPromotedStoriesEditor();
-      promotedStoriesEditor.on('open', function () {
+      promotedStoriesEditor.on('open', function (e) {
+        $('.DTE').closest('td').addClass('editor-open');
         $('#DTE_Field_long_headline').attr('maxlength', '<%= RESPONSIVE_AD_LONG_HEADLINE_MAX.to_s %>');
         $('.DTE_Form_Buttons')
           .prepend('<span class="help-block">' + storyTitleRequirements + '</span>');
       });
+      promotedStoriesEditor.on('close', function (e) {
+        $('#promoted-stories-table').find('td.editor-open').removeClass('editor-open');
+      });
       promotedStoriesEditor.on('preSubmit', function (e, data, action) {
         // console.log('preSubmit')
-        if ($('.DTE_Inline').closest('td').hasClass('save-disabled')) return false;
+        if ($('.DTE_Inline').closest('td').hasClass('form-is-clean')) return false;
+        $('.DTE_Inline').closest('tr').attr('data-submitted', true);
       });
       promotedStoriesEditor.on('postEdit', function (e, data, rowData) {
         // console.log('postEdit')
       });
       promotedStoriesEditor.on('submitComplete', function (e, res, promotedStory, action) {
-        // console.log('submitComplete')
+        console.log('submitComplete')
         // this.close();  => apparently happens automatically
         var $table = $(this.s.table),
             dt = $table.DataTable(),
             $row = $table.find('tr[data-story-id="' + promotedStory.id + '"]')
-
-        // the drawType option isn't forcing a re-draw (?), so re-draw the individual row(s)
-        // forum discussion: https://datatables.net/forums/discussion/45189
-        dt.row($row).data(promotedStory).draw();
-
-        initTooltips();
-
-        $row.find('td.promoted-story-title').addClass('save-disabled');
+        updateRow(dt, $row, promotedStory);
         editorFlash($row, res, promotedStory);
       });
-      $table.on('draw.dt', initStatusSwitch)
+      $table.on('draw.dt', function (e) {
+        console.log('draw')
+        addClickBlockers();
+        initStatusSwitch();
+      })
       $table.on('pre-row-reorder.dt', function (e, node, index) {
         // console.log('pre-row-reorder')
       })

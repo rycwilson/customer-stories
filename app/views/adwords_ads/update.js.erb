@@ -3,19 +3,39 @@
 
   var res = <%= raw @response_data.to_json %>,
       $table = $('#promoted-stories-table'),
+      promoteIsDisabled = !$table.data('promote-tr'),
       dt = $table.DataTable(),
       $row = $table.find('[data-story-id="' + res.promotedStory.id + '"]'),
-      dtRow = dt.row('[data-story-id="' + res.promotedStory.id + '"]'),
       isStatusUpdate = res.previousChanges && (res.previousChanges[0] === 'status'),
-      updateRowData = function () { dtRow.data(res.promotedStory); },
+
+      // this mirrors the createdRow option in the table setup
+      addClickBlockers = function () {
+        $row.find('td.promoted-story-images, td.promoted-story-title, td.status')
+              .prepend('<div class="click-blocker"></div>');
+        if (promoteIsDisabled) {
+          $row.find('td.status .click-blocker')
+                .attr({
+                  'data-toggle': 'tooltip',
+                  'data-placement': 'left',
+                  'data-title': 'Contact Customer Stories to enable this feature'
+                })
+        }
+      },
       initStatusSwitch = function () {
         $row.find('.bs-switch.promote-control')
-              .bootstrapSwitch({ size: 'small', disabled: !$table.data('promote-tr') })
+              .bootstrapSwitch({ size: 'small', disabled: promoteIsDisabled })
               .end()
-            .find('[data-toggle="tooltip"]').tooltip({
+            .find('td.status [data-toggle="tooltip"]')  // may or may not be there depending on company.promote-tr
+              .tooltip({
                 container: 'body',
                 delay: { show: 500, hide: 0 }
               });
+      },
+      updateRow = function () {
+        dt.row($row).data(res.promotedStory);
+        addClickBlockers();  //  this must run before initStatusSwitch()
+        initStatusSwitch();
+        $row.attr('data-submitted', '');
       },
       flashError = function () {
         $row.children().toggle().end()
@@ -32,9 +52,10 @@
       },
       flashImagesSuccess = function () {
         var $td = $row.find('td.promoted-story-images'),
-            landscapeImages = dtRow.data().ads_images.filter(function (image) {
+            landscapeImages = dt.row($row).data().ads_images.filter(function (image) {
                                 return image.type === 'LandscapeImage'
                               });
+        console.log($row)
         $td.addClass('alert alert-success')
            .html('<i class="fa fa-fw fa-check"></i>&nbsp;&nbsp;<span>Updated</span>');
         setTimeout(function () {
@@ -57,22 +78,28 @@
     toggleFormDone($('#ads-images-form'), false);
     $('#ads-images-modal')
       .one('hidden.bs.modal', function () {
-        res.gadsErrors ?
-          flashError() :
+        if (res.gadsErrors) {
+          flashError()
+        } else {
           flashImagesSuccess();
+          debugger;
+          console.log($row.data('submitted'))
+          setTimeout(updateRow, 2500);
+        }
       })
       .modal('hide');
-    if (!res.gadsErrors) updateRowData();
-    initStatusSwitch();
+    if (!res.gadsErrors) updateRow();
 
   } else if (isStatusUpdate) {
-    var $switchContainer = $row.find('.bootstrap-switch-container'),
+    var $switch = $row.find('.bootstrap-switch'),
         prevStatus = res.previousChanges[1][0],
         newStatus = res.gadsErrors ? prevStatus : res.previousChanges[1][1];
 
     if (res.gadsErrors){
       flashError();
-      $switchContainer
+
+      // revert to previous state
+      $switch
         .find(newStatus === 'ENABLED' ? '.bootstrap-switch-handle-on' : '.bootstrap-switch-handle-off')
           .find('.fa-spin, ' + (newStatus === 'ENABLED' ? '.fa-play' : '.fa-pause'))
             .toggle()
@@ -82,14 +109,11 @@
           .bootstrapSwitch('toggleState');
 
     } else {
-      $switchContainer
+      $switch
         .find(newStatus === 'ENABLED' ? '.bootstrap-switch-handle-on' : '.bootstrap-switch-handle-off')
-        .find('.fa-spin, .fa-check').toggle();
-      setTimeout(function () {
-        $switchContainer.closest('form').attr('data-submitted', '');
-        updateRowData();
-        initStatusSwitch();
-      }, 2500)
+          .find('.fa-spin, .fa-check')
+            .toggle();
+      setTimeout(updateRow, 2500);
     }
   }
 

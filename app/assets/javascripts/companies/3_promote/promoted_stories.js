@@ -102,6 +102,11 @@ function promotedStoriesListeners () {
       listIsFull() ? $list.addClass('max-selected') : $list.removeClass('max-selected');
     })
 
+    .on('submit', '#ads-images-form', function () {
+      var storyId = $(this).attr('action').split('/')[2];
+      $('tr[data-story-id="' + storyId + '"]').attr('data-submitted', true);
+      debugger;
+    })
 
     // reset the modal
     .on('hidden.bs.modal', '#ads-images-modal', function () {
@@ -114,6 +119,7 @@ function promotedStoriesListeners () {
     // change long headline
     .on('click', 'td.promoted-story-title', function () {
       var $row = $(this).parent();
+      if ($(this).find('.click-blocker:visible').length) return false;
       openPromotedStoriesEditor(promotedStoriesEditor, $row);
     })
 
@@ -137,8 +143,8 @@ function promotedStoriesListeners () {
         .nextAll('input[type="checkbox"]')
           .prop('checked', isEnabled)
           .end()
-        .closest('td')
-          .prepend('<div class="switch-stopper"></div>');  // block double-clicking
+        .closest('tr')
+          .attr('data-submitted', true);
       $form.submit();
     })
 
@@ -148,7 +154,7 @@ function promotedStoriesListeners () {
 
     .on('input', 'td.promoted-story-title textarea', function (e) {
       $(this).closest('td')
-             .removeClass('save-disabled')
+             .removeClass('form-is-clean')
              .find('.btn-success')
              .removeClass('disabled');
     })

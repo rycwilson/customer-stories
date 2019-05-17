@@ -20,7 +20,9 @@ body.stories.show {
 // the shadow settings are copied from mvp
 .btn-success, .btn-success[disabled]:hover, .btn-success.disabled:hover,
 .btn-success[disabled]:focus, .btn-success.disabled:focus,
-.btn-success[disabled]:active, .btn-success[disabled]:active:hover {
+.btn-success[disabled]:active, .btn-success.disabled:active,
+.btn-success[disabled]:active:hover, .btn-success.disabled:active:hover,
+.btn-success[disabled]:active:focus, .btn-success.disabled:active:focus {
   background-color: #0095ff; // #4d8664;
   border-color: #07c; // #45715a;
   text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.2);
