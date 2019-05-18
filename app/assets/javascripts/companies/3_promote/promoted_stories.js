@@ -105,7 +105,6 @@ function promotedStoriesListeners () {
     .on('submit', '#ads-images-form', function () {
       var storyId = $(this).attr('action').split('/')[2];
       $('tr[data-story-id="' + storyId + '"]').attr('data-submitted', true);
-      debugger;
     })
 
     // reset the modal
