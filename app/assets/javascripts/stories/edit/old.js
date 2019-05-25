@@ -49,7 +49,7 @@ function storiesEditNewContributorListeners () {
     // select2 inputs to default values (role, referred-by)
     $('.new-contributor-role').val('customer');
     // trigger necessary; not sure why ... http://stackoverflow.com/questions/19639951
-    $('.new-contributor-referrer').val('').trigger('change');
+    $('.new-contributor-referrer').val(null).trigger('change');
   });
 
   // blur buttons after they're clicked

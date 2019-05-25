@@ -513,7 +513,7 @@ module GoogleAds
     def get_ad(ad_id)
       service = create_api.service(:AdGroupAdService, API_VERSION)
       selector = {
-        fields: ['Id', 'Name', 'Status', 'LongHeadline', 'Labels'],
+        fields: ['Id', 'Name', 'Status', 'LongHeadline', 'Labels', 'FormatSetting'],
         ordering: [{ field: 'Id', sort_order: 'ASCENDING' }],
         predicates: [{ field: 'Id', operator: 'IN', values: [ad_id] }]
       }

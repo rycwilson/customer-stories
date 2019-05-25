@@ -158,13 +158,14 @@ function promotedStoriesListeners () {
              .removeClass('disabled');
     })
 
-    // ad previews - separate window
-    .on('click', '.promoted-story-actions .preview', function () {
-      var dt = $('#promoted-stories-table').DataTable(),
-          story = dt.row($(this).closest('tr')).data();
-      window.open(
-        '/promote/preview/' + story.slug, '_blank'
-      );
-    });
+    .on('change', '#ads-preview-select', function () {
+      var $select = $(this);
+      if ($select.val()) {
+        window.open('/promote/preview/' + $select.val(), '_blank');
+        $select.val(null).trigger('change');
+        // should be able to blur $select by removing class select2-container--focus from $select.next(),
+        // but for some reason there are inconsistent results when attempting to do this
+      }
+    })
 
 }

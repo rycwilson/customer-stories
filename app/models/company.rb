@@ -1019,7 +1019,7 @@ class Company < ApplicationRecord
       landscape_image: self.adwords_images.landscape_images.default.present?,
       valid_defaults: GoogleAds::get_image_assets(
           self.adwords_images.default.map { |image| image.asset_id }
-        ).length == self.adwords_images.default.length
+        ).try(:length) == self.adwords_images.default.length
     }
   end
 

@@ -166,19 +166,19 @@ function LI2Observer () {
           if (mutation.type === 'attributes') {
             console.log('attributes, attributeName: ', mutation.attributeName, $(mutation.target).data('uid'));
           } else if (mutation.type === 'childList') {
-            console.log('childList, addedNodes: ', mutation.addedNodes[0], $(mutation.target).data('uid'));
+            // console.log('childList, addedNodes: ', mutation.addedNodes[0], $(mutation.target).data('uid'));
             // this would be the last mutation, but it doesn't always happen
             // if ($(mutation.addedNodes[0]).hasClass('resize-sensor')) {
           } else {
-            console.log('other')
+            // console.log('other')
           }
           if (badgeAdded(mutation)) {
-            console.log('badge added', $(mutation.target).data('uid'))
+            // console.log('badge added', $(mutation.target).data('uid'))
 
             // this is a reliable indicator that the badge has displayed
             // if at least one displays, show the section, with a brief timeout to allow for other badges and style settings
             new ResizeSensor($(mutation.target), function() {
-              console.log('badge rendered', $(mutation.target).data('uid'))
+              // console.log('badge rendered', $(mutation.target).data('uid'))
 
               // give it a brief delay to allow for multiple contributors being rendered,
               // and for local style changes to take effect

@@ -445,7 +445,7 @@ function newSuccessListeners () {
       disableContributionAttrs(true, 'contributor');
       disableContactAttrs(true, 'contributor');
       $(this).find('.create-contact').addClass('hidden');
-      $(this).find('select').val('').trigger('change');
+      $(this).find('select').val(null).trigger('change');
       $(this).find('.form-group').removeClass('has-error');
       $(this).find('.create-contact input').prop('required', false);
       $('button[form="new-success-form"]').attr('type', 'submit');

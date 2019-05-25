@@ -136,6 +136,22 @@ class AdwordsAdsController < ApplicationController
     end
   end
 
+  def preview
+    @story = Story.includes(adwords_ads: { adwords_images: {} }).friendly.find(params[:story_slug])
+    # disable the ad links in production
+    @company = @story.company
+    @is_production = ENV['HOST_NAME'] == 'customerstories.net'
+    @story_url = @story.csp_story_url
+    @short_headline = @company.adwords_short_headline
+    @long_headline = @story.ads.long_headline
+    @image_url = @story.ads.first.landscape_images.default.take.image_url ||
+                 RESPONSIVE_AD_LANDSCAPE_IMAGE_PLACEHOLDER
+    @logo_url = @story.ads.first.square_logos.default.take.image_url ||
+                RESPONSIVE_AD_SQUARE_LOGO_PLACEHOLDER
+    set_ad_dimensions(@long_headline)
+    render :ads_preview, layout: false
+  end
+
   private
 
   def story_params
@@ -174,6 +190,74 @@ class AdwordsAdsController < ApplicationController
   def gads_errors?(story, checklist)
     return false unless story.company.promote_tr?
     return story.ads.all? { |ad| ad.ad_id.present? } ? false : true
+  end
+
+  # padding for the lower half is 25px 11px
+  # "*_minus_padding" means minus 25x2 = 50
+  def set_ad_dimensions(long_headline)
+    case @long_headline.length
+    when 0..29
+      @text_horizontal_container_left = '500px'
+      @text_horizontal_container_right = '400px'
+    when 30..39
+      @text_horizontal_container_left = '480px'
+      @text_horizontal_container_right = '420px'
+    when 40..49
+      @text_horizontal_container_left = '460px'
+      @text_horizontal_container_right = '440px'
+    when 50..59
+      @text_horizontal_container_left = '400px'
+      @text_horizontal_container_right = '500px'
+    when 60..69
+      @text_horizontal_container_left = '380px'
+      @text_horizontal_container_right = '520px'
+    when 70..90
+      @text_horizontal_container_left = '340px'
+      @text_horizontal_container_right = '560px'
+    end
+
+    # these numbers (except the last) are taken straight from a google ad preview
+    @text_vertical_outer_height_top = '214px'
+    @text_vertical_inner_height_top = '180px'  # hacked from 181 to make a correction
+    @text_vertical_outer_height_bottom = '334px'
+    @text_vertical_inner_height_bottom = '300px'  # hacked from 301 to make a correction
+    @text_vertical_inner_height_bottom_minus_padding = '251px'  # 25px x 2
+
+    case @long_headline.length
+    when 0..25
+      @text_square_top_height = '110px'
+      @text_square_top_padding = '0'
+      @text_square_top_height_minus_padding = '100px'  # minus padding x2, minus 10px to account for padding around the text
+      @text_square_top_font_size = '38px'
+      @text_square_top_line_height = '40px'
+      @text_square_middle_height_outer = '85px'
+      @text_square_middle_height_inner =  '59px'
+      @text_square_middle_height_minus_padding = '36px'
+      @text_square_middle_line_height = '31px'
+      @text_square_bottom_font_size = '15px'
+    when 26..79
+      @text_square_top_height = '85px'
+      @text_square_top_padding = '5px 0'
+      @text_square_top_height_minus_padding = '65px'  # minus padding x2, minus 10px to account for padding around the text
+      @text_square_top_font_size = '31px'
+      @text_square_top_line_height = '34px'
+      @text_square_middle_height_outer = '109px'
+      @text_square_middle_height_inner = '83px'
+      @text_square_middle_height_minus_padding = '73px'
+      @text_square_middle_line_height = '26px'
+      @text_square_bottom_font_size = '13px'
+    when 80..90
+      @text_square_top_height = '66px'
+      @text_square_top_padding = '15px 0'
+      @text_square_top_height_minus_padding = '26px'  # minus padding x2, minus 10px to account for padding around the text
+      @text_square_top_font_size = '26px'
+      @text_square_top_line_height = '26px'
+      @text_square_middle_height_outer = '131px'
+      @text_square_middle_height_inner = '105px'
+      @text_square_middle_height_minus_padding = '95px'
+      @text_square_middle_line_height = '24px'
+      @text_square_bottom_font_size = '12px'
+    end
   end
 
 end

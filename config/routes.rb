@@ -86,7 +86,7 @@ Rails.application.routes.draw do
             Customer.friendly.exists?(params[:customer_slug]) &&
             Story.friendly.exists?(params[:story_slug])
           }, as: 'curate_story'
-    get '/promote/preview/:story_slug', to: 'adwords#preview',
+    get '/promote/preview/:story_slug', to: 'adwords_ads#preview',
           constraints: lambda { |params, request|
             Story.friendly.exists?(params[:story_slug])
           }

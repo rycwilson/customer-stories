@@ -122,7 +122,7 @@ class AdwordsAd < ApplicationRecord
       final_urls: [
         self.story.csp_story_url + "?utm_campaign=promote&utm_content=#{ campaign_type }"
       ],
-      call_to_action_text: 'Learn More',
+      call_to_action_text: 'See More',
       main_color: self.main_color,
       accent_color: self.accent_color,
       allow_flexible_color: false,

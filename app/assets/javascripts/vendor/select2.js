@@ -316,7 +316,7 @@ function initSelect2 () {
     }
   });
 
-  $('#charts-story-select, #visitors-story-select, #ads-preview-story-select')
+  $('#charts-story-select, #visitors-story-select')
     .select2({
       theme: 'bootstrap',
       width: 'style'

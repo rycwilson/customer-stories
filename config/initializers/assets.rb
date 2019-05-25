@@ -14,7 +14,7 @@ Rails.application.config.assets.version = '1.0'
 Rails.application.config.assets.precompile << /\.(?:svg|eot|woff|ttf|otf)\z/
 
 Rails.application.config.assets.precompile += %w(
-  adwords/ads_preview.js
+  google_ads/ads_preview.js
   jquery-textfill/source/jquery.textfill.js
   adwords/ads_preview.css
   plugins/cs_video.js

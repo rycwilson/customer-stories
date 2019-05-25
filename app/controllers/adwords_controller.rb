@@ -65,18 +65,18 @@ class AdwordsController < ApplicationController
   end
 
   def preview
-    # disable the ad links in production
-    @company = @story.company
-    @is_production = ENV['HOST_NAME'] == 'customerstories.net'
-    @story_url = @story.csp_story_url
-    @short_headline = @company.adwords_short_headline
-    @long_headline = @story.ads.long_headline
-    @image_url = @story.ads.adwords_image.try(:image_url) ||
-                 @company.adwords_images.default.try(:image_url) ||
-                 RESPONSIVE_AD_LANDSCAPE_IMAGE_PLACEHOLDER
-    @logo_url = @company.adwords_logo_url || LOGO_PLACEHOLDER_URL
-    set_ad_dimensions(@long_headline)
-    render :ads_preview, layout: false
+    # # disable the ad links in production
+    # @company = @story.company
+    # @is_production = ENV['HOST_NAME'] == 'customerstories.net'
+    # @story_url = @story.csp_story_url
+    # @short_headline = @company.adwords_short_headline
+    # @long_headline = @story.ads.long_headline
+    # @image_url = @story.ads.adwords_image.try(:image_url) ||
+    #              @company.adwords_images.default.try(:image_url) ||
+    #              RESPONSIVE_AD_LANDSCAPE_IMAGE_PLACEHOLDER
+    # @logo_url = @company.adwords_logo_url || LOGO_PLACEHOLDER_URL
+    # set_ad_dimensions(@long_headline)
+    # render :ads_preview, layout: false
   end
 
   private

@@ -98,8 +98,8 @@ class CompaniesController < ApplicationController
       # force to get campaigns by name => because staging won't match production
       campaigns = GoogleAds::get_campaigns([ nil, nil ], company.subdomain)
 
-      # new_campaigns = nil
       # create campaigns if they don't exist on google
+      # new_campaigns = nil
       # if campaigns.blank? || campaigns.length < 2
       #   new_campaigns = GoogleAds::create_campaigns(company.subdomain)
       #   new_ad_groups = GoogleAds::create_ad_groups(new_campaigns[:topic][:id], new_campaigns[:retarget][:id])
