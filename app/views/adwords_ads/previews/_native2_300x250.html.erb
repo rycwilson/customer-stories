@@ -16,7 +16,7 @@
 
 <% end %>
 
-<div class="ad native-ad native-2">
+<div class="ad native-ad native-2 <%= is_mobile ? 'mobile-ad' : '' %>">
 
   <%= render('adwords_ads/ads_by_google') %>
 
@@ -50,3 +50,19 @@
   </div>
 
 </div>
+
+<% if (is_mobile) %>
+
+  <div class="mobile__abstract--paragraph">
+    <div class="long-line"></div>
+    <div class="long-line"></div>
+    <div class="long-line"></div>
+    <div class="short-line"></div>
+  </div>
+
+  <div class="mobile__abstract--paragraph">
+    <div class="long-line"></div>
+    <div class="short-line"></div>
+  </div>
+
+<% end %>

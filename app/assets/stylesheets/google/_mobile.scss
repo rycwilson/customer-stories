@@ -9,34 +9,48 @@
     align-items: center;
     justify-content: space-between;
     width: 100%;
-    font-size: 20px;
     margin: 0 auto;
-    a.left, a.right {
+    a, button {
       width: 40px;
       height: 40px;
       display: flex;
       align-items: center;
-      justify-content: center;
       cursor: pointer;
+      justify-content: center;
+      font-size: 20px;
+      border: none;
+      background: none;
+      color: #666;
+      &:hover {
+        color: #222;
+      }
+      // &:focus {
+      //   outline: none;
+      // }
+    }
+    a.carousel-control {
       text-decoration: none;
+      background-image: none;  // overrides bootstrap
+      background-color: transparent;  // overrides bootstrap
+      position: relative;  // overrides bootstrap
+      text-shadow: none;  // overrides bootstrap
       i {
-        color: #666;
         -webkit-text-stroke: 1px #f9f9f9;
       }
-      &:hover {
-        i {
-          color: #222;
+    }
+    .carousel-indicators {
+      flex-grow: 1;
+      position: relative;  // overrides bootstrap
+      bottom: 2px;  // overrides bootstrap
+      left: 0;  // overrides bootstrap
+      margin: 0;
+      li {
+        border: 1px solid #666;
+        &.active {
+          background-color: #666;
         }
       }
     }
-    // .carousel-indicators {
-    //   position: relative;
-    //   li {
-    //     &.active {
-    //       background-color: #666;
-    //     }
-    //   }
-    // }
   }
 
   .mobile {
@@ -65,11 +79,21 @@
     .mobile__screen {
       border: 1px solid rgba(0,0,0,.12);
       border-bottom-width: 0;
-      height: 100%;
+      height: 98.5%;
       min-height: 240px;
       overflow: hidden;
       position: relative;
       text-align: start;
+      .carousel-inner {
+        height: 100%;
+        .item {
+          height: 100%;
+          > div {
+            // height: 100%;
+            // width: 100%;
+          }
+        }
+      }
     }
 
   }
@@ -115,3 +139,4 @@
     }
   }
 }
+

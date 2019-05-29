@@ -1,9 +1,7 @@
 
 $(function () {
 
-  var mobileRotationDesktop = ['image-1', 'native-2', 'text-1'],
-      mobileRotationYouTube = ['home', 'watch'],
-      initMasonry = function () {
+  var initMasonry = function () {
         $('#websites-desktop, #youtube-desktop')
           .masonry({
              itemSelector: '.ad',
@@ -27,10 +25,6 @@ $(function () {
           }
         });
       };
-
-  // $('#websites-desktop').masonry('on', 'layoutComplete', function () {
-  //   $('#websites-desktop').css('visibility', 'visible');
-  // });
 
   initMasonry();
   truncateLongHeadlines();
@@ -80,9 +74,15 @@ $(function () {
         //   truncateLongHeadlines();
         // });
       });
-
     })
-
+    .on('click', '.mobile__selector button', function () {
+      var $carousel = $(this).closest('.mobile').find('.mobile__screen');
+      $(this).children('.fa-pause').is(':visible') ?
+        $carousel.carousel('pause') :
+        $carousel.carousel('cycle');
+      $(this).children('i').toggle();
+      $(this).blur();
+    })
 
 })
 

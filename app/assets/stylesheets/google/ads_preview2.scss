@@ -102,11 +102,18 @@ header {
 }
 
 .ad {
+  position: relative;
   margin: 25px 0;
+  &.mobile-ad {
+    margin: 0 auto;
+  }
   &::before {
     position: absolute;
     right: 0;
     top: -20px
+  }
+  &.mobile-ad::before {
+      content: none;
   }
 }
 
