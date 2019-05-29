@@ -1,0 +1,117 @@
+
+[class*="tab-pane"][id*="-mobile"] {
+
+  .mobile__selector {
+    position: absolute;
+    left: 0;
+    top: -70px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+    font-size: 20px;
+    margin: 0 auto;
+    a.left, a.right {
+      width: 40px;
+      height: 40px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      text-decoration: none;
+      i {
+        color: #666;
+        -webkit-text-stroke: 1px #f9f9f9;
+      }
+      &:hover {
+        i {
+          color: #222;
+        }
+      }
+    }
+    // .carousel-indicators {
+    //   position: relative;
+    //   li {
+    //     &.active {
+    //       background-color: #666;
+    //     }
+    //   }
+    // }
+  }
+
+  .mobile {
+    position: relative;
+    margin: 100px auto 30px auto;
+    background: #fff;
+    border: 1.5px solid #c3c2c2;
+    border-bottom-width: 0;
+    border-radius: 44px 44px 0 0;
+    box-sizing: border-box;
+    display: block;
+    height: 632px;
+    padding: 16px;
+    position: relative;
+    text-align: center;
+    width: 352px;
+    .mobile__button {
+      border: 1px solid #c3c2c2;
+      border-radius: 50%;
+      display: inline-block;
+      height: 12px;
+      margin-bottom: 8px;
+      position: relative;
+      width: 12px;
+    }
+    .mobile__screen {
+      border: 1px solid rgba(0,0,0,.12);
+      border-bottom-width: 0;
+      height: 100%;
+      min-height: 240px;
+      overflow: hidden;
+      position: relative;
+      text-align: start;
+    }
+
+  }
+
+}
+
+.mobile__preview--container {
+  display: flex;
+  justify-content: center;
+  margin-top: 16px;
+}
+
+.mobile__abstract--navigation {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: #eee;
+  height: 32px;
+  div[class*="-icon"] {
+    color: #757575;
+    padding: 8px;
+  }
+  div.headline {
+    width: 120px;
+    height: 8px;
+    background-color: #bdbdbd;
+  }
+}
+
+.mobile__abstract--paragraph {
+  display: flex;
+  flex-direction: column;
+  margin: 8px;
+  div.long-line, div.short-line {
+    background-color: #eee;
+    margin: 4px 0;
+    height: 7px;
+    &.long-line {
+      width: 100%;
+    }
+    &.short-line {
+      width: 75%;
+    }
+  }
+}

@@ -36,22 +36,6 @@ body.stories.show {
   border-color: #07c;  // #395f4e;
 }
 
-.bip-clickable {
-  height: 28px;
-  width: 28px;
-  color: #666;
-  border: 1px solid #e3e3e3;
-  border-radius: 3px;
-  padding: 5px;
-  font-size: 16px;
-  cursor: pointer;
-}
-
-.bip-clickable:hover, .bip-clickable-fa:hover  {
-  color: white !important;
-  background-color: rgb(14, 122, 254); // #4885ed; //#666;
-}
-
 .progress-bar-info, .alert-info {
   background-color: #6685a4;  // btn-secondary
   border-color: #54718d;

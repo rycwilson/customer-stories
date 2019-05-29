@@ -13,10 +13,14 @@ Rails.application.config.assets.version = '1.0'
 # ref: https://stackoverflow.com/questions/10905905/using-fonts-with-rails-asset-pipeline
 Rails.application.config.assets.precompile << /\.(?:svg|eot|woff|ttf|otf)\z/
 
+# fontawesome included for the google preview window
 Rails.application.config.assets.precompile += %w(
-  google_ads/ads_preview.js
+  google/ads_preview.js
+  google/ads_preview.css
+  google/ads_preview2.js
+  google/ads_preview2.css
+  fontawesome/css/font-awesome.min.css
   jquery-textfill/source/jquery.textfill.js
-  adwords/ads_preview.css
   plugins/cs_video.js
   plugins/cs_overlays.js
   plugins/demo.js

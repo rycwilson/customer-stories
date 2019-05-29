@@ -144,12 +144,19 @@ class AdwordsAdsController < ApplicationController
     @story_url = @story.csp_story_url
     @short_headline = @company.adwords_short_headline
     @long_headline = @story.ads.long_headline
-    @image_url = @story.ads.first.landscape_images.default.take.image_url ||
+    @call_to_action = 'See More'
+
+    # TODO: change this from the placeholder with dimensions to an actual image placeholder
+    # same for the logo
+    @image_url = @story.ads.first.landscape_images.default.take.try(:image_url) ||
                  RESPONSIVE_AD_LANDSCAPE_IMAGE_PLACEHOLDER
-    @logo_url = @story.ads.first.square_logos.default.take.image_url ||
+    @image_dominant_color = Miro::DominantColors.new(@image_url).to_hex[0]
+    @square_image_url = @story.ads.first.square_images.default.take.try(:image_url) ||
+                        RESPONSIVE_AD_SQUARE_IMAGE_PLACEHOLDER
+    @logo_url = @story.ads.first.square_logos.default.take.try(:image_url) ||
                 RESPONSIVE_AD_SQUARE_LOGO_PLACEHOLDER
-    set_ad_dimensions(@long_headline)
-    render :ads_preview, layout: false
+    set_ad_parameters(@long_headline)
+    render :ads_preview2, layout: false
   end
 
   private
@@ -194,70 +201,103 @@ class AdwordsAdsController < ApplicationController
 
   # padding for the lower half is 25px 11px
   # "*_minus_padding" means minus 25x2 = 50
-  def set_ad_dimensions(long_headline)
-    case @long_headline.length
-    when 0..29
-      @text_horizontal_container_left = '500px'
-      @text_horizontal_container_right = '400px'
-    when 30..39
-      @text_horizontal_container_left = '480px'
-      @text_horizontal_container_right = '420px'
-    when 40..49
-      @text_horizontal_container_left = '460px'
-      @text_horizontal_container_right = '440px'
-    when 50..59
-      @text_horizontal_container_left = '400px'
-      @text_horizontal_container_right = '500px'
-    when 60..69
-      @text_horizontal_container_left = '380px'
-      @text_horizontal_container_right = '520px'
-    when 70..90
-      @text_horizontal_container_left = '340px'
-      @text_horizontal_container_right = '560px'
+  def set_ad_parameters(long_headline)
+    @ads_params = ads_params_shell
+    case long_headline.length
+    when 75..90
+      @ads_params[:tower][:sh_font_size] = '20px'
+      @ads_params[:tower][:lh_font_size] = '13px'
+      # @ads_params[:square191][:sh_font_size] = '15px'
+      # @ads_params[:square191][:lh_font_size] = '10px'
+    when 55...75
+      @ads_params[:tower][:sh_font_size] = '24px'
+      @ads_params[:tower][:lh_font_size] = '16px'
+      # @ads_params[:square191][:sh_font_size] = ''
+      # @ads_params[:square191][:lh_font_size] = ''
+    when 45...55
+      @ads_params[:tower][:sh_font_size] = '26px'
+      @ads_params[:tower][:lh_font_size] = '17px'
+      # @ads_params[:square191][:sh_font_size] = ''
+      # @ads_params[:tower][:lh_font_size] = ''
+    when 0...45
+      @ads_params[:tower][:sh_font_size] = '28px'
+      @ads_params[:tower][:lh_font_size] = '18px'
+      # @ads_params[:square191][:sh_font_size] = ''
+      # @ads_params[:tower][:lh_font_size] = ''
     end
 
-    # these numbers (except the last) are taken straight from a google ad preview
-    @text_vertical_outer_height_top = '214px'
-    @text_vertical_inner_height_top = '180px'  # hacked from 181 to make a correction
-    @text_vertical_outer_height_bottom = '334px'
-    @text_vertical_inner_height_bottom = '300px'  # hacked from 301 to make a correction
-    @text_vertical_inner_height_bottom_minus_padding = '251px'  # 25px x 2
+    # case @long_headline.length
+    # when 0..29
+    #   @text_horizontal_container_left = '500px'
+    #   @text_horizontal_container_right = '400px'
+    # when 30..39
+    #   @text_horizontal_container_left = '480px'
+    #   @text_horizontal_container_right = '420px'
+    # when 40..49
+    #   @text_horizontal_container_left = '460px'
+    #   @text_horizontal_container_right = '440px'
+    # when 50..59
+    #   @text_horizontal_container_left = '400px'
+    #   @text_horizontal_container_right = '500px'
+    # when 60..69
+    #   @text_horizontal_container_left = '380px'
+    #   @text_horizontal_container_right = '520px'
+    # when 70..90
+    #   @text_horizontal_container_left = '340px'
+    #   @text_horizontal_container_right = '560px'
+    # end
 
-    case @long_headline.length
-    when 0..25
-      @text_square_top_height = '110px'
-      @text_square_top_padding = '0'
-      @text_square_top_height_minus_padding = '100px'  # minus padding x2, minus 10px to account for padding around the text
-      @text_square_top_font_size = '38px'
-      @text_square_top_line_height = '40px'
-      @text_square_middle_height_outer = '85px'
-      @text_square_middle_height_inner =  '59px'
-      @text_square_middle_height_minus_padding = '36px'
-      @text_square_middle_line_height = '31px'
-      @text_square_bottom_font_size = '15px'
-    when 26..79
-      @text_square_top_height = '85px'
-      @text_square_top_padding = '5px 0'
-      @text_square_top_height_minus_padding = '65px'  # minus padding x2, minus 10px to account for padding around the text
-      @text_square_top_font_size = '31px'
-      @text_square_top_line_height = '34px'
-      @text_square_middle_height_outer = '109px'
-      @text_square_middle_height_inner = '83px'
-      @text_square_middle_height_minus_padding = '73px'
-      @text_square_middle_line_height = '26px'
-      @text_square_bottom_font_size = '13px'
-    when 80..90
-      @text_square_top_height = '66px'
-      @text_square_top_padding = '15px 0'
-      @text_square_top_height_minus_padding = '26px'  # minus padding x2, minus 10px to account for padding around the text
-      @text_square_top_font_size = '26px'
-      @text_square_top_line_height = '26px'
-      @text_square_middle_height_outer = '131px'
-      @text_square_middle_height_inner = '105px'
-      @text_square_middle_height_minus_padding = '95px'
-      @text_square_middle_line_height = '24px'
-      @text_square_bottom_font_size = '12px'
-    end
+    # # these numbers (except the last) are taken straight from a google ad preview
+    # @text_vertical_outer_height_top = '214px'
+    # @text_vertical_inner_height_top = '180px'  # hacked from 181 to make a correction
+    # @text_vertical_outer_height_bottom = '334px'
+    # @text_vertical_inner_height_bottom = '300px'  # hacked from 301 to make a correction
+    # @text_vertical_inner_height_bottom_minus_padding = '251px'  # 25px x 2
+
+    # case @long_headline.length
+    # when 0..25
+    #   @text_square_top_height = '110px'
+    #   @text_square_top_padding = '0'
+    #   @text_square_top_height_minus_padding = '100px'  # minus padding x2, minus 10px to account for padding around the text
+    #   @text_square_top_font_size = '38px'
+    #   @text_square_top_line_height = '40px'
+    #   @text_square_middle_height_outer = '85px'
+    #   @text_square_middle_height_inner =  '59px'
+    #   @text_square_middle_height_minus_padding = '36px'
+    #   @text_square_middle_line_height = '31px'
+    #   @text_square_bottom_font_size = '15px'
+    # when 26..79
+    #   @text_square_top_height = '85px'
+    #   @text_square_top_padding = '5px 0'
+    #   @text_square_top_height_minus_padding = '65px'  # minus padding x2, minus 10px to account for padding around the text
+    #   @text_square_top_font_size = '31px'
+    #   @text_square_top_line_height = '34px'
+    #   @text_square_middle_height_outer = '109px'
+    #   @text_square_middle_height_inner = '83px'
+    #   @text_square_middle_height_minus_padding = '73px'
+    #   @text_square_middle_line_height = '26px'
+    #   @text_square_bottom_font_size = '13px'
+    # when 80..90
+    #   @text_square_top_height = '66px'
+    #   @text_square_top_padding = '15px 0'
+    #   @text_square_top_height_minus_padding = '26px'  # minus padding x2, minus 10px to account for padding around the text
+    #   @text_square_top_font_size = '26px'
+    #   @text_square_top_line_height = '26px'
+    #   @text_square_middle_height_outer = '131px'
+    #   @text_square_middle_height_inner = '105px'
+    #   @text_square_middle_height_minus_padding = '95px'
+    #   @text_square_middle_line_height = '24px'
+    #   @text_square_bottom_font_size = '12px'
+    # end
+  end
+
+  def ads_params_shell
+    {
+      tower: {
+        sh_font_size: '',
+        lh_font_size: ''
+      }
+    }
   end
 
 end

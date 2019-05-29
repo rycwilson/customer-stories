@@ -1,0 +1,75 @@
+
+.text-ad {
+  &::before {
+    content: 'Text 300x250'
+  }
+  width: 298px;
+  height: 248px;
+  background-color: white;
+  border: 1px solid #e6e7e8;
+  display: flex;
+  flex-direction: column;
+  > div {
+    display: flex;
+  }
+  a {
+    font-weight: 400;
+    text-decoration: none;
+    &:hover {
+      text-decoration: underline;
+    }
+  }
+  > div:nth-child(2) {
+    flex-direction: column;
+    justify-content: center;
+    .short-headline {
+      padding: 6px 0;
+      a {
+        font-size: 22px;
+        line-height: 26px;
+        color: #37474f;
+      }
+    }
+    .business-name {
+      padding-top: 5px;
+      a {
+        font-size: 12px;
+        line-height: 16px;
+        color: #646464;
+      }
+    }
+    .long-headline {
+      padding: 6px 0;
+      a {
+        font-size: 13px;
+        line-height: 17px;
+        color: #888888;
+      }
+    }
+    padding: 20px 18px 20px 18px;
+    // flex-direction: column;
+    height: 190px;
+  }
+  > div:last-child {
+    background-color: #eee;
+    flex-grow: 1;
+    align-items: center;
+    justify-content: center;
+    .call-to-action {
+      height: 30px;
+      width: 150px;
+      text-align: center;
+      background-color: #324148;
+      cursor: pointer;
+      border-radius: 15px;
+      a {
+        font-size: 14px;
+        line-height: 30px;
+        color: #fff;
+        font-weight: 500;
+        text-transform: uppercase;
+        text-decoration: none;
+      }
+    }
+  }
+}
