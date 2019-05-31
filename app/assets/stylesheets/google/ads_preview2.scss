@@ -3,44 +3,12 @@
 @import 'text_ads';
 @import 'native_ads';
 @import 'mobile';
-
-.image-ad, .text-ad, .native-1, .native-sm {
-  // display: none !important;
-}
-
-.ads-by-google {
-  position: absolute;
-  top: 1px;
-  right: 1px;
-  background-color: #fff;
-  height: 15px;
-  cursor: pointer;
-  .svg-text {
-    display: none;
-    // display: inline-block;
-    padding-right: 1px;
-    padding-left: 5px;
-    height: 100%;
-    width: 74px;
-    // opacity: 0;
-    // visibility: hidden;
-  }
-  .svg-icon {
-    display: inline-block;
-    width: 15px;
-    height: 15px;
-    svg {
-      fill: #00aecd;
-    }
-  }
-}
+@import 'youtube_ads';
+// @import 'gmail_ads';
 
 body {
-  // background: #f9f9f9;
-  // margin: 20px 30px;
   font-family: 'Roboto', arial , sans-serif;
   font-size: 13px;
-  // hr { margin: 20px 0; }
   .format {
     // font-family: 'Open Sans', sans-serif;
   }
@@ -102,6 +70,7 @@ header {
 }
 
 .ad {
+  background-color: #fff;
   position: relative;
   margin: 25px 0;
   &.mobile-ad {
@@ -117,5 +86,52 @@ header {
   }
 }
 
+.ad-box {
+  display: inline-block;
+  border-radius: 3px;
+  border: 1px solid white;
+  color: white;
+  padding: 1px 3px 1px 3px;
+  font-size: 9px;
+  margin-right: 5px;
+  span {
+    font-weight: 400;
+    line-height: 9px;
+  }
+  &.ad-box-green {
+    background-color: green;
+  }
+  &.ad-box-yellow {
+    background-color: #e7c13b;
+  }
+}
+
+
+.ads-by-google {
+  position: absolute;
+  top: 1px;
+  right: 1px;
+  background-color: #fff;
+  height: 15px;
+  cursor: pointer;
+  .svg-text {
+    display: none;
+    // display: inline-block;
+    padding-right: 1px;
+    padding-left: 5px;
+    height: 100%;
+    width: 74px;
+    // opacity: 0;
+    // visibility: hidden;
+  }
+  .svg-icon {
+    display: inline-block;
+    width: 15px;
+    height: 15px;
+    svg {
+      fill: #00aecd;
+    }
+  }
+}
 
 

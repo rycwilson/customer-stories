@@ -148,12 +148,12 @@ class AdwordsAdsController < ApplicationController
 
     # TODO: change this from the placeholder with dimensions to an actual image placeholder
     # same for the logo
-    @image_url = @story.ads.first.landscape_images.default.take.try(:image_url) ||
+    @image_url = @story.ads.first.landscape_images.take.try(:image_url) ||
                  RESPONSIVE_AD_LANDSCAPE_IMAGE_PLACEHOLDER
     @image_dominant_color = Miro::DominantColors.new(@image_url).to_hex[0]
-    @square_image_url = @story.ads.first.square_images.default.take.try(:image_url) ||
+    @square_image_url = @story.ads.first.square_images.take.try(:image_url) ||
                         RESPONSIVE_AD_SQUARE_IMAGE_PLACEHOLDER
-    @logo_url = @story.ads.first.square_logos.default.take.try(:image_url) ||
+    @logo_url = @story.ads.first.square_logos.take.try(:image_url) ||
                 RESPONSIVE_AD_SQUARE_LOGO_PLACEHOLDER
     set_ad_parameters(@long_headline)
     render :ads_preview2, layout: false
