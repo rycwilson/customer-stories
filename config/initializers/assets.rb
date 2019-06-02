@@ -19,7 +19,6 @@ Rails.application.config.assets.precompile += %w(
   google/ads_preview.css
   google/ads_preview2.js
   google/ads_preview2.css
-  fontawesome/css/font-awesome.min.css
   jquery-textfill/source/jquery.textfill.js
   plugins/cs_video.js
   plugins/cs_overlays.js
