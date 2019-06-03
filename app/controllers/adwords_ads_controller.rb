@@ -150,7 +150,9 @@ class AdwordsAdsController < ApplicationController
     # same for the logo
     @image_url = @story.ads.first.landscape_images.take.try(:image_url) ||
                  RESPONSIVE_AD_LANDSCAPE_IMAGE_PLACEHOLDER
-    @image_dominant_color = Miro::DominantColors.new(@image_url).to_hex[0]
+    # must use strict_encode do newlines aren't added
+    # @image_base64 = Base64.strict_encode64( open(@image_url) { |io| io.read } )
+    # @image_dominant_color = Miro::DominantColors.new(@image_url).to_hex[0]
     @square_image_url = @story.ads.first.square_images.take.try(:image_url) ||
                         RESPONSIVE_AD_SQUARE_IMAGE_PLACEHOLDER
     @logo_url = @story.ads.first.square_logos.take.try(:image_url) ||
