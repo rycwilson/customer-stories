@@ -144,8 +144,6 @@ GEM
     haml (5.1.1)
       temple (>= 0.8.0)
       tilt
-    html_to_plain_text (1.0.5)
-      nokogiri (>= 1.4.0)
     httpclient (2.8.3)
     httpi (2.4.4)
       rack
@@ -368,7 +366,6 @@ DEPENDENCIES
   gon
   google-adwords-api (= 1.4.0)
   googlecharts
-  html_to_plain_text
   jquery-minicolors-rails
   local_time
   multi_json
