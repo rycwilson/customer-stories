@@ -12,6 +12,9 @@ Rails.application.routes.draw do
   devise_for :admins
   mount RailsAdmin::Engine => '/admin', as: 'rails_admin'
 
+  get '/switch_user', to: 'switch_user#set_current_user'
+  get '/switch_user/remember_user', to: 'switch_user#remember_user'
+
   use_doorkeeper
 
   # zapier
@@ -28,9 +31,6 @@ Rails.application.routes.draw do
   get '/sitemap', to: 'site#sitemap'
   get '/:google', to: 'site#google_verify', constraints: { google: /google\w+/ }
 
-  # admins only
-  get '/switch_user', to: 'switch_user#set_current_user'
-  get '/switch_user/remember_user', to: 'switch_user#remember_user'
 
   # sendgrid events (currently tracking open and click)
   post '/esp/notifications', to: 'site#esp_notifications'

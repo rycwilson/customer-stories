@@ -49,7 +49,7 @@ gem 'reverse_markdown'
 # gem 'sass-rails', '~> 5.0'
 gem 'sassc-rails'
 gem 'summernote-rails'
-# gem 'switch_user'
+gem 'switch_user'
 gem 'turbolinks', '~> 5.0.0'
 gem 'typhoeus'
 gem 'uglifier', '>= 1.3.0'
@@ -60,7 +60,7 @@ group :production do
 
   gem 'puma'
   gem 'rails_12factor'
-  gem 'rack-timeout'
+  # gem 'rack-timeout'
 
 end
 

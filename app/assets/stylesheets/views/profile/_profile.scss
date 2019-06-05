@@ -22,7 +22,12 @@
   }
 
   #profile-tab {
-    .switch-user { margin-bottom: 15px; }
+    .switch-user-select {
+      margin-bottom: 15px;
+      // input[type="checkbox"] {
+      //   display: none;
+      // }
+    }
     form > .row:first-of-type {
       > div:first-of-type {
         padding: 0 15px 0 25px;
