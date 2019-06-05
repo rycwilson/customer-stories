@@ -12,6 +12,8 @@ $(function () {
              // isInitLayout: false
            });
       },
+
+      // ref https://stackoverflow.com/questions/3404508
       truncateLongHeadlines = function () {
         var $ads = $('.native-1, .native-2, .native-sm'),
             $longHeadlines = $ads.find('.long-headline');
@@ -25,6 +27,8 @@ $(function () {
           }
         });
       },
+
+      // ref https://stackoverflow.com/questions/2541481/
       getAverageRGB = function () {
         // var imageUrl = $('.image-1').first().children('.landscape-image').css('background-image').replace('url(','').replace(')','').replace(/\"/gi, ""),
         var img = new Image(),
