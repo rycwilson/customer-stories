@@ -182,7 +182,7 @@
       }
       blockquote {
         p, span {
-          color: #666 !important;
+          // color: #666 !important;
         }
       }
       // @media only screen and (max-width: 500px) {
@@ -290,11 +290,6 @@
   }
 
   @media only screen and (max-width: 991px) {
-    .cs-story-content {
-      span, p {
-        // font-size: 13px !important;
-      }
-    }
     .related-stories {
       li a.thumbnail .thumbnail-view .thumbnail-view-hover p {
         font-size: 13px !important;
@@ -426,7 +421,14 @@
           span, li, p, a {
             font-size: 14px !important;
           }
+          // summernote is inconsistent in its blockquote handline,
+          // sometimes inserts a <p> and sometimes doesn't
+          // => to avoid styling inconsistency, revert to bootstrap font-size
+          blockquote p {
+            font-size: 17.5px !important;
+          } 
         }
+       
       }
     }
   }
@@ -496,6 +498,12 @@
         span, li, p, a {
           font-size: 13px !important;
         }
+        // summernote is inconsistent in its blockquote handline,
+        // sometimes inserts a <p> and sometimes doesn't
+        // => to avoid styling inconsistency, revert to bootstrap font-size
+        blockquote p {
+          font-size: 17.5px !important;
+        }
       }
     }
     &.cs-testimonial {
@@ -522,6 +530,12 @@
       .narrative {
         span, li, p, a {
           font-size: 15px !important;
+        }
+        // summernote is inconsistent in its blockquote handline,
+        // sometimes inserts a <p> and sometimes doesn't
+        // => to avoid styling inconsistency, revert to bootstrap font-size
+        blockquote p {
+          font-size: 17.5px !important;
         }
       }
     }
@@ -560,8 +574,6 @@
           }
         }
       }
-    }
-    .story-content, .cs-story-content {
     }
   }
 
