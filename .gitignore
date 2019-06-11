@@ -4,10 +4,9 @@
 # or operating system, you probably want to add a global ignore instead:
 #   git config --global core.excludesfile '~/.gitignore_global'
 
-# Ignore bundler config.
+# Ignore bundler config; vs code config; mac finder files
 /.bundle
-
-# Ignore Mac Finder files
+/.vscode
 .DS_Store
 
 # Ignore all logfiles and tempfiles.
@@ -18,7 +17,7 @@
 # ssl certificates
 /ssl
 
-# front-end dependencies
+# dependencies
 /vendor/assets
 
 # figaro-managed credentials
@@ -33,6 +32,8 @@
 
 # pre-compiled assets (uncomment for github push, comment for heroku)
 public/assets
+
+
 
 
 
