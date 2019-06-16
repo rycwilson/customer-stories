@@ -1,6 +1,5 @@
 
 @mixin LI-profile-badge ($bg-color) {
-
   .LI-badge-container {
     width: 100%;
     background-color: $bg-color;  // #f2f2f2;
@@ -32,7 +31,6 @@
       justify-content: space-between;
     }
   }
-
 }
 
 @mixin fa-button () {
@@ -61,4 +59,66 @@
       cursor: not-allowed;
     }
   }
+}
+
+@mixin bs-xs {
+  @media screen and (max-width: 767px) {
+    @content;
+  }
+}
+
+@mixin bs-sm {
+  @media screen and (min-width: 768px) {
+    @content;
+  }
+}
+
+@mixin bs-md {
+  @media screen and (min-width: 992px) {
+    @content;
+  }
+}
+
+@mixin bs-lg {
+  @media screen and (min-width: 1200px) {
+    @content;
+  }
+}
+
+@mixin customer-logo ($bg-color) {
+  display: flex;
+  margin: 30px 0;
+  background-color: $bg-color;  // need this for the mix-blend-mode to work correctly
+  > div {
+    max-width: 50%;  // this can be wider for the quote-logo horizontal layout
+    img {
+      margin: 0 auto;
+      max-height: 65px;
+      mix-blend-mode: multiply;
+    }
+  }
+  .customer-name, .cs-customer-name {
+    color: #888;
+    margin-top: 20px;
+    span {
+      font-size: 16px !important;
+    }
+  }
+  @include bs-sm {
+    justify-content: center;
+    > div {
+      img {
+        max-height: 80px;
+      }
+    }
+  }
+  @include bs-lg {
+    .customer-name, .cs-customer-name {
+      margin-top: 25px;
+      span {
+        font-size: 18px !important;
+      }
+    }
+  }
+
 }

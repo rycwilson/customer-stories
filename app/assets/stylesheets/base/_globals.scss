@@ -5,6 +5,17 @@ $stories-header-height: 40px;
 $csp-bg-gray: #f2f2f2;
 $csp-fg-gray: #efefef;
 
+body {
+  font-family: 'Open Sans', 'Trebuchet MS', arial, sans-serif;
+  font-size: 13px;
+  padding: 0;
+  margin: 0;
+}
+
+.container {
+  position: relative;
+}
+
 a {
   color: #07c;  // #3367d6;
   &:hover, &:active {
@@ -13,71 +24,31 @@ a {
   }
 }
 
+.nav-tabs .dropdown-menu {
+  border-radius: 3px;
+}
+
+ul.dropdown-menu {
+  border-color: #ccc;
+  li {
+    margin-right: .5em;
+    margin-left: .5em;
+    a {
+      font-size: 13px;
+      padding: 6px 12px;
+      border-radius: 3px;
+    }
+    a:hover, a:focus {
+      color: #fff; //  #333;
+      background-color: #0095ff; //  #f2f2f2;
+    }
+  }
+}
+
 .turbolinks-progress-bar {
   height: 1px;
-  background-color: #77b6ff;
+  background-color: #0095ff; // #77b6ff;
 }
 
-@mixin bs-xs {
-  @media screen and (max-width: 767px) {
-    @content;
-  }
-}
-
-@mixin bs-sm {
-  @media screen and (min-width: 768px) {
-    @content;
-  }
-}
-
-@mixin bs-md {
-  @media screen and (min-width: 992px) {
-    @content;
-  }
-}
-
-@mixin bs-lg {
-  @media screen and (min-width: 1200px) {
-    @content;
-  }
-}
-
-@mixin customer-logo ($bg-color) {
-  display: flex;
-  margin: 30px 0;
-  background-color: $bg-color;  // need this for the mix-blend-mode to work correctly
-  > div {
-    max-width: 50%;  // this can be wider for the quote-logo horizontal layout
-    img {
-      margin: 0 auto;
-      max-height: 65px;
-      mix-blend-mode: multiply;
-    }
-  }
-  .customer-name, .cs-customer-name {
-    color: #888;
-    margin-top: 20px;
-    span {
-      font-size: 16px !important;
-    }
-  }
-  @include bs-sm {
-    justify-content: center;
-    > div {
-      img {
-        max-height: 80px;
-      }
-    }
-  }
-  @include bs-lg {
-    .customer-name, .cs-customer-name {
-      margin-top: 25px;
-      span {
-        font-size: 18px !important;
-      }
-    }
-  }
-
-}
 
 

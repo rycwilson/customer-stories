@@ -1,17 +1,16 @@
 
-<ul id='company-nav-tabs' class='nav nav-tabs pull-right' role='tablist'>
+<ul id="company-nav-tabs" class="nav nav-tabs pull-right" role="tablist">
 
   <% if curator?(company) && !current_page?(controller: 'stories', action: 'index') %>
 
-    <li class="dropdown company-settings pull-right">
+    <li class="dropdown company-settings">
+
       <a class="dropdown-toggle" data-toggle="dropdown" href="javascript:;">
-        <span class="visible-xs-inline" style="display: inline !important">
-          <i class='glyphicon glyphicon-cog' style='margin-right:2px'></i>
-        </span>
+        <i class="fa fa-fw fa-gear"></i>
         <i class="fa fa-caret-down"></i>
       </a>
 
-      <ul class="dropdown-menu" role="menu" style="padding: 9px 0">
+      <ul class="dropdown-menu dropdown-menu-right" role="menu" style="padding: 8px 0">
         <li>
           <a href='/settings#company-profile'>
             <i class="fa fa-fw fa-globe"></i>&nbsp;&nbsp;
@@ -54,41 +53,47 @@
 
   <% if current_page?(controller: 'stories', action: 'index') && curator?(company) %>
 
-    <a href='/curate'>
-      <i class='glyphicon glyphicon-home' style='font-size: 18px; '></i>
+    <a href="/curate">
+      <i class="glyphicon glyphicon-home" style="font-size: 18px;"></i>
     </a>
 
   <% else %>
 
     <li class="dropdown user-profile">
+
       <a class="dropdown-toggle" data-toggle="dropdown" href="javascript:;">
-        <span class="visible-xs-inline" style="display: inline !important">
-          <i class='glyphicon glyphicon-user' style='margin-right:2px'></i>
-        </span>
+        <i class="fa fa-fw fa-user-circle-o"></i>
         <i class="fa fa-caret-down"></i>
       </a>
 
-      <ul class="dropdown-menu" style='right:0;left:auto' role="menu">
+      <ul class="dropdown-menu dropdown-menu-right" role="menu" style="padding: 8px 0">
 
         <% if curator?(company) %>
           <li>
             <a href='/user-profile'>
+              <i class="fa fa-fw fa-user-circle-o"></i>&nbsp;&nbsp;
               <%= current_user.full_name %>
             </a>
           </li>
         <% else %>
           <li>
             <%= link_to edit_profile_no_company_path do %>
+              <i class="fa fa-fw fa-user-circle-o"></i>&nbsp;&nbsp;
               <%= current_user.full_name %>
             <% end %>
           </li>
         <% end %>
+        <li role="separator" class="divider"></li>
         <li>
-          <%= link_to 'Sign out', destroy_user_session_path, method: :delete %>
+          <%= link_to destroy_user_session_path({ method: :delete }) do %>
+            <i class="fa fa-fw fa-sign-out"></i>&nbsp;&nbsp;
+            Sign out
+          <% end %>
         </li>
 
       </ul>
     </li>
 
   <% end %>
+  
 </ul>

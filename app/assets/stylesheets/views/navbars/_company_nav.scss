@@ -19,95 +19,81 @@
     display: flex;
     align-items: center;
   }
-
   li {
     position: relative;
   }
+}
 
-  #workflow-tabs {
-    margin-bottom: 0;
-    font-size: 16px;
-    li.active {
-      a {
-        color: #0095ff; // #d74b4b;  // #4885ed;
-        font-weight: bold;
-        border: transparent;
-        border-bottom: 1px solid #0095ff; //#d74b4b;  // #4885ed;
-      }
-      a:hover, a:focus {
-        color: #0095ff; // #d74b4b;  // #4885ed;
-        border-bottom: 1px solid #0095ff; //  #d74b4b;  // #4885ed;
-      }
+#workflow-tabs {
+  margin-bottom: 0;
+  font-size: 16px;
+  li.active {
+    a {
+      color: #0095ff; // #d74b4b;  // #4885ed;
+      font-weight: bold;
+      border: transparent;
+      border-bottom: 1px solid #0095ff; //#d74b4b;  // #4885ed;
     }
-    li {
-      a {
-        text-decoration: none;
-        // display: block;
-        background-color: #ffffff;
-        // margin: 0;
-        font-family: 'Lato';
-        color: #666;
-        font-weight: 400;
-        padding: 12px 12px;
-        letter-spacing: normal;
-        border: 0;  // overrides bootstrap
-      }
-      a:hover, a:focus {
-        background-color: #ffffff;
+    a:hover, a:focus {
+      color: #0095ff; // #d74b4b;  // #4885ed;
+      border-bottom: 1px solid #0095ff; //  #d74b4b;  // #4885ed;
+    }
+  }
+  li {
+    a {
+      text-decoration: none;
+      // display: block;
+      background-color: #ffffff;
+      // margin: 0;
+      font-family: 'Lato';
+      color: #666;
+      font-weight: 400;
+      padding: 12px 12px;
+      letter-spacing: normal;
+      border: 0;  // overrides bootstrap
+    }
+    a:hover, a:focus {
+      background-color: #ffffff;
+      color: #222;
+      // font-weight: bold;
+      border-color: transparent;
+    }
+  }
+}
+
+#company-nav-tabs {
+  margin: 0;
+  border-bottom: 1px solid transparent;
+  li.dropdown {
+    a { 
+      border: 0; 
+    }
+    a.dropdown-toggle {
+      font-size: 16px;
+      padding: 12px 14px;
+      &:hover, &:focus {
+        background-color: #fff;
         color: #222;
-        // font-weight: bold;
-        border-color: transparent;
+        // border-color: transparent;
       }
     }
-  }
-
-  #company-nav-tabs {
-    margin: 0;
-    border-bottom: 1px solid transparent;
-    li.dropdown {
-      a { border: 0; }
+    &.active > a,
+    &.active > a:hover,
+    &.active > a:focus {
+      color: #0095ff;
+    }
+    &.open:not(.active) {
       a.dropdown-toggle {
-        font-size: 16px;
-        padding: 12px 14px;
-        &:hover, &:focus {
-          background-color: #ffffff;
-          color: #222;
-          // border-color: transparent;
-        }
+        background-color: #fff;  // this prevents background color flicker when closing the dropdown
+        color: #222;
       }
-      &.open {
-        > a {
-          background-color: #fff;
-          color: #333;
-          border-top: transparent;
-          border-right: transparent;
-          border-left: transparent;
-          border-bottom: 1px solid #0095ff; // #d74b4b;  // #4885ed;
-        }
-        // remove the caret from dropdown
-        .dropdown-menu::after, .dropdown-menu::before {
-          display:none;
-        }
-      }
-      ul.dropdown-menu {
-        top: 104%;
-        border-color: #f2f2f2;
-        border-top-right-radius: 0;
-        border-top-left-radius: 0;
-        li {
-          a {
-            color: #666;
-            font-size: 13px;
-            padding: 6px 12px;
-            border-radius: 4px;
-          }
-          a:hover, a:focus {
-            color: #333;
-            background-color: #f2f2f2;
-          }
-        }
-      }
+      // remove the caret from dropdown
+      // .dropdown-menu::after, .dropdown-menu::before {
+      //   display:none;
+      // }
+    }
+    ul.dropdown-menu {
+      top: 95%;
     }
   }
-
 }
