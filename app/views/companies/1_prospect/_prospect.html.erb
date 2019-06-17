@@ -1,8 +1,7 @@
-
-<div id='prospect' role='tabpanel'
+<div id="prospect" role="tabpanel"
     class="tab-pane fade <%= workflow_stage == 'prospect' ? 'active in' : '' %>">
 
-  <div class='container clip'>
+  <div class="container">
 
     <div class="layout layout-main-right layout-stack-sm">
       <div class="col-md-3 col-sm-4 layout-sidebar">
@@ -13,9 +12,6 @@
             <a href="#successes" data-toggle="tab">
               <i class="fa fa-rocket"></i>
               &nbsp;&nbsp;Customer Wins
-            <!--   <span class='pull-right'>
-                <i class='fa fa-spinner fa-pulse' style='color:#666'></i>
-              </span> -->
             </a>
           </li>
 
@@ -23,9 +19,6 @@
             <a href="#prospect-contributors" data-toggle="tab">
               <i class="fa fa-users"></i>
               &nbsp;&nbsp;Contributors
-              <!-- <span class='pull-right'>
-                <i class='fa fa-spinner fa-pulse' style='color:#666'></i>
-              </span> -->
             </a>
           </li>
 
@@ -37,12 +30,14 @@
 
         <div class="tab-content stacked-content">
 
-          <div id='successes'
-              class="tab-pane fade <%= tab == '#successes' ? 'active in' : ''%>">
-            <%= render 'companies/1_prospect/successes/successes_table', { company: company } %>
+          <div id="successes" class="tab-pane fade <%= tab == '#successes' ? 'active in' : ''%>">
+            <%= render(
+                  'companies/1_prospect/successes/successes_table',
+                  { company: company } 
+                ) %>
           </div>
 
-          <div id='prospect-contributors'
+          <div id="prospect-contributors"
               class="tab-pane fade <%= tab == '#prospect-contributors' ? 'active in' : ''%>">
             <%= render 'companies/1_prospect/contributors/contributors_table',
                     { company: company, workflow_stage: 'prospect' } %>

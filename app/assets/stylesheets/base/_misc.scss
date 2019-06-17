@@ -46,14 +46,6 @@ hr {
   border-top: 1px solid #dfdfdf;
 }
 
-// this gets rid of the vertical portion of the first tab for views
-// that employ the mvp tabbed content layout
-.container.clip {
-  margin-top: 30px;
-  overflow: hidden;
-  padding-bottom: 100px;  // this leaves room for dropdowns in Crowdsource
-}
-
 .alert-success {
 //   background-color: #4d8664 !important;
 //   border-color: #45715a !important;
