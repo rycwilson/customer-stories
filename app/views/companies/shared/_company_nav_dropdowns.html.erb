@@ -17,31 +17,31 @@
             Company Profile
           </a>
         </li>
-        <li role="separator" class="divider"></li>
+        <%# <li role="separator" class="divider"></li> %>
         <li>
           <a href='/settings#crowdsource'>
             <i class="fa fa-fw fa-users"></i>&nbsp;&nbsp;
             Crowdsource Settings
           </a>
         </li>
-        <li role="separator" class="divider"></li>
+        <%# <li role="separator" class="divider"></li> %>
         <li>
           <a href='/settings#tags'>
             <i class="fa fa-fw fa-tags"></i>&nbsp;&nbsp;
             Story Tags
           </a>
         </li>
-        <li role="separator" class="divider"></li>
+        <%# <li role="separator" class="divider"></li> %>
         <li>
           <a href='/settings#ctas'>
             <i class="fa fa-fw fa-hand-pointer-o"></i>&nbsp;&nbsp;
             Link &amp Form CTAs
           </a>
         </li>
-        <li role="separator" class="divider"></li>
+        <%# <li role="separator" class="divider"></li> %>
         <li>
           <a href='/settings#plugins'>
-            <i class='fa fa-fw fa-plug' style='font-size:15px; top:2px; margin-left:2px'></i>&nbsp;&nbsp;
+            <i class='fa fa-fw fa-plug'></i>&nbsp;&nbsp;
             Stories Plugin
           </a>
         </li>
@@ -83,7 +83,7 @@
             <% end %>
           </li>
         <% end %>
-        <li role="separator" class="divider"></li>
+        <%# <li role="separator" class="divider"></li> %>
         <li>
           <%= link_to destroy_user_session_path({ method: :delete }) do %>
             <i class="fa fa-fw fa-sign-out"></i>&nbsp;&nbsp;
