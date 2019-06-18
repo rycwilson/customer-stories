@@ -8,16 +8,16 @@
 
 // example of bolding items without affecting spacing: http://jsfiddle.net/85LbG/
 #company-nav {
-  position: relative;
-  height: 48px;
-  margin-bottom: 30px;
+  // position: relative;
+  // height: 50px;
+  margin-bottom: 40px;
   background-color: #fff;
   border-bottom: 1px solid #dfdfdf;
   // box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.16), 0 0 1px -1px rgba(0, 0, 0, 0.08);
   .row {
-    height: 48px;
-    display: flex;
-    align-items: center;
+    // height: 100%;
+    // display: flex;
+    // align-items: center;
   }
   li {
     // position: relative;
@@ -25,61 +25,71 @@
 }
 
 #workflow-tabs {
-  margin-bottom: 0;
   font-size: 16px;
-  li.active {
-    a, a:hover, a:focus {
-      color: #0095ff; // #d74b4b;  // #4885ed;
-      font-weight: bold;
-      border: transparent;
-      border-bottom: 1px solid #0095ff; //#d74b4b;  // #4885ed;
-    }
+
+  // hard-coded widths prevent width from changing when text is bolded 
+  // (the trick outlined here didn't work: http://jsfiddle.net/85LbG/)
+  li:nth-of-type(1) {
+    width: 102px
+  }
+  li:nth-of-type(2) {
+    width: 89px
+  }
+  li:nth-of-type(3) {
+    width: 101px;
+  }
+  li:nth-of-type(4) {
+    width: 101px;
   }
   li {
     a {
-      text-decoration: none;
-      // display: block;
-      background-color: #ffffff;
-      // margin: 0;
+      background-color: #fff;
       font-family: 'Lato';
       color: #666;
       font-weight: 400;
       padding: 12px 16px;
       letter-spacing: normal;
-      border: 0;  // overrides bootstrap
+      border: 2px solid transparent;
+      &:hover, &:focus {
+        background-color: #fff;
+        color: #222;
+        border-color: transparent;
+      }
     }
-    a:hover, a:focus {
-      background-color: #ffffff;
-      color: #222;
-      // font-weight: bold;
-      border-color: transparent;
+    &.active {
+      a, a:hover, a:focus {
+        color: #0095ff; // #d74b4b;  // #4885ed;
+        font-weight: bold;
+        // border: transparent;
+        border-bottom: 2px solid #0095ff; //#d74b4b;  // #4885ed;
+      }
     }
+    
   }
 }
 
 #company-nav-tabs {
-  margin: 0;
-  border-bottom: 1px solid transparent;
+  border: 0;
   li.dropdown {
-    a { 
-      border: 0; 
-    }
-    a.dropdown-toggle {
+    > a {
       font-size: 16px;
       padding: 12px 14px;
+      border: 2px solid transparent;
       &:hover, &:focus {
-        background-color: #fff;
         color: #222;
-        // border-color: transparent;
+        background-color: transparent;
+        border-color: transparent;
       }
     }
-    &.active > a,
-    &.active > a:hover,
-    &.active > a:focus {
-      color: #0095ff;
+    &.active {
+      > a, > a:hover, > a:focus {
+        color: #0095ff;
+        border-color: transparent;
+        border-bottom: 2px solid #0095ff;
+      }
     }
     &.open:not(.active) {
-      a.dropdown-toggle {
+      > a {
         background-color: #fff;  // this prevents background color flicker when closing the dropdown
         color: #222;
       }

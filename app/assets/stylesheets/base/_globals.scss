@@ -29,8 +29,6 @@ a {
   }
 }
 
-
-
 // .nav-tabs .dropdown-menu {
 //   border-radius: 3px;
 // }
@@ -42,12 +40,14 @@ ul.dropdown-menu {
     a {
       font-size: 13px;
       padding: 12px 14px 12px 12px;
-      border-radius: 0; // 3px;
+      border-radius: 0; 
+      color: #555;
+      &:hover, &:focus {
+        color: #222; 
+        background-color: #efefef;
+      }
     }
-    a:hover, a:focus {
-      color: #fff; //  #333;
-      background-color: #0095ff; //  #f2f2f2;
-    }
+    
   }
 }
 
