@@ -29,12 +29,12 @@ a {
   }
 }
 
-.btn-secondary {
-  border: 2px solid #0095ff; //  #07c;
-  color: #0095ff; // #07c;
-  font-weight: 600;
+.btn.btn-secondary {
+  border: 1px solid #0095ff;
+  color: #0095ff;
+  line-height: 1.8em;
   &:hover {
-    // background-color: #e5ffff;
+    background-color: #efffff;
     border-color: #007ce6;
     color: #007ce6;
   }
