@@ -30,13 +30,13 @@ a {
 }
 
 .btn.btn-secondary {
-  border: 1px solid #0095ff;
-  color: #0095ff;
-  line-height: 1.8em;
+  border: 1px solid #0079d3;
+  color: #0079d3;
+  // line-height: 1.8em;
   &:hover {
-    background-color: #efffff;
-    border-color: #007ce6;
-    color: #007ce6;
+    // background-color: #efffff;
+    border-color: #0079d3;
+    color: #0079d3;
   }
 }
 

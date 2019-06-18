@@ -23,7 +23,7 @@ body.stories.show {
 .btn-success[disabled]:active, .btn-success.disabled:active,
 .btn-success[disabled]:active:hover, .btn-success.disabled:active:hover,
 .btn-success[disabled]:active:focus, .btn-success.disabled:active:focus {
-  background-color: #0095ff; // #4d8664;
+  background-color: #08f; // #0095ff; // #4d8664;
   border-color: #07c; // #45715a;
   text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.2);
   box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.15), 0 1px 1px rgba(0, 0, 0, 0.075);
@@ -32,7 +32,7 @@ body.stories.show {
 // .note-link-btn is summernote dialog
 .btn-success:hover, .btn-success:focus, .btn-success:active,
 .btn-success:active:hover, .btn-success:active:focus {
-  background-color: #007ed9; // #456f59;
+  background-color: #006fe6; //  #007ed9; // #456f59;
   border-color: #07c;  // #395f4e;
 }
 

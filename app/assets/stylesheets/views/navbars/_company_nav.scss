@@ -57,10 +57,10 @@
     }
     &.active {
       a, a:hover, a:focus {
-        color: #0079d3; // #0095ff; // #d74b4b;  // #4885ed;
+        color: #08f; // #0095ff; // #d74b4b;  // #4885ed;
         font-weight: bold;
         // border: transparent;
-        border-bottom: 2px solid #0079d3; // #0095ff; //#d74b4b;  // #4885ed;
+        border-bottom: 2px solid #08f; // #0095ff; //#d74b4b;  // #4885ed;
       }
     }
     
@@ -82,9 +82,9 @@
     }
     &.active {
       > a, > a:hover, > a:focus {
-        color: #0079d3; // #0095ff;
+        color: #08f; // #0095ff;
         border-color: transparent;
-        border-bottom: 2px solid #0079d3; // #0095ff;
+        border-bottom: 2px solid #08f; // #0095ff;
       }
     }
     &.open:not(.active) {
