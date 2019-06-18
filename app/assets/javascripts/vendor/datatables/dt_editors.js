@@ -25,7 +25,7 @@ function newPromotedStoriesEditor() {
         };
       },
       success: function () {
-        // console.log('editor success')
+        console.log('editor success')
       }
     },
     idSrc: 'id',
@@ -47,9 +47,9 @@ function openPromotedStoriesEditor (promotedStoriesEditor, $row) {
     { // default options: https://editor.datatables.net/reference/option/formOptions.inline
       submit: 'all',
       onComplete: function (editor) {
-        // console.log('onComplete')
+        console.log('onComplete')
       },
-      drawType: 'none',
+      drawType: 'none', 
       // buttons are in reverse order of how they're diplayed because they both have float:right
       buttons: [
         {

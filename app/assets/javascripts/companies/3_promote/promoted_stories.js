@@ -168,4 +168,15 @@ function promotedStoriesListeners () {
       }
     })
 
+    .on('click', '#promoted-stories-table .flash button.close', function () {
+      var $row = $(this).closest('tr');
+      $('#promoted-stories-table').DataTable().row($row).invalidate().draw();
+      $row.attr('data-submitted', '')
+          .find('td.flash > div')
+            .removeClass('alert alert-danger')
+            .end()
+          .children()
+            .toggle();
+    })
+
 }

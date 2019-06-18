@@ -101,7 +101,10 @@ function initPromotedStoriesTable () {
       // add a flash message container
       $row.prepend(
         '<td colspan="4" class="flash">' +
-          '<div>Sorry, there was an error when updating the Promoted Story</div>' +
+          '<div style="position:relative">' +
+            '<button style="position: absolute; top: 0; right: 7px; font-size: 30px; cursor: pointer" type="button" class="close" aria-label="Close"><span aria-hidden="true">&times;</span></button>' +
+            '<span>Sorry, there was an error when updating the Promoted Story. Please contact</span>&nbsp;<a href="mailto:support@customerstories.net?subject=Error when updating a Promoted Story">support@customerstories.net</a>' + 
+          '</div>' +
         '</td>'
       )
     },
@@ -171,12 +174,13 @@ function initPromotedStoriesTable () {
             });
           },
           updateRow = function (dt, $row, promotedStory) {
-            dt.row($row).data(promotedStory);  // .draw();
+            //dt.row($row).invalidate().draw('data');  
+            //dt.row($row).data(promotedStory);
             addClickBlockers($row);
             initStatusSwitch($row);  // this will take care of tooltip
             $row.find('td.promoted-story-title')
                   .addClass('form-is-clean')
-                  .removeClass('editor-open')  // this doesn't work when it's done by the close event after submission
+                  .removeClass('editor-is-open')  // this doesn't work when it's done by the close event after submission
                   .end()
                 .attr('data-submitted', '');
           },
@@ -186,32 +190,25 @@ function initPromotedStoriesTable () {
             })
           },
           editorFlash = function ($row, res, promotedStory) {
-            // console.log(res.error)
             if (res.errors) {
-              $row.children().toggle().end()
-                  .find('td.flash > div')
-                  .addClass('alert alert-danger')
-                  .text(res.errors);
-              setTimeout(function () {
-                $row.find('td.flash > div')
-                      .empty()
-                      .removeClass('alert alert-danger')
-                      .end()
-                    .children().toggle();
-              }, 2500);
+              $row.find('td.flash > div')
+                    .addClass('alert alert-danger')
+                    .end()
+                  .children()
+                    .toggle();
 
             } else {
               $row.find('td.promoted-story-title')
-                  .addClass('alert alert-success')
-                  .html(
-                    '<i class="fa fa-fw fa-check"></i>&nbsp&nbsp;' +
-                    '<span>Updated</span>'
-                  )
+                    .addClass('alert alert-success')
+                    .html(
+                      '<i class="fa fa-fw fa-check"></i>&nbsp&nbsp;' +
+                      '<span>Updated</span>'
+                    )
               setTimeout(function () {
                 $row.find('td.promoted-story-title')
-                    .empty()
-                    .removeClass('alert alert-success')
-                    .text(promotedStory.ads_long_headline)
+                      .empty()
+                      .removeClass('alert alert-success')
+                      .text(promotedStory.ads_long_headline)
               }, 2500)
             }
           };
@@ -222,13 +219,13 @@ function initPromotedStoriesTable () {
       initEditorFlash();
       promotedStoriesEditor = newPromotedStoriesEditor();
       promotedStoriesEditor.on('open', function (e) {
-        $('.DTE').closest('td').addClass('editor-open');
+        $('.DTE').closest('td').addClass('editor-is-open');
         $('#DTE_Field_long_headline').attr('maxlength', '<%= RESPONSIVE_AD_LONG_HEADLINE_MAX.to_s %>');
         $('.DTE_Form_Buttons')
           .prepend('<span class="help-block">' + storyTitleRequirements + '</span>');
       });
       promotedStoriesEditor.on('close', function (e) {
-        $('#promoted-stories-table').find('td.editor-open').removeClass('editor-open');
+        $('#promoted-stories-table').find('td.editor-is-open').removeClass('editor-is-open');
       });
       promotedStoriesEditor.on('preSubmit', function (e, data, action) {
         // console.log('preSubmit')
@@ -240,6 +237,7 @@ function initPromotedStoriesTable () {
       });
       promotedStoriesEditor.on('submitComplete', function (e, res, promotedStory, action) {
         // console.log('submitComplete')
+        console.log('promotedStory', promotedStory)
         // this.close();  => apparently happens automatically
         var $table = $(this.s.table),
             dt = $table.DataTable(),

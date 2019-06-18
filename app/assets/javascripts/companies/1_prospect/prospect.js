@@ -85,7 +85,7 @@ function prospectListeners () {
         editor = curateContributorsEditor;
       }
       editor.one('close', function () {
-        $td.removeClass('editor-open');
+        $td.removeClass('editor-is-open');
       });
     })
 
@@ -100,7 +100,7 @@ function prospectListeners () {
       // don't allow template change if request already sent (or re-sent)
       // (see createdRow property of datatables config)
       if ( $(this).hasClass('disabled') ) { return false; }
-      $(this).addClass('editor-open');  // styling adjustment
+      $(this).addClass('editor-is-open');  // styling adjustment
       if (workflowStage === 'prospect') {
         openContributorsEditor(prospectContributorsEditor, $row);
       } else {
