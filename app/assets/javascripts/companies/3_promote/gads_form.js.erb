@@ -164,8 +164,49 @@ function promoteSettingsListeners () {
           handleS3Upload($imageCard);
           return true;
         }
-      };
+      },
+      /*submitForm = function ($form, $submitBtn) {
+        if ($submitBtn.is(':not(.btn-remove)')) toggleFormWorking($form, $submitBtn);
+        //$form.submit();
+        console.log('submit form')
+      }, */
+      confirmImageRemoval = function ($imageCard, affectedStories) {
 
+        bootbox.confirm({
+          className: 'confirm-ad-image-removal',
+          closeButton: false,
+          title: '<i class="fa fa-warning"></i>\xa0\xa0\xa0<span>Are you sure?</span>',
+          message: '<p>The selected image is utilized in the following Promoted Stories. Removing it will result in the image being replaced by the current default image of its type (square or landscape). The Promoted Stories will update and continue in their current state with no further action required.</p>' +
+                   '<ul style="margin: 25px 0">' + 
+                     affectedStories.reduce(function (listItems, storyTitle) { 
+                      return listItems + '<li>' + storyTitle + '</li>'; 
+                     }, '') +
+                   '</ul>',
+          buttons: {
+            confirm: {
+              label: 'Remove & Replace',
+              className: 'btn-primary',
+              callback: function () {
+                console.log($(this))
+              }
+            },
+            cancel: {
+              label: 'Cancel',
+              className: 'btn-default'
+            }
+          },
+          callback: function (confirmRemoval) {
+            if (confirmRemoval) {
+              $(this).find('[data-bb-handler="confirm"]')
+                       .css('width', $(this).find('[data-bb-handler="confirm"]').css('width'))
+                       .html('<i class="fa fa-spin fa-circle-o-notch"></i>')
+              $imageCard.find('.btn-remove').trigger('click');
+              return false;  // don't close the modal yet, wait for server response
+            }
+          }
+        });
+      };
+            
   $(document)
 
     .on('input', '[name="company[adwords_short_headline]"]', function () {
@@ -254,9 +295,41 @@ function promoteSettingsListeners () {
      */
     .on('click', '.ad-image-card .remove-image', function () {
       // console.log('remove image')
-      $(this).closest('.ad-image-card')
-             .find('input:checkbox[name*="_destroy"]').prop('checked', true).end()
-             .find('.form-group').addClass('to-be-removed');
+      var $imageCard = $(this).closest('.ad-image-card'),
+          dt = $('#promoted-stories-table').DataTable(),
+          imageToRemove = { 
+                            id: $imageCard.find('[name*="[id]"]').val(),
+                            type: $imageCard.find('[name*="[type]"]').val()
+                          },
+          affectedStories = (function () {
+            if (['SquareImage', 'LandscapeImage'].includes(imageToRemove.type)) {
+              return dt.rows(function (index, data, node) {
+                return data.ads_images.some(function (image) {
+                    return image.id == imageToRemove.id;
+                  }) &&
+
+                  // only need to update ads if this is the only required image of its type
+                  data.ads_images.filter(function (image) {
+                    return image.type === imageToRemove.type;
+                  }).length === 1;
+              }).data().toArray().map(function (row) { return row.ads_long_headline; });  
+            } else {
+              return [];
+            }
+          }());
+      if (affectedStories.length) {
+        confirmImageRemoval($imageCard, affectedStories);
+      } else {
+        $imageCard.find('input:checkbox[name*="_destroy"]')
+                    .prop('checked', true)
+                    .end()
+                  .find('.form-group').addClass('to-be-removed');
+      }
+    })
+
+    .on('click', '.bootbox.confirm-ad-image-removal [data-bb-handler="confirm"]', function () {
+      console.log('hello?')
+      console.log($(this));
     })
 
     /**
@@ -320,11 +393,8 @@ function promoteSettingsListeners () {
           },
           isCompanyInput = function (index, input) {
             return input.name.match(/company\[\w+\]/);
-          },
-          submitForm = function () {
-            if ($submitBtn.is(':not(.btn-remove)')) toggleFormWorking($form, $submitBtn);
-            $form.submit();
           };
+          
 
       if ($imageCard && $imageCard.is('.gads-default') && $formGroup.is('.to-be-added')) {
         $imageCard.find('input:hidden[name*="[id]"]').val('');
@@ -332,7 +402,11 @@ function promoteSettingsListeners () {
 
       $form.find('input').filter(isCompanyInput).each(disableInactiveInput);
       // console.log('form inputs', decodeURIComponent($form.serialize()).split('&'))
-      submitForm();
+
+      if ($submitBtn.is(':not(.btn-remove)')) toggleFormWorking($form, $submitBtn);
+
+      /*$form.submit();*/
+      console.log('submit')
 
       if ($formGroup.is('.to-be-removed')) $imageCard.remove();
 

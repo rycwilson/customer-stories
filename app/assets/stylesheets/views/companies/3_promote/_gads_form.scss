@@ -366,3 +366,21 @@
 
 
 }
+
+.bootbox.modal.confirm-ad-image-removal {
+  .modal-content {
+    overflow: hidden;  // so background color doesn't extend past border radius
+  }
+  .modal-header {
+    background-color: #f2dede; //  #fcf8e3;
+    border-color: #ebccd1; //  #faebcc;
+    color: #a94442; //  #8a6d3b;
+    font-size: 16px;
+  }
+  .modal-footer {
+    background-color: #f9f9f9;
+  }
+  .modal-body {
+    
+  }
+}

@@ -1,20 +1,20 @@
 
 (function () {
 
-  var resData = <%= raw @response_data.to_json %>,
+  var res = <%= raw @response_data.to_json %>,
       errors = <%= raw @errors.to_json %>,
       $form = $('#gads-form'),
       $submitBtn = $form.find('button[type="submit"][data-submitted="true"]'),
       $formGroup = $submitBtn.closest('.form-group'),
       $thisList = $formGroup.closest('ul'),
-      imageType = (resData.newImage || resData.swappedDefaultImage) &&
-                  (resData.newImage || resData.swappedDefaultImage).type,
+      imageType = (res.newImage || res.swappedDefaultImage) &&
+                  (res.newImage || res.swappedDefaultImage).type,
       $defaultImageCard = imageType && $('.gads-default').has('input[name*="[type]"][value="' + imageType + '"]'),
-      $swappedImageCard = resData.swappedDefaultImage && $formGroup.closest('.ad-image-card'),
+      $swappedImageCard = res.swappedDefaultImage && $formGroup.closest('.ad-image-card'),
       $modal = $('#ads-images-modal'),
-      modalImageTemplate = resData.newImage && (
-        '<li class="' + resData.imageClassName + '" data-image-id="' + resData.newImage.id + '">' +
-          '<img src="' + resData.newImage.image_url + '" alt="marketing image">' +
+      modalImageTemplate = res.newImage && (
+        '<li class="' + res.imageClassName + '" data-image-id="' + res.newImage.id + '">' +
+          '<img src="' + res.newImage.image_url + '" alt="marketing image">' +
           '<div class="check">' +
             '<div>' +
               '<div></div>' +
@@ -81,7 +81,7 @@
       };
 
   console.log('errors', errors)
-  console.log('resData', resData)
+  console.log('res', res)
 
   if (errors) {
     errors = customizeErrorMessages(errors);
@@ -93,8 +93,8 @@
    *  scenarios 1, 2: new image without a previous default
    *  => behavior is same whether (1) uploaded as default or (2) uploaded to the list
    */
-  if (resData.newImage && !resData.prevDefaultImage) {
-    updateImageCard($formGroup.closest('.ad-image-card'), resData.newImage);
+  if (res.newImage && !res.prevDefaultImage) {
+    updateImageCard($formGroup.closest('.ad-image-card'), res.newImage);
     toggleFormDone($form, true, function () {
         $formGroup.removeClass('to-be-added');
       }, $submitBtn);
@@ -104,35 +104,35 @@
    *  3: new image uploaded to the list and swapped in
    *  4: new image uploaded directly over previous
    */
-  } else if (resData.newImage && resData.prevDefaultImage) {
-    if (resData.swappedDefaultImage) {
+  } else if (res.newImage && res.prevDefaultImage) {
+    if (res.swappedDefaultImage) {
       $swappedImageCard.remove();
-      updateImageCard($defaultImageCard, resData.swappedDefaultImage);
+      updateImageCard($defaultImageCard, res.swappedDefaultImage);
       $form.attr('data-submitted', '');
     } else {
-      updateImageCard($defaultImageCard, resData.newImage);
+      updateImageCard($defaultImageCard, res.newImage);
       toggleFormDone($form, true, function () {
           $formGroup.removeClass('to-be-added');
         }, $submitBtn);
     }
     $defaultImageCard[0].scrollIntoView({ block: 'center', behavior: 'smooth' });
-    movePrevDefaultToList(resData.prevDefaultImage);
+    movePrevDefaultToList(res.prevDefaultImage);
 
   /**
    *  scenario 5: existing image swapped in as new default
    */
-  } else if (!resData.newImage && resData.swappedDefaultImage) {
+  } else if (!res.newImage && res.swappedDefaultImage) {
     $swappedImageCard.remove();
-    updateImageCard($defaultImageCard, resData.swappedDefaultImage);
+    updateImageCard($defaultImageCard, res.swappedDefaultImage);
     $defaultImageCard[0].scrollIntoView({ block: 'center', behavior: 'smooth' });
-    if (resData.prevDefaultImage) movePrevDefaultToList(resData.prevDefaultImage);
+    if (res.prevDefaultImage) movePrevDefaultToList(res.prevDefaultImage);
     $form.attr('data-submitted', '');
 
   /**
    *  removed image
    */
-  } else if (resData.removedImageId) {
-    $modal.find('li[data-image-id="' + resData.removedImageId + '"]').remove();
+  } else if (res.removedImageId) {
+    $modal.find('li[data-image-id="' + res.removedImageId + '"]').remove();
     $form.attr('data-submitted', '');
     // TODO update any stories affected by removed image
 
@@ -143,16 +143,28 @@
         }, $submitBtn);
   }
 
-
+  /**
+   *  images with user-confirmed removal
+   */
+  if ($('.bootbox.confirm-ad-image-removal').length) {
+    $('.bootbox.confirm-ad-image-removal').one('hidden.bs.modal', function () {
+      $('.ad-image-card').has('[name*="[id]"][value="' + removedImageId + '"]')
+                           .remove();
+    });
+    $('.bootbox.confirm-ad-image-removal').modal('hide');
+  }
 
   /**
    *  cleanup
    */
   reEnableAllInputs();
-  if (resData.newImage && resData.newImage.type.includes('Image')) {
+  if (res.newImage && res.newImage.type.includes('Image')) {
     $modal.find('ul.marketing').append(modalImageTemplate);
-  } else if (resData.newImage && resData.newImage.type.includes('Logo')) {
+  } else if (res.newImage && res.newImage.type.includes('Logo')) {
     $modal.find('ul.logos').append(modalImageTemplate);
   }
+
+  
+
 
 }());
