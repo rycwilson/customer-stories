@@ -7,7 +7,7 @@
 .layout-sidebar {
   // height: 100vh;
   // padding: 25px 30px 15px 15px;
-  background-color: #efefef;
+  // background-color: #efefef;
   // box-shadow: inset -8px 0 15px -10px rgba(0, 0, 0, 0.2);
   // border: 1px solid #ddd;
   .nav {
@@ -20,7 +20,8 @@
         margin-right: -15px;
         height: 58px;
         font-family: 'Lato';
-        border-left: 2px solid #efefef;
+        // border-left: 2px solid #efefef;
+        border-right: 2px solid #efefef;
         font-size: 14px;
         color: #666;
         i {
@@ -29,18 +30,20 @@
         }
         &:hover, &:focus {
           background-color: #e5e5e5;
-          border-left: 2px solid #e5e5e5;
+          // border-left: 2px solid #e5e5e5;
+          border-right: 2px solid #e5e5e5;
           color: #222;
         }
       }
       &.active {
         // margin-right: 0;
         > a, a:hover, a:focus {
-          border-left: 2px solid #08f; // #0095ff;
+          // border-left: 2px solid #08f; // #0095ff;
+          border-right: 2px solid #08f; // #0095ff;
           // border-right-color: transparent; 
           color: #08f; // #0095ff;
           font-weight: 600;
-          background-color: #e5e5e5;
+          background-color: #efefef;
         }
       }
     }
