@@ -166,7 +166,7 @@ class AdwordsAd < ApplicationRecord
 
 
   def remove_gad
-    GoogleAds::remove_ad(self.ad_group.ad_group_id, self.ad_id)
+    GoogleAds::remove_ads([ { ad_group_id: self.ad_group.ad_group_id, ad_id: self.ad_id } ])
   end
 
   def assign_defaults

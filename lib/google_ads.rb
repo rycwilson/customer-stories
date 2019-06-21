@@ -182,62 +182,25 @@ module GoogleAds
       updated_gad
     end
 
-    # this could potentially be a google ad that's not structured like a csp ad
-    # => ad.ad_group.ad_group_id will be meaningless in that context
-    # => so use a compatible argument signature
-    def remove_ad(ad_group_id, ad_id)
-      return nil if ad_group_id.blank? || ad_id.blank?
-      service = create_api.service(:AdGroupAdService, API_VERSION)
-      operation = {
-        operator: 'REMOVE',
-        operand: {
-          ad_group_id: ad_group_id,
-          ad: {
-            xsi_type: 'MultiAssetResponsiveDisplayAd',
-            id: ad_id
-          }
-        }
-      }
-      removed_gad = { ad_id: ad_id }
-      begin
-        response = service.mutate([operation])
-        puts "***\n*** Removed responsive display ad #{ ad_id }\n***"
-
-      # Authorization error
-      rescue AdsCommon::Errors::OAuth2VerificationRequired => e
-      # HTTP errors
-      rescue AdsCommon::Errors::HttpError => e
-
-      # API errors
-      rescue AdwordsApi::Errors::ApiException => e
-        removed_gad[:errors] = e.errors.map do |error|
-          {
-            type: error[:error_string].split('.').last,
-            field: error[:field_path].split('.').last
-          }
-        end
-        puts "***\n*** Failed to remove responsive display ad #{ ad_id }\n***"
-        awesome_print(removed_gad[:errors])
-      rescue AdsCommon::Errors::ApiException => e
-        removed_gad[:errors] = e.message
-        puts e.message
-        puts "***\n*** Failed to remove responsive display ad #{ ad_id }\n***"
-      end
-      removed_gad
-    end
-
-    # ads = [ { ad_group_id: 1, ad_id: 1 }, ... ]
     def remove_ads(ads)
+      # ads.delete_if { |ad| (ad.values & ['', nil]).present? }
       service = create_api.service(:AdGroupAdService, API_VERSION)
       operations = ads.map do |ad|
         ad_group_ad = {
           ad_group_id: ad[:ad_group_id],
-          ad: { id: ad[:ad_id] },
+          ad: { 
+            id: ad[:ad_id],
+            # xsi_type: 'MultiAssetResponsiveDisplayAd'
+          },
         }
-        ad_group_operation = { operator: 'REMOVE', operand: ad_group_ad }
+        ad_group_operation = { 
+          operator: 'REMOVE', 
+          operand: ad_group_ad 
+        }
       end
       begin
-        response = service.mutate(operations)
+        result = service.mutate(operations)
+
       # Authorization error.
       rescue AdsCommon::Errors::OAuth2VerificationRequired => e
       # HTTP errors.
@@ -246,22 +209,21 @@ module GoogleAds
         # flash[:alert] = Rails.env.development? ? "HTTP error: #{e}" : 'Error removing Promoted Story'
       # API errors.
       rescue AdwordsApi::Errors::ApiException => e
-        puts "Message: %s" % e.message
-        puts 'Errors:'
-        e.errors.each_with_index do |error, index|
-          puts "\tError [%d]:" % (index + 1)
-          error.each do |field, value|
-            puts "\t\t%s: %s" % [field, value]
-          end
-        end
+        # removed_gad[:errors] = e.errors.map do |error|
+        #   {
+        #     type: error[:error_string].split('.').last,
+        #     field: error[:field_path].split('.').last
+        #   }
+        # end
+        # puts "***\n*** Failed to remove responsive display ad #{ ad_id }\n***"
+        # awesome_print(removed_gad[:errors])
+      rescue AdsCommon::Errors::ApiException => e
+        # removed_gad[:errors] = e.message
+        # puts e.message
+        # puts "***\n*** Failed to remove responsive display ad #{ ad_id }\n***"
       end
-
-      if response and response[:value]
-        ad = response[:value].first
-        puts "Ad ID %d was successfully removed." % ad[:ad][:id]
-      else
-        puts 'No ads were removed.'
-      end
+      puts "***\n*** Removed these ad(s):\n***"
+      awesome_print(result[:value].map { |ad| ad[:ad][:id] }) if result[:value].present?
     end
 
     def create_campaigns(company_subdomain)
