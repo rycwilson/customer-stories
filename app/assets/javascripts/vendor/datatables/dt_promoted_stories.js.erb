@@ -230,7 +230,12 @@ function initPromotedStoriesTable () {
       promotedStoriesEditor.on('preSubmit', function (e, data, action) {
         // console.log('preSubmit')
         if ($('.DTE_Inline').closest('td').hasClass('form-is-clean')) return false;
-        $('.DTE_Inline').closest('tr').attr('data-submitted', true);
+        $('.DTE_Inline').closest('tr')
+                          .attr('data-submitted', true)
+                          .end()
+                        .find('.DTE_Form_Buttons button:nth-of-type(1)')
+                          .find('span, .fa-spin')
+                          .toggle();
       });
       promotedStoriesEditor.on('postEdit', function (e, data, rowData) {
         // console.log('postEdit')

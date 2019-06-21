@@ -47,7 +47,7 @@ function openPromotedStoriesEditor (promotedStoriesEditor, $row) {
     { // default options: https://editor.datatables.net/reference/option/formOptions.inline
       submit: 'all',
       onComplete: function (editor) {
-        console.log('onComplete')
+        // console.log('onComplete')
       },
       drawType: 'none', 
       // buttons are in reverse order of how they're diplayed because they both have float:right
@@ -55,6 +55,7 @@ function openPromotedStoriesEditor (promotedStoriesEditor, $row) {
         {
           label: '<span>Save</span><i class="fa fa-spin fa-circle-o-notch" style="display:none"></i>',
           className: 'btn btn-sm btn-success disabled',
+          type: 'submit',
           fn: function () { this.submit(); }
         },
         {
