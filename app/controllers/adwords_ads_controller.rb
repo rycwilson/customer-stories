@@ -71,7 +71,7 @@ class AdwordsAdsController < ApplicationController
         # => confirm presence of ad_id before updating google
         updated_gad = (ad.previous_changes.keys & ['status']).any? ?
           GoogleAds::change_ad_status(ad) :
-          (ad.ad_id.present? ? GoogleAds::update_ad(ad) : nil)
+          (ad.ad_id.present? ? GoogleAds::update_ads([ad]) : nil)
 
         # revert changes if google errors (update_columns method => no callbacks)
         if updated_gad.try(:[], :errors)

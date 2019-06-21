@@ -368,6 +368,9 @@
 }
 
 .bootbox.modal.confirm-ad-image-removal {
+  li {
+    line-height: 1.7em;
+  }
   .modal-content {
     overflow: hidden;  // so background color doesn't extend past border radius
   }
@@ -381,6 +384,6 @@
     background-color: #f9f9f9;
   }
   .modal-body {
-    
+    padding: 20px 15px;
   }
 }

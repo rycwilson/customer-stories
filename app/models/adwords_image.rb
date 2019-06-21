@@ -40,6 +40,9 @@ class AdwordsImage < ApplicationRecord
 
   def update_ads
     # only required images need to be replaced => SquareImage or LandscapeImage
+    # don't just refer to self.ads here, or ads will be assigned by reference and will
+    # empty once images have been disassociated
+    ads = AdwordsAd.find(self.ads.map { |ad| ad.id })
     self.ads.each do |ad|
       ad.images.delete(self)
       if ad.square_images.blank?
@@ -47,8 +50,8 @@ class AdwordsImage < ApplicationRecord
       elsif ad.landscape_images.blank?
         ad.images << ad.company.adwords_images.landscape_images.default.take
       end
-      GoogleAds::update_ad(ad.reload)
     end
+    GoogleAds::update_ads(ads)
   end
 
   def s3_delete

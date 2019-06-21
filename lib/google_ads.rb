@@ -104,38 +104,46 @@ module GoogleAds
       new_gad
     end
 
-    def update_ad(ad)
+    def update_ads(ads)
       service = create_api.service(:AdService, API_VERSION)
-      gad = ad.google_ad
-      operation = {
-        operator: 'SET',
-        operand: gad.merge({ id: ad.ad_id }),
-      }
-      updated_gad = {}
+      operations = ads.map do |ad|
+        gad = ad.google_ad
+        ad_group_operation = { 
+          operator: 'SET', 
+          operand: gad.merge({ id: ad.ad_id }) 
+        }
+      end
+      updated_gads = {}
       begin
-        result = service.mutate([operation])
+        result = service.mutate(operations)
         if result[:value].present?
-          updated_gad = result[:value].first
-          puts "***\n*** Updated responsive display ad #{updated_gad[:id]}\n***"
-          log_result([updated_gad])
+          result[:value].each do |updated_gad|
+            # the ad group id isn't returned by the AdService
+            # campaign_type = (new_gad[:ad_group_id] == story.topic_ad.ad_group.ad_group_id) ? :topic : :retarget
+            updated_gads[updated_gad[:id]] = updated_gad
+            puts "***\n*** Updated responsive display ad\n***"
+            log_result([updated_gad])
+          end
+        else
+          # should be exception; why here?
         end
       rescue AdwordsApi::Errors::ApiException => e
-        updated_gad[:errors] = e.errors.map do |error|
+        updated_gads[:errors] = e.errors.map do |error|
           {
             type: error[:error_string].split('.').last,
             field: error[:field_path].split('.').last
           }
         end
-        puts "***\n*** Failed to update responsive display ad #{updated_gad[:id]}\n***"
-        awesome_print(updated_gad[:errors])
+        puts "***\n*** Failed to update ads #{ads.map { |ad| ad.ad_id }.join(',')}\n***"
+        awesome_print(updated_gads[:errors])
 
       # a missing ad_id will raise this exception
       rescue AdsCommon::Errors::ApiException => e
-        updated_gad[:errors] = e.message
+        updated_gads[:errors] = e.message
         puts "***\n*** Failed to update responsive display ad #{updated_gad[:id]}\n***"
-        awesome_print(updated_gad[:errors])
+        awesome_print(updated_gads[:errors])
       end
-      updated_gad
+      updated_gads
     end
 
     # note the different service needed to update ad status

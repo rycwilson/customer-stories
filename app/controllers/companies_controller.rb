@@ -65,7 +65,6 @@ class CompaniesController < ApplicationController
     if company.update(company_params)
       # if company.promote_tr? && ads must be modified (e.g. short headline changed, images removed)
       # end
-
     else
       @errors = company.errors.full_messages
     end
@@ -278,7 +277,6 @@ class CompaniesController < ApplicationController
       nil
     end
   end
-
 
   def removed_ad_image_id(images_attrs)
     images_attrs.try(:length) == 1 &&

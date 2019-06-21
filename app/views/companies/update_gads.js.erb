@@ -134,7 +134,7 @@
   } else if (res.removedImageId) {
     $modal.find('li[data-image-id="' + res.removedImageId + '"]').remove();
     $form.attr('data-submitted', '');
-    // TODO update any stories affected by removed image
+    $('#promoted-stories-table').DataTable().ajax.reload();
 
   } else {
     toggleFormDone($form, true, function () {
@@ -148,7 +148,7 @@
    */
   if ($('.bootbox.confirm-ad-image-removal').length) {
     $('.bootbox.confirm-ad-image-removal').one('hidden.bs.modal', function () {
-      $('.ad-image-card').has('[name*="[id]"][value="' + removedImageId + '"]')
+      $('.ad-image-card').has('[name*="[id]"][value="' + res.removedImageId + '"]')
                            .remove();
     });
     $('.bootbox.confirm-ad-image-removal').modal('hide');
@@ -158,13 +158,9 @@
    *  cleanup
    */
   reEnableAllInputs();
-  if (res.newImage && res.newImage.type.includes('Image')) {
-    $modal.find('ul.marketing').append(modalImageTemplate);
-  } else if (res.newImage && res.newImage.type.includes('Logo')) {
-    $modal.find('ul.logos').append(modalImageTemplate);
+  if (res.newImage) {
+    $modal.find(res.newImage.type.includes('Image') ? 'ul.marketing' : 'ul.logos')
+            .append(modalImageTemplate)
   }
-
-  
-
 
 }());

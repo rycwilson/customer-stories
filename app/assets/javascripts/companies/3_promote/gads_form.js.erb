@@ -175,19 +175,20 @@ function promoteSettingsListeners () {
         bootbox.confirm({
           className: 'confirm-ad-image-removal',
           closeButton: false,
-          title: '<i class="fa fa-warning"></i>\xa0\xa0\xa0<span>Are you sure?</span>',
-          message: '<p>The selected image is utilized in the following Promoted Stories. Removing it will result in the image being replaced by the current default image of its type (square or landscape). The Promoted Stories will update and continue in their current state with no further action required.</p>' +
+          title: '<i class="fa fa-warning"></i>\xa0\xa0\xa0\xa0<span>Are you sure?</span>',
+          message: '<p>The selected image is utilized in these Promoted Stories:<p>' +
                    '<ul style="margin: 25px 0">' + 
                      affectedStories.reduce(function (listItems, storyTitle) { 
                       return listItems + '<li>' + storyTitle + '</li>'; 
                      }, '') +
-                   '</ul>',
+                   '</ul>' +
+                   '<p>You can remove the image and it will be replaced by the current default image of the same type (square or landscape). The Promoted Stories will be updated to include the replacement image and no further action will be required.</p>',
           buttons: {
             confirm: {
               label: 'Remove & Replace',
               className: 'btn-primary',
               callback: function () {
-                console.log($(this))
+                // => button callbacks can't be overridden (per bootbox docs)
               }
             },
             cancel: {
@@ -200,8 +201,11 @@ function promoteSettingsListeners () {
               $(this).find('[data-bb-handler="confirm"]')
                        .css('width', $(this).find('[data-bb-handler="confirm"]').css('width'))
                        .html('<i class="fa fa-spin fa-circle-o-notch"></i>')
-              $imageCard.find('.btn-remove').trigger('click');
-              return false;  // don't close the modal yet, wait for server response
+              $imageCard.find('input:checkbox[name*="_destroy"]')
+                          .prop('checked', true)
+                          .end()
+                        .find('.btn-remove').trigger('click');
+              return false;  // don't close the modal yet => wait for server response
             }
           }
         });
@@ -327,11 +331,6 @@ function promoteSettingsListeners () {
       }
     })
 
-    .on('click', '.bootbox.confirm-ad-image-removal [data-bb-handler="confirm"]', function () {
-      console.log('hello?')
-      console.log($(this));
-    })
-
     /**
      *  cancel
      */
@@ -405,7 +404,7 @@ function promoteSettingsListeners () {
 
       if ($submitBtn.is(':not(.btn-remove)')) toggleFormWorking($form, $submitBtn);
 
-      /*$form.submit();*/
+      $form.submit();
       console.log('submit')
 
       if ($formGroup.is('.to-be-removed')) $imageCard.remove();
