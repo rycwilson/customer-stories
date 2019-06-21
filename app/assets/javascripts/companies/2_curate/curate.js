@@ -74,12 +74,13 @@ function curateListeners () {
       })
         .done(function (html, status, xhr) {
           var showTab = function () {
-            $('a[href="#curate-story"]')
+            $('a[href="#edit-story"]')
               .one('shown.bs.tab', function () { window.scrollTo(0, 0); })
               .tab('show');
           };
-          $.when( $('#curate-story').empty().append(html) )
+          $.when( $('#edit-story').empty().append(html) )
             .done(function () {
+              Cookies.set('csp-edit-story-tab', '#story-settings');
               initStoriesEdit(showTab);
             });
         });

@@ -26,7 +26,7 @@ function storiesShow () {
       }
     })
     .on('click', '.edit-story a', function () {
-      Cookies.set('csp-story-tab', '#story-content');
+      Cookies.set('csp-edit-story-tab', '#story-content');
     })
     .on('scroll', function () {
       if (CSP.screenSize === 'xs') return false;

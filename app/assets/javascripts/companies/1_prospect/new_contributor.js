@@ -206,8 +206,8 @@ function newContributorListeners() {
           customerId, successId,
           dtSuccesses = $('#successes-table').DataTable();
       if (isCurateView()) {
-        customerId = $('#curate-story-layout').data('customer-id');
-        successId = $('#curate-story-layout').data('success-id');
+        customerId = $('#edit-story-layout').data('customer-id');
+        successId = $('#edit-story-layout').data('success-id');
         preSelectCustomerAndSuccess(customerId, successId);
       } else if ($('#contributors-filter').val().match(/customer/)) {
         customerId = $('#contributors-filter').val().match(/-(\d+)/)[1];

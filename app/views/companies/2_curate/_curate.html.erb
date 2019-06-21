@@ -1,5 +1,5 @@
 
-<div id='curate' role='tabpanel' class="<%= workflow_stage == 'curate' ? 'active tab-pane fade in' : 'tab-pane fade' %>">
+<div id="curate" role="tabpanel" class="<%= workflow_stage == 'curate' ? 'active tab-pane fade in' : 'tab-pane fade' %>">
 
   <div class='container clip'>
 
@@ -9,14 +9,14 @@
           <a href="#curate-stories" data-toggle='tab' data-target='#curate-stories'></a>
         </li>
         <li class="<%= curate_view == 'story' ? 'active' : '' %>">
-          <a href="#curate-story" data-toggle='tab' data-target='#curate-story'></a>
+          <a href="#edit-story" data-toggle='tab' data-target='#edit-story'></a>
         </li>
       </ul>
     </div>
 
     <div class="tab-content">
 
-      <div id='curate-stories' class="tab-pane fade <%= curate_view == 'stories' ? 'active in' : '' %>">
+      <div id="curate-stories" class="tab-pane fade <%= curate_view == 'stories' ? 'active in' : '' %>">
 
         <div class="row">
 
@@ -82,14 +82,14 @@
 
       </div>
 
-      <div id='curate-story' class="tab-pane fade <%= curate_view == 'story' ? 'active in' : '' %>">
+      <div id="edit-story" class="tab-pane fade <%= curate_view == 'story' ? 'active in' : '' %>">
 
         <% if curate_view == 'story' %>
 
-          <%= render({
-                partial: 'stories/edit/edit',
-                locals: { company: company, story: story, tab: curate_story_tab }
-              }) %>
+          <%= render(
+                'stories/edit/edit',
+                { company: company, story: story, tab: edit_story_tab }
+              ) %>
 
         <% end %>
 

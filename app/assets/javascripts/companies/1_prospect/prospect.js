@@ -73,7 +73,7 @@ function prospectListeners () {
     })
 
     .on('click', '#prospect-contributors-table tr.group a.story', function () {
-      Cookies.set('csp-story-tab', '#story-contributors');
+      Cookies.set('csp-edit-story-tab', '#story-contributors');
     })
 
     // the close event happens shortly after blur; to ensure smooth transition...

@@ -135,7 +135,7 @@ function successActionsListeners () {
         } else {
           storyTab = '#story-contributors';
         }
-        Cookies.set('csp-story-tab', storyTab);
+        Cookies.set('csp-edit-story-tab', storyTab);
         window.location = href;
       }
     )

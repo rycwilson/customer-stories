@@ -1,7 +1,7 @@
 
-// #curate-story view may be loaded synchronously under stories#edit
+// #edit-story view may be loaded synchronously under stories#edit
 // or asynchronously under companies#show
-.stories.edit #curate-story, .companies.show #curate-story {
+.stories.edit #edit-story, .companies.show #edit-story {
 
   @import 'settings';
   @import 'content';

@@ -1,5 +1,5 @@
 
-<div id='curate-story-layout' class="layout layout-main-right layout-stack-sm"
+<div id="edit-story-layout" class="layout layout-main-right layout-stack-sm"
     data-story-id="<%= story.try(:id) %>" data-success-id="<%= story.success.id %>" data-success-name="<%= story.success.name %>" data-customer-id="<%= story.customer.id %>" data-customer-slug="<%= story.customer.slug %>">
 
   <div class="col-md-3 col-sm-4 layout-sidebar">
@@ -48,32 +48,28 @@
 
       </div>
 
-      <div id='story-settings' class="tab-pane fade <%= (tab == '#story-settings' || tab.nil?) ? 'in active' : '' %>">
+      <div id="story-settings" class="tab-pane fade <%= (tab == '#story-settings' || tab.nil?) ? 'in active' : '' %>">
 
-        <%= render({
-              partial: 'stories/edit/settings/settings',
-              locals: { company: company, story: story }
-            }) %>
+        <%= render('stories/edit/settings/settings', { company: company, story: story }) %>
 
       </div>
 
-      <div id='story-content' class="tab-pane fade <%= tab == '#story-content' ? 'in active' : '' %>">
+      <div id="story-content" class="tab-pane fade <%= tab == '#story-content' ? 'in active' : '' %>">
 
-        <%= render 'stories/edit/content/content',
-              { company: company, story: story } %>
+        <%= render('stories/edit/content/content', { company: company, story: story }) %>
 
       </div>
 
-      <div id='story-contributors' class="tab-pane fade <%= tab == '#story-contributors' ? 'in active' : '' %>">
+      <div id="story-contributors" class="tab-pane fade <%= tab == '#story-contributors' ? 'in active' : '' %>">
 
-        <button type='button' style='margin:0 0 10px 0;' class='btn btn-secondary btn-sm' data-toggle='modal' data-target='#new-contributor-modal'>
-          <i class='fa fa-plus-circle fa-fw'></i>&nbsp;New Contributor&nbsp;
+        <button type="button" style="margin:0 0 10px 0;" class="btn btn-secondary btn-sm" data-toggle="modal" data-target="#new-contributor-modal">
+          <i class="fa fa-plus-circle fa-fw"></i>&nbsp;New Contributor&nbsp;
         </button>
 
-        <%= render({
-              partial: 'companies/1_prospect/contributors/contributors_table',
-              locals: { company: company, workflow_stage: 'curate' }
-            }) %>
+        <%= render(
+              'companies/1_prospect/contributors/contributors_table',
+              { company: company, workflow_stage: 'curate' }
+            ) %>
 
       </div>
 

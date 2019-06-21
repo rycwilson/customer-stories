@@ -2,7 +2,7 @@
 function storiesEditResultsListeners () {
 
   $(document)
-    .on('click', '#curate-story .add-result', function (e) {
+    .on('click', '#edit-story .add-result', function (e) {
 
       var template = _.template( $('#new-success-result-template').html() ),
           currentIndex = $('.success-results ul').find('li').length;
@@ -18,7 +18,7 @@ function storiesEditResultsListeners () {
       };
 
       $.when(
-        $('#curate-story .success-results ul').append(
+        $('#edit-story .success-results ul').append(
           template({ index: currentIndex })
         )
       ).then(function () {

@@ -4,11 +4,9 @@
 //= require ./contributors
 
 function storiesEdit () {
-
   storiesEditSettings();
   storiesEditContent();
   storiesEditContributors();
-
 }
 
 // this is used for asynchronous loads of stories/edit/_edit
@@ -23,7 +21,6 @@ function storiesEditListeners () {
   storiesEditSettingsListeners();
   storiesEditContentListeners();
   storiesEditContributorsListeners();
-
 
   $(document)
 
@@ -43,6 +40,10 @@ function storiesEditListeners () {
       ).trigger('change', { auto: true });
 
     })
+
+    .on('click', '#edit-story .nav a', function () {
+      Cookies.set('csp-edit-story-tab', $(this).attr('href'));
+    });
 
     // .on('scroll', function () {
   // var storyHeaderTop = $('#story-header').offset().top;

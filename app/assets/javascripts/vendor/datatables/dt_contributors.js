@@ -9,7 +9,7 @@ function initContributorsTable (workflowStage, dtContributorsInit) {
   if (workflowStage === 'prospect') {
     contributionsPath = '/companies/' + CSP.company.id + '/contributions';
   } else {
-    successId = $('#curate-story-layout').data('success-id');
+    successId = $('#edit-story-layout').data('success-id');
     contributionsPath = '/successes/' + successId + '/contributions';
   }
 
