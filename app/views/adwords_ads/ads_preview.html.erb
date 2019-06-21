@@ -3,12 +3,15 @@
 <head>
   <meta charset="UTF-8">
   <title>Promoted Story Previews</title>
-  <link href="//fonts.googleapis.com/css?family=Open+Sans:400,700" rel="stylesheet" type="text/css">
-  <link href="https://fonts.googleapis.com/css?family=Slabo+27px:400,700&amp;lang=en" rel="stylesheet" type="text/css">
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:bold">
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:lighter">
+  <link href="//fonts.googleapis.com/css?family=Open+Sans:300,400,600" rel="stylesheet" type="text/css">
+  <link href='https://fonts.googleapis.com/css?family=Lato:300,400,700' rel='stylesheet' type='text/css'>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,500">
+  <!-- bootstrap -->
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
   <link rel="stylesheet" href="<%= asset_path('google/ads_preview.css') %>">
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+  <!-- bootstrap -->
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
   <!-- masonry -->
   <script src="https://unpkg.com/imagesloaded@4.1/imagesloaded.pkgd.min.js"></script>
   <script src="https://unpkg.com/masonry-layout@4/dist/masonry.pkgd.min.js"></script>
@@ -18,201 +21,76 @@
 </head>
 <body>
 
-  <h2>Promoted Stories</h2>
+  <header>
+    <h4>Promoted Story Preview</h4>
+  </header>
+
+<!--   <h2>Promoted Stories</h2>
   <p>Customer Stories automatically creates a set of responsive creatives to match publisher formats.</p>
   <p><u>Formats</u></p>
   <ul style='list-style-type:none'>
     <li><strong>Native:</strong>&nbsp;&nbsp;Integrates with the look, feel, and content of a publisher’s site</li>
     <li><strong>Image:</strong>&nbsp;&nbsp;Standard format used commonly on publishers' sites</li>
     <li><strong>Text:</strong>&nbsp;&nbsp;Displays even when ad-blocking is enabled</li>
-  </ul>
+  </ul> -->
 
-  <hr>
+  <%= render('adwords_ads/previews_nav') %>
 
-  <div class="grid" style='visibility:hidden'>
+  <div class="container-fluid">
 
-    <div id="image-horizontal-lg" class='image-ad grid-item'>
-      <span class='format'>Image</span>
-      <div id="adContent" style="line-height: normal; background-color: rgb(238, 238, 238); overflow: hidden; position: relative; width: 970px; height: 90px; border-radius: 0px;" data-variation="bannerA"><div id="colorSlot1" data-type="shape" style="position: absolute; top: 0px; left: 0px; width: 970px; height: 90px; background-color: rgb(255, 255, 255);"></div><div id="product" data-type="product" style="position: absolute; top: 0px; left: 0px; width: 172px; height: 90px;"><img src="<%= @image_url %>" style="display: block; position: absolute; top: 0px; left: 0px; width: 172px; height: 90px;"></div><div id="logo" data-type="logo" style="position: absolute; top: 21px; left: 217px; width: 48px; height: 48px;"><img src="<%= @logo_url %>" style="display: block; position: absolute; top: 0px; left: 0px; width: 48px; height: 48px;"></div><div id="text1" style="font-family: Roboto, Arial, sans-serif; font-weight: bold; font-style: normal; width: 236px; position: absolute; top: 5px; left: 289px; height: 81px; color: rgb(43, 43, 43); font-size: 24px;" data-type="headline" dir="ltr"><div style="position: absolute; top: 12px; left: 15px; width: 206px; height: 57px;"><div style="display: inline-block; height: 100%; vertical-align: middle;"></div><div style="display: inline-block; width: 100%; vertical-align: middle;"><span><%= @short_headline %></span></div></div></div>
-
-      <!-- description (maps to long_headline) -->
-      <div id="text2" style="font-family: Roboto, Arial, sans-serif; font-weight: lighter; font-style: normal; width: 273px; display: flex; align-items: center; position: absolute; left: 525px; height: 100%; color: rgb(92, 92, 92); font-size: <%= @long_headline.length <= 85 ? '18px' : '16px' %>;" data-type="description" dir="ltr">
-        <span><%= @long_headline %></span>
-      </div>
-
-      <div id="url" style="font-family: Roboto, Arial, sans-serif; font-weight: lighter; font-style: normal; display: none;"></div><div id="button" style="font-family: Times; font-weight: normal; font-style: normal; position: absolute; top: 22px; left: 861px; width: 47px; height: 47px; background-color: rgb(83, 84, 86);" data-type="button"><svg width="100%" height="100%" viewBox="0 0 26 42" style="position: absolute; top: 26%; left: 0px; width: 48%; height: 48%; margin: 0px 26%;"> <polyline fill="none" stroke="rgba(255,255,255,1)" stroke-width="5" stroke-miterlimit="10" points="6,3 24,21 6,39"></polyline></svg></div><div id="adContent-border" style="border-color: rgb(229, 229, 229); border-radius: 0px; border-style: solid; border-width: 1px; position: absolute; top: 0px; left: 0px; width: 100%; height: 100%; z-index: 500; box-sizing: border-box; pointer-events: none;"></div><a id="adContent-clickOverlay" target="_blank" href="<%= @story_url %>" style="background: rgba(0, 0, 0, 0); z-index: 1000; cursor: pointer; position: absolute; left: 0px; top: 0px; width: 100%; height: 100%;"></a></div>
-
-      <div id="abgc" class="abgc" dir="ltr"><div id="abgb" class="abgb"><svg width="100%" height="100%"><rect class="abgbg" width="100%" height="100%"></rect><svg class="abgi" x="0px"><circle cx="6" cy="6" r="0.67"></circle><path d="M4.2,11.3Q3.3,11.8,3.3,10.75L3.3,4.1Q3.3,3.1,4.3,3.5L10.4,7.0Q12.0,7.5,10.4,8.0L6.65,10.0L6.65,7.75a0.65,0.65,0,1,0,-1.3,0L5.35,10.75a0.9,0.9,0,0,0,1.3,0.8L12.7,8.2Q13.7,7.5,12.7,6.7L3.3,1.6Q2.2,1.3,1.8,2.5L1.8,12.5Q2.2,13.9,3.3,13.3L4.8,12.5A0.3,0.3,0,1,0,4.2,11.3Z"></path></svg></svg></div><div id="abgs" class="abgs"><a id="abgl" class="abgl" href="https://support.google.com/adsense/troubleshooter/1631343?hl=en_US" target="_blank"><svg width="100%" height="100%"><path class="abgbg" d="M0,0L75,0L75,15L4,15s-4,0,-4,-4z"></path><svg class="abgi" x="60px"><circle cx="6" cy="6" r="0.67"></circle><path d="M4.2,11.3Q3.3,11.8,3.3,10.75L3.3,4.1Q3.3,3.1,4.3,3.5L10.4,7.0Q12.0,7.5,10.4,8.0L6.65,10.0L6.65,7.75a0.65,0.65,0,1,0,-1.3,0L5.35,10.75a0.9,0.9,0,0,0,1.3,0.8L12.7,8.2Q13.7,7.5,12.7,6.7L3.3,1.6Q2.2,1.3,1.8,2.5L1.8,12.5Q2.2,13.9,3.3,13.3L4.8,12.5A0.3,0.3,0,1,0,4.2,11.3Z"></path></svg><svg class="abgtxt" x="5px" y="11px" width="53px"><text>AdChoices</text></svg></svg></a></div></div>
-
+    <div class="hidden" style="display: flex; margin: 30px 60px; font-family: 'Open Sans', arial , sans-serif">
+      <!-- <label style="font-size: 16px; font-weight: 600; color: #999; margin-right: 20px;">Formats</label> -->
+      <ul class="list-unstyled" style="padding-top: 2px">
+        <li style="line-height: 1.8em;"><span style="font-weight: 600">Image:</span>&nbsp;&nbsp;Standard format used commonly on publishers' sites</li>
+        <li style="line-height: 1.8em;"><span style="font-weight: 600">Native:</span>&nbsp;&nbsp;Integrates with the look, feel, and content of a publisher’s site</li>
+        <li style="line-height: 1.8em;"><span style="font-weight: 600">Text:</span>&nbsp;&nbsp;Displays even when ad-blocking is enabled</li>
+      </ul>
     </div>
 
-    <div id="text-horizontal-lg" class='grid-item'>
-      <span class='format'>Text</span>
-      <div id="adunit" data-rh-set-type="0"><div id="ads"><ul><li id="taw0" class="taw taw0" lang="en"><a class="rhbackground" href="<%= @story_url %>" target="_blank"><div class="rh" data-ifc="[[[&quot;5,5,5,5&quot;,null,0,2]]]"><table><tbody><tr><td class="rh0c"><div class="rh0"><table><tbody><tr><td class="rh00c" style="width:<%= @text_horizontal_container_left %>"><div class="rh00" style="width:<%= @text_horizontal_container_left %>"><table><tbody><tr><td class="rh000c"><div class="rh000" style="width:<%= @text_horizontal_container_left %>"><table><tbody><tr><td class="rh0000c"><div class="rh-box-title rh-title rh0000 collapsed-box" data-ifc="[[[null,null,1,1]]]"><a class="rhtitle rhdefaultcolored" href="<%= @story_url %>" target="_blank"><span><%= @short_headline %></span></a></div></td></tr></tbody></table></div></td></tr></tbody></table></div></td><td class="rh01c"><div class="rh01"><div class="rh-box-button rh-nessie-button-flat rh010" data-ifc="[[[null,null,1,1]]]"><div class="rhbutton-container"><a class="rhbutton" href="<%= @story_url %>" target="_blank"><div class="icon-container"><svg class="rhsvgpngicon" preserveAspectRatio="xMinYMin meet" version="1.1" xmlns="https://www.w3.org/2000/svg" xmlns:xlink="https://www.w3.org/1999/xlink" x="0px" y="0px" height="32px" width="20px" viewBox="0 0 26 42" enable-background="new 0 0 26 42" xml:space="preserve"><polyline fill="none" stroke="white" stroke-width="5" stroke-miterlimit="10" points="2.875,2.958 21.166,20.957 2.917,38.916"></polyline></svg></div></a></div></div></div></td><td class="rh02c"><div class="rh02" style="width:<%= @text_horizontal_container_right %>"><table><tbody><tr><td class="rh020c"><div class="rh020" style="width:<%= @text_horizontal_container_right %>"><table><tbody><tr><td class="rh0200c"><div class="rh-body rh-box-body rh0200"><a class="rhbody" href="<%= @story_url %>" target="_blank"><span><%= @long_headline %></span></a></div></td></tr><tr><td class="rh0201c"><div class="rh-box-url rh-url rh0201" data-ifc="[[[null,null,1,1]]]"><div class="rhurlctr rhdefaultcolored rhurlctr_nowrap rhurlctr_clickable" dir="ltr"><a class="rhurl rhdefaultcolored" title="<%= @short_headline %>" href="<%= @story_url %>" target="_blank"><span><%= @short_headline %></span></a></div></div></td></tr></tbody></table></div></td></tr></tbody></table></div></td></tr></tbody></table></div></td></tr></tbody></table></div></a></li></ul></div><div class="ads_chrome_top"></div><div class="ads_chrome_bottom"></div><div class="ads_chrome_left"></div><div class="ads_chrome_right"></div></div>
+    <div class="tab-content">
 
-      <div id="abgc" class="abgc" dir="ltr"><div id="abgb" class="abgb"><svg width="100%" height="100%"><rect class="abgbg" width="100%" height="100%"></rect><svg class="abgi" x="0px"><circle cx="6" cy="6" r="0.67"></circle><path d="M4.2,11.3Q3.3,11.8,3.3,10.75L3.3,4.1Q3.3,3.1,4.3,3.5L10.4,7.0Q12.0,7.5,10.4,8.0L6.65,10.0L6.65,7.75a0.65,0.65,0,1,0,-1.3,0L5.35,10.75a0.9,0.9,0,0,0,1.3,0.8L12.7,8.2Q13.7,7.5,12.7,6.7L3.3,1.6Q2.2,1.3,1.8,2.5L1.8,12.5Q2.2,13.9,3.3,13.3L4.8,12.5A0.3,0.3,0,1,0,4.2,11.3Z"></path></svg></svg></div><div id="abgs" class="abgs"><a id="abgl" class="abgl" href="https://support.google.com/adsense/troubleshooter/1631343?hl=en_US" target="_blank"><svg width="100%" height="100%"><path class="abgbg" d="M0,0L75,0L75,15L4,15s-4,0,-4,-4z"></path><svg class="abgi" x="60px"><circle cx="6" cy="6" r="0.67"></circle><path d="M4.2,11.3Q3.3,11.8,3.3,10.75L3.3,4.1Q3.3,3.1,4.3,3.5L10.4,7.0Q12.0,7.5,10.4,8.0L6.65,10.0L6.65,7.75a0.65,0.65,0,1,0,-1.3,0L5.35,10.75a0.9,0.9,0,0,0,1.3,0.8L12.7,8.2Q13.7,7.5,12.7,6.7L3.3,1.6Q2.2,1.3,1.8,2.5L1.8,12.5Q2.2,13.9,3.3,13.3L4.8,12.5A0.3,0.3,0,1,0,4.2,11.3Z"></path></svg><svg class="abgtxt" x="5px" y="11px" width="53px"><text>AdChoices</text></svg></svg></a></div></div>
+      <div id="websites" aria-controls="websites" role="tabpanel" class="tab-pane fade active in">
 
-    </div>
-
-    <div id="text-vertical" class='grid-item'>
-      <span class='format'>Text</span>
-      <div id="adunit" data-rh-set-type="0"><div id="ads"><ul><li id="taw0" class="taw taw0" lang="en"><a class="rhbackground" href="<%= @story_url %>" target="_blank"><div class="rh" data-ifc="[[[&quot;5,5,5,5&quot;,null,0,2]]]"><table><tbody><tr><td class="rh0c" style='height:<%= @text_vertical_outer_height_top %>'><div class="rh0" style="height: <%= @text_vertical_inner_height_top %>"><table><tbody><tr><td class="rh00c" style="height:<%= @text_vertical_inner_height_top %>"><div class="rh00" style="height:<%= @text_vertical_inner_height_top %>"><table><tbody><tr><td class="rh000c">
-
-      <div class="short-headline rh-box-title rh-title rh000 collapsed-box"
-           style="display:flex; align-items:center">
-        <a class=" rhtitle rhdefaultcolored" href="<%= @story_url %>" target="_blank" title="<%= @company.subdomain %>.customerstories.net">
-          <span><%= @short_headline %></span>
-        </a>
-      </div>
-
-      </td></tr></tbody></table></div></td></tr></tbody></table></div></td></tr><tr><td class="rh1c"><div class="rh1"><div class="rh-box-button rh-nessie-button-flat rh10" data-ifc="[[[null,null,1,1]]]"><div class="rhbutton-container"><a class="rhbutton" href="<%= @story_url %>" target="_blank" title="<%= @company.subdomain %>.customerstories.net"><div class="icon-container"><svg class="rhsvgpngicon" preserveAspectRatio="xMinYMin meet" version="1.1" xmlns="https://www.w3.org/2000/svg" xmlns:xlink="https://www.w3.org/1999/xlink" x="0px" y="0px" height="32px" width="20px" viewBox="0 0 26 42" enable-background="new 0 0 26 42" xml:space="preserve"><polyline fill="none" stroke="white" stroke-width="5" stroke-miterlimit="10" points="2.875,2.958 21.166,20.957 2.917,38.916"></polyline></svg></div></a></div></div></div></td></tr><tr><td class="rh2c" style="height:<%= @text_vertical_outer_height_bottom %>"><div class="rh2" style="height:<%= @text_vertical_inner_height_bottom %>"><table><tbody><tr><td class="rh20c" style="height:<%= @text_vertical_inner_height_bottom %>"><div class="rh20" style="height:<%= @text_vertical_inner_height_bottom %>"><table><tbody><tr><td class="rh200c">
-
-      <div class="long-headline rh-body rh-box-body rh200"
-           style="display:flex; align-items:center; height:<%= @text_vertical_inner_height_bottom_minus_padding %>;">
-        <span> <a class="rhbody" href="<%= @story_url %>" target="_blank" title="">
-          <%= @long_headline %>
-        </a></span>
-      </div>
-
-      </td></tr></tbody></table></div></td></tr></tbody></table></div></td></tr><tr><td class="rh3c"><div class="rh-box-url rh-url rh3" data-ifc="[[[null,null,1,1]]]"><div class="rhurlctr rhdefaultcolored rhurlctr_nowrap rhurlctr_clickable" dir="ltr"><a class="rhurl rhdefaultcolored" title="<%= @short_headline %>" href="<%= @story_url %>" target="_blank"><span><%= @short_headline %></span></a></div></div></td></tr></tbody></table></div></a></li></ul></div><div class="ads_chrome_top"></div><div class="ads_chrome_bottom"></div><div class="ads_chrome_left"></div><div class="ads_chrome_right"></div></div>
-
-      <div id="abgc" class="abgc" dir="ltr"><div id="abgb" class="abgb"><svg width="100%" height="100%"><rect class="abgbg" width="100%" height="100%"></rect><svg class="abgi" x="0px"><circle cx="6" cy="6" r="0.67"></circle><path d="M4.2,11.3Q3.3,11.8,3.3,10.75L3.3,4.1Q3.3,3.1,4.3,3.5L10.4,7.0Q12.0,7.5,10.4,8.0L6.65,10.0L6.65,7.75a0.65,0.65,0,1,0,-1.3,0L5.35,10.75a0.9,0.9,0,0,0,1.3,0.8L12.7,8.2Q13.7,7.5,12.7,6.7L3.3,1.6Q2.2,1.3,1.8,2.5L1.8,12.5Q2.2,13.9,3.3,13.3L4.8,12.5A0.3,0.3,0,1,0,4.2,11.3Z"></path></svg></svg></div><div id="abgs" class="abgs"><a id="abgl" class="abgl" href="https://support.google.com/adsense/troubleshooter/1631343?hl=en_US" target="_blank"><svg width="100%" height="100%"><path class="abgbg" d="M0,0L75,0L75,15L4,15s-4,0,-4,-4z"></path><svg class="abgi" x="60px"><circle cx="6" cy="6" r="0.67"></circle><path d="M4.2,11.3Q3.3,11.8,3.3,10.75L3.3,4.1Q3.3,3.1,4.3,3.5L10.4,7.0Q12.0,7.5,10.4,8.0L6.65,10.0L6.65,7.75a0.65,0.65,0,1,0,-1.3,0L5.35,10.75a0.9,0.9,0,0,0,1.3,0.8L12.7,8.2Q13.7,7.5,12.7,6.7L3.3,1.6Q2.2,1.3,1.8,2.5L1.8,12.5Q2.2,13.9,3.3,13.3L4.8,12.5A0.3,0.3,0,1,0,4.2,11.3Z"></path></svg><svg class="abgtxt" x="5px" y="11px" width="53px"><text>AdChoices</text></svg></svg></a></div></div>
-
-    </div>
-
-    <div id="image-vertical" class='image-ad grid-item'>
-      <div style='text-align:left'>
-        <span class='format'>Image</span>
-      </div>
-      <div id="adContent" style="line-height: normal; background-color: rgb(238, 238, 238); overflow: hidden; position: relative; width: 160px; height: 600px; border-radius: 0px;" data-variation="towerA"><div id="colorSlot1" data-type="shape" style="position: absolute; top: 0px; left: 0px; width: 160px; height: 600px; background-color: rgb(255, 255, 255);"></div><div id="product" data-type="product" style="position: absolute; top: 0px; left: 0px; width: 160px; height: 83px;"><img src="<%= @image_url %>" style="display: block; position: absolute; top: 0px; left: 0px; width: 160px; height: 83px;"></div><div id="logo" data-type="logo" style="position: absolute; top: 237px; left: 48px; width: 60px; height: 60px;"><img src="<%= @logo_url %>" style="display: block; position: absolute; top: 0px; left: 0px; width: 60px; height: 60px;"></div><div id="text1" style="font-family: Roboto, Arial, sans-serif; font-weight: bold; font-style: normal; line-height: 1.5; width: 106px; position: absolute; top: 113px; left: 27px; height: 109px; color: rgb(43, 43, 43); font-size: 21px;" data-type="headline" dir="ltr"><div style="position: absolute; top: 0px; left: 0px; width: 106px; height: 109px;"><div style="display: inline-block; height: 100%; vertical-align: middle;"></div><div style="display: inline-block; width: 100%; vertical-align: middle;"><span><%= @short_headline %></span></div></div></div><div id="text2" style="font-family: Roboto, Arial, sans-serif; font-weight: lighter; font-style: normal; line-height: 1.6; width: 125px; position: absolute; top: 320px; left: 18px; height: 140px; color: rgb(92, 92, 92);" data-type="description" dir="ltr"><div style="position: absolute; top: 0px; left: 0px; width: 125px; height: 140px;">
-
-      <div class='long-headline' style="display:flex; align-items:center; width:100%; height:140px">
-        <span><%= @long_headline %></span>
-      </div>
-
-      </div></div><div id="url" style="font-family: Roboto, Arial, sans-serif; font-weight: lighter; font-style: normal; display: none;"></div><div id="button" style="font-family: Times; font-weight: normal; font-style: normal; position: absolute; top: 491px; left: 56px; width: 49px; height: 49px; background-color: rgb(83, 84, 86);" data-type="button"><svg width="100%" height="100%" viewBox="0 0 26 42" style="position: absolute; top: 26%; left: 0px; width: 48%; height: 48%; margin: 0px 26%;"> <polyline fill="none" stroke="rgba(255,255,255,1)" stroke-width="5" stroke-miterlimit="10" points="6,3 24,21 6,39"></polyline></svg></div><div id="adContent-border" style="border-color: rgb(229, 229, 229); border-radius: 0px; border-style: solid; border-width: 1px; position: absolute; top: 0px; left: 0px; width: 100%; height: 100%; z-index: 500; box-sizing: border-box; pointer-events: none;"></div><a id="adContent-clickOverlay" href="<%= @story_url %>" target="_blank" style="background: rgba(0, 0, 0, 0); z-index: 1000; cursor: pointer; position: absolute; left: 0px; top: 0px; width: 100%; height: 100%;"></a></div>
-
-      <div id="abgc" class="abgc" dir="ltr"><div id="abgb" class="abgb"><svg width="100%" height="100%"><rect class="abgbg" width="100%" height="100%"></rect><svg class="abgi" x="0px"><circle cx="6" cy="6" r="0.67"></circle><path d="M4.2,11.3Q3.3,11.8,3.3,10.75L3.3,4.1Q3.3,3.1,4.3,3.5L10.4,7.0Q12.0,7.5,10.4,8.0L6.65,10.0L6.65,7.75a0.65,0.65,0,1,0,-1.3,0L5.35,10.75a0.9,0.9,0,0,0,1.3,0.8L12.7,8.2Q13.7,7.5,12.7,6.7L3.3,1.6Q2.2,1.3,1.8,2.5L1.8,12.5Q2.2,13.9,3.3,13.3L4.8,12.5A0.3,0.3,0,1,0,4.2,11.3Z"></path></svg></svg></div><div id="abgs" class="abgs"><a id="abgl" class="abgl" href="https://support.google.com/adsense/troubleshooter/1631343?hl=en_US" target="_blank"><svg width="100%" height="100%"><path class="abgbg" d="M0,0L75,0L75,15L4,15s-4,0,-4,-4z"></path><svg class="abgi" x="60px"><circle cx="6" cy="6" r="0.67"></circle><path d="M4.2,11.3Q3.3,11.8,3.3,10.75L3.3,4.1Q3.3,3.1,4.3,3.5L10.4,7.0Q12.0,7.5,10.4,8.0L6.65,10.0L6.65,7.75a0.65,0.65,0,1,0,-1.3,0L5.35,10.75a0.9,0.9,0,0,0,1.3,0.8L12.7,8.2Q13.7,7.5,12.7,6.7L3.3,1.6Q2.2,1.3,1.8,2.5L1.8,12.5Q2.2,13.9,3.3,13.3L4.8,12.5A0.3,0.3,0,1,0,4.2,11.3Z"></path></svg><svg class="abgtxt" x="5px" y="11px" width="53px"><text>AdChoices</text></svg></svg></a></div></div>
-
-    </div>
-
-    <div id="image-horizontal-sm" class='image-ad grid-item'>
-      <span class='format'>Image</span>
-      <div id="adContent" style="line-height: normal; background-color: rgb(238, 238, 238); overflow: hidden; position: relative; width: 320px; height: 50px; border-radius: 0px;" data-variation="smallBanner"><div id="colorSlot1" data-type="shape" style="position: absolute; top: 0px; left: 5px; width: 310px; height: 50px; background-color: rgb(255, 255, 255);"></div><div id="product" style="display: none;"></div><div id="logo" data-type="logo" style="position: absolute; top: 8px; left: 10px; width: 34px; height: 34px;"><img src="<%= @logo_url %>" style="display: block; position: absolute; top: 0px; left: 0px; width: 34px; height: 34px;"></div>
-
-      <div class="slide-up-down" style='position:absolute; left: 59px; top: 0; width: 180px'>
-        <!-- short headline -->
-        <div id="text1" style="font-family: Roboto, Arial, sans-serif; font-weight: bold; font-style: normal; display: flex; align-items: center; height: 50px; color: rgb(91, 91, 91); font-size: 16px" data-type="headline" dir="ltr">
-          <span><%= @short_headline %></span>
-        </div>
-        <!-- description (maps to long headline) -->
-        <div id="text2" style="font-family: Roboto, Arial, sans-serif; font-weight: lighter; font-style: normal; display: flex; align-items: center; height: 38px; color: rgb(92, 92, 92); margin: 6px 0;" data-type="description" dir="ltr">
-          <span><%= @long_headline %></span>
-        </div>
-      </div> <!-- .slide-up-down -->
-
-      <div id="url" style="font-family: Roboto, Arial, sans-serif; font-weight: lighter; font-style: normal; display: none;"></div><div id="button" style="font-family: Times; font-weight: normal; font-style: normal; position: absolute; top: 8px; left: 260px; width: 35px; height: 35px; background-color: rgb(83, 84, 86);" data-type="button"><svg width="100%" height="100%" viewBox="0 0 26 42" style="position: absolute; top: 26%; left: 0px; width: 48%; height: 48%; margin: 0px 26%;"> <polyline fill="none" stroke="rgba(255,255,255,1)" stroke-width="5" stroke-miterlimit="10" points="6,3 24,21 6,39"></polyline></svg></div><div id="adContent-border" style="border-color: rgb(229, 229, 229); border-radius: 0px; border-style: solid; border-width: 1px; position: absolute; top: 0px; left: 0px; width: 100%; height: 100%; z-index: 500; box-sizing: border-box; pointer-events: none;"></div><a id="adContent-clickOverlay" href="<%= @story_url %>" target="_blank" style="background: rgba(0, 0, 0, 0); z-index: 1000; cursor: pointer; position: absolute; left: 0px; top: 0px; width: 100%; height: 100%;"></a></div>
-
-      <div id="abgc" class="abgc" dir="ltr"><div id="abgb" class="abgb"><svg width="100%" height="100%"><rect class="abgbg" width="100%" height="100%"></rect><svg class="abgi" x="0px"><circle cx="6" cy="6" r="0.67"></circle><path d="M4.2,11.3Q3.3,11.8,3.3,10.75L3.3,4.1Q3.3,3.1,4.3,3.5L10.4,7.0Q12.0,7.5,10.4,8.0L6.65,10.0L6.65,7.75a0.65,0.65,0,1,0,-1.3,0L5.35,10.75a0.9,0.9,0,0,0,1.3,0.8L12.7,8.2Q13.7,7.5,12.7,6.7L3.3,1.6Q2.2,1.3,1.8,2.5L1.8,12.5Q2.2,13.9,3.3,13.3L4.8,12.5A0.3,0.3,0,1,0,4.2,11.3Z"></path></svg></svg></div><div id="abgs" class="abgs"><a id="abgl" class="abgl" href="https://support.google.com/adsense/troubleshooter/1631343?hl=en_US" target="_blank"><svg width="100%" height="100%"><path class="abgbg" d="M0,0L75,0L75,15L4,15s-4,0,-4,-4z"></path><svg class="abgi" x="60px"><circle cx="6" cy="6" r="0.67"></circle><path d="M4.2,11.3Q3.3,11.8,3.3,10.75L3.3,4.1Q3.3,3.1,4.3,3.5L10.4,7.0Q12.0,7.5,10.4,8.0L6.65,10.0L6.65,7.75a0.65,0.65,0,1,0,-1.3,0L5.35,10.75a0.9,0.9,0,0,0,1.3,0.8L12.7,8.2Q13.7,7.5,12.7,6.7L3.3,1.6Q2.2,1.3,1.8,2.5L1.8,12.5Q2.2,13.9,3.3,13.3L4.8,12.5A0.3,0.3,0,1,0,4.2,11.3Z"></path></svg><svg class="abgtxt" x="5px" y="11px" width="53px"><text>AdChoices</text></svg></svg></a></div></div>
-
-    </div>
-
-    <div id="text-horizontal-sm" class='grid-item'>
-      <span class='format'>Text</span>
-      <div id="adunit" data-rh-set-type="0"><div id="glasspane"></div><div id="ads"><ul><li id="taw0" class="taw taw0" lang="en"><div class="rh"><table><tbody><tr><td class="rh0c"><div class="rh-box-overlap rh0 animated" data-num-frames="3"><div class="rh00"><table><tbody><tr><td class="rh000c">
-      <div class="rh-box-title rh-title rh000 collapsed-box"><a class="rhtitle rhdefaultcolored" href="<%= @story_url %>" target="_blank" title="<%= @company.subdomain %>.customerstories.net">
-
-      <div class='short-headline'>
-        <span><%= @short_headline %></span>
-      </div>
-
-      </a></div></td></tr></tbody></table></div><div class="rh01"><table><tbody><tr><td class="rh010c">
-
-      <div class="long-headline rh-body rh-box-body rh010" style='display: flex; align-items: center; height:38px'>
-        <span class="rhbody"><%= @long_headline %></span>
-      </div>
-
-      </td></tr></tbody></table></div><div class="rh02"><table><tbody><tr><td class="rh020c"><div class="rh-box-url rh-url rh020"><div class="rhurlctr rhdefaultcolored rhurlctr_nowrap rhurlctr_clickable" dir="ltr"><a class="rhurl rhdefaultcolored" title="<%= @short_headline %>" href="<%= @story_url %>" target="_blank">
-
-      <div class="short-headline">
-        <span><%= @short_headline %></span>
-      </div>
-
-      </a></div></div></td></tr></tbody></table></div></div></td><td class="rh1c"><div class="rh-box-button rh-nessie-button-flat rh1"><div class="rhbutton-container"><a class="rhbutton" href="<%= @story_url %>" target="_blank" title="<%= @company.subdomain %>.customerstories.net"><div class="message"><span>Visit Site</span></div><div class="icon-container"><svg class="rhsvgpngicon" preserveAspectRatio="xMinYMin meet" version="1.1" xmlns="https://www.w3.org/2000/svg" xmlns:xlink="https://www.w3.org/1999/xlink" x="0px" y="0px" height="23px" width="14px" viewBox="0 0 26 42" enable-background="new 0 0 26 42" xml:space="preserve"><polyline fill="none" stroke="white" stroke-width="5" stroke-miterlimit="10" points="2.875,2.958 21.166,20.957 2.917,38.916"></polyline></svg></div></a></div></div></td></tr></tbody></table></div></li></ul></div><div class="ads_chrome_top"></div><div class="ads_chrome_bottom"></div><div class="ads_chrome_left"></div><div class="ads_chrome_right"></div></div>
-
-      <div id="abgc" class="abgc" dir="ltr" style="width: 15px; height: 15px;"><div id="abgb" class="abgb" style="display: block;"><svg width="100%" height="100%"><rect class="abgbg" width="100%" height="100%"></rect><svg class="abgi" x="0px"><circle cx="6" cy="6" r="0.67"></circle><path d="M4.2,11.3Q3.3,11.8,3.3,10.75L3.3,4.1Q3.3,3.1,4.3,3.5L10.4,7.0Q12.0,7.5,10.4,8.0L6.65,10.0L6.65,7.75a0.65,0.65,0,1,0,-1.3,0L5.35,10.75a0.9,0.9,0,0,0,1.3,0.8L12.7,8.2Q13.7,7.5,12.7,6.7L3.3,1.6Q2.2,1.3,1.8,2.5L1.8,12.5Q2.2,13.9,3.3,13.3L4.8,12.5A0.3,0.3,0,1,0,4.2,11.3Z"></path></svg></svg></div><div id="abgs" class="abgs" style="display: none;"><a id="abgl" class="abgl" href="https://support.google.com/adsense/troubleshooter/1631343?hl=en_US" target="_blank"><svg width="100%" height="100%"><path class="abgbg" d="M0,15L75,15L75,4s0,-4,-4,-4L0,0z"></path><svg class="abgi" x="0px"><circle cx="6" cy="6" r="0.67"></circle><path d="M4.2,11.3Q3.3,11.8,3.3,10.75L3.3,4.1Q3.3,3.1,4.3,3.5L10.4,7.0Q12.0,7.5,10.4,8.0L6.65,10.0L6.65,7.75a0.65,0.65,0,1,0,-1.3,0L5.35,10.75a0.9,0.9,0,0,0,1.3,0.8L12.7,8.2Q13.7,7.5,12.7,6.7L3.3,1.6Q2.2,1.3,1.8,2.5L1.8,12.5Q2.2,13.9,3.3,13.3L4.8,12.5A0.3,0.3,0,1,0,4.2,11.3Z"></path></svg><svg class="abgtxt" x="17px" y="11px" width="53px"><text transform="scale(0.10959612277867528)">AdChoices</text></svg></svg></a></div></div>
-
-    </div>
-
-    <div id="native-square" class='grid-item'>
-      <span class='format'>Native</span>
-      <div id="adunit" class="content-ads" style="width: 300px; height: 250px; position: relative; overflow: hidden;"><div class="attribution">Ad</div>
-      <div id="ads" class="ads">
-      <div class="ad ad-1" id="taw0" style="">
-      <div class="image"><a class="image-link" data-ifc="[[[&quot;10,10,10,10&quot;,null,0,2]]]" href="<%= @story_url %>" target="_blank"><img src="<%= @image_url %>?w=600&amp;h=314"></a></div>
-      <div class="button">
-      <a class="button-link" href="<%= @story_url %>" target="_blank">
-      <span class="button-text">Visit Site</span>
-      <svg class="button-icon" enable-background="new 0 0 44 44" height="44px" version="1.1" viewBox="0 0 44 44" width="44px" x="0px" xml:space="preserve" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" y="0px">
-      <polyline class="button-icon-element" fill="#000" points="16.895,11.188 27.105,22.014 16.918,32.812">
-      </polyline>
-      </svg>
-      </a>
-      </div>
-      <div class="title"><a class="title-link" href="<%= @story_url %>" target="_blank"><%= @long_headline %></a></div>
-      <div class="body">
-      <a class="body-link" href="<%= @story_url %>" target="_blank"></a>
-      </div>
-      <div class="url"><a class="url-link" href="<%= @story_url %>" target="_blank"><%= @short_headline %></a></div>
-      </div></div></div>
-      <div id="abgc" class="abgc" dir="ltr" style="width: 15px; height: 15px;"><div id="abgb" class="abgb" style="display: block;"><svg width="100%" height="100%"><rect class="abgbg" width="100%" height="100%"></rect><svg class="abgi" x="0px"><circle cx="6" cy="6" r="0.67"></circle><path d="M4.2,11.3Q3.3,11.8,3.3,10.75L3.3,4.1Q3.3,3.1,4.3,3.5L10.4,7.0Q12.0,7.5,10.4,8.0L6.65,10.0L6.65,7.75a0.65,0.65,0,1,0,-1.3,0L5.35,10.75a0.9,0.9,0,0,0,1.3,0.8L12.7,8.2Q13.7,7.5,12.7,6.7L3.3,1.6Q2.2,1.3,1.8,2.5L1.8,12.5Q2.2,13.9,3.3,13.3L4.8,12.5A0.3,0.3,0,1,0,4.2,11.3Z"></path></svg></svg></div><div id="abgs" class="abgs" style="display: none;"><a id="abgl" class="abgl" href="https://support.google.com/adsense/troubleshooter/1631343?hl=en_US" target="_blank"><svg width="100%" height="100%"><path class="abgbg" d="M0,0L75,0L75,15L4,15s-4,0,-4,-4z"></path><svg class="abgi" x="60px"><circle cx="6" cy="6" r="0.67"></circle><path d="M4.2,11.3Q3.3,11.8,3.3,10.75L3.3,4.1Q3.3,3.1,4.3,3.5L10.4,7.0Q12.0,7.5,10.4,8.0L6.65,10.0L6.65,7.75a0.65,0.65,0,1,0,-1.3,0L5.35,10.75a0.9,0.9,0,0,0,1.3,0.8L12.7,8.2Q13.7,7.5,12.7,6.7L3.3,1.6Q2.2,1.3,1.8,2.5L1.8,12.5Q2.2,13.9,3.3,13.3L4.8,12.5A0.3,0.3,0,1,0,4.2,11.3Z"></path></svg><svg class="abgtxt" x="5px" y="11px" width="53px"><text transform="scale(0.10959612277867528)">AdChoices</text></svg></svg></a></div></div>
-
-    </div>
-
-    <div id="image-logo" class='image-ad grid-item'>
-      <span class='format'>Image</span>
-      <div id="adContent" data-variation="square191" style="line-height: normal; background-color: rgb(238, 238, 238); overflow: hidden; position: relative; width: 300px; height: 250px; border-radius: 0px;"><div id="colorSlot1" data-type="shape" style="position: absolute; top: 0px; left: 0px; width: 300px; height: 250px; background-color: rgb(255, 255, 255);"></div><div id="product" data-type="product" style="position: absolute; top: 0px; left: 0px; width: 300px; height: 157px;"><img src="<%= @image_url %>" style="display: block; position: absolute; top: 0px; left: 0px; width: 300px; height: 157px;"></div><div id="logo" data-type="logo" style="position: absolute; top: 198px; left: 15px; width: 43px; height: 43px;"><img src="<%= @logo_url %>" style="display: block; position: absolute; top: 0px; left: 0px; width: 43px; height: 43px;"></div><div id="text1" data-type="headline" dir="ltr" style="font-family: Roboto, Arial, sans-serif; font-weight: bold; font-style: normal; width: 270px; position: absolute; top: 165px; left: 15px; height: 25px; color: rgb(43, 43, 43); font-size: 21px;"><div style="position: absolute; top: 0px; left: 0px; width: 252px; height: 25px;"><div style="display: inline-block; height: 100%; vertical-align: middle;"></div><div style="display: inline-block; width: 100%; vertical-align: middle;"><span><%= @short_headline %></span></div></div></div><div id="text2" data-type="description" dir="ltr" style="font-family: Roboto, Arial, sans-serif; font-weight: 300; font-style: normal; width: 155px; position: absolute; top: 198px; left: 73px; height: 43px; color: rgb(92, 92, 92);"><div style="position: absolute; top: 0px; left: 0px; width: 155px; height: 43px;">
-
-      <div class='long-headline' style="display:flex; align-items:center; width:100%; height:43px">
-        <span><%= @long_headline %></span>
-      </div>
-
-      </div></div><div id="url" style="font-family: Roboto, Arial, sans-serif; font-weight: 300; font-style: normal; display: none;"></div><div id="button" data-type="button" style="position: absolute; top: 200px; left: 249px; width: 36px; height: 36px; background-color: rgb(83, 84, 86);"><svg width="100%" height="100%" viewBox="0 0 26 42" style="position: absolute; top: 26%; left: 0px; width: 48%; height: 48%; margin: 0px 26%;"> <polyline fill="none" stroke="rgba(255,255,255,1)" stroke-width="5" stroke-miterlimit="10" points="6,3 24,21 6,39"></polyline></svg></div><div id="adContent-border" style="border-color: rgb(229, 229, 229); border-radius: 0px; border-style: solid; border-width: 1px; position: absolute; top: 0px; left: 0px; width: 100%; height: 100%; z-index: 500; box-sizing: border-box; pointer-events: none;"></div><a id="adContent-clickOverlay" href="<%= @story_url %>" target="_blank" style="background: rgba(0, 0, 0, 0); z-index: 1000; cursor: pointer; position: absolute; left: 0px; top: 0px; width: 100%; height: 100%;"></a></div>
-
-      <div id="abgc" class="abgc" dir="ltr" style="width: 15px; height: 15px;"><div id="abgb" class="abgb" style="display: block;"><svg width="100%" height="100%"><rect class="abgbg" width="100%" height="100%"></rect><svg class="abgi" x="0px"><circle cx="6" cy="6" r="0.67"></circle><path d="M4.2,11.3Q3.3,11.8,3.3,10.75L3.3,4.1Q3.3,3.1,4.3,3.5L10.4,7.0Q12.0,7.5,10.4,8.0L6.65,10.0L6.65,7.75a0.65,0.65,0,1,0,-1.3,0L5.35,10.75a0.9,0.9,0,0,0,1.3,0.8L12.7,8.2Q13.7,7.5,12.7,6.7L3.3,1.6Q2.2,1.3,1.8,2.5L1.8,12.5Q2.2,13.9,3.3,13.3L4.8,12.5A0.3,0.3,0,1,0,4.2,11.3Z"></path></svg></svg></div><div id="abgs" class="abgs" style="display: none;"><a id="abgl" class="abgl" href="https://support.google.com/adsense/troubleshooter/1631343?hl=en_US" target="_blank"><svg width="100%" height="100%"><path class="abgbg" d="M0,0L75,0L75,15L4,15s-4,0,-4,-4z"></path><svg class="abgi" x="60px"><circle cx="6" cy="6" r="0.67"></circle><path d="M4.2,11.3Q3.3,11.8,3.3,10.75L3.3,4.1Q3.3,3.1,4.3,3.5L10.4,7.0Q12.0,7.5,10.4,8.0L6.65,10.0L6.65,7.75a0.65,0.65,0,1,0,-1.3,0L5.35,10.75a0.9,0.9,0,0,0,1.3,0.8L12.7,8.2Q13.7,7.5,12.7,6.7L3.3,1.6Q2.2,1.3,1.8,2.5L1.8,12.5Q2.2,13.9,3.3,13.3L4.8,12.5A0.3,0.3,0,1,0,4.2,11.3Z"></path></svg><svg class="abgtxt" x="5px" y="11px" width="53px"><text transform="scale(0.10959612277867528)">AdChoices</text></svg></svg></a></div></div>
-    </div>
-
-    <div id="image-no-logo" class='image-ad grid-item'>
-      <span class='format'>Image</span>
-      <div id="adContent" data-variation="squareA" style="line-height: normal; background-color: rgb(255, 255, 255); overflow: hidden; position: relative; width: 300px; height: 250px; border-radius: 0px;"><div id="color-slot1" data-type="shape" style="position: absolute; top: 0px; left: 0px; width: 300px; height: 157px; background-color: rgb(33, 33, 33);"></div><div id="color-slot2" data-type="shape" style="position: absolute; top: 157px; left: 0px; width: 300px; height: 35px; background-color: rgb(83, 83, 83);"></div><div id="color-slot3" data-type="shape" style="position: absolute; top: 192px; left: 0px; width: 300px; height: 58px; background-color: rgb(255, 255, 255);"></div><div id="product" data-type="product" style="position: absolute; top: 0px; left: 0px; width: 300px; height: 157px;"><img src="<%= @image_url %>" style="display: block; position: absolute; top: 0px; left: 0px; width: 300px; height: 157px;"></div><div id="text1" data-type="headline" dir="ltr" style="font-family: Roboto, Arial, sans-serif; font-weight: bold; font-style: normal; width: 252px; position: absolute; top: 157px; left: 15px; height: 35px; color: rgb(255, 255, 255); font-size: 21px;"><div style="position: absolute; top: 5px; left: 0px; width: 252px; height: 25px;"><div style="display: inline-block; height: 100%; vertical-align: middle;"></div><div style="display: inline-block; width: 100%; vertical-align: middle;"><span><%= @short_headline %></span></div></div></div><div id="text2" data-type="description" dir="ltr" style="font-family: Roboto, Arial, sans-serif; font-weight: lighter; font-style: normal; width: 216px; position: absolute; top: 195px; left: 15px; height: 33px; color: rgb(0, 0, 0); font-size: 12px;">
-
-        <div class='long-headline' style="display:flex; align-items:center; width:100%; height:33px">
-          <span><%= @long_headline %></span>
+        <div class="tab-content">
+          <div id="websites-mobile" class="tab-pane fade active in">
+            <%= render('adwords_ads/mobile', { mobile_id: 'mobile--websites' }) %></li>
+          </div>
+          <%= render('adwords_ads/websites_desktop_pane') %>
         </div>
 
-      </div><div id="button" data-type="button" style="font-family: Times; font-weight: normal; font-style: normal; position: absolute; top: 202px; left: 246px; width: 39px; height: 39px; background-color: rgb(33, 33, 33);"><svg width="100%" height="100%" viewBox="0 0 26 42" style="position: absolute; top: 26%; left: 0px; width: 48%; height: 48%; margin: 0px 26%;"> <polyline fill="none" stroke="rgba(255,255,255,1)" stroke-width="5" stroke-miterlimit="10" points="6,3 24,21 6,39"></polyline></svg></div><div id="url" style="font-family: Roboto, Arial, sans-serif; font-weight: lighter; font-style: normal; width: 153px; position: absolute; top: 228px; left: 15px; height: 15px; color: rgb(0, 0, 0); font-size: 12px;" data-type="url" dir="ltr"><div style="position: absolute; top: 0px; left: 0px; width: 153px; height: 15px;"><div style="display: inline-block; height: 100%; vertical-align: middle;"></div><div style="display: inline-block; width: 100%; vertical-align: middle;"><span><%= @company.subdomain %>.customerstories.net</span></div></div></div><div id="adContent-border" style="border-color: rgb(229, 229, 229); border-radius: 0px; border-style: solid; border-width: 1px; position: absolute; top: 0px; left: 0px; width: 100%; height: 100%; z-index: 500; box-sizing: border-box; pointer-events: none;"></div><a id="adContent-clickOverlay" href="<%= @story_url %>" target="_blank" style="background: rgba(0, 0, 0, 0); z-index: 1000; cursor: pointer; position: absolute; left: 0px; top: 0px; width: 100%; height: 100%;"></a></div>
-      <div id="abgc" class="abgc" dir="ltr"><div id="abgb" class="abgb"><svg width="100%" height="100%"><rect class="abgbg" width="100%" height="100%"></rect><svg class="abgi" x="0px"><circle cx="6" cy="6" r="0.67"></circle><path d="M4.2,11.3Q3.3,11.8,3.3,10.75L3.3,4.1Q3.3,3.1,4.3,3.5L10.4,7.0Q12.0,7.5,10.4,8.0L6.65,10.0L6.65,7.75a0.65,0.65,0,1,0,-1.3,0L5.35,10.75a0.9,0.9,0,0,0,1.3,0.8L12.7,8.2Q13.7,7.5,12.7,6.7L3.3,1.6Q2.2,1.3,1.8,2.5L1.8,12.5Q2.2,13.9,3.3,13.3L4.8,12.5A0.3,0.3,0,1,0,4.2,11.3Z"></path></svg></svg></div><div id="abgs" class="abgs"><a id="abgl" class="abgl" href="https://support.google.com/adsense/troubleshooter/1631343?hl=en_US" target="_blank"><svg width="100%" height="100%"><path class="abgbg" d="M0,0L75,0L75,15L4,15s-4,0,-4,-4z"></path><svg class="abgi" x="60px"><circle cx="6" cy="6" r="0.67"></circle><path d="M4.2,11.3Q3.3,11.8,3.3,10.75L3.3,4.1Q3.3,3.1,4.3,3.5L10.4,7.0Q12.0,7.5,10.4,8.0L6.65,10.0L6.65,7.75a0.65,0.65,0,1,0,-1.3,0L5.35,10.75a0.9,0.9,0,0,0,1.3,0.8L12.7,8.2Q13.7,7.5,12.7,6.7L3.3,1.6Q2.2,1.3,1.8,2.5L1.8,12.5Q2.2,13.9,3.3,13.3L4.8,12.5A0.3,0.3,0,1,0,4.2,11.3Z"></path></svg><svg class="abgtxt" x="5px" y="11px" width="53px"><text>AdChoices</text></svg></svg></a></div></div>
-
-    </div>
-
-    <div id="text-square" class='grid-item'>
-      <span class='format'>Text</span>
-      <div id="adunit" data-rh-set-type="0"><div id="ads"><ul><li id="taw0" class="taw taw0" lang="en"><a class="rhbackground" href="<%= @story_url %>" target="_blank"><div class="rh" data-ifc="[[[&quot;5,5,5,5&quot;,null,0,2]]]"><table><tbody><tr><td class="rh0c" style="height:<%= @text_square_top_height %>"><div class="rh0" style="height:<%= @text_square_top_height %>"><table><tbody><tr><td class="rh00c" style="padding:<%= @text_square_top_padding %>;height:<%= @text_square_top_height_minus_padding %>">
-
-      <div class="short-headline rh-box-title rh-title rh00 collapsed-box"
-           style="display:flex; align-items: center; justify-content:center; height:<%= @text_square_top_height_minus_padding %>; font-size: <%= @text_square_top_font_size %>; line-height: <%= @text_square_top_line_height %>">
-        <a class="rhtitle rhdefaultcolored" href="<%= @story_url %>" target="_blank"><span><%= @short_headline %></span></a>
       </div>
 
-      </td></tr></tbody></table></div></td></tr><tr><td class="rh1c" style="height:<%= @text_square_middle_height_outer %>"><div class="rh1" style="height:<%= @text_square_middle_height_inner %>"><table><tbody><tr><td class="rh10c">
+      <div id="youtube" role="tabpanel" class="tab-pane fade">
 
-      <div class="long-headline rh-body rh-box-body rh10"
-           style="display:flex; align-items:center; justify-content:center; height:<%= @text_square_middle_height_minus_padding %>; line-height:<%= @text_square_middle_line_height %>"><a class="rhbody" href="<%= @story_url %>" target="_blank" title=""><span><%= @long_headline %></span></a>
+        <div class="tab-content">
+          <div id="youtube-mobile" class="tab-pane fade active in">
+
+            <%= render('adwords_ads/mobile', { mobile_id: 'mobile--youtube' }) %></li>
+
+          </div>
+          <%= render('adwords_ads/youtube_desktop_pane') %>
+        </div>
+
       </div>
 
-      </td></tr></tbody></table></div></td></tr><tr><td class="rh2c"><div class="rh2"><div class="rh-box-button rh-nessie-button-flat rh20" data-ifc="[[[null,null,1,1]]]"><div class="rhbutton-container"><a class="rhbutton" href="<%= @story_url %>" target="_blank" title="<%= @company.subdomain %>.customerstories.net"><div class="icon-container"><svg class="rhsvgpngicon" preserveAspectRatio="xMinYMin meet" version="1.1" xmlns="https://www.w3.org/2000/svg" xmlns:xlink="https://www.w3.org/1999/xlink" x="0px" y="0px" height="24px" width="15px" viewBox="0 0 26 42" enable-background="new 0 0 26 42" xml:space="preserve"><polyline fill="none" stroke="white" stroke-width="5" stroke-miterlimit="10" points="2.875,2.958 21.166,20.957 2.917,38.916"></polyline></svg></div></a></div></div></div></td></tr><tr><td class="rh3c"><div class="rh3"><table><tbody><tr><td class="rh30c"><div class="rh-box-empty rh30"></div></td><td class="rh31c"><div class="rh-box-url rh-url rh31" data-ifc="[[[null,null,1,1]]]" style="font-size:<%= @text_square_bottom_font_size %>"><div class="rhurlctr rhdefaultcolored rhurlctr_nowrap rhurlctr_clickable" dir="ltr"><a class="rhurl rhdefaultcolored" title="<%= @short_headline %>" href="<%= @story_url %>" target="_blank"><span><%= @short_headline %></span></a></div></div></td></tr></tbody></table></div></td></tr></tbody></table></div></a></li></ul></div><div class="ads_chrome_top"></div><div class="ads_chrome_bottom"></div><div class="ads_chrome_left"></div><div class="ads_chrome_right"></div></div>
+      <div id="gmail" role="tabpanel" class="tab-pane fade">
 
-      <div id="abgc" class="abgc" dir="ltr" style="width: 15px; height: 15px;"><div id="abgb" class="abgb" style="display: block;"><svg width="100%" height="100%"><rect class="abgbg" width="100%" height="100%"></rect><svg class="abgi" x="0px"><circle cx="6" cy="6" r="0.67"></circle><path d="M4.2,11.3Q3.3,11.8,3.3,10.75L3.3,4.1Q3.3,3.1,4.3,3.5L10.4,7.0Q12.0,7.5,10.4,8.0L6.65,10.0L6.65,7.75a0.65,0.65,0,1,0,-1.3,0L5.35,10.75a0.9,0.9,0,0,0,1.3,0.8L12.7,8.2Q13.7,7.5,12.7,6.7L3.3,1.6Q2.2,1.3,1.8,2.5L1.8,12.5Q2.2,13.9,3.3,13.3L4.8,12.5A0.3,0.3,0,1,0,4.2,11.3Z"></path></svg></svg></div><div id="abgs" class="abgs" style="display: none;"><a id="abgl" class="abgl" href="https://support.google.com/adsense/troubleshooter/1631343?hl=en_US" target="_blank"><svg width="100%" height="100%"><path class="abgbg" d="M0,0L75,0L75,15L4,15s-4,0,-4,-4z"></path><svg class="abgi" x="60px"><circle cx="6" cy="6" r="0.67"></circle><path d="M4.2,11.3Q3.3,11.8,3.3,10.75L3.3,4.1Q3.3,3.1,4.3,3.5L10.4,7.0Q12.0,7.5,10.4,8.0L6.65,10.0L6.65,7.75a0.65,0.65,0,1,0,-1.3,0L5.35,10.75a0.9,0.9,0,0,0,1.3,0.8L12.7,8.2Q13.7,7.5,12.7,6.7L3.3,1.6Q2.2,1.3,1.8,2.5L1.8,12.5Q2.2,13.9,3.3,13.3L4.8,12.5A0.3,0.3,0,1,0,4.2,11.3Z"></path></svg><svg class="abgtxt" x="5px" y="11px" width="53px"><text transform="scale(0.10959612277867528)">AdChoices</text></svg></svg></a></div></div>
+        <div class="tab-content">
+          <div id="gmail-mobile" class="tab-pane fade active in">
+            <h4>gmail mobile</h4>
+
+            <ul class="list-unstyled list-inline">
+              <li><%#= render('adwords_ads/mobile') %></li>
+              <li><%#= render('adwords_ads/mobile') %></li>
+            </ul>
+
+          </div>
+          <div id="gmail-desktop" class="tab-pane fade">
+            <h4>gmail desktop</h4>
+          </div>
+        </div>
+
+      </div>
 
     </div>
 

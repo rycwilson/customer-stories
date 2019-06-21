@@ -17,8 +17,6 @@ Rails.application.config.assets.precompile << /\.(?:svg|eot|woff|ttf|otf)\z/
 Rails.application.config.assets.precompile += %w(
   google/ads_preview.js
   google/ads_preview.css
-  google/ads_preview2.js
-  google/ads_preview2.css
   jquery-textfill/source/jquery.textfill.js
   plugins/cs_video.js
   plugins/cs_overlays.js
