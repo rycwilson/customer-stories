@@ -12,8 +12,8 @@
       <div class="spacer" style="height: 24px"></div>
       <div class="logo" style="background-image: url(<%= @logo_url %>)"></div>
       <div class="spacer" style="height: 12px"></div>
-      <div class="long-headline">
-        <span style="font-size: <%= @ads_params[:tower][:lh_font_size] %>"><%= @long_headline %></span>
+      <div class="description">
+        <span style="font-size: <%= @ads_params[:tower][:desc_font_size] %>"><%= @description %></span>
       </div>
       <div class="spacer" style="height: 18px"></div>
       <div class="button">
@@ -30,8 +30,8 @@
     <div class="short-headline">
       <span><%= @short_headline %></span>
     </div>
-    <div class="long-headline">
-      <span><%= @long_headline %></span>
+    <div class="description">
+      <span><%= @description %></span>
     </div>
     <div class="button">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><polyline fill="none" points="42,32 60,50 42,68" stroke-width="6" stroke-linecap="round" stroke-linejoin="round" stroke="rgba(0,0,0,1)"></polyline></svg>
@@ -47,8 +47,8 @@
     <%= render('adwords_ads/ads_by_google') %>
     <div class="landscape-image" style="background-image: url(<%= @image_url %>)"></div>
     <div>
-      <div class="long-headline">
-        <a><%= @long_headline %></a>
+      <div class="description">
+        <a><%= @description %></a>
       </div>
       <div class="spacer" style="height: 11px;"></div>
       <div class="business-name">
@@ -66,8 +66,8 @@
     <%= render('adwords_ads/ads_by_google') %>
     <div class="square-image" style="background-image: url(<%= @square_image_url %>)"></div>
     <div>
-      <div class="long-headline">
-        <a href="javascript:;"><%= @long_headline %></a>
+      <div class="description">
+        <a href="javascript:;"><%= @description %></a>
       </div>
       <div>
         <div class="business-name">

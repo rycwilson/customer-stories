@@ -1021,7 +1021,7 @@ class Company < ApplicationRecord
   def gads_requirements_checklist
     {
       promote_enabled: self.promote_tr?,
-      default_headline: self.adwords_short_headline.present?,
+      default_headline: self.gads_default_short_headline.present?,
       square_image: self.adwords_images.square_images.default.present?,
       landscape_image: self.adwords_images.landscape_images.default.present?,
       valid_defaults: GoogleAds::get_image_assets(
@@ -1148,7 +1148,7 @@ class Company < ApplicationRecord
             new_gads[:topic] = { errors: new_topic_gad[:errors] }
           end
         end
-        new_gads[:topic] = story.topic_ad.slice(:ad_id, :long_headline)
+        new_gads[:topic] = story.topic_ad.slice(:ad_id, :description)
 
         if story.retarget_ad.blank?
           story.create_retarget_ad(adwords_ad_group_id: story.company.retarget_ad_group.id, status: 'ENABLED')
@@ -1160,7 +1160,7 @@ class Company < ApplicationRecord
             new_gads[:retarget] = { errors: new_retarget_gad[:errors] }
           end
         end
-        new_gads[:retarget] = story.retarget_ad.slice(:ad_id, :long_headline)
+        new_gads[:retarget] = story.retarget_ad.slice(:ad_id, :description)
 
       else
 

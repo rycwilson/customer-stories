@@ -30,7 +30,7 @@
     font-weight: 700;
   }
 
-  .long-headline {
+  .description {
     box-sizing: border-box;
     color: #5C5C5C;
     font-weight: 300;
@@ -82,7 +82,7 @@
       background-position: center;
       margin: 0 6px;
     }
-    .long-headline {
+    .description {
       flex: 1 0 0;
       margin: 0 6px;
       p {
@@ -132,7 +132,7 @@
       line-height: 1.3em;
     }
   }
-  .long-headline {
+  .description {
     flex-shrink: 0;
     flex-grow: 1;
     margin: 0 15px;
@@ -198,7 +198,7 @@
       max-height: 6.0em;
       border: 0 solid transparent;
       border-width: 0 6px;
-      // font-size: 20px;  => set in controller, depends on long headline length
+      // font-size: 20px;  => set in controller, depends on description length
       span {
         line-height: 1.5em;
       }
@@ -213,7 +213,7 @@
       //   size: contain;
       // }
     }
-    .long-headline {
+    .description {
       // box-sizing: border-box;
       // color: #5C5C5C;
       flex-shrink: 0;

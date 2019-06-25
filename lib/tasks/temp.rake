@@ -2,8 +2,15 @@ namespace :temp do
 
   desc "temp stuff"
 
-  # at this point, ads are still invalid due to missing square image
-  # => add a square image and reset
+  task add_fields_to_gads: :environment do
+    AdwordsAd.all.each do |ad| 
+      ad.update(
+        short_headline: ad.story.company.gads_default_short_headline,
+        description: ad.long_headline
+      )
+    end
+    # GoogleAds::update_ads(AdwordsAd.where.not(ad_id: nil).to_a)
+  end
 
   # this needs to be a permananent method for copying production db
   task reset_all_gads_campaigns: :environment do
@@ -11,7 +18,7 @@ namespace :temp do
       if company.promote_tr?
 
         # ensure these values match google (or set them to nil):
-        # comany.topic/retarget_campaign.campaign_id
+        # company.topic/retarget_campaign.campaign_id
         # company.topic/retarget_ad_group.ad_group_id
         company.sync_gads_campaigns
 

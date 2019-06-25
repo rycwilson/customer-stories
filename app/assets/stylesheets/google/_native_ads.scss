@@ -1,7 +1,7 @@
 
 .native-ad {
   display: flex;
-  .long-headline {
+  .description, .long-headline {
     overflow: hidden;
     a {
       text-decoration: none;
@@ -192,7 +192,7 @@
       cursor: pointer;
       margin-bottom: 2px;
     }
-    .long-headline {
+    .description {
       height: 28px;
       flex-grow: 1;
       a {

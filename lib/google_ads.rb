@@ -39,7 +39,7 @@ module GoogleAds
             campaign_type = (new_gad[:ad_group_id] == story.topic_ad.ad_group.ad_group_id) ? :topic : :retarget
             new_gads[campaign_type] = {
               ad_id: new_gad[:ad][:id],
-              long_headline: new_gad[:ad][:long_headline][:asset][:asset_text]
+              # description: new_gad[:ad][:description][:asset][:asset_text]
             }
             puts "***\n*** Created responsive display ad (#{campaign_type})\n***"
             log_result([ new_gad[:ad] ])

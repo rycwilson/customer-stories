@@ -35,8 +35,8 @@ function initPromotedStoriesTable () {
         }
       },
       {
-        name: 'long_headline',
-        data: 'ads_long_headline'
+        name: 'description',
+        data: 'ads_description'
       },
       {
         name: 'customer',
@@ -169,7 +169,7 @@ function initPromotedStoriesTable () {
               placeholder: 'Select a Promoted Story',
               width: 'style',
               data: $table.DataTable().rows().data().toArray().map(function (promotedStory) {
-                  return { id: promotedStory.slug, text: promotedStory.ads_long_headline };
+                  return { id: promotedStory.slug, text: promotedStory.ads_description };
                 })
             });
           },
@@ -208,7 +208,7 @@ function initPromotedStoriesTable () {
                 $row.find('td.promoted-story-title')
                       .empty()
                       .removeClass('alert alert-success')
-                      .text(promotedStory.ads_long_headline)
+                      .text(promotedStory.ads_description)
               }, 2500)
             }
           };
@@ -220,7 +220,7 @@ function initPromotedStoriesTable () {
       promotedStoriesEditor = newPromotedStoriesEditor();
       promotedStoriesEditor.on('open', function (e) {
         $('.DTE').closest('td').addClass('editor-is-open');
-        $('#DTE_Field_long_headline').attr('maxlength', '<%= RESPONSIVE_AD_LONG_HEADLINE_MAX.to_s %>');
+        $('#DTE_Field_description').attr('maxlength', <%= RESPONSIVE_AD_DESCRIPTION_MAX.to_s %>);
         $('.DTE_Form_Buttons')
           .prepend('<span class="help-block">' + storyTitleRequirements + '</span>');
       });

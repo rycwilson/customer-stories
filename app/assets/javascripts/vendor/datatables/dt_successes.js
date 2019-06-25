@@ -20,8 +20,8 @@ function initSuccessesTable (dtSuccessesInit) {
       {
         data: null,
         render: function (data, type, row) {
-          return "<i class='fa fa-caret-right'></i>" +
-                 "<i class='fa fa-caret-down' style='display:none'></i>";
+          return '<i class="fa fa-caret-right"></i>' +
+                 '<i class="fa fa-caret-down" style="display:none"></i>';
         }
       },
       {

@@ -100,7 +100,7 @@ class AdwordsAd < ApplicationRecord
         {
           asset: {
             xsi_type: 'TextAsset',
-            asset_text: self.story.company.adwords_short_headline  # get company via story in case ad is new record
+            asset_text: self.story.company.gads_default_short_headline  # get company via story in case ad is new record
           }
         }
       ],
@@ -108,7 +108,7 @@ class AdwordsAd < ApplicationRecord
         {
           asset: {
             xsi_type: 'TextAsset',
-            asset_text: self.long_headline
+            asset_text: self.description
           }
         },
       ],
@@ -168,13 +168,14 @@ class AdwordsAd < ApplicationRecord
     #     ).length == ?
   end
 
-
   def remove_gad
     GoogleAds::remove_ads([ { ad_group_id: self.ad_group.ad_group_id, ad_id: self.ad_id } ])
   end
 
   def assign_defaults
-    self.long_headline = self.story.title.truncate(RESPONSIVE_AD_LONG_HEADLINE_MAX, { omission: '' })
+    self.description = self.story.title.truncate(RESPONSIVE_AD_DESCRIPTION_MAX, { omission: '' })
+    self.long_headline = self.story.company.gads_default_long_headline ||
+                         self.story.title.truncate(RESPONSIVE_AD_LONG_HEADLINE_MAX, { omission: '' })
     self.adwords_images << self.story.company.adwords_images.default
   end
 

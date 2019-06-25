@@ -13,13 +13,13 @@ function newPromotedStoriesEditor() {
               id: $('#promoted-stories-table').DataTable()
                     .row('[data-story-id="' + storyId + '"]').data()
                     .topic_ad.id,
-              long_headline: data.data[storyId].long_headline
+              description: data.data[storyId].description
             },
             retarget_ad_attributes: {
               id: $('#promoted-stories-table').DataTable()
                     .row('[data-story-id="' + storyId + '"]').data()
                     .retarget_ad.id,
-              long_headline: data.data[storyId].long_headline
+              description: data.data[storyId].description
             }
           }
         };
@@ -32,8 +32,8 @@ function newPromotedStoriesEditor() {
     fields: [
       {
         label: 'Promoted Story Title',
-        name: 'long_headline',
-        data: 'ads_long_headline',
+        name: 'description',
+        data: 'ads_description',
         type: 'textarea'
       }
     ]
@@ -43,7 +43,7 @@ function newPromotedStoriesEditor() {
 function openPromotedStoriesEditor (promotedStoriesEditor, $row) {
   promotedStoriesEditor.inline(
     $row.find('td.promoted-story-title')[0],
-    'long_headline',
+    'description',
     { // default options: https://editor.datatables.net/reference/option/formOptions.inline
       submit: 'all',
       onComplete: function (editor) {
