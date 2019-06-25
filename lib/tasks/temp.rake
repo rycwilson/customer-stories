@@ -9,7 +9,6 @@ namespace :temp do
         description: ad.long_headline
       )
     end
-    # GoogleAds::update_ads(AdwordsAd.where.not(ad_id: nil).to_a)
   end
 
   # this needs to be a permananent method for copying production db
