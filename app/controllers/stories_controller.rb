@@ -194,7 +194,7 @@ class StoriesController < ApplicationController
     data = Rails.cache.fetch("#{@company.subdomain}/promoted-stories") do
       @company.stories.with_ads.to_json({
         only: [:id, :title, :slug],
-        methods: [:ads_status, :ads_long_headline, :ads_images, :csp_story_path],
+        methods: [:ads_status, :ads_description, :ads_images, :csp_story_path],
         include: {
           success: {
             only: [],
@@ -202,12 +202,8 @@ class StoriesController < ApplicationController
               customer: { only: [:name, :slug] }
             }
           },
-          topic_ad: {
-            only: [:id, :status]
-          },
-          retarget_ad: {
-            only: [:id, :status]
-          }
+          topic_ad: { only: [:id] },
+          retarget_ad: { only: [:id] }
         }
       })
     end

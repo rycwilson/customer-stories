@@ -156,7 +156,8 @@ class CompaniesController < ApplicationController
     params.require(:company).permit(
       :name, :subdomain, :logo_url, :website, :gtm_id,
       :header_color_1, :header_color_2, :header_text_color,
-      :adwords_short_headline,
+      :gads_business_name, :gads_default_short_headline, :gads_default_long_headline,
+      :gads_default_cta_text, :gads_default_main_color, :gads_default_accent_color,
       { adwords_images_attributes: [:id, :type, :image_url, :default, :is_default_card, :_destroy] }
     )
   end

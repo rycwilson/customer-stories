@@ -16,7 +16,7 @@ class AdwordsAdsController < ApplicationController
           # error
         end
       end
-      new_gads[:topic] = story.topic_ad.slice(:ad_id, :long_headline)
+      new_gads[:topic] = story.topic_ad.slice(:ad_id, :description)
 
       if story.retarget_ad.blank?
         story.create_retarget_ad(adwords_ad_group_id: story.company.retarget_ad_group.id, status: 'ENABLED')
@@ -28,7 +28,7 @@ class AdwordsAdsController < ApplicationController
           # error
         end
       end
-      new_gads[:retarget] = story.retarget_ad.slice(:ad_id, :long_headline)
+      new_gads[:retarget] = story.retarget_ad.slice(:ad_id, :description)
 
     else
       add_missing_default_images(story)
@@ -75,7 +75,7 @@ class AdwordsAdsController < ApplicationController
 
         # revert changes if google errors (update_columns method => no callbacks)
         if updated_gad.try(:[], :errors)
-          if (ad.previous_changes.keys & ['long_headline', 'status']).any?
+          if (ad.previous_changes.keys & ['description', 'status']).any?
             ad.update_columns(
               ad.previous_changes.map { |attr, val| [attr, val.shift] }.to_h
             )
@@ -94,7 +94,7 @@ class AdwordsAdsController < ApplicationController
       JSON.parse(
         story.to_json({
           only: [:id, :title, :slug],
-          methods: [:ads_status, :ads_long_headline, :ads_images, :csp_story_path],
+          methods: [:ads_status, :ads_description, :ads_images, :csp_story_path],
           include: {
             success: {
               only: [],
@@ -102,12 +102,8 @@ class AdwordsAdsController < ApplicationController
                 customer: { only: [:name, :slug] }
               }
             },
-            topic_ad: {
-              only: [:id, :status]
-            },
-            retarget_ad: {
-              only: [:id, :status]
-            }
+            topic_ad: { only: [:id] },
+            retarget_ad: { only: [:id, :status] }
           }
         })
       )
@@ -144,8 +140,9 @@ class AdwordsAdsController < ApplicationController
     @company = @story.company
     @is_production = ENV['HOST_NAME'] == 'customerstories.net'
     @story_url = @story.csp_story_url
-    @short_headline = @company.adwords_short_headline
+    @short_headline = @story.ads_short_headline
     @long_headline = @story.ads.long_headline
+    @description = @story.ads.description
     @call_to_action = 'See More'
 
     # TODO: change this from the placeholder with dimensions to an actual image placeholder
@@ -159,7 +156,7 @@ class AdwordsAdsController < ApplicationController
                         RESPONSIVE_AD_SQUARE_IMAGE_PLACEHOLDER
     @logo_url = @story.ads.first.square_logos.take.try(:image_url) ||
                 RESPONSIVE_AD_SQUARE_LOGO_PLACEHOLDER
-    set_ad_parameters(@long_headline)
+    set_ad_parameters(@description)
     render :ads_preview, layout: false
   end
 
@@ -167,8 +164,8 @@ class AdwordsAdsController < ApplicationController
 
   def story_params
     params.require(:story).permit(
-      topic_ad_attributes: [ :id, :status, :long_headline, adwords_image_ids: [] ],
-      retarget_ad_attributes: [ :id, :status, :long_headline, adwords_image_ids: [] ]
+      topic_ad_attributes: [ :id, :status, :description, :short_headline, :long_headline, adwords_image_ids: [] ],
+      retarget_ad_attributes: [ :id, :status, :description, :short_headline, :long_headline, adwords_image_ids: [] ]
     )
   end
 
@@ -205,29 +202,29 @@ class AdwordsAdsController < ApplicationController
 
   # padding for the lower half is 25px 11px
   # "*_minus_padding" means minus 25x2 = 50
-  def set_ad_parameters(long_headline)
+  def set_ad_parameters(description)
     @ads_params = ads_params_shell
-    case long_headline.length
+    case description.length
     when 75..90
       @ads_params[:tower][:sh_font_size] = '20px'
-      @ads_params[:tower][:lh_font_size] = '13px'
+      @ads_params[:tower][:desc_font_size] = '13px'
       # @ads_params[:square191][:sh_font_size] = '15px'
-      # @ads_params[:square191][:lh_font_size] = '10px'
+      # @ads_params[:square191][:desc_font_size] = '10px'
     when 55...75
       @ads_params[:tower][:sh_font_size] = '24px'
-      @ads_params[:tower][:lh_font_size] = '16px'
+      @ads_params[:tower][:desc_font_size] = '16px'
       # @ads_params[:square191][:sh_font_size] = ''
-      # @ads_params[:square191][:lh_font_size] = ''
+      # @ads_params[:square191][:desc_font_size] = ''
     when 45...55
       @ads_params[:tower][:sh_font_size] = '26px'
-      @ads_params[:tower][:lh_font_size] = '17px'
+      @ads_params[:tower][:desc_font_size] = '17px'
       # @ads_params[:square191][:sh_font_size] = ''
-      # @ads_params[:tower][:lh_font_size] = ''
+      # @ads_params[:tower][:desc_font_size] = ''
     when 0...45
       @ads_params[:tower][:sh_font_size] = '28px'
-      @ads_params[:tower][:lh_font_size] = '18px'
+      @ads_params[:tower][:desc_font_size] = '18px'
       # @ads_params[:square191][:sh_font_size] = ''
-      # @ads_params[:tower][:lh_font_size] = ''
+      # @ads_params[:tower][:desc_font_size] = ''
     end
     # end
   end
@@ -236,7 +233,7 @@ class AdwordsAdsController < ApplicationController
     {
       tower: {
         sh_font_size: '',
-        lh_font_size: ''
+        desc_font_size: ''
       }
     }
   end

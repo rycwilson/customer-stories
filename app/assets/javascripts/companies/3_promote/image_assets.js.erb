@@ -213,7 +213,7 @@ function promoteSettingsListeners () {
             
   $(document)
 
-    .on('input', '[name="company[adwords_short_headline]"]', function () {
+    .on('input', '[name="company[gads_default_short_headline]"]', function () {
       var $input = $(this), $btn = $(this).next();
       $input.is(':valid') ? $btn.show().prop('disabled', false) : $btn.prop('disabled', true);
     })
@@ -316,7 +316,7 @@ function promoteSettingsListeners () {
                   data.ads_images.filter(function (image) {
                     return image.type === imageToRemove.type;
                   }).length === 1;
-              }).data().toArray().map(function (row) { return row.ads_long_headline; });  
+              }).data().toArray().map(function (row) { return row.ads_description; });  
             } else {
               return [];
             }

@@ -25,21 +25,12 @@ class Story < ApplicationRecord
     end
   end
   has_many :adwords_ads, dependent: :destroy do  # topic and retarget
-    def enabled?
-      self.all? { |ad| ad.status == 'ENABLED' }
-    end
-    def status
-      self.first.status  # same for each ad
-    end
-    def long_headline
-      self.first.long_headline  # same for each ad
-    end
-    def adwords_image
-      self.first.adwords_image  # same for each ad
-    end
-    def adwords_image= (adwords_image)
-      self.each { |ad| ad.adwords_image = adwords_image }
-    end
+    def enabled?; self.all? { |ad| ad.status == 'ENABLED' }; end
+    
+    # these values are the same for topic and retarget ads
+    def status; self.first.status; end
+    def description; self.first.description; end
+    def long_headline; self.first.long_headline; end
   end
   alias_attribute :ads, :adwords_ads
   has_one(
@@ -516,6 +507,14 @@ class Story < ApplicationRecord
 
   def ads_status
     self.ads.first.status  # same for each ad
+  end
+
+  def ads_description
+    self.ads.first.description
+  end
+
+  def ads_short_headline
+    self.ads.first.short_headline  # same for each ad
   end
 
   def ads_long_headline
