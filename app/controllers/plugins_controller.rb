@@ -67,7 +67,7 @@ class PluginsController < ApplicationController
       layout: false,
       locals: {
         company: @company,
-        stories: stories.first(16),
+        stories: stories,  #.first(16),
         title: 'Customer Stories',
         is_demo: params[:is_demo].present?,
         max_rows: params[:max_rows].to_i,
