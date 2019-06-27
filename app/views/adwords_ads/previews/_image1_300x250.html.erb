@@ -22,7 +22,7 @@
 
   <div class="landscape-image" style="background-image: url(<%= @image_url %>)"></div>
 
-  <div class="short-headline">
+  <div class="short-headline <%= @short_headline_background %>" style="<%= 'background-color:' + @main_color %>">
     <span><%= @short_headline %></span>
   </div>
 
@@ -31,9 +31,7 @@
     <div class="description">
       <p><%= @description %></p>
     </div>
-    <div class="button">
-      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><polyline fill="none" points="42,32 60,50 42,68" stroke-width="6" stroke-linecap="round" stroke-linejoin="round" stroke="rgba(0,0,0,1)"></polyline></svg>
-    </div>
+    <button class="<%= @button_background %>" style="background-color: <%= @accent_color %>"></button>
   </div>
 
   <div class="spacer"></div>

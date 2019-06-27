@@ -3,7 +3,7 @@
 
   var res = <%= raw @response_data.to_json %>,
       errors = <%= raw @errors.to_json %>,
-      $form = $('#image-assets-form'),
+      $form = $('#gads-images-form'),
       $submitBtn = $form.find('button[type="submit"][data-submitted="true"]'),
       $formGroup = $submitBtn.closest('.form-group'),
       $thisList = $formGroup.closest('ul'),

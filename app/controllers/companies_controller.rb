@@ -58,7 +58,7 @@ class CompaniesController < ApplicationController
     respond_to { |format| format.js }
   end
 
-  def update_gads
+  def update_gads_images
     puts 'companies#update_gads'
     awesome_print(company_params.to_h)
     company = Company.find(params[:id])

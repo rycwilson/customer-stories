@@ -43,7 +43,7 @@
     margin: 0 auto;
     background-color: #fff;
     border: 1px solid transparent;
-    &.bg-dark {
+    &.dark-background {
       border: 1px solid #fff;
     }
     // following settings lifted from chrome new tab page
@@ -148,7 +148,7 @@
     }
     &:hover, &.cs-loading {
       border: 1px solid transparent;  // override bootstrap .thumbnail
-      &.bg-dark {
+      &.dark-background {
         border: 1px solid #fff;
       }
       box-shadow: 0 3px 8px 0 rgba(0,0,0,0.2), 0 0 0 1px rgba(0,0,0,0.08);
@@ -273,7 +273,7 @@
       width: 50px;
       padding: 15px;
     }
-    &.bg-light {
+    &.light-background {
       .cs-scroll-left {
         background: url('https://s3-us-west-1.amazonaws.com/csp-production-assets/shared/chevron-gray-left.png') no-repeat center;
       }
@@ -281,7 +281,7 @@
         background: url('https://s3-us-west-1.amazonaws.com/csp-production-assets/shared/chevron-gray-right.png') no-repeat center;
       }
     }
-    &.bg-dark {
+    &.dark-background {
       .cs-scroll-left {
         background: url('https://s3-us-west-1.amazonaws.com/csp-production-assets/shared/chevron-white-left.png') no-repeat center;
       }
@@ -314,7 +314,7 @@
       margin: 0 4px;
       border-radius: 8px;
     }
-    &.bg-light {
+    &.light-background {
       .cs-page-dot {
         background-color: #bbb;
       }
@@ -322,7 +322,7 @@
         background-color: #333;
       }
     }
-    &.bg-dark {
+    &.dark-background {
       .cs-page-dot {
         border: 1px solid #fff;
         background-color: transparent;

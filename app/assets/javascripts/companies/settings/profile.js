@@ -21,7 +21,7 @@ function companyProfileListeners() {
     var o = Math.round(((parseInt(bgRgb.r) * 299) +
                         (parseInt(bgRgb.g) * 587) +
                         (parseInt(bgRgb.b) * 114)) / 1000);
-    return (o > 125) ? 'dark' : 'light';
+    return (o > 155) ? 'light-background' : 'dark-background';
   };
 
   // CSP test-colors-btn
@@ -48,11 +48,11 @@ function companyProfileListeners() {
     .on('change', '.color-picker .lower', function () {
       var $storiesHeader = $('#company-profile-form .stories-header');
       $storiesHeader.css('background-color', $(this).val());
-      if (colorContrast(hexToRgb($(this).val())) === 'light') {
-        $storiesHeader.find('h4').removeClass('dark').addClass('light')
+      if (colorContrast(hexToRgb($(this).val())) === 'dark-background') {
+        $storiesHeader.find('h4').removeClass('light-background').addClass('dark-background')
         $('input[name="company[header_text_color]"]').minicolors('value', { color: '#ffffff' });
       } else {
-        $storiesHeader.find('h4').addClass('dark').removeClass('light');
+        $storiesHeader.find('h4').removeClass('dark-background').addClass('light-background');
         $('input[name="company[header_text_color]"]').minicolors('value', { color: '#333333' });
         // $storiesHeader.find('i').css({ color: 'rgba(255, 255, 255, 0.9)' });
       }

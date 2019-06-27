@@ -18,14 +18,14 @@
               &nbsp;&nbsp;Promoted Stories
             </a>
           </li>
-          <li class="<%= tab == '#content-settings' ? 'active' : '' %>">
-            <a href="#content-settings" data-toggle="tab">
+          <li class="<%= tab == '#gads-content' ? 'active' : '' %>">
+            <a href="#gads-content" data-toggle="tab">
               <i class="fa fa-edit"></i>
               &nbsp;&nbsp;Text Content
             </a>
           </li>
-          <li class="<%= tab == '#image-assets' ? 'active' : '' %>">
-            <a href="#image-assets" data-toggle="tab">
+          <li class="<%= tab == '#gads-images' ? 'active' : '' %>">
+            <a href="#gads-images" data-toggle="tab">
               <i class="fa fa-image"></i>
               <i class="fa fa-image"></i>
               &nbsp;&nbsp;Image Content
@@ -68,12 +68,12 @@
             <%= render 'companies/3_promote/promoted_stories_table', { company: company } %>
           </div>
 
-          <div id="content-settings" class="tab-pane fade <%= tab == '#content-settings' ? 'active in' : '' %>">
-            <%= render 'companies/3_promote/content_settings', { company: company } %>
+          <div id="gads-content" class="tab-pane fade <%= tab == '#gads-content' ? 'active in' : '' %>">
+            <%= render 'companies/3_promote/ads_text_content', { company: company } %>
           </div>
 
-          <div id="image-assets" class="tab-pane fade <%= tab == '#image-assets' ? 'active in' : '' %>">
-            <%= render 'companies/3_promote/image_assets', { company: company } %>
+          <div id="gads-images" class="tab-pane fade <%= tab == '#gads-images' ? 'active in' : '' %>">
+            <%= render 'companies/3_promote/ads_image_content', { company: company } %>
           </div>
 
         </div>

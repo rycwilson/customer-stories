@@ -28,7 +28,7 @@ function storyCTAsListeners () {
         var o = Math.round(((parseInt(bgRgb.r) * 299) +
                             (parseInt(bgRgb.g) * 587) +
                             (parseInt(bgRgb.b) * 114)) / 1000);
-        return (o > 125) ? 'bg-light' : 'bg-dark';
+        return (o > 155) ? 'light-background' : 'dark-background';
       },
       closeOpenAccordions = function () {
         $('#edit-ctas .edit-cta.collapse').each(function () {
@@ -108,7 +108,7 @@ function storyCTAsListeners () {
     })
 
     .on('change', '[name="primary_cta[background_color]"]', function () {
-      if (colorContrast(hexToRgb($(this).val())) === 'bg-light') {
+      if (colorContrast(hexToRgb($(this).val())) === 'light-background') {
         $('[name="primary_cta[text_color]"]').minicolors('value', { color: '#333333' });
       } else {
         $('[name="primary_cta[text_color]"]').minicolors('value', { color: '#ffffff' });

@@ -69,6 +69,12 @@
         text-transform: uppercase;
         text-decoration: none;
       }
+      &.dark-background {
+        color: #fff;
+      }
+      &.light-background {
+        color: #000;
+      }
     }
   }
 }

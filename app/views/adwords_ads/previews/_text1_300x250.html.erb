@@ -25,7 +25,7 @@
       <a href="javascript:;"><%= @short_headline %></a>
     </div>
     <div class="business-name">
-      <a href="javascript:;"><%= @company.name %></a>
+      <a href="javascript:;"><%= @business_name %></a>
     </div>
     <div class="description">
       <a href="javascript:;"><%= @description %></a>
@@ -33,8 +33,8 @@
   </div>
 
   <div>
-    <div class="call-to-action">
-      <a><%= @call_to_action %></a>
+    <div class="call-to-action <%= @text_cta_background %>" style="background-color: <%= @main_color %>">
+      <a><%= @cta_text %></a>
     </div>
   </div>
 

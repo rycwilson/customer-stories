@@ -78,7 +78,7 @@ function attachAppListeners () {
       })
 
     /**
-     * some forms excluded as they have their own handler, e.g. #new-success-form, #image-assets-form
+     * some forms excluded as they have their own handler, e.g. #new-success-form, #gads-images-form
      */
     .on('click', 'button:submit', function (e) {
       if ($(this).hasClass('disabled')) {
@@ -100,7 +100,8 @@ function attachAppListeners () {
           $form.is('#story-content-form') ||
           $form.is('#new-cta-form') ||
           $form.is('[id*="cta-"]') ||
-          $form.is('#submission-form')) {
+          $form.is('#submission-form') ||
+          $form.is('#gads-content-form')) {
         if ($form.data('submitted')) {
           e.preventDefault();
           return false;
