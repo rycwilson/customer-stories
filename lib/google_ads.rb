@@ -108,9 +108,9 @@ module GoogleAds
       service = create_api.service(:AdService, API_VERSION)
       operations = ads.map do |ad|
         gad = ad.google_ad
-        ad_group_operation = { 
-          operator: 'SET', 
-          operand: gad.merge({ id: ad.ad_id }) 
+        ad_group_operation = {
+          operator: 'SET',
+          operand: gad.merge({ id: ad.ad_id })
         }
       end
       updated_gads = {}
@@ -140,7 +140,7 @@ module GoogleAds
       # a missing ad_id will raise this exception
       rescue AdsCommon::Errors::ApiException => e
         updated_gads[:errors] = e.message
-        puts "***\n*** Failed to update responsive display ad #{updated_gad[:id]}\n***"
+        puts "***\n*** Failed to update ads #{ads.map { |ad| ad.ad_id }.join(',')}\n***"
         awesome_print(updated_gads[:errors])
       end
       updated_gads
@@ -188,14 +188,14 @@ module GoogleAds
       operations = ads.map do |ad|
         ad_group_ad = {
           ad_group_id: ad[:ad_group_id],
-          ad: { 
+          ad: {
             id: ad[:ad_id],
             # xsi_type: 'MultiAssetResponsiveDisplayAd'
           },
         }
-        ad_group_operation = { 
-          operator: 'REMOVE', 
-          operand: ad_group_ad 
+        ad_group_operation = {
+          operator: 'REMOVE',
+          operand: ad_group_ad
         }
       end
       begin
