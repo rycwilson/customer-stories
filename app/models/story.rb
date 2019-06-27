@@ -24,13 +24,20 @@ class Story < ApplicationRecord
       self.where(type: 'CTAForm')
     end
   end
+
+  # the methods below also exist as model methods since that's how they're consumed by datatables;
+  # TODO: dry it up
   has_many :adwords_ads, dependent: :destroy do  # topic and retarget
     def enabled?; self.all? { |ad| ad.status == 'ENABLED' }; end
     
     # these values are the same for topic and retarget ads
     def status; self.first.status; end
-    def description; self.first.description; end
+    def short_headline; self.first.short_headline; end
     def long_headline; self.first.long_headline; end
+    def description; self.first.description; end
+    def cta_text; self.first.cta_text; end
+    def main_color; self.first.main_color; end
+    def accent_color; self.first.accent_color; end
   end
   alias_attribute :ads, :adwords_ads
   has_one(
@@ -508,19 +515,27 @@ class Story < ApplicationRecord
   def ads_status
     self.ads.first.status  # same for each ad
   end
-
+  
+  def ads_short_headline
+    self.ads.first.short_headline  # same for each ad
+  end
+  
+  def ads_long_headline
+    self.ads.first.long_headline  # same for each ad
+  end
+  
   def ads_description
     self.ads.first.description
   end
 
-  def ads_short_headline
-    self.ads.first.short_headline  # same for each ad
+  def ads_main_color
+    self.ads.first.main_color
   end
 
-  def ads_long_headline
-    self.ads.first.long_headline  # same for each ad
+  def ads_accent_color
+    self.ads.first.accent_color
   end
-
+  
   def ads_images
     self.ads.first.adwords_images.map do |ad_image|   # same for each ad
       { id: ad_image.id, image_url: ad_image.image_url, type: ad_image.type }

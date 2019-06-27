@@ -135,40 +135,79 @@ class AdwordsAdsController < ApplicationController
   end
 
   def preview
-    @story = Story.includes(adwords_ads: { adwords_images: {} }).friendly.find(params[:story_slug])
-    # disable the ad links in production
-    @company = @story.company
-    @is_production = ENV['HOST_NAME'] == 'customerstories.net'
-    @story_url = @story.csp_story_url
-    @short_headline = @story.ads_short_headline
-    @long_headline = @story.ads.long_headline
-    @description = @story.ads.description
-    @call_to_action = 'See More'
+    if request.params[:company_preview].present? 
+      company = Company.find_by(subdomain: request.subdomain)
+      company_preview = request.params[:company_preview]
+      company_preview.each { |k,v| company_preview[k] = nil if v == '' }
+      story = nil
+    else
+      story = Story.includes(adwords_ads: { adwords_images: {} }).friendly.find(params[:story_slug])
+      company = story.company
+    end
+    @business_name = company_preview.try(:[], :gads_business_name) ||
+        company.gads_business_name || 
+        company.name.truncate(25)
+    @short_headline = company_preview.try(:[], :gads_default_short_headline) ||
+        story.try(:ads_short_headline) || 
+        company.gads_default_short_headline
+    @long_headline = company_preview.try(:[], :gads_default_long_headline) ||
+        story.try(:ads_long_headline) || 
+        "The Promoted Story Title goes here. It is copied from the Customer Story Title by default"
+    @description = story.try(:ads_description) || 
+        "The Promoted Story Title goes here. It is copied from the Customer Story Title by default"
+    @cta_text = company_preview.try(:[], :gads_default_cta_text) ||
+        story.try(:ads_cta_text) ||
+        company.gads_default_cta_text
+    @main_color = company_preview.try(:[], :gads_default_main_color) ||
+        story.try(:ads_main_color) || 
+        company.gads_default_main_color 
+    @accent_color = company_preview.try(:[], :gads_default_accent_color) ||
+        story.try(:ads_accent_color) || 
+        company.gads_default_accent_color
+    story_url = story.try(:csp_story_url)
+    
+    @button_background = company.color_contrast(@accent_color)
+    @short_headline_background = company.color_contrast(@main_color)
+    @cta_background = company.color_contrast(@main_color)
 
+    @image_url = random_ad_image(company, story, 'LandscapeImage', (story.try(:topic_ad) || company).adwords_images.landscape_images)
+    @square_image_url = random_ad_image(company, story, 'SquareImage', (story.try(:topic_ad) || company).adwords_images.square_images)
+    @logo_url = random_ad_image(company, story, 'SquareLogo', (story.try(:topic_ad) || company).adwords_images.square_logos)
+    
+    # disable the ad links in production
+    @is_production = ENV['HOST_NAME'] == 'customerstories.net'
+    
     # TODO: change this from the placeholder with dimensions to an actual image placeholder
     # same for the logo
-    @image_url = @story.ads.first.landscape_images.take.try(:image_url) ||
-                 RESPONSIVE_AD_LANDSCAPE_IMAGE_PLACEHOLDER
+    
+    
+    
     # must use strict_encode do newlines aren't added
     # @image_base64 = Base64.strict_encode64( open(@image_url) { |io| io.read } )
     # @image_dominant_color = Miro::DominantColors.new(@image_url).to_hex[0]
-    @square_image_url = @story.ads.first.square_images.take.try(:image_url) ||
-                        RESPONSIVE_AD_SQUARE_IMAGE_PLACEHOLDER
-    @logo_url = @story.ads.first.square_logos.take.try(:image_url) ||
-                RESPONSIVE_AD_SQUARE_LOGO_PLACEHOLDER
+    
+    
     set_ad_parameters(@description)
     render :ads_preview, layout: false
   end
-
+    
   private
-
+  
   def story_params
     params.require(:story).permit(
       topic_ad_attributes: [ :id, :status, :description, :short_headline, :long_headline, adwords_image_ids: [] ],
       retarget_ad_attributes: [ :id, :status, :description, :short_headline, :long_headline, adwords_image_ids: [] ]
-    )
+      )
   end
-
+    
+  # previews
+  # def company_params
+  #   params.require(:company).permit(
+  #     :gads_business_name, :gads_default_short_headline, :gads_default_long_headline,
+  #     :gads_default_cta_text, :gads_default_main_color, :gads_default_accent_color
+  #   )
+  # end
+      
   def add_missing_default_images(story)
     default_images = story.company.adwords_images.default
     story.ads.each do |ad|
@@ -179,7 +218,7 @@ class AdwordsAdsController < ApplicationController
       ad.save
     end
   end
-
+      
   def customize_gads_errors(new_gads)
     errors = []
     new_gads[:errors].each do |error|
@@ -188,18 +227,18 @@ class AdwordsAdsController < ApplicationController
         errors << "Not found: #{ error[:field].underscore.humanize.downcase.singularize }"
       when 'REQUIRED'
         errors << "Required: #{ error[:field].underscore.humanize.downcase.singularize }"
-      # when something else
+        # when something else
       else
       end
     end
     errors
   end
-
+      
   def gads_errors?(story, checklist)
     return false unless story.company.promote_tr?
     return story.ads.all? { |ad| ad.ad_id.present? } ? false : true
   end
-
+      
   # padding for the lower half is 25px 11px
   # "*_minus_padding" means minus 25x2 = 50
   def set_ad_parameters(description)
@@ -228,7 +267,7 @@ class AdwordsAdsController < ApplicationController
     end
     # end
   end
-
+  
   def ads_params_shell
     {
       tower: {
@@ -237,5 +276,20 @@ class AdwordsAdsController < ApplicationController
       }
     }
   end
-
+  
+  def random_ad_image(company, story, type, images)
+    placeholder = case type 
+      when 'LandscapeImage'
+        RESPONSIVE_AD_LANDSCAPE_IMAGE_PLACEHOLDER
+      when 'SquareImage'
+        RESPONSIVE_AD_SQUARE_IMAGE_PLACEHOLDER
+      when 'SquareLogo'
+        RESPONSIVE_AD_SQUARE_LOGO_PLACEHOLDER
+      end
+    (images.length && images[rand(0...images.length)].image_url) || placeholder
+  end
+      
 end
+            
+            
+            

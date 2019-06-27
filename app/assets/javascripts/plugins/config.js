@@ -26,7 +26,7 @@ function pluginConfigListeners () {
         var o = Math.round(((parseInt(bgRgb.r) * 299) +
                             (parseInt(bgRgb.g) * 587) +
                             (parseInt(bgRgb.b) * 114)) / 1000);
-        return (o > 125) ? 'dark' : 'light';
+        return (o > 155) ? 'light-background' : 'dark-background';
       },
       updateScriptTag = function updateScriptTagOnCustomStoryChange () {
         var isFirstSelection = !$('.script-tag textarea').text().match(/data-stories/);
@@ -140,7 +140,7 @@ function pluginConfigListeners () {
         $('.script-tag textarea').text()
           .replace(/data-tab-color="#\w+"/, 'data-tab-color="' + $(this).val() + '"')
       );
-      if (colorContrast(hexToRgb($(this).val())) === 'light') {
+      if (colorContrast(hexToRgb($(this).val())) === 'dark-background') {
         $('[name="tabbed_carousel[text_color]"]').minicolors('value', { color: '#ffffff' });
       } else {
         $('[name="tabbed_carousel[text_color]"]').minicolors('value', { color: '#333333' });

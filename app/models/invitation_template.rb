@@ -65,7 +65,7 @@ class InvitationTemplate < ApplicationRecord
     self.request_body.gsub!( /\[(\w+)_link=('|")(.+?)('|")\]/, '<a href="[\1_url]" target="_blank">\3</a>')
     # re-construct buttons
     self.request_body.gsub!(/\[(\w+)_button={text:('|")(.+?)('|"),color:('|")(.+?)('|")}\]/) do |match|
-      "<a href='[#{$1}_url]' target='_blank' class='csp-cta' style='background-color:#{$6};border-color:#{$6};color:#{self.company.color_contrast($6) == "light" ? "#ffffff" : "#333333"};#{button_style_settings}'>#{$3.truncate(25)}<\/a>"
+      "<a href='[#{$1}_url]' target='_blank' class='csp-cta' style='background-color:#{$6};border-color:#{$6};color:#{self.company.color_contrast($6) == "light-background" ? "#333" : "#fff"};#{button_style_settings}'>#{$3.truncate(25)}<\/a>"
     end
     self.request_body.sub!(/^<p>/, '<p style="margin-top:0">')
   end

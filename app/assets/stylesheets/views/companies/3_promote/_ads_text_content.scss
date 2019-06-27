@@ -1,5 +1,5 @@
 
-#content-settings-form {
+#gads-content-form {
 
   .col-sm-3 {
     // width: 22%;
@@ -40,8 +40,12 @@
 
 }
 
-.popover.headline, .popover.description, .popover.custom-colors {
-  max-width: 400px;
+.popover.business-name, .popover.short-headline, .popover.long-headline, .popover.custom-colors {
+  max-width: 500px;
+  left: 700px !important;
+  .arrow {
+    left: 320px !important;
+  }
   .popover-content {
     padding: 25px;
     p:last-child {

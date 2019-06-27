@@ -86,6 +86,15 @@ Rails.application.routes.draw do
             Customer.friendly.exists?(params[:customer_slug]) &&
             Story.friendly.exists?(params[:story_slug])
           }, as: 'curate_story'
+    get '/promote/preview/', to: 'adwords_ads#preview',
+          constraints: lambda { |params, request|
+            request.params[:company_preview][:gads_business_name].present? && 
+            request.params[:company_preview][:gads_default_short_headline].present? &&
+            request.params[:company_preview][:gads_default_long_headline] &&   # may be blank
+            request.params[:company_preview][:gads_default_cta_text].present? &&
+            request.params[:company_preview][:gads_default_main_color].present? &&
+            request.params[:company_preview][:gads_default_accent_color].present?
+          }
     get '/promote/preview/:story_slug', to: 'adwords_ads#preview',
           constraints: lambda { |params, request|
             Story.friendly.exists?(params[:story_slug])
@@ -116,7 +125,7 @@ Rails.application.routes.draw do
         end
         resources :ctas, only: [:show, :create, :update, :destroy], shallow: true
         resources :invitation_templates, except: [:index]
-        member { put :update_gads }
+        member { put :update_gads_images }
         member { get :set_reset_gads }
         # member { get '/promote-settings', to: 'companies#show' }
         member { put :widget }

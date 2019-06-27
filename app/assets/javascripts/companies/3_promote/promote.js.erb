@@ -1,7 +1,7 @@
 
 //= require ./promoted_stories
-//= require ./content_settings
-//= require ./image_assets
+//= require ./ads_text_content
+//= require ./ads_image_content
 
 function promote () {
 
@@ -11,7 +11,7 @@ function promote () {
   // http://stackoverflow.com/questions/39488774
   var initFormValidator = function () {
         // console.log('initFormValidator()')
-        $('#image-assets-form').validator({
+        $('#gads-images-form').validator({
           focus: false,
           disable: false,
           custom: {
@@ -120,7 +120,7 @@ function promote () {
         })
       },
       initPopovers = function () {
-        $('#image-assets-form button.image-requirements')
+        $('#gads-images-form button.image-requirements')
           .popover({
             html: true,
             container: 'body',
@@ -150,31 +150,43 @@ function promote () {
                      '</ul>';
             }
           });
-        $('#content-settings-form .form-group.headline .btn-help').popover({
+        $('#gads-content-form .form-group.business-name .btn-help').popover({
           html: true,
           container: 'body',
-          template: '<div class="popover headline" role="tooltip"><div class="arrow"></div><h3 class="popover-title label-secondary"></h3><div class="popover-content"></div></div>',
+          template: '<div class="popover business-name" role="tooltip"><div class="arrow"></div><h3 class="popover-title label-secondary"></h3><div class="popover-content"></div></div>',
           content: function () {
-            return '<p>The headline is the first line of your Promoted Story and can be up to 30 characters. ' +
-                     'It appears in smaller spaces where the title doesn\'t fit, ' +
-                     'and may appear with or without the description.</p>';
+            return '<p>If your company\'s name exceeds the character limit, you can provide a shortened version. Changes made here will only affect Promoted Stories.</p>';
                      // 'The length of the rendered headline will depend on the site it appears on. ' +
                      // 'If it\'s shortened, it will end with an ellipsis.</p>';
           }
         }),
-        $('#content-settings-form .form-group.description .btn-help').popover({
+        $('#gads-content-form .form-group.short-headline .btn-help').popover({
           html: true,
           container: 'body',
-          template: '<div class="popover description" role="tooltip"><div class="arrow"></div><h3 class="popover-title label-secondary"></h3><div class="popover-content"></div></div>',
+          template: '<div class="popover short-headline" role="tooltip"><div class="arrow"></div><h3 class="popover-title label-secondary"></h3><div class="popover-content"></div></div>',
           content: function () {
-            return '<p>The description adds to the headline. It may provide additional context or details, or invite people to take action.'
-                    'It can be up to 90 characters, and may appear after the headline or title.</p>';
+            return '<p>The Short Headline is the first line of your Promoted Story and can be up to 30 characters. ' +
+                     'It appears in smaller spaces where the Long Headline doesn\'t fit, ' +
+                     'and may appear with or without the Promoted Story Title.</p>';
+                     // 'The length of the rendered headline will depend on the site it appears on. ' +
+                     // 'If it\'s shortened, it will end with an ellipsis.</p>';
+          }
+        }),
+        $('#gads-content-form .form-group.long-headline .btn-help').popover({
+          html: true,
+          container: 'body',
+          template: '<div class="popover long-headline" role="tooltip"><div class="arrow"></div><h3 class="popover-title label-secondary"></h3><div class="popover-content"></div></div>',
+          content: function () {
+            return '<p>The Long Headline is the first line of your Promoted Story and can be up to 90 characters. ' +
+                     'It appears instead of the Short Headline in larger spaces, ' +
+                     'and may appear with or without the Promoted Story Title.</p>' +
+                   '<p><em>This is an optional field.</em> Most Promoted Stories will utilize the Short Headline in combination with the Promoted Story Title. Sometimes the Long Headline will appear by itself; in such cases the Promoted Story Title will be utilized instead if the Long Headline has been left blank.</p>';
                    // '<p>The length of the rendered description will depend on the site it appears on. ' +
                    //  'If it\'s shortened, it will end with an ellipsis. ' +
                    //  'The description doesn\'t show in all sizes and formats.</p>';
           }
         }),
-        $('#content-settings-form .form-group.custom-colors .btn-help').popover({
+        $('#gads-content-form .form-group.custom-colors .btn-help').popover({
           html: true,
           container: 'body',
           template: '<div class="popover custom-colors" role="tooltip"><div class="arrow"></div><h3 class="popover-title label-secondary"></h3><div class="popover-content"></div></div>',
@@ -277,6 +289,16 @@ function promoteListeners () {
       Cookies.set('promote-tab', $(this).attr('href'));
     })
 
+    .on('click', '#gads-content-form .btn-preview', function () {
+      var queryString = '?' + decodeURIComponent($('#gads-content-form').serialize())
+            .split('&')
+            .filter(function (param) { return param.includes('company'); })
+            .join('&')
+            .replace(/company\[/g, 'company_preview[')
+            .replace(/#/g, '%23');  // escape hex color values
+      //console.log(queryString)
+      window.open('/promote/preview' + queryString);
+    })
     // changing the scroll-on-focus offset for bootstrap validator isn't working,
     // so do this instead...
     // .on('click', 'a[href="#promote-settings"]', function () {

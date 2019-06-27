@@ -67,13 +67,13 @@
           .icon-button:hover i {
             color: #fff !important;
           }
-          .icon-button.light {
+          .icon-button.dark-background {
             background: rgba(255, 255, 255, 0.9);
             i {
               // color is set with style attribute / jquery since tracks nav background
             }
           }
-          .icon-button.light:hover {
+          .icon-button.dark-background:hover {
             box-shadow: 0 0 2px 2px rgba(255, 255, 255, 0.9);
           }
           .icon-button.dark {
@@ -95,10 +95,10 @@
             font-size: 15px;
             text-decoration: none;
           }
-          a.light {
+          a.dark-background {
             color: rgba(255, 255, 255, 0.9);
           }
-          a.dark {
+          a.light-background {
             color: rgba(51, 51, 51, 0.9);
           }
           &:hover:not(.preview) {
@@ -120,16 +120,16 @@
             float: right;
             text-decoration: none;
           }
-          a.light {
+          a.dark-background {
             color: rgba(255, 255, 255, 0.9);
           }
-          a.light:hover {
+          a.dark-background:hover {
             color: rgba(230, 230, 230, 0.9);
           }
-          a.dark {
+          a.light-background {
             color: rgba(51, 51, 51, 0.9);
           }
-          a.dark:hover {
+          a.light-background:hover {
             color: rgba(51, 51, 51, 1.0);
           }
         }

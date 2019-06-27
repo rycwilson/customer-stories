@@ -1,19 +1,19 @@
 
 <%= form_for(
       company,
-      url: update_gads_company_path(company),
+      url: company_path(company),
       method: 'put',
       remote: 'true',
       authenticity_token: true,
       html: {
-        id: 'content-settings-form',
+        id: 'gads-content-form',
         class: 'form-horizontal'
       }
     ) do |f| %>
 
   <div class="row">
 
-    <div class="form-group">
+    <div class="form-group business-name">
       <label class="control-label col-sm-3">Company Name</label>
       <div class="col-sm-6">
         <%= f.text_field(
@@ -22,6 +22,12 @@
               value: f.object.gads_business_name || company.name
             ) %>
         <span class="help-block with-errors">Max 25 characters</span>
+         <button type="button" role="button" class="btn-help" style="position: absolute; top: -4px; right: -40px" data-toggle="popover" data-placement="top" data-trigger="focus">
+          <span class="fa-stack fa-lg">
+            <i class="fa fa-circle-o fa-stack-2x"></i>
+            <i class="fa fa-question fa-stack-1x"></i>
+          </span>
+        </button>
       </div>
       <div class="col-sm-3"><!-- filler --></div>
     </div>
@@ -112,7 +118,7 @@
     <div class="col-sm-6 col-sm-offset-3">
       <div class="form-group text-right">
 
-        <button type="button" class="btn btn-secondary" style="margin: 0 5px">
+        <button type="button" class="btn btn-secondary btn-preview" style="margin: 0 5px">
           <i class="glyphicon glyphicon-new-window"></i>&nbsp;
           Preview
         </button>

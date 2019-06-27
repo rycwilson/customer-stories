@@ -1237,7 +1237,9 @@ class Company < ApplicationRecord
 
     # // http://www.w3.org/TR/AERT#color-contrast
     o = (((rgb[:r] * 299) + (rgb[:g] * 587) + (rgb[:b] * 114)) / 1000).round
-    return (o > 125) ? 'dark' : 'light';
+    awesome_print(o)
+    # binding.remote_pry
+    return (o > 155) ? 'light-background' : 'dark-background';
   end
 
   private

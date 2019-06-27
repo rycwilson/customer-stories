@@ -36,7 +36,7 @@
     font-weight: 300;
   }
 
-  .button {
+  button {
     flex-shrink: 0;
     flex-grow: 0;
     border: none;
@@ -44,7 +44,12 @@
     box-shadow: 0 0 2px 0 rgba(0,0,0,0.12), 0 2px 2px 0 rgba(0,0,0,0.24);
     // text-shadow: 1px 1px 0 rgba(255,255,255,0.1);
     background-color: rgba(255, 255, 255, 1);
-    // background-image: url(data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zd…5lam9pbj0icm91bmQiIHN0cm9rZT0icmdiYSgwLDAsMCwxKSI+PC9wb2x5bGluZT48
+    &.light-background {
+      background-image: url('https://csp-production-assets.s3-us-west-1.amazonaws.com/adwords/google-chevron-black.svg')
+    }
+    &.dark-background {
+      background-image: url('https://csp-production-assets.s3-us-west-1.amazonaws.com/adwords/google-chevron-white.svg')
+    }
   }
 
 }
@@ -63,10 +68,16 @@
     // flex-grow: 0;
   }
   .short-headline {
-    margin: 6px 12px;
+    padding: 7px 12px 5px 12px; // 6px 12px;
     span {
       line-height: 1.4em;
       font-size: 15px;
+    }
+    &.dark-background {
+      color: #fff;
+    }
+    &.light-background {
+      color: #000;
     }
   }
   > div:nth-of-type(4) {
@@ -91,7 +102,7 @@
         margin-bottom: 0;
       }
     }
-    .button {
+    button {
       height: 38px;
       width: 38px;
       margin: 0 6px;
@@ -143,7 +154,7 @@
       line-height: 1.2em;
     }
   }
-  .button {
+  button {
     width: 41px;
     height: 41px;
   }
@@ -225,17 +236,9 @@
         line-height: 1.8em;
       }
     }
-    .button {
+    button {
       height: 56px;
       width: 56px;
-      // flex-shrink: 0;
-      // flex-grow: 0;
-      // border: none;
-      // border-radius: 50%;
-      // box-shadow: 0 0 2px 0 rgba(0,0,0,0.12), 0 2px 2px 0 rgba(0,0,0,0.24);
-      // text-shadow: 1px 1px 0 rgba(255,255,255,0.1);
-      // background-color: rgba(255, 255, 255, 1);
-      // background-image: url(data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zd…5lam9pbj0icm91bmQiIHN0cm9rZT0icmdiYSgwLDAsMCwxKSI+PC9wb2x5bGluZT48
     }
     .spacer {
       flex-grow: 0;

@@ -13,7 +13,13 @@ class AdwordsAd < ApplicationRecord
     # http://vaidehijoshi.github.io/blog/2015/12/01/functions-to-call-upon-activerecord-association-callbacks/
     after_add: :clear_promoted_stories_cache,
     after_remove: :clear_promoted_stories_cache
-  ) { def default; where(default: true); end }
+  ) do 
+    def default; where(default: true); end
+    def square_images; where(type: 'SquareImage'); end
+    def landscape_images; where(type: 'LandscapeImage'); end
+    def square_logos; where(type: 'SquareLogo'); end
+    def landscape_logos; where(type: 'LandscapeLogo'); end
+  end
   alias_attribute :images, :adwords_images
   has_many(
     :marketing_images,
