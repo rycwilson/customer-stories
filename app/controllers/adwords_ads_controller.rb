@@ -153,8 +153,9 @@ class AdwordsAdsController < ApplicationController
     @long_headline = company_preview.try(:[], :gads_default_long_headline) ||
         story.try(:ads_long_headline) || 
         "The Promoted Story Title goes here. It is copied from the Customer Story Title by default"
-    @description = story.try(:ads_description) || 
-        "The Promoted Story Title goes here. It is copied from the Customer Story Title by default"
+    # @description = story.try(:ads_description) || 
+    #     "The Promoted Story Title goes here. It is copied from the Customer Story Title by default"
+    @description = "Here is a description. The Promoted Story"
     @cta_text = company_preview.try(:[], :gads_default_cta_text) ||
         story.try(:ads_cta_text) ||
         company.gads_default_cta_text
@@ -170,22 +171,27 @@ class AdwordsAdsController < ApplicationController
     @short_headline_background = company.color_contrast(@main_color)
     @cta_background = company.color_contrast(@main_color)
 
-    @image_url = random_ad_image(company, story, 'LandscapeImage', (story.try(:topic_ad) || company).adwords_images.landscape_images)
-    @square_image_url = random_ad_image(company, story, 'SquareImage', (story.try(:topic_ad) || company).adwords_images.square_images)
-    @logo_url = random_ad_image(company, story, 'SquareLogo', (story.try(:topic_ad) || company).adwords_images.square_logos)
+    @image_url = random_ad_image(
+      company, story, 'LandscapeImage', (story.try(:topic_ad) || company).adwords_images.landscape_images
+    )
+    @square_image_url = random_ad_image(
+      company, story, 'SquareImage', (story.try(:topic_ad) || company).adwords_images.square_images
+    )
+    @logo_url = random_ad_image(
+      company, story, 'SquareLogo', (story.try(:topic_ad) || company).adwords_images.square_logos
+    )
     
     # disable the ad links in production
     @is_production = ENV['HOST_NAME'] == 'customerstories.net'
     
-    # TODO: change this from the placeholder with dimensions to an actual image placeholder
-    # same for the logo
+    
+    
     
     
     
     # must use strict_encode do newlines aren't added
     # @image_base64 = Base64.strict_encode64( open(@image_url) { |io| io.read } )
     # @image_dominant_color = Miro::DominantColors.new(@image_url).to_hex[0]
-    
     
     set_ad_parameters(@description)
     render :ads_preview, layout: false
@@ -247,25 +253,40 @@ class AdwordsAdsController < ApplicationController
     when 75..90
       @ads_params[:tower][:sh_font_size] = '20px'
       @ads_params[:tower][:desc_font_size] = '13px'
-      # @ads_params[:square191][:sh_font_size] = '15px'
-      # @ads_params[:square191][:desc_font_size] = '10px'
+      @ads_params[:banner][:sh_font_size] = '23px'
+      @ads_params[:banner][:desc_font_size] = '15px'
+      @ads_params[:image_1][:desc_font_size] = '11px'
+      @ads_params[:native_2][:lh_font_size] = '14px'
+      @ads_params[:text_1][:desc_font_size] = '13px'
+      @ads_params[:youtube_home][:desc_font_size] = '12px'
     when 55...75
       @ads_params[:tower][:sh_font_size] = '24px'
       @ads_params[:tower][:desc_font_size] = '16px'
-      # @ads_params[:square191][:sh_font_size] = ''
-      # @ads_params[:square191][:desc_font_size] = ''
+      @ads_params[:banner][:sh_font_size] = '23px'
+      @ads_params[:banner][:desc_font_size] = '15px'
+      @ads_params[:image_1][:desc_font_size] = '11px'
+      @ads_params[:native_2][:lh_font_size] = '14px'
+      @ads_params[:text_1][:desc_font_size] = '14px'
+      @ads_params[:youtube_home][:desc_font_size] = '12px'
     when 45...55
       @ads_params[:tower][:sh_font_size] = '26px'
       @ads_params[:tower][:desc_font_size] = '17px'
-      # @ads_params[:square191][:sh_font_size] = ''
-      # @ads_params[:tower][:desc_font_size] = ''
+      @ads_params[:banner][:sh_font_size] = '23px'
+      @ads_params[:banner][:desc_font_size] = '15px'
+      @ads_params[:image_1][:desc_font_size] = '13px'
+      @ads_params[:native_2][:lh_font_size] = '14px'
+      @ads_params[:text_1][:desc_font_size] = '14px'
+      @ads_params[:youtube_home][:desc_font_size] = '12px'
     when 0...45
       @ads_params[:tower][:sh_font_size] = '28px'
       @ads_params[:tower][:desc_font_size] = '18px'
-      # @ads_params[:square191][:sh_font_size] = ''
-      # @ads_params[:tower][:desc_font_size] = ''
+      @ads_params[:banner][:sh_font_size] = '23px'
+      @ads_params[:banner][:desc_font_size] = '15px'
+      @ads_params[:image_1][:desc_font_size] = '14px'
+      @ads_params[:native_2][:lh_font_size] = '14px'
+      @ads_params[:text_1][:desc_font_size] = '14px'
+      @ads_params[:youtube_home][:desc_font_size] = '12px'
     end
-    # end
   end
   
   def ads_params_shell
@@ -273,10 +294,27 @@ class AdwordsAdsController < ApplicationController
       tower: {
         sh_font_size: '',
         desc_font_size: ''
+      },
+      banner: {
+        sh_font_size: '',
+        desc_font_size: ''
+      },
+      image_1: {
+        desc_font_size: ''
+      },
+      native_2: {
+        desc_font_size: ''
+      },
+      text_1: {
+        desc_font_size: ''
+      },
+      youtube_home: {
+        desc_font_size: ''
       }
     }
   end
   
+  # TODO: change this from the placeholder with dimensions to an actual image placeholder
   def random_ad_image(company, story, type, images)
     placeholder = case type 
       when 'LandscapeImage'
