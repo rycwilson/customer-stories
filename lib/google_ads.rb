@@ -232,7 +232,7 @@ module GoogleAds
         # puts "***\n*** Failed to remove responsive display ad #{ ad_id }\n***"
       end
       puts "***\n*** Removed these ad(s):\n***"
-      awesome_print(result[:value].map { |ad| ad[:ad][:id] }) if result[:value].present?
+      awesome_print(result[:value].map { |ad| ad[:ad][:id] }) if result.try(:[], :value).present?
     end
 
     def create_campaigns(company_subdomain)
