@@ -16,27 +16,25 @@
 
 <% end %>
 
-<div class="ad text-ad text-1 <%= is_mobile ? 'mobile-ad' : '' %>">
+<div class="ad image-ad image-1 <%= is_mobile ? 'mobile-ad' : '' %>">
 
   <%= render('adwords_ads/ads_by_google') %>
 
-  <div>
-    <div class="short-headline">
-      <a href="javascript:;"><%= @short_headline %></a>
-    </div>
-    <div class="business-name">
-      <a href="javascript:;"><%= @business_name %></a>
-    </div>
-    <div class="description">
-      <a href="javascript:;"><%= @description %></a>
-    </div>
+  <div class="landscape-image" style="background-image: url(<%= @image_url %>)"></div>
+
+  <div class="short-headline <%= @short_headline_background %>" style="<%= 'background-color:' + @main_color %>">
+    <span><%= @short_headline %></span>
   </div>
 
   <div>
-    <div class="call-to-action <%= @text_cta_background %>" style="background-color: <%= @main_color %>">
-      <a><%= @cta_text %></a>
+    <div class="logo" style="background-image: url(<%= @logo_url %>)"></div>
+    <div class="description">
+      <p style="font-size: <%= @ads_params[:image_1][:desc_font_size] %>"><%= @description %></p>
     </div>
+    <button class="<%= @button_background %>" style="background-color: <%= @accent_color %>"></button>
   </div>
+
+  <div class="spacer"></div>
 
 </div>
 
