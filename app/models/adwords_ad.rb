@@ -123,9 +123,9 @@ class AdwordsAd < ApplicationRecord
         self.story.csp_story_url + "?utm_campaign=promote&utm_content=#{ campaign_type }"
       ],
       call_to_action_text: 'See More',
-      main_color: self.main_color,
-      accent_color: self.accent_color,
-      allow_flexible_color: false,
+      # main_color: self.main_color,
+      # accent_color: self.accent_color,
+      allow_flexible_color: true,
       # https://developers.google.com/adwords/api/docs/reference/v201809/AdGroupAdService.ResponsiveDisplayAd#formatsetting
       format_setting: 'ALL_FORMATS',  # 'NATIVE', 'NON_NATIVE'
       # dynamic_settings_price_prefix: 'as low as',

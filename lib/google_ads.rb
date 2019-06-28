@@ -46,21 +46,30 @@ module GoogleAds
           end
         else
           # should be exception; why here?
-          new_gad[:errors] = ["unknown"]
+          new_gads[:errors] = ["unknown"]
         end
-      rescue Exception => e
+      rescue AdwordsApi::Errors::ApiException => e
         new_gads[:errors] = e.errors.map do |error|
           {
             type: error[:error_string].split('.').last,
             field: error[:field_path].split('.').last
           }
         end
-        puts "***\n*** Failed to create responsive display ad for story:"
+        puts "***\n*** Failed to create responsive display ads for story:"
+        puts "*** #{story.title}\n***"
+        awesome_print(new_gads[:errors])
+      rescue AdsCommon::Errors::ApiException => e
+        new_gads[:errors] = e.message
+        puts "***\n*** Failed to create responsive display ads for story:"
         puts "*** #{story.title}\n***"
         awesome_print(new_gads[:errors])
       end
       new_gads
     end
+
+  #   NoMethodError - undefined method `errors' for #<AdsCommon::Errors::ApiException:0x007fed9cc18f18>:
+  # lib/google_ads.rb:52:in `rescue in create_story_ads'
+  # lib/google_ads.rb:35:in `create_story_ads'
 
     # this method is called from an AdwordsAd before_create callback
     # => always a new ad
