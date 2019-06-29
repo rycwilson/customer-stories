@@ -155,31 +155,15 @@ function initContributorsTable (workflowStage, dtContributorsInit) {
             storySlug = story && story.slug,
             storyTitle = story && story.title,
             storyPath = story &&
-              (story.published ? story.csp_story_path : '/curate/' + customerSlug + '/' + storySlug),
-            link; // to success or story
-
-        if (story) {
-          link = '<span style="font-weight:600">' +
-                   '<a href="' + storyPath + '" class="story">' +
-                      storyTitle +
-                   '</a>' + '\xa0\xa0<span style="font-weight:normal;font-size:12px">(Customer Story)</span>' +
-                 '</span>';
-        } else {
-          link = '<span style="font-weight:600">' +
-                   '<a href="javascript:;" class="success">' +
-                      successName +
-                   '</a>' + '\xa0\xa0<span style="font-weight:normal;font-size:12px">(Customer Win)</span' +
-                 '</span>';
-        }
+              (story.published ? story.csp_story_path : '/curate/' + customerSlug + '/' + storySlug);
+        
         return $('<tr/>').append(
             '<td colspan="5">' +
-               '<span style="font-weight:600">' +
-                  customerName +
-               '</span>' +
-               '<span style="font-weight: normal">' +  // em-dash not bold
-                 '&nbsp;&nbsp;&#8211;&nbsp;&nbsp;' +
-               '</span>' +
-               link +
+              '<span>' + customerName + '</span>' +
+              '<span class="emdash">&nbsp;&nbsp;&#8211;&nbsp;&nbsp;</span>' +
+              (story ? 
+                '<a href="' + storyPath + '" class="story">' + storyTitle + '</a>' :
+                '<a href="javascript:;" class="success">' + successName + '</a>') +
             '</td>'
           );
       }

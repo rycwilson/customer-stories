@@ -1,0 +1,42 @@
+
+
+table thead tr th,  
+table tfoot tr th {
+  font-weight: 400;
+  font-size: 14px;
+  border-bottom-width: 1px;
+}
+
+table.dataTable tr.group td {
+  background-color: #efefef;
+}
+
+.table-bordered > thead > tr > th, .table-bordered > thead > tr > td {
+  border-bottom-width: 1px;  // bootstrap 2px
+}
+
+table.dataTable thead th {
+  background-color: #dfdfdf;
+  font-weight: 600;
+  border: 1px solid #c6c6c6;
+}
+
+.table.dataTable tbody tr.active td,
+.table.dataTable tbody tr.active th,
+.table.dataTable tbody tr.active:hover td,
+.table.dataTable tbody tr.active:hover th {
+	background-color: $nav-blue !important;
+  color: #fff;
+  > a {
+    color: #fff;
+  }
+}
+
+table.dataTable tr.group td {
+  font-weight: 600;
+}
+
+table.dataTable thead .sorting_asc:after, table.dataTable thead .sorting_desc:after {
+  color: $nav-blue !important;
+  opacity: 1;
+}

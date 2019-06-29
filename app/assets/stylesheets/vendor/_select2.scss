@@ -6,3 +6,7 @@
 // .select2-container--bootstrap .select2-selection--single {
 //   height: 32px;
 // }
+
+.select2-container--bootstrap .select2-results__option--highlighted[aria-selected] {
+  background-color: $nav-blue;
+}

@@ -1,20 +1,20 @@
 
-$company-header-height: 65px;
-$stories-header-height: 40px;
-
-$csp-bg-gray: #f2f2f2;
-$csp-fg-gray: #efefef;
-
-.turbolinks-progress-bar {
-  height: 1px;
-  background-color: #0095ff; // #77b6ff;
-}
+@import 'variables';
+@import 'buttons';
 
 body {
   font-family: 'Open Sans', 'Trebuchet MS', arial, sans-serif;
   font-size: 13px;
   padding: 0;
   margin: 0;
+
+  // this prevents presence/absence of scroll bar from shfiting the page left/right
+  // TODO ... or maybe this: https://css-tricks.com/elegant-fix-jumping-scrollbar-issue/
+  overflow-y: scroll;
+
+  &:not(.site) {
+    background-color: #f9f9f9;
+  }
 }
 
 .container {
@@ -29,15 +29,12 @@ a {
   }
 }
 
-.btn.btn-secondary {
-  border: 1px solid #0079d3;
-  color: #0079d3;
-  // line-height: 1.8em;
-  &:hover {
-    // background-color: #efffff;
-    border-color: #0079d3;
-    color: #0079d3;
-  }
+label {
+  font-weight: 600;
+}
+
+hr {
+  border-top: 1px solid #dfdfdf;
 }
 
 // .nav-tabs .dropdown-menu {
@@ -60,6 +57,40 @@ ul.dropdown-menu {
     }
     
   }
+}
+
+.dropdown-menu.dropdown-actions > li > a {
+  padding: 6px 12px 6px 6px;
+}
+.dropdown-menu.dropdown-actions > li:not(.disabled) > a {
+  color: #444;
+  i.action {
+    color: #666;
+  }
+}
+
+.required-input label:not(.radio-inline):not(.checkbox-inline):not([for="csv-file-input"]):after {
+  color: #a94442;  // #D9534F;
+  content: " *";
+}
+
+#flash {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 65px;
+  border-radius: 0;
+  font-size: 16px;
+  margin: 0;
+}
+body.sessions #flash,
+body.site #flash {
+  height: 85px;
+}
+
+.turbolinks-progress-bar {
+  height: 1px;
+  background-color: #0095ff; // #77b6ff;
 }
 
 

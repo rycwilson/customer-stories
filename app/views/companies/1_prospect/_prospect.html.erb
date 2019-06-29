@@ -39,8 +39,10 @@
 
           <div id="prospect-contributors"
               class="tab-pane fade <%= tab == '#prospect-contributors' ? 'active in' : ''%>">
-            <%= render 'companies/1_prospect/contributors/contributors_table',
-                    { company: company, workflow_stage: 'prospect' } %>
+            <%= render(
+                  'companies/1_prospect/contributors/contributors_table',
+                  { company: company, workflow_stage: 'prospect' } 
+                ) %>
           </div>
 
         </div>

@@ -1,6 +1,10 @@
 
 .stories.show, .cs-overlay-container {
 
+  &.stories.show {
+    background-color: #fff;
+  }
+
   text-align: left;   // override weebly
   $max-xs-width: 500px;
 

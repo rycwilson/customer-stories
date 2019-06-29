@@ -18,30 +18,30 @@
         align-items: center;
         margin-left: -15px;
         margin-right: -15px;
-        height: 58px;
+        height: 56px;
         font-family: 'Lato';
-        // border-left: 2px solid #efefef;
-        border-right: 2px solid #efefef;
+        border-left: 2px solid transparent;
         font-size: 14px;
         color: #666;
+        padding: 10px 20px;
         i {
           font-size: 1.25em;
-          margin-right: 10px;
+          margin-right: 13px;
         }
         &:hover, &:focus {
           background-color: #e5e5e5;
           // border-left: 2px solid #e5e5e5;
-          border-right: 2px solid #e5e5e5;
+          border-left: 2px solid #e5e5e5;
           color: #222;
         }
       }
       &.active {
         // margin-right: 0;
         > a, a:hover, a:focus {
-          // border-left: 2px solid #08f; // #0095ff;
-          border-right: 2px solid #08f; // #0095ff;
+          // border-left: 2px solid $nav-blue; // #0095ff;
+          border-left: 2px solid $nav-blue; // #0095ff;
           // border-right-color: transparent; 
-          color: #08f; // #0095ff;
+          color: $nav-blue; // #0095ff;
           font-weight: 600;
           background-color: #efefef;
         }

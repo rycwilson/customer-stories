@@ -1,23 +1,18 @@
 
-/* bootstrap-sass */
-$icon-font-path: "bootstrap-sass/assets/fonts/bootstrap/";
-@import "bootstrap-sass/assets/stylesheets/bootstrap-sprockets";
-@import "bootstrap-sass/assets/stylesheets/bootstrap";
-
+$icon-font-path: 'bootstrap-sass/assets/fonts/bootstrap/';
+@import 'bootstrap-sass/assets/stylesheets/bootstrap-sprockets';
+@import 'bootstrap-sass/assets/stylesheets/bootstrap';
+@import 'bootstrap-jasny/dist/css/jasny-bootstrap';
 @import 'font-awesome';
-
+@import 'base/variables';
 @import 'base/mixins';
-@import 'base/normalize';
 @import 'base/globals';
 @import 'base/layout';
-@import 'base/mvp_holdovers';
-@import 'base/misc';
-
-@import 'animate.css/animate';
-@import 'bootstrap-jasny/dist/css/jasny-bootstrap';
-// @import 'magnific-popup/dist/magnific-popup';
-
 @import 'vendor/vendor';
+
+// TODO why do we need this?
+@import 'base/mvp_holdovers';
+// @import 'animate.css/animate';
 
 @import 'views/site';
 @import 'views/navbars/navbars';
@@ -26,23 +21,5 @@ $icon-font-path: "bootstrap-sass/assets/fonts/bootstrap/";
 @import 'views/stories/stories';
 @import 'views/contributions/contributions';
 @import 'views/profile/profile';
-
-@import 'override';
-
 @import 'custom/custom';
-
-
-#flash {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  height: 65px;
-  border-radius: 0;
-  font-size: 16px;
-  margin: 0;
-}
-body.sessions #flash,
-body.site #flash {
-  height: 85px;
-}
 
