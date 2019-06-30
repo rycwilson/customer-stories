@@ -7,113 +7,120 @@
   }
 }
 
-#curate {
+#curate-sidebar {
+  background-color: $medium-gray;
+  // border-left: 2px solid $nav-blue;
+  padding: 0 15px 0 15px;
+  hr {
+    margin: 15px 0 0 0;
+  }
+}
 
-  #curate-stories {
+#curate-filters  {
+  margin: 0 -15px;
+  padding: 15px;
+  .form-group {
+    margin-bottom: 20px;
+  }
+}
 
-    @import 'gallery';
-
-    > .row > [class*="col-"]:first-of-type {
-      background: #efefef;
-      padding-top: 15px;
-      position: relative;
-      h4 {
-        margin-bottom: 10px;
-      }
-      [data-target="#new-story-modal"] {
-        position: absolute;
-        top: 12px;
-        right: 12px;
-        cursor: pointer;
-        color: #666;
-        i {
-          // TODO: Font Awesome 5 has font variants that allow different weights
-          -webkit-text-stroke: 1px #efefef;
-        }
-      }
-      [data-target="#new-story-modal"]:hover {
-        color: #222;
-      }
-      // button {
-      //   width: 160px;
-      //   margin: 15px 0;
-      // }
-      #curate-filters  {
-        margin: 0 -15px;
-        padding: 15px;
-        .form-group {
-          margin-bottom: 20px;
-        }
-      }
+.customer-stories {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  // height: 56px;
+  font-family: 'Lato';
+  font-size: 16px;
+  font-weight: bold;
+  margin: 0 -15px;
+  padding: 12px 10px 12px 20px;
+  border-left: 2px solid $nav-blue;
+  img {
+    height: 26px;
+    margin-right: 15px;
+  }
+  > a, span {
+    display: flex;
+    align-items: center;
+  }
+  > a {
+    color: $nav-blue;
+    text-decoration: none;
+    height: 100%;
+    margin-right: 25px;
+    flex-grow: 1;
+    &:hover {
+      color: #3af;
     }
+  }
+  .btn-add {
+    @include fa-button($medium-gray);
+  }
+}
 
-    #status-filters {
-      margin: 10px;
-    }
+#curate-stories {
+  @import 'gallery';   
+}
 
+#edit-story {
+  // settings for this table are in prospect.scss
+  #curate-contributors-table {
   }
 
-  #edit-story {
-    // settings for this table are in prospect.scss
-    #curate-contributors-table {
+
+  #narrative-editor {
+
+  }
+  #narrative-editor + .note-editor {
+    .modal.link-dialog {
+
     }
-
-
-    #narrative-editor {
-
-    }
-    #narrative-editor + .note-editor {
-      .modal.link-dialog {
-
+    // note that the .image-dialog class must be assigned on summernote init
+    .modal.image-dialog {
+      .modal-body {
+        padding-top: 25px;
       }
-      // note that the .image-dialog class must be assigned on summernote init
-      .modal.image-dialog {
-        .modal-body {
-          padding-top: 25px;
-        }
-        .form-group.note-group-select-from-files {
-          label {
-            padding: 6px 12px;
-            border: 1px solid #ccc;
-            border-radius: 4px;
-            cursor: pointer;
-            &:hover {
-              background-color: #efefef;
-            }
+      .form-group.note-group-select-from-files {
+        label {
+          padding: 6px 12px;
+          border: 1px solid #ccc;
+          border-radius: 4px;
+          cursor: pointer;
+          &:hover {
+            background-color: #efefef;
           }
         }
-        div.or {
-          text-align: center;
-          h5 {
-            position: relative;
-            width: 40%;
-            margin: 20px auto;
-            color: #555;
-          }
-          h5:before {
-            content: "";
-            display: block;
-            border-top: solid 1px #ccc;
-            width: 100%;
-            height: 1px;
-            position: absolute;
-            top: 50%;
-            z-index: 1;
-          }
-          h5 span {
-            background: #fff;
-            padding: 0 20px;
-            position: relative;
-            z-index: 5;
-          }
-        }
-        .note-image-btn {
-          padding: 6px 24px;
-        }
-
       }
-    }
+      div.or {
+        text-align: center;
+        h5 {
+          position: relative;
+          width: 40%;
+          margin: 20px auto;
+          color: #555;
+        }
+        h5:before {
+          content: "";
+          display: block;
+          border-top: solid 1px #ccc;
+          width: 100%;
+          height: 1px;
+          position: absolute;
+          top: 50%;
+          z-index: 1;
+        }
+        h5 span {
+          background: #fff;
+          padding: 0 20px;
+          position: relative;
+          z-index: 5;
+        }
+      }
+      .note-image-btn {
+        padding: 6px 24px;
+      }
 
+    }
   }
 
 }

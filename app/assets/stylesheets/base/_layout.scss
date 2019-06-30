@@ -9,7 +9,7 @@
   // padding: 25px 30px 15px 15px;
   // background-color: #efefef;
   // box-shadow: inset -8px 0 15px -10px rgba(0, 0, 0, 0.2);
-  // border: 1px solid #ddd;
+  // border: 1px solid #dfdfdf;
   .nav {
     > li {
       margin: 0;      
@@ -24,7 +24,15 @@
         font-size: 14px;
         color: #666;
         padding: 10px 20px;
-        i {
+        > span {
+          display: flex;
+          align-items: center;
+        }
+        &[href="#successes"], &[href="#prospect-contributors"] {
+          padding: 10px 10px 10px 20px;
+          justify-content: space-between;
+        }
+        i:not([class*="fa-stack"]) {
           font-size: 1.25em;
           margin-right: 13px;
         }
@@ -46,6 +54,21 @@
           background-color: #efefef;
         }
       }
+    }
+  }
+
+  // New customer wins, New contributors
+  .btn-add {
+    @include fa-button($medium-gray);
+
+    // wait until both tables are loaded to show (see csp_datatables.js); 
+    // don't use transition on initial load
+    display: none;  
+    opacity: 1;
+    transition: opacity 0.15s linear;  // matches bootstrap tab .fade transition
+    &:not(.shown) {
+      visibility: hidden;
+      opacity: 0;
     }
   }
 }

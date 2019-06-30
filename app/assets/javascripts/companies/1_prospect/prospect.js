@@ -76,6 +76,14 @@ function prospectListeners () {
       Cookies.set('csp-edit-story-tab', '#story-contributors');
     })
 
+    .on('hide.bs.tab', 'a[href="#successes"], a[href="#prospect-contributors"]', function () { 
+      $(this).find('.btn-add').removeClass('shown');
+    })
+    .on('shown.bs.tab', 'a[href="#successes"], a[href="#prospect-contributors"]', function () {
+      console.log('show')
+      $(this).find('.btn-add').addClass('shown');
+    })
+
     // the close event happens shortly after blur; to ensure smooth transition...
     .on('blur', 'td.invitation-template', function () {
       var $td = $(this), editor;

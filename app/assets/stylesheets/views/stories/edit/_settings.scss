@@ -45,8 +45,7 @@
         margin: 0 5px 0 0;
       }
       .bootstrap-switch .bootstrap-switch-handle-on {
-        background: #26b859; // #5fba7d; // #449d44; //#36a829;
-        opacity: 0.7
+        background: $status-on-color;  // #26b859; // #5fba7d; // #449d44; //#36a829;
       }
     }
     #approval-pdf {

@@ -20,18 +20,25 @@
 
         <div class="row">
 
-          <div class="col-md-4 col-lg-3" style="position: relative">
+          <div id="curate-sidebar" class="col-md-4 col-lg-3">
 
-            <h4 class="lead">
-              <a href='/'>Customer Stories</a>
-            </h4>
-
-            <span data-toggle="modal" data-target="#new-story-modal">
-              <span class="fa-stack fa-lg">
-                <i class="fa fa-circle-o fa-stack-2x"></i>
-                <i class="fa fa-plus fa-stack-1x"></i>
+            <div class="customer-stories">
+              <a href="/">
+                <img src="https://csp-production-assets.s3-us-west-1.amazonaws.com/icons/stories_icon.png">
+                <span>Customer Stories</span>
+              </a>
+              <span>
+                <button type="button" class="btn-add"
+                        data-toggle="modal" data-target="#new-story-modal">
+                  <span class="fa-stack fa-lg">
+                    <i class="fa fa-circle-o fa-stack-2x"></i>
+                    <i class="fa fa-plus fa-stack-1x"></i>
+                  </span>
+                </button>
               </span>
-            </span>
+            </div>
+
+            <hr>
 
 <!-- // skinny up the X icon
   // ref: https://sridharkatakam.com/thin-font-awesome-close-icon/
