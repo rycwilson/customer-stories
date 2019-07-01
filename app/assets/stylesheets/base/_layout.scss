@@ -1,14 +1,15 @@
 
-.layout {
-  margin-left: -15px;
-  margin-right: -15px;
+
+@media (min-width: 1200px) {
+  #prospect .container,
+  #curate .container,
+  #promote .container,
+  #measure .container {
+    width: 1200px;
+  }  
 }
 
 .layout-sidebar {
-  // height: 100vh;
-  // padding: 25px 30px 15px 15px;
-  // background-color: #efefef;
-  // box-shadow: inset -8px 0 15px -10px rgba(0, 0, 0, 0.2);
   // border: 1px solid #dfdfdf;
   .nav {
     > li {
@@ -16,8 +17,8 @@
       > a {
         display: flex;
         align-items: center;
-        margin-left: -15px;
-        margin-right: -15px;
+        // margin-left: -15px;
+        // margin-right: -15px;
         height: 56px;
         font-family: 'Lato';
         border-left: 2px solid transparent;
@@ -57,6 +58,10 @@
     }
   }
 
+  .disabled-tab { 
+    color: #ccc; 
+  }
+
   // New customer wins, New contributors
   .btn-add {
     @include fa-button($medium-gray);
@@ -74,5 +79,5 @@
 }
 
 .layout-main {
-  padding: 40px 15px 100px 30px;
+  // padding: 0 15px 100px 30px;
 }

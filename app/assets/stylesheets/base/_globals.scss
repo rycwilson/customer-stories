@@ -37,38 +37,6 @@ hr {
   border-top: 1px solid #dfdfdf;
 }
 
-// .nav-tabs .dropdown-menu {
-//   border-radius: 3px;
-// }
-
-ul.dropdown-menu {
-  border-color: #ccc;
-  padding: 8px 0;
-  li {
-    a {
-      font-size: 13px;
-      padding: 12px 14px 12px 12px;
-      border-radius: 0; 
-      color: #555;
-      &:hover, &:focus {
-        color: #222; 
-        background-color: #efefef;
-      }
-    }
-    
-  }
-}
-
-.dropdown-menu.dropdown-actions > li > a {
-  padding: 6px 12px 6px 6px;
-}
-.dropdown-menu.dropdown-actions > li:not(.disabled) > a {
-  color: #444;
-  i.action {
-    color: #666;
-  }
-}
-
 .required-input label:not(.radio-inline):not(.checkbox-inline):not([for="csv-file-input"]):after {
   color: #a94442;  // #D9534F;
   content: " *";

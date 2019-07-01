@@ -1,65 +1,53 @@
 
-#company-nav.unregistered {
-  #workflow-tabs {
-    pointer-events: none;
-    opacity: 0.5;
-  }
-}
-
 #company-nav {
-  // position: relative;
-  // height: 50px;
   margin-bottom: 40px;
   background-color: #fff;
   border-bottom: 1px solid #dfdfdf;
-  // box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.16), 0 0 1px -1px rgba(0, 0, 0, 0.08);
-  .row {
-    // height: 100%;
-    // display: flex;
-    // align-items: center;
-  }
-  li {
-    // position: relative;
+  &.unregistered {
+    .nav-workflow {
+      pointer-events: none;
+      opacity: 0.5;
+    }
   }
 }
 
-#workflow-tabs {
+.nav-tabs.nav-workflow {
   font-size: 16px;
-
+  border-bottom: 0;
+  
   // hard-coded widths prevent width from changing when text is bolded 
   // (the trick outlined here didn't work: http://jsfiddle.net/85LbG/)
-  li:nth-of-type(1) {
+  > li:nth-of-type(1) {
     width: 102px
   }
-  li:nth-of-type(2) {
+  > li:nth-of-type(2) {
     width: 89px
   }
-  li:nth-of-type(3) {
+  > li:nth-of-type(3) {
     width: 101px;
   }
-  li:nth-of-type(4) {
+  > li:nth-of-type(4) {
     width: 101px;
   }
-  li {
-    a {
+  > li {
+    margin-bottom: 0;
+    > a {
       background-color: #fff;
       font-family: 'Lato';
       color: #666;
       font-weight: 400;
-      padding: 12px 16px;
-      letter-spacing: normal;
       border: 2px solid transparent;
       &:hover, &:focus {
         background-color: #fff;
         color: #222;
-        border-color: transparent;
+        border: 2px solid transparent;
       }
     }
     &.active {
-      a, a:hover, a:focus {
+      > a, > a:hover, > a:focus {
         color: $nav-blue; // #0095ff; // #d74b4b;  // #4885ed;
         font-weight: bold;
-        // border: transparent;
+        border: 2px solid transparent;
         border-bottom: 2px solid $nav-blue; // #0095ff; //#d74b4b;  // #4885ed;
       }
     }
@@ -67,12 +55,11 @@
   }
 }
 
-#company-nav-tabs {
+.nav-tabs.nav-settings {
   border: 0;
   li.dropdown {
     > a {
       font-size: 16px;
-      padding: 12px 14px;
       border: 2px solid transparent;
       &:hover, &:focus {
         color: #222;
@@ -82,9 +69,9 @@
     }
     &.active {
       > a, > a:hover, > a:focus {
-        color: $nav-blue; // #0095ff;
+        color: $nav-blue; 
         border-color: transparent;
-        border-bottom: 2px solid $nav-blue; // #0095ff;
+        border-bottom: 2px solid $nav-blue;
       }
     }
     &.open:not(.active) {
@@ -97,8 +84,6 @@
       //   display:none;
       // }
     }
-    ul.dropdown-menu {
-      top: 95%;
-    }
   }
-}
+} 
+

@@ -216,28 +216,19 @@
 }
 
 .successes-header, .contributors-header {
-  margin-bottom: 12px;
-  > [class*="col-"]:first-child {
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-    height: 100%;
-    padding-bottom: 2px;  // hack to account for checkbox height discrepancy
-    .dropdown {
-      margin: 0 45px;
-    }
-    label.checkbox-filter {
-      margin-left: 17px;
-    }
-  }
-  > [class*="col-"]:last-child {
-    label.checkbox-filter {
-      font-weight: normal;
-      margin-bottom: 5px;
-    }
+  background-color: #efefef;
+  margin: -7px 0 -6px 0;
+  padding-top: 24px;
+  padding-bottom: 12px;
+  &.successes-header {
+    padding-bottom: 20px;
   }
   .form-group {
     width: 100%;
+    margin-bottom: 12px;
+  }
+  .checkbox-filters label {
+    margin-bottom: 5px;
   }
   .form-group.search > div {
     position: relative;
@@ -255,7 +246,7 @@
     text-align: left;
   }
   select + span.select2 {
-    margin-bottom: 12px;
+    // margin-bottom: 12px;
   }
   .select2-container {
     width: 100%;

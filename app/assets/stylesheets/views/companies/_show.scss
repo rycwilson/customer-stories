@@ -1,0 +1,11 @@
+
+// dropdowns will initially be hidden so they can be flipped (dropup) if necessary
+.actions.dropdown .dropdown-menu {
+  &:not(.shown) {
+    visibility: hidden;
+  }
+  &.flip {
+    top: auto;
+    bottom: 90%;
+  }
+}

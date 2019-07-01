@@ -13,7 +13,7 @@ function profileEdit () {
         $('.dropdown.user-profile').removeClass('active');
       }
     })
-    .one('click', '.workflow-tabs', function () {
+    .one('click', '.nav-workflow', function () {
       if ($('.dropdown.user-profile').hasClass('active')) {
         $('.dropdown.user-profile').removeClass('active');
       }

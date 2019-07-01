@@ -66,7 +66,13 @@ function prospectListeners () {
   var lastSuccessesSortDirection = 'asc',
       lastContributorsSortDirection = 'asc';
 
+      console.log($('td.actions.dropdown').length);
+
+  
+
   $(document)
+
+    
 
     .on('click', '#prospect .layout-sidebar a', function () {
       Cookies.set('prospect-tab', $(this).attr('href'));

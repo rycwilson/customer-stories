@@ -2,7 +2,7 @@
 function newContributorListeners() {
 
   var isCurateView = function () {
-        return $('#workflow-tabs li.active a').attr('href') === '#curate';
+        return $('.nav-workflow li.active a').attr('href') === '#curate';
       },
       noCustomerContributors = function () {
         // length of 2 accounts for empty option and - Create New Contributor -

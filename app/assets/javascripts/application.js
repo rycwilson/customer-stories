@@ -54,7 +54,7 @@ function attachAppListeners () {
 
   $(document)
 
-    .on('click', '#workflow-tabs a', function (e) {
+    .on('click', '.nav-workflow a', function (e) {
       e.preventDefault();
       var currentWorkflowPath = window.location.pathname,
           newWorkflowPath = '/' + $(this).attr('href').slice(1, $(this).attr('href').length);
@@ -120,7 +120,7 @@ function attachAppListeners () {
                         (workflowMatch[2] ? 'story' : 'stories') : null;
 
     if (workflowStage) {
-      $('#workflow-tabs a[href="#' + workflowStage + '"]').tab('show');
+      $('.nav-workflow a[href="#' + workflowStage + '"]').tab('show');
       if (curateView) {
         $('a[href="#curate-' + curateView + '"]').tab('show');
         // don't scroll to panel

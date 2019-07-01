@@ -25,17 +25,7 @@
       }
     }
   }
-  .layout-sidebar {
-    @media only screen and (min-width: 992px) {
-      width: 22%
-    }
-    .disabled-tab { color: #ccc; }
-  }
-  .layout-main {
-    @media only screen and (min-width: 992px) {
-      width: 78%
-    }
-  }
+
 }
 
 
@@ -105,16 +95,7 @@
       // padding: 2em;
       // margin: -2em;
     }
-    .dropdown-menu {
-      padding: 9px 0;
-    }
-  }
-  td.status.dropdown.open, td.actions.dropdown.open {
-    border-bottom: 1px solid #0095ff;  // #d74b4b;
-    .dropdown-menu {
-      border-top-right-radius: 0;
-      margin: 1px 0;
-    }
+
   }
 }
 

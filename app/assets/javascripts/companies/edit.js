@@ -24,7 +24,7 @@ function companiesEdit () {
       }
     })
 
-    .one('click', '.workflow-tabs', function () {
+    .one('click', '.nav-workflow', function () {
       if ($('.dropdown.company-settings').hasClass('active')) {
         $('.dropdown.company-settings').removeClass('active');
       }
