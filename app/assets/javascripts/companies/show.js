@@ -32,7 +32,7 @@ function companiesShowListeners () {
       }
     })
     .on('hidden.bs.dropdown', '.actions.dropdown', function () {
-      $(this).removeClass('flip shown');
+      $(this).find('.dropdown-menu').removeClass('flip shown');
       
       // don't remove .active if the child row is open
       if (!$(this).closest('tr').hasClass('shown')) {
