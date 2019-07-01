@@ -64,16 +64,15 @@
       a {
         font-size: 14px;
         line-height: 30px;
-        color: #fff;
         font-weight: 500;
         text-transform: uppercase;
         text-decoration: none;
-      }
-      &.dark-background {
-        color: #fff;
-      }
-      &.light-background {
-        color: #000;
+        &.dark-background {
+          color: #fff;
+        }
+        &.light-background {
+          color: #000;
+        }
       }
     }
   }
