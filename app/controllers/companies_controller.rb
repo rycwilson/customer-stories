@@ -51,9 +51,29 @@ class CompaniesController < ApplicationController
       @company.update_tags(params[:category_tags] || [], params[:product_tags] || [])
       @flash = {}
     else
-      @company.update(company_params) ?
-        @flash = {} :
+      if @company.update(company_params)
+        @flash = {}
+        if request.params[:apply_google_changes].present?
+          @company.ads.each do |ad|
+            # update_columns => no callbacks (so we can update all gads at once below)
+            ad.update_columns(
+              short_headline: @company.gads_default_short_headline,
+              long_headline: @company.gads_default_long_headline,
+              cta_text: @company.gads_default_cta_text,
+              main_color: @company.gads_default_main_color,
+              accent_color: @company.gads_default_accent_color
+            )
+          end
+          GoogleAds::update_ads(
+            AdwordsAd.joins(:company)
+                     .where.not(ad_id: nil)
+                     .where(companies: { id: @company.id })
+                     .to_a
+          )
+        end
+      else
         @flash = { mesg: @company.errors.full_messages.join(', '), status: 'danger' }
+      end
     end
     respond_to { |format| format.js }
   end

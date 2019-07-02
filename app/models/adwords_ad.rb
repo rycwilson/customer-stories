@@ -106,7 +106,7 @@ class AdwordsAd < ApplicationRecord
         {
           asset: {
             xsi_type: 'TextAsset',
-            asset_text: self.story.company.gads_default_short_headline  # get company via story in case ad is new record
+            asset_text: self.short_headline || self.story.company.gads_default_short_headline  # get company via story in case ad is new record
           }
         }
       ],
@@ -118,11 +118,11 @@ class AdwordsAd < ApplicationRecord
           }
         },
       ],
-      business_name: self.story.company.name,
+      business_name: self.story.company.gads_business_name,
       long_headline: {
         asset: {
           xsi_type: 'TextAsset',
-          asset_text: self.long_headline
+          asset_text: self.long_headline || self.story.company.gads_default_long_headline
         }
       },
       # the association methods (e.g. ad.landscape_images) don't work here
@@ -132,9 +132,9 @@ class AdwordsAd < ApplicationRecord
       final_urls: [
         self.story.csp_story_url + "?utm_campaign=promote&utm_content=#{ campaign_type }"
       ],
-      call_to_action_text: 'See More',
-      # main_color: self.main_color,
-      # accent_color: self.accent_color,
+      call_to_action_text: self.cta_text || self.story.company.gads_default_cta_text,
+      main_color: self.main_color || self.story.company.gads_default_main_color,
+      accent_color: self.accent_color || self.story.company.gads_default_accent_color,
       allow_flexible_color: true,
       # https://developers.google.com/adwords/api/docs/reference/v201809/AdGroupAdService.ResponsiveDisplayAd#formatsetting
       format_setting: 'ALL_FORMATS',  # 'NATIVE', 'NON_NATIVE'
