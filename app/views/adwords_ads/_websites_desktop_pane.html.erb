@@ -44,7 +44,9 @@
     <div class="landscape-image" style="background-image: url(<%= @image_url %>)"></div>
     <div>
       <div class="long-headline">
-        <a><%= @long_headline %></a>
+        <a style="font-size: <%= @ads_params[:native_1][:lh_font_size] %>">
+          <%= @long_headline %>
+        </a>
       </div>
       <div class="spacer" style="height: 11px;"></div>
       <div class="business-name">

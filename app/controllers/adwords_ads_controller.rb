@@ -250,6 +250,7 @@ class AdwordsAdsController < ApplicationController
       @ads_params[:banner][:sh_font_size] = '23px'
       @ads_params[:banner][:desc_font_size] = '15px'
       @ads_params[:image_1][:desc_font_size] = '11px'
+      @ads_params[:native_1][:lh_font_size] = '17px'
       @ads_params[:native_2][:lh_font_size] = '14px'
       @ads_params[:text_1][:desc_font_size] = '13px'
       @ads_params[:youtube_home][:desc_font_size] = '12px'
@@ -259,6 +260,7 @@ class AdwordsAdsController < ApplicationController
       @ads_params[:banner][:sh_font_size] = '23px'
       @ads_params[:banner][:desc_font_size] = '15px'
       @ads_params[:image_1][:desc_font_size] = '11px'
+      @ads_params[:native_1][:lh_font_size] = '17px'
       @ads_params[:native_2][:lh_font_size] = '14px'
       @ads_params[:text_1][:desc_font_size] = '14px'
       @ads_params[:youtube_home][:desc_font_size] = '12px'
@@ -296,8 +298,11 @@ class AdwordsAdsController < ApplicationController
       image_1: {
         desc_font_size: ''
       },
+      native_1: {
+        lh_font_size: ''
+      },
       native_2: {
-        desc_font_size: ''
+        lh_font_size: ''
       },
       text_1: {
         desc_font_size: ''
