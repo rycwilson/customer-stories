@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20190624173959) do
+ActiveRecord::Schema.define(version: 20190415230011) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -55,9 +55,6 @@ ActiveRecord::Schema.define(version: 20190624173959) do
     t.datetime "updated_at",                                null: false
     t.string   "main_color"
     t.string   "accent_color"
-    t.string   "description"
-    t.string   "cta_text"
-    t.string   "short_headline"
     t.index ["adwords_ad_group_id"], name: "index_adwords_ads_on_adwords_ad_group_id", using: :btree
     t.index ["story_id"], name: "index_adwords_ads_on_story_id", using: :btree
   end
@@ -110,8 +107,8 @@ ActiveRecord::Schema.define(version: 20190624173959) do
 
   create_table "companies", force: :cascade do |t|
     t.string   "name"
-    t.datetime "created_at",                                        null: false
-    t.datetime "updated_at",                                        null: false
+    t.datetime "created_at",                                       null: false
+    t.datetime "updated_at",                                       null: false
     t.string   "logo_file_name"
     t.string   "logo_content_type"
     t.integer  "logo_file_size"
@@ -126,14 +123,11 @@ ActiveRecord::Schema.define(version: 20190624173959) do
     t.string   "gtm_id"
     t.string   "primary_cta_background_color", default: "#337ab7"
     t.string   "primary_cta_text_color",       default: "#ffffff"
-    t.string   "gads_default_short_headline"
+    t.string   "adwords_short_headline"
     t.boolean  "promote_tr",                   default: false
     t.boolean  "promote_crm",                  default: false
-    t.string   "gads_business_name"
-    t.string   "gads_default_cta_text",        default: "See More"
-    t.string   "gads_default_main_color",      default: "#ffffff"
-    t.string   "gads_default_accent_color",    default: "#ffffff"
-    t.string   "gads_default_long_headline"
+    t.string   "adwords_logo_url"
+    t.string   "adwords_logo_media_id"
     t.index ["subdomain"], name: "index_companies_on_subdomain", unique: true, using: :btree
   end
 
