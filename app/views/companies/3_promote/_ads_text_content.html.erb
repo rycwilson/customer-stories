@@ -19,7 +19,8 @@
         <%= f.text_field(
               :gads_business_name,
               class: 'form-control',
-              value: f.object.gads_business_name || company.name
+              maxlength: '25',
+              value: f.object.gads_business_name || company.name.truncate(25)
             ) %>
         <span class="help-block with-errors">Max 25 characters</span>
          <button type="button" role="button" class="btn-help" style="position: absolute; top: -4px; right: -40px" data-toggle="popover" data-placement="top" data-trigger="focus">
@@ -38,6 +39,7 @@
         <%= f.text_field(
               :gads_default_short_headline,
               class: 'form-control',
+              maxlength: '30',
               value: f.object.gads_default_short_headline || "#{company.name} Customer Stories".truncate(30)
             ) %>
         <span class="help-block with-errors">Max 30 characters</span>
@@ -57,6 +59,7 @@
         <%= f.text_field(
                 :gads_default_long_headline,
                 class: 'form-control',
+                maxlength: '90',
                 value: f.object.gads_default_long_headline
               ) %>
         <span class="help-block with-errors">Max 90 characters</span>
@@ -104,12 +107,17 @@
       <div class="col-sm-3"><!-- filler --></div>
     </div>
 
-
   </div>
 
   <div class="row">
-    <div class="col-sm-6 col-sm-offset-3" style="padding: 0; margin-top: 0">
+    <div class="col-sm-6 col-sm-offset-3 text-right" style="padding: 0; margin-top: 0; margin-bottom: 15px">
       <hr style="margin-top: 0">
+      <div class="checkbox">
+        <label>
+          <input type="checkbox" name="apply_google_changes" value="true">
+          <span>Apply changes to existing Promoted Stories</span>
+        </label>
+      </div>
     </div>
 
   </div>

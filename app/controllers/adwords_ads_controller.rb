@@ -153,9 +153,8 @@ class AdwordsAdsController < ApplicationController
     @long_headline = company_preview.try(:[], :gads_default_long_headline) ||
         story.try(:ads_long_headline) || 
         "The Promoted Story Title goes here. It is copied from the Customer Story Title by default"
-    # @description = story.try(:ads_description) || 
-    #     "The Promoted Story Title goes here. It is copied from the Customer Story Title by default"
-    @description = "Here is a description. The Promoted Story"
+    @description = story.try(:ads_description) || 
+        "The Promoted Story Title goes here. It is copied from the Customer Story Title by default"
     @cta_text = company_preview.try(:[], :gads_default_cta_text) ||
         story.try(:ads_cta_text) ||
         company.gads_default_cta_text
