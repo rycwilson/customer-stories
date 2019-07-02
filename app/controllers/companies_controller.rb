@@ -53,24 +53,7 @@ class CompaniesController < ApplicationController
     else
       if @company.update(company_params)
         @flash = {}
-        if request.params[:apply_google_changes].present?
-          @company.ads.each do |ad|
-            # update_columns => no callbacks (so we can update all gads at once below)
-            ad.update_columns(
-              short_headline: @company.gads_default_short_headline,
-              long_headline: @company.gads_default_long_headline,
-              cta_text: @company.gads_default_cta_text,
-              main_color: @company.gads_default_main_color,
-              accent_color: @company.gads_default_accent_color
-            )
-          end
-          GoogleAds::update_ads(
-            AdwordsAd.joins(:company)
-                     .where.not(ad_id: nil)
-                     .where(companies: { id: @company.id })
-                     .to_a
-          )
-        end
+        apply_google_changes(@company) if request.params[:apply_google_changes].present?
       else
         @flash = { mesg: @company.errors.full_messages.join(', '), status: 'danger' }
       end
@@ -304,6 +287,25 @@ class CompaniesController < ApplicationController
     images_attrs[images_attrs.keys.first][:_destroy] == 'true' ?
       images_attrs[images_attrs.keys.first][:id] :
       nil
+  end
+
+  def apply_google_changes company
+    company.ads.each do |ad|
+      # update_columns => no callbacks (so we can update all gads at once below)
+      ad.update_columns(
+        short_headline: company.gads_default_short_headline,
+        long_headline: company.gads_default_long_headline,
+        cta_text: company.gads_default_cta_text,
+        main_color: company.gads_default_main_color,
+        accent_color: company.gads_default_accent_color
+      )
+    end
+    GoogleAds::update_ads(
+      AdwordsAd.joins(:company)
+               .where.not(ad_id: nil)
+               .where(companies: { id: company.id })
+               .to_a
+    )
   end
 
 end

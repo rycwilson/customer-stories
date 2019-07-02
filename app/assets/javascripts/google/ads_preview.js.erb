@@ -62,7 +62,7 @@ $(function () {
           data = context.getImageData(0, 0.95 * height, width, 0.05 * height)
         } catch(e) {
           //  security error, img on diff domain
-          debugger
+          
           return defaultRGB;
         }
         length = data.data.length;

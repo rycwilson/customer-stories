@@ -34,9 +34,12 @@
     </div>
   </div>
 
-  <div>
-    <div class="call-to-action" style="background-color: <%= @main_color %>">
-      <a class="<%= @cta_background %>"><%= @cta_text %></a>
+  <div style="background-color: <%= (@main_color === '#ffffff' || @accent_color === '#ffffff') ? '#eeeeee' : @main_color %>">
+    <div class="call-to-action">
+      <a class="<%= (@main_color === '#ffffff' || @accent_color === '#ffffff') ? 'dark-background' : @cta_background %>"
+         style="<%= (@main_color === '#ffffff' || @accent_color === '#ffffff') ? 'background-color: #324148' : '' %>">
+         <%= @cta_text %>
+      </a>
     </div>
   </div>
 
