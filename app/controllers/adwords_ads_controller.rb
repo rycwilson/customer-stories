@@ -183,11 +183,6 @@ class AdwordsAdsController < ApplicationController
     # disable the ad links in production
     @is_production = ENV['HOST_NAME'] == 'customerstories.net'
     
-    
-    
-    
-    
-    
     # must use strict_encode do newlines aren't added
     # @image_base64 = Base64.strict_encode64( open(@image_url) { |io| io.read } )
     # @image_dominant_color = Miro::DominantColors.new(@image_url).to_hex[0]
@@ -202,7 +197,7 @@ class AdwordsAdsController < ApplicationController
     params.require(:story).permit(
       topic_ad_attributes: [ :id, :status, :description, :short_headline, :long_headline, adwords_image_ids: [] ],
       retarget_ad_attributes: [ :id, :status, :description, :short_headline, :long_headline, adwords_image_ids: [] ]
-      )
+    )
   end
     
   # previews
@@ -323,7 +318,7 @@ class AdwordsAdsController < ApplicationController
       when 'SquareLogo'
         RESPONSIVE_AD_SQUARE_LOGO_PLACEHOLDER
       end
-    (images.length && images[rand(0...images.length)].image_url) || placeholder
+    (images.length != 0 && images[rand(0...images.length)].image_url) || placeholder
   end
       
 end
