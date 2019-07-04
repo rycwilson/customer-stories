@@ -14,12 +14,13 @@ $(function () {
       },
 
       // ref https://stackoverflow.com/questions/3404508
-      truncateLongHeadlines = function () {
-        var $ads = $('.native-1, .native-2, .native-sm'),
-            $longHeadlines = $ads.find('.long-headline');
+      truncateTextContent = function () {
+        var $ads = $('.native-ad'),
+            $fields = $ads.find('.description, .long-headline');
 
-        $longHeadlines.each(function () {
+        $fields.each(function () {
           var $link = $(this).children('a');
+          if ($link.is('.fart')) debugger;
           while ($link.outerHeight() > $(this).height()) {
             $link.text(function (index, text) {
               return text.replace(/\W*\s(\S)*$/, '...');
@@ -81,7 +82,7 @@ $(function () {
 
 
   initMasonry();
-  truncateLongHeadlines();
+  // truncateTextContent();
 
   // var rgb = getAverageRGB();
   // console.log('rgb('+rgb.r+','+rgb.g+','+rgb.b+')')
@@ -128,10 +129,10 @@ $(function () {
     .on('shown.bs.tab', '[href="#websites"], [href="#websites-desktop"]', function () {
       $('#websites-desktop').imagesLoaded(function () {
         initMasonry();
-        truncateLongHeadlines();
+        truncateTextContent();
         // $('#websites-desktop').masonry('on', 'layoutComplete', function () {
         //   console.log('hello?')
-        //   truncateLongHeadlines();
+        //   truncateTextContent();
         // });
       });
     })

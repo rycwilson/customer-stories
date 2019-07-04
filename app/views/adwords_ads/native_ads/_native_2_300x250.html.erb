@@ -25,12 +25,24 @@
   <div class="first-row">
     <div class="logo" style="background-image: url(<%= @logo_url %>)"></div>
     <div class="headlines">
-      <div class="short-headline">
-        <span><%= @short_headline %></span>
-      </div>
-      <div class="long-headline">
-        <a style="font-size: <%= @ads_params[:native_2][:lh_font_size] %>"><%= @description %></a>
-      </div>
+
+      <% if long_headline_only %>
+
+        <div class="long-headline">
+          <a href="javascript:;"><%= @long_headline %></a>
+        </div>
+
+      <% else %>
+
+        <div class="short-headline">
+          <span><%= @short_headline %></span>
+        </div>
+        <div class="description">
+          <a href="javascript:;"><%= @description %>></a>
+        </div>
+
+      <% end %>
+
     </div>
   </div>
 

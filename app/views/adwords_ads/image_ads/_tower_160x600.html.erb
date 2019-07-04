@@ -1,0 +1,48 @@
+
+<div class="ad image-ad tower">
+
+  <%= render('adwords_ads/ads_by_google') %>
+
+  <div class="landscape-image" style="background-image: url(<%= @image_url %>)"></div>
+  <% if includes_logo %>
+    <div class="spacer" style="height: 30px"></div>
+  <% end %>
+
+  <div class="tower-container">
+
+    <div class="short-headline <%= includes_logo ? 'includes-logo' : @short_headline_background %>"
+         style="<%= includes_logo ? '' : 'background-color:' + @main_color  %>">
+      <span style="font-size: <%= sh_font_size %>">
+        <%= @short_headline %>
+      </span>
+    </div>
+    <div class="spacer" style="height: <%= includes_logo ? '24px' : '18px' %>"></div>
+
+    <% if includes_logo %>
+
+      <div class="logo" style="background-image: url(<%= @logo_url %>)"></div>
+      <div class="spacer" style="height: 12px"></div>
+
+    <% end %>
+
+    <div class="description <%= includes_logo ? 'includes-logo' : '' %>">
+      <span style="font-size: <%= desc_font_size %>">
+        <%= @description %>
+      </span>
+    </div>
+    <div class="spacer" style="height: 18px"></div>
+
+    <button class="<%= @button_background %>" style="background-color: <%= @accent_color %>"></button>
+
+    <% unless includes_logo %>
+
+      <div class="business-name">
+        <span><%= @business_name %></span>
+      </div>
+
+    <% end %>
+
+  </div>
+  <div class="spacer" style="height: <%= includes_logo ? '60px' : '12px' %>"></div>
+
+</div>

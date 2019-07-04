@@ -88,12 +88,12 @@ Rails.application.routes.draw do
           }, as: 'curate_story'
     get '/promote/preview/', to: 'adwords_ads#preview',
           constraints: lambda { |params, request|
-            request.params[:company_preview][:gads_business_name].present? && 
-            request.params[:company_preview][:gads_default_short_headline].present? &&
-            request.params[:company_preview][:gads_default_long_headline] &&   # may be blank
-            request.params[:company_preview][:gads_default_cta_text].present? &&
-            request.params[:company_preview][:gads_default_main_color].present? &&
-            request.params[:company_preview][:gads_default_accent_color].present?
+            request.params[:defaults][:gads_business_name].present? && 
+            request.params[:defaults][:gads_default_short_headline].present? &&
+            request.params[:defaults][:gads_default_long_headline] &&   # may be blank
+            request.params[:defaults][:gads_default_cta_text].present? &&
+            request.params[:defaults][:gads_default_main_color].present? &&
+            request.params[:defaults][:gads_default_accent_color].present?
           }
     get '/promote/preview/:story_slug', to: 'adwords_ads#preview',
           constraints: lambda { |params, request|

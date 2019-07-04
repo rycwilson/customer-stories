@@ -1,0 +1,29 @@
+
+<div class="ad native-ad native-3">
+
+  <%= render('adwords_ads/ads_by_google') %>
+
+  <div class="square-image" style="background-image: url(<%= @square_image_url %>)"></div>
+
+  <div>
+
+    <div class="long-headline">
+      <a href="javascript:;"><%= @long_headline %></a>
+    </div>
+
+    <div>
+
+      <div class="business-name">
+        <div class="ad-box ad-box-green"><span>Ad</span></div>
+        <a><%= @business_name %></a>
+      </div>
+
+      <div class="call-to-action">
+        <a href="javascript:;"><%= @cta_text %></a>
+      </div>
+
+    </div>
+
+  </div>
+
+</div>

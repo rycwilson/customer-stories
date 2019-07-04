@@ -53,8 +53,8 @@ ActiveRecord::Schema.define(version: 20190624173959) do
     t.string   "long_headline"
     t.datetime "created_at",                                null: false
     t.datetime "updated_at",                                null: false
-    t.string   "main_color"
-    t.string   "accent_color"
+    t.string   "main_color",          default: "#ffffff"
+    t.string   "accent_color",        default: "#ffffff"
     t.string   "description"
     t.string   "cta_text"
     t.string   "short_headline"

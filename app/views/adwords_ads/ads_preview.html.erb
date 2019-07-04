@@ -55,7 +55,41 @@
           <div id="websites-mobile" class="tab-pane fade active in">
             <%= render('adwords_ads/mobile', { mobile_id: 'mobile--websites' }) %></li>
           </div>
-          <%= render('adwords_ads/websites_desktop_pane') %>
+          <div id="websites-desktop" style="padding-top: 40px;" role="tabpanel" class="tab-pane fade">
+            <%= render(
+                  'adwords_ads/image_ads/tower_160x600', 
+                  { 
+                    includes_logo: true,
+                    sh_font_size: @ads_params[:tower][:sh_font_size],
+                    desc_font_size: @ads_params[:tower][:desc_font_size]
+                  }
+                ) %>
+            <%= render(
+                  'adwords_ads/native_ads/native_2_300x250', 
+                  { is_mobile: false, long_headline_only: false }
+                ) %>
+            <%= render(
+                  'adwords_ads/native_ads/native_2_300x250', 
+                  { is_mobile: false, long_headline_only: true }
+                ) %>
+            <%= render(
+                  'adwords_ads/native_ads/native_1_480x120',
+                  show_description: @long_headline.length <= 65 
+                ) %>
+            <%= render('adwords_ads/native_ads/native_3_373x116') %>
+            <%= render('adwords_ads/image_ads/image_1_300x250', { is_mobile: false }) %>
+            <%= render('adwords_ads/text_ads/text_1_300x250', { is_mobile: false }) %>
+            <%= render(
+              'adwords_ads/image_ads/tower_160x600', 
+                  { 
+                    includes_logo: false,
+                    sh_font_size: @ads_params[:tower_sans_logo][:sh_font_size],
+                    desc_font_size: @ads_params[:tower_sans_logo][:desc_font_size]
+                  }
+                ) %>
+            <%= render('adwords_ads/image_ads/banner_728x90', { includes_logo: true }) %>
+            <%= render('adwords_ads/image_ads/banner_728x90', { includes_logo: false }) %>
+          </div>
         </div>
 
       </div>
@@ -66,7 +100,10 @@
           <div id="youtube-mobile" class="tab-pane fade active in">
             <%= render('adwords_ads/mobile', { mobile_id: 'mobile--youtube' }) %></li>
           </div>
-          <%= render('adwords_ads/youtube_desktop_pane') %>
+          <div id="youtube-desktop" style="padding-top: 40px;" class="tab-pane fade">
+            <%= render('adwords_ads/image_ads/banner_728x90', { includes_logo: false }) %>
+            <%= render('adwords_ads/image_ads/image_1_300x250', { is_mobile: false }) %>
+          </div>
         </div>
         
       </div>
