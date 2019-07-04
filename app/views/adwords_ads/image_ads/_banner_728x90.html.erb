@@ -1,0 +1,39 @@
+
+<div class="ad image-ad banner">
+
+  <%= render('adwords_ads/ads_by_google') %>
+
+  <div class="landscape-image" style="background-image: url(<%= @image_url %>)"></div>
+
+  <% if includes_logo %>
+
+    <div class="logo" style="background-image: url(<%= @logo_url %>)"></div>
+  
+    <div class="short-headline">
+      <span><%= @short_headline %></span>
+    </div>
+
+  <% else %>
+
+    <div class="sans-logo <%= @short_headline_background %>" style="background-color: <%= @main_color %>">
+
+      <div class="short-headline">
+        <span><%= @short_headline %></span>
+      </div>
+
+      <div class="business-name">
+        <span><%= @business_name %></span>
+      </div>
+
+    </div>
+
+  <% end %>
+
+  <div class="description">
+    <span style="font-size: <%= @ads_params[:banner][:desc_font_size] %>"><%= @description %></span>
+  </div>
+
+  <button class="<%= @button_background %>" style="background-color: <%= @accent_color %>"></button>
+  <div class="spacer"></div>
+
+</div>

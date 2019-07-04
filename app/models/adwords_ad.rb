@@ -13,7 +13,7 @@ class AdwordsAd < ApplicationRecord
     # http://vaidehijoshi.github.io/blog/2015/12/01/functions-to-call-upon-activerecord-association-callbacks/
     after_add: :clear_promoted_stories_cache,
     after_remove: :clear_promoted_stories_cache
-  ) do 
+  ) do
     def default; where(default: true); end
     def square_images; where(type: 'SquareImage'); end
     def landscape_images; where(type: 'LandscapeImage'); end
@@ -118,11 +118,11 @@ class AdwordsAd < ApplicationRecord
           }
         },
       ],
-      business_name: self.story.company.gads_business_name,
+      business_name: self.story.company.gads_business_name || self.story.company.name.truncate(30),
       long_headline: {
         asset: {
           xsi_type: 'TextAsset',
-          asset_text: self.long_headline || self.story.company.gads_default_long_headline
+          asset_text: self.long_headline || self.story.company.gads_default_long_headline || self.description
         }
       },
       # the association methods (e.g. ad.landscape_images) don't work here

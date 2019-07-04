@@ -1,0 +1,33 @@
+
+<div class="ad native-ad native-1">
+
+  <%= render('adwords_ads/ads_by_google') %>
+
+  <div class="landscape-image" style="background-image: url(<%= @image_url %>)"></div>
+
+  <div>
+
+    <div class="long-headline <%= show_description ? 'with-description' : '' %>">
+      <a href="javascript:;"><%= @long_headline %></a>
+    </div>
+
+    <% if show_description %>
+
+      <div class="description">
+        <a href="javascript"><%= @description %></a>
+      </div>
+
+    <% end %>
+
+    <div class="business-name">
+      <div class="ad-box ad-box-green"><span>Ad</span></div>
+      <a href="javascript:;"><%= @business_name %></a>
+    </div>
+
+    <div class="call-to-action">
+      <a href="javascript:;"><%= @cta_text %></a>
+    </div>
+    
+  </div>
+
+</div>

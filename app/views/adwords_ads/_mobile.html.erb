@@ -35,22 +35,25 @@
           <%#= render('adwords_ads/previews/fancy1', { is_mobile: true }) %>
         </div> -->
         <div class="item active">
-          <%= render('adwords_ads/previews/image_1_300x250', { is_mobile: true }) %>
+          <%= render('adwords_ads/image_ads/image_1_300x250', { is_mobile: true }) %>
         </div>
         <div class="item">
-          <%= render('adwords_ads/previews/native_2_300x250', { is_mobile: true }) %>
+          <%= render(
+                'adwords_ads/native_ads/native_2_300x250', 
+                { is_mobile: true, long_headline_only: true }
+              ) %>
         </div>
         <div class="item">
-          <%= render('adwords_ads/previews/text_1_300x250', { is_mobile: true }) %>
+          <%= render('adwords_ads/text_ads/text_1_300x250', { is_mobile: true }) %>
         </div>
 
       <% elsif mobile_id == 'mobile--youtube' %>
 
         <div class="item active">
-          <%= render('adwords_ads/previews/youtube_home') %>
+          <%= render('adwords_ads/youtube_ads/youtube_home') %>
         </div>
         <div class="item">
-          <%= render('adwords_ads/previews/youtube_watch') %>
+          <%= render('adwords_ads/youtube_ads/youtube_watch') %>
         </div>
 
       <% end %>

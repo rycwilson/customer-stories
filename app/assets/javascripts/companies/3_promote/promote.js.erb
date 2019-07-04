@@ -294,7 +294,7 @@ function promoteListeners () {
             .split('&')
             .filter(function (param) { return param.includes('company'); })
             .join('&')
-            .replace(/company\[/g, 'company_preview[')
+            .replace(/company\[/g, 'defaults[')
             .replace(/#/g, '%23');  // escape hex color values
       //console.log(queryString)
       window.open('/promote/preview' + queryString);

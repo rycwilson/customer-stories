@@ -6,7 +6,7 @@
     a {
       text-decoration: none;
       cursor: pointer;
-      font-size: 14px;
+      // font-size: 14px;
       color: #212121;
     }
   }
@@ -46,19 +46,40 @@
     }
   }
   > div:last-child {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
     padding: 4px 0 4px 13px;
     .long-headline {
-      height: 54px;
+      height: 60px;
+      line-height: 20px;
       padding-right: 30px;
+      font-size: 17px;
       a {
-        line-height: 17px;
         font-weight: 400;
+      }
+      &.with-description {
+        overflow: hidden;
+        height: 32px;
+        font-size: 14px;
+        line-height: 15px;
+      }
+    }
+    .description {
+      // display: inline-block;
+      height: 26px;
+      line-height: 13px;
+      padding-right: 5px;
+      font-size: 11px;
+      a {
+        color: #757575;
       }
     }
     .business-name {
       display: flex;
       align-items: center;
-      height: 13px;
+      height: 24px;
+      font-size: 12px;
       a {
         color: #b2b2b2;
       }
@@ -75,68 +96,6 @@
       box-shadow: 0 0 2px 0 rgba(0,0,0,0.12), 0 2px 2px 0 rgba(0,0,0,0.24);
       font-weight: 500;
       color: #fff;
-    }
-  }
-}
-
-.native-ad.native-sm {
-  &::before {
-    content: 'Native 373x116'
-  }
-  width: 373px;
-  height: 116px;
-  padding: 10px;
-  flex-direction: row;
-  align-items: flex-start;
-  .square-image {
-    display: inline-block;
-    height: 78px;
-    width: 78px;
-    flex-shrink: 0;
-    background: {
-      size: contain;
-      repeat: no-repeat;
-      position: center;
-    }
-  }
-  > div:last-child {
-    display: inline-flex;
-    flex-direction: column;
-    justify-content: space-between;
-    width: 100%;
-    height: 100%;
-    padding-left: 15px;
-    .long-headline {
-      height: 57px;
-      width: 100%;
-      a {
-        line-height: 18px;
-        font-weight: 500;
-      }
-    }
-    > div:last-child {
-      display: flex;
-      flex-direction: row;
-      justify-content: space-between;
-      .business-name {
-        display: inline-flex;
-        align-items: center;
-        a {
-          color: #8c8c8c;
-        }
-      }
-      .call-to-action {
-        display: inline-block;
-        a {
-          width: 75px;
-          height: 28px;
-          border: 1px solid #999999;
-          font-size: 12px;
-          line-height: 28px;
-          color: #757575;
-          font-weight: 400;
-        }
-      }
     }
   }
 }
@@ -162,9 +121,9 @@
   .first-row {
     display: flex;
     width: 100%;
+    flex-grow: 1;
     // font-size: 0;
     // height: 61px;
-    flex-grow: 1;
     // line-height: 0;
     padding: 10px 12px 0 15px;
     // width: 273px;
@@ -183,6 +142,7 @@
     .headlines {
       display: flex;
       flex-direction: column;
+      justify-content: center;
     }
     .short-headline {
       color: #212121;
@@ -192,19 +152,29 @@
       cursor: pointer;
       margin-bottom: 2px;
     }
-    .long-headline {
+    .description {
       height: 28px;
-      flex-grow: 1;
+      line-height: 14px;
+      font-size: 12px;
+      font-weight: 300;
       a {
-        color: #757575;
-        font-size: 12px;
-        font-weight: 300;
-        line-height: 14px;
         cursor: pointer;
-        text-decoration: none;
+      // text-decoration: none;
+        color: #757575;
         &:hover {
-          text-decoration: underline;
+          // text-decoration: underline;
         }
+      }
+    }
+    .long-headline {
+      height: 36px;
+      line-height: 18px;
+      a {
+        font-size: 14px;
+        text-decoration: none;
+        color: #212121;
+        font-weight: 500;
+        cursor: pointer;
       }
     }
   }
@@ -212,7 +182,7 @@
     display: flex;
     align-items: center;
     justify-content: space-between;
-    height: 29px;
+    height: 34px;
     width: 100%;
     padding: 3px 12px 5px 15px;
     .business-name a {
@@ -242,6 +212,68 @@
         justify-content: center;
         height: 100%;
         width: 13px;
+      }
+    }
+  }
+
+}
+
+.native-ad.native-3 {
+  &::before {
+    content: 'Native 373x116'
+  }
+  width: 373px;
+  height: 116px;
+  padding: 10px;
+  flex-direction: row;
+  align-items: flex-start;
+  .square-image {
+    display: inline-block;
+    height: 78px;
+    width: 78px;
+    flex-shrink: 0;
+    background: {
+      size: contain;
+      repeat: no-repeat;
+      position: center;
+    }
+  }
+  > div:last-child {
+    display: inline-flex;
+    flex-direction: column;
+    justify-content: space-between;
+    width: 100%;
+    height: 100%;
+    padding-left: 15px;
+    .long-headline {
+      height: 57px;
+      width: 100%;
+      font-size: 14px;
+      line-height: 18px;
+      font-weight: 500;
+    }
+    > div:last-child {
+      display: flex;
+      flex-direction: row;
+      justify-content: space-between;
+      .business-name {
+        display: inline-flex;
+        align-items: center;
+        a {
+          color: #8c8c8c;
+        }
+      }
+      .call-to-action {
+        display: inline-block;
+        a {
+          width: 75px;
+          height: 28px;
+          border: 1px solid #999999;
+          font-size: 12px;
+          line-height: 28px;
+          color: #757575;
+          font-weight: 400;
+        }
       }
     }
   }
