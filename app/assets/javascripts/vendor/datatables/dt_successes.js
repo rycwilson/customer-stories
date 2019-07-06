@@ -19,6 +19,7 @@ function initSuccessesTable (dtSuccessesInit) {
     columns: [
       {
         data: null,
+        width: '5%',
         render: function (data, type, row) {
           return "<i class='fa fa-caret-right'></i>" +
                  "<i class='fa fa-caret-down' style='display:none'></i>";
@@ -26,6 +27,7 @@ function initSuccessesTable (dtSuccessesInit) {
       },
       {
         name: 'success',
+        width: '61%',
         data: {
           _: function (row, type, set, meta) {
             // console.log(row)
@@ -43,6 +45,7 @@ function initSuccessesTable (dtSuccessesInit) {
       },
       {
         name: 'customer',
+        width: '0%',
         data: {
           _: function (row, type, set, meta) {
             return { id: row.customer.id, name: row.customer.name };
@@ -54,6 +57,7 @@ function initSuccessesTable (dtSuccessesInit) {
       },
       {  // curator
         name: 'curator',
+        width: '0%',
         data: {
           _: 'curator.full_name',
           filter: 'curator.id'
@@ -61,12 +65,14 @@ function initSuccessesTable (dtSuccessesInit) {
       },
       {
         name: 'status',
+        width: '26%',
         data: {
           _: 'display_status',
         }
       },
       {
         name: 'story',
+        width: '0%',
         data: {
           _: function (row, type, set, meta) {
             return row.story && { id: row.story.id, title: row.story.title };
@@ -76,6 +82,7 @@ function initSuccessesTable (dtSuccessesInit) {
       },
       {
         data: 'display_status',
+        width: '8%',
         render: function (data, type, row, meta) {
             return _.template($('#success-actions-dropdown-template').html())({
                 status: data,
@@ -99,11 +106,11 @@ function initSuccessesTable (dtSuccessesInit) {
           }
         }
       },
-      { width: '0%', targets: [customerIndex, curatorIndex, storyIndex] },  // hidden
-      { width: '5%', targets: 0 },
-      { width: '61%', targets: successIndex },
-      { width: '26%', targets: statusIndex },
-      { width: '8%', targets: actionsIndex }
+      // { width: '0%', targets: [customerIndex, curatorIndex, storyIndex] },  // hidden
+      // { width: '5%', targets: 0 },
+      // { width: '61%', targets: successIndex },
+      // { width: '26%', targets: statusIndex },
+      // { width: '8%', targets: actionsIndex }
     ],
     rowGroup: {
       dataSrc: 'customer.name',
