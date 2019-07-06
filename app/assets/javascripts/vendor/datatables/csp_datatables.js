@@ -31,9 +31,9 @@ function initDataTables (isBatch) {
     var dtSuccessesInit = $.Deferred(),
         dtContributorsInit = $.Deferred(),
         showTables = function () {
-          $('.successes-header, #successes-table, .contributors-header, #prospect-contributors-table')
+          $('.successes-header, #successes-table, ' +
+            '.contributors-header, #prospect-contributors-table')
             .css('visibility', 'visible');
-          $('#prospect .layout-sidebar').find('.btn-add').show();
         },
         renderTableHeaders = function () {
           var dtSuccesses = $('#successes-table').DataTable(),
