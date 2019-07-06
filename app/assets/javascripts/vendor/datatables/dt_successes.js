@@ -8,6 +8,7 @@ function initSuccessesTable (dtSuccessesInit) {
       url: '/successes',
       dataSrc: ''
     },
+    autoWidth: false,
     dom: 'tip',
     pageLength: 100,
     language: {
@@ -137,6 +138,7 @@ function initSuccessesTable (dtSuccessesInit) {
     initComplete: function (settings, json) {
       var $table = $(this), dt = $table.DataTable();
           $tableWrapper = $table.closest('[id*="table_wrapper"]');
+      
       // remove default search field.  Disabling via options also disables api, so can't do that
       $tableWrapper.children('.row:first-child').remove();
 

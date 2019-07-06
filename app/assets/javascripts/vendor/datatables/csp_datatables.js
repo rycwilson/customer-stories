@@ -6,6 +6,16 @@
 
 function initDataTables (isBatch) {
 
+  // https://github.com/DataTables/Responsive/issues/40
+  $(document).on(
+    'shown.bs.tab', 
+    'a[href="#successes"], a[href*="contributors"], a[href="promoted-stories"]', 
+    function () {
+      $( $.fn.dataTable.tables(true) ).css('width', '100%');
+      $( $.fn.dataTable.tables(true) ).DataTable().columns.adjust().draw();
+    }
+  )
+
   // make sure daterangepicker is initialized prior to datatables,
   // else the prior selected date range will be used instead of default
   if ($('#measure-visitors-container').hasClass('active')) {
@@ -21,9 +31,9 @@ function initDataTables (isBatch) {
     var dtSuccessesInit = $.Deferred(),
         dtContributorsInit = $.Deferred(),
         showTables = function () {
-          $('.successes-header, #successes-table, ' +
-            '.contributors-header, #prospect-contributors-table')
+          $('.successes-header, #successes-table, .contributors-header, #prospect-contributors-table')
             .css('visibility', 'visible');
+          $('#prospect .layout-sidebar').find('.btn-add').show();
         },
         renderTableHeaders = function () {
           var dtSuccesses = $('#successes-table').DataTable(),
