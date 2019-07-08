@@ -10,10 +10,10 @@
     {{ var summary = JSON.stringify(story.summary).replace(/'/g, "&#39"); }}
     {{ var quote = JSON.stringify(story.quote).replace(/'/g, "&#39"); }}
 
-    <li class='grid-item' data-story-id="{{= story.id }}" data-story-slug="{{= storySlug }}" data-customer-slug="{{= customerSlug }}">
+    <li class="story-card grid-item" data-story-id="{{= story.id }}" data-story-slug="{{= storySlug }}" data-customer-slug="{{= customerSlug }}">
 
       <a href="{{= isCurator ? 'javascript:;' : (story.published && story.csp_story_path) || (story.preview_published && 'javascript:;') || '' }}"
-         class="thumbnail {{= isCurator ? 'curator' : 'public' }} {{= story.published ? 'published' : (story.preview_published ? 'preview-published' : (story.logo_published ? 'logo-published' : 'pending-curation')) }}"
+         class=" {{= isCurator ? 'curator' : 'public' }} {{= story.published ? 'published' : (story.preview_published ? 'preview-published' : (story.logo_published ? 'logo-published' : 'pending-curation')) }}"
          data-logosrc="{{= story.success.customer.logo_url }}"
          data-customer='{{= JSON.stringify(story.success.customer.name) }}'
          data-summary='{{= summary }}'
@@ -22,28 +22,32 @@
          data-quote-attr-title='{{= JSON.stringify(story.quote_attr_title) }}'
          data-preview-contributor='{{= JSON.stringify(story.published_contributors[0]) }}'">
 
-        <div class="thumbnail-view">
+        <div class="story-card__content thumbnail-view">
 
           {{ if (story.title) { }}
-            <div class='thumbnail-view-hover'>
+            <div class="story-card__title thumbnail-view-hover">
               <p>{{= story.title }}</p>
             </div>
           {{ } }}
 
-          {{ if (story.success.customer.logo_url) { }}
-            <img src="{{= story.success.customer.logo_url }}">
-          {{ } else { }}
-            <img src="<%= LOGO_PLACEHOLDER_URL %>">
-          {{ } }}
+          <div class="story-card__logo">
+
+            {{ if (story.success.customer.logo_url) { }}
+              <img src="{{= story.success.customer.logo_url }}">
+            {{ } else { }}
+              <img src="<%= LOGO_PLACEHOLDER_URL %>">
+            {{ } }}
+
+          </div>
 
         </div>
 
-        <div class="caption">
-          <span class="customer-name">{{= story.success.customer.name }}</span>
-          <span class="click-action"></span>
+        <div class="story-card__caption caption">
+          <span class="story-card__customer customer-name">{{= story.success.customer.name }}</span>
+          <span class="story-card__cta click-action"></span>
         </div>
 
-        <div class="icon-container">
+        <div class="story-card__loading icon-container">
           <i class="fa fa-spin fa-circle-o-notch"></i>
         </div>
 

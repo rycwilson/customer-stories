@@ -29,6 +29,10 @@ a {
   }
 }
 
+li.story-card {
+  @include story_card();
+}
+
 label {
   font-weight: 600;
 }

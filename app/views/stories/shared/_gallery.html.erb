@@ -10,19 +10,15 @@
             skip_digest: true
           ) do %>
 
-        <li class="grid-item" data-story-id="<%= story.id %>">
-
-          <%= render(
-                'stories/shared/story_card',
-                {
-                  story: story,
-                  is_curator: false,
-                  is_plugin: false,
-                  is_external: false
-                }
-              ) %>
-
-        </li>
+        <%= render(
+              'stories/shared/story_card',
+              {
+                story: story,
+                is_curator: false,
+                is_plugin: false,
+                is_external: false
+              }
+            ) %>
 
       <% end %>
 

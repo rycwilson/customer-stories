@@ -7,7 +7,7 @@ body.pixlee.plugin-demo {
 
 #cs-gallery {
 
-  @import '../../../base/mixins';
+  @import '../../../mixins/mixins';
   @import '../variables';
   @import '../../../views/plugins/gallery';
   @import 'gallery';

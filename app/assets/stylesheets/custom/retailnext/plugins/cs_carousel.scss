@@ -2,7 +2,7 @@
 @import '../variables';
 
 #cs-carousel {
-  @import '../../../base/mixins';
+  @import '../../../mixins/mixins';
   @import '../../../views/plugins/carousel';
   @import 'carousel';
   @import '../show';

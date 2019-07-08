@@ -3,7 +3,7 @@
 
 #cs-carousel, #cs-varmour-container {
 
-  @import '../../../base/mixins';
+  @import '../../../mixins/mixins';
 
   // varmour was the original, so doesn't need to inherit from the standard carousel
   // @import '../../../views/plugins/carousel';

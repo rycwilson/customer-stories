@@ -209,7 +209,7 @@ Preview.prototype.update = function( $item ) {
       contributor : $itemEl.data( 'preview-contributor' )
     };
 
-  contributorProfileTemplate = _.template($('#csp-linkedin-widget-template').html());
+  // contributorProfileTemplate = _.template($('#csp-linkedin-widget-template').html());
 
   var self = this,
       widgetWidth = (CSP.screenSize === 'lg') ? 420 : 320;

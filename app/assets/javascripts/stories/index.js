@@ -98,7 +98,7 @@ function storiesIndexListeners () {
 
         // stop the subsequent touchend event from triggering the <a> tag
         $storyLink.one('touchend', function (e) {
-          console.log('touchend');
+          // console.log('touchend');
           e.preventDefault();
         });
 
@@ -118,12 +118,12 @@ function storiesIndexListeners () {
           // this selector is still allowing a click on the title <p> to trigger this listener => check in the function instead
           // ':not(li[data-story-id]:nth-of-type(' + $storyCard.index() + 1 + '), li[data-story-id]:nth-of-type(' + $storyCard.index() + 1 + ') *)',
           function (e) {
-            console.log('body touchstart')
+            // console.log('body touchstart')
             if ($(e.target).is($storyCard) || $storyCard.has(e.target).length ) {
               console.log('story card')
               // do nothing (link will be followed)
             } else {
-              console.log('not story card')
+              // console.log('not story card')
               $storyCard.removeClass('hover');
               $storyLink.off('touchstart', storyLoading);
             }

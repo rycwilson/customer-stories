@@ -1,4 +1,6 @@
 
+@import 'story_card';
+
 @mixin LI-profile-badge ($bg-color) {
   .LI-badge-container {
     width: 100%;
