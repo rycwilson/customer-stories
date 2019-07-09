@@ -1,6 +1,8 @@
 
 #gads-content-form {
 
+  padding-top: 20px;
+
   .col-sm-3 {
     // width: 22%;
   }
@@ -10,6 +12,13 @@
 
   .btn-help {
     @include fa-button();
+  }
+
+  .gads-content__header {
+    height: 100px;
+    padding: 20px;
+    background-color: #efefef;
+    display: none;
   }
 
   .form-group.custom-colors {

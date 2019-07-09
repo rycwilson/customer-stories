@@ -27,9 +27,10 @@
 
       <% if ad_image[:default] %>
 
-        <label><%= ad_image[:type].split(/(?=[A-Z])/).join(' ') %>&nbsp;<span>*</span></label>
+        <!-- <label><%#= ad_image[:type].split(/(?=[A-Z])/).join(' ') %>&nbsp;<span>*</span></label> -->
         <button type="button" data-trigger="fileinput">
-          <i class="fa fa-fw fa-upload"></i>
+          <i class="fa fa-fw fa-upload"></i>&nbsp;&nbsp;
+          <span>Upload</span>
         </button>
 
       <% else %>
@@ -84,7 +85,8 @@
     <div class="ad-image-card__footer">
 
       <% if ad_image[:default] %>
-        <label>*&nbsp;<span>required default</span><span>optional default</span><span>default</span></label>
+        <!--<label>*&nbsp;<span>required default</span><span>optional default</span><span>default</span></label>-->
+        <label><span>*&nbsp;Required</span><span>*&nbsp;optional</span></label>
       <% end %>
 
       <div>

@@ -37,32 +37,26 @@
 
   </div> -->
 
-  <div class="image-library__header">
-    <label>Image Library</label>
+  <div class="image-content__header">
     <div class="btn-group">
-      <a href="#image-library__marketing" class="btn btn-secondary active" data-toggle="tab">
-        <i class="fa fa-fw fa-image"></i>
+      <a href="#image-content__marketing" class="btn btn-secondary active" data-toggle="tab">
+        <i class="fa fa-fw fa-image"></i>&nbsp;
         Marketing
       </a>
-      <a href="#image-library__logos" class="btn btn-secondary" data-toggle="tab" style="width: 122px">
-        <i class="fa fa-fw fa-flag"></i>
+      <a href="#image-content__logos" class="btn btn-secondary" data-toggle="tab">
+        <i class="fa fa-fw fa-flag"></i>&nbsp;
         Logos
       </a>
     </div>
-
+    <span class="help-block">Select image type</span>
   </div>
 
-  <div class="image-library tab-content">
+  <div class="image-content tab-content">
 
-    <div id="image-library__marketing" class="tab-pane fade in active">
+    <div id="image-content__marketing" class="tab-pane fade in active">
 
-      <div class="image-library__sub-header">
-        <label>Marketing Images</label>
-        <button type="button" class="btn-add" <%= missing_default_google_images?(company, 'marketing') ? 'disabled' : '' %>>
-          <span class="fa-stack fa-lg">
-          <i class="fa fa-circle-o fa-stack-2x"></i>
-          <i class="fa fa-plus fa-stack-1x"></i>
-        </button>
+      <div class="image-content__sub-header">
+        <label>Default Images</label>
         <button type="button" class="image-requirements marketing" role="button"
                 data-toggle="popover" data-placement="right" data-trigger="focus"
                 data-square-min="300x300" data-square-ratio="1:1"
@@ -73,7 +67,8 @@
           </span>
         </button>
       </div>
-      <ul style="padding: 0">
+
+      <ul>
 
         <%= render(
               'companies/3_promote/ad_image_card',
@@ -107,6 +102,24 @@
 
         <br>
 
+        <div class="image-content__sub-header">
+          <label>Additional Images</label>
+          <button type="button" class="btn-add" <%= missing_default_google_images?(company, 'marketing') ? 'disabled' : '' %>>
+            <span class="fa-stack fa-lg">
+            <i class="fa fa-circle-o fa-stack-2x"></i>
+            <i style="font-size: 15px" class="fa fa-upload fa-stack-1x"></i>
+          </button>
+          <button type="button" class="additional-images marketing" role="button"
+                  data-toggle="popover" data-placement="right" data-trigger="focus"
+                  data-square-min="300x300" data-square-ratio="1:1"
+                  data-landscape-min="600x314" data-landscape-ratio="1.91:1">
+            <span class="fa-stack fa-lg">
+              <i class="fa fa-circle-o fa-stack-2x"></i>
+              <i class="fa fa-question fa-stack-1x"></i>
+            </span>
+          </button>
+        </div>
+
         <% company.adwords_images.marketing.select { |image| !image.default? }
                   .each_with_index do |image, index| %>
 
@@ -125,16 +138,10 @@
 
     </div>
 
+    <div id="image-content__logos" class="tab-pane fade">
 
-    <div id="image-library__logos" class="tab-pane fade">
-
-      <div class="image-library__sub-header">
-        <label>Logos</label>
-        <button type="button" class="btn-add">
-          <span class="fa-stack fa-lg">
-          <i class="fa fa-circle-o fa-stack-2x"></i>
-          <i class="fa fa-plus fa-stack-1x"></i>
-        </button>
+      <div class="image-content__sub-header">
+        <label>Default Logos</label>
         <button type="button" class="image-requirements logos" role="button"
                 data-toggle="popover" data-placement="right" data-trigger="focus"
                 data-square-min="128x128" data-square-ratio="1:1" data-square-suggest="1200x1200"
@@ -146,7 +153,7 @@
         </button>
       </div>
 
-      <ul style="padding: 0">
+      <ul>
 
         <%= render(
               'companies/3_promote/ad_image_card',
@@ -179,6 +186,24 @@
             ) %>
 
         <br>
+
+        <div class="image-content__sub-header">
+          <label>Additional Logos</label>
+          <button type="button" class="btn-add">
+            <span class="fa-stack fa-lg">
+            <i class="fa fa-circle-o fa-stack-2x"></i>
+            <i style="font-size: 15px" class="fa fa-upload fa-stack-1x"></i>
+          </button>
+          <button type="button" class="additional-images logos" role="button"
+                  data-toggle="popover" data-placement="right" data-trigger="focus"
+                  data-square-min="128x128" data-square-ratio="1:1" data-square-suggest="1200x1200"
+                  data-landscape-min="512x128" data-landscape-ratio="4:1" data-landscape-suggest="1200x300">
+            <span class="fa-stack fa-lg">
+              <i class="fa fa-circle-o fa-stack-2x"></i>
+              <i class="fa fa-question fa-stack-1x"></i>
+            </span>
+          </button>
+        </div>
 
         <% company.adwords_images.logos.select { |logo| !logo.default? }
                   .each_with_index do |ad_image, index| %>

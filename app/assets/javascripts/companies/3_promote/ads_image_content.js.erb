@@ -218,22 +218,22 @@ function promoteSettingsListeners () {
       $input.is(':valid') ? $btn.show().prop('disabled', false) : $btn.prop('disabled', true);
     })
 
-    .on('show.bs.tab', '.image-library__header a[data-toggle="tab"]', function () {
+    .on('show.bs.tab', '.image-content__header a[data-toggle="tab"]', function () {
       if ($(this).is(':not(.active)')) {
-        $('.image-library__header .btn-group').children().toggleClass('active');
+        $('.image-content__header .btn-group').children().toggleClass('active');
       }
     })
 
     // upload a new ad image
-    .on('click', '.image-library .btn-add', function () {
-      var $thisList = $(this).closest('[id*="image-library"]').find('ul'),
-          $otherList = $('.image-library').find('ul').not($thisList);
+    .on('click', '.image-content .btn-add', function () {
+      var $thisList = $(this).closest('[id*="image-content"]').find('ul'),
+          $otherList = $('.image-content').find('ul').not($thisList);
       $.when(
           $thisList.append(
             _.template($('#ad-image-card-template').html())({
               id: '',
-              type: $thisList.is('#image-library__marketing ul') ? 'Image' : 'Logo',
-              typeClassName: $thisList.is('#image-library__marketing ul') ? 'gads-image' : 'gads-logo',
+              type: $thisList.is('#image-content__marketing ul') ? 'Image' : 'Logo',
+              typeClassName: $thisList.is('#image-content__marketing ul') ? 'gads-image' : 'gads-logo',
               imageIndex: $thisList.children('li').length + $otherList.children('li').length,
               imageUrl: ''
             })

@@ -1,9 +1,9 @@
 
-.popover.image-requirements {
+.popover.image-requirements, .popover.additional-images {
   max-width: 500px;
   .popover-content {
     padding: 25px;
-    h4 {
+    h5 {
       display: inline-block;
       margin-bottom: 10px;
     }
@@ -31,6 +31,13 @@
   // override jasny bootstrap
   .fileinput, .fileinput-preview {
     margin: 0;
+  }
+
+  .image-content ul {
+    padding-left: 15px;
+    > .image-content__sub-header {
+      margin-left: -15px;
+    }
   }
 
   .form-group {
@@ -66,30 +73,31 @@
     }
   }
 
-  .image-library__header {
+  .image-content__header {
+    height: 100px;
     display: flex;
+    flex-direction: column;
     align-items: center;
-    justify-content: space-between;
+    justify-content: center;
     margin-bottom: 20px;
-    width: 400px;
-    label {
-      font-size: 20px;
-      font-weight: 400;
-      color: #666;
-      margin-bottom: 0;
+    background-color: #efefef;
+    a[href*="marketing"] {
+      padding: 8px 24px;
     }
-    a {
-      padding: 8px 16px;
+    a[href*="logos"] {
+      padding: 8px 40px;
+    }
+    .help-block {
+      margin: 10px 0 0
     }
   }
 
-  .image-library__sub-header {
+  .image-content__sub-header {
     display: flex;
     align-items: center;
     margin-bottom: 12px;
-    padding: 0 12px;
     label {
-      margin: 0 20px 0 0;
+      margin: 0 15px 0 0;
     }
     button {
       @include fa-button();
@@ -140,26 +148,33 @@
       height: 50px;
       display: flex;
       align-items: center;
-      justify-content: space-between;
-      padding: 8px 0;
-      label {
-        margin: 0;
-        font-weight: 400;
-        color: #333;  // overrides has-success, has-error
-      }
+      justify-content: center;
       button {
         background: none;
         outline: none;
         border: none;
-        padding: 8px;
-        margin-right: -10px;
-      }
-      i {
-        font-size: 20px;
+        height: 100%;
+        display: flex;
+        align-items: center;
         color: #666;
+        i {
+          font-size: 20px;
+        }
         &:hover {
           color: #222;
         }
+      }
+    }
+    &:not(.gads-default) .ad-image-card__header {
+      padding: 8px 0;
+      justify-content: space-between;
+      .checkbox-inline {
+        margin: 0;
+        padding: 8px 20px;
+      }
+      button {
+        padding: 0 8px;
+        margin-right: -8px;
       }
     }
     .thumbnail {
@@ -213,10 +228,9 @@
         transform: translate(0, -50%);
       }
       label {
-        font-size: 11px;
         font-weight: 400;
         margin: 0;
-        span:nth-child(1), span:nth-child(3) {
+        span {
           display: none;
         }
       }
@@ -234,25 +248,21 @@
         }
       }
     }
-    &.gads-required:not([data-image-url]) .form-group:not(.to-be-added) .ad-image-card__header label span {
-      color: #a94442;
-    }
-    &.gads-required .ad-image-card__footer label {
-      color: #a94442;
-      span:nth-child(1) {
+    
+    &.gads-required:not([data-image-url]) {
+      .fileinput-preview.thumbnail {
+        border-color: #a94442;
+      }
+      .ad-image-card__footer label {
+        color: #a94442;
+        span:first-child {
+          display: initial;
+        }
+      }
+    } 
+    &.gads-default:not(.gads-required):not([data-image-url]) .ad-image-card__footer label {
+      span:last-child {
         display: initial;
-      }
-      span:nth-child(2), span:nth-child(3) {
-        display: none;
-      }
-    }
-    &.gads-default[data-image-url] .ad-image-card__footer label {
-      color: initial;
-      span:nth-child(1), span:nth-child(2) {
-        display: none;
-      }
-      span:nth-child(3) {
-        display: initial
       }
     }
   }

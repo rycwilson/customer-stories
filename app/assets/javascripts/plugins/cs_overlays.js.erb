@@ -112,7 +112,7 @@ function cspInitOverlays ($, $container, subdomain, isDemo, env) {
           // modify the share url to include the encoded redirect_url
           $(this).attr('href', $(this).attr('href').replace(replaceRegex, replacement))
         });
-
+        
         if ($storyCard.hasClass('has-video')) {
           cspInitVideo($, $storyOverlay);
         }

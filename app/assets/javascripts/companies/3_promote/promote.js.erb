@@ -132,30 +132,49 @@ function promote () {
             container: 'body',
             template: '<div class="popover image-requirements" role="tooltip"><div class="arrow"></div><h3 class="popover-title label-secondary"></h3><div class="popover-content"></div></div>',
             content: function () {
-              return '<h4><strong>Square ' + ($(this).is('.marketing') ? 'Image' : 'Logo') + '</strong></h4>&nbsp;&nbsp;' +
-                     '<span>(' + ($(this).is('.marketing') ? 'required' : 'optional/recommended') + ')</span>' +
-                     '<ul>' +
-                       '<li>Minimum dimensions: ' + $(this).data('square-min') + '</li>' +
-                       '<li>Aspect ratio within 1% of ' + $(this).data('square-ratio') + '</li>' +
-                       ($(this).is('.logos') ? '<li>Suggested dimensions: ' + $(this).data('square-suggest') + '</li>' : '') +
-                       '<li>Maximum size: 5MB (5,242,880 bytes)</li>' +
-                       '<li>Image may be cropped horizontally up to 5% on each side</li>' +
-                       '<li>Text may cover no more than 20% of the image</li>' +
-                       ($(this).is('.logos') ? '<li>Transparent background is best, but only if the logo is centered</li>' : '') +
-                     '</ul>' +
-                     '<h4><strong>Landscape ' + ($(this).is('.marketing') ? 'Image' : 'Logo') + '</strong></h4>&nbsp;&nbsp;' +
-                     '<span>(' + ($(this).is('.marketing') ? 'required' : 'optional/recommended') + ')</span>' +
-                     '<ul>' +
-                       '<li>Minimum dimensions: ' + $(this).data('landscape-min') + '</li>' +
-                       '<li>Aspect ratio within 1% of ' + $(this).data('landscape-ratio') + '</li>' +
-                       ($(this).is('.logos') ? '<li>Suggested dimensions: ' + $(this).data('landscape-suggest') + '</li>' : '') +
-                       '<li>Maximum size: 5MB (5,242,880 bytes)</li>' +
-                       '<li>Image may be cropped horizontally up to 5% on each side</li>' +
-                       '<li>Text may cover no more than 20% of the image</li>' +
-                       ($(this).is('.logos') ? '<li>Transparent background is best, but only if the logo is centered</li>' : '') +
-                     '</ul>';
+              return (
+                (
+                  $(this).is('.marketing') ?
+                    '<p>A Promoted Story requires at least two marketing images: one square and one landscape. These default images will be assigned to each new Promoted Story.</p>' :
+                    '<p>Logos are optional, however we recommend adding a square logo at minimum. These default logos will be assigned to each new Promoted Story.</p>'
+                ) +
+                '<h5><strong>Square ' + ($(this).is('.marketing') ? 'Image' : 'Logo') + '</strong></h5>&nbsp;&nbsp;' +
+                '<span>(' + ($(this).is('.marketing') ? 'required' : 'optional/recommended') + ')</span>' +
+                '<ul>' +
+                  '<li>Minimum dimensions: ' + $(this).data('square-min') + '</li>' +
+                  '<li>Aspect ratio within 1% of ' + $(this).data('square-ratio') + '</li>' +
+                  ($(this).is('.logos') ? '<li>Suggested dimensions: ' + $(this).data('square-suggest') + '</li>' : '') +
+                  '<li>Maximum size: 5MB (5,242,880 bytes)</li>' +
+                  '<li>Image may be cropped horizontally up to 5% on each side</li>' +
+                  '<li>Text may cover no more than 20% of the image</li>' +
+                  ($(this).is('.logos') ? '<li>Transparent background is best, but only if the logo is centered</li>' : '') +
+                '</ul>' +
+                '<h5><strong>Landscape ' + ($(this).is('.marketing') ? 'Image' : 'Logo') + '</strong></h5>&nbsp;&nbsp;' +
+                '<span>(' + ($(this).is('.marketing') ? 'required' : 'optional/recommended') + ')</span>' +
+                '<ul>' +
+                  '<li>Minimum dimensions: ' + $(this).data('landscape-min') + '</li>' +
+                  '<li>Aspect ratio within 1% of ' + $(this).data('landscape-ratio') + '</li>' +
+                  ($(this).is('.logos') ? '<li>Suggested dimensions: ' + $(this).data('landscape-suggest') + '</li>' : '') +
+                  '<li>Maximum size: 5MB (5,242,880 bytes)</li>' +
+                  '<li>Image may be cropped horizontally up to 5% on each side</li>' +
+                  '<li>Text may cover no more than 20% of the image</li>' +
+                  ($(this).is('.logos') ? '<li>Transparent background is best, but only if the logo is centered</li>' : '') +
+                '</ul>'
+              );
             }
           });
+        $('#gads-images-form button.additional-images')
+          .popover({
+              html: true,
+              container: 'body',
+              template: '<div class="popover additional-images" role="tooltip"><div class="arrow"></div><h3 class="popover-title label-secondary"></h3><div class="popover-content"></div></div>',
+              content: function () {
+                return (
+                  '<p>Each Promoted Story can have up to 15 marketing images and 5 logos assigned to it. This allows for optimization. Additional images and logos beyond the required defaults are an optional feature and aren\'t guaranteed to yield any benefits.</p>' +
+                  '<p>Here you can upload a collection of ' + ($(this).is('.marketing') ? 'images' : 'logos') + ' from which to assign to Promoted Stories. Requirements are the same as those for default ' + ($(this).is('.marketing') ? 'images' : 'logos') + '.</p>'
+                );
+              }
+            });
         $('#gads-content-form .form-group.business-name .btn-help').popover({
           html: true,
           container: 'body',
