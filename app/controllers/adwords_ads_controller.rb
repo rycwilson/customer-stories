@@ -157,7 +157,7 @@ class AdwordsAdsController < ApplicationController
         story.try(:ads_short_headline) ||
         company.gads_default_short_headline
     @long_headline = defaults.try(:[], :gads_default_long_headline) ||
-        story_preview.try(:long_headline)
+        story_preview.try(:long_headline) ||
         story.try(:ads_long_headline) ||
         "The Promoted Story Title goes here. It is copied from the Customer Story Title by default."
     @description = story.try(:ads_description) ||
@@ -166,11 +166,11 @@ class AdwordsAdsController < ApplicationController
         story.try(:ads_cta_text) ||
         company.gads_default_cta_text
     @main_color = defaults.try(:[], :gads_default_main_color) ||
-        story_preview.try(:main_color)
+        story_preview.try(:main_color) ||
         story.try(:ads_main_color) ||
         company.gads_default_main_color
     @accent_color = defaults.try(:[], :gads_default_accent_color) ||
-        story_preview.try(:accent_color)
+        story_preview.try(:accent_color) ||
         story.try(:ads_accent_color) ||
         company.gads_default_accent_color
     story_url = story.try(:csp_story_url)

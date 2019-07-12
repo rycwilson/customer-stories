@@ -1,7 +1,7 @@
 
 function initPromotedStoriesTable () {
 
-  var imageIndex = 0, titleIndex = 2, customerIndex = 1, statusIndex = 3; //  actionsIndex = 4,
+  var imageIndex = 0, titleIndex = 1, customerIndex = 2, statusIndex = 3; //  actionsIndex = 4,
       storyTitleRequirements = "Max 90 characters";
 
   $('#promoted-stories-table').DataTable({
@@ -19,14 +19,14 @@ function initPromotedStoriesTable () {
     order: [[ statusIndex, 'asc' ]],
 
     columns: [
-      {
+      /*{
         data: null,
         render: function (data, type, row) {
           return '<i class="fa fa-caret-right"></i>' +
                  '<i class="fa fa-caret-down" style="display:none"></i>';
         }
-      },
-      /* {
+      },*/
+      {
         name: 'ads_images',
         data: 'ads_images',
         render: function (ads_images, type, row, meta) {
@@ -40,14 +40,14 @@ function initPromotedStoriesTable () {
                    '<input type="file" name="image_url" id="image_url" class="hidden" ' +
                  '</div>';
         }
-      }, */
-      {
-        name: 'customer',
-        data: 'success.customer.name'
       },
       {
         name: 'description',
         data: 'ads_description'
+      },
+      {
+        name: 'customer',
+        data: 'success.customer.name'
       },
       {
         name: 'status',
@@ -80,7 +80,7 @@ function initPromotedStoriesTable () {
     columnDefs: [
       {
         // targets: [imageIndex, titleIndex, actionsIndex],
-        targets: [0, titleIndex],
+        targets: [imageIndex, titleIndex],
         orderable: false
       },
       {
@@ -88,8 +88,8 @@ function initPromotedStoriesTable () {
         targets: [statusIndex, titleIndex],
         searchable: false
       },
-      // { width: '22%', targets: imageIndex },
-      { width: '5%', targets: 0 },
+      // { width: '5%', targets: 0 },
+      { width: '22%', targets: imageIndex },
       //{ width: '26%', targets: customerIndex },
       //{ width: '57%', targets: titleIndex },
       { width: '12%', targets: statusIndex },
@@ -99,12 +99,13 @@ function initPromotedStoriesTable () {
     createdRow: function (row, promotedStory, index) {
       var $table = $(this), $row = $(row);
       $row.attr('data-story-id', promotedStory.id);
-      // $row.children().eq(0).addClass('promoted-story-images');
-      $row.children().eq(0).addClass('toggle-promoted-story-child');
-      $row.children().eq(1).addClass('promoted-story-customer');
-      $row.children().eq(2).addClass('promoted-story-title form-is-clean')
+      $row.children().eq(imageIndex).addClass('promoted-story-images');
+      // $row.children().eq(0).addClass('toggle-promoted-story-child');
+
+      $row.children().eq(customerIndex).addClass('promoted-story-customer');
+      $row.children().eq(titleIndex).addClass('promoted-story-title form-is-clean')
                            .attr('data-title', promotedStory.title);
-      $row.children().eq(3).addClass('status dropdown');
+      $row.children().eq(statusIndex).addClass('status dropdown');
       // $row.children().eq(4).addClass('actions dropdown');
 
       // add a flash message container
@@ -123,8 +124,8 @@ function initPromotedStoriesTable () {
           addClickBlockers = function ($row) {
             var $rows = $row ? $row : $table.find('tr[data-story-id]');
             $rows.each(function () {
-              // $(this).find('td.promoted-story-images, td.promoted-story-title, td.status')
-              $(this).find('td.toggle-promoted-story-child, td.promoted-story-title, td.status')
+              //$(this).find('td.toggle-promoted-story-child, td.promoted-story-title, td.status')
+              $(this).find('td.promoted-story-images, td.promoted-story-title, td.status')
                        .prepend('<div class="click-blocker"></div>');
             });
           },
