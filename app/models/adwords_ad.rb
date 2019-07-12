@@ -58,9 +58,6 @@ class AdwordsAd < ApplicationRecord
     source: :adwords_image
   ) { def default; where(default: true); end }
 
-  has_and_belongs_to_many :google_ads_headlines
-  has_and_belongs_to_many :google_ads_descriptions
-
   validates_presence_of :story
   validates_presence_of :ad_group
   # validates_presence_of :square_images, if: :promote_enabled?

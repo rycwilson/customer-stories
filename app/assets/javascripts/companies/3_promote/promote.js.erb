@@ -136,8 +136,8 @@ function promote () {
               return (
                 (
                   $(this).is('.marketing') ?
-                    '<p>A Promoted Story requires at least two marketing images: one square and one landscape. These default images will be assigned to each new Promoted Story.</p>' :
-                    '<p>Logos are optional, however we recommend adding a square logo at minimum. These default logos will be assigned to each new Promoted Story.</p>'
+                    '<p style="margin-bottom: 20px">A Promoted Story requires at least two marketing images: one square and one landscape. These default images will be assigned to each new Promoted Story.</p>' :
+                    '<p style="margin-bottom: 20px">Logos are optional, however we recommend adding a square logo at minimum. These default logos will be assigned to each new Promoted Story.</p>'
                 ) +
                 '<h5><strong>Square ' + ($(this).is('.marketing') ? 'Image' : 'Logo') + '</strong></h5>&nbsp;&nbsp;' +
                 '<span>(' + ($(this).is('.marketing') ? 'required' : 'optional/recommended') + ')</span>' +
@@ -171,8 +171,8 @@ function promote () {
               template: '<div class="popover additional-images" role="tooltip"><div class="arrow"></div><h3 class="popover-title label-secondary"></h3><div class="popover-content"></div></div>',
               content: function () {
                 return (
-                  '<p>Each Promoted Story can have up to 15 marketing images and 5 logos assigned to it. This allows for optimization. Additional images and logos beyond the required defaults are an optional feature and aren\'t guaranteed to yield any benefits.</p>' +
-                  '<p>Here you can upload a collection of ' + ($(this).is('.marketing') ? 'images' : 'logos') + ' from which to assign to Promoted Stories. Requirements are the same as those for default ' + ($(this).is('.marketing') ? 'images' : 'logos') + '.</p>'
+                  '<p>Each Promoted Story can have up to 15 marketing images and 5 logos assigned to it. This allows for optimization. Additional images and logos beyond the required defaults are optional and not guaranteed to yield any measurable benefits.</p>' +
+                  '<p>Here you can upload a collection of ' + ($(this).is('.marketing') ? 'images' : 'logos') + ' (both square and landscape) from which to assign to Promoted Stories. Requirements are the same as those for default ' + ($(this).is('.marketing') ? 'images' : 'logos') + '.</p>'
                 );
               }
             });
