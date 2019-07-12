@@ -1216,45 +1216,12 @@ class Company < ApplicationRecord
 
     # // http://www.w3.org/TR/AERT#color-contrast
     o = (((rgb[:r] * 299) + (rgb[:g] * 587) + (rgb[:b] * 114)) / 1000).round
-    awesome_print(o)
+    # awesome_print(o)
     # binding.remote_pry
     return (o > 155) ? 'light-background' : 'dark-background';
   end
 
   private
-
-
-  def matching_ad
-    # how to compare an existing gad to a local ad if can't get all fields from gads?
-    # => may be forced to delete all on a reset
-  end
-
-  # ads_match? => both present, fields match
-  # ads_mismatch? => both present, field data mismatch (text/image assets)
-  # should_create_ads? => both gads and local data missing
-  # should_push_ads? => local data exists but missing from gads
-  # should_pull_ads? => gads data exists but missing locally
-  # orphaned_ads? => data exists (either locally or gads) for an unpublished story
-  def matching_ads
-    # return the matching ads
-  end
-
-  def mismatching_ads
-    # return the mismatching ads
-  end
-
-  def should_push_ads?
-  end
-
-  def should_pull_ads?
-  end
-
-  def should_create_ads?
-  end
-
-  def orphaned_ads
-    # return
-  end
 
   def fill_daily_gaps visitors, start_date, end_date
     all_dates = []
