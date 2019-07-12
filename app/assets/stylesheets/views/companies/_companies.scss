@@ -45,15 +45,12 @@ table.dataTable tr.group td {
 
 .datatable {
 
-  tr {
-    background: #fff;
+  i[class*="fa-caret"] {
+    // font-size: 14px;
   }
 
-  tr.active {
-    i:not(.action) {
-      color: white;
-      text-decoration: none;
-    }
+  tr {
+    background: #fff;
   }
 
   tr.active {
@@ -63,7 +60,7 @@ table.dataTable tr.group td {
     td:last-child {
       // border-right: 1px solid #0095ff; // #08c;
     }
-    i:not(.action) {
+    i:not(.action):not(.fa-play):not(.fa-pause) {
       color: white;
       text-decoration: none;
     }
@@ -83,7 +80,15 @@ table.dataTable tr.group td {
 
   td {
     vertical-align: middle !important;  // override bootstrap for case of inline editor expanding row height
-    i[class*="fa-caret"] { color: #999; }
+  }
+  
+  th.toggle-success-child,
+  td.toggle-success-child.disabled, 
+  th.toggle-contributor-child,
+  td.toggle-contributor-child.disabled
+  th.toggle-promoted-story-child,
+  td.toggle-promoted-story-child.disabled {
+    pointer-events: none;
   }
 
   th.actions {
@@ -91,25 +96,27 @@ table.dataTable tr.group td {
     padding: 8px 12px;
   }
 
-  td.status.dropdown, td.actions.dropdown {
-    text-align: center;
+  td.dropdown {
+    position: relative;
     padding: 0;
+    text-align: center;
     // ref: http://stackoverflow.com/questions/11078509/how-to-increase-the-clickable-area-of-a-a-tag-button
+    // kinda weird, but this was the best way to make the <a> occupy the entire <td> ...
     > a {
-      display: block;
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
       width: 100%;
       height: 100%;
-      margin-top: -8px;
-      padding-top: 8px;
-      margin-bottom: -8px;
-      padding-bottom: 8px;
-      // position: relative;
-      // display: inline-block;
-      // background: transparent;
-      // border: transparent;
-      // z-index: 1;
-      // padding: 2em;
-      // margin: -2em;
+      color: #666;
+      text-decoration: none;
+      &:hover {
+        color: #222;
+      }
     }
     .dropdown-menu {
       padding: 9px 0;

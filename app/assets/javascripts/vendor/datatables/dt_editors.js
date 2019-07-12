@@ -25,7 +25,7 @@ function newPromotedStoriesEditor() {
         };
       },
       success: function () {
-        console.log('editor success')
+        // console.log('editor success')
       }
     },
     idSrc: 'id',

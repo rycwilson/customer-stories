@@ -20,7 +20,6 @@ $(function () {
 
         $fields.each(function () {
           var $link = $(this).children('a');
-          if ($link.is('.fart')) debugger;
           while ($link.outerHeight() > $(this).height()) {
             $link.text(function (index, text) {
               return text.replace(/\W*\s(\S)*$/, '...');

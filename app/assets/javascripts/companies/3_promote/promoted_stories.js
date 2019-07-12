@@ -7,7 +7,7 @@ function promotedStoriesListeners () {
     .on('click', 'td.promoted-story-images .thumbnail', function () {
       var $modal = $('#ads-images-modal'),
           formTemplate = _.template($('#ads-images-form-template').html()),
-          dt = $('#promoted-stories-table').DataTable();
+          dt = $('#promoted-stories-table').DataTable(),
           $tr = $(this).closest('tr'),
           storyId = dt.row($tr).data().id,
           topicAdId = dt.row($tr).data().topic_ad.id,
@@ -117,8 +117,10 @@ function promotedStoriesListeners () {
 
     // change long headline
     .on('click', 'td.promoted-story-title', function () {
+      if ($(this).find('.click-blocker:visible').length) {
+        return false;
+      }
       var $row = $(this).parent();
-      if ($(this).find('.click-blocker:visible').length) return false;
       openPromotedStoriesEditor(promotedStoriesEditor, $row);
     })
 

@@ -1,5 +1,6 @@
 
 //= require ./promoted_stories
+//= require ./promoted_story_child_row
 //= require ./ads_text_content
 //= require ./ads_image_content
 
@@ -231,6 +232,7 @@ function promote () {
 
 function promoteListeners () {
 
+  promotedStoryChildRowListeners();
   promotedStoriesListeners();
   promoteSettingsListeners();
 

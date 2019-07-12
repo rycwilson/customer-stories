@@ -9,7 +9,7 @@ function initDataTables (isBatch) {
   // https://github.com/DataTables/Responsive/issues/40
   $(document).on(
     'shown.bs.tab', 
-    'a[href="#successes"], a[href*="contributors"], a[href="promoted-stories"]', 
+    'a[href="#successes"], a[href*="contributors"], a[href="#promoted-stories"]', 
     function () {
       $( $.fn.dataTable.tables(true) ).css('width', '100%');
       $( $.fn.dataTable.tables(true) ).DataTable().columns.adjust().draw();

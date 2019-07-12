@@ -106,7 +106,7 @@ class AdwordsAd < ApplicationRecord
         {
           asset: {
             xsi_type: 'TextAsset',
-            asset_text: self.short_headline || self.story.company.gads_default_short_headline  # get company via story in case ad is new record
+            asset_text: self.short_headline  
           }
         }
       ],
@@ -122,7 +122,7 @@ class AdwordsAd < ApplicationRecord
       long_headline: {
         asset: {
           xsi_type: 'TextAsset',
-          asset_text: self.long_headline || self.story.company.gads_default_long_headline || self.description
+          asset_text: self.long_headline || self.description
         }
       },
       # the association methods (e.g. ad.landscape_images) don't work here
@@ -132,9 +132,9 @@ class AdwordsAd < ApplicationRecord
       final_urls: [
         self.story.csp_story_url + "?utm_campaign=promote&utm_content=#{ campaign_type }"
       ],
-      call_to_action_text: self.cta_text || self.story.company.gads_default_cta_text,
-      main_color: self.main_color || self.story.company.gads_default_main_color,
-      accent_color: self.accent_color || self.story.company.gads_default_accent_color,
+      call_to_action_text: self.story.company.gads_default_cta_text,
+      main_color: self.main_color,
+      accent_color: self.accent_color,
       allow_flexible_color: true,
       # https://developers.google.com/adwords/api/docs/reference/v201809/AdGroupAdService.ResponsiveDisplayAd#formatsetting
       format_setting: 'ALL_FORMATS',  # 'NATIVE', 'NON_NATIVE'
@@ -179,12 +179,15 @@ class AdwordsAd < ApplicationRecord
   end
 
   def assign_defaults
-    self.description = self.story.title.truncate(RESPONSIVE_AD_DESCRIPTION_MAX, { omission: '' })
+    self.short_headline = self.story.company.gads_default_short_headline
     self.long_headline = self.story.company.gads_default_long_headline ||
-                         self.story.title.truncate(RESPONSIVE_AD_LONG_HEADLINE_MAX, { omission: '' })
+        self.story.title.truncate(RESPONSIVE_AD_LONG_HEADLINE_MAX)
+    self.description = self.story.title.truncate(RESPONSIVE_AD_DESCRIPTION_MAX)
+    self.main_color = self.story.company.gads_default_main_color
+    self.accent_color = self.story.company.gads_default_accent_color
     self.adwords_images << self.story.company.adwords_images.default
   end
-
+  
   def google_error(error)
     case error[:type]
     when 'INVALID_ID'

@@ -1,5 +1,5 @@
 
-@import 'successes';
+@import 'successes';  
 @import 'contributors';
 @import 'contributor_invitation_modal';
 @import 'contribution_content_modal';
@@ -29,7 +29,8 @@
 }
 
 #successes-table, #prospect-contributors-table, #curate-contributors-table {
-  th.toggle-success-child, td.toggle-success-child, th.toggle-contributor-child, td.toggle-contributor-child {
+  th.toggle-success-child, td.toggle-success-child, 
+  th.toggle-contributor-child, td.toggle-contributor-child {
     // padding necessary to override datatables css that adds padding-right: 30px to the th,
     // thus preventing text from centering horizontally
     padding: 8px;
@@ -37,6 +38,9 @@
     text-align: center;
     cursor: pointer;
     color: #666;
+    &:hover:not(th) {
+      color: #222;
+    }
   }
   // child rows
   tr:not(.group) > td[colspan]:not(.dataTables_empty) {

@@ -52,7 +52,7 @@ function contributorChildRowListeners () {
           if (dt.row($(this)).child.isShown()) {
             dt.row($(this)).child.hide();
             $(this).removeClass('shown active');
-            $(this).children('td.contributor-child-toggle').children().toggle();
+            $(this).children('td.toggle-contributor-child').children().toggle();
           }
         });
 

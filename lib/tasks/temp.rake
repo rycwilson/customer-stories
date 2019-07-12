@@ -6,7 +6,9 @@ namespace :temp do
     AdwordsAd.all.each do |ad| 
       ad.update(
         short_headline: ad.story.company.gads_default_short_headline,
-        description: ad.long_headline
+        description: ad.long_headline,
+        main_color: '#ffffff',
+        accent_color: '#ffffff'
       )
     end
   end

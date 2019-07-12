@@ -94,7 +94,9 @@ class AdwordsAdsController < ApplicationController
       JSON.parse(
         story.to_json({
           only: [:id, :title, :slug],
-          methods: [:ads_status, :ads_description, :ads_images, :csp_story_path],
+          methods: [
+            :ads_status, :ads_short_headline, :ads_long_headline, :ads_main_color, :ads_accent_color, :ads_description, :ads_images, :csp_story_path
+          ],
           include: {
             success: {
               only: [],
@@ -103,7 +105,7 @@ class AdwordsAdsController < ApplicationController
               }
             },
             topic_ad: { only: [:id] },
-            retarget_ad: { only: [:id, :status] }
+            retarget_ad: { only: [:id] }
           }
         })
       )
@@ -139,18 +141,23 @@ class AdwordsAdsController < ApplicationController
       company = Company.find_by(subdomain: request.subdomain)
       defaults = request.params[:defaults]
       defaults.each { |k,v| defaults[k] = nil if v == '' }
-      story = nil
+      story = nil   
     else
       story = Story.includes(adwords_ads: { adwords_images: {} }).friendly.find(params[:story_slug])
       company = story.company
+      if request.params[:story].present?
+        story_preview = request.params[:story][:topic_ad_attributes]
+      end
     end
     @business_name = defaults.try(:[], :gads_business_name) ||
         company.gads_business_name ||
         company.name.truncate(25)
     @short_headline = defaults.try(:[], :gads_default_short_headline) ||
+        story_preview.try(:short_headline) ||
         story.try(:ads_short_headline) ||
         company.gads_default_short_headline
     @long_headline = defaults.try(:[], :gads_default_long_headline) ||
+        story_preview.try(:long_headline)
         story.try(:ads_long_headline) ||
         "The Promoted Story Title goes here. It is copied from the Customer Story Title by default."
     @description = story.try(:ads_description) ||
@@ -159,9 +166,11 @@ class AdwordsAdsController < ApplicationController
         story.try(:ads_cta_text) ||
         company.gads_default_cta_text
     @main_color = defaults.try(:[], :gads_default_main_color) ||
+        story_preview.try(:main_color)
         story.try(:ads_main_color) ||
         company.gads_default_main_color
     @accent_color = defaults.try(:[], :gads_default_accent_color) ||
+        story_preview.try(:accent_color)
         story.try(:ads_accent_color) ||
         company.gads_default_accent_color
     story_url = story.try(:csp_story_url)
@@ -195,8 +204,12 @@ class AdwordsAdsController < ApplicationController
 
   def story_params
     params.require(:story).permit(
-      topic_ad_attributes: [ :id, :status, :description, :short_headline, :long_headline, adwords_image_ids: [] ],
-      retarget_ad_attributes: [ :id, :status, :description, :short_headline, :long_headline, adwords_image_ids: [] ]
+      topic_ad_attributes: [ 
+        :id, :status, :short_headline, :long_headline, :description, :main_color, :accent_color, adwords_image_ids: [] 
+      ],
+      retarget_ad_attributes: [ 
+        :id, :status, :short_headline, :long_headline, :description, :main_color, :accent_color, adwords_image_ids: [] 
+      ]
     )
   end
 

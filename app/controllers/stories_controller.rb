@@ -194,7 +194,9 @@ class StoriesController < ApplicationController
     data = Rails.cache.fetch("#{@company.subdomain}/promoted-stories") do
       @company.stories.with_ads.to_json({
         only: [:id, :title, :slug],
-        methods: [:ads_status, :ads_description, :ads_images, :csp_story_path],
+        methods: [
+          :ads_status, :ads_short_headline, :ads_long_headline, :ads_main_color, :ads_accent_color, :ads_description, :ads_images, :csp_story_path
+        ],
         include: {
           success: {
             only: [],

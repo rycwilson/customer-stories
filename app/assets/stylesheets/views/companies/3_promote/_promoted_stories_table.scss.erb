@@ -86,6 +86,24 @@
 }
 
 #promoted-stories-table {
+
+  tbody > tr {
+    height: 80px;
+  }
+  
+  th.toggle-promoted-story-child,
+  td.toggle-promoted-story-child {
+    // padding necessary to override datatables css that adds padding-right: 30px to the th,
+    // thus preventing text from centering horizontally
+    padding: 8px;
+    vertical-align: middle;
+    text-align: center;
+    cursor: pointer;
+    color: #666;
+    &:hover:not(th) {
+      color: #222;
+    }
+  }
   td.promoted-story-images {
     text-align: center;
     vertical-align: middle;
@@ -239,6 +257,53 @@
     td.promoted-story-title {
       cursor: initial;
     }
+  }
+
+  tr.shown.active {
+    td.promoted-story-title,
+    td.status {
+      cursor: not-allowed;
+    }
+    td.promoted-story-title,
+    td.status .help-block {
+      color: #fff;
+      &:hover {
+        color: #fff;
+      }
+    }
+  }
+  tr:not(.group) > td[colspan]:not(.dataTables_empty) {
+    background-color: #efefef;
+    padding: 20px 10px;
+  }
+  .child-row {
+    width: 100%;
+    .form-group {
+      width: 100%;
+      margin-bottom: 10px;
+      input[name*="short_headline"],
+      input[name*="long_headline"] {
+        width: 100%;
+      }
+      .col-sm-8 {
+        padding: 0;
+      }
+    }
+    .form-group--colors .col-sm-8 {
+      display: flex;
+      align-items: center;
+      justify-content: space-evenly;
+      .form-inline { 
+        label {
+          display: inline-block;
+          font-weight: normal;
+        }
+      }
+      .minicolors {
+        display: inline-block
+      }
+    }
+
   }
 
 }
