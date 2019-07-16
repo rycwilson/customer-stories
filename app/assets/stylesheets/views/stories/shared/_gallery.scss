@@ -1,100 +1,48 @@
 
 
-#stories-gallery, .related-stories {
+#stories-gallery {
+  margin: 0 auto;
+  min-height: 100vh;  // accommodate the sign-in footer
+  padding-bottom: 20px;
 
-  &#stories-gallery {
-    margin: 0 auto;
-    min-height: 100vh;  // accommodate the sign-in footer
-    padding-bottom: 20px;
+  li.story-card {
+    @include story-card();
   }
+  
+}
 
+#stories-gallery, .related-stories {
+  .story-card {
+    margin: 15px;
+  }
 }
 
 @media only screen and (max-width: 767px) {
-  #stories-gallery, .related-stories {
-    li {
-      margin: 15px;
-      a.thumbnail {
-        .thumbnail-view {
-          .thumbnail-view-hover p {
-          }
-          img {
-            // padding: 23px;
-          }
-        }
-        .caption {
-        }
-      }
-    }
-  }
 }
 
-@media only screen and (max-width: 991px) {
-  .related-stories {
-    li {
-      margin: 15px;
-      a.thumbnail {
-        width: 200px;  // 210
-        height: 140px;  // 140
-        .thumbnail-view {
-          line-height: 106px;
-          .thumbnail-view-hover p {
-            font-size: 14px;
-            line-height: 22px;
-          }
-        }
-        .caption {
-          font-size: 13px;
-        }
-      }
-    }
-  }
+@media only screen and (max-width: 991px) { 
 }
 
 @media only screen and (min-width: 768px) and (max-width: 991px) {
-  #stories-gallery {
-    li {
-      margin: 15px;
-      a.thumbnail {
-        width: 200px;  // 210
-        height: 140px;  // 140
-        .thumbnail-view {
-          line-height: 106px;
-          .thumbnail-view-hover p {
-            font-size: 14px;
-            line-height: 22px;
-          }
-        }
-        .caption {
-          font-size: 13px;
-        }
+  #stories-gallery, .related-stories {
+    .story-card {
+      a {
+        width: 200px;  
+        height: 140px; 
       }
+    }
+    .story-card__title p {
+      font-size: 13px !important;
     }
   }
 }
 
 @media only screen and (min-width: 992px) {
   #stories-gallery, .related-stories {
-    // margin-right: -40px; // pull it over a bit (only apply if filters present)
-    // &.no-filters { margin-right: 0; }
-    li {
+    .story-card {
       margin: 20px;
-      a.thumbnail {
-        width: 242px;
-        height: 170px;
-        .thumbnail-view {
-          height: 80%;
-          .thumbnail-view-hover p {
-          }
-          img {
-            // padding: 24px;
-          }
-        }
-        .caption {
-        }
-      }
     }
-    &.related-stories li {
+    &.related-stories .story-card {
       margin: 10px 18px;
     }
   }
@@ -102,21 +50,11 @@
 
 @media only screen and (min-width: 992px) and (max-width: 1199px) {
   .related-stories {
-    li {
+    .story-card {
       margin: 15px;
-      a.thumbnail {
-        width: 200px;  // 210
-        height: 140px;  // 140
-        .thumbnail-view {
-          line-height: 106px;
-          .thumbnail-view-hover p {
-            font-size: 14px;
-            line-height: 22px;
-          }
-        }
-        .caption {
-          font-size: 13px;
-        }
+      a {
+        width: 200px; 
+        height: 140px;  
       }
     }
   }

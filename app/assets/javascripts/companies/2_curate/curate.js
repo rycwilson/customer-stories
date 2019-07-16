@@ -3,9 +3,12 @@ function curate () {
 
   // don't need to call this here as the auto curator-select change event will trigger it
   // filterCurateGallery();
-  $('#curate-filters .curator').val(
+  $('#curate-filters .curator')
+    .val(
       $('#curate-filters .curator').children('[value="' + CSP.current_user.id + '"]').val()
-    ).trigger('change', { auto: true });
+    )
+    .trigger('change', { auto: true });
+
 }
 
 // keep track of filters with session cookies
@@ -25,14 +28,13 @@ function preselectFilters () {
 function curateListeners () {
 
   var loading = function ($storyCard) {
-        $storyCard.addClass('loading');
-        setTimeout(function () { $storyCard.addClass('still-loading'); }, 1000);
-        $('#curate-gallery li').css('pointer-events', 'none');
+        $storyCard.addClass('loading still-loading');
+        $('#curate-gallery .story-card').css('pointer-events', 'none');
       },
       cancelLoading = function () {
-        $('#curate-stories li').each(function () {
-          $(this).removeClass('loading still-loading');
-          $(this).css('pointer-events', 'auto');
+        $('#curate-gallery .story-card').each(function () {
+          $(this).removeClass('loading still-loading')
+                 .css('pointer-events', 'auto');
         });
       };
 
@@ -45,9 +47,21 @@ function curateListeners () {
       });
     })
 
-    .on('show.bs.tab', 'a[href="#curate-stories"]', cancelLoading)
+    .on('show.bs.tab', 'a[href=".curate-stories"]', cancelLoading)
+    .on('shown.bs.tab', 'a[href="#curate"]', function () {
+      // truncate titles
+      $('#curate-gallery').find('.story-card__title')
+                            .each(function (index, wrapper) {
+                              var $title = $(wrapper).find('p');
+                              while ($title.outerHeight() > $(wrapper).height()) {
+                                $title.text(function (index, text) {
+                                  return text.replace(/\W*\s(\S)*$/, '...');
+                                });
+                              }
+                            });
+    })
 
-    .on('click', '#curate-gallery > li > a', function (e) {
+    .on('click', '#curate-gallery > .story-card > a', function (e) {
 
       e.preventDefault();
 
@@ -74,7 +88,7 @@ function curateListeners () {
       })
         .done(function (html, status, xhr) {
           var showTab = function () {
-            $('a[href="#edit-story"]')
+            $('a[href=".edit-story"]')
               .one('shown.bs.tab', function () { window.scrollTo(0, 0); })
               .tab('show');
           };
@@ -89,22 +103,20 @@ function curateListeners () {
     .on('change', '#curate-filters select',
       function (e) {
         var filterCookieName = 'csp-curate-filter-' + $(this).attr('class').split(' ')[0],
-            filterCookieVal;
-
+        filterCookieVal;
+        
         // toggle the X icon
         // if ($(this).val() === '') {
         //   $(this).prev().css('display', 'none');
         // } else {
         //   $(this).prev().css('display', 'inline-block');
         // }
-
+            
         if ($(this).is('select')) filterCookieVal = $(this).val();
         else filterCookieVal = $(this).prop('checked');
         Cookies.set(filterCookieName, filterCookieVal);
         filterCurateGallery();
       });
-
-
 
 }
 
@@ -184,9 +196,27 @@ function filterCurateGallery (context) {
 
   if (stories.length === 0) {
     $gallery.append('<li><h3 style="padding-top: 15px;" class="lead grid-item">No Stories found</h3></li>');
+
   } else {
-    $gallery.append($(storiesTemplate({ stories: stories, isCurator: true })))
-            .hide().show('fast');
+    $gallery.hide()
+            .append( $(storiesTemplate({ stories: stories, isCurator: true })) )
+            .imagesLoaded(function () {
+              $gallery.show({
+                duration: 0,
+                complete: function () {
+                  // truncate titles
+                  $gallery.find('.story-card__title')
+                            .each(function (index, wrapper) {
+                              var $title = $(wrapper).find('p');
+                              while ($title.outerHeight() > $(wrapper).height()) {
+                                $title.text(function (index, text) {
+                                  return text.replace(/\W*\s(\S)*$/, '...');
+                                });
+                              }
+                            });
+                }
+              });
+            });
   }
 
 }

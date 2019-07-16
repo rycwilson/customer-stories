@@ -29,6 +29,18 @@ $(document).on('turbolinks:load', function (e) {
   setAppData();
   constructPlugins();
   CSP.init();
+
+  // truncate story titles
+  // discussion: http://hackingui.com/front-end/a-pure-css-solution-for-multiline-text-truncation/
+  // $('.story-card__title').each(function () {
+  //   var $title = $(this).find('p');
+  //   while ($title.outerHeight() > $(this).height()) {
+  //     $title.text(function (index, text) {
+  //       return text.replace(/\W*\s(\S)*$/, '...');
+  //     });
+  //   }
+  // });
+
   // ref: https://clicky.com/help/apps-plugins#rails4turbo
   // clicky.log( document.location.pathname + document.location.search, document.title, 'pageview' )
 });
@@ -117,18 +129,26 @@ function attachAppListeners () {
           ),
         workflowStage = workflowMatch && workflowMatch[1],
         curateView = workflowStage && (workflowStage === 'curate') ?
-                        (workflowMatch[2] ? 'story' : 'stories') : null;
+                      (workflowMatch[2] ? 'story' : 'stories') : 
+                      null;
 
     if (workflowStage) {
       $('.nav-workflow a[href="#' + workflowStage + '"]').tab('show');
       if (curateView) {
-        $('a[href="#curate-' + curateView + '"]').tab('show');
+        if (curateView === 'stories') {
+          $('a[href=".curate-stories"]').tab('show'); 
+        } else {
+          $('a[href=".edit-story"]').tab('show');
+        }
+        
         // don't scroll to panel
         setTimeout(function() { window.scrollTo(0, 0); }, 1);
         if (curateView === 'stories') {
-          $('#curate-filters .curator').val(
-            $('#curate-filters .curator').children('[value="' + CSP.current_user.id.toString() + '"]').val()
-          ).trigger('change', { auto: true });
+          $('#curate-filters .curator')
+            .val(
+              $('#curate-filters .curator').children('[value="' + CSP.current_user.id + '"]').val()
+            )
+            .trigger('change', { auto: true });
         }
       }
     }
@@ -150,7 +170,6 @@ function attachAppListeners () {
     .on('turbolinks:request-start', function () {
       // console.log('turbolinks:request-start');
       // debugger;
-
     })
     .on('turbolinks:visit', function () {
       // console.log('turbolinks:visit');
@@ -176,7 +195,6 @@ function attachAppListeners () {
     .on('turbolinks:render', function () {
       // console.log('turbolinks:render');
       if (document.documentElement.hasAttribute('data-turbolinks-preview')) {
-        // console.log('preview rendered');
         constructPlugins();
       }
     });

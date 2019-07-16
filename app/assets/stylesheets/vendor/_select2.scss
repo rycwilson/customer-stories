@@ -7,10 +7,32 @@
 //   height: 32px;
 // }
 
-.select2-container--bootstrap .select2-selection {
+.select2-container--bootstrap .select2-selection--single .select2-selection__rendered,
+.select2-container--bootstrap .select2-selection--single .select2-selection__placeholder {
   font-family: 'Open Sans', 'Trebuchet MS', arial, sans-serif;
+  font-size: 13px;
+  line-height: 1em;
+  height: 100%;
+  width: 100%;
+  display: flex;
+  flex-direction: row-reverse;
+  align-items: center;
+  justify-content: space-between;
+  .select2-selection__clear,
+  .select2-selection__arrow {
+    font-size: 16px;  
+  }
+  &[class*="placeholder"] {
+    flex-direction: row;
+  }
 }
 
 .select2-container--bootstrap .select2-results__option--highlighted[aria-selected] {
   background-color: $nav-blue;
+}
+
+.select2-container--bootstrap .select2-results__option {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }

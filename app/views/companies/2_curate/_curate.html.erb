@@ -1,35 +1,31 @@
 
-<div id="curate" role="tabpanel" class="<%= workflow_stage == 'curate' ? 'active tab-pane fade in' : 'tab-pane fade' %>">
+<div id="curate" role="tabpanel" class="tab-pane fade <%= workflow_stage == 'curate' ? 'active  in' : '' %>">
 
+  <div class="hidden">
+    <ul class="nav nav-tabs">
+      <li class="<%= curate_view == 'stories' ? 'active' : '' %>">
+        <a href=".curate-stories" data-toggle="tab"></a>
+      </li>
+      <li class="<%= curate_view == 'story' ? 'active' : '' %>">
+        <a href=".edit-story" data-toggle="tab"></a>
+      </li>
+    </ul>
+  </div>
+    
   <div class="container">
+    <div class="row">
 
-    <div class="hidden">
-      <ul class="nav nav-tabs">
-        <li class="<%= curate_view == 'stories' ? 'active' : '' %>">
-          <a href="#curate-stories" data-toggle='tab' data-target='#curate-stories'></a>
-        </li>
-        <li class="<%= curate_view == 'story' ? 'active' : '' %>">
-          <a href="#edit-story" data-toggle='tab' data-target='#edit-story'></a>
-        </li>
-      </ul>
-    </div>
+      <div class="col-sm-5 col-md-4 col-lg-3 layout-sidebar">
+        <div class="tab-content">
 
-    <div class="tab-content">
-
-      <div id="curate-stories" class="tab-pane fade <%= curate_view == 'stories' ? 'active in' : '' %>">
-
-        <div class="row">
-
-          <div id="curate-sidebar" class="col-md-4 col-lg-3">
-
+          <div class="curate-stories tab-pane fade <%= curate_view == 'stories' ? 'active in' : '' %>">
             <div class="customer-stories">
               <a href="/">
                 <img src="https://csp-production-assets.s3-us-west-1.amazonaws.com/icons/stories_icon_2.png">
                 <span>Customer Stories</span>
               </a>
               <span>
-                <button type="button" class="btn-add"
-                        data-toggle="modal" data-target="#new-story-modal">
+                <button type="button" class="btn-add" data-toggle="modal" data-target="#new-story-modal">
                   <span class="fa-stack fa-lg">
                     <i class="fa fa-circle-o fa-stack-2x"></i>
                     <i class="fa fa-plus fa-stack-1x"></i>
@@ -37,69 +33,64 @@
                 </button>
               </span>
             </div>
-
-            <!-- <hr> -->
-
-<!-- // skinny up the X icon
-  // ref: https://sridharkatakam.com/thin-font-awesome-close-icon/
-  .fa-times-thin:before {
-    content: '\00d7';
-  } -->
-            <!-- <button type='button' class='btn btn-secondary' data-toggle='modal' data-target='#new-story-modal'><i class='fa fa-plus-circle fa-fw'></i>&nbsp;New Story</button> -->
-
             <%= render('companies/2_curate/filters', { company: company }) %>
-
           </div>
 
-          <div class="col-md-8 col-lg-9">
+          <div class="edit-story tab-pane fade <%= curate_view == 'story' ? 'active in' : '' %>">
+            <ul class="nav nav-layout-sidebar nav-stacked">
+              <li>
+                <a href="javascript:;"
+                  class="all-stories">
+                  <i class="fa fa-chevron-circle-left"></i>&nbsp;&nbsp;All Stories
+                </a>
+              </li>
+              <li class="<%= (edit_story_tab == '#story-settings' || edit_story_tab.nil?) ? 'active' : '' %>">
+                <a href="#story-settings" data-toggle="tab">
+                  <i class="fa fa-gear"></i>&nbsp;&nbsp;Story Settings
+                </a>
+              </li>
+              <li class="<%= edit_story_tab == '#story-content' ? 'active' : '' %>">
+                <a href="#story-content" data-toggle="tab">
+                  <i class="fa fa-edit"></i>&nbsp;&nbsp;Story Content
+                </a>
+              </li>
+              <li class="<%= edit_story_tab == '#story-contributors' ? 'active' : '' %>">
+                <a href="#story-contributors" data-toggle="tab">
+                  <i class="fa fa-users"></i>&nbsp;&nbsp;Story Contributors
+                </a>
+              </li>
+            </ul>
+          </div>
+ 
+        </div>
+      </div>
 
-            <!-- <div id="status-filters" class="row">
-              <div class="col-sm-12 text-center">
+      <div class="col-sm-7 col-md-8 col-lg-9 layout-main">
+        <div class="tab-content">
 
-                <label style='margin-right:30px'>
-                  <input class='pending' type="checkbox" checked='true'>&nbsp;
-                  Not published
-                </label>
-                <label style='margin-right:30px'>
-                  <input class='logo-published' type="checkbox" checked='true'>&nbsp;
-                  Logo published
-                </label>
-                <label style='margin-right:30px'>
-                  <input class='preview-published' type="checkbox" checked='true'>&nbsp;
-                  Preview published
-                </label>
-                <label style='margin-right:30px'>
-                  <input class='published' type="checkbox" checked='true'>&nbsp;
-                  Story Published
-                </label>
-
-              </div>
-            </div> -->
-
+          <div class="curate-stories tab-pane fade <%= curate_view == 'stories' ? 'active in' : '' %>">
             <div class="grid-container">
 
               <ul id="curate-gallery" class="grid list-unstyled text-center">
               </ul>
 
             </div>
+          </div>
+
+          <div id="edit-story" class="edit-story tab-pane fade <%= curate_view == 'story' ? 'active in' : '' %>">
+
+            <% if curate_view == 'story' %>
+
+              <%= render(
+                    'stories/edit/edit',
+                    { company: company, story: story, tab: edit_story_tab }
+                  ) %>
+
+            <% end %>
 
           </div>
 
         </div>
-
-      </div>
-
-      <div id="edit-story" class="tab-pane fade <%= curate_view == 'story' ? 'active in' : '' %>">
-
-        <% if curate_view == 'story' %>
-
-          <%= render(
-                'stories/edit/edit',
-                { company: company, story: story, tab: edit_story_tab }
-              ) %>
-
-        <% end %>
-
       </div>
 
     </div>

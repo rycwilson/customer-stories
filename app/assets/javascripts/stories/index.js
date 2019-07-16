@@ -12,6 +12,33 @@ function storiesIndex () {
   // but what about a turbolinks restore?
   // preSelectFilters(getQueryString('category'), getQueryString('product'));
 
+  // truncate story titles
+  $('.story-card__title').each(function () {
+    var $title = $(this).find('p');
+    while ($title.outerHeight() > $(this).height()) {
+      $title.text(function (index, text) {
+        return text.replace(/\W*\s(\S)*$/, '...');
+      });
+    }
+  });
+
+
+  // truncateTextContent = function () {
+  //   var $ads = $('.native-ad'),
+  //       $fields = $ads.find('.description, .long-headline');
+
+  //   $fields.each(function () {
+  //     var $link = $(this).children('a');
+  //     while ($link.outerHeight() > $(this).height()) {
+  //       $link.text(function (index, text) {
+  //         return text.replace(/\W*\s(\S)*$/, '...');
+  //       });
+  //     }
+  //   });
+  // },
+
+
+
 }
 
 function storiesIndexListeners () {

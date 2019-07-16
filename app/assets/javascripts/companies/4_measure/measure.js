@@ -1,16 +1,16 @@
 
 function measureListeners () {
 
-  measureCharts();
-  measureStories();
-  measureVisitors();
+  // measureCharts();
+  // measureStories();
+  // measureVisitors();
 
-  $(document)
-    // toggle display Recent activity groups
-    .on('show.bs.collapse hidden.bs.collapse', '#activity-groups .hiddenRow',
-      function () {
-        $(this).parent().prev().find('i').toggle();
-      });
+  // $(document)
+  //   // toggle display Recent activity groups
+  //   .on('show.bs.collapse hidden.bs.collapse', '#activity-groups .hiddenRow',
+  //     function () {
+  //       $(this).parent().prev().find('i').toggle();
+  //     });
 }
 
 function measureCharts () {

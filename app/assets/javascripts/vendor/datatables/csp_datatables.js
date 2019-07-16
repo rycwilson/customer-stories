@@ -91,6 +91,8 @@ function initDataTables (isBatch) {
             .select2({
               theme: 'bootstrap',
               width: 'style',
+              // placeholder: 'Select',
+              // allowClear: true,
               minimumResultsForSearch: -1   // hides text input
             })
             // select2 is inserting an empty <option> for some reason

@@ -101,6 +101,8 @@ function initSelect2 () {
        .select2({
          theme: 'bootstrap',
          width: 'style',
+        //  allowClear: true,
+        //  placeholder: 'Select',
          minimumResultsForSearch: -1   // hides text input
        })
        // select2 is inserting an empty <option> for some reason

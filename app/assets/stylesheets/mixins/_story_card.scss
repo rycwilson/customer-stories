@@ -1,5 +1,5 @@
 
-@mixin story-card () {
+@mixin story-card ($size: 'medium') {
   display: inline-block;
   vertical-align: top;
 
@@ -20,43 +20,49 @@
       justify-content: center;
       height: 100%;
       width: 100%;
-      padding: 12px;
       background: transparent;
-      // border-radius: 3px 3px 0 0;
       transform: translateY(-100%);
-
-      // transition: all $transition-time ease-in-out;
       transition: all 0s step-end;
+      overflow: hidden;
       p {
+        padding: 12px;
+        // padding: 0;  // inspired by pixlee conflict (TODO: ???)
         font: {
           family: inherit !important;
-          size: 15px !important;
+          size: if($size == 'small', 13px !important, 15px !important);
           weight: 600;
         }
         line-height: 26px !important;
         color: #444 !important;
-        padding: 0;  // inspired by pixlee conflict
+
         // weebly will squish together letters and words in the customer name together without these...
         word-spacing: normal;
         letter-spacing: normal;
         margin-bottom: 0;
       }
-    }
-    .story-card__logo img {
-      max-height: 70%;
-      max-width: 70%;
+    } 
+    .story-card__logo { 
+      display: flex;
+      align-items: center;  
+      justify-content: center;
+      height: 100%;
+      width: 100%;
       opacity: 1;
       // transition: opacity $transition-time ease-in-out;
       transition: opacity 0s step-end;
+      img {
+        max-height: 70%;
+        max-width: 70%;
 
-      // this compensates for a bug in chrome, which causes images of a
-      // certain aspect ratio to expand and contract very slightly on
-      // hover and opacity transition
-      // ref: https://stackoverflow.com/questions/20886991
-      -webkit-transform: translateZ(0);
-      mix-blend-mode: multiply;
-      &.grayscale { 
-        filter: grayscale(100%);
+        // this compensates for a bug in chrome, which causes images of a
+        // certain aspect ratio to expand and contract very slightly on
+        // hover and opacity transition
+        // ref: https://stackoverflow.com/questions/20886991
+        -webkit-transform: translateZ(0);
+        mix-blend-mode: multiply;
+        &.grayscale { 
+          filter: grayscale(100%);
+        }
       }
     }
   }
@@ -95,8 +101,8 @@
     display: block;
     position: relative;
     background-color: #fff;
-    width: 242px;
-    height: 170px;
+    width: if($size == 'small', 200px, 242px);
+    height: if($size == 'small', 140px, 170px);
     padding: 0;
     border: 1px solid transparent;
     border-radius: 0;
@@ -111,12 +117,12 @@
     &.curator .story-card__cta:after {
       content: 'Configure Story';
     }
+    &.public.logo-published {
+      pointer-events: none;
+    }
     &:active {
       filter: brightness(94%);
       box-shadow: 0 3px 8px 0 rgba(0,0,0,0.2), 0 0 0 1px rgba(0,0,0,0.08)
-    }
-    &.public.logo-published {
-      pointer-events: none;
     }
   }
 
@@ -124,17 +130,17 @@
     a.curator, a.public:not(.logo-published) {
       border: 1px solid transparent;
       box-shadow: 0 3px 8px 0 rgba(0,0,0,0.2), 0 0 0 1px rgba(0,0,0,0.08);
-    }
-    .story-card__logo img {
-      opacity: 0.04;
-    }
-    .story-card__customer {
-      visibility: hidden;
-      transition: all 0s step-end;
-    }
-    .story-card__cta:after {
-      visibility: visible;
-      transition: all 0s step-end;
+      .story-card__logo {
+        opacity: 0.04;
+      }
+      .story-card__cta:after {
+        visibility: visible;
+        transition: all 0s step-end;
+      }
+      .story-card__customer {
+        visibility: hidden;
+        transition: all 0s step-end;
+      }
     }
   }
 
@@ -142,20 +148,24 @@
     .story-card__title {
       transform: translateY(0%);
     }
-    .story-card__logo img {
+    .story-card__logo {
       opacity: 0.04;
     }
   }
 
   &:not(.still-loading) {
-    .story-card__loading i {
+    .story-card__loading {
       opacity: 0;
     }
   }
+  
   &.loading {
-    filter: brightness(95%);
+    filter: brightness(97%);
     .story-card__title {
       transform: none;
+    }
+    .story-card__logo {
+      opacity: 0.04;
     }
     .story-card__customer {
       visibility: hidden;
@@ -165,13 +175,13 @@
     }
     &.still-loading {
       .story-card__title, .story-card__caption {
-        opacity: 0.05;
+        opacity: 0.04;
         transition: opacity 1s step-end;
       }
-      .story-card__logo img {
+      .story-card__logo {
         opacity: 0;
-        transition: opacity 1s step-end;
       }
+      
       // the icon needs to be wrapped in a div in order for the transform to work
       // (center if element is centered, not top-left of element)
       .story-card__loading {
@@ -179,15 +189,15 @@
         top: 50%;
         left: 50%;
         transform: translate(-50%, -50%);
+        opacity: 1;
+        transition: opacity 1s step-end;
         i {
           font-size: 20px;
           color: #666;
-          opacity: 1;
-          transition: opacity 1s step-end;
-          // -webkit-transition: opacity 1s step-end;
         }
       }
     }
+
   }
 
   // applies to plugins

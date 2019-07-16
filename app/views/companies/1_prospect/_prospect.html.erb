@@ -4,72 +4,72 @@
   <div class="container">
     <div class="row">
 
-        <div class="col-md-3 col-sm-4 layout-sidebar">
+      <div class="col-sm-4 col-md-3 layout-sidebar">
 
-          <ul class="nav nav-layout-sidebar nav-stacked">
+        <ul class="nav nav-layout-sidebar nav-stacked">
 
-            <li class="<%= (tab == '#successes' || tab.nil?) ? 'active' : '' %>">
-              <a href="#successes" data-toggle="tab">
-                <span>
-                  <i class="fa fa-fw fa-rocket"></i>
-                  <span>Customer Wins</span>
-                </span>
-                <span>
-                  <button type="button" 
-                          class="btn-add <%= (tab == '#successes' || tab.nil?) ? 'shown' : '' %>"
-                          data-toggle="modal" data-target="#new-success-modal">
-                    <span class="fa-stack fa-lg">
-                      <i class="fa fa-circle-o fa-stack-2x"></i>
-                      <i class="fa fa-plus fa-stack-1x"></i>
-                    </span>
-                  </button>
-                </span>
-              </a>
-            </li>
+          <li class="<%= (tab == '#successes' || tab.nil?) ? 'active' : '' %>">
+            <a href="#successes" data-toggle="tab">
+              <span>
+                <i class="fa fa-fw fa-rocket"></i>
+                <span>Customer Wins</span>
+              </span>
+              <span>
+                <button type="button" 
+                        class="btn-add <%= (tab == '#successes' || tab.nil?) ? 'shown' : '' %>"
+                        data-toggle="modal" data-target="#new-success-modal">
+                  <span class="fa-stack fa-lg">
+                    <i class="fa fa-circle-o fa-stack-2x"></i>
+                    <i class="fa fa-plus fa-stack-1x"></i>
+                  </span>
+                </button>
+              </span>
+            </a>
+          </li>
 
-            <li class="<%= tab == '#prospect-contributors' ? 'active' : ''%>">
-              <a href="#prospect-contributors" data-toggle="tab">
-                <span>
-                  <i class="fa fa-fw fa-users"></i>
-                  <span>Contributors</span>
-                </span>
-                <span>
-                  <button type="button" 
-                          class="btn-add <%= tab == '#prospect-contributors' ? 'shown' : ''%>"
-                          data-toggle="modal" data-target="#new-contributor-modal">
-                    <span class="fa-stack fa-lg">
-                      <i class="fa fa-circle-o fa-stack-2x"></i>
-                      <i class="fa fa-plus fa-stack-1x"></i>
-                    </span>
-                  </button>
-                </span>
-              </a>
-            </li>
+          <li class="<%= tab == '#prospect-contributors' ? 'active' : ''%>">
+            <a href="#prospect-contributors" data-toggle="tab">
+              <span>
+                <i class="fa fa-fw fa-users"></i>
+                <span>Contributors</span>
+              </span>
+              <span>
+                <button type="button" 
+                        class="btn-add <%= tab == '#prospect-contributors' ? 'shown' : ''%>"
+                        data-toggle="modal" data-target="#new-contributor-modal">
+                  <span class="fa-stack fa-lg">
+                    <i class="fa fa-circle-o fa-stack-2x"></i>
+                    <i class="fa fa-plus fa-stack-1x"></i>
+                  </span>
+                </button>
+              </span>
+            </a>
+          </li>
 
-          </ul>
+        </ul>
 
-        </div>
+      </div>
 
-        <div class="col-md-9 col-sm-8 layout-main">
-          <div class="tab-content stacked-content">
+      <div class="col-sm-8 col-md-9 layout-main">
+        <div class="tab-content">
 
-            <div id="successes" class="tab-pane fade <%= (tab == '#successes' || tab.nil?) ? 'active in' : ''%>">
-              <%= render(
-                    'companies/1_prospect/successes/successes_table',
-                    { company: company } 
-                  ) %>
-            </div>
-
-            <div id="prospect-contributors"
-                class="tab-pane fade <%= tab == '#prospect-contributors' ? 'active in' : ''%>">
-              <%= render(
-                    'companies/1_prospect/contributors/contributors_table',
-                    { company: company, workflow_stage: 'prospect' } 
-                  ) %>
-            </div>
-
+          <div id="successes" class="tab-pane fade <%= (tab == '#successes' || tab.nil?) ? 'active in' : ''%>">
+            <%= render(
+                  'companies/1_prospect/successes/successes_table',
+                  { company: company } 
+                ) %>
           </div>
+
+          <div id="prospect-contributors"
+              class="tab-pane fade <%= tab == '#prospect-contributors' ? 'active in' : ''%>">
+            <%= render(
+                  'companies/1_prospect/contributors/contributors_table',
+                  { company: company, workflow_stage: 'prospect' } 
+                ) %>
+          </div>
+
         </div>
+      </div>
 
     </div>
   </div>

@@ -71,7 +71,7 @@
     display: none;  
     opacity: 1;
     transition: opacity 0.15s linear;  // matches bootstrap tab .fade transition
-    &:not(.shown) {
+    &:not(.shown):not([data-target="#new-story-modal"]) {
       visibility: hidden;
       opacity: 0;
     }
