@@ -44,11 +44,11 @@
       <div class="row form-horizontal">
 
         <div class="form-group">
-          <label class="col-sm-3 control-label">Curator</label>
-          <div class="col-sm-9" style="padding:0">
+          <label class="col-sm-3 col-sm-offset-1 control-label">Curator</label>
+          <div class="col-sm-8" style="padding:0">
 
             <select style="border-color: #66afe9" class="prospect successes curator-select form-control">
-              <option label=" "><option>
+              <option></option>
 
               {{ _.each(curators, function (curator) { }}
 
@@ -62,28 +62,25 @@
         </div>
 
         <div class="form-group search">
-          <label class="col-sm-3 control-label">Search</label>
-          <div class="col-sm-9" style="padding:0">
+          <label class="col-sm-3 col-sm-offset-1 control-label">Filter</label>
+          <div class="col-sm-8" style="padding:0">
 
-            <i class="fa fa-remove search-all fa-fw" style="display:none"></i>
-
-            <select id="successes-filter" class="dt-filter form-control text-left">
+            <select id="successes-filter" class="dt-filter form-control">
               <option></option>
-              <option value="0" data-column="success">All Customer Wins</option>
-              <optgroup label="Customer Win">
-
-                {{ _.each(successes, function (success) { }}
-
-                  <option data-column="success" value="success-{{= success.id }}">{{= success.name }}</option>
-
-                {{ }); }}
-
-              </optgroup>
               <optgroup label="Customer">
 
                 {{ _.each(customers, function (customer) { }}
 
                   <option data-column="customer" value="customer-{{= customer.id }}">{{= customer.name }}</option>
+
+                {{ }); }}
+
+              </optgroup>
+              <optgroup label="Customer Win">
+
+                {{ _.each(successes, function (success) { }}
+
+                  <option data-column="success" value="success-{{= success.id }}">{{= success.name }}</option>
 
                 {{ }); }}
 

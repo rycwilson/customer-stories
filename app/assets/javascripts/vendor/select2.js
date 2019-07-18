@@ -101,17 +101,38 @@ function initSelect2 () {
        .select2({
          theme: 'bootstrap',
          width: 'style',
-        //  allowClear: true,
-        //  placeholder: 'Select',
+         allowClear: true,
+         placeholder: 'Select',
          minimumResultsForSearch: -1   // hides text input
        })
+        .on('select2:unselecting', function (e) {
+          $(this).data('unselecting', true);
+        })
+        .on('select2:open', function (e) {
+          if ($(this).data('unselecting')) {
+            $(this).removeData('unselecting')
+            $(this).select2('close');
+          }
+        });
+
        // select2 is inserting an empty <option> for some reason
-       .children('option').not('[value]').remove();
+      //  .children('option').not('[value]').remove();
+
     $('.dt-filter').select2({
        theme: 'bootstrap',
        width: 'style',
-       // allowClear: true
-    });
+       placeholder: 'Search / Select',
+       allowClear: true
+    })
+      .on('select2:unselecting', function (e) {
+        $(this).data('unselecting', true);
+      })
+      .on('select2:open', function (e) {
+        if ($(this).data('unselecting')) {
+          $(this).removeData('unselecting')
+          $(this).select2('close');
+        }
+      });
   }
 
   // story settings has its own init routine
@@ -126,33 +147,31 @@ function initSelect2 () {
     placeholder: 'Select',
     allowClear: true
   })
-    .on("select2:unselecting", function (e) {
-      $(this).data('state', 'unselected');
+    .on('select2:unselecting', function (e) {
+      $(this).data('unselecting', true);
     })
-    .on("select2:open", function (e) {
-      if ($(this).data('state') === 'unselected') {
-        $(this).removeData('state');
-        var self = $(this);
-        setTimeout(function() { self.select2('close'); }, 0);
+    .on('select2:open', function (e) {
+      if ($(this).data('unselecting')) {
+        $(this).removeData('unselecting')
+               .select2('close');
       }
     });
 
   $('.stories-filter').select2({
-      theme: 'bootstrap',
-      placeholder: 'Select',
-      allowClear: true,
-      width: 'style'   // get the width from stories.scss
+    theme: 'bootstrap',
+    placeholder: 'Select',
+    allowClear: true,
+    width: 'style'   // get the width from stories.scss
+  })
+    .on('select2:unselecting', function (e) {
+      $(this).data('unselecting', true);
     })
-    // ref https://stackoverflow.com/questions/29618382/disable-dropdown-opening-on-select2-clear
-    .on('select2:unselecting', function() {
-        $(this).data('unselecting', true);
-      })
-    .on('select2:opening', function(e) {
-       if ($(this).data('unselecting')) {
-         $(this).removeData('unselecting');
-         e.preventDefault();
-        }
-      });
+    .on('select2:open', function (e) {
+      if ($(this).data('unselecting')) {
+        $(this).removeData('unselecting')
+               .select2('close');
+      }
+    });
 
   $('.filters-container.visible-md-block select').css('visibility', 'visible');
 
@@ -246,15 +265,15 @@ function initSelect2 () {
       })
         .on('select2:select', prependCustomerName)
         .on('select2:unselect', prependCustomerName)
-        .on('select2:unselecting', function() {
-            $(this).data('unselecting', true);
-          })
-        .on('select2:opening', function(e) {
-           if ($(this).data('unselecting')) {
-             $(this).removeData('unselecting');
-             e.preventDefault();
-            }
-          });
+        .on('select2:unselecting', function (e) {
+          $(this).data('unselecting', true);
+        })
+        .on('select2:open', function (e) {
+          if ($(this).data('unselecting')) {
+            $(this).removeData('unselecting')
+                   .select2('close');
+          }
+        });
 
       var ul = $(select).next('.select2-container').first('ul.select2-selection__rendered');
       ul.sortable({
@@ -281,16 +300,15 @@ function initSelect2 () {
     allowClear: true,
     width: 'style'
   })
-    // ref https://stackoverflow.com/questions/29618382/disable-dropdown-opening-on-select2-clear
-    .on('select2:unselecting', function() {
-        $(this).data('unselecting', true);
-      })
-    .on('select2:opening', function(e) {
-       if ($(this).data('unselecting')) {
-         $(this).removeData('unselecting');
-         e.preventDefault();
-        }
-      });
+    .on('select2:unselecting', function (e) {
+      $(this).data('unselecting', true);
+    })
+    .on('select2:open', function (e) {
+      if ($(this).data('unselecting')) {
+        $(this).removeData('unselecting')
+              .select2('close');
+      }
+    });
 
   $('.content__select--product select').select2({
     theme: 'bootstrap',
@@ -298,16 +316,15 @@ function initSelect2 () {
     allowClear: true,
     width: 'style'
   })
-    // ref https://stackoverflow.com/questions/29618382/disable-dropdown-opening-on-select2-clear
-    .on('select2:unselecting', function() {
-        $(this).data('unselecting', true);
-      })
-    .on('select2:opening', function(e) {
-       if ($(this).data('unselecting')) {
-         $(this).removeData('unselecting');
-         e.preventDefault();
-        }
-      });
+    .on('select2:unselecting', function (e) {
+      $(this).data('unselecting', true);
+    })
+    .on('select2:open', function (e) {
+      if ($(this).data('unselecting')) {
+        $(this).removeData('unselecting')
+              .select2('close');
+      }
+    });
 
   // restore last selected value
   // change the selected item, but avoid 'change' event

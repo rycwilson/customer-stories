@@ -93,19 +93,18 @@
 
 <% end %>
 
-<div id='story-content-submit' class="container">
+<div id="story-content-submit" class="container">
   <div class="row">
     <div class="col-sm-4 col-md-3 layout-sidebar"></div>
     <div class="col-sm-8 col-md-9 layout-main">
       <div class="tab-content stacked-content">
-        <p class="pull-left"><%= truncate(story.title, length: 80, separator: ' ') %></p>
-      <!--   <button type="reset" form="story-content-form" class="btn btn-default">
-          Clear changes
-        </button> -->
-        <button type="submit" form="story-content-form" class="btn btn-success text-center" style='width: 114px'>
+
+        <p class="pull-left"><%= story.title.truncate(80) %></p>
+
+        <button type="submit" form="story-content-form" class="btn btn-success text-center" style="width: 114px">
           <span>Save changes</span>
-          <i class='fa fa-spin fa-circle-o-notch' style='display:none'></i>
-          <i class='fa fa-check' style='display:none'></i>
+          <i class="fa fa-spin fa-circle-o-notch" style="display:none"></i>
+          <i class="fa fa-check" style="display:none"></i>
         </button>
 
       </div>

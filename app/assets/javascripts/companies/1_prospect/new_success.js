@@ -326,7 +326,7 @@ function newSuccessListeners () {
           .val($('#successes-filter').val().match(/customer-(\d+)/)[1])
           .trigger('change.select2');
       }
-      if (curatorId !== '0') {
+      if (curatorId !== '') {
         $('select.new-success.curator')
           .val($('.prospect.curator-select').val())
           .trigger('change');

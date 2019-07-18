@@ -1,0 +1,82 @@
+
+<% content_for :head do %>
+  <meta name="turbolinks-cache-control" content="no-cache">
+<% end %>
+
+<%= render(
+      'shared/navbars/company_nav', 
+      { company: @company, workflow_stage: @workflow_stage } 
+    ) %>
+
+<div class="container">
+  <div class="row">
+
+    <div class="col-sm-5 col-md-4 col-lg-3 layout-sidebar">
+      <ul class="nav">
+        <li>
+          <a href="#edit-company-profile" data-toggle="tab">
+            <i class="fa fa-fw fa-globe"></i>
+            <span>Company Profile</span>
+          </a>
+        </li>
+        <li>
+          <a href="#edit-crowdsource" data-toggle="tab" class='<%= @company.new_record? ? 'disabled-tab' : '' %>'>
+            <i class="fa fa-fw fa-users"></i>
+            <span>Crowdsource Settings</span>
+          </a>
+        </li>
+        <li>
+          <a href="#edit-plugins" data-toggle="tab" class='<%= @company.new_record? ? 'disabled-tab' : '' %>'>
+            <i class='fa fa-fw fa-plug' style='font-size:15px; top:2px; margin-left:2px'></i>
+            <span></span>Stories Plugin</span>
+          </a>
+        </li>
+        <li>
+          <a href="#edit-ctas" data-toggle="tab" class='<%= @company.new_record? ? 'disabled-tab' : '' %>'>
+            <i class="fa fa-fw fa-hand-pointer-o"></i>
+            <span>Link &amp Form CTAs</span>
+          </a>
+        </li>
+        <li>
+          <a href="#edit-tags" data-toggle="tab" class='<%= @company.new_record? ? 'disabled-tab' : '' %>'>
+            <i class="fa fa-fw fa-tags"></i>
+            <span>Story Tags</span>
+          </a>
+        </li>
+      </ul>
+    </div>
+
+    <div class="col-sm-7 col-md-8 col-lg-9 layout-main">
+      <div class="tab-content">
+
+        <div class="tab-pane fade" id="edit-company-profile">
+          <%= render(
+                'companies/settings/company_form', 
+                { company: @company, form_options: @form_options } 
+              ) %>
+        </div>
+
+        <div class="tab-pane fade" id="edit-crowdsource">
+          <%= render(
+            'companies/settings/invitation_templates',
+                { company: @company, templates_select: @templates_select } 
+              ) %>
+        </div>
+        
+        <div class="tab-pane fade" id="edit-plugins">
+          <%= render('plugins/config', { company: @company, plugin: @company.plugin }) %>
+        </div>
+
+        <div class="tab-pane fade" id="edit-ctas" role="tabpanel"  >
+          <%= render('companies/settings/ctas', { company: @company }) %>
+        </div>
+
+        <div class="tab-pane fade" id="edit-tags">
+          <%= render('companies/settings/story_tags', { company: @company }) %>
+        </div>
+
+      </div> 
+    </div> 
+
+  </div>
+</div>  

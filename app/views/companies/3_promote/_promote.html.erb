@@ -1,13 +1,12 @@
 
-<div id="promote"
-     class="<%= workflow_stage == 'promote' ? 'active tab-pane fade in' : 'tab-pane fade' %>"
-     role='tabpanel'>
+<div id="promote" role='tabpanel'
+     class="tab-pane fade <%= workflow_stage == 'promote' ? 'active in' : '' %>">
   <div class="container">
+    <div class="row">
 
-    <div class="layout layout-main-right layout-stack-sm">
-      <div class="col-md-3 col-sm-4 layout-sidebar">
+      <div class="col-sm-5 col-md-4 col-lg-3 layout-sidebar">
 
-        <ul class="nav nav-layout-sidebar nav-stacked">
+        <ul class="nav">
           <li class="<%= tab == '#promoted-stories' ? 'active' : '' %>">
             <a href="#promoted-stories" data-toggle="tab">
               <i class="fa fa-bullhorn"></i>
@@ -49,9 +48,8 @@
 
       </div>
 
-      <div class="col-md-9 col-sm-8 layout-main">
-
-        <div class="tab-content stacked-content" style="padding-top: 8px">
+      <div class="col-sm-7 col-md-8 col-lg-9 layout-main">
+        <div class="tab-content">
 
           <div id="promoted-stories" class="tab-pane fade <%= tab == '#promoted-stories' ? 'active in' : '' %>">
             <%= render 'companies/3_promote/promoted_stories_table', { company: company } %>
@@ -62,11 +60,9 @@
           </div>
 
         </div>
-
       </div>
 
     </div>
-
   </div>
 </div>  <!-- promote -->
 

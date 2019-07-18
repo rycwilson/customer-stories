@@ -218,11 +218,7 @@
 .successes-header, .contributors-header {
   background-color: #efefef;
   margin: -7px 0 -6px 0;
-  padding-top: 24px;
-  padding-bottom: 12px;
-  &.successes-header {
-    padding-bottom: 20px;
-  }
+  padding: 20px 0;
   .form-group {
     width: 100%;
     margin-bottom: 12px;
@@ -230,17 +226,7 @@
   .checkbox-filters label {
     margin-bottom: 5px;
   }
-  .form-group.search > div {
-    position: relative;
-    i {
-      position: absolute;
-      color: #999;
-      right: 30px;
-      top: 10px;
-      z-index: 100;
-      cursor: pointer;
-    }
-  }
+  
   select + span > span:first-child > span {
     padding-right: 30px; // matches search box
     text-align: left;
@@ -251,4 +237,5 @@
   .select2-container {
     width: 100%;
   }
+
 }

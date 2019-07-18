@@ -27,6 +27,11 @@
   }
 }
 
+.select2-container--bootstrap .select2-search--dropdown .select2-search__field {
+  font-family: 'Open Sans', 'Trebuchet MS', arial, sans-serif;
+  font-size: 13px;
+}
+
 .select2-container--bootstrap .select2-results__option--highlighted[aria-selected] {
   background-color: $nav-blue;
 }

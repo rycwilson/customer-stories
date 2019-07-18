@@ -51,8 +51,8 @@
       // transition: opacity $transition-time ease-in-out;
       transition: opacity 0s step-end;
       img {
-        max-height: 70%;
-        max-width: 70%;
+        max-height: if($size == 'small', 60%, 70%);
+        max-width: if($size == 'small', 60%, 70%);
 
         // this compensates for a bug in chrome, which causes images of a
         // certain aspect ratio to expand and contract very slightly on
@@ -78,7 +78,7 @@
     span {
       font: {
         family: inherit !important;
-        size: 14px !important;
+        size: if($size == 'small', 13px !important, 14px !important);
       }
       position: absolute;
       width: 90%;
@@ -160,7 +160,7 @@
   }
   
   &.loading {
-    filter: brightness(97%);
+    filter: brightness(96%);
     .story-card__title {
       transform: none;
     }

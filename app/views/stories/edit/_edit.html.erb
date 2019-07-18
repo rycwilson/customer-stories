@@ -27,7 +27,7 @@
                 story.csp_story_path + "?preview=true",
                 { class: "btn btn-sm btn-secondary pull-right", style: "width: 100%", target: "_blank" }
               ) do %>
-            <i class='fa fa-fw fa-search fa-fw'></i>&nbsp;&nbsp;View Story&nbsp;
+            <i class='glyphicon glyphicon-new-window'></i>&nbsp;&nbsp;View Story&nbsp;
           <% end %>
         </span>
       </div>
@@ -54,10 +54,6 @@
     </div>
 
     <div id="story-contributors" class="tab-pane fade <%= tab == '#story-contributors' ? 'in active' : '' %>">
-
-      <button type="button" style="margin:0 0 10px 0;" class="btn btn-secondary btn-sm" data-toggle="modal" data-target="#new-contributor-modal">
-        <i class="fa fa-plus-circle fa-fw"></i>&nbsp;New Contributor&nbsp;
-      </button>
 
       <%= render(
             'companies/1_prospect/contributors/contributors_table',

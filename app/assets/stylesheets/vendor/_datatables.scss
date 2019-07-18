@@ -40,3 +40,15 @@ table.dataTable thead .sorting_asc:after, table.dataTable thead .sorting_desc:af
   color: $nav-blue !important;
   opacity: 1;
 }
+
+div.dataTables_wrapper > div.dataTables_info {
+  visibility: hidden;
+}
+
+// settings apply for div.dataTables_info as it appears in headers
+div.dataTables_wrapper [class*="header"] div.dataTables_info {
+  margin-bottom: 0;
+  padding: 0;
+}
+
+

@@ -44,69 +44,66 @@
       </div>
     </div>
 
-    <div class="col-sm-6 form-horizontal select-filters">
-      <div class="form-group">
-        <label class="col-sm-3 control-label">Curator</label>
-        <div class="col-sm-9" style="padding:0">
+    <div class="col-sm-6 select-filters">
+      <div class="row form-horizontal">
 
-          <select class="prospect contributors curator-select form-control text-left">
+        <div class="form-group">
+          <label class="col-sm-3 col-sm-offset-1 control-label">Curator</label>
+          <div class="col-sm-8" style="padding:0">
 
-            <option value="0">All Curators<option>
+            <select class="prospect contributors curator-select form-control">
+              <option></option>
 
-            {{ _.each(curators, function (curator) { }}
+              {{ _.each(curators, function (curator) { }}
 
-              <option data-column="curator" value="{{= curator.id }}">{{= curator.first_name + " " + curator.last_name }}</option>
+                <option data-column="curator" value="{{= curator.id }}">{{= curator.first_name + " " + curator.last_name }}</option>
 
-            {{ }); }}
+              {{ }); }}
 
-          </select>
+            </select>
 
+          </div>
         </div>
-      </div>
 
-      <div class="form-group search">
-        <label class="col-sm-3 control-label">Search</label>
-        <div class="col-sm-9" style="padding:0;">
+        <div class="form-group search">
+          <label class="col-sm-3 col-sm-offset-1 control-label">Filter</label>
+          <div class="col-sm-8" style="padding:0;">
 
-          <i class="fa fa-remove search-all fa-fw" style="display:none"></i>
+            <select id="contributors-filter" class="dt-filter form-control">
+              <option></option>
+              <optgroup label="Customer">
 
-          <select id="contributors-filter" class="dt-filter form-control text-left">
-            <option></option>
-            <option value="0" data-column="contributor" selected>All Contributors</option>
-            <optgroup label="Contributor">
+                {{ _.each(customers, function (customer) { }}
 
-              {{ _.each(contributors, function (contributor) { }}
+                  <option data-column="customer" value="customer-{{= customer.id }}">{{= customer.name }}</option>
 
-                <option data-column="contributor" value="contributor-{{= contributor.id }}">{{= contributor.fullName }}</option>
+                {{ }); }}
 
-              {{ }); }}
+              </optgroup>
+              <optgroup label="Customer Win">
 
-            </optgroup>
-            <optgroup label="Customer Win">
+                {{ _.each(successes, function (success) { }}
 
-              {{ _.each(successes, function (success) { }}
+                  <option data-column="success" value="success-{{= success.id }}">{{= success.name }}</option>
 
-                <option data-column="success" value="success-{{= success.id }}">{{= success.name }}</option>
+                {{ }); }}
 
-              {{ }); }}
+              </optgroup>
+              <optgroup label="Contributor">
 
-            </optgroup>
-            <optgroup label="Customer">
+                {{ _.each(contributors, function (contributor) { }}
 
-              {{ _.each(customers, function (customer) { }}
+                  <option data-column="contributor" value="contributor-{{= contributor.id }}">{{= contributor.fullName }}</option>
 
-                <option data-column="customer" value="customer-{{= customer.id }}">{{= customer.name }}</option>
+                {{ }); }}
 
-              {{ }); }}
+              </optgroup>
+            </select>
 
-            </optgroup>
-          </select>
-
+          </div>
         </div>
+        
       </div>
-
-      
-
     </div>
   </div>
 

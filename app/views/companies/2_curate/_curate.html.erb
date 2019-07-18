@@ -37,7 +37,7 @@
           </div>
 
           <div class="edit-story tab-pane fade <%= curate_view == 'story' ? 'active in' : '' %>">
-            <ul class="nav nav-layout-sidebar nav-stacked">
+            <ul class="nav">
               <li>
                 <a href="javascript:;"
                   class="all-stories">
@@ -56,7 +56,21 @@
               </li>
               <li class="<%= edit_story_tab == '#story-contributors' ? 'active' : '' %>">
                 <a href="#story-contributors" data-toggle="tab">
-                  <i class="fa fa-users"></i>&nbsp;&nbsp;Story Contributors
+                  <span>
+                    <i class="fa fa-users"></i>&nbsp;&nbsp;
+                    <span>Story Contributors</span>
+                  </span>
+                  <span>
+                    <button type="button" 
+                            class="btn-add <%= (edit_story_tab == '#story-contributors') ? 'shown' : '' %>"
+                            data-toggle="modal" 
+                              data-target="#new-contributor-modal">
+                      <span class="fa-stack fa-lg">
+                        <i class="fa fa-circle-o fa-stack-2x"></i>
+                        <i class="fa fa-plus fa-stack-1x"></i>
+                      </span>
+                    </button>
+                  </span>
                 </a>
               </li>
             </ul>

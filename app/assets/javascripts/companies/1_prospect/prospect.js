@@ -76,13 +76,20 @@ function prospectListeners () {
       Cookies.set('csp-edit-story-tab', '#story-contributors');
     })
 
-    .on('hide.bs.tab', 'a[href="#successes"], a[href="#prospect-contributors"]', function () { 
-      $(this).find('.btn-add').removeClass('shown');
-    })
-    .on('shown.bs.tab', 'a[href="#successes"], a[href="#prospect-contributors"]', function () {
-      console.log('show')
-      $(this).find('.btn-add').addClass('shown');
-    })
+    // transition the Add button with the respective tab pane
+    .on(
+      'hide.bs.tab', 
+      'a[href="#successes"], a[href="#prospect-contributors"], a[href="#story-contributors"]', 
+      function () { 
+        $(this).find('.btn-add').removeClass('shown');
+      })
+    .on(
+      'shown.bs.tab', 
+      'a[href="#successes"], a[href="#prospect-contributors"], a[href="#story-contributors"]', 
+      function () {
+        $(this).find('.btn-add').addClass('shown');
+      }
+    )
 
     // the close event happens shortly after blur; to ensure smooth transition...
     .on('blur', 'td.invitation-template', function () {
@@ -196,7 +203,7 @@ function prospectListeners () {
     .on('click', 'a.all-curators', function () {
       var $tableWrapper = $(this).closest('[id*="table_wrapper"]'),
           filterVal = $tableWrapper.find('.dt-filter').val();
-      $tableWrapper.find('.curator-select').val('0').trigger('change');
+      $tableWrapper.find('.curator-select').val('').trigger('change');
       $tableWrapper.find('.dt-filter').val(filterVal).trigger('change');
     })
     .on('click', 'td.invitation-template .DTE_Form_Buttons :first-child', function () {
