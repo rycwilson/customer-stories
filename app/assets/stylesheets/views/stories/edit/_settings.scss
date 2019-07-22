@@ -13,16 +13,28 @@
 
 #story-settings {
 
+  .form-group {
+    margin-bottom: 25px;
+  }
+
   // this prevents content shifting when toggling the customer logo/name
   // TODO this (or something like it) needs to be implemented more broadly
   min-height: 100vh;
 
   #story-settings-form {
-    .col-lg-3 {
-      width: 20%;
+    .col-md-3 {
+      width: 22%;
     }
-    .col-lg-6 {
-      width: 60%
+    .col-md-9 {
+      &.col-md-offset-3 {
+        margin-left: 22%
+      }
+    }
+    .col-lg-6 { 
+      width: 56%;
+      &.col-lg-offset-3 {
+        margin-left: 22%;
+      }
     }
     hr {
       margin-bottom: 25px;
