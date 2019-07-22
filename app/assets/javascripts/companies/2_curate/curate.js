@@ -48,17 +48,19 @@ function curateListeners () {
     })
 
     .on('show.bs.tab', 'a[href=".curate-stories"]', cancelLoading)
-    .on('shown.bs.tab', 'a[href="#curate"]', function () {
-      // truncate titles
-      $('#curate-gallery').find('.story-card__title')
-                            .each(function (index, wrapper) {
-                              var $title = $(wrapper).find('p');
-                              while ($title.outerHeight() > $(wrapper).height()) {
-                                $title.text(function (index, text) {
-                                  return text.replace(/\W*\s(\S)*$/, '...');
-                                });
-                              }
-                            });
+    .on('shown.bs.tab', 'a[href="#curate"], a[href=".curate-stories"]', function () {
+      // truncate story titles
+      // discussion: http://hackingui.com/front-end/a-pure-css-solution-for-multiline-text-truncation/
+      $('a[href=".curate-stories"]').one('shown.bs.tab', function () {
+        $('.story-card__title').each(function () {
+          var $title = $(this).find('p');
+          while ($title.outerHeight() > $(this).height()) {
+            $title.text(function (index, text) {
+              return text.replace(/\W*\s(\S)*$/, '...');
+            });
+          }
+        });
+      })
     })
 
     .on('click', '#curate-gallery > .story-card > a', function (e) {
@@ -103,15 +105,7 @@ function curateListeners () {
     .on('change', '#curate-filters select',
       function (e) {
         var filterCookieName = 'csp-curate-filter-' + $(this).attr('class').split(' ')[0],
-        filterCookieVal;
-        
-        // toggle the X icon
-        // if ($(this).val() === '') {
-        //   $(this).prev().css('display', 'none');
-        // } else {
-        //   $(this).prev().css('display', 'inline-block');
-        // }
-            
+        filterCookieVal;    
         if ($(this).is('select')) filterCookieVal = $(this).val();
         else filterCookieVal = $(this).prop('checked');
         Cookies.set(filterCookieName, filterCookieVal);

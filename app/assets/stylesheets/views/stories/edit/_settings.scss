@@ -18,17 +18,11 @@
   min-height: 100vh;
 
   #story-settings-form {
-    .col-sm-3 {
+    .col-lg-3 {
       width: 20%;
     }
-    .col-sm-7 {
-      width: 60%;
-    }
-    .col-sm-7.col-sm-offset-3 {
-      margin-left: 20%;
-    }
-    .col-sm-2 {
-      width: 20%;
+    .col-lg-6 {
+      width: 60%
     }
     hr {
       margin-bottom: 25px;
@@ -38,7 +32,7 @@
   .form-group.publish {
     .publish-control {
       display: inline-block;
-      margin-right: 20px;
+      // margin-right: 20px;
       label {
         vertical-align: middle;
         font-weight: normal;

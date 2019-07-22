@@ -1,67 +1,79 @@
 
-<div id="edit-story-layout" 
-    data-story-id="<%= story.try(:id) %>" data-success-id="<%= story.success.id %>" 
-    data-success-name="<%= story.success.name %>" 
-    data-customer-id="<%= story.customer.id %>" 
-    data-customer-slug="<%= story.customer.slug %>">
+<div id="edit-story-layout" class="layout layout-main-right layout-stack-sm"
+    data-story-id="<%= story.try(:id) %>" data-success-id="<%= story.success.id %>" data-success-name="<%= story.success.name %>" data-customer-id="<%= story.customer.id %>" data-customer-slug="<%= story.customer.slug %>">
 
-  <div id="story-header__wrapper">
+  <div class="col-md-3 col-sm-4 layout-sidebar">
 
-    <div id="story-header__spacekeeper"></div>
-
-    <div id="story-header">
-      <div>
-        <span><label>Customer</label></span>
-        <span><%= story.customer.name %></span>
-        <span>
-          <button type="button" data-toggle="modal" data-target="#edit-customer-modal" data-customer-id="<%= story.customer.id %>" class="btn btn-sm btn-secondary" style="width: 100%">
-            <i class='fa fa-fw fa-pencil fa-fw'></i>&nbsp;&nbsp;Edit Customer&nbsp;
-          </button>
-        </span>
-      </div>
-      <div id="story-header__title">
-        <span><label>Story Title</label></span>
-        <span><%= story.title %></span>
-        <span>
-          <%= link_to(
-                story.csp_story_path + "?preview=true",
-                { class: "btn btn-sm btn-secondary pull-right", style: "width: 100%", target: "_blank" }
-              ) do %>
-            <i class='glyphicon glyphicon-new-window'></i>&nbsp;&nbsp;View Story&nbsp;
-          <% end %>
-        </span>
-      </div>
-      <div id="story-header__flash" class="<%= story.company.promote_tr? ? 'promote-enabled' : '' %>">
-        <p>Story published successfully</p>
-        <p>Errors when creating Promoted Story</p>
-      </div>
-    </div>
+    <%= render 'stories/edit/nav_tabs', { tab: tab } %>
 
   </div>
 
-  <div class="tab-content">
+  <div class="col-md-9 col-sm-8 layout-main">
+    <div class="tab-content stacked-content">
 
-    <div id="story-settings" class="tab-pane fade <%= (tab == '#story-settings' || tab.nil?) ? 'in active' : '' %>">
+      <div id="story-header__wrapper">
+        <div id="story-header__spacekeeper"></div>
 
-      <%= render('stories/edit/settings/settings', { company: company, story: story }) %>
+        <div id="story-header">
+    <!--  <div id="test" style="height: 150px; width: 100%; position: absolute; left: 0; top: -25px; background-color: #f9f9f9; margin: 0"></div> -->
+          <div>
+            <span><label>Customer</label></span>
+            <span><%= story.customer.name %></span>
+            <span>
+              <button type="button" data-toggle="modal" data-target="#edit-customer-modal" data-customer-id="<%= story.customer.id %>" class="btn btn-sm btn-secondary" style="width: 100%">
+                <i class='fa fa-fw fa-pencil fa-fw'></i>&nbsp;&nbsp;Edit Customer&nbsp;
+              </button>
+            </span>
+          </div>
+
+          <div id="story-header__title">
+            <span><label>Story Title</label></span>
+            <span><%= story.title %></span>
+            <span>
+              <%= link_to(
+                    story.csp_story_path + "?preview=true",
+                    { class: "btn btn-sm btn-secondary pull-right", style: "width: 100%", target: "_blank" }
+                  ) do %>
+                <i class='fa fa-fw fa-search fa-fw'></i>&nbsp;&nbsp;View Story&nbsp;
+              <% end %>
+            </span>
+          </div>
+
+          <div id="story-header__flash" class="<%= story.company.promote_tr? ? 'promote-enabled' : '' %>">
+            <p>Story published successfully</p>
+            <p>Errors when creating Promoted Story</p>
+          </div>
+
+        </div>
+
+      </div>
+
+      <div id="story-settings" class="tab-pane fade <%= (tab == '#story-settings' || tab.nil?) ? 'in active' : '' %>">
+
+        <%= render('stories/edit/settings/settings', { company: company, story: story }) %>
+
+      </div>
+
+      <div id="story-content" class="tab-pane fade <%= tab == '#story-content' ? 'in active' : '' %>">
+
+        <%= render('stories/edit/content/content', { company: company, story: story }) %>
+
+      </div>
+
+      <div id="story-contributors" class="tab-pane fade <%= tab == '#story-contributors' ? 'in active' : '' %>">
+
+        <button type="button" style="margin:0 0 10px 0;" class="btn btn-secondary btn-sm" data-toggle="modal" data-target="#new-contributor-modal">
+          <i class="fa fa-plus-circle fa-fw"></i>&nbsp;New Contributor&nbsp;
+        </button>
+
+        <%= render(
+              'companies/1_prospect/contributors/contributors_table',
+              { company: company, workflow_stage: 'curate' }
+            ) %>
+
+      </div>
 
     </div>
-
-    <div id="story-content" class="tab-pane fade <%= tab == '#story-content' ? 'in active' : '' %>">
-
-      <%= render('stories/edit/content/content', { company: company, story: story }) %>
-
-    </div>
-
-    <div id="story-contributors" class="tab-pane fade <%= tab == '#story-contributors' ? 'in active' : '' %>">
-
-      <%= render(
-            'companies/1_prospect/contributors/contributors_table',
-            { company: company, workflow_stage: 'curate' }
-          ) %>
-
-    </div>
- 
   </div>
 
 </div>

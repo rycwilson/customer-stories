@@ -30,17 +30,6 @@ $(document).on('turbolinks:load', function (e) {
   constructPlugins();
   CSP.init();
 
-  // truncate story titles
-  // discussion: http://hackingui.com/front-end/a-pure-css-solution-for-multiline-text-truncation/
-  // $('.story-card__title').each(function () {
-  //   var $title = $(this).find('p');
-  //   while ($title.outerHeight() > $(this).height()) {
-  //     $title.text(function (index, text) {
-  //       return text.replace(/\W*\s(\S)*$/, '...');
-  //     });
-  //   }
-  // });
-
   // ref: https://clicky.com/help/apps-plugins#rails4turbo
   // clicky.log( document.location.pathname + document.location.search, document.title, 'pageview' )
 });

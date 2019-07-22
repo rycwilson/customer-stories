@@ -22,23 +22,6 @@ function storiesIndex () {
     }
   });
 
-
-  // truncateTextContent = function () {
-  //   var $ads = $('.native-ad'),
-  //       $fields = $ads.find('.description, .long-headline');
-
-  //   $fields.each(function () {
-  //     var $link = $(this).children('a');
-  //     while ($link.outerHeight() > $(this).height()) {
-  //       $link.text(function (index, text) {
-  //         return text.replace(/\W*\s(\S)*$/, '...');
-  //       });
-  //     }
-  //   });
-  // },
-
-
-
 }
 
 function storiesIndexListeners () {
