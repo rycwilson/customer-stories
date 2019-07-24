@@ -33,8 +33,10 @@
 # pre-compiled assets (uncomment for github push, comment for heroku)
 /public/assets
 
-
-
-
-
-
+# added by webpacker:
+/public/packs
+/public/packs-test
+/node_modules
+/yarn-error.log
+yarn-debug.log*
+.yarn-integrity
