@@ -18,7 +18,7 @@
 /ssl
 
 # dependencies
-/vendor/assets
+/vendor
 
 # figaro-managed credentials
 # no push to either github or heroku
@@ -31,7 +31,7 @@
 /.env
 
 # pre-compiled assets (uncomment for github push, comment for heroku)
-public/assets
+/public/assets
 
 
 
