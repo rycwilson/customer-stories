@@ -12,21 +12,23 @@ module Csp
     # Application configuration should go into files in config/initializers
     # -- all .rb files in that directory are automatically loaded.
 
+    # config.assets.paths << Rails.root.join('vendor', 'assets' 'node_modules')
+    
     # custom fonts
     # ref https://gist.github.com/anotheruiguy/7379570
-    config.assets.paths << Rails.root.join("app", "assets", "fonts")
-    config.assets.paths << Rails.root.join('vendor', 'assets' 'node_modules')
+    config.assets.paths << Rails.root.join('app', 'assets', 'fonts')
 
-    # Bower asset paths
-    # (lines 37-47 per bootstrap-sass docs re: using bower package)
-    Rails.root.join('vendor', 'assets', 'bower_components').to_s.tap do |bower_path|
-      config.sass.load_paths << bower_path
-      config.assets.paths << bower_path
-    end
-    # Precompile Bootstrap fonts
-    config.assets.precompile << %r(bootstrap-sass/assets/fonts/bootstrap/[\w-]+\.(?:eot|svg|ttf|woff2?)$)
-    # Minimum Sass number precision required by bootstrap-sass
-    ::Sass::Script::Value::Number.precision = [8, ::Sass::Script::Value::Number.precision].max
+    # TODO how does this apply to yarn?
+    # per https://github.com/twbs/bootstrap-sass/blob/master/README.md
+    # root.join('vendor', 'assets', 'bower_components').to_s.tap do |bower_path|
+    #   config.sass.load_paths << bower_path
+    #   config.assets.paths << bower_path
+    # end
+    # # Precompile Bootstrap fonts
+    # config.assets.precompile << %r(bootstrap-sass/assets/fonts/bootstrap/[\w-]+\.(?:eot|svg|ttf|woff2?)$)
+    # # Minimum Sass number precision required by bootstrap-sass
+    # ::Sass::Script::Value::Number.precision = [8, ::Sass::Script::Value::Number.precision].max
+    ###
 
     # load custom classes
     config.autoload_paths += Dir["#{config.root}/lib/**/"]
