@@ -38,8 +38,6 @@
 
   <% else %>
 
-    <%= include_gon if include_gon?(controller_name, action_name) %>
-
     <% if admin_navbar?(controller_name) %>
 
       <%= render('shared/navbars/company_header', { company: @company }) %>

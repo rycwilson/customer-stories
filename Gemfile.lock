@@ -118,10 +118,6 @@ GEM
       activerecord (>= 4.0.0)
     globalid (0.4.2)
       activesupport (>= 4.2.0)
-    gon (6.2.1)
-      actionpack (>= 3.0)
-      multi_json
-      request_store (>= 1.0)
     google-ads-common (1.0.2)
       google-ads-savon (~> 1.0, >= 1.0.2)
       httpclient (~> 2.7)
@@ -269,8 +265,6 @@ GEM
     rb-inotify (0.10.0)
       ffi (~> 1.0)
     remotipart (1.4.3)
-    request_store (1.4.1)
-      rack (>= 1.4)
     responders (3.0.0)
       actionpack (>= 5.0)
       railties (>= 5.0)
@@ -369,7 +363,6 @@ DEPENDENCIES
   figaro
   font-awesome-rails
   friendly_id (~> 5.1.0)
-  gon
   google-adwords-api (= 1.4.0)
   googlecharts
   jquery-minicolors-rails

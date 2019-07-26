@@ -27,6 +27,12 @@ class ApplicationController < ActionController::Base
 
   helper_method :company_curator?
 
+  def index 
+    respond_to do |format| 
+      format.json { render({ json: user_signed_in? ? app_data : {} })} 
+    end
+  end
+
   def auth_test
     respond_to do |format|
       format.any do  # zapier sends GET request with Accept = */* (any format permissable)
@@ -135,28 +141,6 @@ class ApplicationController < ActionController::Base
   end
 
   protected
-
-  def set_gon (company=nil)
-    is_curator = (user_signed_in? && (current_user.company_id == company.try(:id)))
-    gon.push({
-      company: company.present? ? JSON.parse(company.to_json({
-        methods: [:curators, :customers, :invitation_templates, :plugin],
-      })) : nil,
-      current_user: user_signed_in? ? {
-        id: current_user.id,
-        first_name: current_user.first_name,
-        last_name: current_user.last_name,
-        name: current_user.full_name,
-        title: current_user.title,
-        email: current_user.email,
-        phone: current_user.phone,
-        photo: current_user.photo_url,
-        is_curator: is_curator
-      } : nil,
-      stories: company.present? ? company.stories_json : nil,
-      env: csp_environment
-    })
-  end
 
   def csp_environment
     if ENV['HOST_NAME'] == 'customerstories.net'
@@ -340,5 +324,44 @@ class ApplicationController < ActionController::Base
       controller: 'application',
       action: 'linkedin_auth_callback'
     })
+  end
+
+
+  # is_curator = (user_signed_in? && (current_user.company_id == company.try(:id)))
+  #   gon.push({
+  #     company: company.present? ? JSON.parse(company.to_json({
+  #       methods: [:curators, :customers, :invitation_templates, :plugin],
+  #     })) : nil,
+  #     current_user: user_signed_in? ? {
+  #       id: current_user.id,
+  #       first_name: current_user.first_name,
+  #       last_name: current_user.last_name,
+  #       name: current_user.full_name,
+  #       title: current_user.title,
+  #       email: current_user.email,
+  #       phone: current_user.phone,
+  #       photo: current_user.photo_url,
+  #       is_curator: is_curator
+  #     } : nil,
+  #     stories: company.present? ? company.stories_json : nil,
+  #     env: csp_environment
+  #   })
+
+
+  # loaded by js for signed in curators
+  def app_data 
+    company = current_user.company
+    {
+      current_user: current_user.as_json({
+          only: [:id, :company_id, :first_name, :last_name, :title, :email, :phone, :photo_url],
+          methods: [:full_name]
+      }),
+      company: company.as_json({  
+            only: [:id, :name, :subdomain],
+            methods: [:curators, :customers, :invitation_templates, :plugin]
+          }),
+      stories: company.stories_json,
+      env: csp_environment
+    }
   end
 end

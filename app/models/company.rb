@@ -476,7 +476,6 @@ class Company < ApplicationRecord
       self.product_select_fragments_memcache_iterator + 1)
   end
 
-  # stories_json returns data included in the client via the gon object
   def stories_json
     Rails.cache.fetch("#{self.subdomain}/stories_json") do
       JSON.parse(

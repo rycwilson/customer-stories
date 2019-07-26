@@ -52,6 +52,7 @@ Rails.application.routes.draw do
   # valid subdomains (company/subdomain exists, excludes www)
   constraints(CompanySubdomain) do
 
+    get '/app', to: 'application#index', format: 'json'
     get '/', to: 'stories#index'
 
     get '/plugins/:type/cs', to: 'plugins#main'

@@ -17,7 +17,6 @@ class StoriesController < ApplicationController
     authenticate_user!
     user_authorized?(@story, current_user)
   end
-  before_action(only: [:index, :show, :edit]) { set_gon(@company) }
   before_action(only: [:show]) { set_public_story_or_redirect(@company) }
   before_action(only: [:show, :approval]) { set_contributors(@story) }
   before_action :set_s3_direct_post, only: :edit
