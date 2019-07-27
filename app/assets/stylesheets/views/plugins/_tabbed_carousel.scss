@@ -7,7 +7,7 @@
 
 .cs-section {
   position: fixed;
-  bottom: -48px;   // matches height .cs-header-row
+  bottom: 0;   // matches height .cs-header-row
   overflow: hidden;
   z-index: 1000;
   width: 100%;

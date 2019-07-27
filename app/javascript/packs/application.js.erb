@@ -21,14 +21,14 @@ import Rails from 'rails-ujs';
 import Turbolinks from 'turbolinks'; 
 Rails.start();
 Turbolinks.start();
+window.$ = $; window.jQuery = jQuery;
 
 /* jquery-ui must appear before bootstrap, per https://stackoverflow.com/questions/13731400 */
 import 'jquery-ui/ui/widget';
 import 'bootstrap-sass/assets/javascripts/bootstrap';
+require('../vendor/jquery_plugins');
 
 const APP = getAppData();
-console.log('APP', APP)
-APP.reload();
 
 // const _ = require('underscore');
 

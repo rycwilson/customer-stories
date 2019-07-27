@@ -111,78 +111,7 @@ function deconstructPlugins () {
 
 }
 
-// this mirrors the function in cs.js.erb
-function slideDrawerPlugin ($container) {
 
-  var drawer = {
-
-    init: function (options, div) {
-
-      if (options.showDrawer === true && options.slideTimeout === true) {
-        setTimeout(function() {
-          drawer.slide(div, options.drawerHiddenHeight, options.slideSpeed);
-        }, options.slideTimeoutCount);
-      } else if (options.showDrawer === 'slide') {
-        // Set drawer hidden with slide effect
-        drawer.slide(div, options.drawerHiddenHeight, options.slideSpeed);
-      } else if (options.showDrawer === false) {
-        // Set drawer to hide
-        drawer.hide(options, div);
-      }
-      $container.on(
-        'click',
-        '.visible-xs-block .cs-header:not([class*="remove"]), .hidden-xs .cs-header:not([class*="remove"])',
-        function () {
-          drawer.toggle(options, div);
-        }
-      );
-    },
-    toggle: function (options, div) {
-      ($(div).height() + options.borderHeight === options.drawerHeight) ?
-        drawer.slide( div, options.drawerHiddenHeight, options.slideSpeed ) :
-        drawer.slide( div, options.drawerHeight - options.borderHeight, options.slideSpeed );
-    },
-    slide: function (div, height, speed) {
-      $(div).animate({ 'height': height }, speed, 'swing', function () {
-        $container.find('.cs-header i[class*="fa-chevron"]').toggle();
-        $container.find('header').toggleClass('open closed');
-      });
-    },
-    hide: function (options, div) {
-      $(div).css('height', options.drawerHiddenHeight);
-    },
-
-  };
-
-  // Function wrapper
-  $.fn.slideDrawer = function (options) {
-
-    var $drawerContent = $container.find('.cs-drawer-content'),  /* Content height of drawer */
-        borderHeight = parseInt($drawerContent.css('border-top-width')); /* Border height of content */
-
-    var drawerHeight = this.height() + borderHeight; /* Total drawer height + border height */
-    var drawerContentHeight = $drawerContent.outerHeight(); //- borderHeight; /* Total drawer content height minus border top */
-    var drawerHiddenHeight = (drawerHeight - drawerContentHeight) - borderHeight; /* How much to hide the drawer, total height minus content height */
-    var defaults = {
-      showDrawer: 'slide', /* Drawer hidden on load by default, options (true, false, slide) */
-      slideSpeed: 400, /* Slide drawer speed 3 secs by default */
-      slideTimeout: true, /* Sets time out if set to true showDrawer false will be ignored */
-      slideTimeoutCount: 5000, /* How long to wait before sliding drawer */
-      drawerContentHeight: drawerContentHeight, /* Div content height no including tab or border */
-      drawerHeight: drawerHeight, /* Full div height */
-      drawerHiddenHeight: drawerHiddenHeight, /* Height of div when hidden full height minus content height */
-      borderHeight: borderHeight /* border height if set in css you cann overwrite but best just leave alone */
-    };
-
-    /* Overwrite defaults */
-    var pluginOptions = $.extend(defaults, options);
-
-    return this.each(function () {
-      drawer.init(pluginOptions, this);
-    });
-  };
-
-}
 
 // datetime-moment plugin
 // https://datatables.net/plug-ins/sorting/datetime-moment
@@ -239,28 +168,6 @@ function slideDrawerPlugin ($container) {
 
     }));
 
-// social sharing
-$.fn.popupWindow = function (e, width, height) {
-  // Prevent default anchor event
-  e.preventDefault();
-  // Fixes dual-screen position                         Most browsers      Firefox
-  var dualScreenLeft = window.screenLeft !== undefined ? window.screenLeft : screen.left;
-  var dualScreenTop = window.screenTop !== undefined ? window.screenTop : screen.top;
 
-  var windowWidth = window.innerWidth ? window.innerWidth : document.documentElement.clientWidth ? document.documentElement.clientWidth : screen.width;
-  var windowHeight = window.innerHeight ? window.innerHeight : document.documentElement.clientHeight ? document.documentElement.clientHeight : screen.height;
-
-  // Set values for window
-  width = width || windowWidth;
-  height = height || windowHeight;
-
-  var left = ((windowWidth / 2) - (width / 2)) + dualScreenLeft;
-  var top = ((windowHeight / 2) - (height / 2)) + dualScreenTop;
-
-  // Set title and open popup with focus on it
-  var strTitle = ((typeof this.attr('title') !== 'undefined') ? this.attr('title') : 'Social Share'),
-      strParam = 'width=' + width + ',height=' + height + ',top=' + top + ',left=' + left + ',resizable=no',
-      objWindow = window.open(this.attr('href'), 'shareWindow', strParam).focus();
-};
 
 
