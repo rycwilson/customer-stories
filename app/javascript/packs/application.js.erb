@@ -17,34 +17,35 @@
 import 'core-js/stable';
 import 'regenerator-runtime/runtime';
 
-import Rails from 'rails-ujs'; 
-import Turbolinks from 'turbolinks'; 
-Rails.start();
-Turbolinks.start();
 window.$ = $; window.jQuery = jQuery;
+require('../vendor/jquery_plugins');
+
+import Rails from 'rails-ujs'; 
+import turbolinks from 'vendor/turbolinks'; 
+import global from 'global';
 
 /* jquery-ui must appear before bootstrap, per https://stackoverflow.com/questions/13731400 */
 import 'jquery-ui/ui/widget';
 import 'bootstrap-sass/assets/javascripts/bootstrap';
-require('../vendor/jquery_plugins');
 
-const APP = getAppData();
+window.APP = window.APP || buildApp();
+APP.init();  
 
-// const _ = require('underscore');
-
-$(function () {
-  console.log('ready')
-})  
-
-import prospect from 'companies/1_prospect/prospect_module';
-// prospect.init();
-
-function getAppData() {
+function buildApp() {
   const app = { 
     current_user: {}, 
     company: {}, 
     stories: {}, 
     env: '', 
+    browser: {  // ref: http://stackoverflow.com/questions/9847580
+      isChrome: !!window.chrome && !!window.chrome.webstore,
+      isSafari: Object.prototype.toString.call(window.HTMLElement).indexOf('Constructor') > 0,
+      isFirefox: typeof InstallTrigger !== 'undefined'
+    },
+    init: () => {
+      Rails.start();
+      turbolinks.init();
+    },
     reload: (callback = () => true) => { 
       $.getJSON('/app', function (data, status, xhr) {
         Object.assign(APP, data);
@@ -57,3 +58,4 @@ function getAppData() {
   });
   return app;
 }
+
