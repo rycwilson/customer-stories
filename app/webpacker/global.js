@@ -1,7 +1,7 @@
 
-import companies from 'views/companies/index';
-import stories from 'views/stories/index';
-import profile from 'views/profile/index';
+import companies from 'views/companies';
+import stories from 'views/stories';
+import profile from 'views/profile';
 
 const global = {
   attachListeners: () => {
