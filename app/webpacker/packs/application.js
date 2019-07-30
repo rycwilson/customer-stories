@@ -20,15 +20,17 @@ import 'regenerator-runtime/runtime';
 window.$ = $; window.jQuery = jQuery;
 require('../vendor/jquery_plugins');
 
+import global from 'global';
 import Rails from 'rails-ujs'; 
 import turbolinks from 'vendor/turbolinks'; 
-import global from 'global';
 
 /* jquery-ui must appear before bootstrap, per https://stackoverflow.com/questions/13731400 */
 import 'jquery-ui/ui/widget';
 import 'bootstrap-sass/assets/javascripts/bootstrap';
+import ResponsiveBootstrapToolkit from 'responsive-toolkit';
 
 window.APP = window.APP || buildApp();
+getBootstrapViewport(ResponsiveBootstrapToolkit);
 APP.init();
 
 function buildApp() {
@@ -42,6 +44,7 @@ function buildApp() {
       isSafari: Object.prototype.toString.call(window.HTMLElement).indexOf('Constructor') > 0,
       isFirefox: typeof InstallTrigger !== 'undefined'
     },
+    screenSize: undefined,
     init: () => {
       Rails.start();
       turbolinks.init();
@@ -54,8 +57,16 @@ function buildApp() {
     }
   }
   $.getJSON('/app', function (data, status, xhr) { 
-    Object.assign(app, data)
+    Object.assign(APP, data)
   });
   return app;
 }
 
+function getBootstrapViewport(viewport) {
+  $(document).ready(() => {
+    if (viewport.is('xs')) APP.screenSize = 'xs';
+    else if (viewport.is('sm')) APP.screenSize = 'sm';
+    else if (viewport.is('md')) APP.screenSize = 'md';
+    else if (viewport.is('lg')) APP.screenSize = 'lg';
+  })
+}

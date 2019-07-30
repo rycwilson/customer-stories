@@ -3,8 +3,8 @@ const profile = {
   edit: () => {
     console.log('profile.edit()')
   },
-  attachListeners: () => {
-    console.log('profile.attachListeners()')
+  addListeners: () => {
+    console.log('profile.addListeners()')
   }
 };
 

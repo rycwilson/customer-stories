@@ -1,16 +1,12 @@
 
-const companies = {
-  show: () => {
-    console.log('companies.show()')
-  },
-  edit: () => {
-    console.log('companies.edit()')
-  },
-  attachListeners: () => {
-    console.log('companies.attachListeners()')
-    // dashboard.attachListeners();
-    // settings.attachListeners();
-  }
-};
+import show from './show';
+import edit from './edit';
 
-export default companies;
+export default {
+  show: show,
+  edit: edit,
+  addListeners: () => {
+    show.addListeners();
+    edit.addListeners();
+  }
+}

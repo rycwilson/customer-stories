@@ -1,24 +1,28 @@
 (($) => {
 
-  $.fn.slideDrawer = function (userOptions) {
-    const $drawerContent = this.find('.cs-drawer-content'),  
-          borderHeight = parseInt($drawerContent.css('border-top-width')),
-          drawerHeight = this.height() + borderHeight, /* Total drawer height + border height */
-          drawerContentHeight = $drawerContent.outerHeight(), //- borderHeight; /* Total drawer content height minus border top */
-          drawerHiddenHeight = (drawerHeight - drawerContentHeight) - borderHeight, /* How much to hide the drawer, total height minus content height */
-          defaultOptions = {
+  const imagesLoaded = require('imagesloaded');
+  imagesLoaded.makeJQueryPlugin($);
+
+  // tabbed carousel 
+  $.fn.slideDrawer = function (userOptions = {}) {
+    const $drawerContent = this.find('.cs-drawer-content');
+    const borderHeight = parseInt($drawerContent.css('border-top-width'));
+    const drawerHeight = this.height() + borderHeight; /* Total drawer height + border height */
+    const drawerContentHeight = $drawerContent.outerHeight(); //- borderHeight; /* Total drawer content height minus border top */
+    const drawerHiddenHeight = (drawerHeight - drawerContentHeight) - borderHeight; /* How much to hide the drawer, total height minus content height */
+    const defaultOptions = {
             // hidden on load by default, options (true, false, slide)
             showDrawer: 'slide',
             slideSpeed: 400, 
             slideTimeout: false, /* Sets time out if set to true showDrawer false will be ignored */
             slideTimeoutCount: 5000, /* How long to wait before sliding drawer */
-            drawerContentHeight: drawerContentHeight, /* Div content height no including tab or border */
+            drawerContentHeight: drawerContentHeight, /* Div content height not including tab or border */
             drawerHeight: drawerHeight, /* Full div height */
             drawerHiddenHeight: drawerHiddenHeight, /* Height of div when hidden full height minus content height */
             borderHeight: borderHeight /* border height if set in css you cann overwrite but best just leave alone */
-          },
-          options = Object.assign(defaultOptions, userOptions || {}),
-          drawer = {
+          };
+    const options = Object.assign(defaultOptions, userOptions);
+    const drawer = {
             init: (container) => {
               if (options.showDrawer === true && options.slideTimeout === true) {
                 setTimeout(

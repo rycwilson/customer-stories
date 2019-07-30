@@ -1,17 +1,15 @@
 
-const stories = {
-  index: () => {
-    console.log('stories.index()')
-  },
-  show: () => {
-    console.log('stories.show()')
-  },
-  edit: () => {
-    console.log('stories.edit()')
-  },
-  attachListeners: () => {
-    console.log('stories.attachListeners()');
+import gallery from './gallery';
+import show from './show';
+import edit from './edit';
+
+export default {
+  gallery: gallery,
+  show: show,
+  edit: edit,
+  addListeners: () => {
+    gallery.addListeners();
+    show.addListeners();
+    edit.addListeners();
   }
 };
-
-export default stories;

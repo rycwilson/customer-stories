@@ -33,8 +33,6 @@
       }
     ) %>
 
-<%=  %>
-
 <%= render(
       'stories/show/story',
       {
@@ -66,7 +64,7 @@
 
 <div class="hidden-xs">
 
-  <% if @more_stories.present? && @company.subdomain != 'varmour' %>
+  <%# if @more_stories.present? && @company.subdomain != 'varmour' %>
 
     <div id="cs-tabbed-carousel"> 
       <%= render(
@@ -83,7 +81,7 @@
           ) %>
     </div>
 
-  <% end %>
+  <%# end %>
 
 </div>
 

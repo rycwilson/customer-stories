@@ -4,10 +4,10 @@ import stories from 'views/stories';
 import profile from 'views/profile';
 
 const global = {
-  attachListeners: () => {
-    companies.attachListeners();
-    stories.attachListeners();
-    profile.attachListeners();
+  addListeners: () => {
+    companies.addListeners();
+    stories.addListeners();
+    profile.addListeners();
   }
 }
 

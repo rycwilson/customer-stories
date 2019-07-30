@@ -2,15 +2,15 @@
 import companies from './companies/index';
 import stories from './stories/index';
 import profile from './profile/index';
+import flash from '../lib/flash';
 
 const views = {
         companies: {
-          new: companies.new,
           show: companies.show,
           edit: companies.edit
         },
         stories: {
-          index: stories.index,
+          gallery: stories.gallery,
           show: stories.show,
           edit: stories.edit
         },
@@ -21,13 +21,13 @@ const views = {
       };
 
 const view = {
-        init: (controller, action) => {
-          if (!views[controller] || typeof views[controller][action] !== 'function') {
+  init: (controller, action) => {
+          if ($('#flash').is(':visible')) flash.timeout();
+          if (!views[controller] || typeof views[controller][action].init !== 'function') {
             return false;
           }
-          // if ($('#flash').is(':visible')) { flashTimeout(); }
-          views[controller][action]();
+          views[controller][action].init();
         }
-      };
+};
 
 export default view;

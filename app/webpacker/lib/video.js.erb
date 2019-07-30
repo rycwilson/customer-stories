@@ -1,0 +1,159 @@
+
+export default {
+
+  loadThumbnail: (callback = () => true) => {
+    // note there are actually two thumb containers: regular and xs
+    const $thumbContainers = $(".video-thumb-container");
+
+    // no video, or wistia videoId
+    if ($('.testimonial').hasClass('no-video') || $thumbContainers.length === 0 ) {
+      callback();
+      return false;
+    }
+
+    const provider = $thumbContainers.data('provider');
+    const videoId = $thumbContainers.data('video-id');
+    const videoUrl = $thumbContainers.data("video-url");
+    // const videoQuery = '', thumbSrc = '';
+
+    if (provider === 'youtube') {
+      loadYoutubeThumbnail($thumbContainers, videoId, callback)
+    } else if (provider === 'vimeo') {
+      loadVimeoThumbnail($thumbContainers, videoId, callback)
+    }
+  },
+
+  addListeners: () => {
+    playVideo();
+  }
+
+}
+
+function playVideo() {
+console.log('playVideo')
+  $(document).on(
+    'click',
+    '.video-thumb-container img, .video-thumb-container .play-button',
+    (e) => {
+      const $thumbContainers = $('.video-thumb-container');
+      const $modal = $('#video-modal');
+      const provider = $thumbContainers.data('provider');
+      const videoId = $thumbContainers.data('video-id');
+      const playerWindow = $modal.find('iframe')[0].contentWindow;
+      const pauseVideo = () => {
+        if (provider === 'youtube') {
+          playerWindow.postMessage('{"event":"command","func":"pauseVideo","args":""}', '*');
+        } else if (provider === 'vimeo') {
+          playerWindow.postMessage('{"method":"pause"}', '*');
+        }
+      };
+      let videoUrl = $thumbContainers.data('video-url');
+      let query;
+
+    if (provider === 'youtube') {
+      query = (videoUrl.includes('?') ? '&' : '?') + 'autoplay=1&enablejsapi=1&controls=0&iv_load_policy=3&showinfo=0&rel=0';
+    } else if (provider === 'vimeo') {
+      query = (videoUrl.includes('?') ? '&' : '?') + 'autoplay=1';
+    }
+    videoUrl = videoUrl + query;
+
+    if ($(document).width() < 768) {
+      $('.story-video-xs iframe')
+        .one('load', function () {
+            $(this).closest('.video-thumb-container')
+                     .children(':not(iframe)')
+                       .remove()  // remove thumbnail image and play button
+                       .end()
+                     .end()
+                   .removeClass('hidden')
+          })
+        .attr('src', videoUrl);
+
+    // play video in modal
+    } else { 
+      playerWindow.location.replace(videoUrl);
+      $modal.find('button.close')
+              .on('click', pauseVideo)
+              .end()
+            .one('hide.bs.modal', pauseVideo)
+            .one('hidden.bs.modal', () => {})
+      // warning: this has historically caused browser to hang
+      // playerWindow.location.replace('');
+    }
+  });
+}
+
+function loadYoutubeThumbnail($thumbContainers, videoId, callback = () => true) {
+  // ref: http://stackoverflow.com/questions/2068344
+  const thumbSrc = `https://img.youtube.com/vi/${videoId}/hqdefault.jpg`;
+  $.when($thumbContainers.append(`<img src="${thumbSrc}">`))
+    .done(() => {
+      $thumbContainers.imagesLoaded().done(function () {
+        // original width of 120 indicates youtube thumbnail not available
+        if ($thumbContainers.find('img')[0].naturalWidth === 120) {
+          if ($('body').hasClass('stories show')) {
+            removeVideo(callback);
+          } else {
+            loadPlaceholder($thumbContainers);
+          }
+        } else {
+          $.when(
+            $thumbContainers.find('img').after(`
+              <div class="play-button">
+                <i class="fa fa-2x fa-inverse fa-play"></i>
+              </div>
+            `)
+          ).done(callback);
+        }
+      });
+    });
+}
+
+function loadVimeoThumbnail($thumbContainers, videoId, callback = () => true) {
+  $.getJSON(
+    `https://vimeo.com/api/oembed.json?url=https%3A//vimeo.com/${videoId}`,
+    (data, status, xhr) => {
+      $.when( 
+        $thumbContainers.append(`
+          <div><img class="video-thumb" src="${data.thumbnail_url_with_play_button}" alt="vimeo thumbnail"></div>
+        `)
+      ).done(callback);
+    }
+  )
+    .fail((data, status, xhr) => {
+      if ($('body').hasClass('stories show')) {
+        removeVideo(callback);
+      } else {
+        loadPlaceholder($thumbContainers);
+        // strange but necessary css setting adds a huge bottom padding, see video.scss
+        // needs to be removed for the placeholder
+        $thumbContainers.css('padding-bottom', '0');
+        callback();
+      }
+    })
+}
+
+function loadPlaceholder($thumbContainers) {
+  /*const url = "<%%= asset_path('video_placeholder.jpg') %>"
+  $thumbContainers.empty().append(
+    `<img id="video-placeholder" src="${url}" alt="video placeholder">`
+  );*/
+}
+
+function removeVideo(callback = () => true) {
+  if (App.screenSize === 'xs') {
+    $('.story-video-xs').remove();
+    callback();
+  } else {
+    $.ajax({
+      url: window.location.pathname,
+      method: 'get',
+      data: { remove_video: true },
+      dataType: 'html'
+    })
+      .done((html, status, xhr) => {
+        $.when( $('.testimonial').empty().append(html) )
+          .done(callback);
+      })
+  }
+}

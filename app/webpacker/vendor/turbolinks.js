@@ -6,18 +6,18 @@ import view from '../views/index';
 const turbolinks = {
   init: () => {
     Turbolinks.start();  // TODO is this really necessary? never had it before
-    attachListeners();
+    addListeners();
   }
 };
 
 export default turbolinks;
 
-function attachListeners() {
+function addListeners() {
   $(document)
 
     // Fires once after the initial page load, and again after every Turbolinks visit. 
     // Access visit timing metrics with the event.data.timing object
-    .one('turbolinks:load', global.attachListeners)
+    .one('turbolinks:load', global.addListeners)
     .on('turbolinks:load', (e) => {
       const controllerAction = $('body').attr('class').split(' '),
             controller = controllerAction[0],
