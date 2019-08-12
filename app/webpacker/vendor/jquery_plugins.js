@@ -3,6 +3,10 @@
   const imagesLoaded = require('imagesloaded');
   imagesLoaded.makeJQueryPlugin($);
 
+  $.fn.forceRedraw = function () {
+    return this.hide(0, function () { $(this).show(); });
+  };
+
   // tabbed carousel 
   $.fn.slideDrawer = function (userOptions = {}) {
     const $drawerContent = this.find('.cs-drawer-content');
