@@ -10,7 +10,7 @@ const views = {
           edit: companies.edit
         },
         stories: {
-          gallery: stories.gallery,
+          index: stories.gallery,
           show: stories.show,
           edit: stories.edit
         },
@@ -20,14 +20,15 @@ const views = {
         }
       };
 
+
 const view = {
   init: (controller, action) => {
-          if ($('#flash').is(':visible')) flash.timeout();
-          if (!views[controller] || typeof views[controller][action].init !== 'function') {
-            return false;
-          }
-          views[controller][action].init();
-        }
+    if ($('#flash').is(':visible')) flash.timeout();
+    if (!views[controller] || typeof views[controller][action].init !== 'function') {
+      return false;
+    }
+    views[controller][action].init();
+  }
 };
 
 export default view;

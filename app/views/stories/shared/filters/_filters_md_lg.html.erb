@@ -21,7 +21,8 @@
       <div class="form-group">
 
         <%= label_tag(:category_select, "Category") %>
-        <%= select_tag(:category_select,
+        <%= select_tag(
+              :category_select,
               options_for_select(
                 company.story_categories.public_select_options,
                 pre_selected_filters['category'].present? ? pre_selected_filters['category'] : ''

@@ -2,8 +2,7 @@
 export default {
 
   init: () => {
-    // oldInit();
-
+    initFilters();
   },
 
   addListeners: () => {
@@ -17,6 +16,69 @@ export default {
         replaceStateStoriesIndex('', '');
         $('.stories-search-form .input-group-btn').addClass('show-clear');
       })
+      .on('change', '.stories-filter', function () {
+        const $categorySelect = $(this).closest('.filters-container')
+                                         .find('[name="category_select"]');
+        const categoryId = $categorySelect.val();
+        const categorySlug = categoryId && $categorySelect.find('option:selected').data('slug');
+        const $productSelect = $(this).closest('.filters-container')
+                                        .find('[name="product_select"]');
+        const productId = $productSelect.val();
+        const productSlug = productId && $productSelect.find('option:selected').data('slug');
+        const filteredStories = filterStories(categoryId, productId);
+        const filterResults = filteredStories.length === 1 ? 
+            "1 story found" : 
+            `${filteredStories.length} stories found`;
+        const categoryFilterResults = filterStories(categoryId, '').length === 1 ? 
+            "1 story found" : 
+            `${filterStories(categoryId, '').length} stories found`;
+        const productFilterResults = filterStories('', productId).length === 1 ? 
+            "1 story found" : 
+            `${filterStories('', productId).length} stories found`;
+  
+        syncSelectTags(categoryId, productId);
+  
+        // reset search
+        $('.stories-search').val('').trigger('input');
+        $('.search-results').hide();
+  
+        // show combined filter results (only when both filters are shown)
+        if (categoryId || productId) {
+          $('.filters-container.tall .combined-results')
+            .find('> span > span:last-child').text(filterResults).end()
+            .find('> span').show();
+          $('.filters-container.visible-xs-block .filter-results > span').text(filterResults);
+        } else {
+          $('.filters-container.tall .combined-results > span').hide();
+          $('.filters-container.visible-xs-block .filter-results > span').text('');
+        }
+  
+        // show individual filter results
+        $('.stories-filter').each(function () {
+          if ($(this).val()) {
+            $(this).closest('.form-group')
+                   .find('.filter-results > span')
+                   .text($(this).hasClass('category-select') ? categoryFilterResults : productFilterResults);
+          } else {
+            $(this).closest('.form-group').find('.filter-results > span').text('');
+          }
+        });
+  
+        // show results for grouped stories filter
+        if ($('#grouped-stories-filter').val()) {
+          $('#filters-container.visible-xs-block .filter-results > span').text(filterResults);
+        } else {
+          $('#filters-container.visible-xs-block .filter-results > span').text('');
+        }
+  
+        updateGallery($(
+          _.template($('#stories-template').html())({
+            stories: filteredStories,
+            isCurator: false
+          })
+        ));
+        replaceStateStoriesIndex(categorySlug, productSlug);
+      });
 
   }
 
@@ -48,7 +110,7 @@ function clearSearch () {
 }
 
 // this function also found in select2.js
-function prependTagType {
+function prependTagType() {
   $('.select2-selection__rendered li:not(:last-of-type)')
     .each(function (index, tag) {
       tagId = $('#grouped-stories-filter').select2('data')[index].id;
@@ -65,7 +127,7 @@ function prependTagType {
 
 // when selecting a filter, sync select tags across different views (xs, sm, md-lg)
 // change.select2 => prevents the change event from triggering
-function syncSelectTags = (categoryId, productId) {
+function syncSelectTags(categoryId, productId) {
   var multiSelectFilterVal = [];
   if (categoryId) multiSelectFilterVal.push('c' + categoryId);
   if (productId) multiSelectFilterVal.push('p' + productId);
@@ -73,9 +135,27 @@ function syncSelectTags = (categoryId, productId) {
   $('[name="product_select"]').val(productId).trigger('change.select2');
   $('[name="filter_select[]"]').val(multiSelectFilterVal).trigger('change.select2');
   prependTagType();
-};
+}
 
-function updateGallery ($stories) {
+function initFilters() {
+  $('.stories-filter').select2({
+    theme: 'bootstrap',
+    placeholder: 'Select',
+    allowClear: true,
+    width: 'style'   
+  })
+    .on('select2:unselecting', function () {
+      $(this).data('unselecting', true);
+    })
+    .on('select2:opening', function (e) {
+      if ($(this).data('unselecting')) {
+        $(this).removeData('unselecting');
+        e.preventDefault();
+      }
+    });
+}
+
+function updateGallery($stories) {
   $('#stories-gallery').imagesLoaded(() => {
     $('#stories-gallery')
       .empty()

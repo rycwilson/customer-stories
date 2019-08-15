@@ -28,6 +28,7 @@ import turbolinks from 'vendor/turbolinks';
 import 'jquery-ui/ui/widget';
 import 'bootstrap-sass/assets/javascripts/bootstrap';
 import ResponsiveBootstrapToolkit from 'responsive-toolkit';
+import 'select2/dist/js/select2';
 
 window.APP = window.APP || buildApp();
 getBootstrapViewport(ResponsiveBootstrapToolkit);
