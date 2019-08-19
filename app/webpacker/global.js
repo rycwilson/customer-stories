@@ -3,12 +3,12 @@ import companies from 'views/companies';
 import stories from 'views/stories';
 import profile from 'views/profile';
 
-const global = {
-  addListeners: () => {
-    companies.addListeners();
-    stories.addListeners();
-    profile.addListeners();
-  }
+export function addAppListeners() {
+  companies.addListeners();
+  stories.addListeners();
+  profile.addListeners();
 }
 
-export default global;
+export function pluck(array, key) {
+  return array.map(obj => obj[key]);
+}

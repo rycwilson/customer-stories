@@ -20,7 +20,6 @@ import 'regenerator-runtime/runtime';
 window.$ = $; window.jQuery = jQuery;
 require('../vendor/jquery_plugins');
 
-import global from 'global';
 import Rails from 'rails-ujs'; 
 import turbolinks from 'vendor/turbolinks'; 
 

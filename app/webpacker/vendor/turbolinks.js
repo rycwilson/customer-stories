@@ -1,6 +1,6 @@
 
 import Turbolinks from 'turbolinks';
-import global from '../global';
+import { addAppListeners } from '../global';
 import view from '../views/index';
 
 const turbolinks = {
@@ -17,7 +17,7 @@ function addListeners() {
 
     // Fires once after the initial page load, and again after every Turbolinks visit. 
     // Access visit timing metrics with the event.data.timing object
-    .one('turbolinks:load', global.addListeners)
+    .one('turbolinks:load', addAppListeners)
     .on('turbolinks:load', (e) => {
       const controllerAction = $('body').attr('class').split(' '),
             controller = controllerAction[0],

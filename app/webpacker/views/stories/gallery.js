@@ -1,15 +1,34 @@
 
+import { pluck } from 'global';
+import _intersection from 'lodash/intersection';
+import _template from 'lodash/template';
+import _templateSettings from 'lodash/templateSettings';
+import storyCardTemplate from './story_card_template';
+
+// custom template delimiters (to avoid clashing with erb)
+// https://stackoverflow.com/questions/9802402
+_templateSettings.evaluate = /{{([\s\S]+?)}}/g;
+_templateSettings.interpolate = /{{=([\s\S]+?)}}/g;
+
+// test example - works
+// const compiled = _template(story_cards);
+// console.log(
+//   compiled({ cities: ['Sacramento', 'San Francisco', 'Los Angeles'] })
+// )
+
 export default {
 
   init: () => {
     initFilters();
+    // console.log(story_cards);
   },
 
   addListeners: () => {
+    
+
     $(document)
       .on('input', '.stories-search', handleSearchInput)
       .on('click', '.submit-search', handleSearchSubmission)
-
       .on('click', '.clear-search', clearSearch)
       .on('submit', '.stories-search-form', function () {
         $('.search-results').text('');
@@ -71,12 +90,21 @@ export default {
           $('#filters-container.visible-xs-block .filter-results > span').text('');
         }
   
-        updateGallery($(
-          _.template($('#stories-template').html())({
-            stories: filteredStories,
-            isCurator: false
+        const storyCardsHtml = filteredStories.reduce(function (html, currentStory) {
+          return html + _template(storyCardTemplate)({
+            story: currentStory,
+            storyLink: (currentStory.published && currentStory.csp_story_path) || 
+                       (currentStory.preview_published && 'javascript:;'),
+            storySlug: currentStory.csp_story_path.match(/\/((\w|-)+)$/)[1],
+            className: `public ${ currentStory.published ? 'published' : (currentStory.preview_published ? 'preview-published' : 'logo-published') }`,
+            customerSlug: currentStory.csp_story_path.match(/^\/((\w|-)+)\//)[1],
           })
-        ));
+        })
+
+        console.log(storyCardsHtml)
+
+        // updateGallery( $(storyCardsHtml) );
+
         replaceStateStoriesIndex(categorySlug, productSlug);
       });
 
@@ -170,23 +198,29 @@ function filterStories(categoryId, productId) {
           return story.logo_published || story.preview_published;
         });
   const categoryStoryIds = categoryId ? 
-          _.pluck(publicStories.filter((story) => {
+          pluck(
+            publicStories.filter(story => {
               return story.success.story_categories &&
-                  story.success.story_categories.some((category) => {
+                  story.success.story_categories.some(category => {
                     return category.id == categoryId;
                   });
-            }), 'id') :
-          _.pluck(publicStories, 'id');
+            }), 
+            'id'
+          ) :
+          pluck(publicStories, 'id');
   const productStoryIds = productId ? 
-          _.pluck(publicStories.filter((story) => {
+          pluck(
+            publicStories.filter(story => {
               return story.success.products &&
-                  story.success.products.some((product) => {
+                  story.success.products.some(product => {
                     return product.id == productId;
                   });
-            }), 'id') :
-          _.pluck(publicStories, 'id');
-  const storyIds = _.intersection(categoryStoryIds, productStoryIds);
-  return publicStories.filter((story) => storyIds.includes(story.id));
+            }), 
+            'id'
+          ) :
+          pluck(publicStories, 'id');
+  const storyIds = _intersection(categoryStoryIds, productStoryIds);
+  return publicStories.filter(story => storyIds.includes(story.id));
 }
 
 function oldInit () {

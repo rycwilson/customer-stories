@@ -6,6 +6,7 @@
     "jquery": "^3.4.1",
     "jquery-ui": "^1.12.1",
     "jscookie": "^1.1.0",
+    "lodash": "^4.17.15",
     "rails-erb-loader": "^5.5.2",
     "rails-ujs": "^5.2.3",
     "responsive-toolkit": "^2.6.3",

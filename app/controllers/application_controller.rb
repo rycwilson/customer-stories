@@ -29,7 +29,7 @@ class ApplicationController < ActionController::Base
 
   def index 
     respond_to do |format| 
-      format.json { render({ json: user_signed_in? ? app_data : {} })} 
+      format.json { render({ json: app_data }) } 
     end
   end
 
@@ -328,16 +328,16 @@ class ApplicationController < ActionController::Base
 
   # loaded by js for signed in curators
   def app_data 
-    company = current_user.company
+    company = Company.find_by subdomain: request.subdomain
     {
-      current_user: current_user.as_json({
+      current_user: user_signed_in? && current_user.as_json({
           only: [:id, :company_id, :first_name, :last_name, :title, :email, :phone, :photo_url],
           methods: [:full_name]
-      }),
-      company: company.as_json({  
-            only: [:id, :name, :subdomain],
-            methods: [:curators, :customers, :invitation_templates, :plugin]
-          }),
+        }),
+      company: user_signed_in? && company.as_json({  
+          only: [:id, :name, :subdomain],
+          methods: [:curators, :customers, :invitation_templates, :plugin]
+        }),
       stories: company.stories_json,
       env: csp_environment
     }
