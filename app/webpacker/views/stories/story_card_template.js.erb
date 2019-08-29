@@ -6,8 +6,15 @@ export default `
       data-story-slug="{{= storySlug }}" 
       data-customer-slug="{{= customerSlug }}">
 
-    <a href="{{= storyLink }}"
-       class="{{= className }}">
+    <a href="{{= storyLink }}" 
+      class="{{= className }}"
+      data-logosrc="{{= story.success.customer.logo_url }}"
+      data-customer='{{= JSON.stringify(story.success.customer.name) }}'
+      data-summary='{{= story.summary }}'
+      data-quote='{{= story.quote }}'
+      data-quote-attr-name='{{= JSON.stringify(story.quote_attr_name) }}'
+      data-quote-attr-title='{{= JSON.stringify(story.quote_attr_title) }}'
+      data-preview-contributor='{{= JSON.stringify(story.published_contributors[0]) }}'>
       
       <div class="thumbnail-view">
 
@@ -23,19 +30,18 @@ export default `
           <img src="<%= LOGO_PLACEHOLDER_URL %>">
         {{ } }}
 
-     </div>
+      </div>
 
-     <div class="caption">
-       <span class="customer-name">{{= story.success.customer.name }}</span>
-       <span class="click-action"></span>
-     </div>
+      <div class="caption">
+        <span class="customer-name">{{= story.success.customer.name }}</span>
+        <span class="click-action"></span>
+      </div>
 
-     <div class="icon-container">
-       <i class="fa fa-spin fa-circle-o-notch"></i>
-     </div>
+      <div class="icon-container">
+        <i class="fa fa-spin fa-circle-o-notch"></i>
+      </div>
 
     </a>
 
   </li>
-
 `

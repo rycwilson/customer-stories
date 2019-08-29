@@ -1,115 +1,28 @@
 
-import { pluck } from 'global';
 import _intersection from 'lodash/intersection';
 import _template from 'lodash/template';
 import _templateSettings from 'lodash/templateSettings';
 import storyCardTemplate from './story_card_template';
+import { pluck } from 'global';
 
 // custom template delimiters (to avoid clashing with erb)
 // https://stackoverflow.com/questions/9802402
 _templateSettings.evaluate = /{{([\s\S]+?)}}/g;
 _templateSettings.interpolate = /{{=([\s\S]+?)}}/g;
 
-// test example - works
-// const compiled = _template(story_cards);
-// console.log(
-//   compiled({ cities: ['Sacramento', 'San Francisco', 'Los Angeles'] })
-// )
-
 export default {
-
   init: () => {
     initFilters();
     // console.log(story_cards);
   },
-
   addListeners: () => {
-    
-
     $(document)
       .on('input', '.stories-search', handleSearchInput)
-      .on('click', '.submit-search', handleSearchSubmission)
+      .on('click', '.submit-search', handleSearchClick)
       .on('click', '.clear-search', clearSearch)
-      .on('submit', '.stories-search-form', function () {
-        $('.search-results').text('');
-        replaceStateStoriesIndex('', '');
-        $('.stories-search-form .input-group-btn').addClass('show-clear');
-      })
-      .on('change', '.stories-filter', function () {
-        const $categorySelect = $(this).closest('.filters-container')
-                                         .find('[name="category_select"]');
-        const categoryId = $categorySelect.val();
-        const categorySlug = categoryId && $categorySelect.find('option:selected').data('slug');
-        const $productSelect = $(this).closest('.filters-container')
-                                        .find('[name="product_select"]');
-        const productId = $productSelect.val();
-        const productSlug = productId && $productSelect.find('option:selected').data('slug');
-        const filteredStories = filterStories(categoryId, productId);
-        const filterResults = filteredStories.length === 1 ? 
-            "1 story found" : 
-            `${filteredStories.length} stories found`;
-        const categoryFilterResults = filterStories(categoryId, '').length === 1 ? 
-            "1 story found" : 
-            `${filterStories(categoryId, '').length} stories found`;
-        const productFilterResults = filterStories('', productId).length === 1 ? 
-            "1 story found" : 
-            `${filterStories('', productId).length} stories found`;
-  
-        syncSelectTags(categoryId, productId);
-  
-        // reset search
-        $('.stories-search').val('').trigger('input');
-        $('.search-results').hide();
-  
-        // show combined filter results (only when both filters are shown)
-        if (categoryId || productId) {
-          $('.filters-container.tall .combined-results')
-            .find('> span > span:last-child').text(filterResults).end()
-            .find('> span').show();
-          $('.filters-container.visible-xs-block .filter-results > span').text(filterResults);
-        } else {
-          $('.filters-container.tall .combined-results > span').hide();
-          $('.filters-container.visible-xs-block .filter-results > span').text('');
-        }
-  
-        // show individual filter results
-        $('.stories-filter').each(function () {
-          if ($(this).val()) {
-            $(this).closest('.form-group')
-                   .find('.filter-results > span')
-                   .text($(this).hasClass('category-select') ? categoryFilterResults : productFilterResults);
-          } else {
-            $(this).closest('.form-group').find('.filter-results > span').text('');
-          }
-        });
-  
-        // show results for grouped stories filter
-        if ($('#grouped-stories-filter').val()) {
-          $('#filters-container.visible-xs-block .filter-results > span').text(filterResults);
-        } else {
-          $('#filters-container.visible-xs-block .filter-results > span').text('');
-        }
-  
-        const storyCardsHtml = filteredStories.reduce(function (html, currentStory) {
-          return html + _template(storyCardTemplate)({
-            story: currentStory,
-            storyLink: (currentStory.published && currentStory.csp_story_path) || 
-                       (currentStory.preview_published && 'javascript:;'),
-            storySlug: currentStory.csp_story_path.match(/\/((\w|-)+)$/)[1],
-            className: `public ${ currentStory.published ? 'published' : (currentStory.preview_published ? 'preview-published' : 'logo-published') }`,
-            customerSlug: currentStory.csp_story_path.match(/^\/((\w|-)+)\//)[1],
-          })
-        })
-
-        console.log(storyCardsHtml)
-
-        // updateGallery( $(storyCardsHtml) );
-
-        replaceStateStoriesIndex(categorySlug, productSlug);
-      });
-
+      .on('submit', '.stories-search-form', handleSearchSubmission)
+      .on('change', '.stories-filter', handleFilterChange);
   }
-
 }
 
 function handleSearchInput (e) {
@@ -119,14 +32,20 @@ function handleSearchInput (e) {
   $('.stories-search-form .input-group-btn').removeClass('show-clear');
 }
 
-function handleSearchSubmission (e) {
+function handleSearchClick (e) {
   if ($(this).closest('form').find('.stories-search').val() === '') {
     return false;
   }
   $(this).closest('form').submit();
 }
 
-function clearSearch () {
+function handleSearchSubmission() {
+  $('.search-results').text('');
+  replacePageState('', '');
+  $('.stories-search-form .input-group-btn').addClass('show-clear');
+}
+
+function clearSearch() {
   $('.stories-search').val('').trigger('input');
   $('.search-results').text('');
   // updateGallery($(
@@ -135,6 +54,78 @@ function clearSearch () {
   //     isCurator: false
   //   })
   // ));
+}
+
+function handleFilterChange() {
+  const $categorySelect = $(this).closest('.filters-container')
+                                    .find('[name="category_select"]');
+  const categoryId = $categorySelect.val();
+  const categorySlug = categoryId && $categorySelect.find('option:selected').data('slug');
+  const $productSelect = $(this).closest('.filters-container')
+                                  .find('[name="product_select"]');
+  const productId = $productSelect.val();
+  const productSlug = productId && $productSelect.find('option:selected').data('slug');
+  const filteredStories = filterStories(categoryId, productId);
+  const filterResults = filteredStories.length === 1 ? 
+      "1 story found" : 
+      `${filteredStories.length} stories found`;
+  const categoryFilterResults = filterStories(categoryId, '').length === 1 ? 
+      "1 story found" : 
+      `${filterStories(categoryId, '').length} stories found`;
+  const productFilterResults = filterStories('', productId).length === 1 ? 
+      "1 story found" : 
+      `${filterStories('', productId).length} stories found`;
+  const storyCardsHtml = filteredStories.reduce(function (html, currentStory) {
+    return html + _template(storyCardTemplate)({
+      story: currentStory,
+      storyLink: (currentStory.published && currentStory.csp_story_path) || 
+                  (currentStory.preview_published && 'javascript:;'),
+      storySlug: currentStory.csp_story_path.match(/\/((\w|-)+)$/)[1],
+      className: `public ${ currentStory.published ? 'published' : (currentStory.preview_published ? 'preview-published' : 'logo-published') }`,
+      customerSlug: currentStory.csp_story_path.match(/^\/((\w|-)+)\//)[1],
+    })
+  })
+    .replace('[object Object]', '');  // TODO: wtf is up with this?
+
+  console.log(storyCardsHtml);
+
+
+  syncSelectTags(categoryId, productId);
+
+  // reset search
+  $('.stories-search').val('').trigger('input');
+  $('.search-results').hide();
+
+  // show combined filter results (only when both filters are shown)
+  if (categoryId || productId) {
+    $('.filters-container.tall .combined-results')
+      .find('> span > span:last-child').text(filterResults).end()
+      .find('> span').show();
+    $('.filters-container.visible-xs-block .filter-results > span').text(filterResults);
+  } else {
+    $('.filters-container.tall .combined-results > span').hide();
+    $('.filters-container.visible-xs-block .filter-results > span').text('');
+  }
+
+  // show individual filter results
+  $('.stories-filter').each(function () {
+    if ($(this).val()) {
+      $(this).closest('.form-group')
+              .find('.filter-results > span')
+              .text($(this).hasClass('category-select') ? categoryFilterResults : productFilterResults);
+    } else {
+      $(this).closest('.form-group').find('.filter-results > span').text('');
+    }
+  });
+
+  // show results for grouped stories filter
+  if ($('#grouped-stories-filter').val()) {
+    $('#filters-container.visible-xs-block .filter-results > span').text(filterResults);
+  } else {
+    $('#filters-container.visible-xs-block .filter-results > span').text('');
+  }
+  updateGallery($(storyCardsHtml));
+  replacePageState(categorySlug, productSlug);
 }
 
 // this function also found in select2.js
@@ -184,12 +175,12 @@ function initFilters() {
 }
 
 function updateGallery($stories) {
-  $('#stories-gallery').imagesLoaded(() => {
-    $('#stories-gallery')
-      .empty()
-      .append($stories)
-      .hide()
-      .show('fast', initGridPreviews);
+  const $gallery = $('#stories-gallery');
+  $gallery.imagesLoaded(function () {
+    $gallery.empty()
+            .append($stories)
+            .hide()
+            .show('fast');  // then => initGridPreviews
   });
 }
 
@@ -221,6 +212,21 @@ function filterStories(categoryId, productId) {
           pluck(publicStories, 'id');
   const storyIds = _intersection(categoryStoryIds, productStoryIds);
   return publicStories.filter(story => storyIds.includes(story.id));
+}
+
+// turbolinks will not save filter info to the state, so it's not included
+function replacePageState(categorySlug, productSlug) {
+  if (!categorySlug && !productSlug) {
+    history.replaceState({ turbolinks: true }, null, '/');
+  } else if (categorySlug && !productSlug) {
+    history.replaceState({ turbolinks: true }, null, '/?category=' + categorySlug);
+  } else if (!categorySlug && productSlug) {
+    history.replaceState({ turbolinks: true }, null, '/?product=' + productSlug);
+  } else if (categorySlug && productSlug) {
+    history.replaceState({ turbolinks: true }, null, '/?category=' + categorySlug + '&product=' + productSlug);
+  } else {
+    // error
+  }
 }
 
 function oldInit () {
