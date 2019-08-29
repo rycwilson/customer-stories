@@ -85,7 +85,7 @@ function handleFilterChange() {
       customerSlug: currentStory.csp_story_path.match(/^\/((\w|-)+)\//)[1],
     })
   })
-    .replace('[object Object]', '');  // TODO: wtf is up with this?
+    .replace('[object Object]', '');  // TODO: what's up with this?
 
   console.log(storyCardsHtml);
 
