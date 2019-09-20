@@ -8,7 +8,7 @@ body.pixlee {
 
   &.stories:not(.edit) {
 
-    #company-header {
+    .company-header--pixlee {
       border-bottom: 1px solid $border-color;  // don't apply this above
     }
 

@@ -34,13 +34,15 @@ function storiesIndexListeners () {
   var prependTagType = function () {
         $('.select2-selection__rendered li:not(:last-of-type)')
           .each(function (index, tag) {
-            tagId = $('#grouped-stories-filter').select2('data')[index].id;
-            tagText = $('#grouped-stories-filter').select2('data')[index].text;
+            tagId = $('.stories-filter__select--grouped').select2('data')[index].id;
+            tagText = $('.stories-filter__select--grouped').select2('data')[index].text;
             if (!tag.innerHTML.includes('Category:') && !tag.innerHTML.includes('Product:')) {
               tag.innerHTML =
                 tag.innerHTML.replace(
                     tagText,
-                    tagId.includes('c') ? 'Category:\xa0' + tagText : 'Product:\xa0' + tagText
+                    tagId.includes('c') ? 
+                      'Category:\xa0' + '<span style="font-weight: bold">' + tagText + '</span>' : 
+                      'Product:\xa0' + '<span style="font-weight: bold">' + tagText + '</span>'
                   );
             }
           });
@@ -51,27 +53,34 @@ function storiesIndexListeners () {
         var multiSelectFilterVal = [];
         if (categoryId) multiSelectFilterVal.push('c' + categoryId);
         if (productId) multiSelectFilterVal.push('p' + productId);
-        $('[name="category_select"]').val(categoryId).trigger('change.select2');
-        $('[name="product_select"]').val(productId).trigger('change.select2');
-        $('[name="filter_select[]"]').val(multiSelectFilterVal).trigger('change.select2');
-        prependTagType();
+        $('.stories-filter__select--grouped').val(multiSelectFilterVal).trigger('change.select2');
+        $('.stories-filter__select--category').val(categoryId).trigger('change.select2');
+        $('.stories-filter__select--product').val(productId).trigger('change.select2');
       };
 
   $(document)
 
-    .on('input', '.stories-search', function () {
-      $('.stories-search').not($(this)).val($(this).val());
-      $('.stories-search-form [name="search"]').val($(this).val());
-      $('.clear-search').hide();
-      $('.stories-search-form .input-group-btn').removeClass('show-clear');
+    .on('input', '.search-stories input', function () {
+      $('.search-stories__input').not($(this)).val($(this).val());
+      $('.search-stories input[type="hidden"]').val($(this).val());
+      $('.search-stories__clear').hide();
     })
-    .on('click', '.submit-search', function () {
-      if ($(this).closest('form').find('.stories-search').val() === '') return false;
-      $(this).closest('form').submit();
+    .on('click', '.search-stories button[type="submit"]', function (e) {
+      e.preventDefault();
+      var $form = $(this).closest('form');
+      if ($form.find('input').val() === '') {
+        // false => reload from cache if available; true => reload from server
+        location.reload(false)  
+      } else {
+        $('.search-stories__results').text('');
+        replaceStateStoriesIndex('', '');
+        $form.submit();
+      }
     })
-    .on('click', '.clear-search', function () {
-      $('.stories-search').val('').trigger('input');
-      $('.search-results').text('');
+    .on('click', '.search-stories__clear', function () {
+      var $form = $(this).closest('form')
+      $form.find('input').val('').trigger('input');
+      $('.search-stories__results').text('');
       updateGallery($(
         _.template($('#stories-template').html())({
           stories: filterStories('', ''),
@@ -79,12 +88,6 @@ function storiesIndexListeners () {
         })
       ));
     })
-    .on('submit', '.stories-search-form', function () {
-      $('.search-results').text('');
-      replaceStateStoriesIndex('', '');
-      $('.stories-search-form .input-group-btn').addClass('show-clear');
-    })
-
 
     .on('click touchstart', 'li[data-story-id]:not(.hover) a.published', function (e) {
       // console.log('click touchstart')
@@ -147,112 +150,84 @@ function storiesIndexListeners () {
       }
     })
 
+    .on('change', '.stories-filter__select', function () {
+      var isGroupedFilter = $(this).is('[class*="--grouped"]'),
+          $categoryFilter = $('.stories-filter__select--category'),
+          $categoryResults = $('.stories-filter__results--category'),
+          $productFilter = $('.stories-filter__select--product'),
+          $productResults = $('.stories-filter__results--product'),
+          $combinedResults = $('.stories-filter__results--grouped, .search-and-filters__results--combined'),
+          filterResults = function (numFoundStories) {
+            return numFoundStories === 1 ?
+                      "1 story found" :
+                      numFoundStories + "\xa0stories found";
+          },
+          categoryId, categorySlug,
+          productId, productSlug,
+          filteredStories;
 
-    .on('change', '#grouped-stories-filter', function () {
-      var categoryRawId = $(this).val() && $(this).val().find(function (tagId) {
-                            return tagId.includes('c');
-                          }),
-          categoryId = categoryRawId && categoryRawId.slice(1, categoryRawId.length),
-          categorySlug = categoryId &&
-            $(this).find('optgroup[label="Category"] option:selected').data('slug'),
-          productRawId = $(this).val() && $(this).val().find(function (tagId) {
-                            return tagId.includes('p');
-                          }),
-          productId = productRawId && productRawId.slice(1, productRawId.length),
-          productSlug = productId &&
-            $(this).find('optgroup[label="Product"] option:selected').data('slug'),
-          filteredStories = filterStories(categoryId, productId),
-          filterResults = filteredStories.length === 1 ? "1 story found" : filteredStories.length.toString() + " stories found",
-          categoryFilterResults = filterStories(categoryId, '').length === 1 ? "1 story found" : filterStories(categoryId, '').length.toString() + " stories found",
-          productFilterResults = filterStories('', productId).length === 1 ? "1 story found" : filterStories('', productId).length.toString() + " stories found";
+      if (isGroupedFilter) {
+        var categoryRawId = $(this).val() && 
+                $(this).val().find(function (tagId) {
+                  return tagId.includes('c');
+                }),
+            categoryId = categoryRawId && 
+                         categoryRawId.slice(1, categoryRawId.length),
+            categorySlug = categoryId &&
+                $(this).find('optgroup[label="Category"] option:selected')
+                         .data('slug'),
+            productRawId = $(this).val() && 
+                $(this).val().find(function (tagId) {
+                  return tagId.includes('p');
+                }),
+            productId = productRawId && 
+                        productRawId.slice(1, productRawId.length),
+            productSlug = productId &&
+                $(this).find('optgroup[label="Product"] option:selected')
+                  .data('slug');
 
-      syncSelectTags(categoryId, productId);
+      } else {
+        categoryId = $categoryFilter.val();
+        categorySlug = categoryId && $categoryFilter.find('option:selected').data('slug');
+        productId = $productFilter.val();
+        productSlug = productId && $productFilter.find('option:selected').data('slug');
+      }
+          
+      filteredStories = filterStories(categoryId, productId);
 
       // reset search
-      $('.stories-search').val('').trigger('input');
-      $('.search-results').text('');
+      $('.search-stories__input').val('').trigger('input');
+      $('.search-stories__results').text('');
 
-      // show results
+      // show/clear results 
       if (categoryId || productId) {
-        $('.filters-container.visible-xs-block .filter-results > span').text(filterResults);
-        $('.filters-container.tall .combined-results')
-          .find('> span > span:last-child').text(filterResults).end()
-          .find('> span').show();
+        $combinedResults.each(function () {
+          $(this).text(
+            $(this).is('[class*="--grouped"]') ?
+              filterResults(filteredStories.length) :
+              'Applied filters:\xa0\xa0' + filterResults(filteredStories.length)
+          )
+        });
         if (categoryId) {
-          $('.stories-filter.category-select')
-            .nextAll('.filter-results').children('span').text(categoryFilterResults);
+          $categoryResults.text( 
+            filterResults(filterStories(categoryId, '').length) 
+          );
         } else {
-          $('.stories-filter.category-select')
-            .nextAll('.filter-results').children('span').text('');
+          $categoryResults.text('');
         }
         if (productId) {
-          $('.stories-filter.product-select')
-            .nextAll('.filter-results').children('span').text(productFilterResults);
+          $productResults.text( 
+            filterResults(filterStories('', productId).length) 
+          );
         } else {
-          $('.stories-filter.product-select')
-            .nextAll('.filter-results').children('span').text('');
+          $productResults.text('');
         }
       } else {
-        $('.filters-container.visible-xs-block .filter-results > span').text('');
-        $('.filters-container.tall .combined-results > span').hide();
+        $combinedResults.add($categoryResults).add($productResults).text('');
       }
-
-      updateGallery($(
-        _.template($('#stories-template').html())({
-          stories: filteredStories,
-          isCurator: false
-        })
-      ));
-      replaceStateStoriesIndex(categorySlug, productSlug);
-    })
-
-    .on('change', '.stories-filter', function () {
-      var $categorySelect = $(this).closest('.filters-container').find("[name='category_select']"),
-          categoryId = $categorySelect.val(),
-          categorySlug = categoryId && $categorySelect.find('option:selected').data('slug'),
-          $productSelect = $(this).closest('.filters-container').find("[name='product_select']"),
-          productId = $productSelect.val(),
-          productSlug = productId && $productSelect.find('option:selected').data('slug'),
-          filteredStories = filterStories(categoryId, productId),
-          filterResults = filteredStories.length === 1 ? "1 story found" : filteredStories.length.toString() + " stories found",
-          categoryFilterResults = filterStories(categoryId, '').length === 1 ? "1 story found" : filterStories(categoryId, '').length.toString() + " stories found",
-          productFilterResults = filterStories('', productId).length === 1 ? "1 story found" : filterStories('', productId).length.toString() + " stories found";
 
       syncSelectTags(categoryId, productId);
-
-      // reset search
-      $('.stories-search').val('').trigger('input');
-      $('.search-results').hide();
-
-      // show combined filter results (only when both filters are shown)
-      if (categoryId || productId) {
-        $('.filters-container.tall .combined-results')
-          .find('> span > span:last-child').text(filterResults).end()
-          .find('> span').show();
-        $('.filters-container.visible-xs-block .filter-results > span').text(filterResults);
-      } else {
-        $('.filters-container.tall .combined-results > span').hide();
-        $('.filters-container.visible-xs-block .filter-results > span').text('');
-      }
-
-      // show individual filter results
-      $('.stories-filter').each(function () {
-        if ($(this).val()) {
-          $(this).closest('.form-group')
-                 .find('.filter-results > span')
-                 .text($(this).hasClass('category-select') ? categoryFilterResults : productFilterResults);
-        } else {
-          $(this).closest('.form-group').find('.filter-results > span').text('');
-        }
-      });
-
-      // show results for grouped stories filter
-      if ($('#grouped-stories-filter').val()) {
-        $('#filters-container.visible-xs-block .filter-results > span').text(filterResults);
-      } else {
-        $('#filters-container.visible-xs-block .filter-results > span').text('');
-      }
-
+      prependTagType();
       updateGallery($(
         _.template($('#stories-template').html())({
           stories: filteredStories,
@@ -326,11 +301,11 @@ function replaceStateStoriesIndex (categorySlug, productSlug) {
   if (!categorySlug && !productSlug) {
     history.replaceState({ turbolinks: true }, null, '/');
   } else if (categorySlug && !productSlug) {
-    history.replaceState({ turbolinks: true }, null, '/?category=' + categorySlug);
+    history.replaceState({ turbolinks: true }, null, '?category=' + categorySlug);
   } else if (!categorySlug && productSlug) {
-    history.replaceState({ turbolinks: true }, null, '/?product=' + productSlug);
+    history.replaceState({ turbolinks: true }, null, '?product=' + productSlug);
   } else if (categorySlug && productSlug) {
-    history.replaceState({ turbolinks: true }, null, '/?category=' + categorySlug + '&product=' + productSlug);
+    history.replaceState({ turbolinks: true }, null, '?category=' + categorySlug + '&product=' + productSlug);
   } else {
     // error
   }

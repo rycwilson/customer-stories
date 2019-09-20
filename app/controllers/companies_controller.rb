@@ -56,7 +56,10 @@ class CompaniesController < ApplicationController
         @flash = {} :
         @flash = { mesg: @company.errors.full_messages.join(', '), status: 'danger' }
     end
-    respond_to { |format| format.js }
+    respond_to do |format| 
+      @background_color_contrast = helpers.background_color_contrast(@company.header_color_2)
+      format.js {}
+    end
   end
 
   def update_gads

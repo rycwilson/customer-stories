@@ -116,4 +116,12 @@ module StoriesHelper
     { image: image, width: width, height: height }
   end
 
+  def stories_header_class(company)
+    "stories-header stories-header--#{company.subdomain} stories-header--#{background_color_contrast(company.header_color_2)}"
+  end
+
+  def stories_header_custom_colors(company)
+    "background-color: #{company.header_color_2}; color: #{company.header_text_color}"
+  end
+
 end

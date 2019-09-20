@@ -56,22 +56,8 @@
 
         </div>
 
-        <div class="stories-header" style="background-color:<%= company.header_color_2 %>">
-          <h4 class="<%= company.color_contrast %>">Customer Stories</h3>
-          <!-- <div style="display:inline-block">
-
-          <span class="social-buttons pull-right">
-            <a href="javascript:;" class="icon-button linkedin-share <%= company.color_contrast %>">
-              <i class="fa fa-linkedin" style="color:<%#= company.color_contrast == 'light' ? company.header_color_2 : '#fff' %>"></i><span></span>
-            </a>
-            <a href="javascript:;" class="icon-button twitter-share <%= company.color_contrast %>">
-              <i class="fa fa-twitter" style="color:<%#= company.color_contrast == 'light' ? company.header_color_2 : '#fff' %>"></i><span></span>
-            </a>
-            <a href="javascript:;" class="icon-button facebook-share <%= company.color_contrast %>">
-              <i class="fa fa-facebook" style="color:<%#= company.color_contrast == 'light' ? company.header_color_2 : '#fff' %>"></i><span></span>
-            </a>
-          </span>
-          </div> -->
+        <div class="<%= stories_header_class(company) %>" style="background-color:<%= company.header_color_2 %>">
+          <h>Customer Stories</h>
         </div>
 
       </div>  <!-- form-group -->

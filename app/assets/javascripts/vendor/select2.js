@@ -8,14 +8,16 @@ function initSelect2 () {
 
   var prependTagType = function () {
     var tagId, tagText;
-    $('.filters-container .select2-selection__rendered li:not(:last-of-type)')
+    $('.search-and-filters .select2-selection__rendered li:not(:last-of-type)')
       .each(function (index, tag) {
-        tagId = $('#grouped-stories-filter').select2('data')[index].id;
-        tagText = $('#grouped-stories-filter').select2('data')[index].text;
+        tagId = $('.stories-filter__select--grouped').select2('data')[index].id;
+        tagText = $('.stories-filter__select--grouped').select2('data')[index].text;
         if (!tag.innerHTML.includes('Category:') && !tag.innerHTML.includes('Product:')) {
           tag.innerHTML = tag.innerHTML.replace(
               tagText,
-              tagId.includes('c') ? 'Category:\xa0' + tagText : 'Product:\xa0' + tagText
+              tagId.includes('c') ?
+                'Category:\xa0' + '<span style="font-weight: bold">' + tagText + '</span>' : 
+                'Product:\xa0' + '<span style="font-weight: bold">' + tagText + '</span>'
             );
         }
       });
@@ -157,26 +159,25 @@ function initSelect2 () {
       }
     });
 
-  $('.stories-filter').select2({
-    theme: 'bootstrap',
-    placeholder: 'Select',
-    allowClear: true,
-    width: 'style'   // get the width from stories.scss
-  })
-    .on('select2:unselecting', function (e) {
-      $(this).data('unselecting', true);
+  // main gallery filters
+  $('.stories-filter__select--category, .stories-filter__select--product')
+    .select2({
+      theme: 'bootstrap',
+      placeholder: 'Select',
+      allowClear: true,
+      width: 'style'   
     })
-    .on('select2:open', function (e) {
-      if ($(this).data('unselecting')) {
-        $(this).removeData('unselecting')
-               .select2('close');
-      }
-    });
+      .on('select2:unselecting', function (e) {
+        $(this).data('unselecting', true);
+      })
+      .on('select2:open', function (e) {
+        if ($(this).data('unselecting')) {
+          $(this).removeData('unselecting')
+                .select2('close');
+        }
+      });
 
-  $('.filters-container.visible-md-block select').css('visibility', 'visible');
-
-
-  $('#grouped-stories-filter').select2({
+  $('.stories-filter__select--grouped').select2({
     theme: 'bootstrap',
     placeholder: 'Select Category and/or Product',
     tags: true,
@@ -197,18 +198,41 @@ function initSelect2 () {
         siblings[i].selected = false;
       }
     })
-    .on('select2:select', prependTagType)
-    .on('select2:unselect', prependTagType);
+    .on('select2:select, change.select2', function () {
+      prependTagType();
+      $(this).next('.select2')
+               .find('.select2-selection__choice__remove')
+                 .html('<i class="fa fa-fw fa-remove"></i>');
+    })
+    .on('select2:unselect, change.select2', function () {
+      prependTagType();
+      $(this).next('.select2')
+               .find('.select2-selection__choice__remove')
+                 .html('<i class="fa fa-fw fa-remove"></i>');
+    })
 
+  // modify close button
+  $('.stories-filter__select--grouped')
+    .next('.select2')
+      .find('.select2-selection__choice__remove')
+        .html('<i class="fa fa-fw fa-remove"></i>');
 
   if ($('body').hasClass('stories index')) {
     prependTagType();
-    $('.filters-container.visible-xs-block').css('visibility', 'visible');
+    $('.search-and-filters.visible-xs-block').css('visibility', 'visible');
   }
 
+  // restore last selected value
+  // change the selected item, but avoid 'change' event
+  $('[class*="stories-filter__select"]').each(function () {
+    if (preSelect = $(this).data('pre-select')) {
+      $(this).val(preSelect.toString()).trigger('change.select2');
+    }
+  });
+
   // TODO Is this an issue?  http://stackoverflow.com/questions/36497723
-  // $('.stories-filter').data('init', true);
-  // $('.stories-filter').each(function () {
+  // $('[class*="search-and-filters__filter]').data('init', true);
+  // $('[class*="search-and-filters__filter]').each(function () {
   //   if ($(this)[0].getAttribute('data-init') === null) {
   //     // console.log("init'ing select2");
   //     $(this).select2({
@@ -326,14 +350,7 @@ function initSelect2 () {
       }
     });
 
-  // restore last selected value
-  // change the selected item, but avoid 'change' event
-  $('select').each(function () {
-    if ($(this).hasClass('stories-filter') &&
-        (preSelect = $(this).data('pre-select'))) {
-      $(this).val(preSelect.toString()).trigger('change.select2');
-    }
-  });
+  
 
   $('#charts-story-select, #visitors-story-select')
     .select2({

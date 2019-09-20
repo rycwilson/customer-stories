@@ -9,7 +9,11 @@
   <%= yield(:head) if content_for?(:head) %>
 
   <%= stylesheet_link_tag 'application', media: 'all', 'data-turbolinks-track' => 'reload' %>
+
   <%#= mvp_stylesheet %>
+  <% if ['site', 'sessions'].include?(controller_name) %>
+    <%= stylesheet_link_tag 'mvpready-landing', media: 'all', 'data-turbolinks-track' => 'reload' %>
+  <% end %>
 
   <%= javascript_include_tag 'application', 'data-turbolinks-track' => 'reload' %>
   <%= csrf_meta_tags %>

@@ -18,12 +18,10 @@
     ));
   }
 
-  $('.clear-search').show();
   // don't show search results for stories-header
-  $('.filters-container .search-results').text(searchResults).show();
-  $('.filters-container.tall .combined-results > span').hide();
-  $('.filter-results > span').text('');
-  $('.stories-filter').val('').trigger('change.select2');
-  $('#grouped-stories-filter').val(null).trigger('change.select2');
+  $('.search-stories__results').text(searchResults);
+  $('.search-stories__clear').show();
+  $('.stories-filter__select').val('').trigger('change.select2');
+  $('.stories-filter__results"]').text('');
 
 }());

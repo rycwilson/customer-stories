@@ -18,9 +18,15 @@
   flex-direction: row-reverse;
   align-items: center;
   justify-content: space-between;
+
+  // TODO: changing font size has impact on the caret (arrow)
   .select2-selection__clear,
   .select2-selection__arrow {
-    font-size: 16px;  
+    font-size: 20px;
+    padding-bottom: 1px;  
+    &:hover {
+      color: #666;
+    }
   }
   &[class*="placeholder"] {
     flex-direction: row;
@@ -32,12 +38,54 @@
   font-size: 13px;
 }
 
-.select2-container--bootstrap .select2-results__option--highlighted[aria-selected] {
-  background-color: $nav-blue;
-}
-
 .select2-container--bootstrap .select2-results__option {
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+}
+
+.select2-container--bootstrap .select2-selection--multiple .select2-selection__rendered {
+}
+
+.select2-container--bootstrap .select2-results__group {
+  background-color: #efefef;
+  color: #666;
+  font-size: 14px;
+}
+
+// pre-selected option
+.select2-container--bootstrap .select2-results__option[aria-selected=true] {
+  background-color: #e8ffff;
+}
+
+// this one must appear after the previous
+.select2-container--bootstrap .select2-results__option--highlighted[aria-selected] {
+  background-color: $nav-blue;
+}
+
+.select2-container--bootstrap .select2-selection--multiple .select2-selection__choice {
+  line-height: 30px;
+  background-color: $medium-gray;
+  padding-right: 0;  // the fa-remove icon provides padding (see below)
+  margin: 8px 8px 0 8px;
+  
+  // select2: fixes word text wrap issues on long select values
+  // ref https://github.com/select2/select2/issues/4585
+  max-width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis; 
+  &:nth-last-child(2) {  
+    margin-bottom: 8px;
+  }
+  span[class*="remove"] {
+    float: right;
+    padding: 0 8px;
+    margin-right: 0;
+    &:hover {
+      color: #666;
+    }
+    i {
+      font-size: 14px;  
+    }
+  }
 }

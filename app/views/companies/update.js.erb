@@ -2,7 +2,8 @@
 
   var company = <%= raw @company.to_json({ only: [], methods: [:previous_changes, :color_contrast] }) %>,
       flash = <%= raw @flash.to_json %>,
-      $form = $('form[data-submitted="true"]');
+      $form = $('form[data-submitted="true"]'),
+      backgroundColorContrast = '<%= @background_color_contrast %>';
 
   if (company.previous_changes.logo_url) {
     $('.navbar-brand-img img').attr('src', company.previous_changes.logo_url[1]);
@@ -15,9 +16,10 @@
   }
 
   if (company.previous_changes.header_color_2) {
-    $('#stories-header')
+    $('.stories-header')
       .css('background-color', company.previous_changes.header_color_2[1])
-      .find('h3, .icon-button').removeClass('light dark').addClass(company.color_contrast);
+      .removeClass('stories-header--light-background stories-header--dark-background')
+      .addClass('stories-header--' + backgroundColorContrast);
   }
 
   if (flash.mesg) {

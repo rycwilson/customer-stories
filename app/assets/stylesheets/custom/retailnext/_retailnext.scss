@@ -71,10 +71,10 @@ body.retailnext:not(.companies):not(.profile):not(.edit) {
 
   @media only screen and (min-width: 1200px) {
     &.stories.index {
-      .filters-container.visible-md-block.short {
+      .search-and-filters.visible-md-block.short {
         // margin: 10px 2px 0 0;
       }
-      .filters-container.visible-md-block.tall {
+      .search-and-filters.visible-md-block.tall {
       }
     }
   }
