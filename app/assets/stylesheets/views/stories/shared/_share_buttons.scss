@@ -1,0 +1,108 @@
+
+$facebook-blue: #3B5998;
+$twitter-blue: #4099ff;
+$linkedin-blue: #0077b5;
+
+.share-buttons, .cs-share-buttons {
+  .stories-header & {
+    float: right;
+  }
+
+  // overlays only
+  &:not(.share-buttons) {
+    display: flex;
+    align-items: center;
+    justify-content: space-evenly;
+  }
+
+  @media only screen and (max-width: 767px) {
+    display: flex;
+    justify-content: space-between;
+    margin: 20px auto;
+    width: 280px;
+    &.no-video {
+      margin-bottom: 25px;
+    }
+  }
+}
+
+.share-button, .cs-share-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  height: 38px;
+  width: 38px;
+  border-radius: 20px;
+  margin: 0 10px;
+  transition: all 0.2s ease-in-out;
+  i {
+    font-size: 18px;
+  }
+  .stories-header--light-background & {
+    background-color: #555;
+    color: #fff;
+  }
+  .stories-header--dark-background & {
+    background-color: #fff;
+    color: #555;
+    &:hover {
+      box-shadow: 0 0 2px 2px rgba(255, 255, 255, 0.9);
+    }
+  }
+  &:link, &:visited, &:hover, &:active {
+    text-decoration: none;
+  }
+  &:hover {
+    color: #fff;
+  }
+
+  @media only screen and (max-width: 767px) {
+    height: 42px;
+    width: 42px;
+    font-size: 18px;
+    border-radius: 21px;
+    color: #fff;
+    margin: 0;
+    &--facebook {
+      background-color: $facebook-blue;
+    }
+    &--twitter {
+      background-color: $twitter-blue;
+    }
+    &--linkedin {
+      background-color: $linkedin-blue;
+    }
+    &--email {
+      background-color: #555;
+    }
+  }
+  
+  @media only screen and (min-width: 768px) {
+    
+    // overlays only
+    &:not(.share-button) {
+      background-color: #fff;
+      border: 2px solid #ddd;
+      width: 42px;
+      height: 42px;
+      border-radius: 21px;
+      color: #555;
+      &:hover {
+        color: #fff;
+      }
+    }
+    
+    &--facebook:hover {
+      background-color: $facebook-blue;
+    }
+    &--twitter:hover {
+      background-color: $twitter-blue;
+    }
+    &--linkedin:hover {
+      background-color: $linkedin-blue;
+    }
+    &--email:hover {
+      background-color: #333;
+    }
+  }
+}

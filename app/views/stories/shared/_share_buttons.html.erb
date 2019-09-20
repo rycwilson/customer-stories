@@ -1,0 +1,30 @@
+
+<!-- the class names will be prepended with cs- if this is for the plugin -->
+<div class="<%= container_class %> <%= story.video_url.blank? ? 'no-video' : '' %>">
+
+  <a href="<%= FACEBOOK_SHARE_URL + url_encode(story.csp_story_url) %>"
+      class="<%= button_class %> <%= button_class %>--facebook">
+    <i class="fa fa-fw fa-facebook"></i>
+  </a>
+
+  <a href="<%= TWITTER_SHARE_URL + url_encode(story.csp_story_url) %>"
+      class="<%= button_class %> <%= button_class %>--twitter">
+    <i class="fa fa-fw fa-twitter"></i>
+  </a>
+
+  <a href="<%= LINKEDIN_SHARE_URL + url_encode(story.csp_story_url) %>"
+      class="<%= button_class %> <%= button_class %>--linkedin">
+    <i class="fa fa-fw fa-linkedin"></i>
+  </a>
+
+  <a href="mailto:?subject=<%= story.title %>&body=<%= story.csp_story_url %>" 
+      class="<%= button_class %> <%= button_class %>--email">
+    <i class="fa fa-fw fa-envelope"></i>
+  </a>
+
+  <!-- <a href="/stories/<%#= story.id %>/share_on_linkedin" class="icon-button linkedin-share" data-turbolinks="false">
+    <i class="fa fa-linkedin""></i>
+    <span></span>
+  </a> -->
+
+</div>
