@@ -193,7 +193,13 @@ function filterCurateGallery (context) {
 
   } else {
     $gallery.hide()
-            .append( $(storiesTemplate({ stories: stories, isCurator: true })) )
+            .append( 
+                $(storiesTemplate({ 
+                  stories: stories, 
+                  cardClass: 'story-card grid-item story-card--small',
+                  isCurator: true 
+                })) 
+              )
             .imagesLoaded(function () {
               $gallery.show({
                 duration: 0,

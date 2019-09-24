@@ -1,10 +1,10 @@
 
-
-$company-header-height: 65px;
+$company-header-height: 70px;
+$company-logo-max-height: 50px;
 $stories-header-height: 42px;
 
-$csp-bg-gray: #f2f2f2;
-$csp-fg-gray: #efefef;
+// $csp-bg-gray: #f2f2f2;
+// $csp-fg-gray: #efefef;
 
 $light-gray: #f9f9f9;
 $medium-gray: #efefef;
@@ -15,3 +15,8 @@ $nav-blue: #039be5; // #0288d1 // #0074eb;  // #0095ff; //#d74b4b;  // #4885ed;
 $status-on-color: rgba(3, 155, 229, 0.35); //  rgba(105, 255, 255, 0.5);  // same as btn-success, with opacity
 
 // https://www.invisionapp.com/inside-design/finding-the-right-color-palettes-for-data-visualizations/
+
+$story-card-width: 242px;
+$story-card-height: 170px;
+$small-story-card-width: 200px;
+$small-story-card-height: 140px;

@@ -51,4 +51,98 @@ div.dataTables_wrapper [class*="header"] div.dataTables_info {
   padding: 0;
 }
 
+// override bootstrap rule
+.table > thead > tr > th, 
+.table > thead > tr > td, 
+.table > tbody > tr > th, 
+.table > tbody > tr > td, 
+.table > tfoot > tr > th, 
+.table > tfoot > tr > td {
+  vertical-align: middle;
+}
 
+td {
+  i[class*="fa-caret"] { 
+    color: #888;
+    &:hover {
+      color: #555;
+    } 
+  }
+}
+
+td.status.dropdown, td.actions.dropdown {
+  text-align: center;
+  padding: 0;
+  // ref: http://stackoverflow.com/questions/11078509/how-to-increase-the-clickable-area-of-a-a-tag-button
+  > a {
+    display: block;
+    width: 100%;
+    height: 100%;
+    margin-top: -8px;
+    padding-top: 8px;
+    margin-bottom: -8px;
+  }
+}
+
+.datatable {
+
+  tr.active {
+    i:not(.action) {
+      color: white;
+      text-decoration: none;
+    }
+  }
+
+  tr.active {
+    td:first-child {
+      // border-left: 1px solid #0095ff; // #08c;
+    }
+    td:last-child {
+      // border-right: 1px solid #0095ff; // #08c;
+    }
+    i:not(.action) {
+      color: white;
+      text-decoration: none;
+    }
+  }
+  tr.active:hover {
+    td:first-child {
+      // border-left-color: #0095ff !important;  // #0075b0
+    }
+    td:last-child {
+      // border-right-color: #0095ff !important;  // #0075b0
+    }
+  }
+  // child row
+  tr.active:hover + tr:not(.group) > td[colspan]:not(.dataTables_empty) {
+    // border-color: #0095ff !important; // #0075b0
+  }
+
+  th.actions {
+    text-align: center;
+    padding: 8px 12px;
+  }
+
+  td.status.dropdown, td.actions.dropdown {
+    text-align: center;
+    padding: 0;
+    // ref: http://stackoverflow.com/questions/11078509/how-to-increase-the-clickable-area-of-a-a-tag-button
+    > a {
+      display: block;
+      width: 100%;
+      height: 100%;
+      margin-top: -8px;
+      padding-top: 8px;
+      margin-bottom: -8px;
+      padding-bottom: 8px;
+      // position: relative;
+      // display: inline-block;
+      // background: transparent;
+      // border: transparent;
+      // z-index: 1;
+      // padding: 2em;
+      // margin: -2em;
+    }
+
+  }
+}

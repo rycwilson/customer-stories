@@ -57,11 +57,6 @@ class InvitationTemplate < ApplicationRecord
     end
   end
 
-  def fart (color)
-    
-  end
-
-
   def format_for_storage
     # re-construct curator photo placeholder
     # outside single quote necessary for capture reference to work correctly
@@ -70,13 +65,17 @@ class InvitationTemplate < ApplicationRecord
     self.request_body.gsub!( /\[(\w+)_link=('|")(.+?)('|")\]/, '<a href="[\1_url]" target="_blank">\3</a>')
     # re-construct buttons
     self.request_body.gsub!(/\[(\w+)_button={text:('|")(.+?)('|"),color:('|")(.+?)('|")}\]/) do |match|
-      "<a href='[#{$1}_url]' target='_blank' class='csp-cta' style='background-color:#{$6};border-color:#{$6};color:#{ActionController::Base.helpers.background_color_contrast($6) == "light-background" ? "#333333" : "ffffff"};#{button_style_settings}'>#{$3.truncate(25)}<\/a>"
+      "<a href='[#{$1}_url]' target='_blank' class='csp-cta' style='background-color:#{$6};border-color:#{$6};color:#{InvitationTemplate.background_color_contrast($6) == "light-background" ? "#333333" : "ffffff"};#{button_style_settings}'>#{$3.truncate(25)}<\/a>"
     end
     self.request_body.sub!(/^<p>/, '<p style="margin-top:0">')
   end
 
   def default?
     ['Customer', 'Customer Success', 'Sales'].include?(self.name)
+  end
+
+  def self.background_color_contrast(hex_color)
+    ApplicationController.helpers.background_color_contrast(hex_color)
   end
 
 end

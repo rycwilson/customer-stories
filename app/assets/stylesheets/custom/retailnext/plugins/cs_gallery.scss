@@ -1,8 +1,9 @@
 
+@import '../../../views/plugins/main';
+@import '../../fonts';
 @import '../variables';
 
 #cs-gallery {
-  @import '../../../mixins/mixins';
   @import '../../../views/plugins/gallery';
   @import 'gallery';
   @import '../show';

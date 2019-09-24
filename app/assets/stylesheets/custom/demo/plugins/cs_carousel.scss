@@ -1,11 +1,11 @@
 
-#cs-carousel {
+@import '../../../views/plugins/main';
+@import '../../fonts';
 
-  @import '../../../mixins/mixins';
+#cs-carousel {
 
   @import '../../../views/plugins/carousel';
 
-  @import '../../fonts';
   // @import 'carousel';
 
 }

@@ -1,6 +1,6 @@
 
-@import 'variables';
 @import 'buttons';
+@import 'story_card';
 
 body {
   font-family: 'Open Sans', 'Trebuchet MS', arial, sans-serif;
@@ -58,7 +58,35 @@ body.site #flash {
 
 .turbolinks-progress-bar {
   height: 1px;
-  background-color: #0095ff; // #77b6ff;
+  background-color: $nav-blue; // #77b6ff;
+}
+
+/**
+ * this needs to be in global scope due to fixed position
+ */
+ .submission-footer {
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: -66px;
+  transition: bottom 0s;
+  [class*="col-"] {
+    background-color: #fff;
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.175);
+    border: 1px solid #ccc;
+    border-top-right-radius: 3px;
+    border-top-left-radius: 3px;
+    padding: 15px 15px 18px;
+  }
+  p {
+    font-size: 16px;
+    color: #262626;
+    margin-bottom: 0;
+  }
+  &.show {
+    bottom: 0;
+    transition: bottom 0.3s ease-in-out;
+  }
 }
 
 

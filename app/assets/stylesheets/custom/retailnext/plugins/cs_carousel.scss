@@ -1,8 +1,9 @@
 
+@import '../../../views/plugins/main';
+@import '../../fonts';
 @import '../variables';
 
 #cs-carousel {
-  @import '../../../mixins/mixins';
   @import '../../../views/plugins/carousel';
   @import 'carousel';
   @import '../show';

@@ -1,11 +1,11 @@
 
 <ul id="stories-gallery" class="grid list-unstyled text-center <%= no_filters_present ? 'no-filters' : '' %>">
 
-  <% cache(cache_key, skip_digest: true) do %>
+  <!-- <%# cache(cache_key, skip_digest: true) do %> -->
 
     <% stories.each do |story| %>
 
-      <% cache(
+      <%# cache(
             "#{company.subdomain}/story-card-#{story.id}-memcache-iterator-#{company.story_card_fragments_memcache_iterator}",
             skip_digest: true
           ) do %>
@@ -14,16 +14,17 @@
               'stories/shared/story_card',
               {
                 story: story,
+                card_class: 'story-card grid-item',
                 is_curator: false,
                 is_plugin: false,
                 is_external: false
               }
             ) %>
 
-      <% end %>
+      <%# end %>
 
     <% end %>
 
-  <% end %>
+  <!-- <%# end %> -->
 
 </ul>

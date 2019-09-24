@@ -27,7 +27,7 @@ class CompaniesController < ApplicationController
   def edit
     redirect_to(company_settings_path) if request.path.match(/\/companies\/\d+/)
     @form_options = set_form_options(params, @company)
-    render(:company_settings)
+    render :company_settings
   end
 
   def create
@@ -187,7 +187,7 @@ class CompaniesController < ApplicationController
     options = {
       html: {
         id: 'company-profile-form',
-        class: 'directUpload',
+        class: 'directUpload form-horizontal',
         data: {
           url: @s3_direct_post.url,
           host: URI.parse(@s3_direct_post.url).host,

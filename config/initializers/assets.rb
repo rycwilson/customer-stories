@@ -22,34 +22,26 @@ Rails.application.config.assets.precompile += %w(
   plugins/cs_overlays.js
   plugins/demo.js
   views/plugins/demo.css
-  custom/acme-test/plugins/cs_gallery.css
-  custom/acme-test/plugins/cs_carousel.css
-  custom/acme-test/plugins/cs_tabbed_carousel.css
-  custom/centerforcustomerengagement/plugins/cs_gallery.css
-  custom/centerforcustomerengagement/plugins/cs_carousel.css
-  custom/centerforcustomerengagement/plugins/cs_tabbed_carousel.css
-  custom/compas/plugins/cs_gallery.css
-  custom/compas/plugins/cs_carousel.css
-  custom/compas/plugins/cs_tabbed_carousel.css
-  custom/coupa/plugins/cs_gallery.css
-  custom/coupa/plugins/cs_carousel.css
-  custom/coupa/plugins/cs_tabbed_carousel.css
-  custom/demo/plugins/cs_gallery.css
-  custom/demo/plugins/cs_carousel.css
-  custom/demo/plugins/cs_tabbed_carousel.css
-  custom/pixlee/plugins/cs_gallery.css
-  custom/pixlee/plugins/cs_carousel.css
-  custom/pixlee/plugins/cs_tabbed_carousel.css
-  custom/retailnext/plugins/cs_gallery.css
-  custom/retailnext/plugins/cs_carousel.css
-  custom/retailnext/plugins/cs_tabbed_carousel.css
-  custom/trunity/plugins/cs_gallery.css
-  custom/trunity/plugins/cs_carousel.css
-  custom/trunity/plugins/cs_tabbed_carousel.css
-  custom/varmour/plugins/cs_gallery.css
-  custom/varmour/plugins/cs_carousel.css
-  custom/varmour/plugins/cs_tabbed_carousel.css
   pdf.css
   mvpready-landing.css
   mvpready-admin.css
 )
+
+%w(
+  acme-test
+  centerforcustomerengagement
+  compas
+  coupa
+  demo
+  pixlee
+  retailnext
+  trunity
+  varmour
+).each do |subdomain|
+  Rails.application.config.assets.precompile += [
+    "custom/#{subdomain}/#{subdomain}.css",
+    "custom/#{subdomain}/plugins/cs_gallery.css",
+    "custom/#{subdomain}/plugins/cs_carousel.css",
+    "custom/#{subdomain}/plugins/cs_tabbed_carousel.css"
+  ]
+end

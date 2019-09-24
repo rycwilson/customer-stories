@@ -60,9 +60,8 @@
 
 #curate-gallery {
   // display: none;
-  li.story-card {
+  .story-card {
     margin: 6px;
-    @include story-card('small');
   }
   @media only screen and (min-width: 1200px) {
     li.story-card {

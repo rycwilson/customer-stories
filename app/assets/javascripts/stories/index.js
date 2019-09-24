@@ -84,6 +84,7 @@ function storiesIndexListeners () {
       updateGallery($(
         _.template($('#stories-template').html())({
           stories: filterStories('', ''),
+          cardClass: 'story-card grid-item', 
           isCurator: false
         })
       ));
@@ -231,6 +232,7 @@ function storiesIndexListeners () {
       updateGallery($(
         _.template($('#stories-template').html())({
           stories: filteredStories,
+          classClass: 'story-card grid-item',
           isCurator: false
         })
       ));

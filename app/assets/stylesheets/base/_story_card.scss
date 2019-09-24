@@ -1,0 +1,273 @@
+
+.story-card {
+  display: inline-block;
+  vertical-align: top;
+  margin: 15px;
+  a {
+    display: block;
+    position: relative;
+    background-color: #fff;
+    width: $story-card-width;
+    height: $story-card-height;
+    padding: 0;
+    border: 1px solid transparent;
+    border-radius: 0;
+    box-shadow: 0 2px 2px 0 rgba(0,0,0,0.16), 0 0 0 1px rgba(0,0,0,0.08);
+    transition: box-shadow 0.1s ease-in-out; 
+    &.public.published .story-card__cta:after {
+      content: 'Read Story';
+    }
+    &.public.preview-published .story-card__cta:after {
+      content: 'Read More';
+    }
+    &.curator .story-card__cta:after {
+      content: 'Configure Story';
+    }
+    &.public.logo-published {
+      pointer-events: none;
+    }
+    &:active {
+      filter: brightness(94%);
+      box-shadow: 0 3px 8px 0 rgba(0,0,0,0.2), 0 0 0 1px rgba(0,0,0,0.08)
+    }
+  }
+
+  &:hover:not(.og-expanded), &.hover:not(.og-expanded), &.loading {
+    a.curator, a.public:not(.logo-published) {
+      border: 1px solid transparent;
+      box-shadow: 0 3px 8px 0 rgba(0,0,0,0.2), 0 0 0 1px rgba(0,0,0,0.08);
+      .story-card__logo {
+        opacity: 0.04;
+      }
+      .story-card__cta:after {
+        visibility: visible;
+        transition: all 0s step-end;
+      }
+      .story-card__customer {
+        visibility: hidden;
+        transition: all 0s step-end;
+      }
+    }
+  }
+
+  &.og-expanded a, a:hover, &.hover {
+    .story-card__title {
+      transform: translateY(0%);
+    }
+    .story-card__logo {
+      opacity: 0.04;
+    }
+  }
+
+  &:not(.still-loading) {
+    .story-card__loading {
+      opacity: 0;
+    }
+  }
+  
+  &.loading {
+    filter: brightness(96%);
+    .story-card__title {
+      transform: none;
+    }
+    .story-card__logo {
+      opacity: 0.04;
+    }
+    .story-card__customer {
+      visibility: hidden;
+    }
+    .story-card__cta:after {
+      visibility: visible;
+    }
+    &.still-loading {
+      .story-card__title, .story-card__caption {
+        opacity: 0.04;
+        transition: opacity 1s step-end;
+      }
+      .story-card__logo {
+        opacity: 0;
+      }
+      
+      // the icon needs to be wrapped in a div in order for the transform to work
+      // (center if element is centered, not top-left of element)
+      .story-card__loading {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        opacity: 1;
+        transition: opacity 1s step-end;
+        i {
+          font-size: 20px;
+          color: #666;
+        }
+      }
+    }
+
+  }
+
+  // applies to plugins
+  &.logo-only {
+    width: 150px;
+    height: 75px;
+    background-color: transparent;
+    border: none;
+    box-shadow: 0 0;
+    .story-card__content, .story-card__caption {
+      height: 100%;
+    }
+    .story-card__logo img {
+      mix-blend-mode: multiply;
+    }
+    @media only screen and (max-width: 767px) {
+      margin: 20px 0;
+    }
+  }
+
+  &--small {
+    a {
+      width: $small-story-card-width;
+      height: $small-story-card-height;
+    }
+  }
+
+  @media only screen and (max-width: 767px) {
+  }
+  
+  @media only screen and (min-width: 768px) {
+  }
+  @media only screen and (min-width: 768px) and (max-width: 991px) {
+    #stories-gallery & a, #cs-gallery & a, .related-stories & a {
+      width: $small-story-card-width;  
+      height: $small-story-card-height; 
+   
+    }
+    .story-card__title p {
+      font-size: 13px !important;
+    }
+  }
+  @media only screen and (min-width: 992px) {
+    #stories-gallery &, #cs-gallery &, .related-stories & {
+      margin: 20px;
+    }
+    .related-stories & {
+      margin: 10px 18px;
+    }
+  }
+  @media only screen and (min-width: 992px) and (max-width: 1199px) {
+    .related-stories & {
+      margin: 15px;
+      a {
+        width: $small-story-card-width; 
+        height: $small-story-card-height;  
+      }
+    }
+  }
+  @media only screen and (min-width: 1200px) {
+  }
+}
+
+.story-card__content {
+  position: relative;
+  width: 100%;
+  height: 80%;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+
+.story-card__logo { 
+  display: flex;
+  align-items: center;  
+  justify-content: center;
+  height: 100%;
+  width: 100%;
+  opacity: 1;
+  // transition: opacity $transition-time ease-in-out;
+  transition: opacity 0s step-end;
+  img {
+    max-height: 70%;
+    max-width: 70%;
+
+    // this compensates for a bug in chrome, which causes images of a
+    // certain aspect ratio to expand and contract very slightly on
+    // hover and opacity transition
+    // ref: https://stackoverflow.com/questions/20886991
+    -webkit-transform: translateZ(0);
+    mix-blend-mode: multiply;
+    &.grayscale { 
+      filter: grayscale(100%);
+    }
+  }
+  .story-card--small & img {
+    max-height: 60%;
+    max-width: 60%;
+  }
+}
+
+.story-card__title {
+  position: absolute;
+  z-index: 100;
+  display: flex;
+  align-items: center;
+  height: 100%;
+  width: 100%;
+  background: transparent;
+  transform: translateY(-100%);
+  transition: all 0s step-end;
+  overflow: hidden;
+  p {
+    padding: 12px;
+    // padding: 0;  // inspired by pixlee conflict (TODO: ???)
+    font: {
+      family: inherit !important;
+      size: 15px;
+      weight: 600;
+    }
+    line-height: 26px !important;
+    color: #444 !important;
+
+    // weebly will squish together letters and words in the customer name together without these...
+    word-spacing: normal;
+    letter-spacing: normal;
+    margin-bottom: 0;
+  }
+  .story-card--small & p {
+    font-size: 13px !important;
+  }
+} 
+
+.story-card__caption {
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+  height: 35%;
+  color: #444;
+  border-radius: 0;
+  background: transparent;
+  span {
+    font: {
+      family: inherit !important;
+      size: 14px !important;
+    }
+    position: absolute;
+    width: 90%;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+
+    // weebly will squish together letters and words in the customer name together without these...
+    word-spacing: normal;
+    letter-spacing: normal;
+  }
+  .story-card__cta:after {
+    text-decoration: underline;
+    visibility: hidden;
+    transition: all 0s;
+  }
+  .story-card--small & span {
+    font-size: 13px !important;
+  }
+}

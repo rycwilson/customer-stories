@@ -6,7 +6,7 @@
 <% grayscale = grayscale || nil %>
 <% is_pre_selected = is_pre_selected || nil %>
 
-<li class="story-card grid-item" data-story-id="<%= story.id %>">
+<li class="<%= card_class %>" data-story-id="<%= story.id %>">
 
   <!-- grid__item is for the overlays; not implemented internally -->
   <a href="<%= story.csp_story_link(is_curator, is_plugin, is_external, plugin_type) %>"
@@ -22,7 +22,7 @@
 
     <div class="story-card__content thumbnail-view">
       <% if story.title.present? && !logo_only %>
-        <div class="story-card__title thumbnail-view-hover">
+        <div class="story-card__title thumbnail-view-hover text-center">
           <p><%= story.title %></p>
         </div>
       <% end %>
@@ -31,7 +31,7 @@
       </div>
     </div>
 
-    <div class="story-card__caption caption">
+    <div class="story-card__caption caption text-center">
       <% unless logo_only %>
         <span class="story-card__customer customer-name"><%= story.customer.name %></span>
       <% end %>

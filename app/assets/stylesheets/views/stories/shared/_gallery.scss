@@ -4,17 +4,6 @@
   margin: 0 auto;
   min-height: 100vh;  // accommodate the sign-in footer
   padding-bottom: 20px;
-
-  li.story-card {
-    @include story-card();
-  }
-  
-}
-
-#stories-gallery, .related-stories {
-  .story-card {
-    margin: 15px;
-  }
 }
 
 @media only screen and (max-width: 767px) {
@@ -24,40 +13,12 @@
 }
 
 @media only screen and (min-width: 768px) and (max-width: 991px) {
-  #stories-gallery, .related-stories {
-    .story-card {
-      a {
-        width: 200px;  
-        height: 140px; 
-      }
-    }
-    .story-card__title p {
-      font-size: 13px !important;
-    }
-  }
 }
 
 @media only screen and (min-width: 992px) {
-  #stories-gallery, .related-stories {
-    .story-card {
-      margin: 20px;
-    }
-    &.related-stories .story-card {
-      margin: 10px 18px;
-    }
-  }
 }
 
 @media only screen and (min-width: 992px) and (max-width: 1199px) {
-  .related-stories {
-    .story-card {
-      margin: 15px;
-      a {
-        width: 200px; 
-        height: 140px;  
-      }
-    }
-  }
 }
 
 @media only screen and (min-width: 1200px) {

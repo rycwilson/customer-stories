@@ -38,25 +38,10 @@
 <div id='invitation-template-container'>
 </div>
 
-<div id='invitation-template-submit' class="container">
-  <div class="row">
-    <div class="col-sm-4 col-md-3 layout-sidebar"></div>
-    <div class="col-sm-8 col-md-9 layout-main">
-      <div class="tab-content stacked-content">
-        <p class="pull-left"></p>
-      <!--   <button type="reset" form="story-content-form" class="btn btn-default">
-          Clear changes
-        </button> -->
-        <button type="submit" form="invitation-template-form" class="btn btn-success text-center">
-          <span></span>
-          <i class='fa fa-spin fa-circle-o-notch' style='display:none'></i>
-          <i class='fa fa-check' style='display:none'></i>
-        </button>
-
-      </div>
-    </div>
-  </div>
-</div>
+<%= render(
+      'shared/submission_footer', 
+      { modifier: 'invitation-template', story: nil }
+    ) %>
 
 <% content_for(:underscore_templates) do %>
 

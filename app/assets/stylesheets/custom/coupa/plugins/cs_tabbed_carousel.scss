@@ -1,7 +1,7 @@
 
-#cs-tabbed-carousel, #cs-tab-container, #cs-container {
+@import '../../../views/plugins/main';
 
-  @import '../../../mixins/mixins';
+#cs-tabbed-carousel, #cs-tab-container, #cs-container {
 
   @import '../../../views/plugins/tabbed_carousel';
   // @import 'tabbed_carousel';

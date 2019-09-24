@@ -1,20 +1,19 @@
 
+@import '../../../views/plugins/main';
+@import '../../fonts';
+@import '../../../views/plugins/carousel';
+
+// custom
+@import '../variables';
+@import 'carousel';
+@import '../show';
+
 body.pixlee.plugin-demo {
   .thumbnail-view-hover, .caption {
     font-family: 'Muli', 'Open Sans', sans-serif;
   }
 }
 
-#cs-carousel {
-
-  @import '../../../mixins/mixins';
-  @import '../variables';
-  @import '../../../views/plugins/carousel';
-  @import 'carousel';
-  @import '../show';
-
-  .cs-overlay-container {
-    padding: 0;
-  }
-
+.cs-overlay-container {
+  padding: 0;
 }

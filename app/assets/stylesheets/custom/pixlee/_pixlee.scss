@@ -1,9 +1,9 @@
 
 // body.pixlee:not(.companies):not(.profile):not(.edit) {
-
-body.pixlee {
-
-  @import 'variables';
+  
+  body.pixlee {
+    @import 'variables';
+    
   @import 'company_header';
 
   &.stories:not(.edit) {

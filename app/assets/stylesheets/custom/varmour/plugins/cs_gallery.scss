@@ -1,14 +1,11 @@
 
+@import '../../../views/plugins/main';
+@import '../../fonts';
+@import '../../../views/plugins/gallery';
+
+// custom 
 @import '../variables';
-
-#cs-gallery {
-
-  @import '../../../mixins/mixins';
-
-  @import '../../../views/plugins/gallery';
-  // @import '../../fonts';
-  @import 'gallery';
-}
+@import 'gallery';
 
 // override settings for demo as necessary
 @import 'demo';

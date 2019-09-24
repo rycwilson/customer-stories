@@ -10,12 +10,12 @@ body.varmour.stories.index, body.varmour.stories.show {
   }
 }
 
-.company-header__logo--varmour img {
+.company-header__logo--varmour img, 
+.fileinput .thumbnail > .logo-upload__logo {  // selector necessary to override jasny
   max-height: 40px;
 }
 
 .company-header--varmour {
-  height: 90px;
   a.primary-cta {
     font-size: 12px;
     background-color: #fc6621 !important;
@@ -34,7 +34,9 @@ body.varmour.stories.index, body.varmour.stories.show {
       }
     }
   }
-
+  body.stories.index &, body.stories.show & {
+    height: 90px;
+  }
 }
 
 .stories-header--varmour {
@@ -47,7 +49,6 @@ body.varmour.stories.index, body.varmour.stories.show {
   .stories-header__title {
     font-family: $metropolis-regular;
     text-transform: uppercase;
-    color: #fff;
     padding-top: 2px;
   }
 
