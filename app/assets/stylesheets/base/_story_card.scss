@@ -1,63 +1,11 @@
 
+$story-card-box-shadow: 0 2px 2px 0 rgba(0,0,0,0.16), 0 0 0 1px rgba(0,0,0,0.08);
+$story-card-box-shadow-hover: 0 3px 8px 0 rgba(0,0,0,0.2), 0 0 0 1px rgba(0,0,0,0.08);
+
 .story-card {
   display: inline-block;
   vertical-align: top;
   margin: 15px;
-  a {
-    display: block;
-    position: relative;
-    background-color: #fff;
-    width: $story-card-width;
-    height: $story-card-height;
-    padding: 0;
-    border: 1px solid transparent;
-    border-radius: 0;
-    box-shadow: 0 2px 2px 0 rgba(0,0,0,0.16), 0 0 0 1px rgba(0,0,0,0.08);
-    transition: box-shadow 0.1s ease-in-out; 
-    &.public.published .story-card__cta:after {
-      content: 'Read Story';
-    }
-    &.public.preview-published .story-card__cta:after {
-      content: 'Read More';
-    }
-    &.curator .story-card__cta:after {
-      content: 'Configure Story';
-    }
-    &.public.logo-published {
-      pointer-events: none;
-    }
-    &:active {
-      filter: brightness(94%);
-      box-shadow: 0 3px 8px 0 rgba(0,0,0,0.2), 0 0 0 1px rgba(0,0,0,0.08)
-    }
-  }
-
-  &:hover:not(.og-expanded), &.hover:not(.og-expanded), &.loading {
-    a.curator, a.public:not(.logo-published) {
-      border: 1px solid transparent;
-      box-shadow: 0 3px 8px 0 rgba(0,0,0,0.2), 0 0 0 1px rgba(0,0,0,0.08);
-      .story-card__logo {
-        opacity: 0.04;
-      }
-      .story-card__cta:after {
-        visibility: visible;
-        transition: all 0s step-end;
-      }
-      .story-card__customer {
-        visibility: hidden;
-        transition: all 0s step-end;
-      }
-    }
-  }
-
-  &.og-expanded a, a:hover, &.hover {
-    .story-card__title {
-      transform: translateY(0%);
-    }
-    .story-card__logo {
-      opacity: 0.04;
-    }
-  }
 
   &:not(.still-loading) {
     .story-card__loading {
@@ -106,8 +54,8 @@
 
   }
 
-  // applies to plugins
-  &.logo-only {
+  // applies to plugins only
+  &--logo-only {
     width: 150px;
     height: 75px;
     background-color: transparent;
@@ -116,18 +64,14 @@
     .story-card__content, .story-card__caption {
       height: 100%;
     }
+    .story-card__title, .story-card__customer {
+      display: none;
+    }
     .story-card__logo img {
       mix-blend-mode: multiply;
     }
     @media only screen and (max-width: 767px) {
       margin: 20px 0;
-    }
-  }
-
-  &--small {
-    a {
-      width: $small-story-card-width;
-      height: $small-story-card-height;
     }
   }
 
@@ -167,6 +111,56 @@
   }
 }
 
+.story-card__link {
+  display: block;
+  position: relative;
+  background-color: #fff;
+  width: $story-card-width;
+  height: $story-card-height;
+  padding: 0;
+  border: 1px solid transparent;
+  border-radius: 0;
+  box-shadow: $story-card-box-shadow;
+  transition: box-shadow 0.1s ease-in-out; 
+
+  &:active {
+    filter: brightness(94%);
+    box-shadow: $story-card-box-shadow-hover;
+  }
+
+  // .story-card:hover:not(.og-expanded) &, 
+  // .story-card.hover:not(.og-expanded) &, 
+  &:hover,
+  .story-card.og-expanded &,
+  .story-card.loading & {
+    border: 1px solid transparent;
+    box-shadow: $story-card-box-shadow-hover;;
+    .story-card__logo {
+      opacity: 0.04;
+    }
+    .story-card__title {
+      transform: translateY(0%);
+    }
+    .story-card__cta:after {
+      visibility: visible;
+      transition: all 0s step-end;
+    }
+    .story-card__customer {
+      visibility: hidden;
+      transition: all 0s step-end;
+    }
+  }
+
+  .story-card--small & {
+    width: $small-story-card-width;
+    height: $small-story-card-height;
+  }
+
+  .story-card--logo-published:not(.story-card--dashboard) & {
+    pointer-events: none;
+  }
+}
+
 .story-card__content {
   position: relative;
   width: 100%;
@@ -197,13 +191,13 @@
     // ref: https://stackoverflow.com/questions/20886991
     -webkit-transform: translateZ(0);
     mix-blend-mode: multiply;
-    &.grayscale { 
-      filter: grayscale(100%);
-    }
   }
   .story-card--small & img {
     max-height: 60%;
     max-width: 60%;
+  }
+  .story-card--grayscale & img {
+    filter: grayscale(100%);
   }
 }
 
@@ -269,5 +263,15 @@
   }
   .story-card--small & span {
     font-size: 13px !important;
+  }
+
+  .story-card--published & .story-card__cta:after {
+    content: 'Read Story';
+  } 
+  .story-card--preview-published & .story-card__cta:after {
+    content: 'Read More';
+  }
+  .story-card--dashboard & .story-card__cta:after {
+    content: 'Configure Story';
   }
 }

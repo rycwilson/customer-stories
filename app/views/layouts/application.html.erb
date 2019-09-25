@@ -8,15 +8,11 @@
   <title><%= title_helper(controller_name, action_name, @company, @story) %></title>
   <%= yield(:head) if content_for?(:head) %>
 
-  <%= stylesheet_link_tag 'application', media: 'all', 'data-turbolinks-track' => 'reload' %>
-
-  <% if @company.present? %>
-    <%= stylesheet_link_tag(
-          "custom/#{@company.subdomain}/#{@company.subdomain}", 
-          media: 'all', 
-          'data-turbolinks-track' => 'reload'
-        ) %>
-  <% end%>
+  <% if custom_stylesheet?(@company) %>
+    <%= stylesheet_link_tag(@company.subdomain, media: 'all', 'data-turbolinks-track' => 'reload') %>
+  <% else %>
+    <%= stylesheet_link_tag('application', media: 'all', 'data-turbolinks-track' => 'reload') %>
+  <% end %>
 
   <%#= mvp_stylesheet %>
   <% if ['site', 'sessions'].include?(controller_name) %>

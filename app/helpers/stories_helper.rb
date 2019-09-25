@@ -124,4 +124,14 @@ module StoriesHelper
     "background-color: #{company.header_color_2}; color: #{company.header_text_color}"
   end
 
+  def story_card_class(story, is_dashboard=false, is_plugin=false, is_grayscale=false, is_logo_only=false)
+    # company_modifier = "story-card--#{company.subdomain}"
+    status_modifier = "story-card--#{story.status}"
+    dashboard_modifier = is_dashboard ? "story-card--dashboard" : ''
+    plugin_modifier = is_plugin ? 'story-card--plugin' : ''
+    grayscale_modifier = is_grayscale ? 'story-card--grayscale' : ''
+    logo_only_modifier = is_logo_only ? 'story-card--logo-only' : ''
+    "story-card grid-item #{status_modifier} #{dashboard_modifier} #{plugin_modifier} #{grayscale_modifier} #{logo_only_modifier}"
+  end
+
 end

@@ -1,13 +1,3 @@
 
 @import '../../../views/plugins/main';
-@import '../../fonts';
-@import '../variables';
-
-#cs-gallery {
-  @import '../../../views/plugins/gallery';
-  @import 'gallery';
-  @import '../show';
-}
-
-// override settings for demo as necessary
-@import 'demo';
+@import '../../../views/plugins/gallery';

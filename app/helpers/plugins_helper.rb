@@ -38,11 +38,4 @@ module PluginsHelper
     end
   end
 
-  def story_card_class(company, is_grayscale, is_logo_only)
-    company_modifier = "story-card--#{company.subdomain}"
-    grayscale_modifier = is_grayscale ? 'story-card--grayscale' : ''
-    logo_only_modifier = is_logo_only ? 'story-card--logo-only' : ''
-    "story-card grid-item #{company_modifier} #{grayscale_modifier} #{logo_only_modifier}"
-  end
-
 end

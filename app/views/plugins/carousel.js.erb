@@ -220,8 +220,8 @@ function cspInitCarousel ($, $container, preSelectedStoryIndex, subdomain) {
         initialAdjust = false;
       }; // adjust columns
   // scroll listeners
-  $container.find('.cs-scroll-left, .cs-scroll-xs-left').on('click', arrowLeft);
-  $container.find('.cs-scroll-right, .cs-scroll-xs-right').on('click', arrowRight);
+  $container.find('.cs-carousel__scroll-btn--left, .cs-scroll-xs-left').on('click', arrowLeft);
+  $container.find('.cs-carousel__scroll-btn--right, .cs-scroll-xs-right').on('click', arrowRight);
 
   // initial adjustment
   adjustColumns();
@@ -229,7 +229,7 @@ function cspInitCarousel ($, $container, preSelectedStoryIndex, subdomain) {
   // prev / next navigation
   $('.cs-prev').on('click', function (e) {
     $('.cs-next').removeClass('bookend');
-    $('.cs-scroll-left').trigger('click');
+    $('.cs-carousel__scroll-btn--left').trigger('click');
     if (currentPage === 0) {
       $(this).addClass('bookend')
     }
@@ -237,7 +237,7 @@ function cspInitCarousel ($, $container, preSelectedStoryIndex, subdomain) {
 
   $('.cs-next').on('click', function (e) {
     $('.cs-prev').removeClass('bookend')
-    $('.cs-scroll-right').trigger('click');
+    $('.cs-carousel__scroll-btn--right').trigger('click');
     if (currentPage === numPages - 1) {
       $(this).addClass('bookend')
     }

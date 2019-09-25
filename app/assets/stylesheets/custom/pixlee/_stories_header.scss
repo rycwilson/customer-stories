@@ -1,50 +1,49 @@
 
-#stories-header-wrapper {
-  padding-top: 70px;
-  .stories-header--pixlee {
-    box-shadow: 0 0;
-    border-bottom: 1px solid $border-color;
-    .navbar-container {
+.stories-header--pixlee {
+  box-shadow: 0 0;
+  border-bottom: 1px solid $border-color;
+  margin-top: $company-header-height;
+  .navbar-container {
+    // height: 100%;
+    .visible-xs-block {
       // height: 100%;
-      .visible-xs-block {
-        // height: 100%;
-      }
-      .row {
-        // height: 100%;
-        // display: flex;
-        // align-items: center;
-        .navbar-header {
-          h4 {
-            font-family: 'Bowlby One';
-            text-transform: uppercase;
-            padding-top: 2px;  // push it down just a bit
-            // margin-bottom: 0;
-            // opacity: 0.9;
-          }
+    }
+    .row {
+      // height: 100%;
+      // display: flex;
+      // align-items: center;
+      .navbar-header {
+        h4 {
+          font-family: 'Bowlby One';
+          text-transform: uppercase;
+          padding-top: 2px;  // push it down just a bit
+          // margin-bottom: 0;
+          // opacity: 0.9;
         }
+      }
 
-        .edit-story {
-          a {
-            // font-family
-          }
+      .edit-story {
+        a {
+          // font-family
         }
         .social-buttons {
           display: none;
         }
 
       }
+
     }
-    &.show:after {
-      // content: '';
-      // position: absolute;
-      // top: 100%;
-      // z-index: -1;
-      // width: 100%;
-      // height: 90px;
-      // margin-top: -38px;
-      background-image: linear-gradient(to bottom, $bg-color 0%, #ffffff 100%);
-      // background-repeat: repeat-x;
-      // filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#f2f2f2', endColorstr='#ffffff', GradientType=0);
-    }
+  }
+  &.show:after {
+    // content: '';
+    // position: absolute;
+    // top: 100%;
+    // z-index: -1;
+    // width: 100%;
+    // height: 90px;
+    // margin-top: -38px;
+    background-image: linear-gradient(to bottom, $bg-color 0%, #ffffff 100%);
+    // background-repeat: repeat-x;
+    // filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#f2f2f2', endColorstr='#ffffff', GradientType=0);
   }
 }

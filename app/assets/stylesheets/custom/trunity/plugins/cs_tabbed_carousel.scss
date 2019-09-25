@@ -1,11 +1,3 @@
 
 @import '../../../views/plugins/main';
-@import '../../fonts';
-
-#cs-tabbed-carousel, #cs-tab-container, #cs-container {
-
-  @import '../../../views/plugins/tabbed_carousel';
-
-  @import 'tabbed_carousel';
-
-}
+@import '../../../views/plugins/tabbed_carousel';

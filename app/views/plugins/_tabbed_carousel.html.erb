@@ -100,11 +100,11 @@
                       "stories/shared/story_card",
                       {
                         story: story,
-                        card_class:  "story-card grid-item #{grayscale ? 'story-card--grayscale': ''} #{logos_only ? 'cs-card--logo-only' : ''}",
-                        is_curator: false,
+                        card_class: story_card_class(story, false, true),
+                        plugin_type: 'tabbed_carousel',
+                        is_dashboard: false,
                         is_plugin: is_plugin,
                         is_external: is_external,
-                        plugin_type: 'tabbed_carousel'
                       }
                     ) %>
 

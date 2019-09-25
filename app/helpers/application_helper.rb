@@ -1,5 +1,10 @@
 module ApplicationHelper
 
+  def custom_stylesheet?(company)
+    ['centerforcustomerengagement', 'compas', 'pixlee', 'trunity', 'varmour']
+      .include?(company.subdomain)
+  end
+
   def custom_google_fonts(company)
     return nil if company.blank? || !['stories', 'plugins', 'companies'].include?(controller_name)
     fonts = case company.subdomain

@@ -3,34 +3,10 @@
   background-color: #fff;
 }
 
-.story-card {
 
-  &.loading {
-    background-color: $fg-color;
-    filter: brightness(97%);
-  }
-  a:active {
-    background-color: $fg-color;
-    filter: brightness(94%);
-  }
-
-  
-  #stories-gallery, .related-stories {
-    .story-card__title p, .story-card__caption span {
-      font-family: $body-font;
-    }
-  }
-  
-}
 
 // the plugin will inherit its font from the host page
 body.pixlee.plugin-demo {
   font-family: $body-font;
 }
 
-.story-card__caption .story-card__cta:after {
-  color: $pixlee-blue;
-  font-weight: 700;
-  text-decoration: none;
-  text-transform: uppercase;
-}

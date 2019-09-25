@@ -1,4 +1,17 @@
 
+.trunity.stories.show, .cs-overlay-container {
+
+  #cs-tabbed-carousel {
+    .cs-header {
+      background-color: #febe57;
+    }
+    .cs-drawer-content {
+      border-top-color: #febe57;
+    }
+  }
+
+}
+
 body.trunity:not(.companies):not(.profile):not(.edit) {
 
   // @import 'company_header';

@@ -196,7 +196,7 @@ function filterCurateGallery (context) {
             .append( 
                 $(storiesTemplate({ 
                   stories: stories, 
-                  cardClass: 'story-card grid-item story-card--small',
+                  cardClass: 'story-card grid-item story-card--small story-card--dashboard',
                   isCurator: true 
                 })) 
               )

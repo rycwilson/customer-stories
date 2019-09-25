@@ -1,6 +1,23 @@
 
-.cs-container-fluid {
+
+.cs-carousel__scroll {
   position: relative;
+  height: 230px;  //  190 + (margin = 20 x 2)
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  > div {
+    cursor: pointer;
+    margin: auto;
+    height: 100px;
+    width: 50px;
+    padding: 15px;
+  }
+}
+
+.cs-carousel {
+  position: relative;
+  visibility: hidden;
   padding: 0;
   -webkit-backface-visibility: hidden;  // ref: http://stackoverflow.com/questions/19254146
   ::-webkit-scrollbar {
@@ -22,205 +39,14 @@
       div[class^='col-'] {
         position: relative;
         // width: 330px;  // jquery will set this
-        height: 190px;
+        // height: 190px;
         padding-left: 16px;  // modified from 15 so 2 stories on an ipad
         padding-right: 16px;
         box-sizing: border-box;
       }
     }
   }
-  .cs-thumbnail {
-    width: 270px;
-    height: 100%;  // 190px column height
-    position: absolute;
-    left: 0;
-    right: 0;
-    margin: 0 auto;
-    background-color: #fff;
-    border: 1px solid transparent;
-    &.bg-dark {
-      border: 1px solid #fff;
-    }
-    // following settings lifted from chrome new tab page
-    box-shadow: 0 2px 2px 0 rgba(0,0,0,0.16), 0 0 0 1px rgba(0,0,0,0.08);
-    transition: box-shadow 0.1s ease-in-out;
-    padding: 0;
-    text-align: center;
-    border-radius: 0;
-    .thumbnail-view {
-      position: relative;
-      height: 80%;
-      width: 100%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      cursor: pointer;
-      .thumbnail-view-hover {
-        position: absolute;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        width: 100%;
-        height: 100%;
-        padding: 12px;
-        -webkit-transform: translateY(-100%);
-        -moz-transform: translateY(-100%);
-        -ms-transform: translateY(-100%);
-        -o-transform: translateY(-100%);
-        transform: translateY(-100%);
-        transition: all 0s step-end;
-        // important setting is for weebly
-        p {
-          font-family: inherit !important;
-          font-size: 16px !important;
-          text-align: center;
-          line-height: 28px !important;
-          padding: 0;  // inspired by pixlee conflict
-          font-weight: 600;
-          letter-spacing: normal;
-          color: #444 !important;
-          margin-bottom: 0;
-        }
-      }
-      img {
-        display: inline-block;
-        vertical-align: middle;
-        max-height: 70%;
-        max-width: 70%;
-        opacity: 1;
-        transition: opacity 0s step-end;
-        -moz-transition: opacity 0s step-end;
-        -webkit-transition: opacity 0s step-end;
-        // this compensates for a bug in chrome, which causes images of a
-        // certain aspect ratio to expand and contract very slightly on
-        // hover and opacity transition
-        // ref: https://stackoverflow.com/questions/20886991
-        -webkit-transform: translateZ(0);
-        mix-blend-mode: multiply;
-        &.grayscale {
-          filter: grayscale(100%);
-        }
-      }
-    }
-    .caption {
-      position: absolute;
-      bottom: 0;
-      height: 35%;
-      width: 100%;
-      border-radius: 0;
-      background: transparent;
-      span {
-        font: {
-          family: inherit !important;
-          size: 14px !important;
-          weight: 400 !important;
-        }
-        color: #444 !important;
-        position: absolute;
-        width: 90%;
-        top: 50%;
-        left: 50%;
-        transform: translate(-50%, -50%);
-      }
-      span.click-action:after {
-        text-decoration: underline;
-        visibility: hidden;
-        transition: all 0s;
-      }
-    }
-    &:active {
-      -webkit-filter: brightness(94%);
-      box-shadow: 0 3px 8px 0 rgba(0,0,0,0.2), 0 0 0 1px rgba(0,0,0,0.08)
-    }
-    &.logo-published {
-      pointer-events: none;
-    }
-    &.published .caption span.click-action:after {
-      content: 'Read Story';
-    }
-    &.preview-published .caption span.click-action:after {
-      content: 'Read More';
-    }
-    &:hover, &.cs-loading {
-      border: 1px solid transparent;  // override bootstrap .thumbnail
-      &.bg-dark {
-        border: 1px solid #fff;
-      }
-      box-shadow: 0 3px 8px 0 rgba(0,0,0,0.2), 0 0 0 1px rgba(0,0,0,0.08);
-      .thumbnail-view-hover {
-        -webkit-transform: translateY(0%);
-        -moz-transform: translateY(0%);
-        -ms-transform: translateY(0%);
-        -o-transform: translateY(0%);
-      }
-      img {
-        opacity: 0.04;
-      }
-      .caption {
-        span.customer-name {
-          visibility: hidden;
-          transition: all 0s step-end;
-        }
-        span.click-action:after {
-          visibility: visible;
-          transition: all 0s step-end;
-        }
-      }
-    }
-    &.logo-only {
-      width: 150px;
-      height: 75px;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-      background-color: transparent;
-      border: none;
-      box-shadow: 0 0;
-      .thumbnail-view, .caption {
-        height: 100%;
-      }
-      img {
-        mix-blend-mode: multiply;
-      }
-    }
-    &:not(.cs-still-loading) {
-      i.fa-spin {
-        opacity: 0;
-      }
-    }
-    &.cs-loading {
-      // border-color: #ccc;
-      -webkit-filter: brightness(95%);
-      .thumbnail-view-hover { transform: none; }
-      // img { opacity: 0.05 !important; }
-      &.cs-still-loading {
-        .thumbnail-view, .caption {
-          opacity: 0.05;
-          transition: opacity 1s step-end;
-        }
-        img {
-          opacity: 0;
-          transition: opacity 1s step-end;
-          // -webkit-transition: opacity 1s step-end;
-        }
-        // the icon needs to be wrapped in a div in order for the transform to work
-        // (center if element is centered, not top-left of element)
-        .icon-container {
-          position: absolute;
-          top: 50%;
-          left: 50%;
-          transform: translate(-50%, -50%);
-          i.fa-spin {
-            font-size: 20px;
-            color: #666;
-            opacity: 1;
-            transition: opacity 1s step-end;
-            // -webkit-transition: opacity 1s step-end;
-          }
-        }
-      }
-    }
-  }
+
   .cs-scroll-xs-container {
     display: none;
     .cs-row {

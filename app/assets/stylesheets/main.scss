@@ -12,7 +12,6 @@ $icon-font-path: 'bootstrap-sass/assets/fonts/bootstrap/';
 
 // TODO why do we need this?
 @import 'base/mvp_holdovers';
-// @import 'animate.css/animate';
 
 @import 'views/site';
 @import 'views/navbars/navbars';
@@ -21,5 +20,4 @@ $icon-font-path: 'bootstrap-sass/assets/fonts/bootstrap/';
 @import 'views/stories/stories';
 @import 'views/contributions/contributions';
 @import 'views/profile/profile';
-@import 'custom/custom';
 

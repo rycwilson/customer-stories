@@ -14,8 +14,8 @@
               'stories/shared/story_card',
               {
                 story: story,
-                card_class: 'story-card grid-item',
-                is_curator: false,
+                card_class: story_card_class(story),
+                is_dashboard: false,
                 is_plugin: false,
                 is_external: false
               }

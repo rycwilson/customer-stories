@@ -1,17 +1,14 @@
 
 @import '../../../views/plugins/main';
-@import '../../fonts';
 @import '../../../views/plugins/carousel';
 
 // custom
 @import '../variables';
-@import 'carousel';
+// @import 'carousel';
 @import '../show';
 
 body.pixlee.plugin-demo {
-  .thumbnail-view-hover, .caption {
-    font-family: 'Muli', 'Open Sans', sans-serif;
-  }
+  font-family: 'Muli', 'Open Sans', sans-serif;
 }
 
 .cs-overlay-container {
