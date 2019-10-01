@@ -10,10 +10,10 @@
     {{ var summary = JSON.stringify(story.summary).replace(/'/g, "&#39"); }}
     {{ var quote = JSON.stringify(story.quote).replace(/'/g, "&#39"); }}
 
-    <li class="{{= cardClass }} story-card--{{= (story.logo_published && 'logo-published') || (story.preview_published && 'preview-published') || (story.published && 'published')}}" data-story-id="{{= story.id }}" data-story-slug="{{= storySlug }}" data-customer-slug="{{= customerSlug }}">
+    <li class="story-card grid-item story-card--{{= subdomain }} {{= isDashboard ? 'story-card--small story-card--dashboard' : '' }} story-card--{{= (story.published && 'published') || (story.preview_published && 'preview-published') || (story.logo_published && 'logo-published') || ''}}" data-story-id="{{= story.id }}" data-story-slug="{{= storySlug }}" data-customer-slug="{{= customerSlug }}">
 
-      <a href="{{= isCurator ? 'javascript:;' : (story.published && story.csp_story_path) || (story.preview_published && 'javascript:;') || '' }}"
-         class="story-card__link {{= isCurator ? 'curator' : 'public' }} {{= story.published ? 'published' : (story.preview_published ? 'preview-published' : (story.logo_published ? 'logo-published' : 'pending-curation')) }}"
+      <a href="{{= isDashboard ? 'javascript:;' : (story.published && story.csp_story_path) || (story.preview_published && 'javascript:;') || '' }}"
+         class="story-card__link {{= isDashboard ? 'curator' : 'public' }} {{= story.published ? 'published' : (story.preview_published ? 'preview-published' : (story.logo_published ? 'logo-published' : 'pending-curation')) }}"
          data-logosrc="{{= story.success.customer.logo_url }}"
          data-customer='{{= JSON.stringify(story.success.customer.name) }}'
          data-summary='{{= summary }}'

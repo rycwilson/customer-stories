@@ -6,3 +6,12 @@
 @import '../../../../../vendor/assets/bower_components/bootstrap-horizon/bootstrap-horizon';
 @import 'overlays/main';
 @import '../stories/show/show';
+
+body.plugin-demo {
+  font-family: $company-body-font;
+  background-color: #f2f2f2;
+  &.bg-dark {
+    background-color: #888;
+  }
+}
+

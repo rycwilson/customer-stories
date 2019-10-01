@@ -196,8 +196,8 @@ function filterCurateGallery (context) {
             .append( 
                 $(storiesTemplate({ 
                   stories: stories, 
-                  cardClass: 'story-card grid-item story-card--small story-card--dashboard',
-                  isCurator: true 
+                  subdomain: location.href.match(/:\/\/(\w+)./),
+                  isDashboard: true 
                 })) 
               )
             .imagesLoaded(function () {

@@ -1,14 +1,14 @@
 
-// colors
-$bg-color: #ffffff; // #f9f9f9;
-$fg-color: #f8f9fd;  // #e4e4e4;
-$border-color: #f2f2f2;
 $stories-header-color: #f8f9fd;
-// $story-hover-color: rgba(50, 58, 69, 0.8);
+$stories-bg-color: #ffffff; // #f9f9f9;
+$stories-fg-color: #f8f9fd;  // #e4e4e4;
+
 $pixlee-blue: #56ccf2;
+$border-color: #f2f2f2;
+// $story-hover-color: rgba(50, 58, 69, 0.8);
 
 @import url(https://fonts.googleapis.com/css?family=Muli);
 
 // $stories-header-font: 'Bowlby One';
-$body-font: 'Muli', 'Open Sans', sans-serif;
-$title-font: '';
+$company-body-font: 'Muli', 'Open Sans', sans-serif;
+$company-title-font: 'Bowlby One', 'Muli', 'Open Sans', sans-serif;

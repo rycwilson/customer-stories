@@ -3,17 +3,21 @@
 @import 'story_card';
 
 body {
-  font-family: 'Open Sans', 'Trebuchet MS', arial, sans-serif;
+  font-family: $csp-body-font;
   font-size: 13px;
   padding: 0;
   margin: 0;
-
+  
   // this prevents presence/absence of scroll bar from shfiting the page left/right
   // TODO ... or maybe this: https://css-tricks.com/elegant-fix-jumping-scrollbar-issue/
   overflow-y: scroll;
-
+  
   &:not(.site) {
-    background-color: #f9f9f9;
+    background-color: $light-gray;
+  }
+  &.stories.index, &.stories.show {
+    background-color: $stories-bg-color;
+    font-family: $company-body-font;
   }
 }
 

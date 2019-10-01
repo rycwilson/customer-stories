@@ -13,7 +13,7 @@
     updateGallery($(
       _.template($('#stories-template').html())({
         stories: CSP.stories.filter(function (story) { return storyIds.includes(story.id); }),
-        isCurator: false
+        isDashboard: false
       })
     ));
   }

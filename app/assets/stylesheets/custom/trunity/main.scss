@@ -1,4 +1,6 @@
 
+@import '../../main';
+
 .trunity.stories.show, .cs-overlay-container {
 
   #cs-tabbed-carousel {
@@ -13,12 +15,6 @@
 }
 
 body.trunity:not(.companies):not(.profile):not(.edit) {
-
-  // @import 'company_header';
-  // @import 'stories_header';
-  // @import 'gallery';
-  // @import 'index';
-  @import 'show';
 
   @media only screen and (max-width: 767px) {
     #stories-gallery, #curate-gallery {

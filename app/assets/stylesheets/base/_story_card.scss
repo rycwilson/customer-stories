@@ -1,7 +1,4 @@
 
-$story-card-box-shadow: 0 2px 2px 0 rgba(0,0,0,0.16), 0 0 0 1px rgba(0,0,0,0.08);
-$story-card-box-shadow-hover: 0 3px 8px 0 rgba(0,0,0,0.2), 0 0 0 1px rgba(0,0,0,0.08);
-
 .story-card {
   display: inline-block;
   vertical-align: top;
@@ -217,11 +214,11 @@ $story-card-box-shadow-hover: 0 3px 8px 0 rgba(0,0,0,0.2), 0 0 0 1px rgba(0,0,0,
     // padding: 0;  // inspired by pixlee conflict (TODO: ???)
     font: {
       family: inherit !important;
-      size: 15px;
+      size: $story-card-title-size;
       weight: 600;
     }
-    line-height: 26px !important;
-    color: #444 !important;
+    line-height: 26px;
+    color: $story-card-text-color;
 
     // weebly will squish together letters and words in the customer name together without these...
     word-spacing: normal;
@@ -238,13 +235,12 @@ $story-card-box-shadow-hover: 0 3px 8px 0 rgba(0,0,0,0.2), 0 0 0 1px rgba(0,0,0,
   bottom: 0;
   width: 100%;
   height: 35%;
-  color: #444;
   border-radius: 0;
   background: transparent;
   span {
     font: {
       family: inherit !important;
-      size: 14px !important;
+      size: $story-card-caption-size;
     }
     position: absolute;
     width: 90%;
@@ -256,7 +252,11 @@ $story-card-box-shadow-hover: 0 3px 8px 0 rgba(0,0,0,0.2), 0 0 0 1px rgba(0,0,0,
     word-spacing: normal;
     letter-spacing: normal;
   }
+  .story-card__customer {
+    color: $story-card-text-color;
+  }
   .story-card__cta:after {
+    color: $story-card-text-color;
     text-decoration: underline;
     visibility: hidden;
     transition: all 0s;

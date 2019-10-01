@@ -3,7 +3,7 @@
  *  TODO (?): http://stackoverflow.com/questions/24710277/turbolinks-and-controller-specific-assets
  *
  *= require_self
- *= require main
+ *= require main_wrapper
  */
 
 

@@ -1,22 +1,33 @@
 
-$company-header-height: 70px;
-$company-logo-max-height: 50px;
-$stories-header-height: 42px;
-
-// $csp-bg-gray: #f2f2f2;
-// $csp-fg-gray: #efefef;
-
 $light-gray: #f9f9f9;
 $medium-gray: #efefef;
 $dark-gray: #e5e5e5;
-
 $nav-blue: #039be5; // #0288d1 // #0074eb;  // #0095ff; //#d74b4b;  // #4885ed;
+
+$csp-body-font: 'Open Sans', 'Trebuchet MS', arial, sans-serif;
+$csp-title-font: 'Lato', 'Open Sans', 'Trebuchet MS', arial, sans-serif;
+
+$company-body-font: $csp-body-font !default;
+
+$company-header-height: 70px !default;
+$company-logo-max-height: 50px !default;
+$stories-header-height: 42px !default;
+ 
+$stories-bg-color: $light-gray !default;
+$stories-fg-color: $medium-gray !default;
 
 $status-on-color: rgba(3, 155, 229, 0.35); //  rgba(105, 255, 255, 0.5);  // same as btn-success, with opacity
 
 // https://www.invisionapp.com/inside-design/finding-the-right-color-palettes-for-data-visualizations/
 
-$story-card-width: 242px;
-$story-card-height: 170px;
-$small-story-card-width: 200px;
-$small-story-card-height: 140px;
+$story-card-width: 242px !default;
+$story-card-height: 170px !default;
+$small-story-card-width: 200px !default;
+$small-story-card-height: 140px !default;
+
+$story-card-box-shadow: 0 2px 2px 0 rgba(0,0,0,0.16), 0 0 0 1px rgba(0,0,0,0.08) !default;
+$story-card-box-shadow-hover: 0 3px 8px 0 rgba(0,0,0,0.2), 0 0 0 1px rgba(0,0,0,0.08) !default;
+
+$story-card-title-size: 15px !default;
+$story-card-caption-size: 14px !default;
+$story-card-text-color: #444 !default;

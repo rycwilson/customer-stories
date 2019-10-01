@@ -1,0 +1,71 @@
+
+@import 'variables';
+@import 'show';
+
+@mixin stories-header-title {
+  h3 {
+    // font-family: 'Bowlby One';
+    text-transform: uppercase;
+    // padding-top: 2px;
+  }
+}
+
+body.pixlee {
+  .company-header--pixlee {
+    .pixlee.stories.index &, .pixlee.stories.show & {
+      border-bottom: 1px solid $border-color;  
+    }
+  }
+  
+  .stories-header.stories-header--pixlee {
+    @include stories-header-title;
+    box-shadow: 0 0;
+    border-bottom: 1px solid $border-color;
+    &.show:after {
+      background-image: linear-gradient(to bottom, $stories-bg-color 0%, #ffffff 100%);
+    }
+  }
+  .search-and-filters.visible-md-block {
+    border: 1px solid $border-color;
+  }
+  .company-logo-upload__stories-header {
+    @include stories-header-title;
+  }
+}
+
+.story-card.story-card--pixlee {
+
+  &.loading {
+    background-color: $stories-fg-color;
+    filter: brightness(97%);
+  }
+  a:active {
+    background-color: $stories-fg-color;
+    filter: brightness(94%);
+  }
+  
+  #stories-gallery &, .related-stories & {
+    .story-card__title p, .story-card__caption span {
+      font-family: $company-body-font;
+    }
+  }
+
+  .story-card__cta:after {
+    color: $pixlee-blue;
+    font-weight: 700;
+    text-decoration: none;
+    text-transform: uppercase;
+  }
+
+  .cs-carousel & .story-card__cta:after {
+    content: 'Read Case Study';
+  }
+  
+}
+
+
+
+
+  
+
+

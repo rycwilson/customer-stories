@@ -1,12 +1,13 @@
 
+@import '../../../views/plugins/main';
+@import '../../../views/plugins/gallery';
+@import '../main';
+
 #cs-gallery {
   background-color: #fff;
 }
 
-
-
 // the plugin will inherit its font from the host page
 body.pixlee.plugin-demo {
-  font-family: $body-font;
+  background-color: #fff;
 }
-

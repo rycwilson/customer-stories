@@ -16,7 +16,7 @@ class PluginsController < ApplicationController
     end
     @uid = params[:uid]
     # set the stylesheet url here, as it's impossible to use the asset path helper in cs.js in a company-specific way
-    @stylesheet_url = custom_stylesheet_url(@company, "cs_#{@type}")
+    @stylesheet_url = custom_stylesheet_url(@company, @type)
     respond_to do |format|
       format.js { render action: 'cs' }
     end
@@ -66,7 +66,7 @@ class PluginsController < ApplicationController
       partial: params[:type],
       layout: false,
       locals: {
-        company: @company,
+        company: company,
         stories: stories,  #.first(16),
         title: 'Customer Stories',
         is_demo: params[:is_demo].present?,
@@ -74,6 +74,7 @@ class PluginsController < ApplicationController
         background: params[:background] || 'light',
         tab_color: params[:tab_color],
         text_color: params[:text_color],
+        carousel_version: company.subdomain == 'pixlee' ? 'v2' : 'v1',
         is_grayscale: params[:grayscale].present? && params[:grayscale] != 'false',
         is_logos_only: params[:logos_only].present? && params[:logos_only] != 'false',
         is_curator: false,
@@ -86,7 +87,7 @@ class PluginsController < ApplicationController
     )
   end
 
-  def get_pre_selected_story (company, params)
+  def get_pre_selected_story(company, params)
     story = params[:pre_selected_story].present? &&
             Story.friendly.exists?(params[:pre_selected_story]) &&
             Story.friendly.find(params[:pre_selected_story])
@@ -95,7 +96,7 @@ class PluginsController < ApplicationController
       story
   end
 
-  def plugin_stories (company, params)
+  def plugin_stories(company, params)
     if params[:stories].present?
       # remove any that don't exist or aren't published, or if not authorized
       story_ids = params[:stories]
@@ -116,11 +117,8 @@ class PluginsController < ApplicationController
     stories
   end
 
-  def custom_stylesheet_url (company, type)
-    URI.join(
-      root_url,
-      ActionController::Base.helpers.asset_path("custom/#{company.subdomain}/plugins/#{type}.css")
-    ).to_s
+  def custom_stylesheet_url(company, type)
+    URI.join(root_url, helpers.asset_path("#{company.subdomain}_#{type}.css")).to_s
   end
 
 end

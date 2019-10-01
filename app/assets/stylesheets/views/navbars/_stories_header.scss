@@ -1,49 +1,4 @@
 
-.stories-header__home {
-  display: flex;
-  align-items: center;
-  font-size: 18px;
-  float: right;
-  padding: 8px;
-  &:link, &:visited, &:hover, &:active {
-    text-decoration: none;
-  }
-  .stories-header--light-background & {
-    color: rgba(51, 51, 51, 0.9);
-    &:hover {
-      // color: rgba(51, 51, 51, 1.0);
-    }
-  }
-  .stories-header--dark-background & {
-    color: rgba(255, 255, 255, 0.9);
-    &:hover {
-      // color: rgba(230, 230, 230, 0.9);
-    }
-  }
-}
-
-.stories-header__edit {
-  height: 100%;
-  width: 100%;
-  padding: 0 30px;
-  display: flex;  
-  align-items: center;
-  justify-content: center;
-  font-size: 15px;
-  &:link, &:visited, &:hover, &:active {
-    text-decoration: none;
-  }
-  .stories-header--light-background & {
-    color: rgba(51, 51, 51, 0.9);
-  }
-  .stories-header--dark-background & {
-    color: rgba(255, 255, 255, 0.9);
-  }
-  &:hover {
-    background: rgba(0, 0, 0, 0.2);
-  }
-}
-
 .stories-header {
   height: $stories-header-height;
   margin-top: $company-header-height;
@@ -63,6 +18,7 @@
       align-items: center;
       .navbar-header {
         .stories-header__title {
+          font-family: $company-title-font;
           margin: 0;
           // color: #555;
         }
@@ -116,3 +72,50 @@
     }
   }
 }
+
+.stories-header__edit {
+  height: 100%;
+  width: 100%;
+  padding: 0 30px;
+  display: flex;  
+  align-items: center;
+  justify-content: center;
+  font-size: 15px;
+  &:link, &:visited, &:hover, &:active {
+    text-decoration: none;
+  }
+  .stories-header--light-background & {
+    color: rgba(51, 51, 51, 0.9);
+  }
+  .stories-header--dark-background & {
+    color: rgba(255, 255, 255, 0.9);
+  }
+  &:hover {
+    background: rgba(0, 0, 0, 0.2);
+  }
+}
+
+.stories-header__home {
+  display: flex;
+  align-items: center;
+  font-size: 18px;
+  float: right;
+  padding: 8px;
+  &:link, &:visited, &:hover, &:active {
+    text-decoration: none;
+  }
+  .stories-header--light-background & {
+    color: rgba(51, 51, 51, 0.9);
+    &:hover {
+      // color: rgba(51, 51, 51, 1.0);
+    }
+  }
+  .stories-header--dark-background & {
+    color: rgba(255, 255, 255, 0.9);
+    &:hover {
+      // color: rgba(230, 230, 230, 0.9);
+    }
+  }
+}
+
+

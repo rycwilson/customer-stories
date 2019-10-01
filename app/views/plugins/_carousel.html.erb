@@ -4,16 +4,16 @@
 
     <div class="cs-grid cs-grid-carousel">
 
-      <div class="cs-carousel cs-container-fluid">
+      <div class="cs-carousel cs-container-fluid cs-carousel--<%= carousel_version %> <%= background ? 'cs-carousel--' + background + '-background' : '' %>">
 
         <div class="cs-row">
 
-          <div class="cs-carousel__scroll cs-carousel__scroll--left col-xs-2 col-sm-1 <%= background ? 'bg-' + background : '' %>">
+          <div class="cs-carousel__arrow cs-carousel__arrow--left col-xs-2 col-sm-1">
             <div>
             </div>
           </div>
 
-          <div class="cs-rh-container <%= company.subdomain == 'pixlee' ? 'col-xs-12' : 'col-xs-8 col-sm-10' %>">
+          <div class="cs-carousel__carousel cs-rh-container col-xs-8 col-sm-10">
 
             <!-- text-center in case not enough stories to fill carousel -->
             <div class="cs-row row-horizon text-center">
@@ -45,44 +45,29 @@
             </div>
           </div>
 
-          <div class="cs-carousel__scroll cs-carousel__scroll--right col-xs-2 col-sm-1 <%= background ? 'bg-' + background : '' %>">
+          <div class="cs-carousel__arrow cs-carousel__arrow--right col-xs-2 col-sm-1">
             <div>
             </div>
           </div>
-
-          <% if company.subdomain != 'pixlee' %>
-
-            <div class="col-xs-12 cs-scroll-xs-container">
-              <div class="cs-row">
-                <div class="col-xs-2 cs-scroll-xs text-center">
-                  <div class="cs-scroll-xs-left"></div>
-                </div>
-                <div class="col-xs-8 cs-pagination-xs">
-                </div>
-                <div class="col-xs-2 cs-scroll-xs text-center">
-                  <div class="cs-scroll-xs-right"></div>
-                </div>
-              </div>
-            </div>
-
-          <% end %>
-
         </div>
 
-        <% if company.subdomain != 'pixlee' %>
+        <div class="cs-carousel__scroll-xs">
+          <button type="button" class="cs-carousel__arrow-xs cs-carousel__arrow-xs--left">
+            <i class="fa fa-fw fa-angle-left"></i>
+          </button>
+          <div class="cs-carousel__pagination-xs text-center"></div>
+          <button type="button" class="cs-carousel__arrow-xs cs-carousel__arrow-xs--right">
+            <i class="fa fa-fw fa-angle-right"></i>
+          </button>
+        </div>
 
-          <div class="cs-row cs-pagination <%= background ? 'bg-' + background : '' %>">
-          </div>
+        <div class="cs-carousel__pagination"></div>
 
-        <% elsif stories.length > 1 %>
-
-          <div class="cs-nav">
-            <span style="float: right">
-              <span class="cs-prev bookend">Previous</span>&nbsp;&nbsp;/&nbsp;&nbsp;<span class="cs-next">Next</span>
-            </span>
-          </div>
-
-        <% end %>
+        <div class="cs-carousel__prev-next">
+          <button type="button" class="cs-carousel__prev cs-carousel__prev--bookend">Previous</button>
+          <span>/</span>
+          <button type="button" class="cs-carousel__next ">Next</button>
+        </div>
 
       </div>
 

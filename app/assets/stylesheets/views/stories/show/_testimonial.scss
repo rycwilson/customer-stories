@@ -10,7 +10,7 @@
       @include customer-logo('#fff');
     }
     .cs-customer-logo {
-      @include customer-logo(if(variable-exists(bg-color), $bg-color, $light-gray));
+      @include customer-logo(if(variable-exists(stories-bg-color), $stories-bg-color, $light-gray));
     }
   }
   .customer-logo-quote.hidden-xs {
@@ -61,7 +61,7 @@
     // bottom: -90px;  // mirrors margin-bottom
     z-index: -1;
     width: 100%;
-    background-image: linear-gradient(to bottom, #ffffff 0%, if(variable-exists(bg-color), $bg-color, $light-gray) 100%);
+    background-image: linear-gradient(to bottom, #ffffff 0%, if(variable-exists(stories-bg-color), $stories-bg-color, $light-gray) 100%);
     background-repeat: repeat-x;
     // filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#fff2f2f2', endColorstr='#ffffffff', GradientType=0);
   }
@@ -80,12 +80,12 @@
     }
     .customer-logo-quote.visible-xs-block {
       .customer-logo {
-        background-color: if(variable-exists(bg-color), $bg-color, $light-gray);
+        background-color: if(variable-exists(stories-bg-color), $stories-bg-color, $light-gray);
       }
     }
     .customer-logo-quote.hidden-xs {
       .customer-logo {
-        background-color: if(variable-exists(bg-color), $bg-color, $light-gray);
+        background-color: if(variable-exists(stories-bg-color), $stories-bg-color, $light-gray);
         img {
           max-height: 80px;
           max-width: 60%;

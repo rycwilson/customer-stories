@@ -84,8 +84,8 @@ function storiesIndexListeners () {
       updateGallery($(
         _.template($('#stories-template').html())({
           stories: filterStories('', ''),
-          cardClass: 'story-card grid-item', 
-          isCurator: false
+          subdomain: location.href.match(/:\/\/(\w+)./)[1],
+          isDashboard: false
         })
       ));
     })
@@ -232,8 +232,8 @@ function storiesIndexListeners () {
       updateGallery($(
         _.template($('#stories-template').html())({
           stories: filteredStories,
-          classClass: 'story-card grid-item',
-          isCurator: false
+          subdomain: location.href.match(/:\/\/(\w+)./)[1],
+          isDashboard: false
         })
       ));
       replaceStateStoriesIndex(categorySlug, productSlug);
@@ -337,7 +337,7 @@ function replaceStateStoriesIndex (categorySlug, productSlug) {
 //       filteredStories = filterStories(filterTag, filterId);
 //       updateGallery($(storiesTemplate({
 //                          stories: filteredStories,
-//                          isCurator: CSP.current_user.is_curator })));
+//                          isDashboard: CSP.current_user.is_curator })));
 //       selectBoxesTrackQueryString($categorySelect, categorySlug, $productSelect, productSlug);
 
 //     // Safari only (calls window.onpopstate on initial load)

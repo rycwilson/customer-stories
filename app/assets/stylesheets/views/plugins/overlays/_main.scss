@@ -9,7 +9,7 @@ $anim-time: 0.2s;
 
 @import "base";
 @import "mediaqueries";
-// @import "../../stories/show/show";
+@import "../../stories/show/show";
 
 .cs-overlay-container {
   height: auto;
