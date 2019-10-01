@@ -131,7 +131,7 @@ module StoriesHelper
     plugin_modifier = is_plugin ? 'story-card--plugin' : ''
     grayscale_modifier = is_grayscale ? 'story-card--grayscale' : ''
     logo_only_modifier = is_logo_only ? 'story-card--logo-only' : ''
-    "story-card grid-item #{company_modifier} #{status_modifier} #{dashboard_modifier} #{plugin_modifier} #{grayscale_modifier} #{logo_only_modifier}"
+    "story-card #{company_modifier} #{status_modifier} #{dashboard_modifier} #{plugin_modifier} #{grayscale_modifier} #{logo_only_modifier}"
   end
 
 end

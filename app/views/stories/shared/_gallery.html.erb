@@ -9,6 +9,7 @@
             "#{company.subdomain}/story-card-#{story.id}-memcache-iterator-#{company.story_card_fragments_memcache_iterator}",
             skip_digest: true
           ) do %>
+      <li style="display: inline-block">
 
         <%= render(
               'stories/shared/story_card',
@@ -22,6 +23,7 @@
             ) %>
 
       <%# end %>
+      </li>
 
     <% end %>
 

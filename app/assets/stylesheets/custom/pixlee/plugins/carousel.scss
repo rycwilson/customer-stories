@@ -14,10 +14,6 @@ $carousel-nav-size: 13px;
   padding: 0; 
 }
 
-body.plugin-demo {
-  background-color: #fff;
-}
-
 .cs-carousel__prev, .cs-carousel__next {
   .cs-carousel--light-background & {
     color: $story-card-text-color;

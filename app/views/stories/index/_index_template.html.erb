@@ -10,49 +10,53 @@
     {{ var summary = JSON.stringify(story.summary).replace(/'/g, "&#39"); }}
     {{ var quote = JSON.stringify(story.quote).replace(/'/g, "&#39"); }}
 
-    <li class="story-card grid-item story-card--{{= subdomain }} {{= isDashboard ? 'story-card--small story-card--dashboard' : '' }} story-card--{{= (story.published && 'published') || (story.preview_published && 'preview-published') || (story.logo_published && 'logo-published') || ''}}" data-story-id="{{= story.id }}" data-story-slug="{{= storySlug }}" data-customer-slug="{{= customerSlug }}">
+    <li style="display: inline-block">
 
-      <a href="{{= isDashboard ? 'javascript:;' : (story.published && story.csp_story_path) || (story.preview_published && 'javascript:;') || '' }}"
-         class="story-card__link {{= isDashboard ? 'curator' : 'public' }} {{= story.published ? 'published' : (story.preview_published ? 'preview-published' : (story.logo_published ? 'logo-published' : 'pending-curation')) }}"
-         data-logosrc="{{= story.success.customer.logo_url }}"
-         data-customer='{{= JSON.stringify(story.success.customer.name) }}'
-         data-summary='{{= summary }}'
-         data-quote='{{= quote }}'
-         data-quote-attr-name='{{= JSON.stringify(story.quote_attr_name) }}'
-         data-quote-attr-title='{{= JSON.stringify(story.quote_attr_title) }}'
-         data-preview-contributor='{{= JSON.stringify(story.published_contributors[0]) }}'">
+      <div class="story-card story-card--{{= subdomain }} {{= isDashboard ? 'story-card--small story-card--dashboard' : '' }} story-card--{{= (story.published && 'published') || (story.preview_published && 'preview-published') || (story.logo_published && 'logo-published') || ''}}" data-story-id="{{= story.id }}" data-story-slug="{{= storySlug }}" data-customer-slug="{{= customerSlug }}">
 
-        <div class="story-card__content">
+        <a href="{{= isDashboard ? 'javascript:;' : (story.published && story.csp_story_path) || (story.preview_published && 'javascript:;') || '' }}"
+          class="story-card__link {{= isDashboard ? 'curator' : 'public' }} {{= story.published ? 'published' : (story.preview_published ? 'preview-published' : (story.logo_published ? 'logo-published' : 'pending-curation')) }}"
+          data-logosrc="{{= story.success.customer.logo_url }}"
+          data-customer='{{= JSON.stringify(story.success.customer.name) }}'
+          data-summary='{{= summary }}'
+          data-quote='{{= quote }}'
+          data-quote-attr-name='{{= JSON.stringify(story.quote_attr_name) }}'
+          data-quote-attr-title='{{= JSON.stringify(story.quote_attr_title) }}'
+          data-preview-contributor='{{= JSON.stringify(story.published_contributors[0]) }}'">
 
-          {{ if (story.title) { }}
-            <div class="story-card__title">
-              <p>{{= story.title }}</p>
-            </div>
-          {{ } }}
+          <div class="story-card__content">
 
-          <div class="story-card__logo">
-
-            {{ if (story.success.customer.logo_url) { }}
-              <img src="{{= story.success.customer.logo_url }}">
-            {{ } else { }}
-              <img src="<%= LOGO_PLACEHOLDER_URL %>">
+            {{ if (story.title) { }}
+              <div class="story-card__title">
+                <p>{{= story.title }}</p>
+              </div>
             {{ } }}
+
+            <div class="story-card__logo">
+
+              {{ if (story.success.customer.logo_url) { }}
+                <img src="{{= story.success.customer.logo_url }}">
+              {{ } else { }}
+                <img src="<%= LOGO_PLACEHOLDER_URL %>">
+              {{ } }}
+
+            </div>
 
           </div>
 
-        </div>
+          <div class="story-card__caption caption">
+            <span class="story-card__customer customer-name">{{= story.success.customer.name }}</span>
+            <span class="story-card__cta click-action"></span>
+          </div>
 
-        <div class="story-card__caption caption">
-          <span class="story-card__customer customer-name">{{= story.success.customer.name }}</span>
-          <span class="story-card__cta click-action"></span>
-        </div>
+          <div class="story-card__loading icon-container">
+            <i class="fa fa-spin fa-circle-o-notch"></i>
+          </div>
 
-        <div class="story-card__loading icon-container">
-          <i class="fa fa-spin fa-circle-o-notch"></i>
-        </div>
+        </a>
 
-      </a>
-
+      </div>
+    
     </li>
 
   {{ }); }}

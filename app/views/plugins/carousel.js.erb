@@ -249,8 +249,6 @@ function cspInitCarousel ($, $container, preSelectedStoryIndex, subdomain) {
 
   // set up pagination (numPages calculation needs to be after adjustment)
   numPages = Math.ceil($carousel.prop('scrollWidth') / $carousel.width());
-  console.log(numPages)
-  console.log($paginationXs)
   if (numPages > 8 && $(window).width() <= 500) {
     $paginationXs
       .append('<span class="cs-carousel__page-count-xs">' +

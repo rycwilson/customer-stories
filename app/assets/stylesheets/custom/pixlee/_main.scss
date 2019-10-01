@@ -6,17 +6,16 @@
   h3 {
     // font-family: 'Bowlby One';
     text-transform: uppercase;
-    // padding-top: 2px;
+    padding-top: 2px;
   }
 }
 
 body.pixlee {
-  .company-header--pixlee {
+  .company-header.company-header--pixlee {
     .pixlee.stories.index &, .pixlee.stories.show & {
       border-bottom: 1px solid $border-color;  
     }
   }
-  
   .stories-header.stories-header--pixlee {
     @include stories-header-title;
     box-shadow: 0 0;
@@ -30,6 +29,9 @@ body.pixlee {
   }
   .company-logo-upload__stories-header {
     @include stories-header-title;
+  }
+  &.plugin-demo {
+    background-color: #fff;
   }
 }
 
@@ -46,13 +48,13 @@ body.pixlee {
   
   #stories-gallery &, .related-stories & {
     .story-card__title p, .story-card__caption span {
-      font-family: $company-body-font;
+      // font-family: $company-body-font !important;
     }
   }
 
   .story-card__cta:after {
-    color: $pixlee-blue;
-    font-weight: 700;
+    color: $pixlee-blue !important;
+    font-weight: 700 !important;
     text-decoration: none;
     text-transform: uppercase;
   }

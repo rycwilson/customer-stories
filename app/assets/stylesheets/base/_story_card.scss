@@ -1,7 +1,5 @@
 
 .story-card {
-  display: inline-block;
-  vertical-align: top;
   margin: 15px;
 
   &:not(.still-loading) {
@@ -211,20 +209,23 @@
   overflow: hidden;
   p {
     padding: 12px;
-    // padding: 0;  // inspired by pixlee conflict (TODO: ???)
+    // TODO: ?
+    // padding: 0;  // inspired by pixlee conflict 
     font: {
       family: inherit !important;
-      size: $story-card-title-size;
-      weight: 600;
+      size: $story-card-title-size !important;
+      weight: 600 !important;
     }
-    line-height: 26px;
-    color: $story-card-text-color;
+    line-height: 2em !important;
+    color: $story-card-text-color !important;
 
     // weebly will squish together letters and words in the customer name together without these...
     word-spacing: normal;
     letter-spacing: normal;
     margin-bottom: 0;
   }
+
+  // presently this is only used in the dashboard
   .story-card--small & p {
     font-size: 13px !important;
   }
@@ -240,7 +241,7 @@
   span {
     font: {
       family: inherit !important;
-      size: $story-card-caption-size;
+      size: $story-card-caption-size !important;
     }
     position: absolute;
     width: 90%;
@@ -253,10 +254,10 @@
     letter-spacing: normal;
   }
   .story-card__customer {
-    color: $story-card-text-color;
+    color: $story-card-text-color !important;
   }
   .story-card__cta:after {
-    color: $story-card-text-color;
+    color: $story-card-text-color !important;
     text-decoration: underline;
     visibility: hidden;
     transition: all 0s;

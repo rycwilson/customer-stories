@@ -5,7 +5,7 @@
 <% is_grayscale = is_grayscale || nil %>
 <% is_pre_selected = is_pre_selected || nil %>
 
-<li class="<%= card_class %>" data-story-id="<%= story.id %>">
+<div class="<%= card_class %>" data-story-id="<%= story.id %>">
 
   <!-- grid__item is for the overlays; not implemented internally -->
   <a href="<%= story.csp_story_link(is_dashboard, is_plugin, is_external, plugin_type) %>"
@@ -30,16 +30,16 @@
       </div>
     </div>
 
-    <div class="story-card__caption caption text-center">
-      <span class="story-card__customer customer-name"><%= story.customer.name %></span>
-      <span class="story-card__cta click-action"></span>
+    <div class="story-card__caption text-center">
+      <span class="story-card__customer"><%= story.customer.name %></span>
+      <span class="story-card__cta"></span>
     </div>
 
-    <div class="story-card__loading icon-container">
+    <div class="story-card__loading">
       <i class="fa fa-spin fa-circle-o-notch"></i>
     </div>
 
   </a>
 
-</li>
+</div>
 

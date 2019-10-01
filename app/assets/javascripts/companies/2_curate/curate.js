@@ -189,7 +189,7 @@ function filterCurateGallery (context) {
   $gallery.empty();
 
   if (stories.length === 0) {
-    $gallery.append('<li><h3 style="padding-top: 15px;" class="lead grid-item">No Stories found</h3></li>');
+    $gallery.append('<li><h3 style="padding-top: 15px;" class="lead">No Stories found</h3></li>');
 
   } else {
     $gallery.hide()

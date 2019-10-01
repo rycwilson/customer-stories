@@ -123,7 +123,9 @@ function cspInitOverlays ($, $container, subdomain, isDemo, env) {
       initPreselected = function () {
         if ($container.find('a.cs-loaded').length) {
           var $storyCard = $('a.cs-loaded'),
-              storyIndex = $container.is('#cs-gallery') ? $storyCard.index() + 1 : $storyCard.parent().index() + 1,
+              storyIndex = $container.is('#cs-gallery') ? 
+                             $storyCard.closest('li').index() + 1 : 
+                             $storyCard.closest('[class*="col-"]').index() + 1,
               $storyOverlay = $container.find('.content__item:nth-of-type(' + storyIndex + ')');
           initOverlay($storyCard, $storyOverlay);
         }
@@ -218,9 +220,11 @@ function cspInitOverlays ($, $container, subdomain, isDemo, env) {
     .on('click touchstart', 'a.published, a.preview-published', function (e) {
       // console.log('click touchstart')
       var $storyCard = $(this),
-          storyIndex = $container.is('#cs-gallery') ? $storyCard.index() + 1 : $storyCard.parent().index() + 1,
+          storyIndex = $container.is('#cs-gallery') ? 
+                          $storyCard.closest('.story-card').index() + 1 : 
+                          $storyCard.closest('[class*="col-"]').index() + 1,
           $storyOverlay = $container.find('.content__item:nth-of-type(' + storyIndex + ')');
-
+      
       e.preventDefault();
 
       if (e.type === 'click') {

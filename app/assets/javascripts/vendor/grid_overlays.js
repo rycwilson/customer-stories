@@ -130,7 +130,7 @@
     // set the width/heigth and position
     itemOffsetLeft = $(item).offset().left - gridOffsetLeft;
     if ($(item).hasClass('grid__item--carousel')) {
-      itemOffsetTop = ($('.cs-rh-container').offset().top + parseInt($('.row-horizon').css('padding-top'))) - $(gridEl).offset().top;
+      itemOffsetTop = ($('.cs-carousel__carousel').offset().top + parseInt($('.row-horizon').css('padding-top'))) - $(gridEl).offset().top;
     } else {
       itemOffsetTop = item.offsetTop;
     }
@@ -199,7 +199,7 @@
 
       // reset gallery
       // (for the gallery: some story cards aren't display due to max rows - see gallery.js.erb)
-      $(gridEl).find('a.cs-thumbnail:not([style*="display: none"])').each(function () {
+      $(gridEl).find('.story-card a:not([style*="display: none"])').each(function () {
         $(this).removeClass('cs-hover cs-loading cs-still-loading')
                .removeAttr('style');  // this gets rid of pointer-events: none
       });
