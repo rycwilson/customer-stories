@@ -90,7 +90,7 @@ function storiesIndexListeners () {
       ));
     })
 
-    .on('click touchstart', 'li[data-story-id]:not(.hover) a.published', function (e) {
+    .on('click touchstart', '.story-card:not(.hover) a.published', function (e) {
       // console.log('click touchstart')
       var $storyLink = $(this),
           $storyCard = $(this).parent(),
@@ -99,7 +99,7 @@ function storiesIndexListeners () {
             $storyCard.addClass('loading still-loading').forceRedraw();
 
             // don't appy this change to current $storyCard or link won't be followed
-            $('#stories-gallery li').not($storyCard).css('pointer-events', 'none');
+            $('.story-card').not($storyCard).css('pointer-events', 'none');
           };
 
       if (e.type === 'click') {
@@ -145,7 +145,7 @@ function storiesIndexListeners () {
         );
 
         // remove hover from other cards
-        $('#stories-gallery').find('li').not($storyCard).each(function () {
+        $('.story-card').not($storyCard).each(function () {
           $(this).removeClass('hover');
         });
       }

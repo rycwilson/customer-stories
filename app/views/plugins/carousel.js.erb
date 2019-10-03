@@ -6,7 +6,7 @@ function cspInitCarousel ($, $container, preSelectedStoryIndex, subdomain) {
 
   var $carousel = $container.find('.row-horizon'),
       $columns = $carousel.children(),
-      $stories = $columns.children(),
+      $stories = $columns.find('.story-card a'),
       storyWidth = $stories.first().width() + 15, // +
                    // parseInt( $columns.first().css('padding-left'), 10 ) +
                    // parseInt( $columns.first().css('padding-right'), 10 ),
@@ -88,14 +88,14 @@ function cspInitCarousel ($, $container, preSelectedStoryIndex, subdomain) {
         if ($carousel.width() >= 4 * storyWidth) {
           $columns.css('width', Math.floor($carousel.width() / 4).toString() + 'px');
           if ($columns.length <= 4) {
-            $container.find('.cs-carousel__arrow div').hide();
+            $container.find('.cs-carousel__arrow button').hide();
           }
 
         } else if ($carousel.width() >= 3 * storyWidth) {
           lastIsShortSingle = $columns.length % 3 === 1, lastIsShortDouble = $columns.length % 3 === 2;
           // no scroll arrow if not needed
           if ($columns.length <= 3) {
-            $container.find('.cs-carousel_arrow div').hide();
+            $container.find('.cs-carousel_arrow button').hide();
           }
           // adjust columns
           $columns.css('width', Math.floor($carousel.width() / 3).toString() + 'px');
@@ -152,7 +152,7 @@ function cspInitCarousel ($, $container, preSelectedStoryIndex, subdomain) {
           lastIsShortSingle = $columns.length % 2 !== 0;
           // no scroll arrow if not needed
           if ($columns.length <= 2) {
-            $container.find('.cs-carousel__arrow div').hide();
+            $container.find('.cs-carousel__arrow button').hide();
           }
           // adjust column size
           $columns.css('width', Math.floor($carousel.width() / 2).toString() + 'px');
@@ -182,7 +182,7 @@ function cspInitCarousel ($, $container, preSelectedStoryIndex, subdomain) {
         } else {
           $columns.css('width', $carousel.css('width'));
           if ($columns.length === 1) {
-            $container.find('.cs-carousel__arrow div').hide();
+            $container.find('.cs-carousel__arrow button').hide();
           }
         }
 
@@ -224,8 +224,10 @@ function cspInitCarousel ($, $container, preSelectedStoryIndex, subdomain) {
       }; // adjust columns
       
   // scroll listeners
-  $container.find('.cs-carousel__arrow--left div, .cs-carousel__arrow-xs--left').on('click', arrowLeft);
-  $container.find('.cs-carousel__arrow--right div, .cs-carousel__arrow-xs--right').on('click', arrowRight);
+  $container.find('.cs-carousel__arrow--left button, .cs-carousel__arrow-xs--left').on('click', arrowLeft);
+  $container.find('.cs-carousel__arrow--right button, .cs-carousel__arrow-xs--right').on('click', arrowRight);
+
+  $('.cs-carousel__arrow button').on('click', function () { $(this).blur(); });
 
   // initial adjustment
   adjustColumns();
@@ -233,7 +235,7 @@ function cspInitCarousel ($, $container, preSelectedStoryIndex, subdomain) {
   // prev / next navigation
   $('.cs-carousel__prev').on('click', function (e) {
     $('.cs-carousel__next').removeClass('cs-carousel__next--bookend');
-    $('.cs-carousel__arrow--left div').trigger('click');
+    $('.cs-carousel__arrow--left button').trigger('click');
     if (currentPage === 0) {
       $(this).addClass('cs-carousel__prev--bookend')
     }
@@ -241,7 +243,7 @@ function cspInitCarousel ($, $container, preSelectedStoryIndex, subdomain) {
 
   $('.cs-carousel__next').on('click', function (e) {
     $('.cs-carousel__prev').removeClass('cs-carousel__prev--bookend')
-    $('.cs-carousel__arrow--right div').trigger('click');
+    $('.cs-carousel__arrow--right button').trigger('click');
     if (currentPage === numPages - 1) {
       $(this).addClass('cs-carousel__next--bookend')
     }

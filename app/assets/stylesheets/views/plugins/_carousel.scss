@@ -86,15 +86,16 @@ body.plugin-demo #cs-carousel {
   display: flex;
   align-items: center;
   height: 100%;
-  > div {
-    cursor: pointer;
+  > button {
+    border: none;
+    // cursor: pointer;
     height: 100px;
     width: 50px;
     padding: 15px;
   }
   &--left {
     justify-content: flex-end;
-    > div {
+    > button {
       .cs-carousel--light-background & {
         background: url($gray-chevron-left) no-repeat center / contain content-box;
       }
@@ -105,7 +106,7 @@ body.plugin-demo #cs-carousel {
   }
   &--right {
     justify-content: flex-start;
-    > div {
+    > button {
       .cs-carousel--light-background & {
         background: url($gray-chevron-right) no-repeat center / contain content-box;
       }

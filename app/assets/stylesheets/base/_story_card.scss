@@ -1,14 +1,11 @@
 
-.story-card {
-  margin: 15px;
 
-  &:not(.still-loading) {
-    .story-card__loading {
-      opacity: 0;
-    }
-  }
+
+.story-card {
+  position: relative;
+  margin: 15px;
   
-  &.loading {
+  &.loading, &.cs-loading {
     filter: brightness(96%);
     .story-card__title {
       transform: none;
@@ -22,31 +19,6 @@
     .story-card__cta:after {
       visibility: visible;
     }
-    &.still-loading {
-      .story-card__title, .story-card__caption {
-        opacity: 0.04;
-        transition: opacity 1s step-end;
-      }
-      .story-card__logo {
-        opacity: 0;
-      }
-      
-      // the icon needs to be wrapped in a div in order for the transform to work
-      // (center if element is centered, not top-left of element)
-      .story-card__loading {
-        position: absolute;
-        top: 50%;
-        left: 50%;
-        transform: translate(-50%, -50%);
-        opacity: 1;
-        transition: opacity 1s step-end;
-        i {
-          font-size: 20px;
-          color: #666;
-        }
-      }
-    }
-
   }
 
   // applies to plugins only
@@ -68,6 +40,10 @@
     @media only screen and (max-width: 767px) {
       margin: 20px 0;
     }
+  }
+
+  .cs-carousel & {
+    margin: 0 auto;
   }
 
   @media only screen and (max-width: 767px) {
@@ -123,13 +99,14 @@
     box-shadow: $story-card-box-shadow-hover;
   }
 
-  // .story-card:hover:not(.og-expanded) &, 
-  // .story-card.hover:not(.og-expanded) &, 
   &:hover,
+  .story-card.hover:not(.og-expanded) &, 
+  .story-card.cs-hover:not(.og-expanded) &,
   .story-card.og-expanded &,
-  .story-card.loading & {
+  .story-card.loading &,
+  .story-card.cs-loading & {
     border: 1px solid transparent;
-    box-shadow: $story-card-box-shadow-hover;;
+    box-shadow: $story-card-box-shadow-hover;
     .story-card__logo {
       opacity: 0.04;
     }
@@ -193,6 +170,10 @@
   }
   .story-card--grayscale & img {
     filter: grayscale(100%);
+  }
+  .story-card.still-loading &,
+  .story-card.cs-still-loading & {
+    opacity: 0;
   }
 }
 
@@ -274,5 +255,31 @@
   }
   .story-card--dashboard & .story-card__cta:after {
     content: 'Configure Story';
+  }
+}
+
+.story-card__title, 
+.story-card__caption {
+  .story-card.still-loading &, 
+  .story-card.cs-still-loading & {
+    opacity: 0.04;
+    transition: opacity 1s step-end;
+  }
+}
+
+.story-card__loading {
+  position: absolute;
+  opacity: 0;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  i {
+    font-size: 20px;
+    color: #666;
+  }
+  .story-card.loading.still-loading &,
+  .story-card.cs-loading.cs-still-loading & {
+    opacity: 1;
+    transition: opacity 1s step-end;
   }
 }

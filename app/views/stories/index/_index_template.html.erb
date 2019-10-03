@@ -10,7 +10,7 @@
     {{ var summary = JSON.stringify(story.summary).replace(/'/g, "&#39"); }}
     {{ var quote = JSON.stringify(story.quote).replace(/'/g, "&#39"); }}
 
-    <li style="display: inline-block">
+    <li style="display: inline-block; vertical-align: top">
 
       <div class="story-card story-card--{{= subdomain }} {{= isDashboard ? 'story-card--small story-card--dashboard' : '' }} story-card--{{= (story.published && 'published') || (story.preview_published && 'preview-published') || (story.logo_published && 'logo-published') || ''}}" data-story-id="{{= story.id }}" data-story-slug="{{= storySlug }}" data-customer-slug="{{= customerSlug }}">
 

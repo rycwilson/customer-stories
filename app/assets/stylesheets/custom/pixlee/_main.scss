@@ -30,9 +30,9 @@ body.pixlee {
   .company-logo-upload__stories-header {
     @include stories-header-title;
   }
-  &.plugin-demo {
-    background-color: #fff;
-  }
+  // &.plugin-demo {
+    // background-color: #fff;
+  // }
 }
 
 .story-card.story-card--pixlee {
