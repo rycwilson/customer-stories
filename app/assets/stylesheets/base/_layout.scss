@@ -65,12 +65,14 @@
 
     // wait until both tables are loaded to show (see csp_datatables.js); 
     // don't use transition on initial load
-    display: none;  
-    opacity: 1; 
-    transition: opacity 0.15s linear;  // matches bootstrap tab .fade transition
-    &:not(.shown) {
-      visibility: hidden;
-      opacity: 0;
+    &:not(.btn-add--new-story) {
+      display: none;  
+      opacity: 1; 
+      transition: opacity 0.15s linear;  // matches bootstrap tab .fade transition
+      &:not(.shown) {
+        visibility: hidden;
+        opacity: 0;
+      }
     }
   }
 }

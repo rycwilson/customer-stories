@@ -132,7 +132,7 @@
     if ($(item).hasClass('grid__item--carousel')) {
       itemOffsetTop = ($('.cs-carousel__carousel').offset().top + parseInt($('.row-horizon').css('padding-top'))) - $(gridEl).offset().top;
     } else {
-      itemOffsetTop = item.offsetTop;
+      itemOffsetTop = item.parentNode.offsetTop;
     }
 
     dummy.style.WebkitTransform = 'translate3d(' + itemOffsetLeft + 'px, ' + itemOffsetTop + 'px, 0px) scale3d(' + item.offsetWidth/(gridItemsContainer.offsetWidth + gridOffsetLeft + gridOffsetRight + scrollbarWidth) + ',' + item.offsetHeight/getViewport('y') + ',1)',

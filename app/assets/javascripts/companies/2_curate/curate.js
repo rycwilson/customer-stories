@@ -196,7 +196,7 @@ function filterCurateGallery (context) {
             .append( 
                 $(storiesTemplate({ 
                   stories: stories, 
-                  subdomain: location.href.match(/:\/\/(\w+)./),
+                  subdomain: location.href.match(/:\/\/(\w+)\./),
                   isDashboard: true 
                 })) 
               )
