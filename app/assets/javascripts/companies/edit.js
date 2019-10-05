@@ -10,6 +10,7 @@ function companiesEdit () {
 
   $('a[href="#edit-' + fragment || 'company-profile' + '"]').tab('show');
   $('.dropdown.company-settings').addClass('active');
+
   $('.layout-main').show();
 
   $(document)

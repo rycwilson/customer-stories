@@ -63,29 +63,35 @@
   background-color: $nav-blue;
 }
 
-.select2-container--bootstrap .select2-selection--multiple .select2-selection__choice {
+.select2-container--bootstrap .select2-selection--multiple .select2-selection__choice,
+.select2-container--bootstrap .select2-selection--multiple .select2-search--inline {
   line-height: 30px;
-  background-color: $medium-gray;
-  padding-right: 0;  // the fa-remove icon provides padding (see below)
   margin: 8px 8px 0 8px;
-  
-  // select2: fixes word text wrap issues on long select values
-  // ref https://github.com/select2/select2/issues/4585
-  max-width: 100%;
-  overflow: hidden;
-  text-overflow: ellipsis; 
-  &:nth-last-child(2) {  
+  &.select2-search--inline {  
     margin-bottom: 8px;
-  }
-  span[class*="remove"] {
-    float: right;
-    padding: 0 8px;
-    margin-right: 0;
-    &:hover {
-      color: #666;
+    .select2-search__field {
+      padding-left: 0;
     }
-    i {
-      font-size: 14px;  
+  }
+  &.select2-selection__choice {
+    padding-right: 0;  // the fa-remove icon provides padding
+    background-color: $medium-gray;
+    
+    // select2: fixes word text wrap issues on long select values
+    // ref https://github.com/select2/select2/issues/4585
+    max-width: 100%;
+    overflow: hidden;
+    text-overflow: ellipsis; 
+    span[class*="remove"] {
+      float: right;
+      padding: 0 8px;
+      margin-right: 0;
+      &:hover {
+        color: #666;
+      }
+      i {
+        font-size: 14px;  
+      }
     }
   }
 }

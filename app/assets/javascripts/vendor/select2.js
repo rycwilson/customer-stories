@@ -198,13 +198,7 @@ function initSelect2 () {
         siblings[i].selected = false;
       }
     })
-    .on('select2:select, change.select2', function () {
-      prependTagType();
-      $(this).next('.select2')
-               .find('.select2-selection__choice__remove')
-                 .html('<i class="fa fa-fw fa-remove"></i>');
-    })
-    .on('select2:unselect, change.select2', function () {
+    .on('select2:select, select2:unselect, change.select2', function () {
       prependTagType();
       $(this).next('.select2')
                .find('.select2-selection__choice__remove')
@@ -259,12 +253,23 @@ function initSelect2 () {
   Thus, company tag select boxes should not show a list of options, because the
   options are being created at this stage.  There is nothing to select.
   */
-  $('.company-tags').select2({
-    theme: 'bootstrap',
-    tags: true,
-    placeholder: 'Add tags',
-    selectOnClose: true
-  });
+  $('.company-tags')
+    .select2({
+      theme: 'bootstrap',
+      tags: true,
+      placeholder: 'Add tags',
+      selectOnClose: true
+    })
+    .on('select2:select, select2:unselect, change.select2', function () {
+      $(this).next('.select2')
+               .find('.select2-selection__choice__remove')
+                 .html('<i class="fa fa-fw fa-remove"></i>');
+    })
+  $('#company-tags-form')
+    .find('.select2-selection__choice__remove')
+      .html('<i class="fa fa-fw fa-remove"></i>')
+      .end()
+    .attr('data-init', true);
 
   $('select.invitation-template').select2({
     theme: 'bootstrap',

@@ -16,6 +16,13 @@
   }
 }
 
+#company-tags-form {
+  visibility: hidden;
+  &[data-init="true"] {
+    visibility: visible;
+  }
+}
+
 .companies.edit {
   
   .form-group {
