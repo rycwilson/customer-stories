@@ -78,6 +78,6 @@
 }
 
 .layout-main {
-  // padding: 0 15px 100px 30px;
-  min-height: 100vh;
+  padding-top: 15px;
+  min-height: 100vh;  // TODO: replace with html, body { height: 100% }
 }

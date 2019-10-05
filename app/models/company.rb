@@ -38,11 +38,26 @@ class Company < ApplicationRecord
   has_many :contributions, -> { includes(:contributor, :referrer, success: { customer: {} }) }, through: :successes
   has_many :contributors, -> { distinct }, through: :customers, source: :contributors
   has_many :referrers, -> { distinct }, through: :contributions, source: :referrer
-  has_many :stories, through: :successes do
+  has_many :stories, through: :successes do 
     def select_options
       self.select { |story| story.published? }
           .map { |story| [ story.title, story.id ] }
           .unshift( ['All', 0] )
+    end
+    def plugin_select_options
+      options = {}
+      where('logo_published = ? OR preview_published = ?', true, true)
+        .each do |story|
+          option_data = [ 
+            story.title, "#{story.id}", { data: { customer: story.customer.name.to_json } } 
+          ]
+          if options.has_key?(story.customer.name)
+            options[story.customer.name] << option_data
+          else
+            options.merge!({ story.customer.name => [ option_data ] })
+          end
+        end
+      options
     end
     def published
       self.select { |story| story.published? }
@@ -65,7 +80,6 @@ class Company < ApplicationRecord
   # so must be included in the select clause
   has_many :visitor_sessions, -> { select('visitor_sessions.*, visitor_sessions.clicky_session_id, visitor_actions.timestamp').distinct }, through: :visitor_actions
   has_many :visitors, -> { select('visitors.*, visitor_sessions.clicky_session_id, visitor_actions.timestamp').distinct }, through: :visitor_sessions
-
   has_many :story_categories, dependent: :destroy do
     def select_options
       self.map do |category|
@@ -398,20 +412,6 @@ class Company < ApplicationRecord
     options
   end
 
-  def stories_grouped_options
-    options = {}
-    self.stories.select { |story| story.logo_published? || story.preview_published? }
-        .each do |story|
-          option_data = [ story.title, "#{story.id}", { data: { customer: story.customer.name.to_json } } ]
-          if options.has_key?(story.customer.name)
-            options[story.customer.name] << option_data
-          else
-            options.merge!({ story.customer.name => [ option_data ] })
-          end
-        end
-    options
-  end
-
   #
   # method returns a fragment cache key that looks like this:
   #
@@ -498,6 +498,11 @@ class Company < ApplicationRecord
 
   def expire_stories_json_cache
     Rails.cache.delete("#{self.subdomain}/stories_json")
+  end
+
+  def expire_fragment(nested_fragment)
+    fragment = "#{self.subdomain}/#{nested_fragment}"
+    self.expire_fragment(fragment) if fragment_exist?(fragment)
   end
 
   def curator? current_user=nil

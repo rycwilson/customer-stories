@@ -29,6 +29,8 @@ class InvitationTemplate < ApplicationRecord
   end
   before_update() { self.format_for_storage() }
 
+  after_commit { self.company.expire_fragment('crowdsource') }
+
   def button_style_settings
     'display: inline-block;' +
     'font-size: 1.1em;' +

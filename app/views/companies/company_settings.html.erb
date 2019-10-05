@@ -50,29 +50,39 @@
       <div class="tab-content">
 
         <div class="tab-pane fade" id="edit-company-profile">
-          <%= render(
-                'companies/settings/company_profile', 
-                { company: @company, form_options: @form_options } 
-              ) %>
+          <% cache(@company) do %>
+            <%= render(
+                  'companies/settings/company_profile', 
+                  { company: @company, form_options: @form_options } 
+                ) %>
+          <% end %>
         </div>
 
         <div class="tab-pane fade" id="edit-crowdsource">
-          <%= render(
-                'companies/settings/invitation_templates',
-                { company: @company, templates_select: @templates_select } 
-              ) %>
+          <% cache("#{@company.subdomain}/crowdsource", skip_digest: true) do %>
+            <%= render(
+                  'companies/settings/invitation_templates',
+                  { company: @company, templates_select: @templates_select } 
+                ) %>
+          <% end %>
         </div>
         
         <div class="tab-pane fade" id="edit-plugins">
-          <%= render('plugins/config', { company: @company, plugin: @company.plugin }) %>
+          <% cache("#{@company.subdomain}/plugin-config", skip_digest: true) do %>
+            <%= render('plugins/config', { company: @company }) %>
+          <% end %>
         </div>
 
-        <div class="tab-pane fade" id="edit-ctas" role="tabpanel"  >
-          <%= render('companies/settings/ctas', { company: @company }) %>
+        <div class="tab-pane fade" id="edit-ctas" role="tabpanel">
+          <% cache("#{@company.subdomain}/edit-ctas", skip_digest: true) do %>
+            <%= render('companies/settings/ctas', { company: @company }) %>
+          <% end %>
         </div>
 
         <div class="tab-pane fade" id="edit-tags">
-          <%= render('companies/settings/story_tags', { company: @company }) %>
+          <% cache("#{@company.subdomain}/story-tags", skip_digest: true) do %>
+            <%= render('companies/settings/story_tags', { company: @company }) %>
+          <% end %>
         </div>
 
       </div> 

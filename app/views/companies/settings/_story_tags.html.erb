@@ -1,49 +1,57 @@
 
-<%= form_tag(company_path(company), id: 'company-tags-form', method: 'put', remote: true) do %>
+<%= form_tag(
+      company_path(company), 
+      {
+        method: 'put', 
+        remote: true,
+        id: 'company-tags-form',
+        class: 'form-horizontal'
+      }
+    ) do %>
 
   <%= hidden_field_tag(:tags, true) %>
 
-  <div class="row">
+  <div class="form-group">
+    <%= label_tag('category_tags[]', 'Category Tags', class: 'col-sm-3 control-label') %>
     <div class="col-sm-6">
-      <div class="form-group">
-
-        <%= label_tag('category_tags[]', 'Category Tags', class: 'control-label') %>
-        <%= select_tag('category_tags[]',
-              options_for_select(
-                company.story_categories.select_options,
-                company.story_categories.pluck(:id)   # all pre-selected
-              ),
-              { multiple: 'true', class: 'company-tags form-control',
-                # placeholder: doesn't work from here, set in js
-                style: 'width:100%' }
-            ) %>
-
-      </div>
+      <%= select_tag(
+            'category_tags[]',
+            options_for_select(
+              company.story_categories.select_options,
+              company.story_categories.pluck(:id)   # all pre-selected
+            ),
+            { 
+              multiple: 'true', 
+              class: 'company-tags form-control',
+              # placeholder: doesn't work from here, set in js
+              style: 'width:100%' 
+            }
+          ) %>
     </div>
-    <div class="col-sm-6">
-      <div class="form-group">
-
-        <%= label_tag 'product_tags[]', 'Product Tags', class: 'control-label' %>
-        <%= select_tag 'product_tags[]',
-              options_for_select(
-                company.products.select_options,
-                company.products.pluck(:id)   # all pre-selected
-              ),
-              { multiple: 'true', class: 'company-tags form-control',
-                style: 'width:100%' } %>
-
-      </div>
-    </div>
+    <div class="col-sm-3"></div>
   </div>
 
-  <div class="row">
-    <div class="col-sm-12">
-      <hr>
+  <div class="form-group">
+    <%= label_tag('product_tags[]', 'Product Tags', class: 'col-sm-3 control-label') %>
+    <div class="col-sm-6">
+      <%= select_tag(
+            'product_tags[]',
+            options_for_select(
+              company.products.select_options,
+              company.products.pluck(:id)   # all pre-selected
+            ),
+            { 
+              multiple: 'true', 
+              class: 'company-tags form-control',
+              style: 'width:100%' 
+            } 
+          ) %>
     </div>
+    <div class="col-sm-3"></div>
   </div>
 
-  <div class="row">
-    <div class="col-sm-12 text-right">
+  <div class="form-group">
+    <div class="col-sm-offset-3 col-sm-6 text-right">
 
       <button type="submit" class="btn btn-success" form="company-tags-form" style="width:114px">
         <span>Save changes</span>
@@ -52,6 +60,7 @@
       </button>
 
     </div>
+    <div class="col-sm-3"></div>
   </div>
 
 <% end %>

@@ -14,6 +14,11 @@ class Product < ApplicationRecord
 
   friendly_id :name, use: [:slugged, :scoped], scope: :company_id
 
+  after_commit do 
+    self.company.expire_fragment('plugin-config')
+    self.company.expire_fragment('story-tags')
+  end
+
   def should_generate_new_friendly_id?
     new_record? || name_changed? || slug.blank?
   end

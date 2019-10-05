@@ -24,6 +24,7 @@ class Customer < ApplicationRecord
 
   after_commit(on: [:update]) do
     self.stories.each { |story| story.expire_csp_story_path_cache }
+    self.company.expire_fragment('plugin-config')
   end if Proc.new { |customer| customer.previous_changes.key?(:name) }
 
   def should_generate_new_friendly_id?

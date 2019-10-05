@@ -153,6 +153,7 @@ class Story < ApplicationRecord
     expire_filter_select_fragment_cache
     self.company.increment_stories_gallery_fragments_memcache_iterator
     self.company.expire_stories_json_cache
+    self.company.expire_fragment('plugin-config')
   end if Proc.new { |story|
            ( story.previous_changes.keys &
              ['published', 'preview_published', 'logo_published'] ).any?
@@ -173,7 +174,7 @@ class Story < ApplicationRecord
   after_update_commit do
     expire_story_video_info_cache
     expire_story_video_xs_fragment_cache
-  end if Proc.new { |story| story.previous_changes.key?('video_url') }
+  end if Proc.new { |story| story.previous_changes.key?('video_url') }  
 
   after_update_commit do
     expire_story_testimonial_fragment_cache
@@ -185,6 +186,7 @@ class Story < ApplicationRecord
   after_update_commit do
     expire_csp_story_path_cache
     expire_story_narrative_fragment_cache
+    self.company.expire_fragment('plugin-config')
   end if Proc.new { |story| story.previous_changes.key?('title') }
 
   after_update_commit do
