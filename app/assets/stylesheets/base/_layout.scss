@@ -77,7 +77,11 @@
   }
 }
 
-.layout-main {
+.companies.edit .layout-main,
+.profile.edit .layout-main {
   padding-top: 15px;
-  min-height: 100vh;  // TODO: replace with html, body { height: 100% }
+}
+
+.layout-main {
+  min-height: 100vh;   // TODO: replace with html, body { height: 100% }
 }
