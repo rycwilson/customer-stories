@@ -63,35 +63,57 @@
   background-color: $nav-blue;
 }
 
-.select2-container--bootstrap .select2-selection--multiple .select2-selection__choice,
+// https://github.com/select2/select2-bootstrap-theme/issues/77
+.select2-container .select2-selection__rendered > *:first-child.select2-search--inline {
+  width: 100% !important;
+}
+.select2-container .select2-selection__rendered > *:first-child.select2-search--inline .select2-search__field {
+  cursor: pointer;
+  width: 100% !important;
+}
+
 .select2-container--bootstrap .select2-selection--multiple .select2-search--inline {
   line-height: 30px;
-  margin: 8px 8px 0 8px;
-  &.select2-search--inline {  
-    margin-bottom: 8px;
+  
+  // only-child => no selections have been made, so don't expand the input by adding margin
+  &:not(:only-child) { 
+    margin: 8px 0 8px 8px;
     .select2-search__field {
       padding-left: 0;
     }
   }
-  &.select2-selection__choice {
-    padding-right: 0;  // the fa-remove icon provides padding
-    background-color: $medium-gray;
-    
-    // select2: fixes word text wrap issues on long select values
-    // ref https://github.com/select2/select2/issues/4585
-    max-width: 100%;
-    overflow: hidden;
-    text-overflow: ellipsis; 
-    span[class*="remove"] {
-      float: right;
-      padding: 0 8px;
-      margin-right: 0;
-      &:hover {
-        color: #666;
-      }
-      i {
-        font-size: 14px;  
-      }
+}
+
+.select2-container--bootstrap .select2-selection--multiple .select2-selection__choice {
+  line-height: 30px;
+  margin: 8px 0 0 8px;
+  padding-right: 0;  // the fa-remove icon provides padding
+  background-color: $medium-gray;
+  border-color: $medium-gray;
+  
+  // select2: fixes word text wrap issues on long select values
+  // ref https://github.com/select2/select2/issues/4585
+  max-width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis; 
+  span[class*="remove"] {
+    float: right;
+    padding: 0 8px;
+    margin-right: 0;
+    &:hover {
+      color: #666;
+    }
+    i {
+      font-size: 14px;  
+    }
+  }
+  .plugin-config & {
+    cursor: pointer;
+    width: calc(100% - 16px);
+  }
+  .stories-filter__select--grouped & {
+    &:nth-last-child(2) {
+      margin-bottom: 8px;
     }
   }
 }

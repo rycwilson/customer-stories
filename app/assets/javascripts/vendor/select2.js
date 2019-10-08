@@ -293,8 +293,6 @@ function initSelect2 () {
           return undefined;
         }
       })
-        .on('select2:select', prependCustomerName)
-        .on('select2:unselect', prependCustomerName)
         .on('select2:unselecting', function (e) {
           $(this).data('unselecting', true);
         })
@@ -303,7 +301,13 @@ function initSelect2 () {
             $(this).removeData('unselecting')
                    .select2('close');
           }
-        });
+        })
+        .on('select2:select, select2:unselect, change.select2', function () {
+          prependCustomerName();
+          $(this).next('.select2')
+                   .find('.select2-selection__choice__remove')
+                     .html('<i class="fa fa-fw fa-remove"></i>');
+        })
 
       var ul = $(select).next('.select2-container').first('ul.select2-selection__rendered');
       ul.sortable({

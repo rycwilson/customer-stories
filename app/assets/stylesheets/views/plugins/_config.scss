@@ -71,33 +71,17 @@
   // select:not([name="plugin[stories][]"]) + span.select2 {
   //   // display: none;
   // }
-  .select2-container--bootstrap .select2-selection--multiple {
-    .select2-selection__choice__remove {
-      margin: 0 6px;
-    }
-    .select2-selection__choice {
-      border-color: transparent;
-      background-color: #eee;
-    }
-  }
+  // .select2-container--bootstrap .select2-selection--multiple {
+  //   .select2-selection__choice__remove {
+  //     margin: 0 6px;
+  //   }
+  //   .select2-selection__choice {
+  //     border-color: transparent;
+  //     background-color: #eee;
+  //   }
+  // }
 
-  [name="plugin[stories][]"] + span.select2 {
-    .select2-selection__choice {
-      cursor: pointer;  // drag and drop
-      width: 100%;
-      padding: 5px 0;
-    }  
-  }
-
-
-  // https://github.com/select2/select2-bootstrap-theme/issues/77
-  .select2-container .select2-selection__rendered > *:first-child.select2-search--inline {
-    width: 100% !important;
-  }
-  .select2-container .select2-selection__rendered > *:first-child.select2-search--inline .select2-search__field {
-    cursor: pointer;
-    width: 100% !important;
-  }
+  
 
 }
 
