@@ -17,8 +17,8 @@ function constructPlugins () {
   // these funtions all copied over from config.js (plugin configuration)
   // (make sure initSelect2() is called first - it defines $.fn.select2Sortable)
   var customStoriesToJson = function () {
-        var storyIds = $('select.plugin-stories').val() ?
-                         $('select.plugin-stories').val().map(function (id) { return +id; }) :
+        var storyIds = $('[name="plugin[stories][]"]').val() ?
+                         $('[name="plugin[stories][]"]').val().map(function (id) { return +id; }) :
                          [];
         return JSON.stringify(storyIds);
       },
@@ -36,8 +36,8 @@ function constructPlugins () {
         if (typeof $.fn.select2Sortable !== 'function') {
           setTimeout(initSelect2Sortable, 25);
         } else {
-          $('select.plugin-stories').select2Sortable(updateScriptTag);
-          $('select.plugin-stories').show();
+          $('[name="plugin[stories][]"]').select2Sortable(updateScriptTag);
+          $('[name="plugin[stories][]"]').show();
         }
       };
 

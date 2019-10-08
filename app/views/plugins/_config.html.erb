@@ -176,35 +176,30 @@
     <div class="col-sm-6 col-sm-offset-3">
 
       <div>
-      <%= select_tag(
-            'plugin[stories][]',
-            grouped_options_for_select(
-              company.stories.plugin_select_options,
-              []
-            ),
-            {
-              include_blank: true,
-              multiple: 'true',
-              class: 'plugin-stories',
-              style: 'width: 100%; position: absolute'
-            }
-          ) %>
+        <%= select_tag(
+              'plugin[stories][]',
+              grouped_options_for_select(
+                company.stories.plugin_select_options,
+                []
+              ),
+              { include_blank: true, multiple: true, style: 'width: 100%' }
+            ) %>
       </div>
       
       <div>
-      <%= select_tag(
-            'plugin[category]',
-            options_for_select(company.story_categories.select_options),
-            { include_blank: true, style: 'width: 100%; position: absolute' }
-          ) %>
+        <%= select_tag(
+              'plugin[category]',
+              options_for_select(company.story_categories.select_options),
+              { include_blank: true, style: 'width: 100%' }
+            ) %>
       </div>
 
       <div>
-      <%= select_tag(
-            'plugin[product]',
-            options_for_select(company.products.select_options),
-            { include_blank: true, style: 'width: 100%; position: absolute' }
-          ) %>
+        <%= select_tag(
+              'plugin[product]',
+              options_for_select(company.products.select_options),
+              { include_blank: true, style: 'width: 100%' }
+            ) %>
       </div>
 
     </div>

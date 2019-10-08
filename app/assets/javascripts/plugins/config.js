@@ -2,8 +2,8 @@
 function pluginConfigListeners () {
 
   var customStoriesToJson = function () {
-        var storyIds = $('select.plugin-stories').val() ?
-                         $('select.plugin-stories').val().map(function (id) { return +id; }) :
+        var storyIds = $('[name="plugin[stories][]"]').val() ?
+                         $('[name="plugin[stories][]"]').val().map(function (id) { return +id; }) :
                          [];
         return JSON.stringify(storyIds);
       },

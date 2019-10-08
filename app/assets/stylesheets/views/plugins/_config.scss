@@ -65,24 +65,10 @@
 }
 
 .plugin-config__content-select {
+  // show/hide on the select2 input doesn't work well => use a parent container
   > div > div:not(:first-child) {
     display: none;
   }
-  // select:not([name="plugin[stories][]"]) + span.select2 {
-  //   // display: none;
-  // }
-  // .select2-container--bootstrap .select2-selection--multiple {
-  //   .select2-selection__choice__remove {
-  //     margin: 0 6px;
-  //   }
-  //   .select2-selection__choice {
-  //     border-color: transparent;
-  //     background-color: #eee;
-  //   }
-  // }
-
-  
-
 }
 
 .plugin-config__code-buttons {
