@@ -1,9 +1,8 @@
 
-
 .plugin-config__type, 
 .plugin-config__content-buttons, 
 .plugin-config__code-buttons {
-  margin-bottom: 15px;
+  margin-bottom: 10px;
 }
 
 .plugin-config__type-settings,
@@ -57,13 +56,6 @@
   }
 }
 
-.plugin-config__content-buttons {
-  .btn-group {
-    display: block;
-    margin-bottom: 5px;
-  }
-}
-
 .plugin-config__content-select {
   // show/hide on the select2 input doesn't work well => use a parent container
   > div > div:not(:first-child) {
@@ -72,13 +64,13 @@
 }
 
 .plugin-config__code-buttons {
-  // .btn {
-  //   width: 100px;
-  //   & + .btn {
-  //     margin-left: 5px;
-  //   }
-  //   &.copy i:last-of-type {
-  //     display: none;
-  //   }
-  // }
+  .btn {
+    width: 100px;
+    & + .btn {
+      margin-left: 5px;
+    }
+    &.copy i:last-of-type {
+      display: none;
+    }
+  }
 }

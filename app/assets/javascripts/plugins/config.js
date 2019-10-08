@@ -45,8 +45,7 @@ function pluginConfigListeners () {
       var type = $(this).val(),
           $typeLink = $('a[href="#' + type + '-settings' + '"]'),
           $logosOnly = $('[name="plugin[logos_only]"]'),
-          tabbedCarouselAttrs = '\xa0data-delay="' + $('[name="tabbed_carousel[delay]"]').val() + '"\xa0data-tab-color="' + $('[name="tabbed_carousel[tab_color]"]').val() + '"\xa0data-text-color="' + $('[name="tabbed_carousel[text_color]"]').val() + '"',
-          $settingsBox = $('.plugin-config__type-settings > .collapse');
+          tabbedCarouselAttrs = '\xa0data-delay="' + $('[name="tabbed_carousel[delay]"]').val() + '"\xa0data-tab-color="' + $('[name="tabbed_carousel[tab_color]"]').val() + '"\xa0data-text-color="' + $('[name="tabbed_carousel[text_color]"]').val() + '"';
       $('.script-tag textarea').text(
         $('.script-tag textarea').text()
           .replace(/id="(cs-gallery|cs-carousel|cs-tabbed-carousel)"/, function () {
@@ -227,7 +226,6 @@ function pluginConfigListeners () {
             $(this).prop('checked') ? '\xa0data-grayscale="true"></script>' : ''
           )
       );
-
     })
 
     .on('click', 'a.plugin-demo:not([disabled])', function (e) {
@@ -256,7 +254,7 @@ function pluginConfigListeners () {
         (type === 'tabbed_carousel' ? '&tab_color=' + tabColor.replace('#', '%23') : '') +
         (type === 'tabbed_carousel' ? '&text_color=' + textColor.replace('#', '%23') : '') +
         (type === 'tabbed_carousel' ? '&delay=' + delay : '');
-        console.log('params', params)
+        // console.log('params', params)
       if (params.length === 1) params = '';   // no params
 // console.log('GET', demoPath + params)
       $(this).attr('href', demoPath + params);

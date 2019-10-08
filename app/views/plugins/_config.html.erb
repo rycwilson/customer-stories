@@ -7,7 +7,7 @@
 
 <div class="plugin-config form-horizontal">
 
-  <div class="plugin-config__type form-group type">
+  <div class="plugin-config__type form-group">
 
     <label class="col-sm-3 control-label">Type</label>
     <div class="col-sm-6">
@@ -43,7 +43,6 @@
       </div>
 
     </div>
-    <div class="col-sm-3"></div>
 
   </div>
 
@@ -206,24 +205,18 @@
   </div>
 
   <div class="plugin-config__appearance form-group">
-
     <label class="col-sm-3 control-label">Appearance</label>
     <div class="col-sm-6">
-
-      <div class="checkbox logos-only">
-        <label>
+      <div class="btn-group">
+        <label for="plugin_logos_only" class="checkbox-inline">
           <%= check_box_tag('plugin[logos_only]', true, false) %>
           Logos Only
         </label>
-      </div>
-
-      <div class="checkbox grayscale">
-        <label>
+        <label for="plugin_grayscale" class="checkbox-inline">
           <%= check_box_tag('plugin[grayscale]', true, false) %>
           Grayscale
         </label>
       </div>
-
     </div>
   </div>
 
@@ -240,7 +233,6 @@
         <i class="fa fa-fw fa-check"></i>
       </button>
     </div>
-    <div class="col-sm-3"></div>
   </div>
 
   <div class="plugin-config__code form-group">
@@ -254,7 +246,6 @@
 <script src="<%= Rails.env.development? ? 'http' : 'https' %>://<%= company.subdomain %>.<%= ENV["HOST_NAME"] %>/plugins/gallery/cs.js" data-max-rows="4"></script></textarea>
       </div>
     </div>
-    <div class="col-sm-3"></div>
   </div>
 
 </div>
