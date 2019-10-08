@@ -1,15 +1,7 @@
 
 <% content_for :head do %>
-
   <meta name="turbolinks-cache-control" content="no-cache">
-
-  <!-- seo meta tags -->
-  <% if production? %>
-    <% cache("#{@company.subdomain}/stories-index-meta-tags", expires_in: 1.week) do %>
-      <%= render 'stories/index/index_meta_tags', { company: @company } %>
-    <% end %>
-  <% end %>
-
+  <%= render_seo_meta_tags('index', @company) if production? %>
 <% end %>
 
 <% content_for(:underscore_templates) do %>

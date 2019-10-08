@@ -4,6 +4,10 @@
 @import 'ctas';
 @import '../../plugins/config';
 
+p.lead {
+  margin-bottom: 25px;
+}
+
 .headers-color-picker {
   > div {
     display: flex; 
@@ -23,24 +27,27 @@
   }
 }
 
-.companies.edit {
-  
+#edit-company-profile, #edit-tags {
   .form-group {
     margin-bottom: 25px;
   }
+}
+
+.companies.edit {
+  
   form > .form-group:nth-last-child(2) {  // some extra space between last item and Save button
     margin-bottom: 35px;
   } 
   .col-sm-3 {
-    width: 22%;
+    width: 21%;
     // background-color: #ecc9c7;
   }
   .col-sm-6 {
     // background-color: #d9e3da;
-    width: 56%;
+    width: 58%;
   }
   .col-sm-6.col-sm-offset-3 {
-    margin-left: 22%;
+    margin-left: 21%;
   }
 
   // for safari

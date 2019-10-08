@@ -1,16 +1,8 @@
 
 <!-- turbolinks caching problematic with linkedin widgets  -->
 <% content_for :head do %>
-
   <meta name="turbolinks-cache-control" content="no-cache">
-
-  <%# if production? %>
-    <% cache("#{@company.subdomain}/story-#{@story.id}-meta-tags", skip_digest: true, expires_in: 1.week) do %>
-      <%= render 'stories/show/story_meta_tags',
-            { company: @company, success: @story.success, story: @story } %>
-    <% end %>
-  <%# end %>
-
+  <%= render_seo_meta_tags('show', @company, @story) if production? %>
 <% end %>
 
 <% content_for(:underscore_templates) do %>

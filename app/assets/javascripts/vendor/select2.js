@@ -24,13 +24,14 @@ function initSelect2 () {
   };
 
   var prependCustomerName = function () {
-    var storyId, storyTitle, storyCustomer;
-    $('#edit-plugins ul.select2-selection__rendered li.select2-selection__choice')
+    var storyId, storyTitle, storyCustomer,
+        $storiesSelect = $('[name="plugin[stories][]"]');
+    $('.plugin-config ul.select2-selection__rendered li.select2-selection__choice')
       .each(function (index, story) {
-        storyId = $('select.plugin-stories').select2('data')[index].id;
-        storyTitle = $('select.plugin-stories').select2('data')[index].text;
+        storyId = $storiesSelect.select2('data')[index].id;
+        storyTitle = $storiesSelect.select2('data')[index].text;
         customerName = JSON.parse(
-          $('select.plugin-stories').find('option[value="' + storyId + '"]').data('customer')
+          $storiesSelect.find('option[value="' + storyId + '"]').data('customer')
         );
         if (!story.innerHTML.match(new RegExp('^' + customerName))) {
           story.innerHTML = story.innerHTML.replace(
@@ -289,7 +290,7 @@ function initSelect2 () {
         tags: true,
         width: 'style',
         createTag: function(params) {
-            return undefined;
+          return undefined;
         }
       })
         .on('select2:select', prependCustomerName)
@@ -323,12 +324,30 @@ function initSelect2 () {
     }
   });
 
-  $('.content__select--category select').select2({
-    theme: 'bootstrap',
-    placeholder: 'Select Category',
-    allowClear: true,
-    width: 'style'
-  })
+  $('[name="plugin[category]"]')
+    .select2({
+      theme: 'bootstrap',
+      placeholder: 'Select Category',
+      allowClear: true,
+      width: 'style'
+    })
+    .on('select2:unselecting', function (e) {
+      $(this).data('unselecting', true);
+    })
+    .on('select2:open', function (e) {
+      if ($(this).data('unselecting')) {
+        $(this).removeData('unselecting')
+               .select2('close');
+      }
+    })
+
+  $('[name="plugin[product]"]')
+    .select2({
+      theme: 'bootstrap',
+      placeholder: 'Select Product',
+      allowClear: true,
+      width: 'style'
+    })
     .on('select2:unselecting', function (e) {
       $(this).data('unselecting', true);
     })
@@ -337,25 +356,7 @@ function initSelect2 () {
         $(this).removeData('unselecting')
               .select2('close');
       }
-    });
-
-  $('.content__select--product select').select2({
-    theme: 'bootstrap',
-    placeholder: 'Select Product',
-    allowClear: true,
-    width: 'style'
-  })
-    .on('select2:unselecting', function (e) {
-      $(this).data('unselecting', true);
     })
-    .on('select2:open', function (e) {
-      if ($(this).data('unselecting')) {
-        $(this).removeData('unselecting')
-              .select2('close');
-      }
-    });
-
-  
 
   $('#charts-story-select, #visitors-story-select')
     .select2({

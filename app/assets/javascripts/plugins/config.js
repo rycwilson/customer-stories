@@ -43,7 +43,10 @@ function pluginConfigListeners () {
 
     .on('change', '[name="plugin[type]"]', function () {
       var type = $(this).val(),
-          tabbedCarouselAttrs = '\xa0data-delay="' + $('[name="tabbed_carousel[delay]"]').val() + '"\xa0data-tab-color="' + $('[name="tabbed_carousel[tab_color]"]').val() + '"\xa0data-text-color="' + $('[name="tabbed_carousel[text_color]"]').val() + '"';
+          $typeLink = $('a[href="#' + type + '-settings' + '"]'),
+          $logosOnly = $('[name="plugin[logos_only]"]'),
+          tabbedCarouselAttrs = '\xa0data-delay="' + $('[name="tabbed_carousel[delay]"]').val() + '"\xa0data-tab-color="' + $('[name="tabbed_carousel[tab_color]"]').val() + '"\xa0data-text-color="' + $('[name="tabbed_carousel[text_color]"]').val() + '"',
+          $settingsBox = $('.plugin-config__type-settings > .collapse');
       $('.script-tag textarea').text(
         $('.script-tag textarea').text()
           .replace(/id="(cs-gallery|cs-carousel|cs-tabbed-carousel)"/, function () {
@@ -77,30 +80,13 @@ function pluginConfigListeners () {
           })
       );
 
+      $typeLink.tab('show');
+
+      // 'logos only' presently only works for the gallery
       if (type === 'gallery') {
-        $('div.checkbox.logos-only input[type="checkbox"]').prop('disabled', false);
-        $('.settings.collapse').one('hidden.bs.collapse', function () {
-          $('.settings.collapse .carousel, .settings.collapse .tabbed-carousel').show();
-        });
-        $('.settings.collapse .tabbed-carousel, .settings.collapse .carousel').hide();
-        $('.settings.collapse .gallery').show();
-        // $('.settings.collapse').collapse('hide');
-      } else if (type === 'carousel') {
-        if ($('div.checkbox.logos-only input[type="checkbox"]').prop('checked')) {
-          $('div.checkbox.logos-only input[type="checkbox"]').trigger('click');
-        }
-        $('div.checkbox.logos-only input[type="checkbox"]').prop('disabled', true);
-        $('.settings.collapse .gallery, .settings.collapse .tabbed-carousel').hide();
-        $('.settings.collapse .carousel').show();
-        // $('.settings.collapse').collapse('show');
-      } else if (type === 'tabbed_carousel') {
-        if ($('div.checkbox.logos-only input[type="checkbox"]').prop('checked')) {
-          $('div.checkbox.logos-only input[type="checkbox"]').trigger('click');
-        }
-        $('div.checkbox.logos-only input[type="checkbox"]').prop('disabled', true);
-        $('.settings.collapse .gallery, .settings.collapse .carousel').hide();
-        $('.settings.collapse .tabbed-carousel').show();
-        // $('.settings.collapse').collapse('show');
+        $logosOnly.prop('disabled', false);
+      } else {
+        $logosOnly.prop('checked', false).prop('disabled', true);
       }
     })
 
@@ -112,20 +98,15 @@ function pluginConfigListeners () {
     })
 
     .on('change', '[name="gallery[no_max_rows]"]', function () {
-      if ($(this).prop('checked')) {
-        $('[name="gallery[max_rows]"]').val('')
-        $('.form-group.max-rows .spinner').addClass('disabled')
-        $('.script-tag textarea').text(
-          $('.script-tag textarea').text().replace(/\sdata-max-rows="\d+"/, '')
-        );
-      } else {
-        $('[name="gallery[max_rows]"]').val('4')
-        $('.form-group.max-rows .spinner').removeClass('disabled')
-        $('.script-tag textarea').text(
-          $('.script-tag textarea').text()
-            .replace(/><\/script>/, '\xa0data-max-rows="4"></script>')
-        );
-      }
+      var maxRowsEnabled = !$(this).prop('checked');
+      $('[name="gallery[max_rows]"]').val(maxRowsEnabled ? '4' : '');
+      $('#gallery-settings .spinner button').prop('disabled', maxRowsEnabled ? false : true);
+      $('.script-tag textarea').text(
+        $('.script-tag textarea').text().replace(
+          maxRowsEnabled ? /><\/script>/ : /\sdata-max-rows="\d+"/, 
+          maxRowsEnabled ? '\xa0data-max-rows="4"></script>' : ''
+        )
+      );
     })
 
     .on('change', '[name="carousel[background]"]', function () {
@@ -162,7 +143,12 @@ function pluginConfigListeners () {
     })
 
     .on('change', '[name="plugin[content]"]', function () {
-      var content = $(this).val();  // IN [custom, category, product]
+      var content = $(this).val(),   // IN [custom, category, product]
+          $contentSelect = content === 'custom' ? 
+                            $('[name="plugin[stories][]"]') : 
+                            content === 'category' ?
+                              $('[name="plugin[category]"]') :
+                              $('[name="plugin[product]"]');  
       $('.script-tag textarea').text(
         $('.script-tag textarea').text()
 
@@ -171,35 +157,28 @@ function pluginConfigListeners () {
           // re-add if custom was selected and a selection exists
           // the multiple select option makes .val() behave different
           .replace(/><\/script>/, function () {
-            return (content === 'custom' && $('[name="plugin[stories][]"]').val() !== null) ? '\xa0data-stories="' + customStoriesToJson() + '"></script>' : '></script>';
+            return (content === 'custom' && $contentSelect.val() !== null) ? '\xa0data-stories="' + customStoriesToJson() + '"></script>' : '></script>';
           })
 
           // remove data-category
           .replace(/\sdata-category="((\w|-)+)?"/, '')
           // re-add if category was selected and a selection exists
           .replace(/><\/script>/, function () {
-            return (content === 'category' && $('[name="plugin[category]"]').val() !== '') ? '\xa0data-category="' + ($('[name="plugin[category]"]').find('option:selected').data('slug') || '') + '"></script>' : '></script>';
+            return (content === 'category' && $contentSelect.val() !== '') ? '\xa0data-category="' + ($contentSelect.find('option:selected').data('slug') || '') + '"></script>' : '></script>';
           })
 
           // remove data-product
           .replace(/\sdata-product="((\w|-)+)?"/, '')
           // re-add if product was selected and a selection exists
           .replace(/><\/script>/, function () {
-            return (content === 'product' && $('[name="plugin[product]"]').val() !== '') ? '\xa0data-product="' + ($('[name="plugin[product]"]').find('option:selected').data('slug') || '') + '"></script>' : '></script>';
+            return (content === 'product' && $contentSelect.val() !== '') ? '\xa0data-product="' + ($contentSelect.find('option:selected').data('slug') || '') + '"></script>' : '></script>';
           })
       );
-
-      if (content === 'custom') {
-        $('.content__select--category, .content__select--product').hide();
-        $('.content__select--custom').show();
-      } else if (content === 'category') {
-        $('.content__select--custom, .content__select--product').hide();
-        $('.content__select--category').show();
-      } else if (content === 'product') {
-        $('.content__select--custom, .content__select--category').hide();
-        $('.content__select--product').show();
-      }
-
+      $contentSelect
+        .parent()
+          .siblings().each(function () { $(this).hide(); })
+          .end()
+        .show();
     })
 
     .on('change', '[name="plugin[stories][]"]', updateScriptTag)
@@ -285,27 +264,24 @@ function pluginConfigListeners () {
     })
 
     // ref http://bootsnipp.com/snippets/featured/input-spinner-with-min-and-max-values
-    .on('click', '.spinner .btn:first-of-type', function () {
-      var step = 1, $input = $(this).closest('.spinner').find('input');
-      if ($input.attr('max') === undefined || parseInt($input.val()) < parseInt($input.attr('max'))) {
-        $input.val(parseInt($input.val(), 10) + step);
-        $input.trigger('change');
+    .on('click', '#gallery-settings .spinner button', function () {
+      var $input = $(this).closest('.spinner').find('input'),
+          isIncrement = $(this).hasClass('btn--inc'),
+          step = isIncrement ? 1 : -1,
+          min = parseInt($input.attr('min')),
+          max = parseInt($input.attr('max')),
+          oldVal = parseInt($input.val()), 
+          newVal = oldVal + step;
+      $input.val(newVal).trigger('change');
+      if (newVal === min || newVal === max) {
+        $(this).prop('disabled', true);
       } else {
-        $(this).next("disabled", true);
-      }
-    })
-    .on('click', '.spinner .btn:last-of-type', function () {
-      var step = 1, $input = $(this).closest('.spinner').find('input');
-      if ($input.attr('min') === undefined || parseInt($input.val()) > parseInt($input.attr('min'))) {
-        $input.val(parseInt($input.val(), 10) - step);
-        $input.trigger('change');
-      } else {
-        $(this).prev("disabled", true);
+        $(this).add($(this).siblings()).prop('disabled', false);
       }
     })
 
     .on('click', '.copy', function () {
-      var htmlText = $('#plugin-config-form').find('textarea[readonly]').text(),
+      var htmlText = $('.plugin-config').find('textarea[readonly]').text(),
           $temp = $("<textarea></textarea>");
       $("body").append($temp);
       $temp.text(htmlText).select();

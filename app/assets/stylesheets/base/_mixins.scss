@@ -27,6 +27,46 @@
   }
 }
 
+@mixin fa-spinner($width) {
+  width: $width;
+  input {
+    text-align: right;
+  }
+  .spinner__buttons {
+    position: relative;
+    white-space: nowrap;
+    width: 2%;
+    vertical-align: middle;
+    display: table-cell;
+  }
+  .btn {
+    display: block;
+    float: none;
+    width: 100%;
+    max-width: 100%;
+    padding: 8px;
+    margin-left: -1px;
+    position: relative;
+    border-radius: 0;
+    &--inc {
+      border-top-right-radius: 4px;
+    }
+    &--dec {
+      margin-top: -2px;
+      border-bottom-right-radius: 4px;
+    }
+  }
+  i {
+    position: absolute;
+    top: 0;
+    left: 4px;
+  }
+  &[disabled] {
+    opacity: 0.5;
+    pointer-events: none;
+  }
+}
+
 // http://hackingui.com/front-end/a-pure-css-solution-for-multiline-text-truncation/
 // @mixin multiline-ellipsis($line-height: 1.2em, $line-count: 1, $bg-color: transparent){
 //   overflow: hidden;
