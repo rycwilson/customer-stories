@@ -49,7 +49,7 @@
     <div class="col-sm-8 col-lg-9 layout-main">
       <div class="tab-content">
 
-        <div class="tab-pane fade" id="edit-company-profile">
+        <div class="tab-pane fade" id="edit-company-profile" role="tabpanel">
           <% cache(@company) do %>
             <%= render(
                   'companies/settings/company_profile', 
@@ -58,7 +58,7 @@
           <% end %>
         </div>
 
-        <div class="tab-pane fade" id="edit-crowdsource">
+        <div class="tab-pane fade" id="edit-crowdsource" role="tabpanel">
           <% cache("#{@company.subdomain}/crowdsource", skip_digest: true) do %>
             <%= render(
                   'companies/settings/invitation_templates',
@@ -67,7 +67,7 @@
           <% end %>
         </div>
         
-        <div class="tab-pane fade" id="edit-plugins">
+        <div class="tab-pane fade" id="edit-plugins" role="tabpanel">
           <% cache("#{@company.subdomain}/plugin-config", skip_digest: true) do %>
             <%= render('plugins/config', { company: @company }) %>
           <% end %>
@@ -79,7 +79,7 @@
           <% end %>
         </div>
 
-        <div class="tab-pane fade" id="edit-tags">
+        <div class="tab-pane fade" id="edit-tags" role="tabpanel">
           <% cache("#{@company.subdomain}/story-tags", skip_digest: true) do %>
             <%= render('companies/settings/story_tags', { company: @company }) %>
           <% end %>
