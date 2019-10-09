@@ -145,7 +145,7 @@ function initStoriesEditSettings (cbShowTab) {
 
   initS3Upload();
 
-  $('.story-settings.story-tags')
+  $('.story-settings.story-tags, #story-ctas-select')
     .select2({
       theme: 'bootstrap',
       placeholder: 'Select'
@@ -156,11 +156,6 @@ function initStoriesEditSettings (cbShowTab) {
                 .html('<i class="fa fa-fw fa-remove"></i>');
     })
     .trigger('change.select2');
-
-  $('#story-ctas-select').select2({
-    theme: 'bootstrap',
-    placeholder: 'Select'
-  });
 
   $('#story-settings-form').parent().removeClass('hidden')
   if (cbShowTab) cbShowTab();
