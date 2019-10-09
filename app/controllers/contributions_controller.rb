@@ -25,12 +25,13 @@ class ContributionsController < ApplicationController
       }.to_json
 
     else  # datatables source data (contributors)
-      if params[:success_id]
-        contributions = Success.find(params[:success_id]).contributions
-      else
-        contributions = company.contributions
-      end
-      data = Rails.cache.fetch("#{company.subdomain}/contributions-json") do
+      contributions = params[:success_id] ? 
+                        Success.find(params[:success_id]).contributions :
+                        company.contributions  
+      cache_key = params[:success_id] ? 
+                    "#{company.subdomain}/successes/#{params[:success_id]}/contributions-json" :
+                    "#{company.subdomain}/contributions-json"
+      data = Rails.cache.fetch(cache_key) do
         contributions.to_json({
           only: [:id, :status, :publish_contributor, :contributor_unpublished],
           methods: [:display_status, :timestamp],
