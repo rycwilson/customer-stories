@@ -82,7 +82,9 @@ class Contribution < ApplicationRecord
     end
   )
 
-  after_commit(on: [:create, :destroy]) { self.company.expire_ll_cache('successes-json') }
+  after_commit(on: [:create, :destroy]) do 
+    self.company.expire_ll_cache('successes-json', 'contributions-json') 
+  end
 
   after_update_commit do
     if self.previous_changes.key?('publish_contributor') && self.story.present?
@@ -95,8 +97,9 @@ class Contribution < ApplicationRecord
       self.story.expire_story_card_fragment_cache
       self.company.increment_stories_gallery_fragments_memcache_iterator
     end
-    if self.previous_changes.key?('status')
-      self.company.expire_ll_cache('successes-json')
+    if (self.previous_changes.keys & ['status', 'publish_contributor', 'contributor_unpublished']).any?
+      self.company.expire_ll_cache('contributions-json')
+      self.company.expire_ll_cache('successes-json') if self.previous_changes.key?('status')
     end
   end
 

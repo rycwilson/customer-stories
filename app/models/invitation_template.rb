@@ -29,7 +29,10 @@ class InvitationTemplate < ApplicationRecord
   end
   before_update() { self.format_for_storage() }
 
-  after_commit { self.company.expire_fragment_cache('crowdsource') }
+  after_commit do 
+    self.company.expire_fragment_cache('crowdsource') 
+    self.company.expire_ll_cache('contributions-json') if self.previous_changes.key?('name')
+  end
 
   def button_style_settings
     'display: inline-block;' +

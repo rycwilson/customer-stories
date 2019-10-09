@@ -152,7 +152,7 @@ class Story < ApplicationRecord
     expire_story_card_fragment_cache
     expire_filter_select_fragment_cache
     self.company.increment_stories_gallery_fragments_memcache_iterator
-    self.company.expire_ll_cache('stories-json')
+    self.company.expire_ll_cache('stories-json', 'contributions-json')
     self.company.expire_fragment_cache('plugin-config')
   end if Proc.new { |story|
            ( story.previous_changes.keys &
@@ -187,7 +187,7 @@ class Story < ApplicationRecord
     expire_csp_story_path_cache
     expire_story_narrative_fragment_cache
     self.company.expire_fragment_cache('plugin-config')
-    self.company.expire_ll_cache('successes-json')
+    self.company.expire_ll_cache('successes-json', 'contributions-json')
   end if Proc.new { |story| story.previous_changes.key?('title') }
 
   after_update_commit do
@@ -277,7 +277,7 @@ class Story < ApplicationRecord
   def expire_csp_story_path_cache
     Rails.cache.delete("#{self.company.subdomain}/csp-story-#{self.id}-path")
     self.expire_fragment_cache_on_path_change
-    self.company.expire_ll_cache('stories-json')
+    self.company.expire_ll_cache('stories-json', 'contributions-json')
   end
 
   # method returns a friendly id url that either contains or omits a product

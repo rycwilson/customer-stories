@@ -76,7 +76,10 @@ class Success < ApplicationRecord
     end
   end
 
-  after_commit { self.company.expire_ll_cache('successes-json') }
+  after_commit do 
+    self.company.expire_ll_cache('successes-json') 
+    self.company.expire_ll_cache('contributions-json') if self.previous_changes.key?('name')
+  end
 
   # after_commit(on: [:create, :destroy]) do
   # end

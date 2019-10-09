@@ -34,7 +34,7 @@ class User < ApplicationRecord
       .joins(:contributions)
       .distinct()
       .where('users.id = ? OR contributions.contributor_id = ? OR contributions.referrer_id = ?', self.id, self.id, self.id)
-      .each { |company| company.expire_ll_cache('successes-json') }
+      .each { |company| company.expire_ll_cache('successes-json', 'contributions-json') }
   end
   
   after_commit(on: [:update]) { expire_published_contributor_cache } if Proc.new do |user|
