@@ -13,25 +13,22 @@ class Customer < ApplicationRecord
 
   friendly_id :name, use: [:slugged, :scoped], scope: :company_id
 
-  after_commit(on: [:update]) do
-    expire_fragment_cache_on_logo_change
-    self.company.expire_stories_json_cache
-  end if Proc.new do |customer|
-      customer.previous_changes.any? do |k, v|
-        [:logo_url, :show_name_with_logo].include?(k)
-      end
-    end
-
-  after_commit(on: [:update]) do
-    self.stories.each { |story| story.expire_csp_story_path_cache }
-    self.company.expire_fragment('plugin-config')
-  end if Proc.new { |customer| customer.previous_changes.key?(:name) }
+  after_update_commit do
+    expire_cache if (self.previous_changes.keys & ['name', 'logo_url', 'show_name_with_logo']).any?
+  end
 
   def should_generate_new_friendly_id?
     new_record? || name_changed? || slug.blank?
   end
 
-  def expire_fragment_cache_on_logo_change
+  def expire_cache
+    expire_story_fragments
+    self.stories.each { |story| story.expire_csp_story_path_cache }
+    self.company.expire_fragment_cache('plugin-config')
+    self.company.expire_ll_cache('successes-json', 'stories-json')
+  end
+
+  def expire_story_fragments
     self.stories.each do |story|
       self.expire_fragment("#{self.company.subdomain}/stories/#{story.id}/testimonial")
       self.expire_fragment("#{self.company.subdomain}/stories/#{story.id}/cs-testimonial")

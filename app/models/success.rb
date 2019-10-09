@@ -15,8 +15,12 @@ class Success < ApplicationRecord
 
   has_one :story, dependent: :destroy
   has_many :products_successes, dependent: :destroy
-  has_many :products, through: :products_successes,
-    after_add: :expire_product_tags_cache, after_remove: :expire_product_tags_cache
+  has_many(
+    :products, 
+    through: :products_successes,
+    after_add: :expire_product_tags_cache, 
+    after_remove: :expire_product_tags_cache
+  )
   has_many :story_categories_successes, dependent: :destroy
   has_many :story_categories, through: :story_categories_successes,
     after_add: :expire_category_tags_cache, after_remove: :expire_category_tags_cache
@@ -71,6 +75,8 @@ class Success < ApplicationRecord
       remove_excess_newlines_from_win_story_text if self.win_story_text.present?
     end
   end
+
+  after_commit { self.company.expire_ll_cache('successes-json') }
 
   # after_commit(on: [:create, :destroy]) do
   # end
@@ -164,12 +170,12 @@ class Success < ApplicationRecord
   end
 
   def expire_category_tags_cache (category)
-    category.company.expire_stories_json_cache
+    category.company.expire_ll_cache('stories-json')
     category.company.increment_category_select_fragments_memcache_iterator
   end
 
   def expire_product_tags_cache (product)
-    product.company.expire_stories_json_cache
+    product.company.expire_ll_cache('stories-json')
     product.company.increment_product_select_fragments_memcache_iterator
   end
 

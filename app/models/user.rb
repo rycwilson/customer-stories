@@ -1,5 +1,4 @@
-# TODO: check validations - client and server side
-# use Bootstrap Validator on client side if necessary
+
 class User < ApplicationRecord
   # RYAN = self.find_by(email:'***REMOVED***')
 
@@ -26,9 +25,18 @@ class User < ApplicationRecord
   has_many :successes, class_name: 'Success', foreign_key: 'curator_id' # curator, no (dependent: :destroy)
   has_many :stories, through: :successes
 
-  # if user doesn't have a linkedin_url, unpublish any contributions
-  after_commit :update_contributions, on: :update
+  after_update_commit do 
+    dont_publish_as_contributor if linkedin_profile_removed?
 
+    # expire cache
+    Company
+      .joins(:curators)
+      .joins(:contributions)
+      .distinct()
+      .where('users.id = ? OR contributions.contributor_id = ? OR contributions.referrer_id = ?', self.id, self.id, self.id)
+      .each { |company| company.expire_ll_cache('successes-json') }
+  end
+  
   after_commit(on: [:update]) { expire_published_contributor_cache } if Proc.new do |user|
       trigger_keys = ['first_name', 'last_name', 'linkedin_url', 'linkedin_title', 'linkedin_photo_url', 'linkedin_company', 'linkedin_location']
       (user.previous_changes.keys & trigger_keys).any?
@@ -66,10 +74,8 @@ class User < ApplicationRecord
     self.company_id.present?
   end
 
-  def update_contributions
-    if self.linkedin_url.blank?
-      self.own_contributions.each { |c| c.update publish_contributor: false }
-    end
+  def dont_publish_as_contributor
+    self.own_contributions.each { |c| c.update(publish_contributor: false) }
   end
 
   def expire_published_contributor_cache
@@ -99,5 +105,9 @@ class User < ApplicationRecord
   #     # user.name = auth["info"]["nickname"]
   #   end
   # end
+
+  def linkedin_profile_removed?
+    self.previous_changes[:linkedin_url].try(:[], 1).blank?
+  end
 
 end

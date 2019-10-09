@@ -139,7 +139,7 @@ class Story < ApplicationRecord
   before_update(:update_publish_state, on: [:create, :update])
 
   after_commit(on: [:create, :destroy]) do
-    self.company.expire_stories_json_cache
+    self.company.expire_ll_cache('stories-json')
   end
 
   # note: the _changed? methods for attributes don't work in the
@@ -152,8 +152,8 @@ class Story < ApplicationRecord
     expire_story_card_fragment_cache
     expire_filter_select_fragment_cache
     self.company.increment_stories_gallery_fragments_memcache_iterator
-    self.company.expire_stories_json_cache
-    self.company.expire_fragment('plugin-config')
+    self.company.expire_ll_cache('stories-json')
+    self.company.expire_fragment_cache('plugin-config')
   end if Proc.new { |story|
            ( story.previous_changes.keys &
              ['published', 'preview_published', 'logo_published'] ).any?
@@ -165,7 +165,7 @@ class Story < ApplicationRecord
   after_update_commit do
     expire_story_card_fragment_cache
     self.company.increment_stories_gallery_fragments_memcache_iterator
-    self.company.expire_stories_json_cache
+    self.company.expire_ll_cache('stories-json')
   end if Proc.new { |story|
            ( (story.published? || story.preview_published?) &&
              (story.previous_changes.keys & ['title', 'summary', 'quote']).any? )
@@ -186,7 +186,8 @@ class Story < ApplicationRecord
   after_update_commit do
     expire_csp_story_path_cache
     expire_story_narrative_fragment_cache
-    self.company.expire_fragment('plugin-config')
+    self.company.expire_fragment_cache('plugin-config')
+    self.company.expire_ll_cache('successes-json')
   end if Proc.new { |story| story.previous_changes.key?('title') }
 
   after_update_commit do
@@ -196,7 +197,7 @@ class Story < ApplicationRecord
   before_destroy do
     expire_filter_select_fragment_cache
     self.company.increment_stories_gallery_fragments_memcache_iterator
-    self.company.expire_stories_json_cache
+    self.company.expire_ll_cache('stories-json')
   end
 
   # method takes an active record relation
@@ -276,7 +277,7 @@ class Story < ApplicationRecord
   def expire_csp_story_path_cache
     Rails.cache.delete("#{self.company.subdomain}/csp-story-#{self.id}-path")
     self.expire_fragment_cache_on_path_change
-    self.company.expire_stories_json_cache
+    self.company.expire_ll_cache('stories-json')
   end
 
   # method returns a friendly id url that either contains or omits a product
@@ -386,7 +387,7 @@ class Story < ApplicationRecord
 
   def expire_published_contributor_cache(contributor_id)
     Rails.cache.delete("#{self.company.subdomain}/story-#{self.id}-published-contributors")
-    self.company.expire_stories_json_cache
+    self.company.expire_ll_cache('stories-json')
     self.expire_fragment("#{self.company.subdomain}/story-#{self.id}-contributors")
     self.expire_fragment("#{self.company.subdomain}/story-#{self.id}-contributor-#{contributor_id}")
   end

@@ -328,7 +328,7 @@ class Company < ApplicationRecord
     end
   end
 
-  after_commit :expire_fragment_cache, on: :update,
+  after_commit :expire_gallery_fragment_cache, on: :update,
     if: Proc.new { |company|
       (company.previous_changes.keys & ['header_color_1', 'header_text_color']).any?
     }
@@ -478,7 +478,7 @@ class Company < ApplicationRecord
 
   # stories_json returns data included in the client via the gon object
   def stories_json
-    Rails.cache.fetch("#{self.subdomain}/stories_json") do
+    Rails.cache.fetch("#{self.subdomain}/stories-json") do
       JSON.parse(
         Story.default_order(Story.company_all(self.id))
         .to_json({
@@ -496,13 +496,14 @@ class Company < ApplicationRecord
     end
   end
 
-  def expire_stories_json_cache
-    Rails.cache.delete("#{self.subdomain}/stories_json")
+  def expire_ll_cache(*keys)
+    keys.each { |key| Rails.cache.delete("#{self.subdomain}/#{key}") }
   end
 
-  def expire_fragment(nested_fragment)
-    fragment = "#{self.subdomain}/#{nested_fragment}"
-    self.expire_fragment(fragment) if fragment_exist?(fragment)
+  def expire_fragment_cache(key)
+    if fragment_exist?("#{self.subdomain}/#{key}")
+      self.expire_fragment("#{self.subdomain}/#{key}")
+    end 
   end
 
   def curator? current_user=nil
@@ -609,7 +610,7 @@ class Company < ApplicationRecord
   end
 
   # changes to company colors expires all gallery fragments
-  def expire_fragment_cache
+  def expire_gallery_fragment_cache
     self.increment_stories_gallery_fragments_memcache_iterator
     self.increment_story_card_fragments_memcache_iterator
   end

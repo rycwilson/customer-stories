@@ -11,6 +11,6 @@ class ContributorQuestion < ApplicationRecord
 
   default_scope { order(created_at: :asc) }
 
-  after_commit { self.company.expire_fragment('crowdsource') }
+  after_commit { self.company.expire_fragment_cache('crowdsource') }
 
 end
