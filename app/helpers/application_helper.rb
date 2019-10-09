@@ -1,8 +1,8 @@
 module ApplicationHelper
 
-  def custom_stylesheet?(company)
+  def custom_stylesheet?(company=nil)
     ['centerforcustomerengagement', 'compas', 'pixlee', 'trunity', 'varmour']
-      .include?(company.subdomain)
+      .include?(company.try(:subdomain))
   end
 
   def custom_google_fonts(company)
