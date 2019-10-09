@@ -63,15 +63,14 @@ function curateListeners () {
       })
     })
 
-    .on('click', '#curate-gallery > .story-card > a', function (e) {
-
+    .on('click', '#curate-gallery .story-card', function (e) {
       e.preventDefault();
 
-      var $storyCard = $(this).closest('li'), storySlug = $storyCard.data('story-slug'),
+      var $storyCard = $(this), 
+          storySlug = $storyCard.data('story-slug'),
           customerSlug = $storyCard.data('customer-slug');
 
       loading($storyCard);
-
   // replacing state ensure turbolinks:false for the first tab state
       window.history.replaceState(
         { turbolinks: false }, null, '/curate'
@@ -85,7 +84,7 @@ function curateListeners () {
 
       $.ajax({
         url: '/stories/' + $storyCard.data('story-id') + '/edit',
-        method: 'get',
+        method: 'GET',
         dataType: 'html'
       })
         .done(function (html, status, xhr) {

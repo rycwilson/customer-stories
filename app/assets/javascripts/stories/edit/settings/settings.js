@@ -145,10 +145,17 @@ function initStoriesEditSettings (cbShowTab) {
 
   initS3Upload();
 
-  $('.story-settings.story-tags').select2({
-    theme: 'bootstrap',
-    placeholder: 'Select'
-  });
+  $('.story-settings.story-tags')
+    .select2({
+      theme: 'bootstrap',
+      placeholder: 'Select'
+    })
+    .on('select2:select, select2:unselect, change.select2', function () {
+      $(this).next('.select2')
+              .find('.select2-selection__choice__remove')
+                .html('<i class="fa fa-fw fa-remove"></i>');
+    })
+    .trigger('change.select2');
 
   $('#story-ctas-select').select2({
     theme: 'bootstrap',

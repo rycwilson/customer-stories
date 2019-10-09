@@ -90,7 +90,7 @@ function storiesIndexListeners () {
       ));
     })
 
-    .on('click touchstart', '.story-card:not(.hover) a.published', function (e) {
+    .on('click touchstart', '#stories-gallery .story-card:not(.hover) a.published', function (e) {
       // console.log('click touchstart')
       var $storyLink = $(this),
           $storyCard = $(this).parent(),

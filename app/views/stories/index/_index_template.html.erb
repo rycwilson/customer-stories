@@ -12,7 +12,8 @@
 
     <li style="display: inline-block; vertical-align: top">
 
-      <div class="story-card story-card--{{= subdomain }} {{= isDashboard ? 'story-card--small story-card--dashboard' : '' }} story-card--{{= (story.published && 'published') || (story.preview_published && 'preview-published') || (story.logo_published && 'logo-published') || ''}}" data-story-id="{{= story.id }}" data-story-slug="{{= storySlug }}" data-customer-slug="{{= customerSlug }}">
+      <div class="story-card story-card--{{= subdomain }} {{= isDashboard ? 'story-card--small story-card--dashboard' : '' }} story-card--{{= (story.published && 'published') || (story.preview_published && 'preview-published') || (story.logo_published && 'logo-published') || ''}}"
+            data-story-id="{{= story.id }}" data-story-slug="{{= storySlug }}" data-customer-slug="{{= customerSlug }}">
 
         <a href="{{= isDashboard ? 'javascript:;' : (story.published && story.csp_story_path) || (story.preview_published && 'javascript:;') || '' }}"
           class="story-card__link {{= isDashboard ? 'curator' : 'public' }} {{= story.published ? 'published' : (story.preview_published ? 'preview-published' : (story.logo_published ? 'logo-published' : 'pending-curation')) }}"

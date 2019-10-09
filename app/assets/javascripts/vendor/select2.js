@@ -139,10 +139,16 @@ function initSelect2 () {
   }
 
   // story settings has its own init routine
-  $('.story-tags:not(.story-settings)').select2({
-    theme: 'bootstrap',
-    placeholder: 'Select'
-  });
+  $('.story-tags:not(.story-settings)')
+    .select2({
+      theme: 'bootstrap',
+      placeholder: 'Select'
+    })
+    .on('select2:select, select2:unselect, change.select2', function () {
+      $(this).next('.select2')
+               .find('.select2-selection__choice__remove')
+                 .html('<i class="fa fa-fw fa-remove"></i>');
+    })
 
   $('#curate-filters select').select2({
     theme: 'bootstrap',
