@@ -8,6 +8,7 @@
 }
 
 #curate .layout-sidebar .curate-stories {
+  @include hide-until-init;
   background-color: $medium-gray;
   background-clip: content-box;
   padding: 0;

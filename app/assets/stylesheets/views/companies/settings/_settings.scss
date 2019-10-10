@@ -21,10 +21,7 @@ p.lead {
 }
 
 #company-tags-form {
-  visibility: hidden;
-  &[data-init="true"] {
-    visibility: visible;
-  }
+  @include hide-until-init;
 }
 
 #edit-company-profile, #edit-tags {

@@ -1,4 +1,11 @@
 
+@mixin hide-until-init {
+  visibility: hidden;
+  &[data-init="true"] {
+    visibility: visible;
+  }
+}
+
 @mixin fa-button ($background-color) {
   display: flex;
   align-items:center;

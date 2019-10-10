@@ -1,28 +1,22 @@
 
 function curate () {
 
+  var $curatorSelect = $('.curate-filters__curator');
   // don't need to call this here as the auto curator-select change event will trigger it
   // filterCurateGallery();
-  $('#curate-filters .curator')
-    .val(
-      $('#curate-filters .curator').children('[value="' + CSP.current_user.id + '"]').val()
-    )
+  
+  $curatorSelect
+    .val($curatorSelect.children('[value="' + CSP.current_user.id + '"]').val())
     .trigger('change', { auto: true });
 
 }
 
 // keep track of filters with session cookies
 function preselectFilters () {
-  $('#curate-filters').find('select.curator').val(Cookies.get('csp-curate-filter-curator') || CSP.current_user.id).trigger('change');
-  $('#curate-filters').find('select.customer').val(Cookies.get('csp-curate-filter-customer') || 0).trigger('change');
-  $('#curate-filters').find('select.category').val(Cookies.get('csp-curate-filter-category') || 0).trigger('change');
-  $('#curate-filters').find('select.product').val(Cookies.get('csp-curate-filter-product') || 0).trigger('change');
-
-  // control the default by choosing 'true' or 'false' for comparison
-  $('#status-filters .published').prop('checked', Cookies.get('csp-curate-filter-published') === 'true' ? true : false).trigger('change');
-  $('#status-filters .logo-published').prop('checked', Cookies.get('csp-curate-filter-logo-published') === 'false' ? false : true).trigger('change');
-  $('#status-filters .preview-published').prop('checked', Cookies.get('csp-curate-filter-preview-published') === 'false' ? false : true).trigger('change');
-  $('#status-filters .pending').prop('checked', Cookies.get('csp-curate-filter-pending') === 'false' ? false : true).trigger('change');
+  $('.curate-filters__curator').val(Cookies.get('csp-curate-filter-curator') || CSP.current_user.id).trigger('change');
+  $('.curate-filters__customer').val(Cookies.get('csp-curate-filter-customer') || 0).trigger('change');
+  $('.curate-filters__category').val(Cookies.get('csp-curate-filter-category') || 0).trigger('change');
+  $('.curate-filters__product').val(Cookies.get('csp-curate-filter-product') || 0).trigger('change');
 }
 
 function curateListeners () {
@@ -117,11 +111,11 @@ function filterCurateGallery (context) {
   var stories = [],
       $gallery = $('#curate-gallery'),
       storiesTemplate = _.template($('#stories-template').html()),
-      customerId = $('#curate-filters .customer').val(),
-      curatorId = $('#curate-filters .curator').val(),
-      categoryId = $('#curate-filters .category').val(),
-      productId = $('#curate-filters .product').val(),
-      status = $('#curate-filters .status').val();
+      customerId = $('.curate-filters__customer').val(),
+      curatorId = $('.curate-filters__curator').val(),
+      categoryId = $('.curate-filters__category').val(),
+      productId = $('.curate-filters__product').val(),
+      status = $('.curate-filters__status').val();
 
       // showPending = $('#status-filters .pending').prop('checked'),
       // showLogoPublished = $('#status-filters .logo-published').prop('checked'),

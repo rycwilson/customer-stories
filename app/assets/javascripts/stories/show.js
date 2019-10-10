@@ -164,7 +164,7 @@ function LI2Observer () {
       observer = new MutationObserver(function (mutations) {
         mutations.forEach(function (mutation) {
           if (mutation.type === 'attributes') {
-            console.log('attributes, attributeName: ', mutation.attributeName, $(mutation.target).data('uid'));
+            // console.log('attributes, attributeName: ', mutation.attributeName, $(mutation.target).data('uid'));
           } else if (mutation.type === 'childList') {
             // console.log('childList, addedNodes: ', mutation.addedNodes[0], $(mutation.target).data('uid'));
             // this would be the last mutation, but it doesn't always happen

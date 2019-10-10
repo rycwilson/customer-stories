@@ -73,6 +73,7 @@ class Story < ApplicationRecord
 
   scope :published, -> { where(published: true) }
 
+  # TODO for scopes taking arguments, class methods are preferred, see Rails Guides
   scope :company_all, ->(company_id) {
     joins(success: { customer: {} })
     .where(customers: { company_id: company_id })

@@ -79,6 +79,7 @@
 }
 
 .search-and-filters {
+  @include hide-until-init;
   .form-group {
     margin-bottom: 0;
   }
@@ -87,7 +88,6 @@
     margin-bottom: 15px;
   }
   &.visible-xs-block {
-    visibility: hidden;  // wait for select2 to init (see select2.js)
     max-width: 320px;
     margin: 0 auto;  // center
     .form-group:last-of-type  {

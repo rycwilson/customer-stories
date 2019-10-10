@@ -61,7 +61,10 @@ class Company < ApplicationRecord
       options
     end
     def with_ads
-      joins(:topic_ad, :retarget_ad)  .order(publish_date: :desc)
+      self.select do |story|
+        story.topic_ad.present? && story.retarget_ad.present?
+      end
+      .sort_by { |story| story.publish_date }.reverse
     end
   end
   has_many :visitor_actions

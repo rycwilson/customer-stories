@@ -161,12 +161,13 @@ function initSelect2 () {
                  .html('<i class="fa fa-fw fa-remove"></i>');
     })
 
-  $('#curate-filters select').select2({
-    theme: 'bootstrap',
-    width: 'style',
-    placeholder: 'Select',
-    allowClear: true
-  })
+  $('#curate-filters select')
+    .select2({
+      theme: 'bootstrap',
+      width: 'style',
+      placeholder: 'Select',
+      allowClear: true
+    })
     .on('select2:unselecting', function (e) {
       $(this).data('unselecting', true);
     })
@@ -183,6 +184,7 @@ function initSelect2 () {
         $(this).next('.select2').removeClass('select2-container--allow-clear')
       }
     })
+  $('#curate .layout-sidebar .curate-stories').attr('data-init', true);
 
   // main gallery filters
   $('.stories-filter__select--category, .stories-filter__select--product')
@@ -209,12 +211,13 @@ function initSelect2 () {
       }
     })
 
-  $('.stories-filter__select--grouped').select2({
-    theme: 'bootstrap',
-    placeholder: 'Select Category and/or Product',
-    tags: true,
-    width: 'style',
-  })
+  $('.stories-filter__select--grouped')
+    .select2({
+      theme: 'bootstrap',
+      placeholder: 'Select Category and/or Product',
+      tags: true,
+      width: 'style',
+    })
     // ref https://stackoverflow.com/questions/29618382/disable-dropdown-opening-on-select2-clear
     // the answer that worked above did not work for this one, but this one does:
     .on('select2:unselecting', function (e) {
@@ -243,10 +246,7 @@ function initSelect2 () {
       .find('.select2-selection__choice__remove')
         .html('<i class="fa fa-fw fa-remove"></i>');
 
-  if ($('body').hasClass('stories index')) {
-    prependTagType();
-    $('.search-and-filters.visible-xs-block').css('visibility', 'visible');
-  }
+  if ($('body').hasClass('stories index')) prependTagType();
 
   // restore last selected value
   // change the selected item, but avoid 'change' event
@@ -255,6 +255,7 @@ function initSelect2 () {
       $(this).val(preSelect.toString()).trigger('change.select2');
     }
   });
+  $('.search-and-filters').attr('data-init', true);
 
   // TODO Is this an issue?  http://stackoverflow.com/questions/36497723
   // $('[class*="search-and-filters__filter]').data('init', true);
