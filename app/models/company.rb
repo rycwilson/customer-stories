@@ -18,7 +18,7 @@ class Company < ApplicationRecord
 
   has_many :customers, dependent: :destroy do
     def select_options
-      self.sort_by { |c| c.name }.map { |customer| [ customer.name, customer.id ] }
+      order(:name).map { |customer| [ customer.name, customer.id ] }
     end
   end
   has_many :successes, -> { includes(:story) }, through: :customers do
@@ -32,7 +32,8 @@ class Company < ApplicationRecord
 
   has_many :curators, class_name: "User" do
     def select_options
-      self.sort_by { |c| c.last_name }.map { |curator| [ curator.full_name, curator.id ] }
+      order(:last_name).map { |curator| [ curator.full_name, curator.id ] }
+      # self.sort_by { |c| c.last_name }.map { |curator| [ curator.full_name, curator.id ] }
     end
   end
   has_many :contributions, -> { includes(:contributor, :referrer, success: { customer: {} }) }, through: :successes
@@ -40,7 +41,7 @@ class Company < ApplicationRecord
   has_many :referrers, -> { distinct }, through: :contributions, source: :referrer
   has_many :stories, through: :successes do 
     def select_options
-      self.select { |story| story.published? }
+      self.published
           .map { |story| [ story.title, story.id ] }
           .unshift( ['All', 0] )
     end
@@ -59,14 +60,8 @@ class Company < ApplicationRecord
         end
       options
     end
-    def published
-      self.select { |story| story.published? }
-    end
     def with_ads
-      self.select do |story|
-        story.topic_ad.present? && story.retarget_ad.present?
-      end
-      .sort_by { |story| story.publish_date }.reverse
+      joins(:topic_ad, :retarget_ad)  .order(publish_date: :desc)
     end
   end
   has_many :visitor_actions

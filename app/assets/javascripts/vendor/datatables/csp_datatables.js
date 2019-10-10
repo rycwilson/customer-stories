@@ -119,6 +119,13 @@ function initDataTables (isBatch) {
                 $(this).removeData('unselecting')
                        .select2('close');
               }
+            })
+            .on('change.select2', function (e) {
+              if ($(this).val()) {
+                $(this).next('.select2').addClass('select2-container--allow-clear')
+              } else {
+                $(this).next('.select2').removeClass('select2-container--allow-clear')
+              }
             });
 
             // select2 is inserting an empty <option> for some reason
@@ -138,6 +145,13 @@ function initDataTables (isBatch) {
               if ($(this).data('unselecting')) {
                 $(this).removeData('unselecting')
                        .select2('close');
+              }
+            })
+            .on('change.select2', function (e) {
+              if ($(this).val()) {
+                $(this).next('.select2').addClass('select2-container--allow-clear')
+              } else {
+                $(this).next('.select2').removeClass('select2-container--allow-clear')
               }
             });
 

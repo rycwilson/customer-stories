@@ -99,44 +99,55 @@ function initSelect2 () {
    * may not be present if datatables not yet rendered
    * this code duplicated from csp_datatables.js
    */
-  if ($('.successes-header').length && $('.contributors-header').length) {
-    $('.prospect.curator-select')
-       .select2({
-         theme: 'bootstrap',
-         width: 'style',
-         allowClear: true,
-         placeholder: 'Select',
-         minimumResultsForSearch: -1   // hides text input
-       })
-        .on('select2:unselecting', function (e) {
-          $(this).data('unselecting', true);
-        })
-        .on('select2:open', function (e) {
-          if ($(this).data('unselecting')) {
-            $(this).removeData('unselecting')
-            $(this).select2('close');
-          }
-        });
+  // if ($('.successes-header').length && $('.contributors-header').length) {
+  //   $('.prospect.curator-select')
+  //      .select2({
+  //        theme: 'bootstrap',
+  //        width: 'style',
+  //        allowClear: true,
+  //        placeholder: 'Select',
+  //        minimumResultsForSearch: -1   // hides text input
+  //      })
+  //       .on('select2:unselecting', function (e) {
+  //         $(this).data('unselecting', true);
+  //       })
+  //       .on('select2:open', function (e) {
+  //         if ($(this).data('unselecting')) {
+  //           $(this).removeData('unselecting')
+  //           $(this).select2('close');
+  //         }
+  //       })
+  //       .on('change.select2', function (e) {
+  //         if ($(this).val()) {
+  //           $(this).next('.select2').addClass('select2-container--allow-clear')
+  //         } else {
+  //           $(this).next('.select2').removeClass('select2-container--allow-clear')
+  //         }
+  //       })
 
-       // select2 is inserting an empty <option> for some reason
-      //  .children('option').not('[value]').remove();
-
-    $('.dt-filter').select2({
-       theme: 'bootstrap',
-       width: 'style',
-       placeholder: 'Search / Select',
-       allowClear: true
-    })
-      .on('select2:unselecting', function (e) {
-        $(this).data('unselecting', true);
-      })
-      .on('select2:open', function (e) {
-        if ($(this).data('unselecting')) {
-          $(this).removeData('unselecting')
-          $(this).select2('close');
-        }
-      });
-  }
+  //   $('.dt-filter').select2({
+  //      theme: 'bootstrap',
+  //      width: 'style',
+  //      placeholder: 'Search / Select',
+  //      allowClear: true
+  //   })
+  //     .on('select2:unselecting', function (e) {
+  //       $(this).data('unselecting', true);
+  //     })
+  //     .on('select2:open', function (e) {
+  //       if ($(this).data('unselecting')) {
+  //         $(this).removeData('unselecting')
+  //         $(this).select2('close');
+  //       }
+  //     })
+  //     .on('change.select2', function (e) {
+  //       if ($(this).val()) {
+  //         $(this).next('.select2').addClass('select2-container--allow-clear')
+  //       } else {
+  //         $(this).next('.select2').removeClass('select2-container--allow-clear')
+  //       }
+  //     })
+  // }
 
   // story settings has its own init routine
   $('.story-tags:not(.story-settings)')
@@ -164,7 +175,14 @@ function initSelect2 () {
         $(this).removeData('unselecting')
                .select2('close');
       }
-    });
+    })
+    .on('change.select2', function (e) {
+      if ($(this).val()) {
+        $(this).next('.select2').addClass('select2-container--allow-clear')
+      } else {
+        $(this).next('.select2').removeClass('select2-container--allow-clear')
+      }
+    })
 
   // main gallery filters
   $('.stories-filter__select--category, .stories-filter__select--product')
@@ -174,15 +192,22 @@ function initSelect2 () {
       allowClear: true,
       width: 'style'   
     })
-      .on('select2:unselecting', function (e) {
-        $(this).data('unselecting', true);
-      })
-      .on('select2:open', function (e) {
-        if ($(this).data('unselecting')) {
-          $(this).removeData('unselecting')
-                .select2('close');
-        }
-      });
+    .on('select2:unselecting', function (e) {
+      $(this).data('unselecting', true);
+    })
+    .on('select2:open', function (e) {
+      if ($(this).data('unselecting')) {
+        $(this).removeData('unselecting')
+              .select2('close');
+      }
+    })
+    .on('change.select2', function (e) {
+      if ($(this).val()) {
+        $(this).next('.select2').addClass('select2-container--allow-clear')
+      } else {
+        $(this).next('.select2').removeClass('select2-container--allow-clear')
+      }
+    })
 
   $('.stories-filter__select--grouped').select2({
     theme: 'bootstrap',
@@ -350,6 +375,13 @@ function initSelect2 () {
                .select2('close');
       }
     })
+    .on('change.select2', function (e) {
+      if ($(this).val()) {
+        $(this).next('.select2').addClass('select2-container--allow-clear')
+      } else {
+        $(this).next('.select2').removeClass('select2-container--allow-clear')
+      }
+    })
 
   $('[name="plugin[product]"]')
     .select2({
@@ -365,6 +397,13 @@ function initSelect2 () {
       if ($(this).data('unselecting')) {
         $(this).removeData('unselecting')
               .select2('close');
+      }
+    })
+    .on('change.select2', function (e) {
+      if ($(this).val()) {
+        $(this).next('.select2').addClass('select2-container--allow-clear')
+      } else {
+        $(this).next('.select2').removeClass('select2-container--allow-clear')
       }
     })
 

@@ -71,6 +71,8 @@ class Story < ApplicationRecord
 
   friendly_id :title, use: [:slugged, :finders, :history]
 
+  scope :published, -> { where(published: true) }
+
   scope :company_all, ->(company_id) {
     joins(success: { customer: {} })
     .where(customers: { company_id: company_id })
