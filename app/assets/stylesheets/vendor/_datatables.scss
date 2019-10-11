@@ -1,10 +1,13 @@
 
-
 table thead tr th,  
 table tfoot tr th {
   font-weight: 400;
   font-size: 14px;
   border-bottom-width: 1px;
+}
+
+.dataTables_paginate {
+  display: none;
 }
 
 table.dataTable tr.group td {

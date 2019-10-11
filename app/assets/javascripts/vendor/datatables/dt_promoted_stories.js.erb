@@ -111,6 +111,7 @@ function initPromotedStoriesTable () {
     initComplete: function (settings, json) {
       // console.log('initComplete')
       var $table = $(this),
+          $tableWrapper = $table.closest('[id*="table_wrapper"]'),
           addClickBlockers = function ($row) {
             var $rows = $row ? $row : $table.find('tr[data-story-id]');
             $rows.each(function () {
@@ -261,6 +262,7 @@ function initPromotedStoriesTable () {
       $table.css('visibility', 'visible');
 
       $('.working--promote').addClass('promoted-stories-loaded');
+      $tableWrapper.find('.dataTables_paginate').show();
 
     },
 

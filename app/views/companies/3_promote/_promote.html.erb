@@ -2,8 +2,6 @@
 <div id="promote" role='tabpanel'
      class="tab-pane fade <%= workflow_stage == 'promote' ? 'active in' : '' %>">
 
-  <div class="working working--promote"><div><div><i class="fa fa-spin fa-circle-o-notch"></i></div></div></div>
-
   <div class="container">
     <div class="row">
 
@@ -55,6 +53,7 @@
         <div class="tab-content">
 
           <div id="promoted-stories" class="tab-pane fade <%= tab == '#promoted-stories' ? 'active in' : '' %>">
+            <div class="working working--promote"><div><div><i class="fa fa-spin fa-circle-o-notch"></i></div></div></div>
             <%= render 'companies/3_promote/promoted_stories_table', { company: company } %>
           </div>
 

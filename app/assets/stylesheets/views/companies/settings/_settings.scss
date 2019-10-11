@@ -20,32 +20,14 @@ p.lead {
   }
 }
 
+#company-profile-form, #company-tags-form  {
+  @include horizontal-form; 
+}
 #company-tags-form {
   @include hide-until-init;
 }
 
-#edit-company-profile, #edit-tags {
-  .form-group {
-    margin-bottom: 25px;
-  }
-}
-
 .companies.edit {
-  
-  form > .form-group:nth-last-child(2) {  // some extra space between last item and Save button
-    margin-bottom: 35px;
-  } 
-  .col-sm-3 {
-    width: 21%;
-    // background-color: #ecc9c7;
-  }
-  .col-sm-6 {
-    // background-color: #d9e3da;
-    width: 58%;
-  }
-  .col-sm-6.col-sm-offset-3 {
-    margin-left: 21%;
-  }
 
   // for safari
   input::-webkit-contacts-auto-fill-button {
@@ -65,6 +47,5 @@ p.lead {
   #select2-category_tags_-results, #select2-product_tags_-results {
     display: none;
   }
-
 
 }

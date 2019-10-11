@@ -146,6 +146,7 @@ function initSuccessesTable (dtSuccessesInit) {
       dtSuccessesInit.resolve();
 
       $('.working--prospect').addClass('successes-loaded');
+      $tableWrapper.find('.dataTables_paginate').show();
 
       // $table.on('draw.dt', function (e) {
       //   console.log('draw')

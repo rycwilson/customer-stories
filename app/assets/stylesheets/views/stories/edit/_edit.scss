@@ -1,9 +1,34 @@
 
+
+#story-settings-form {
+  @include horizontal-form;
+}
+.story-settings__publish {
+  > div {
+    display: flex;
+    justify-content: space-around;
+    label {
+      vertical-align: middle;
+      font-weight: normal;
+      margin: 0 5px 0 0;
+    }
+    .bootstrap-switch .bootstrap-switch-handle-on {
+      background: $status-on-color;  // #26b859; // #5fba7d; // #449d44; //#36a829;
+    }
+  }
+}
+#story-settings {
+  // this prevents content shifting when toggling the customer logo/name
+  // TODO this (or something like it) needs to be implemented more broadly
+  min-height: 100vh;
+}
+
+
+
 // #edit-story view may be loaded synchronously under stories#edit
 // or asynchronously under companies#show
 .stories.edit #edit-story, .companies.show #edit-story {
 
-  @import 'settings';
   @import 'content';
   @import 'contributions';
   @import 'results';
@@ -22,11 +47,6 @@
     background-color: transparent;
   }
   #story-header {
-
-    // #test {
-    //   flex: 0 0 100%;
-    //   z-index: -100;
-    // }
     height: 100px;
     position: relative;
     display: flex;

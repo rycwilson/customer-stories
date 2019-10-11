@@ -239,6 +239,7 @@ function initContributorsTable (workflowStage, dtContributorsInit) {
       }
 
       $('.working--prospect').addClass('contributors-loaded');
+      $tableWrapper.find('.dataTables_paginate').show();
 
     }
   });

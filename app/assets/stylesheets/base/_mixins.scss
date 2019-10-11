@@ -1,4 +1,26 @@
 
+@mixin horizontal-form {
+  .form-group {
+    margin-bottom: 25px;
+  }
+  .col-sm-3 {
+    width: 21%;
+    // background-color: #ecc9c7;
+  }
+  .col-sm-6 {
+    // background-color: #d9e3da;
+    width: 58%;
+  }
+  .col-sm-6.col-sm-offset-3 {
+    margin-left: 21%;
+  }
+  
+  // some extra space between last item and Save button
+  > .form-group:nth-last-of-type(2) {  
+    margin-bottom: 35px;
+  } 
+}
+
 @mixin hide-until-init {
   visibility: hidden;
   &[data-init="true"] {

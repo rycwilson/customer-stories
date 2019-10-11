@@ -75,7 +75,7 @@ function prospectListeners () {
       $('a[href="#successes"]').tab('show');
       $('#successes-filter').val('success-' + successId).trigger('change');
     })
-    .on('click', '#prospect-contributors-table tr.group a.story', function () {
+    .on('click', '#prospect-contributors-table tr.group a.story', function (e) {
       e.stopPropagation();
       Cookies.set('csp-edit-story-tab', '#story-contributors');
     })
