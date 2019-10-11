@@ -40,10 +40,12 @@
 <%= render 'stories/shared/new_story_modal', { company: @company } %>
 <%= render 'stories/show/video_modal', { is_plugin: false } %>
 
-<%= render(
-      'shared/navbars/company_nav',
-      { company: @company, workflow_stage: @workflow_stage } 
-    ) %>
+<% cache("#{@company.subdomain}/#{@workflow_stage}/company-nav") do %>
+  <%= render(
+        'shared/navbars/company_nav',
+        { company: @company, workflow_stage: @workflow_stage } 
+      ) %>
+<% end %>
 
 <div class='tab-content'>
 

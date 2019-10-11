@@ -68,7 +68,7 @@
 .stories-header__title {
   font-family: $company-title-font;
   margin: 0;
-  opacity: 0.9;
+  opacity: 0.9;  // colors are set via helper method
 }
 
 .stories-header__edit {
