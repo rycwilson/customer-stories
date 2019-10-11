@@ -145,6 +145,8 @@ function initSuccessesTable (dtSuccessesInit) {
       // trigger curator select and show tables
       dtSuccessesInit.resolve();
 
+      $('.working--prospect').addClass('successes-loaded');
+
       // $table.on('draw.dt', function (e) {
       //   console.log('draw')
       //   $tableWrapper.find('.dataTables_info')

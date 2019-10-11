@@ -25,15 +25,19 @@
       transform: translate(-50%, -50%);
       i {
         color: #fff;
-        font-size: 30px;
+        font-size: 36px;
       }
     }
   }
   &--still {
     > div {
       opacity: 0.5;
-      transition: opacity 2s step-end;
+      transition: opacity 1s step-end;
     }
+  }
+  &.successes-loaded.contributors-loaded,
+  &.promoted-stories-loaded {
+    display: none;
   }
 }
 

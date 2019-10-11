@@ -5,6 +5,7 @@
 
     {{ var storySlug = story.csp_story_path.match(/\/((\w|-)+)$/)[1]; }}
     {{ var customerSlug = story.csp_story_path.match(/^\/((\w|-)+)\//)[1]; }}
+    {{ var companyClass = 'story-card--' + subdomain; }}
 
     <!-- // single quotes cause trouble -->
     {{ var summary = JSON.stringify(story.summary).replace(/'/g, "&#39"); }}
@@ -12,7 +13,7 @@
 
     <li style="display: inline-block; vertical-align: top">
 
-      <div class="story-card story-card--{{= subdomain }} {{= isDashboard ? 'story-card--small story-card--dashboard' : '' }} story-card--{{= (story.published && 'published') || (story.preview_published && 'preview-published') || (story.logo_published && 'logo-published') || ''}}"
+      <div class="story-card {{= isDashboard ? 'story-card--small story-card--dashboard' : companyClass }} story-card--{{= (story.published && 'published') || (story.preview_published && 'preview-published') || (story.logo_published && 'logo-published') || ''}}"
             data-story-id="{{= story.id }}" data-story-slug="{{= storySlug }}" data-customer-slug="{{= customerSlug }}">
 
         <a href="{{= isDashboard ? 'javascript:;' : (story.published && story.csp_story_path) || (story.preview_published && 'javascript:;') || '' }}"

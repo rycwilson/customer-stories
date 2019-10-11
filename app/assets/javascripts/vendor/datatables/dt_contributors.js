@@ -238,6 +238,8 @@ function initContributorsTable (workflowStage, dtContributorsInit) {
 
       }
 
+      $('.working--prospect').addClass('contributors-loaded');
+
     }
   });
 }

@@ -3,12 +3,12 @@
 
 function companiesShow () {
   
-  // panel-specific stuff
   prospect();
   curate();
   promote();
   
-  // $('body').prepend('<div class="working"><div><div><i class="fa fa-spin fa-circle-o-notch"></i></div></div></div>'); 
+  // to control delay via css (opacity transition), need to synchronously add the working--still class
+  // => won't work without the timeout
   setTimeout(function () { $('.working').addClass('working--still'); }, 1);
 }
 
