@@ -197,6 +197,8 @@ function initDataTables (isBatch) {
         initSelectFilters();
         initCheckboxFilters();
         showTables();
+
+        $('.working').remove();
       });
 
   }

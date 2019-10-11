@@ -9,7 +9,7 @@ function companiesShow () {
   promote();
   
   // $('body').prepend('<div class="working"><div><div><i class="fa fa-spin fa-circle-o-notch"></i></div></div></div>'); 
-  // setTimeout(function () { $('.working').addClass('working--still'); }, 1);
+  setTimeout(function () { $('.working').addClass('working--still'); }, 1);
 }
 
 function companiesShowListeners () {
