@@ -1,6 +1,7 @@
 
 function curate () {
 
+
   var $curatorSelect = $('.curate-filters__curator');
   // don't need to call this here as the auto curator-select change event will trigger it
   // filterCurateGallery();
@@ -45,7 +46,7 @@ function curateListeners () {
     .on('shown.bs.tab', 'a[href="#curate"], a[href=".curate-stories"]', function () {
       // truncate story titles
       // discussion: http://hackingui.com/front-end/a-pure-css-solution-for-multiline-text-truncation/
-      $('a[href=".curate-stories"]').one('shown.bs.tab', function () {
+      var truncateStoryTitles = function () {
         $('.story-card__title').each(function () {
           var $title = $(this).find('p');
           while ($title.outerHeight() > $(this).height()) {
@@ -54,7 +55,9 @@ function curateListeners () {
             });
           }
         });
-      })
+      };
+      truncateStoryTitles();
+      $('a[href=".curate-stories"]').one('shown.bs.tab', truncateStoryTitles);
     })
 
     .on('click', '#curate-gallery .story-card', function (e) {
@@ -189,7 +192,7 @@ function filterCurateGallery (context) {
             .append( 
                 $(storiesTemplate({ 
                   stories: stories, 
-                  subdomain: location.href.match(/:\/\/(\w+)\./),
+                  subdomain: location.href.match(/:\/\/(\w+)\./)[1],
                   isDashboard: true 
                 })) 
               )

@@ -4,26 +4,37 @@
 
 @mixin stories-header-title {
   h3 {
-    // font-family: 'Bowlby One';
     text-transform: uppercase;
     padding-top: 2px;
+    font-weight: 400;
+  }
+}
+
+
+.company-header.company-header--pixlee {
+  .pixlee.stories.index &, .pixlee.stories.show & {
+    border-bottom: 1px solid $border-color;  
+  }
+}
+.stories-header.stories-header--pixlee {
+  @include stories-header-title;
+  box-shadow: 0 0;
+  border-bottom: 1px solid $border-color;
+  &.show:after {
+    background-image: linear-gradient(to bottom, $stories-bg-color 0%, #ffffff 100%);
   }
 }
 
 body.pixlee {
-  .company-header.company-header--pixlee {
-    .pixlee.stories.index &, .pixlee.stories.show & {
-      border-bottom: 1px solid $border-color;  
-    }
-  }
-  .stories-header.stories-header--pixlee {
-    @include stories-header-title;
-    box-shadow: 0 0;
-    border-bottom: 1px solid $border-color;
-    &.show:after {
-      background-image: linear-gradient(to bottom, $stories-bg-color 0%, #ffffff 100%);
-    }
-  }
+  // TODO in addition to this, change the input focus color?
+  // .search-stories .input-group .input-group-btn button {
+  //   background-color: $pixlee-blue;
+  //   border-color: $pixlee-blue;
+  //   &:hover, &:focus {
+  //     background-color: $pixlee-blue-darkened;
+  //     border-color: $pixlee-blue;
+  //   }
+  // }
   .search-and-filters.visible-md-block {
     border: 1px solid $border-color;
   }

@@ -294,7 +294,19 @@ function updateGallery ($stories) {
       .empty()
       .append($stories)
       .hide()
-      .show('fast', initGridPreviews);
+      .show('fast', function () {
+        initGridPreviews();
+        
+        // truncate story titles
+        $('.story-card__title').each(function () {
+          var $title = $(this).find('p');
+          while ($title.outerHeight() > $(this).height()) {
+            $title.text(function (index, text) {
+              return text.replace(/\W*\s(\S)*$/, '...');
+            });
+          }
+        });
+      });
   });
 }
 

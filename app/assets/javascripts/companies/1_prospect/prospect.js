@@ -68,12 +68,20 @@ function prospectListeners () {
 
   $(document)
 
-    .on('click', '#prospect .layout-sidebar a', function () {
-      Cookies.set('prospect-tab', $(this).attr('href'));
+    // when linking to correspoding success or story, don't sort by row group
+    .on('click', '#prospect-contributors-table a.success', function (e) {
+      e.stopPropagation();
+      var successId = $(this).closest('tr').next().data('success-id');
+      $('a[href="#successes"]').tab('show');
+      $('#successes-filter').val('success-' + successId).trigger('change');
+    })
+    .on('click', '#prospect-contributors-table tr.group a.story', function () {
+      e.stopPropagation();
+      Cookies.set('csp-edit-story-tab', '#story-contributors');
     })
 
-    .on('click', '#prospect-contributors-table tr.group a.story', function () {
-      Cookies.set('csp-edit-story-tab', '#story-contributors');
+    .on('click', '#prospect .layout-sidebar a', function () {
+      Cookies.set('prospect-tab', $(this).attr('href'));
     })
 
     // transition the Add button with the respective tab pane
@@ -123,11 +131,7 @@ function prospectListeners () {
       }
     })
 
-    .on('click', '#prospect-contributors-table a.success', function (e) {
-      var successId = $(this).closest('tr').next().data('success-id');
-      $('a[href="#successes"]').tab('show');
-      $('#successes-filter').val('success-' + successId).trigger('change');
-    })
+    
 
     // no striping for grouped rows, yes striping for ungrouped
     // manipulate via jquery; insufficient to just change even/odd classes

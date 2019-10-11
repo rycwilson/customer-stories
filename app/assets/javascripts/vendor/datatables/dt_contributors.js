@@ -209,6 +209,7 @@ function initContributorsTable (workflowStage, dtContributorsInit) {
 
       // this is for the question mark icons that go with status= opt_out or remove
       $('[data-toggle="tooltip"]').tooltip();
+
       if (workflowStage === 'prospect') {
         // global so can be accessed from prospectListeners
         prospectContributorsEditor = newContributorsEditor(
