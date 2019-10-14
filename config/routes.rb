@@ -1,3 +1,4 @@
+
 #
 # this comes in handy if the current_user is needed
 # request.env['warden'].user(:user)
