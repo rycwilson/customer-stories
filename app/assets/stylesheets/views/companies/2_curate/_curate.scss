@@ -29,16 +29,13 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  // height: 56px;
-  font-family: 'Lato';
+  font-family: $csp-title-font;
   font-size: 16px;
   font-weight: bold;
-  // margin: 0 -15px;
-  padding: 12px 10px 12px 20px;
-  // border-left: 2px solid $nav-blue;
+  padding: 12px 10px;
   img {
     height: 20px;
-    margin-right: 18px;
+    margin-right: 16px;
   }
   > a, span {
     display: flex;
@@ -46,14 +43,24 @@
   }
   > a {
     color: $nav-blue;
+    padding: 8px;
     text-decoration: none;
     height: 100%;
-    margin-right: 25px;
     flex-grow: 1;
+    img:last-of-type {
+      display: none;
+    }
     &:hover {
-      color: #3af;
+      color: #1db5ff; //#3af;
+      img:first-of-type {
+        display: none;
+      }
+      img:last-of-type {
+        display: initial;
+      }
     }
   }
+
   // .btn-add {
   //   @include fa-button($medium-gray);
   // }

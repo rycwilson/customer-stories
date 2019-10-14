@@ -5,9 +5,9 @@ function curate () {
   var $curatorSelect = $('.curate-filters__curator');
   // don't need to call this here as the auto curator-select change event will trigger it
   // filterCurateGallery();
-  
+  console.log('hello?')
   $curatorSelect
-    .val($curatorSelect.children('[value="' + CSP.current_user.id + '"]').val())
+    .val(CSP.current_user.id)
     .trigger('change', { auto: true });
 
 }
@@ -42,7 +42,9 @@ function curateListeners () {
       });
     })
 
-    .on('show.bs.tab', 'a[href=".curate-stories"]', cancelLoading)
+    .on('show.bs.tab', 'a[href=".curate-stories"]', function () {
+      cancelLoading();
+    })
     .on('shown.bs.tab', 'a[href="#curate"], a[href=".curate-stories"]', function () {
       // truncate story titles
       // discussion: http://hackingui.com/front-end/a-pure-css-solution-for-multiline-text-truncation/
@@ -57,7 +59,8 @@ function curateListeners () {
         });
       };
       truncateStoryTitles();
-      $('a[href=".curate-stories"]').one('shown.bs.tab', truncateStoryTitles);
+      // $('a[href=".curate-stories"]').one('shown.bs.tab', truncateStoryTitles);
+
     })
 
     .on('click', '#curate-gallery .story-card', function (e) {

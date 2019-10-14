@@ -1,14 +1,11 @@
 
-.plugin-config__type, 
-.plugin-config__content-buttons, 
-.plugin-config__code-buttons {
-  margin-bottom: 10px;
-}
-
-.plugin-config__type-settings,
-.plugin-config__content-select,
-.plugin-config__appearance {
-  margin-bottom: 25px;
+.plugin-config {
+  @include horizontal-form;
+  & .plugin-config__type, 
+  & .plugin-config__content-buttons, 
+  & .plugin-config__code-buttons {
+    margin-bottom: 10px;
+  }
 }
 
 .plugin-config__type-settings {

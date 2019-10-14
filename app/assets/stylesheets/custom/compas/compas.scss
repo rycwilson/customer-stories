@@ -1,0 +1,14 @@
+// this file allows for multiple entry points for sass compilation,
+// while keeping a single (company) main file:
+//
+// 1 - this file
+// 2 - plugins/*
+//
+// => both impoort [company]/_main.scss as a partial
+//
+
+// company main
+@import 'main';
+
+// app main
+@import '../../main';

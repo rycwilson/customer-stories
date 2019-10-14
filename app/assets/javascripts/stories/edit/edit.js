@@ -4,6 +4,11 @@
 //= require ./contributors
 
 function storiesEdit () {
+  
+  $('.curate-filters__curator')
+    .val(CSP.current_user.id)
+    .trigger('change', { auto: true });
+
   storiesEditSettings();
   storiesEditContent();
   storiesEditContributors();

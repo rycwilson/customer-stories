@@ -16,8 +16,8 @@
   }
   
   // some extra space between last item and Save button
-  > .form-group:nth-last-of-type(2) {  
-    margin-bottom: 35px;
+  > .form-group button[type="submit"] {
+    margin-top: 10px;
   } 
 }
 
