@@ -47,12 +47,11 @@
 
 //= require js-cookie/src/js.cookie
 
-//= require local_time
+//= require local-time
 
 //= require moment/moment
 //= require bootstrap-daterangepicker/daterangepicker
 
-//= require jstz
 //= require browser_timezone_rails/set_time_zone
 
 //= require bootstrap-validator/dist/validator

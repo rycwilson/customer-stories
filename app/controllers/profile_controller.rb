@@ -1,12 +1,36 @@
 class ProfileController < ApplicationController
 
-  before_action { @user = current_user; @company = @user.try(:company) }
-    # note company may be nil (contributor on site, or contrbution submission)
-  before_action only: [:edit] { set_gon(@company) }
-  before_action :set_s3_direct_post, only: [:edit]
+  SWITCH_USERS = [
+    '***REMOVED***', 
+    '***REMOVED***', 
+    '***REMOVED***', 
+    'heather@trunity.com', 
+    'haley@pixleeteam.com',
+    'bill@c4ce.com',
+    'colin@pixleeteam.com',
+    'carlos@compas.global',
+    'awad@pixleeteam.com',
+    'kturner@varmour.com'
+  ]
+
+  def switch 
+    session[:original_user_id] ||= current_user.id
+    impersonate_user(User.find(params[:switch_user_id]))
+
+    # originally this was a sync response, but the subsequent post was missing its hidden param (switch_user_id)
+    # => don't know why, but the async approach works well...
+    respond_to { |format| format.js }
+  end
 
   def edit
-  end
+    @switch_users = User.where(email: SWITCH_USERS).map do |user|
+      { id: user.id, name: user.full_name }
+    end
+    @original_user = User.find_by_id(session[:original_user_id])
+    @user = current_user
+    @company = @user.company
+    set_s3_direct_post()
+  end 
 
   def update
   end

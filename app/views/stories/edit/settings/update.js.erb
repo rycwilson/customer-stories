@@ -98,7 +98,10 @@
         }
       };
 
-  console.log('res', res);
+  $('.story__copy-hidden-link')
+    .attr('title', 'Copy')
+    .tooltip('fixTitle')
+    .removeClass('disabled');
 
   updateStory();
   toggleFormDone($('#story-settings-form'), true)

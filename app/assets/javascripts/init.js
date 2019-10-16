@@ -27,7 +27,7 @@ window.CSP = window.CSP || {
         (({
           'index': storiesIndex,
           'show': storiesShow,
-          'edit': storiesEdit,
+          'edit': storiesEdit
         })[action])();
       },
       'contributions': function () {},

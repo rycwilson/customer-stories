@@ -299,6 +299,7 @@ class StoriesController < ApplicationController
     params.require(:story).permit(
       :title, :summary, :quote, :quote_attr_name, :quote_attr_title, :video_url, :success_id,
       :formatted_video_url, :narrative, :published, :logo_published, :preview_published,
+      :hidden_link,
       success_attributes: [
         :id, :name, :customer_id, :curator_id,
         product_ids: [], story_category_ids: [],
@@ -399,7 +400,7 @@ class StoriesController < ApplicationController
   end
 
   # if we're here, it means the router allowed through a valid path:
-  # /:customer/:product/:title OR /:customer/:title
+  # /:customer/:product/:title OR /:customer/:title OR /:customer/:random_string
   # (valid => these resources exist AND exist together)
   # => @story can't be nil
   #
@@ -408,13 +409,18 @@ class StoriesController < ApplicationController
   #   - the correct link if outdated slug is used
   #   - company's story index if not published or not curator
   def set_public_story_or_redirect company
-    @story = Story.friendly.find params[:title]
+    @story = Story.find_by(slug: params[:title]) || 
+             Story.find_by(hidden_link: request.url)
+    if params[:hidden_link].present?
+      redirect_to(@story.csp_story_path) if @story.published? 
+      return
+    end
     if request.path != @story.csp_story_path  # friendly path changed
       # old story title slug requested, redirect to current
       return redirect_to @story.csp_story_path, status: :moved_permanently
     elsif request.format == 'application/pdf' || params[:is_plugin]
       @story
-    elsif !@story.published? && !company_curator?(company.id)
+    elsif !@story.published? && !params[:hidden_link] && !company_curator?(company.id)
       return redirect_to root_url(subdomain:request.subdomain, host:request.domain)
     end
   end

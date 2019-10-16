@@ -1,13 +1,14 @@
 class ApplicationController < ActionController::Base
 
   layout(:layout)
+  impersonates(:user)
 
   # Prevent CSRF attacks by raising an exception.
   # For APIs, you may want to use :null_session instead.
   protect_from_forgery with: :exception
 
-  # before_action { binding.remote_pry }
-
+  # before_action { puts "\ncurrent user: #{current_user.full_name}\n" }
+  
   # Devise - whitelist User params
   before_action :configure_permitted_parameters, if: :devise_controller?
 
@@ -317,8 +318,8 @@ class ApplicationController < ActionController::Base
       headers: { Authorization: "Bearer #{token}" }
     )
     data_request.run
-    puts "PROFILE"
-    puts JSON.parse(data_request.response.response_body)
+    # puts "PROFILE"
+    # puts JSON.parse(data_request.response.response_body)
     JSON.parse(data_request.response.response_body)
   end
 

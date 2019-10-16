@@ -1,4 +1,12 @@
 
+
+.story__hidden-link button {
+  color: #666;
+  &:hover:not(.disabled) {
+    color: #222;
+  }
+}
+
 #story-settings {
 
   // this prevents content shifting when toggling the customer logo/name

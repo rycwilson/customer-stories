@@ -1,10 +1,10 @@
 
 function profileEdit () {
 
-  if (!CSP.current_user.is_curator) {
-    $('header').css('background-color', 'white');
-    $('header').css('border-color', '#dddddd');
-  }
+  // if (!CSP.current_user.is_curator) {
+  //   $('header').css('background-color', 'white');
+  //   $('header').css('border-color', '#dddddd');
+  // }
 
   $('.dropdown.user-profile').addClass('active');
   $(document)

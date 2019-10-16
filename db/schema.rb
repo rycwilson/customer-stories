@@ -396,7 +396,7 @@ ActiveRecord::Schema.define(version: 20191014190219) do
     t.boolean  "preview_published",    default: false
     t.text     "summary"
     t.datetime "preview_publish_date"
-    t.string   "hidden_link_string"
+    t.string   "hidden_link"
     t.index ["success_id"], name: "index_stories_on_success_id", using: :btree
     t.index ["title"], name: "index_stories_on_title", unique: true, using: :btree
   end

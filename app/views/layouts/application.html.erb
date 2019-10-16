@@ -26,6 +26,9 @@
   <%= custom_google_fonts(@company) %>
 
   <%= favicon_link_tag 'favicon.ico' %>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/chance/1.1.0/chance.min.js"></script>
+
 </head>
 <!-- TODO: fixed navbar - leave padding as below (false is temp. blocker) -->
 <body class="<%= controller_name %> <%= action_name %> <%= @company ? @company.subdomain : '' %>"

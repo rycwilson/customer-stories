@@ -103,6 +103,33 @@ function storiesEditSettingsListeners () {
       }
 
     })
+
+    .on('focus', '.story__hidden-link input', function () { $(this).blur(); })
+    .on('click', '.story__refresh-hidden-link', function () {
+      var hiddenLink = [location.origin, chance.guid()].join('/');
+      $('.story__hidden-link input').val(hiddenLink);
+      $('.story__copy-hidden-link')
+        .attr('title', 'Save changes to enable Copy')
+        .tooltip('fixTitle')
+        .addClass('disabled');
+    })
+    .on('click', '.story__copy-hidden-link', function () {
+      var $temp = $('<input />');
+      $('body').append($temp);
+      $temp.val($('.story__hidden-link input').val())
+           .select();
+      document.execCommand('copy');
+      $temp.remove();
+      $(this)
+        .attr('title', 'Copied!')
+        .tooltip('fixTitle')
+        .tooltip('show')
+        .one('hidden.bs.tooltip', function () {
+          $('.story__copy-hidden-link')
+            .attr('title', 'Copy')
+            .tooltip('fixTitle');
+        });
+    });
 }
 
 // the select2 boxes initialize synchronously, i.e. subsequent code doesn't
