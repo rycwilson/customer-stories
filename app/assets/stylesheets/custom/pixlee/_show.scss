@@ -199,6 +199,9 @@
   }
 
   @media only screen and (max-width: 767px) {
+    .social-sharing {
+      display: none;
+    }
     &.cs-overlay-container {
       .cs-content.content--show {
         background: $bg-color;
