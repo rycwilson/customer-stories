@@ -3,7 +3,7 @@ class PluginsController < ApplicationController
   include StoriesAndPlugins
 
   skip_before_action :verify_authenticity_token, only: [:main, :show, :init]
-  before_action except: [:track] { @company = Company.find_by(subdomain: request.subdomain) }
+  before_action(except: [:track]) { @company = Company.find_by(subdomain: request.subdomain) }
 
   def main
     # handle legacy naming...
