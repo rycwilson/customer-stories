@@ -13,7 +13,7 @@
     updateGallery($(
       _.template($('#stories-template').html())({
         stories: CSP.stories.filter(function (story) { return storyIds.includes(story.id); }),
-        subdomain: location.href.match(/:\/\/(\w+)\./)[1],
+        subdomain: location.href.match(/:\/\/((\w|-)+)\./)[1],
         isDashboard: false
       })
     ));

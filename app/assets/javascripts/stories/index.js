@@ -84,7 +84,7 @@ function storiesIndexListeners () {
       updateGallery($(
         _.template($('#stories-template').html())({
           stories: filterStories('', ''),
-          subdomain: location.href.match(/:\/\/(\w+)\./)[1],
+          subdomain: location.href.match(/:\/\/((\w|-)+)\./)[1],
           isDashboard: false
         })
       ));
@@ -232,7 +232,7 @@ function storiesIndexListeners () {
       updateGallery($(
         _.template($('#stories-template').html())({
           stories: filteredStories,
-          subdomain: location.href.match(/:\/\/(\w+)\./)[1],
+          subdomain: location.href.match(/:\/\/((\w|-)+)\./)[1],
           isDashboard: false
         })
       ));
