@@ -16,7 +16,6 @@
 yarn-error.log
 
 /public/packs
-/yarn-error.log
 /node_modules
 
 # ssl certificates
@@ -24,9 +23,7 @@ yarn-error.log
 
 # dependencies
 /vendor/assets
-/node_modules
 
-/public/packs
 
 
 # figaro-managed credentials

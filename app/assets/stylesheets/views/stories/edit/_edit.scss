@@ -1,5 +1,12 @@
 
 
+.hidden-link button {
+  color: #666;
+  &:hover:not(.disabled) {
+    color: #222;
+  }
+}
+
 #story-settings-form {
   @include horizontal-form;
 }

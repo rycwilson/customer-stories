@@ -104,25 +104,20 @@ function storiesEditSettingsListeners () {
 
     })
 
-    .on('focus', '.story__hidden-link input', function () { $(this).blur(); })
-    .on('click', '.story__refresh-hidden-link', function () {
+    .on('focus', '.hidden-link input', function () { $(this).blur(); })
+    .on('click', '.hidden-link__refresh', function () {
       $(this).blur();
       var hiddenLink = [location.origin, chance.guid()].join('/');
-      $('.story__hidden-link input').val(hiddenLink);
-      $('.story__copy-hidden-link')
+      $('.hidden-link input').val(hiddenLink);
+      $('.hidden-link__copy')
         .attr('title', 'Save changes to enable Copy')
         .tooltip('fixTitle')
         .addClass('disabled')
     })
-    .on('click', '.story__copy-hidden-link', function (e) {
-      if ($(this).is('.disabled')) {
-        $(this).blur();
-        e.stopPropagation();
-        return false;
-      }
+    .on('click', '.hidden-link__copy', function () {
       var $temp = $('<input />');
       $('body').append($temp);
-      $temp.val($('.story__hidden-link input').val())
+      $temp.val($('.hidden-link input').val())
            .select();
       document.execCommand('copy');
       $temp.remove();
@@ -131,7 +126,7 @@ function storiesEditSettingsListeners () {
         .tooltip('fixTitle')
         .tooltip('show')
         .one('hidden.bs.tooltip', function () {
-          $('.story__copy-hidden-link')
+          $('.hidden-link__copy')
             .attr('title', 'Copy')
             .tooltip('fixTitle');
         });

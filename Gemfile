@@ -39,6 +39,7 @@ gem 'rack_password'
 gem 'rack-timeout', require:"rack/timeout/base"
 gem 'reverse_markdown'
 gem 'sassc-rails'
+gem 'sprockets', '~> 3.7.2'
 gem 'summernote-rails'
 gem 'turbolinks', '~> 5.0.0'
 gem 'typhoeus'

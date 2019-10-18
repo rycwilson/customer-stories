@@ -10,7 +10,6 @@
   }
 }
 
-
 .company-header.company-header--pixlee {
   .pixlee.stories.index &, .pixlee.stories.show & {
     border-bottom: 1px solid $border-color;  
@@ -41,9 +40,9 @@ body.pixlee {
   .company-logo-upload__stories-header {
     @include stories-header-title;
   }
-  // &.plugin-demo {
-    // background-color: #fff;
-  // }
+  .share-buttons {
+    display: none;
+  }
 }
 
 .story-card.story-card--pixlee {
