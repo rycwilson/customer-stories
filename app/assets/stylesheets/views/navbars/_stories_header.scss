@@ -1,12 +1,14 @@
 
 .stories-header {
   height: $stories-header-height;
-  margin-top: $company-header-height;
   min-height: 40px;  // overrides bootstrap 50px
   background: #fff;
   border: 0;
   border-radius: 0;
   box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.16), 0 0 1px -1px rgba(0, 0, 0, 0.08);
+  .navbar-fixed-top + & {
+    margin-top: $company-header-height;
+  }
   .navbar-container {
     height: 100%;
     .visible-xs-block {

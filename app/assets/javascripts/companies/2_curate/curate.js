@@ -5,7 +5,6 @@ function curate () {
   var $curatorSelect = $('.curate-filters__curator');
   // don't need to call this here as the auto curator-select change event will trigger it
   // filterCurateGallery();
-  console.log('hello?')
   $curatorSelect
     .val(CSP.current_user.id)
     .trigger('change', { auto: true });

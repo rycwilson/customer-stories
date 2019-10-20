@@ -134,7 +134,6 @@ function storiesIndexListeners () {
           function (e) {
             // console.log('body touchstart')
             if ($(e.target).is($storyCard) || $storyCard.has(e.target).length ) {
-              console.log('story card')
               // do nothing (link will be followed)
             } else {
               // console.log('not story card')
@@ -151,11 +150,19 @@ function storiesIndexListeners () {
       }
     })
 
-    .on('change', '.stories-filter__select', function () {
-      var isGroupedFilter = $(this).is('[class*="--grouped"]'),
-          $categoryFilter = $('.stories-filter__select--category'),
+    .on('change', '.stories-filter__select', function (e) {
+      var $container = $(this).closest('.search-and-filters'),
+          isGroupedFilter = $(this).is('[class*="--grouped"]'),
+
+          // make sure to select filters from the same container,
+          // lest the value of the just-changed filter be ""
+          $categoryFilter = $(this).is('[class*="--category"]') ?
+                              $(this) :
+                              $container.find('.stories-filter__select--category'),
           $categoryResults = $('.stories-filter__results--category'),
-          $productFilter = $('.stories-filter__select--product'),
+          $productFilter = $(this).is('[class*="--product"]') ?
+                              $(this) :
+                              $container.find('.stories-filter__select--product'),
           $productResults = $('.stories-filter__results--product'),
           $combinedResults = $('.stories-filter__results--grouped, .search-and-filters__results--combined'),
           filterResults = function (numFoundStories) {
@@ -193,9 +200,9 @@ function storiesIndexListeners () {
         productId = $productFilter.val();
         productSlug = productId && $productFilter.find('option:selected').data('slug');
       }
-          
-      filteredStories = filterStories(categoryId, productId);
 
+      filteredStories = filterStories(categoryId, productId);
+        
       // reset search
       $('.search-stories__input').val('').trigger('input');
       $('.search-stories__results').text('');

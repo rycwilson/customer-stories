@@ -19,6 +19,7 @@
   @include stories-header-title;
   box-shadow: 0 0;
   border-bottom: 1px solid $border-color;
+  margin-top: $company-header-height;
   &.show:after {
     background-image: linear-gradient(to bottom, $stories-bg-color 0%, #ffffff 100%);
   }
