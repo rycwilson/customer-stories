@@ -5,6 +5,9 @@
   &:hover:not(.disabled) {
     color: #222;
   }
+  &:focus.disabled, &:active.disabled {
+    outline: none;
+  }
 }
 
 #story-settings {
