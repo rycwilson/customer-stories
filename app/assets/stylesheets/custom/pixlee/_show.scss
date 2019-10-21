@@ -200,7 +200,7 @@
 
   @media only screen and (max-width: 767px) {
     .social-sharing {
-      display: none;
+      display: none !important;
     }
     &.cs-overlay-container {
       .cs-content.content--show {
