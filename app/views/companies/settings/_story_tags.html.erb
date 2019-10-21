@@ -21,7 +21,7 @@
               company.story_categories.pluck(:id)   # all pre-selected
             ),
             { 
-              multiple: 'true', 
+              multiple: true, 
               class: 'company-tags form-control',
               # placeholder: doesn't work from here, set in js
               style: 'width:100%' 
@@ -41,7 +41,7 @@
               company.products.pluck(:id)   # all pre-selected
             ),
             { 
-              multiple: 'true', 
+              multiple: true, 
               class: 'company-tags form-control',
               style: 'width:100%' 
             } 
