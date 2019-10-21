@@ -1,22 +1,26 @@
 
 @import 'variables';
-@import 'fonts';
 @import 'gallery';
 @import 'show';
 
-body.varmour.stories.index, body.varmour.stories.show {
-  font-family: $metropolis-regular;
+@mixin stories-header-title {
+  h3 {
+    text-transform: uppercase;
+    padding-top: 2px;
+    font-weight: 400;
+  }
+}
+
+body.varmour {
+  .company-logo-upload__stories-header {
+    @include stories-header-title;
+  }
   &.index {
     background-color: #fafcfd;
   }
 }
 
-.company-header__logo--varmour img, 
-.fileinput .thumbnail > .logo-upload__logo {  // selector necessary to override jasny
-  max-height: 40px;
-}
-
-.company-header--varmour {
+.company-header.company-header--varmour {
   a.primary-cta {
     font-size: 12px;
     background-color: #fc6621 !important;
@@ -35,23 +39,14 @@ body.varmour.stories.index, body.varmour.stories.show {
       }
     }
   }
-  body.stories.index &, body.stories.show & {
-    height: 90px;
-  }
 }
 
-.stories-header--varmour {
-  height: 70px;
+.stories-header.stories-header--varmour {
+  @include stories-header-title;
   box-shadow: 0 9px 22px -6px rgba(0, 0, 0, 0.07);
   // background-color: #21597a;
   // background: url('https://csp-production-assets.s3-us-west-1.amazonaws.com/varmour/header-background.png');
   // => extracted colors: #c4d9e0, #0b1114, #21597a, #4794b5, #7aaebf
-
-  .stories-header__title {
-    font-family: $metropolis-regular;
-    text-transform: uppercase;
-    padding-top: 2px;
-  }
 
   .search-stories {
     .input-group {
