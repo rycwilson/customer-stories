@@ -197,7 +197,7 @@ body.pixlee.stories.show, .cs-overlay-container {
   }
 
   @media only screen and (max-width: 767px) {
-    .social-sharing {
+    .share-buttons, .cs-share-buttons {
       display: none !important;
     }
     &.cs-overlay-container {

@@ -55,6 +55,12 @@ CONTRIBUTOR_LINKEDIN_AUTH_URL = "https://www.linkedin.com/oauth/v2/authorization
 #                                       scope=r_liteprofile%20w_share%20w_member_social&\
 #                                       state=#{ENV['LINKEDIN_STATE']}&".gsub(/\s+/, '')
 
+FACEBOOK_SHARE_WINDOW_WIDTH = 600
+FACEBOOK_SHARE_WINDOW_HEIGHT = 424
+TWITTER_SHARE_WINDOW_WIDTH = 500
+TWITTER_SHARE_WINDOW_HEIGHT = 446
+LINKEDIN_SHARE_WINDOW_WIDTH = 550
+LINKEDIN_SHARE_WINDOW_HEIGHT = 540
 
 # the parameters must be defined in the typhoeus request
 LINKEDIN_TOKEN_BASE_URL = "https://www.linkedin.com/oauth/v2/accessToken"

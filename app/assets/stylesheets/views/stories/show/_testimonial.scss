@@ -6,11 +6,8 @@
     align-items: center;
   }
   .customer-logo-quote.visible-xs-block {
-    .customer-logo {
-      @include customer-logo('#fff');
-    }
-    .cs-customer-logo {
-      @include customer-logo(if(variable-exists(stories-bg-color), $stories-bg-color, $light-gray));
+    .customer-logo, .cs-customer-logo {
+      @include customer-logo($stories-bg-color);
     }
   }
   .customer-logo-quote.hidden-xs {

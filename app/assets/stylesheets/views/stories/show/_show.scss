@@ -46,7 +46,7 @@
     background-color: transparent;
     article {
       min-height: 100vh;
-      background-color: if(variable-exists(stories-bg-color), $stories-bg-color, $light-gray);
+      background-color: $stories-bg-color;
       .cs-story-header {
         height: 55px;
         background-color: #fff;
@@ -97,7 +97,7 @@
 
 
   .story-content, .cs-story-content {
-    background-color: if(variable-exists(stories-bg-color), $stories-bg-color, $light-gray);
+    background-color: $stories-bg-color;
     padding-bottom: 60px;
     &.cs-story-content {
       h1, h2, h3, h4, h5, h6, span, li, p, a, i:not(.fa-facebook):not(.fa-twitter):not(.fa-linkedin):not(.fa-envelope) {
@@ -246,7 +246,7 @@
   }
 
   .story-video-xs, .cs-story-video-xs {
-    background-color: if(variable-exists(stories-bg-color), $stories-bg-color, $light-gray);
+    background-color: $stories-bg-color;
     padding: 25px 0;
     position: relative;
   }

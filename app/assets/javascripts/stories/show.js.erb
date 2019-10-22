@@ -47,17 +47,17 @@ function storiesShow () {
     // ref: https://codepen.io/patrickkahl/pen/DxmfG
     // ref: http://stackoverflow.com/questions/4068373
     // ref: http://stackoverflow.com/questions/24046807
-    .on('click', '.linkedin-share', function (e) {
-      CSP.screenSize === 'xs' ? $(this).popupWindow(e) : $(this).popupWindow(e, 550, 540);
+    .on('click', '.share-button', function (e) {
+      var width = $(this).is('[class*="facebook"]') ? <%= FACEBOOK_SHARE_WINDOW_WIDTH %> :
+                    $(this).is('[class*="twitter"]') ? <%= TWITTER_SHARE_WINDOW_WIDTH %> :
+                      <%= LINKEDIN_SHARE_WINDOW_WIDTH %>,
+          height = $(this).is('[class*="facebook"]') ? <%= FACEBOOK_SHARE_WINDOW_HEIGHT %> :
+                    $(this).is('[class*="twitter"]') ? <%= TWITTER_SHARE_WINDOW_HEIGHT %> :
+                      <%= LINKEDIN_SHARE_WINDOW_HEIGHT %>;
+      CSP.screenSize === 'xs' ? 
+        $(this).popupWindow(e) : 
+        $(this).popupWindow(e, width, height);
     })
-    .on('click', '.twitter-share', function (e) {
-      CSP.screenSize === 'xs' ? $(this).popupWindow(e) : $(this).popupWindow(e, 500, 446);
-    })
-    .on('click', '.facebook-share', function (e) {
-      CSP.screenSize === 'xs' ? $(this).popupWindow(e) : $(this).popupWindow(e, 600, 424);
-    });
-
-  // clickyListeners();
 
 }
 

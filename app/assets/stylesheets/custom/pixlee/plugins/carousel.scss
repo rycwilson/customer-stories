@@ -6,9 +6,9 @@ $story-card-title-size: 13px;
 $story-card-caption-size: 13px;
 $carousel-nav-size: 13px;
 
+@import '../main';
 @import '../../../views/plugins/main';
 @import '../../../views/plugins/carousel';
-@import '../main';
 
 .cs-overlay-container {
   padding: 0; 

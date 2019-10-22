@@ -250,18 +250,16 @@ function cspInitOverlays ($, $container, subdomain, isDemo, env) {
         }
       }
     })
-
-    /**
-     *  social sharing buttons
-     */
-    .on('click', '.share__button--linkedin a', function (e) {
-      window.width < 768 ? $(this).popupWindow(e) : $(this).popupWindow(e, 550, 540);
-    })
-    .on('click', '.share__button--twitter a', function (e) {
-      window.width < 768 ? $(this).popupWindow(e) : $(this).popupWindow(e, 500, 448);
-    })
-    .on('click', '.share__button--facebook a', function (e) {
-      window.width < 768 ? $(this).popupWindow(e) : $(this).popupWindow(e, 600, 424);
+    .on('click', '.cs-share-button', function (e) {
+      var width = $(this).is('[class*="facebook"]') ? <%= FACEBOOK_SHARE_WINDOW_WIDTH %> :
+                    $(this).is('[class*="twitter"]') ? <%= TWITTER_SHARE_WINDOW_WIDTH %> :
+                      <%= LINKEDIN_SHARE_WINDOW_WIDTH %>,
+          height = $(this).is('[class*="facebook"]') ? <%= FACEBOOK_SHARE_WINDOW_HEIGHT %> :
+                    $(this).is('[class*="twitter"]') ? <%= TWITTER_SHARE_WINDOW_HEIGHT %> :
+                      <%= LINKEDIN_SHARE_WINDOW_HEIGHT %>;
+      $(window).width() < 768 ? 
+        $(this).popupWindow(e) : 
+        $(this).popupWindow(e, width, height);
     });
 
   function trackStoryVisitor ($storyCard) {
