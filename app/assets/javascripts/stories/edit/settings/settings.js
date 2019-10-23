@@ -136,40 +136,34 @@ function storiesEditSettingsListeners () {
 // the select2 boxes initialize synchronously, i.e. subsequent code doesn't
 // execute until initilization is complete.
 // pass the cbShowTab callback to the bs-switch onInit property
-function initStoriesEditSettings (cbShowTab) {
-
-  initS3Upload();
-
-  $('.story-settings.story-tags, #story-ctas-select')
-    .select2({
-      theme: 'bootstrap',
-      placeholder: 'Select'
-    })
-    .on('select2:select, select2:unselect, change.select2', function () {
-      $(this).next('.select2')
-              .find('.select2-selection__choice__remove')
-                .html('<i class="fa fa-fw fa-remove"></i>');
-    })
-    .trigger('change.select2');
-
-  $('#story-settings-form').parent().removeClass('hidden')
-  if (cbShowTab) cbShowTab();
-
-  $('.bs-switch.publish-control').bootstrapSwitch({
-    size: 'small',
-    onInit: function (e) {
-      // TODO: not sure why this was necessary, probably remove it
-      // // without the timeout, one switch is briefly on (?)
-      // setTimeout(function () {
-      //   $('#story-settings-form').parent().removeClass('hidden');
-      //   if (cbShowTab) {
-      //     $(window).one('shown.bs.tab', function () {
-      //       window.scrollTo(0,0);
-      //     });
-      //     cbShowTab();
-      //   }
-      // }, 0);
+function initStoriesEditSettings(shownTabHandler) {
+  var initSelectInputs = function () {
+        $('.story-settings.story-tags, #story-ctas-select')
+          .select2({
+            theme: 'bootstrap',
+            placeholder: 'Select'
+          })
+          .on('select2:select, select2:unselect, change.select2', function () {
+            $(this).next('.select2')
+                    .find('.select2-selection__choice__remove')
+                      .html('<i class="fa fa-fw fa-remove"></i>');
+          })
+          .trigger('change.select2');  // manipulate the remove button
+      };
+  var initSwitchInputs = function () {
+        $('.bs-switch.publish-control').bootstrapSwitch({
+          size: 'small',
+          onInit: function (e) {}
+        });
+      };
+  $.when(initSelectInputs, initSwitchInputs).done(function () {
+    if (shownTabHandler) {
+      window.scrollTo(0, 0);
+      shownTabHandler();
     }
-  });
-
+    $('#story-settings-form').attr('data-init', true);
+  })    
+  initS3Upload();
+  initSelectInputs();
+  initSwitchInputs();
 }

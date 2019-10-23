@@ -1,9 +1,10 @@
 
+
 //= require ./settings/settings
 //= require ./content/content
 //= require ./contributors
 
-function storiesEdit () {
+function storiesEdit() {
   
   $('.curate-filters__curator')
     .val(CSP.current_user.id)
@@ -15,8 +16,8 @@ function storiesEdit () {
 }
 
 // this is used for asynchronous loads of stories/edit/_edit
-function initStoriesEdit (cbShowTab) {
-  initStoriesEditSettings(cbShowTab);
+function initStoriesEdit(shownTabHandler) {
+  initStoriesEditSettings(shownTabHandler);
   initStoriesEditContent();
   initContributorsTable('curate');
 }

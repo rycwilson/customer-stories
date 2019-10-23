@@ -9,6 +9,7 @@
 
 #story-settings-form {
   @include horizontal-form;
+  @include hide-until-init;
 }
 .story-settings__publish {
   > div {
