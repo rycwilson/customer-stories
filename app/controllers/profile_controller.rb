@@ -3,6 +3,9 @@ class ProfileController < ApplicationController
   SWITCH_USERS = [
     '***REMOVED***', 
     '***REMOVED***', 
+    'demo@customerstories.net',
+    'acme-test@customerstories.net',
+    'ryanbpalo@customerstories.com',
     '***REMOVED***', 
     'heather@trunity.com', 
     'haley@pixleeteam.com',
@@ -24,7 +27,11 @@ class ProfileController < ApplicationController
 
   def edit
     @switch_users = User.where(email: SWITCH_USERS).map do |user|
-      { id: user.id, name: user.full_name }
+      { 
+        id: user.id, 
+        email: user.email,
+        name: "#{user.full_name}" + (user.company.present? ? "\s(#{user.company.name})" : '') 
+      }
     end
     @original_user = User.find_by_id(session[:original_user_id])
     @user = current_user
