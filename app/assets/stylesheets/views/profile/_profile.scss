@@ -1,4 +1,12 @@
 
+#switch-user {
+  margin: 20px 0;
+}
+
+.user-profile {
+  @include horizontal-form;
+}
+
 .profile.edit {
 
   // for safari
@@ -10,82 +18,81 @@
     right: 0;
   }
 
-  .layout-sidebar {
-    @media only screen and (min-width: 992px) {
-      width: 22%
-    }
-  }
-  .layout-main {
-    @media only screen and (min-width: 992px) {
-      width: 78%
-    }
-  }
+  // .layout-sidebar {
+  //   @media only screen and (min-width: 992px) {
+  //     width: 22%
+  //   }
+  // }
+  // .layout-main {
+  //   @media only screen and (min-width: 992px) {
+  //     width: 78%
+  //   }
+  // }
 
-  #profile-tab {
-    .switch-user { margin-bottom: 15px; }
-    form > .row:first-of-type {
-      > div:first-of-type {
-        padding: 0 15px 0 25px;
-        .form-group:first-of-type {
-          margin-bottom: 12px;
-        }
-        .fileinput {
-          position: relative;
-          .thumbnail {
-            height: 115px;
-            width: 115px;
-          }
-          .photo-btns {
-            > div:first-child {
-              margin-bottom: 8px;
-            }
-            position: absolute;
-            top: 0;
-            left: 125px;
-          }
-        }
-      }
-      > div:last-of-type {
-        padding: 0 25px 0 15px;
-        .form-group:nth-of-type(2) {
-          // margin-bottom: 32px;
-        }
-        .linkedin-url {
-          position: relative;
-          .input-group {
-            width: 100%;
-          }
-          a.linkedin-connect {
-            z-index: 100;
-            position: absolute;
-            top: 23px;
-            left: 0;
-            right: 79px;
-            background-color: #2672ae;
-            color: white;
-            border-top-right-radius: 0;
-            border-bottom-right-radius: 0;
-          }
-          a.linkedin-connect:hover {
-            border-color: #245e98;
-          }
-          i {
-            color: #666;
-          }
-        }
-        .linkedin-url.url-present {
-          a.linkedin-connect {
-            display: none;
-          }
-        }
-        .linkedin-url.url-absent {
-          .input-group-btn {
-            opacity: 0.5;
-            pointer-events: none;
-          }
-        }
-      }
-    }
-  }
+  // #profile-tab {
+  //   form > .row:first-of-type {
+  //     > div:first-of-type {
+  //       padding: 0 15px 0 25px;
+  //       .form-group:first-of-type {
+  //         margin-bottom: 12px;
+  //       }
+  //       .fileinput {
+  //         position: relative;
+  //         .thumbnail {
+  //           height: 115px;
+  //           width: 115px;
+  //         }
+  //         .photo-btns {
+  //           > div:first-child {
+  //             margin-bottom: 8px;
+  //           }
+  //           position: absolute;
+  //           top: 0;
+  //           left: 125px;
+  //         }
+  //       }
+  //     }
+  //     > div:last-of-type {
+  //       padding: 0 25px 0 15px;
+  //       .form-group:nth-of-type(2) {
+  //         // margin-bottom: 32px;
+  //       }
+  //       .linkedin-url {
+  //         position: relative;
+  //         .input-group {
+  //           width: 100%;
+  //         }
+  //         a.linkedin-connect {
+  //           z-index: 100;
+  //           position: absolute;
+  //           top: 23px;
+  //           left: 0;
+  //           right: 79px;
+  //           background-color: #2672ae;
+  //           color: white;
+  //           border-top-right-radius: 0;
+  //           border-bottom-right-radius: 0;
+  //         }
+  //         a.linkedin-connect:hover {
+  //           border-color: #245e98;
+  //         }
+  //         i {
+  //           color: #666;
+  //         }
+  //       }
+  //       .linkedin-url.url-present {
+  //         a.linkedin-connect {
+  //           display: none;
+  //         }
+  //       }
+  //       .linkedin-url.url-absent {
+  //         .input-group-btn {
+  //           opacity: 0.5;
+  //           pointer-events: none;
+  //         }
+  //       }
+  //     }
+  //   }
+  // }
 
 }

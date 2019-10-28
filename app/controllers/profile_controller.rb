@@ -37,6 +37,7 @@ class ProfileController < ApplicationController
     @user = current_user
     @company = @user.company
     set_s3_direct_post()
+    render :edit2
   end 
 
   def update

@@ -85,4 +85,7 @@
 .layout-main {
   min-height: 100vh;   // TODO: replace with html, body { height: 100% }
   padding-bottom: 100px;
+  #curate & {
+    padding: 0;
+  }
 }
