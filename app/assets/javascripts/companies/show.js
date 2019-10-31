@@ -27,8 +27,6 @@ function companiesShowListeners () {
           windowBottom = window.scrollY + window.innerHeight,
           dropdownBottom = $dropdownMenu.offset().top + $dropdownMenu.outerHeight();
       $(this).closest('tr').addClass('active');
-      console.log('dropdownBottom', dropdownBottom)
-      console.log('windowBottom', windowBottom)
       if (dropdownBottom > windowBottom) {
         $dropdownMenu.addClass('flip shown');
       } else {

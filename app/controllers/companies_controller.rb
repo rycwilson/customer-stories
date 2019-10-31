@@ -17,9 +17,9 @@ class CompaniesController < ApplicationController
     @workflow_stage = params[:workflow_stage]
     @prospect_tab = request.cookies['prospect-tab'] || '#successes'
     @promote_tab = request.cookies['promote-tab'] || '#promoted-stories'
-    # @recent_activity = Rails.cache.fetch("#{@company.subdomain}/recent-activity") { @company.recent_activity(30) }
-    # @story_views_30_day_count = PageView.joins(:visitor_session)
-    #                              .company_story_views_since(@company.id, 30).count
+    @recent_activity = Rails.cache.fetch("#{@company.subdomain}/recent-activity") { @company.recent_activity(30) }
+    @story_views_30_day_count = PageView.joins(:visitor_session)
+                                .company_story_views_since(@company.id, 30).count
     # note: app data is obtained via json (see set_gon() in application controller)
     @curate_view = 'stories'
   end

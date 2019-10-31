@@ -1,16 +1,16 @@
 
 function measureListeners () {
 
-  // measureCharts();
-  // measureStories();
-  // measureVisitors();
+  measureCharts();
+  measureStories();
+  measureVisitors();
 
-  // $(document)
-  //   // toggle display Recent activity groups
-  //   .on('show.bs.collapse hidden.bs.collapse', '#activity-groups .hiddenRow',
-  //     function () {
-  //       $(this).parent().prev().find('i').toggle();
-  //     });
+  $(document)
+    // toggle display Recent activity groups
+    .on('show.bs.collapse hidden.bs.collapse', '#activity-groups .hiddenRow',
+      function () {
+        $(this).parent().prev().find('i').toggle();
+      });
 }
 
 function measureCharts () {
@@ -32,7 +32,8 @@ function measureCharts () {
 
   $(document)
     .on('click', 'a[href="#measure"]',
-      function () {
+    function () {
+      console.log('click measure tab')
         // if current page is not companies#show, let initGoogleCharts handle it
         if ($('#measure-summary-container').length === 0) {
           return false;
@@ -43,6 +44,7 @@ function measureCharts () {
       })
     .on('submit', '#charts-filter-form',
       function (e) {
+      console.log('submit meaasure form')
         e.preventDefault();
         getCharts(false);
       });
