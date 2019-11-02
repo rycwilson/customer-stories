@@ -27,7 +27,6 @@ Rails.application.config.assets.precompile += %w(
   jquery-textfill/source/jquery.textfill.js
   plugins/cs_video.js
   plugins/cs_overlays.js
-  plugins/demo.js
   custom/plugin_wrappers/acme-test_carousel.css
   custom/plugin_wrappers/acme-test_gallery.css
   custom/plugin_wrappers/acme-test_tabbed_carousel.css

@@ -6,15 +6,9 @@ class PluginsController < ApplicationController
   before_action(except: [:track]) { @company = Company.find_by(subdomain: request.subdomain) }
 
   def main
-    # handle legacy naming...
-    if params[:type] == 'varmour'
-      @type = 'carousel'
-    elsif params[:type].blank? || params[:type] == 'tab'
-      @type = 'tabbed_carousel'
-    else
-      @type = params[:type]
-    end
+    @type = params[:type] || 'tabbed_carousel'
     @uid = params[:uid]
+
     # set the stylesheet url here, as it's impossible to use the asset path helper in cs.js in a company-specific way
     @stylesheet_url = custom_stylesheet_url(@company, @type)
     respond_to do |format|
@@ -63,12 +57,12 @@ class PluginsController < ApplicationController
     stories = plugin_stories(company, params)
     pre_selected_story = get_pre_selected_story(company, params)
     render_to_string(
-      partial: params[:type],
+      partial: params[:type] || 'tabbed_carousel',
       layout: false,
       locals: {
         company: company,
         stories: stories,  #.first(16),
-        title: 'Customer Stories',
+        title: params[:title] || 'Customer Stories',
         is_demo: params[:is_demo].present?,
         max_rows: params[:max_rows].to_i,
         background: params[:background] || 'light',
@@ -79,7 +73,9 @@ class PluginsController < ApplicationController
         is_logos_only: params[:logos_only].present? && params[:logos_only] != 'false',
         is_curator: false,
         is_plugin: true,
-        is_external: true,
+        is_external: request.referer.match(/(lvh.me|customerstories.org|customerstories.net)/) ?
+                       false :
+                       true,
         window_width: params[:window_width],
         pre_selected_story: pre_selected_story,
         contributors: pre_selected_story && set_contributors(pre_selected_story)
@@ -114,7 +110,7 @@ class PluginsController < ApplicationController
     else
       stories = company.public_stories
     end
-    stories
+    params[:skip].present? ? stories.where.not(slug: params[:skip]) : stories
   end
 
   def custom_stylesheet_url(company, type)

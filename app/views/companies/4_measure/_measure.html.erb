@@ -63,7 +63,7 @@
             <% cache("#{company.subdomain}/recent-activity", skip_digest: true) do %>
               <%= render 'companies/4_measure/activity_table',
                     { recent_activity: recent_activity,
-                      story_views_30_day_count: @story_views_30_day_count } %>
+                      story_views_30_day_count: story_views_30_day_count } %>
             <% end %>
 
           </div>

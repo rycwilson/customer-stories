@@ -1,4 +1,5 @@
 
+
 function storiesShow () {
 
   var socialShareRedirectURI = (new URL(location)).searchParams.get('redirect_uri');
@@ -10,8 +11,8 @@ function storiesShow () {
   if (!$('body').hasClass('pixlee')) {
     // linkedinListener($('.story-wrapper'));
     LI2Observer();
-    initMoreStories();
   }
+  initMoreStories();
 
   setTimeout(function () {
     $('#primary-cta-xs').addClass('open');
@@ -62,41 +63,25 @@ function storiesShow () {
 }
 
 function initMoreStories () {
-  var moreStoriesDelay = 5000,
-      // better to do this in css, but sometimes not possible
-      companyCustomization = function () {
-        if ($('body').hasClass('centerforcustomerengagement')) {
-          $('.cs-header, .cs-drawer-content').hover(
-            function () {
-              $('.cs-header').css('background-color', '#003464');
-              $('.cs-drawer-content').css('border-top-color', '#003464');
-            },
-            function () {
-              $('.cs-header').css('background-color', '#333');
-              $('.cs-drawer-content').css('border-top-color', '#333');
-            }
-          );
-        }
-      };
-
-  if (Cookies.get('cs-carousel-removed')) return false;
-  $('.cs-header [class*="remove"]').on('click', function (e) {
-    $('#cs-tabbed-carousel').hide();
-    Cookies.set('cs-carousel-removed', '1', { expires: 1, path: '/' });
-    return false;
-  });
-  slideDrawerPlugin($('#cs-tabbed-carousel'));  // define the jquery plugin
-  $('#cs-tabbed-carousel').imagesLoaded(function () {
-    moreStoriesScrollHandlers();
-    setTimeout(function () {
-      $('.cs-section')
-        .slideDrawer()
-        .css({ opacity: 0, visibility: "visible" })
-        .animate({ opacity: 1 }, 200)
-        .animate({ bottom: 0 }, 'fast');
-      companyCustomization();
-    }, moreStoriesDelay);
-  });
+  var minStories = 5;
+  var delay = 5;
+  var shouldInit = $('body').is(':not(.pixlee):not(.varmour)') && 
+        $(window).width() >= 768 &&
+        CSP.stories.filter(function (story) {
+            return story.logo_published || story.preview_published || story.published;
+          })
+          .length >= minStories;
+          
+  // TODO make data-title the first data attribute => why is $script.data('title') undefined??
+  if (shouldInit) {
+    $('body').append(
+      '<div id="cs-tabbed-carousel"></div>' + 
+      '<script src="' + location.protocol + '//' + location.host + '/plugins/tabbed_carousel/cs.js"' + 
+          'data-delay="' + delay + '"' +  
+          'data-title="More Stories"' +  
+          'data-skip="' + location.pathname.slice(location.pathname.lastIndexOf('/') + 1, location.pathname.length) + '"></script>'
+    )
+  } 
 }
 
 // NOTE: the contributor data must be passed to the callback as shown;
@@ -125,33 +110,6 @@ function clickyListeners () {
       clicky.log(href, $('title').text(), 'outbound');
     }
   };
-
-  // $(document)
-    // .on('click', '.company-logo-clicky', { type: 'logo' }, clickyLog)
-    // .on('click', '.cta-link', { type: 'cta-link' }, clickyLog)
-    // .on('click', '.cta-form', { type: 'cta-form' }, clickyLog)
-    // .on('click', '.linkedin-share, .twitter-share, .facebook-share',
-    //     { type: 'social-share', title: $('title').text() }, clickyLog)
-    // .on('click', '.linkedin-share', function (e) {
-    //   if (CSP.screenSize === 'xs')
-    //   $(this).popupWindow(e, 550, 540);
-    // })
-    // .on('click', '.twitter-share', function (e) {
-    //   $(this).popupWindow(e, 500, 446);
-    // })
-    // .on('click', '.facebook-share', function (e) {
-    //   $(this).popupWindow(e, 600, 424);
-    // });
-    // .on('mouseover', '.linkedin-widget',
-    //   function () {
-    //     window.focus();
-    //     $(window).on('blur',
-    //       { type: 'linkedin', href: $(this).data('linkedin-url') }, clickyLog);
-    //   })
-    // .on('mouseout', '.linkedin-widget',
-    //   function () {
-    //     $(window).off('blur', clickyLog);
-    //   });
 }
 
 function LI2Observer () {

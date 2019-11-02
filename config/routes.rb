@@ -52,8 +52,8 @@ Rails.application.routes.draw do
     get '/', to: 'stories#index'
 
     get '/plugins/:type/cs', to: 'plugins#main'
-    get '/widgets/:type/cs', to: 'plugins#main'  # legacy
-    get '/widget/cs', to: 'plugins#main'  # legacy
+    # get '/widgets/:type/cs', to: 'plugins#main'  # legacy (was varmour)
+    get '/widget/cs', to: 'plugins#main'  # legacy (trunity)
 
     # specifying a default format for plugins#show because (for unknown reason) ajax jsonp
     # request sent from IE11 was resulting in request interpreted as html

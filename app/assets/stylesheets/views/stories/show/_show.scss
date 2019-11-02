@@ -37,9 +37,6 @@
   &.stories.show {
     @import '../shared/cookie_consent';
     background-color: #fff;
-    #cs-tabbed-carousel {
-      @import '../../plugins/tabbed_carousel';
-    }
   }
 
   &.cs-overlay-container {

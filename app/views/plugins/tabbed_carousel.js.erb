@@ -162,15 +162,16 @@ function cspInitTabbedCarousel ($, $container, delay, isDemo) {
     if (numPages > 1) {
 
       $carousel.on('scroll', paginationTrackScroll);
-      $container.find('.cs-scroll-left')
-        .on('click', arrowScrollLeft($carousel, pageWidth));
-      $container.find('.cs-scroll-right')
-        .on('click', arrowScrollRight($carousel, pageWidth, scrollWidth));
-      $container.find('.cs-page-dot')
+      $container.find('.cs-tabbed-carousel__arrow--left button')
+                .on('click', arrowScrollLeft($carousel, pageWidth));
+      $container.find('.cs-tabbed-carousel__arrow--right button')
+                .on('click', arrowScrollRight($carousel, pageWidth, scrollWidth));
+      $container
+        .find('.cs-page-dot')
         .on('click', paginationScroll($carousel, pageWidth, paginationTrackScroll));
 
     } else {
-      $container.find('.cs-pagination-row, .cs-scroll-left, .cs-scroll-right')
+      $container.find('.cs-pagination-row, .cs-tabbed-carousel__arrow')
         .css('visibility', 'hidden');
     }
   }

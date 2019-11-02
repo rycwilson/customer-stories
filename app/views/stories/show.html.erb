@@ -56,29 +56,6 @@
   </div>
 <% end %>
 
-<div class="hidden-xs">
-
-  <% if @more_stories.present? && @company.subdomain != 'varmour' %>
-
-    <div id="cs-tabbed-carousel">
-      <%= render(
-            'plugins/tabbed_carousel',
-            {
-              company: @company,
-              stories: @more_stories,
-              title: 'More Stories',
-              tab_color: nil,
-              text_color: nil,
-              is_plugin: true,
-              is_external: false
-            }
-          ) %>
-    </div>
-
-  <% end %>
-
-</div>
-
 
 
 
