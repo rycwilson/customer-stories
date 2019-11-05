@@ -1,0 +1,6 @@
+
+// Why both this file and ./_plugins ? 
+// => For companies without custom plugin styles, this file is the top-level scss for all plugin types
+// => For companies with custom plugin styles, they will import _plugins.scss into their own top-level file
+
+@import 'plugins';

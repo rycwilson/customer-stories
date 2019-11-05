@@ -83,7 +83,7 @@
 .story-card__link {
   display: block;
   position: relative;
-  background-color: #fff;
+  background-color: #fff !important;  // overcome the bootstrap-plugins wrapper specificity
   width: $story-card-width;
   height: $story-card-height;
   padding: 0;

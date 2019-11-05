@@ -6,11 +6,11 @@ class PluginsController < ApplicationController
   before_action(except: [:track]) { @company = Company.find_by(subdomain: request.subdomain) }
 
   def main
-    @type = params[:type] || 'tabbed_carousel'
+    @type = params[:type] || 'tabbed_carousel'  # trunity still using old tabbed carousel
     @uid = params[:uid]
 
     # set the stylesheet url here, as it's impossible to use the asset path helper in cs.js in a company-specific way
-    @stylesheet_url = custom_stylesheet_url(@company, @type)
+    @stylesheet_url = URI.join(root_url, helpers.asset_path("#{@company.subdomain}_plugins.css")).to_s
     respond_to do |format|
       format.js { render action: 'cs' }
     end
@@ -111,10 +111,6 @@ class PluginsController < ApplicationController
       stories = company.public_stories
     end
     params[:skip].present? ? stories.where.not(slug: params[:skip]) : stories
-  end
-
-  def custom_stylesheet_url(company, type)
-    URI.join(root_url, helpers.asset_path("#{company.subdomain}_#{type}.css")).to_s
   end
 
 end

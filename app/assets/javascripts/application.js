@@ -151,8 +151,9 @@ function attachAppListeners () {
       // console.log('turbolinks:click');
     })
 
-    .on('turbolinks:before-visit', function () {
+    .on('turbolinks:before-visit', function (e) {
       // console.log('turbolinks:before-visit');
+      // console.log($(e).originalEvent.data.url)
       // debugger;
     })
 

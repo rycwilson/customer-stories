@@ -20,45 +20,47 @@ Rails.application.config.assets.paths += %w(
 # ref: https://stackoverflow.com/questions/10905905/using-fonts-with-rails-asset-pipeline
 Rails.application.config.assets.precompile << /\.(?:svg|eot|woff|ttf|otf)\z/
 
-# fontawesome included for the google preview window
 Rails.application.config.assets.precompile += %w(
+  pdf.css
+  mvpready-landing.css
   google/ads_preview.js
   google/ads_preview.css
   jquery-textfill/source/jquery.textfill.js
   plugins/cs_video.js
   plugins/cs_overlays.js
-  custom/plugin_wrappers/acme-test_carousel.css
-  custom/plugin_wrappers/acme-test_gallery.css
-  custom/plugin_wrappers/acme-test_tabbed_carousel.css
+)
+
+# companies with custom styles
+Rails.application.config.assets.precompile += %w(
   custom/wrappers/centerforcustomerengagement.css
-  custom/plugin_wrappers/centerforcustomerengagement_carousel.css
-  custom/plugin_wrappers/centerforcustomerengagement_gallery.css
-  custom/plugin_wrappers/centerforcustomerengagement_tabbed_carousel.css
   custom/wrappers/compas.css
-  custom/plugin_wrappers/compas_carousel.css
-  custom/plugin_wrappers/compas_gallery.css
-  custom/plugin_wrappers/compas_tabbed_carousel.css
-  custom/plugin_wrappers/coupa_carousel.css
-  custom/plugin_wrappers/coupa_gallery.css
-  custom/plugin_wrappers/coupa_tabbed_carousel.css
-  custom/plugin_wrappers/demo_carousel.css
-  custom/plugin_wrappers/demo_gallery.css
-  custom/plugin_wrappers/demo_tabbed_carousel.css
   custom/wrappers/pixlee.css
-  custom/plugin_wrappers/pixlee_carousel.css
-  custom/plugin_wrappers/pixlee_gallery.css
-  custom/plugin_wrappers/pixlee_tabbed_carousel.css
-  custom/plugin_wrappers/retailnext_carousel.css
-  custom/plugin_wrappers/retailnext_gallery.css
-  custom/plugin_wrappers/retailnext_tabbed_carousel.css
   custom/wrappers/trunity.css
-  custom/plugin_wrappers/trunity_carousel.css
-  custom/plugin_wrappers/trunity_gallery.css
-  custom/plugin_wrappers/trunity_tabbed_carousel.css
   custom/wrappers/varmour.css
-  custom/plugin_wrappers/varmour_carousel.css
-  custom/plugin_wrappers/varmour_gallery.css
-  custom/plugin_wrappers/varmour_tabbed_carousel.css
-  pdf.css
-  mvpready-landing.css
+)
+
+# all companies should appear here for basic plugin styles
+Rails.application.config.assets.precompile += %w(
+  custom/plugin_wrappers/acme-test_plugins.css
+  custom/plugin_wrappers/centerforcustomerengagement_plugins.css
+  custom/plugin_wrappers/compas_plugins.css
+  custom/plugin_wrappers/compelling-cases_plugins.css
+  custom/plugin_wrappers/corefact_plugins.css
+  custom/plugin_wrappers/coupa_plugins.css
+  custom/plugin_wrappers/demo_plugins.css
+  custom/plugin_wrappers/juniper_plugins.css
+  custom/plugin_wrappers/kodacon_plugins.css
+  custom/plugin_wrappers/modeanalytics_plugins.css
+  custom/plugin_wrappers/neonova_plugins.css
+  custom/plugin_wrappers/perch_plugins.css
+  custom/plugin_wrappers/pixlee_plugins.css
+  custom/plugin_wrappers/references_plugins.css
+  custom/plugin_wrappers/retailnext_plugins.css
+  custom/plugin_wrappers/saucelabs_plugins.css
+  custom/plugin_wrappers/smartpaymentplan_plugins.css
+  custom/plugin_wrappers/testco_plugins.css
+  custom/plugin_wrappers/trunity_plugins.css
+  custom/plugin_wrappers/varmour_plugins.css
+  custom/plugin_wrappers/zeniq_plugins.css
+  custom/plugin_wrappers/zoommarketing_plugins.css
 )

@@ -1,4 +1,6 @@
 
+// note 1 - some items require !important because the ./_plugins.scss necessarily
+//  wraps the bootstrap settings, thus creating higher specificity
 
 // Goal: let the story card height dictate the carousel height
 // => for children (e.g. the arrow columns) to use 'height 100%', parent container needs a defined height
@@ -216,10 +218,10 @@ body.plugin-demo #cs-carousel {
 
   &--v2 {
     .cs-carousel__arrow {
-      width: 0%;
+      width: 0% !important;  // note 1
     }
     .cs-carousel__carousel {
-      width: 100%;
+      width: 100% !important;  // note 1
     }
     .cs-carousel__pagination {
       display: none;
@@ -228,10 +230,10 @@ body.plugin-demo #cs-carousel {
 
   @media only screen and (max-width: 500px) {
     .cs-carousel__arrow {
-      width: 0%;
+      width: 0% !important;  // note 1
     }
     .cs-carousel__carousel {
-      width: 100%;
+      width: 100% !important;  // note 1
     }
     .cs-carousel__pagination {
       display: none;
@@ -249,30 +251,30 @@ body.plugin-demo #cs-carousel {
   @media only screen and (min-width: 768px) {
     &--v1 { 
       .cs-carousel__arrow {
-        width: 10%;
+        width: 10% !important;  // note 1
       }
       .cs-carousel__carousel {
-        width: 80%;
+        width: 80% !important;  // note 1
       }
     }
   }
   @media only screen and (min-width: 992px) {
     &--v1 {
       .cs-carousel__arrow {
-        width: 12%;
+        width: 12% !important;  // note 1
       }
       .cs-carousel__carousel {
-        width: 76%;
+        width: 76% !important;  // note 1
       }
     }
   }
   @media only screen and (min-width: 1200px) {
     &--v1 {
       .cs-carousel__arrow {
-        width: 10%;
+        width: 10% !important;  // note 1
       }
       .cs-carousel__carousel {
-        width: 80%;
+        width: 80% !important;  // note 1
       }
     }
   }

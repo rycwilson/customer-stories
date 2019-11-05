@@ -1,0 +1,28 @@
+
+@import '../../base/variables';
+@import '../../base/mixins';
+
+// don't override host's bootstrap settings
+#cs-container, #cs-gallery, #cs-carousel, #cs-tabbed-carousel {
+  @import '../../../../../vendor/assets/bower_components/bootstrap-sass/assets/stylesheets/_bootstrap-plugins';
+  @import '../../../../../vendor/assets/bower_components/bootstrap-horizon/bootstrap-horizon';
+}
+
+@import '../../base/globals';
+@import 'overlays/main';
+@import '../stories/show/show';
+@import 'gallery';
+// @import 'carousel';
+// @import 'tabbed_carousel';
+  
+body.plugin-demo {
+  font-family: $company-body-font;
+  // font-size: 14px;
+  background-color: #f2f2f2;
+  &.bg-dark {
+    background-color: #888;
+  }
+}
+
+
+

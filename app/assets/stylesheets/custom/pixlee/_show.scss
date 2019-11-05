@@ -1,20 +1,6 @@
 
 body.pixlee.stories.show, .cs-overlay-container {
-  &.stories.show {
-    #cs-tabbed-carousel {
-      display: none !important;
-      // @import 'plugins/tabbed_carousel';
-      .cs-header {
-        font-family: $company-body-font;  // don't apply this to external widget
-        background-color: $pixlee-blue;
-        color: #fff;
-      }
-      .cs-drawer-content {
-        border-top-color: $pixlee-blue;
-      }
-    }
-  }
-
+  
   &.cs-overlay-container {
     article {
       background-color: $stories-bg-color;

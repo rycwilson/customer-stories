@@ -117,9 +117,6 @@
 
   // root_url provides a company-specific url (via subdomain)
   function getPlugin ($container, $script, isDemo, env, preSelectedStorySlug) {
-  console.log('the title is ', $script.data('title'))
-  console.log('the delay is ', $script.data('delay'))
-  console.log('the skip is ', $script.data('skip'))
     return function () {
       $.ajax({
         url: "<%= URI.join(root_url, plugin_view_path(@type)) %>",
