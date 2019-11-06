@@ -114,7 +114,12 @@ function storiesEditSettingsListeners () {
         .tooltip('fixTitle')
         .addClass('disabled')
     })
-    .on('click', '.hidden-link__copy', function () {
+    .on('click', '.hidden-link__copy', function (e) {
+      $(this).blur();
+      if ($(this).is('.disabled')) {
+        e.stopPropagation();
+        return false;
+      }
       var $temp = $('<input />');
       $('body').append($temp);
       $temp.val($('.hidden-link input').val())

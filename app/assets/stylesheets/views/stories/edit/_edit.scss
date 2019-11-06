@@ -1,9 +1,14 @@
 
-
 .hidden-link button {
   color: #666;
-  &:hover:not(.disabled) {
+  &:hover {
     color: #222;
+    &.disabled {
+      color: #666;
+    }
+  }
+  &:focus.disabled, &:active.disabled {
+    outline: none;
   }
 }
 
