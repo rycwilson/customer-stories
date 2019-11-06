@@ -21,7 +21,7 @@
 
     <div class="story-card__content">
       <% if story.title.present? %>
-        <div class="story-card__title text-center">
+        <div class="story-card__title">
           <p><%= story.title %></p>
         </div>
       <% end %>
@@ -30,7 +30,7 @@
       </div>
     </div>
 
-    <div class="story-card__caption text-center">
+    <div class="story-card__caption">
       <span class="story-card__customer"><%= story.customer.name %></span>
       <span class="story-card__cta"></span>
     </div>

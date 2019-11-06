@@ -31,7 +31,7 @@
     <a href="javascript:;" data-plugin-type="tabbed_carousel" class="<%#= @params[:type] == 'tabbed_carousel' ? 'active' : '' %>">Tabbed Carousel</a>
   </div> -->
 
-  <div id="cs-<%= params[:type].gsub('_', '-') %>">
+  <div id="cs-<%= params[:type].gsub('_', '-') %>" class="cs-plugin">
   <script src="<%= root_url + "plugins/#{params[:type]}/cs.js" %>" data-demo="1" <%= params_to_data_attrs(params) %>></script>
 
 </body>
