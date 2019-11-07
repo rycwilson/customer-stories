@@ -4,18 +4,9 @@
 @import 'show';
 
 .cs-plugin {
-  .cs-carousel, #cs-gallery, .cs-tabbed-carousel {
-    .story-card__cta:after {
-      content: 'Read Case Study';
-    }
-  }
   .story-card.story-card--pixlee {
     @include pixlee-story-card;
   }
-}
-  
-#cs-gallery {
-  background-color: #fff;
 }
 
 .cs-overlay-container {

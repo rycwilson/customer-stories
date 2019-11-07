@@ -115,7 +115,7 @@ $white-chevron-right: 'https://s3-us-west-1.amazonaws.com/csp-production-assets/
   &[class*="__prev-next"] {
     font-size: $carousel-nav-size;
     justify-content: flex-end;
-    padding: 0 16px;
+    padding: 0;
     // color: rgba(0, 0, 0, 0.6);
     transition: color 0.25s ease;
     .cs-carousel--light-background & {

@@ -20,17 +20,6 @@ module PluginsHelper
   # method provides for auto-populating settings for legacy plugins that won't
   # necessarily have the expected data attributes
   def tabbed_carousel_style (company, tab_color, text_color, border_only=false)
-    case company.subdomain
-    when 'trunity'
-      tab_color = '#FEBE57' if tab_color.blank?
-      text_color = '#ffffff' if text_color.blank?
-    when 'retailnext'
-      tab_color = '#ffd400' if tab_color.blank?
-      text_color = '#000000' if text_color.blank?
-    else
-      tab_color = tab_color || "#333333"
-      text_color = text_color || "#ffffff"
-    end
     if border_only
       "border-top-color: #{tab_color}"
     else

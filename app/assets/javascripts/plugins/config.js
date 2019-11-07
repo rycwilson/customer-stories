@@ -88,7 +88,7 @@ function pluginConfigListeners () {
       if (type === 'gallery') {
         $logosOnly.prop('disabled', false);
       } else {
-        $logosOnly.prop('checked', false).prop('disabled', true);
+        $logosOnly.prop('checked', false).prop('disabled', true).trigger('change');
       }
     })
 
@@ -234,7 +234,7 @@ function pluginConfigListeners () {
     .on('click', 'a.plugin-demo:not([disabled])', function (e) {
       var demoPath = '/plugins/demo',
           params = '?',
-          type = $('[name="plugin[type]"]:checked').val(),
+          type = $('[name="plugin[type]"]:checked').val().replace('-', '_'),
           content = $('[name="plugin[content]"]:checked').val(),
           maxRows = $('[name="gallery[max_rows]"]').val(),
           background = $('[name="carousel[background]"]:checked').val(),
