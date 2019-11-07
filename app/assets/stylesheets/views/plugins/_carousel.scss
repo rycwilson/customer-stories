@@ -1,7 +1,4 @@
 
-// note 1 - some items require !important because the ./_plugins.scss necessarily
-//  wraps the bootstrap settings, thus creating higher specificity
-
 // Goal: let the story card height dictate the carousel height
 // => for children (e.g. the arrow columns) to use 'height 100%', parent container needs a defined height
 // => so carousel container height is defined in terms of story card height
@@ -13,14 +10,6 @@ $gray-chevron-left: 'https://s3-us-west-1.amazonaws.com/csp-production-assets/sh
 $gray-chevron-right: 'https://s3-us-west-1.amazonaws.com/csp-production-assets/shared/chevron-gray-right.png';
 $white-chevron-left: 'https://s3-us-west-1.amazonaws.com/csp-production-assets/shared/chevron-white-left.png';
 $white-chevron-right: 'https://s3-us-west-1.amazonaws.com/csp-production-assets/shared/chevron-white-right.png';
-
-.cs-row {
-  margin: 0;
-  padding: 0;
-  .cs-carousel > & {
-    height: calc(#{$story-card-height} + #{$carousel-vertical-padding});
-  }
-}
 
 .cs-carousel__scroll-xs {
   display: none;
@@ -117,7 +106,6 @@ $white-chevron-right: 'https://s3-us-west-1.amazonaws.com/csp-production-assets/
 }
 
 .cs-carousel__pagination, .cs-carousel__prev-next {
-  height: 50px;
   display: flex;
   align-items: center;
   // background-color: #d1cfc0;
@@ -178,8 +166,13 @@ $white-chevron-right: 'https://s3-us-west-1.amazonaws.com/csp-production-assets/
   // TODO: still necessary for mobile?
   // -webkit-backface-visibility: hidden;  // ref: http://stackoverflow.com/questions/19254146
 
-  > .cs-row:first-child {
-    
+  .cs-row {
+    margin: 0;
+    padding: 0;
+  }
+  > .cs-row {
+    height: calc(#{$carousel-story-card-height} + #{$carousel-vertical-padding});
+    margin-bottom: 20px;
   }
 
   .cs-carousel__carousel {
@@ -188,8 +181,6 @@ $white-chevron-right: 'https://s3-us-west-1.amazonaws.com/csp-production-assets/
     .row-horizon {
       padding: calc(#{$carousel-vertical-padding / 2}) 0;
    
-
-
       // this takes care of a very slight width discrepancy that was resulting
       // in scrolls that didn't quite center the story tiles;
       // ref: https://stackoverflow.com/questions/5303897/css-width-doesnt-add-up
@@ -214,10 +205,10 @@ $white-chevron-right: 'https://s3-us-west-1.amazonaws.com/csp-production-assets/
 
   &--v2 {
     .cs-carousel__arrow {
-      width: 0% !important;  // note 1
+      display: none;
     }
     .cs-carousel__carousel {
-      width: 100% !important;  // note 1
+      width: 100%;
     }
     .cs-carousel__pagination {
       display: none;
@@ -226,10 +217,10 @@ $white-chevron-right: 'https://s3-us-west-1.amazonaws.com/csp-production-assets/
 
   @media only screen and (max-width: 500px) {
     .cs-carousel__arrow {
-      width: 0% !important;  // note 1
+      width: 0%;
     }
     .cs-carousel__carousel {
-      width: 100% !important;  // note 1
+      width: 100%;
     }
     .cs-carousel__pagination {
       display: none;
@@ -247,30 +238,30 @@ $white-chevron-right: 'https://s3-us-west-1.amazonaws.com/csp-production-assets/
   @media only screen and (min-width: 768px) {
     &--v1 { 
       .cs-carousel__arrow {
-        width: 10% !important;  // note 1
+        width: 10%;
       }
       .cs-carousel__carousel {
-        width: 80% !important;  // note 1
+        width: 80%;
       }
     }
   }
   @media only screen and (min-width: 992px) {
     &--v1 {
       .cs-carousel__arrow {
-        width: 12% !important;  // note 1
+        width: 12%;
       }
       .cs-carousel__carousel {
-        width: 76% !important;  // note 1
+        width: 76%;
       }
     }
   }
   @media only screen and (min-width: 1200px) {
     &--v1 {
       .cs-carousel__arrow {
-        width: 10% !important;  // note 1
+        width: 10%;
       }
       .cs-carousel__carousel {
-        width: 80% !important;  // note 1
+        width: 80%;
       }
     }
   }

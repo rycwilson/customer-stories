@@ -48,12 +48,15 @@ function pluginConfigListeners () {
           tabbedCarouselAttrs = '\xa0data-delay="' + $('[name="tabbed_carousel[delay]"]').val() + '"\xa0data-tab-color="' + $('[name="tabbed_carousel[tab_color]"]').val() + '"\xa0data-text-color="' + $('[name="tabbed_carousel[text_color]"]').val() + '"';
       $('.script-tag textarea').text(
         $('.script-tag textarea').text()
-          .replace(/id="(cs-gallery|cs-carousel|cs-tabbed-carousel)"/, function () {
-            // for working on the server, input values for plugin[type] use underscore (namely: tabbed_carousel),
-            // but id attributes (and attributes in general) use hyphen
-            return (type === 'tabbed_carousel') ? 'id="cs-tabbed-carousel"' : 'id="cs-' + type + '"';
-          })
-          .replace(/\/plugins\/(gallery|carousel|tabbed_carousel)/, '/plugins/' + type)
+          .replace(
+            /id="(cs-gallery|cs-carousel|cs-tabbed-carousel)"/, 
+            'id="cs-' + type + '"'
+          )
+          // for url params, replace hyphen with  underscore
+          .replace(
+            /\/plugins\/(gallery|carousel|tabbed_carousel)/, 
+            '/plugins/' + type.replace('-', '_')
+          )
 
           // remove the gallery attributes
           .replace(/\sdata-max-rows="\d+"/, '')
@@ -75,7 +78,7 @@ function pluginConfigListeners () {
           .replace(/\sdata-delay="\d+"\sdata-tab-color="#\w+"\sdata-text-color="#\w+"/, '')
           // re-add them if tabbed carousel was selected
           .replace(/><\/script>/, function () {
-            return (type === 'tabbed_carousel') ? tabbedCarouselAttrs + '></script>' : '></script>';
+            return (type === 'tabbed-carousel') ? tabbedCarouselAttrs + '></script>' : '></script>';
           })
       );
 

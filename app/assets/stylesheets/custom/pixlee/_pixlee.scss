@@ -1,14 +1,6 @@
 
-@import 'variables';
+@import 'vars_and_mixins';
 @import 'show';
-
-@mixin stories-header-title {
-  h3 {
-    text-transform: uppercase;
-    padding-top: 2px;
-    font-weight: 400;
-  }
-}
 
 .company-header.company-header--pixlee {
   .pixlee.stories.index &, .pixlee.stories.show & {
@@ -46,30 +38,9 @@ body.pixlee {
   }
 }
 
+// specify .cs-plugin for specificity
 .story-card.story-card--pixlee {
-
-  &.loading {
-    background-color: $stories-fg-color;
-    filter: brightness(97%);
-  }
-  a:active {
-    background-color: $stories-fg-color;
-    filter: brightness(94%);
-  }
-  
-  #stories-gallery &, .related-stories & {
-    .story-card__title p, .story-card__caption span {
-      // font-family: $company-body-font !important;
-    }
-  }
-
-  .story-card__cta:after {
-    color: $pixlee-blue !important;
-    font-weight: 700 !important;
-    text-decoration: none;
-    text-transform: uppercase;
-  }
-  
+  @include pixlee-story-card;
 }
 
 

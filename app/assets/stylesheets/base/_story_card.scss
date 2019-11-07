@@ -111,22 +111,38 @@
 
   // applies to plugins only
   &--logo-only {
-    width: 150px;
-    height: 75px;
-    background-color: transparent;
-    border: none;
-    box-shadow: 0 0;
-    .story-card__content, .story-card__caption {
-      height: 100%;
+    &.hover:not(.og-expanded), 
+    &.cs-hover:not(.og-expanded),
+    &.og-expanded,
+    &.loading,
+    &.cs-loading {
+      .story-card__link {
+        border: none;
+        box-shadow: none
+      }
     }
-    .story-card__title, .story-card__customer {
-      display: none;
-    }
-    .story-card__logo img {
-      mix-blend-mode: multiply;
-    }
-    @media only screen and (max-width: 767px) {
-      margin: 20px 0;
+    .story-card__link {
+      width: 150px;
+      height: 75px;
+      background-color: transparent;
+      border: none;
+      box-shadow: none;
+      .story-card__content, .story-card__caption {
+        height: 100%;
+      }
+      .story-card__title, .story-card__customer {
+        display: none;
+      }
+      .story-card__logo img {
+        mix-blend-mode: multiply;
+      }
+      &:hover {
+        border: none;
+        box-shadow: none;
+      }
+      @media only screen and (max-width: 767px) {
+        margin: 20px 0;
+      }
     }
   }
 
@@ -169,7 +185,7 @@
 .story-card__link {
   display: block;
   position: relative;
-  background-color: #fff !important;  // overcome the bootstrap-plugins wrapper specificity
+  background-color: #fff;
   width: $story-card-width;
   height: $story-card-height;
   padding: 0;
@@ -276,10 +292,10 @@
     letter-spacing: normal;
   }
   .story-card__customer {
-    color: $story-card-text-color !important;
+    color: $story-card-text-color;
   }
   .story-card__cta:after {
-    color: $story-card-text-color !important;
+    color: $story-card-text-color;
     text-decoration: underline;
     visibility: hidden;
     transition: all 0s;

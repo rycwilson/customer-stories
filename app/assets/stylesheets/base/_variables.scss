@@ -23,7 +23,9 @@ $status-on-color: rgba(140, 221, 129, 0.5); // #8CDD81;	 //  rgba(3, 155, 229, 0
 // https://www.invisionapp.com/inside-design/finding-the-right-color-palettes-for-data-visualizations/
 
 $story-card-width: 242px !default;
+$carousel-story-card-width: $story-card-width !default;
 $story-card-height: 170px !default;
+$carousel-story-card-height: $story-card-height !default;
 $small-story-card-width: 200px !default;
 $small-story-card-height: 140px !default;
 

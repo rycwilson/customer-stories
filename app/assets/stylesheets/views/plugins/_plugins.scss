@@ -1,7 +1,6 @@
 
 @import '../../base/variables';
 @import '../../base/mixins';
-@import '../../base/globals';
 
 body.plugin-demo {
   font-family: $company-body-font;
@@ -19,9 +18,10 @@ body.plugin-demo {
 // include overlays and story page since they will have settings that override bootstrap
 // => if they're not scoped, bootstrap settings will take precedence due to specificity from scoping
 .cs-plugin {
-
+  
   @import '../../../../../vendor/assets/bower_components/bootstrap-sass/assets/stylesheets/_bootstrap-plugins';
   @import '../../../../../vendor/assets/bower_components/bootstrap-horizon/bootstrap-horizon';
+  @import '../../base/globals';
   @import 'overlays/main';
   @import '../stories/show/show';
 }

@@ -1,7 +1,19 @@
 
-@import 'pixlee';
+@import 'vars_and_mixins';
 @import '../../views/plugins/plugins';
+@import 'show';
 
+.cs-plugin {
+  .cs-carousel, #cs-gallery, .cs-tabbed-carousel {
+    .story-card__cta:after {
+      content: 'Read Case Study';
+    }
+  }
+  .story-card.story-card--pixlee {
+    @include pixlee-story-card;
+  }
+}
+  
 #cs-gallery {
   background-color: #fff;
 }
@@ -12,12 +24,12 @@
 
 .cs-carousel__prev, .cs-carousel__next {
   .cs-carousel--light-background & {
-    color: $carousel-story-card-text-color !important;
+    color: $carousel-story-card-text-color;
     &--bookend {
-      color: #e0e7ef !important;  // overcome the bootstrap-plugins wrapper specificity
+      color: #e0e7ef;
     }
     &:hover, &:active {
-      color: $pixlee-blue !important;  // overcome the bootstrap-plugins wrapper specificity
+      color: $pixlee-blue;
     }
   }
 }
@@ -41,8 +53,4 @@
   }
 }
 
-.cs-carousel, .cs-gallery, .cs-tabbed-carousel {
-  .story-card__cta:after {
-    content: 'Read Case Study';
-  }
-}
+
