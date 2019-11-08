@@ -63,7 +63,7 @@ function storiesShow () {
 }
 
 function initMoreStories () {
-  var minStories = 5;
+  var minStories = 4;
   var delay = 5;
   var shouldInit = $('body').is(':not(.pixlee):not(.varmour)') && 
         $(window).width() >= 768 &&
@@ -75,7 +75,7 @@ function initMoreStories () {
   // TODO make data-title the first data attribute => why is $script.data('title') undefined??
   if (shouldInit) {
     $('body').append(
-      '<div id="cs-tabbed-carousel"></div>' + 
+      '<div id="cs-tabbed-carousel" class="cs-plugin"></div>' + 
       '<script src="' + location.protocol + '//' + location.host + '/plugins/tabbed_carousel/cs.js"' + 
           'data-delay="' + delay + '"' +  
           'data-title="More Stories"' +  

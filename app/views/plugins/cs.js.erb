@@ -59,10 +59,9 @@
           $container = $("#cs-tabbed-carousel, #cs-tab-container, #cs-container").first();
         }
       }
-      $container.addClass('cs-plugin');
-      if ($script.data('demo')) {
-        isDemo = true;
-      }
+
+      if ($script.data('demo')) var isDemo = true;
+      if (!$container.hasClass('cs-plugin')) $container.addClass('cs-plugin');
 
       $stylesheet
         .appendTo('head')
@@ -165,7 +164,7 @@
         initOverlays = $.Deferred(),
         maxGalleryRows = parseInt($script.data('max-rows'), 10),
         tabbedCarouselDelay = ((type === 'tabbed_carousel') && parseInt($script.data('delay'), 10) || 0);
-
+    
     trackPluginVisitor($container, isDemo, env);
 
     $.getScript("<%= asset_url('plugins/cs_video.js') %>", function () {
@@ -187,7 +186,7 @@
           method: 'GET',
           dataType: 'script'
         })
-          .done(function () {
+          .done(function (data, status, xhr) {
             if (type === 'gallery') cspInitGallery($, $container, maxGalleryRows, preSelectedStoryIndex);
             else if (type === 'carousel') cspInitCarousel($, $container, preSelectedStoryIndex, '<%= @company.subdomain %>');
             else if (type === 'tabbed_carousel') {
