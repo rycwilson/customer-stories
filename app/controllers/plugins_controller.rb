@@ -50,8 +50,6 @@ class PluginsController < ApplicationController
 
   # if invalid category or product filters, return all stories
   def plugin_view (company, params)
-    awesome_print(params)
-    puts request.referer
     # puts params.permit(params.keys).to_h
     # puts "logos_only #{params.permit(params.keys).to_h[:logos_only].present? && params.permit(params.keys).to_h[:logos_only] != 'false'}"
     # puts "grayscale #{params[:grayscale].present? && params[:grayscale] != 'false'}"

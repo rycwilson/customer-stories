@@ -6,6 +6,19 @@
   }  
 }
 
+.companies.edit .layout-main,
+.profile.edit .layout-main {
+  padding-top: 15px;
+}
+
+.layout-main {
+  min-height: 100vh;   // TODO: replace with html, body { height: 100% }
+  padding-bottom: 100px;
+  #curate & {
+    padding: 0;
+  }
+}
+
 .layout-sidebar {
   // border: 1px solid #dfdfdf;
   .nav {
@@ -74,18 +87,5 @@
         opacity: 0;
       }
     }
-  }
-}
-
-.companies.edit .layout-main,
-.profile.edit .layout-main {
-  padding-top: 15px;
-}
-
-.layout-main {
-  min-height: 100vh;   // TODO: replace with html, body { height: 100% }
-  padding-bottom: 100px;
-  #curate & {
-    padding: 0;
   }
 }

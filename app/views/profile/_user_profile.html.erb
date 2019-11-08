@@ -18,32 +18,22 @@
       }
     ) do |f| %>
 
-  <div class="visible-sm-block">
-    <div style="display: flex; justify-content: center">
-    <div style="width: 140px; height: 140px; background: #d9e3da">
-      <div style="height: 110px">
-      </div> 
-      <div style="height: 30px; background: #d1cfc0; display: flex; align-items: center; justify-content: center">
-        <i class="fa fa-fw fa-upload"></i>&nbsp;
-        <span>Upload a photo</span>
-      </div>
-    </div>
+
+
+
+ <!-- <div class="form-group">
+    <%#= f.label(:first_name, 'First name', class: 'col-sm-4 control-label') %>
+    <div class="col-sm-5">
+      <%#= f.text_field(:first_name, class: 'form-control') %>
     </div>
   </div>
 
   <div class="form-group">
-    <%= f.label(:first_name, 'First name', class: 'col-sm-4 control-label') %>
+    <%#= f.label(:last_name, 'Last name', class: 'col-sm-4 control-label') %>
     <div class="col-sm-5">
-      <%= f.text_field(:last_name, class: 'form-control') %>
+      <%#= f.text_field(:last_name, class: 'form-control') %>
     </div>
-  </div>
-
-  <div class="form-group">
-    <%= f.label(:last_name, 'Last name', class: 'col-sm-4 control-label') %>
-    <div class="col-sm-5">
-      <%= f.text_field(:last_name, class: 'form-control') %>
-    </div>
-  </div>
+  </div>-->
 
 
 <!-- TWO
@@ -72,41 +62,138 @@
   </div>
 -->
 
-<!-- ONE
-  <div class="form-group" style="margin-bottom: 15px">
-    <div class="col-sm-3" style="position: relative">
-      <div style="position: absolute; top: 5px; right: 0; width: 140px; height: 140px; background: #d9e3da">
-        <div style="height: 110px">
-        </div> 
-        <div style="height: 30px; background: #d1cfc0; display: flex; align-items: center; justify-content: center">
-          <i class="fa fa-fw fa-upload"></i>&nbsp;
-          <span>Upload a photo</span>
+  <div class="visible-sm-block visible-md-block">
+
+    <div class="form-group">
+      <div class="col-sm-offset-3 col-sm-9">
+        <div style="width: 140px; height: 140px; background: #d9e3da">
+          <div style="height: 110px">
+          </div> 
+          <div style="height: 30px; background: #d1cfc0; display: flex; align-items: center; justify-content: center">
+            <i class="fa fa-fw fa-upload"></i>&nbsp;
+            <span>Upload a photo</span>
+          </div>
         </div>
       </div>
     </div>
-    <div class="col-sm-6">
-      <%#= f.label(:first_name, 'First name', class: 'control-label', style: 'margin-bottom: 5px') %>
-      <%#= f.text_field(:first_name, class: 'form-control') %>
+
+    <div class="form-group">
+      <%= f.label(:first_name, 'First Name', class: 'col-sm-3 control-label') %>
+      <div class="col-sm-9 col-md-8">
+        <%= f.text_field(:first_name, class: 'form-control') %>
+      </div>
+    </div>
+
+    <div class="form-group">
+      <%= f.label(:last_name, 'Last Name', class: 'col-sm-3 control-label') %>
+      <div class="col-sm-9 col-md-8">
+        <%= f.text_field(:last_name, class: 'form-control') %>
+      </div>
+    </div>
+
+    <div class="form-group">
+      <%= f.label(:title, 'Job Title', class: 'col-sm-3 control-label') %>
+      <div class="col-sm-9 col-md-8">
+        <%= f.text_field(:title, class: 'form-control') %>
+      </div>
+    </div>
+
+    <div class="form-group">
+      <%= f.label(:email, 'Email', class: 'col-sm-3 control-label') %>
+      <div class="col-sm-9 col-md-8">
+        <%= f.email_field(:email, class: 'form-control') %>
+      </div>
+    </div>
+
+    <div class="form-group">
+      <%= f.label(:phone, 'Phone', class: 'col-sm-3 control-label') %>
+      <div class="col-sm-9 col-md-8">
+        <%= f.telephone_field(:phone, class: 'form-control') %>
+      </div>
+    </div>
+
+    <div class="form-group">
+      <div class="col-sm-12 col-md-offset-3 col-md-8 text-right">
+        <button type="submit" class="btn btn-success" form="company-profile-form" style="width:114px">
+          <span>Save changes</span>
+          <i class='fa fa-spin fa-circle-o-notch' style="display:none"></i>
+          <i class='fa fa-check' style="display: none"></i>
+        </button>
+      </div>
     </div>
   </div>
--->
+
+  <div class="visible-lg-block">
+    <div class="row">
+
+      <div class="col-lg-3" style="display:flex; justify-content: flex-end; padding: 0">
+        <div style="width: 140px; height: 140px; background: #d9e3da;">
+          <div style="height: 110px">
+          </div> 
+          <div style="height: 30px; background: #d1cfc0; display: flex; align-items: center; justify-content: center">
+            <i class="fa fa-fw fa-upload"></i>&nbsp;
+            <span>Upload a photo</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-lg-6">
+
+        <div class="form-group">
+          <%= f.label(:first_name, 'First Name', class: 'col-lg-4 control-label', style: 'width: 25%') %>
+          <div class="col-lg-8" style="width: 75%">
+            <%= f.text_field(:first_name, class: 'form-control') %>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <%= f.label(:last_name, 'Last Name', class: 'col-lg-4 control-label', style: 'width: 25%') %>
+          <div class="col-lg-8" style="width: 75%">
+            <%= f.text_field(:last_name, class: 'form-control') %>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <%= f.label(:title, 'Job Title', class: 'col-lg-4 control-label', style: 'width: 25%') %>
+          <div class="col-lg-8" style="width: 75%">
+            <%= f.text_field(:title, class: 'form-control') %>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <%= f.label(:email, 'Email', class: 'col-sm-3 control-label', style: 'width: 25%') %>
+          <div class="col-lg-8" style="width: 75%">
+            <%= f.email_field(:email, class: 'form-control') %>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <%= f.label(:phone, 'Phone', class: 'col-sm-3 control-label', style: 'width: 25%') %>
+          <div class="col-lg-8" style="width: 75%">
+            <%= f.telephone_field(:phone, class: 'form-control') %>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <div class="col-lg-12 text-right">
+            <button type="submit" class="btn btn-success" form="company-profile-form" style="width:114px">
+              <span>Save changes</span>
+              <i class='fa fa-spin fa-circle-o-notch' style="display:none"></i>
+              <i class='fa fa-check' style="display: none"></i>
+            </button>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
 
 <!--
-  <div class="form-group">
-    <div class="col-sm-3">
-    </div>
-    <div class="col-sm-6">
-      <%#= f.label(:last_name, 'Last name', class: 'control-label', style: 'margin-bottom: 5px') %>
-      <%#= f.text_field(:last_name, class: 'form-control') %>
-    </div>
-  </div>
--->
-
-  <% if user.company.present? %>
+  <%# if user.company.present? %>
     <div class="form-group">
       <label class="col-sm-3 control-label">Company</label>
       <div class="col-sm-9 col-md-6">
-        <%= text_field_tag(
+        <%#= text_field_tag(
               nil, 
               user.company.name,
               class: 'form-control',
@@ -114,37 +201,7 @@
             ) %>
       </div>
     </div>
-  <% end %>
-
-  <div class="form-group">
-    <%= f.label(:title, 'Job Title', class: 'col-sm-3 control-label') %>
-    <div class="col-sm-9 col-md-6">
-      <%= f.text_field(:title, class: 'form-control') %>
-    </div>
-  </div>
-
-  <div class="form-group">
-    <%= f.label(:email, 'Email', class: 'col-sm-3 control-label') %>
-    <div class="col-sm-9 col-md-6">
-      <%= f.email_field(:email, class: 'form-control') %>
-    </div>
-  </div>
-
-  <div class="form-group">
-    <%= f.label(:phone, 'Phone', class: 'col-sm-3 control-label') %>
-    <div class="col-sm-9 col-md-6">
-      <%= f.telephone_field(:phone, class: 'form-control') %>
-    </div>
-  </div>
-
-  <div class="form-group">
-    <div class="col-sm-offset-3 col-sm-9 col-md-6 text-right">
-      <button type="submit" class="btn btn-success" form="company-profile-form" style="width:114px">
-        <span>Save changes</span>
-        <i class='fa fa-spin fa-circle-o-notch' style="display:none"></i>
-        <i class='fa fa-check' style="display: none"></i>
-      </button>
-    </div>
-  </div>
+  <%# end %>
+-->
 
 <% end %>

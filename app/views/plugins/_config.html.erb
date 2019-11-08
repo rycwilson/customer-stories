@@ -10,7 +10,7 @@
   <div class="plugin-config__type form-group">
 
     <label class="col-sm-3 control-label">Type</label>
-    <div class="col-sm-6">
+    <div class="col-sm-9 col-md-8 col-lg-6">
 
       <div class="btn-group">
         <!-- <label class="radio-inline" for="plugin_type_gallery">
@@ -52,7 +52,7 @@
     <a href="#carousel-settings" data-toggle="tab" class="hidden"></a>
     <a href="#tabbed-carousel-settings" data-toggle="tab" class="hidden"></a>
 
-    <div class="col-sm-6 col-sm-offset-3">
+    <div class="col-sm-offset-3 col-sm-9 col-md-8 col-lg-6">
       <div class="tab-content">
         
         <div id="gallery-settings" class="tab-pane tab-pane--gallery active">
@@ -150,7 +150,7 @@
   <div class="plugin-config__content-buttons form-group">
 
     <label class="col-sm-3 control-label">Content</label>
-    <div class="col-sm-6">
+    <div class="col-sm-9 col-md-8 col-lg-6">
 
       <div class="btn-group">
         <%= label_tag('plugin_content_custom', class: 'radio-inline') do %>
@@ -172,7 +172,7 @@
   </div>
 
   <div class="plugin-config__content-select form-group">
-    <div class="col-sm-6 col-sm-offset-3">
+    <div class="col-sm-offset-3 col-sm-9 col-md-8 col-lg-6">
 
       <div>
         <%= select_tag(
@@ -206,7 +206,7 @@
 
   <div class="plugin-config__appearance form-group">
     <label class="col-sm-3 control-label">Appearance</label>
-    <div class="col-sm-6">
+    <div class="col-sm-9 col-md-8 col-lg-6">
       <div class="btn-group">
         <label for="plugin_logos_only" class="checkbox-inline">
           <%= check_box_tag('plugin[logos_only]', true, false) %>
@@ -222,7 +222,7 @@
 
   <div class="plugin-config__code-buttons form-group">
     <label class="col-sm-3 control-label">Code</label>
-    <div class="col-sm-6">
+    <div class="col-sm-9 col-md-8 col-lg-6">
       <a href="javascript:;" class="plugin-demo btn btn-secondary" <%= company.stories.blank? ? 'disabled' : '' %>>
         <i class="fa fa-fw fa-external-link"></i>
         <span>Demo</span>
@@ -237,7 +237,7 @@
 
   <div class="plugin-config__code form-group">
     <div class="col-sm-3"></div>
-    <div class="col-sm-6">
+    <div class="col-sm-9 col-md-8 col-lg-6">
       <div class="script-tag">
 <!--             <button type="button" class="clipboard">
           <i class="fa fa-fw fa-clipboard"></i>
