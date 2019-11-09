@@ -24,12 +24,13 @@ function profileEdit () {
 function attachProfileListeners () {
 
   $(document)
-  
+
     .on('click', '.user-photo-upload__button', function () {
+      var $fileinput = $(this).prev('.fileinput');
+      var $existingPhoto = $fileinput.find('.user-photo-upload__photo--exists');
+      var $placeholder = $fileinput.find('.user-photo-upload__photo--placeholder')
+      $existingPhoto.attr('src') ? $existingPhoto.click() : $placeholder.click();
       $(this).blur();
-      $('.user-photo-upload__photo--exists').attr('src') ?
-        $('.user-photo-upload__photo--exists').trigger('click', { 'buttonClick': true }) :
-        $('.user-photo-upload__photo--placeholder').trigger('click', { 'buttonClick': true });
     })
 
     .on('click', '.btn.linkedin-edit',

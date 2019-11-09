@@ -18,66 +18,11 @@
       }
     ) do |f| %>
 
-
-
-
- <!-- <div class="form-group">
-    <%#= f.label(:first_name, 'First name', class: 'col-sm-4 control-label') %>
-    <div class="col-sm-5">
-      <%#= f.text_field(:first_name, class: 'form-control') %>
-    </div>
-  </div>
-
-  <div class="form-group">
-    <%#= f.label(:last_name, 'Last name', class: 'col-sm-4 control-label') %>
-    <div class="col-sm-5">
-      <%#= f.text_field(:last_name, class: 'form-control') %>
-    </div>
-  </div>-->
-
-
-<!-- TWO
-  <div class="form-group">
-    <%= f.label(:first_name, 'First name', class: 'col-sm-3 control-label') %>
-    <div class="col-sm-4">
-      <%= f.text_field(:first_name, class: 'form-control') %>
-    </div>
-    <div class="col-sm-3 text-center" style="position: relative;">
-      <div style="position: absolute; top: -15px; left: 50%; transform: translate(-50%, 0); width: 140px; height: 140px; background: #d9e3da">
-        <div style="height: 110px">
-        </div> 
-        <div style="height: 30px; background: #d1cfc0; display: flex; align-items: center; justify-content: center">
-          <i class="fa fa-fw fa-upload"></i>&nbsp;
-          <span>Upload a photo</span>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <div class="form-group" style="margin-bottom: 50px">
-    <%= f.label(:last_name, 'Last name', class: 'col-sm-3 control-label') %>
-    <div class="col-sm-4">
-      <%= f.text_field(:last_name, class: 'form-control') %>
-    </div>
-  </div>
--->
-
-
   <div class="visible-sm-block visible-md-block">
 
     <div class="form-group">
       <div class="col-sm-offset-3 col-sm-9">
-        <div style="width: 140px; height: 140px; background: #efefef">
-          <div style="height: 110px">
-
-       
-
-          </div> 
-          <div style="height: 30px; background: #d1cfc0; display: flex; align-items: center; justify-content: center">
-            <i class="fa fa-fw fa-upload"></i>&nbsp;
-            <span>Upload a photo</span>
-          </div>
-        </div>
+        <%= render('profile/user_photo', { user: user, user_form: f }) %>
       </div>
     </div>
 
@@ -120,7 +65,7 @@
       <div class="col-sm-12 col-md-offset-3 col-md-8 text-right">
         <button type="submit" class="btn btn-success" form="company-profile-form" style="width:114px">
           <span>Save changes</span>
-          <i class='fa fa-spin fa-circle-o-notch' style="display:none"></i>
+          <i class='fa fa-spin fa-circle-o-notch' style="display: none"></i>
           <i class='fa fa-check' style="display: none"></i>
         </button>
       </div>
@@ -131,35 +76,7 @@
     <div class="row">
 
       <div class="col-lg-3" style="display: flex; justify-content: flex-end; padding: 0">
-
-        <div class="user-photo-upload">
-
-          <div class="fileinput <%= user.photo_url.present? ? 'fileinput-exists' : 'fileinput-new' %>" data-provides="fileinput">
-
-            <div class="user-photo-upload__photo user-photo-upload__photo--placeholder fileinput-new thumbnail"
-                data-trigger="fileinput">
-              <div>
-                <%= image_tag('user-photo-missing.png', alt: 'user photo') %>
-              </div>
-            </div>
-            <div class="user-photo-upload__photo user-photo-upload__photo--exists fileinput-preview fileinput-exists thumbnail"
-                data-trigger="fileinput">
-              <div>
-                <%= image_tag(user.photo_url, alt: 'user photo') if user.photo_url.present? %>
-              </div>
-            </div>
-            <div class="btn-file">
-              <%= f.file_field(:photo_url) %>
-            </div>
-
-          </div>
-
-          <button type="button" class="user-photo-upload__button btn" data-trigger="fileinput">
-            <i class="fa fa-fw fa-upload"></i>&nbsp;
-            Upload a photo
-          </button>
-      
-        </div>
+        <%= render('profile/user_photo', { user: user, user_form: f }) %>
       </div>
 
       <div class="col-lg-6">
