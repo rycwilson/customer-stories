@@ -62,12 +62,16 @@
   </div>
 -->
 
+
   <div class="visible-sm-block visible-md-block">
 
     <div class="form-group">
       <div class="col-sm-offset-3 col-sm-9">
-        <div style="width: 140px; height: 140px; background: #d9e3da">
+        <div style="width: 140px; height: 140px; background: #efefef">
           <div style="height: 110px">
+
+       
+
           </div> 
           <div style="height: 30px; background: #d1cfc0; display: flex; align-items: center; justify-content: center">
             <i class="fa fa-fw fa-upload"></i>&nbsp;
@@ -126,14 +130,35 @@
   <div class="visible-lg-block">
     <div class="row">
 
-      <div class="col-lg-3" style="display:flex; justify-content: flex-end; padding: 0">
-        <div style="width: 140px; height: 140px; background: #d9e3da;">
-          <div style="height: 110px">
-          </div> 
-          <div style="height: 30px; background: #d1cfc0; display: flex; align-items: center; justify-content: center">
-            <i class="fa fa-fw fa-upload"></i>&nbsp;
-            <span>Upload a photo</span>
+      <div class="col-lg-3" style="display: flex; justify-content: flex-end; padding: 0">
+
+        <div class="user-photo-upload">
+
+          <div class="fileinput <%= user.photo_url.present? ? 'fileinput-exists' : 'fileinput-new' %>" data-provides="fileinput">
+
+            <div class="user-photo-upload__photo user-photo-upload__photo--placeholder fileinput-new thumbnail"
+                data-trigger="fileinput">
+              <div>
+                <%= image_tag('user-photo-missing.png', alt: 'user photo') %>
+              </div>
+            </div>
+            <div class="user-photo-upload__photo user-photo-upload__photo--exists fileinput-preview fileinput-exists thumbnail"
+                data-trigger="fileinput">
+              <div>
+                <%= image_tag(user.photo_url, alt: 'user photo') if user.photo_url.present? %>
+              </div>
+            </div>
+            <div class="btn-file">
+              <%= f.file_field(:photo_url) %>
+            </div>
+
           </div>
+
+          <button type="button" class="user-photo-upload__button btn" data-trigger="fileinput">
+            <i class="fa fa-fw fa-upload"></i>&nbsp;
+            Upload a photo
+          </button>
+      
         </div>
       </div>
 

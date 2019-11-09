@@ -27,13 +27,12 @@ function companyProfileListeners() {
   $(document)
 
     .on('click', '.company-logo-upload__button', function (e) {
-      $('.company-logo-upload__logo--existing').attr('src') ?
-        $('.company-logo-upload__logo--existing').click() :
+      $('.company-logo-upload__logo--exists').attr('src') ?
+        $('.company-logo-upload__logo--exists').click() :
         $('.company-logo-upload__logo--placeholder').click()
     })
 
     .on('change', '.headers-color-picker .upper', function () {
-      console.log($(this).val())
       $('.company-logo-upload__company-header').css('background-color', $(this).val());
     })
 

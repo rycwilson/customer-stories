@@ -24,6 +24,14 @@ function profileEdit () {
 function attachProfileListeners () {
 
   $(document)
+  
+    .on('click', '.user-photo-upload__button', function () {
+      $(this).blur();
+      $('.user-photo-upload__photo--exists').attr('src') ?
+        $('.user-photo-upload__photo--exists').trigger('click', { 'buttonClick': true }) :
+        $('.user-photo-upload__photo--placeholder').trigger('click', { 'buttonClick': true });
+    })
+
     .on('click', '.btn.linkedin-edit',
       function () {
         $('.linkedin-connect').toggle();
