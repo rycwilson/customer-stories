@@ -1,10 +1,12 @@
-
-<% content_for :head do %>
+<% content_for(:head) do %>
   <!-- LI widget won't load if page is cached -->
   <meta name="turbolinks-cache-control" content="no-cache">
 <% end %>
 
-<%= render 'shared/navbars/company_nav', { company: @company, workflow_stage: nil } %>
+<%= render(
+      'shared/navbars/company_nav', 
+      { company: @company, workflow_stage: nil }
+    ) %>
 
 <div class="container">
   <div class="row">
