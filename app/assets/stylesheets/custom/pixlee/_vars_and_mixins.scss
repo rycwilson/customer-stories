@@ -40,11 +40,13 @@ $carousel-nav-size: 13px;
   }
 
   .story-card__cta:after {
-    content: 'Read Case Study';
     color: $pixlee-blue;
     font-weight: 700 !important;
     text-decoration: none;
     text-transform: uppercase;
+  }
+  .cs-plugin & .story-card__cta:after {
+    content: 'Read Case Study';
   }
 }
 
