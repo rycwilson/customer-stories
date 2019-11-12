@@ -157,7 +157,8 @@
             <span class="input-group-btn">
               <button type="button" 
                   class="story__copy-hidden-link btn btn-default <%= story.hidden_link.blank? ? 'disabled' : '' %>" 
-                  data-toggle="tooltip" data-container="body" data-placement="top" title="Copy">
+                  data-toggle="tooltip" data-container="body" data-placement="top" 
+                  title="<%= story.hidden_link.blank? ? '' : 'Copy' %>">
                 <i class="fa fa-clipboard"></i>
               </button>
             </span>
