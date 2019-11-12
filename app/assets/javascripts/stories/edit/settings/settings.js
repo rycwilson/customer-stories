@@ -112,6 +112,7 @@ function storiesEditSettingsListeners () {
       $('.story__copy-hidden-link')
         .attr('title', 'Save changes to enable Copy')
         .tooltip('fixTitle')
+        .addClass('disabled')
     })
     .on('click', '.story__copy-hidden-link', function (e) {
       if ($(this).is('.disabled')) {
