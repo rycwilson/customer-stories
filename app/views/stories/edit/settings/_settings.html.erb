@@ -141,7 +141,7 @@
               readonly: true
             ) %>
         <span class="input-group-btn">
-          <button type="button" class="story__refresh-hidden-link btn btn-default" 
+          <button type="button" class="hidden-link__refresh btn btn-default" 
               style="border-radius: 0; border-left: 0"
               data-toggle="tooltip" data-container="body" data-placement="top" title="Refresh">
             <i class="fa fa-refresh"></i>
@@ -149,7 +149,7 @@
         </span>
         <span class="input-group-btn">
           <button type="button" 
-              class="story__copy-hidden-link btn btn-default <%= story.hidden_link.blank? ? 'disabled' : '' %>" 
+              class="hidden-link__copy btn btn-default <%= story.hidden_link.blank? ? 'disabled' : '' %>" 
               data-toggle="tooltip" data-container="body" data-placement="top" 
               title="<%= story.hidden_link.blank? ? '' : 'Copy' %>">
             <i class="fa fa-clipboard"></i>
