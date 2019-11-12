@@ -1,5 +1,6 @@
 
 
+// use .disabled instead of [disabled], else tooltip won't work
 .story__hidden-link button {
   color: #666;
   &:hover:not(.disabled) {

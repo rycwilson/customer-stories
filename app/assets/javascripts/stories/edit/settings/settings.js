@@ -106,12 +106,12 @@ function storiesEditSettingsListeners () {
 
     .on('focus', '.story__hidden-link input', function () { $(this).blur(); })
     .on('click', '.story__refresh-hidden-link', function () {
+      $(this).blur();
       var hiddenLink = [location.origin, chance.guid()].join('/');
       $('.story__hidden-link input').val(hiddenLink);
       $('.story__copy-hidden-link')
         .attr('title', 'Save changes to enable Copy')
         .tooltip('fixTitle')
-        .addClass('disabled');
     })
     .on('click', '.story__copy-hidden-link', function (e) {
       if ($(this).is('.disabled')) {
