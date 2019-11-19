@@ -299,7 +299,7 @@ class StoriesController < ApplicationController
     params.require(:story).permit(
       :title, :summary, :quote, :quote_attr_name, :quote_attr_title, :video_url, :success_id,
       :formatted_video_url, :narrative, :published, :logo_published, :preview_published,
-      :hidden_link,
+      :hidden_link, :og_title, :og_description, :og_image_url, :og_image_width, :og_image_height,
       success_attributes: [
         :id, :name, :customer_id, :curator_id,
         product_ids: [], story_category_ids: [],

@@ -5,9 +5,14 @@
   <meta name="turbolinks-cache-control" content="no-cache">
 
   <%# if production? %>
-    <% cache("#{@company.subdomain}/story-#{@story.id}-meta-tags", skip_digest: true, expires_in: 1.week) do %>
-      <%= render 'stories/show/story_meta_tags',
-            { company: @company, success: @story.success, story: @story } %>
+    <% cache(
+        "#{@company.subdomain}/stories/#{@story.id}/meta-tags", 
+        skip_digest: true
+      ) do %>
+      <%= render( 
+            'stories/show/story_meta_tags',
+            { company: @company, success: @story.success, story: @story } 
+          ) %>
     <% end %>
   <%# end %>
 

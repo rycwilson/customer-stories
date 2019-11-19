@@ -2,8 +2,14 @@ namespace :temp do
 
   desc "temp stuff"
 
-  # at this point, ads are still invalid due to missing square image
-  # => add a square image and reset
+  task populate_og_values: :environment do
+    Story.all.each do |story|
+      story.update(
+        og_title: story.title,
+        og_description: story.quote.present? ? "\"#{story.quote}\"" : ''
+      )
+    end
+  end
 
   # this needs to be a permananent method for copying production db
   task reset_all_gads_campaigns: :environment do

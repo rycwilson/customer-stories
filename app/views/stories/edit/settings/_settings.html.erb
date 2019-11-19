@@ -9,7 +9,12 @@
           id: 'story-settings-form',
           method: 'put',
           remote: true,
-          class: 'form-horizontal'
+          class: 'form-horizontal directUpload', 
+          data: {
+            url: @s3_direct_post.url,
+            host: URI.parse(@s3_direct_post.url).host,
+            'form-data' => (@s3_direct_post.fields)
+          }
         }
       ) do |story_form| %>
 
@@ -136,6 +141,8 @@
         </div>
         <div class="col-sm-2"></div>
       </div>
+
+      <%= render('stories/edit/settings/og_meta_tags', { story: story, story_form: story_form }) %>
 
       <div class="story__hidden-link form-group">
         <%= story_form.label(nil, 'Hidden Link', class: 'control-label col-sm-3') %>

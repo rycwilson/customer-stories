@@ -131,6 +131,26 @@ class Story < ApplicationRecord
     .where('logo_published IS TRUE OR preview_published IS TRUE')
   }
 
+  before_create { self.og_title = self.title }
+  after_update_commit do
+    self.expire_fragment("#{self.company.subdomain}/stories/#{self.id}/meta-tags")
+    # TODO: pro-actively expire social network cache on changing og-* fields
+    # request = Typhoeus::Request.new(
+    #   "https://graph.facebook.com",
+    #   method: :POST,
+    #   headers: { Authorization: "Bearer <facebook_app_id>|<facebook_access_token>" },
+    #   params: {
+    #     id: 'https%3A%2F%2Facme-test.customerstories.org%2Fcurate%2Ftestwowin%2Ftestwowin',
+    #     scrape: true
+    #   }
+    # )
+    # request.run
+    # awesome_print(request.response.response_body)
+  end if Proc.new { |story|
+      ( story.previous_changes.keys & 
+        ['og_title', 'og_description', 'og_image_url', 'og_image_alt'] ).any?
+    }
+  
   # scrub user-supplied html input using whitelist
   before_update(:scrub_html_input, on: [:create, :update],
     if: Proc.new { self.narrative.present? && self.narrative_changed? })

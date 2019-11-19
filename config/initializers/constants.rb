@@ -64,6 +64,7 @@ LINKEDIN_PROFILE_JS = "https://platform.linkedin.com/badges/js/profile.js"
 LINKEDIN_SHARE_URL = "https://www.linkedin.com/shareArticle?mini=true&url="
 TWITTER_SHARE_URL = "https://twitter.com/share?url="
 FACEBOOK_SHARE_URL = "https://www.facebook.com/sharer.php?u="
+FACEBOOK_APP_ID = "291034101286863"
 
 GETCLICKY_API_BASE_URL = "http://api.clicky.com/api/stats/4"
 GETCLICKY_TRACKING_URL = "http://in.getclicky.com/in.php"

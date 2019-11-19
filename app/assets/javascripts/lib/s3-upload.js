@@ -24,7 +24,7 @@ function initS3Upload ($form) {
           // var progress = parseInt(data.loaded / data.total * 100, 10);
         },
         submit: function (e, data) {
-          console.log('s3 submit')
+          // console.log('s3 submit') 
           /**
            *  When drag-dropping an image into summernote editor, the image gets uploaded twice, see:
            *    https://stackoverflow.com/questions/41768242
@@ -62,10 +62,10 @@ function initS3Upload ($form) {
           }
         },
         start: function (e) {
-          console.log('s3 start')
+          // console.log('s3 start')
         },
         done: function(e, data) {
-          console.log('s3 done')
+          // console.log('s3 done')
           var key = $(data.jqXHR.responseXML).find('Key').text(),
               url = 'https://' + $form.data('host') + '/' + key,
               $imageUrlInput;
@@ -94,6 +94,7 @@ function initS3Upload ($form) {
           } else {
             // note the image is being uploaded to s3 even if there's a validation error (autoupload)
             if ($formGroup.is(':not(.has-error)')) {
+              // console.log('writing url ', url)
               if ($imageUrlInput) {
                 $imageUrlInput.val(url);
 
@@ -101,6 +102,7 @@ function initS3Upload ($form) {
                 $imageUrlInput = $('<input>', { type:'hidden', name: $fileInput.attr('name'), value: url });
                 $formGroup.append($imageUrlInput);
               }
+            } else {
             }
           }
 
@@ -109,7 +111,7 @@ function initS3Upload ($form) {
         },
         fail: function(e, data) {
           // possible to get a 403 Forbidden error
-          console.log('s3 fail')
+          // console.log('s3 fail')
         }
       });
     })
