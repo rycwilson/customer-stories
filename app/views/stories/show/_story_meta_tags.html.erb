@@ -1,8 +1,8 @@
 
 <meta property="og:type" content="article">
 <meta property="og:site_name" content="<%= company.name %> Customer Stories">
-<meta property="og:title" content="<%= story.og_title %>">
-<meta property="og:description" content="<%= story.og_description %>">
+<meta property="og:title" content="<%= story.og_title || story.title %>">
+<meta property="og:description" content="<%= story.og_description || story.quote %>">
 <meta property="og:url" content="<%= story.csp_story_url %>">
 <meta property="fb:app_id" content="<%= FACEBOOK_APP_ID %>">
 <!-- <meta name="twitter:site" content="@realCustStories"> -->
