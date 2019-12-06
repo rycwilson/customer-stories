@@ -1,6 +1,201 @@
 
-@mixin LI-profile-badge ($bg-color) {
+@mixin horizontal-form {
+  .form-group {
+    margin-bottom: 25px;
+  }
+  
+  // some extra space between last item and Save button
+  .form-group button[type="submit"] {
+    margin-top: 10px;
+  } 
+  @media screen and (min-width: 768px) {
+  }
+  @media screen and (min-width: 992px) {
+  }
+  @media screen and (min-width: 1200px) {
+    .col-sm-3 {
+      width: 23%;
+      // background-color: #ecc9c7;
+    }
 
+    // applies to user profile only
+    .col-lg-3 {
+      width: 27%;
+    }
+    .col-lg-6 {
+      // background-color: #d9e3da;
+      width: 56%;
+    }
+    .col-sm-offset-3, .col-lg-6.col-md-offset-3 {
+      margin-left: 23%;
+    }
+  }
+}
+
+@mixin hide-until-init {
+  visibility: hidden;
+  &[data-init="true"] {
+    visibility: visible;
+  }
+}
+
+@mixin fa-button ($background-color) {
+  display: flex;
+  align-items:center;
+  background:none;
+  border: none;
+  outline: none;
+  color: #666;
+  font-size: 12px;
+  padding: 4px;
+  &:hover {
+    color: #222;
+  }
+  i {
+    -webkit-text-stroke: 1px $background-color;  // should match background color
+    &.fa-question {
+      -webkit-text-stroke: 0.5px $background-color;
+      top: -1px;
+      left: -0.5px;
+    }
+  }
+  &[disabled] {
+    &:hover {
+      color: #666;
+      cursor: not-allowed;
+    }
+  }
+}
+
+@mixin fa-spinner($width) {
+  width: $width;
+  input {
+    text-align: right;
+  }
+  .spinner__buttons {
+    position: relative;
+    white-space: nowrap;
+    width: 2%;
+    vertical-align: middle;
+    display: table-cell;
+  }
+  .btn {
+    display: block;
+    float: none;
+    width: 100%;
+    max-width: 100%;
+    padding: 8px;
+    margin-left: -1px;
+    position: relative;
+    border-radius: 0;
+    &--inc {
+      border-top-right-radius: 4px;
+    }
+    &--dec {
+      margin-top: -2px;
+      border-bottom-right-radius: 4px;
+    }
+  }
+  i {
+    position: absolute;
+    top: 0;
+    left: 4px;
+  }
+  &[disabled] {
+    opacity: 0.5;
+    pointer-events: none;
+  }
+}
+
+// http://hackingui.com/front-end/a-pure-css-solution-for-multiline-text-truncation/
+// @mixin multiline-ellipsis($line-height: 1.2em, $line-count: 1, $bg-color: transparent){
+//   overflow: hidden;
+//   position: relative;
+//   line-height: $line-height;
+//   max-height: $line-height * $line-count; 
+//   // text-align: justify;
+//   margin-right: -1em;
+//   padding-right: 1em;
+//   &:before {
+//     content: '...';
+//     position: absolute;
+//     right: 0;
+//     bottom: 0;
+//   }
+//   &:after {
+//     content: '';
+//     position: absolute;
+//     right: 0;
+//     width: 1em;
+//     height: 1em;
+//     margin-top: 0.2em;
+//     background: $bg-color;
+//   }
+// }
+
+@mixin bs-xs {
+  @media screen and (max-width: 767px) {
+    @content;
+  }
+}
+
+@mixin bs-sm {
+  @media screen and (min-width: 768px) {
+    @content;
+  }
+}
+
+@mixin bs-md {
+  @media screen and (min-width: 992px) {
+    @content;
+  }
+}
+
+@mixin bs-lg {
+  @media screen and (min-width: 1200px) {
+    @content;
+  }
+}
+
+@mixin customer-logo($bg-color) {
+  display: flex;
+  margin: 30px 0;
+  background-color: $bg-color;  // need this for the mix-blend-mode to work correctly
+  > div {
+    max-width: 50%;  // this can be wider for the quote-logo horizontal layout
+    img {
+      margin: 0 auto;
+      max-height: 65px;
+      mix-blend-mode: multiply;
+    }
+  }
+  .customer-name, .cs-customer-name {
+    color: #888;
+    margin-top: 20px;
+    span {
+      font-size: 16px !important;
+    }
+  }
+  @include bs-sm {
+    justify-content: center;
+    > div {
+      img {
+        max-height: 80px;
+      }
+    }
+  }
+  @include bs-lg {
+    .customer-name, .cs-customer-name {
+      margin-top: 25px;
+      span {
+        font-size: 18px !important;
+      }
+    }
+  }
+
+}
+
+@mixin LI-profile-badge ($bg-color) {
   .LI-badge-container {
     width: 100%;
     background-color: $bg-color;  // #f2f2f2;
@@ -30,35 +225,6 @@
     .LI-footer {
       display: flex;
       justify-content: space-between;
-    }
-  }
-
-}
-
-@mixin fa-button () {
-  display: flex;
-  align-items:center;
-  background:none;
-  border: none;
-  outline: none;
-  color: #666;
-  font-size: 12px;
-  padding: 4px;
-  &:hover {
-    color: #222;
-  }
-  i {
-    -webkit-text-stroke: 1px #f9f9f9;  // should match background color
-    &.fa-question {
-      -webkit-text-stroke: 0.5px #f9f9f9;
-      top: -1px;
-      left: -0.5px;
-    }
-  }
-  &[disabled] {
-    &:hover {
-      color: #666;
-      cursor: not-allowed;
     }
   }
 }

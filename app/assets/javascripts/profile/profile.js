@@ -1,11 +1,6 @@
 
 function profileEdit () {
 
-  // if (!CSP.current_user.is_curator) {
-  //   $('header').css('background-color', 'white');
-  //   $('header').css('border-color', '#dddddd');
-  // }
-
   $('.dropdown.user-profile').addClass('active');
   $(document)
     .one('turbolinks:before-visit', function () {
@@ -13,7 +8,7 @@ function profileEdit () {
         $('.dropdown.user-profile').removeClass('active');
       }
     })
-    .one('click', '.workflow-tabs', function () {
+    .one('click', '.nav-workflow', function () {
       if ($('.dropdown.user-profile').hasClass('active')) {
         $('.dropdown.user-profile').removeClass('active');
       }
@@ -24,6 +19,15 @@ function profileEdit () {
 function attachProfileListeners () {
 
   $(document)
+
+    .on('click', '.user-photo-upload__button', function () {
+      var $fileinput = $(this).prev('.fileinput');
+      var $existingPhoto = $fileinput.find('.user-photo-upload__photo--exists');
+      var $placeholder = $fileinput.find('.user-photo-upload__photo--placeholder')
+      $existingPhoto.attr('src') ? $existingPhoto.click() : $placeholder.click();
+      $(this).blur();
+    })
+
     .on('click', '.btn.linkedin-edit',
       function () {
         $('.linkedin-connect').toggle();

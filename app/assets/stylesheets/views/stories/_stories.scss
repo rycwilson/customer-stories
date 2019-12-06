@@ -3,7 +3,7 @@
 @import 'show/show';
 @import 'edit/edit';
 
-.stories.show, .stories.index, .companies.show {
+.stories.show, .stories.index {
   @import 'shared/cookie_consent';
   @import 'shared/gallery';
 }
@@ -12,6 +12,8 @@
 .stories.edit, .companies.show {
   @import 'shared/video';
 }
+
+
 
 
 

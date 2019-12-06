@@ -1,0 +1,47 @@
+
+@import 'vars_and_mixins';
+@import '../../views/plugins/plugins';
+@import 'show';
+
+.cs-plugin {
+  .story-card.story-card--pixlee {
+    @include pixlee-story-card;
+  }
+}
+
+.cs-overlay-container {
+  padding: 0; 
+}
+
+.cs-carousel__prev, .cs-carousel__next {
+  .cs-carousel--light-background & {
+    color: $carousel-story-card-text-color;
+    &--bookend {
+      color: #e0e7ef;
+    }
+    &:hover, &:active {
+      color: $pixlee-blue;
+    }
+  }
+}
+
+.cs-carousel {
+  .story-card__link {
+    width: $carousel-story-card-width;
+    height: $carousel-story-card-height;
+  }
+  .story-card__title p {
+    font-size: $carousel-story-card-title-size !important;
+    color: $carousel-story-card-text-color !important;
+  }
+  .story-card__caption {
+    span {
+      font-size: $carousel-story-card-caption-size !important;
+    }
+    .story-card__customer {
+      color: $carousel-story-card-text-color !important;
+    }
+  }
+}
+
+

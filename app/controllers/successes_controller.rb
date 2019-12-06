@@ -29,15 +29,17 @@ class SuccessesController < ApplicationController
 
   def index
     company = Company.find_by(subdomain: request.subdomain) || current_user.company
-    data = company.successes.to_json({
-      only: [:id, :name],
-      methods: [:display_status, :referrer, :contact, :timestamp],
-      include: {
-        curator: { only: [:id], methods: [:full_name] },
-        customer: { only: [:id, :name, :slug] },
-        story: { only: [:id, :title, :slug] }
-      }
-    })
+    data = Rails.cache.fetch("#{company.subdomain}/successes-json") do 
+      company.successes.to_json({
+        only: [:id, :name],
+        methods: [:display_status, :referrer, :contact, :timestamp],
+        include: {
+          curator: { only: [:id], methods: [:full_name] },
+          customer: { only: [:id, :name, :slug] },
+          story: { only: [:id, :title, :slug] }
+        }
+      })
+    end
     respond_to { |format| format.json { render({ json: data }) } }
   end
 

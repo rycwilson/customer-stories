@@ -1,0 +1,92 @@
+
+<% content_for :head do %>
+  <meta name="turbolinks-cache-control" content="no-cache">
+<% end %>
+
+<%= render(
+      'shared/navbars/company_nav', 
+      { company: @company, workflow_stage: @workflow_stage } 
+    ) %>
+
+<div class="container">
+  <div class="row">
+
+    <div class="col-sm-4 col-lg-3 layout-sidebar">
+      <ul class="nav nav--company-settings">
+        <li>
+          <a href="#edit-company-profile" data-toggle="tab">
+            <i class="fa fa-fw fa-globe"></i>
+            <span>Company Profile</span>
+          </a>
+        </li>
+        <li>
+          <a href="#edit-crowdsource" data-toggle="tab" class='<%= @company.new_record? ? 'disabled-tab' : '' %>'>
+            <i class="fa fa-fw fa-users"></i>
+            <span>Crowdsource Settings</span>
+          </a>
+        </li>
+        <li>
+          <a href="#edit-plugins" data-toggle="tab" class='<%= @company.new_record? ? 'disabled-tab' : '' %>'>
+            <i class='fa fa-fw fa-plug' style='font-size:15px; top:2px; margin-left:2px'></i>
+            <span>Customer Stories Plugin</span>
+          </a>
+        </li>
+        <li>
+          <a href="#edit-ctas" data-toggle="tab" class='<%= @company.new_record? ? 'disabled-tab' : '' %>'>
+            <i class="fa fa-fw fa-hand-pointer-o"></i>
+            <span>Link &amp; Form CTAs</span>
+          </a>
+        </li>
+        <li>
+          <a href="#edit-tags" data-toggle="tab" class='<%= @company.new_record? ? 'disabled-tab' : '' %>'>
+            <i class="fa fa-fw fa-tags"></i>
+            <span>Story Tags</span>
+          </a>
+        </li>
+      </ul>
+    </div>
+
+    <div class="col-sm-8 col-lg-9 layout-main">
+      <div class="tab-content">
+
+        <div class="tab-pane fade" id="edit-company-profile" role="tabpanel">
+          <% cache(@company) do %>
+            <%= render(
+                  'companies/settings/company_profile', 
+                  { company: @company, form_options: @form_options } 
+                ) %>
+          <% end %>
+        </div>
+
+        <div class="tab-pane fade" id="edit-crowdsource" role="tabpanel">
+          <% cache("#{@company.subdomain}/crowdsource", skip_digest: true) do %>
+            <%= render(
+                  'companies/settings/invitation_templates',
+                  { company: @company, templates_select: @templates_select } 
+                ) %>
+          <% end %>
+        </div>
+        
+        <div class="tab-pane fade" id="edit-plugins" role="tabpanel">
+          <% cache("#{@company.subdomain}/plugin-config", skip_digest: true) do %>
+            <%= render('plugins/config', { company: @company }) %>
+          <% end %>
+        </div>
+
+        <div class="tab-pane fade" id="edit-ctas" role="tabpanel">
+          <% cache("#{@company.subdomain}/edit-ctas", skip_digest: true) do %>
+            <%= render('companies/settings/ctas', { company: @company }) %>
+          <% end %>
+        </div>
+
+        <div class="tab-pane fade" id="edit-tags" role="tabpanel">
+          <% cache("#{@company.subdomain}/story-tags", skip_digest: true) do %>
+            <%= render('companies/settings/story_tags', { company: @company }) %>
+          <% end %>
+        </div>
+
+      </div> 
+    </div> 
+
+  </div>
+</div>  

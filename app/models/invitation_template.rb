@@ -29,6 +29,11 @@ class InvitationTemplate < ApplicationRecord
   end
   before_update() { self.format_for_storage() }
 
+  after_commit do 
+    self.company.expire_fragment_cache('crowdsource') 
+    self.company.expire_ll_cache('contributions-json') if self.previous_changes.key?('name')
+  end
+
   def button_style_settings
     'display: inline-block;' +
     'font-size: 1.1em;' +
@@ -65,13 +70,17 @@ class InvitationTemplate < ApplicationRecord
     self.request_body.gsub!( /\[(\w+)_link=('|")(.+?)('|")\]/, '<a href="[\1_url]" target="_blank">\3</a>')
     # re-construct buttons
     self.request_body.gsub!(/\[(\w+)_button={text:('|")(.+?)('|"),color:('|")(.+?)('|")}\]/) do |match|
-      "<a href='[#{$1}_url]' target='_blank' class='csp-cta' style='background-color:#{$6};border-color:#{$6};color:#{self.company.color_contrast($6) == "light" ? "#ffffff" : "#333333"};#{button_style_settings}'>#{$3.truncate(25)}<\/a>"
+      "<a href='[#{$1}_url]' target='_blank' class='csp-cta' style='background-color:#{$6};border-color:#{$6};color:#{InvitationTemplate.background_color_contrast($6) == "light-background" ? "#333333" : "ffffff"};#{button_style_settings}'>#{$3.truncate(25)}<\/a>"
     end
     self.request_body.sub!(/^<p>/, '<p style="margin-top:0">')
   end
 
   def default?
     ['Customer', 'Customer Success', 'Sales'].include?(self.name)
+  end
+
+  def self.background_color_contrast(hex_color)
+    ApplicationController.helpers.background_color_contrast(hex_color)
   end
 
 end

@@ -2,41 +2,44 @@
 <!-- these things only affect plugins -->
 <% plugin_type = plugin_type || nil %>
 <% background = background || nil %>
-<% logo_only = logo_only || nil %>
-<% grayscale = grayscale || nil %>
+<% is_grayscale = is_grayscale || nil %>
 <% is_pre_selected = is_pre_selected || nil %>
 
-<!-- grid__item is for the overlays; not implemented internally -->
-<a href="<%= story.csp_story_link(is_curator, is_plugin, is_external, plugin_type) %>"
-   class="public grid__item <%= plugin_type === 'gallery' ? 'grid__item--gallery' : (plugin_type === 'carousel' ? 'grid__item--carousel' : '') %> <%= is_external ? 'cs-thumbnail' : 'thumbnail' %> <%= story.status %> <%= story.video_url.present? ? 'has-video' : '' %> <%= background ? 'bg-' + background : '' %> <%= logo_only ? 'logo-only' : '' %> <%= is_pre_selected ? 'cs-loaded' : '' %>"
-   target="<%= is_external ? '_blank' : '' %>"
-   data-customer="<%= is_external ? '' : story.customer.name.to_json %>"
-   data-logosrc="<%= is_external ? '' : story.customer.logo_url %>"
-   data-summary="<%= is_external ? '' : story.summary.try(:to_json) %>"
-   data-quote="<%= is_external ? '' : story.quote.try(:to_json) %>"
-   data-quote-attr-name="<%= is_external ? '' : story.quote_attr_name.try(:to_json) %>"
-   data-quote-attr-title="<%= is_external ? '' : story.quote_attr_title.try(:to_json) %>"
-   data-preview-contributor="<%#= is_external ? '' : story.preview_contributor %>">
+<div class="<%= card_class %>" data-story-id="<%= story.id %>" <%= %> <%= is_pre_selected ? 'cs-loaded' : '' %>>
 
-  <div class="thumbnail-view">
-    <% if story.title.present? && !logo_only %>
-      <div class='thumbnail-view-hover'>
-        <p><%= story.title %></p>
+  <!-- grid__item is for the overlays; not implemented internally -->
+  <a href="<%= story.csp_story_link(is_dashboard, is_plugin, is_external, plugin_type) %>"
+    class="story-card__link grid__item <%= plugin_type === 'carousel' ? 'grid__item--carousel' : '' %> <%= story.status %> <%= story.video_url.present? ? 'has-video' : '' %> <%= background ? 'bg-' + background : '' %>"
+    target="<%= is_external ? '_blank' : '' %>"
+    data-customer="<%= is_external ? '' : story.customer.name.to_json %>"
+    data-logosrc="<%= is_external ? '' : story.customer.logo_url %>"
+    data-summary="<%= is_external ? '' : story.summary.try(:to_json) %>"
+    data-quote="<%= is_external ? '' : story.quote.try(:to_json) %>"
+    data-quote-attr-name="<%= is_external ? '' : story.quote_attr_name.try(:to_json) %>"
+    data-quote-attr-title="<%= is_external ? '' : story.quote_attr_title.try(:to_json) %>"
+    data-preview-contributor="<%#= is_external ? '' : story.preview_contributor %>">
+
+    <div class="story-card__content">
+      <% if story.title.present? %>
+        <div class="story-card__title">
+          <p><%= story.title %></p>
+        </div>
+      <% end %>
+      <div class="story-card__logo">
+        <img src="<%= story.customer.logo_url || LOGO_PLACEHOLDER_URL %>">
       </div>
-    <% end %>
-    <img class="<%= grayscale ? 'grayscale' : '' %>" src="<%= story.customer.logo_url || LOGO_PLACEHOLDER_URL %>">
-  </div>
+    </div>
 
-  <div class="caption">
-    <% unless logo_only %>
-      <span class="customer-name"><%= story.customer.name %></span>
-    <% end %>
-    <span class="click-action"></span>
-  </div>
+    <div class="story-card__caption">
+      <span class="story-card__customer"><%= story.customer.name %></span>
+      <span class="story-card__cta"></span>
+    </div>
+    
+    <div class="story-card__loading">
+      <i class="fa fa-spin fa-circle-o-notch"></i>
+    </div>
 
-  <div class="icon-container">
-    <i class="fa fa-spin fa-circle-o-notch"></i>
-  </div>
+  </a>
 
-</a>
+</div>
 

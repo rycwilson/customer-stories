@@ -1,17 +1,4 @@
 
-.row.successes-header {
-  height: 125px;
-  button {
-    width: 188px;
-    margin-left: 50px;
-  }
-  // .dropdown {
-  //   button, .dropdown-menu {
-  //     width: 188px;
-  //   }
-  // }
-}
-
 #successes-table {
   /**
    * hide sorting icon for successes; doesn't presently work in light of row grouping

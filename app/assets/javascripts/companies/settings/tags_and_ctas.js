@@ -42,10 +42,13 @@ function storyCTAsListeners () {
   $(document)
 
     .on('click', '.section-header .help-block a', function () {
-      $(this).closest('.help-block').find('a').each(function () {
-        $(this).toggle();
-      });
-      $(this).closest('.section-header').find('p.help-block').toggle();
+      $(this)
+        .add($(this).siblings())
+          .toggle()
+          .end()
+        .closest('.section-header')
+          .find('p.help-block')
+            .toggle();
     })
 
     .on('click', '#primary-cta [data-target="#new-cta-modal"]', function () {

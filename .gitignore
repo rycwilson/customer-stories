@@ -13,9 +13,9 @@
 /log
 !/log/.keep
 /tmp
+yarn-error.log
 
 /public/packs
-/yarn-error.log
 /node_modules
 
 # ssl certificates
@@ -23,6 +23,8 @@
 
 # dependencies
 /vendor/assets
+
+
 
 # figaro-managed credentials
 # no push to either github or heroku

@@ -5,15 +5,12 @@
 //= require ../plugins/config
 
 function companiesEdit () {
+  var fragment = location.href.match(/#(company-profile|crowdsource|plugins|ctas|tags)$/) &&
+                 location.href.match(/#(company-profile|crowdsource|plugins|ctas|tags)$/)[1];
 
+  $('a[href="#edit-' + fragment || 'company-profile' + '"]').tab('show');
   $('.dropdown.company-settings').addClass('active');
 
-  var url = document.location.toString();
-  if (url.match('#')) {
-    $('.nav-layout-sidebar a[href="#edit-' + url.split('#')[1] + '"]').tab('show');
-  } else {
-    $('.nav-layout-sidebar a[href="#edit-company-profile"]').tab('show');
-  }
   $('.layout-main').show();
 
   $(document)
@@ -24,14 +21,14 @@ function companiesEdit () {
       }
     })
 
-    .one('click', '.workflow-tabs', function () {
+    .one('click', '.nav-workflow', function () {
       if ($('.dropdown.company-settings').hasClass('active')) {
         $('.dropdown.company-settings').removeClass('active');
       }
     })
 
-    .on('shown.bs.tab', '.nav-layout-sidebar a', function (e) {
-      window.location.hash = e.target.hash.replace('edit-', '');
+    .on('shown.bs.tab', '.nav--company-settings a', function (e) {
+      location.hash = e.target.hash.replace('edit-', '');
       window.scrollTo(0, 0);
     })
 

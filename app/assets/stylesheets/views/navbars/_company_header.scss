@@ -1,33 +1,28 @@
 
-#company-header {
+
+.company-header__logo {
+  display: flex;
+  align-items: center;
+  padding: 0;
+  img {
+    max-height: $company-logo-max-height;
+  }
+}
+
+.company-header {
   /* color1, color2, and text color are defined in company model */
   /* background-color set to transparent in mvpready-admin.css */
   background-clip: border-box;
   border: 0;
   height: $company-header-height;
+  margin-bottom: 0;
+  border-radius: 0;
   .navbar-container {
     height: 100%;
     .row {
       height: 100%;
       display: flex;
       align-items: center;
-      .navbar-header {
-        a {
-          display: flex;
-          align-items: center;
-          padding: 0;
-          img {
-            max-height: 50px;
-          }
-        }
-        &.pixlee {
-          a {
-            img {
-              max-height: 20px;
-            }
-          }
-        }
-      }
 
       // here we are adding an absolutely positioned element for the text
       // so the btn background can be darkened without darkening text
@@ -74,8 +69,5 @@
       }
 
     }
-  }
-  .stories.index &, .stories.show & {
-    height: 70px;
   }
 }

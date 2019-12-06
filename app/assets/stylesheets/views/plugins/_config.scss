@@ -1,292 +1,73 @@
 
-.companies.edit {
-
-  #edit-plugins {
-
-    // @import '../../../../../vendor/assets/bower_components/select2.sortable/select2.sortable';
-    @import '../../../../../vendor/assets/jquery-ui-1.12.1.custom/jquery-ui';
-    @import '../../../../../vendor/assets/jquery-ui-1.12.1.custom/jquery-ui.structure';
-
-    $form-width: 550px;
-
-    p.lead {
-      margin-bottom: 25px;
-    }
-    .form-horizontal {
-      margin-left: -30px;
-      .help-block {
-        display: inline-block;
-        margin-bottom: 5px;
-      }
-      .form-group.type {
-        margin-bottom: 0;
-      }
-      .settings-container {
-        // collapse is jumpy when padding in collapsed element or margins in surrounding elements
-        padding: 10px 0 20px 0;
-        .form-group.settings {
-          margin-bottom: 0;  // margin makes the collapse jumpy
-          .gallery .form-group.max-rows {
-            width: 100%;
-            .input-group.spinner {
-              width: 60px;
-              input {
-                text-align: right;
-              }
-              .input-group-btn-vertical {
-                position: relative;
-                white-space: nowrap;
-                width: 2%;
-                vertical-align: middle;
-                display: table-cell;
-              }
-              .input-group-btn-vertical > .btn {
-                display: block;
-                float: none;
-                width: 100%;
-                max-width: 100%;
-                padding: 8px;
-                margin-left: -1px;
-                position: relative;
-                border-radius: 0;
-              }
-              .input-group-btn-vertical > .btn:first-child {
-                border-top-right-radius: 4px;
-              }
-              .input-group-btn-vertical > .btn:last-child {
-                margin-top: -2px;
-                border-bottom-right-radius: 4px;
-              }
-              .input-group-btn-vertical i {
-                position: absolute;
-                top: 0;
-                left: 4px;
-              }
-              &.disabled {
-                opacity: 0.5;
-                pointer-events: none;
-              }
-            }
-            .checkbox {
-              padding-top: 3px;
-              margin-left: 15px;
-              label {
-                margin-top: 0;    // these get it to match the other checkboxes
-                margin-right: 4px;
-                input {
-                  margin-right: 4px;
-                }
-              }
-            }
-            .help-block {
-              margin-top: 15px;
-            }
-          }
-          .gallery {
-            .form-inline {
-              height: 128px;
-              width: $form-width;
-              display: inline-block;  // only as wide as contents allows for background shading
-              padding: 20px 15px;
-              background: #efefef;
-              .form-group {
-                margin-left: 0;
-                margin-right: 0;
-                label.control-label {
-                  padding-top: 2px;
-                  margin-bottom: 5px;
-                  margin-right: 10px;
-                }
-              }
-            }
-          }
-          .carousel .row {
-            margin-left: 0;
-            margin-right: 0;
-            height: 128px;  // matches the slightly larger tabbed carousel settings
-            width: $form-width;
-            padding: 15px;
-            padding-top: 20px;
-            background: #efefef;
-            label {
-              padding-top: 5px;
-              &.control-label {
-                padding-left: 0px;
-              }
-            }
-            .btn-group {
-              height: 34.5px;  // matches height of the form-inline
-            }
-          }
-          .tabbed-carousel .form-group.delay {
-            width: 100%;
-            .help-block {
-              display: inline-block;
-              padding-left: 8px;
-            }
-            .input-group.spinner {
-              width: 60px;
-              input {
-                text-align: right;
-              }
-              .input-group-btn-vertical {
-                position: relative;
-                white-space: nowrap;
-                width: 2%;
-                vertical-align: middle;
-                display: table-cell;
-              }
-              .input-group-btn-vertical > .btn {
-                display: block;
-                float: none;
-                width: 100%;
-                max-width: 100%;
-                padding: 8px;
-                margin-left: -1px;
-                position: relative;
-                border-radius: 0;
-              }
-              .input-group-btn-vertical > .btn:first-child {
-                border-top-right-radius: 4px;
-              }
-              .input-group-btn-vertical > .btn:last-child {
-                margin-top: -2px;
-                border-bottom-right-radius: 4px;
-              }
-              .input-group-btn-vertical i {
-                position: absolute;
-                top: 0;
-                left: 4px;
-              }
-            }
-          }
-          .tabbed-carousel {
-            .form-inline {
-              width: $form-width;
-              display: inline-block;  // only as wide as contents allows for background shading
-              padding-left: 15px;
-              padding-right: 15px;
-              background: #efefef;
-              &:first-of-type {
-                padding-top: 20px;
-                padding-bottom: 10px;
-              }
-              &:last-of-type {
-                padding-top: 10px;
-                padding-bottom: 20px;
-              }
-              .form-group {
-                margin-left: 0;
-                margin-right: 0;
-                label {
-                  padding-top: 2px;
-                  margin-bottom: 5px;
-                  margin-right: 10px;
-                }
-                .minicolors {
-                  display: inline-block;
-                  input {
-                    margin-right: 20px;
-                  }
-                }
-              }
-            }
-
-          }
-
-        }
-      }
-      .form-group.content__btn-group {
-        margin-bottom: 5px;
-        .btn-group {
-          display: block;
-          margin-bottom: 5px;
-        }
-      }
-
-
-      .form-group.content__select {
-        margin-bottom: 25px;
-        .content__select--custom, .content__select--category, .content__select--product {
-          width: $form-width;
-        }
-        // overrride select bootstrap theme settings
-        .select2-container--bootstrap .select2-selection--multiple {
-          .select2-selection__choice__remove {
-            margin: 0 6px;
-          }
-          .select2-selection__choice {
-            border-color: transparent;
-            background-color: #eee;
-          }
-        }
-        .content__select--custom .select2-selection__choice {
-          cursor: pointer;  // drag and drop
-          width: 100%;
-          padding: 5px 0;
-        }
-        // https://github.com/select2/select2-bootstrap-theme/issues/77
-        .select2-container .select2-selection__rendered > *:first-child.select2-search--inline {
-          width: 100% !important;
-        }
-        .select2-container .select2-selection__rendered > *:first-child.select2-search--inline .select2-search__field {
-          cursor: pointer;
-          width: 100% !important;
-        }
-        .content__select--category, .content__select--product {
-          display: none;
-        }
-      }
-      .form-group.code {
-        margin-bottom: 10px;
-        .btn {
-          width: 100px;
-          & + .btn {
-            margin-left: 5px;
-          }
-          &.copy i:last-of-type {
-            display: none;
-          }
-        }
-      }
-      .script-tag {
-        width: $form-width;
-        // position: relative;
-        // textarea {
-          // padding: 10px 12px;
-        // }
-        // button {
-        //   border: none;
-        //   background: none;
-        //   position: absolute;
-        //   right: 0;
-        //   top: 2px;
-        //   padding: 8px;
-        //   .fa-clipboard {
-        //     font-size: 16px;
-        //     color: #666;
-        //   }
-        //   &:hover .fa-clipboard {
-        //     color: #222;
-        //   }
-        // }
-      }
-
-      // select2: fixes word text wrap issues on long select values
-      // ref https://github.com/select2/select2/issues/4585
-      li.select2-selection__choice {
-          max-width: 100%;
-          overflow: hidden;
-          text-overflow: ellipsis; //use this if you want to shorten
-      }
-
-      ul.select2-selection__rendered {
-          padding-right: 12px !important; //overrides select2 style
-      }
-    }
-
-
-
+.plugin-config {
+  @include horizontal-form;
+  & .plugin-config__type, 
+  & .plugin-config__content-buttons, 
+  & .plugin-config__code-buttons {
+    margin-bottom: 10px;
   }
+}
 
+.plugin-config__type-settings {
+  .form-group {
+    margin: 0;
+  }
+  .help-block {
+    margin: 10px 0;
+  }
+  label {
+    margin-right: 5px;
+  }
+  .tab-content {
+    padding: 15px;
+    background-color: $medium-gray;
+  }
+  .input-group.spinner {
+    @include fa-spinner(60px);
+  }
+  .tab-pane--gallery {
+    .checkbox {
+      display: inline-flex;
+      align-items: center;
+      padding: 0;
+      input {
+        margin: 0 5px 0 20px;
+      }
+    }
+  }
+  .tab-pane--carousel {
+    .control-label {
+      margin-right: 15px;
+    }
+  }
+  .tab-pane--tabbed-carousel {
+    [name="tabbed_carousel[tab_color]"] {
+      margin-right: 15px;
+    }
+    .form-inline:first-child {
+      margin-bottom: 15px;
+    }
+    .minicolors {
+      display: inline-block;
+    }
+  }
+}
+
+.plugin-config__content-select {
+  // show/hide on the select2 input doesn't work well => use a parent container
+  > div > div:not(:first-child) {
+    display: none;
+  }
+}
+
+.plugin-config__code-buttons {
+  .btn {
+    width: 100px;
+    & + .btn {
+      margin-left: 5px;
+    }
+    &.copy i:last-of-type {
+      display: none;
+    }
+  }
 }

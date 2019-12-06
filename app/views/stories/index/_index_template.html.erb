@@ -5,50 +5,60 @@
 
     {{ var storySlug = story.csp_story_path.match(/\/((\w|-)+)$/)[1]; }}
     {{ var customerSlug = story.csp_story_path.match(/^\/((\w|-)+)\//)[1]; }}
+    {{ var companyClass = 'story-card--' + subdomain; }}
 
     <!-- // single quotes cause trouble -->
     {{ var summary = JSON.stringify(story.summary).replace(/'/g, "&#39"); }}
     {{ var quote = JSON.stringify(story.quote).replace(/'/g, "&#39"); }}
 
-    <li class='grid-item' data-story-id="{{= story.id }}" data-story-slug="{{= storySlug }}" data-customer-slug="{{= customerSlug }}">
+    <li style="display: inline-block; vertical-align: top">
 
-      <a href="{{= isCurator ? 'javascript:;' : (story.published && story.csp_story_path) || (story.preview_published && 'javascript:;') || '' }}"
-         class="thumbnail {{= isCurator ? 'curator' : 'public' }} {{= story.published ? 'published' : (story.preview_published ? 'preview-published' : (story.logo_published ? 'logo-published' : 'pending-curation')) }}"
-         data-logosrc="{{= story.success.customer.logo_url }}"
-         data-customer='{{= JSON.stringify(story.success.customer.name) }}'
-         data-summary='{{= summary }}'
-         data-quote='{{= quote }}'
-         data-quote-attr-name='{{= JSON.stringify(story.quote_attr_name) }}'
-         data-quote-attr-title='{{= JSON.stringify(story.quote_attr_title) }}'
-         data-preview-contributor='{{= JSON.stringify(story.published_contributors[0]) }}'">
+      <div class="story-card {{= isDashboard ? 'story-card--small story-card--dashboard' : companyClass }} story-card--{{= (story.published && 'published') || (story.preview_published && 'preview-published') || (story.logo_published && 'logo-published') || ''}}"
+            data-story-id="{{= story.id }}" data-story-slug="{{= storySlug }}" data-customer-slug="{{= customerSlug }}">
 
-        <div class="thumbnail-view">
+        <a href="{{= isDashboard ? 'javascript:;' : (story.published && story.csp_story_path) || (story.preview_published && 'javascript:;') || '' }}"
+          class="story-card__link {{= isDashboard ? 'curator' : 'public' }} {{= story.published ? 'published' : (story.preview_published ? 'preview-published' : (story.logo_published ? 'logo-published' : 'pending-curation')) }}"
+          data-logosrc="{{= story.success.customer.logo_url }}"
+          data-customer='{{= JSON.stringify(story.success.customer.name) }}'
+          data-summary='{{= summary }}'
+          data-quote='{{= quote }}'
+          data-quote-attr-name='{{= JSON.stringify(story.quote_attr_name) }}'
+          data-quote-attr-title='{{= JSON.stringify(story.quote_attr_title) }}'
+          data-preview-contributor='{{= JSON.stringify(story.published_contributors[0]) }}'">
 
-          {{ if (story.title) { }}
-            <div class='thumbnail-view-hover'>
-              <p>{{= story.title }}</p>
+          <div class="story-card__content">
+
+            {{ if (story.title) { }}
+              <div class="story-card__title">
+                <p>{{= story.title }}</p>
+              </div>
+            {{ } }}
+
+            <div class="story-card__logo">
+
+              {{ if (story.success.customer.logo_url) { }}
+                <img src="{{= story.success.customer.logo_url }}">
+              {{ } else { }}
+                <img src="<%= LOGO_PLACEHOLDER_URL %>">
+              {{ } }}
+
             </div>
-          {{ } }}
 
-          {{ if (story.success.customer.logo_url) { }}
-            <img src="{{= story.success.customer.logo_url }}">
-          {{ } else { }}
-            <img src="<%= LOGO_PLACEHOLDER_URL %>">
-          {{ } }}
+          </div>
 
-        </div>
+          <div class="story-card__caption caption">
+            <span class="story-card__customer customer-name">{{= story.success.customer.name }}</span>
+            <span class="story-card__cta click-action"></span>
+          </div>
 
-        <div class="caption">
-          <span class="customer-name">{{= story.success.customer.name }}</span>
-          <span class="click-action"></span>
-        </div>
+          <div class="story-card__loading icon-container">
+            <i class="fa fa-spin fa-circle-o-notch"></i>
+          </div>
 
-        <div class="icon-container">
-          <i class="fa fa-spin fa-circle-o-notch"></i>
-        </div>
+        </a>
 
-      </a>
-
+      </div>
+    
     </li>
 
   {{ }); }}

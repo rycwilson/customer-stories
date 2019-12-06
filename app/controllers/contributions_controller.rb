@@ -25,29 +25,34 @@ class ContributionsController < ApplicationController
       }.to_json
 
     else  # datatables source data (contributors)
-      if params[:success_id]
-        contributions = Success.find(params[:success_id]).contributions
-      else
-        contributions = company.contributions
+      contributions = params[:success_id].present? ? 
+                        Success.find(params[:success_id]).contributions :
+                        company.contributions  
+      cache_key = params[:success_id].present? ? 
+                    "#{company.subdomain}/successes/#{params[:success_id]}/contributions-json" :
+                    "#{company.subdomain}/contributions-json"
+      data = Rails.cache.fetch(cache_key) do
+        contributions.to_json({
+          only: [:id, :status, :publish_contributor, :contributor_unpublished],
+          methods: [:display_status, :timestamp],
+          include: {
+            success: {
+              only: [:id, :customer_id, :curator_id, :name],
+              include: {
+                curator: { only: [:id], methods: [:full_name] },
+                customer: { only: [:id, :name, :slug] },
+                story: { 
+                  only: [:id, :title, :published, :slug],
+                  methods: [:csp_story_path] 
+                }
+              }
+            },
+            contributor: { only: [:id, :email, :first_name, :last_name, :phone, :title, :linkedin_url], methods: [:full_name] },
+            referrer: { only: [:id, :email, :first_name, :last_name, :title], methods: [:full_name] },
+            invitation_template: { only: [:id, :name] },
+          }
+        })
       end
-      data = contributions.to_json({
-        only: [:id, :status, :publish_contributor, :contributor_unpublished],
-        methods: [:display_status, :timestamp],
-        include: {
-          success: {
-            only: [:id, :customer_id, :curator_id, :name],
-            include: {
-              curator: { only: [:id], methods: [:full_name] },
-              customer: { only: [:id, :name, :slug] },
-              story: { only: [:id, :title, :published, :slug],
-                       methods: [:csp_story_path] }
-            }
-          },
-          contributor: { only: [:id, :email, :first_name, :last_name, :phone, :title, :linkedin_url], methods: [:full_name] },
-          referrer: { only: [:id, :email, :first_name, :last_name, :title], methods: [:full_name] },
-          invitation_template: { only: [:id, :name] },
-        }
-      })
     end
     # pp(JSON.parse(data))
     respond_to { |format| format.json { render({ json: data }) } }

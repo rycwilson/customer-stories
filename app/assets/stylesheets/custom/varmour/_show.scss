@@ -1,5 +1,5 @@
 
-&.stories.show {
+.stories.show {
 
   .testimonial, .cs-testimonial {
     font-family: $metropolis-regular;
@@ -18,16 +18,16 @@
       }
     }
     &:after {
-      background-image: linear-gradient(to top, $bg-color 0%, #ffffff 100%);  //f2f2f2
+      background-image: linear-gradient(to top, $varmour-gray 0%, #ffffff 100%);  //f2f2f2
     }
   }
 
-  .story-video-xs, .cs-story-video-xs, .social-buttons-xs, .cs-social-buttons-xs {
-    background-color: $bg-color;
+  .story-video-xs, .cs-story-video-xs, .share-buttons-xs, .cs-share-buttons-xs {
+    background-color: $varmour-gray;
   }
 
   .story-content, .cs-story-content {
-    background-color: $bg-color;
+    background-color: $varmour-gray;
     font-family: $metropolis-regular;
     h4 {
       font-family: $metropolis-regular;
@@ -37,12 +37,12 @@
   @media only screen and (max-width: 767px) {
     &.cs-overlay-container {
       .cs-content.content--show {
-        background: $bg-color;
+        background: $varmour-gray;
       }
     }
     .testimonial, .cs-testimonial {
     }
-    .story-video-xs, .cs-story-video-xs, .social-buttons-xs, .cs-social-buttons-xs {
+    .story-video-xs, .cs-story-video-xs, .share-buttons-xs, .cs-share-buttons-xs {
       background-color: #fff;
     }
     .story-content, .cs-story-content {

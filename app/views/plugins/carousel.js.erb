@@ -6,12 +6,12 @@ function cspInitCarousel ($, $container, preSelectedStoryIndex, subdomain) {
 
   var $carousel = $container.find('.row-horizon'),
       $columns = $carousel.children(),
-      $stories = $columns.children(),
+      $stories = $columns.find('.story-card a'),
       storyWidth = $stories.first().width() + 15, // +
                    // parseInt( $columns.first().css('padding-left'), 10 ) +
                    // parseInt( $columns.first().css('padding-right'), 10 ),
-      $pagination = $container.find('.cs-pagination'),
-      $paginationXs = $container.find('.cs-pagination-xs'),
+      $pagination = $container.find('.cs-carousel__pagination'),
+      $paginationXs = $container.find('.cs-carousel__pagination-xs'),
       currentStoryIndex,  // this is set before adjusting
       numPages, pageWidth,  // these are set after adjusting
       currentPage = 0,  // 0-based paging
@@ -25,13 +25,16 @@ function cspInitCarousel ($, $container, preSelectedStoryIndex, subdomain) {
           currentPage -= 1;
           var scrollTime = Math.round($carousel.width() / 2);
           [ $pagination, $paginationXs ].forEach(function ($p) {
-            $p.children('.cs-current-page-dot').removeClass('cs-current-page-dot');
-            $p.children().eq(currentPage).addClass('cs-current-page-dot');
+            $p.children('.cs-carousel__page-dot--current')
+              .removeClass('cs-carousel__page-dot--current');
+            $p.children('.cs-carousel__page-dot')
+              .eq(currentPage)
+                .addClass('cs-carousel__page-dot--current');
           });
           $carousel.animate({ scrollLeft: '-=' + $carousel.css('width') }, scrollTime);
           $container
-            .find('.cs-current-page-num')
-            .text((currentPage + 1).toString() + ' of ' + numPages.toString())
+            .find('.cs-carousel__page-count-xs')
+              .text((currentPage + 1).toString() + ' of ' + numPages.toString())
         }
       },
       // need to have the ability to scroll to a pre-selected story here, else the closing action
@@ -42,8 +45,8 @@ function cspInitCarousel ($, $container, preSelectedStoryIndex, subdomain) {
           currentPage += 1;
           var scrollTime = Math.round($carousel.width() / 2);
           [ $pagination, $paginationXs ].forEach(function ($p) {
-            $p.children('.cs-current-page-dot').removeClass('cs-current-page-dot');
-            $p.children().eq(currentPage).addClass('cs-current-page-dot');
+            $p.children('.cs-carousel__page-dot--current').removeClass('cs-carousel__page-dot--current');
+            $p.children().eq(currentPage).addClass('cs-carousel__page-dot--current');
           });
           $carousel.animate(
             { scrollLeft: '+=' + $carousel.css('width') },
@@ -57,8 +60,8 @@ function cspInitCarousel ($, $container, preSelectedStoryIndex, subdomain) {
             }
           );
           $container
-            .find('.cs-current-page-num')
-            .text((currentPage + 1).toString() + ' of ' + numPages.toString())
+            .find('.cs-carousel__page-count-xs')
+              .text((currentPage + 1).toString() + ' of ' + numPages.toString())
         }
       },
       adjustColumns = function () {
@@ -85,14 +88,14 @@ function cspInitCarousel ($, $container, preSelectedStoryIndex, subdomain) {
         if ($carousel.width() >= 4 * storyWidth) {
           $columns.css('width', Math.floor($carousel.width() / 4).toString() + 'px');
           if ($columns.length <= 4) {
-            $container.find('.cs-scroll div').hide();
+            $container.find('.cs-carousel__arrow button').hide();
           }
 
         } else if ($carousel.width() >= 3 * storyWidth) {
           lastIsShortSingle = $columns.length % 3 === 1, lastIsShortDouble = $columns.length % 3 === 2;
           // no scroll arrow if not needed
           if ($columns.length <= 3) {
-            $container.find('.cs-scroll div').hide();
+            $container.find('.cs-carousel_arrow button').hide();
           }
           // adjust columns
           $columns.css('width', Math.floor($carousel.width() / 3).toString() + 'px');
@@ -149,7 +152,7 @@ function cspInitCarousel ($, $container, preSelectedStoryIndex, subdomain) {
           lastIsShortSingle = $columns.length % 2 !== 0;
           // no scroll arrow if not needed
           if ($columns.length <= 2) {
-            $container.find('.cs-scroll div').hide();
+            $container.find('.cs-carousel__arrow button').hide();
           }
           // adjust column size
           $columns.css('width', Math.floor($carousel.width() / 2).toString() + 'px');
@@ -179,7 +182,7 @@ function cspInitCarousel ($, $container, preSelectedStoryIndex, subdomain) {
         } else {
           $columns.css('width', $carousel.css('width'));
           if ($columns.length === 1) {
-            $container.find('.cs-scroll div').hide();
+            $container.find('.cs-carousel__arrow button').hide();
           }
         }
 
@@ -197,49 +200,52 @@ function cspInitCarousel ($, $container, preSelectedStoryIndex, subdomain) {
           });
           if (numPages > 8 && $(window).width() <= 500) {
             $paginationXs.append(
-              '<span class="cs-current-page-num" style="color: #999">' + (currentPage + 1).toString() + ' of ' + numPages.toString() + '</span>'
+              '<span class="cs-carousel__page-count-xs">' + (currentPage + 1).toString() + ' of ' + numPages.toString() + '</span>'
             );
           } else if ($(window).width() <= 500) {
             for (var i = 0; i < numPages; i++) {
               if (i === currentPage) {
-                $paginationXs.append("<div class='cs-page-dot cs-current-page-dot'></div>");
+                $paginationXs.append("<div class='cs-carousel__page-dot cs-carousel__page-dot--current'></div>");
               } else {
-                $paginationXs.append("<div class='cs-page-dot'></div>");
+                $paginationXs.append("<div class='cs-carousel__page-dot'></div>");
               }
             }
           } else {
             for (var i = 0; i < numPages; i++) {
               if (i === currentPage) {
-                $pagination.append("<div class='cs-page-dot cs-current-page-dot'></div>");
+                $pagination.append("<div class='cs-carousel__page-dot cs-carousel__page-dot--current'></div>");
               } else {
-                $pagination.append("<div class='cs-page-dot'></div>");
+                $pagination.append("<div class='cs-carousel__page-dot'></div>");
               }
             }
           }
         }
         initialAdjust = false;
       }; // adjust columns
+      
   // scroll listeners
-  $container.find('.cs-scroll-left, .cs-scroll-xs-left').on('click', arrowLeft);
-  $container.find('.cs-scroll-right, .cs-scroll-xs-right').on('click', arrowRight);
+  $container.find('.cs-carousel__arrow--left button, .cs-carousel__arrow-xs--left').on('click', arrowLeft);
+  $container.find('.cs-carousel__arrow--right button, .cs-carousel__arrow-xs--right').on('click', arrowRight);
+
+  $('.cs-carousel__arrow button').on('click', function () { $(this).blur(); });
 
   // initial adjustment
   adjustColumns();
 
   // prev / next navigation
-  $('.cs-prev').on('click', function (e) {
-    $('.cs-next').removeClass('bookend');
-    $('.cs-scroll-left').trigger('click');
+  $('.cs-carousel__prev').on('click', function (e) {
+    $('.cs-carousel__next').removeClass('cs-carousel__next--bookend');
+    $('.cs-carousel__arrow--left button').trigger('click');
     if (currentPage === 0) {
-      $(this).addClass('bookend')
+      $(this).addClass('cs-carousel__prev--bookend')
     }
   })
 
-  $('.cs-next').on('click', function (e) {
-    $('.cs-prev').removeClass('bookend')
-    $('.cs-scroll-right').trigger('click');
+  $('.cs-carousel__next').on('click', function (e) {
+    $('.cs-carousel__prev').removeClass('cs-carousel__prev--bookend')
+    $('.cs-carousel__arrow--right button').trigger('click');
     if (currentPage === numPages - 1) {
-      $(this).addClass('bookend')
+      $(this).addClass('cs-carousel__next--bookend')
     }
   })
 
@@ -247,23 +253,23 @@ function cspInitCarousel ($, $container, preSelectedStoryIndex, subdomain) {
   numPages = Math.ceil($carousel.prop('scrollWidth') / $carousel.width());
   if (numPages > 8 && $(window).width() <= 500) {
     $paginationXs
-      .append('<span class="cs-current-page-num" style="color:#999">' +
+      .append('<span class="cs-carousel__page-count-xs">' +
                 (currentPage + 1).toString() + ' of ' + numPages.toString() +
               '</span>');
   } else if ($(window).width() <= 500) {
     for (var i = 0; i < numPages; i++) {
       if (i === 0) {
-        $paginationXs.append("<div class='cs-page-dot cs-current-page-dot'></div>");
+        $paginationXs.append("<div class='cs-carousel__page-dot cs-carousel__page-dot--current'></div>");
       } else {
-        $paginationXs.append("<div class='cs-page-dot'></div>");
+        $paginationXs.append("<div class='cs-carousel__page-dot'></div>");
       }
     }
   } else {
     for (var i = 0; i < numPages; i++) {
       if (i === 0) {
-        $pagination.append("<div class='cs-page-dot cs-current-page-dot'></div>");
+        $pagination.append("<div class='cs-carousel__page-dot cs-carousel__page-dot--current'></div>");
       } else {
-        $pagination.append("<div class='cs-page-dot'></div>");
+        $pagination.append("<div class='cs-carousel__page-dot'></div>");
       }
     }
   }
@@ -287,16 +293,16 @@ function cspInitCarousel ($, $container, preSelectedStoryIndex, subdomain) {
     var $preSelectedStoryCard = $carousel.find('a').eq(preSelectedStoryIndex);
     if ($preSelectedStoryCard.parent().position().left + $preSelectedStoryCard.outerWidth(true) > $carousel.width()) {
       $.when(scrollToStory).done(function () {
-        $container.find('.cs-container-fluid').css('visibility', 'visible');
+        $container.find('.cs-carousel').css('visibility', 'visible');
         $container[0].scrollIntoView({ block: 'center' });
       });
       arrowRight(null, preSelectedStoryIndex);
     } else {
-      $container.find('.cs-container-fluid').css('visibility', 'visible');
+      $container.find('.cs-carousel').css('visibility', 'visible');
       $container[0].scrollIntoView({ block: 'center' });
     }
   } else {
-    $container.find('.cs-container-fluid').css('visibility', 'visible');
+    $container.find('.cs-carousel').css('visibility', 'visible');
   }
 
   if (subdomain === 'pixlee' && $container.parent().next().is('div.pagination')) {

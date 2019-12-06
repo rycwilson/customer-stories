@@ -1,18 +1,6 @@
 
-.row.contributors-header {
-  height: 150px;
-  button {
-    width: 170px;
-    margin-left: 50px;
-  }
-  // .dropdown {
-  //   button, .dropdown-menu {
-  //     width: 170px
-  //   }
-  // }
-}
-
 #prospect-contributors-table, #curate-contributors-table {
+  
   /**
    * hide sorting icon for contributors; doesn't presently work in light of row grouping
    */

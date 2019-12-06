@@ -104,25 +104,25 @@ function storiesEditSettingsListeners () {
 
     })
 
-    .on('focus', '.story__hidden-link input', function () { $(this).blur(); })
-    .on('click', '.story__refresh-hidden-link', function () {
+    .on('focus', '.hidden-link input', function () { $(this).blur(); })
+    .on('click', '.hidden-link__refresh', function () {
       $(this).blur();
       var hiddenLink = [location.origin, chance.guid()].join('/');
-      $('.story__hidden-link input').val(hiddenLink);
-      $('.story__copy-hidden-link')
+      $('.hidden-link input').val(hiddenLink);
+      $('.hidden-link__copy')
         .attr('title', 'Save changes to enable Copy')
         .tooltip('fixTitle')
         .addClass('disabled')
     })
-    .on('click', '.story__copy-hidden-link', function (e) {
+    .on('click', '.hidden-link__copy', function (e) {
+      $(this).blur();
       if ($(this).is('.disabled')) {
-        $(this).blur();
         e.stopPropagation();
         return false;
       }
       var $temp = $('<input />');
       $('body').append($temp);
-      $temp.val($('.story__hidden-link input').val())
+      $temp.val($('.hidden-link input').val())
            .select();
       document.execCommand('copy');
       $temp.remove();
@@ -131,7 +131,7 @@ function storiesEditSettingsListeners () {
         .tooltip('fixTitle')
         .tooltip('show')
         .one('hidden.bs.tooltip', function () {
-          $('.story__copy-hidden-link')
+          $('.hidden-link__copy')
             .attr('title', 'Copy')
             .tooltip('fixTitle');
         });
@@ -141,38 +141,34 @@ function storiesEditSettingsListeners () {
 // the select2 boxes initialize synchronously, i.e. subsequent code doesn't
 // execute until initilization is complete.
 // pass the cbShowTab callback to the bs-switch onInit property
-function initStoriesEditSettings (cbShowTab) {
-
-  initS3Upload();
-
-  $('.story-settings.story-tags').select2({
-    theme: 'bootstrap',
-    placeholder: 'Select'
-  });
-
-  $('#story-ctas-select').select2({
-    theme: 'bootstrap',
-    placeholder: 'Select'
-  });
-
-  $('#story-settings-form').parent().removeClass('hidden')
-  if (cbShowTab) cbShowTab();
-
-  $('.bs-switch.publish-control').bootstrapSwitch({
-    size: 'small',
-    onInit: function (e) {
-      // TODO: not sure why this was necessary, probably remove it
-      // // without the timeout, one switch is briefly on (?)
-      // setTimeout(function () {
-      //   $('#story-settings-form').parent().removeClass('hidden');
-      //   if (cbShowTab) {
-      //     $(window).one('shown.bs.tab', function () {
-      //       window.scrollTo(0,0);
-      //     });
-      //     cbShowTab();
-      //   }
-      // }, 0);
+function initStoriesEditSettings(shownTabHandler) {
+  var initSelectInputs = function () {
+        $('.story-settings.story-tags, #story-ctas-select')
+          .select2({
+            theme: 'bootstrap',
+            placeholder: 'Select'
+          })
+          .on('select2:select, select2:unselect, change.select2', function () {
+            $(this).next('.select2')
+                    .find('.select2-selection__choice__remove')
+                      .html('<i class="fa fa-fw fa-remove"></i>');
+          })
+          .trigger('change.select2');  // manipulate the remove button
+      };
+  var initSwitchInputs = function () {
+        $('.bs-switch.publish-control').bootstrapSwitch({
+          size: 'small',
+          onInit: function (e) {}
+        });
+      };
+  $.when(initSelectInputs, initSwitchInputs).done(function () {
+    if (shownTabHandler) {
+      window.scrollTo(0, 0);
+      shownTabHandler();
     }
-  });
-
+    $('#story-settings-form').attr('data-init', true);
+  })    
+  initS3Upload();
+  initSelectInputs();
+  initSwitchInputs();
 }

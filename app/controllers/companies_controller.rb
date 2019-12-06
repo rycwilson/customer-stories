@@ -19,7 +19,7 @@ class CompaniesController < ApplicationController
     @promote_tab = request.cookies['promote-tab'] || '#promoted-stories'
     @recent_activity = Rails.cache.fetch("#{@company.subdomain}/recent-activity") { @company.recent_activity(30) }
     @story_views_30_day_count = PageView.joins(:visitor_session)
-                                 .company_story_views_since(@company.id, 30).count
+                                .company_story_views_since(@company.id, 30).count
     # note: app data is obtained via json (see set_gon() in application controller)
     @curate_view = 'stories'
   end
@@ -27,6 +27,7 @@ class CompaniesController < ApplicationController
   def edit
     redirect_to(company_settings_path) if request.path.match(/\/companies\/\d+/)
     @form_options = set_form_options(params, @company)
+    render :company_settings
   end
 
   def create
@@ -55,7 +56,10 @@ class CompaniesController < ApplicationController
         @flash = {} :
         @flash = { mesg: @company.errors.full_messages.join(', '), status: 'danger' }
     end
-    respond_to { |format| format.js }
+    respond_to do |format| 
+      @background_color_contrast = helpers.background_color_contrast(@company.header_color_2)
+      format.js {}
+    end
   end
 
   def update_gads
@@ -183,7 +187,7 @@ class CompaniesController < ApplicationController
     options = {
       html: {
         id: 'company-profile-form',
-        class: 'directUpload',
+        class: 'directUpload form-horizontal',
         data: {
           url: @s3_direct_post.url,
           host: URI.parse(@s3_direct_post.url).host,

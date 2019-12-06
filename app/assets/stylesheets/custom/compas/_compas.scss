@@ -1,15 +1,31 @@
 
-body.compas:not(.companies):not(.profile):not(.edit) {
-  font-family: "Open Sans", sans-serif;
-  h1, h2, h3, h4, h5, h6, .h1, .h2, .h3, .h4, .h5, .h6,
-  .grid-container .grid a.thumbnail .thumbnail-view .thumbnail-view-hover p {
-    font-family: "Open Sans", sans-serif;
+.company-header.company-header--compas {
+  opacity: 0.9;
+  .navbar-container {
+    .row {
+      a.primary-cta  {
+        background-color: transparent !important;
+        border-color: #e41516 !important;
+        color: #e41516 !important;
+        font-size: 13px;
+        border-radius: 20px;
+        line-height: 38px;
+        padding: 0 26px;
+        text-align: center;
+        font-weight: 600;
+        transition: background .25s ease;
+        &:hover, &:focus {
+          background: #e41516 !important;
+          color: #fff !important;
+        }
+      }
+    }
   }
+}
 
-  @import 'company_header';
-  @import 'stories_header';
-  @import 'show';
-
+.stories-header.stories-header--compas {
+  // margin-top: 0;
+  box-shadow: 0 0;
 }
 
 

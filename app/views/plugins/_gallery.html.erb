@@ -11,12 +11,11 @@
               'stories/shared/story_card',
               {
                 story: story,
-                is_curator: false,
+                card_class: story_card_class(story, false, true, is_grayscale, is_logos_only),
+                plugin_type: 'gallery',
+                is_dashboard: false,
                 is_plugin: true,
                 is_external: true,
-                grayscale: grayscale,
-                logo_only: logos_only,
-                plugin_type: 'gallery',
                 is_pre_selected: pre_selected_story.try(:id) == story.id
               }
             ) %>

@@ -29,6 +29,7 @@ $(document).on('turbolinks:load', function (e) {
   setAppData();
   constructPlugins();
   CSP.init();
+
   // ref: https://clicky.com/help/apps-plugins#rails4turbo
   // clicky.log( document.location.pathname + document.location.search, document.title, 'pageview' )
 });
@@ -54,7 +55,7 @@ function attachAppListeners () {
 
   $(document)
 
-    .on('click', '#workflow-tabs a', function (e) {
+    .on('click', '.nav-workflow a', function (e) {
       e.preventDefault();
       var currentWorkflowPath = window.location.pathname,
           newWorkflowPath = '/' + $(this).attr('href').slice(1, $(this).attr('href').length);
@@ -117,18 +118,26 @@ function attachAppListeners () {
           ),
         workflowStage = workflowMatch && workflowMatch[1],
         curateView = workflowStage && (workflowStage === 'curate') ?
-                        (workflowMatch[2] ? 'story' : 'stories') : null;
+                      (workflowMatch[2] ? 'story' : 'stories') : 
+                      null;
 
     if (workflowStage) {
-      $('#workflow-tabs a[href="#' + workflowStage + '"]').tab('show');
+      $('.nav-workflow a[href="#' + workflowStage + '"]').tab('show');
       if (curateView) {
-        $('a[href="#curate-' + curateView + '"]').tab('show');
+        if (curateView === 'stories') {
+          $('a[href=".curate-stories"]').tab('show'); 
+        } else {
+          $('a[href=".edit-story"]').tab('show');
+        }
+        
         // don't scroll to panel
         setTimeout(function() { window.scrollTo(0, 0); }, 1);
         if (curateView === 'stories') {
-          $('#curate-filters .curator').val(
-            $('#curate-filters .curator').children('[value="' + CSP.current_user.id.toString() + '"]').val()
-          ).trigger('change', { auto: true });
+          $('#curate-filters .curator')
+            .val(
+              $('#curate-filters .curator').children('[value="' + CSP.current_user.id + '"]').val()
+            )
+            .trigger('change', { auto: true });
         }
       }
     }
@@ -142,15 +151,15 @@ function attachAppListeners () {
       // console.log('turbolinks:click');
     })
 
-    .on('turbolinks:before-visit', function () {
+    .on('turbolinks:before-visit', function (e) {
       // console.log('turbolinks:before-visit');
+      // console.log($(e).originalEvent.data.url)
       // debugger;
     })
 
     .on('turbolinks:request-start', function () {
       // console.log('turbolinks:request-start');
       // debugger;
-
     })
     .on('turbolinks:visit', function () {
       // console.log('turbolinks:visit');
@@ -176,7 +185,6 @@ function attachAppListeners () {
     .on('turbolinks:render', function () {
       // console.log('turbolinks:render');
       if (document.documentElement.hasAttribute('data-turbolinks-preview')) {
-        // console.log('preview rendered');
         constructPlugins();
       }
     });

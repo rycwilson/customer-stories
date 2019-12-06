@@ -1,12 +1,12 @@
 
 function cspInitGallery ($, $container, maxRows, preSelectedStoryIndex) {
   // console.log('cspInitGallery')
-
+  
   var scrollBarWidth = window.innerWidth - document.documentElement.clientWidth;
 
   if (maxRows) {
-    var maxGalleryHeight = maxRows * $container.find('a.cs-thumbnail').first().outerHeight(true);
-    $container.find('a.cs-thumbnail').each(function () {
+    var maxGalleryHeight = maxRows * $container.find('.story-card').first().outerHeight(true);
+    $container.find('.story-card').each(function () {
       if (($(this).offset().top - $container.find('.cs-grid').offset().top) > maxGalleryHeight) {
         $(this).css('display', 'none');
       }

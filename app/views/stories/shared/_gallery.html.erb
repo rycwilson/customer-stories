@@ -1,33 +1,32 @@
 
 <ul id="stories-gallery" class="grid list-unstyled text-center <%= no_filters_present ? 'no-filters' : '' %>">
 
-  <% cache(cache_key, skip_digest: true) do %>
+  <!-- <%# cache(cache_key, skip_digest: true) do %> -->
 
     <% stories.each do |story| %>
 
-      <% cache(
+      <%# cache(
             "#{company.subdomain}/story-card-#{story.id}-memcache-iterator-#{company.story_card_fragments_memcache_iterator}",
             skip_digest: true
           ) do %>
+      <li style="display: inline-block; vertical-align: top">
 
-        <li class="grid-item" data-story-id="<%= story.id %>">
+        <%= render(
+              'stories/shared/story_card',
+              {
+                story: story,
+                card_class: story_card_class(story),
+                is_dashboard: false,
+                is_plugin: false,
+                is_external: false
+              }
+            ) %>
 
-          <%= render(
-                'stories/shared/story_card',
-                {
-                  story: story,
-                  is_curator: false,
-                  is_plugin: false,
-                  is_external: false
-                }
-              ) %>
-
-        </li>
-
-      <% end %>
+      <%# end %>
+      </li>
 
     <% end %>
 
-  <% end %>
+  <!-- <%# end %> -->
 
 </ul>

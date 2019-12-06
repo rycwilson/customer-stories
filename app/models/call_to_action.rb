@@ -5,4 +5,6 @@ class CallToAction < ApplicationRecord
   has_many :successes, through: :ctas_successes
   has_many :stories, through: :successes
 
+  after_commit { self.company.expire_fragment_cache('edit-ctas') }
+
 end

@@ -1,15 +1,10 @@
 
-<div id='measure' class="<%= workflow_stage == 'measure' ? 'active tab-pane fade in' : 'tab-pane fade' %>" role='tabpanel'>
+<div id="measure" class="<%= workflow_stage == 'measure' ? 'active tab-pane fade in' : 'tab-pane fade' %>" role='tabpanel'>
 
-  <div class="container clip">
+  <div class="container">
+    <div class="row">
 
-    <div class="layout layout-main-right layout-stack-sm">
-
-      <div class="col-md-3 col-sm-4 layout-sidebar">
-
-        <div class="nav-layout-sidebar-skip">
-          <strong>Tab Navigation</strong> / <a href="#settings-content">Skip to Content</a>
-        </div>
+      <div class="col-sm-4 col-lg-3 layout-sidebar">
 
         <ul class="nav nav-layout-sidebar nav-stacked">
 
@@ -46,7 +41,7 @@
 
       </div>
 
-      <div class="col-md-9 col-sm-8 layout-main">
+      <div class="col-sm-8 col-lg-9 layout-main">
 
         <div id="settings-content" class="tab-content stacked-content">
 
@@ -67,7 +62,7 @@
             <% cache("#{company.subdomain}/recent-activity", skip_digest: true) do %>
               <%= render 'companies/4_measure/activity_table',
                     { recent_activity: recent_activity,
-                      story_views_30_day_count: @story_views_30_day_count } %>
+                      story_views_30_day_count: story_views_30_day_count } %>
             <% end %>
 
           </div>
@@ -75,6 +70,7 @@
         <!-- </div> -->
 
       </div> <!-- /.col -->
-    </div> <!-- layout -->
+
+    </div>
   </div> <!-- container -->
 </div>  <!-- measure -->
