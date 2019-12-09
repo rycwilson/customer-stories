@@ -1,4 +1,69 @@
 
+.og-image-upload.form-group {
+  margin-bottom: 15px;
+  > [class*="col-"] {
+    width: calc(210px + 30px);  // 210 + padding
+    height: calc(115px + 30px);  // 115 + height of label and upload button
+  }
+}
+
+// specificity (nesting) needed to override jasny / bootstrap
+.og-image-upload__fileinput {
+  margin-bottom: 0;
+  .og-image-upload__thumbnail {
+    width: 210px;
+    height: 117px;
+    padding: 6px;
+    border: 1px solid #ccc; 
+    margin-bottom: 0;
+  }
+  .og-image-upload.has-error & .og-image-upload__thumbnail {
+    border-color: #a94442;
+  }
+}
+
+.og-image-upload__errors {
+  .og-image-upload.has-error & {
+    display: initial;
+  }
+  display: none; 
+  position: absolute; 
+  top: 50%; 
+  left: 50%; 
+  transform: translate(-50%, -50%); 
+  height: 100%; 
+  width: 100%;
+  > div {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+    color: #a94442;
+    i {
+      font-size: 20px;
+      margin-bottom: 8px;
+    }
+    span {
+      text-align: center;
+      font-size: 13px;
+      margin: 0;
+    }
+  }
+}
+
+.og-image-upload__button {
+  font-size: 13px; 
+  background: none; 
+  box-shadow: none; 
+  padding: 5px; 
+  color: #666;
+  &:hover, &:active {
+    box-shadow: none;
+    color: #222;
+  }
+}
+
 .hidden-link button {
   color: #666;
   &:hover {
@@ -35,7 +100,6 @@
   // TODO this (or something like it) needs to be implemented more broadly
   min-height: 100vh;
 }
-
 
 
 // #edit-story view may be loaded synchronously under stories#edit

@@ -2,6 +2,25 @@
 
 function storiesShow () {
 
+  $(document)
+    .on('click', '.a', function () {
+      $('meta[property="og:image"]').attr('content', 'https://csp-development-assets.s3-us-west-1.amazonaws.com/temp/400x400.png')
+
+    })
+    .on('click', '.b', function () {
+      $('meta[property="og:image"]').attr('content', 'https://csp-development-assets.s3-us-west-1.amazonaws.com/temp/600x600.png')
+    })
+    .on('click', '.c', function () {
+      $('meta[property="og:image"]').attr('content', 'https://csp-development-assets.s3-us-west-1.amazonaws.com/temp/1200x1200.png')
+    })
+    .on('click', '.d', function () {
+      $('meta[property="og:image"]').attr('content', 'https://csp-development-assets.s3-us-west-1.amazonaws.com/temp/600x314.png')
+    })
+    .on('click', '.e', function () {
+      $('meta[property="og:image"]').attr('content', 'https://csp-development-assets.s3-us-west-1.amazonaws.com/temp/1200x628.png')
+    })
+
+
   var socialShareRedirectURI = (new URL(location)).searchParams.get('redirect_uri');
   if (socialShareRedirectURI) location.href = socialShareRedirectURI;
 

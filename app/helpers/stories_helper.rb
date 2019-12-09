@@ -124,9 +124,9 @@ module StoriesHelper
     when 'pixlee'
       provider == 'all' ? (image = PIXLEE_400X400_URL) : (image = PIXLEE_300X160_URL)
     else
-      width = '1200'
-      height = '630'
-      image = CS_FULL_LOGO_URL
+      # width = '1200'
+      # height = '630'
+      # image = CS_FULL_LOGO_URL
     end
     { image: image, width: width, height: height }
   end

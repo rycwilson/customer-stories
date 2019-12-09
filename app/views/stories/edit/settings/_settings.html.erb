@@ -5,9 +5,14 @@
       authenticity_token: true,
       html: {
         id: 'story-settings-form',
-        method: 'PUT',
+        method: 'put',
         remote: true,
-        class: 'form-horizontal'
+        class: 'form-horizontal directUpload', 
+        data: {
+          url: @s3_direct_post.url,
+          host: URI.parse(@s3_direct_post.url).host,
+          'form-data' => (@s3_direct_post.fields)
+        }
       }
     ) do |story_form| %>
 
@@ -49,12 +54,14 @@
 
     <!-- new stories start in ENABLED state -->
     <% if story.company.promote_tr? %>
+
       <input type="hidden"
               name="story[topic_ad_attributes][status]"
               value="ENABLED" disabled>
       <input type="hidden"
               name="story[retarget_ad_attributes][status]"
               value="ENABLED" disabled>
+      
     <% end %>
 
   </div>
@@ -130,6 +137,8 @@
     </div>
   </div>
 
+  <%= render('stories/edit/settings/og_meta_tags', { story: story, story_form: story_form }) %>
+
   <div class="hidden-link form-group">
     <%= story_form.label(nil, 'Hidden Link', class: 'control-label col-sm-3') %>
     <div class="col-sm-9 col-md-8 col-lg-6">
@@ -165,6 +174,7 @@
   <div class="story-settings__publish form-group">
     <label class="col-sm-3 control-label">Publish</label>
     <div class="col-sm-9 col-md-8 col-lg-6" style="">
+
       <div class="publish-control">
         <label>Logo</label>
         <%= story_form.check_box(
@@ -176,6 +186,7 @@
               }
             ) %>
       </div>
+
       <div class="publish-control">
         <label>Preview</label>
         <%= story_form.check_box(
@@ -219,3 +230,4 @@
   <% end %>
 
 <% end %>
+

@@ -26,12 +26,12 @@ function companiesEdit () {
         $('.dropdown.company-settings').removeClass('active');
       }
     })
-
-    .on('shown.bs.tab', '.nav--company-settings a', function (e) {
+    
+    .on('shown.bs.tab', '.nav--company a', function (e) {
+      Cookies.set('company-tab', e.target.hash);
       location.hash = e.target.hash.replace('edit-', '');
       window.scrollTo(0, 0);
     })
-
 
 }
 
