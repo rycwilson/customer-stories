@@ -28,8 +28,9 @@ class ProfileController < ApplicationController
   def edit
     @user = current_user
     @company = @user.company
+    @original_user = User.find_by_id(session[:original_user_id])
     set_s3_direct_post()
-    if @user.admin?
+    if current_user.admin? || @original_user.try(:admin?)
       @switch_users = User.where(email: SWITCH_USERS).map do |user|
         { 
           id: user.id, 
@@ -37,9 +38,7 @@ class ProfileController < ApplicationController
           name: "#{user.full_name}" + (user.company.present? ? "\s(#{user.company.name})" : '') 
         }
       end
-      @original_user = User.find_by_id(session[:original_user_id])
     end
-    render :edit2
   end 
 
   def update

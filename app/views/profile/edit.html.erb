@@ -1,347 +1,73 @@
-
-
-<% content_for :head do %>
+<% content_for(:head) do %>
   <!-- LI widget won't load if page is cached -->
   <meta name="turbolinks-cache-control" content="no-cache">
 <% end %>
 
-<%= render 'profile/remove_li_profile_modal', { user: @user } %>
+<%= render(
+      'shared/navbars/company_nav', 
+      { company: @company, workflow_stage: nil }
+    ) %>
 
-<%= render 'shared/navbars/company_nav', { company: @company, workflow_stage: nil } %>
+<div class="container">
+  <div class="row">
 
-<div class="container clip">
-  <div class="layout layout-main-right layout-stack-sm">
+    <div class="col-sm-4 col-lg-3 layout-sidebar">
 
-    <div class="col-md-3 col-sm-4 layout-sidebar">
-      <%= render 'profile/shared/tabs' %>
+      <ul class="nav">
+        <li class="active">
+          <a href="#profile-tab" data-toggle="tab">
+            <i class="fa fa-fw fa-user"></i>
+            <span>Profile</span>
+          </a>
+        </li>
+        <li>
+          <a href="#password-tab" data-toggle="tab">
+            <i class="fa fa-fw fa-lock"></i>
+            <span>Change Password</span>
+          </a>
+        </li>
+      </ul>
+
+      <% if current_user.admin? || @original_user.try(:admin?) %>
+
+        <div style="display: flex; justify-content: center">
+          <div id="switch-user" class="dropdown">
+            <button class="btn btn-default dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+              Switch User
+              <span class="caret"></span>
+            </button>
+            <ul class="dropdown-menu" aria-labelledby="switch-user">
+              <% @switch_users.each do |user| %>
+                <li>
+                  <%= form_tag(switch_user_path, method: 'POST', remote: true) do %>
+                    <%= hidden_field_tag(:switch_user_id, user[:id]) %>
+                    <%= submit_tag(user[:name], style: 'background: none; border: none') %>
+                  <% end %>
+                </li>
+              <% end %>
+            </ul>
+          </div>
+        </div>
+
+      <% end %>
+
     </div>
 
-    <div class="col-sm-8 col-md-9 layout-main">
-
-      <div class="tab-content stacked-content">
+    <div class="col-sm-8 col-lg-9 layout-main">
+      <div class="tab-content">
         <div class="tab-pane fade in active" id="profile-tab">
 
-<% if current_user.admin? || @original_user.try(:admin?) %>
+          <%= render(
+                'profile/user_profile', 
+                { user: @user, s3_direct_post: @s3_direct_post }
+              ) %>
 
-  <div id="switch-user" class="dropdown" style="margin-bottom: 30px">
-    <button class="btn btn-default dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
-      Switch User
-      <span class="caret"></span>
-    </button>
-    <ul class="dropdown-menu" aria-labelledby="switch-user">
-      <% @switch_users.each do |user| %>
-        <li>
-          <%= form_tag(switch_user_path, method: 'POST', remote: true) do %>
-            <%= hidden_field_tag(:switch_user_id, user[:id]) %>
-            <%= submit_tag(user[:name], style: 'background: none; border: none') %>
-          <% end %>
-        </li>
-      <% end %>
-    </ul>
-  </div>
-
-<% end %>
-
-<%= form_for(@user, url: registration_path(@user), method: 'put', remote: 'true', authenticity_token: true,
-    html: {
-      id: 'user-profile-form',
-      class: 'directUpload',
-      data: {
-        'form-data' => (@s3_direct_post.fields),
-        'url' => @s3_direct_post.url,
-        'host' => URI.parse(@s3_direct_post.url).host
-      }
-    }
-  ) do |f| %>
-
-<div class="row">
-  <div class="col-sm-6">
-
-    <label>Photo</label>  <!-- have to pull this out for proper styling -->
-    <div class="form-group">
-      <div class="fileinput <%= @user.photo_url.blank? ? 'fileinput-new' : 'fileinput-exists' %>" data-provides="fileinput">
-
-        <div class="fileinput-new thumbnail">
-          <%= image_tag('user-photo-missing.png', alt: 'photo placeholder') %>
         </div>
+        <div class="tab-pane fade in active" id="password-tab">
 
-        <div class="fileinput-preview fileinput-exists thumbnail" data-trigger="fileinput">
-          <%= image_tag(@user.photo_url, alt: 'photo missing') if @user.photo_url.present? %>
-        </div>
-
-        <div class="photo-btns">
-          <div class="btn btn-default btn-file">
-            <div class="fileinput-new">
-              Select image
-            </div>
-            <div class="fileinput-exists">
-              Change
-            </div>
-            <%= f.file_field :photo_url %>
-            <!-- below doesn't work, must use form builder -->
-            <!-- <input type="file" name="user[photo_url]" class='form-control' id='user_photo_url'> -->
-          </div>
-          <a href="#" class="btn btn-default fileinput-exists" data-dismiss="fileinput">
-            Remove
-          </a>
-        </div>
-
-      </div>  <!-- /.fileupload -->
-    </div>
-
-    <div class="row">
-      <div class="col-sm-6">
-        <div class="form-group">
-          <%= f.label :first_name, "First name", class: 'control-label' %>
-          <%= f.text_field :first_name, class: 'form-control' %>
-        </div>
-
-      </div>
-      <div class="col-sm-6">
-        <div class="form-group">
-          <%= f.label :last_name, "Last name", class: 'control-label' %>
-          <%= f.text_field :last_name, class: 'form-control' %>
-        </div>
-
-      </div>
-    </div>
-
-    <div class="form-group">
-      <%= f.label :email, "Email", class: 'control-label' %>
-      <%= f.text_field :email, class: 'form-control' %>
-    </div>
-
-    <div class="row">
-      <div class="col-sm-6">
-        <div class="form-group">
-          <%= f.label :phone, "Phone", class: 'control-label' %>
-          <%= f.text_field :phone, class: 'form-control' %>
         </div>
       </div>
-      <div class="col-sm-6">
-        <!-- filler -->
-      </div>
     </div>
 
-  </div>
-  <div class="col-sm-6">
-
-    <div class="form-group">
-      <%= f.label :company_id, "Company", class: 'control-label' %>
-      <%= f.text_field :company_id, class: 'form-control',
-            value: @user.try(:company).try(:name), disabled: true %>
-    </div>
-
-    <div class="form-group">
-      <%= f.label :title, "Job Title", class: 'control-label' %>
-      <%= f.text_field :title, class: 'form-control' %>
-    </div>
-
-    <!-- <div class="form-group linkedin-url <%#= current_user.linkedin_url.present? ? 'url-present' : 'url-absent' %>">
-
-      <%#= f.label :linkedin_url, "LinkedIn URL", class: 'control-label' %>
-      <div class="input-group">
-        <%#= f.text_field :linkedin_url, class: 'form-control',
-                          readonly: true %>
-        <div class="input-group-btn">
-          <button type='button' class='btn btn-default linkedin-edit'>
-            <i class='glyphicon glyphicon-pencil'></i>
-          </button>
-          <button type='button' class='btn btn-default linkedin-remove'
-                  data-toggle='modal' data-target='#remove-li-profile-modal'>
-            <i class="glyphicon glyphicon-remove"></i>
-          </button>
-        </div>
-      </div>
-
-      <%# if current_user.company_registered? %>
-
-        <%#= link_to(
-              "Connect to LinkedIn",
-              linkedin_auth_path,
-              class: 'linkedin-connect btn btn-secondary',
-              data: { turbolinks: false }
-            ) %>
-
-      <%# end %>
-
-    </div> -->
-
-  </div> <!-- .col-sm-6 -->
-</div> <!-- .row -->
-
-<hr>
-
-<div class="row">
-  <div class="col-sm-12 text-right">
-    <!-- <button type="reset" class="btn btn-default">
-      Cancel
-    </button> -->
-    <button type="submit" class="btn btn-success text-center" form="user-profile-form" style="width:114px">
-      <span>Save changes</span>
-      <i class='fa fa-spin fa-circle-o-notch' style='display:none'></i>
-      <i class='fa fa-check' style='display:none'></i>
-    </button>
   </div>
 </div>
-
-<% end %>  <!-- form -->
-
-<!--  -->
-        </div>  <!-- .tab-pane -->
-        <div class="tab-pane fade" id="password-tab">
-
-          <div class="heading-block">
-            <h3>Change Password</h3>
-          </div> <br> <!-- /.heading-block -->
-
-          <%= form_for @user, url: user_registration_path,
-                remote: true, method: 'patch',
-                html: { class: 'form-horizontal',
-                           id: 'password-update-form' } do |f| %>
-
-            <div class="form-group">
-              <%= f.label :current_password, 'Old password',
-                    class: 'col-sm-3 control-label' %>
-              <div class="col-sm-5">
-                <%= f.password_field :current_password, class: 'form-control',
-                                      autocomplete: "off" %>
-                <span class="help-block">
-                  Please enter current password to confirm changes
-                </span>
-              </div>
-            </div>
-
-            <hr>
-
-            <div class="form-group">
-              <%= f.label :password, 'New password', class: 'col-sm-3 control-label' %>
-              <div class="col-sm-5">
-                <%= f.password_field :password, class: 'form-control', autocomplete: "off" %>
-                <!-- <span class="help-block">
-                  leave blank if you don't want to change it
-                </span> -->
-              </div>
-            </div>
-
-            <div class="form-group">
-              <%= f.label :password_confirmation, 'Confirm new password',
-                    class: 'col-sm-3 control-label' %>
-              <div class="col-sm-5">
-                <%= f.password_field :password_confirmation,
-                      class: 'form-control', autocomplete: "off" %>
-              </div>
-            </div>
-
-            <div class="form-group">
-              <div class="col-sm-5 col-sm-offset-3">
-                <button type="submit" class="btn btn-success">
-                  Save Changes
-                </button>
-                &nbsp;
-                <button type="reset" class="btn btn-default">
-                  Cancel
-                </button>
-              </div>
-            </div>
-
-          <% end %>
-
-        </div> <!-- /.tab-pane -->
-
-        <div class="tab-pane fade" id="my-contributions-tab">
-
-          <div class="heading-block">
-            <h3>My Contributions</h3>
-          </div> <!-- /.heading-block -->
-
-        <!--   <div class='row'>
-            <div class='portlet portlet-default '>
-              <div class='portlet-body'> -->
-
-                <div class='table-responsive'>
-
-                  <table class="table table-striped table-bordered">
-                    <thead>
-                      <tr>
-                        <th>Company</th>
-                        <th>Curator</th>
-                        <th>Product</th>
-                        <th>View / Edit</th>
-                        <th>LinkedIn Profile</th>
-                        <th>Status</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-<!-- <tbody> -->
-  <% @user.own_contributions.each do |contribution| %>
-
-    <tr>
-      <td class='valign-middle'>
-        <%= contribution.success.customer.company.name %>
-      </td>
-      <td class='valign-middle'>
-        <%= contribution.success.curator.full_name %>
-      </td>
-      <td class='valign-middle'>
-        <%= contribution.success.products.take.try(:name) || "none" %>
-      </td>
-      <td class='valign-middle text-center'>
-
-        <% unless contribution.success.story.try(:published?) %>
-          <a href="javascript:;">
-            <i class='glyphicon glyphicon-pencil'></i>
-          </a>
-        <% end %>
-
-      </td>
-      <td class='valign-middle text-center'>
-
-        <%= form_for contribution,
-              url: "/contributions/#{contribution.access_token}",
-              method: :put, remote: true,
-              html: { class: 'contributor-linkedin-checkbox' } do |f| %>
-
-          <!-- value will be filled in by js based on checkbox -->
-          <%= hidden_field_tag 'contribution[contributor_unpublished]' %>
-
-          <%= f.check_box :publish_contributor, {}, 'true', 'false' %>
-
-        <% end %>
-
-      </td>
-      <td class='valign-middle'>
-
-        <% if contribution.success.story.try(:published?) %>
-          <%= link_to 'Published',
-                File.join( request.protocol +
-                  contribution.success.customer.company.subdomain +
-                  '.' + request.domain + request.port_string,
-                  contribution.success.story.csp_story_path ) %>
-        <% else %>
-          <span>Pending Curation</span>
-        <% end %>
-
-      </td>
-    </tr>
-
-  <% end %>
-<!-- </tbody> -->
-                    </tbody>
-                  </table>
-                </div>  <!-- table-responsive -->
-
-             <!--  </div>  --> <!-- portlet-body -->
-            <!-- </div> -->  <!-- portlet -->
-          <!-- </div> -->  <!-- row -->
-
-        </div> <!-- /.tab-pane -->
-
-      </div> <!-- /.tab-content -->
-
-    </div> <!-- .layout-sidebar -->
-
-  </div> <!-- .layout -->
-</div> <!-- .container -->
-
-
