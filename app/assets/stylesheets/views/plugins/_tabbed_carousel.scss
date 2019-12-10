@@ -43,11 +43,10 @@
   overflow: hidden;
   z-index: 1000;
   width: 100%;
+
+
   -webkit-backface-visibility: hidden;  // ref: http://stackoverflow.com/questions/19254146
-  // if user is using a mouse the scrollbar spacing gets screwy.  just lose the scrollbar
-  ::-webkit-scrollbar {
-    display: none;
-  }
+  
   
   .cs-header-row {
     height: 48px;   //  30 + 8 + 8
@@ -151,6 +150,13 @@
   }
   
   .row-horizon {
+    // hide the scrollbar https://stackoverflow.com/questions/16670931
+    -ms-overflow-style: none;  // IE 10+
+    scrollbar-width: none;  // firefox
+    &::-webkit-scrollbar {  // safari and chrome
+      display: none;
+    }
+
     div[class^='col'] {
       width: 230px;
       // // height: 130px;
