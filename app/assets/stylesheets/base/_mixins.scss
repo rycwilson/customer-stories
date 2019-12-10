@@ -195,6 +195,15 @@
 
 }
 
+@mixin disable-publish-preview {
+  .publish-control.disabled {
+    .bootstrap-switch-label,
+    .bootstrap-switch-handle-off {
+      cursor: not-allowed;
+    }
+  }
+}
+
 @mixin LI-profile-badge ($bg-color) {
   .LI-badge-container {
     width: 100%;

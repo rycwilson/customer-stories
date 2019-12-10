@@ -2,12 +2,13 @@
 function storiesIndex () {
   // there's a timing issue if trying to click immediately per gon.preview_story,
   // so pass a callback to initGridPreviews
-  initGridPreviews({}, function () {
-    if (gon.preview_story) {
-      $('li[data-story-id="' + gon.preview_story.toString() + '"] > a')[0].click();
-      delete gon.preview_story;
-    }
-  });
+  // initGridPreviews({}, function () {
+  //   if (gon.preview_story) {
+  //     $('li[data-story-id="' + gon.preview_story.toString() + '"] > a')[0].click();
+  //     delete gon.preview_story;
+  //   }
+  // });
+  
   // for a sync load, this isn't necessary => server will provide pre select
   // but what about a turbolinks restore?
   // preSelectFilters(getQueryString('category'), getQueryString('product'));

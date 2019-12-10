@@ -6,6 +6,7 @@ function initGridPreviews (config, callback) {
   $grid = $('#stories-gallery');
   // the items
   $items = $grid.children('li');
+  console.log('$items', $items)
   // current expanded item´s index
   current = -1;
   // position (top) of the expanded item
@@ -71,7 +72,8 @@ function initEvents(callback) {
   $items.on( 'click', 'span.og-close', function() {
     hidePreview();
     return false;
-  } ).children( 'a.preview-published' ).on( 'click', function(e) {
+  } ).find( 'a.preview-published' ).on( 'click', function(e) {
+    // console.log('preview click')
     var $item = $( this ).parent();
     // check if item already opened
     current === $item.index() ? hidePreview() : showPreview( $item );
@@ -151,6 +153,7 @@ function Preview( $item ) {
 }
 
 Preview.prototype.create = function() {
+  // console.log('creating preview')
   // create Preview structure:
   this.$loading = $( '<div class="og-loading"></div>' );
   this.$logoContainer = $( '<div class="og-logo hidden-xs"></div>').append( this.$loading );

@@ -82,6 +82,7 @@
   @include hide-until-init;
 }
 .story-settings__publish {
+  @include disable-publish-preview;
   > div {
     display: flex;
     justify-content: space-around;

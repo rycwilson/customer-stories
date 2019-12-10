@@ -2,6 +2,12 @@ namespace :temp do
 
   desc "temp stuff"
 
+  task disable_previews: :environment do
+    Story.where(preview_published: true).each do |story| 
+      story.update preview_published: false
+    end
+  end
+
   task populate_og_values: :environment do
     Story.all.each do |story|
       story.update(

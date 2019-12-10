@@ -187,11 +187,12 @@
             ) %>
       </div>
 
-      <div class="publish-control">
+      <div class="publish-control disabled" data-toggle="tooltip" title="Contact Customer Stories">
         <label>Preview</label>
         <%= story_form.check_box(
               :preview_published,
-              class: "bs-switch publish-control form-control",
+              class: 'bs-switch publish-control form-control',
+              disabled: true,
               data: {
                 'on-text': '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;',
                 'off-text': '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;'
