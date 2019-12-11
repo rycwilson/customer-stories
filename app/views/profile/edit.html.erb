@@ -63,7 +63,9 @@
               ) %>
 
         </div>
-        <div class="tab-pane fade in active" id="password-tab">
+        <div class="tab-pane fade" id="password-tab">
+
+          <%= render('profile/change_password', { user: @user }) %>
 
         </div>
       </div>

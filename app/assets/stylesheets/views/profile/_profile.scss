@@ -3,7 +3,7 @@
   margin: 20px 0;
 }
 
-.user-profile {
+.user-profile, .change-password {
   @include horizontal-form;
 }
 
