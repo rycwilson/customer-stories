@@ -3,11 +3,12 @@
   opacity: 0.9;
   .navbar-container {
     .row {
-      a.primary-cta  {
-        background-color: transparent !important;
-        border-color: #e41516 !important;
-        color: #e41516 !important;
+      .primary-cta a  {
+        // background-color: #f64b42;
+        // border-color: #e41516 !important;
+        // color: #fff;
         font-size: 13px;
+        // text-transform: upppercase;
         border-radius: 20px;
         line-height: 38px;
         padding: 0 26px;
@@ -15,8 +16,8 @@
         font-weight: 600;
         transition: background .25s ease;
         &:hover, &:focus {
-          background: #e41516 !important;
-          color: #fff !important;
+          // background: #dd443b;
+          box-shadow: 0 2px 4px 0 rgba(246,75,66,.6);
         }
       }
     }
