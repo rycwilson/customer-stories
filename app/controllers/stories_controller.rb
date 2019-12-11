@@ -67,7 +67,7 @@ class StoriesController < ApplicationController
   end
 
   def show
-    if params[:is_plugin]
+    if params[:is_plugin] && request.format.symbol == :js
       # @is_plugin = @is_external = true
       respond_to do |format|
         format.js do
@@ -80,9 +80,14 @@ class StoriesController < ApplicationController
     end
     if params[:remove_video].present?
       render(
-        'stories/show/testimonial',
-        { story: @story, include_video: false }
-      )
+        partial: 'stories/show/testimonial',
+        locals: { 
+          story: @story, 
+          long_customer_name: @story.customer.name.length > 20,
+          include_video: false, 
+          is_plugin: params[:is_plugin]
+        }
+      ) 
     end
     @is_preview = params[:preview].present?
     # convert the story narrative to plain text (for SEO tags)

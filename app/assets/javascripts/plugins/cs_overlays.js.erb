@@ -114,7 +114,7 @@ function cspInitOverlays ($, $container, subdomain, isDemo, env) {
         });
 
         if ($storyCard.find('a').hasClass('has-video')) {
-          cspInitVideo($, $storyOverlay);
+          cspInitVideo($, $storyOverlay, $storyCard);
         }
         LI2Observer($storyOverlay);
         // initLinkedIn();

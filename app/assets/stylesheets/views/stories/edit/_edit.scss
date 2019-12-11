@@ -80,9 +80,10 @@
 #story-settings-form {
   @include horizontal-form;
   @include hide-until-init;
-}
-.story-settings__publish {
   @include disable-publish-preview;
+}
+
+.story-settings__publish {
   > div {
     display: flex;
     justify-content: space-around;
