@@ -7,7 +7,7 @@
   }
   .customer-logo-quote.visible-xs-block {
     .customer-logo, .cs-customer-logo {
-      @include customer-logo($stories-bg-color);
+      @include customer-logo(#fff);
     }
   }
   .customer-logo-quote.hidden-xs {
