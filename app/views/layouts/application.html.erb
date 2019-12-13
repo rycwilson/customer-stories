@@ -9,7 +9,7 @@
   <%= yield(:head) if content_for?(:head) %>
 
   <% if custom_stylesheet?(@company) %>
-    <%= stylesheet_link_tag(@company.subdomain, media: 'all', 'data-turbolinks-track' => 'reload') %>
+    <%= stylesheet_link_tag("custom/wrappers/#{@company.subdomain}", media: 'all', 'data-turbolinks-track' => 'reload') %>
   <% else %>
     <%= stylesheet_link_tag('application', media: 'all', 'data-turbolinks-track' => 'reload') %>
   <% end %>
@@ -31,7 +31,7 @@
   <link href="https://fonts.googleapis.com/css?family=Montserrat:400,500,600,700&amp;lang=en" rel="stylesheet" type="text/css">
   <link href="https://fonts.googleapis.com/css?family=Open+Sans:300" rel="stylesheet">
 
-  <% if @company.try(:subdomain) == 'pixlee' %>
+  <% if staging? || @company.try(:subdomain) == 'pixlee' %>
     <meta name="robots" content="noindex">
   <% end %>
 
