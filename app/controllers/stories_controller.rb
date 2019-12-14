@@ -67,7 +67,7 @@ class StoriesController < ApplicationController
   end
 
   def show
-    if params[:is_plugin] && request.format.symbol == :js
+    if params[:is_plugin]
       # @is_plugin = @is_external = true
       respond_to do |format|
         format.js do
