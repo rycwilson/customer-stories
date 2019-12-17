@@ -25,7 +25,11 @@
         CSP.stories[storyIndex].preview_published = story.preview_published;
         CSP.stories[storyIndex].published = story.published;
         CSP.stories[storyIndex].title = story.title;
-        $('#story-header__title > span:nth-of-type(2)').text(story.title);
+        $('#story-header__title')
+          .children('span:nth-of-type(2)')
+            .text(story.title)
+            .end()
+          .find('a').attr('href', story.csp_story_path)
       },
 
       flash = function () {
