@@ -10,7 +10,7 @@ function storiesEditSettingsListeners () {
   $(document)
 
     // ensure only valid logo/story publish states
-    .on('switchChange.bootstrapSwitch', '.form-group.publish input', function (e, data) {
+    .on('switchChange.bootstrapSwitch', '.story-settings__publish input', function (e, data) {
       // note the jquery indexing => necessary for bootstrap switch to work properly
       var $current = $(this),
           $logoInput = $('input:checkbox[name="story[logo_published]"]'),

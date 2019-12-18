@@ -8,14 +8,10 @@ class StoriesController < ApplicationController
   skip_before_action(:verify_authenticity_token, only: [:show], if: Proc.new { params[:is_plugin] })
 
   before_action :set_company
-  before_action :set_story, only: [:edit, :ctas, :tags, :promote, :approval, :destroy]
+  # before_action :set_story, only: [:edit, :ctas, :tags, :promote, :approval, :destroy]
   before_action only: [:show] do
     @is_social_share_redirect = true if params[:redirect_uri].present?
     @is_curator = @company.curator?(current_user)
-  end
-  before_action only: [:edit] do
-    authenticate_user!
-    user_authorized?(@story, current_user)
   end
   before_action(only: [:index, :show, :edit]) { set_gon(@company) }
   before_action(only: [:show]) { set_public_story_or_redirect(@company) }
@@ -97,6 +93,16 @@ class StoriesController < ApplicationController
   end
 
   def edit
+    authenticate_user!
+    @story = Story.find_by_id(params[:id]) || Story.friendly.find(params[:story_slug])
+    if request.path != curate_story_path(@story.customer.slug, @story.slug) # friendly path changed
+      # old story title slug requested, redirect to current
+      return redirect_to(
+        curate_story_path(@story.customer.slug, @story.slug), 
+        status: :moved_permanently
+      )
+    end
+    user_authorized?(@story, current_user)
     # want to catch ajax requests but ignore tubolinks
     if request.xhr? && !request.env["HTTP_TURBOLINKS_REFERRER"]
       respond_to do |format|
@@ -145,12 +151,10 @@ class StoriesController < ApplicationController
   end
 
   def create
-    # pp(story_params)
     @story = Story.new(story_params)
     if @story.save
       @redirect_path = curate_story_path(@story.customer.slug, @story.slug)
     end
-
     respond_to { |format| format.js }
   end
 
@@ -375,9 +379,9 @@ class StoriesController < ApplicationController
     end
   end
 
-  def set_story
-    @story = Story.find_by_id(params[:id]) || Story.friendly.find(params[:story_slug])
-  end
+  # def set_story
+  #   @story = Story.find_by_id(params[:id]) || Story.friendly.find(params[:story_slug])
+  # end
 
   def render_story_partial (story, contributors, window_width)
     render_to_string({
@@ -415,19 +419,19 @@ class StoriesController < ApplicationController
   #   - the correct link if outdated slug is used
   #   - company's story index if not published or not curator
   def set_public_story_or_redirect company
-    @story = Story.find_by(slug: params[:title]) || 
-             Story.find_by(hidden_link: request.url)
-    if params[:hidden_link].present?
-      redirect_to(@story.csp_story_path) if @story.published? 
-      return
-    end
-    if request.path != @story.csp_story_path  # friendly path changed
-      # old story title slug requested, redirect to current
-      return redirect_to @story.csp_story_path, status: :moved_permanently
+    # binding.remote_pry
+    @story = Story.find_by(hidden_link: request.url) ||
+             Story.friendly.find(params[:title])
+    if params[:hidden_link].present? 
+      if @story.published?
+        redirect_to(@story.csp_story_path, status: :moved_permanently) and return
+      end
+    elsif request.path != @story.csp_story_path  # friendly path changed
+      redirect_to(@story.csp_story_path, status: :moved_permanently) and return
     elsif request.format == 'application/pdf' || params[:is_plugin]
       @story
-    elsif !@story.published? && !params[:hidden_link] && !company_curator?(company.id)
-      return redirect_to root_url(subdomain:request.subdomain, host:request.domain)
+    elsif !@story.published? && !company_curator?(company.id)
+      redirect_to(root_url(subdomain:request.subdomain, host:request.domain)) and return
     end
   end
 
