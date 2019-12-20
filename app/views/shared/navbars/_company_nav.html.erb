@@ -1,5 +1,5 @@
 
-<nav id="company-nav" class="<%= company.present? ? '' : 'unregistered' %>">
+<nav id="company-nav" class="<%= company.present?  && company.persisted? ? '' : 'unregistered' %>">
   <div class="container company-nav-container">
     <div class="row">
 

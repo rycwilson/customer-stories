@@ -10,6 +10,7 @@ class CompaniesController < ApplicationController
   def new
     @company = Company.new
     @form_options = set_form_options(params)
+    render :company_settings
   end
 
   def show

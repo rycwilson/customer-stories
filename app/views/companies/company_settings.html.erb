@@ -12,37 +12,44 @@
   <div class="row">
 
     <div class="col-sm-4 col-lg-3 layout-sidebar">
-      <ul class="nav nav--company">
+      <ul class="nav nav--company <%= action_name == 'new' ? 'nav--new-company' : '' %>">
         <li class="<%= (@tab == '#edit-company-profile' || @tab.nil?) ? 'active' : '' %>">
           <a href="#edit-company-profile" data-toggle="tab">
             <i class="fa fa-fw fa-globe"></i>
             <span>Company Profile</span>
           </a>
         </li>
-        <li class="<%= @tab == '#edit-crowdsource' ? 'active' : '' %>">
-          <a href="#edit-crowdsource" data-toggle="tab" class='<%= @company.new_record? ? 'disabled-tab' : '' %>'>
-            <i class="fa fa-fw fa-users"></i>
-            <span>Crowdsource Settings</span>
-          </a>
-        </li>
-        <li class="<%= @tab == '#edit-plugins' ? 'active' : '' %>">
-          <a href="#edit-plugins" data-toggle="tab" class='<%= @company.new_record? ? 'disabled-tab' : '' %>'>
-            <i class='fa fa-fw fa-plug' style='font-size:15px; top:2px; margin-left:2px'></i>
-            <span>Customer Stories Plugin</span>
-          </a>
-        </li>
-        <li class="<%= @tab == '#edit-ctas' ? 'active' : '' %>">
-          <a href="#edit-ctas" data-toggle="tab" class='<%= @company.new_record? ? 'disabled-tab' : '' %>'>
-            <i class="fa fa-fw fa-hand-pointer-o"></i>
-            <span>Link &amp; Form CTAs</span>
-          </a>
-        </li>
-        <li class="<%= @tab == '#edit-tags' ? 'active' : '' %>">
-          <a href="#edit-tags" data-toggle="tab" class='<%= @company.new_record? ? 'disabled-tab' : '' %>'>
-            <i class="fa fa-fw fa-tags"></i>
-            <span>Story Tags</span>
-          </a>
-        </li>
+        
+        <% unless action_name == 'new' %>
+
+          <li class="<%= @tab == '#edit-crowdsource' ? 'active' : '' %>">
+            <a href="#edit-crowdsource" data-toggle="tab" class='<%= @company.new_record? ? 'disabled-tab' : '' %>'>
+              <i class="fa fa-fw fa-users"></i>
+              <span>Crowdsource Settings</span>
+            </a>
+          </li>
+
+          <li class="<%= @tab == '#edit-plugins' ? 'active' : '' %>">
+            <a href="#edit-plugins" data-toggle="tab" class='<%= @company.new_record? ? 'disabled-tab' : '' %>'>
+              <i class='fa fa-fw fa-plug' style='font-size:15px; top:2px; margin-left:2px'></i>
+              <span>Customer Stories Plugin</span>
+            </a>
+          </li>
+          <li class="<%= @tab == '#edit-ctas' ? 'active' : '' %>">
+            <a href="#edit-ctas" data-toggle="tab" class='<%= @company.new_record? ? 'disabled-tab' : '' %>'>
+              <i class="fa fa-fw fa-hand-pointer-o"></i>
+              <span>Link &amp; Form CTAs</span>
+            </a>
+          </li>
+          <li class="<%= @tab == '#edit-tags' ? 'active' : '' %>">
+            <a href="#edit-tags" data-toggle="tab" class='<%= @company.new_record? ? 'disabled-tab' : '' %>'>
+              <i class="fa fa-fw fa-tags"></i>
+              <span>Story Tags</span>
+            </a>
+          </li>
+
+        <% end %>
+
       </ul>
     </div>
 
@@ -59,36 +66,40 @@
           <% end %>
         </div>
 
-        <div id="edit-crowdsource" role="tabpanel"
-            class="tab-pane fade <%= (@tab == '#edit-crowdsource') ? 'active in' : '' %>">
-          <% cache("#{@company.subdomain}/crowdsource", skip_digest: true) do %>
-            <%= render(
-                  'companies/settings/invitation_templates',
-                  { company: @company, templates_select: @templates_select } 
-                ) %>
-          <% end %>
-        </div>
-        
-        <div id="edit-plugins" role="tabpanel"
-            class="tab-pane fade <%= (@tab == '#edit-plugins') ? 'active in' : '' %>">
-          <% cache("#{@company.subdomain}/plugin-config", skip_digest: true) do %>
-            <%= render('plugins/config', { company: @company }) %>
-          <% end %>
-        </div>
+        <% unless action_name == 'new' %>
 
-        <div id="edit-ctas" role="tabpanel"
-            class="tab-pane fade <%= (@tab == '#edit-ctas') ? 'active in' : '' %>">
-          <% cache("#{@company.subdomain}/edit-ctas", skip_digest: true) do %>
-            <%= render('companies/settings/ctas', { company: @company }) %>
-          <% end %>
-        </div>
+          <div id="edit-crowdsource" role="tabpanel"
+              class="tab-pane fade <%= (@tab == '#edit-crowdsource') ? 'active in' : '' %>">
+            <% cache("#{@company.subdomain}/crowdsource", skip_digest: true) do %>
+              <%= render(
+                    'companies/settings/invitation_templates',
+                    { company: @company, templates_select: @templates_select } 
+                  ) %>
+            <% end %>
+          </div>
+          
+          <div id="edit-plugins" role="tabpanel"
+              class="tab-pane fade <%= (@tab == '#edit-plugins') ? 'active in' : '' %>">
+            <% cache("#{@company.subdomain}/plugin-config", skip_digest: true) do %>
+              <%= render('plugins/config', { company: @company }) %>
+            <% end %>
+          </div>
 
-        <div id="edit-tags" role="tabpanel" 
-            class="tab-pane fade <%= (@tab == '#edit-tags') ? 'active in' : '' %>">
-          <% cache("#{@company.subdomain}/story-tags", skip_digest: true) do %>
-            <%= render('companies/settings/story_tags', { company: @company }) %>
-          <% end %>
-        </div>
+          <div id="edit-ctas" role="tabpanel"
+              class="tab-pane fade <%= (@tab == '#edit-ctas') ? 'active in' : '' %>">
+            <% cache("#{@company.subdomain}/edit-ctas", skip_digest: true) do %>
+              <%= render('companies/settings/ctas', { company: @company }) %>
+            <% end %>
+          </div>
+
+          <div id="edit-tags" role="tabpanel" 
+              class="tab-pane fade <%= (@tab == '#edit-tags') ? 'active in' : '' %>">
+            <% cache("#{@company.subdomain}/story-tags", skip_digest: true) do %>
+              <%= render('companies/settings/story_tags', { company: @company }) %>
+            <% end %>
+          </div>
+
+        <% end %>
 
       </div> 
     </div> 

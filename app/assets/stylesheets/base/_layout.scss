@@ -10,6 +10,7 @@
   min-height: 100vh;   // TODO: replace with html, body { height: 100% }
   padding-bottom: 100px;
   .companies.edit &,
+  .companies.new &,
   .profile.edit & {
     padding-top: 15px;
   }

@@ -18,7 +18,7 @@
 
 <% end %>
 
-<nav class="company-header company-header--<%= @company.subdomain %> navbar navbar-default admin <%= fixed_navbar?(@company, controller_name, action_name) ? 'navbar-fixed-top' : '' %>" 
+<nav class="company-header <%= @company ? "company-header--#{@company.subdomain}" : '' %> navbar navbar-default admin <%= fixed_navbar?(@company, controller_name, action_name) ? 'navbar-fixed-top' : '' %>" 
       role="banner" 
       style="background:<%= @company ? @company.header_color_1 : Company::CSP.header_color_1 %>">
   <div class="container navbar-container">
