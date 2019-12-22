@@ -99,55 +99,55 @@ function initSelect2 () {
    * may not be present if datatables not yet rendered
    * this code duplicated from csp_datatables.js
    */
-  // if ($('.successes-header').length && $('.contributors-header').length) {
-  //   $('.prospect.curator-select')
-  //      .select2({
-  //        theme: 'bootstrap',
-  //        width: 'style',
-  //        allowClear: true,
-  //        placeholder: 'Select',
-  //        minimumResultsForSearch: -1   // hides text input
-  //      })
-  //       .on('select2:unselecting', function (e) {
-  //         $(this).data('unselecting', true);
-  //       })
-  //       .on('select2:open', function (e) {
-  //         if ($(this).data('unselecting')) {
-  //           $(this).removeData('unselecting')
-  //           $(this).select2('close');
-  //         }
-  //       })
-  //       .on('change.select2', function (e) {
-  //         if ($(this).val()) {
-  //           $(this).next('.select2').addClass('select2-container--allow-clear')
-  //         } else {
-  //           $(this).next('.select2').removeClass('select2-container--allow-clear')
-  //         }
-  //       })
+  if ($('.successes-header').length && $('.contributors-header').length) {
+    $('.prospect.curator-select')
+       .select2({
+         theme: 'bootstrap',
+         width: 'style',
+         allowClear: true,
+         placeholder: 'Select',
+         minimumResultsForSearch: -1   // hides text input
+       })
+        .on('select2:unselecting', function (e) {
+          $(this).data('unselecting', true);
+        })
+        .on('select2:open', function (e) {
+          if ($(this).data('unselecting')) {
+            $(this).removeData('unselecting')
+            $(this).select2('close');
+          }
+        })
+        .on('change.select2', function (e) {
+          if ($(this).val()) {
+            $(this).next('.select2').addClass('select2-container--allow-clear')
+          } else {
+            $(this).next('.select2').removeClass('select2-container--allow-clear')
+          }
+        })
 
-  //   $('.dt-filter').select2({
-  //      theme: 'bootstrap',
-  //      width: 'style',
-  //      placeholder: 'Search / Select',
-  //      allowClear: true
-  //   })
-  //     .on('select2:unselecting', function (e) {
-  //       $(this).data('unselecting', true);
-  //     })
-  //     .on('select2:open', function (e) {
-  //       if ($(this).data('unselecting')) {
-  //         $(this).removeData('unselecting')
-  //         $(this).select2('close');
-  //       }
-  //     })
-  //     .on('change.select2', function (e) {
-  //       if ($(this).val()) {
-  //         $(this).next('.select2').addClass('select2-container--allow-clear')
-  //       } else {
-  //         $(this).next('.select2').removeClass('select2-container--allow-clear')
-  //       }
-  //     })
-  // }
+    $('.dt-filter').select2({
+       theme: 'bootstrap',
+       width: 'style',
+       placeholder: 'Search / Select',
+       allowClear: true
+    })
+      .on('select2:unselecting', function (e) {
+        $(this).data('unselecting', true);
+      })
+      .on('select2:open', function (e) {
+        if ($(this).data('unselecting')) {
+          $(this).removeData('unselecting')
+          $(this).select2('close');
+        }
+      })
+      .on('change.select2', function (e) {
+        if ($(this).val()) {
+          $(this).next('.select2').addClass('select2-container--allow-clear')
+        } else {
+          $(this).next('.select2').removeClass('select2-container--allow-clear')
+        }
+      })
+  }
 
   // story settings has its own init routine
   $('.story-tags:not(.story-settings)')

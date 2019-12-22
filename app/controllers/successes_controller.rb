@@ -58,19 +58,20 @@ class SuccessesController < ApplicationController
   end
 
   def create
-    puts "successes#create incoming params"
-    puts params.to_h
+    # puts "successes#create"
     if params[:zapier_create].present?
-      puts "Zapier -> CSP, create success"
-      puts success_params.to_h
+      # puts "Zapier -> CSP, create success"
+      # puts success_params.to_h
     end
     @company = Company.find_by(subdomain: request.subdomain) || current_user.company
 
-    params[:success][:customer_attributes] = find_dup_customer(
-      success_params.to_h.dig(:customer_attributes),
-      params[:zapier_create].present?,
-      current_user
-    )
+    if params[:success].dig(:customer_attributes).present?
+      params[:success][:customer_attributes] = find_dup_customer(
+        success_params.to_h.dig(:customer_attributes),
+        params[:zapier_create].present?,
+        current_user
+      )
+    end
 
     if params[:success].dig(:contributions_attributes, '0', :referrer_attributes).present?
       params[:success][:contributions_attributes]['0'][:referrer_attributes] = find_dup_user_and_split_full_name(
