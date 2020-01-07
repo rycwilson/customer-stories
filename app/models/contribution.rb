@@ -25,7 +25,12 @@ class Contribution < ApplicationRecord
   belongs_to :contributor, class_name: 'User', foreign_key: 'contributor_id'
 
   # this is a handy way to select a limited set of attributes
-  belongs_to :win_story_contributor, -> { select('users.id, users.first_name, users.last_name, users.email, users.linkedin_url') }, class_name: 'User', foreign_key: 'contributor_id'
+  belongs_to(
+    :win_story_contributor, 
+    -> { select('users.id, users.first_name, users.last_name, users.email, users.linkedin_url') }, 
+    class_name: 'User', 
+    foreign_key: 'contributor_id'
+  )
   belongs_to :referrer, class_name: 'User', foreign_key: 'referrer_id'
   has_one :customer, through: :success
   has_one :company, through: :success

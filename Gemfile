@@ -29,6 +29,7 @@ gem 'multi_json'
 gem 'order_as_specified'
 gem 'pg'
 gem 'pretender'
+gem 'pry-byebug', '=1.3.3'  # https://stackoverflow.com/questions/32780971
 gem 'pry-rails' 
 gem 'pry-remote'
 gem 'pry-theme'

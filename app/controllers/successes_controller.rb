@@ -121,6 +121,7 @@ class SuccessesController < ApplicationController
   end
 
   def import
+    # awesome_print params[:imported_successes]
     @company = Company.find(params[:company_id])
     @successes = []
     success_lookup = {}   # { name: { id: 1, customer_id: 1 } }
@@ -157,14 +158,22 @@ class SuccessesController < ApplicationController
         # create a new contribution if a contributor is present (new or existing)
         if new_contribution[:contributor_attributes].present?
           params[:contribution] = new_contribution
+          # puts "\n\nCREATING CONTRIBUTION\n"
+          # awesome_print contribution_params
           Contribution.create(contribution_params)
+          # puts "\nERRORS:\n"
+          # puts contribution.errors.full_messages
         else
           # ignore this imported success
         end
       else
         params[:success] = imported_success
         success = Success.new(success_params)
+        # puts "\n\nCREATING SUCCESS\n"
+        # awesome_print success
         success.save(validate: false)  # no validate makes for faster execution
+        # puts "\nERRORS:\n"
+        # puts success.errors.full_messages
         @successes << success
       end
 
@@ -183,14 +192,12 @@ class SuccessesController < ApplicationController
         if success.present? && email.present?
           user_lookup[email] ||= (index == 0 ? success.referrer[:id] : success.contact[:id])
         elsif email.present?
-          # binding.remote_pry
           user_lookup[email] ||= User.find_by_email(email).id
         end
       end
 
       [referrer_template, contact_template].each do |template|
         if template.present?
-          # binding.remote_pry if imported_success[:name] == "Amazon Wins with Acme"
           template_lookup[template] ||= InvitationTemplate.where(name: template, company_id: @company.id).take.id
         end
       end
@@ -220,14 +227,14 @@ class SuccessesController < ApplicationController
       :name, :win_story_html, :win_story_text, :win_story_markdown, :win_story_completed, :customer_id, :curator_id,
       customer_attributes: [:id, :name, :company_id],
       contributions_attributes: [
-        :referrer_id, :contributor_id, :invitation_template_id, :success_contact,
-        invitation_template_attributes: [:name, :company_id],
+        :contributor_id, :referrer_id, :invitation_template_id, :success_contact,
+        contributor_attributes: [
+          :id, :email, :first_name, :last_name, :title, :phone, :sign_up_code, :password
+        ],
         referrer_attributes: [
           :id, :email, :first_name, :last_name, :title, :phone, :sign_up_code, :password
         ],
-        contributor_attributes: [
-          :id, :email, :first_name, :last_name, :title, :phone, :sign_up_code, :password
-        ]
+        invitation_template_attributes: [:name, :company_id]
       ]
     )
   end
@@ -247,7 +254,8 @@ class SuccessesController < ApplicationController
       ],
       referrer_attributes: [
         :id, :email, :first_name, :last_name, :title, :phone, :sign_up_code, :password
-      ]
+      ],
+      invitation_template_attributes: [:name, :company_id]
     )
   end
 
@@ -297,7 +305,6 @@ class SuccessesController < ApplicationController
       contribution.has_key?("#{contact_type}_id") ||
       contribution.has_key?("#{contact_type}_attributes")
     end.keys[0]
-    # binding.remote_pry if success[:name] == 'TestCo Win 7'
     success[:contributions_attributes][contribution_index][:invitation_template_id] = template_id
     success[:contributions_attributes][contribution_index].except!(:invitation_template_attributes)
     success
@@ -372,13 +379,14 @@ class SuccessesController < ApplicationController
 
 
   def build_contribution_from_import (success, success_id)
+    puts "\n\nBUILDING CONTRIBUTION FOR SUCCESS #{success_id}\n"
+    awesome_print success
     contribution = {
       success_id: success_id,
       contributor_attributes: {},
       referrer_attributes: {},
       invitation_template_attributes: {}
     }
-
     contact_index = success[:contributions_attributes].select do |index, c|
       c.has_key?("contributor_id") || c.has_key?("contributor_attributes")
     end.keys[0]
