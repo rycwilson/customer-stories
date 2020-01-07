@@ -50,7 +50,7 @@ function constructPlugins () {
   initTooltips();
   initClicky();
 
-  $("input[type='tel']").inputmask("999-999-9999");
+  // $("input[type='tel']").inputmask("999-999-9999");
   $('.mini-colors').not('#edit-plugins .minicolors').minicolors({ theme: 'bootstrap' });
   $('#edit-plugins .mini-colors').minicolors({ theme: 'bootstrap', inline: false });
 

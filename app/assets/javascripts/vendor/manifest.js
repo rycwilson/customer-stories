@@ -34,9 +34,9 @@
 
 //= require bootstrap-switch/dist/js/bootstrap-switch
 
-//= require jquery.inputmask/dist/inputmask/inputmask
-//= require jquery.inputmask/dist/inputmask/inputmask.phone.extensions
-//= require jquery.inputmask/dist/inputmask/jquery.inputmask
+// = require jquery.inputmask/dist/inputmask/inputmask
+// = require jquery.inputmask/dist/inputmask/inputmask.phone.extensions
+// = require jquery.inputmask/dist/inputmask/jquery.inputmask
 
 //= require jquery.minicolors
 //= require flot/jquery.flot
