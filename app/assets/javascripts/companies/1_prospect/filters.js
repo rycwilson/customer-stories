@@ -35,7 +35,7 @@ function prospectFiltersListeners () {
           .find('optgroup[label="Customer Win"] option')
             .each(function () {
               successId = $(this).val().match(/-(\d+)$/)[1];
-              if (curatorId !== '0' && curatorSuccessIds.includes(successId)) {
+              if (curatorId !== '' && curatorSuccessIds.includes(successId)) {
                 $(this).data('curator', true);
               } else {
                 $(this).data('curator', false);
@@ -45,7 +45,7 @@ function prospectFiltersListeners () {
           .find('optgroup[label="Contributor"] option')
             .each(function () {
               contributorId = $(this).val().match(/-(\d+)$/)[1];
-              if (curatorId !== '0' && curatorContributorIds.includes(contributorId)) {
+              if (curatorId !== '' && curatorContributorIds.includes(contributorId)) {
                 $(this).data('curator', true);
               } else {
                 $(this).data('curator', false);
@@ -55,7 +55,7 @@ function prospectFiltersListeners () {
           .find('optgroup[label="Customer"] option')
             .each(function () {
               customerId = $(this).val().match(/-(\d+)$/)[1];
-              if (curatorId !== '0' && curatorCustomerIds.includes(customerId)) {
+              if (curatorId !== '' && curatorCustomerIds.includes(customerId)) {
                 $(this).data('curator', true);
               } else {
                 $(this).data('curator', false);
@@ -127,7 +127,7 @@ function prospectFiltersListeners () {
             curatorId = $filter.closest('[id*="table_wrapper"').find('.curator-select').val(),
             prev = $input.data('prev'),
             curr = $input.val();
-        if (prev === '' || curatorId === '0') {
+        if (prev === '' || curatorId === '') {
           showCuratorOptions($filter, false); // show all items
         } else if (curr === '') {
           showCuratorOptions($filter, true); // show curator-specific items
@@ -140,12 +140,12 @@ function prospectFiltersListeners () {
             curatorId = $tableWrapper.find('.curator-select').val(),
             filterCol = $tableWrapper.find('.dt-filter option:selected').data('column'),
             filterVal = searchStr ? searchStr :
-                          ( $tableWrapper.find('.dt-filter option:selected').val() === '0' ? '0' :
+                          ( $tableWrapper.find('.dt-filter option:selected').val() === '' ? '' :
                             $tableWrapper.find('.dt-filter option:selected').text() ),
             // set curator
             dtSearch = dt.search('')
                .column('curator:name')
-               .search(curatorId === '0' ? '' : '^' + curatorId + '$', true, false);
+               .search(!curatorId ? '' : '^' + curatorId + '$', true, false);
 
         if ($table.is($('#successes-table'))) {
           // clear last column search, and keep track of current search
@@ -171,7 +171,7 @@ function prospectFiltersListeners () {
         }
 
         // search a column
-        if (filterVal !== '0') {
+        if (filterVal !== '') {
           if (useRegExSearch) {
             dtSearch = dtSearch.column(filterCol + ':name').search('^' + filterVal + '$', true, false);
           } else {
@@ -179,13 +179,6 @@ function prospectFiltersListeners () {
           }
         }
         return dtSearch;
-      },
-      toggleClear = function ($filter) {
-        if ($filter.val() === '0') {
-          $filter.prev().css('display', 'none');
-        } else {
-          $filter.prev().css('display', 'inline-block');
-        }
       };
 
   $(document)
@@ -199,7 +192,7 @@ function prospectFiltersListeners () {
       tagCuratorOptions($filter, curatorId);
 
       // TODO: should selecting a curator automatically filter all?
-      $filter.val('0').trigger('change.select2');
+      $filter.val('').trigger('change.select2');
       setSearch($table).draw();
 
       // update the other curator select (if auto, halt the chain)
@@ -211,7 +204,6 @@ function prospectFiltersListeners () {
 
     .on('change', '#successes-filter, #contributors-filter', function () {
       var $table = $(this).closest('[id*="table_wrapper"]').find('table');
-      toggleClear($(this)); // toggle the X icon
       setSearch($table, true).draw();
     })
 
@@ -232,7 +224,7 @@ function prospectFiltersListeners () {
     // if a curator is selected, show curator-specific items
     .on('select2:open', '.dt-filter', function() {
       var curatorId = $(this).closest('[id*="table_wrapper"]').find('.curator-select').val();
-      showCuratorOptions($(this), curatorId === '0' ? false : true);
+      showCuratorOptions($(this), curatorId === '' ? false : true);
 
       // keep track of previous value; this allows for toggling of curator-specific options
       $('input.select2-search__field').data('prev', '');
@@ -257,7 +249,7 @@ function prospectFiltersListeners () {
       var $tableWrapper = $(this).closest('[id*="table_wrapper"]'),
           $table = $tableWrapper.find('table'),
           dt = $table.DataTable();
-      $(this).next().val('0').trigger('change');
+      $(this).next().val('').trigger('change');
 
       // close any open child rows
       $table.find('tr').each(function () {

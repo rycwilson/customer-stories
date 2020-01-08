@@ -16,7 +16,10 @@
 
           <div class="tab-pane fade in active" id="company-profile">
 
-            <%= render 'companies/settings/company_form', { company: @company, form_options: @form_options } %>
+            <%= render(
+                  'companies/settings/company_profile', 
+                  { company: @company, form_options: @form_options } 
+                ) %>
 
           </div>
 

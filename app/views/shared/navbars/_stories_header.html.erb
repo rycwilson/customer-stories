@@ -1,92 +1,93 @@
 
-<div id="stories-header-wrapper" style="<%= company.subdomain == 'compas' ? 'background:' + company.header_color_2 : '' %>">
-  <nav id="stories-header" class="navbar navbar-default <%= action_name %>" style="background-color:<%= company.header_color_2 %>; color:<%= company.header_text_color %>">
-    <div class="container navbar-container">
+<nav class="<%= stories_header_class(company) %> <%= action_name %> navbar navbar-default" 
+      style="<%= stories_header_custom_colors(company) %>">
+  <div class="container navbar-container">
 
-      <div class="visible-xs-block" style="height: 100%">
-        <!-- don't add .visible-xs-block to .row, as the display: flex setting will be overridden -->
-        <div class="row">
-          <div class="navbar-header col-xs-12">
-            <h4>Customer Stories</h4>
-          </div>
+    <div class="visible-xs-block" style="height: 100%">
+      <!-- don't add .visible-xs-block to .row, as the display: flex setting will be overridden -->
+      <div class="row">
+        <div class="col-xs-12 navbar-header">
+          <h3 class="stories-header__title">Customer Stories</h3>
+        </div>
+      </div>
+    </div>
+
+    <div class="row hidden-xs">
+
+      <% if curator?(company) && current_page?(action: 'index') %>
+
+        <div class="col-sm-6 navbar-header">
+          <h3 class="stories-header__title">Customer Stories</h3>
         </div>
 
-      </div>
+        <div class="col-sm-6">
+          <a href="/curate" class="stories-header__home">
+            <i class="glyphicon glyphicon-home"></i>
+          </a>
+        </div>
 
-      <div class="row hidden-xs">
+      <% elsif curator?(company) && current_page?(action: 'show') %>
 
-        <% if curator?(company) && current_page?(action: 'index') %>
+        <div class="col-sm-5 navbar-header">
+          <h3 class="stories-header__title">Customer Stories</h3>
+        </div>
 
-          <div class="col-sm-6 navbar-header">
-            <h4>Customer Stories</h4>
-          </div>
-
-          <div class="col-sm-6 home">
-            <a href="/curate" class="<%= company.color_contrast %>">
-              <i class="glyphicon glyphicon-home"></i>
-            </a>
-          </div>
-
-        <% elsif curator?(company) && current_page?(action: 'show') %>
-
-          <div class="col-sm-5 navbar-header">
-            <h4>Customer Stories</h4>
-          </div>
-
-          <div class="col-sm-2 text-center edit-story <%= 'preview' if is_preview %>">
+        <div class="col-sm-2 text-center" style="height: 100%">
+          <% unless is_preview %>
 
             <%= link_to(
                   curate_story_path(story.customer.slug, story.slug),
-                  { class: "#{company.color_contrast }" }
+                  class: "stories-header__edit"
                 ) do %>
               <i class="glyphicon glyphicon-pencil"></i>&nbsp;&nbsp;Edit Story
             <% end %>
 
-          </div>
+          <% end %>
+        </div>
 
-          <div class="col-sm-5">
-            <%= render('stories/shared/social_buttons', { company: company, story: story }) %>
-          </div>
-
-        <% elsif current_page?(action: 'index') %>
-
-          <div class="col-sm-6 navbar-header">
-            <h4>Customer Stories</h4>
-          </div>
-
-          <div class="col-sm-6">
-            <% if company.category_tags.blank? && company.product_tags.blank? %>
-              <%= render('stories/shared/filters/search_form', { company: company }) %>
-            <% else %>
-              <!-- filler -->
-            <% end -%>
-          </div>
-
-        <% elsif current_page?(action: 'show') %>
-
-          <div class="col-sm-6 navbar-header" style="<%= !production? ? 'display:flex; align-items: center' : ''; %>">
-            <h4 style="display: inline-block">Customer Stories</h4>
-
-            <%# if !production? %>
-         <!--      <div style="display: inline-block; margin: 0 20px" id="google_translate_element"></div>
-              <script type="text/javascript">
-                function googleTranslateElementInit() {
-                  new google.translate.TranslateElement({pageLanguage: 'en', layout: google.translate.TranslateElement. InlineLayout.SIMPLE}, 'google_translate_element');
+        <div class="col-sm-5">
+          <%= render(
+                'stories/shared/share_buttons', 
+                { 
+                  story: story, 
+                  container_class: 'share-buttons',
+                  button_class: 'share-button'
                 }
-              </script>
-              <script type="text/javascript" src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script> -->
-            <%# end %>
+              ) %>
+        </div>
 
-          </div>
+      <% elsif current_page?(action: 'index') %>
 
-          <div class="col-sm-6">
-            <%= render('stories/shared/social_buttons', { company: company, story: story }) %>
-          </div>
+        <div class="col-sm-6 navbar-header">
+          <h3 class="stories-header__title">Customer Stories</h3>
+        </div>
 
-        <% end %>
+        <div class="col-sm-6">
+          <% if !include_category_filter?(company) && !include_product_filter?(company) %>
+            <%= render('stories/shared/search_form', { company: company }) %>
+          <% end %>
+        </div>
 
-      </div>
+      <% elsif current_page?(action: 'show') %>
+
+        <div class="col-sm-6 navbar-header">
+          <h3 class="stories-header__title">Customer Stories</h3>
+        </div>
+
+        <div class="col-sm-6">
+          <%= render(
+                'stories/shared/share_buttons', 
+                { 
+                  story: story, 
+                  container_class: 'share-buttons',
+                  button_class: 'share-button'
+                }
+              ) %>
+        </div>
+
+      <% end %>
 
     </div>
-  </nav>
-</div>
+
+  </div>
+</nav>

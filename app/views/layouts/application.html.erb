@@ -8,8 +8,16 @@
   <title><%= title_helper(controller_name, action_name, @company, @story) %></title>
   <%= yield(:head) if content_for?(:head) %>
 
-  <%= stylesheet_link_tag 'application', media: 'all', 'data-turbolinks-track' => 'reload' %>
-  <%= mvp_stylesheet %>
+  <% if custom_stylesheet?(@company) %>
+    <%= stylesheet_link_tag("custom/wrappers/#{@company.subdomain}", media: 'all', 'data-turbolinks-track' => 'reload') %>
+  <% else %>
+    <%= stylesheet_link_tag('application', media: 'all', 'data-turbolinks-track' => 'reload') %>
+  <% end %>
+
+  <%#= mvp_stylesheet %>
+  <% if ['site', 'sessions'].include?(controller_name) %>
+    <%= stylesheet_link_tag 'mvpready-landing', media: 'all', 'data-turbolinks-track' => 'reload' %>
+  <% end %>
 
   <%#= javascript_include_tag 'application', 'data-turbolinks-track' => 'reload' %>
   <%= javascript_pack_tag('application', 'data-turbolinks-track': 'reload') %>
@@ -25,10 +33,18 @@
   <link href="https://fonts.googleapis.com/css?family=Montserrat:400,500,600,700&amp;lang=en" rel="stylesheet" type="text/css">
   <link href="https://fonts.googleapis.com/css?family=Open+Sans:300" rel="stylesheet">
 
+  <% if staging? || @company.try(:subdomain) == 'pixlee' %>
+    <meta name="robots" content="noindex">
+  <% end %>
+
   <%= custom_google_fonts(@company) %>
 
   <%= favicon_link_tag 'favicon.ico' %>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/chance/1.1.0/chance.min.js"></script>
+
 </head>
+
 <!-- TODO: fixed navbar - leave padding as below (false is temp. blocker) -->
 <body class="<%= controller_name %> <%= action_name %> <%= @company ? @company.subdomain : '' %>"
       style="<%= @is_social_share_redirect ? 'visibility:hidden;' : '' %> <%= admin_navbar?(controller_name) && false ? 'padding-top:65px;' : '' %>">

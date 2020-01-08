@@ -1,30 +1,26 @@
 
-ruby '2.5.0'
+ruby '2.5.7'
 source 'https://rubygems.org'
 
-# NOTE: Front-end assets are all managed through the bower-rails gem
-#  see Bowerfile
-#  run rake bower:install to install assets listed in Bowerfile
-
 gem 'activerecord-import'
-gem 'aws-sdk', '~> 2'
 gem 'awesome_print'
+gem 'aws-sdk', '~> 2'
 gem 'bootstrap-tab-history-rails'
 gem 'bower-rails', '~> 0.11.0'
 gem 'browser-timezone-rails'
 gem 'connection_pool'
 gem 'dalli'
-# gem 'delayed_job_active_record'
 gem 'devise'
 gem 'devise-doorkeeper'
 gem 'doorkeeper'
 gem 'ffaker'
 gem 'figaro'
 gem 'font-awesome-rails'
-gem 'friendly_id', '~> 5.1.0'
+gem 'friendly_id', '~> 5.2.4'
+gem 'gon'
 gem 'googlecharts'
 gem 'google-adwords-api', '1.4.0'
-# gem 'jazz_hands', github: 'nixme/jazz_hands', branch: 'bring-your-own-debugger'
+gem 'html_to_plain_text'
 gem 'jquery-minicolors-rails'
 gem 'local_time'
 # gem 'miro'
@@ -32,22 +28,20 @@ gem 'multi_json'
 # gem 'oauth2'
 gem 'order_as_specified'
 gem 'pg'
-# gem 'pry'
-# gem 'pry-byebug'  # causes issues with pry-remote
-gem 'pry-rails'
+gem 'pretender'
+gem 'pry-byebug', '=1.3.3'  # https://stackoverflow.com/questions/32780971
+gem 'pry-rails' 
 gem 'pry-remote'
-# gem 'pry-rescue'
 gem 'pry-theme'
 gem 'rails', '5.2.3'
 gem 'rails_admin'
 gem 'rails-html-sanitizer'
 gem 'rack_password'
-# gem 'rack-timeout'
+gem 'rack-timeout', require:"rack/timeout/base"
 gem 'reverse_markdown'
-# gem 'sass-rails', '~> 5.0'
 gem 'sassc-rails'
+gem 'sprockets', '~> 3.7.2'
 gem 'summernote-rails'
-gem 'switch_user'
 gem 'turbolinks', '~> 5.0.0'
 gem 'typhoeus'
 gem 'uglifier', '>= 1.3.0'
@@ -56,15 +50,12 @@ gem 'wicked_pdf'
 gem 'wkhtmltopdf-binary'
 
 group :production do
-
   gem 'puma'
   gem 'rails_12factor'
   # gem 'rack-timeout'
-
 end
 
 group :development, :test do
-
   # gem 'rack-mini-profiler'
   # gem 'flamegraph'
   # gem 'stackprof'
@@ -76,5 +67,4 @@ group :development, :test do
   gem 'spring'
   gem 'web-console', '~> 3.0'
   gem 'binding_of_caller'
-
 end

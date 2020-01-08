@@ -1,0 +1,87 @@
+<div class="row" style="margin-bottom: 25px">
+
+  <label class="control-label col-sm-3">Open Graph Tags</label>
+
+  <div class="col-sm-9 col-md-8 col-lg-6">
+    <div style="background: #efefef; padding: 15px">
+
+      <div class="form-group" style="margin-bottom: 15px">
+        <div class="col-sm-12">
+          <%= story_form.label(:og_title, 'Title', style: 'font-weight: 400;') %>
+          <%= story_form.text_field(:og_title, class: 'form-control', placeholder: 'og:title') %>
+        </div>
+      </div>
+
+      <div class="form-group" style="margin-bottom: 15px">
+        <div class="col-sm-12">
+        <%= story_form.label(:og_description, 'Description', style: 'font-weight: 400;') %>
+        <%= story_form.text_area(
+              :og_description, class: 'form-control', rows: 2, placeholder: 'og:description'
+            ) %>
+        </div>
+      </div>
+
+      <div class="og-image-upload form-group">
+        <%= story_form.hidden_field(:og_image_width) %>
+        <%= story_form.hidden_field(:og_image_height) %>
+
+        <div class="col-sm-12">
+
+          <div style="display: flex; align-items: center; justify-content: space-between">
+            <label style="margin-bottom: 0; font-weight: 400">Image</label>
+            <button type="button" class="og-image-upload__button btn">
+              <i class="fa fa-upload"></i>&nbsp;
+              Upload
+            </button>
+          </div>
+
+          <div class="og-image-upload__fileinput fileinput <%= story.og_image_url.present? ? 'fileinput-exists' : 'fileinput-new' %>" 
+              data-provides="fileinput">
+          
+            <div style="height: 100%; position: relative">
+    
+              <div class="og-image-upload__thumbnail fileinput-new thumbnail form-control" data-trigger="fileinput">
+                <%= image_tag(RESPONSIVE_AD_LANDSCAPE_IMAGE_PLACEHOLDER, alt: 'og:image placeholder') %>
+              </div>
+
+              <div class="og-image-upload__thumbnail fileinput-preview fileinput-exists thumbnail form-control" data-trigger="fileinput">
+                <%= image_tag(story.og_image_url, alt: 'og:image') if story.og_image_url.present? %>
+              </div>
+
+              <div class="og-image-upload__errors">
+                <div>
+                  <i class="fa fa-warning"></i>
+                  <span class="help-block with-errors"></span>
+                </div>
+              </div>
+
+            </div>
+
+            <div class="btn-file">
+              <%= story_form.file_field(
+                    :og_image_url,
+                    data: {
+                      'min-dimensions': '600x314',
+                      'max-file-size': '5242880',
+                    }
+                  ) %>
+            </div>
+          
+          </div>
+
+        </div>
+      </div>
+
+      <div class="form-group" style="margin-bottom: 15px">
+        <div class="col-sm-12">
+          <%= story_form.label(:og_image_alt, 'Image Description', style: 'font-weight: 400;') %>
+          <%= story_form.text_area(
+                :og_image_alt, class: 'form-control', rows: 2, placeholder: 'og:image:alt'
+              ) %>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+</div>

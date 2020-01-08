@@ -60,19 +60,13 @@
         }
       }
 
-      if ($script.data('demo')) {
-        isDemo = true;
-      }
+      if ($script.data('demo')) var isDemo = true;
+      if (!$container.hasClass('cs-plugin')) $container.addClass('cs-plugin');
 
-      // get font awesome if it doesn't exist on host
-      $("<link>", {
-        rel: "stylesheet",
-        type: "text/css",
-        href: "https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css"
-      })
+      $stylesheet
         .appendTo('head')
+        .on('load', getPlugin($container, $script, isDemo, env, preSelectedStorySlug))
         .on('load', function () {
-
           if (preSelectedStorySlug) {
             // z-index is just a touch greater than the 100000 that is set on .cs-main when an overlay is opened
             // TODO: constantize this number
@@ -96,21 +90,7 @@
               };
             }, 7000)
           }
-
         });
-
-      // reset the css (none of this works with weebly, gah!)
-      // ref: https://stackoverflow.com/questions/15901030/reset-remove-css-styles-for-element-only
-      //
-      // $container.css('all', 'initial');
-      // $container.find('*').css('all', 'unset');
-      //
-      // $container.css('all', 'revert');
-
-      // wait for stylesheet to load ...
-      $stylesheet
-        .appendTo('head')
-        .on('load', getPlugin($container, $script, isDemo, env, preSelectedStorySlug));
 
     });
   }
@@ -125,6 +105,8 @@
         data: {
           is_demo: isDemo,
           stories: $script.data('stories'),
+          title: $script.data('title'),
+          skip: $script.data('skip'),
           category: $script.data('category'),
           product: $script.data('product'),
           pre_selected_story: (new URL(window.location)).searchParams.get('cs') ||
@@ -152,6 +134,16 @@
             if (++loadedImages === $images.length) {
               initPlugin('<%= @type %>', $container, $script, isDemo, env, preSelectedStoryIndex);
             }
+
+            // truncate story titles
+            $('.story-card__title').each(function () {
+              var $title = $(this).find('p');
+              while ($title.outerHeight() > $(this).height()) {
+                $title.text(function (index, text) {
+                  return text.replace(/\W*\s(\S)*$/, '...');
+                });
+              }
+            });
           });
 
           // if images are coming from cache they won't trigger the load event;
@@ -172,12 +164,13 @@
         initOverlays = $.Deferred(),
         maxGalleryRows = parseInt($script.data('max-rows'), 10),
         tabbedCarouselDelay = ((type === 'tabbed_carousel') && parseInt($script.data('delay'), 10) || 0);
-
+    
     trackPluginVisitor($container, isDemo, env);
 
     $.getScript("<%= asset_url('plugins/cs_video.js') %>", function () {
         initVideo.resolve();
       });
+
     if (type !== 'tabbed_carousel') {
       $.getScript("<%= asset_url('plugins/cs_overlays.js') %>", function () {
           cspInitOverlays($, $container, '<%= @company.subdomain %>', isDemo, env);
@@ -193,7 +186,7 @@
           method: 'GET',
           dataType: 'script'
         })
-          .done(function () {
+          .done(function (data, status, xhr) {
             if (type === 'gallery') cspInitGallery($, $container, maxGalleryRows, preSelectedStoryIndex);
             else if (type === 'carousel') cspInitCarousel($, $container, preSelectedStoryIndex, '<%= @company.subdomain %>');
             else if (type === 'tabbed_carousel') {

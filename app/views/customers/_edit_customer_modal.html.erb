@@ -100,7 +100,8 @@
             <div class="customer-logo__show-name text-center">
               <label class="checkbox-inline">
                 <input name="customer[show_name_with_logo]" type="hidden" value="false">
-                <input type="checkbox" value="true" checked="{{= customer.show_name_with_logo ? 'checked' : '' }}" name="customer[show_name_with_logo]">
+                <input type="checkbox" value="true" name="customer[show_name_with_logo]"
+                      {{= customer.show_name_with_logo ? 'checked' : '' }}>
                 Show name with logo
               </label>
             </div>

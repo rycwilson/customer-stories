@@ -1,4 +1,5 @@
 
+
 <div class="<%= is_plugin ? 'cs-container' : 'container' %>">
 
   <div class="<%= is_plugin ? 'cs-row' : 'row' %>">
@@ -115,7 +116,7 @@
               <div>
                 <div class="primary-cta">
 
-                  <a href="https://www.pixlee.com/request-demo?utm_source=Customer%20Stories" class="btn">
+                  <a href="https://landing.pixlee.com/request-demo?utm_source=Customer_Stories" class="btn">
                     <span>REQUEST DEMO</span>
                   </a>
 
@@ -139,41 +140,23 @@
 
         <section style="margin-bottom: 25px">
           <div class="cs-row" style="margin: auto; height: 42px; margin-bottom: 0">
-              <div class="col-sm-1" style="display: flex; align-items: center; justify-content: center; height: 100%; padding: 0">
-                <i class="fa fa-fw fa-share" style="font-size: 14px;"></i>
-              </div>
 
-              <div class="col-sm-11" style="padding: 0">
-                <div class="social-sharing">
-
-                  <div class="share__button--facebook">
-                    <a href="<%= FACEBOOK_SHARE_URL + url_encode(story.csp_story_url) %>">
-                      <i class="fa fa-fw fa-facebook" style="color: inherit !important"></i>
-                    </a>
-                  </div>
-
-                  <div class="share__button--twitter">
-                    <a href="<%= TWITTER_SHARE_URL + url_encode(story.csp_story_url) %>">
-                      <i class="fa fa-fw fa-twitter" style="color: inherit !important"></i>
-                    </a>
-                  </div>
-
-                  <div class="share__button--linkedin">
-                    <a href="<%= LINKEDIN_SHARE_URL + url_encode(story.csp_story_url) %>">
-                      <i class="fa fa-fw fa-linkedin" style="color: inherit !important"></i>
-                    </a>
-                  </div>
-
-                  <div class="share__button--email">
-                    <a href="mailto:?subject=<%= url_encode(story.title) %>&body=<%= url_encode(story.csp_story_url) %>" class="mailto">
-                      <i class="fa fa-fw fa-envelope" style="padding-bottom: 1px; color: inherit !important"></i>
-                    </a>
-                  </div>
-
-                </div>
-
-              </div>
+            <div class="col-sm-1" style="display: flex; align-items: center; justify-content: center; height: 100%; padding: 0">
+              <i class="fa fa-fw fa-share" style="font-size: 14px;"></i>
             </div>
+
+            <div class="col-sm-11" style="padding: 0">
+              <%= render(
+                    'stories/shared/share_buttons', 
+                    { 
+                      story: story,
+                      container_class: 'cs-share-buttons',
+                      button_class: 'cs-share-button'
+                    }
+                  ) %>
+            </div>
+
+          </div>
         </section>
 
       <% end %>

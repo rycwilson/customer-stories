@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20190415230011) do
+ActiveRecord::Schema.define(version: 20191115170419) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -396,6 +396,13 @@ ActiveRecord::Schema.define(version: 20190415230011) do
     t.boolean  "preview_published",    default: false
     t.text     "summary"
     t.datetime "preview_publish_date"
+    t.string   "hidden_link"
+    t.string   "og_title"
+    t.string   "og_description"
+    t.string   "og_image_url"
+    t.string   "og_image_alt"
+    t.string   "og_image_width"
+    t.string   "og_image_height"
     t.index ["success_id"], name: "index_stories_on_success_id", using: :btree
     t.index ["title"], name: "index_stories_on_title", unique: true, using: :btree
   end

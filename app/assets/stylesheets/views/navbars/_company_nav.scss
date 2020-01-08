@@ -1,113 +1,89 @@
 
-#company-nav.unregistered {
-  #workflow-tabs {
-    pointer-events: none;
-    opacity: 0.5;
-  }
-}
-
-// example of bolding items without affecting spacing: http://jsfiddle.net/85LbG/
 #company-nav {
-  position: relative;
-  height: 48px;
   margin-bottom: 40px;
   background-color: #fff;
   border-bottom: 1px solid #dfdfdf;
-  // box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.16), 0 0 1px -1px rgba(0, 0, 0, 0.08);
-  .row {
-    height: 48px;
-    display: flex;
-    align-items: center;
+  &.unregistered {
+    .nav-workflow {
+      pointer-events: none;
+      opacity: 0.5;
+    }
   }
+}
 
-  li {
-    position: relative;
+.nav-tabs.nav-workflow {
+  font-size: 16px;
+  border-bottom: 0;
+  
+  // hard-coded widths prevent width from changing when text is bolded 
+  // (the trick outlined here didn't work: http://jsfiddle.net/85LbG/)
+  > li:nth-of-type(1) {
+    width: 102px
   }
-
-  #workflow-tabs {
+  > li:nth-of-type(2) {
+    width: 89px
+  }
+  > li:nth-of-type(3) {
+    width: 101px;
+  }
+  > li:nth-of-type(4) {
+    width: 101px;
+  }
+  > li {
     margin-bottom: 0;
-    font-size: 16px;
-    li.active {
-      a {
-        color: #0095ff; // #d74b4b;  // #4885ed;
-        font-weight: bold;
-        border: transparent;
-        border-bottom: 1px solid #0095ff; //#d74b4b;  // #4885ed;
-      }
-      a:hover, a:focus {
-        color: #0095ff; // #d74b4b;  // #4885ed;
-        border-bottom: 1px solid #0095ff; //  #d74b4b;  // #4885ed;
+    > a {
+      background-color: #fff;
+      font-family: 'Lato';
+      color: #666;
+      font-weight: 400;
+      border: 2px solid transparent;
+      &:hover, &:focus {
+        background-color: #fff;
+        color: #222;
+        border: 2px solid transparent;
       }
     }
-    li {
-      a {
-        text-decoration: none;
-        // display: block;
-        background-color: #ffffff;
-        // margin: 0;
-        font-family: 'Lato';
-        color: #666;
-        font-weight: 400;
-        padding: 12px 12px;
-        letter-spacing: normal;
-        border: 0;  // overrides bootstrap
+    &.active {
+      > a, > a:hover, > a:focus {
+        color: $nav-blue; // #0095ff; // #d74b4b;  // #4885ed;
+        font-weight: bold;
+        border: 2px solid transparent;
+        border-bottom: 2px solid $nav-blue; // #0095ff; //#d74b4b;  // #4885ed;
       }
-      a:hover, a:focus {
-        background-color: #ffffff;
+    }
+    
+  }
+}
+
+.nav-tabs.nav-settings {
+  border: 0;
+  li.dropdown {
+    > a {
+      font-size: 16px;
+      border: 2px solid transparent;
+      &:hover, &:focus {
         color: #222;
-        // font-weight: bold;
+        background-color: transparent;
         border-color: transparent;
       }
     }
-  }
-
-  #company-nav-tabs {
-    margin: 0;
-    border-bottom: 1px solid transparent;
-    li.dropdown {
-      a { border: 0; }
-      a.dropdown-toggle {
-        font-size: 16px;
-        padding: 12px 14px;
-        &:hover, &:focus {
-          background-color: #ffffff;
-          color: #222;
-          // border-color: transparent;
-        }
-      }
-      &.open {
-        > a {
-          background-color: #fff;
-          color: #333;
-          border-top: transparent;
-          border-right: transparent;
-          border-left: transparent;
-          border-bottom: 1px solid #0095ff; // #d74b4b;  // #4885ed;
-        }
-        // remove the caret from dropdown
-        .dropdown-menu::after, .dropdown-menu::before {
-          display:none;
-        }
-      }
-      ul.dropdown-menu {
-        top: 104%;
-        border-color: #f2f2f2;
-        border-top-right-radius: 0;
-        border-top-left-radius: 0;
-        li {
-          a {
-            color: #666;
-            font-size: 13px;
-            padding: 6px 12px;
-            border-radius: 4px;
-          }
-          a:hover, a:focus {
-            color: #333;
-            background-color: #f2f2f2;
-          }
-        }
+    &.active {
+      > a, > a:hover, > a:focus {
+        color: $nav-blue; 
+        border-color: transparent;
+        border-bottom: 2px solid $nav-blue;
       }
     }
+    &.open:not(.active) {
+      > a {
+        background-color: #fff;  // this prevents background color flicker when closing the dropdown
+        color: #222;
+      }
+      // remove the caret from dropdown
+      // .dropdown-menu::after, .dropdown-menu::before {
+      //   display:none;
+      // }
+    }
   }
+} 
 
-}

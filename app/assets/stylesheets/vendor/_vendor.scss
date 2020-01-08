@@ -12,7 +12,8 @@
 @import 'bootstrap-daterangepicker/daterangepicker';
 @import 'summernote';
 
-// override plugin stylesheets
+// csp overrides
+@import 'bootstrap';
 @import 'select2';
 @import 'summernote_csp';
-@import 'turbolinks';
+@import 'datatables';

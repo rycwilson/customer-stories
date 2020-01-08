@@ -4,11 +4,13 @@ class CompaniesController < ApplicationController
   # application#check_subdomain takes care of this...
   # before_action :user_authorized?, only: [:edit, :show]
   before_action :set_company, except: [:new, :create, :promote, :get_curators, :get_invitation_templates]
+  before_action(only: [:show, :edit]) { set_gon(@company) }
   before_action :set_s3_direct_post, only: [:new, :edit, :show, :create]
 
   def new
     @company = Company.new
     @form_options = set_form_options(params)
+    render :company_settings
   end
 
   def show
@@ -16,15 +18,18 @@ class CompaniesController < ApplicationController
     @workflow_stage = params[:workflow_stage]
     @prospect_tab = request.cookies['prospect-tab'] || '#successes'
     @promote_tab = request.cookies['promote-tab'] || '#promoted-stories'
-    # @recent_activity = Rails.cache.fetch("#{@company.subdomain}/recent-activity") { @company.recent_activity(30) }
-    # @story_views_30_day_count = PageView.joins(:visitor_session)
-    #                              .company_story_views_since(@company.id, 30).count
+    @recent_activity = Rails.cache.fetch("#{@company.subdomain}/recent-activity") { @company.recent_activity(30) }
+    @story_views_30_day_count = PageView.joins(:visitor_session)
+                                .company_story_views_since(@company.id, 30).count
+    # note: app data is obtained via json (see set_gon() in application controller)
     @curate_view = 'stories'
   end
 
   def edit
     redirect_to(company_settings_path) if request.path.match(/\/companies\/\d+/)
+    @tab = request.cookies['company-tab'] || '#edit-company-profile'
     @form_options = set_form_options(params, @company)
+    render :company_settings
   end
 
   def create
@@ -53,7 +58,10 @@ class CompaniesController < ApplicationController
         @flash = {} :
         @flash = { mesg: @company.errors.full_messages.join(', '), status: 'danger' }
     end
-    respond_to { |format| format.js }
+    respond_to do |format| 
+      @background_color_contrast = helpers.background_color_contrast(@company.header_color_2)
+      format.js {}
+    end
   end
 
   def update_gads
@@ -181,7 +189,7 @@ class CompaniesController < ApplicationController
     options = {
       html: {
         id: 'company-profile-form',
-        class: 'directUpload',
+        class: 'directUpload form-horizontal',
         data: {
           url: @s3_direct_post.url,
           host: URI.parse(@s3_direct_post.url).host,

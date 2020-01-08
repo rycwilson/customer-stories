@@ -1,9 +1,9 @@
 
-function cspInitVideo ($, $story) {
+function cspInitVideo ($, $storyOverlay, $storyCard) {
   // console.log('cspInitVideo')
 
   // two containers: regular and xs
-  var $thumbContainers = $story.find('.video-thumb-container'),
+  var $thumbContainers = $storyOverlay.find('.video-thumb-container'),
       provider = $thumbContainers.data('provider'),
       videoId = $thumbContainers.data('video-id'),
       videoUrl = $thumbContainers.data('video-url'),
@@ -12,7 +12,7 @@ function cspInitVideo ($, $story) {
 
   if (['youtube', 'vimeo'].includes(provider)) {
     // var $iframe = $('#cs-video-modal iframe'),
-    var $iframe = $(window).width() < 768 ? $story.find('.cs-story-video-xs iframe') : $story.find('.cs-story-video iframe'),
+    var $iframe = $(window).width() < 768 ? $storyOverlay.find('.cs-story-video-xs iframe') : $storyOverlay.find('.cs-story-video iframe'),
         videoPlayerWindow = $iframe[0].contentWindow;
 
   }
@@ -24,7 +24,7 @@ function cspInitVideo ($, $story) {
 
   function loadVideoThumbnail () {
     // no video, or wistia video
-    if ($story.find('.cs-testimonial').hasClass('no-video') ||
+    if ($storyOverlay.find('.cs-testimonial').hasClass('no-video') ||
         $thumbContainers.length === 0 ||
         $thumbContainers.find('img').not('#cs-video-placeholder').length !== 0) {
       return false;
@@ -46,13 +46,13 @@ function cspInitVideo ($, $story) {
       thumbSrc = 'https://img.youtube.com/vi/' + videoId + '/hqdefault.jpg';
       $.when(appendThumbnail())
         .done(function () {
-          var $images = $story.find('.cs-story-video-xs img, .cs-story-video img'),
+          var $images = $storyOverlay.find('.cs-story-video-xs img, .cs-story-video img'),
               loadedImages = 0;
           $images.on('load', function () {
             if (++loadedImages === $images.length) {
               // original width of 120 indicates youtube thumbnail not available
               if ($images[0].naturalWidth === 120) {
-                removeVideo();
+                removeVideo($storyCard);
               } else {
                 $.when(
                   $thumbContainers.find('img').after(
@@ -92,15 +92,20 @@ function cspInitVideo ($, $story) {
 
   function removeVideo () {
     $('.cs-story-video-xs').remove();
-    $.ajax({
-      url: $storyCard.attr('href'),
-      method: 'GET',
-      data: { remove_video: true },
-      dataType: 'html'
-    })
-      .done(function () {
-        $('.cs-testimonial').empty().append(html);
-      });
+
+    // TODO: some issues here
+    // $.ajax({
+    //   url: $storyCard.attr('href'),
+    //   method: 'GET',
+    //   data: { 
+    //     remove_video: true, 
+    //     is_plugin: true 
+    //   },
+    //   dataType: 'html'
+    // })
+    //   .done(function (html) {
+    //     $('.cs-testimonial').empty().append(html);
+    //   });
   }
 
   function pauseVideo () {

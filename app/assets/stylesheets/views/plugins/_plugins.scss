@@ -1,0 +1,82 @@
+
+@import '../../base/variables';
+@import '../../base/mixins';
+  
+body.plugin-demo {
+  font-family: $company-body-font;
+  // font-size: 14px;
+  background-color: #f2f2f2;
+  &.bg-dark {
+    background-color: #888;
+  }
+  #cs-carousel {
+    margin: 100px 0;
+  }
+}
+
+// Scope font awesome and bootstrap so as not to affect host page;
+// include overlays and story page since they will have settings that override bootstrap
+// => if they're not scoped, bootstrap settings will take precedence due to specificity from scoping
+.cs-plugin {
+
+  // this file is copied from the font-awesome-rails gem and the @at-root is wrapped around @font-face
+  // => else the icons won't work
+  // => https://github.com/sass/sass/issues/1251
+  @import './font_awesome';
+
+  @import '../../../../../vendor/assets/bower_components/bootstrap-sass/assets/stylesheets/bootstrap-plugins'; 
+  @import '../../../../../vendor/assets/bower_components/bootstrap-horizon/bootstrap-horizon';
+  @import '../../base/globals';
+  @import 'overlays/main';
+  @import '../stories/show/show';
+}
+
+@import 'gallery';
+@import 'carousel';
+@import 'tabbed_carousel';
+
+.cs-carousel, .cs-tabbed-carousel {
+  .story-card {
+    margin: 0 auto;
+  }
+}
+
+.story-card.cs-hover:not(.og-expanded),
+.story-card.cs-loading {
+  .story-card__link {
+    border: 1px solid transparent;
+    box-shadow: $story-card-box-shadow-hover;
+    .story-card__logo {
+      opacity: 0.04;
+    }
+    .story-card__title {
+      transform: translateY(0%);
+    }
+    .story-card__cta:after {
+      visibility: visible;
+      transition: all 0s step-end;
+    }
+    .story-card__customer {
+      visibility: hidden;
+      transition: all 0s step-end;
+    }
+  }
+}
+
+@media only screen and (min-width: 992px) {
+  #cs-gallery .story-card {
+    margin: 20px;
+  }
+}
+
+@media only screen and (min-width: 768px) and (max-width: 991px) {
+  #cs-gallery .story-card__link {
+    width: $small-story-card-width;  
+    height: $small-story-card-height; 
+  }
+}
+
+
+
+
+

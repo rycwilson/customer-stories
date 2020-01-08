@@ -1,4 +1,5 @@
 
+#curate .layout-main
 #new-story-modal {
   .modal-header {
     .close {
@@ -7,113 +8,132 @@
   }
 }
 
-#curate {
+#curate .layout-sidebar .curate-stories {
+  @include hide-until-init;
+  background-color: $medium-gray;
+  background-clip: content-box;
+  padding: 0;
+}
+#curate .layout-main .curate-stories {
+  margin: 0 -15px;
+}
 
-  #curate-stories {
+#curate-filters  {
+  // margin: 0 -15px;
+  padding: 20px 15px 15px;
+  .form-group {
+    margin-bottom: 20px;
+  }
+}
 
-    @import 'gallery';
-
-    > .row > [class*="col-"]:first-of-type {
-      background: #efefef;
-      padding-top: 15px;
-      position: relative;
-      h4 {
-        margin-bottom: 10px;
+.customer-stories {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-family: $csp-title-font;
+  font-size: 16px;
+  font-weight: bold;
+  padding: 12px 10px;
+  img {
+    height: 20px;
+    margin-right: 16px;
+  }
+  > a, span {
+    display: flex;
+    align-items: center;
+  }
+  > a {
+    color: $nav-blue;
+    padding: 8px;
+    text-decoration: none;
+    height: 100%;
+    flex-grow: 1;
+    img:last-of-type {
+      display: none;
+    }
+    &:hover {
+      color: #1db5ff; //#3af;
+      img:first-of-type {
+        display: none;
       }
-      [data-target="#new-story-modal"] {
-        position: absolute;
-        top: 12px;
-        right: 12px;
-        cursor: pointer;
-        color: #666;
-        i {
-          // TODO: Font Awesome 5 has font variants that allow different weights
-          -webkit-text-stroke: 1px #efefef;
-        }
-      }
-      [data-target="#new-story-modal"]:hover {
-        color: #222;
-      }
-      // button {
-      //   width: 160px;
-      //   margin: 15px 0;
-      // }
-      #curate-filters  {
-        margin: 0 -15px;
-        padding: 15px;
-        .form-group {
-          margin-bottom: 20px;
-        }
+      img:last-of-type {
+        display: initial;
       }
     }
-
-    #status-filters {
-      margin: 10px;
-    }
-
   }
 
-  #edit-story {
-    // settings for this table are in prospect.scss
-    #curate-contributors-table {
+  // .btn-add {
+  //   @include fa-button($medium-gray);
+  // }
+}
+
+#curate-gallery {
+  // display: none;
+  .story-card {
+    margin: 8px;
+  }
+  @media only screen and (min-width: 1200px) {
+    li.story-card {
+      margin: 8px;
     }
+  }
+}
 
+#edit-story {
+  // settings for this table are in prospect.scss
+  #curate-contributors-table {
+  }
 
-    #narrative-editor {
+  #narrative-editor + .note-editor {
+    .modal.link-dialog {
 
     }
-    #narrative-editor + .note-editor {
-      .modal.link-dialog {
-
+    // note that the .image-dialog class must be assigned on summernote init
+    .modal.image-dialog {
+      .modal-body {
+        padding-top: 25px;
       }
-      // note that the .image-dialog class must be assigned on summernote init
-      .modal.image-dialog {
-        .modal-body {
-          padding-top: 25px;
-        }
-        .form-group.note-group-select-from-files {
-          label {
-            padding: 6px 12px;
-            border: 1px solid #ccc;
-            border-radius: 4px;
-            cursor: pointer;
-            &:hover {
-              background-color: #efefef;
-            }
+      .form-group.note-group-select-from-files {
+        label {
+          padding: 6px 12px;
+          border: 1px solid #ccc;
+          border-radius: 4px;
+          cursor: pointer;
+          &:hover {
+            background-color: #efefef;
           }
         }
-        div.or {
-          text-align: center;
-          h5 {
-            position: relative;
-            width: 40%;
-            margin: 20px auto;
-            color: #555;
-          }
-          h5:before {
-            content: "";
-            display: block;
-            border-top: solid 1px #ccc;
-            width: 100%;
-            height: 1px;
-            position: absolute;
-            top: 50%;
-            z-index: 1;
-          }
-          h5 span {
-            background: #fff;
-            padding: 0 20px;
-            position: relative;
-            z-index: 5;
-          }
-        }
-        .note-image-btn {
-          padding: 6px 24px;
-        }
-
       }
-    }
+      div.or {
+        text-align: center;
+        h5 {
+          position: relative;
+          width: 40%;
+          margin: 20px auto;
+          color: #555;
+        }
+        h5:before {
+          content: "";
+          display: block;
+          border-top: solid 1px #ccc;
+          width: 100%;
+          height: 1px;
+          position: absolute;
+          top: 50%;
+          z-index: 1;
+        }
+        h5 span {
+          background: #fff;
+          padding: 0 20px;
+          position: relative;
+          z-index: 5;
+        }
+      }
+      .note-image-btn {
+        padding: 6px 24px;
+      }
 
+    }
   }
 
 }

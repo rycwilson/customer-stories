@@ -3,20 +3,14 @@ class PluginsController < ApplicationController
   include StoriesAndPlugins
 
   skip_before_action :verify_authenticity_token, only: [:main, :show, :init]
-  before_action except: [:track] { @company = Company.find_by(subdomain: request.subdomain) }
+  before_action(except: [:track]) { @company = Company.find_by(subdomain: request.subdomain) }
 
   def main
-    # handle legacy naming...
-    if params[:type] == 'varmour'
-      @type = 'carousel'
-    elsif params[:type].blank? || params[:type] == 'tab'
-      @type = 'tabbed_carousel'
-    else
-      @type = params[:type]
-    end
+    @type = params[:type] || 'tabbed_carousel'  # trunity still using old tabbed carousel
     @uid = params[:uid]
+
     # set the stylesheet url here, as it's impossible to use the asset path helper in cs.js in a company-specific way
-    @stylesheet_url = custom_stylesheet_url(@company, "cs_#{@type}")
+    @stylesheet_url = helpers.asset_url("custom/plugin_wrappers/#{@company.subdomain}_plugins.css").to_s
     respond_to do |format|
       format.js { render action: 'cs' }
     end
@@ -63,22 +57,25 @@ class PluginsController < ApplicationController
     stories = plugin_stories(company, params)
     pre_selected_story = get_pre_selected_story(company, params)
     render_to_string(
-      partial: params[:type],
+      partial: params[:type] || 'tabbed_carousel',
       layout: false,
       locals: {
-        company: @company,
+        company: company,
         stories: stories,  #.first(16),
-        title: 'Customer Stories',
+        title: params[:title] || 'Customer Stories',
         is_demo: params[:is_demo].present?,
         max_rows: params[:max_rows].to_i,
         background: params[:background] || 'light',
         tab_color: params[:tab_color],
         text_color: params[:text_color],
-        grayscale: params[:grayscale].present? && params[:grayscale] != 'false',
-        logos_only: params[:logos_only].present? && params[:logos_only] != 'false',
+        carousel_version: company.subdomain == 'pixlee' ? 'v2' : 'v1',
+        is_grayscale: params[:grayscale].present? && params[:grayscale] != 'false',
+        is_logos_only: params[:logos_only].present? && params[:logos_only] != 'false',
         is_curator: false,
         is_plugin: true,
-        is_external: true,
+        is_external: request.referer.match(/^(?!.*plugins\/demo).*(lvh\.me|customerstories\.org|customerstories\.net).*$/) ?
+                       false :
+                       true,
         window_width: params[:window_width],
         pre_selected_story: pre_selected_story,
         contributors: pre_selected_story && set_contributors(pre_selected_story)
@@ -86,7 +83,7 @@ class PluginsController < ApplicationController
     )
   end
 
-  def get_pre_selected_story (company, params)
+  def get_pre_selected_story(company, params)
     story = params[:pre_selected_story].present? &&
             Story.friendly.exists?(params[:pre_selected_story]) &&
             Story.friendly.find(params[:pre_selected_story])
@@ -95,7 +92,7 @@ class PluginsController < ApplicationController
       story
   end
 
-  def plugin_stories (company, params)
+  def plugin_stories(company, params)
     if params[:stories].present?
       # remove any that don't exist or aren't published, or if not authorized
       story_ids = params[:stories]
@@ -113,14 +110,7 @@ class PluginsController < ApplicationController
     else
       stories = company.public_stories
     end
-    stories
-  end
-
-  def custom_stylesheet_url (company, type)
-    URI.join(
-      root_url,
-      ActionController::Base.helpers.asset_path("custom/#{company.subdomain}/plugins/#{type}.css")
-    ).to_s
+    params[:skip].present? ? stories.where.not(slug: params[:skip]) : stories
   end
 
 end

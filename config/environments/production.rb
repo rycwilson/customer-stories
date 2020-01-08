@@ -104,9 +104,10 @@ Rails.application.configure do
 
   # Enable locale fallbacks for I18n (makes lookups for any locale fall back to
   # the I18n.default_locale when a translation cannot be found).
+  
+  # TODO for Rails >= 5.2.2, can use this:
   # config.i18n.fallbacks = true
-
-  # https://github.com/svenfuchs/i18n/releases/tag/v1.1.0
+  # else
   config.i18n.fallbacks = [I18n.default_locale]
 
   # Send deprecation notices to registered listeners.

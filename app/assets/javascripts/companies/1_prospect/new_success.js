@@ -326,7 +326,7 @@ function newSuccessListeners () {
           .val($('#successes-filter').val().match(/customer-(\d+)/)[1])
           .trigger('change.select2');
       }
-      if (curatorId !== '0') {
+      if (curatorId !== '') {
         $('select.new-success.curator')
           .val($('.prospect.curator-select').val())
           .trigger('change');
@@ -337,7 +337,7 @@ function newSuccessListeners () {
       $('.form-group.csv-file, #new-success-form .form-group:not(.source)').toggle();
       if ($(this).val() === 'import') {
         $('#new-success-form .form-group').removeClass('has-error');
-        $('button[type="submit"][form="new-success-form"] span').text('Import CSV');
+        $('button[type="submit"][form="new-success-form"] span').text('Import');
       } else {
         $('#new-success-form').find('.fileinput').fileinput('clear');
         $('#new-success-form').find('.fileinput-filename').addClass('placeholder').text('Upload');
@@ -346,7 +346,7 @@ function newSuccessListeners () {
           .find('.help-block').text('');
         $('button[type="submit"][form="new-success-form"')
           .prop('disabled', false)
-          .find('span').text('Create Win');
+          .find('span').text('Create');
       }
     })
 
@@ -449,7 +449,7 @@ function newSuccessListeners () {
       $(this).find('.form-group').removeClass('has-error');
       $(this).find('.create-contact input').prop('required', false);
       $('button[form="new-success-form"]').attr('type', 'submit');
-      $('button[form="new-success-form"] span').text('Create Win').css('display', 'inline').prop('disabled', false);
+      $('button[form="new-success-form"] span').text('Create').css('display', 'inline').prop('disabled', false);
       $('button[form="new-success-form"] i').css('display', 'none');
     })
 

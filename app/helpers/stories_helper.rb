@@ -1,6 +1,21 @@
 module StoriesHelper
 
-  def linkedin_widget_width (window_width)
+  def render_seo_meta_tags(stories_view, company, story=nil)
+    if stories_view == 'index'
+      cache("#{company.subdomain}/stories/seo-meta-tags", expires_in: 1.week) do
+        render('stories/index/seo_meta_tags', { company: @company })
+      end
+    elsif stories_view == 'show'
+      cache("#{company.subdomain}/stories/#{story.id}/seo-meta-tags", skip_digest: true, expires_in: 1.week) do
+        render(
+          'stories/show/seo_meta_tags',
+          { company: company, success: story.success, story: story }
+        )
+      end
+    end
+  end
+
+  def linkedin_widget_width(window_width)
     case window_width.to_i
     when 0...370
       '340'
@@ -109,11 +124,29 @@ module StoriesHelper
     when 'pixlee'
       provider == 'all' ? (image = PIXLEE_400X400_URL) : (image = PIXLEE_300X160_URL)
     else
-      width = '1200'
-      height = '630'
-      image = CS_FULL_LOGO_URL
+      # width = '1200'
+      # height = '630'
+      # image = CS_FULL_LOGO_URL
     end
     { image: image, width: width, height: height }
+  end
+
+  def stories_header_class(company)
+    "stories-header stories-header--#{company.subdomain} stories-header--#{background_color_contrast(company.header_color_2)}"
+  end
+
+  def stories_header_custom_colors(company)
+    "background-color: #{company.header_color_2}; color: #{company.header_text_color}"
+  end
+
+  def story_card_class(story, is_dashboard=false, is_plugin=false, is_grayscale=false, is_logo_only=false)
+    company_modifier = "story-card--#{story.company.subdomain}"
+    status_modifier = "story-card--#{story.status}"
+    dashboard_modifier = is_dashboard ? "story-card--dashboard" : ''
+    plugin_modifier = is_plugin ? 'story-card--plugin' : ''
+    grayscale_modifier = is_grayscale ? 'story-card--grayscale' : ''
+    logo_only_modifier = is_logo_only ? 'story-card--logo-only' : ''
+    "story-card #{company_modifier} #{status_modifier} #{dashboard_modifier} #{plugin_modifier} #{grayscale_modifier} #{logo_only_modifier}"
   end
 
 end

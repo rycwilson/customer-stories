@@ -18,7 +18,7 @@
   <%= render 'companies/1_prospect/contributors/contributors_table_header_template' %>
   <%= render 'companies/1_prospect/contributors/contributor_child_row_template' %>
   <%= render 'companies/1_prospect/contributors/contributor_actions_dropdown_template' %>
-  <%= render 'companies/1_prospect/contributors/csp_linkedin_widget_template' %>
+  <%#= render 'companies/1_prospect/contributors/csp_linkedin_widget_template' %>
   <%= render 'companies/3_promote/ads_status_form_template' %>
   <%= render 'companies/3_promote/promoted_story_actions_dropdown_template' %>
   <%= render 'companies/3_promote/ad_image_card_template' %>
@@ -40,45 +40,45 @@
 <%= render 'stories/shared/new_story_modal', { company: @company } %>
 <%= render 'stories/show/video_modal', { is_plugin: false } %>
 
-<div id='wrapper'>
-
+<% cache("#{@company.subdomain}/#{@workflow_stage}/company-nav") do %>
   <%= render(
         'shared/navbars/company_nav',
         { company: @company, workflow_stage: @workflow_stage } 
       ) %>
+<% end %>
 
-  <div class='tab-content'>
+<div class='tab-content'>
 
-    <%= render(
-          'companies/1_prospect/prospect',
-          { company: @company, workflow_stage: @workflow_stage, tab: @prospect_tab } 
-        ) %>
+  <%= render(
+        'companies/1_prospect/prospect',
+        { company: @company, workflow_stage: @workflow_stage, tab: @prospect_tab } 
+      ) %>
 
-    <%= render(
-          'companies/2_curate/curate', 
-          { 
-            company: @company, 
-            workflow_stage: @workflow_stage,
-            story: @story,
-            curate_view: @curate_view,
-            edit_story_tab: @edit_story_tab 
-          }
-        ) %>
+  <%= render(
+        'companies/2_curate/curate', 
+        { 
+          company: @company, 
+          workflow_stage: @workflow_stage,
+          story: @story,
+          curate_view: @curate_view,
+          edit_story_tab: @edit_story_tab 
+        }
+      ) %>
 
-    <%= render(
-          'companies/3_promote/promote',
-          { company: @company, workflow_stage: @workflow_stage, tab: @promote_tab } 
-        ) %>
+  <%= render(
+        'companies/3_promote/promote',
+        { company: @company, workflow_stage: @workflow_stage, tab: @promote_tab } 
+      ) %>
 
-    <%#= render(
-          'companies/4_measure/measure',
-          { 
-            company: @company, 
-            workflow_stage: @workflow_stage,
-            recent_activity: @recent_activity,
-            story_views_30_day_count: @story_views_30_day_count } 
-        ) %>
-
-  </div>
+  <%= render(
+        'companies/4_measure/measure',
+        { 
+          company: @company, 
+          workflow_stage: @workflow_stage,
+          recent_activity: @recent_activity,
+          story_views_30_day_count: @story_views_30_day_count 
+        } 
+      ) %>
 
 </div>
+

@@ -1,3 +1,4 @@
+
 #
 # this comes in handy if the current_user is needed
 # request.env['warden'].user(:user)
@@ -31,7 +32,6 @@ Rails.application.routes.draw do
   get '/sitemap', to: 'site#sitemap'
   get '/:google', to: 'site#google_verify', constraints: { google: /google\w+/ }
 
-
   # sendgrid events (currently tracking open and click)
   post '/esp/notifications', to: 'site#esp_notifications'
 
@@ -56,8 +56,8 @@ Rails.application.routes.draw do
     get '/', to: 'stories#index'
 
     get '/plugins/:type/cs', to: 'plugins#main'
-    get '/widgets/:type/cs', to: 'plugins#main'  # legacy
-    get '/widget/cs', to: 'plugins#main'  # legacy
+    # get '/widgets/:type/cs', to: 'plugins#main'  # legacy (was varmour)
+    get '/widget/cs', to: 'plugins#main'  # legacy (trunity)
 
     # specifying a default format for plugins#show because (for unknown reason) ajax jsonp
     # request sent from IE11 was resulting in request interpreted as html
@@ -135,6 +135,13 @@ Rails.application.routes.draw do
       get '/analytics/visitors', to: 'analytics#visitors', as: 'measure_visitors'
       get '/analytics/stories', to: 'analytics#stories', as: 'measure_stories'
 
+      # switch to a different user (this needs to come before the next route below)
+      post(
+        '/user-profile', 
+        to: 'profile#switch', 
+        as: 'switch_user',
+        constraints: -> (request) { request.params[:switch_user_id].present? }
+      )
       # user profile
       get '/user-profile', to: 'profile#edit', as: 'edit_profile'
 
@@ -199,12 +206,20 @@ Rails.application.routes.draw do
       get(
         '/:customer/:title',
         to: 'stories#track',
-        constraints: -> (request) { request.query_parameters[:track].present? }
+          constraints: -> (request) { request.query_parameters[:track].present? }
       )
       get '/:customer/:product/:title', to: 'stories#show', as: 'public_story'
       get '/:customer/:title', to: 'stories#show', as: 'public_story_no_product'
+          
+      # hidden stories
+      get(
+        '/:random_string', 
+        to: 'stories#show',
+        constraints: -> (request) { Story.exists?(hidden_link: request.url) }, 
+        hidden_link: true
+      )
     end
-
+        
     # find a tag by its slug, necessary to set filter select boxes
     # on sync load of stories#index
     get   '/companies/:company_id/story_categories/:slug', to: 'story_categories#show'

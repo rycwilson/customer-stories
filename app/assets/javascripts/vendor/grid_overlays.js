@@ -85,7 +85,7 @@
       item.addEventListener('click', function(ev) {
         ev.preventDefault();
         // csp (last expression was added)
-        if(isAnimating || current === pos || !$(item).hasClass('cs-loaded')) {
+        if(isAnimating || current === pos || !$(item).parent().hasClass('cs-loaded')) {
           return false;
         }
         isAnimating = true;
@@ -130,9 +130,9 @@
     // set the width/heigth and position
     itemOffsetLeft = $(item).offset().left - gridOffsetLeft;
     if ($(item).hasClass('grid__item--carousel')) {
-      itemOffsetTop = ($('.cs-rh-container').offset().top + parseInt($('.row-horizon').css('padding-top'))) - $(gridEl).offset().top;
+      itemOffsetTop = ($('.cs-carousel__carousel').offset().top + parseInt($('.row-horizon').css('padding-top'))) - $(gridEl).offset().top;
     } else {
-      itemOffsetTop = item.offsetTop;
+      itemOffsetTop = item.parentNode.offsetTop;
     }
 
     dummy.style.WebkitTransform = 'translate3d(' + itemOffsetLeft + 'px, ' + itemOffsetTop + 'px, 0px) scale3d(' + item.offsetWidth/(gridItemsContainer.offsetWidth + gridOffsetLeft + gridOffsetRight + scrollbarWidth) + ',' + item.offsetHeight/getViewport('y') + ',1)',
@@ -199,9 +199,14 @@
 
       // reset gallery
       // (for the gallery: some story cards aren't display due to max rows - see gallery.js.erb)
-      $(gridEl).find('a.cs-thumbnail:not([style*="display: none"])').each(function () {
-        $(this).removeClass('cs-hover cs-loading cs-still-loading')
-               .removeAttr('style');  // this gets rid of pointer-events: none
+      $(gridEl)
+        .find('.story-card a:not([style*="display: none"])')
+          .each(function () {
+            $(this)
+              .parent()
+                .removeClass('cs-hover cs-loading cs-still-loading')
+                .end()
+              .removeAttr('style');  // this gets rid of pointer-events: none
       });
 
       // csp: the overlay will have its own scroll bar

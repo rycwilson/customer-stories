@@ -24,7 +24,10 @@ function loadVideoThumbnail (cbSuccess) {
           $.ajax({
             url: window.location.pathname,
             method: 'get',
-            data: { remove_video: true },
+            data: { 
+              remove_video: true,
+              is_plugin: false 
+            },
             dataType: 'html',
             success: function (html, status, xhr) {
               $.when( $('.testimonial').empty().append(html) )

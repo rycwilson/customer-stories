@@ -141,9 +141,19 @@ function initSuccessesTable (dtSuccessesInit) {
       
       // remove default search field.  Disabling via options also disables api, so can't do that
       $tableWrapper.children('.row:first-child').remove();
-
+      
       // trigger curator select and show tables
       dtSuccessesInit.resolve();
+
+      $('.working--prospect').addClass('successes-loaded');
+      $tableWrapper.find('.dataTables_paginate').show();
+
+      // $table.on('draw.dt', function (e) {
+      //   console.log('draw')
+      //   $tableWrapper.find('.dataTables_info')
+      //                .addClass('help-block text-right')
+      //                .appendTo($tableWrapper.find('.select-filters'));
+      // });
     }
 
   });

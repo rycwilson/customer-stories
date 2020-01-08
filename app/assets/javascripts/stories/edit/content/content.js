@@ -16,7 +16,7 @@ function storiesEditContentListeners () {
   storiesEditResultsListeners();
 
   var openFormControls = function () {
-        $('#story-content-submit').addClass('show');
+        $('.submission-footer--story').addClass('show');
       },
       getContributor = function (contributionId) {
         return $('#prospect-contributors-table')

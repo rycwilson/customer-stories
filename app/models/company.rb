@@ -18,7 +18,7 @@ class Company < ApplicationRecord
 
   has_many :customers, dependent: :destroy do
     def select_options
-      self.sort_by { |c| c.name }.map { |customer| [ customer.name, customer.id ] }
+      order(:name).map { |customer| [ customer.name, customer.id ] }
     end
   end
   has_many :successes, -> { includes(:story) }, through: :customers do
@@ -32,20 +32,33 @@ class Company < ApplicationRecord
 
   has_many :curators, class_name: "User" do
     def select_options
-      self.sort_by { |c| c.last_name }.map { |curator| [ curator.full_name, curator.id ] }
+      order(:last_name).map { |curator| [ curator.full_name, curator.id ] }
+      # self.sort_by { |c| c.last_name }.map { |curator| [ curator.full_name, curator.id ] }
     end
   end
   has_many :contributions, -> { includes(:contributor, :referrer, success: { customer: {} }) }, through: :successes
   has_many :contributors, -> { distinct }, through: :customers, source: :contributors
   has_many :referrers, -> { distinct }, through: :contributions, source: :referrer
-  has_many :stories, through: :successes do
+  has_many :stories, through: :successes do 
     def select_options
-      self.select { |story| story.published? }
+      self.published
           .map { |story| [ story.title, story.id ] }
           .unshift( ['All', 0] )
     end
-    def published
-      self.select { |story| story.published? }
+    def plugin_select_options
+      options = {}
+      where('logo_published = ? OR preview_published = ?', true, true)
+        .each do |story|
+          option_data = [ 
+            story.title, "#{story.id}", { data: { customer: story.customer.name.to_json } } 
+          ]
+          if options.has_key?(story.customer.name)
+            options[story.customer.name] << option_data
+          else
+            options.merge!({ story.customer.name => [ option_data ] })
+          end
+        end
+      options
     end
     def with_ads
       self.select do |story|
@@ -65,7 +78,6 @@ class Company < ApplicationRecord
   # so must be included in the select clause
   has_many :visitor_sessions, -> { select('visitor_sessions.*, visitor_sessions.clicky_session_id, visitor_actions.timestamp').distinct }, through: :visitor_actions
   has_many :visitors, -> { select('visitors.*, visitor_sessions.clicky_session_id, visitor_actions.timestamp').distinct }, through: :visitor_sessions
-
   has_many :story_categories, dependent: :destroy do
     def select_options
       self.map do |category|
@@ -314,7 +326,7 @@ class Company < ApplicationRecord
     end
   end
 
-  after_commit :expire_fragment_cache, on: :update,
+  after_commit :expire_gallery_fragment_cache, on: :update,
     if: Proc.new { |company|
       (company.previous_changes.keys & ['header_color_1', 'header_text_color']).any?
     }
@@ -398,20 +410,6 @@ class Company < ApplicationRecord
     options
   end
 
-  def stories_grouped_options
-    options = {}
-    self.stories.select { |story| story.logo_published? || story.preview_published? }
-        .each do |story|
-          option_data = [ story.title, "#{story.id}", { data: { customer: story.customer.name.to_json } } ]
-          if options.has_key?(story.customer.name)
-            options[story.customer.name] << option_data
-          else
-            options.merge!({ story.customer.name => [ option_data ] })
-          end
-        end
-    options
-  end
-
   #
   # method returns a fragment cache key that looks like this:
   #
@@ -477,7 +475,7 @@ class Company < ApplicationRecord
   end
 
   def stories_json
-    Rails.cache.fetch("#{self.subdomain}/stories_json") do
+    Rails.cache.fetch("#{self.subdomain}/stories-json") do
       JSON.parse(
         Story.default_order(Story.company_all(self.id))
         .to_json({
@@ -495,8 +493,14 @@ class Company < ApplicationRecord
     end
   end
 
-  def expire_stories_json_cache
-    Rails.cache.delete("#{self.subdomain}/stories_json")
+  def expire_ll_cache(*keys)
+    keys.each { |key| Rails.cache.delete("#{self.subdomain}/#{key}") }
+  end
+
+  def expire_fragment_cache(key)
+    if fragment_exist?("#{self.subdomain}/#{key}")
+      self.expire_fragment("#{self.subdomain}/#{key}")
+    end 
   end
 
   def curator? current_user=nil
@@ -603,7 +607,7 @@ class Company < ApplicationRecord
   end
 
   # changes to company colors expires all gallery fragments
-  def expire_fragment_cache
+  def expire_gallery_fragment_cache
     self.increment_stories_gallery_fragments_memcache_iterator
     self.increment_story_card_fragments_memcache_iterator
   end

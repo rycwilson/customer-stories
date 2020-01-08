@@ -334,25 +334,6 @@ function successChildRowListeners () {
       $('select[name="win_story_email[recipients]"]').val(recipientIds).trigger('change.select2')
     })
 
-    .on('click', 'button[data-target="#edit-customer-modal"]', function (e) {
-      // clicking a row group will normally sort alphabetically; prevent this
-      e.stopImmediatePropagation();
-      $.ajax({
-        url: customerPath($(this).data('customer-id')),
-        method: 'get',
-        dataType: 'json'
-      })
-        .done(function (customer, status, xhr) {
-          $.when(
-            $('#edit-customer-modal .modal-body').append(
-              _.template($('#customer-form-template').html())({
-                customer: customer
-              })
-            )
-          ).done(function () { initS3Upload($('#customer-form')) })
-        })
-    })
-
     .on('click', '.win-story-actions__expand', function (e, isEditClick) {
       var $tr = $('tr.shown'),
           $trChild = $tr.next(),
@@ -576,7 +557,26 @@ function successChildRowListeners () {
       $form.submit();
     })
 
-    .on('click', '.customer-logo .customer-logo__upload', function () {
+    .on('click', 'button[data-target="#edit-customer-modal"]', function (e) {
+      // clicking a row group will normally sort alphabetically; prevent this
+      e.stopImmediatePropagation();
+      $.ajax({
+        url: customerPath($(this).data('customer-id')),
+        method: 'get',
+        dataType: 'json'
+      })
+        .done(function (customer, status, xhr) {
+          $.when(
+            $('#edit-customer-modal .modal-body').append(
+              _.template($('#customer-form-template').html())({
+                customer: customer
+              })
+            )
+          ).done(function () { initS3Upload($('#customer-form')) })
+        })
+    })
+
+    .on('click', '.customer-logo__upload', function () {
       var $previewImg = $(this).closest('.fileinput').find('.fileinput-preview img');
       if ($previewImg.attr('src')) {
         // click on the preview

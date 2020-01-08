@@ -66,7 +66,7 @@ function contributorChildRowListeners () {
         $trContributor.one('input change', function () {
           $(this).find('button[type="submit"]').prop('disabled', false);
         });
-        $("input[type='tel']").inputmask("999-999-9999");
+        // $("input[type='tel']").inputmask("999-999-9999");
       }
     })
 

@@ -1,25 +1,9 @@
 
-&.stories.show, .cs-overlay-container {
-
-
-  &.stories.show {
-    #cs-tabbed-carousel {
-      display: none !important;
-      // @import 'plugins/tabbed_carousel';
-      .cs-header {
-        font-family: $body-font;  // don't apply this to external widget
-        background-color: $pixlee-blue;
-        color: #fff;
-      }
-      .cs-drawer-content {
-        border-top-color: $pixlee-blue;
-      }
-    }
-  }
-
+body.pixlee.stories.show, .cs-plugin .cs-overlay-container {
+  
   &.cs-overlay-container {
     article {
-      background-color: $bg-color;
+      background-color: $stories-bg-color;
       .cs-story-header {
         background-color: $stories-header-color;
         border-bottom: 1px solid $border-color;
@@ -34,17 +18,17 @@
   .testimonial, .cs-testimonial {
     margin-bottom: 100px;
     &:after {
-      background-image: linear-gradient(to top, $bg-color 0%, #ffffff 100%);
+      background-image: linear-gradient(to top, $stories-bg-color 0%, #ffffff 100%);
     }
     &.cs-testimonial {
       .customer-logo-quote.visible-xs-block {
         .customer-logo {
-          background-color: $bg-color;
+          background-color: $stories-bg-color;
         }
       }
       .customer-logo-quote.hidden-xs {
         .customer-logo {
-          background-color: $bg-color;
+          background-color: $stories-bg-color;
         }
       }
     }
@@ -160,14 +144,14 @@
   }
 
   .story-content, .cs-story-content {
-    background-color: $bg-color;
+    background-color: $stories-bg-color;
     .section-title h4 {
     }
     section {
       border: none;
     }
     section:not(.narrative) {
-      background-color: $fg-color;
+      background-color: $stories-fg-color;
       // border: 1px solid $border-color;
       @media only screen and (max-width: 767px) {
         background-color: #fff;
@@ -181,7 +165,7 @@
       }
     }
     .related-stories ul {
-      background-color: $fg-color;
+      background-color: $stories-fg-color;
       border: none;
       @media only screen and (max-width: 767px) {
         background-color: #fff;
@@ -192,16 +176,19 @@
     &.story-content {
       .narrative {
         .story-title h3 {
-          font-family: $body-font;
+          font-family: $company-body-font;
         }
       }
     }
   }
 
   @media only screen and (max-width: 767px) {
+    .share-buttons, .cs-share-buttons {
+      display: none !important;
+    }
     &.cs-overlay-container {
       .cs-content.content--show {
-        background: $bg-color;
+        background: $stories-bg-color;
       }
     }
     .testimonial, .cs-testimonial {
@@ -210,7 +197,7 @@
         content: none;
       }
     }
-    .story-video-xs, .social-buttons-xs {
+    .story-video-xs, .share-buttons-xs {
       background-color: #fff;
     }
     .story-content {

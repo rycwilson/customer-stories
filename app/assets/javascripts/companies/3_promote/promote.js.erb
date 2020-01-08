@@ -16,7 +16,7 @@ function promote () {
           custom: {
             'max-file-size': function ($fileInput) {
               if ($fileInput[0].files[0].size > $fileInput.data('max-file-size')) {
-                return "File size is too large";
+                return "Image file is too big";
               }
             },
             'img-size-error': function ($fileInput, justChecking) {
@@ -37,13 +37,13 @@ function promote () {
                   minHeight = type && $fileInput.data('img-size-error').split('x')[1],
                   ratio = width / height,
                   isTooSmall = function () {
-                    if (!type) return 'Image is incorrect size';
+                    if (!type) return 'Image is wrong size';
                     return (width < minWidth || height < minHeight) ?
-                      'Image is incorrect size' :
+                      'Image is wrong size' :
                       false
                   },
                   hasBadAspectRatio = function () {
-                    if (!type) return 'Image is incorrect size';
+                    if (!type) return 'Image is wrong size';
                     var isValidSquare = ['SquareImage', 'SquareLogo'].includes(type) &&
                                         ratio >= 0.99 && ratio <= 1.01,
                         isValidLandscapeImage = type === 'LandscapeImage' &&
@@ -52,7 +52,7 @@ function promote () {
                                                ratio >= 3.99 && ratio <= 4.01;
                     return (isValidSquare || isValidLandscapeImage || isValidLandscapeLogo) ?
                       false :
-                      'Image is incorrect size';
+                      'Image is wrong size';
                   };
               error = isTooSmall() || hasBadAspectRatio();
               // failed

@@ -21,51 +21,46 @@ function companyProfileListeners() {
     var o = Math.round(((parseInt(bgRgb.r) * 299) +
                         (parseInt(bgRgb.g) * 587) +
                         (parseInt(bgRgb.b) * 114)) / 1000);
-    return (o > 125) ? 'dark' : 'light';
+    return (o > 125) ? 'light-background' : 'dark-background';
   };
-
-  // CSP test-colors-btn
-  var defaultHeaderStyle = "background:linear-gradient(45deg, #FBFBFB 0%, #85CEE6 100%);color:#333333;",
-      defaultColorLeft = '#fbfbfb',
-      defaltColorRight = '#85cee6',
-      defaultTextColor = '#333333';
 
   $(document)
 
-    .on('click', '#company-profile-form .fileinput button', function (e) {
-      var $previewImg = $(this).closest('.fileinput').find('.fileinput-preview img');
-      $previewImg.attr('src') ?
-        // click on the preview
-        $(this).closest('.fileinput').find('.thumbnail')[1].click() :
-        // click on the placeholder
-        $(this).closest('.fileinput').find('.thumbnail')[0].click();
+    .on('click', '.company-logo-upload__button', function (e) {
+      $('.company-logo-upload__logo--exists').attr('src') ?
+        $('.company-logo-upload__logo--exists').click() :
+        $('.company-logo-upload__logo--placeholder').click()
     })
 
-    .on('change', '.color-picker .upper', function () {
-      $('#company-profile-form .logo-upload .thumbnail').css('background-color', $(this).val());
+    .on('change', '.headers-color-picker .upper', function () {
+      $('.company-logo-upload__company-header').css('background-color', $(this).val());
     })
 
-    .on('change', '.color-picker .lower', function () {
-      var $storiesHeader = $('#company-profile-form .stories-header');
-      $storiesHeader.css('background-color', $(this).val());
-      if (colorContrast(hexToRgb($(this).val())) === 'light') {
-        $storiesHeader.find('h4').removeClass('dark').addClass('light')
-        $('input[name="company[header_text_color]"]').minicolors('value', { color: '#ffffff' });
-      } else {
-        $storiesHeader.find('h4').addClass('dark').removeClass('light');
-        $('input[name="company[header_text_color]"]').minicolors('value', { color: '#333333' });
-        // $storiesHeader.find('i').css({ color: 'rgba(255, 255, 255, 0.9)' });
-      }
+    .on('change', '.headers-color-picker .lower', function () {
+      var $storiesHeader = $('.company-logo-upload__stories-header');
+      $storiesHeader
+        .css('background-color', $(this).val())
+        .removeClass(
+          'company-logo-upload__stories-header--light-background ' +
+          'company-logo-upload__stories-header--dark-background'
+        )
+        .addClass(
+          'company-logo-upload__stories-header--' + colorContrast(hexToRgb($(this).val()))
+        )
+      
+      $('input[name="company[header_text_color]"]')
+        .minicolors(
+          'value', 
+          { 
+            color: $storiesHeader.attr('class').includes('light-background') ? 
+                      '#333333' :
+                      '#ffffff'
+          }
+        )
     })
 
-    .on('change', '.color-picker .text', function () {
-      $('#company-profile-form .stories-header h3').css('color', $(this).val());
-    })
-
-    // Dynamically change the max-height of the select box
-    //   (a static setting doesn't work for some reason)
-    .on('select2:open', '#edit-company-profile', function () {
-      $(".select2-container--bootstrap .select2-results > .select2-results__options").css('max-height', 0);
+    .on('change', '.headers-color-picker .text', function () {
+      $('.company-logo-upload__stories-header h3').css('color', $(this).val());
     })
 
 }

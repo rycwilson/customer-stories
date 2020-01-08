@@ -1,177 +1,68 @@
 
-@import 'new';
-@import 'show';
-@import 'edit';
 @import '1_prospect/prospect';
 @import '2_curate/curate';
 @import '3_promote/promote';
 @import '4_measure/measure';
+@import 'settings/settings';
 
-.companies, .stories.edit {
-
-  .companies.new, .companies.edit {
-    .layout-main {
-      padding: 50px 40px 0 30px;
-    }
-  }
-
-  #edit-company-profile > form >, #edit-tags > form >, #edit-ctas >, #edit-plugins > {
-    .row > {
-      div[class*="col-"]:first-of-type:not(.story-header) {
-        padding: 0 15px 0 25px;
-      }
-      div[class*="col-"]:last-of-type, div:only-child {
-        padding: 0 25px 0 15px;
-      }
-    }
-  }
-  .layout-sidebar {
-    @media only screen and (min-width: 992px) {
-      width: 22%
-    }
-    .disabled-tab { color: #ccc; }
-  }
-  .layout-main {
-    @media only screen and (min-width: 992px) {
-      width: 78%
-    }
-  }
-}
-
-// override datatables
-table.dataTable tr.group td {
-  background-color: #e5e5e5;
-}
-
-.datatable {
-
-  tr {
-    background: #fff;
-  }
-
-  tr.active {
-    i:not(.action) {
-      color: white;
-      text-decoration: none;
-    }
-  }
-
-  tr.active {
-    td:first-child {
-      // border-left: 1px solid #0095ff; // #08c;
-    }
-    td:last-child {
-      // border-right: 1px solid #0095ff; // #08c;
-    }
-    i:not(.action) {
-      color: white;
-      text-decoration: none;
-    }
-  }
-  tr.active:hover {
-    td:first-child {
-      // border-left-color: #0095ff !important;  // #0075b0
-    }
-    td:last-child {
-      // border-right-color: #0095ff !important;  // #0075b0
-    }
-  }
-  // child row
-  tr.active:hover + tr:not(.group) > td[colspan]:not(.dataTables_empty) {
-    // border-color: #0095ff !important; // #0075b0
-  }
-
-  td {
-    vertical-align: middle !important;  // override bootstrap for case of inline editor expanding row height
-    i[class*="fa-caret"] { color: #999; }
-  }
-
-  th.actions {
-    text-align: center;
-    padding: 8px 12px;
-  }
-
-  td.status.dropdown, td.actions.dropdown {
-    text-align: center;
-    padding: 0;
-    // ref: http://stackoverflow.com/questions/11078509/how-to-increase-the-clickable-area-of-a-a-tag-button
-    > a {
-      display: block;
-      width: 100%;
-      height: 100%;
-      margin-top: -8px;
-      padding-top: 8px;
-      margin-bottom: -8px;
-      padding-bottom: 8px;
-      // position: relative;
-      // display: inline-block;
-      // background: transparent;
-      // border: transparent;
-      // z-index: 1;
-      // padding: 2em;
-      // margin: -2em;
-    }
-    .dropdown-menu {
-      padding: 9px 0;
-    }
-  }
-  td.status.dropdown.open, td.actions.dropdown.open {
-    border-bottom: 1px solid #0095ff;  // #d74b4b;
-    .dropdown-menu {
-      border-top-right-radius: 0;
-      margin: 1px 0;
-    }
-  }
-}
-
-/**
- * this needs to be in global scope due to fixed position
- */
-#story-content-submit, #invitation-template-submit {
+.working {
   position: fixed;
-  bottom: -66px;
-  left: 0;
+  top: 0;
   right: 0;
-  // border-top-right-radius: 3px;
-  // border-top-left-radius: 3px;
-
-
-  // use the layout* classes to stay consistent with page
-  .layout-sidebar {
-    padding: 0;
-    border: none;
-    box-shadow: none;
-  }
-  .layout-main {
-    padding: 0 0 0 15px;
-    .tab-content {
-      border-top-right-radius: 4px;
-      border-top-left-radius: 4px;
-      // background-color: rgba(255, 247, 229, 0.95);
-      // border: 1px solid #e5dece;
-      box-shadow: 0 2px 8px 0px rgba(0, 0, 0, 0.2);
-      background: rgb(239, 239, 239);
-      border: 1px solid #ccc;
-      // opacity: 0.95;
-      padding: 15px;
-      text-align: right;
-      p {
-        font-size: 18px;
-        color: rgba(51, 51, 51, 0.9);
-        margin-bottom: 0;
-      }
-      // button {
-      //   opacity: 1.0;
-      // }
-    }
-   }
-   transition: bottom 0s;
-}
-
-#story-content-submit.show, #invitation-template-submit.show {
   bottom: 0;
-  transition: bottom 0.3s ease-out;
+  left: 0;
+  z-index: 1000;
+  background-color: transparent;
+  > div {
+    height: 100%;
+    width: 100%;
+    background-color: #444;
+    opacity: 0;
+    > div {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      i {
+        color: #fff;
+        font-size: 36px;
+      }
+    }
+  }
+  &--still {
+    > div {
+      opacity: 0.5;
+      transition: opacity 1s step-end;
+    }
+  }
+  &.successes-loaded.contributors-loaded,
+  &.promoted-stories-loaded {
+    display: none;
+  }
 }
+
+.companies.new {
+  .disabled-tab {
+    pointer-events: none;
+  }
+  .content {
+    margin-top: 40px;
+    overflow: hidden;
+  }
+}
+
+// dropdowns will initially be hidden so they can be flipped (dropup) if necessary
+.actions.dropdown .dropdown-menu {
+  &:not(.shown) {
+    visibility: hidden;
+  }
+  &.flip {
+    top: auto;
+    bottom: 90%;
+  }
+}
+
+
 
 
 
