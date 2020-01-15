@@ -210,6 +210,12 @@ function initSelect2 () {
         $(this).next('.select2').removeClass('select2-container--allow-clear')
       }
     })
+    .each(function (e) {
+      // pre-selected value
+      if ($(this).val()) {
+        $(this).next('.select2').addClass('select2-container--allow-clear')
+      }
+    })
 
   $('.stories-filter__select--grouped')
     .select2({
