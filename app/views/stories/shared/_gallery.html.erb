@@ -3,6 +3,16 @@
 
   <!-- <%# cache(cache_key, skip_digest: true) do %> -->
 
+    <% if action_name == 'search' && stories.blank? %>
+
+      <li>
+        <h4 id="no-search-results">
+          <%= "Sorry, we couldn't find any results matching \"#{ @search_string }\"" %> 
+        </h4>
+      </li>
+
+    <% end %>
+
     <% stories.each do |story| %>
 
       <%# cache(

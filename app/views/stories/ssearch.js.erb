@@ -1,6 +1,8 @@
 
 (function () {
 
+  import { updateGallery } from 'global';
+
   var storyIds = <%= raw @story_ids.to_json %>,
       searchString = "<%= @search_string %>",
       searchResults = storyIds.length === 1 ? "1 story found" : storyIds.length.toString() + " stories found";

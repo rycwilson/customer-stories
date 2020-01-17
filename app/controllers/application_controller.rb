@@ -339,8 +339,15 @@ class ApplicationController < ActionController::Base
           only: [:id, :name, :subdomain],
           methods: [:curators, :customers, :invitation_templates, :plugin]
         }),
-      stories: company.stories_json,
+      # stories: company.stories_json,
       env: csp_environment
     }
   end
+
+  def log_action
+    puts "#{controller_name}##{action_name}"
+    puts params.permit(params.keys).to_h
+    puts request.format.symbol
+  end
+
 end

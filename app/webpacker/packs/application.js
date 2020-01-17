@@ -20,14 +20,14 @@ import 'regenerator-runtime/runtime';
 window.$ = $; window.jQuery = jQuery;
 require('../vendor/jquery_plugins');
 
-import Rails from 'rails-ujs'; 
+import Rails from 'rails-ujs'
 import turbolinks from 'vendor/turbolinks'; 
 
 /* jquery-ui must appear before bootstrap, per https://stackoverflow.com/questions/13731400 */
 import 'jquery-ui/ui/widget';
 import 'bootstrap-sass/assets/javascripts/bootstrap';
 import ResponsiveBootstrapToolkit from 'responsive-toolkit';
-import 'select2/dist/js/select2';
+import 'select2';
 
 window.APP = window.APP || buildApp();
 getBootstrapViewport(ResponsiveBootstrapToolkit);

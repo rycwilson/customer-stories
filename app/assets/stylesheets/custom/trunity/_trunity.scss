@@ -66,7 +66,7 @@ body.trunity:not(.companies):not(.profile):not(.edit) {
   }
 
   @media only screen and (min-width: 1200px) {
-    &.stories.index {
+    &.stories.index, &.stories.search {
       .search-and-filters.visible-md-block.short {
         // margin: 10px 2px 0 0;
       }

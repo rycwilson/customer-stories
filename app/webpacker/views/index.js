@@ -11,6 +11,7 @@ const views = {
         },
         stories: {
           index: stories.gallery,
+          search: stories.gallery,
           show: stories.show,
           edit: stories.edit
         },

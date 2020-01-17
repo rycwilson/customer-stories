@@ -49,7 +49,7 @@ Rails.application.routes.draw do
   # valid subdomains (company/subdomain exists, excludes www)
   constraints(CompanySubdomain) do
 
-    get '/app', to: 'application#index', format: 'json'
+    get '/app', to: 'application#index'
     get '/', to: 'stories#index'
 
     get '/plugins/:type/cs', to: 'plugins#main'
@@ -65,13 +65,12 @@ Rails.application.routes.draw do
 
     # see below for route to public story page
     resources(:stories, { only: [:index] }) do
-      get '/search', on: :collection, to: 'stories#search'
       get '/share_on_linkedin', on: :member, to: 'stories#share_on_linkedin'
     end
-
+    get '/search', to: 'stories#search'
 
     # routing constraints cause issues within the devise authenticate block
-    # (possible explanation? https://anadea.info/blog/rails-authentication-routing-constraints-considered-harmful)
+    # (possible explanation? https:// anadea.info/blog/rails-authentication-routing-constraints-considered-harmful)
     # => bring these routes outside the authenticate block and authenticate in the controller
     get '/:workflow_stage', to: 'companies#show',
           constraints: lambda { |params, request|

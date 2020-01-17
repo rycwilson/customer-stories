@@ -1,13 +1,13 @@
 
 <div class="search-and-filters visible-md-block visible-lg-block <%= both_filters_present ? 'tall' : 'short' %>">
 
-  <%= render('stories/shared/search_form', { company: company }) %>
+  <%= render('stories/shared/search_form', { company: company, storiesCount: @stories.length }) %>
 
   <% if both_filters_present %>
 
     <div class="text-right">
       <span class="search-and-filters__results--combined help-block">
-        <% if pre_selected_filters['category'].present? || pre_selected_filters['product'].present? %>
+        <% if pre_selected_filters.try(:[], 'category') || pre_selected_filters.try(:[], 'product') %>
           Applied filters:&nbsp;&nbsp;<%= applied_filters_results %>
         <% end %>
       </span>
@@ -26,18 +26,19 @@
               nil,
               options_for_select(
                 company.story_categories.public_select_options,
-                pre_selected_filters['category'].present? ? pre_selected_filters['category'] : ''
+                pre_selected_filters.try(:[], 'category') ? pre_selected_filters['category'] : ''
               ),
               {
                 include_blank: true,
                 class: 'stories-filter__select stories-filter__select--category',
-                style: 'width: 100%'
+                style: 'width: 100%',
+                # data: { remote: true, url: stories_path, type: :json, method: :get }
               }
             ) %>
 
         <div class="text-right">
           <span class="stories-filter__results--category help-block">
-            <% if pre_selected_filters['category'].present? %>
+            <% if pre_selected_filters.try(:[], 'category') %>
               <%= category_results %>
             <% end %>
           </span>
@@ -60,7 +61,7 @@
               nil,
               options_for_select(
                 company.products.public_select_options,
-                pre_selected_filters['product'].present? ? [pre_selected_filters['product']] : []
+                pre_selected_filters.try(:[], 'product') ? [pre_selected_filters['product']] : []
               ),
               {
                 include_blank: true,
@@ -71,7 +72,7 @@
 
         <div class="text-right">
           <span class="stories-filter__results--product help-block">
-            <% if pre_selected_filters['product'].present? %>
+            <% if pre_selected_filters.try(:[], 'product') %>
               <%= product_results %>
             <% end %>
           </span>

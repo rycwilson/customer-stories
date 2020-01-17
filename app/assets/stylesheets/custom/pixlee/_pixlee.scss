@@ -3,7 +3,7 @@
 @import 'show';
 
 .company-header.company-header--pixlee {
-  .pixlee.stories.index &, .pixlee.stories.show & {
+  .pixlee.stories.index &, .pixlee.stories.search &, .pixlee.stories.show & {
     border-bottom: 1px solid $border-color;  
   }
 }

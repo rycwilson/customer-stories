@@ -19,7 +19,7 @@ body {
   &:not(.site) {
     background-color: $light-gray;
   }
-  &.stories.index, &.stories.show {
+  &.stories.index, &.stories.search, &.stories.show {
     background-color: $stories-bg-color;
     font-family: $company-body-font;
   }

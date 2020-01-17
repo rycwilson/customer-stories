@@ -3,6 +3,18 @@ DEV_TUNNEL_SUBDOMAIN = "cspdev"
 DEMO_COMPANY_ID = 24
 SAMPLE_COMPANY_ID = 10  # varmour
 
+STORY_DATA_MAP = {
+    only: [:id, :title, :summary, :quote, :quote_attr_name, :quote_attr_title, :published, :logo_published, :preview_published, :publish_date, :updated_at],
+    methods: [:csp_story_path, :published_contributors, :preview_contributor],
+    include: {
+      success: {
+        only: [],
+        include: {
+          customer: { only: [:id, :name, :logo_url] },
+          story_categories: { only: [:id, :name, :slug] },
+          products: { only: [:id, :name, :slug] } }}}
+  }
+
 INDUSTRIES = ['Education', 'Government', 'Financial Services', 'Healthcare', 'Hospitality', 'Manufacturing', 'Media and Entertainment', 'Service Provider', 'Technology', 'IT', 'Telecommunications'];
 
 LOGO_PLACEHOLDER_URL = "https://s3-us-west-1.amazonaws.com/csp-production-assets/shared/logo-placeholder.png"

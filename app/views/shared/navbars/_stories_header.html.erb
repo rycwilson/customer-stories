@@ -14,7 +14,8 @@
 
     <div class="row hidden-xs">
 
-      <% if curator?(company) && current_page?(action: 'index') %>
+      <% if curator?(company) && 
+            (current_page?(action: 'index') || current_page?(action: 'search')) %>
 
         <div class="col-sm-6 navbar-header">
           <h3 class="stories-header__title">Customer Stories</h3>
@@ -56,7 +57,7 @@
               ) %>
         </div>
 
-      <% elsif current_page?(action: 'index') %>
+      <% elsif current_page?(action: 'index') || current_page?(action: 'search') %>
 
         <div class="col-sm-6 navbar-header">
           <h3 class="stories-header__title">Customer Stories</h3>

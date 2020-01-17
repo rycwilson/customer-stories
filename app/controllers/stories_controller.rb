@@ -19,6 +19,7 @@ class StoriesController < ApplicationController
   before_action :set_s3_direct_post, only: :edit
 
   def index
+    # log_action
     @pre_selected_filters = { category: '', product: '' }
     @stories_gallery_cache_key = @company.stories_gallery_cache_key(@pre_selected_filters)
     @category_select_cache_key = @company.category_select_cache_key(0)
@@ -37,29 +38,66 @@ class StoriesController < ApplicationController
       end
     end
     filter_params = get_filters_from_query_or_plugin(@company, params)
-    if filter_params.present?
-      @pre_selected_filters = filter_params
-      @stories_gallery_cache_key = @company.stories_gallery_cache_key(filter_params)
-      unless fragment_exist?(@stories_gallery_cache_key)
-        @stories = @company.filter_stories(filter_params)
+    respond_to do |format| 
+      format.html do 
+        if filter_params.present?
+          @pre_selected_filters = filter_params
+          @stories_gallery_cache_key = @company.stories_gallery_cache_key(filter_params)
+          unless fragment_exist?(@stories_gallery_cache_key)
+            @stories = @company.filter_stories(filter_params)
+          end
+          category_stories = product_stories = []
+          if filter_params['category'].present?
+            @category_select_cache_key = @company.category_select_cache_key(filter_params['category'])
+            category_stories = Story.company_public_filter_category(@company.id, filter_params['category'])
+            @category_results = "#{category_stories.size} #{'story'.pluralize(category_stories.size)} found"
+          end
+          if filter_params['product'].present?
+            @product_select_cache_key = @company.product_select_cache_key(filter_params['product'])
+            product_stories = Story.company_public_filter_product(@company.id, filter_params['product'])
+            @product_results = "#{product_stories.size} #{'story'.pluralize(product_stories.size)} found"
+          end
+          @applied_filters_results = filters_results(category_stories, product_stories)
+        else
+          unless fragment_exist?(@stories_gallery_cache_key)
+            @stories = @company.public_stories
+          end
+        end
       end
-      category_stories = product_stories = []
-      if filter_params['category'].present?
-        @category_select_cache_key = @company.category_select_cache_key(filter_params['category'])
-        category_stories = Story.company_public_filter_category(@company.id, filter_params['category'])
-        @category_results = "#{category_stories.size} #{'story'.pluralize(category_stories.size)} found"
-      end
-      if filter_params['product'].present?
-        @product_select_cache_key = @company.product_select_cache_key(filter_params['product'])
-        product_stories = Story.company_public_filter_product(@company.id, filter_params['product'])
-        @product_results = "#{product_stories.size} #{'story'.pluralize(product_stories.size)} found"
-      end
-      @applied_filters_results = filters_results(category_stories, product_stories)
-    else
-      unless fragment_exist?(@stories_gallery_cache_key)
-        @stories = @company.public_stories
+      format.json do 
+        filter = {}
+        stories = []
+        if params[:category_id]
+          filter[:category] = {}.merge(id: params[:category_id])
+          category_stories = JSON.parse(
+            Story.company_public_filter_category(@company.id, params[:category_id])
+                 .to_json(STORY_DATA_MAP)
+          )
+          stories.concat(category_stories)
+          filter[:category][:count] = category_stories.length
+        end
+        if params[:product_id]
+          filter[:product] = {}.merge(id: params[:product_id])
+          product_stories = JSON.parse(
+            Story.company_public_filter_product(@company.id, params[:product_id])
+                 .to_json(STORY_DATA_MAP)
+          )
+          stories.concat(product_stories)
+          filter[:product][:count] = product_stories.length
+        end
+        if params[:category_id].present? && params[:product_id].present?
+          stories = category_stories & product_stories
+        elsif params[:category_id].present?
+          stories = category_stories
+        elsif params[:product_id].present?
+          stories = product_stories
+        else
+          stories = @company.public_stories_json
+        end
+        render(json: { filter: filter, stories: stories })
       end
     end
+
   end
 
   def show
@@ -236,48 +274,53 @@ class StoriesController < ApplicationController
   end
 
   def search
-    @search_string = params[:search]
-    @story_ids = Story.company_public(@company.id)
-                      .where(
-                        "lower(title) LIKE ? OR lower(narrative) LIKE ?",
-                        "%#{@search_string.downcase}%",
-                        "%#{@search_string.downcase}%"
-                      )
-                      .pluck(:id)
-    @story_ids.concat(
+    # log_action
+    @search_string = params[:q].downcase
+    @stories = Story.company_public(@company.id)
+                    .where(
+                      "lower(title) LIKE ? OR lower(narrative) LIKE ?",
+                      "%#{ @search_string }%",
+                      "%#{ @search_string }%"
+                    )
+                    .to_a
+    @stories.concat(
       Story.company_public(@company.id)
            .joins(:customer)
-           .where("lower(customers.name) LIKE ?", "%#{@search_string.downcase}%")
-           .pluck(:id)
+           .where("lower(customers.name) LIKE ?", "%#{ @search_string }%")
+           .to_a
     )
-    @story_ids.concat(
+    @stories.concat(
       Story.company_public(@company.id)
            .joins(:category_tags)
-           .where("lower(story_categories.name) LIKE ?", "%#{@search_string.downcase}%")
-           .pluck(:id)
+           .where("lower(story_categories.name) LIKE ?", "%#{ @search_string }%")
+           .to_a
     )
-    @story_ids.concat(
+    @stories.concat(
       Story.company_public(@company.id)
            .joins(:product_tags)
-           .where("lower(products.name) LIKE ?", "%#{@search_string.downcase}%")
-           .pluck(:id)
+           .where("lower(products.name) LIKE ?", "%#{ @search_string }%")
+           .to_a
     )
-    @story_ids.concat(
+    @stories.concat(
       Story.company_public(@company.id)
            .joins(:results)
-           .where("lower(results.description) LIKE ?", "%#{@search_string.downcase}%")
-           .pluck(:id)
+           .where("lower(results.description) LIKE ?", "%#{ @search_string }%")
+           .to_a
     )
     # it's possible a matching Result or CallToAction doesn't have an associated story,
     # since they're associated with the Success model
-    @story_ids.concat(
+    @stories.concat(
       Story.company_public(@company.id)
            .joins(:ctas)
-           .where("lower(call_to_actions.display_text) LIKE ?", "%#{@search_string.downcase}%")
-           .pluck(:id)
+           .where("lower(call_to_actions.display_text) LIKE ?", "%#{ @search_string }%")
+           .to_a
     )
-    @story_ids.uniq!
-    respond_to { |format| format.js {} }
+    @stories.uniq!
+    # awesome_print(@stories).uniq
+    respond_to do |format| 
+      format.html { render :index }
+      format.json { render json: JSON.parse( @stories.to_json(STORY_DATA_MAP) ) } 
+    end
   end
 
   def share_on_linkedin

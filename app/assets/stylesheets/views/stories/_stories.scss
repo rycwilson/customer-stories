@@ -3,9 +3,15 @@
 @import 'show/show';
 @import 'edit/edit';
 
-.stories.show, .stories.index {
+.stories.show, .stories.index, .stories.search {
   @import 'shared/cookie_consent';
   @import 'shared/gallery';
+
+  &.stories.index, &.stories.search {
+    .stories-header + .container {
+      min-height: 100vh;  // accommodate the sign-in footer
+    }
+  }
 }
 
 // .stories.show imports its own copy, since also needed for overlay
