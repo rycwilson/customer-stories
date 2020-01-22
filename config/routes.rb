@@ -226,10 +226,10 @@ Rails.application.routes.draw do
 
   end
 
-  # all other subdomains
-  # get '/*all', to: 'site#strip_subdomain', constraints: { subdomain: 'www' }
-  get '/', to: 'site#invalid_subdomain', constraints: { subdomain: /.+/ }
-  get '/*all', to: 'site#invalid_subdomain', constraints: { subdomain: /.+/ }
+  # "subdomain is present but isn't just the local ip address"
+  # => https://stackoverflow.com/questions/2404010)
+  get '/', to: 'site#invalid_subdomain', constraints: { subdomain: /^(?!.*(^\d+\.\d+\.\d+\.\d+)).*(\w|-)+/ }
+  get '/*all', to: 'site#invalid_subdomain', constraints: { subdomain: /^(?!.*(^\d+\.\d+\.\d+\.\d+)).*(\w|-)+/ }
 
   root 'site#index'
 

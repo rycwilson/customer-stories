@@ -1,6 +1,6 @@
 class AnalyticsController < ApplicationController
 # before_action { binding.remote_pry }
-  before_action { @company = Company.find_by(subdomain: request.subdomain) }
+  before_action { @company = Company.find_by(subdomain: request.subdomain.remove_dev_ip) }
   before_action except: [:stories] do
     @story = Story.find_by(id: params[:story_id])
     @start_date = Date.strptime(params[:date_range].split(' - ')[0], '%m/%d/%Y' )

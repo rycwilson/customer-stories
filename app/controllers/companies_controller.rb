@@ -36,17 +36,20 @@ class CompaniesController < ApplicationController
     @company = Company.new(company_params)
     if @company.save
       @company.users << current_user
-      if current_user.linkedin_url.present?
-        redirect_to File.join(request.protocol + "#{@company.subdomain}." + request.domain + request.port_string, company_path(@company)), flash: { success: "Account setup complete" }
-      else
-        redirect_to File.join(request.protocol + "#{@company.subdomain}." + request.domain + request.port_string, edit_profile_path), flash: { info: "Complete your account setup by connecting to LinkedIn" }
-      end
+      redirect_to(
+        {
+          subdomain: @company.subdomain + (Rails.env.development? ? ".#{ request.subdomain }" : ''),
+          controller: 'companies',
+          action: 'show',
+          id: @company.id
+        }, 
+        flash: { success: "Account setup complete" }
+      ) 
     else
       # validation(s): presence / uniqueness of name, presence of subdomain
       flash[:danger] = @company.errors.full_messages.join(', ')
       redirect_to(register_company_path)
     end
-
   end
 
   def update
@@ -173,7 +176,8 @@ class CompaniesController < ApplicationController
   end
 
   def set_company
-    @company = Company.find_by_id(params[:id]) || Company.find_by_subdomain(request.subdomain)
+    @company = Company.find_by_id(params[:id]) || 
+               Company.find_by_subdomain(request.subdomain.remove_dev_ip)
   end
 
   def user_authorized?

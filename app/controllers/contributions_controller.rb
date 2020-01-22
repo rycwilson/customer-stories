@@ -13,7 +13,7 @@ class ContributionsController < ApplicationController
   respond_to(:html, :json, :js)
 
   def index
-    company = Company.find_by(subdomain: request.subdomain)
+    company = Company.find_by(subdomain: request.subdomain.remove_dev_ip)
 
     # Get contributions data for a win story. Success and contributor data already exist in the client.
     if params[:win_story]
@@ -89,7 +89,7 @@ class ContributionsController < ApplicationController
 
   # GET '/contributions/:token/:type'
   def edit
-    @company = Company.find_by(subdomain: request.subdomain)
+    @company = Company.find_by(subdomain: request.subdomain.remove_dev_ip)
     @submission_type = params[:type]  # type IN ('contribution', 'feedback')
   end
 
@@ -99,7 +99,7 @@ class ContributionsController < ApplicationController
       puts contribution_params.to_h
     end
 
-    @company = Company.find_by(subdomain: request.subdomain) || current_user.company
+    @company = Company.find_by(subdomain: request.subdomain.remove_dev_ip) || current_user.company
 
     if contribution_params[:success_attributes].to_h.has_key?(:customer_attributes)
       params[:contribution][:success_attributes][:customer_attributes] = find_dup_customer(

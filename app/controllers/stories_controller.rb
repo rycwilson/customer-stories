@@ -375,7 +375,7 @@ class StoriesController < ApplicationController
     if params[:company_id]  # create story
       @company = Company.find(params[:company_id])
     else
-      @company = Company.find_by(subdomain: request.subdomain)
+      @company = Company.find_by(subdomain: request.subdomain.remove_dev_ip)
     end
   end
 
@@ -431,7 +431,7 @@ class StoriesController < ApplicationController
     elsif request.format == 'application/pdf' || params[:is_plugin]
       @story
     elsif !@story.published? && !company_curator?(company.id)
-      redirect_to(root_url(subdomain:request.subdomain, host:request.domain)) and return
+      redirect_to(root_url) and return
     end
   end
 

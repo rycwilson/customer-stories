@@ -1,7 +1,7 @@
 class StoryPathConstraint
 
   def self.matches? request
-    company = Company.find_by(subdomain: request.subdomain)
+    company = Company.find_by(subdomain: request.subdomain.remove_dev_ip)
     customer = Customer.friendly.exists?(request.params[:customer]) ?
                  Customer.friendly.find(request.params[:customer]) : 
                  nil

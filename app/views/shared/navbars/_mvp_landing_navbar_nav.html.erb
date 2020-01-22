@@ -12,10 +12,12 @@
     <li>
       <%= link_to(
             company_url(
-              subdomain: current_user.company.subdomain,
+              subdomain: current_user.company.subdomain + 
+                (Rails.env.development? ? ".#{ request.subdomain.match(/(\d+\.\d+\.\d+\.\d+$)/)[0] }" : ''),
               id: current_user.company_id
             ),
-            class: 'navbar-brand' ) do %>
+            class: 'navbar-brand' 
+          ) do %>
 
         <% if current_user.company.logo_url.present? %>
           <%= image_tag current_user.company.logo_url %>

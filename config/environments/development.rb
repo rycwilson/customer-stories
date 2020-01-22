@@ -8,7 +8,7 @@ Rails.application.configure do
   # this ensures subdomans work properly in dev environment (was originally in session_store.rb)
   # ref http://stackoverflow.com/questions/10402777
   config.session_store(
-    :cookie_store, key: '_csp_session', domain: 'lvh.me', tld_length: 2
+    :cookie_store, key: '_csp_session', domain: 'xip.io', tld_length: 2
   )
 
   # In the development environment your application's code is reloaded on

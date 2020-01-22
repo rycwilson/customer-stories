@@ -71,7 +71,7 @@ module StoriesHelper
     elsif ENV['HOST_NAME'] == 'customerstories.org'
       'https://customerstories.org'
     else
-      'http://lvh.me:3000'
+      'http://ipx.io:3000'
     end
   end
 

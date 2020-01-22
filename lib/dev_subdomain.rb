@@ -1,7 +1,7 @@
 class DevSubdomain
 
   def self.matches? (request)
-    request.subdomain == 'cspdev'
+    request.subdomain.remove_dev_ip == 'cspdev'
   end
 
 end

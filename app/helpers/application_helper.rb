@@ -65,13 +65,10 @@ module ApplicationHelper
     user_signed_in? && current_user.company_id.blank?
   end
 
-  # method takes a url and strips out the subdomain (as defined by the current request)
   def strip_subdomain url
-    if request.subdomain.present?
-      url.sub(request.subdomain + '.', '')
-    else
-      url
-    end
+    Rails.env.development? ?
+      url.sub(/(\/\/)((\w|-)+)\.(\d+\.\d+\.\d+\.\d+)/, '\1\4') :
+      url.sub(/\/\/(\w|-)+\./, '//')
   end
 
   def title_helper controller, action, company=nil, story=nil

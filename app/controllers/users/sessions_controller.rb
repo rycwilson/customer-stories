@@ -8,8 +8,8 @@ class Users::SessionsController < Devise::SessionsController
   # validate that request.subdomain matches the user.company.subdomain
   # this callback assumes the user exists.
   before_action(only: :create) do
-    if request.subdomain.present? && request.subdomain != DEV_TUNNEL_SUBDOMAIN
-      validate_user_subdomain(request.subdomain, params[:user][:email])
+    if request.subdomain.remove_dev_ip.present? && request.subdomain.remove_dev_ip != DEV_TUNNEL_SUBDOMAIN
+      validate_user_subdomain(request.subdomain.remove_dev_ip, params[:user][:email])
     end
   end
 
@@ -62,7 +62,10 @@ class Users::SessionsController < Devise::SessionsController
     else
       # kill session since user is already logged in at this point (not sure why!)
       request.reset_session
-      redirect_to(root_url(host: request.domain), flash: { danger: "Not authorized" }) and return false
+      redirect_to(
+        root_url(host: request.domain.add_dev_ip), 
+        flash: { danger: "Not authorized" }
+      ) and return false
     end
   end
 

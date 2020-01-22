@@ -6,20 +6,18 @@ class SiteController < ApplicationController
   def index
   end
 
-  def strip_subdomain
-    if request.query_string.present?
-      redirect_to request.protocol + request.domain + request.path + '?' + request.query_string
-    else
-      redirect_to request.protocol + request.domain + request.path
-    end
-  end
-
   def valid_subdomain_bad_path
     redirect_to root_url(host: request.host), flash: { warning: "Page doesn't exist" }
   end
 
   def invalid_subdomain
-    redirect_to root_url(host: request.domain)
+    redirect_to root_url(
+      subdomain: Rails.env.development? ? 
+                  # remove "acme" from "acme.127.0.0.1"
+                  request.subdomain.sub(/^((\w|-)+\.)(\d+\.\d+\.\d+\.\d+)/, '\3') : 
+                  '',
+      host: request.domain
+    )
   end
 
   def store_front

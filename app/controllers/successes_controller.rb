@@ -28,7 +28,7 @@ class SuccessesController < ApplicationController
   end
 
   def index
-    company = Company.find_by(subdomain: request.subdomain) || current_user.company
+    company = Company.find_by(subdomain: request.subdomain.remove_dev_ip) || current_user.company
     data = Rails.cache.fetch("#{company.subdomain}/successes-json") do 
       company.successes.to_json({
         only: [:id, :name],
@@ -63,7 +63,7 @@ class SuccessesController < ApplicationController
       # puts "Zapier -> CSP, create success"
       # puts success_params.to_h
     end
-    @company = Company.find_by(subdomain: request.subdomain) || current_user.company
+    @company = Company.find_by(subdomain: request.subdomain.remove_dev_ip) || current_user.company
 
     if params[:success].dig(:customer_attributes).present?
       params[:success][:customer_attributes] = find_dup_customer(

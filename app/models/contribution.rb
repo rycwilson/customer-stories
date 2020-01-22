@@ -237,7 +237,7 @@ class Contribution < ApplicationRecord
   # type is in ['contribution', 'feedback', 'opt_out', 'remove']
   def invitation_link (type)
     Rails.application.routes.url_helpers.url_for({
-      subdomain: self.company.subdomain,
+      subdomain: self.company.subdomain.add_dev_ip,
       controller: 'contributions',
       action: ['contribution', 'feedback'].include?(type) ? 'edit' : 'update',
       token: self.access_token, type: type

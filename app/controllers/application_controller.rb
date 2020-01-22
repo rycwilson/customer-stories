@@ -20,7 +20,7 @@ class ApplicationController < ActionController::Base
       invalid_subdomain? ||
       params[:controller] == 'plugins' ||
       params[:action] == 'zapier_trigger' ||
-      request.subdomain == 'cspdev'
+      request.subdomain.remove_dev_ip == 'cspdev'
     end
   )
 
@@ -59,81 +59,82 @@ class ApplicationController < ActionController::Base
     )
   end
 
-  def linkedin_auth_callback
-    # puts params.permit(params.keys).to_h
-    # share_url = params[:state].match(/csp-share(.+)csp-share/).try(:[], 1)
-    # profile_type = # lite or basic
+  # TODO: account for dev ip in references to subdomain
+  # def linkedin_auth_callback
+  #   # puts params.permit(params.keys).to_h
+  #   # share_url = params[:state].match(/csp-share(.+)csp-share/).try(:[], 1)
+  #   # profile_type = # lite or basic
 
-    # contribution submission
-    if contribution = Contribution.find_by(
-          id: params[:state].match(/csp-contribution-(\d+)$/).try(:[], 1)
-        )
-      puts "CONTRIBUTION #{contribution.id}"
-      if request.subdomain.empty?  # insert subdomain and re-direct
-        redirect_to(
-          url_for({ subdomain: company.subdomain, params: request.params })
-        ) and return
-      end
-      if params[:error]
-        redirect_to(
-          confirm_submission_path(contribution.access_token),
-          flash: { warning: params[:error_description] }
-        )
-      elsif params[:code]
-        token_response = get_linkedin_token(params[:code])
-        if token_response['error']
-          redirect_to(
-            confirm_submission_path(contribution.access_token),
-            flash: { danger: 'LinkedIn error: ' + token_response['error_description'] }
-          )
-        else
-          token = token_response['access_token']
-          # save token to User model
-          # linkedin_data = get_linkedin_profile(token, 'lite')
-        end
-      end
+  #   # contribution submission
+  #   if contribution = Contribution.find_by(
+  #         id: params[:state].match(/csp-contribution-(\d+)$/).try(:[], 1)
+  #       )
+  #     puts "CONTRIBUTION #{contribution.id}"
+  #     if request.subdomain.empty?  # rt subdomain and re-direct
+  #       redirect_to(
+  #         url_for({ subdomain: company.subdomain, params: request.params })
+  #       ) and return
+  #     end
+  #     if params[:error]
+  #       redirect_to(
+  #         confirm_submission_path(contribution.access_token),
+  #         flash: { warning: params[:error_description] }
+  #       )
+  #     elsif params[:code]
+  #       token_response = get_linkedin_token(params[:code])
+  #       if token_response['error']
+  #         redirect_to(
+  #           confirm_submission_path(contribution.access_token),
+  #           flash: { danger: 'LinkedIn error: ' + token_response['error_description'] }
+  #         )
+  #       else
+  #         token = token_response['access_token']
+  #         # save token to User model
+  #         # linkedin_data = get_linkedin_profile(token, 'lite')
+  #       end
+  #     end
 
-    else  # signed in user (likely curator, could be contributor)
-      if params[:error]
-        redirect_to(
-          edit_profile_path,
-          flash: { warning: params[:error_description] }
-        )
-      elsif params[:code] # code returned, now get access token
-        token_response = get_linkedin_token(params[:code])
-        if token_response['error']
-          redirect_to(
-            edit_profile_path,
-            flash: { danger: 'LinkedIn error: ' + token_response['error_description'] }
-          )
-        else
-          token = token_response['access_token']
-          puts "TOKEN"
-          puts token
-          # save token to User model
-          get_linkedin_profile(token, 'lite')
+  #   else  # signed in user (likely curator, could be contributor)
+  #     if params[:error]
+  #       redirect_to(
+  #         edit_profile_path,
+  #         flash: { warning: params[:error_description] }
+  #       )
+  #     elsif params[:code] # code returned, now get access token
+  #       token_response = get_linkedin_token(params[:code])
+  #       if token_response['error']
+  #         redirect_to(
+  #           edit_profile_path,
+  #           flash: { danger: 'LinkedIn error: ' + token_response['error_description'] }
+  #         )
+  #       else
+  #         token = token_response['access_token']
+  #         puts "TOKEN"
+  #         puts token
+  #         # save token to User model
+  #         get_linkedin_profile(token, 'lite')
 
-          if false # errors
-            # what if linkedin api is down?  timeout?
-            # since this is all happening in the same flow, a 401 response won't happen;
-            # but further authenticated requests (from linkedin_connect action)
-            # need to account for possibility of 401, re-direct to beginning of auth process
-          else
+  #         if false # errors
+  #           # what if linkedin api is down?  timeout?
+  #           # since this is all happening in the same flow, a 401 response won't happen;
+  #           # but further authenticated requests (from linkedin_connect action)
+  #           # need to account for possibility of 401, re-direct to beginning of auth process
+  #         else
 
-          # not checking for errors here,
-          # what's the point of telling contributor?
-          # if update_user_linkedin_data(contributor, linkedin_data)
-          #   redirect_to confirm_submission_path(contribution.access_token)
-          # else
-          #   redirect_to confirm_submission_path(contribution.access_token),
-          #       flash: {
-          #         warning: "Submission successful, but errors saving LinkedIn data: #{contributor.errors.full_messages.join(', ')}"
-          #       }
-          end
-        end
-      end
-    end
-  end
+  #         # not checking for errors here,
+  #         # what's the point of telling contributor?
+  #         # if update_user_linkedin_data(contributor, linkedin_data)
+  #         #   redirect_to confirm_submission_path(contribution.access_token)
+  #         # else
+  #         #   redirect_to confirm_submission_path(contribution.access_token),
+  #         #       flash: {
+  #         #         warning: "Submission successful, but errors saving LinkedIn data: #{contributor.errors.full_messages.join(', ')}"
+  #         #       }
+  #         end
+  #       end
+  #     end
+  #   end
+  # end
 
   protected
 
@@ -172,7 +173,7 @@ class ApplicationController < ActionController::Base
   # method only called if user_signed_in?
   def check_subdomain
     user_subdomain = current_user.company.try(:subdomain)
-    if user_subdomain == request.subdomain  # all good
+    if user_subdomain == request.subdomain.remove_dev_ip  # all go    
       true
     # zaps will be with subdomain in dev (cspdev) and without in production
     # account for both by sending the necessary parameter
@@ -181,13 +182,12 @@ class ApplicationController < ActionController::Base
     # no subdomain for the linkedin auth callback
     elsif params[:action] == 'linkedin_auth_callback'
       true
-    elsif request.subdomain.blank? &&
-          params[:controller] == 'site' &&
+    elsif request.subdomain.remove_dev_ip.blank? && params[:controller] == 'site' &&
           (['index', 'store_front'].include?(params[:action]))
       # logged in, navigating to store front
       true
     elsif user_subdomain.nil?  # user not associated with a company
-      if request.subdomain.blank?
+      if request.subdomain.remove_dev_ip.blank?
         true
       else
         # ok to access public pages (story, stories index, or contributions)
@@ -195,24 +195,22 @@ class ApplicationController < ActionController::Base
             params[:controller] == 'contributions'
           true
         else # strip the subdomain, TODO: this should be a 401
-          redirect_to url_for({ subdomain: nil,
-                                controller: params[:controller],
-                                action: params[:action] })
+          redirect_to url_for({ 
+            subdomain: Rails.env.development? ? request.subdomain.sub(/^(\w|-)+\./, '') : '',
+            controller: params[:controller],
+            action: params[:action] 
+          })
         end
       end
     else  # re-direction required
-      if params[:action] == 'linkedin_callback'
-         # linkedin_callback won't have subdomain, insert it and include params
-        redirect_to url_for({ subdomain: user_subdomain,
-                              controller: params[:controller],
-                              action: params[:action],
-                              params: request.params })
-      else
-        redirect_to url_for({ subdomain: user_subdomain,
-                              controller: params[:controller],
-                              action: params[:action] })
-      end
+      redirect_to(
+        subdomain: user_subdomain + (Rails.env.development? ? ".#{ request.subdomain.match(/(\d+\.\d+\.\d+\.\d+$)/)[0] }" : ''),
+        controller: params[:controller],
+        action: params[:action],
+        params: params[:action] == 'linkedin_callback' ? request.params : {}
+      )
     end
+
   end
 
   def configure_permitted_parameters
@@ -231,10 +229,10 @@ class ApplicationController < ActionController::Base
       # binding.remote_pry
       if resource.company_id.present?  # returning users
         url_for({
-            subdomain: resource.company.subdomain,
-            controller: '/companies',
-            action: 'show',
-            id: resource.company.id,
+          subdomain: resource.company.subdomain + (Rails.env.development? ? ".#{ request.subdomain }" : ''),
+          controller: '/companies',
+          action: 'show',
+          id: resource.company.id,
         })
       else
         edit_profile_no_company_path
@@ -244,9 +242,12 @@ class ApplicationController < ActionController::Base
     end
   end
 
-  # removes the subdomain from the url upon signing out
   def after_sign_out_path_for resource
-    url_for({ subdomain: nil, controller: '/site', action: 'index' })
+    url_for({ 
+      subdomain: Rails.env.development? ? request.subdomain.sub(/^(\w|-)+\./, '') : '', # remove the company subdomain
+      controller: '/site', 
+      action: 'index' 
+    })
   end
 
   def invalid_subdomain?
@@ -337,7 +338,7 @@ class ApplicationController < ActionController::Base
 
   def linkedin_auth_callback_url
     url_for({
-      subdomain: nil,
+      subdomain: '' + (Rails.env.development? ? "#{ request.subdomain }" : ''),
       controller: 'application',
       action: 'linkedin_auth_callback'
     })

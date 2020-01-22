@@ -3,7 +3,7 @@ class PluginsController < ApplicationController
   include StoriesAndPlugins
 
   skip_before_action :verify_authenticity_token, only: [:main, :show, :init]
-  before_action(except: [:track]) { @company = Company.find_by(subdomain: request.subdomain) }
+  before_action(except: [:track]) { @company = Company.find_by(subdomain: request.subdomain.remove_dev_ip) }
 
   def main
     @type = params[:type] || 'tabbed_carousel'  # trunity still using old tabbed carousel
