@@ -42,14 +42,6 @@ module ApplicationHelper
     ENV['HOST_NAME'] == 'customerstories.org'
   end
 
-  def mvp_stylesheet
-    if ['companies', 'stories', 'profile', 'contributions'].include?(controller_name)
-      stylesheet_link_tag('mvpready-admin', media: 'all', 'data-turbolinks-track' => 'reload')
-    else
-      stylesheet_link_tag('mvpready-landing', media: 'all', 'data-turbolinks-track' => 'reload')
-    end
-  end
-
   # method determines if title 'Customer Stories' should be displayed as plural
   def stories?
     (controller_name == 'companies' && action_name != 'new') ||

@@ -14,8 +14,7 @@
     <%= stylesheet_link_tag('application', media: 'all', 'data-turbolinks-track' => 'reload') %>
   <% end %>
 
-  <%#= mvp_stylesheet %>
-  <% if ['site', 'sessions'].include?(controller_name) %>
+  <% unless ['companies', 'stories', 'profile', 'contributions'].include?(controller_name)%>
     <%= stylesheet_link_tag 'mvpready-landing', media: 'all', 'data-turbolinks-track' => 'reload' %>
   <% end %>
 
