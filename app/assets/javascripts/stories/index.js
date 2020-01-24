@@ -73,7 +73,8 @@ function storiesIndexListeners () {
         // false => reload from cache if available; true => reload from server
         location.reload(false)  
       } else {
-        $('.search-stories__results').text('');
+        $('.search-stories__results, .stories-filter__results--category, .stories-filter__results--product, .search-and-filters__results--combined')
+          .text('');
         replaceStateStoriesIndex('', '');
         $form.submit();
       }
