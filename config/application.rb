@@ -12,6 +12,14 @@ module Csp
     # Application configuration should go into files in config/initializers
     # -- all .rb files in that directory are automatically loaded.
 
+    # rack-cors
+    config.middleware.insert_before 0, Rack::Cors do
+      allow do
+        origins '*'
+        resource '*', headers: :any, methods: [:get, :post, :options]
+      end
+    end
+
     # custom fonts
     # ref https://gist.github.com/anotheruiguy/7379570
     config.assets.paths << Rails.root.join("app", "assets", "fonts")

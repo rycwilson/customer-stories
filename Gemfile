@@ -36,6 +36,7 @@ gem 'pry-theme'
 gem 'rails', '>= 5.0.0.rc2', '< 5.1'
 gem 'rails_admin'
 gem 'rails-html-sanitizer'
+gem 'rack-cors'
 gem 'rack_password'
 gem 'rack-timeout', require:"rack/timeout/base"
 gem 'reverse_markdown'

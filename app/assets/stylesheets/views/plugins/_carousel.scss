@@ -157,7 +157,7 @@ $white-chevron-right: 'https://s3-us-west-1.amazonaws.com/csp-production-assets/
 
 .cs-carousel {
   position: relative;
-  padding: 0;
+  padding: 0 !important;  // don't let bootstrap override
   visibility: hidden;
   ::-webkit-scrollbar {
     display: none;
@@ -190,8 +190,8 @@ $white-chevron-right: 'https://s3-us-west-1.amazonaws.com/csp-production-assets/
         // position: relative;
         // width: 330px;  // jquery will set this
         // height: 190px;
-        padding-left: 16px;  // modified from 15 so 2 stories on an ipad
-        padding-right: 16px;
+        padding-left: 0;  
+        padding-right: 0;
         box-sizing: border-box;
       }
     }
