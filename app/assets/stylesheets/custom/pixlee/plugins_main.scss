@@ -25,6 +25,21 @@
   }
 }
 
+// these are band-aids to compensate for some inconsistent padding on pixlee's site;
+// here *their* style settings are adjusted instead of our own (specificity to override their own settings),
+// because changing our settings can have the unforunate affect of changing how the overlay
+// lines up with the story card as it expands/contracts
+#brands_holder {
+  @media only screen and (min-width: 768px) {
+    padding: 20px 0;
+  }
+}
+.resources_css .container #main_container #case_studies_container .content_container {
+  @media only screen and (max-width: 767px) {
+    padding-top: 30px;
+  }
+}
+
 .cs-carousel {
   .story-card__link {
     width: $carousel-story-card-width;
