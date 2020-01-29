@@ -216,7 +216,7 @@
     border-right: ($width / 2 + 0px) solid transparent; 
   }
   &.active > div {
-    visibility: visible;
+    // visibility: visible;  // temporarily hidden
   }
 }
 
