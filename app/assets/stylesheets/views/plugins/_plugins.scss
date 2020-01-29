@@ -70,7 +70,7 @@ body.plugin-demo {
 }
 
 @media only screen and (min-width: 768px) and (max-width: 991px) {
-  #cs-gallery .story-card__link {
+  #cs-gallery .story-card:not([class*="--logo-only"]) .story-card__link {
     width: $small-story-card-width;  
     height: $small-story-card-height; 
   }
