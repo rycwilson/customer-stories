@@ -219,7 +219,8 @@ function cspInitOverlays ($, $container, subdomain, isDemo, env) {
 
     .on('click touchstart', 'a.published, a.preview-published', function (e) {
       // console.log('click touchstart')
-      var $storyCard = $(this).parent(),
+      var $storyLink = $(this),
+          $storyCard = $(this).parent(),
           storyIndex = $container.is('#cs-gallery') ? 
                          $storyCard.index() + 1 : 
                          $storyCard.parent().index() + 1,
@@ -232,7 +233,7 @@ function cspInitOverlays ($, $container, subdomain, isDemo, env) {
 
       } else {  // touchstart
         if ($storyCard.hasClass('cs-hover')) {
-          $storyCard[0].click();
+          $storyLink[0].click();
 
         } else {
           $storyCard.addClass('cs-hover');
@@ -241,7 +242,7 @@ function cspInitOverlays ($, $container, subdomain, isDemo, env) {
           });
 
           // stop the subsequent touchend event from triggering the <a> tag
-          $storyCard.find('a').one('touchend', function (e) {
+          $storyLink.one('touchend', function (e) {
             e.preventDefault();
           });
 
