@@ -73,7 +73,8 @@ function storiesIndexListeners () {
         // false => reload from cache if available; true => reload from server
         location.reload(false)  
       } else {
-        $('.search-stories__results').text('');
+        $('.search-stories__results, .stories-filter__results--category, .stories-filter__results--product, .search-and-filters__results--combined')
+          .text('');
         replaceStateStoriesIndex('', '');
         $form.submit();
       }
@@ -92,7 +93,6 @@ function storiesIndexListeners () {
     })
 
     .on('click touchstart', '#stories-gallery .story-card:not(.hover) a.published', function (e) {
-      // console.log('click touchstart')
       var $storyLink = $(this),
           $storyCard = $(this).parent(),
           storyLoading = function () {
@@ -104,21 +104,18 @@ function storiesIndexListeners () {
           };
 
       if (e.type === 'click') {
-        // console.log('click')
         storyLoading();
       } else {
-        // console.log('touchstart')
         e.preventDefault();
         $storyCard.addClass('hover');
 
         // stop the subsequent touchend event from triggering the <a> tag
         $storyLink.one('touchend', function (e) {
-          // console.log('touchend');
           e.preventDefault();
         });
 
         // next tap => load story
-        $storyLink.one('touchstart', storyLoading);
+        $storyLink.one('touch', storyLoading);
 
         // undo style changes when navigating away
         // TODO: doesn't work
@@ -133,11 +130,9 @@ function storiesIndexListeners () {
           // this selector is still allowing a click on the title <p> to trigger this listener => check in the function instead
           // ':not(li[data-story-id]:nth-of-type(' + $storyCard.index() + 1 + '), li[data-story-id]:nth-of-type(' + $storyCard.index() + 1 + ') *)',
           function (e) {
-            // console.log('body touchstart')
             if ($(e.target).is($storyCard) || $storyCard.has(e.target).length ) {
               // do nothing (link will be followed)
             } else {
-              // console.log('not story card')
               $storyCard.removeClass('hover');
               $storyLink.off('touchstart', storyLoading);
             }

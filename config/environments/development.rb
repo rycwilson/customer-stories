@@ -1,5 +1,10 @@
 Rails.application.configure do
 
+  # for viewing via mobile on local network
+  # get localhost IP from system preferences => network (here it's 192.168.1.3)
+  # point mobile browser to [subdomain].192.168.1.3.xip.io:3000  
+  # config.action_dispatch.tld_length = 5
+
   # config.force_ssl = true
   # config.ssl_options = { redirect: { port: 3000 }, hsts: { subdomains: true } }
   config.log_level = :debug

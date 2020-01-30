@@ -1,4 +1,15 @@
 
+$workflow-tab-width: 98;
+$dropdowns-tab-width: 64;
+
+@mixin nav-tab-border {
+  border: {
+    width: 2px 0 2px 0;
+    style: solid;
+    color: transparent;
+  }
+}
+
 #company-nav {
   margin-bottom: 40px;
   background-color: #fff;
@@ -14,41 +25,33 @@
 .nav-tabs.nav-workflow {
   font-size: 16px;
   border-bottom: 0;
-  
-  // hard-coded widths prevent width from changing when text is bolded 
-  // (the trick outlined here didn't work: http://jsfiddle.net/85LbG/)
-  > li:nth-of-type(1) {
-    width: 102px
-  }
-  > li:nth-of-type(2) {
-    width: 89px
-  }
-  > li:nth-of-type(3) {
-    width: 101px;
-  }
-  > li:nth-of-type(4) {
-    width: 101px;
-  }
   > li {
+    @include tab-arrows($workflow-tab-width);
+
+    // hard-coded widths prevent width from changing when text is bolded 
+    // (the trick outlined here didn't work: http://jsfiddle.net/85LbG/)
+    width: #{$workflow-tab-width}px;
     margin-bottom: 0;
     > a {
+      @include nav-tab-border;
+      display: flex;
+      justify-content: center;
       background-color: #fff;
       font-family: 'Lato';
       color: #666;
       font-weight: 400;
-      border: 2px solid transparent;
       &:hover, &:focus {
+        @include nav-tab-border;
         background-color: #fff;
         color: #222;
-        border: 2px solid transparent;
       }
     }
     &.active {
       > a, > a:hover, > a:focus {
+        @include nav-tab-border;
         color: $nav-blue; // #0095ff; // #d74b4b;  // #4885ed;
         font-weight: bold;
-        border: 2px solid transparent;
-        border-bottom: 2px solid $nav-blue; // #0095ff; //#d74b4b;  // #4885ed;
+        border-bottom-color: $nav-blue; // #0095ff; //#d74b4b;  // #4885ed;
       }
     }
     
@@ -58,20 +61,21 @@
 .nav-tabs.nav-settings {
   border: 0;
   li.dropdown {
+    @include tab-arrows($dropdowns-tab-width);  
     > a {
+      @include nav-tab-border;
       font-size: 16px;
-      border: 2px solid transparent;
       &:hover, &:focus {
+        @include nav-tab-border;
         color: #222;
         background-color: transparent;
-        border-color: transparent;
       }
     }
     &.active {
       > a, > a:hover, > a:focus {
+        @include nav-tab-border;
         color: $nav-blue; 
-        border-color: transparent;
-        border-bottom: 2px solid $nav-blue;
+        border-bottom-color: $nav-blue;
       }
     }
     &.open:not(.active) {
