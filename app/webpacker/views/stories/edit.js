@@ -1,11 +1,9 @@
 
 export default {
-
-  init: () => {
+  init() {
     console.log('stories.edit.init()')
   },
-  addListeners: () => {
+  addListeners() {
     console.log('stories.edit.addListeners()');
   }
-
 }

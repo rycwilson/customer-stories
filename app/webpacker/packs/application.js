@@ -17,9 +17,7 @@
 import 'core-js/stable';
 import 'regenerator-runtime/runtime';
 
-window.$ = $; window.jQuery = jQuery;
 require('../vendor/jquery_plugins');
-
 import Rails from 'rails-ujs'
 import turbolinks from 'vendor/turbolinks'; 
 
@@ -29,6 +27,7 @@ import 'bootstrap-sass/assets/javascripts/bootstrap';
 import ResponsiveBootstrapToolkit from 'responsive-toolkit';
 import 'select2';
 
+window.$ = $; window.jQuery = jQuery;
 window.APP = window.APP || buildApp();
 getBootstrapViewport(ResponsiveBootstrapToolkit);
 APP.init();
@@ -56,9 +55,10 @@ function buildApp() {
       });
     }
   }
-  $.getJSON('/app', function (data, status, xhr) { 
-    Object.assign(APP, data)
-  });
+  // $.getJSON('/app', function (data, status, xhr) { 
+  //   Object.assign(APP, data)
+  //   console.log('APP')
+  // });
   return app;
 }
 

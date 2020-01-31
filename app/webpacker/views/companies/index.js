@@ -1,12 +1,28 @@
 
-import show from './show';
-import edit from './edit';
+import prospect from './dashboard/prospect';
+import curate from './dashboard/curate';
+import promote from './dashboard/promote';
+import measure from './dashboard/measure';
 
 export default {
-  show: show,
-  edit: edit,
-  addListeners: () => {
-    show.addListeners();
-    edit.addListeners();
+  dashboard: {
+    init() {
+      [prospect, curate, promote, measure].forEach((section) => section.init());
+    },
+    addListeners() {
+      [prospect, curate, promote, measure].forEach((section) => section.addListeners());
+    }
+  },
+  settings: {
+    init() {
+      console.log('companies.edit.init()');
+    },
+    addListeners() {
+      console.log('companies.edit.addListeners()');
+    }
+  },
+  addListeners() {
+    this.dashboard.addListeners();
+    this.settings.addListeners();
   }
 }

@@ -8,6 +8,7 @@ class ApplicationController < ActionController::Base
   protect_from_forgery with: :exception
 
   # before_action { binding.remote_pry }
+  after_action { cookies['current-user-id'] = current_user.try(:id) }
   
   # Devise - whitelist User params
   before_action :configure_permitted_parameters, if: :devise_controller?

@@ -19,9 +19,10 @@ function addListeners() {
     // Access visit timing metrics with the event.data.timing object
     .one('turbolinks:load', addAppListeners)
     .on('turbolinks:load', (e) => {
-      const controllerAction = $('body').attr('class').split(' '),
-            controller = controllerAction[0],
-            action = controllerAction[1];
+      const controllerAction = $('body').attr('class').split(' ');
+      const controller = controllerAction[0];
+      const action = controllerAction[1];
+      APP.currentUserId = Cookies.get('current-user-id');
       view.init(controller, action);
     })
 

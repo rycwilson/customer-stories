@@ -12,12 +12,12 @@ _templateSettings.evaluate = /{{([\s\S]+?)}}/g;
 _templateSettings.interpolate = /{{=([\s\S]+?)}}/g;
 
 export default {
-  init: () => {
+  init() {
     initFilters();
     truncateStoryTitles();
     // console.log(story_cards);
   },
-  addListeners: () => {
+  addListeners() {
     $(document)
       .on('input', '.search-stories__input', handleSearchInput)
       .on('click', '.search-stories [type="submit"]', handleSearchClick)
@@ -298,17 +298,12 @@ function handleStoryClick(e) {
   // console.log('click touchstart')
   const $storyLink = $(this);
   const $storyCard = $(this).parent();
-  const storyLoading = () => {
-      // the forceRedraw is necessary because the style changes won't take affect while the link is being followed
-      $storyCard.addClass('loading still-loading').forceRedraw();
-
-      // don't applyy this change to current $storyCard or link won't be followed
-      $('.story-card').not($storyCard).css('pointer-events', 'none');
-    };
+  const showStoryLoading = () => $storyCard.showLoading(true);
 
   if (e.type === 'click') {
     // console.log('click')
-    storyLoading();
+    $storyCard.showLoading(true);
+
   } else {
     // console.log('touchstart')
     e.preventDefault();
@@ -317,8 +312,8 @@ function handleStoryClick(e) {
     // stop the subsequent touchend event from triggering the <a> tag
     $storyLink.one('touchend', (e) => e.preventDefault());
 
-    // next tap => load story
-    $storyLink.one('touchstart', storyLoading);
+    // next tap => load story (link will be followed)
+    $storyLink.one('touchstart', showStoryLoading);
 
     // undo style changes when navigating away
     // TODO: doesn't work
@@ -339,7 +334,7 @@ function handleStoryClick(e) {
         } else {
           // console.log('not story card')
           $storyCard.removeClass('hover');
-          $storyLink.off('touchstart', storyLoading);
+          $storyLink.off('touchstart', showStoryLoading);
         }
       }
     );

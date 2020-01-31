@@ -4,8 +4,7 @@ import linkedin from 'lib/linkedin';
 import carousel from 'views/plugins/tabbed_carousel';
 
 export default {
-
-  init: () => {
+  init() {
     redirectPluginShares();
     
     // story is initially hidden in case video failure prompts removal
@@ -19,8 +18,7 @@ export default {
 
     setTimeout(() => $('#primary-cta-xs').addClass('open'), 3000);
   },
-
-  addListeners: () => {
+  addListeners() {
     video.addListeners();
     $(document)
       .on('click touchend', '#primary-cta-xs.open', function (e) {
@@ -35,7 +33,7 @@ export default {
         if (APP.screenSize === 'xs') return false;
         if ($('body').hasClass('stories show')) {
           // prevent carousel tab from covering curator sign in
-          if (!APP.current_user) {
+          if (!APP.currentUserId) {
             const scrollBottom = $(document).height() - $(window).height() - $(window).scrollTop();
             if (scrollBottom < $('#sign-in-footer').height()) {
               $('#cs-tabbed-carousel').hide();
@@ -60,7 +58,6 @@ export default {
         APP.screenSize === 'xs' ? $(this).popupWindow(e) : $(this).popupWindow(e, 600, 424);
       });
   }
-
 }
 
 function initMoreStories() {

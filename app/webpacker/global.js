@@ -1,12 +1,10 @@
 
 import companies from 'views/companies';
 import stories from 'views/stories';
-import profile from 'views/profile';
+import users from 'views/users';
 
 export function addAppListeners() {
-  companies.addListeners();
-  stories.addListeners();
-  profile.addListeners();
+  [companies, stories, users].forEach((resource) => resource.addListeners());
 }
 
 export function pluck(array, key) {

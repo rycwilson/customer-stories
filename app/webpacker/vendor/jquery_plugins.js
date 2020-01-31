@@ -3,6 +3,18 @@
   const imagesLoaded = require('imagesloaded');
   imagesLoaded.makeJQueryPlugin($);
 
+  // presently only used for story cards but could also be used for datatables loading screens
+  $.fn.showLoading = function (isLoading) {
+    if (isLoading) {
+      // the forceRedraw is necessary because the style changes won't take affect while the link is being followed
+      this.addClass('loading still-loading').forceRedraw();
+      $('.story-card').css('pointer-events', 'none');
+    } else {
+      $(this).removeClass('loading still-loading')
+      $('.story-card').css('pointer-events', 'initial');
+    }
+  }
+
   $.fn.forceRedraw = function () {
     return this.hide(0, function () { $(this).show(); });
   };
