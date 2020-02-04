@@ -3,9 +3,8 @@
 <% plugin_type = plugin_type || nil %>
 <% background = background || nil %>
 <% is_grayscale = is_grayscale || nil %>
-<% is_pre_selected = is_pre_selected || nil %>
 
-<div class="<%= card_class %>" data-story-id="<%= story.id %>" <%= %> <%= is_pre_selected ? 'cs-loaded' : '' %>>
+<div class="<%= card_class %>" data-story-id="<%= story.id %>">
 
   <!-- grid__item is for the overlays; not implemented internally -->
   <a href="<%= story.csp_story_link(is_dashboard, is_plugin, is_external, plugin_type) %>"

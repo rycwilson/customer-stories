@@ -77,7 +77,7 @@ class PluginsController < ApplicationController
                        false :
                        true,
         window_width: params[:window_width],
-        pre_selected_story: pre_selected_story,
+        pre_selected_story_id: pre_selected_story.try(:id),
         contributors: pre_selected_story && set_contributors(pre_selected_story)
       }
     )

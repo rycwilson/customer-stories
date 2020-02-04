@@ -217,7 +217,7 @@ function cspInitOverlays ($, $container, subdomain, isDemo, env) {
       }
     })
 
-    .on('click touchstart', 'a.published, a.preview-published', function (e) {
+    .on('click touchstart', '.story-card--published a', function (e) {
       // console.log('click touchstart')
       var $storyLink = $(this),
           $storyCard = $(this).parent(),
