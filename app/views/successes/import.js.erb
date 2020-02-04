@@ -38,7 +38,7 @@
    * the datatable filter state persists through a reload,
    */
   $('#successes-table').DataTable().ajax.reload(function (successes) {
-    $('#prospect-contributors-table').DataTable().ajax.reload(function (contributions) {
+    $('#contributors-table').DataTable().ajax.reload(function (contributions) {
       updateSelectOptions(company, successes);
       toggleFormDone($('#new-success-form'), false, cbDone(successes, true));
     });

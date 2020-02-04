@@ -14,15 +14,27 @@ class CompaniesController < ApplicationController
   end
 
   def show
-    redirect_to('/curate') if request.path.match(/\/companies\/\d+/)
-    @workflow_stage = params[:workflow_stage]
-    @prospect_tab = request.cookies['prospect-tab'] || '#successes'
-    @promote_tab = request.cookies['promote-tab'] || '#promoted-stories'
-    @recent_activity = Rails.cache.fetch("#{@company.subdomain}/recent-activity") { @company.recent_activity(30) }
-    @story_views_30_day_count = PageView.joins(:visitor_session)
-                                .company_story_views_since(@company.id, 30).count
-    # note: app data is obtained via json (see set_gon() in application controller)
-    @curate_view = 'stories'
+    respond_to do |format|
+      format.json do 
+        render(
+          json: {
+            company: @company.slice(:id, :name, :subdomain),
+            current_user: current_user.slice(:id)
+          }
+        ) 
+      end
+      format.html do
+        redirect_to('/curate') if request.path.match(/\/companies\/\d+/)
+        @workflow_stage = params[:workflow_stage]
+        @prospect_tab = request.cookies['prospect-tab'] || '#successes'
+        @promote_tab = request.cookies['promote-tab'] || '#promoted-stories'
+        @recent_activity = Rails.cache.fetch("#{@company.subdomain}/recent-activity") { @company.recent_activity(30) }
+        @story_views_30_day_count = PageView.joins(:visitor_session)
+                                    .company_story_views_since(@company.id, 30).count
+        # note: app data is obtained via json (see set_gon() in application controller)
+        @curate_view = 'stories'
+      end
+    end
   end
 
   def edit

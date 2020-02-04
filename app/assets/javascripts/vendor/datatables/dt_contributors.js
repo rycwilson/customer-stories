@@ -175,7 +175,7 @@ function initContributorsTable (workflowStage, dtContributorsInit) {
       // note: these indices won't align with *index variables,
       // as these are only the unhidden columns
       // $(row).children().eq(0).attr('data-filter', data.success.id);
-      $(row).children().eq(0).addClass('toggle-contributor-child');
+      $(row).children().eq(0).addClass('toggle-nested-row');
       $(row).children().eq(1).addClass('contributor');
       $(row).children().eq(2)
         .addClass('invitation-template')

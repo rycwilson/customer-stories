@@ -14,7 +14,7 @@
     line-height: 1.6
   }
 
-  td.toggle-success-child.disabled {
+  td.toggle-child-row.disabled {
     pointer-events: none;
   }
 
@@ -177,7 +177,7 @@
 
   }
 
-  tr.group {
+  tr.dtrg-group {
     td:first-of-type {  // customer name
       border-right-width: 0;
     }

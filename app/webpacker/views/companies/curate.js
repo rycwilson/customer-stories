@@ -66,7 +66,7 @@ function preSelectFilters() {
 
 function autoSelectCurator() {
   $('.curate-filters__curator')
-    .val(APP.currentUserId)
+    .val(APP.current_user.id )
     .trigger('change', { auto: true });
 }
 
@@ -134,6 +134,6 @@ function initStory() {
   //     .one('shown.bs.tab', function () { window.scrollTo(0, 0); })
   //     .tab('show');
   // };
-  // Cookies.set('csp-edit-story-tab', '#story-settings');
+  // Cookies.set('cs-edit-story-tab', '#story-settings');
   // initStoriesEdit(showTab);
 }

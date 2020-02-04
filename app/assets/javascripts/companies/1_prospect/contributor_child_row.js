@@ -18,7 +18,7 @@ function contributorChildRowListeners () {
       }
 
   $(document)
-    .on('click', 'td.toggle-contributor-child', function () {
+    .on('click', '[id*="contributors-table"] td.toggle-nested-row', function () {
       var $table = $(this).closest('table'),
           $trContribution = $(this).closest('tr'),
           $trContributor, // child row

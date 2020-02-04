@@ -1,0 +1,178 @@
+
+export default (contribution) => {
+  const contributor = contribution.contributor;
+  return `
+
+<div class="container contributor-child-row" style="width: 100%">
+
+  <form id="contribution-form-${ contribution.id }" class="form-horizontal"
+        action="/contributions/${ contribution.id }" method="post" data-remote="true" data-type="script">
+
+    <input type="hidden" name="_method" value="put">
+    <input type="hidden" name="authenticity_token" value="${ $('meta[name=csrf-token]').attr('content') }">
+    <input type="hidden" name="contributor" value="true">
+
+    <!-- // without this it will try to create a new record -->
+    <input type="hidden" name="contribution[contributor_attributes][id]" value="${ contributor.id }">
+
+    <div class="row">
+      <div class="col-sm-6">
+        <div class="row">
+
+          <div class="form-group">
+            <label for="contribution_contributor_attributes_first_name" class="col-sm-3 control-label">
+              First name
+            </label>
+            <div class="col-sm-9">
+              <input type="text" class="form-control"
+                id="contribution_contributor_attributes_first_name"
+                name="contribution[contributor_attributes][first_name]"
+                value="${ contributor.first_name }">
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="contribution_contributor_attributes_last_name" class="col-sm-3 control-label">
+              Last name
+            </label>
+            <div class="col-sm-9">
+              <input type="text" class="form-control"
+                id="contribution_contributor_attributes_last_name"
+                name="contribution[contributor_attributes][last_name]"
+                value="${ contributor.last_name }">
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="contribution_contributor_attributes_title" class="col-sm-3 control-label">
+              Job Title
+            </label>
+            <div class="col-sm-9">
+              <input type="text" class="form-control"
+                id="contribution_contributor_attributes_title"
+                name='contribution[contributor_attributes][title]'
+                value="${ contributor.title }">
+            </div>
+          </div>
+
+          <div class='form-group'>
+            <label for="contribution_contributor_attributes_email" class="col-sm-3 control-label">
+              Email
+            </label>
+            <div class="col-sm-9">
+              <input type="email" class="form-control"
+                id="contribution_contributor_attributes_email"
+                name='contribution[contributor_attributes][email]'
+                value="${ contributor.email }">
+            </div>
+          </div>
+
+          <div class='form-group'>
+            <label for="contribution_contributor_attributes_phone" class="col-sm-3 control-label">
+              Phone
+            </label>
+            <div class="col-sm-9">
+              <input type="tel" class="form-control"
+                id="contribution_contributor_attributes_phone"
+                name='contribution[contributor_attributes][phone]'
+                value="${ contributor.phone }">
+            </div>
+          </div>
+
+        </div>
+      </div>
+      <div class="col-sm-6">
+        <div class="row">
+
+          <div class="form-group">
+            <label for="contribution_contributor_attributes_linkedin_url" class="col-sm-3 control-label">
+              LinkedIn
+            </label>
+            <div class="col-sm-9">
+              <input type="text" class="form-control"
+                id="contribution_contributor_attributes_linkedin_url"
+                name="contribution[contributor_attributes][linkedin_url]"
+                placeholder="Profile URL"
+                value="${ contributor.linkedin_url }">
+            </div>
+          </div>
+
+          <!-- // linkedin profile: publish checkbox and widget (or placeholder) -->
+          <div class="form-group LI-profile ${ contributor.linkedin_url ? '' : 'hidden' }">
+
+          <!-- // don't render checkbox if still in the prospect stage -->
+          <!-- // tooltip wrapper, control-label column is used here to ensure styling similarity with other controls -->
+          ${
+            location.href.includes('curate') ?
+      `
+      <label class="col-sm-3 control-label"></label>
+      <div class="col-sm-9"
+          data-toggle="${ contribution.contributor_unpublished ? 'tooltip' : '' }"
+          data-placement="${ contribution.contributor_unpublished ? 'top' : '' }"
+          title="${ 
+              contribution.contributor_unpublished ? 
+                'Contributor has removed their profile from this story' : 
+                '' }">
+        <div class="linkedin-checkbox-container ${ contribution.contributor_unpublished ? 'contributor-unpublished' : '' }" 
+            style="margin-bottom: 5px">
+          <label for="contribution-publish-contributor-${ contributor.id }">
+            <input type="hidden" name="contribution[publish_contributor]" value="false">
+            <input type="checkbox" id="contribution-publish-contributor-${ contributor.id }" 
+                  name="contribution[publish_contributor]" 
+                  value="true" ${ contribution.publish_contributor ? 'checked' : '' }>
+            <span>&nbsp;&nbsp;Publish profile with this Story</span>
+          </label>
+        </div>
+      </div>
+      ` : `
+      <div class="col-sm-1"></div>
+      <div class="col-sm-11">
+
+        <div class="LI-profile__container ${ contributor.linkedin_url ? '' : 'hidden' }">
+          <i class="fa fa-fw fa-spin fa-circle-o-notch"></i>
+          <span class="LI-profile__error">Error loading the profile badge</span>
+          ${ 
+            contributor.linkedin_url ? `
+              <div class="LI-profile-badge" 
+                  data-version="v1" data-size="medium" data-locale="en_US" 
+                  data-type="horizontal" data-theme="light" 
+                  data-vanity="${ 
+                    contributor.linkedin_url.match(/in\/((\w|-)+)(\/|$)/) && 
+                    contributor.linkedin_url.match(/in\/((\w|-)+)(\/|$)/)[1] 
+                    }">
+                <a class="LI-simple-link" href="${ contributor.linkedin_url }?trk=profile-badge"></a>
+              </div>` : 
+              ''
+          }
+        </div>
+
+      </div>
+      `
+
+          }   <!-- // curate || prospect -->
+
+          </div>  <!-- // .form-group.linkedin-profile -->
+        </div>
+      </div>
+    </div>
+
+    <hr>
+
+    <div class="row">
+      <div class="col-sm-12 text-right">
+
+        <button type="submit" disabled class="btn btn-sm btn-success text-center" style="width: 97px">
+          <span>Save changes</span>
+          <i class="fa fa-spin fa-circle-o-notch" style="display: none"></i>
+          <i class="fa fa-check" style="display: none"></i>
+        </button>
+
+      </div>
+    </div>
+
+  </form>
+</div>
+  
+`;
+}
+

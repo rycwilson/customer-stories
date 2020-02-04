@@ -48,8 +48,6 @@ Rails.application.routes.draw do
 
   # valid subdomains (company/subdomain exists, excludes www)
   constraints(CompanySubdomain) do
-
-    get '/app', to: 'application#index'
     get '/', to: 'stories#index'
 
     get '/plugins/:type/cs', to: 'plugins#main'
@@ -89,9 +87,8 @@ Rails.application.routes.draw do
           }
 
     authenticate :user do
-
+      get '/dashboard', to: 'companies#show' 
       get '/settings', to: 'companies#edit', as: 'company_settings'
-
       resources :companies, only: [:show, :edit, :update] do
         resources :customers, only: [:show, :create, :update, :destroy], shallow: true
         resources :successes, only: [:show, :create, :update, :destroy], shallow: true do
@@ -112,7 +109,7 @@ Rails.application.routes.draw do
           member { put :update, constraints: { id: /\d+/ } }
         end
         resources :ctas, only: [:show, :create, :update, :destroy], shallow: true
-        resources :invitation_templates, except: [:index]
+        resources :invitation_templates
         member { put :update_gads }
         member { get :set_reset_gads }
         member { get '/promote-settings', to: 'companies#show' }

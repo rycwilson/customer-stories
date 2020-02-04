@@ -17,27 +17,26 @@
 import 'core-js/stable';
 import 'regenerator-runtime/runtime';
 
+window.$ = $; window.jQuery = jQuery;
 require('../vendor/jquery_plugins');
-import Rails from 'rails-ujs'
+import Rails from 'rails-ujs';
 import turbolinks from 'vendor/turbolinks'; 
 
 /* jquery-ui must appear before bootstrap, per https://stackoverflow.com/questions/13731400 */
-import 'jquery-ui/ui/widget';
-import 'bootstrap-sass/assets/javascripts/bootstrap';
+// import 'jquery-ui/ui/widget';
+import 'bootstrap-sass';
 import ResponsiveBootstrapToolkit from 'responsive-toolkit';
 import 'select2';
+import 'datatables.net-bs';
+import 'datatables.net-editor-bs'; 
+import 'datatables.net-rowgroup-bs';
 
-window.$ = $; window.jQuery = jQuery;
 window.APP = window.APP || buildApp();
 getBootstrapViewport(ResponsiveBootstrapToolkit);
 APP.init();
 
 function buildApp() {
   const app = { 
-    current_user: {}, 
-    company: {}, 
-    stories: {}, 
-    env: '', 
     browser: {  // ref: http://stackoverflow.com/questions/9847580
       isChrome: !!window.chrome && !!window.chrome.webstore,
       isSafari: Object.prototype.toString.call(window.HTMLElement).indexOf('Constructor') > 0,
@@ -47,18 +46,8 @@ function buildApp() {
     init: () => {
       Rails.start();
       turbolinks.init();
-    },
-    reload: (callback = () => true) => { 
-      $.getJSON('/app', function (data, status, xhr) {
-        Object.assign(APP, data);
-        callback();
-      });
     }
   }
-  // $.getJSON('/app', function (data, status, xhr) { 
-  //   Object.assign(APP, data)
-  //   console.log('APP')
-  // });
   return app;
 }
 

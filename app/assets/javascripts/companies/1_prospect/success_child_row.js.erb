@@ -550,7 +550,7 @@ function successChildRowListeners () {
       }
 
       // disallow toggling either the child row or view/edit mode
-      $('td.toggle-success-child').addClass('disabled');
+      $('#successes-table td.toggle-nested-row').addClass('disabled');
       $('button.win-story-actions__edit').prop('disabled', true);
 
       $form.attr('data-submitted', 'true');
@@ -612,7 +612,7 @@ function successChildRowListeners () {
       $(this).closest('.customer-logo').find('.customer-name').toggle();
     })
 
-    .on('click', 'td.toggle-success-child', function () {
+    .on('click', '#successes-table td.toggle-nested-row', function () {
       var toggleButton = $(this),
           $table = $('#successes-table'),
           dt = $table.DataTable(),
@@ -700,7 +700,7 @@ function successChildRowListeners () {
           if (dt.row($(this)).child.isShown()) {
             dt.row($(this)).child.hide();
             $(this).removeClass('shown active');
-            $(this).children('td.toggle-success-child').children().toggle();
+            $(this).children('td.toggle-nested-row').children().toggle();
           }
         });
 

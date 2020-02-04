@@ -92,11 +92,7 @@ function initSuccessesTable (dtSuccessesInit) {
         orderable: false,
         searchable: false,
         createdCell: function (td, cellData, rowData, row, col) {
-          if (col === 0) {
-            $(td).addClass('toggle-success-child');
-          } else {
-            $(td).addClass('actions dropdown');
-          }
+          $(td).addClass(col === 0 ? 'toggle-nested-row' : 'actions dropdown');
         }
       },
       { width: '0%', targets: [customerIndex, curatorIndex, storyIndex] },  // hidden
@@ -130,7 +126,7 @@ function initSuccessesTable (dtSuccessesInit) {
     createdRow: function (row, data, index) {
       $(row).attr('data-customer-id', data.customer.id);
       $(row).attr('data-success-id', data.id);
-      $(row).children().eq(0).addClass('toggle-success-child');
+      $(row).children().eq(0).addClass('toggle-nested-row');
       $(row).children().eq(1).attr('data-filter', data.id);
       $(row).children().eq(2).addClass('status');
       $(row).children().eq(3).addClass('actions dropdown');

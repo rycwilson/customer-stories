@@ -1,44 +1,38 @@
 
-export default `
+export default (story, cardClass, storyLink, storySlug, customerSlug) => `
 
   <li style="display: inline-block; vertical-align: top">
 
-    <div class="story-card {{= cardClass }}" 
-          data-story-id="{{= story.id }}" 
-          data-story-slug="{{= storySlug }}" 
-          data-customer-slug="{{= customerSlug }}">
+    <div class="story-card ${ cardClass }" 
+          data-story-id="${ story.id }" 
+          data-story-slug="${ storySlug }" 
+          data-customer-slug="${ customerSlug }">
 
-      <a href="{{= storyLink }}" class="story-card__link"
-          data-logosrc="{{= story.success.customer.logo_url }}"
-          data-customer='{{= JSON.stringify(story.success.customer.name) }}'
-          data-summary='{{= story.summary }}'
-          data-quote='{{= story.quote }}'
-          data-quote-attr-name='{{= JSON.stringify(story.quote_attr_name) }}'
-          data-quote-attr-title='{{= JSON.stringify(story.quote_attr_title) }}'
-          data-preview-contributor='{{= JSON.stringify(story.published_contributors[0]) }}'">
+      <a href="${ storyLink }" class="story-card__link"
+          data-logosrc="${ story.success.customer.logo_url }"
+          data-customer='${ JSON.stringify(story.success.customer.name) }'
+          data-summary='${ story.summary }'
+          data-quote='${ story.quote }'
+          data-quote-attr-name='${ JSON.stringify(story.quote_attr_name) }'
+          data-quote-attr-title='${ JSON.stringify(story.quote_attr_title) }'
+          data-preview-contributor='${ JSON.stringify(story.published_contributors[0]) }'">
         
         <div class="story-card__content">
 
-          {{ if (story.title) { }}
-            <div class="story-card__title">
-              <p>{{= story.title }}</p>
-            </div>
-          {{ } }}
+          ${ story.title ? '<div class="story-card__title"><p>' + story.title + '</p></div>' : '' }
 
           <div class="story-card__logo">
-
-            {{ if (story.success.customer.logo_url) { }}
-              <img src="{{= story.success.customer.logo_url }}">
-            {{ } else { }}
-              <img src="<%= LOGO_PLACEHOLDER_URL %>">
-            {{ } }}
+            
+            <img src="${ story.success.customer.logo_url ? 
+                            story.success.customer.logo_url : 
+                            '<%= LOGO_PLACEHOLDER_URL %>' }">
 
           </div>
 
         </div>
 
         <div class="story-card__caption">
-          <span class="story-card__customer">{{= story.success.customer.name }}</span>
+          <span class="story-card__customer">${ story.success.customer.name }</span>
           <span class="story-card__cta"></span>
         </div>
 
@@ -50,4 +44,6 @@ export default `
     
     </div>
 
-  </li>`.trim()
+  </li>
+
+`;

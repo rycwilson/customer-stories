@@ -206,7 +206,6 @@ class SuccessesController < ApplicationController
   end
 
   def update
-    # puts success_params.to_h
     params[:success][:win_story_completed] = ActiveRecord::Type::Boolean.new.cast(success_params[:win_story_completed])
     @success.update(success_params)
     respond_to { |format| format.js {} }

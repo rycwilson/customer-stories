@@ -3,14 +3,12 @@ import Turbolinks from 'turbolinks';
 import { addAppListeners } from '../global';
 import view from '../views/index';
 
-const turbolinks = {
-  init: () => {
+export default {
+  init() {
     Turbolinks.start();  // TODO is this really necessary? never had it before
     addListeners();
   }
 };
-
-export default turbolinks;
 
 function addListeners() {
   $(document)
@@ -22,7 +20,8 @@ function addListeners() {
       const controllerAction = $('body').attr('class').split(' ');
       const controller = controllerAction[0];
       const action = controllerAction[1];
-      APP.currentUserId = Cookies.get('current-user-id');
+
+      // TODO: not so reliable if cookies are disabled
       view.init(controller, action);
     })
 

@@ -60,9 +60,9 @@
   // update datatables
   // don't update until the child row is closed, or the re-draw will hose things
   // timeout is necessary because this appears to step on the normal open/close behavior (contributor_child_row.js)
-  $trContribution.one('click', 'td.toggle-contributor-child', function (e) {
+  $trContribution.one('click', 'td.toggle-child-row', function (e) {
     setTimeout(function () {
-      $('#prospect-contributors-table, #curate-contributors-table').DataTable()
+      $('#contributors-table, #curate-contributors-table').DataTable()
         .row('[data-contribution-id="' + contribution.id + '"]')  // don't use $trContribution here as it won't apply to curate table
         .data(
           Object.assign(

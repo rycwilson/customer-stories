@@ -1,15 +1,15 @@
 
 import _intersection from 'lodash/intersection';
-import _template from 'lodash/template';
-import _templateSettings from 'lodash/templateSettings';
-import storyCardTemplate from './story_card_template';
+// import _template from 'lodash/template';
+// import _templateSettings from 'lodash/templateSettings';
 import Rails from 'rails-ujs';
+import storyCardTemplate from './story_card_template';
 import { pluck, truncateStoryTitles } from 'global';
 
 // custom template delimiters (to avoid clashing with erb)
 // https://stackoverflow.com/questions/9802402
-_templateSettings.evaluate = /{{([\s\S]+?)}}/g;
-_templateSettings.interpolate = /{{=([\s\S]+?)}}/g;
+// _templateSettings.evaluate = /{{([\s\S]+?)}}/g;
+// _templateSettings.interpolate = /{{=([\s\S]+?)}}/g;
 
 export default {
   init() {
@@ -71,7 +71,7 @@ function handleSearchClick (e) {
 function handleSearchSuccess(e) {
   const [stories, status, xhr] = e.detail;
   $('.search-stories__results').text(
-    `${ stories.length === 1 ? '1 story found' : stories.length + '\xa0stories found' }`
+    stories.length === 1 ? '1 story found' : stories.length + '\xa0stories found' 
   );
   renderGallery(stories);
 }
@@ -264,15 +264,17 @@ function renderGallery(stories) {
   const isDashboard = false;
   const storiesHtml = stories.map((story) => {
     const statusClass = `story-card--${ (story.published && 'published') || (story.preview_published && 'preview-published') || (story.logo_published && 'logo-published') || '' }`;
-    return _template(storyCardTemplate)({
-      story: story,
-      cardClass: statusClass + ` ${ isDashboard ? 'story-card--small story-card--dashboard' : companyClass }`,
-      storyLink: `${ isDashboard || story.preview_published ? 
-                      'javascript:;' : 
-                      (story.published && story.csp_story_path) || '' }`,
-      storySlug: story.csp_story_path.match(/\/((\w|-)+)$/)[1],
-      customerSlug: story.csp_story_path.match(/^\/((\w|-)+)\//)[1],
-    })
+    const cardClass = statusClass + ` ${ isDashboard ? 'story-card--small story-card--dashboard' : companyClass }`;
+    const storyLink = `${
+      isDashboard || story.preview_published ? 
+        'javascript:;' : 
+        (story.published && story.csp_story_path) || ''
+    }`;
+    const storySlug = story.csp_story_path.match(/\/((\w|-)+)$/)[1];
+    const customerSlug = story.csp_story_path.match(/^\/((\w|-)+)\//)[1];
+    return storyCardTemplate(
+      story, cardClass, storyLink, storySlug, customerSlug
+    );
   }).join(' ');
   $gallery.empty().append($(storiesHtml)).show();
 }

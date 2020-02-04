@@ -1,6 +1,7 @@
 
 import video from 'lib/video';
-import linkedin from 'lib/linkedin';
+// TODO why is the file extension necessary here but not in views/companies/prospect/contributors ???
+import { storiesShowLIObserver } from 'lib/linkedin.js.erb';
 import carousel from 'views/plugins/tabbed_carousel';
 
 export default {
@@ -12,7 +13,7 @@ export default {
 
     // company-specific stuff
     if (!$('body').hasClass('pixlee')) {
-      // linkedin.storiesShowLIObserver();
+      // storiesShowLIObserver();
       initMoreStories();
     }
 
@@ -33,7 +34,7 @@ export default {
         if (APP.screenSize === 'xs') return false;
         if ($('body').hasClass('stories show')) {
           // prevent carousel tab from covering curator sign in
-          if (!APP.currentUserId) {
+          if (!APP.current_user.id) {
             const scrollBottom = $(document).height() - $(window).height() - $(window).scrollTop();
             if (scrollBottom < $('#sign-in-footer').height()) {
               $('#cs-tabbed-carousel').hide();

@@ -29,7 +29,7 @@
         }
       }) %>;
 
-  $('#prospect-contributors-table, #curate-contributors-table').each(function () {
+  $('#contributors-table, #curate-contributors-table').each(function () {
     $(this).DataTable()
       .row('[data-contribution-id="' + contribution.id + '"]')
       .invalidate()

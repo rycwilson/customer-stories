@@ -5,25 +5,24 @@ import users from './users/index';
 import flash from '../lib/flash';
 
 const views = {
-        companies: {
-          show: companies.dashboard,
-          edit: companies.settings
-        },
-        stories: {
-          index: stories.gallery,
-          search: stories.gallery,
-          show: stories.show,
-          edit: stories.edit
-        },
-        users: {
-          edit: users.edit,
-          linkedin_callback: users.edit
-        }
-      };
-
+  companies: {
+    show: companies.show,
+    edit: companies.edit
+  },
+  stories: {
+    index: stories.gallery,
+    search: stories.gallery,
+    show: stories.show,
+    edit: stories.edit
+  },
+  users: {
+    edit: users.edit,
+    linkedin_callback: users.edit
+  }
+};
 
 const view = {
-  init: (controller, action) => {
+  init(controller, action) {
     // console.log('controller: ', controller)
     // console.log('action: ', action)
     if ($('#flash').is(':visible')) flash.timeout();

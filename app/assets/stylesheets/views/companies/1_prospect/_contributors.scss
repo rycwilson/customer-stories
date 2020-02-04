@@ -1,5 +1,5 @@
 
-#prospect-contributors-table, #curate-contributors-table {
+#contributors-table, #curate-contributors-table {
   
   /**
    * hide sorting icon for contributors; doesn't presently work in light of row grouping
@@ -21,7 +21,7 @@
     cursor: pointer;
     position: relative;
     padding-right: 40px;
-    i.fa-caret-down, i.fa-check {
+    i.fa-pencil, i.fa-check {
       position: absolute;
       right: 20px;
       top: 50%;
@@ -41,6 +41,20 @@
     }
     .DTE_Form_Buttons :first-child {
       width: 48px;
+    }
+
+    .DTE_Inline_Field {
+      width: 100% !important;
+      [data-dte-e="label"], [data-dte-e="input"] {
+        width: 100%;
+        padding: 0;
+        &[data-dte-e="label"] {
+          margin-bottom: 5px
+        }
+      }
+      [data-dte-e="input-control"] .select2-container {
+        margin-bottom: 0;
+      }
     }
   }
 
@@ -87,7 +101,7 @@
       min-height: 155px;
       width: 100%;
       // border: 1px solid #ccc;
-      background-color: #f9f9f9;
+      background-color:#f9f9f9;
       box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.16), 0 0 0 1px rgba(0, 0, 0, 0.08);
       i {
         color: #555;

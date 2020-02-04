@@ -10,7 +10,7 @@ table tfoot tr th {
   display: none;
 }
 
-table.dataTable tr.group td {
+table.dataTable tr.dtrg-group td {
   background-color: #efefef;
 }
 
@@ -35,7 +35,7 @@ table.dataTable thead th {
   }
 }
 
-table.dataTable tr.group td {
+table.dataTable tr.dtrg-group td {
   font-weight: 600;
 }
 
@@ -64,13 +64,13 @@ div.dataTables_wrapper [class*="header"] div.dataTables_info {
   vertical-align: middle;
 }
 
-td {
-  i[class*="fa-caret"] { 
+td.toggle-child-row, td.invitation-template, td.actions a {
+  i {
     color: #888;
-    &:hover {
-      color: #555;
-    } 
   }
+  &:hover i {
+    color: #555;
+  } 
 }
 
 td.status.dropdown, td.actions.dropdown {
@@ -117,7 +117,7 @@ td.status.dropdown, td.actions.dropdown {
     }
   }
   // child row
-  tr.active:hover + tr:not(.group) > td[colspan]:not(.dataTables_empty) {
+  tr.active:hover + tr:not(.dtrg-group) > td[colspan]:not(.dataTables_empty) {
     // border-color: #0095ff !important; // #0075b0
   }
 

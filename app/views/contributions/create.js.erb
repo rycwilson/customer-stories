@@ -28,9 +28,9 @@
       $modal = $('#new-contributor-modal'),
       isCurateView = $('a[href="#story-contributors"]').parent().hasClass('active'),
       openContributorForm = function ($tr) {
-        $tr.find('td.toggle-contributor-child').trigger('click');
+        $tr.find('td.toggle-child-row').trigger('click');
         // scroll to center (but only for the current table view)
-        if ($tr.closest('table').is('#prospect-contributors-table') && !isCurateView ||
+        if ($tr.closest('table').is('#contributors-table') && !isCurateView ||
             $tr.closest('table').is('#curate-contributors-table') && isCurateView) {
           window.scrollTo(0, $tr.offset().top - (window.innerHeight / 2) + (($tr.next().outerHeight() + $tr.outerHeight()) / 2));
         }
@@ -50,7 +50,7 @@
 
   // reload tables and scroll to new contributor
   // (reload tables with separate .reload calls to ensure actions only happen once)
-  $('#prospect-contributors-table').DataTable().ajax.reload(function (contributions) {
+  $('#contributors-table').DataTable().ajax.reload(function (contributions) {
       // var rowsAreGrouped = $('#toggle-group-by-success').prop('checked'), groupIndex;
       if (!isCurateView) {
         updateSelectOptions(company, $('#successes-table').DataTable().rows().data().toArray());
@@ -61,7 +61,7 @@
         $modal
           .one('hidden.bs.modal', function () {
             openContributorForm(
-              $('#prospect-contributors-table tr[data-contribution-id="' + contribution.id + '"]')
+              $('#contributors-table tr[data-contribution-id="' + contribution.id + '"]')
             );
           })
           .modal('hide');

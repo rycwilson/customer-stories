@@ -1,46 +1,38 @@
 
-(function () {
+(() => {
 
-  var success = <%= raw @success.to_json({ only: [:id, :win_story_completed], methods: [:previous_changes, :display_status] }) %>,
-      $tr = $('#successes-table tr[data-success-id="' + success.id + '"]'),
-      winStoryCompleted = success.win_story_completed,
-      $form = $('form[id*="success-form-"]'),
-      $submitBtn = $form.find('button[type="submit"]'),
-      isEditMode = typeof $('#win-story-editor').data('summernote') === 'object';
+  const success = <%= raw @success.to_json({ only: [:id, :win_story_completed], methods: [:previous_changes, :display_status] }) %>;
+  const $tr = $(`#successes-table tr[data-success-id="${ success.id }"]`);
+  const $form = $('.success-form');
+  const $submitBtn = $form.find('button[type="submit"]');
+  const isEditMode = $('#win-story-editor').attr('contenteditable') === 'true';
 
-  // toggle button icons
   $submitBtn.find('i.fa-spin, i.fa-check').toggle();
 
-  setTimeout(function () {
+  setTimeout(() => {
     // re-enable items disabled during form submission
-    $('td.toggle-success-child').removeClass('disabled');
+    $('#successes-table td.toggle-child-row').removeClass('disabled');
     $('button.win-story-actions__edit').prop('disabled', false);
 
     $form.attr('data-submitted', '');
     if (isEditMode) {
-      $submitBtn.find('.fa-check, .save-changes').toggle();
-      $submitBtn.prop('disabled', true);
+      $submitBtn.prop('disabled', true)
+                  .end()
+                .find('.fa-check, .save-changes')
+                  .toggle();
     } else {
-      $submitBtn.removeClass('save-changes')
-                .addClass('mark-completed')
-                .find('.fa-check, .mark-completed').toggle();
-      if (winStoryCompleted) $submitBtn.hide();
+      $submitBtn.toggleClass('save-changes mark-completed')
+                .find('.fa-check, .mark-completed')
+                  .toggle();
+      if (success.win_story_completed) $submitBtn.hide();
     }
 
     // update status if win story was marked completed
     if (success.previous_changes.win_story_completed) {
       $tr.find('td.status').html(success.display_status)
     }
-
-  }, 2000)
+  }, 2000);
 
   // update datatables => not necessary as we're not keeping Success.win_story in datatables
-  // don't update until the child row is closed, or the re-draw will hose things
-  // timeout is necessary because this appears to step on the normal open/close behavior (success_child_row.js)
-  // $trSuccess.one('click', 'td.toggle-success-child', function (e) {
-  //   setTimeout(function () {
-  //     $('#successes-table').DataTable().row($trSuccess).data(success);
-  //   }, 100);
-  // })
 
-}());
+})();

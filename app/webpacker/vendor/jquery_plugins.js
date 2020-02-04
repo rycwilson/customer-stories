@@ -19,6 +19,21 @@
     return this.hide(0, function () { $(this).show(); });
   };
 
+  // conversion to markdown calls for removal of all whitespace and newlines
+  // ref https://stackoverflow.com/questions/1539367
+  $.fn.htmlClean = function() {
+    this.contents().filter(function() {
+      if (this.nodeType != 3) {
+        $(this).htmlClean();
+        return false;
+      } else {
+        this.textContent = $.trim(this.textContent);
+        return !/\S/.test(this.nodeValue);
+      }
+    }).remove();
+    return this;
+  }
+
   // tabbed carousel 
   $.fn.slideDrawer = function (userOptions = {}) {
     const $drawerContent = this.find('.cs-drawer-content');

@@ -8,7 +8,6 @@ class ApplicationController < ActionController::Base
   protect_from_forgery with: :exception
 
   # before_action { binding.remote_pry }
-  after_action { cookies['current-user-id'] = current_user.try(:id) }
   
   # Devise - whitelist User params
   before_action :configure_permitted_parameters, if: :devise_controller?
@@ -326,23 +325,6 @@ class ApplicationController < ActionController::Base
       controller: 'application',
       action: 'linkedin_auth_callback'
     })
-  end
-
-  # loaded by js for signed in curators
-  def app_data 
-    company = Company.find_by subdomain: request.subdomain
-    {
-      current_user: user_signed_in? && current_user.as_json({
-          only: [:id, :company_id, :first_name, :last_name, :title, :email, :phone, :photo_url],
-          methods: [:full_name]
-        }),
-      company: user_signed_in? && company.as_json({  
-          only: [:id, :name, :subdomain],
-          methods: [:curators, :customers, :invitation_templates, :plugin]
-        }),
-      # stories: company.stories_json,
-      env: csp_environment
-    }
   end
 
   def log_action

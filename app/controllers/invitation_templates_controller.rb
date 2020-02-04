@@ -2,9 +2,21 @@
 class InvitationTemplatesController < ApplicationController
 
   before_action() { @company = Company.find(params[:company_id]) }
-  before_action({ except: [:new, :create] }) do
+  before_action({ except: [:index, :new, :create] }) do
     unless params[:restore].present?
       @template = params[:id] == '0' ? nil : InvitationTemplate.find(params[:id])
+    end
+  end
+
+  def index
+    respond_to do |format|
+      format.json do 
+        render(
+          json: JSON.parse(
+            @company.invitation_templates.to_json({ only: [:id, :name] })
+          )
+        )
+      end
     end
   end
 

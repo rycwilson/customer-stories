@@ -1,8 +1,6 @@
 
-<script id="contributors-table-header-template" type="text/template">
-
+export default (curators, successes, customers, contributors) => `
   <div class="row contributors-header" style="visibility:hidden">
-
     <div class="col-sm-6">
       <div class="row form-horizontal">
 
@@ -43,7 +41,6 @@
 
       </div>
     </div>
-
     <div class="col-sm-6 select-filters">
       <div class="row form-horizontal">
 
@@ -53,13 +50,13 @@
 
             <select class="prospect contributors curator-select form-control">
               <option></option>
-
-              {{ _.each(curators, function (curator) { }}
-
-                <option data-column="curator" value="{{= curator.id }}">{{= curator.first_name + " " + curator.last_name }}</option>
-
-              {{ }); }}
-
+              ${
+                curators.map((curator) => `
+                  <option data-column="curator" value="${ curator.id }">
+                    ${ curator.name }
+                  </option>
+                `).join('')
+              }
             </select>
 
           </div>
@@ -72,31 +69,31 @@
             <select id="contributors-filter" class="dt-filter form-control">
               <option></option>
               <optgroup label="Customer">
-
-                {{ _.each(customers, function (customer) { }}
-
-                  <option data-column="customer" value="customer-{{= customer.id }}">{{= customer.name }}</option>
-
-                {{ }); }}
-
+                ${
+                  customers.map((customer) => `
+                    <option data-column="customer" value="customer-${ customer.id }">
+                      ${ customer.name }
+                    </option>
+                  `).join('')
+                }
               </optgroup>
               <optgroup label="Customer Win">
-
-                {{ _.each(successes, function (success) { }}
-
-                  <option data-column="success" value="success-{{= success.id }}">{{= success.name }}</option>
-
-                {{ }); }}
-
+                ${
+                  successes.map((success) => `
+                    <option data-column="success" value="success-${ success.id }">
+                      ${ success.name }
+                    </option>
+                  `).join('')
+                }
               </optgroup>
               <optgroup label="Contributor">
-
-                {{ _.each(contributors, function (contributor) { }}
-
-                  <option data-column="contributor" value="contributor-{{= contributor.id }}">{{= contributor.fullName }}</option>
-
-                {{ }); }}
-
+                ${
+                  contributors.map((contributor) => `
+                    <option data-column="contributor" value="contributor-${ contributor.id }">
+                      ${ contributor.fullName }
+                    </option>
+                  `).join('')
+                }
               </optgroup>
             </select>
 
@@ -106,7 +103,4 @@
       </div>
     </div>
   </div>
-
-</script>
-
-
+`

@@ -1,4 +1,11 @@
 
+export function formIsValid($form) {
+  let formIsValid = true;
+  $form.find('select[required], input[required]')
+         .each((index, input) => formIsValid = input.checkValidity());
+  return formIsValid;
+}
+
 const forms = {
 
   toggleWorking: ($form, $btn) => {
