@@ -134,8 +134,8 @@ function successChildRowListeners () {
               // ['view', <%= Rails.env.development? ? ['codeview'] : [] %>],
             ],
             buttons: {
-              contributionsDropdown: noteInsertionDropdown($tr.data('customer-id'), contributionsData, 'contributions'),
-              placeholdersDropdown: noteInsertionDropdown($tr.data('customer-id'), contributionsData, 'placeholders')
+              // contributionsDropdown: noteInsertionDropdown($tr.data('customer-id'), contributionsData, 'contributions'),
+              // placeholdersDropdown: noteInsertionDropdown($tr.data('customer-id'), contributionsData, 'placeholders')
             },
             callbacks: {
               // without this, insertion of a new line doesn't trigger input; critical for inserting placeholders
@@ -350,6 +350,7 @@ function successChildRowListeners () {
           isExpansion ? expandedViewHeight($tr, true) : collapsedViewHeight(),
           function () {
             depopulatePlaceholders();
+            /*
             $('.note-customButton').append(
               '<label class="insert-contributions">Insert</label><button type="button" class="help" data-toggle="popover"><i class="fa fa-fw fa-question-circle-o"></i></button>'
             );
@@ -360,6 +361,7 @@ function successChildRowListeners () {
               content: customButtonHelpPopoverContent,
               template: '<div class="popover" style="min-width: 400px; role="tooltip"><div class="arrow"></div><div class="popover-content"></div></div>'
             });
+            */
 
             // some buttons we don't want active while editing
             $('.win-story-actions__copy').prop('disabled', true);
@@ -394,6 +396,7 @@ function successChildRowListeners () {
           expandedViewHeight($tr, true),
           function () {
             depopulatePlaceholders();
+            /*
             $('.note-customButton').append(
               '<label class="insert-contributions">Insert</label><button type="button" class="help" data-toggle="popover"><i class="fa fa-fw fa-question-circle-o"></i></button>'
             );
@@ -404,6 +407,7 @@ function successChildRowListeners () {
               content: customButtonHelpPopoverContent,
               template: '<div class="popover" style="min-width: 400px; role="tooltip"><div class="arrow"></div><div class="popover-content"></div></div>'
             });
+            */
             $('.win-story-actions__copy').prop('disabled', true);
 
             // $('.mark-completed').addClass('disabled');
