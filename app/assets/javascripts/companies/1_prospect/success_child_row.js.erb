@@ -70,7 +70,8 @@ function successChildRowListeners () {
       },
       noteInsertionDropdown = function (customerId, contributionsData, type) {
         return function (context) {
-          var ui = $.summernote.ui,
+          var $editor = $('#win-story-editor'),
+              ui = $.summernote.ui,
               button = ui.buttonGroup([
                 ui.button({
                   className: 'btn btn-default dropdown-toggle\xa0' + type,
@@ -87,7 +88,7 @@ function successChildRowListeners () {
                   callback: function ($dropdown) {
                     $dropdown.find('li').each(function () {
                       $(this).on('click', function () {
-                        var pasteHtml,
+                        var pasteHtml,  
                             isContributionsDropdown = $dropdown.hasClass('contributions'),
                             isPlaceholdersDropdown = $(this).data('placeholder');
                         if (isContributionsDropdown && $(this).data('contribution-id')) {
@@ -105,10 +106,9 @@ function successChildRowListeners () {
                         } else if (isPlaceholdersDropdown) {
                           pasteHtml = $(this).data('placeholder');
                         }
-                        // console.log('pasteHtml', pasteHtml)
-                        context.invoke('editor.restoreRange');   // restore cursor position
-                        context.invoke('editor.pasteHTML', pasteHtml)
-                        context.invoke('editor.saveRange');  // save cursor position
+                        $editor.summernote('restoreRange');   // restore cursor position
+                        $editor.summernote('pasteHTML', pasteHtml)
+                        $editor.summernote('saveRange');  // save cursor position
                       });
                     });
                   }
@@ -134,8 +134,8 @@ function successChildRowListeners () {
               // ['view', <%= Rails.env.development? ? ['codeview'] : [] %>],
             ],
             buttons: {
-              // contributionsDropdown: noteInsertionDropdown($tr.data('customer-id'), contributionsData, 'contributions'),
-              // placeholdersDropdown: noteInsertionDropdown($tr.data('customer-id'), contributionsData, 'placeholders')
+              contributionsDropdown: noteInsertionDropdown($tr.data('customer-id'), contributionsData, 'contributions'),
+              placeholdersDropdown: noteInsertionDropdown($tr.data('customer-id'), contributionsData, 'placeholders')
             },
             callbacks: {
               // without this, insertion of a new line doesn't trigger input; critical for inserting placeholders
@@ -350,7 +350,6 @@ function successChildRowListeners () {
           isExpansion ? expandedViewHeight($tr, true) : collapsedViewHeight(),
           function () {
             depopulatePlaceholders();
-            /*
             $('.note-customButton').append(
               '<label class="insert-contributions">Insert</label><button type="button" class="help" data-toggle="popover"><i class="fa fa-fw fa-question-circle-o"></i></button>'
             );
@@ -361,7 +360,6 @@ function successChildRowListeners () {
               content: customButtonHelpPopoverContent,
               template: '<div class="popover" style="min-width: 400px; role="tooltip"><div class="arrow"></div><div class="popover-content"></div></div>'
             });
-            */
 
             // some buttons we don't want active while editing
             $('.win-story-actions__copy').prop('disabled', true);
@@ -396,7 +394,6 @@ function successChildRowListeners () {
           expandedViewHeight($tr, true),
           function () {
             depopulatePlaceholders();
-            /*
             $('.note-customButton').append(
               '<label class="insert-contributions">Insert</label><button type="button" class="help" data-toggle="popover"><i class="fa fa-fw fa-question-circle-o"></i></button>'
             );
@@ -407,7 +404,6 @@ function successChildRowListeners () {
               content: customButtonHelpPopoverContent,
               template: '<div class="popover" style="min-width: 400px; role="tooltip"><div class="arrow"></div><div class="popover-content"></div></div>'
             });
-            */
             $('.win-story-actions__copy').prop('disabled', true);
 
             // $('.mark-completed').addClass('disabled');
