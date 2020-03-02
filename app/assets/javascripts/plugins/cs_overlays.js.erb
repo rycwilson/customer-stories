@@ -75,6 +75,7 @@ function cspInitOverlays ($, $container, subdomain, isDemo, env) {
       },
       initOverlay = function ($storyCard, $storyOverlay) {
         // console.log('initOverlay()')
+        $storyOverlay.find('*').addClass('cs');
         $storyOverlay.find('.cs-share-buttons a').each(function () {
           var redirectUrl, replaceRegex, replacement;
 

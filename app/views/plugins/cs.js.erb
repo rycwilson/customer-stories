@@ -121,6 +121,9 @@
       })
         .done(function (data) {
           $container.html(data.html);
+
+          $container.find('*').addClass('cs');
+
           if (preSelectedStorySlug) {
             var $preSelectedStoryCard = $container.find('a[href*="' + preSelectedStorySlug + '"]'),
                 preSelectedStoryIndex = $container.is('#cs-gallery') ? $preSelectedStoryCard.index() : $preSelectedStoryCard.parent().index();

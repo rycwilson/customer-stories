@@ -1,4 +1,15 @@
 
+// .single .post-entry .has-content-area div,
+// .single .post-entry img,
+// .single .wrap_content .post-entry p,
+// .single .post-entry .has-content-area ul,
+// .single .post-entry .has-content-area ul li,
+// .post-entry ul,
+// .post-entry li {
+//   all: initial;
+// }
+
+
 @import 'vars_and_mixins';
 @import '../../views/plugins/plugins';
 @import 'show';
@@ -8,6 +19,84 @@
     @include pixlee-story-card;
   }
 }
+
+
+// pixlee blog: https://www.pixlee.com/blog/?p=2120&preview=1&_ppp=d2649d30d0
+// .single .wrap_content .post-entry .cs-plugin {
+//   blockquote p:before {
+//     width: initial;
+//     height: initial;
+//     background: initial;
+//   }
+//   p:nth-child(1)::first-letter {
+//     all: unset;
+//   }
+// }
+
+// pixlee blog
+// body[class*="postid-"] #cs-gallery {
+//   &,
+//   div:not(.cs-story-wrapper):not(.cs-container):not(.cs-row):not(.story-card):not(.customer-logo):not(.customer-name), 
+//   li {
+//     margin: 0 !important;
+//   }
+//   li {
+//     list-style: none !important;
+//     width: 100% !important;
+//   }
+//   .cs-container {
+//     margin: 0 auto !important;
+//   }
+//   .cs-container > .cs-row,
+//   .customer-logo-quote.hidden-xs {
+//     margin: 0px -15px !important;
+//   }
+//   li > .cs-row {
+//     margin: 0px -15px 10px !important;
+//   }
+//   .cs-story-wrapper {
+//     margin: 4% 3% 0 3% !important;
+//   }
+//   blockquote p {
+//     padding: 0 !important;
+//   }
+//   .cs-testimonial blockquote {
+//     margin: 0 0 0 25px !important;
+//   }
+//   .narrative blockquote {
+//     padding: 10px 20px !important;
+//     margin: 0 0 20px !important;
+//     p {
+//       font-style: normal !important;
+//     }
+//   }
+//   .customer-logo,
+//   .narrative,
+//   .pixlee-cta {
+//     img {
+//       width: auto;
+//       margin: 0 auto !important;
+//     }
+//     .customer-name {
+//       margin: 25px 0 0 0 !important;
+//     }
+//   }
+//   .story-card__logo img {
+//     width: auto;
+//     margin: 0 !important; 
+//   }
+//   ul {
+//     margin: 0 0 10px 0 !important;
+//   }
+//   @media only screen and (min-width: 768px) {
+//     .customer-logo {
+//       margin: 0 !important;
+//     }
+//   }
+//   @media only screen and (min-width: 1200px) {
+//   }
+  
+// }
 
 .cs-overlay-container {
   padding: 0; 
@@ -58,5 +147,3 @@
     }
   }
 }
-
-
