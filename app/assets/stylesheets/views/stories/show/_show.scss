@@ -48,23 +48,18 @@
         height: 55px;
         background-color: #fff;
         box-shadow: 0 2px 2px rgba(0, 0, 0, 0.05);
+        display: flex;
+        justify-content: space-between;
+        font-size: 16px !important;  // buttons will inherit this, icons will be 2em
         button {
           height: 100%;
           background: none;
           border: none;
           color: #666;
-          &:first-of-type {
-            padding: 20px 15px;
-            i {
-              line-height: 14px;
-            }
-          }
-          &:last-of-type {
-            padding: 0 12px;
-            float: right;
-            i {
-              line-height: 22px;
-            }
+          padding: 0 12px;
+          &:last-of-type i {
+            position: relative;
+            top: -3px;
           }
           &:hover {
             color: #222;
@@ -163,6 +158,9 @@
           color: #333;
         }
       }
+      li {
+        line-height: 1.5 !important;
+      }
       .row, .cs-row {
         display: flex;
         align-items: center;
@@ -175,9 +173,9 @@
             font-size: 14px !important;
           }
         }
-        span, a {
-          line-height: 1.5 !important;
-        }
+        // span, a {
+        //   line-height: 1.5 !important;
+        // }
       }
       &.visible-xs-block {
         .section-title {

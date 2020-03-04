@@ -25,6 +25,7 @@ function cspInitOverlays ($, $container, subdomain, isDemo, env) {
                  ($storyOverlay.find('.story-results.hidden-xs:not(.visible-xs-block .story-results)').length ? $storyOverlay.find('.story-results.hidden-xs:not(.visible-xs-block .story-results)').outerHeight(true) : 0) +
                  ($storyOverlay.find('.story-ctas.hidden-xs:not(.visible-xs-block .story-ctas)').length ? $storyOverlay.find('.story-ctas.hidden-xs:not(.visible-xs-block .story-ctas)').outerHeight(true) : 0) - 25;  // 25 is margin between header and cta
         };
+
         // listener for fixing CTA (ref https://stackoverflow.com/questions/24270036)
         document.addEventListener('scroll', function (e) {
           if ($(e.target).is('section.content--show .scroll-wrap')) {
