@@ -63,9 +63,15 @@ body.plugin-demo {
   }
 }
 
+@media only screen and (max-width: 991px) {
+  #cs-gallery .story-card:not(.story-card--logo-only) {
+    margin: 15px !important;  // pixlee blog override
+  }
+}
+
 @media only screen and (min-width: 992px) {
   #cs-gallery .story-card {
-    margin: 20px;
+    margin: 20px !important;  // pixlee blog override
   }
 }
 

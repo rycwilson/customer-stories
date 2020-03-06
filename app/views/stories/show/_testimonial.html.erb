@@ -25,7 +25,7 @@
         <% if story.quote.present? %>
 
           <blockquote>
-            <p><%= story.quote %></p>
+            <p><%= story.quote.chars.delete_if { |char| [34, 39, 8220, 8221].include? char.ord }.join('') %></p>
             <div class="<%= story.quote_attr_name.blank? ? 'hidden' : '' %>">
               <cite class="text-right">
                 <p class="cite-name"><%= story.quote_attr_name %></p>
@@ -62,7 +62,7 @@
           <% if story.quote.present? %>
 
             <blockquote>
-              <p><%= story.quote %></p>
+              <p><%= story.quote.chars.delete_if { |char| [34, 39, 8220, 8221].include? char.ord }.join('') %></p>
               <div class="<%= story.quote_attr_name.blank? ? 'hidden' : '' %>">
                 <cite class="text-right">
                   <p class="cite-name"><%= story.quote_attr_name %></p>

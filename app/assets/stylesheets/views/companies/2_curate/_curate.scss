@@ -67,18 +67,6 @@
   // }
 }
 
-#curate-gallery {
-  // display: none;
-  .story-card {
-    margin: 8px;
-  }
-  @media only screen and (min-width: 1200px) {
-    li.story-card {
-      margin: 8px;
-    }
-  }
-}
-
 #edit-story {
   // settings for this table are in prospect.scss
   #curate-contributors-table {

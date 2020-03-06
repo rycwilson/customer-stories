@@ -159,7 +159,7 @@
 
 @mixin customer-logo($bg-color) {
   display: flex;
-  margin: 30px 0;
+  margin: 30px 0 !important;  // pixlee blog override
   background-color: $bg-color;  // need this for the mix-blend-mode to work correctly
   > div {
     max-width: 50%;  // this can be wider for the quote-logo horizontal layout

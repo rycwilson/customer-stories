@@ -35,7 +35,7 @@
 // pixlee blog
 body[class*="postid-"] #cs-gallery {
   &,
-  div:not(.cs-story-wrapper):not(.cs-container):not(.cs-row):not(.story-card):not(.customer-logo):not(.customer-name), 
+  div:not(.cs-story-wrapper):not(.cs-container):not(.cs-row):not(.story-card):not(.customer-logo):not(.cs-customer-logo):not(.customer-name), 
   li {
     margin: 0 !important;
   }
@@ -55,18 +55,29 @@ body[class*="postid-"] #cs-gallery {
   }
   .cs-story-wrapper {
     margin: 4% 3% 0 3% !important;
+    @media only screen and (max-width: 767px) {
+      margin: 0 !important;
+    }
   }
   blockquote p {
     padding: 0 !important;
   }
-  .cs-testimonial blockquote {
-    margin: 0 0 0 25px !important;
-  }
+  .cs-testimonial {
+    .customer-name {
+      margin: 25px 0 0 0 !important;
+    }
+    blockquote {
+      margin: 0 0 0 25px !important;
+      @media only screen and (max-width: 767px) {
+        margin: 0 !important;
+      }
+    }
+  } 
   .narrative blockquote {
     padding: 10px 20px !important;
     margin: 0 0 20px !important;
     p {
-      font-style: normal !important;
+      // font-style: normal !important;
     }
   }
   .customer-logo,
@@ -76,16 +87,22 @@ body[class*="postid-"] #cs-gallery {
       width: auto;
       margin: 0 auto !important;
     }
-    .customer-name {
-      margin: 25px 0 0 0 !important;
-    }
   }
   .story-card__logo img {
     width: auto;
     margin: 0 !important; 
   }
+  .cs-customer-logo img {
+    width: auto;
+  }
   ul {
     margin: 0 0 10px 0 !important;
+    &.fa-ul {
+      margin: 0 0 0 2.14285714em !important;
+      li {
+        margin-bottom: 10px !important;
+      }
+    }
   }
   @media only screen and (min-width: 768px) {
     .customer-logo {
@@ -128,6 +145,11 @@ body[class*="postid-"] #cs-gallery {
   }
 }
 
+#brands_holder, #case_studies_container {
+  .narrative p {
+    line-height: 26px;  // host page conflicts with itself and negate this value => restore it
+  }
+}
 .cs-carousel {
   .story-card__link {
     width: $carousel-story-card-width;

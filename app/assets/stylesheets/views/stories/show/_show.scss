@@ -135,19 +135,10 @@
       h1, h2, h3, h4, h5, h6 {
         line-height: 1.3 !important;
       }
-      span, li, p, a {
-        line-height: 1.5 !important;
+      blockquote,
+      blockquote p {
+        font-style: italic;
       }
-      blockquote {
-        p, span {
-          // color: #666 !important;
-        }
-      }
-      // @media only screen and (max-width: 500px) {
-      //   .story-title {
-      //     text-align: center;
-      //   }
-      // }
     }
     .story-results, .story-ctas {
       a {
@@ -185,7 +176,7 @@
           // display: inline-block;  // so it can be centered
           margin-bottom: 0;
           li {
-            font-size: 14px !important;
+            font-size: 14px; // !important;
             margin-bottom: 10px;
             padding-left: 6px;
           }
@@ -197,15 +188,15 @@
       }
       @media only screen and (min-width: 768px) {
         span, a {
-          font-size: 13px !important;
+          font-size: 13px; // !important;
         }
       }
       @media only screen and (min-width: 992px) {
         i {
-          font-size: 15px !important;
+          font-size: 15px; // !important;
         }
         span, a {
-          font-size: 14px !important;
+          font-size: 14px; // !important;
         }
       }
     }
@@ -226,7 +217,7 @@
           // }
         }
         li a.thumbnail .thumbnail-view .thumbnail-view-hover p {
-          font-size: 13px !important;
+          // font-size: 13px !important;
         }
       }
     }
@@ -253,7 +244,7 @@
   @media only screen and (max-width: 991px) {
     .related-stories {
       li a.thumbnail .thumbnail-view .thumbnail-view-hover p {
-        font-size: 13px !important;
+        // font-size: 13px !important;
       }
     }
   }
@@ -358,13 +349,11 @@
       }
       > .container, > .cs-container {
         max-width: $max-xs-width;
-        .well, .cs-well {
-          padding: 19px 0 0 0;
-          border: 0
-        }
         .narrative {
-          span, li, p, a {
-            font-size: 14px !important;
+          &:not(.cs) {
+            span, li, p, a {
+              font-size: 14px; // !important;
+            }
           }
           // summernote is inconsistent in its blockquote handline,
           // sometimes inserts a <p> and sometimes doesn't
@@ -440,8 +429,10 @@
         margin-top: -50px;
       }
       .narrative {
-        span, li, p, a {
-          font-size: 13px !important;
+        &:not(.cs) {
+          span, li, p, a {
+            font-size: 13px; // !important;
+          }
         }
         // summernote is inconsistent in its blockquote handline,
         // sometimes inserts a <p> and sometimes doesn't
@@ -473,8 +464,10 @@
       //   font-size: 22px !important;
       // }
       .narrative {
-        span, li, p, a {
-          font-size: 15px !important;
+        &:not(.cs) {
+          span, li, p, a {
+            font-size: 15px; // !important;
+          }
         }
         // summernote is inconsistent in its blockquote handline,
         // sometimes inserts a <p> and sometimes doesn't

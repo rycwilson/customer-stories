@@ -146,6 +146,13 @@
     }
   }
 
+  #curate-gallery & {
+    margin: 8px;
+  }
+  #cs-gallery & {
+    margin: 15px !important;  // pixlee blog override
+  }
+
   @media only screen and (max-width: 767px) {
     &--logo-only {
       margin: 0;
