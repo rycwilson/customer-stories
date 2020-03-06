@@ -20,83 +20,99 @@
   }
 }
 
-
 // pixlee blog: https://www.pixlee.com/blog/?p=2120&preview=1&_ppp=d2649d30d0
-// .single .wrap_content .post-entry .cs-plugin {
-//   blockquote p:before {
-//     width: initial;
-//     height: initial;
-//     background: initial;
-//   }
-//   p:nth-child(1)::first-letter {
-//     all: unset;
-//   }
-// }
+.single .wrap_content .post-entry .cs-plugin {
+  blockquote p:before {
+    width: initial;
+    height: initial;
+    background: initial;
+  }
+  p:nth-child(1)::first-letter {
+    all: unset;
+  }
+}
 
 // pixlee blog
-// body[class*="postid-"] #cs-gallery {
-//   &,
-//   div:not(.cs-story-wrapper):not(.cs-container):not(.cs-row):not(.story-card):not(.customer-logo):not(.customer-name), 
-//   li {
-//     margin: 0 !important;
-//   }
-//   li {
-//     list-style: none !important;
-//     width: 100% !important;
-//   }
-//   .cs-container {
-//     margin: 0 auto !important;
-//   }
-//   .cs-container > .cs-row,
-//   .customer-logo-quote.hidden-xs {
-//     margin: 0px -15px !important;
-//   }
-//   li > .cs-row {
-//     margin: 0px -15px 10px !important;
-//   }
-//   .cs-story-wrapper {
-//     margin: 4% 3% 0 3% !important;
-//   }
-//   blockquote p {
-//     padding: 0 !important;
-//   }
-//   .cs-testimonial blockquote {
-//     margin: 0 0 0 25px !important;
-//   }
-//   .narrative blockquote {
-//     padding: 10px 20px !important;
-//     margin: 0 0 20px !important;
-//     p {
-//       font-style: normal !important;
-//     }
-//   }
-//   .customer-logo,
-//   .narrative,
-//   .pixlee-cta {
-//     img {
-//       width: auto;
-//       margin: 0 auto !important;
-//     }
-//     .customer-name {
-//       margin: 25px 0 0 0 !important;
-//     }
-//   }
-//   .story-card__logo img {
-//     width: auto;
-//     margin: 0 !important; 
-//   }
-//   ul {
-//     margin: 0 0 10px 0 !important;
-//   }
-//   @media only screen and (min-width: 768px) {
-//     .customer-logo {
-//       margin: 0 !important;
-//     }
-//   }
-//   @media only screen and (min-width: 1200px) {
-//   }
+body[class*="postid-"] #cs-gallery {
+  &,
+  div:not(.cs-story-wrapper):not(.cs-container):not(.cs-row):not(.story-card):not(.customer-logo):not(.cs-customer-logo):not(.customer-name), 
+  li {
+    margin: 0 !important;
+  }
+  li {
+    list-style: none !important;
+    width: 100% !important;
+  }
+  .cs-container {
+    margin: 0 auto !important;
+  }
+  .cs-container > .cs-row,
+  .customer-logo-quote.hidden-xs {
+    margin: 0px -15px !important;
+  }
+  li > .cs-row {
+    margin: 0px -15px 10px !important;
+  }
+  .cs-story-wrapper {
+    margin: 4% 3% 0 3% !important;
+    @media only screen and (max-width: 767px) {
+      margin: 0 !important;
+    }
+  }
+  blockquote p {
+    padding: 0 !important;
+  }
+  .cs-testimonial {
+    .customer-name {
+      margin: 25px 0 0 0 !important;
+    }
+    blockquote {
+      margin: 0 0 0 25px !important;
+      @media only screen and (max-width: 767px) {
+        margin: 0 !important;
+      }
+    }
+  } 
+  .narrative blockquote {
+    padding: 10px 20px !important;
+    margin: 0 0 20px !important;
+    p {
+      // font-style: normal !important;
+    }
+  }
+  .customer-logo,
+  .narrative,
+  .pixlee-cta {
+    img {
+      width: auto;
+      margin: 0 auto !important;
+    }
+  }
+  .story-card__logo img {
+    width: auto;
+    margin: 0 !important; 
+  }
+  .cs-customer-logo img {
+    width: auto;
+  }
+  ul {
+    margin: 0 0 10px 0 !important;
+    &.fa-ul {
+      margin: 0 0 0 2.14285714em !important;
+      li {
+        margin-bottom: 10px !important;
+      }
+    }
+  }
+  @media only screen and (min-width: 768px) {
+    .customer-logo {
+      margin: 0 !important;
+    }
+  }
+  @media only screen and (min-width: 1200px) {
+  }
   
-// }
+}
 
 .cs-overlay-container {
   padding: 0; 
@@ -129,6 +145,11 @@
   }
 }
 
+#brands_holder, #case_studies_container {
+  .narrative p {
+    line-height: 26px;  // host page conflicts with itself and negate this value => restore it
+  }
+}
 .cs-carousel {
   .story-card__link {
     width: $carousel-story-card-width;

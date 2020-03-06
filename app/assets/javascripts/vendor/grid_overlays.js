@@ -49,7 +49,6 @@
   gridOffsetRight = ($(window).width() - ($(gridEl).offset().left + $(gridEl).outerWidth())),
   xsBreakpoint = 768,
   itemOffsetLeft, itemOffsetTop;  // will be assigned when an item is clicked
-
   $('.cs-content').css('margin-left', '-' + gridOffsetLeft + 'px');
 
   init();
@@ -70,8 +69,8 @@
       // client = docElem['clientHeight'];
       inner = window['innerHeight'];
     }
-    // return client < inner ? inner : client;
-    return inner
+    //return client < inner ? inner : client;
+    return inner;
   }
   function scrollX() { return window.pageXOffset || docElem.scrollLeft; }
   function scrollY() { return window.pageYOffset || docElem.scrollTop; }
@@ -123,21 +122,28 @@
    * some csp modifications to ensure overlay opens correctly in a container that can be at any y-position on the page
    */
   function loadContent (item) {
+
+    if (location.href.includes('pixlee.com/blog') && $('.container.fullwidth').length) {
+      var horizMargin = $('.container.fullwidth').offset().left.toString() + 'px';
+      $('.container.fullwidth').css('margin', '0 ' + horizMargin)
+    }
+
     // add expanding element/placeholder
     var dummy = document.createElement('div');
     dummy.className = 'placeholder';
 
     // set the width/heigth and position
     itemOffsetLeft = $(item).offset().left - gridOffsetLeft;
+    // console.log('itemOffsetLeft', itemOffsetLeft)
     if ($(item).hasClass('grid__item--carousel')) {
       itemOffsetTop = ($('.cs-carousel__carousel').offset().top + parseInt($('.row-horizon').css('padding-top'))) - $(gridEl).offset().top;
     } else {
       itemOffsetTop = item.parentNode.offsetTop;
     }
 
-    dummy.style.WebkitTransform = 'translate3d(' + itemOffsetLeft + 'px, ' + itemOffsetTop + 'px, 0px) scale3d(' + item.offsetWidth/(gridItemsContainer.offsetWidth + gridOffsetLeft + gridOffsetRight + scrollbarWidth) + ',' + item.offsetHeight/getViewport('y') + ',1)',
+    // dummy.style.WebkitTransform = 'translate3d(' + itemOffsetLeft + 'px, ' + itemOffsetTop + 'px, 0px) scale3d(' + item.offsetWidth/(gridItemsContainer.offsetWidth + gridOffsetLeft + gridOffsetRight + scrollbarWidth) + ',' + item.offsetHeight/getViewport('y') + ',1)',
     dummy.style.transform = 'translate3d(' + itemOffsetLeft + 'px, ' + itemOffsetTop + 'px, 0px) scale3d(' + item.offsetWidth/(gridItemsContainer.offsetWidth + gridOffsetLeft + gridOffsetRight + scrollbarWidth) + ',' + item.offsetHeight/getViewport('y') + ',1)'
-
+// console.log('translate3d(' + itemOffsetLeft + 'px, ' + itemOffsetTop + 'px, 0px) scale3d(' + item.offsetWidth/(gridItemsContainer.offsetWidth + gridOffsetLeft + gridOffsetRight + scrollbarWidth) + ',' + item.offsetHeight/getViewport('y') + ',1)')
     // add transition class
     classie.add(dummy, 'placeholder--trans-in');
 
@@ -156,9 +162,9 @@
       // dummy.style.WebkitTransform = 'translate3d(-5px, ' + (scrollY() - 5) + 'px, 0px)';
       // dummy.style.transform = 'translate3d(-5px, ' + (scrollY() - 5) + 'px, 0px)';
       // csp modified...
-      dummy.style.WebkitTransform = 'translate3d(' + (-1 * gridOffsetLeft) + 'px,' + (-1 * ($('.cs-grid').offset().top - scrollY())) + 'px, 0px)';
+      // dummy.style.WebkitTransform = 'translate3d(' + (-1 * gridOffsetLeft) + 'px,' + (-1 * ($('.cs-grid').offset().top - scrollY())) + 'px, 0px)';
       dummy.style.transform = 'translate3d(' + (-1 * gridOffsetLeft) + 'px,' + (-1 * ($('.cs-grid').offset().top - scrollY())) + 'px, 0px)';
-
+// console.log('translate3d(' + (-1 * gridOffsetLeft) + 'px,' + (-1 * ($('.cs-grid').offset().top - scrollY())) + 'px, 0px)')
       // disallow scroll
       window.addEventListener('scroll', noscroll);
 
@@ -234,7 +240,7 @@
     setTimeout(function() {
       var dummy = gridItemsContainer.querySelector('.placeholder');
       classie.removeClass(bodyEl, 'noscroll');
-      dummy.style.WebkitTransform = 'translate3d(' + itemOffsetLeft + 'px, ' + itemOffsetTop + 'px, 0px) scale3d(' + gridItem.offsetWidth/(gridItemsContainer.offsetWidth + gridOffsetLeft + gridOffsetRight + scrollbarWidth) + ',' + gridItem.offsetHeight/getViewport('y') + ',1)';
+      // dummy.style.WebkitTransform = 'translate3d(' + itemOffsetLeft + 'px, ' + itemOffsetTop + 'px, 0px) scale3d(' + gridItem.offsetWidth/(gridItemsContainer.offsetWidth + gridOffsetLeft + gridOffsetRight + scrollbarWidth) + ',' + gridItem.offsetHeight/getViewport('y') + ',1)';
       dummy.style.transform = 'translate3d(' + itemOffsetLeft + 'px, ' + itemOffsetTop + 'px, 0px) scale3d(' + gridItem.offsetWidth/(gridItemsContainer.offsetWidth + gridOffsetLeft + gridOffsetRight + scrollbarWidth) + ',' + gridItem.offsetHeight/getViewport('y') + ',1)';
       // dummy.style.backgroundColor = 'rgba(0, 0, 0, 0.6)';
       onEndTransition(dummy, function() {
@@ -258,6 +264,10 @@
 
       // reset current
       current = -1;
+
+      if (location.href.includes('pixlee.com/blog') && $('.container.fullwidth').length) {
+        $('.container.fullwidth').css('margin', '0 auto')
+      }
     }, 25);
   }
 
