@@ -34,6 +34,15 @@
 
 // pixlee blog
 body[class*="postid-"] #cs-gallery {
+  .fa {
+    display: inline-block !important;
+  }
+  .fa-2x {
+    font-size: 2em !important; 
+  }
+  .fa-stack-2x {
+    font-size: 2em !important;  // pixlee blog override
+  }
   &,
   div:not(.cs-story-wrapper):not(.cs-container):not(.cs-row):not(.story-card):not(.customer-logo):not(.cs-customer-logo):not(.customer-name), 
   li {
