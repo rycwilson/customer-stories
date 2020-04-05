@@ -7,6 +7,20 @@
  *
  * Copyright 2015, Codrops
  * http://www.codrops.com
+ * 
+ * TODO try this for transitions:
+ * portal {
+ *   position: fixed;
+ *   width: 100%;
+ *   height: 100%;
+ *   transform: scale(0.3);
+ *   transform-origin: 90% 90%;
+ *   transition: transform 300ms ease-out;
+ *   box-shadow: 3px 3px 5px black;
+ * }
+ * portal.expand {
+ *   transform: scale(1);
+ * }
  */
 
 (function ($) {
