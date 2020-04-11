@@ -1,5 +1,7 @@
 
-<div class="cs-overlay-container <%= pre_selected_story.present? ? 'pre-selected' : '' %>">
+<%#= inline_css 'custom/plugin_wrappers/pixlee_plugins.css' %>
+
+<div class="cs-overlay-container <%= pre_selected_story_id.present? ? 'pre-selected' : '' %>">
 
   <div class="cs-main">
 
@@ -11,12 +13,13 @@
               'stories/shared/story_card',
               {
                 story: story,
-                card_class: story_card_class(story, false, true, is_grayscale, is_logos_only),
+                card_class: story_card_class(
+                  story, false, true, is_grayscale, is_logos_only, pre_selected_story_id
+                ),
                 plugin_type: 'gallery',
                 is_dashboard: false,
                 is_plugin: true,
-                is_external: true,
-                is_pre_selected: pre_selected_story.try(:id) == story.id
+                is_external: true
               }
             ) %>
 
@@ -32,7 +35,7 @@
 
           <div class="content__item">
 
-            <% if pre_selected_story.try(:id) == story.id %>
+            <% if pre_selected_story_id == story.id %>
 
               <%= render(
                     story.published? ? 'stories/show/story' : 'stories/show/preview',

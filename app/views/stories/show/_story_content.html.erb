@@ -42,8 +42,6 @@
 
         <% if related_stories.present? && related_stories.length >= 2 %>
 
-          <hr>
-
           <%= render(
                 'stories/show/related_stories',
                 { company: company, related_stories: related_stories }

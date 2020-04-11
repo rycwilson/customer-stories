@@ -8,6 +8,10 @@ body.pixlee.stories.show, .cs-plugin .cs-overlay-container {
         background-color: $stories-header-color;
         border-bottom: 1px solid $border-color;
         box-shadow: 0 0;
+        button:last-of-type i {
+          position: relative;
+          top: -1px;
+        }
       }
       p {
         padding-top: 0;  // overrides a host setting

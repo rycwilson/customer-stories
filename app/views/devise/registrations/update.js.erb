@@ -1,13 +1,11 @@
 (function () {
-
   var user = <%= raw @user.to_json %>,
       status = "<%= @status %>",
       flashMesg = "<%= @flash_mesg %>",
       passwordUpdate = <%= @password_update %>;
 
-  $('button[type="submit"][form="user-profile-form"]').find('span, .fa-spin').toggle()
-
   if (passwordUpdate) {
+    $('button[type="submit"][form="change-password-form"]').find('span, .fa-spin').toggle()
     $('.change-password')[0].reset();
     if (status === 'success') {
       flashDisplay("Password changed", status);
@@ -20,6 +18,7 @@
   }
 
   else {
+    $('button[type="submit"][form="user-profile-form"]').find('span, .fa-spin').toggle()
     if (status === 'success') {
       if (!user.linkedin_url) {
         if ($('.linkedin-url').hasClass('url-present')) {
