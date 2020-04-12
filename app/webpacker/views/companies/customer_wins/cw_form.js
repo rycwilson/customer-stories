@@ -1,6 +1,6 @@
 
 import { formIsValid } from 'lib/forms';
-// import Rails from 'rails-ujs';
+import Rails from '@rails/ujs';
 
 let $modal, $form, $submitBtn;
 const importedCustomerWins = [];

@@ -2,7 +2,7 @@
 import _intersection from 'lodash/intersection';
 // import _template from 'lodash/template';
 // import _templateSettings from 'lodash/templateSettings';
-import Rails from 'rails-ujs';
+import Rails from '@rails/ujs';
 import storyCardTemplate from './story_card_template';
 import { pluck, truncateStoryTitles } from 'global';
 

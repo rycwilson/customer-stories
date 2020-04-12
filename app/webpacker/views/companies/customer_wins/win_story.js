@@ -1,5 +1,5 @@
 
-import Rails from 'rails-ujs';
+import Rails from '@rails/ujs';
 import { scrollToChildRow } from '../tables';
 import * as editor from './ws_editor';
 
