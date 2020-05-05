@@ -64,37 +64,7 @@ class StoriesController < ApplicationController
           end
         end
       end
-      format.json do 
-        filter = {}
-        stories = []
-        if params[:category_id]
-          filter[:category] = {}.merge(id: params[:category_id])
-          category_stories = JSON.parse(
-            Story.company_public_filter_category(@company.id, params[:category_id])
-                 .to_json(STORY_DATA_MAP)
-          )
-          stories.concat(category_stories)
-          filter[:category][:count] = category_stories.length
-        end
-        if params[:product_id]
-          filter[:product] = {}.merge(id: params[:product_id])
-          product_stories = JSON.parse(
-            Story.company_public_filter_product(@company.id, params[:product_id])
-                 .to_json(STORY_DATA_MAP)
-          )
-          stories.concat(product_stories)
-          filter[:product][:count] = product_stories.length
-        end
-        if params[:category_id].present? && params[:product_id].present?
-          stories = category_stories & product_stories
-        elsif params[:category_id].present?
-          stories = category_stories
-        elsif params[:product_id].present?
-          stories = product_stories
-        else
-          stories = @company.public_stories_json
-        end
-        render(json: { filter: filter, stories: stories })
+      format.json do        
       end
     end
 
@@ -275,51 +245,89 @@ class StoriesController < ApplicationController
 
   def search
     # log_action
-    @search_string = params[:q].downcase
-    @stories = Story.company_public(@company.id)
-                    .where(
-                      "lower(title) LIKE ? OR lower(narrative) LIKE ?",
-                      "%#{ @search_string }%",
-                      "%#{ @search_string }%"
-                    )
-                    .to_a
-    @stories.concat(
-      Story.company_public(@company.id)
-           .joins(:customer)
-           .where("lower(customers.name) LIKE ?", "%#{ @search_string }%")
-           .to_a
-    )
-    @stories.concat(
-      Story.company_public(@company.id)
-           .joins(:category_tags)
-           .where("lower(story_categories.name) LIKE ?", "%#{ @search_string }%")
-           .to_a
-    )
-    @stories.concat(
-      Story.company_public(@company.id)
-           .joins(:product_tags)
-           .where("lower(products.name) LIKE ?", "%#{ @search_string }%")
-           .to_a
-    )
-    @stories.concat(
-      Story.company_public(@company.id)
-           .joins(:results)
-           .where("lower(results.description) LIKE ?", "%#{ @search_string }%")
-           .to_a
-    )
-    # it's possible a matching Result or CallToAction doesn't have an associated story,
-    # since they're associated with the Success model
-    @stories.concat(
-      Story.company_public(@company.id)
-           .joins(:ctas)
-           .where("lower(call_to_actions.display_text) LIKE ?", "%#{ @search_string }%")
-           .to_a
-    )
-    @stories.uniq!
+    if params[:q].present?
+      @search_string = params[:q].downcase
+      @stories = Story.company_public(@company.id)
+                      .where(
+                        "lower(title) LIKE ? OR lower(narrative) LIKE ?",
+                        "%#{ @search_string }%",
+                        "%#{ @search_string }%"
+                      )
+                      .to_a
+      @stories.concat(
+        Story.company_public(@company.id)
+            .joins(:customer)
+            .where("lower(customers.name) LIKE ?", "%#{ @search_string }%")
+            .to_a
+      )
+      @stories.concat(
+        Story.company_public(@company.id)
+            .joins(:category_tags)
+            .where("lower(story_categories.name) LIKE ?", "%#{ @search_string }%")
+            .to_a
+      )
+      @stories.concat(
+        Story.company_public(@company.id)
+            .joins(:product_tags)
+            .where("lower(products.name) LIKE ?", "%#{ @search_string }%")
+            .to_a
+      )
+      @stories.concat(
+        Story.company_public(@company.id)
+            .joins(:results)
+            .where("lower(results.description) LIKE ?", "%#{ @search_string }%")
+            .to_a
+      )
+      # it's possible a matching Result or CallToAction doesn't have an associated story,
+      # since they're associated with the Success model
+      @stories.concat(
+        Story.company_public(@company.id)
+            .joins(:ctas)
+            .where("lower(call_to_actions.display_text) LIKE ?", "%#{ @search_string }%")
+            .to_a
+      )
+      @stories.uniq!
+    else 
+      filter = {}
+      stories = []
+      if params[:category_id]
+        filter[:category] = {}.merge(id: params[:category_id])
+        category_stories = JSON.parse(
+          Story.company_public_filter_category(@company.id, params[:category_id])
+                .to_json(STORY_DATA_MAP)
+        )
+        stories.concat(category_stories)
+        filter[:category][:count] = category_stories.length
+      end
+      if params[:product_id]
+        filter[:product] = {}.merge(id: params[:product_id])
+        product_stories = JSON.parse(
+          Story.company_public_filter_product(@company.id, params[:product_id])
+                .to_json(STORY_DATA_MAP)
+        )
+        stories.concat(product_stories)
+        filter[:product][:count] = product_stories.length
+      end
+      if params[:category_id].present? && params[:product_id].present?
+        stories = category_stories & product_stories
+      elsif params[:category_id].present?
+        stories = category_stories
+      elsif params[:product_id].present?
+        stories = product_stories
+      else
+        stories = @company.public_stories_json
+      end
+    end
     # awesome_print(@stories).uniq
     respond_to do |format| 
       format.html { render :index }
-      format.json { render json: JSON.parse( @stories.to_json(STORY_DATA_MAP) ) } 
+      format.json do 
+        render(
+          json: params[:q] ?
+            JSON.parse( @stories.to_json(STORY_DATA_MAP) ) :
+            { filter: filter, stories: stories }
+        )
+      end
     end
   end
 

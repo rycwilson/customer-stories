@@ -1,5 +1,4 @@
 
-import Cookies from 'js-cookie';
 import { truncateStoryTitles } from 'global';
 
 export default {

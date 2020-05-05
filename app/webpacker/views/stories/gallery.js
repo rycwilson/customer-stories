@@ -15,24 +15,23 @@ export default {
   init() {
     initFilters();
     truncateStoryTitles();
-    // console.log(story_cards);
   },
   addListeners() {
     $(document)
-      .on('input', '.search-stories__input', handleSearchInput)
-      .on('click', '.search-stories [type="submit"]', handleSearchClick)
+      .on('input', '.search-stories__input', onSearchInput)
+      .on('click', '.search-stories [type="submit"]', onSearchClick)
       .on('click', '.search-stories__clear', clearSearch)
-      .on('change', '.stories-filter', handleFilterChange)
-      .on('ajax:success', '.search-stories', handleSearchSuccess)
+      .on('change', '.stories-filter', onFilterChange)
+      .on('ajax:success', '.search-stories', onSearchSuccess)
       .on(
         'click touchstart', 
         '#stories-gallery .story-card:not(.hover) a.published', 
-        handleStoryClick
+        onStoryClick
       );
   }
 }
 
-function handleSearchInput (e) {
+function onSearchInput (e) {
   $('.search-stories__input').not($(this)).val($(this).val());
   $('.search-stories [type="hidden"][name="q"]').val($(this).val());
   $('.search-stories__clear').hide();
@@ -40,14 +39,14 @@ function handleSearchInput (e) {
 }
 
 function clearSearch() {
-  $.getJSON('/stories', ({ filter, stories }, status, xhr) => renderGallery(stories));
+  $.getJSON('/stories/search', ({ filter, stories }, status, xhr) => renderGallery(stories));
   $('#stories-gallery').empty();
   $('.search-stories__input').val('').trigger('input');
   $('.search-stories__results').text('');
   replacePageState('', '', '');
 }
 
-function handleSearchClick (e) {
+function onSearchClick (e) {
   e.preventDefault();
   const $form = $(this).closest('form');
   const searchString = $form.find('[name="q"]').val();
@@ -68,7 +67,7 @@ function handleSearchClick (e) {
   }
 }
 
-function handleSearchSuccess(e) {
+function onSearchSuccess(e) {
   const [stories, status, xhr] = e.detail;
   $('.search-stories__results').text(
     stories.length === 1 ? '1 story found' : stories.length + '\xa0stories found' 
@@ -76,7 +75,7 @@ function handleSearchSuccess(e) {
   renderGallery(stories);
 }
 
-function handleFilterChange(e) {
+function onFilterChange(e) {
   e.preventDefault();
   $('#stories-gallery').hide();
   let categoryId, categorySlug, productId, productSlug;
@@ -96,13 +95,12 @@ function handleFilterChange(e) {
   const $productResults = $('.stories-filter__results--product');
   const $combinedResults = $('.stories-filter__results--grouped, .search-and-filters__results--combined');
   const queryString = (categoryId, productId) => `${ 
-              categoryId ? 
-                (productId ? 
-                  '?category_id=' + categoryId + '&product_id=' + productId : 
-                  '?category_id=' + categoryId) :
-                (productId ? '?product_id=' + productId : 
-                '') 
-            }`;
+    categoryId ? 
+      (productId ? 
+        '?category_id=' + categoryId + '&product_id=' + productId : 
+        '?category_id=' + categoryId) :
+      (productId ? '?product_id=' + productId : '') 
+  }`;
   
   // clear results
   $combinedResults.add($categoryResults).add($productResults).text('');
@@ -127,14 +125,14 @@ function handleFilterChange(e) {
     productSlug = productId && $productFilter.find('option:selected').data('slug');
   }
   $.getJSON(
-    `/stories${ queryString(categoryId, productId) }`, 
-    handleFilterSuccess($combinedResults, $categoryResults, $productResults)
+    `/stories/search${ queryString(categoryId, productId) }`, 
+    onFilterSuccess($combinedResults, $categoryResults, $productResults)
   )
   syncSelectTags(categoryId, productId);
   replacePageState('', categorySlug, productSlug);
 }
 
-function handleFilterSuccess($combinedResults, $categoryResults, $productResults) {
+function onFilterSuccess($combinedResults, $categoryResults, $productResults) {
   return (data, status, xhr) => {
     const { filter, stories } = data;
     renderGallery(stories);
@@ -282,7 +280,7 @@ function renderGallery(stories) {
 // turbolinks will not save filter info to the state, so it's not included
 function replacePageState(searchString, categorySlug, productSlug) {
   if (searchString) {
-    history.replaceState({ turbolinks: true }, null, `/search?q=${ encodeURIComponent(searchString) }`);
+    history.replaceState({ turbolinks: true }, null, `/stories/search?q=${ encodeURIComponent(searchString) }`);
   } else {
     history.replaceState(
       { turbolinks: true },
@@ -296,7 +294,7 @@ function replacePageState(searchString, categorySlug, productSlug) {
   }
 }
 
-function handleStoryClick(e) {
+function onStoryClick(e) {
   // console.log('click touchstart')
   const $storyLink = $(this);
   const $storyCard = $(this).parent();

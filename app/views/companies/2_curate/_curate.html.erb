@@ -84,12 +84,15 @@
         <div class="tab-content">
 
           <div class="curate-stories tab-pane fade <%= curate_view == 'stories' ? 'active in' : '' %>">
-            <div class="grid-container">
 
-              <ul id="curate-gallery" class="grid list-unstyled text-center">
-              </ul>
+            <%= render(
+                  ''
+              
+                ) %>
 
-            </div>
+            <ul id="curate-gallery" class="grid list-unstyled text-center">
+            </ul>
+
           </div>
 
           <div id="edit-story" class="edit-story tab-pane fade <%= curate_view == 'story' ? 'active in' : '' %>">

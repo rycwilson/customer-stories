@@ -62,10 +62,10 @@ Rails.application.routes.draw do
     get '/plugins/demo', to: 'plugins#demo'
 
     # see below for route to public story page
-    resources(:stories, { only: [:index] }) do
+    resources(:stories, only: [:index]) do
       get '/share_on_linkedin', on: :member, to: 'stories#share_on_linkedin'
+      get '/search', on: :collection, to: 'stories#search'
     end
-    get '/search', to: 'stories#search'
 
     # routing constraints cause issues within the devise authenticate block
     # (possible explanation? https:// anadea.info/blog/rails-authentication-routing-constraints-considered-harmful)
