@@ -48,7 +48,7 @@ function storiesShow () {
     .on('click', '.edit-story a', function () {
       Cookies.set('csp-edit-story-tab', '#story-content');
     })
-    .on('scroll', function () {
+    .on('scroll', _.throttle(function () {
       if (CSP.screenSize === 'xs') return false;
       if ($('body').hasClass('stories show')) {
         // prevent More Stories from covering curator sign in
@@ -62,7 +62,7 @@ function storiesShow () {
           }
         }
       }
-    })
+    }))
 
     // ref: https://codepen.io/patrickkahl/pen/DxmfG
     // ref: http://stackoverflow.com/questions/4068373

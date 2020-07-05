@@ -61,12 +61,14 @@ function constructPlugins () {
         pixleeImg = new Image();
 
     pixleeImg.onload = function () {
-      $('.pixlee-cta .cta__image').css('background', 'url("http://assets.pixlee.com/website/webinar/webinar-hero.png") center / cover no-repeat');
-      pixleeCtaTop = $('.pixlee-cta').offset().top;
+      setTimeout(function () {
+        $('.pixlee-cta .cta__image').css('background', 'url("http://assets.pixlee.com/website/webinar/webinar-hero.png") center / cover no-repeat');
+        pixleeCtaTop = $('.pixlee-cta').offset().top;
+      }, 100);
     };
     pixleeImg.src = 'http://assets.pixlee.com/website/webinar/webinar-hero.png';
 
-    $(document).on('scroll', function () {
+    $(document).on('scroll', _.throttle(function () {
       var currentScroll = $(window).scrollTop();
       if (currentScroll > pixleeCtaTop - 95) {
         $('.pixlee-cta').css({
@@ -81,7 +83,7 @@ function constructPlugins () {
           position: 'static'
         });
       }
-    });
+    }));
 
   }
 
