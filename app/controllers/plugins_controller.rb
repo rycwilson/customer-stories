@@ -51,9 +51,6 @@ class PluginsController < ApplicationController
   # if invalid category or product filters, return all stories
   def plugin_view (company, params)
     # puts params.permit(params.keys).to_h
-    # puts "logos_only #{params.permit(params.keys).to_h[:logos_only].present? && params.permit(params.keys).to_h[:logos_only] != 'false'}"
-    # puts "grayscale #{params[:grayscale].present? && params[:grayscale] != 'false'}"
-    # puts params.permit(params.keys).to_h
     stories = plugin_stories(company, params)
     pre_selected_story = get_pre_selected_story(company, params)
     render_to_string(
@@ -69,8 +66,8 @@ class PluginsController < ApplicationController
         tab_color: params[:tab_color],
         text_color: params[:text_color],
         carousel_version: company.subdomain == 'pixlee' ? 'v2' : 'v1',
+        logo_style: params[:logo_style],
         is_grayscale: params[:grayscale].present? && params[:grayscale] != 'false',
-        is_logos_only: params[:logos_only].present? && params[:logos_only] != 'false',
         is_curator: false,
         is_plugin: true,
         is_external: request.referer.match(/^(?!.*plugins\/demo).*(lvh\.me|customerstories\.org|customerstories\.net).*$/) ?

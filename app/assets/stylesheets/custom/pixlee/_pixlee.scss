@@ -1,4 +1,3 @@
-
 @import 'vars_and_mixins';
 @import 'show';
 
@@ -38,7 +37,7 @@ body.pixlee {
 }
 
 // specify .cs-plugin for specificity
-.story-card.story-card--pixlee {
+.story-card.story-card--pixlee.story-card--card {
   @include pixlee-story-card;
 }
 

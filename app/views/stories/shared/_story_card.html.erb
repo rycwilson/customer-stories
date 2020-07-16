@@ -18,25 +18,35 @@
     data-quote-attr-title="<%= is_external ? '' : story.quote_attr_title.try(:to_json) %>"
     data-preview-contributor="<%#= is_external ? '' : story.preview_contributor %>">
 
-    <div class="story-card__content">
-      <% if story.title.present? %>
-        <div class="story-card__title">
-          <p><%= story.title %></p>
-        </div>
-      <% end %>
+    <% if card_class.include? 'card-image' %>
+
       <div class="story-card__logo">
         <img src="<%= story.customer.logo_url || LOGO_PLACEHOLDER_URL %>">
       </div>
-    </div>
+      
+    <% else %>
 
-    <div class="story-card__caption">
-      <span class="story-card__customer"><%= story.customer.name %></span>
-      <span class="story-card__cta"></span>
-    </div>
-    
-    <div class="story-card__loading">
-      <i class="fa fa-spin fa-circle-o-notch"></i>
-    </div>
+      <div class="story-card__content">
+        <% if story.title.present? %>
+          <div class="story-card__title">
+            <p><%= story.title %></p>
+          </div>
+        <% end %>
+        <div class="story-card__logo">
+          <img src="<%= story.customer.logo_url || LOGO_PLACEHOLDER_URL %>">
+        </div>
+      </div>
+
+      <div class="story-card__caption">
+        <span class="story-card__customer"><%= story.customer.name %></span>
+        <span class="story-card__cta"></span>
+      </div>
+      
+      <div class="story-card__loading">
+        <i class="fa fa-spin fa-circle-o-notch"></i>
+      </div>
+
+    <% end %>
 
   </a>
 

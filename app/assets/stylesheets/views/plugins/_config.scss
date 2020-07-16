@@ -60,6 +60,19 @@
   }
 }
 
+.plugin-config__appearance {
+  .btn-group-vertical {
+    padding-left: 20px;
+    label {
+      font-weight: normal;
+      cursor: pointer;
+    }
+  }
+  label[for="plugin_grayscale"] {
+    padding-top: 14px;
+  }
+}
+
 .plugin-config__code-buttons {
   .btn {
     width: 100px;

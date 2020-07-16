@@ -209,14 +209,10 @@ function pluginConfigListeners () {
       );
     })
 
-    .on('change', '[name="plugin[logos_only]"]', function () {
-      // var isFirstSelection = !$('.script-tag textarea').text().match(/data-logos-only/);
+    .on('change', '[name="plugin[logo-style]"]', function () {
       $('.script-tag textarea').text(
         $('.script-tag textarea').text()
-          .replace(
-            $(this).prop('checked') ? /><\/script>/ : /\xa0data-logos-only="true"/,
-            $(this).prop('checked') ? '\xa0data-logos-only="true"></script>' : ''
-          )
+          .replace(/data-logo-style="(logo-only|card|card-image)"/, 'data-logo-style="' + $(this).val() + '"')
       );
     })
 
