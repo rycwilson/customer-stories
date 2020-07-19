@@ -37,7 +37,7 @@ body.pixlee {
 }
 
 // specify .cs-plugin for specificity
-.story-card.story-card--pixlee.story-card--card {
+.story-card.story-card--pixlee {
   @include pixlee-story-card;
 }
 

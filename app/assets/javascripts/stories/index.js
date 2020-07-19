@@ -15,11 +15,13 @@ function storiesIndex () {
 
   // truncate story titles
   $('.story-card__title').each(function () {
-    var $title = $(this).find('p');
-    while ($title.outerHeight() > $(this).height()) {
-      $title.text(function (index, text) {
-        return text.replace(/\W*\s(\S)*$/, '...');
-      });
+    if ($(this).closest('.story-card').hasClass('story-card--card')) {
+      var $title = $(this).find('p');
+      while ($title.outerHeight() > $(this).height()) {
+        $title.text(function (index, text) {
+          return text.replace(/\W*\s(\S)*$/, '...');
+        });
+      }
     }
   });
 
@@ -87,7 +89,8 @@ function storiesIndexListeners () {
         _.template($('#stories-template').html())({
           stories: filterStories('', ''),
           subdomain: location.href.match(/:\/\/((\w|-)+)\./)[1],
-          isDashboard: false
+          isDashboard: false,
+          cardClass: 'card'
         })
       ));
     })
@@ -236,7 +239,8 @@ function storiesIndexListeners () {
         _.template($('#stories-template').html())({
           stories: filteredStories,
           subdomain: location.href.match(/:\/\/((\w|-)+)\./)[1],
-          isDashboard: false
+          isDashboard: false,
+          cardClass: 'card'
         })
       ));
       replaceStateStoriesIndex(categorySlug, productSlug);
@@ -302,11 +306,13 @@ function updateGallery ($stories) {
         
         // truncate story titles
         $('.story-card__title').each(function () {
-          var $title = $(this).find('p');
-          while ($title.outerHeight() > $(this).height()) {
-            $title.text(function (index, text) {
-              return text.replace(/\W*\s(\S)*$/, '...');
-            });
+          if ($(this).closest('.story-card').hasClass('story-card--card')) {
+            var $title = $(this).find('p');
+            while ($title.outerHeight() > $(this).height()) {
+              $title.text(function (index, text) {
+                return text.replace(/\W*\s(\S)*$/, '...');
+              });
+            }
           }
         });
       });

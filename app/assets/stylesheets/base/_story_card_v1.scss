@@ -16,7 +16,7 @@
     transition: all 0s step-end;
   }
 }
-.story-card.story-card--card {
+.story-card.story-card--logo-only, .story-card.story-card--card {
   position: relative;
   margin: 15px;
   .story-card__link {
@@ -82,14 +82,6 @@
     p {
       padding: 12px;
       text-align: center;
-      // TODO: ?
-      // padding: 0;  // inspired by pixlee conflict 
-      font: {
-        family: inherit !important;
-        size: $story-card-title-size !important;
-        weight: 600 !important;
-      }
-      line-height: 2em !important;
       color: $story-card-text-color !important;
   
       // weebly will squish together letters and words in the customer name together without these...
@@ -197,42 +189,6 @@
   &.story-card--dashboard {
     .story-card__cta:after {
       content: 'Configure Story';
-    }
-  }
-  // applies to plugins only
-  &.story-card--logo-only {
-    &.hover:not(.og-expanded), 
-    &.cs-hover:not(.og-expanded),
-    &.og-expanded,
-    &.loading,
-    &.cs-loading {
-      .story-card__link {
-        border: none;
-        box-shadow: none
-      }
-    }
-    .story-card__link {
-      width: 150px;
-      height: 75px;
-      background-color: transparent;
-      border: none;
-      box-shadow: none;
-      .story-card__content, .story-card__caption {
-        height: 100%;
-      }
-      .story-card__title, .story-card__customer {
-        display: none;
-      }
-      .story-card__logo img {
-        mix-blend-mode: multiply;
-      }
-      &:hover {
-        border: none;
-        box-shadow: none;
-      }
-      @media only screen and (max-width: 767px) {
-        margin: 20px 0;
-      }
     }
   }
 }

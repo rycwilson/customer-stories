@@ -1,12 +1,70 @@
 @import 'story_card_v1';
 @import 'story_card_v2';
 
+.story-card__link {
+  width: $story-card-width;
+  height: $story-card-height;
+}
+.story-card__loading {
+  position: absolute;
+  opacity: 0;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  i {
+    font-size: 20px !important;
+    color: #666;
+  }
+}
+.story-card__title p {
+  font: {
+    family: inherit !important;
+    size: $story-card-title-size !important;
+    weight: 600 !important;
+  }
+  line-height: 2em !important;
+}
 .story-card {
   #curate-gallery & {
     margin: 8px;
   }
   #cs-gallery & {
     margin: 15px !important;  // pixlee blog override
+  }
+  &--logo-only, &--card {
+    background-image: none !important;  // override inline style
+  }
+  &--logo-only {
+    &.hover:not(.og-expanded), 
+    &.cs-hover:not(.og-expanded),
+    &.og-expanded,
+    &.loading,
+    &.cs-loading {
+      .story-card__link {
+        border: none;
+        box-shadow: none
+      }
+    }
+    .story-card__link {
+      width: 150px;
+      height: 75px;
+      background-color: transparent;
+      border: none;
+      box-shadow: none;
+      .story-card__content, .story-card__caption {
+        height: 100%;
+      }
+      .story-card__title, .story-card__customer {
+        display: none;
+      }
+      .story-card__logo img {
+        mix-blend-mode: multiply;
+      }
+      &:hover {
+        border: none;
+        box-shadow: none;
+      }
+    }
   }
   &--grayscale {
     .story-card__logo img {
@@ -19,17 +77,22 @@
   @media only screen and (max-width: 767px) {
     &--logo-only {
       margin: 0;
+      .story-card__link {
+        margin: 20px 0;
+      }
     }
   }
   @media only screen and (min-width: 768px) {
   }
   @media only screen and (min-width: 768px) and (max-width: 991px) {
-    #stories-gallery & a, .related-stories & a {
-      width: $small-story-card-width;  
-      height: $small-story-card-height; 
-    }
-    .story-card__title p {
-      font-size: 13px !important;
+    #stories-gallery &, .related-stories & {
+      .story-card__link {
+        width: $small-story-card-width;  
+        height: $small-story-card-height; 
+      }
+      .story-card__title p {
+        font-size: 13px !important;
+      }
     }
   }
   @media only screen and (min-width: 992px) {
@@ -50,20 +113,5 @@
     }
   }
   @media only screen and (min-width: 1200px) {
-  }
-}
-.story-card__link {
-  width: $story-card-width;
-  height: $story-card-height;
-}
-.story-card__loading {
-  position: absolute;
-  opacity: 0;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  i {
-    font-size: 20px !important;
-    color: #666;
   }
 }

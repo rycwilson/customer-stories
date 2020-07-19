@@ -138,11 +138,13 @@
 
             // truncate story titles
             $('.story-card__title').each(function () {
-              var $title = $(this).find('p');
-              while ($title.outerHeight() > $(this).height()) {
-                $title.text(function (index, text) {
-                  return text.replace(/\W*\s(\S)*$/, '...');
-                });
+              if ($(this).closest('.story-card').hasClass('story-card--card')) {
+                var $title = $(this).find('p');
+                while ($title.outerHeight() > $(this).height()) {
+                  $title.text(function (index, text) {
+                    return text.replace(/\W*\s(\S)*$/, '...');
+                  });
+                }
               }
             });
           });
