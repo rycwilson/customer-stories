@@ -4,7 +4,7 @@
 <% background = background || nil %>
 <% is_grayscale = is_grayscale || nil %>
 
-<div class="<%= card_class %>" data-story-id="<%= story.id %>">
+<div class="<%= card_class %>" data-story-id="<%= story.id %>" style="background-image: url(<%= story.og_image_url %>)">
 
   <!-- grid__item is for the overlays; not implemented internally -->
   <a href="<%= story.csp_story_link(is_dashboard, is_plugin, is_external, plugin_type) %>"
@@ -18,27 +18,44 @@
     data-quote-attr-title="<%= is_external ? '' : story.quote_attr_title.try(:to_json) %>"
     data-preview-contributor="<%#= is_external ? '' : story.preview_contributor %>">
 
-    <div class="story-card__content">
-      <% if story.title.present? %>
+    <% if card_class.include? 'card-image' %>
+
+      <img class="story-card__logo" src="<%= story.customer.logo_url || LOGO_PLACEHOLDER_URL %>">
+
+      <div class="story-card__hover-view">
         <div class="story-card__title">
           <p><%= story.title %></p>
         </div>
-      <% end %>
-      <div class="story-card__logo">
-        <img src="<%= story.customer.logo_url || LOGO_PLACEHOLDER_URL %>">
-      </div>
-    </div>
 
-    <div class="story-card__caption">
-      <span class="story-card__customer"><%= story.customer.name %></span>
-      <span class="story-card__cta"></span>
-    </div>
-    
+        <div class="story-card__cta">READ MORE</div>
+      </div>
+      
+    <% else %>
+
+      <div class="story-card__content">
+        <% if story.title.present? %>
+          <div class="story-card__title">
+            <p><%= story.title %></p>
+          </div>
+        <% end %>
+        <div class="story-card__logo">
+          <img src="<%= story.customer.logo_url || LOGO_PLACEHOLDER_URL %>">
+        </div>
+      </div>
+
+      <div class="story-card__caption">
+        <span class="story-card__customer"><%= story.customer.name %></span>
+        <span class="story-card__cta"></span>
+      </div>
+      
+    <% end %>
+
     <div class="story-card__loading">
       <i class="fa fa-spin fa-circle-o-notch"></i>
     </div>
-
+    
   </a>
+  
 
 </div>
 

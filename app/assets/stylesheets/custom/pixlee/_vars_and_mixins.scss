@@ -1,4 +1,3 @@
-
 $stories-header-color: #f8f9fd;
 $stories-bg-color: #ffffff; // #f9f9f9;
 $stories-fg-color: #f8f9fd;  // #e4e4e4;
@@ -23,37 +22,38 @@ $carousel-story-card-caption-size: 13px;
 $carousel-story-card-text-color: #667282;
 $carousel-nav-size: 13px;
 
-@mixin pixlee-story-card {
-  &.loading {
-    background-color: $stories-fg-color;
-    filter: brightness(97%);
-  }
-  a:active {
-    background-color: $stories-fg-color;
-    filter: brightness(94%);
-  }
-  
-  #stories-gallery &, .related-stories & {
-    .story-card__title p, .story-card__caption span {
-      // font-family: $company-body-font !important;
-    }
-  }
-
-  .story-card__cta:after {
-    color: $pixlee-blue;
-    font-weight: 700 !important;
-    text-decoration: none;
-    text-transform: uppercase;
-  }
-  .cs-plugin & .story-card__cta:after {
-    content: 'Read Case Study';
-  }
-}
-
 @mixin stories-header-title {
   h3 {
     text-transform: uppercase;
     padding-top: 2px;
     font-weight: 400;
+  }
+}
+
+@mixin pixlee-story-card {
+  &.story-card--card {
+    &.loading {
+      background-color: $stories-fg-color;
+      filter: brightness(97%);
+    }
+    a:active {
+      background-color: $stories-fg-color;
+      filter: brightness(94%);
+    }
+    
+    #stories-gallery &, .related-stories & {
+      .story-card__title p, .story-card__caption span {
+        // font-family: $company-body-font !important;
+      }
+    }
+    .story-card__cta:after {
+      color: $pixlee-blue;
+      font-weight: 700 !important;
+      text-decoration: none;
+      text-transform: uppercase;
+    }
+    .cs-plugin & .story-card__cta:after {
+      content: 'Read Case Study';
+    }
   }
 }

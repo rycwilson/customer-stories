@@ -114,7 +114,7 @@
           background: $script.data('background'),
           tab_color: $script.data('tab-color'),
           text_color: $script.data('text-color'),
-          logos_only: $script.data('logos-only'),
+          logo_style: $script.data('logo-style'),
           grayscale: $script.data('grayscale'),
           window_width: window.innerWidth
         }
@@ -138,11 +138,13 @@
 
             // truncate story titles
             $('.story-card__title').each(function () {
-              var $title = $(this).find('p');
-              while ($title.outerHeight() > $(this).height()) {
-                $title.text(function (index, text) {
-                  return text.replace(/\W*\s(\S)*$/, '...');
-                });
+              if ($(this).closest('.story-card').hasClass('story-card--card')) {
+                var $title = $(this).find('p');
+                while ($title.outerHeight() > $(this).height()) {
+                  $title.text(function (index, text) {
+                    return text.replace(/\W*\s(\S)*$/, '...');
+                  });
+                }
               }
             });
           });

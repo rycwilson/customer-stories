@@ -25,7 +25,14 @@
         <% if story.quote.present? %>
 
           <blockquote>
-            <p><%= story.quote.chars.delete_if { |char| [34, 39, 8220, 8221].include? char.ord }.join('') %></p>
+            <p>
+              <%= story.quote.strip.chars.reject.with_index do |char, index| 
+                    puts index, [34, 39, 8220, 8221].include?(char.ord)
+                    [34, 39, 8220, 8221].include?(char.ord) && 
+                    (index == 0 || index == story.quote.strip.length - 1)
+                  end.join('') 
+                %>
+            </p>
             <div class="<%= story.quote_attr_name.blank? ? 'hidden' : '' %>">
               <cite class="text-right">
                 <p class="cite-name"><%= story.quote_attr_name %></p>
@@ -62,7 +69,14 @@
           <% if story.quote.present? %>
 
             <blockquote>
-              <p><%= story.quote.chars.delete_if { |char| [34, 39, 8220, 8221].include? char.ord }.join('') %></p>
+              <p>
+                <%= story.quote.strip.chars.reject.with_index do |char, index| 
+                      puts index, [34, 39, 8220, 8221].include?(char.ord)
+                      [34, 39, 8220, 8221].include?(char.ord) && 
+                      (index == 0 || index == story.quote.strip.length - 1)
+                    end.join('') 
+                  %>
+              </p>
               <div class="<%= story.quote_attr_name.blank? ? 'hidden' : '' %>">
                 <cite class="text-right">
                   <p class="cite-name"><%= story.quote_attr_name %></p>

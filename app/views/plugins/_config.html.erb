@@ -207,16 +207,26 @@
   <div class="plugin-config__appearance form-group">
     <label class="col-sm-3 control-label">Appearance</label>
     <div class="col-sm-9 col-md-8 col-lg-6">
-      <div class="btn-group">
-        <label for="plugin_logos_only" class="checkbox-inline">
-          <%= check_box_tag('plugin[logos_only]', true, false) %>
-          Logos Only
-        </label>
-        <label for="plugin_grayscale" class="checkbox-inline">
+
+      <div class="btn-group-vertical">
+        <%= label_tag('plugin_logo_style_logo-only', class: 'radio') do %>
+          <%= radio_button_tag('plugin[logo_style]', 'logo-only', true) %>
+          Logo only
+        <% end %>
+        <%= label_tag('plugin_logo_style_card', class: 'radio') do %>
+          <%= radio_button_tag('plugin[logo_style]', 'card', false) %>
+          Card with logo
+        <% end %>
+        <%= label_tag('plugin_logo_style_card-image', class: 'radio') do %>
+          <%= radio_button_tag('plugin[logo_style]', 'card-image', false) %>
+          Card with logo and background image
+        <% end %>
+        <label for="plugin_grayscale" class="checkbox">
           <%= check_box_tag('plugin[grayscale]', true, false) %>
           Grayscale
         </label>
       </div>
+
     </div>
   </div>
 
@@ -243,7 +253,7 @@
           <i class="fa fa-fw fa-clipboard"></i>
         </button> -->
         <textarea class="form-control" style="width:100%;" rows="6" readonly><div id="cs-gallery" class="cs-plugin"></div>
-<script src="<%= Rails.env.development? ? 'http' : 'https' %>://<%= company.subdomain %>.<%= ENV["HOST_NAME"] %>/plugins/gallery/cs.js" data-max-rows="4"></script></textarea>
+<script src="<%= Rails.env.development? ? 'http' : 'https' %>://<%= company.subdomain %>.<%= ENV["HOST_NAME"] %>/plugins/gallery/cs.js" data-logo-style="logo-only" data-max-rows="4"></script></textarea>
       </div>
     </div>
   </div>

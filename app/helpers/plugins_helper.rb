@@ -1,13 +1,14 @@
 module PluginsHelper
 
-  def params_to_data_attrs (params)
+  def demo_plugin_data_attrs params
+    puts params
     [
       params[:stories].present? ? "data-stories=#{params[:stories]}" : '',
       params[:category].present? ? "data-category=#{params[:category]}" : '',
       params[:product].present? ? "data-product=#{params[:product]}" : '',
       params[:max_rows].present? ? "data-max-rows=#{params[:max_rows]}" : '',
       params[:background].present? ? "data-background=#{params[:background]}" : '',
-      params[:logos_only].present? ? "data-logos-only=true" : '',
+      params[:logo_style].present? ? "data-logo-style=#{params[:logo_style]}" : '',
       params[:grayscale].present? ? "data-grayscale=true" : '',
       params[:tab_color].present? ? "data-tab-color=#{params[:tab_color]}" : '',
       params[:text_color].present? ? "data-text-color=#{params[:text_color]}" : '',

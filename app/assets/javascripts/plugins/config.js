@@ -44,7 +44,7 @@ function pluginConfigListeners () {
     .on('change', '[name="plugin[type]"]', function () {
       var type = $(this).val(),
           $typeLink = $('a[href="#' + type + '-settings' + '"]'),
-          $logosOnly = $('[name="plugin[logos_only]"]'),
+          $logoOnly = $('[name="plugin[logo_style]"][value="logo-only"]'),
           tabbedCarouselAttrs = '\xa0data-delay="' + $('[name="tabbed_carousel[delay]"]').val() + '"\xa0data-tab-color="' + $('[name="tabbed_carousel[tab_color]"]').val() + '"\xa0data-text-color="' + $('[name="tabbed_carousel[text_color]"]').val() + '"';
       $('.script-tag textarea').text(
         $('.script-tag textarea').text()
@@ -86,9 +86,12 @@ function pluginConfigListeners () {
 
       // 'logos only' presently only works for the gallery
       if (type === 'gallery') {
-        $logosOnly.prop('disabled', false);
+        $logoOnly.prop('disabled', false);
       } else {
-        $logosOnly.prop('checked', false).prop('disabled', true).trigger('change');
+        if ($logoOnly.prop('checked')) {
+          $('[name="plugin[logo_style]"][value="card"]')[0].click()
+        }  
+        $logoOnly.prop('disabled', true)
       }
     })
 
@@ -209,16 +212,15 @@ function pluginConfigListeners () {
       );
     })
 
-    .on('change', '[name="plugin[logos_only]"]', function () {
-      // var isFirstSelection = !$('.script-tag textarea').text().match(/data-logos-only/);
+    .on('change', '[name="plugin[logo_style]"]', function () {
       $('.script-tag textarea').text(
         $('.script-tag textarea').text()
           .replace(
-            $(this).prop('checked') ? /><\/script>/ : /\xa0data-logos-only="true"/,
-            $(this).prop('checked') ? '\xa0data-logos-only="true"></script>' : ''
+            /data-logo-style="(logo-only|card|card-image)"/, 
+            'data-logo-style="' + $('[name="plugin[logo_style]"]:checked').val() + '"'
           )
       );
-    })
+    })  
 
     .on('change', '[name="plugin[grayscale]"]', function () {
       var isFirstSelection = !$('.script-tag textarea').text().match(/data-grayscale/);
@@ -240,24 +242,25 @@ function pluginConfigListeners () {
           background = $('[name="carousel[background]"]:checked').val(),
           tabColor = $('[name="tabbed_carousel[tab_color]"]').val(),
           textColor = $('[name="tabbed_carousel[text_color]"]').val(),
-          logosOnly = $('[name="plugin[logos_only]"]').prop('checked'),
+          logoStyle = $('[name="plugin[logo_style]"]:checked').val(),
           grayscale = $('[name="plugin[grayscale]"]').prop('checked'),
           delay = $('[name="tabbed_carousel[delay]"]').val(),
           stories = customStoriesToJson().replace('[', '%5B').replace(']', '%5D'),
           category = $('[name="plugin[category]"]').find('option:selected').data('slug'),
           product = $('[name="plugin[product]"]').find('option:selected').data('slug');
+      
       params += 'type=' + type +
         (content === 'custom' && $('[name="plugin[stories][]"]').val() ? '&stories=' + stories : '') +
         (content === 'category' && category ? '&category=' + category : '') +
         (content === 'product' && product ? '&product=' + product : '') +
         (type === 'gallery' && maxRows ? '&max_rows=' + maxRows : '') +
         (type === 'carousel' ? '&background=' + background : '') +
-        (logosOnly ? '&logos_only=true' : '') +
+        '&logo_style=' + logoStyle + 
         (grayscale ? '&grayscale=true' : '') +
         (type === 'tabbed_carousel' ? '&tab_color=' + tabColor.replace('#', '%23') : '') +
         (type === 'tabbed_carousel' ? '&text_color=' + textColor.replace('#', '%23') : '') +
         (type === 'tabbed_carousel' ? '&delay=' + delay : '');
-        // console.log('params', params)
+        console.log('params', params)
       if (params.length === 1) params = '';   // no params
 // console.log('GET', demoPath + params)
       $(this).attr('href', demoPath + params);

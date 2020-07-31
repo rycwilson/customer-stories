@@ -177,8 +177,10 @@ $white-chevron-right: 'https://s3-us-west-1.amazonaws.com/csp-production-assets/
 
   .cs-carousel__carousel {
     // background-color: #d9e3da;
+    height: calc(#{$carousel-story-card-height} + #{$carousel-vertical-padding});
     padding: 0;
     .row-horizon {
+      height: 100%;
       padding: calc(#{$carousel-vertical-padding / 2}) 0;
    
       // this takes care of a very slight width discrepancy that was resulting
@@ -187,12 +189,15 @@ $white-chevron-right: 'https://s3-us-west-1.amazonaws.com/csp-production-assets/
       font-size: 0;
 
       div[class^='col-'] {
-        // position: relative;
+        position: relative;
         // width: 330px;  // jquery will set this
         // height: 190px;
         padding-left: 15px;  
         padding-right: 15px;
         box-sizing: border-box;
+        .story-card {
+          position: absolute;
+        }
       }
     }
   }

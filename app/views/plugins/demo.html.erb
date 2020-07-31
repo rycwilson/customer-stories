@@ -32,6 +32,6 @@
   </div> -->
 
   <div id="cs-<%= params[:type].gsub('_', '-') %>" class="cs-plugin">
-  <script src="<%= root_url + "plugins/#{params[:type]}/cs.js" %>" data-demo="1" <%= params_to_data_attrs(params) %>></script>
+  <script src="<%= root_url + "plugins/#{params[:type]}/cs.js" %>" data-demo="1" <%= demo_plugin_data_attrs(params) %>></script>
 
 </body>

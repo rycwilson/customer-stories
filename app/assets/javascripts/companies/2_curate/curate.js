@@ -195,7 +195,8 @@ function filterCurateGallery (context) {
                 $(storiesTemplate({ 
                   stories: stories, 
                   subdomain: location.href.match(/:\/\/((\w|-)+)\./)[1],
-                  isDashboard: true 
+                  isDashboard: true,
+                  cardClass: 'card'
                 })) 
               )
             .imagesLoaded(function () {
