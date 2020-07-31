@@ -1,6 +1,5 @@
-
-import customerWinsPane from './customer_wins/customer_wins';
-import contributorsPane from './contributors/contributors';
+import customerWinsPane from '../customer_wins/customer_wins';
+import contributorsPane from '../contributors/contributors';
 import { setSearch, autoSearch, displayResults } from './tables';
 import _uniq from 'lodash/uniq';
 import _uniqBy from 'lodash/uniqBy';
@@ -14,6 +13,7 @@ export default {
     customerWinsPane.table.init(loadCustomerWins);
     customerWinsPane.initForm();
     contributorsPane.table.init(loadContributors);
+    contributorsPane.initForm();
     $.when(loadCustomerWins, loadContributors)
       .done((data, status, xhr) => {
         renderTableHeaders();

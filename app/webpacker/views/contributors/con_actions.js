@@ -1,6 +1,5 @@
-
 import 'moment';
-import { editStory } from '../prospect';
+import { editStory } from '../dashboard/prospect';
 import conTable from './con_table';
 
 export function addListeners() {

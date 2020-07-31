@@ -1,4 +1,3 @@
-
 export default (story, cardClass, storyLink, storySlug, customerSlug) => `
 
   <li style="display: inline-block; vertical-align: top">
@@ -16,26 +15,36 @@ export default (story, cardClass, storyLink, storySlug, customerSlug) => `
           data-quote-attr-name='${ JSON.stringify(story.quote_attr_name) }'
           data-quote-attr-title='${ JSON.stringify(story.quote_attr_title) }'
           data-preview-contributor='${ JSON.stringify(story.published_contributors[0]) }'">
-        
-        <div class="story-card__content">
 
-          ${ story.title ? '<div class="story-card__title"><p>' + story.title + '</p></div>' : '' }
+        ${cardClass.includes('card-image') ? `
 
-          <div class="story-card__logo">
-            
-            <img src="${ story.success.customer.logo_url ? 
-                            story.success.customer.logo_url : 
-                            '<%= LOGO_PLACEHOLDER_URL %>' }">
+          <img class="story-card__logo" src="${ story.customer.logo_url || LOGO_PLACEHOLDER_URL }">
 
+          <div class="story-card__hover-view">
+            <div class="story-card__title">
+              <p>${ story.title }</p>
+            </div>
+            <div class="story-card__cta">READ MORE</div>
           </div>
 
-        </div>
+          ` : `
 
-        <div class="story-card__caption">
-          <span class="story-card__customer">${ story.success.customer.name }</span>
-          <span class="story-card__cta"></span>
-        </div>
+          <div class="story-card__content">
+            ${ story.title ? '<div class="story-card__title"><p>' + story.title + '</p></div>' : '' }
+            <div class="story-card__logo">
+              <img src="${ story.success.customer.logo_url ? 
+                              story.success.customer.logo_url : 
+                              '<%= LOGO_PLACEHOLDER_URL %>' }">
+            </div>
+          </div>
 
+          <div class="story-card__caption">
+            <span class="story-card__customer">${ story.success.customer.name }</span>
+            <span class="story-card__cta"></span>
+          </div>
+
+        `}
+        
         <div class="story-card__loading">
           <i class="fa fa-spin fa-circle-o-notch"></i>
         </div>

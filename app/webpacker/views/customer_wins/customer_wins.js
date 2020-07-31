@@ -1,5 +1,5 @@
 
-import { setSearch, toggleChildRow } from '../tables';
+import { setSearch, toggleChildRow } from '../dashboard/tables';
 import cwTable from './cw_table';
 import cwForm from './cw_form';
 import customerFormTemplate from './customer_form';

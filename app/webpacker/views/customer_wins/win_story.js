@@ -1,6 +1,6 @@
 
 import Rails from '@rails/ujs';
-import { scrollToChildRow } from '../tables';
+import { scrollToChildRow } from '../dashboard/tables';
 import * as editor from './ws_editor';
 
 let $editor, $form, $submitBtn, $htmlInput, $textInput, $markdownInput;

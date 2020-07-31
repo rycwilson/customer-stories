@@ -1,4 +1,3 @@
-
 import _intersection from 'lodash/intersection';
 // import _template from 'lodash/template';
 // import _templateSettings from 'lodash/templateSettings';
@@ -261,8 +260,9 @@ function renderGallery(stories) {
   const companyClass = `story-card--${ location.href.match(/:\/\/((\w|-)+)\./)[1] }`;
   const isDashboard = false;
   const storiesHtml = stories.map((story) => {
+    const typeClass = 'story-card--card'
     const statusClass = `story-card--${ (story.published && 'published') || (story.preview_published && 'preview-published') || (story.logo_published && 'logo-published') || '' }`;
-    const cardClass = statusClass + ` ${ isDashboard ? 'story-card--small story-card--dashboard' : companyClass }`;
+    const cardClass = typeClass + ' ' + statusClass + ` ${ isDashboard ? 'story-card--small story-card--dashboard' : companyClass }`;
     const storyLink = `${
       isDashboard || story.preview_published ? 
         'javascript:;' : 

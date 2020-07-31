@@ -1,6 +1,6 @@
 
 import 'summernote';
-import { scrollToChildRow } from '../tables';
+import { scrollToChildRow } from '../dashboard/tables';
 import * as templates from './ws_templates';
 import _unescape from 'lodash/unescape';
 

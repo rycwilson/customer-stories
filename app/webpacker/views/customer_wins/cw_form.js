@@ -63,15 +63,15 @@ export default {
 }
 
 function initSelectBoxes() {
-  $('select.new-success.curator').select2({
-    theme: 'bootstrap',
-    placeholder: 'Select'
-  });
   $("select.new-success.customer").select2({
     theme: 'bootstrap',
     tags: true,  // to allow custom input
     selectOnClose: true,
     placeholder: 'Select or Create',
+  });
+  $('select.new-success.curator').select2({
+    theme: 'bootstrap',
+    placeholder: 'Select'
   });
   $('select.new-success.referrer').select2({
     theme: 'bootstrap',
@@ -79,7 +79,6 @@ function initSelectBoxes() {
   });
   $('select.new-success.contributor').select2({
     theme: 'bootstrap',
-    // minimumResultsForSearch: -1,
     placeholder: 'Select or Create'
   });
 }
@@ -99,9 +98,9 @@ function onSelectOpen (e) {
 }
 
 function onShowModal(e) {
-  $modal = typeof $modal === 'undefined' ? $('#new-success-modal') : $modal;
-  $form = typeof $form === 'undefined' ? $('#new-success-form') : $form;
-  $submitBtn = typeof $submitBtn === 'undefined' ? 
+  $modal = $modal || $('#new-success-modal');
+  $form = $form || $('#new-success-form');
+  $submitBtn = typeof $submitBtn == undefined ? 
     $('button[type="submit"][form="new-success-form"]') : 
     $submitBtn;
   const curatorId = $('.curator-select').val();
@@ -139,17 +138,19 @@ function onHiddenModal() {
   disableContactAttrs(true, 'referrer');
   disableContributionAttrs(true, 'contributor');
   disableContactAttrs(true, 'contributor');
-  $form.find('.create-contact').addClass('hidden').end()
-       .find('select').val(null).trigger('change').end()
-       .find('.form-group').removeClass('has-error').end()
-       .find('.create-contact input').prop('required', false);
-  $submitBtn.attr('type', 'submit').end()
-            .find('span')
-              .text('Create')
-              .css('display', 'inline')
-              .prop('disabled', false)
-              .end()
-            .find('i').hide();
+  $form
+    .find('.create-contact').addClass('hidden').end()
+    .find('select').val(null).trigger('change').end()
+    .find('.form-group').removeClass('has-error').end()
+    .find('.create-contact input').prop('required', false);
+  $submitBtn
+    .attr('type', 'submit')
+    .find('span')
+      .text('Create')
+      .css('display', 'inline')
+      .prop('disabled', false)
+      .end()
+    .find('i').hide();
 }
 
 function onSubmitClick(e) {

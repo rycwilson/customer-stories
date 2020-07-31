@@ -1,7 +1,8 @@
 
 import Cookies from 'js-cookie';
-import { setSearch, toggleChildRow } from '../tables';
+import { setSearch, toggleChildRow } from '../dashboard/tables';
 import conTable from './con_table';
+import conForm from './con_form';
 import childRowTemplate from './con_child_row';
 import { badgeObserver } from 'lib/linkedin';
 import { addListeners as addActionsDropdownListeners } from './con_actions';
@@ -9,6 +10,7 @@ import { addListeners as addActionsDropdownListeners } from './con_actions';
 export default {
   addListeners() {
     addActionsDropdownListeners();
+    conForm.addListeners();
     $(document)
       .on('click', '#contributors-table .dtrg-group', sortTable)
       .on('click', '#contributors-table .dtrg-group a', linkToCustomerWinOrStory)
@@ -21,6 +23,9 @@ export default {
         toggleChildRow(childRowTemplate, addBadgeObserver)
       )
   },  
+  initForm() {
+    conForm.init();
+  },
   table: {
     init(deferred) {
       conTable.init(deferred);

@@ -1,5 +1,4 @@
-
-import { editStory } from '../prospect';
+import { editStory } from '../dashboard/prospect';
 import cwTable from './cw_table';
 
 export function addListeners() {

@@ -1,4 +1,4 @@
-
+import dashboard from './dashboard/index';
 import companies from './companies/index';
 import stories from './stories/index';
 import users from './users/index';
@@ -6,7 +6,7 @@ import flash from '../lib/flash';
 
 const views = {
   companies: {
-    show: companies.show,
+    show: dashboard.show,
     edit: companies.edit
   },
   stories: {

@@ -1,5 +1,4 @@
-
-import { truncateStoryTitles } from './node_modules/global';
+import { truncateStoryTitles } from '../../global';
 
 export default {
   init() {
