@@ -64,7 +64,17 @@ class StoriesController < ApplicationController
           end
         end
       end
-      format.json do        
+      format.json do    
+        render json: @company.stories.to_json(
+          only: [:id, :title, :summary, :quote, :quote_attr_name, :quote_attr_title, :published, :logo_published, :preview_published, :publish_date, :updated_at],
+          methods: [:csp_story_path, :published_contributors, :status],
+          include: {
+            curator: { only: [:id], methods: [:full_name] },
+            customer: { only: [:id, :name, :logo_url] },
+            category_tags: { only: [:id, :name, :slug] },
+            product_tags: { only: [:id, :name, :slug] } 
+          }
+        )
       end
     end
 

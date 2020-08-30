@@ -1,6 +1,6 @@
 class ApplicationController < ActionController::Base
 
-  layout(:layout)
+  layout(:set_layout)
   impersonates(:user)
 
   # Prevent CSRF attacks by raising an exception.
@@ -23,6 +23,28 @@ class ApplicationController < ActionController::Base
       request.subdomain == 'cspdev'
     end
   )
+
+  # def set_gon (company=nil)
+  #   is_curator = (user_signed_in? && (current_user.company_id == company.try(:id)))
+  #   gon.push({
+  #     company: company.present? ? JSON.parse(company.to_json({
+  #       methods: [:curators, :customers, :invitation_templates, :plugin],
+  #     })) : nil,
+  #     current_user: user_signed_in? ? {
+  #       id: current_user.id,
+  #       first_name: current_user.first_name,
+  #       last_name: current_user.last_name,
+  #       name: current_user.full_name,
+  #       title: current_user.title,
+  #       email: current_user.email,
+  #       phone: current_user.phone,
+  #       photo: current_user.photo_url,
+  #       is_curator: is_curator
+  #     } : nil,
+  #     stories: company.present? ? company.stories_json : nil,
+  #     env: csp_environment
+  #   })
+  # end
 
   before_action({ only: [:linkedin_auth_callback] }) { linkedin_authenticated?(params[:state]) }
 
@@ -265,7 +287,7 @@ class ApplicationController < ActionController::Base
 
   private
 
-  def layout
+  def set_layout
     # if you want to skip the layout ...
     #   false
     # elsif you want to use a different layout

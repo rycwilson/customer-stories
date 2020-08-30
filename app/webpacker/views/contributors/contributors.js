@@ -1,7 +1,7 @@
 
 import Cookies from 'js-cookie';
 import { setSearch, toggleChildRow } from '../dashboard/tables';
-import conTable from './con_table';
+import dataTable from './data_table';
 import conForm from './con_form';
 import childRowTemplate from './con_child_row';
 import { badgeObserver } from 'lib/linkedin';
@@ -28,11 +28,11 @@ export default {
   },
   table: {
     init(deferred) {
-      conTable.init(deferred);
+      dataTable.init(deferred);
     },
     renderHeader(curators, successes, customers, contributors) {
       $('#contributors-table').closest('[id*="table_wrapper"]').prepend(
-        conTable.headerTemplate(curators, successes, customers, contributors)
+        dataTable.headerTemplate(curators, successes, customers, contributors)
       );
     },
   },

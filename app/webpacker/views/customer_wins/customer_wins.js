@@ -1,6 +1,6 @@
 
 import { setSearch, toggleChildRow } from '../dashboard/tables';
-import cwTable from './cw_table';
+import dataTable from './data_table';
 import cwForm from './cw_form';
 import customerFormTemplate from './customer_form';
 import childRowTemplate from './cw_child_row';
@@ -30,11 +30,11 @@ export default {
   },
   table: {
     init(deferred) {
-      cwTable.init(deferred);
+      dataTable.init(deferred);
     },
     renderHeader(curators, successes, customers) {
       $('#successes-table').closest('[id*="table_wrapper"]').prepend(
-        cwTable.headerTemplate(curators, successes, customers)
+        dataTable.headerTemplate(curators, successes, customers)
       );
     }
   }

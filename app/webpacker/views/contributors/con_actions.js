@@ -1,6 +1,6 @@
 import 'moment';
 import { editStory } from '../dashboard/prospect';
-import conTable from './con_table';
+import dataTable from './data_table';
 
 export function addListeners() {
   $(document)
@@ -100,7 +100,7 @@ function deleteContributor(e) {
     method: 'delete',
     dataType: 'json'
   })
-    .done((contribution, status, xhr) => conTable.remove(contributionId));
+    .done((contribution, status, xhr) => dataTable.remove(contributionId));
   //  bootbox.confirm({
   //    size: 'small',
   //    className: 'confirm-remove-contributor',

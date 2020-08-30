@@ -1,7 +1,10 @@
 import { truncateStoryTitles } from '../../global';
+import stories from 'views/stories';
 
 export default {
   init() {
+    const loadStories = $.Deferred();
+    stories.table.init(loadStories);
     initFilters();
     preSelectFilters();
   },

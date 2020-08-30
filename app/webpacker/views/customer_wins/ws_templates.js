@@ -1,5 +1,5 @@
 
-import conTable from '../contributors/con_table';
+import conTable from '../contributors/data_table';
 import _uniqBy from 'lodash/uniqBy';
 import _escape from 'lodash/escape';
 

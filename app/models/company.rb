@@ -359,6 +359,26 @@ class Company < ApplicationRecord
     end
   end
 
+  # stories_json returns data included in the client via the gon object
+  # def stories_json
+  #   Rails.cache.fetch("#{self.subdomain}/stories-json") do
+  #     JSON.parse(
+  #       Story.default_order(Story.company_all(self.id))
+  #       .to_json({
+  #         only: [:id, :title, :summary, :quote, :quote_attr_name, :quote_attr_title, :published, :logo_published, :preview_published, :publish_date, :updated_at],
+  #         methods: [:csp_story_path, :published_contributors, :preview_contributor],
+  #         include: {
+  #           success: {
+  #             only: [:curator_id],
+  #             include: {
+  #               customer: { only: [:id, :name, :logo_url] },
+  #               story_categories: { only: [:id, :name, :slug] },
+  #               products: { only: [:id, :name, :slug] } }}}
+  #       })
+  #     )
+  #   end
+  # end
+
   def public_stories_filter_category (category_id)
     story_ids = Story.default_order(Story.company_public_filter_category(self.id, category_id)).pluck(:id)
     Story.where(id: story_ids).order_as_specified(id: story_ids)
