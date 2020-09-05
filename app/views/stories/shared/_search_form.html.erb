@@ -14,7 +14,7 @@
   <div class="input-group">
     <%= text_field_tag(
           nil, 
-          action_name == 'search' ? @search_string : nil, 
+          action_name == 'search' ? @q : nil, 
           { 
             type: 'search',
             class: 'search-stories__input form-control', 

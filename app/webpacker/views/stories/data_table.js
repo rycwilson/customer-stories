@@ -72,7 +72,7 @@ export default {
         // }
       // ],
       initComplete: function (settings, json) {
-        console.log('stories init complete');
+        // console.log('stories init complete');
         const $table = $(this);
         const dt = $table.DataTable();
         const $tableWrapper = $table.closest('[id*="table_wrapper"]');

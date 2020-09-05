@@ -2,8 +2,7 @@ import _intersection from 'lodash/intersection';
 // import _template from 'lodash/template';
 // import _templateSettings from 'lodash/templateSettings';
 import Rails from '@rails/ujs';
-import storyCardTemplate from './story_card_template';
-import { pluck, truncateStoryTitles } from 'global';
+import { renderGallery, truncateStoryTitles } from 'global';
 
 // custom template delimiters (to avoid clashing with erb)
 // https://stackoverflow.com/questions/9802402
@@ -38,8 +37,11 @@ function onSearchInput (e) {
 }
 
 function clearSearch() {
-  $.getJSON('/stories/search', ({ filter, stories }, status, xhr) => renderGallery(stories));
-  $('#stories-gallery').empty();
+  $.getJSON(
+    '/stories/search', 
+    ({ filter, stories }) => renderGallery($('#stories-gallery'), stories)
+  );
+  $('#stories-gallery').hide().empty();
   $('.search-stories__input').val('').trigger('input');
   $('.search-stories__results').text('');
   replacePageState('', '', '');
@@ -56,7 +58,7 @@ function onSearchClick (e) {
     $('[class*="stories-filter__select"]').val('').trigger('change.select2');
     $('.stories-filter__results--category, .stories-filter__results--product, .stories-filter__results--grouped, .search-and-filters__results--combined')
       .text('');
-    $('#stories-gallery').hide();
+    $('#stories-gallery').hide().empty();
     $('.search-stories__clear').show();
 
     // https://github.com/rails/rails/issues/29546
@@ -71,12 +73,12 @@ function onSearchSuccess(e) {
   $('.search-stories__results').text(
     stories.length === 1 ? '1 story found' : stories.length + '\xa0stories found' 
   );
-  renderGallery(stories);
+  renderGallery($('#stories-gallery'), stories);
 }
 
 function onFilterChange(e) {
   e.preventDefault();
-  $('#stories-gallery').hide();
+  $('#stories-gallery').hide().empty();
   let categoryId, categorySlug, productId, productSlug;
   const $select = $(e.target);
   const $container = $select.closest('.search-and-filters');
@@ -124,7 +126,7 @@ function onFilterChange(e) {
     productSlug = productId && $productFilter.find('option:selected').data('slug');
   }
   $.getJSON(
-    `/stories/search${ queryString(categoryId, productId) }`, 
+    `/stories/search${queryString(categoryId, productId)}`, 
     onFilterSuccess($combinedResults, $categoryResults, $productResults)
   )
   syncSelectTags(categoryId, productId);
@@ -134,7 +136,7 @@ function onFilterChange(e) {
 function onFilterSuccess($combinedResults, $categoryResults, $productResults) {
   return (data, status, xhr) => {
     const { filter, stories } = data;
-    renderGallery(stories);
+    renderGallery($('#stories-gallery'), stories);
     displayFilterResults(filter, stories.length, $combinedResults, $categoryResults, $productResults);
   }
 }
@@ -253,28 +255,6 @@ function initFilters() {
         .html('<i class="fa fa-fw fa-remove"></i>');
   prependTagType();
   $('.search-and-filters').attr('data-init', true);
-}
-
-function renderGallery(stories) {
-  const $gallery = $('#stories-gallery');
-  const companyClass = `story-card--${ location.href.match(/:\/\/((\w|-)+)\./)[1] }`;
-  const isDashboard = false;
-  const storiesHtml = stories.map((story) => {
-    const typeClass = 'story-card--card'
-    const statusClass = `story-card--${ (story.published && 'published') || (story.preview_published && 'preview-published') || (story.logo_published && 'logo-published') || '' }`;
-    const cardClass = typeClass + ' ' + statusClass + ` ${ isDashboard ? 'story-card--small story-card--dashboard' : companyClass }`;
-    const storyLink = `${
-      isDashboard || story.preview_published ? 
-        'javascript:;' : 
-        (story.published && story.csp_story_path) || ''
-    }`;
-    const storySlug = story.csp_story_path.match(/\/((\w|-)+)$/)[1];
-    const customerSlug = story.csp_story_path.match(/^\/((\w|-)+)\//)[1];
-    return storyCardTemplate(
-      story, cardClass, storyLink, storySlug, customerSlug
-    );
-  }).join(' ');
-  $gallery.empty().append($(storiesHtml)).show();
 }
 
 // turbolinks will not save filter info to the state, so it's not included

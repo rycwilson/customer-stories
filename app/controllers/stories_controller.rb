@@ -65,16 +65,7 @@ class StoriesController < ApplicationController
         end
       end
       format.json do    
-        render json: @company.stories.to_json(
-          only: [:id, :title, :summary, :quote, :quote_attr_name, :quote_attr_title, :published, :logo_published, :preview_published, :publish_date, :updated_at],
-          methods: [:csp_story_path, :published_contributors, :status],
-          include: {
-            curator: { only: [:id], methods: [:full_name] },
-            customer: { only: [:id, :name, :logo_url] },
-            category_tags: { only: [:id, :name, :slug] },
-            product_tags: { only: [:id, :name, :slug] } 
-          }
-        )
+        render json: @company.stories.to_json(dashboard_story_map)
       end
     end
 
@@ -256,45 +247,36 @@ class StoriesController < ApplicationController
   def search
     # log_action
     if params[:q].present?
-      @search_string = params[:q].downcase
+      @q = params[:q].downcase
       @stories = Story.company_public(@company.id)
-                      .where(
-                        "lower(title) LIKE ? OR lower(narrative) LIKE ?",
-                        "%#{ @search_string }%",
-                        "%#{ @search_string }%"
-                      )
-                      .to_a
+        .where("lower(title) LIKE ? OR lower(narrative) LIKE ?", "%#{@q}%", "%#{@q}%").to_a
       @stories.concat(
         Story.company_public(@company.id)
-            .joins(:customer)
-            .where("lower(customers.name) LIKE ?", "%#{ @search_string }%")
-            .to_a
+          .joins(:customer)
+          .where("lower(customers.name) LIKE ?", "%#{@q}%").to_a
       )
       @stories.concat(
         Story.company_public(@company.id)
-            .joins(:category_tags)
-            .where("lower(story_categories.name) LIKE ?", "%#{ @search_string }%")
-            .to_a
+          .joins(:category_tags)
+          .where("lower(story_categories.name) LIKE ?", "%#{@q}%").to_a
       )
       @stories.concat(
         Story.company_public(@company.id)
-            .joins(:product_tags)
-            .where("lower(products.name) LIKE ?", "%#{ @search_string }%")
-            .to_a
+          .joins(:product_tags)
+          .where("lower(products.name) LIKE ?", "%#{@q}%").to_a
       )
       @stories.concat(
         Story.company_public(@company.id)
-            .joins(:results)
-            .where("lower(results.description) LIKE ?", "%#{ @search_string }%")
-            .to_a
+          .joins(:results)
+          .where("lower(results.description) LIKE ?", "%#{@q}%").to_a
       )
+
       # it's possible a matching Result or CallToAction doesn't have an associated story,
       # since they're associated with the Success model
       @stories.concat(
         Story.company_public(@company.id)
-            .joins(:ctas)
-            .where("lower(call_to_actions.display_text) LIKE ?", "%#{ @search_string }%")
-            .to_a
+          .joins(:ctas)
+          .where("lower(call_to_actions.display_text) LIKE ?", "%#{@q}%").to_a
       )
       @stories.uniq!
     else 
@@ -302,19 +284,13 @@ class StoriesController < ApplicationController
       stories = []
       if params[:category_id]
         filter[:category] = {}.merge(id: params[:category_id])
-        category_stories = JSON.parse(
-          Story.company_public_filter_category(@company.id, params[:category_id])
-                .to_json(STORY_DATA_MAP)
-        )
+        category_stories = Story.company_public_filter_category(@company.id, params[:category_id]).to_a
         stories.concat(category_stories)
         filter[:category][:count] = category_stories.length
       end
       if params[:product_id]
         filter[:product] = {}.merge(id: params[:product_id])
-        product_stories = JSON.parse(
-          Story.company_public_filter_product(@company.id, params[:product_id])
-                .to_json(STORY_DATA_MAP)
-        )
+        product_stories = Story.company_public_filter_product(@company.id, params[:product_id]).to_a
         stories.concat(product_stories)
         filter[:product][:count] = product_stories.length
       end
@@ -325,18 +301,20 @@ class StoriesController < ApplicationController
       elsif params[:product_id].present?
         stories = product_stories
       else
-        stories = @company.public_stories_json
+        stories = Rails.cache.fetch("#{@company.subdomain}/public-stories-json") do
+          Story.default_order(Story.company_public(@company.id)).to_json(public_story_map)
+        end
       end
     end
-    # awesome_print(@stories).uniq
     respond_to do |format| 
       format.html { render :index }
       format.json do 
-        render(
-          json: params[:q] ?
-            JSON.parse( @stories.to_json(STORY_DATA_MAP) ) :
-            { filter: filter, stories: stories }
-        )
+        render json: params[:q] ? 
+          @stories.to_json(public_story_map) : 
+          { 
+            filter: filter, 
+            stories: JSON.parse(stories.is_a?(Array) ? stories.to_json(public_story_map) : stories)
+          }
       end
     end
   end
@@ -380,6 +358,31 @@ class StoriesController < ApplicationController
       topic_ad_attributes: [:id, :adwords_ad_group_id, :ad_id, :status, :_destroy],
       retarget_ad_attributes: [:id, :adwords_ad_group_id, :ad_id, :status, :_destroy]
     )
+  end
+
+  def public_story_map
+    {
+      only: [:id, :title, :og_image_url, :logo_published, :preview_published, :published, :publish_date, :slug],
+      methods: [:csp_story_path],
+      include: {
+        customer: { only: [:name, :slug, :logo_url] },
+        category_tags: { only: [:id, :name] },
+        product_tags: { only: [:id, :name] } 
+      }
+    }
+  end
+
+  def dashboard_story_map
+    {
+      only: [:id, :title, :og_image_url, :logo_published, :preview_published, :published, :publish_date, :slug, :updated_at],
+      methods: [:csp_story_path, :status],
+      include: {
+        curator: { only: [:id], methods: [:full_name] },
+        customer: { only: [:id, :name, :slug, :logo_url] },
+        category_tags: { only: [:id, :name] },
+        product_tags: { only: [:id, :name] } 
+      }
+    }
   end
 
   def new_ads(story, story_params)

@@ -351,14 +351,6 @@ class Company < ApplicationRecord
     Story.where(id: story_ids).order_as_specified(id: story_ids)
   end
 
-  def public_stories_json
-    Rails.cache.fetch("#{self.subdomain}/public-stories-json") do
-      JSON.parse(
-        Story.default_order( Story.company_all(self.id) ).to_json(STORY_DATA_MAP)
-      )
-    end
-  end
-
   # stories_json returns data included in the client via the gon object
   # def stories_json
   #   Rails.cache.fetch("#{self.subdomain}/stories-json") do

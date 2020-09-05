@@ -18,7 +18,7 @@ import 'core-js/stable';
 import 'regenerator-runtime/runtime';
 
 window.$ = window.jQuery = $;
-require('../vendor/jquery_plugins');
+require('vendor/jquery_plugins');
 
 require('@rails/ujs').start();
 require('turbolinks').start();
@@ -33,7 +33,7 @@ import 'datatables.net-editor-bs';
 import 'datatables.net-rowgroup-bs';
 
 import { addAppListeners } from '../global';
-import view from '../views/index';
+import view from 'views/index';
 
 window.APP = window.APP || buildApp();
 getBootstrapViewport(ResponsiveBootstrapToolkit);

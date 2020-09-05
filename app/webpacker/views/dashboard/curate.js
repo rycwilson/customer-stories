@@ -1,26 +1,21 @@
-import { truncateStoryTitles } from '../../global';
+import { renderGallery } from 'global';
 import stories from 'views/stories';
+// import storyCardTemplate from 'views/stories/story_card_template';
 
 export default {
   init() {
     const loadStories = $.Deferred();
     stories.table.init(loadStories);
-    initFilters();
-    preSelectFilters();
+    $.when(loadStories).then(onLoadStoriesSuccess, onLoadStoriesError)
   },
   addListeners() {
     $(document)
-      .on('click', '#curate-gallery .story-card', getStory)
-      .on('change', '#curate-filters select', filterStories)
+      .on('click', '#dashboard-gallery .story-card', getStory)
+      .on('change', '#curate-filters select', onFilterChange)
       .on(
         'show.bs.tab', 
         'a[href=".curate-stories"]', 
         (e) => $('.story-card').showLoading(false)
-      )
-      .on(
-        'shown.bs.tab', 
-        'a[href="#curate"], a[href=".curate-stories"]', 
-        truncateStoryTitles
       )
 
       // summernote auto-focuses on url input when the modal opens; cancel this...
@@ -32,6 +27,14 @@ export default {
   }
 }
 
+const filters = {
+  curatorId: '',
+  status: '',
+  customerId: '',
+  categoryId: '',
+  productId: ''
+}
+
 const filterCookies = [
   'dashboard-stories-filter-curator', 
   'dashboard-stories-ilter-status', 
@@ -40,35 +43,95 @@ const filterCookies = [
   'dashboard-stories-filter-product'
 ];
 
-function filterStories(e) {
-  // console.log('filterStories()')
+function onLoadStoriesSuccess(e) {
+  initFilters();
+  preSelectFilters();
+}
+
+function onLoadStoriesError(e) {
+  console.log('loadStories error', e)
+}
+
+function onFilterChange(e) {
   const $select = $(e.target);
-  const filter = ['curator', 'status', 'customer', 'category', 'product']
-                    [$('#curate-filters select').index($select)];
-  const filterCookieName = `dashboard-stories-filter-${ filter }`;
-  
-  // TODO: set up a data table for stories, refactor filterCurateGallery as necessary 
-  // filterCurateGallery();
-
-  Cookies.set(filterCookieName, $select.val());
+  const $gallery = $('#dashboard-gallery');
+  const selectIndex = $('#curate-filters select').index($select);
+  const filter = ['curatorId', 'status', 'customerId', 'categoryId', 'productId'][selectIndex]
+  $gallery.hide().empty();
+  if (filter == 'status') {
+    filters['status'] = $select.find('option:selected').text().split(' ')
+      .filter(word => word != 'Story').join('-').toLowerCase();
+  } else {
+    filters[filter] = $select.val();
+  }
+  Cookies.set(
+    `dashboard-stories-filter-${filter.replace('Id', '')}`, 
+    $select.val()
+  );
+  renderGallery($gallery, filterStories(), true);
 }
 
-function preSelectFilters() {
-  let filterCookiesArePresent;
-  filterCookies.forEach((cookie) => {
-    if (Cookies.get(cookie)) {
-      filterCookiesArePresent = true;
-      $(`.curate-filters__${ cookie.slice(cookie.lastIndexOf('-') + 1, cookie.length) }`)
-        .val(Cookies.get(cookie)).trigger('change');
-    } 
+function filterStories () {
+  // console.log('filters', filters)
+  return $('#stories-table').DataTable().rows().data().filter((story) => (
+    (filters['curatorId'] ? (story.curator.id == filters['curatorId']) : true) &&
+    (filters['status'] ? (story.status == filters['status']) : true) &&
+    (filters['customerId'] ? (story.customer.id == filters['customerId']) : true) && 
+    (
+      filters['categoryId'] ? 
+        story.category_tags.filter(tag => tag.id == filters['categoryId']).length :
+        true
+    ) &&
+    (
+      filters['productId'] ? 
+        story.product_tags.filter(tag => tag.id == filters['productId']).length :
+        true
+    )
+  )).toArray();
+}
+
+function getStory(e) {
+  e.preventDefault();
+  const $storyCard = $(this);
+  const storySlug = $storyCard.data('story-slug');
+  const customerSlug = $storyCard.data('customer-slug');
+  console.log($storyCard, storySlug, customerSlug)
+  $storyCard.showLoading(true);
+  $.ajax({
+    method: 'GET',
+    dataType: 'html',
+    url: `/stories/${$storyCard.data('story-id')}/edit`,
   })
-  if (!filterCookiesArePresent) autoSelectCurator();
+    .done((html, status, xhr) => {
+      // $.when(renderStory(html)).done(initStory)
+      $('#edit-story').empty().append(html);
+      initStory();
+
+      // replacing state ensures turbolinks:false for the first tab state
+      window.history.replaceState({ turbolinks: false }, null, '/curate');
+    
+      // default to true, though this will lead to unnecessary requests in the case
+      // of back/forward navigation (but that's better than not making a turbolinks
+      // request when necessary)
+      window.history.pushState(
+        { turbolinks: true }, null, '/curate/' + customerSlug + '/' + storySlug
+      );
+    });
 }
 
-function autoSelectCurator() {
-  $('.curate-filters__curator')
-    .val(APP.current_user.id )
-    .trigger('change', { auto: true });
+function renderStory (html) { 
+  return () => $('#edit-story').empty().append(html); 
+}
+  
+function initStory() {
+  console.log('initStory()')
+  const showTab = () => (
+    $('a[href=".edit-story"]')
+      .one('shown.bs.tab', () => { window.scrollTo(0, 0); })
+      .tab('show')
+  );
+  Cookies.set('cs-edit-story-tab', '#story-settings');
+  // initStoriesEdit(showTab);
 }
 
 function initFilters() {
@@ -98,43 +161,54 @@ function initFilters() {
   $('#curate .layout-sidebar .curate-stories').attr('data-init', true);
 }
 
-function getStory(e) {
-  e.preventDefault();
-  const $storyCard = $(this);
-  const storySlug = $storyCard.data('story-slug');
-  const customerSlug = $storyCard.data('customer-slug');
-  $storyCard.showLoading(true);
-  $.ajax({
-    url: `/stories/${ storyCard.data('story-id') }/edit`,
-    method: 'GET',
-    dataType: 'html'
+function preSelectFilters() {
+  let filterCookiesArePresent;
+  filterCookies.forEach((cookie) => {
+    if (Cookies.get(cookie)) {
+      filterCookiesArePresent = true;
+      $(`.curate-filters__${cookie.slice(cookie.lastIndexOf('-') + 1, cookie.length)}`)
+        .val(Cookies.get(cookie)).trigger('change');
+    } 
   })
-    .done((html, status, xhr) => {
-      $.when(renderStory(html)).done(initStory)
-      
-      // replacing state ensures turbolinks:false for the first tab state
-      window.history.replaceState({ turbolinks: false }, null, '/curate');
-    
-      // default to true, though this will lead to unnecessary requests in the case
-      // of back/forward navigation (but that's better than not making a turbolinks
-      // request when necessary)
-      window.history.pushState(
-        { turbolinks: true }, null, '/curate/' + customerSlug + '/' + storySlug
-      );
-    });
+  if (!filterCookiesArePresent) {
+    $('.curate-filters__curator')
+      .val(APP.current_user.id)
+      .trigger('change', { auto: true });
+  }
 }
 
-function renderStory (html) { 
-  return () => $('#edit-story').empty().append(html); 
-}
-  
-function initStory() {
-  console.log('initStory()')
-  // var showTab = function () {
-  //   $('a[href=".edit-story"]')
-  //     .one('shown.bs.tab', function () { window.scrollTo(0, 0); })
-  //     .tab('show');
-  // };
-  // Cookies.set('cs-edit-story-tab', '#story-settings');
-  // initStoriesEdit(showTab);
+
+// the select2 boxes initialize synchronously, i.e. subsequent code doesn't
+// execute until initilization is complete.
+// pass the cbShowTab callback to the bs-switch onInit property
+function initStoriesEditSettings(shownTabHandler) {
+  var initSelectInputs = function () {
+        $('.story-settings.story-tags, #story-ctas-select')
+          .select2({
+            theme: 'bootstrap',
+            placeholder: 'Select'
+          })
+          .on('select2:select, select2:unselect, change.select2', function () {
+            $(this).next('.select2')
+                    .find('.select2-selection__choice__remove')
+                      .html('<i class="fa fa-fw fa-remove"></i>');
+          })
+          .trigger('change.select2');  // manipulate the remove button
+      };
+  var initSwitchInputs = function () {
+        $('.bs-switch.publish-control').bootstrapSwitch({
+          size: 'small',
+          onInit: function (e) {}
+        });
+      };
+  $.when(initSelectInputs, initSwitchInputs).done(function () {
+    if (shownTabHandler) {
+      window.scrollTo(0, 0);
+      shownTabHandler();
+    }
+    $('#story-settings-form').attr('data-init', true);
+  })    
+  initS3Upload();
+  initSelectInputs();
+  initSwitchInputs();
 }
