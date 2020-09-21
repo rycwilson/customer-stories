@@ -1,9 +1,15 @@
 
 #curate .layout-main
+
 #new-story-modal {
   .modal-header {
     .close {
       font-size: 26px;
+    }
+  }
+  &.curate {
+    .form-group.success {
+      display: none;
     }
   }
 }

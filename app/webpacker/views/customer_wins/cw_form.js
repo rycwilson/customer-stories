@@ -7,7 +7,7 @@ const importedCustomerWins = [];
 
 export default {
   init() {
-    initSelectBoxes();
+    initSelectInputs();
   },
   addListeners() {
     $(document)
@@ -62,7 +62,7 @@ export default {
   }
 }
 
-function initSelectBoxes() {
+function initSelectInputs() {
   $("select.new-success.customer").select2({
     theme: 'bootstrap',
     tags: true,  // to allow custom input

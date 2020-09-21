@@ -6,9 +6,11 @@ export default {
   init() {
     const loadStories = $.Deferred();
     stories.table.init(loadStories);
+    stories.newStoryForm.init();
     $.when(loadStories).then(onLoadStoriesSuccess, onLoadStoriesError)
   },
   addListeners() {
+    stories.newStoryForm.addListeners();
     $(document)
       .on('click', '#dashboard-gallery .story-card', getStory)
       .on('change', '#curate-filters select', onFilterChange)

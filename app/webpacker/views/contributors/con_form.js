@@ -8,7 +8,7 @@ let $form;
 
 export default {
   init() {
-    initSelectBoxes();
+    initSelectInputs();
   },
   addListeners() {
     $(document)
@@ -29,7 +29,7 @@ export default {
   }
 }
 
-function initSelectBoxes () {
+function initSelectInputs () {
   $('select.new-contributor.customer')
     .add('select.new-contributor.success')
     .add('select.new-contributor.contributor')
