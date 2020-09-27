@@ -1,6 +1,9 @@
-#stories-gallery {
+#stories-gallery, #dashboard-gallery {
   margin: 0 auto;
   padding-bottom: 20px;
+  h3 {
+    padding-top: 15px;
+  }
 }
 
 @media only screen and (max-width: 767px) {

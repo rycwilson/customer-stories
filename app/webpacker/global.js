@@ -10,16 +10,21 @@ export function addAppListeners() {
 }
 
 export function renderGallery($gallery, stories, isDashboard) {
-  console.log('stories', stories)
+  // console.log('stories', stories)
   if (stories.length == 0) {
-    $gallery.append('<li><h3 style="padding-top: 15px;" class="lead">No Stories found</h3></li>');
+    console.log('none', $gallery)
+    $gallery
+      .append(
+        '<li><h3 class="lead">No Stories found</h3></li>'
+      )
+      .show();
     return false;
   }
   const companyClass = `story-card--${location.href.match(/:\/\/((\w|-)+)\./)[1]}`;
   const locationClass = isDashboard ? 'story-card--small story-card--dashboard' : companyClass;
   const typeClass = 'story-card--card';
   const storyCardsHtml = stories.map((story) => {
-    console.log(story)
+    // console.log(story)
 
     // order matters here
     const statusClass = `story-card--${

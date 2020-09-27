@@ -6,7 +6,7 @@ export default {
   init() {
     const loadStories = $.Deferred();
     stories.table.init(loadStories);
-    stories.newStoryForm.init();
+    stories.newStoryForm.initSelectInputs();
     $.when(loadStories).then(onLoadStoriesSuccess, onLoadStoriesError)
   },
   addListeners() {
@@ -97,7 +97,6 @@ function getStory(e) {
   const $storyCard = $(this);
   const storySlug = $storyCard.data('story-slug');
   const customerSlug = $storyCard.data('customer-slug');
-  console.log($storyCard, storySlug, customerSlug)
   $storyCard.showLoading(true);
   $.ajax({
     method: 'GET',
@@ -126,7 +125,7 @@ function renderStory (html) {
 }
   
 function initStory() {
-  console.log('initStory()')
+  // console.log('initStory()')
   const showTab = () => (
     $('a[href=".edit-story"]')
       .one('shown.bs.tab', () => { window.scrollTo(0, 0); })
