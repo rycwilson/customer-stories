@@ -39,20 +39,7 @@ function storiesEditListeners () {
     }
   };
 
-   // bs validator will attempt to validate the image that existed prior to upload
-  // => check for new image before validating
-  var imageIsNew = function ($img) {
-    if ($img.attr('src') && $img.attr('src').includes('data:')) {
-      // console.log('image is new')
-      clearInterval(checkForNewImage);
-      if (!imageDidLoad($img)) {
-        checkImageLoaded = setInterval(imageDidLoad, 100, $img);
-      }
-      return true;
-    } else {
-      // console.log('image is not new')
-    }
-  };
+  
 
   storiesEditSettingsListeners();
   storiesEditContentListeners();

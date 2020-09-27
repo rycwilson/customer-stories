@@ -5,12 +5,11 @@ import stories from 'views/stories';
 export default {
   init() {
     const loadStories = $.Deferred();
+    $.when(loadStories).then(onLoadStoriesSuccess, onLoadStoriesError);
     stories.table.init(loadStories);
     stories.newStoryForm.initSelectInputs();
-    $.when(loadStories).then(onLoadStoriesSuccess, onLoadStoriesError)
   },
   addListeners() {
-    stories.newStoryForm.addListeners();
     $(document)
       .on('click', '#dashboard-gallery .story-card', getStory)
       .on('change', '#curate-filters select', onFilterChange)
@@ -46,7 +45,7 @@ const filterCookies = [
 ];
 
 function onLoadStoriesSuccess(e) {
-  initFilters();
+  initSelectInputs();
   preSelectFilters();
 }
 
@@ -95,47 +94,37 @@ function filterStories () {
 function getStory(e) {
   e.preventDefault();
   const $storyCard = $(this);
-  const storySlug = $storyCard.data('story-slug');
-  const customerSlug = $storyCard.data('customer-slug');
   $storyCard.showLoading(true);
   $.ajax({
     method: 'GET',
     dataType: 'html',
     url: `/stories/${$storyCard.data('story-id')}/edit`,
   })
-    .done((html, status, xhr) => {
-      // $.when(renderStory(html)).done(initStory)
-      $('#edit-story').empty().append(html);
-      initStory();
-
-      // replacing state ensures turbolinks:false for the first tab state
-      window.history.replaceState({ turbolinks: false }, null, '/curate');
-    
-      // default to true, though this will lead to unnecessary requests in the case
-      // of back/forward navigation (but that's better than not making a turbolinks
-      // request when necessary)
-      window.history.pushState(
-        { turbolinks: true }, null, '/curate/' + customerSlug + '/' + storySlug
-      );
-    });
-}
-
-function renderStory (html) { 
-  return () => $('#edit-story').empty().append(html); 
+    .then((html) => $('#edit-story').empty().append(html))
+    .then(stories.edit.init)
+    .then(modifyHistory($storyCard))
 }
   
-function initStory() {
-  // console.log('initStory()')
-  const showTab = () => (
-    $('a[href=".edit-story"]')
-      .one('shown.bs.tab', () => { window.scrollTo(0, 0); })
-      .tab('show')
-  );
-  Cookies.set('cs-edit-story-tab', '#story-settings');
-  // initStoriesEdit(showTab);
-}
+function modifyHistory() {
+  return ($storyCard) => {
+    const storySlug = $storyCard.data('story-slug');
+    const customerSlug = $storyCard.data('customer-slug');
 
-function initFilters() {
+    // replacing state ensures turbolinks:false for the first tab state
+    window.history.replaceState({ turbolinks: false }, null, '/curate');
+    
+    // default to true, though this will lead to unnecessary requests in the case
+    // of back/forward navigation (but that's better than not making a turbolinks
+    // request when necessary)
+    window.history.pushState(
+      { turbolinks: true }, 
+      null, 
+      `/curate/${$storyCard.data('customer-slug')}/${$storyCard.data('story-slug')}`
+    );
+  }
+}
+  
+function initSelectInputs() {
   $('#curate-filters select')
     .select2({
       theme: 'bootstrap',
@@ -176,40 +165,4 @@ function preSelectFilters() {
       .val(APP.current_user.id)
       .trigger('change', { auto: true });
   }
-}
-
-
-// the select2 boxes initialize synchronously, i.e. subsequent code doesn't
-// execute until initilization is complete.
-// pass the cbShowTab callback to the bs-switch onInit property
-function initStoriesEditSettings(shownTabHandler) {
-  var initSelectInputs = function () {
-        $('.story-settings.story-tags, #story-ctas-select')
-          .select2({
-            theme: 'bootstrap',
-            placeholder: 'Select'
-          })
-          .on('select2:select, select2:unselect, change.select2', function () {
-            $(this).next('.select2')
-                    .find('.select2-selection__choice__remove')
-                      .html('<i class="fa fa-fw fa-remove"></i>');
-          })
-          .trigger('change.select2');  // manipulate the remove button
-      };
-  var initSwitchInputs = function () {
-        $('.bs-switch.publish-control').bootstrapSwitch({
-          size: 'small',
-          onInit: function (e) {}
-        });
-      };
-  $.when(initSelectInputs, initSwitchInputs).done(function () {
-    if (shownTabHandler) {
-      window.scrollTo(0, 0);
-      shownTabHandler();
-    }
-    $('#story-settings-form').attr('data-init', true);
-  })    
-  initS3Upload();
-  initSelectInputs();
-  initSwitchInputs();
 }

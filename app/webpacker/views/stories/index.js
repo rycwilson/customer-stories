@@ -16,6 +16,7 @@ export default {
   },
   addListeners() {
     gallery.addListeners();
+    newStoryForm.addListeners();
     show.addListeners();
     edit.addListeners();
   }

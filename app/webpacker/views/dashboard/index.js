@@ -31,6 +31,21 @@ export default {
           setNavCookie(section)
         )
     });
+    $(document)
+      .on('click', '.nav-workflow a', onTabClick)
+  }
+}
+
+function onTabClick(e) {
+  e.preventDefault();
+  const currentPath = window.location.pathname;
+  const newPath = `/${$(this).attr('href').slice(1, $(this).attr('href').length)}`;
+  if ($('body').hasClass('companies show')) {
+    // replacing state ensures turbolinks:false for the first tab state
+    window.history.replaceState({ turbolinks: false }, null, currentPath);
+    window.history.pushState({ turbolinks: true }, null, newPath);
+  } else {
+    Turbolinks.visit(newPath);
   }
 }
   

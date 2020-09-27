@@ -7,16 +7,14 @@ import users from 'views/users';
 export function addAppListeners() {
   dashboard.addListeners();
   [companies, stories, users].forEach((resource) => resource.addListeners());
+  window.onpopstate = onPopState;
 }
 
 export function renderGallery($gallery, stories, isDashboard) {
   // console.log('stories', stories)
   if (stories.length == 0) {
-    console.log('none', $gallery)
     $gallery
-      .append(
-        '<li><h3 class="lead">No Stories found</h3></li>'
-      )
+      .append('<li><h3 class="lead">No Stories found</h3></li>')
       .show();
     return false;
   }
@@ -66,4 +64,38 @@ export function truncateStoryTitles() {
       }
     }
   });
+}
+
+function onPopState(e) {
+  console.log(onpopstate)
+  const dashboardPathMatch = window.location.pathname.match(
+    /(prospect|curate|promote|measure)(\/(\w|-)+)?/
+  );
+  const dashboardTab = dashboardPathMatch && `#${dashboardPathMatch[1]}`;
+  // const curateView = dashboardTab && (dashboardTab === '#curate') ?
+  //   (dashboardPathMatch[2] ? 'story' : 'stories') : 
+  //   null;
+  if (dashboardTab) {
+    console.log('well?', dashboardTab)
+    console.log($(`.nav-workflow a[href="${dashboardTab}"]`))
+    $(`.nav-workflow a[href="${dashboardTab}"]`).tab('show');
+    // if (curateView) {
+    //   if (curateView === 'stories') {
+    //     $('a[href=".curate-stories"]').tab('show'); 
+    //   } else {
+    //     $('a[href=".edit-story"]').tab('show');
+    //   }
+      
+    //   // don't scroll to panel
+    //   setTimeout(function() { window.scrollTo(0, 0); }, 1);
+    //   if (curateView === 'stories') {
+    //     $('#curate-filters .curator')
+    //       .val(
+    //         $('#curate-filters .curator').children('[value="' + CSP.current_user.id + '"]').val()
+    //       )
+    //       .trigger('change', { auto: true });
+    //   }
+    // }
+  }
+
 }

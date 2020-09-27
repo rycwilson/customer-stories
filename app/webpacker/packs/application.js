@@ -26,6 +26,8 @@ require('turbolinks').start();
 /* jquery-ui must appear before bootstrap, per https://stackoverflow.com/questions/13731400 */
 // import 'jquery-ui/ui/widget';
 import 'bootstrap-sass';
+import 'bootstrap-validator';
+import 'bootstrap-switch';
 import ResponsiveBootstrapToolkit from 'responsive-toolkit';
 import 'select2';
 import 'datatables.net-bs';
@@ -41,11 +43,6 @@ APP.init();
 
 function buildApp() {
   const app = { 
-    browser: {  // ref: http://stackoverflow.com/questions/9847580
-      isChrome: !!window.chrome && !!window.chrome.webstore,
-      isSafari: Object.prototype.toString.call(window.HTMLElement).indexOf('Constructor') > 0,
-      isFirefox: typeof InstallTrigger !== 'undefined'
-    },
     screenSize: undefined,
     init: () => {
       addTurbolinksListeners();
