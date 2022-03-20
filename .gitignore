@@ -24,6 +24,7 @@ yarn-error.log
 # dependencies
 /vendor/assets
 
+/.ruby-version
 
 
 # figaro-managed credentials
