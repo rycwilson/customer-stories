@@ -29,11 +29,15 @@
 
 .site.index {
 
+  .testimonial-content {
+    margin-bottom: 30px;
+  }
+
   .LI-profile-badge {
     @include LI-profile-badge(#fff);
-    width: 100%;
-    position: absolute;
-    bottom: 0;
+    // width: 100%;
+    // position: absolute;
+    // bottom: 0;
   }
 
   #cs-rel-container {
@@ -52,7 +56,8 @@
   }
 
   #section-testimonials {
-
+    padding-bottom: 115px;
+    
     .clients-list {
 
       li {
