@@ -29,7 +29,6 @@ gem 'multi_json'
 gem 'order_as_specified'
 gem 'pg'
 gem 'pretender'
-gem 'pry-byebug', '=1.3.3'  # https://stackoverflow.com/questions/32780971
 gem 'pry-rails' 
 gem 'pry-remote'
 gem 'pry-theme'
@@ -62,6 +61,7 @@ group :development, :test do
   # gem 'stackprof'
   # gem 'whenever', require: false
   gem 'better_errors'
+  gem 'pry-byebug'
   # Access an IRB console on exception pages or by using <%= console %> in views
 
   # Spring speeds up development by keeping your application running in the background. Read more: https://github.com/rails/spring
