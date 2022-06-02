@@ -7,7 +7,7 @@
 # Ignore bundler config; vs code config; mac finder files
 /.bundle
 /.vscode
-.DS_Store
+**/.DS_Store
 
 # Ignore all logfiles and tempfiles.
 /log
