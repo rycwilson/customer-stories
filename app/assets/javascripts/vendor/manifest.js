@@ -45,7 +45,7 @@
 // ref: http://stackoverflow.com/questions/18575582
 // https://github.com/maciej-gurban/responsive-bootstrap-toolkit
 
-//= require js-cookie/src/js.cookie
+//= require js-cookie/dist/js.cookie
 
 //= require local-time
 

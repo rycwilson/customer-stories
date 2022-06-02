@@ -27,10 +27,10 @@ module Csp
 
     # Bower asset paths
     # (lines 37-47 per bootstrap-sass docs re: using bower package)
-    Rails.root.join('vendor', 'assets', 'bower_components').to_s.tap do |bower_path|
-      config.sass.load_paths << bower_path
-      config.assets.paths << bower_path
-    end
+    # Rails.root.join('vendor', 'assets', 'bower_components').to_s.tap do |bower_path|
+    #   config.sass.load_paths << bower_path
+    #   config.assets.paths << bower_path
+    # end
     # Precompile Bootstrap fonts
     config.assets.precompile << %r(bootstrap-sass/assets/fonts/bootstrap/[\w-]+\.(?:eot|svg|ttf|woff2?)$)
 
