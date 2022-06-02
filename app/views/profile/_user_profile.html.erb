@@ -62,7 +62,7 @@
 
     <div class="form-group">
       <div class="col-sm-12 col-md-offset-3 col-md-8 text-right">
-        <button type="submit" class="btn btn-success" form="company-profile-form" style="width:114px">
+        <button type="submit" class="btn btn-success" form="user-profile-form" style="width:114px">
           <span>Save changes</span>
           <i class='fa fa-spin fa-circle-o-notch' style="display: none"></i>
           <i class='fa fa-check' style="display: none"></i>
@@ -75,7 +75,9 @@
     <div class="row">
 
       <div class="col-lg-3" style="display: flex; justify-content: flex-end; padding: 0">
-        <%= render('profile/user_photo', { user: user, user_form: f }) %>
+        <div class="form-group">
+          <%= render('profile/user_photo', { user: user, user_form: f }) %>
+        </div>
       </div>
 
       <div class="col-lg-6">

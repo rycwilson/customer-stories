@@ -93,16 +93,15 @@ function initS3Upload ($form) {
 
           } else {
             // note the image is being uploaded to s3 even if there's a validation error (autoupload)
-            if ($formGroup.is(':not(.has-error)')) {
-              // console.log('writing url ', url)
+            if ($formGroup.hasClass('has-error')) {
+              // console.log('error')
+            } else {
               if ($imageUrlInput) {
                 $imageUrlInput.val(url);
-
               } else {
                 $imageUrlInput = $('<input>', { type:'hidden', name: $fileInput.attr('name'), value: url });
                 $formGroup.append($imageUrlInput);
               }
-            } else {
             }
           }
 
