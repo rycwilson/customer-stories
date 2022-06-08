@@ -40,7 +40,10 @@ gem 'rack-cors'
 gem 'rack_password'
 gem 'rack-timeout', require: "rack/timeout/base"
 gem 'reverse_markdown'
-gem 'sassc-rails'
+
+gem 'bootstrap-sass', '~> 3.4.1'
+gem 'sassc-rails', '>= 2.1.0'
+
 gem 'sprockets', '~> 3'
 gem 'summernote-rails'
 gem 'turbolinks'

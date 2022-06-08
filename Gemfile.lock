@@ -54,6 +54,8 @@ GEM
       gyoku (>= 0.4.0)
       nokogiri
     arel (9.0.0)
+    autoprefixer-rails (10.4.7.0)
+      execjs (~> 2)
     awesome_print (1.9.2)
     aws-eventstream (1.2.0)
     aws-partitions (1.595.0)
@@ -100,6 +102,9 @@ GEM
     bindex (0.8.1)
     binding_of_caller (1.0.0)
       debug_inspector (>= 0.0.1)
+    bootstrap-sass (3.4.1)
+      autoprefixer-rails (>= 5.2.1)
+      sassc (>= 2.0.0)
     bootstrap-tab-history-rails (0.1.0)
       railties (>= 3.1)
     browser-timezone-rails (1.1.0)
@@ -373,6 +378,7 @@ DEPENDENCIES
   aws-sdk-s3 (~> 1)
   better_errors
   binding_of_caller
+  bootstrap-sass (~> 3.4.1)
   bootstrap-tab-history-rails
   browser-timezone-rails
   connection_pool
@@ -407,7 +413,7 @@ DEPENDENCIES
   rails_12factor
   rails_admin
   reverse_markdown
-  sassc-rails
+  sassc-rails (>= 2.1.0)
   spring
   sprockets (~> 3)
   summernote-rails
