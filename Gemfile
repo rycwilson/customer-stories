@@ -6,6 +6,7 @@ gem 'activerecord-import'
 gem 'awesome_print'
 gem 'aws-sdk-rails', '~> 3'
 gem 'aws-sdk-s3', '~> 1'
+gem 'bootsnap', require: false
 gem 'bootstrap-tab-history-rails'
 # gem 'bower-rails', '~> 0.11.0'
 gem 'browser-timezone-rails'
