@@ -408,7 +408,7 @@ DEPENDENCIES
   rack-cors
   rack-timeout
   rack_password
-  rails (~> 5)
+  rails (= 5.2.8)
   rails-html-sanitizer
   rails_12factor
   rails_admin
