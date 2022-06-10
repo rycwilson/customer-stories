@@ -5,6 +5,7 @@
 //= require jquery-ujs/src/rails
 //= require turbolinks
 //= require underscore/underscore
+//= require bootstrap-sprockets
 //= require_tree ./lib
 //= require vendor/vendor
 //= require companies/companies

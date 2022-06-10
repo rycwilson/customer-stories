@@ -7,8 +7,8 @@
 // => both import this file
 //
 $icon-font-path: 'bootstrap-sass/assets/fonts/bootstrap/';
-@import 'bootstrap-sass/assets/stylesheets/bootstrap-sprockets';
-@import 'bootstrap-sass/assets/stylesheets/bootstrap';
+@import 'bootstrap-sprockets';
+@import 'bootstrap';
 @import 'bootstrap-jasny/dist/css/jasny-bootstrap';
 @import 'font-awesome';
 @import 'base/variables';
