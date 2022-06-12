@@ -399,6 +399,8 @@ DEPENDENCIES
   googlecharts
   html_to_plain_text
   jquery-minicolors-rails
+  jquery-rails
+  jquery-ui-rails
   local_time
   multi_json
   order_as_specified

@@ -1,63 +1,55 @@
-
-//= require css-element-queries/src/ResizeSensor
-
-//= require jquery-csv/src/jquery.csv
-
 //= require modernizr/modernizr
+//= require css-element-queries/src/ResizeSensor
+//= require summernote
+//= require js-cookie/dist/js.cookie
 
+// DATE / TIME
+//= require local-time
+//= require moment/moment
+//= require browser_timezone_rails/set_time_zone
+
+// JQUERY PLUGINS
+//= require select2/dist/js/select2.full
+//= require jquery-csv/src/jquery.csv
+//= require jquery.minicolors
+//= require imagesloaded/imagesloaded.pkgd
+
+// DATATABLES
+//= require datatables
+//= require js/dataTables.editor
+//= require select2/editor.select2
+//= require integration/bootstrap/3/dataTables.bootstrap
+// require datatables-old/media/js/jquery.dataTables
+
+// BOOTSTRAP EXTENSIONS
+//= require bootstrap-jasny/js/fileinput
+//= require bootstrap-validator/dist/validator
+//= require bootstrap-switch/dist/js/bootstrap-switch
+//= require bootstrap-daterangepicker/daterangepicker
+//= require bootbox/bootbox
 //= require bootstrap-tab-history
 
-// mvp ready
+// Detect bootstrap3 breakpoints in javascript: 
+// http://stackoverflow.com/questions/18575582
+// https://github.com/maciej-gurban/responsive-bootstrap-toolkit
+//= require responsive-toolkit/dist/bootstrap-toolkit
+
+// MVP READY TEMPLATE
 //= require slimscroll/jquery.slimscroll
 //= require magnific-popup/dist/jquery.magnific-popup
+//= require flot/jquery.flot
 
-//= require DataTables/datatables
-//= require datatables-editor-trial/js/dataTables.editor
-//= require datatables-plugins/select2/editor.select2.js
-// = require datatables-old/media/js/jquery.dataTables
-//= require datatables-plugins/integration/bootstrap/3/dataTables.bootstrap
+// AWS S3 upload
+//= require jquery-ui/widget
+//= require jquery-file-upload/js/jquery.fileupload
 
-//= require bootstrap-jasny/js/fileinput
+
+// NO LONGER USED
+// require masonry/dist/masonry.pkgd
 // require mvpready-core
 // require mvpready-helpers
 // require mvpready-admin
 // require mvpready-landing
-
-//= require select2/dist/js/select2.full
-//= require summernote
-// = require masonry/dist/masonry.pkgd
-//= require imagesloaded/imagesloaded
-
-// s3 upload
-//= require jquery-ui/ui/widget
-//= require jquery-file-upload/js/jquery.fileupload
-
-//= require bootstrap-switch/dist/js/bootstrap-switch
-
-// = require jquery.inputmask/dist/inputmask/inputmask
-// = require jquery.inputmask/dist/inputmask/inputmask.phone.extensions
-// = require jquery.inputmask/dist/inputmask/jquery.inputmask
-
-//= require jquery.minicolors
-//= require flot/jquery.flot
-
-//= require responsive-toolkit/dist/bootstrap-toolkit
-// ref: http://stackoverflow.com/questions/18575582
-// https://github.com/maciej-gurban/responsive-bootstrap-toolkit
-
-//= require js-cookie/dist/js.cookie
-
-//= require local-time
-
-//= require moment/moment
-//= require bootstrap-daterangepicker/daterangepicker
-
-//= require browser_timezone_rails/set_time_zone
-
-//= require bootstrap-validator/dist/validator
-
-//= require bootbox/bootbox
-
-
-
-
+// require jquery.inputmask/dist/inputmask/inputmask
+// require jquery.inputmask/dist/inputmask/inputmask.phone.extensions
+// require jquery.inputmask/dist/inputmask/jquery.inputmask

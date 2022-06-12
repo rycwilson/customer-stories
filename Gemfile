@@ -23,7 +23,11 @@ gem 'gon'
 gem 'googlecharts'
 gem 'google-adwords-api', '1.5'
 gem 'html_to_plain_text'
+
+gem 'jquery-rails'
+gem 'jquery-ui-rails'
 gem 'jquery-minicolors-rails'
+
 gem 'local_time'
 # gem 'miro'
 gem 'multi_json'

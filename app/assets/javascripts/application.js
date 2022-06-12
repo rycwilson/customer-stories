@@ -1,11 +1,11 @@
 
 /* jquery-ui must appear before bootstrap, per https://stackoverflow.com/questions/13731400 */
-//= require jquery/dist/jquery
+//= require jquery3
+//= require rails-ujs
 //= require jquery-ui
-//= require jquery-ujs/src/rails
+//= require bootstrap-sprockets
 //= require turbolinks
 //= require underscore/underscore
-//= require bootstrap-sprockets
 //= require_tree ./lib
 //= require vendor/vendor
 //= require companies/companies
