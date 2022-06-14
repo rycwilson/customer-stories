@@ -1,7 +1,7 @@
 
 /* jquery-ui must appear before bootstrap, per https://stackoverflow.com/questions/13731400 */
 //= require jquery3
-//= require rails-ujs
+//= require jquery_ujs
 //= require jquery-ui
 //= require bootstrap-sprockets
 //= require turbolinks
