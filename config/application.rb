@@ -26,7 +26,8 @@ module Csp
     # custom fonts
     # ref https://gist.github.com/anotheruiguy/7379570
     config.assets.paths << Rails.root.join('app', 'assets', 'fonts')
-    config.assets.paths << Rails.root.join('vendor', 'assets', 'node_modules')
+
+    # config.assets.paths << Rails.root.join('vendor', 'assets', 'node_modules')
 
     # bower setup no longer needed:
     # Rails.root.join('vendor', 'assets', 'bower_components').to_s.tap do |bower_path|
