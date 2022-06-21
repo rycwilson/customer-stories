@@ -4,28 +4,33 @@
 # or operating system, you probably want to add a global ignore instead:
 #   git config --global core.excludesfile '~/.gitignore_global'
 
-# Ignore bundler config; vs code config; mac finder files
-/.bundle
+/.ruby-version
+
+# editor config
 /.vscode
+
+# mac system files
 **/.DS_Store
 
-# Ignore all logfiles and tempfiles.
+# log and temp files
 /log
 !/log/.keep
 /tmp
-yarn-error.log
 
+# from webpacker branch
 /public/packs
 /node_modules
+/yarn-error.log
+/vendor/assets/yarn.lock
 
 # ssl certificates
 /ssl
 
 # dependencies
-/vendor/assets
-
-/.ruby-version
-
+/vendor/assets/*
+!/vendor/assets/javascripts
+!/vendor/assets/stylesheets
+!/vendor/assets/*.zip
 
 # figaro-managed credentials
 # no push to either github or heroku
