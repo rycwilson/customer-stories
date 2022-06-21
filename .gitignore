@@ -28,6 +28,8 @@
 
 # dependencies
 /vendor/assets/*
+!/vendor/assets/package.json
+!/vendor/assets/package-lock.json
 !/vendor/assets/javascripts
 !/vendor/assets/stylesheets
 !/vendor/assets/*.zip
