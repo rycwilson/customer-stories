@@ -24,8 +24,8 @@ body.plugin-demo {
   // => https://github.com/sass/sass/issues/1251
   @import './font_awesome';
 
-  @import '../../../../../vendor/assets/bower_components/bootstrap-sass/assets/stylesheets/bootstrap-plugins'; 
-  @import '../../../../../vendor/assets/bower_components/bootstrap-horizon/bootstrap-horizon';
+  @import 'bootstrap-plugins'; 
+  @import 'bootstrap-horizon/src/bootstrap-horizon';
   @import '../../base/globals';
   @import 'overlays/main';
   @import '../stories/show/show';

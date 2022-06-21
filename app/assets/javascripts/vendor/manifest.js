@@ -35,13 +35,13 @@
 //= require responsive-toolkit/dist/bootstrap-toolkit
 
 // MVP READY TEMPLATE
-//= require slimscroll/jquery.slimscroll
+// require slimscroll/jquery.slimscroll
 //= require magnific-popup/dist/jquery.magnific-popup
 //= require flot/jquery.flot
 
 // AWS S3 upload
 //= require jquery-ui/widget
-//= require jquery-file-upload/js/jquery.fileupload
+//= require blueimp-file-upload/js/jquery.fileupload
 
 
 // NO LONGER USED
