@@ -107,7 +107,10 @@ function storiesEditSettingsListeners () {
     .on('focus', '.hidden-link input', function () { $(this).blur(); })
     .on('click', '.hidden-link__refresh', function () {
       $(this).blur();
-      var hiddenLink = [location.origin, chance.guid()].join('/');
+      // var hiddenLink = [location.origin, chance.guid()].join('/');
+
+      // https://stackoverflow.com/questions/105034/how-to-create-a-guid-uuid
+      var hiddenLink = window.location.origin + '/' + Date.now().toString(36) + Math.random().toString(36).substring(2);
       $('.hidden-link input').val(hiddenLink);
       $('.hidden-link__copy')
         .attr('title', 'Save changes to enable Copy')
