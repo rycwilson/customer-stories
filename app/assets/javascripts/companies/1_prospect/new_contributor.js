@@ -51,7 +51,7 @@ function newContributorListeners() {
           .select2({
             theme: "bootstrap",
             tags: true,
-            selectOnClose: true,
+            // selectOnClose: true,
             placeholder: 'Select or Create',
             data: successOptionsData
           });

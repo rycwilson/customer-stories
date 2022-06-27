@@ -247,7 +247,7 @@ function updateSelectOptions (company, successes) {
           $modal.find('select.customer, select.success').select2({
             theme: "bootstrap",
             tags: true,  // to allow custom input
-            selectOnClose: true,
+            // selectOnClose: true,
             placeholder: 'Select or Create',
           });
           $modal.find('select.referrer, select.contributor').select2({

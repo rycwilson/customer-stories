@@ -50,7 +50,7 @@ function initSelect2 () {
   $("select.customer:not(.modal.in select)").select2({
     theme: "bootstrap",
     tags: true,  // to allow custom input
-    selectOnClose: true,
+    // selectOnClose: true,
     placeholder: 'Select or Create',
   });
 
@@ -60,7 +60,7 @@ function initSelect2 () {
   $("select.success:not(.modal.in select)").select2({
     theme: "bootstrap",
     tags: true,  // to allow custom input
-    selectOnClose: true,
+    // selectOnClose: true,
     placeholder: 'Select or Create',
   });
 
@@ -297,7 +297,7 @@ function initSelect2 () {
       theme: 'bootstrap',
       tags: true,
       placeholder: 'Add tags',
-      selectOnClose: true
+      // selectOnClose: true
     })
     .on('select2:select, select2:unselect, change.select2', function () {
       $(this).next('.select2')

@@ -78,13 +78,13 @@
 
             <label class='col-sm-3 control-label'>Customer</label>
             <div class="col-sm-9">
-              <%= collection_select(nil, nil,
-                    company.customers.sort_by do |customer|
-                      customer.name
-                    end,
-                    :id, :name, { include_blank: true },
-                    { name: '', class: 'new-success customer form-control', style: 'width:100%', required: true }
-                  ) %>
+              <%= select(
+                nil, 
+                nil,
+                company.customers.sort_by { |c| c.name }.map { |c| [c.name, c.id] },  
+                { include_blank: true },
+                { name: '', class: 'new-success customer form-control', style: 'width:100%', required: true }
+              ) %>
               <span class="help-block">Required</span>
             </div>
 
