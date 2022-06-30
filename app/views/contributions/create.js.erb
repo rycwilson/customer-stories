@@ -56,7 +56,8 @@
         updateSelectOptions(company, $('#successes-table').DataTable().rows().data().toArray());
         $('.contributors.curator-select').val(contribution.success.curator.id).trigger('change')
         $('#contributors-filter').val('success-' + contribution.success.id).trigger('change');
-        $('#contributors-filter').select2('focus');
+        //$('#contributors-filter').select2('focus');  // results in error 
+        $('#contributors-filter').next('.select2').addClass('select2-container--focus');
         toggleFormDone($('#new-contributor-form'));
         $modal
           .one('hidden.bs.modal', function () {

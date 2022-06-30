@@ -61,7 +61,7 @@ function successActionsListeners () {
     .on('click', '.success-actions .manage-contributors', function (e) {
       var successId = $(this).closest('tr').data('success-id');
       $('#contributors-filter').val('success-' + successId).trigger('change');
-      $('#contributors-filter').select2('focus');
+      $('#contributors-filter').next('.select2').addClass('select2-container--focus');
       $(document)
         .one('click', function () {
           $('#contributors-filter').next().removeClass('select2-container--focus');

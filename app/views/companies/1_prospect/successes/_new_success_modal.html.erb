@@ -15,10 +15,11 @@
           <ul class="list-unstyled"></ul>
         </div>
 
-        <%= form_for(
-              Success.new,
-              url: company_successes_path(company),
-              html: { id: 'new-success-form', remote: true, class: 'form-horizontal' },
+        <%= form_with(
+              model: [company, Success.new],
+              format: :js,
+              local: false,
+              html: { id: 'new-success-form', class: 'form-horizontal' },
             ) do |success_form| %>
 
           <%= success_form.hidden_field(:customer_id) %>
