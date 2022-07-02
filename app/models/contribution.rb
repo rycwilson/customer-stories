@@ -22,22 +22,23 @@ class Contribution < ApplicationRecord
 
   # associations
   belongs_to :success, inverse_of: :contributions
-  belongs_to :contributor, class_name: 'User', foreign_key: 'contributor_id'
+  belongs_to :contributor, class_name: 'User', foreign_key: 'contributor_id', optional: true
 
   # this is a handy way to select a limited set of attributes
   belongs_to(
     :win_story_contributor, 
     -> { select('users.id, users.first_name, users.last_name, users.email, users.linkedin_url') }, 
     class_name: 'User', 
-    foreign_key: 'contributor_id'
+    foreign_key: 'contributor_id',
+    optional: true
   )
-  belongs_to :referrer, class_name: 'User', foreign_key: 'referrer_id'
+  belongs_to :referrer, class_name: 'User', foreign_key: 'referrer_id', optional: true
   has_one :customer, through: :success
   has_one :company, through: :success
   has_one :curator, through: :success
   has_one :story, through: :success
   has_one :email_contribution_request, dependent: :destroy
-  belongs_to :invitation_template
+  belongs_to :invitation_template, optional: true
   has_many :contributor_questions, through: :invitation_template
   alias_attribute :questions, :contributor_questions
   has_many :contributor_answers, dependent: :destroy do
