@@ -65,17 +65,15 @@ group :production do
 end
 
 group :development, :test do
-  # gem 'rack-mini-profiler'
-  # gem 'flamegraph'
-  # gem 'stackprof'
-  # gem 'whenever', require: false
-  gem 'better_errors'
+  gem 'rspec-rails', '~> 5'
   gem 'pry-byebug'
-  # Access an IRB console on exception pages or by using <%= console %> in views
-
-  # Spring speeds up development by keeping your application running in the background. Read more: https://github.com/rails/spring
-  gem 'spring'
-  gem 'web-console'
   gem 'binding_of_caller'
+  gem 'better_errors'
 
+  # Spring speeds up development by keeping your application running in the background. 
+  # Read more: https://github.com/rails/spring
+  gem 'spring'
+
+  # Access an IRB console on exception pages or by using <%= console %> in views
+  gem 'web-console'
 end
