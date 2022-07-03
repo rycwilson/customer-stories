@@ -51,6 +51,8 @@ class Success < ApplicationRecord
   has_many :results, -> { order(created_at: :asc) }, dependent: :destroy
   has_many :ctas_successes, dependent: :destroy
   has_many :ctas, through: :ctas_successes, source: :call_to_action
+  
+  # default_scope { order(name: :asc) }
 
   validates_uniqueness_of(:name, scope: :customer_id)
 

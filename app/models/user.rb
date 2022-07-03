@@ -2,7 +2,7 @@
 class User < ApplicationRecord
   # RYAN = self.find_by(email:'***REMOVED***')
 
-  belongs_to :company
+  belongs_to :company, optional: true
   validates :first_name, presence: true
   validates :last_name, presence: true
   validates :phone, format: { without: /_/ }
