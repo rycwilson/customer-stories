@@ -88,8 +88,11 @@ class Contribution < ApplicationRecord
     end
   )
 
-  after_commit(on: [:create, :destroy]) do 
-    self.company.expire_ll_cache('successes-json', 'contributions-json') 
+  after_commit(on: [:create, :destroy]) do
+    # TODO: Why doesn't self.company association method work on destroy?
+    # TODO ... probably because associated models have been destroyed - changed bahavior in rails 5?
+    # self.company.expire_ll_cache('successes-json', 'contributions-json') 
+    self.success.customer.company.expire_ll_cache('successes-json', 'contributions-json') 
   end
 
   after_update_commit do
