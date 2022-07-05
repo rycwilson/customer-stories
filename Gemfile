@@ -4,8 +4,8 @@ source 'https://rubygems.org'
 
 gem 'activerecord-import'
 gem 'awesome_print'
-gem 'aws-sdk-rails', '~> 3'
-gem 'aws-sdk-s3', '~> 1'
+gem 'aws-sdk-rails', '~> 3.0'
+gem 'aws-sdk-s3', '~> 1.0'
 gem 'bootsnap', require: false
 gem 'bootstrap-tab-history-rails'
 # gem 'bower-rails', '~> 0.11.0'
@@ -49,12 +49,12 @@ gem 'reverse_markdown'
 gem 'bootstrap-sass', '~> 3.4.1'
 gem 'sassc-rails', '>= 2.1.0'
 
-gem 'sprockets', '~> 3'
+gem 'sprockets', '~> 3.0'
 gem 'summernote-rails'
 gem 'turbolinks'
 gem 'typhoeus'
 gem 'uglifier'
-gem 'wicked_pdf', '~> 2'
+gem 'wicked_pdf', '~> 2.0'
 gem 'wkhtmltopdf-binary'
 
 group :production do
@@ -70,7 +70,7 @@ group :development do
 end
 
 group :development, :test do
-  gem 'rspec-rails', '~> 5'
+  gem 'rspec-rails', '~> 5.0'
   gem 'pry-byebug'
   gem 'binding_of_caller'
   gem 'better_errors'

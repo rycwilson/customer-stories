@@ -393,8 +393,8 @@ PLATFORMS
 DEPENDENCIES
   activerecord-import
   awesome_print
-  aws-sdk-rails (~> 3)
-  aws-sdk-s3 (~> 1)
+  aws-sdk-rails (~> 3.0)
+  aws-sdk-s3 (~> 1.0)
   better_errors
   binding_of_caller
   bootsnap
@@ -435,16 +435,16 @@ DEPENDENCIES
   rails_12factor
   rails_admin
   reverse_markdown
-  rspec-rails (~> 5)
+  rspec-rails (~> 5.0)
   sassc-rails (>= 2.1.0)
   spring
-  sprockets (~> 3)
+  sprockets (~> 3.0)
   summernote-rails
   turbolinks
   typhoeus
   uglifier
   web-console
-  wicked_pdf (~> 2)
+  wicked_pdf (~> 2.0)
   wkhtmltopdf-binary
 
 RUBY VERSION
