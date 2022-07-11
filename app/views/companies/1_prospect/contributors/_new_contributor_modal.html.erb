@@ -72,12 +72,12 @@
             <div class="col-sm-9">
 
               <%= select(
-                    nil, 
-                    nil,
-                    company.successes.sort_by { |s| s.name }.map { |s| [s.name, s.id] },
-                    { include_blank: true },
-                    { class: 'new-contributor success form-control', style: 'width:100%', required: true }
-                  ) %>
+                nil, 
+                nil,
+                company.successes.sort_by { |s| s.name }.map { |s| [s.name, s.id] },
+                { include_blank: true },
+                { class: 'new-contributor success form-control', style: 'width:100%', required: true }
+              ) %>
 
               <span class="help-block">Required</span>
 
