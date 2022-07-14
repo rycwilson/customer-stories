@@ -49,6 +49,7 @@ gem 'reverse_markdown'
 gem 'bootstrap-sass', '~> 3.4.1'
 gem 'sassc-rails', '>= 2.1.0'
 
+gem 'slim-rails', '~> 3.0'
 gem 'sprockets', '~> 3.0'
 gem 'summernote-rails'
 gem 'turbolinks'
