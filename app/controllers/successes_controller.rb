@@ -8,22 +8,23 @@ class SuccessesController < ApplicationController
     @success = Success.find(params[:id])
   end
   skip_before_action(
-    :verify_authenticity_token,
-    only: [:create],
+    :verify_authenticity_token, 
+    only: [:create], 
     if: -> { params[:zapier_create].present? }
   )
 
   def zapier_trigger
     company = current_user.company
-    data = company.successes.select { |s| s.win_story_completed? && s.curator_id == params['curator_id'].to_i }
-                  .to_json({
-                    only: [:id, :name, :win_story_html, :win_story_text, :win_story_markdown],
-                    include: {
-                      customer: {
-                        only: [:name, :description, :logo_url]
-                      }
-                    }
-                  })
+    data = company.successes
+      .select { |s| s.win_story_completed? && s.curator_id == params['curator_id'].to_i }
+      .to_json({
+        only: [:id, :name, :win_story_html, :win_story_text, :win_story_markdown],
+        include: {
+          customer: {
+            only: [:name, :description, :logo_url]
+          }
+        }
+      })
     respond_to { |format| format.json { render({ json: data }) } }
   end
 

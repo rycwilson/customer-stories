@@ -363,24 +363,22 @@ function newSuccessListeners () {
       }
     })
 
-    .on('change', 'select.new-success.customer', function () {
-      var $form = $('#new-success-form');
-      customerVal = $(this).val();
-      customerId = isNaN(customerVal) ? null : customerVal;
-
-      // update hidden customer_id
+    .on('change', 'select.new-success.customer', (e) => {
+      const $form = $('#new-success-form');
+      const customerVal = $(e.target).val();
+      const customerId = isNaN(customerVal) ? null : customerVal;
       $form.find('#success_customer_id').val(customerId);
-
       if (customerId) {
-        // turn off customer attributes
-        $form.find('input[id*="customer_attributes"]').each(function () {
-            $(this).prop('disabled', true);
-          });
+        // disable customer attributes
+        $form
+          .find('input[id*="customer_attributes"]')
+          .each(function disableCustomerAttrs() { $(this).prop('disabled', true) });
       } else {
         // update and enable customer attributes
-        $form.find('input[id*="customer_attributes_id"]').val('');
-        $form.find('input[id*="customer_attributes_name"]').val(customerVal);
-        $form.find('input[id*="customer_attributes"]').prop('disabled', false);
+        $form
+          .find('input[id*="customer_attributes_id"]').val('').end()
+          .find('input[id*="customer_attributes_name"]').val(customerVal).end()
+          .find('input[id*="customer_attributes"]').prop('disabled', false);
       }
     })
 
