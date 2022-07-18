@@ -176,7 +176,7 @@
           // display: inline-block;  // so it can be centered
           margin-bottom: 0;
           li {
-            font-size: 14px; // !important;
+            font-size: 14px; // important;
             margin-bottom: 10px;
             padding-left: 6px;
           }
@@ -188,15 +188,15 @@
       }
       @media only screen and (min-width: 768px) {
         span, a {
-          font-size: 13px; // !important;
+          font-size: 13px; // important;
         }
       }
       @media only screen and (min-width: 992px) {
         i {
-          font-size: 15px; // !important;
+          font-size: 15px; // important;
         }
         span, a {
-          font-size: 14px; // !important;
+          font-size: 14px; // important;
         }
       }
     }
