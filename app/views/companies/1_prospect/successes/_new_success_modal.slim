@@ -5,15 +5,15 @@
       .modal-header 
         button.close type="button" data-dismiss="modal" aria-label="Close"
           span aria-hidden="true"
-            |&times;
+            | &times;
         h4.modal-title
-          |New Customer Win(s)
+          | New Customer Win(s)
 
       .modal-body
 
         .new-records 
           label
-            |Added the following Customer Wins 
+            | Added the following Customer Wins 
             ul.list-unstyled
 
         = form_with( \
@@ -30,26 +30,26 @@
 
           .form-group.source
             label.col-sm-3.control-label
-              |Source
+              | Source
             .col-sm-9
               .btn-group style="margin-bottom: 10px;"
                 = label_tag('source_create', class: 'radio-inline') do
                   = radio_button_tag('source', 'create', true)
-                  |New Customer Win
+                  | New Customer Win
                 = label_tag('source_import', class: 'radio-inline') do
                   = radio_button_tag('source', 'import')
-                  |Import CSV File
+                  | Import CSV File
 
           .form-group.csv-file.required-input
             label.col-sm-3.control-label
-              |File
+              | File
             .col-sm-9
 
               .fileinput.fileinput-new.input-group data-provides="fileinput"
                 .form-control data-trigger="fileinput"
                   i.glyphicon.glyphicon-file.fileinput-exists
                   .fileinput-filename.placeholder 
-                    |Upload
+                    | Upload
                 .input-group-addon.btn.btn-default.btn-file
                   label for="csv-file-input"
                     i.fa.fa-fw.fa-upload
@@ -58,7 +58,7 @@
 
           .form-group.customer.required-input
             label.col-sm-3.control-label
-              |Customer
+              | Customer
             .col-sm-9
               = select( \
                 nil, \
@@ -67,11 +67,11 @@
                 { include_blank: true }, \
                 { name: '', class: 'new-success customer form-control', style: 'width:100%', required: true })
               span.help-block 
-                |Required
+                | Required
 
           .form-group.required-input 
             label.col-sm-3.control-label for="success_name" 
-              |Name
+              | Name
             .col-sm-9
               = success_form.text_field( \
                 :name, \
@@ -79,11 +79,11 @@
                 required: true, \
                 placeholder: 'Name of Project / Deal / Opportunity from CRM')
               span.help-block 
-                |Required 
+                | Required 
 
           .form-group.curator.required-input
             label.col-sm-3.control-label for="success_curator_id"
-              |Curator
+              | Curator
             .col-sm-9
               = success_form.collection_select( \
                 :curator_id, \
@@ -93,7 +93,7 @@
                 { include_blank: true }, \
                 { class: 'new-success curator form-control', style: 'width:100%', required: true })
               span.help-block
-                |Required
+                | Required
 
           = success_form.fields_for(:contributions, success_form.object.contributions.build) do |contribution_form|
             / = contribution_form.hidden_field( \
@@ -103,7 +103,7 @@
 
             .form-group.referrer
               label.col-sm-3.control-label for="referrer_id"
-                |Referred by
+                | Referred by
               .col-sm-9
                 = contribution_form.collection_select( \
                   :referrer_id, \
@@ -127,7 +127,7 @@
             = contribution_form.hidden_field(:success_contact, value: true)
             .form-group.contributor
               label.col-sm-3.control-label for="contributor_id"
-                |Customer Contact
+                | Customer Contact
               .col-sm-9
                 = contribution_form.collection_select( \
                   :contributor_id, \
@@ -145,7 +145,7 @@
 
           .form-group.win-story
             label.col-sm-3.control-label for="success_win_story_html"
-              |Description
+              | Description
             .col-sm-9
               = success_form.text_area( \
                 :win_story_html, \
@@ -157,6 +157,6 @@
         / <!-- <button type="reset" class="btn btn-default" data-dismiss="modal">Cancel</button> -->
         button.btn.btn-success.text-center type="submit" style="width:80px" form="new-success-form"
           span 
-            |Create
+            | Create
           i.fa.fa-spin.fa-circle-o-notch style="display:none"
           i.fa.fa-check style="display:none"

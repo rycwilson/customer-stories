@@ -6,9 +6,9 @@
       .modal-header
         button.close type="button" data-dismiss="modal" aria-label="Close"
           span aria-hidden="true"
-            |&times;
+            | &times;
         h4.modal-title
-          |New Contributor
+          | New Contributor
 
       .modal-body
 
@@ -29,8 +29,8 @@
               = customer_form.hidden_field(:company_id, value: company.id)
 
           .form-group.customer.required-input
-            .col-sm-3.control-label
-              |Customer
+            label.col-sm-3.control-label
+              | Customer
             .col-sm-9
               = collection_select( \
                 nil, \
@@ -44,11 +44,11 @@
                 required: true })
 
               span.help-block
-                |Required
+                | Required
 
           .form-group.success.required-input
             label.col-sm-3.control-label
-              |Customer Win
+              | Customer Win
             .col-sm-9
               = select( \
                 nil, \
@@ -57,11 +57,11 @@
                 { include_blank: true }, \
                 { class: 'new-contributor success form-control', style: 'width:100%', required: true })
               span.help-block
-                |Required
+                | Required
 
           .form-group.contributor.required-input
             label.col-sm-3.control-label for="contribution_contributor_id"
-              |Contributor
+              | Contributor
             .col-sm-9
               = contribution_form.collection_select( \
                 :contributor_id, \
@@ -73,7 +73,7 @@
                 { include_blank: true }, \
                 { class: 'new-contributor contributor form-control', style: 'width:100%', required: true })
               span.help-block
-                |Required
+                | Required
 
           = render( \
             'companies/shared/create_contact', \
@@ -82,7 +82,7 @@
           .form-group.invitation-template
             label.col-sm-3.control-label for="contribution_invitation_template_id"
               span
-                |Invitation Template
+                | Invitation Template
             .col-sm-9
               = contribution_form.collection_select( \
                 :invitation_template_id, \
@@ -94,7 +94,7 @@
 
           .form-group.referrer
             label.col-sm-3.control-label for='contribution_referrer_id'
-              |Referred by
+              | Referred by
             .col-sm-9
               = contribution_form.collection_select( \
                 :referrer_id, \
@@ -113,6 +113,6 @@
       .modal-footer
         button.btn.btn-success.text-center type="submit" style='width:132px' form='new-contributor-form'
           span
-            |Add Contributor
+            | Add Contributor
           i.fa.fa-spin.fa-circle-o-notch style="display:none"
           i.fa.fa-check style="display:none"

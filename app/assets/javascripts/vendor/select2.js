@@ -5,7 +5,6 @@
   Only one .select2() call per element will work, others ignored
 */
 function initSelect2 () {
-
   var prependTagType = function () {
     var tagId, tagText;
     $('.search-and-filters .select2-selection__rendered li:not(:last-of-type)')
@@ -47,53 +46,50 @@ function initSelect2 () {
   /**
    * customer (includes new success, new contributor, new story)
    */
-  $("select.customer:not(.modal.in select)").select2({
-    theme: "bootstrap",
-    tags: true,  // to allow custom input
-    // selectOnClose: true,
-    placeholder: 'Select or Create',
-  });
+  $('.modal:not(.in) select.customer')
+    .select2({
+      theme: 'bootstrap',
+      tags: true,               // allows for custom input
+      selectOnClose: true,
+      placeholder: 'Select or Create',
+    })
 
   /**
    * success (includes new contributor, new story)
    */
-  $("select.success:not(.modal.in select)").select2({
-    theme: "bootstrap",
-    tags: true,  // to allow custom input
-    // selectOnClose: true,
-    placeholder: 'Select or Create',
-  });
+  $('.modal:not(.in) select.success')
+    .select2({
+      theme: 'bootstrap',
+      tags: true,
+      selectOnClose: true,
+      placeholder: 'Select or Create',
+    })
 
   /**
    * contributor (includes new success, new contributor)
-   */
-  $('select.contributor:not(.modal.in select)').select2({
-    theme: 'bootstrap',
-    // minimumResultsForSearch: -1,
-    placeholder: 'Select or Create'
-  });
-
-  /**
    * referrer (includes new success, new referrer)
    */
-  $('select.referrer:not(.modal.in)').select2({
-    theme: 'bootstrap',
-    placeholder: 'Select or Create'
-  });
+  $('.modal:not(.in) select.contributor, select.referrer')
+    .select2({
+      theme: 'bootstrap',
+      placeholder: 'Select or Create'
+    });
+
+  // https://github.com/select2/select2/issues/5993
+  $('.modal:not(.in)')
+    .find('select.customer, select.success, select.contributor, select.referrer')
+      .on('select2:open', (e) => {
+        document.querySelector('.select2-container--open .select2-search__field').focus();
+      })
 
   /**
    * curator (includes new success, new contributor)
+   * invitation template
    */
-   $('.new-success.curator').select2({
+   $('.new-success.curator, .new-contributor.invitation-template').select2({
      theme: 'bootstrap',
      placeholder: 'Select'
    });
-
-  $('.new-contributor.invitation-template').select2({
-    theme: "bootstrap",
-    placeholder: 'Select'
-  });
-
 
   /**
    * may not be present if datatables not yet rendered
@@ -423,7 +419,7 @@ function initSelect2 () {
   // this works, but only hides options on removing a tag
   // for hiding options whether adding or removing a tag, css is used to hide the results
   // ref: https://github.com/select2/select2/issues/3320
-  function select2Listeners () {
+  function select2Listeners (foo, bar, lorem) {
       // .on('select2:unselecting', function (e) {
       //   $(this).data('unselecting', true);
       // })
