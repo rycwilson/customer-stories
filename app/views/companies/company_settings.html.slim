@@ -1,0 +1,89 @@
+
+- content_for(:head) do
+  meta name="turbolinks-cache-control" content="no-cache"
+
+= render( \
+    'shared/navbars/company_nav', 
+    { company: @company, workflow_stage: @workflow_stage })
+
+.container
+  .row
+    .col-sm-4.col-lg-3.layout-sidebar
+
+      ul.nav.nav--company class=('nav--new-company' if action_name == 'new')
+        li class=('active' if @tab == '#edit-company-profile' || @tab.nil?)
+          a href="#edit-company-profile" data-toggle="tab"
+            i.fa.fa-fw.fa-globe
+            span
+              | Company Profile
+        
+        - unless action_name == 'new'
+
+          li class=('active' if @tab == '#edit-crowdsource')
+            a {
+              href="#edit-crowdsource" 
+              class=('disabled-tab' if @company.new_record?)
+              data-toggle="tab" }
+              i.fa.fa-fw.fa-users
+              span
+                | Crowdsource Settings
+
+          li class=('active' if @tab == '#edit-plugins')
+            a {
+              href="#edit-plugins" 
+              class=('disabled-tab' if @company.new_record?)
+              data-toggle="tab" }
+              i.fa.fa-fw.fa-plug style="font-size:15px; top:2px; margin-left:2px"
+              span
+                | Customer Stories Plugin
+          li class=('active' if @tab == '#edit-ctas')
+            a {
+              href="#edit-ctas" 
+              class=('disabled-tab' if @company.new_record?)
+              data-toggle="tab" }
+              i.fa.fa-fw.fa-hand-pointer-o
+              span
+                | Link & Form CTAs
+          li class=('active' if @tab == '#edit-tags')
+            a {
+              href="#edit-tags" 
+              class=('disabled-tab' if @company.new_record?)
+              data-toggle="tab" }
+              i.fa.fa-fw.fa-tags
+              span
+                | Story Tags
+
+    .col-sm-8.col-lg-9.layout-main
+      .tab-content
+
+        #edit-company-profile.tab-pane.fade {
+          class=('active in' if @tab == '#edit-company-profile' || @tab.nil?)
+          role="tabpanel" }
+          - cache(@company) do
+            = render( \
+                'companies/settings/company_profile', 
+                { company: @company, form_options: @form_options })
+
+        - unless action_name == 'new'
+
+          #edit-crowdsource.tab-pane.fade {
+            class=('active in' if @tab == '#edit-crowdsource')
+            role="tabpanel" }
+            - cache("#{@company.subdomain}/crowdsource", skip_digest: true) do
+              = render( \
+                  'companies/settings/invitation_templates',
+                  { company: @company, templates_select: @templates_select })
+          
+          #edit-plugins.tab-pane.fade {
+            class=('active in' if @tab == '#edit-plugins') 
+            role="tabpanel" }
+            - cache("#{@company.subdomain}/plugin-config", skip_digest: true) do
+              = render('plugins/config', { company: @company })
+
+          #edit-ctas.tab-pane.fade class=('active in' if @tab == '#edit-ctas') role="tabpanel"
+            - cache("#{@company.subdomain}/edit-ctas", skip_digest: true) do
+              = render('companies/settings/ctas', { company: @company })
+
+          #edit-tags.tab-pane.fade class=('active in' if @tab == '#edit-tags') role="tabpanel"
+            - cache("#{@company.subdomain}/story-tags", skip_digest: true) do
+              = render('companies/settings/story_tags', { company: @company })

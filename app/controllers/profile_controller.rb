@@ -16,7 +16,7 @@ class ProfileController < ApplicationController
     'kturner@varmour.com'
   ]
 
-  def switch 
+  def switch
     session[:original_user_id] ||= current_user.id
     impersonate_user(User.find(params[:switch_user_id]))
 

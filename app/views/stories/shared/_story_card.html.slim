@@ -1,0 +1,50 @@
+
+/ these things only affect plugins
+- plugin_type = plugin_type || nil
+- background = background || nil
+- is_grayscale = is_grayscale || nil
+
+div {
+  class="#{card_class}" 
+  data-story-id="#{story.id}" 
+  style="background-image: url(#{story.og_image_url})" }
+
+  / grid__item is for the overlays; not implemented internally
+  a.story-card__link.grid__item {
+    href="#{story.csp_story_link(is_dashboard, is_plugin, is_external, plugin_type)}"
+    class="#{story.status}"
+    class=('grid__item--carousel' if plugin_type == 'carousel')
+    class=('has-video' if story.video_url.present?)
+    class=("bg-#{background}" if background)
+    target=('_blank' if is_external)
+    data-customer=(story.customer.name.to_json if !is_external)
+    data-logosrc=(story.customer.logo_url if !is_external)
+    data-summary=(story.summary&.to_json if !is_external)
+    data-quote=(story.quote&.to_json if !is_external)
+    data-quote-attr-name=(story.quote.attr_name&.to_json if !is_external)
+    data-quote-attr-title=(story.quote_attr_title&.to_json if !is_external)
+    data-preview-contributor=""> }
+
+    - if card_class.include?('card-image')
+      img.story-card__logo src="#{story.customer.logo_url || LOGO_PLACEHOLDER_URL}"
+      .story-card__hover-view
+        .story-card__title
+          p
+            = story.title
+        .story-card__cta
+          | READ MORE
+    - else
+      .story-card__content
+        - if story.title.present?
+          .story-card__title
+            p
+              = story.title
+        story-card__logo
+          img src="#{story.customer.logo_url || LOGO_PLACEHOLDER_URL}"
+      story-card__caption
+        span.story-card__customer
+          = story.customer.name
+        span.story-card__cta
+
+    .story-card__loading
+      i.fa.fa-spin.fa-circle-o-notch

@@ -1,0 +1,18 @@
+ul#stories-gallery.grid.list-unstyled.text-center class=('no-filters' if no_filters_present)
+
+  / cache(cache_key, skip_digest: true) do
+
+  - stories.each do |story|
+
+    / - cache(
+          "#{company.subdomain}/story-card-#{story.id}-memcache-iterator-#{company.story_card_fragments_memcache_iterator}",
+          { skip_digest: true }) do
+    li style="display: inline-block; vertical-align: top"
+
+      = render( \
+          'stories/shared/story_card',
+          { story: story,
+            card_class: story_card_class(story, 'card'),
+            is_dashboard: false,
+            is_plugin: false,
+            is_external: false })

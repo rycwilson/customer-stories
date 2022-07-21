@@ -17,10 +17,10 @@
             ul.list-unstyled
 
         = form_with( \
-          model: [company, Success.new],
-          format: :js,
-          local: false,
-          html: { id: 'new-success-form', class: 'form-horizontal' }) do |success_form|
+            model: [company, Success.new],
+            format: :js,
+            local: false,
+            html: { id: 'new-success-form', class: 'form-horizontal' }) do |success_form|
 
           = success_form.hidden_field(:customer_id)
           = success_form.fields_for(:customer, success_form.object.build_customer) do |customer_form|
@@ -61,11 +61,14 @@
               | Customer
             .col-sm-9
               = select( \
-                nil,
-                nil,
-                company.customers.sort_by { |c| c.name }.map { |c| [c.name, c.id] },
-                { include_blank: true },
-                { name: '', class: 'new-success customer form-control', style: 'width:100%', required: true })
+                  nil,
+                  nil,
+                  company.customers.sort_by { |c| c.name }.map { |c| [c.name, c.id] },
+                  { include_blank: true },
+                  { name: '',
+                    class: 'new-success customer form-control',
+                    style: 'width:100%',
+                    required: true })
               span.help-block 
                 | Required
 
@@ -74,10 +77,10 @@
               | Name
             .col-sm-9
               = success_form.text_field( \
-                :name,
-                class: 'form-control',
-                required: true,
-                placeholder: 'Name of Project / Deal / Opportunity from CRM')
+                  :name,
+                  class: 'form-control',
+                  required: true,
+                  placeholder: 'Name of Project / Deal / Opportunity from CRM')
               span.help-block 
                 | Required 
 
@@ -86,12 +89,14 @@
               | Curator
             .col-sm-9
               = success_form.collection_select( \
-                :curator_id,
-                company.curators.sort_by { |c| c.last_name },
-                :id, \
-                :full_name,
-                { include_blank: true },
-                { class: 'new-success curator form-control', style: 'width:100%', required: true })
+                  :curator_id,
+                  company.curators.sort_by { |c| c.last_name },
+                  :id, \
+                  :full_name,
+                  { include_blank: true },
+                  { class: 'new-success curator form-control',
+                    style: 'width: 100%',
+                    required: true })
               span.help-block
                 | Required
 
@@ -105,22 +110,25 @@
               label.col-sm-3.control-label for="referrer_id"
                 | Referred by
               .col-sm-9
+                /effectively disabled by default by giving it a blank name
                 = contribution_form.collection_select( \
-                  :referrer_id,
-                  company.referrers \
-                    .sort_by { |referrer| referrer.last_name } \
-                    .unshift(User.new(id: 0, first_name: '- Create New Contact -', last_name:'')),
-                  :id,
-                  :full_name,
-                  { include_blank: true },
-                  # effectively disabled by default by giving it a blank name \
-                  { name: '', class: 'new-success referrer form-control', style: 'width:100%' } )
+                    :referrer_id,
+                    company.referrers \
+                      .sort_by { |referrer| referrer.last_name } \
+                      .unshift(User.new(id: 0, first_name: '- Create New Contact -', last_name:'')),
+                    :id,
+                    :full_name,
+                    { include_blank: true },
+                    { name: '', class: 'new-success referrer form-control', style: 'width:100%' })
 
             = render( \
-              'companies/shared/create_contact',
-              { form: 'new-success', contribution_form: contribution_form, contact_type: 'referrer' })
+                'companies/shared/create_contact',
+                { form: 'new-success', 
+                  contribution_form: contribution_form, 
+                  contact_type: 'referrer' })
 
-          = success_form.fields_for(:contributions, success_form.object.contributions.build) do |contribution_form|
+          = success_form.fields_for( \
+              :contributions, success_form.object.contributions.build) do |contribution_form|
             / = contribution_form.hidden_field( \
             /   :invitation_template_id,
             /   value: company.invitation_templates.customer.id)
@@ -130,28 +138,31 @@
                 | Customer Contact
               .col-sm-9
                 = contribution_form.collection_select( \
-                  :contributor_id,
-                  (company.contributors - company.referrers - company.curators) \
-                    .sort_by { |contributor| contributor.last_name } \
-                    .unshift(User.new(id: 0, first_name: '- Create New Contact -', last_name:'')),
-                  :id,
-                  :full_name,
-                  { include_blank: true },
-                  # effectively disabled by default by giving it a blank name \
-                  { name: '', class: 'new-success contributor form-control', style: 'width:100%' })
+                    :contributor_id,
+                    (company.contributors - company.referrers - company.curators) \
+                      .sort_by { |contributor| contributor.last_name } \
+                      .unshift(User.new(id: 0, first_name: '- Create New Contact -', last_name:'')),
+                    :id,
+                    :full_name,
+                    { include_blank: true },
+                    { name: '',
+                      class: 'new-success contributor form-control',
+                      style: 'width:100%' })
             = render( \
-              'companies/shared/create_contact',
-              { form: 'new-success', contribution_form: contribution_form, contact_type: 'contributor' })
+                'companies/shared/create_contact',
+                { form: 'new-success', 
+                  contribution_form: contribution_form, 
+                  contact_type: 'contributor' })
 
           .form-group.win-story
             label.col-sm-3.control-label for="success_win_story_html"
               | Description
             .col-sm-9
               = success_form.text_area( \
-                :win_story_html,
-                rows: 4,
-                class: 'form-control',
-                placeholder: 'Description of Project / Deal / Opportunity from CRM')
+                  :win_story_html,
+                  rows: 4,
+                  class: 'form-control',
+                  placeholder: 'Description of Project / Deal / Opportunity from CRM')
 
       .modal-footer
         /! <button type="reset" class="btn btn-default" data-dismiss="modal">Cancel</button>
