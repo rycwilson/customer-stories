@@ -7,6 +7,9 @@
     evaluate:    /\{\{(.+?)\}\}/g,
     interpolate: /\{\{=(.+?)\}\}/g,
     escape:      /\{\{-(.+?)\}\}/g
+    // evaluate: /<\?js(.+?)\?>/g,
+    // interpolate: /<\?js(.+?)\?>/g,
+    // escape: /<\?js(.+?)\?>/g,
   };
   // provide a .each_slice method for the template
   // this is for rendering the stories index
