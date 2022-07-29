@@ -3,6 +3,8 @@ require "active_support/core_ext/integer/time"
 Rails.application.configure do
   # Settings specified here will take precedence over those in config/application.rb.
 
+  config.hosts << ".lvh.me"
+
   # for viewing via mobile on local network:
   # get localhost IP from system preferences => network (here it's 192.168.1.3)
   # point mobile browser to [subdomain].192.168.1.3.xip.io:3000  
