@@ -21,9 +21,9 @@ div {
     data-logosrc=(story.customer.logo_url if !is_external)
     data-summary=(story.summary&.to_json if !is_external)
     data-quote=(story.quote&.to_json if !is_external)
-    data-quote-attr-name=(story.quote.attr_name&.to_json if !is_external)
+    data-quote-attr-name=(story.quote_attr_name&.to_json if !is_external)
     data-quote-attr-title=(story.quote_attr_title&.to_json if !is_external)
-    data-preview-contributor=""> }
+    data-preview-contributor="" }
 
     - if card_class.include?('card-image')
       img.story-card__logo src="#{story.customer.logo_url || LOGO_PLACEHOLDER_URL}"
