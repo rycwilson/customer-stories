@@ -375,25 +375,31 @@ class Story < ApplicationRecord
     # Rails.cache.fetch("#{self.company.subdomain}/story-#{self.id}-published-contributors") do
       contributors =
         User.joins(own_contributions: { success: {} })
-            .where.not(linkedin_url:'')
-            .where(successes: { id: self.success_id },
-                   contributions: { publish_contributor: true })
-            .order("CASE contributions.role
-                      WHEN 'customer' THEN '1'
-                      WHEN 'customer success' THEN '2'
-                      WHEN 'sales' THEN '3'
-                    END")
+            .where.not(linkedin_url: [nil, ''])
+            .where(
+              successes: { id: self.success_id }, 
+              contributions: { publish_contributor: true }
+            )
+            .order(Arel.sql(
+              "CASE contributions.role
+                WHEN 'customer' THEN '1'
+                WHEN 'customer success' THEN '2'
+                WHEN 'sales' THEN '3'
+              END"
+            ))
             .map do |contributor|
-               { widget_loaded: false,
-                 id: contributor.id,
-                 first_name: contributor.first_name,
-                 last_name: contributor.last_name,
-                 linkedin_url: contributor.linkedin_url,
-                 linkedin_photo_url: contributor.linkedin_photo_url,
-                 linkedin_title: contributor.linkedin_title,
-                 linkedin_company: contributor.linkedin_company,
-                 linkedin_location: contributor.linkedin_location }
-             end
+              { 
+                widget_loaded: false,
+                id: contributor.id,
+                first_name: contributor.first_name,
+                last_name: contributor.last_name,
+                linkedin_url: contributor.linkedin_url,
+                linkedin_photo_url: contributor.linkedin_photo_url,
+                linkedin_title: contributor.linkedin_title,
+                linkedin_company: contributor.linkedin_company,
+                linkedin_location: contributor.linkedin_location 
+              }
+            end
       contributors.delete_if { |c| c[:id] == self.curator.id }
       # don't need the id anymore, don't want to send it to client ...
       contributors.map! { |c| c.except(:id) }

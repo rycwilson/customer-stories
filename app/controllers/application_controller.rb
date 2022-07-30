@@ -270,11 +270,13 @@ class ApplicationController < ActionController::Base
             successes: { id: story.success_id },
             contributions: { publish_contributor: true }
           )
-          .order("CASE contributions.role
-                    WHEN 'customer' THEN '1'
-                    WHEN 'customer success' THEN '2'
-                    WHEN 'sales' THEN '3'
-                  END")
+          .order(Arel.sql(
+            "CASE contributions.role
+              WHEN 'customer' THEN '1'
+              WHEN 'customer success' THEN '2'
+              WHEN 'sales' THEN '3'
+            END"
+          ))
           .to_a
           .delete_if { |c| c.id == story.curator.id }
   end
