@@ -39,9 +39,9 @@ div {
           .story-card__title
             p
               = story.title
-        story-card__logo
+        .story-card__logo
           img src="#{story.customer.logo_url || LOGO_PLACEHOLDER_URL}"
-      story-card__caption
+      .story-card__caption
         span.story-card__customer
           = story.customer.name
         span.story-card__cta
