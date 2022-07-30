@@ -68,7 +68,7 @@
             .grid-container
               ul#curate-gallery.grid.list-unstyled.text-center
 
-          #edit-story.tab-pane.fade class=('active in' if curate_view == 'story')
+          #edit-story.edit-story.tab-pane.fade class=('active in' if curate_view == 'story')
             - if curate_view == 'story'
               = render( \
                   'stories/edit/edit',
