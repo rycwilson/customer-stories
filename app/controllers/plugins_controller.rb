@@ -22,7 +22,8 @@ class PluginsController < ApplicationController
         json = { html: plugin_view(@company, params) }.to_json
         callback = params[:callback]
         jsonp = callback + "(" + json + ")"
-        render(text: jsonp)
+        # render(text: jsonp)
+        render(plain: jsonp)
       end
     end
     # DEPRECATION WARNING: `render :text` is deprecated because it does not actually render a `text/plain` response.
