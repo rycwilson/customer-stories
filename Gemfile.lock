@@ -204,6 +204,9 @@ GEM
       socksify
     i18n (1.12.0)
       concurrent-ruby (~> 1.0)
+    jbuilder (2.11.5)
+      actionview (>= 5.0.0)
+      activesupport (>= 5.0.0)
     jmespath (1.6.1)
     jquery-minicolors-rails (2.2.6.2)
       jquery-rails
@@ -229,6 +232,9 @@ GEM
       activerecord
       kaminari-core (= 1.2.2)
     kaminari-core (1.2.2)
+    listen (3.7.1)
+      rb-fsevent (~> 0.10, >= 0.10.3)
+      rb-inotify (~> 0.9, >= 0.9.10)
     local_time (2.1.0)
     loofah (2.18.0)
       crass (~> 1.0.2)
@@ -272,6 +278,8 @@ GEM
     rack (2.2.4)
     rack-cors (1.1.1)
       rack (>= 2.0.0)
+    rack-mini-profiler (2.3.4)
+      rack (>= 1.2.0)
     rack-pjax (1.1.0)
       nokogiri (~> 1.5)
       rack (>= 1.1)
@@ -408,11 +416,11 @@ GEM
       addressable
       httpi (~> 2.0)
       nokogiri (>= 1.4.2)
-    web-console (3.7.0)
-      actionview (>= 5.0)
-      activemodel (>= 5.0)
+    web-console (4.2.0)
+      actionview (>= 6.0.0)
+      activemodel (>= 6.0.0)
       bindex (>= 0.4.0)
-      railties (>= 5.0)
+      railties (>= 6.0.0)
     websocket-driver (0.7.5)
       websocket-extensions (>= 0.1.0)
     websocket-extensions (0.1.5)
@@ -432,7 +440,7 @@ DEPENDENCIES
   aws-sdk-s3 (~> 1.0)
   better_errors
   binding_of_caller
-  bootsnap
+  bootsnap (>= 1.4.4)
   bootstrap-sass (= 3.3.6)
   bootstrap-tab-history-rails
   browser-timezone-rails
@@ -449,9 +457,11 @@ DEPENDENCIES
   google-adwords-api (= 1.5)
   googlecharts
   html_to_plain_text
+  jbuilder (~> 2.7)
   jquery-minicolors-rails
   jquery-rails
   jquery-ui-rails
+  listen (~> 3.3)
   local_time
   multi_json
   order_as_specified
@@ -463,10 +473,10 @@ DEPENDENCIES
   pry-theme
   puma
   rack-cors
+  rack-mini-profiler (~> 2.0)
   rack-timeout
   rack_password
   rails (~> 6.0)
-  rails-html-sanitizer
   rails_12factor
   rails_admin
   reverse_markdown
@@ -479,7 +489,7 @@ DEPENDENCIES
   turbolinks
   typhoeus
   uglifier
-  web-console
+  web-console (>= 4.1.0)
   wicked_pdf (~> 2.0)
   wkhtmltopdf-binary
 
