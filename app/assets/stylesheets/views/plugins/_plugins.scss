@@ -29,6 +29,25 @@ body.plugin-demo {
   @import '../../base/globals';
   @import 'overlays/main';
   @import '../stories/show/show';
+
+  // these are copied from bootstrap source: _grid.scss
+  .cs-container, .cs-container-fluid {
+    @include container-fixed;
+  }
+  .cs-container {
+    @media (min-width: $screen-sm-min) {
+      width: $container-sm;
+    }
+    @media (min-width: $screen-md-min) {
+      width: $container-md;
+    }
+    @media (min-width: $screen-lg-min) {
+      width: $container-lg;
+    }
+  }
+  .cs-row {
+    @include make-row;
+  }
 }
 
 @import 'gallery';
