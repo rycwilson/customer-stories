@@ -15,7 +15,8 @@
             Contribution.new,
             url: company_contributions_path(company),
             html: { \
-              id: 'new-contributor-form', 
+              id: 'new-contributor-form',
+              autocomplete: 'off',
               remote: true, 
               class: 'form-horizontal' }) do |contribution_form|
 

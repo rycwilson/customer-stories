@@ -189,6 +189,7 @@ class CompaniesController < ApplicationController
     options = {
       html: {
         id: 'company-profile-form',
+        autocomplete: 'off',
         class: 'directUpload form-horizontal',
         data: {
           url: @s3_direct_post.url,

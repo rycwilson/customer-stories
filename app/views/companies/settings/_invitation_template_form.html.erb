@@ -12,7 +12,8 @@
 
 <%= form_for(template, url: url,
       html: { method: method, remote: true,
-              id: 'invitation-template-form' }) do |template_form| %>
+              id: 'invitation-template-form',
+              autocomplete: 'off' }) do |template_form| %>
 
   <%= template_form.hidden_field(:company_id) %>
 

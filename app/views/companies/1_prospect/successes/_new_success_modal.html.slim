@@ -20,7 +20,10 @@
             model: [company, Success.new],
             format: :js,
             local: false,
-            html: { id: 'new-success-form', class: 'form-horizontal' }) do |success_form|
+            html: { \
+              id: 'new-success-form',
+              autocomplete: 'off',
+              class: 'form-horizontal' }) do |success_form|
 
           = success_form.hidden_field(:customer_id)
           = success_form.fields_for(:customer, success_form.object.build_customer) do |customer_form|
