@@ -41,6 +41,13 @@ function initSelect2 () {
       });
   };
 
+  // remove title attribute that select2 adds by default
+  $(document).on('change', 'select', (e) => {
+    if ($(e.target).data('select2')) {
+      $(e.target).next('.select2').find('.select2-selection__rendered').attr('title', '');
+    }
+  })
+
   // for customers, successes, contributors, referrers => don't initialize if the form submission modal is still open
 
   /**
@@ -78,6 +85,9 @@ function initSelect2 () {
   // https://github.com/select2/select2/issues/5993
   $('.modal:not(.in)')
     .find('select.customer, select.success, select.contributor, select.referrer')
+      .next('.select2')
+        // .find('.select2-selection__rendered').attr('title', '').end()
+        // .end()
       .on('select2:open', (e) => {
         document.querySelector('.select2-container--open .select2-search__field').focus();
       })
@@ -86,10 +96,10 @@ function initSelect2 () {
    * curator (includes new success, new contributor)
    * invitation template
    */
-   $('.new-success.curator, .new-contributor.invitation-template').select2({
-     theme: 'bootstrap',
-     placeholder: 'Select'
-   });
+  $('.new-success.curator, .new-contributor.invitation-template').select2({
+    theme: 'bootstrap',
+    placeholder: 'Select'
+  })
 
   /**
    * may not be present if datatables not yet rendered
