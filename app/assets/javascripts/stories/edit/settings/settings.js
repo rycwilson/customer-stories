@@ -161,6 +161,7 @@ function initStoriesEditSettings(shownTabHandler) {
   var initSwitchInputs = function () {
         $('.bs-switch.publish-control').bootstrapSwitch({
           size: 'small',
+          animate: false,
           onInit: function (e) {}
         });
       };
