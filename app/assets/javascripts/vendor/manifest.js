@@ -24,7 +24,7 @@
 // BOOTSTRAP EXTENSIONS
 //= require bootstrap-jasny/js/fileinput
 //= require bootstrap-validator/dist/validator
-//= require bootstrap-switch/dist/js/bootstrap-switch
+//= require jquery3-bootstrap-switch/dist/js/bootstrap-switch
 //= require bootstrap-daterangepicker/daterangepicker
 //= require bootbox/bootbox
 //= require bootstrap-tab-history
