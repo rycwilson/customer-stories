@@ -565,7 +565,7 @@ class Company < ApplicationRecord
   # when destroying a tag, expire affected filter select fragments
   def expire_filter_select_fragments_on_tag_destroy (tag, tag_instances)
     tag_instances.each do |tag_instance|
-      if tag_instance.success.story.logo_published?
+      if tag_instance.success.story&.logo_published?
         if tag == 'category'
           self.increment_category_select_fragments_memcache_iterator
         elsif tag == 'product'
