@@ -151,6 +151,11 @@ function initStoriesEditSettings(shownTabHandler) {
             theme: 'bootstrap',
             placeholder: 'Select'
           })
+          .next('.select2')
+            .find('.select2-selection__choice')
+              .attr('title', '')
+              .end()
+            .end()
           .on('select2:select, select2:unselect, change.select2', function () {
             $(this).next('.select2')
                     .find('.select2-selection__choice__remove')

@@ -44,7 +44,10 @@ function initSelect2 () {
   // remove title attribute that select2 adds by default
   $(document).on('change', 'select', (e) => {
     if ($(e.target).data('select2')) {
-      $(e.target).next('.select2').find('.select2-selection__rendered').attr('title', '');
+      $(e.target)
+        .next('.select2')
+          .find('.select2-selection__rendered, .select2-selection__choice')
+            .attr('title', '');
     }
   })
 
@@ -305,6 +308,11 @@ function initSelect2 () {
       placeholder: 'Add tags',
       // selectOnClose: true
     })
+    .next('.select2')
+      .find('.select2-selection__choice')
+        .attr('title', '')
+        .end()
+      .end()
     .on('select2:select, select2:unselect, change.select2', function () {
       $(this).next('.select2')
                .find('.select2-selection__choice__remove')
