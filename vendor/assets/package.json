@@ -29,7 +29,6 @@
     "css-element-queries": "^1.0.2",
     "datatables-helper": "^1.0.0",
     "datatables.net-bs": "^1.12.1",
-    "datatables.net-editor": "^1.6.5",
     "datatables.net-plugins": "^1.11.5",
     "flot": "^0.8.3",
     "flot-orderbars": "^1.0.0",

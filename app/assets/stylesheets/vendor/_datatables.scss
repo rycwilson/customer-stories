@@ -10,18 +10,33 @@ table tfoot tr th {
   display: none;
 }
 
-table.dataTable tr.group td {
-  background-color: #efefef;
+table.dataTable {
+  thead {
+    th {
+      background-color: #dfdfdf;
+      font-weight: 600;
+      border: 1px solid #c6c6c6;
+    }
+
+    .sorting_asc:after,
+    .sorting_desc:after {
+      color: $nav-blue !important;
+      opacity: 1;
+    }
+  }
+
+  tr.group td {
+    background-color: #efefef;
+    font-weight: 600;
+  }
+
+  &.table-hover > tbody > tr:hover > * {
+    box-shadow: none;
+  }
 }
 
 .table-bordered > thead > tr > th, .table-bordered > thead > tr > td {
   border-bottom-width: 1px;  // bootstrap 2px
-}
-
-table.dataTable thead th {
-  background-color: #dfdfdf;
-  font-weight: 600;
-  border: 1px solid #c6c6c6;
 }
 
 .table.dataTable tbody tr.active td,
@@ -33,15 +48,6 @@ table.dataTable thead th {
   > a {
     color: #fff;
   }
-}
-
-table.dataTable tr.group td {
-  font-weight: 600;
-}
-
-table.dataTable thead .sorting_asc:after, table.dataTable thead .sorting_desc:after {
-  color: $nav-blue !important;
-  opacity: 1;
 }
 
 div.dataTables_wrapper > div.dataTables_info {
@@ -148,4 +154,25 @@ td.status.dropdown, td.actions.dropdown {
     }
 
   }
+
+}
+
+div.DTE_Inline {
+  div.DTE_Inline_Field div.DTE_Field > label {
+    display: initial;
+    width: 100%;
+    padding-left: 0;
+    margin-bottom: 5px;
+  }
+  div.DTE_Inline_Field, div.DTE_Inline_Buttons {
+    display: block;
+    width: 100% !important;
+  }
+  div.DTE_Inline_Buttons div.DTE_Form_Buttons button {
+    margin: 0 0 0 8px;
+  }
+}
+
+input.select2-search__field[aria-controls*="DTE_Field"] {
+  display: none;
 }

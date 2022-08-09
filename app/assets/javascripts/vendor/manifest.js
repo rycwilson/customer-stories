@@ -15,11 +15,12 @@
 //= require imagesloaded/imagesloaded.pkgd
 
 // DATATABLES
-//= require datatables
+//= require datatables.net/js/jquery.dataTables
+//= require datatables.net-bs/js/dataTables.bootstrap
 //= require js/dataTables.editor
+//= require js/editor.bootstrap
 //= require select2/editor.select2
-//= require integration/bootstrap/3/dataTables.bootstrap
-// require datatables-old/media/js/jquery.dataTables
+// //= require RowGroup-1.0.0/js/dataTables.rowGroup
 
 // BOOTSTRAP EXTENSIONS
 //= require bootstrap-jasny/js/fileinput

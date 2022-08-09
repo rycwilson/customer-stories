@@ -46,7 +46,7 @@ gem 'rack_password'
 gem 'rack-timeout', require: "rack/timeout/base"
 gem 'reverse_markdown'
 
-gem 'bootstrap-sass', '~> 3.4.1'
+gem 'bootstrap-sass', '3.3.6'
 gem 'sassc-rails', '>= 2.1.0'
 
 gem 'slim-rails', '~> 3.0'
