@@ -17,11 +17,36 @@ table.dataTable {
       font-weight: 600;
       border: 1px solid #c6c6c6;
     }
+    
+    > tr {
+      > th.sorting:before {
+        content: none;
+      }
+      
+      > th.sorting:after {
+        font-family: 'Glyphicons Halflings';
+        content: "\e150";
+        opacity: 0.2;
+        top: 8px;
+        right: 8px;
+        bottom: 8px;
+        line-height: initial;
+        font-size: initial;
+      }
 
-    .sorting_asc:after,
-    .sorting_desc:after {
-      color: $nav-blue !important;
-      opacity: 1;
+      > th.sorting_asc:after,
+      > th.sorting_desc:after {
+        color: $nav-blue;
+        opacity: 1;
+      }
+
+      > th.sorting_asc:after {
+        content: "\e155";
+      }
+
+      > th.sorting_desc:after {
+        content: "\e156";
+      }
     }
   }
 
