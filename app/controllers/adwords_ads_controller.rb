@@ -69,12 +69,12 @@ class AdwordsAdsController < ApplicationController
         # for non-promoted-enabled companies, changing status will be blocked,
         # but other ad parameters can be changed
         # => confirm presence of ad_id before updating google
-        updated_gad = (ad.previous_changes.keys & ['status']).any? ?
-          GoogleAds::change_ad_status(ad) :
-          (ad.ad_id.present? ? GoogleAds::update_ads([ad]) : nil)
+        # updated_gads = (ad.previous_changes.keys & ['status']).any? ?
+        #   GoogleAds::change_ad_status(ad) :
+        #   (ad.ad_id.present? ? GoogleAds::update_ads([ad]) : nil)
 
         # revert changes if google errors (update_columns method => no callbacks)
-        if updated_gad.try(:[], :errors)
+        if updated_gads.try(:[], :errors)
           if (ad.previous_changes.keys & ['long_headline', 'status']).any?
             ad.update_columns(
               ad.previous_changes.map { |attr, val| [attr, val.shift] }.to_h
@@ -83,7 +83,7 @@ class AdwordsAdsController < ApplicationController
             ad.adwords_image_ids = existing_ads_image_ids  # saves immediately, skips the callback
           end
         end
-        updated_gads[index == 0 ? :topic : :retarget] = updated_gad
+        updated_gads[index == 0 ? :topic : :retarget] = updated_gads
       end
     else
       # error
