@@ -6,21 +6,21 @@ li.ad-image-card {
 
   input {
     type="hidden" 
-    name="company[adwords_images_attributes][<%= image_index %>][id]" 
-    value="<%= ad_image[:id] %>" }
+    name="company[adwords_images_attributes][#{ image_index }][id]" 
+    value="#{ ad_image[:id] }" }
   input {
     type="hidden" 
-    name="company[adwords_images_attributes][<%= image_index %>][type]" 
-    value="<%= ad_image[:type] %>" }
+    name="company[adwords_images_attributes][#{ image_index }][type]" 
+    value="#{ ad_image[:type] }" }
   input {
     type="hidden"
-    name="company[adwords_images_attributes][<%= image_index %>][image_url]"
+    name="company[adwords_images_attributes][#{ image_index }][image_url]"
     value="#{ad_image[:image_url] || ''}" }
 
   - if ad_image[:default]
     input {
       type="hidden" 
-      name="company[adwords_images_attributes][<%= image_index %>][is_default_card]" 
+      name="company[adwords_images_attributes][#{ image_index }][is_default_card]" 
       value="true" }
     input {
       type="hidden" 
@@ -29,7 +29,7 @@ li.ad-image-card {
     input {
       type="checkbox" 
       class="hidden" 
-      name="company[adwords_images_attributes][<%= image_index %>][default]" 
+      name="company[adwords_images_attributes][#{ image_index }][default]" 
       value="true" 
       checked=(ad_image[:default]) }
   - else
