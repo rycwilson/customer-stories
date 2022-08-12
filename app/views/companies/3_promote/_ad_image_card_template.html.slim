@@ -1,0 +1,71 @@
+
+script#ad-image-card-template type="text/template"
+
+  li.ad-image-card.new-ad-image.hidden class="{{= typeClassName }}"
+
+    input {
+      type="hidden"
+      name="company[adwords_images_attributes][{{= imageIndex }}][id]" 
+      value="{{= id }}" }
+    input {
+      type="hidden" 
+      name="company[adwords_images_attributes][{{= imageIndex }}][type]" 
+      value="{{= type }}" }
+    input {
+      type="hidden" 
+      name="company[adwords_images_attributes][{{= imageIndex }}][image_url]" 
+      value="{{= imageUrl }}" }
+    input {
+      type="hidden" 
+      name="company[adwords_images_attributes][{{= imageIndex }}][_destroy]" 
+      value="false" }
+    input.hidden { 
+      type="checkbox"
+      id="company_adwords_images_attributes_{{= imageIndex }}__destroy"
+      name="company[adwords_images_attributes][{{= imageIndex }}][_destroy]" 
+      value="true" }
+
+    .form-group.fileinput.fileinput-exists.has-feedback data-provides="fileinput"
+
+      .ad-image-card__header
+        label.checkbox-inline
+          input {
+            type="hidden" 
+            name="company[adwords_images_attributes][{{= imageIndex }}][default]" 
+            value="false" }
+          input {
+            type="checkbox" 
+            name="company[adwords_images_attributes][{{= imageIndex }}][default]" 
+            value="true" }
+          | Make default
+        button.remove-image type="button"
+          i.fa.fa-fw.fa-remove
+
+      .ad-image-card__frame
+
+        .thumbnail-wrapper
+          .ad-image-card__errors--wrapper
+            .ad-image-card__errors
+              i.fa.fa-warning
+              span.help-block.with-errors
+          .fileinput-preview.thumbnail
+            img src="{{= imageUrl }}" alt="{{= type }}"
+        | {{ if (!imageUrl) { }}
+        .btn-file
+          input {
+            type="file"
+            accept="image/*"
+            name="company[adwords_images_attributes][{{= imageIndex }}][image_url]"
+            data-max-file-size="5242880"
+            data-img-size-error="#{[RESPONSIVE_AD_SQUARE_IMAGE_MIN, RESPONSIVE_AD_LANDSCAPE_IMAGE_MIN, RESPONSIVE_AD_SQUARE_LOGO_MIN, RESPONSIVE_AD_LANDSCAPE_LOGO_MIN]}"
+            data-fileupload-init-error="" }
+        | {{ } }}
+
+      .ad-image-card__footer
+        div
+          button type="button" class="btn btn-sm btn-default btn-cancel" Cancel
+          button type="submit" class="btn btn-sm btn-danger btn-remove" Remove
+          button type="submit" class="btn btn-sm btn-success" form="gads-form" style="width: 59px"
+            span Save
+            i.fa.fa-spin.fa-circle-o-notch style="display: none"
+            i.fa.fa-check style="display: none"

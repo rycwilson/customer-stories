@@ -80,6 +80,11 @@
     }
     a {
       padding: 8px 16px;
+      
+      &.btn-secondary.active {
+        box-shadow: none;
+        background-color: $medium-gray;
+      }
     }
   }
 

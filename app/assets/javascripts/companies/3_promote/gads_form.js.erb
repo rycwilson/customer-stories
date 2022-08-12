@@ -240,6 +240,7 @@ function promoteSettingsListeners () {
           )
         )
         .done(function () {
+          console.log('here', $('li.new-ad-image'))
           $('li.new-ad-image input:file')[0].click();
         })
     })

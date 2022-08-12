@@ -304,6 +304,7 @@ class Company < ApplicationRecord
       where(default: true)
     end
   end
+  alias_attribute :ad_images, :adwords_images
   accepts_nested_attributes_for :adwords_images, allow_destroy: true
 
   after_commit(on: [:create]) do
