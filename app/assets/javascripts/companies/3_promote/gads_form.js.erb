@@ -67,8 +67,9 @@ function promoteSettingsListeners () {
           var $fileInput = $imageCard.find('input:file');
           if ($imageCard.is('.new-ad-image')) {
             if ($imageCard.is(':not(.gads-default)')) determineImageType($imageCard, $img);
-            $imageCard.removeClass('new-ad-image hidden')[0]
-                      .scrollIntoView({ block: 'center', behavior: 'smooth' });
+            $imageCard
+              .removeClass('new-ad-image hidden')[0]
+              // .scrollIntoView({ block: 'center', behavior: 'smooth' });
             if (!fileInputWasInitialized($fileInput)) {
               checkInputInitialized = setInterval(fileInputWasInitialized, 100, $fileInput)
             }
@@ -229,7 +230,7 @@ function promoteSettingsListeners () {
       var $thisList = $(this).closest('[id*="image-library"]').find('ul'),
           $otherList = $('.image-library').find('ul').not($thisList);
       $.when(
-          $thisList.append(
+          $thisList.prepend(
             _.template($('#ad-image-card-template').html())({
               id: '',
               type: $thisList.is('#image-library__marketing ul') ? 'Image' : 'Logo',
@@ -240,7 +241,6 @@ function promoteSettingsListeners () {
           )
         )
         .done(function () {
-          console.log('here', $('li.new-ad-image'))
           $('li.new-ad-image input:file')[0].click();
         })
     })

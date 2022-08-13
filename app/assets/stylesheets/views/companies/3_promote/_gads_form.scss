@@ -80,10 +80,26 @@
     }
     a {
       padding: 8px 16px;
+      border-color: #ccc;
+      color: #666;
+      transition: border-color 0s;
       
       &.btn-secondary.active {
-        box-shadow: none;
         background-color: $medium-gray;
+        border-color: $nav-blue;
+        color: $nav-blue;
+      }
+
+      &:active, &.btn-secondary.active {
+        box-shadow: none;
+      }
+      
+      &:hover, &:active {
+        background-color: #e5e5e5;
+      }
+      
+      &:hover {
+        color: #222;
       }
     }
   }

@@ -43,8 +43,7 @@ li.ad-image-card {
       name="company[adwords_images_attributes][#{image_index}][_destroy]"
       value="true" }
 
-  .form-group.fileinputfileinput-exists.has-feedback data-provides="fileinput"
-
+  .form-group.fileinput.fileinput-exists.has-feedback data-provides="fileinput"
     .ad-image-card__header
       - if ad_image[:default]
         label
@@ -66,7 +65,6 @@ li.ad-image-card {
           | Make default
         button.remove-image type="button"
           i.fa.fa-fw.fa-remove
-
     .ad-image-card__frame
       - if ad_image[:default]
         .thumbnail-wrapper
@@ -89,7 +87,6 @@ li.ad-image-card {
       - else
         .fileinput-preview.thumbnail
           img src="#{ad_image[:image_url]}" alt="#{ad_image[:type].split(/(?=[A-Z])/).join(' ')}"
-
     .ad-image-card__footer
       - if ad_image[:default]
         label

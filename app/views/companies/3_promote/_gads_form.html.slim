@@ -11,7 +11,7 @@
       data: { \
         url: @s3_direct_post.url,
         host: URI.parse(@s3_direct_post.url).host,
-        'form-data' => (@s3_direct_post.fields)} }) do |f|
+        'form-data' => (@s3_direct_post.fields) }}) do |f|
 
   .form-group.short-headline
     = f.label(:adwords_short_headline, "Headline", class: 'control-label')
