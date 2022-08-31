@@ -44,25 +44,26 @@
       },
       movePrevDefaultToList = function (prevDefault) {
         var $otherList = $('.image-library').find('ul').not($thisList),
-            typeClassNameLookup = {
-              'SquareImage': 'gads-image gads-image--square',
-              'LandscapeImage': 'gads-image gads-image--landscape',
-              'SquareLogo': 'gads-logo gads-logo--square',
-              'LandscapeLogo': 'gads-logo gads-logo--landscape'
+            cardClassNameLookup = {
+              'SquareImage': 'gads-image--square',
+              'LandscapeImage': 'gads-image--landscape',
+              'SquareLogo': 'gads-logo--square',
+              'LandscapeLogo': 'gads-logo--landscape'
             };
         $.when(
             $thisList.append(
               _.template($('#ad-image-card-template').html())({
                 id: prevDefault.id,
                 type: prevDefault.type,
-                typeClassName: typeClassNameLookup[prevDefault.type],
+                collection: prevDefault.type.match(/Image|Logo/)[0],
+                cardClassName: cardClassNameLookup[prevDefault.type],
                 imageIndex: $thisList.children('li').length + $otherList.children('li').length,
                 imageUrl: prevDefault.image_url
               })
             )
           )
           .done(function () {
-            $thisList.children().last().removeClass('new-ad-image hidden');
+            $thisList.children().last().removeClass('ad-image-card--new hidden');
             $('#previous-default-hidden-inputs').remove();
           })
       };

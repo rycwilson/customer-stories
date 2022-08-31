@@ -1,6 +1,6 @@
 li.ad-image-card {
   class="#{ad_image_card_class_name(ad_image, collection)}" 
-  data-image-url=(ad_image[:image_url] if ad_image[:default] && ad_image[:image_url]) }
+  data-image-url=(ad_image[:image_url] if ad_image[:default]) }
 
   input {
     type="hidden" 
@@ -13,7 +13,7 @@ li.ad-image-card {
   input {
     type="hidden"
     name="company[adwords_images_attributes][#{image_index}][image_url]"
-    value="#{ad_image[:image_url] || ''}" }
+    value="#{ad_image[:image_url]}" }
   input {
     type="hidden" 
     name="company[adwords_images_attributes][#{image_index}][default]" 
@@ -23,13 +23,7 @@ li.ad-image-card {
     name="company[adwords_images_attributes][#{image_index}][default]" 
     value="true" 
     checked=('true' if ad_image[:default]) }
-
-  - if ad_image[:default]
-    input {
-      type="hidden" 
-      name="company[adwords_images_attributes][#{image_index}][is_default_card]" 
-      value="true" }
-  - else
+  - unless ad_image[:default]
     input {
       type="hidden" 
       value="false" 
@@ -40,19 +34,25 @@ li.ad-image-card {
       value="true" }
 
   .form-group.fileinput.fileinput-exists.has-feedback data-provides="fileinput"
+
     .ad-image-card__header
-      - if ad_image[:default]
-        // attaching data-trigger attribute to .file-input-preview does not work
-        button type="button" data-trigger="fileinput"
-          i.fa.fa-fw.fa-upload
-      - else
-        button.set-as-default type="button"
-          i.fa.fa-fw.fa-refresh
-        |&nbsp;
+      - if ad_image
+        - if ad_image[:default]
+          // attaching data-trigger attribute to .file-input-preview does not work
+          button type="button" data-trigger="fileinput"
+            i.fa.fa-fw.fa-upload
+        - else
+          button.set-as-default type="button"
+            i.fa.fa-fw.fa-refresh
+          |&nbsp;
+          button.remove-image type="button"
+            i.fa.fa-fw.fa-remove
+      - else 
         button.remove-image type="button"
           i.fa.fa-fw.fa-remove
       button.did-save type="button"
         i.fa.fa-fw.fa-check
+
     .ad-image-card__frame
       .uploading-spinner
         i.fa.fa-spin.fa-circle-o-notch
@@ -62,18 +62,20 @@ li.ad-image-card {
       .fileinput-preview.thumbnail
         img {
           src="#{ad_image[:image_url] || ad_image[:placeholder_image_url]}" 
-          alt="#{ad_image[:type].split(/(?=[A-Z])/).join(' ')}" }
+          alt=(ad_image[:type]&.split(/(?=[A-Z])/)&.join(' ')) }
       .btn-file
         input {
-          type="file" 
+          type="file"
           accept="image/jpeg,image/png"
           name="company[adwords_images_attributes][#{image_index}][image_url]" 
-          data-collection="#{ad_image[:type].match(/Image|Logo/)[0]}"
-          data-default-type=("#{ad_image[:type]}" if ad_image[:default])
+          data-validate="false"
+          data-collection="#{collection}"
+          data-default-type=(ad_image[:type] if ad_image[:default])
           data-max-file-size="5242880" 
           data-min-dimensions=ad_image_min_dimensions.to_json
           data-aspect-ratio-tolerance=RESPONSIVE_AD_ASPECT_RATIO_TOLERANCE
-          data-required-image=(true if ad_image[:default] && ad_image[:type].match(/Image/)) }
+          data-required-image=('true' if ad_image[:default] && ad_image[:type]&.match(/Image/)) }
+
     .ad-image-card__footer
       button.btn.btn-sm.btn-default.btn-cancel type="button" Cancel
       button.btn.btn-sm.btn-danger.btn-remove type="submit" Delete

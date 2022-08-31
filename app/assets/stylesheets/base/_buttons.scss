@@ -66,6 +66,7 @@ fieldset[disabled] .btn-primary:active,
 fieldset[disabled] .btn-primary.active {
   box-shadow: none;
   opacity: 0.65;
+  transition:none;
 }
 
 .btn-secondary,
@@ -79,7 +80,7 @@ fieldset[disabled] .btn-primary.active {
 .btn-secondary:active,
 .btn-secondary.active {
   color: #006fb8;
-  background-color: #e0e0e0;  // #e1e3e9 
+  background-color: #e5e5e5;  // #e1e3e9 
   border-color: #006fb8; 
 }
 .btn-secondary:active:hover,

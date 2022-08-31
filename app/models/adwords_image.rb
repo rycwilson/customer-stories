@@ -11,10 +11,10 @@ class AdwordsImage < ApplicationRecord
   validates_presence_of :company  # https://launchacademy.com/blog/validating-associations-in-rails
   # validates_presence_of :type, # SquareLogo, LandscapeLogo, SquareImage, LandscapeImage
   # validates_presence_of :image_url  # check for specific format (csp or maybe google)
-  validates_presence_of :asset_id
-
+  
   # upload to gads regardless of company.promote_tr
-  before_validation :upload_to_google, on: :create
+  # validates_presence_of :asset_id
+  # before_validation :upload_to_google, on: :create
 
   # https://medium.com/appaloosa-store-engineering/caution-when-using-before-destroy-with-model-association-71600b8bfed2
   before_destroy :update_ads, prepend: true, if: :promote_enabled?
@@ -51,7 +51,7 @@ class AdwordsImage < ApplicationRecord
         ad.images << ad.company.adwords_images.landscape_images.default.take
       end
     end
-    GoogleAds::update_ads(ads)
+    # GoogleAds::update_ads(ads)
   end
 
   def s3_delete
