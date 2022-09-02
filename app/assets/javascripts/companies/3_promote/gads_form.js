@@ -1,9 +1,9 @@
 
 function promoteSettingsListeners () {
 
-  let imageTimer, newImageTimer, inputTimer;
+  let imageTimer, inputObserver;
 
-  // the data-validate attribute is to prevent premature validation
+  // the data-validate attribute is to prevent premature validation (per bootstrap-validator)
   const imageDidLoad = ($imageCard, $img) => {
     if ($img[0].complete) {
       clearInterval(imageTimer);
@@ -16,16 +16,16 @@ function promoteSettingsListeners () {
     }
   };
 
-  const isPrematureSuccess = ($formGroup, mutation) => {
-    const isImageSuccess = (
-      $(mutation.target).is($formGroup) &&
-      mutation.type === 'attributes' &&
-      mutation.attributeName === 'class' &&
-      $(mutation.target).is('.has-success')
-    );
-    // const isPremature = !($(mutation.target).is('.to-be-added'));
-    return isImageSuccess && isPremature;
-  };
+  // const isPrematureSuccess = ($formGroup, mutation) => {
+  //   const isImageSuccess = (
+  //     $(mutation.target).is($formGroup) &&
+  //     mutation.type === 'attributes' &&
+  //     mutation.attributeName === 'class' &&
+  //     $(mutation.target).is('.has-success')
+  //   );
+  //   // const isPremature = !($(mutation.target).is('.to-be-added'));
+  //   return isImageSuccess && isPremature;
+  // };
 
   const isSuccessfulUpload = ($formGroup, $urlInput, mutation) => (
     $(mutation.target).is($urlInput) &&
@@ -46,12 +46,11 @@ function promoteSettingsListeners () {
     //     if (isPrematureSuccess($formGroup, m)) $formGroup.removeClass('has-success');
     //   });
     // });
-    const inputObserver = new MutationObserver(mutations => {
-      // console.log('mutations', mutations)
+    inputObserver = new MutationObserver((mutations) => {
       for (m of mutations) {
         if (isSuccessfulUpload($formGroup, $urlInput, m)) {
-          console.log('isSuccessfulUpload', $urlInput.val())
           inputObserver.disconnect();
+          console.log('isSuccessfulUpload', $urlInput.val())
           // formGroupObserver.disconnect();
 
           if ($imageCard.is('.gads-default.has-image')) {
@@ -65,12 +64,10 @@ function promoteSettingsListeners () {
           $formGroup.find('img')
             .one('load', () => $formGroup.find('.btn-success').trigger('click'))
             .attr('src', $urlInput.val());
-            // .addClass('to-bee-added has-success')
           break;
         }
       };
     });
-    // observing the image card causes infinite mutations for some reason
     // formGroupObserver.observe($formGroup[0], { attributes: true });
     inputObserver.observe($urlInput[0], { attributes: true });
     if (!imageDidLoad($imageCard, $img)) imageTimer = setInterval(imageDidLoad, 100, $imageCard, $img);
@@ -122,7 +119,7 @@ function promoteSettingsListeners () {
             .html('<i class="fa fa-spin fa-circle-o-notch"></i>');
           $imageCard
             .find('input:checkbox[name*="_destroy"]').prop('checked', true).end()
-            .find('.btn-remove').trigger('click');
+            .find('button:submit.btn-danger').trigger('click');
           return false;  // don't close the modal yet => wait for server response
         }
       }
@@ -147,7 +144,7 @@ function promoteSettingsListeners () {
     .on('click', '.image-library .add-image, .image-library .add-logo', (e) => {
       const collection = $(e.currentTarget).hasClass('add-logo') ? 'logos' : 'images';
       $(`.image-library__all-${collection}`)
-        .children('.ad-image-card--new').find('input:file').click();
+        .children('.ad-image-card--new').find('input:file').trigger('click');
     })
 
     .on('change.bs.fileinput', '.ad-image-card', (e) => {
@@ -157,9 +154,13 @@ function promoteSettingsListeners () {
       }
     })
 
-    .on('validated.bs.validator', '.ad-image-card--new', (e) => {
+    // why doesn't this fire?
+    .on('validated.bs.validator', '#gads-form', (e) => {
       console.log('validated.bs.validator')
-      $(e.currentTarget).removeClass('hidden')
+      const $input = $(e.relatedTarget)
+      if ($input.is('input:file:not([data-default-type])')) {
+        $input.closest('.ad-image-card--new').removeClass('hidden');
+      }
     })
 
     .on('valid.bs.validator', '#gads-form', (e) => {
@@ -169,8 +170,8 @@ function promoteSettingsListeners () {
         console.log('valid.bs.validator', e)
         initS3Upload($(e.currentTarget), $input);
 
-        // Change event on the input will trigger the s3 upload, 
-        // but stop the event propagation so that the upload handler does not re-execute
+        // Change event on the input will trigger the s3 upload
+        // => stop the event propagation so that the upload handler does not re-execute
         $input.closest('.ad-image-card').one('change.bs.fileinput', () => false);
         $input.trigger('change');
       }
@@ -179,9 +180,10 @@ function promoteSettingsListeners () {
     .on('invalid.bs.validator', '#gads-form', (e) => {
       const $input = $(e.relatedTarget);
       console.log('invalid.bs.validator', e.relatedTarget, e.detail)
-      if ($input.is(':file')) {
-        $input.closest('.ad-image-card').removeClass('ad-image-card--uploading');
-      }
+      inputObserver.disconnect();
+      // if ($input.is(':file')) {
+      //   $input.closest('.ad-image-card').removeClass('ad-image-card--uploading');
+      // }
     })
 
     .on('click', '.set-as-default', (e) => (
@@ -209,13 +211,23 @@ function promoteSettingsListeners () {
         toggleExistingDefault(false);
         toggleOtherInputs();
       } else {
-        toggleExistingDefault(true)
-        $('#previous-default-hidden-inputs').remove();
+        toggleExistingDefault(true);
       }
     })
 
-    .on('click', '.ad-image-card .remove-image', function () {
+    .on('click', '.ad-image-card .delete-image', function () {
       const $imageCard = $(this).closest('.ad-image-card');
+      if ($imageCard.is('.ad-image-card--new')) {
+        // reset the new image card...
+        $imageCard
+          .addClass('hidden gads-image')    // TODO make this work for logos too
+          .children('.fileinput')
+            .removeClass('has-error has-danger')
+            .fileinput('reset')
+            .find('input:file').attr('data-validate', 'false');
+        $('#gads-form').validator('update');
+        return false;
+      }
       const dt = $('#promoted-stories-table').DataTable();
       const imageToRemove = { 
         id: $imageCard.find('[name*="[id]"]').val(),
@@ -244,34 +256,19 @@ function promoteSettingsListeners () {
     // TODO don't allow .btn-cancel to be clicked while submitting form
     .on('click', '#gads-form .btn-cancel', (e) => {
       const $imageCard = $(e.currentTarget).closest('.ad-image-card');
-      const $formGroup = $imageCard.find('.form-group');
-      if ($imageCard.is('.gads-default')) {
-        $imageCard.find('.fileinput').fileinput('reset');
-
-        // remove the hidden inputs that would have added the previous default as a new image
-        $('#previous-default-hidden-inputs').remove();
-      }
-
-      
+      const $formGroup = $imageCard.children('.form-group');
       if ($formGroup.is('.to-be-default') || $formGroup.is('.to-be-removed')) {
         $imageCard.find('input:checkbox').prop('checked', false).trigger('change');
+        $formGroup.removeClass('to-be-default to-be-removed');
       }
-      
-      // this covers all
-      // $formGroup.removeClass('to-be-added to-be-removed to-be-default has-success has-error has-danger');
-      // $formGroup.removeClass('to-be-removed to-be-default has-success has-error has-danger');
-      $formGroup.removeClass('to-be-default to-be-removed')
     })
 
+    // .on('rails.submit', '#gads-form', (e) => console.log(e))
+
     .on('click', '#gads-form button:submit', (e) => {
-      const $submitBtn = $(e.currentTarget);
-      if ($submitBtn.is('.disabled') || $submitBtn.data('submitted')) {
-        e.preventDefault();
-        e.stopImmediatePropagation();
-        return false;
-      }
       e.preventDefault();
-      const $form = $('#gads-form');
+      const $submitBtn = $(e.currentTarget);
+      const $form = $($submitBtn.prop('form'));
       const $formGroup = $submitBtn.closest('.form-group');
       const $imageCard = $formGroup.closest('.ad-image-card');
       const cardClassName = $imageCard.length && (
@@ -279,13 +276,9 @@ function promoteSettingsListeners () {
       );
       const $defaultImageCard = $(`.ad-image-card.gads-default.${cardClassName || 'foo'}`);
       const defaultImageIsPresent = $defaultImageCard.children('input[name*="[id]"]').val();
-      // const isNewDefaultImage = (
-      //   $imageCard && $imageCard.is('.gads-default') && $formGroup.is('.to-bee-added')
-      // );
       const $companyInputs = $form.find('input').filter((i, input) => (
         $(input).prop('name').includes('company[')
       ));
-      // $companyInputs.each((i, input) => console.log($(input).attr('name')))
       const isInactiveInput = (input) => {
         const isFileInput = $(input).parent().is('.btn-file');
         const isReplacedDefaultInput = $(input).parent().is($form);
@@ -302,20 +295,15 @@ function promoteSettingsListeners () {
       const disableInactiveInputs = (i, input) => {
         $companyInputs.each((i, input) => { input.disabled = isInactiveInput(input) });
       };
-      const enableInputs = () => $companyInputs.each((i, input) => { input.disabled = false });
-      
-      // if (isNewDefaultImage) $imageCard.find('input:hidden[name*="[id]"]').val('');
+      const reEnableInputs = () => $companyInputs.each((i, input) => { input.disabled = false });
       disableInactiveInputs();
       
       // console.log('form inputs', decodeURIComponent($form.serialize()).split('&'));
       console.log('form inputs before submit', $form.serializeArray())
 
-      // if ($submitBtn.is(':not(.btn-remove)')) toggleFormWorking($form, $submitBtn);
-      $form.submit();
-
-      enableInputs();
-      // console.log('form inputs after submit', $form.serializeArray())
-
+      $imageCard.addClass('ad-image-card--saving');
+      $form.trigger('submit');
+      reEnableInputs();
       if ($formGroup.is('.to-be-removed')) $imageCard.remove();
     })
 }

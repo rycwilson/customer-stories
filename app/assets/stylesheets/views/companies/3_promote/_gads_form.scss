@@ -97,6 +97,46 @@ ul.image-library__all-logos {
     }
   }
 
+  .btn-success {
+    position: relative;
+
+    .spinner {
+      position: absolute;
+      top: 0;
+      right: 0;
+      bottom: 0;
+      left: 0;
+      z-index: -1;
+      border-radius: $btn-border-radius-small;
+      background-color: inherit;
+      box-shadow: inherit;
+
+      span {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+      }
+    }
+  }
+
+  &--saving button {
+    pointer-events: none;
+    
+    &.btn-default {
+      opacity: 0.65;
+    }
+    
+    &.btn-success {
+      background-color: #008f30;    // same as .btn-success:active:focus
+      border-color: #008f30;
+
+      .spinner {
+        z-index: initial;
+      }
+    }
+  }
+
   &--did-save .thumbnail {
     border-color: #0d9f40;
   }
@@ -261,28 +301,28 @@ ul.image-library__all-logos {
     flex-grow: 0.5;
   }
 
-  // .to-be-default > & .btn-success::before {
-  //   content: 'Set as default';
-  // }
-
   [class*="to-be-"] > & {
     display: flex;
   }
 
-  [class*="--square"] [class*="to-be-"] > & {
+  .gads-image--square &,
+  .gads-logo--square & {
     flex-direction: column;
     align-items: center;
 
-    button {
-      width: 75%;
-      
-      &:first-of-type {
-        margin-bottom: 8px;
-      }
+    button:first-of-type {
+      margin-bottom: 8px;
     }
   }
+    
+  .gads-image--square & button {
+    width: 75%;
+  }
 
-  // .to-be-added > &,
+  .gads-logo--square & button {
+    width: 90%;
+  }
+
   .to-be-default > & {
     .btn-danger {
       display: none;
@@ -297,35 +337,26 @@ ul.image-library__all-logos {
 }
 
 #gads-form {
-  // TODO: if there are any pending defaults, don't allow any activity in the lists
-  // &.required-missing {
-  //   ul.ad-image-cards {
-  //     opacity: 0.5;
-  //     pointer-events: none;
-  //     cursor: not-allowed;
-  //   }
-  // }
-
   padding-top: 15px;
-
-  .thumbnail {
-    width: 100%;
-    height: 100%;
-    padding: calc(#{$thumbnail-padding + 2px});
-    transition: border 0s;
-  }
-
+  
   .short-headline {
     [class*="col-"] > div {
       display:flex;
       align-items:center;
       justify-content:space-between
     }
-
+    
     button {
       width: 96px;
       margin-left: 15px;
     }
+  }
+
+  .thumbnail {
+    width: 100%;
+    height: 100%;
+    padding: calc(#{$thumbnail-padding + 2px});
+    transition: border 0s;
   }
 
   .fileinput, .fileinput-preview {

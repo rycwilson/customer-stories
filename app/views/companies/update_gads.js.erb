@@ -82,14 +82,15 @@
         .after(`<%= @saved_image.try(:[], :default) ? nil : j(@saved_image_card) %>`)
         .replaceWith(`<%= j @new_image_card %>`)
     }
-    setTimeout(() => $('.ad-image-card--did-save').removeClass('ad-image-card--did-save'), 3000);
 
   // existing image was set as new default
   } else if (swappedDefaultImage) { 
     $defaultImageCard.replaceWith(`<%= @swapped_default_image ? j(@swapped_default_image_card) : nil %>`);
     $list.children().first().after(`<%= @swapped_default_image ? j(@prev_default_image_card) : nil %>`);
     $swappedImageCard.remove();
-    $form.find(`.gads-default[class*="${typeClassName}"]`)[0].scrollIntoView({ block: 'center' });
+    $form.find(`.gads-default[class*="${typeClassName}"]`)
+      .addClass('ad-image-card--did-save')
+      .get(0).scrollIntoView({ block: 'center' });
 
   // image was removed
   } else if (removedImageId) {
@@ -99,20 +100,11 @@
     $('#promoted-stories-table').DataTable().ajax.reload();
 
   } else {
-    console.log('none')
-    /*
-    toggleFormDone(
-      $form, 
-      true, 
-      () => $formGroup.removeClass('to-bee-added').find($submitBtn).hide(), 
-      $submitBtn
-    );
-    */
+    console.log('no')
   }
 
-  
   setTimeout(updateIndices);
-
+  setTimeout(() => $('.ad-image-card--did-save').removeClass('ad-image-card--did-save'), 3000);
 
   /**
    *  images with user-confirmed removal

@@ -65,7 +65,7 @@ class CompaniesController < ApplicationController
   end
 
   def update_gads
-    # sleep 2
+    # sleep 3
     puts 'companies#update_gads'
     awesome_print(company_params.to_h)
     company = Company.find(params[:id])

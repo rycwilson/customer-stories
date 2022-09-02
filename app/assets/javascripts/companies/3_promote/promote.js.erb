@@ -12,7 +12,7 @@ function promote () {
     $imageCard.attr(
       'class',
       $imageCard.attr('class')
-        .replace('hidden', '')
+        //.replace('hidden', '')
         .replace(/gads-(image|logo)/, typeClassName)
         .concat($imageCard.is('.gads-default') ? ' ad-image-card--new' : '') 
     );

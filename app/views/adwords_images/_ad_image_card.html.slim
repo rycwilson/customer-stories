@@ -1,6 +1,4 @@
-li.ad-image-card {
-  class="#{ad_image_card_class_name(ad_image, collection)}" 
-  data-image-url=(ad_image[:image_url] if ad_image[:default]) }
+li.ad-image-card class="#{ad_image_card_class_name(ad_image, collection)}"
 
   input {
     type="hidden" 
@@ -45,10 +43,10 @@ li.ad-image-card {
           button.set-as-default type="button"
             i.fa.fa-fw.fa-refresh
           |&nbsp;
-          button.remove-image type="button"
+          button.delete-image type="button"
             i.fa.fa-fw.fa-remove
       - else 
-        button.remove-image type="button"
+        button.delete-image type="button"
           i.fa.fa-fw.fa-remove
       button.did-save type="button"
         i.fa.fa-fw.fa-check
@@ -78,8 +76,9 @@ li.ad-image-card {
 
     .ad-image-card__footer
       button.btn.btn-sm.btn-default.btn-cancel type="button" Cancel
-      button.btn.btn-sm.btn-danger.btn-remove type="submit" Delete
+      button.btn.btn-sm.btn-danger type="submit" form="gads-form" Delete
       button.btn.btn-sm.btn-success type="submit" form="gads-form"
-        span Set as default
-        i.fa.fa-spin.fa-circle-o-notch style="display:none"
-        i.fa.fa-check style="display:none"
+        div Set as default
+        div.spinner
+          span 
+            i.fa.fa-spin.fa-circle-o-notch
