@@ -215,16 +215,27 @@ function promoteSettingsListeners () {
       }
     })
 
-    .on('click', '.ad-image-card .btn-remove', function () {
-      const $imageCard = $(this).closest('.ad-image-card');
-      if ($imageCard.is('.ad-image-card--new')) {
-        // reset the new image card...
+    .on('click', '.ad-image-card .btn-remove', (e) => {
+      const $imageCard = $(e.currentTarget).closest('.ad-image-card');
+      const isDefaultImage = $imageCard.is('.gads-default');
+      const resetInvalidImage = () => {
         $imageCard
-          .addClass('hidden gads-image')    // TODO make this work for logos too
+          .addClass(`${isDefaultImage ? '' : 'hidden gads-image'}`)    // TODO make this work for logos too
+          .removeClass(`${isDefaultImage ? 'ad-image-card--new' : ''}`)
           .children('.fileinput')
             .removeClass('has-error has-danger')
             .fileinput('reset')
-            .find('input:file').attr('data-validate', 'false');
+            .find('input:file').attr('data-validate', 'false')
+      }
+      if ($imageCard.is('.ad-image-card--new')) {
+        if (isDefaultImage) {
+          const imageUrl = (
+            $imageCard.children('[name*="[image_url]"]').val() || $imageCard.data('placeholder-url')
+          )
+          $imageCard.find('img').one('load', resetInvalidImage).attr('src', imageUrl);
+        } else {
+          resetInvalidImage()
+        }
         $('#gads-form').validator('update');
         return false;
       }

@@ -1,4 +1,6 @@
-li.ad-image-card class="#{ad_image_card_class_name(ad_image, collection)}"
+li.ad-image-card {
+  class="#{ad_image_card_class_name(ad_image, collection)}"
+  data-placeholder-url="#{ad_image[:placeholder_image_url]}" }
 
   input {
     type="hidden" 
@@ -42,6 +44,7 @@ li.ad-image-card class="#{ad_image_card_class_name(ad_image, collection)}"
         - else
           button.set-as-default type="button"
             i.fa.fa-fw.fa-refresh
+      |&nbsp;
       button.btn-remove type="button"
         i.fa.fa-fw.fa-remove
       button.did-save type="button"
@@ -55,7 +58,7 @@ li.ad-image-card class="#{ad_image_card_class_name(ad_image, collection)}"
         .help-block.with-errors
       .fileinput-preview.thumbnail
         img {
-          src="#{ad_image[:image_url] || ad_image[:placeholder_image_url]}" 
+          src="#{ad_image[:image_url] || ad_image[:placeholder_image_url]}"
           alt=(ad_image[:type]&.split(/(?=[A-Z])/)&.join(' ')) }
       .btn-file
         input {
