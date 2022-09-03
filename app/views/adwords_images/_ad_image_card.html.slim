@@ -37,17 +37,13 @@ li.ad-image-card class="#{ad_image_card_class_name(ad_image, collection)}"
       - if ad_image
         - if ad_image[:default]
           // attaching data-trigger attribute to .file-input-preview does not work
-          button type="button" data-trigger="fileinput"
+          button.btn-upload type="button" data-trigger="fileinput"
             i.fa.fa-fw.fa-upload
         - else
           button.set-as-default type="button"
             i.fa.fa-fw.fa-refresh
-          |&nbsp;
-          button.delete-image type="button"
-            i.fa.fa-fw.fa-remove
-      - else 
-        button.delete-image type="button"
-          i.fa.fa-fw.fa-remove
+      button.btn-remove type="button"
+        i.fa.fa-fw.fa-remove
       button.did-save type="button"
         i.fa.fa-fw.fa-check
 
@@ -56,7 +52,7 @@ li.ad-image-card class="#{ad_image_card_class_name(ad_image, collection)}"
         i.fa.fa-spin.fa-circle-o-notch
       .ad-image-card__errors
         i.fa.fa-warning
-        span.help-block.with-errors
+        .help-block.with-errors
       .fileinput-preview.thumbnail
         img {
           src="#{ad_image[:image_url] || ad_image[:placeholder_image_url]}" 

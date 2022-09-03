@@ -215,7 +215,7 @@ function promoteSettingsListeners () {
       }
     })
 
-    .on('click', '.ad-image-card .delete-image', function () {
+    .on('click', '.ad-image-card .btn-remove', function () {
       const $imageCard = $(this).closest('.ad-image-card');
       if ($imageCard.is('.ad-image-card--new')) {
         // reset the new image card...

@@ -156,13 +156,15 @@ ul.image-library__all-logos {
   button {
     background: none;
     border: none;
-    background-color: rgba(40, 40, 40, 0.5);
+    color: rgba(255, 255, 255, 0.85);
+    background-color: rgba(64, 64, 64, 0.5);
     padding: 6px;
     font-size: 16px;
     border-radius: 50%;
 
     &:hover {
-      background-color: rgba(40, 40, 40, 0.75);
+      background-color: rgba(64, 64, 64, 0.75);
+      color: #fff;
     }
 
     &.did-save {
@@ -170,23 +172,30 @@ ul.image-library__all-logos {
       border: 2px solid #0d9f40;
       pointer-events: none;
       padding: 4px;
-
-      i {
-        color: #0d9f40;
-      }
+      color: #0d9f40;
     }
-  }
-
-  i {
-    color: rgba(255, 255, 255, 0.85);
   }
 
   .ad-image-card--new .form-group:not(.has-error) &,
   [class*="to-be-"] > &,
   .has-error > & .set-as-default,
+  .gads-default > .has-error > & .btn-upload,
+  .gads-default & .btn-remove,
   .ad-image-card--did-save & button:not(.did-save),
   .did-save {
     display: none;
+  }
+
+  .has-error > & .btn-remove {
+    display: block;
+    background-color: transparent;
+    color: #a94442;
+    margin: -5% -5% 0;
+
+    &:hover {
+      background-color: transparent;
+      color: #690402;
+    }
   }
 
   .ad-image-card--did-save & .did-save {
@@ -209,15 +218,9 @@ ul.image-library__all-logos {
     width: 210px; // 244.5px;
   }
 
-  // errors
-  .ad-image-card:not([class*="--square"]):not([class*="--landscape"]) & {
-    width: 180px;
-  }
-
   // .gads-image--square &,
   // .gads-logo--square &,
-  .gads-image--landscape &,
-  .ad-image-card:not([class*="--square"]):not([class*="--landscape"]) & {
+  .gads-image--landscape & {
     height: calc(110px + #{$thumbnail-padding + 2px});
   }
 
@@ -259,6 +262,7 @@ ul.image-library__all-logos {
   align-items: center;
   justify-content: center;
   color: #a94442;
+  padding: 30px;
   border: 1px solid #a94442;
   border-radius: $border-radius-base;
 
@@ -271,7 +275,7 @@ ul.image-library__all-logos {
     margin-bottom: 8px;
   }
 
-  span {
+  div {
     text-align: center;
     font-size: 13px;
     margin-bottom: 0;
