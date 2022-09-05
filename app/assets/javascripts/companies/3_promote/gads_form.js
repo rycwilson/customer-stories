@@ -16,17 +16,6 @@ function promoteSettingsListeners () {
     }
   };
 
-  // const isPrematureSuccess = ($formGroup, mutation) => {
-  //   const isImageSuccess = (
-  //     $(mutation.target).is($formGroup) &&
-  //     mutation.type === 'attributes' &&
-  //     mutation.attributeName === 'class' &&
-  //     $(mutation.target).is('.has-success')
-  //   );
-  //   // const isPremature = !($(mutation.target).is('.to-be-added'));
-  //   return isImageSuccess && isPremature;
-  // };
-
   const isSuccessfulUpload = ($formGroup, $urlInput, mutation) => (
     $(mutation.target).is($urlInput) &&
     mutation.type === 'attributes' &&
@@ -39,13 +28,6 @@ function promoteSettingsListeners () {
     const $img = $imageCard.find('img');
     const $formGroup = $imageCard.find('.form-group');
     const $urlInput = $imageCard.children('input[name*="[image_url]"]');
-    // const formGroupObserver = new MutationObserver(mutations => {
-    //   // jasny bootstrap is prematurely adding the has-success class;
-    //   // remove and add manually pending successful validation
-    //   mutations.forEach(m => {
-    //     if (isPrematureSuccess($formGroup, m)) $formGroup.removeClass('has-success');
-    //   });
-    // });
     inputObserver = new MutationObserver((mutations) => {
       for (m of mutations) {
         if (isSuccessfulUpload($formGroup, $urlInput, m)) {
@@ -68,7 +50,6 @@ function promoteSettingsListeners () {
         }
       };
     });
-    // formGroupObserver.observe($formGroup[0], { attributes: true });
     inputObserver.observe($urlInput[0], { attributes: true });
     if (!imageDidLoad($imageCard, $img)) imageTimer = setInterval(imageDidLoad, 100, $imageCard, $img);
   };
