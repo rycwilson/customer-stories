@@ -1,83 +1,97 @@
 li.ad-image-card {
   class="#{ad_image_card_class_name(ad_image, collection)}"
-  data-placeholder-url="#{ad_image[:placeholder_image_url]}" }
+  data-placeholder-url="#{ad_image[:placeholder_image_url]}"
+  data-image-id=(ad_image[:id] if ad_image)
+  data-toggle=('popover' unless image_index) }
 
-  input {
-    type="hidden" 
-    name="company[adwords_images_attributes][#{image_index}][id]" 
-    value="#{ad_image[:id]}" }
-  input {
-    type="hidden" 
-    name="company[adwords_images_attributes][#{image_index}][type]" 
-    value="#{ad_image[:type]}" }
-  input {
-    type="hidden"
-    name="company[adwords_images_attributes][#{image_index}][image_url]"
-    value="#{ad_image[:image_url]}" }
-  input {
-    type="hidden" 
-    name="company[adwords_images_attributes][#{image_index}][default]" 
-    value="false" }
-  input.hidden {
-    type="checkbox" 
-    name="company[adwords_images_attributes][#{image_index}][default]" 
-    value="true" 
-    checked=('true' if ad_image[:default]) }
-  - unless ad_image[:default]
+  - unless image_index
+    .ad-image-card__frame
+      .thumbnail
+        img src=ad_image[:image_url] alt="#{ad_image[:type].split(/(?=[A-Z])/)&.join(' ')}"
+        .check
+          div
+            div
+            span.fa-stack.fa-lg
+              i.fa.fa-circle-o.fa-stack-2x
+              i.fa.fa-check.fa-stack-1x
+
+  - else
     input {
       type="hidden" 
-      value="false" 
-      name="company[adwords_images_attributes][#{image_index}][_destroy]" }
+      name="company[adwords_images_attributes][#{image_index}][id]" 
+      value="#{ad_image[:id]}" }
+    input {
+      type="hidden" 
+      name="company[adwords_images_attributes][#{image_index}][type]" 
+      value="#{ad_image[:type]}" }
+    input {
+      type="hidden"
+      name="company[adwords_images_attributes][#{image_index}][image_url]"
+      value="#{ad_image[:image_url]}" }
+    input {
+      type="hidden" 
+      name="company[adwords_images_attributes][#{image_index}][default]" 
+      value="false" }
     input.hidden {
       type="checkbox" 
-      name="company[adwords_images_attributes][#{image_index}][_destroy]"
-      value="true" }
+      name="company[adwords_images_attributes][#{image_index}][default]" 
+      value="true" 
+      checked=('true' if ad_image[:default]) }
+    - unless ad_image[:default]
+      input {
+        type="hidden" 
+        value="false" 
+        name="company[adwords_images_attributes][#{image_index}][_destroy]" }
+      input.hidden {
+        type="checkbox" 
+        name="company[adwords_images_attributes][#{image_index}][_destroy]"
+        value="true" }
 
-  .form-group.fileinput.fileinput-exists.has-feedback data-provides="fileinput"
+    .form-group.fileinput.fileinput-exists.has-feedback data-provides="fileinput"
 
-    .ad-image-card__header
-      - if ad_image
-        - if ad_image[:default]
-          // attaching data-trigger attribute to .file-input-preview does not work
-          button.btn-upload type="button" data-trigger="fileinput"
-            i.fa.fa-fw.fa-upload
-        - else
-          button.set-as-default type="button"
-            i.fa.fa-fw.fa-refresh
-      |&nbsp;
-      button.btn-remove type="button"
-        i.fa.fa-fw.fa-remove
-      button.did-save type="button"
-        i.fa.fa-fw.fa-check
+      .ad-image-card__header
+        - if ad_image
+          - if ad_image[:default]
+            // attaching data-trigger attribute to .file-input-preview does not work
+            button.btn-upload type="button" data-trigger="fileinput"
+              i.fa.fa-fw.fa-upload
+          - else
+            button.set-as-default type="button"
+              i.fa.fa-fw.fa-refresh
+        |&nbsp;
+        button.btn-remove type="button"
+          i.fa.fa-fw.fa-remove
+        button.did-save type="button"
+          i.fa.fa-fw.fa-check
 
-    .ad-image-card__frame
-      .uploading-spinner
-        i.fa.fa-spin.fa-circle-o-notch
-      .ad-image-card__errors
-        i.fa.fa-warning
-        .help-block.with-errors
-      .fileinput-preview.thumbnail
-        img {
-          src="#{ad_image[:image_url] || ad_image[:placeholder_image_url]}"
-          alt=(ad_image[:type]&.split(/(?=[A-Z])/)&.join(' ')) }
-      .btn-file
-        input {
-          type="file"
-          accept="image/jpeg,image/png"
-          name="company[adwords_images_attributes][#{image_index}][image_url]" 
-          data-validate="false"
-          data-collection="#{collection}"
-          data-default-type=(ad_image[:type] if ad_image[:default])
-          data-max-file-size="5242880" 
-          data-min-dimensions=ad_image_min_dimensions.to_json
-          data-aspect-ratio-tolerance=RESPONSIVE_AD_ASPECT_RATIO_TOLERANCE
-          data-required-image=('true' if ad_image[:default] && ad_image[:type]&.match(/Image/)) }
+      .ad-image-card__frame
+        .uploading-spinner
+          i.fa.fa-spin.fa-circle-o-notch
+        .ad-image-card__errors
+          i.fa.fa-warning
+          .help-block.with-errors
+        .fileinput-preview.thumbnail
+          img {
+            src="#{ad_image[:image_url] || ad_image[:placeholder_image_url]}"
+            alt=(ad_image[:type]&.split(/(?=[A-Z])/)&.join(' ')) }
+        .btn-file
+          input {
+            type="file"
+            accept="image/jpeg,image/png"
+            name="company[adwords_images_attributes][#{image_index}][image_url]" 
+            data-validate="false"
+            data-collection="#{collection}"
+            data-default-type=(ad_image[:type] if ad_image[:default])
+            data-max-file-size="5242880" 
+            data-min-dimensions=ad_image_min_dimensions.to_json
+            data-aspect-ratio-tolerance=RESPONSIVE_AD_ASPECT_RATIO_TOLERANCE
+            data-required-image=('true' if ad_image[:default] && ad_image[:type]&.match(/Image/)) }
 
-    .ad-image-card__footer
-      button.btn.btn-sm.btn-default.btn-cancel type="button" Cancel
-      button.btn.btn-sm.btn-danger type="submit" form="gads-form" Delete
-      button.btn.btn-sm.btn-success type="submit" form="gads-form"
-        div Set as default
-        div.spinner
-          span 
-            i.fa.fa-spin.fa-circle-o-notch
+      .ad-image-card__footer
+        button.btn.btn-sm.btn-default.btn-cancel type="button" Cancel
+        button.btn.btn-sm.btn-danger type="submit" form="gads-form" Delete
+        button.btn.btn-sm.btn-success type="submit" form="gads-form"
+          div Set as default
+          div.spinner
+            span 
+              i.fa.fa-spin.fa-circle-o-notch

@@ -1,10 +1,19 @@
+.tooltip-inner.promoted-story-status {
+  text-align: left;
+  max-width: 175px;
+}
 
 #ads-images-modal {
+  .btn-group {
+    @include image-collection-btn-group;
+    width: 75%;
+  }
+
   .modal-title {
     margin-bottom: 5px;
   }
   .story-title {
-    margin-bottom: 0;
+    margin-bottom: 0; 
     color: #888;
   }
   .modal-body {
@@ -13,6 +22,33 @@
     // overflow-y: scroll;
     padding: 20px 15px 15px 15px;
   }
+  .image-selections__collection {
+    margin-bottom: 20px;
+  }
+  .ad-image-card {
+    margin: 8px;
+  }
+  .gads-image--square .ad-image-card__frame {
+    width: 105px;
+    height: 105px;
+  }
+  .gads-image--landscape .ad-image-card__frame {
+    width: 147px;
+    height: 77px;
+  }
+  .gads-logo--square .ad-image-card__frame {
+    width: 88px;
+    height: 88px;
+  }
+  .gads-logo--landscape & {
+    width: 174px;
+    height: 43.5px;
+  }
+  .thumbnail {
+    padding: 0;
+    border: none;
+  }
+  /*
   .gads-image--square {
     height: 85px;
   }
@@ -25,16 +61,17 @@
   .gads-logo--landscape {
     height: 80px;
   }
+  */
   img {
-    max-height: 100%;
+    //max-height: 100%;
     cursor: pointer;
     // border: 1px solid #ddd;
     box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.16), 0 0 0 1px rgba(0, 0, 0, 0.08)
   }
   li {
     position: relative;
-    padding: 5px;
-    margin: 10px;
+    //padding: 5px;
+    //margin: 10px;
     .check {
       display: none;
       position: absolute;
@@ -115,7 +152,7 @@
     }
     textarea {
       width: 100%;
-      margin-bottom: 4px;
+      margin-bottom: 8px;
     }
     .DTE_Form_Buttons {
       .help-block {
@@ -165,6 +202,7 @@
       }
     }
     .bootstrap-switch {
+      background: #fff;
       margin-bottom: 5px;
       cursor: pointer;
       .bootstrap-switch-handle-on.bootstrap-switch-primary, 

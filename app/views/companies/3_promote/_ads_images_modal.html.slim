@@ -14,16 +14,10 @@
       input type="hidden" name="story[topic_ad_attributes][id]" value="{{= topicAdId }}"
       input type="hidden" name="story[retarget_ad_attributes][id]" value="{{= retargetAdId }}"
 
-      | {{ selectedImageIds.forEach(function (imageId) { }}
-      input {
-        type="hidden" 
-        name="story[topic_ad_attributes][adwords_image_ids][]" 
-        value="{{= imageId }}" }
-      input {
-        type="hidden" 
-        name="story[retarget_ad_attributes][adwords_image_ids][]" 
-        value="{{= imageId }}" }
-      | {{ }); }}
+      | {{ for (id of selectedImageIds) { }}
+      input type="hidden" name="story[topic_ad_attributes][adwords_image_ids][]" value="{{= id }}"
+      input type="hidden" name="story[retarget_ad_attributes][adwords_image_ids][]" value="{{= id }}"
+      | {{ } }}
 
       button.btn.btn-default type="button" data-dismiss="modal" Cancel
       button.btn.btn-success.text-center type="submit" style="width: 125px" disabled=""
@@ -31,7 +25,7 @@
         i.fa.fa-spin.fa-circle-o-notch style="display: none"
 
 #ads-images-modal.modal.fade tabindex="-1" role="dialog"
-  .modal-dialog.modal-lg role="document"
+  .modal-dialog role="document"
     .modal-content
 
       .modal-header
@@ -41,35 +35,29 @@
         h4.modal-title Promoted Story Images
         h5.story-title
 
-      .modal-body style="display: flex; justify-content: space-around; margin-top: 15px"
-        div style="width: 56%"
-          h4 style="color: #888; text-align: center" Marketing Images
-          div
-            ul.marketing.text-center.list-inline
-              - company.adwords_images.marketing.each do |ad_image|
-                li {
-                  class="#{ad_image_card_class_name(ad_image)}" 
-                  data-image-id="#{ad_image.id}"
-                  data-toggle="popover" }
-                  img src="#{ad_image.image_url}" alt="marketing image"
-                  .check
-                    div
-                      div
-                      span.fa-stack.fa-lg
-                        i.fa.fa-circle-o.fa-stack-2x
-                        i.fa.fa-check.fa-stack-1x
-        div style="width: 44%"
-          h4 style="color: #888; text-align: center" Logos
-          div
-            ul.logos.text-center.list-inline
-              - company.adwords_images.logos.each do |ad_image|
-                li class="#{ad_image_card_class_name(ad_image)}" data-image-id="#{ad_image.id}"
-                  img src="#{ad_image.image_url}" alt="logo"
-                  .check
-                    div
-                      div
-                      span.fa-stack.fa-lg
-                        i.fa.fa-circle-o.fa-stack-2x
-                        i.fa.fa-check.fa-stack-1x
+      .modal-body
+        .image-selections__collection.text-center
+          .btn-group
+            a.btn.btn-secondary.active href="#image-selections__marketing" data-toggle="tab"
+              i.fa.fa-fw.fa-image
+              | &nbsp;&nbsp;
+              | Marketing Images
+            a.btn.btn-secondary href="#image-selections__logos" data-toggle="tab"
+              i.fa.fa-fw.fa-flag
+              | &nbsp;&nbsp;
+              | Logos
+        .tab-content.hidden
+          #image-selections__marketing.tab-pane.fade.active.in
+            ul.ad-image-selections data-max="15"
+              - company.ad_images.marketing.sort_by { |ad_image| ad_image.default ? 0 : 1 }.each do |ad_image|
+                = render( \
+                  'adwords_images/ad_image_card', 
+                  { image_index: nil, ad_image: ad_image, collection: 'images' })
+          #image-selections__logos.tab-pane.fade
+            ul.ad-logo-selections data-max="5"
+              - company.ad_images.logos.each do |ad_image|
+                = render( \
+                  'adwords_images/ad_image_card', 
+                  { image_index: nil, ad_image: ad_image, collection: 'logos' })
 
       .modal-footer

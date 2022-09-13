@@ -108,194 +108,201 @@ function promoteSettingsListeners () {
   };
             
   $(document)
-    .on('input', '[name="company[adwords_short_headline]"]', (e) => {
-      const btn = e.target.nextElementSibling;
-      if (e.target.checkValidity()) {
-        btn.classList.remove('hidden');
-      } else {
-        btn.classList.add('hidden');
-      }
-    })
-
-    .on('show.bs.tab', '.image-library__collection a[data-toggle="tab"]', (e) => {
-      const btnGroup = e.target.parentElement;
-      for (link of btnGroup.children) link.classList.toggle('active');
-    })
-
-    .on('click', '.image-library .add-image, .image-library .add-logo', (e) => {
-      const collection = $(e.currentTarget).hasClass('add-logo') ? 'logos' : 'images';
-      $(`.image-library__all-${collection}`)
-        .children('.ad-image-card--new').find('input:file').trigger('click');
-    })
-
-    .on('change.bs.fileinput', '.ad-image-card', (e) => {
-      if ($(e.target).is('.fileinput')) {
-        console.log('change.bs.fileinput')
-        handleS3Upload($(e.currentTarget));
-      }
-    })
-
-    // why doesn't this fire?
-    .on('validated.bs.validator', '#gads-form', (e) => {
-      console.log('validated.bs.validator')
-      const $input = $(e.relatedTarget)
-      if ($input.is('input:file:not([data-default-type])')) {
-        $input.closest('.ad-image-card--new').removeClass('hidden');
-      }
-    })
-
-    .on('valid.bs.validator', '#gads-form', (e) => {
-      const $input = $(e.relatedTarget);
-      const isNewImage = $input.is(':file') && $input.val();
-      if (isNewImage) {
-        console.log('valid.bs.validator', e)
-        initS3Upload($(e.currentTarget), $input);
-
-        // Change event on the input will trigger the s3 upload
-        // => stop the event propagation so that the upload handler does not re-execute
-        $input.closest('.ad-image-card').one('change.bs.fileinput', () => false);
-        $input.trigger('change');
-      }
-    })
-
-    .on('invalid.bs.validator', '#gads-form', (e) => {
-      const $input = $(e.relatedTarget);
-      console.log('invalid.bs.validator', e.relatedTarget, e.detail)
-      inputObserver.disconnect();
-      // if ($input.is(':file')) {
-      //   $input.closest('.ad-image-card').removeClass('ad-image-card--uploading');
-      // }
-    })
-
+    .on('input', '[name="company[adwords_short_headline]"]', onShortHeadlineInput)
+    .on('click', '.image-library .add-image, .image-library .add-logo', uploadAdImage)
+    .on('change.bs.fileinput', '.ad-image-card', onFileInputChange)
+    .on('validated.bs.validator', '#gads-form', onFileInputValidation)
+    .on('valid.bs.validator', '#gads-form', onValidFileInput)
+    .on('invalid.bs.validator', '#gads-form', onInvalidFileInput)
     .on('click', '.set-as-default', (e) => (
-      $(e.currentTarget).closest('.ad-image-card').find('input:checkbox[name*="[default]"]')
-        .click()
+      $(e.currentTarget).closest('.ad-image-card').find('input:checkbox[name*="[default]"]').trigger('click')
     ))
-
-    .on('change', '.ad-image-card:not(.gads-default) input:checkbox[name*="[default]"]', (e) => {
-      const $input = $(e.target);
-      const cardClassName = $input.closest('.ad-image-card').prop('class')
-        .match(/(gads-image|gads-logo)--(square|landscape)/)[0];
-      const toggleExistingDefault = (isChecked) => (
-        $(`.${cardClassName}.gads-default`)
-          .find('input:checkbox[name*="[default]"]')
-            .prop('checked', isChecked)
-      );
-      const toggleOtherInputs = () => (
-        $(`.${cardClassName}:not(.gads-default) input:checkbox[name*="[default]"]`).not($input)
-          .each((i, _input) => (
-            $(_input).prop('checked', false).nextAll('.form-group').removeClass('to-be-default')
-          ))
-      );
-      $input.nextAll('.form-group').toggleClass('to-be-default');
-      if ($input.prop('checked')) {
-        toggleExistingDefault(false);
-        toggleOtherInputs();
-      } else {
-        toggleExistingDefault(true);
-      }
-    })
-
-    .on('click', '.ad-image-card .btn-remove', (e) => {
-      const $imageCard = $(e.currentTarget).closest('.ad-image-card');
-      const isDefaultImage = $imageCard.is('.gads-default');
-      const resetInvalidImage = () => {
-        $imageCard
-          .addClass(`${isDefaultImage ? '' : 'hidden gads-image'}`)    // TODO make this work for logos too
-          .removeClass(`${isDefaultImage ? 'ad-image-card--new' : ''}`)
-          .children('.fileinput')
-            .removeClass('has-error has-danger')
-            .fileinput('reset')
-            .find('input:file').attr('data-validate', 'false')
-      }
-      if ($imageCard.is('.ad-image-card--new')) {
-        if (isDefaultImage) {
-          const imageUrl = (
-            $imageCard.children('[name*="[image_url]"]').val() || $imageCard.data('placeholder-url')
-          )
-          $imageCard.find('img').one('load', resetInvalidImage).attr('src', imageUrl);
-        } else {
-          resetInvalidImage()
-        }
-        $('#gads-form').validator('update');
-        return false;
-      }
-      const dt = $('#promoted-stories-table').DataTable();
-      const imageToRemove = { 
-        id: $imageCard.find('[name*="[id]"]').val(),
-        type: $imageCard.find('[name*="[type]"]').val()
-      };
-      if (!imageToRemove.id) return $imageCard.remove();
-      const affectedStories = (
-        ['SquareImage', 'LandscapeImage'].includes(imageToRemove.type) &&
-        dt
-          .rows((index, data, node) => (
-            data.ads_images.some((image) => image.id == imageToRemove.id) &&
-            // only need to update ads if this is the only required image of its type
-            data.ads_images.filter((image) => image.type === imageToRemove.type).length === 1
-          ))
-          .data().toArray().map((row) => row.ads_long_headline)
-      );
-      if (affectedStories?.length) {
-        confirmImageRemoval($imageCard, affectedStories);
-      } else {
-        $imageCard
-          .find('input:checkbox[name*="_destroy"]').prop('checked', true).end()
-          .find('.form-group').addClass('to-be-removed');
-      }
-    })
-
-    // TODO don't allow .btn-cancel to be clicked while submitting form
-    .on('click', '#gads-form .btn-cancel', (e) => {
-      const $imageCard = $(e.currentTarget).closest('.ad-image-card');
-      const $formGroup = $imageCard.children('.form-group');
-      if ($formGroup.is('.to-be-default') || $formGroup.is('.to-be-removed')) {
-        $imageCard.find('input:checkbox').prop('checked', false).trigger('change');
-        $formGroup.removeClass('to-be-default to-be-removed');
-      }
-    })
-
+    .on('change', '.ad-image-card:not(.gads-default) input:checkbox[name*="[default]"]', onDefaultCheckboxChange)
+    .on('click', '.ad-image-card .btn-remove', confirmImageDeletion)
+    .on('click', '#gads-form .btn-cancel', cancelUpdate)
+    .on('click', '#gads-form button:submit', onGadsFormSubmitBtnClick)
     // .on('rails.submit', '#gads-form', (e) => console.log(e))
 
-    .on('click', '#gads-form button:submit', (e) => {
-      e.preventDefault();
-      const $submitBtn = $(e.currentTarget);
-      const $form = $($submitBtn.prop('form'));
-      const $formGroup = $submitBtn.closest('.form-group');
-      const $imageCard = $formGroup.closest('.ad-image-card');
-      const cardClassName = $imageCard.length && (
-        $imageCard.prop('class').match(/(gads-image|gads-logo)--(square|landscape)/)[0]
-      );
-      const $defaultImageCard = $(`.ad-image-card.gads-default.${cardClassName || 'foo'}`);
-      const defaultImageIsPresent = $defaultImageCard.children('input[name*="[id]"]').val();
-      const $companyInputs = $form.find('input').filter((i, input) => (
-        $(input).prop('name').includes('company[')
-      ));
-      const isInactiveInput = (input) => {
-        const isFileInput = $(input).parent().is('.btn-file');
-        const isReplacedDefaultInput = $(input).parent().is($form);
-        const isSwappedDefaultInput = (
-          defaultImageIsPresent && 
-          $defaultImageCard.find(input).length &&
-          $imageCard.find('.to-be-default').length
-        );
-        const isOtherImage = $imageCard && !$imageCard.find(input).length;
-        const isOtherFormGroup = !$imageCard && !$formGroup.find(input).length;
-        const isPrevDefaultInput = isReplacedDefaultInput || isSwappedDefaultInput;
-        return isFileInput || ((isOtherImage || isOtherFormGroup) && !isPrevDefaultInput);
-      };
-      const disableInactiveInputs = (i, input) => {
-        $companyInputs.each((i, input) => { input.disabled = isInactiveInput(input) });
-      };
-      const reEnableInputs = () => $companyInputs.each((i, input) => { input.disabled = false });
-      disableInactiveInputs();
-      
-      // console.log('form inputs', decodeURIComponent($form.serialize()).split('&'));
-      console.log('form inputs before submit', $form.serializeArray())
+  function onShortHeadlineInput(e) {
+    const btn = e.target.nextElementSibling;
+    if (e.target.checkValidity()) {
+      btn.classList.remove('hidden');
+    } else {
+      btn.classList.add('hidden');
+    }
+  }
 
-      $imageCard.addClass('ad-image-card--saving');
-      $form.trigger('submit');
-      reEnableInputs();
-      if ($formGroup.is('.to-be-removed')) $imageCard.remove();
-    })
+  function uploadAdImage(e) {
+    const collection = $(e.currentTarget).hasClass('add-logo') ? 'logos' : 'images';
+    $(`.image-library__all-${collection}`)
+      .children('.ad-image-card--new').find('input:file').trigger('click');
+  }
+
+  function onFileInputChange(e) {
+    if ($(e.target).is('.fileinput')) {
+      // console.log('change.bs.fileinput')
+      handleS3Upload($(e.currentTarget));
+    }
+  }
+
+  function onFileInputValidation(e) {
+    // console.log('validated.bs.validator')
+    const $input = $(e.relatedTarget)
+    if ($input.is('input:file:not([data-default-type])')) {
+      $input.closest('.ad-image-card--new').removeClass('hidden');
+    }
+  }
+
+  function onValidFileInput(e) {
+    const $input = $(e.relatedTarget);
+    const isNewImage = $input.is(':file') && $input.val();
+    if (isNewImage) {
+      // console.log('valid.bs.validator', e)
+      initS3Upload($(e.currentTarget), $input);
+
+      // Change event on the input will trigger the s3 upload
+      // => stop the event propagation so that the upload handler does not re-execute
+      $input.closest('.ad-image-card').one('change.bs.fileinput', () => false);
+      $input.trigger('change');
+    }
+  }
+
+  function onInvalidFileInput(e) {
+    const $input = $(e.relatedTarget);
+    const isNewImage = $input.is(':file') && $input.val();
+    if (isNewImage) {
+      // console.log('valid.bs.validator', e)
+      initS3Upload($(e.currentTarget), $input);
+
+      // Change event on the input will trigger the s3 upload
+      // => stop the event propagation so that the upload handler does not re-execute
+      $input.closest('.ad-image-card').one('change.bs.fileinput', () => false);
+      $input.trigger('change');
+    }
+  }
+
+  function onDefaultCheckboxChange(e) {
+    const $input = $(e.target);
+    const cardClassName = $input.closest('.ad-image-card').prop('class')
+      .match(/(gads-image|gads-logo)--(square|landscape)/)[0];
+    const toggleExistingDefault = (isChecked) => (
+      $(`.${cardClassName}.gads-default`)
+        .find('input:checkbox[name*="[default]"]')
+          .prop('checked', isChecked)
+    );
+    const toggleOtherInputs = () => (
+      $(`.${cardClassName}:not(.gads-default) input:checkbox[name*="[default]"]`).not($input)
+        .each((i, _input) => (
+          $(_input).prop('checked', false).nextAll('.form-group').removeClass('to-be-default')
+        ))
+    );
+    $input.nextAll('.form-group').toggleClass('to-be-default');
+    if ($input.prop('checked')) {
+      toggleExistingDefault(false);
+      toggleOtherInputs();
+    } else {
+      toggleExistingDefault(true);
+    }
+  }
+
+  function confirmImageDeletion(e) {
+    const $imageCard = $(e.currentTarget).closest('.ad-image-card');
+    const isDefaultImage = $imageCard.is('.gads-default');
+    const resetInvalidImage = () => {
+      $imageCard
+        .addClass(`${isDefaultImage ? '' : 'hidden gads-image'}`)    // TODO make this work for logos too
+        .removeClass(`${isDefaultImage ? 'ad-image-card--new' : ''}`)
+        .children('.fileinput')
+          .removeClass('has-error has-danger')
+          .fileinput('reset')
+          .find('input:file').attr('data-validate', 'false')
+    }
+    if ($imageCard.is('.ad-image-card--new')) {
+      if (isDefaultImage) {
+        const imageUrl = (
+          $imageCard.children('[name*="[image_url]"]').val() || $imageCard.data('placeholder-url')
+        )
+        $imageCard.find('img').one('load', resetInvalidImage).attr('src', imageUrl);
+      } else {
+        resetInvalidImage()
+      }
+      $('#gads-form').validator('update');
+      return false;
+    }
+    const dt = $('#promoted-stories-table').DataTable();
+    const imageToRemove = { 
+      id: $imageCard.find('[name*="[id]"]').val(),
+      type: $imageCard.find('[name*="[type]"]').val()
+    };
+    if (!imageToRemove.id) return $imageCard.remove();
+    const affectedStories = (
+      ['SquareImage', 'LandscapeImage'].includes(imageToRemove.type) &&
+      dt
+        .rows((index, data, node) => (
+          data.ads_images.some((image) => image.id == imageToRemove.id) &&
+          // only need to update ads if this is the only required image of its type
+          data.ads_images.filter((image) => image.type === imageToRemove.type).length === 1
+        ))
+        .data().toArray().map((row) => row.ads_long_headline)
+    );
+    if (affectedStories?.length) {
+      confirmImageRemoval($imageCard, affectedStories);
+    } else {
+      $imageCard
+        .find('input:checkbox[name*="_destroy"]').prop('checked', true).end()
+        .find('.form-group').addClass('to-be-removed');
+    }
+
+  }
+
+  function cancelUpdate(e) {
+    const $imageCard = $(e.currentTarget).closest('.ad-image-card');
+    const $formGroup = $imageCard.children('.form-group');
+    if ($formGroup.is('.to-be-default') || $formGroup.is('.to-be-removed')) {
+      $imageCard.find('input:checkbox').prop('checked', false).trigger('change');
+      $formGroup.removeClass('to-be-default to-be-removed');
+    }
+  }
+
+  function onGadsFormSubmitBtnClick(e) {
+    e.preventDefault();
+    const $submitBtn = $(e.currentTarget);
+    const $form = $($submitBtn.prop('form'));
+    const $formGroup = $submitBtn.closest('.form-group');
+    const $imageCard = $formGroup.closest('.ad-image-card');
+    const cardClassName = $imageCard.length && (
+      $imageCard.prop('class').match(/(gads-image|gads-logo)--(square|landscape)/)[0]
+    );
+    const $defaultImageCard = $(`.ad-image-card.gads-default.${cardClassName || 'foo'}`);
+    const defaultImageIsPresent = $defaultImageCard.children('input[name*="[id]"]').val();
+    const $companyInputs = $form.find('input').filter((i, input) => (
+      $(input).prop('name').includes('company[')
+    ));
+    const isInactiveInput = (input) => {
+      const isFileInput = $(input).parent().is('.btn-file');
+      const isReplacedDefaultInput = $(input).parent().is($form);
+      const isSwappedDefaultInput = (
+        defaultImageIsPresent && 
+        $defaultImageCard.find(input).length &&
+        $imageCard.find('.to-be-default').length
+      );
+      const isOtherImage = $imageCard && !$imageCard.find(input).length;
+      const isOtherFormGroup = !$imageCard && !$formGroup.find(input).length;
+      const isPrevDefaultInput = isReplacedDefaultInput || isSwappedDefaultInput;
+      return isFileInput || ((isOtherImage || isOtherFormGroup) && !isPrevDefaultInput);
+    };
+    const disableInactiveInputs = (i, input) => {
+      $companyInputs.each((i, input) => { input.disabled = isInactiveInput(input) });
+    };
+    const reEnableInputs = () => $companyInputs.each((i, input) => { input.disabled = false });
+    disableInactiveInputs();
+    
+    // console.log('form inputs', decodeURIComponent($form.serialize()).split('&'));
+    console.log('form inputs before submit', $form.serializeArray())
+
+    $imageCard.addClass('ad-image-card--saving');
+    $form.trigger('submit');
+    reEnableInputs();
+    if ($formGroup.is('.to-be-removed')) $imageCard.remove();
+  }
 }

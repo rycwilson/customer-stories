@@ -1,41 +1,11 @@
 .image-library__collection {
+  @include image-collection-btn-group;
   margin-bottom: 0;
 
   .btn-group {
     width: 100%;
-    padding: 0; 
-    border-radius: 0;
-  }
-
-  a.btn-secondary {
-    width: 50%;
-    padding: 8px 16px;
-    border-color: #ccc;
-    color: #666;
-    transition: border-color 0s;
-    
-    &:hover {
-      color: #222;
-
-      &:not(.active) {
-        border-color: #ccc;
-      }
-    }
-
-    &:hover, &:active {
-      background-color: #e5e5e5;
-    }
-
-    &:active, &.active {
-      box-shadow: none; 
-    }
-
-    &.active {
-      pointer-events: none;
-      background-color: $medium-gray;
-      border-color: $nav-blue;
-      color: $nav-blue;
-    }
+    // padding: 0; 
+    // border-radius: 0;
   }
 }
 
@@ -57,10 +27,9 @@
   }
 }
 
-ul.image-library__default-images,
-ul.image-library__all-images,
-ul.image-library__default-logos,
-ul.image-library__all-logos {
+ul[class*="image-library"],
+ul.ad-image-selections,
+ul.ad-logo-selections {
   display: flex;
   flex-wrap: wrap;
   align-items: center;

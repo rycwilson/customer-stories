@@ -256,6 +256,15 @@ function promoteListeners () {
 
   $(document)
 
+    .on(
+      'show.bs.tab', 
+      '.image-library__collection a[data-toggle="tab"], .image-selections__collection a[data-toggle="tab"]', 
+      (e) => {
+        const btnGroup = e.target.parentElement;
+        for (link of btnGroup.children) link.classList.toggle('active');
+      }
+    )
+
     .on('click', '#gads-set-reset button', function () {
       var $btn = $(this),
           storyIds = [],
