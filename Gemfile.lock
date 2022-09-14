@@ -118,7 +118,6 @@ GEM
     concurrent-ruby (1.1.10)
     connection_pool (2.2.5)
     crass (1.0.6)
-    dalli (3.2.2)
     debug_inspector (1.1.0)
     devise (4.8.1)
       bcrypt (~> 3.0)
@@ -421,7 +420,6 @@ DEPENDENCIES
   bootstrap-tab-history-rails
   browser-timezone-rails
   connection_pool
-  dalli
   devise
   devise-doorkeeper
   doorkeeper
