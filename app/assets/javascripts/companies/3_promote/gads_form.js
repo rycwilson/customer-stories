@@ -245,7 +245,7 @@ function promoteSettingsListeners () {
         ))
         .data().toArray().map((row) => row.ads_long_headline)
     );
-    if (affectedStories?.length) {
+    if (affectedStories && affectedStories.length) {
       confirmImageRemoval($imageCard, affectedStories);
     } else {
       $imageCard
