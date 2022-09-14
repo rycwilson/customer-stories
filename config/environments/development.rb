@@ -26,6 +26,17 @@ Rails.application.configure do
   if Rails.root.join('tmp', 'caching-dev.txt').exist?
     config.action_controller.perform_caching = true
 
+    # Rails 4:
+    # config.cache_store = dalli_store,
+    #                      'localhost:11211',
+    #                      {
+    #                         :failover => true,
+    #                         :socket_timeout => 1.5,
+    #                         :socket_failure_delay => 0.2,
+    #                         :down_retry_delay => 60,
+    #                         :pool_size => 5  # server threads/concurrency
+    # 
+
     # config.cache_store = :memory_store
     config.cache_store = :mem_cache_store
     config.public_file_server.headers = {
