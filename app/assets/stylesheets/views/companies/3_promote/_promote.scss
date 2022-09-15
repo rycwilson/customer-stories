@@ -2,12 +2,6 @@
 @import 'promoted_stories_table';
 @import 'gads_form';
 
-#ads-images-modal {
-  .modal-header .story-title {
-    @include max-lines(1);
-  }
-}
-
 #gads-set-reset {
   margin: 30px 0;
 
@@ -55,15 +49,8 @@
       margin-bottom: 4px;
     }
   }
-
 }
 
 #promoted-stories {
   margin-top: -6px;
-}
-
-#promote-settings {
-  > div, form {
-    // padding-right: 25px;
-  }
 }

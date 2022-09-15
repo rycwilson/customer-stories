@@ -4,74 +4,77 @@
 }
 
 #ads-images-modal {
-  .btn-group {
-    @include image-collection-btn-group;
-    width: 75%;
+  .modal-header {
+    button.close {
+      font-size: 3rem;
+    }
+    
+    > div {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    
+    .story-title {
+      @include max-lines(1);
+      margin-bottom: 0; 
+      color: #888;
+    }
   }
 
-  .modal-title {
-    margin-bottom: 5px;
-  }
-  .story-title {
-    margin-bottom: 0; 
-    color: #888;
-  }
   .modal-body {
     background-color: #fff;
     min-height: 400px;
     // overflow-y: scroll;
     padding: 20px 15px 15px 15px;
   }
+  
+  .btn-group {
+    @include image-collection-btn-group;
+    width: 75%;
+  }
+
   .image-selections__collection {
     margin-bottom: 20px;
   }
+
   .ad-image-card {
     margin: 8px;
   }
+
   .gads-image--square .ad-image-card__frame {
     width: 105px;
     height: 105px;
   }
+
   .gads-image--landscape .ad-image-card__frame {
     width: 147px;
     height: 77px;
   }
+
   .gads-logo--square .ad-image-card__frame {
     width: 88px;
     height: 88px;
   }
+
   .gads-logo--landscape & {
     width: 174px;
     height: 43.5px;
   }
+
   .thumbnail {
     padding: 0;
     border: none;
   }
-  /*
-  .gads-image--square {
-    height: 85px;
-  }
-  .gads-image--landscape {
-    height: 85px;
-  }
-  .gads-logo--square {
-    height: 85px;
-  }
-  .gads-logo--landscape {
-    height: 80px;
-  }
-  */
+
   img {
-    //max-height: 100%;
     cursor: pointer;
-    // border: 1px solid #ddd;
     box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.16), 0 0 0 1px rgba(0, 0, 0, 0.08)
   }
+
   li {
     position: relative;
-    //padding: 5px;
-    //margin: 10px;
+
     .check {
       display: none;
       position: absolute;
@@ -81,8 +84,10 @@
       color: #0095ff;  // #449d44; // mac blue: #5E9ED6;
       font-size: 12px;
       padding: 4px;
+
       > div {
         position: relative;
+
         > div {
           position: absolute;
           top: 2px;
@@ -93,10 +98,12 @@
           border-radius: 14px;
         }
       }
+
       i {
         -webkit-text-stroke: 1px #fff;  // should match background color
       }
     }
+
     &.selected {
       .check {
         display: flex;
@@ -112,76 +119,56 @@
 }
 
 #promoted-stories-table {
-
-  td.promoted-story-images {
-    text-align: center;
-    vertical-align: middle;
-    padding: 8px 14px;
-    height: 97px;  // so it doesn't collapse when showing flash success
-    .fileinput {
-      margin: 0;
-      .thumbnail {
-        height: 80px;
-        width: 153px;
-        cursor: pointer;
-        margin: 0;
-        // backup image
-        // ref: http://stackoverflow.com/questions/980855
-        img:before {
-          content: ' ';
-          display: block;
-          position: absolute;
-          height: 70px;
-          width: 143px;
-          background-image: url('<%= RESPONSIVE_AD_LANDSCAPE_IMAGE_PLACEHOLDER %>');
-          background-size: contain;
-        }
-      }
-    }
-  }
-
   td.promoted-story-title {
+    position: relative;  // needed for click blocker
+
     &:not(.editor-is-open) {
       cursor: pointer;
     }
+
     &:not(.alert):not(.editor-is-open) {
       color: #07c;
     }
+
     &:not(.alert):not(.editor-is-open):hover {
       color: #3af;
     }
+
     textarea {
       width: 100%;
       margin-bottom: 8px;
     }
+
     .DTE_Form_Buttons {
       .help-block {
         display: inline-block;
         margin-top: 0;
         text-decoration: none;
       }
+
       .btn {
         float: right;
       }
+
       .btn:first-of-type {
         margin-left: 8px;  // matches td padding
       }
+
       .btn-success {
         width: 59px;
       }
     }
+
     &.form-is-clean {
       .DTE_Form_Buttons .btn-success {
         outline: none;
+
         &:active {
           background-color: #0095ff;  // disallow color change on click
         }
       }
     }
 
-  }
-  td.promoted-story-images, td.promoted-story-title {
-    position: relative;  // needed for click blocker
     &.alert {
       transition: background-color 0.25s ease;
       text-decoration: none;
@@ -194,6 +181,7 @@
   td.status {
     position: relative;
     padding: 8px;
+
     form.ads-status {
       margin-bottom: -4px;
       &[data-submitted="true"] {
@@ -201,24 +189,27 @@
         // cursor: not-allowed;
       }
     }
+
     .bootstrap-switch {
       background: #fff;
       margin-bottom: 5px;
       cursor: pointer;
+
       .bootstrap-switch-handle-on.bootstrap-switch-primary, 
       .bootstrap-switch-handle-off.bootstrap-switch-default {
         color: #666;
       }
+
       .bootstrap-switch-handle-on {
         background: $status-on-color; // #26b859; // #5fba7d; // #449d44; //#36a829;
       }
+
       &.boostrap-switch-disabled {
         .bs-switch {
           pointer-events: none;
         }
       }
     }
-
   }
 
   td.flash {
@@ -227,6 +218,7 @@
     border-radius: 0;
     padding: 0;
     // pointer-events: none;
+
     > div {
       display: flex;
       align-items: center;
@@ -237,6 +229,7 @@
       visibility: hidden;
       opacity: 0;
       transition: visibility 0s, opacity 0.25s ease;
+
       &.alert {
         visibility: visible;
         opacity: 1;
@@ -256,20 +249,22 @@
     z-index: 100;
     display: none;
   }
+
   &[data-promote-tr="false"] {
     td.status .click-blocker {
       display: initial;
     }
   }
+
   tr[data-submitted="true"] {
     .click-blocker {
       display: initial;
     }
+
     td.promoted-story-title {
       cursor: initial;
     }
   }
-
 }
 
 // other tables have an info section that normally creates some space here
