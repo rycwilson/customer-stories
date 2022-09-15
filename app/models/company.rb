@@ -362,15 +362,15 @@ class Company < ApplicationRecord
     Story.where(id: story_ids).order_as_specified(id: story_ids)
   end
 
-  def get_gads(campaign=nil)
-    if campaign == 'topic'
-      GoogleAds::get_ads([ self.topic_campaign.ad_group.ad_group_id ])
-    elsif campaign == 'retarget'
-      GoogleAds::get_ads([ self.retarget_campaign.ad_group.ad_group_id ])
-    else
-      GoogleAds::get_ads(self.ad_groups.pluck(:id))
-    end
-  end
+  # def get_gads(campaign=nil)
+  #   if campaign == 'topic'
+  #     GoogleAds::get_ads([ self.topic_campaign.ad_group.ad_group_id ])
+  #   elsif campaign == 'retarget'
+  #     GoogleAds::get_ads([ self.retarget_campaign.ad_group.ad_group_id ])
+  #   else
+  #     GoogleAds::get_ads(self.ad_groups.pluck(:id))
+  #   end
+  # end
 
   # TODO: faster? http://stackoverflow.com/questions/20014292
   def filter_stories (filter_params)

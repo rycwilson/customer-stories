@@ -1,29 +1,39 @@
 module CompaniesHelper
 
-  def ad_image_card_class_name(ad_image)
-    case ad_image[:type]
-    when 'SquareLogo'
-      "gads-logo gads-logo--square #{ ad_image[:default] ? 'gads-default' : '' }"
-    when 'LandscapeLogo'
-      "gads-logo gads-logo--landscape #{ ad_image[:default] ? 'gads-default' : '' }"
-    when "SquareImage"
-      "gads-image gads-image--square #{ ad_image[:default] ? 'gads-default gads-required' : '' }"
-    when "LandscapeImage"
-      "gads-image gads-image--landscape #{ ad_image[:default] ? 'gads-default gads-required' : '' }"
+  def ad_image_card_class_name(ad_image, collection='')
+    type_class_name = ad_image[:type]&.split(/(?=[A-Z])/)&.reverse&.join('--')&.downcase&.sub(/\A/, 'gads-')
+    if ad_image[:id].blank?
+      ad_image[:default] ? 
+        "#{type_class_name} gads-default #{ad_image[:type].match(/Image/) ? 'gads-required' : ''}" :
+        "hidden ad-image-card--new gads-#{collection.singularize}"
+    else
+      "#{type_class_name}" \
+      "#{ad_image[:default] ? ' gads-default has-image' : ''}" \
+      "#{ad_image[:default] && ad_image[:type].match(/Image/) ? ' gads-required' : ''}" \
+      "#{ad_image[:did_save] ? ' ad-image-card--did-save' : ''}"
     end
   end
 
-  def ad_image_min_dimensions(type)
-    case type
-    when 'SquareImage'
-      RESPONSIVE_AD_SQUARE_IMAGE_MIN
-    when 'LandscapeImage'
-      RESPONSIVE_AD_LANDSCAPE_IMAGE_MIN
-    when 'SquareLogo'
-      RESPONSIVE_AD_SQUARE_LOGO_MIN
-    when 'LandscapeLogo'
-      RESPONSIVE_AD_LANDSCAPE_LOGO_MIN
-    end
+  def ad_image_min_dimensions(type=nil)
+    min_dimensions = {
+      'SquareImage': {
+        width: RESPONSIVE_AD_SQUARE_IMAGE_MIN
+      },
+      'LandscapeImage': {
+        width: RESPONSIVE_AD_LANDSCAPE_IMAGE_MIN.split('x')[0],
+        height: RESPONSIVE_AD_LANDSCAPE_IMAGE_MIN.split('x')[1],
+        aspect_ratio: RESPONSIVE_AD_LANDSCAPE_IMAGE_ASPECT_RATIO
+      },
+      'SquareLogo': {
+        width: RESPONSIVE_AD_SQUARE_LOGO_MIN,
+      },
+      'LandscapeLogo': {
+        width: RESPONSIVE_AD_LANDSCAPE_LOGO_MIN.split('x')[0],
+        height: RESPONSIVE_AD_LANDSCAPE_LOGO_MIN.split('x')[1],
+        aspect_ratio: RESPONSIVE_AD_LANDSCAPE_LOGO_ASPECT_RATIO
+      }
+    }
+    type ? min_dimensions[type.to_sym] : min_dimensions
   end
 
   def missing_default_google_images?(company, image_type)
@@ -35,10 +45,6 @@ module CompaniesHelper
     #   company.adwords_images.square_logos.default.blank? ||
     #   company.adwords_images.landscape_logos.default.blank?
     # end
-  end
-
-  def gads_logos_index_offset(company, offset)
-    (company.adwords_images.marketing.length + 2 - company.adwords_images.marketing.default.length + offset).to_s
   end
 
 end

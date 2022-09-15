@@ -1,13 +1,10 @@
-
 function initPromotedStoriesTable () {
-
-  var imageIndex = 0, titleIndex = 1, customerIndex = 2, statusIndex = 3; //  actionsIndex = 4,
-      storyTitleRequirements = "Max 90 characters";
-
+  //const [customerIndex, titleIndex, imageIndex, statusIndex] = Array.from(Array(4).keys());
+  const [customerIndex, titleIndex, statusIndex, actionsIndex] = Array.from(Array(4).keys());
+  const storyTitleRequirements = "Max 90 characters";
   $('#promoted-stories-table').DataTable({
-
     ajax: {
-      url: '/companies/' + CSP.company.id + '/stories/promoted',
+      url: `/companies/${CSP.company.id}/stories/promoted`,
       dataSrc: ''
     },
     autoWidth: false,
@@ -17,54 +14,72 @@ function initPromotedStoriesTable () {
       zeroRecords: 'No Promoted Stories found'
     },
     order: [[ statusIndex, 'asc' ]],
-
     columns: [
-      {
-        name: 'ads_images',
-        data: 'ads_images',
-        render: function (ads_images, type, row, meta) {
-          var landscapeImages = ads_images.filter(function (image) {
-                                  return image.type === 'LandscapeImage'
-                                });
-          return '<div class="fileinput">' +
-                   '<div class="fileinput-preview thumbnail">' +
-                     '<img src="' + (landscapeImages.length ? landscapeImages[0].image_url : '') + '" alt="promoted story image">' +
-                   '</div>' +
-                   '<input type="file" name="image_url" id="image_url" class="hidden" ' +
-                 '</div>';
-        }
-      },
-      {
-        name: 'long_headline',
-        data: 'ads_long_headline'
-      },
       {
         name: 'customer',
         data: 'success.customer.name'
       },
       {
+        name: 'long_headline',
+        data: 'ads_long_headline'
+      },
+      /*
+      {
+        name: 'ads_images',
+        data: 'ads_images',
+        render: (ads_images, type, row, meta) => {
+          const landscapeImages = ads_images.filter(image => image.type === 'LandscapeImage');
+          return `
+            <div class="fileinput">
+              <div class="fileinput-preview thumbnail">
+                <img src="${landscapeImages.length ? landscapeImages[0].image_url : ''}" alt="promoted story image">
+              </div>
+              <input type="file" name="image_url" id="image_url" class="hidden">
+            </div>
+          `;
+        }
+      },
+      */
+      {
         name: 'status',
         data: 'ads_status',
-        render: function (ads_status, type, row, meta) {
-          if (type === 'display') {
-            return _.template($('#ads-status-form-template').html())({
-                     promoteEnabled: $('#promoted-stories-table').data('promote-tr'),
-                     status: ads_status,
-                     storyId: row.id,
-                     topicAdId: row.topic_ad.id,
-                     retargetAdId: row.retarget_ad.id
-                   });
-          } else {
-            return ads_status;
-          }
+        render: (ads_status, type, row, meta) => {
+          return type === 'display' ?
+            _.template($('#ads-status-form-template').html())({
+              promoteEnabled: $('#promoted-stories-table').data('promote-tr'),
+              status: ads_status,
+              storyId: row.id,
+              topicAdId: row.topic_ad.id,
+              retargetAdId: row.retarget_ad.id
+            }) : 
+            ads_status;
         }
+      },
+      {
+        data: 'id',
+        render: (storyId, type, row, meta) => `
+          <a href="javascript:;" class="dropdown-toggle" data-toggle="dropdown">
+            <i class="fa fa-caret-down" style="text-decoration:none;"></i>
+          </a>
+          <ul class="dropdown-menu dropdown-menu-right dropdown-actions">
+          <li>
+            <a data-toggle="modal" data-target="#ads-images-modal" role="button">
+              <i class="fa fa-fw fa-image action"></i>&nbsp;&nbsp;
+              <span>Assign Images</span>
+            </a>
+          </li>
+          <li>
+            <a href="/promote/preview/${storyId}" target="_blank">
+              <i class="fa fa-fw fa-external-link action"></i>&nbsp;&nbsp;
+              <span>Preview</span>
+            </a>
+          </li>
+        `
       }
     ],
-
     columnDefs: [
       {
-        // targets: [imageIndex, titleIndex, actionsIndex],
-        targets: [imageIndex, titleIndex],
+        targets: [titleIndex, actionsIndex],
         orderable: false
       },
       {
@@ -72,190 +87,185 @@ function initPromotedStoriesTable () {
         targets: [statusIndex, titleIndex],
         searchable: false
       },
-      { width: '22%', targets: imageIndex },
-      { width: '46%', targets: titleIndex },
+      //{ width: '22%', targets: imageIndex },
       { width: '22%', targets: customerIndex },
+      { width: '46%', targets: titleIndex },
       { width: '10%', targets: statusIndex },
-      // { width: '8%', targets: actionsIndex },
+      { width: '8%', targets: actionsIndex },
     ],
-
-    createdRow: function (row, promotedStory, index) {
-      var $table = $(this), $row = $(row);
+    createdRow: function (row, promotedStory, index) { 
+      const $table = $(this); 
+      const $row = $(row);
       $row.attr('data-story-id', promotedStory.id);
-      $row.children().eq(0).addClass('promoted-story-images');
-      $row.children().eq(1).addClass('promoted-story-title form-is-clean')
-                           .attr('data-title', promotedStory.title);
-      $row.children().eq(2).addClass('promoted-story-customer');
-      $row.children().eq(3).addClass('status dropdown');
+      $row.children().eq(0).addClass('promoted-story-customer').attr('data-title', promotedStory.title);
+      $row.children().eq(1).addClass('promoted-story-title form-is-clean');
+      $row.children().eq(2).addClass('status dropdown');
+      $row.children().eq(3).addClass('actions dropdown');
       // $row.children().eq(4).addClass('actions dropdown');
 
       // add a flash message container
-      $row.prepend(
-        '<td colspan="4" class="flash">' +
-          '<div style="position:relative">' +
-            '<button style="position: absolute; top: 0; right: 7px; font-size: 30px; cursor: pointer" type="button" class="close" aria-label="Close"><span aria-hidden="true">&times;</span></button>' +
-            '<span>Sorry, there was an error when updating the Promoted Story. Please contact</span>&nbsp;<a href="mailto:support@customerstories.net?subject=Error when updating a Promoted Story">support@customerstories.net</a>' + 
-          '</div>' +
-        '</td>'
-      )
+      $row.prepend(`
+        <td colspan="4" class="flash">
+          <div style="position:relative">
+            <button style="position: absolute; top: 0; right: 7px; font-size: 30px; cursor: pointer" type="button" class="close" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+            <span>Sorry, there was an error when updating the Promoted Story. Please contact</span>&nbsp;<a href="mailto:support@customerstories.net?subject=Error when updating a Promoted Story">support@customerstories.net</a>
+          </div>
+        </td>
+      `)
     },
     initComplete: function (settings, json) {
-      // console.log('initComplete')
-      var $table = $(this),
-          $tableWrapper = $table.closest('[id*="table_wrapper"]'),
-          addClickBlockers = function ($row) {
-            var $rows = $row ? $row : $table.find('tr[data-story-id]');
-            $rows.each(function () {
-              $(this).find('td.promoted-story-images, td.promoted-story-title, td.status')
-                       .prepend('<div class="click-blocker"></div>');
+      const $table = $(this);
+      const $tableWrapper = $table.parent();
+      const addClickBlockers = ($row) => {
+        const $rows = $row ? $row : $table.find('tr[data-story-id]');
+        $rows.each((i, row) => {
+          $(row).find('td.promoted-story-title, td.status').prepend('<div class="click-blocker"></div>');
+        });
+      };
+      const addStatusTooltip = function ($row) {
+        $row.find('td.status .click-blocker')
+          .tooltip({ 
+            container: 'body', 
+            placement: 'left',
+            template: `
+              <div class="tooltip" role="tooltip">
+                <div class="tooltip-arrow"></div>
+                <div class="tooltip-inner promoted-story-status"></div>
+              </div>
+            `,
+            title: 'Contact Customer Stories to enable this feature',
+            delay: { show: 500, hide: 0 } 
+          });
+      };
+      initStatusSwitch = function ($row) {
+        const $rows = $row ? $row : $table.find('tr[data-story-id]');
+        const promoteIsDisabled = !$table.data('promote-tr');
+        $rows.each(function () {
+          $(this).find('.bs-switch.promote-control')
+            .bootstrapSwitch({
+              size: 'small',
+              disabled: promoteIsDisabled,
+              onInit: function (e) {}
             });
-          },
-          addStatusTooltip = function ($row) {
-            // console.log('addStatusTooltip()')
-            $row.find('td.status .click-blocker')
-                  .attr({
-                    'data-toggle': 'tooltip',
-                    'data-placement': 'left',
-                    'data-title': 'Contact Customer Stories to enable this feature'
-                  })
-                  .tooltip({
-                    container: 'body',
-                    delay: { show: 500, hide: 0 }
-                  })
-          }
-          initStatusSwitch = function ($row) {
-            // console.log('initStatusSwitch()')
-            var $rows = $row ? $row : $table.find('tr[data-story-id]'),
-                promoteIsDisabled = !$table.data('promote-tr');
-            $rows.each(function () {
-              $(this).find('.bs-switch.promote-control')
-                       .bootstrapSwitch({
-                         size: 'small',
-                         disabled: promoteIsDisabled,
-                         onInit: function (e) {}
-                       })
-              if (promoteIsDisabled) addStatusTooltip($(this));
-            })
-          },
-          renderPreviewSelect = function (isUpdate) {
-            if (isUpdate) {
-              $('#ads-preview-select')
-                .find('option:not(:first-of-type)')
-                  .remove()
-                  .end()
-                .select2('destroy');
-            } else {
-              $table.closest('[id*="table_wrapper"]').prepend(
-                '<div class="form-inline pull-right" style="margin: 8px 0 20px 0">' +
-                  '<div class="form-group">' +
-                    '<label style="margin-right: 10px">Preview</label>' +
-                    '<select id="ads-preview-select" class="form-control" style="width: 320px">' +
-                      '<option></option>' +
-                    '</select>' +
-                  '</div>' +
-                '</div>'
-              );
-            }
-            $('#ads-preview-select').select2({
-              theme: "bootstrap",
-              placeholder: 'Select a Promoted Story',
-              width: 'style',
-              data: $table.DataTable().rows().data().toArray().map(function (promotedStory) {
-                  return { id: promotedStory.slug, text: promotedStory.ads_long_headline };
-                })
-            });
-          },
-          updateRow = function (dt, $row, promotedStory) {
-            //dt.row($row).invalidate().draw('data');  
-            //dt.row($row).data(promotedStory);
-            addClickBlockers($row);
-            initStatusSwitch($row);  // this will take care of tooltip
+          if (promoteIsDisabled) addStatusTooltip($(this));
+        });
+      };
+      const renderPreviewSelect = function (isUpdate) {
+        if (isUpdate) {
+          $('#ads-preview-select')
+            .find('option:not(:first-of-type)')
+              .remove()
+              .end()
+            .select2('destroy');
+        } else {
+          $table.closest('[id*="table_wrapper"]').prepend(`
+            <div class="form-inline pull-right" style="margin: 8px 0 20px 0">
+              <div class="form-group">
+                <label style="margin-right: 10px">Preview</label>
+                <select id="ads-preview-select" class="form-control" style="width: 320px">
+                  <option></option>
+                </select>
+              </div>
+            </div>
+          `);
+        }
+        $('#ads-preview-select').select2({
+          theme: 'bootstrap',
+          placeholder: 'Select a Promoted Story',
+          width: 'style',
+          data: $table.DataTable().rows().data().toArray().map(promotedStory => (
+            { id: promotedStory.slug, text: promotedStory.ads_long_headline }
+          ))
+        });
+      };
+      const updateRow = function (dt, $row, promotedStory) {
+        //dt.row($row).invalidate().draw('data');  
+        //dt.row($row).data(promotedStory);
+        addClickBlockers($row);
+        initStatusSwitch($row);  // this will take care of tooltip
+        $row
+          .find('td.promoted-story-title')
+            .addClass('form-is-clean')
+            .removeClass('editor-is-open')  // this doesn't work when it's done by the close event after submission
+            .end()
+          .attr('data-submitted', '');
+      };
+      const initEditorFlash = () => (
+        $table.find('td.flash').each((i, td) => $(td).css('height', $(td).parent().css('height')))
+      );
+      const editorFlash = ($row, res, promotedStory) => {
+        if (res.errors) {
+          $row
+            .find('td.flash > div')
+              .addClass('alert alert-danger')
+              .end()
+            .children()
+              .toggle();
+        } else {
+          $row.find('td.promoted-story-title')
+            .addClass('alert alert-success')
+            .html('<i class="fa fa-fw fa-check"></i>&nbsp;&nbsp;<span>Updated</span>');
+          setTimeout(() => {
             $row.find('td.promoted-story-title')
-                  .addClass('form-is-clean')
-                  .removeClass('editor-is-open')  // this doesn't work when it's done by the close event after submission
-                  .end()
-                .attr('data-submitted', '');
-          },
-          initEditorFlash = function () {
-            $table.find('td.flash').each(function () {
-              $(this).css('height', $(this).parent().css('height'));
-            })
-          },
-          editorFlash = function ($row, res, promotedStory) {
-            if (res.errors) {
-              $row.find('td.flash > div')
-                    .addClass('alert alert-danger')
-                    .end()
-                  .children()
-                    .toggle();
-
-            } else {
-              $row.find('td.promoted-story-title')
-                    .addClass('alert alert-success')
-                    .html(
-                      '<i class="fa fa-fw fa-check"></i>&nbsp&nbsp;' +
-                      '<span>Updated</span>'
-                    )
-              setTimeout(function () {
-                $row.find('td.promoted-story-title')
-                      .empty()
-                      .removeClass('alert alert-success')
-                      .text(promotedStory.ads_long_headline)
-              }, 2500)
-            }
-          };
-
-      renderPreviewSelect();
+              .empty()
+              .removeClass('alert alert-success')
+              .text(promotedStory.ads_long_headline);
+          }, 2500);
+        }
+      };
+      //renderPreviewSelect();
       addClickBlockers();
       initStatusSwitch();
       initEditorFlash();
       promotedStoriesEditor = newPromotedStoriesEditor();
-      promotedStoriesEditor.on('open', function (e) {
-        $('.DTE').closest('td').addClass('editor-is-open');
+      promotedStoriesEditor.on('open', (e) => {
+        $('.DTE')
+          .closest('td').addClass('editor-is-open').end()
+          .closest('tr').addClass('active');
         $('#DTE_Field_long_headline').attr('maxlength', '<%= RESPONSIVE_AD_LONG_HEADLINE_MAX.to_s %>');
-        $('.DTE_Form_Buttons')
-          .prepend('<span class="help-block">' + storyTitleRequirements + '</span>');
+        $('.DTE_Form_Buttons').prepend(`<span class="help-block">${storyTitleRequirements}</span>`);
       });
-      promotedStoriesEditor.on('close', function (e) {
-        $('#promoted-stories-table').find('td.editor-is-open').removeClass('editor-is-open');
+      promotedStoriesEditor.on('close', (e) => {
+        $('#promoted-stories-table')
+          .find('td.editor-is-open')
+            .removeClass('editor-is-open')
+            .closest('tr').removeClass('active');
       });
-      promotedStoriesEditor.on('preSubmit', function (e, data, action) {
-        // console.log('preSubmit')
+      promotedStoriesEditor.on('preSubmit', (e, data, action) => {
         if ($('.DTE_Inline').closest('td').hasClass('form-is-clean')) return false;
-        $('.DTE_Inline').closest('tr')
-                          .attr('data-submitted', true)
-                          .end()
-                        .find('.DTE_Form_Buttons button:nth-of-type(1)')
-                          .find('span, .fa-spin')
-                          .toggle();
+        $('.DTE_Inline')
+          .closest('tr')
+            .attr('data-submitted', true)
+            .end()
+          .find('.DTE_Form_Buttons button:nth-of-type(1)')
+            .find('span, .fa-spin')
+              .toggle();
       });
-      promotedStoriesEditor.on('postEdit', function (e, data, rowData) {
+      promotedStoriesEditor.on('postEdit', (e, data, rowData) => {
         // console.log('postEdit')
       });
       promotedStoriesEditor.on('submitComplete', function (e, res, promotedStory, action) {
         // console.log('submitComplete')
         // console.log('promotedStory', promotedStory)
         // this.close();  => apparently happens automatically
-        var $table = $(this.s.table),
-            dt = $table.DataTable(),
-            $row = $table.find('tr[data-story-id="' + promotedStory.id + '"]')
+        const $table = $(this.s.table);
+        const dt = $table.DataTable();
+        const $row = $table.find(`tr[data-story-id="${promotedStory.id}"]`);
+        $row.removeClass('active');
         updateRow(dt, $row, promotedStory);
-        editorFlash($row, res, promotedStory);
-        renderPreviewSelect(true);
+        //editorFlash($row, res, promotedStory);
+        //renderPreviewSelect(true);
       });
-      $table.on('draw.dt', function (e) {
+      $table.on('draw.dt', (e) => {
         addClickBlockers();
         initStatusSwitch();
       })
-      $table.on('pre-row-reorder.dt', function (e, node, index) {
+      $table.on('pre-row-reorder.dt', (e, node, index) => {
         // console.log('pre-row-reorder')
       })
       $table.css('visibility', 'visible');
-
       $('.working--promote').addClass('promoted-stories-loaded');
       $tableWrapper.find('.dataTables_paginate').show();
-
-    },
-
+    }
   });
 }

@@ -50,6 +50,10 @@ table.dataTable {
     }
   }
 
+  tbody tr.highlight {
+    background-color: #dff0d8 !important;
+  }
+
   tr.group td {
     background-color: #efefef;
     font-weight: 600;
@@ -68,11 +72,7 @@ table.dataTable {
 .table.dataTable tbody tr.active th,
 .table.dataTable tbody tr.active:hover td,
 .table.dataTable tbody tr.active:hover th {
-	background-color: $nav-blue !important;
-  color: #fff;
-  > a {
-    color: #fff;
-  }
+	background-color: #e8ffff !important; // $nav-blue !important;
 }
 
 div.dataTables_wrapper > div.dataTables_info {
@@ -97,56 +97,38 @@ div.dataTables_wrapper [class*="header"] div.dataTables_info {
 
 td {
   i[class*="fa-caret"] { 
-    color: #888;
-    &:hover {
-      color: #555;
-    } 
+    color: #999;
   }
+
+  &:hover {
+    i[class*="fa-caret"] {
+      color: #222;
+    }
+  } 
 }
 
 td.status.dropdown, td.actions.dropdown {
+  position: relative;
   text-align: center;
   padding: 0;
-  // ref: http://stackoverflow.com/questions/11078509/how-to-increase-the-clickable-area-of-a-a-tag-button
+
   > a {
-    display: block;
-    width: 100%;
-    height: 100%;
-    margin-top: -8px;
-    padding-top: 8px;
-    margin-bottom: -8px;
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
   }
 }
 
 .datatable {
-
-  tr.active {
-    i:not(.action) {
-      color: white;
-      text-decoration: none;
-    }
+  a {
+    text-decoration: none !important;
   }
 
-  tr.active {
-    td:first-child {
-      // border-left: 1px solid #0095ff; // #08c;
-    }
-    td:last-child {
-      // border-right: 1px solid #0095ff; // #08c;
-    }
-    i:not(.action) {
-      color: white;
-      text-decoration: none;
-    }
-  }
-  tr.active:hover {
-    td:first-child {
-      // border-left-color: #0095ff !important;  // #0075b0
-    }
-    td:last-child {
-      // border-right-color: #0095ff !important;  // #0075b0
-    }
-  }
   // child row
   tr.active:hover + tr:not(.group) > td[colspan]:not(.dataTables_empty) {
     // border-color: #0095ff !important; // #0075b0
@@ -156,30 +138,6 @@ td.status.dropdown, td.actions.dropdown {
     text-align: center;
     padding: 8px 12px;
   }
-
-  td.status.dropdown, td.actions.dropdown {
-    text-align: center;
-    padding: 0;
-    // ref: http://stackoverflow.com/questions/11078509/how-to-increase-the-clickable-area-of-a-a-tag-button
-    > a {
-      display: block;
-      width: 100%;
-      height: 100%;
-      margin-top: -8px;
-      padding-top: 8px;
-      margin-bottom: -8px;
-      padding-bottom: 8px;
-      // position: relative;
-      // display: inline-block;
-      // background: transparent;
-      // border: transparent;
-      // z-index: 1;
-      // padding: 2em;
-      // margin: -2em;
-    }
-
-  }
-
 }
 
 div.DTE_Inline {

@@ -65,6 +65,7 @@ class CompaniesController < ApplicationController
   end
 
   def update_gads
+    # sleep 3
     puts 'companies#update_gads'
     awesome_print(company_params.to_h)
     company = Company.find(params[:id])
@@ -76,22 +77,30 @@ class CompaniesController < ApplicationController
     end
     respond_to do |format|
       format.js do
-        @response_data = {}
-        # TODO: this will have to be separate for images and logos lists
-        # @company_params[:defaultImagesAreMissing] =
-        @response_data[:prevDefaultImage] = previous_default_ad_image(company_params.to_h[:adwords_images_attributes])
-        @response_data[:swappedDefaultImage] = swapped_default_ad_image(company_params.to_h[:adwords_images_attributes])
-
-        # this needs to be here regardless of promote being enabled
-        @response_data[:newImage] = new_ad_image(company_params.to_h[:adwords_images_attributes])
-        @response_data[:removedImageId] = removed_ad_image_id(company_params.to_h[:adwords_images_attributes])
-        @response_data[:imageClassName] = @response_data[:newImage] &&
-                                          helpers.ad_image_card_class_name({
-                                            type: @response_data[:newImage][:type],
-                                            default: @response_data[:newImage][:default]
-                                          })
-        # @response_data.delete(:adwords_images_attributes)
-        # @company_params.delete_if { |k, v| v.blank? }
+        ad_images_params = company_params.to_h[:adwords_images_attributes]
+        @saved_image = saved_ad_image(ad_images_params)
+        @swapped_default_image = swapped_default_ad_image(ad_images_params)
+        @prev_default_image = prev_default_ad_image(ad_images_params)
+        image_type = (@saved_image || @swapped_default_image).try(:[], :type)
+        @collection = image_type&.split(/(?=[A-Z])/).try(:[], 1)&.downcase.try(:concat, 's') || ''
+        @res_data = {
+          'savedImage' => @saved_image,
+          'swappedDefaultImage' => @swapped_default_image,
+          'prevDefaultImage' => @prev_default_image,
+          'collection' => @collection,
+          'imageType' => image_type,
+          # 'cardClassName' => (
+          #   @saved_image &&
+          #   helpers.ad_image_card_class_name(type: image_type, default: image_type[:default])
+          # ),
+          'typeClassName' => image_type&.split(/(?=[A-Z])/)&.reverse&.join('--')&.downcase&.sub(/\A/, 'gads-'),
+          'removedImageId' => removed_ad_image_id(ad_images_params),
+        }
+        awesome_print(@res_data)
+        @saved_image_card = image_card(@saved_image, @collection)
+        @swapped_default_image_card = image_card(@swapped_default_image, @collection)
+        @prev_default_image_card = image_card(@prev_default_image, @collection)
+        @new_image_card = @saved_image && !@prev_default_image ? image_card({}, @collection) : nil
       end
     end
   end
@@ -236,30 +245,29 @@ class CompaniesController < ApplicationController
       .delete_if { |image_ads| image_ads[:ads_params].empty? }  # no affected ads
   end
 
-  def new_ad_image(images_attrs)
-    new_image = images_attrs.try(:select) { |index, image| image[:id].blank? }
+  def image_card(image, collection)
+    return nil unless image
+    base_locals = { image_index: '?', collection: collection }
+    render_to_string(partial: 'adwords_images/ad_image_card', locals: base_locals.merge(ad_image: image))
+  end
+
+  def saved_ad_image(ad_images_params)
+    new_image = ad_images_params.try(:select) { |index, image| image[:id].blank? }
     new_image = new_image.try(:[], new_image.try(:keys).try(:first))
     if new_image.present?
-      AdwordsImage.where(image_url: new_image[:image_url])
-                  .take.try(:slice, :id, :type, :image_url, :default)
+      AdwordsImage.where(image_url: new_image[:image_url]).take
+        &.slice(:id, :type, :image_url, :default)
+        &.merge({ did_save: true })
     else
       nil
     end
   end
 
-  def previous_default_ad_image(images_attrs)
-    new_image_is_present = images_attrs.try(:select) { |index, image| image[:id].blank? }.present?
-
-    # 1 - new image uploaded over existing default => last key
-    # 2 - new image added to list and 'make default' selected => first key
-    if images_attrs.try(:length) == 2 && new_image_is_present
-      images_attrs[images_attrs.keys.first][:default] == 'true' ?
-        images_attrs[images_attrs.keys.last] :
-        images_attrs[images_attrs.keys.first]
-
-    # 3 - existing image swapped in as new default => first key
-    elsif images_attrs.try(:length) == 2 && !new_image_is_present
-      images_attrs[images_attrs.keys.first]
+  def prev_default_ad_image(ad_images_params)
+    if ad_images_params.try(:length) == 2
+      new_image_is_present = ad_images_params.try(:select) { |i, image| image[:id].blank? }.present?
+      key = new_image_is_present ? ad_images_params.keys.last : ad_images_params.keys.first
+      AdwordsImage.find(ad_images_params[key][:id])
     else
       nil
     end

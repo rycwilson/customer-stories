@@ -1,5 +1,5 @@
 
-ruby '2.7.5'
+ruby '2.7.6'
 source 'https://rubygems.org'
 
 gem 'activerecord-import'
@@ -11,7 +11,7 @@ gem 'bootstrap-tab-history-rails'
 # gem 'bower-rails', '~> 0.11.0'
 gem 'browser-timezone-rails'
 gem 'connection_pool'
-gem 'dalli'
+# gem 'dalli'
 gem 'devise'
 gem 'devise-doorkeeper'
 gem 'doorkeeper'

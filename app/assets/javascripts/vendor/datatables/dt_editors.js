@@ -24,14 +24,14 @@ function newPromotedStoriesEditor() {
           }
         };
       },
-      success: function () {
-        console.log('editor success')
+      success: (data, status, xhr) => {
+        // console.log(data)
       }
     },
     idSrc: 'id',
     fields: [
       {
-        label: 'Promoted Story Title',
+        label: '', // 'Promoted Story Title',
         name: 'long_headline',
         data: 'ads_long_headline',
         type: 'textarea'
