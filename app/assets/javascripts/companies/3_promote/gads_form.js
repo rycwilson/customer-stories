@@ -169,16 +169,8 @@ function promoteSettingsListeners () {
 
   function onInvalidFileInput(e) {
     const $input = $(e.relatedTarget);
-    const isNewImage = $input.is(':file') && $input.val();
-    if (isNewImage) {
-      // console.log('valid.bs.validator', e)
-      initS3Upload($(e.currentTarget), $input);
-
-      // Change event on the input will trigger the s3 upload
-      // => stop the event propagation so that the upload handler does not re-execute
-      $input.closest('.ad-image-card').one('change.bs.fileinput', () => false);
-      $input.trigger('change');
-    }
+    console.log('invalid.bs.validator')
+    inputObserver.disconnect();
   }
 
   function onDefaultCheckboxChange(e) {
