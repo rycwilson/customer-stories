@@ -56,35 +56,34 @@ class AdwordsAdsController < ApplicationController
 
   # update the story with topic_ad_attributes and retarget_ad_attributes
   def update
-    # puts 'adwords_ads#update'
     # awesome_print(story_params.to_h)
     story = Story.find(params[:id])
 
     # in case there's an error and we need to revert association changes
-    existing_ads_image_ids = story.ads.first.adwords_image_ids
+    # existing_ads_image_ids = story.ads.first.adwords_image_ids
     if story.update(story_params)
       updated_gads = {}
-      [story.topic_ad, story.retarget_ad].each_with_index do |ad, index|
+      # [story.topic_ad, story.retarget_ad].each_with_index do |ad, index|
 
         # for non-promoted-enabled companies, changing status will be blocked,
         # but other ad parameters can be changed
         # => confirm presence of ad_id before updating google
-        updated_gad = (ad.previous_changes.keys & ['status']).any? ?
-          GoogleAds::change_ad_status(ad) :
-          (ad.ad_id.present? ? GoogleAds::update_ads([ad]) : nil)
+        # updated_gads = (ad.previous_changes.keys & ['status']).any? ?
+        #   GoogleAds::change_ad_status(ad) :
+        #   (ad.ad_id.present? ? GoogleAds::update_ads([ad]) : nil)
 
         # revert changes if google errors (update_columns method => no callbacks)
-        if updated_gad.try(:[], :errors)
-          if (ad.previous_changes.keys & ['long_headline', 'status']).any?
-            ad.update_columns(
-              ad.previous_changes.map { |attr, val| [attr, val.shift] }.to_h
-            )
-          else
-            ad.adwords_image_ids = existing_ads_image_ids  # saves immediately, skips the callback
-          end
-        end
-        updated_gads[index == 0 ? :topic : :retarget] = updated_gad
-      end
+        # if updated_gads.try(:[], :errors)
+        #   if (ad.previous_changes.keys & ['long_headline', 'status']).any?
+        #     ad.update_columns(
+        #       ad.previous_changes.map { |attr, val| [attr, val.shift] }.to_h
+        #     )
+        #   else
+        #     ad.adwords_image_ids = existing_ads_image_ids  # saves immediately, skips the callback
+        #   end
+        # end
+        # updated_gads[index == 0 ? :topic : :retarget] = updated_gads
+      # end
     else
       # error
     end
@@ -127,13 +126,15 @@ class AdwordsAdsController < ApplicationController
       # in most case it's sufficient to get data from a single ad (e.g. topic)),
       # since topic and retarget are supposed to be sync'ed
       format.js do
-        @response_data = {}
-        @response_data[:promotedStory] = dt_data[0]
-
+        @res_data = {}
+        @res_data[:promotedStory] = dt_data[0]
+        @res_data[:promoteIsDisabled] = !story.company.promote_tr?
+        
         # presently only one attribute will change at a time
-        @response_data[:previousChanges] = story.topic_ad.previous_changes.first
-        @response_data[:gadsErrors] = updated_gads.any? { |type, ad| ad.try(:[], :errors) }
-        @response_data[:isImagesUpdate] = story_params.to_h[:topic_ad_attributes][:adwords_image_ids].present?
+        @res_data[:previousChanges] = story.topic_ad.previous_changes.first
+        @res_data[:isStatusUpdate] = story.topic_ad.previous_changes.first.try(:first) == :status
+        @res_data[:isImagesUpdate] = story_params.to_h[:topic_ad_attributes][:adwords_image_ids].present?
+        @res_data[:gadsErrors] = updated_gads.any? { |type, ad| ad.try(:[], :errors) }
       end
     end
   end

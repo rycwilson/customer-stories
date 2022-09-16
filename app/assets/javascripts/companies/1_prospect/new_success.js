@@ -326,7 +326,7 @@ function newSuccessListeners () {
           .val($('#successes-filter').val().match(/customer-(\d+)/)[1])
           .trigger('change.select2');
       }
-      if (curatorId !== '0') {
+      if (curatorId !== '') {
         $('select.new-success.curator')
           .val($('.prospect.curator-select').val())
           .trigger('change');
@@ -337,7 +337,7 @@ function newSuccessListeners () {
       $('.form-group.csv-file, #new-success-form .form-group:not(.source)').toggle();
       if ($(this).val() === 'import') {
         $('#new-success-form .form-group').removeClass('has-error');
-        $('button[type="submit"][form="new-success-form"] span').text('Import CSV');
+        $('button[type="submit"][form="new-success-form"] span').text('Import');
       } else {
         $('#new-success-form').find('.fileinput').fileinput('clear');
         $('#new-success-form').find('.fileinput-filename').addClass('placeholder').text('Upload');
@@ -346,7 +346,7 @@ function newSuccessListeners () {
           .find('.help-block').text('');
         $('button[type="submit"][form="new-success-form"')
           .prop('disabled', false)
-          .find('span').text('Create Win');
+          .find('span').text('Create');
       }
     })
 
@@ -363,24 +363,22 @@ function newSuccessListeners () {
       }
     })
 
-    .on('change', 'select.new-success.customer', function () {
-      var $form = $('#new-success-form');
-      customerVal = $(this).val();
-      customerId = isNaN(customerVal) ? null : customerVal;
-
-      // update hidden customer_id
+    .on('change', 'select.new-success.customer', (e) => {
+      const $form = $('#new-success-form');
+      const customerVal = $(e.target).val();
+      const customerId = isNaN(customerVal) ? null : customerVal;
       $form.find('#success_customer_id').val(customerId);
-
       if (customerId) {
-        // turn off customer attributes
-        $form.find('input[id*="customer_attributes"]').each(function () {
-            $(this).prop('disabled', true);
-          });
+        // disable customer attributes
+        $form
+          .find('input[id*="customer_attributes"]')
+          .each(function disableCustomerAttrs() { $(this).prop('disabled', true) });
       } else {
         // update and enable customer attributes
-        $form.find('input[id*="customer_attributes_id"]').val('');
-        $form.find('input[id*="customer_attributes_name"]').val(customerVal);
-        $form.find('input[id*="customer_attributes"]').prop('disabled', false);
+        $form
+          .find('input[id*="customer_attributes_id"]').val('').end()
+          .find('input[id*="customer_attributes_name"]').val(customerVal).end()
+          .find('input[id*="customer_attributes"]').prop('disabled', false);
       }
     })
 
@@ -449,7 +447,7 @@ function newSuccessListeners () {
       $(this).find('.form-group').removeClass('has-error');
       $(this).find('.create-contact input').prop('required', false);
       $('button[form="new-success-form"]').attr('type', 'submit');
-      $('button[form="new-success-form"] span').text('Create Win').css('display', 'inline').prop('disabled', false);
+      $('button[form="new-success-form"] span').text('Create').css('display', 'inline').prop('disabled', false);
       $('button[form="new-success-form"] i').css('display', 'none');
     })
 

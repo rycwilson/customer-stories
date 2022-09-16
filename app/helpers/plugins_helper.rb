@@ -1,13 +1,14 @@
 module PluginsHelper
 
-  def params_to_data_attrs (params)
+  def demo_plugin_data_attrs params
+    puts params
     [
       params[:stories].present? ? "data-stories=#{params[:stories]}" : '',
       params[:category].present? ? "data-category=#{params[:category]}" : '',
       params[:product].present? ? "data-product=#{params[:product]}" : '',
       params[:max_rows].present? ? "data-max-rows=#{params[:max_rows]}" : '',
       params[:background].present? ? "data-background=#{params[:background]}" : '',
-      params[:logos_only].present? ? "data-logos-only=true" : '',
+      params[:logo_style].present? ? "data-logo-style=#{params[:logo_style]}" : '',
       params[:grayscale].present? ? "data-grayscale=true" : '',
       params[:tab_color].present? ? "data-tab-color=#{params[:tab_color]}" : '',
       params[:text_color].present? ? "data-text-color=#{params[:text_color]}" : '',
@@ -20,17 +21,6 @@ module PluginsHelper
   # method provides for auto-populating settings for legacy plugins that won't
   # necessarily have the expected data attributes
   def tabbed_carousel_style (company, tab_color, text_color, border_only=false)
-    case company.subdomain
-    when 'trunity'
-      tab_color = '#FEBE57' if tab_color.blank?
-      text_color = '#ffffff' if text_color.blank?
-    when 'retailnext'
-      tab_color = '#ffd400' if tab_color.blank?
-      text_color = '#000000' if text_color.blank?
-    else
-      tab_color = tab_color || "#333333"
-      text_color = text_color || "#ffffff"
-    end
     if border_only
       "border-top-color: #{tab_color}"
     else

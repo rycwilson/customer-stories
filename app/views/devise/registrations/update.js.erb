@@ -1,14 +1,12 @@
 (function () {
-
   var user = <%= raw @user.to_json %>,
       status = "<%= @status %>",
       flashMesg = "<%= @flash_mesg %>",
       passwordUpdate = <%= @password_update %>;
 
-  $('button[type="submit"][form="user-profile-form"]').find('span, .fa-spin').toggle()
-
   if (passwordUpdate) {
-    $('#password-update-form')[0].reset();
+    $('button[type="submit"][form="change-password-form"]').find('span, .fa-spin').toggle()
+    $('.change-password')[0].reset();
     if (status === 'success') {
       flashDisplay("Password changed", status);
       $("[href='#profile-tab']").click()
@@ -20,6 +18,7 @@
   }
 
   else {
+    $('button[type="submit"][form="user-profile-form"]').find('span, .fa-spin').toggle()
     if (status === 'success') {
       if (!user.linkedin_url) {
         if ($('.linkedin-url').hasClass('url-present')) {
@@ -27,24 +26,13 @@
         }
         $('.linkedin-container > span').remove();
       }
-      // $.getScript('//platform.linkedin.com/in.js', function () {
-      //   $("input[name='user[linkedin_url]']").parent().siblings().remove();
-      //   $("input[name='user[linkedin_url]']").parent().after(
-      //         "<script type='IN/MemberProfile' " +
-      //           "data-id='" + user.linkedin_url + "' " +
-      //           "data-format='inline' data-related='false' " +
-      //           "data-width='300'>" +
-      //         "</script>"
-      //       );
-      //   IN.parse();
-      // });
       flashDisplay('Account updated', status, function () {
-        $('#user-profile-form').data('submitted', '');
+        $('.user-profile').data('submitted', '');
       })
     }
     else {
       flashDisplay(flashMesg, status, function () {
-        $('#user-profile-form').data('submitted', '');
+        $('.user-profile').data('submitted', '');
       });
     }
   }

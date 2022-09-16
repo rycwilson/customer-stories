@@ -10,7 +10,7 @@ function storiesEditSettingsListeners () {
   $(document)
 
     // ensure only valid logo/story publish states
-    .on('switchChange.bootstrapSwitch', '.form-group.publish input', function (e, data) {
+    .on('switchChange.bootstrapSwitch', '.story-settings__publish input', function (e, data) {
       // note the jquery indexing => necessary for bootstrap switch to work properly
       var $current = $(this),
           $logoInput = $('input:checkbox[name="story[logo_published]"]'),
@@ -103,43 +103,81 @@ function storiesEditSettingsListeners () {
       }
 
     })
+
+    .on('focus', '.hidden-link input', function () { $(this).blur(); })
+    .on('click', '.hidden-link__refresh', function () {
+      $(this).blur();
+      // var hiddenLink = [location.origin, chance.guid()].join('/');
+
+      // https://stackoverflow.com/questions/105034/how-to-create-a-guid-uuid
+      var hiddenLink = window.location.origin + '/' + Date.now().toString(36) + Math.random().toString(36).substring(2);
+      $('.hidden-link input').val(hiddenLink);
+      $('.hidden-link__copy')
+        .attr('title', 'Save changes to enable Copy')
+        .tooltip('fixTitle')
+        .addClass('disabled')
+    })
+    .on('click', '.hidden-link__copy', function (e) {
+      $(this).blur();
+      if ($(this).is('.disabled')) {
+        e.stopPropagation();
+        return false;
+      }
+      var $temp = $('<input />');
+      $('body').append($temp);
+      $temp.val($('.hidden-link input').val())
+           .select();
+      document.execCommand('copy');
+      $temp.remove();
+      $(this)
+        .attr('title', 'Copied!')
+        .tooltip('fixTitle')
+        .tooltip('show')
+        .one('hidden.bs.tooltip', function () {
+          $('.hidden-link__copy')
+            .attr('title', 'Copy')
+            .tooltip('fixTitle');
+        });
+    });
 }
 
 // the select2 boxes initialize synchronously, i.e. subsequent code doesn't
 // execute until initilization is complete.
 // pass the cbShowTab callback to the bs-switch onInit property
-function initStoriesEditSettings (cbShowTab) {
-
-  initS3Upload();
-
-  $('.story-settings.story-tags').select2({
-    theme: 'bootstrap',
-    placeholder: 'Select'
-  });
-
-  $('#story-ctas-select').select2({
-    theme: 'bootstrap',
-    placeholder: 'Select'
-  });
-
-  $('#story-settings-form').parent().removeClass('hidden')
-  if (cbShowTab) cbShowTab();
-
-  $('.bs-switch.publish-control').bootstrapSwitch({
-    size: 'small',
-    onInit: function (e) {
-      // TODO: not sure why this was necessary, probably remove it
-      // // without the timeout, one switch is briefly on (?)
-      // setTimeout(function () {
-      //   $('#story-settings-form').parent().removeClass('hidden');
-      //   if (cbShowTab) {
-      //     $(window).one('shown.bs.tab', function () {
-      //       window.scrollTo(0,0);
-      //     });
-      //     cbShowTab();
-      //   }
-      // }, 0);
+function initStoriesEditSettings(shownTabHandler) {
+  var initSelectInputs = function () {
+        $('.story-settings.story-tags, #story-ctas-select')
+          .select2({
+            theme: 'bootstrap',
+            placeholder: 'Select'
+          })
+          .next('.select2')
+            .find('.select2-selection__choice')
+              .attr('title', '')
+              .end()
+            .end()
+          .on('select2:select, select2:unselect, change.select2', function () {
+            $(this).next('.select2')
+                    .find('.select2-selection__choice__remove')
+                      .html('<i class="fa fa-fw fa-remove"></i>');
+          })
+          .trigger('change.select2');  // manipulate the remove button
+      };
+  var initSwitchInputs = function () {
+        $('.bs-switch.publish-control').bootstrapSwitch({
+          size: 'small',
+          animate: false,
+          onInit: function (e) {}
+        });
+      };
+  $.when(initSelectInputs, initSwitchInputs).done(function () {
+    if (shownTabHandler) {
+      window.scrollTo(0, 0);
+      shownTabHandler();
     }
-  });
-
+    $('#story-settings-form').attr('data-init', true);
+  })    
+  initS3Upload();
+  initSelectInputs();
+  initSwitchInputs();
 }

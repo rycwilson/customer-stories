@@ -1,7 +1,11 @@
 
-// colors
-$bg-color: #f5f6f7;
+@import 'fonts';
+
+$varmour-gray: #f5f6f7;
+$varmour-blue: #2fb9ff;
 $story-hover-color: #edf5f8;
 
-// fonts
-@import '../fonts';  // only works for native csp
+$company-logo-max-height: 40px;
+
+$company-body-font: $metropolis-regular;
+$company-title-font: $metropolis-regular;

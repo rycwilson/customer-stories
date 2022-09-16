@@ -1,5 +1,5 @@
 
-<nav id="company-nav" class="<%= company.present? ? '' : 'unregistered' %>">
+<nav id="company-nav" class="<%= company.present?  && company.persisted? ? '' : 'unregistered' %>">
   <div class="container company-nav-container">
     <div class="row">
 
@@ -20,7 +20,46 @@
 
           <% else %>
 
-            <%= render('companies/shared/workflow_tabs', { company: company, workflow_stage: workflow_stage }) %>
+            <!-- https://stackoverflow.com/questions/556153 -->
+            <ul class="nav nav-tabs nav-workflow" role="tablist">
+
+              <li id="prospect-tab" class="<%= workflow_stage == 'prospect' ? 'active' : '' %>"
+                  role="presentation">
+                <a href="#prospect" role="tab" data-toggle="tab"
+                  aria-controls="prospect" data-turbolinks="false">
+                  Prospect
+                </a>
+                <div></div>
+              </li>
+
+              <li id="curate-tab" class="<%= workflow_stage == 'curate' ? 'active' : '' %>"
+                  role="presentation">
+                <a href="#curate" role="tab" data-toggle="tab"
+                  aria-controls="curate" data-turbolinks="false">
+                  Curate
+                </a>
+                <div></div>
+              </li>
+
+              <li id="promote-tab" class="<%= workflow_stage == 'promote' ? 'active' : '' %>"
+                  role="presentation">
+                <a href="#promote" role="tab" data-toggle="tab"
+                  aria-controls="promote" data-turbolinks="false">
+                  Promote
+                </a>
+                <div></div>
+              </li>
+
+              <li id="measure-tab" class="<%= workflow_stage == 'measure' ? 'active' : '' %>"
+                  role="presentation">
+                <a href="#measure" role="tab" data-toggle="tab"
+                  aria-controls="measure" data-turbolinks="false">
+                  Measure
+                </a>
+                <div></div>
+              </li>
+
+            </ul>
 
           <% end %>
 
@@ -31,11 +70,6 @@
         </div>
 
       <% end %>
-
-      <!-- <div id='collapsed-workflow-tabs'
-           class="col-xs-1 <%#= gallery_view? ? '' : 'hidden-xs hidden-sm' %> hidden-md hidden-lg">
-        <%#= render 'companies/shared/collapsed_workflow_tabs', { company: company } %>
-      </div> -->
 
     </div>
 

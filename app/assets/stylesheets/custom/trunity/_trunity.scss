@@ -1,11 +1,18 @@
 
-body.trunity:not(.companies):not(.profile):not(.edit) {
+.trunity.stories.show, .cs-overlay-container {
 
-  // @import 'company_header';
-  // @import 'stories_header';
-  // @import 'gallery';
-  // @import 'index';
-  @import 'show';
+  #cs-tabbed-carousel {
+    .cs-header {
+      background-color: #febe57;
+    }
+    .cs-drawer-content {
+      border-top-color: #febe57;
+    }
+  }
+
+}
+
+body.trunity:not(.companies):not(.profile):not(.edit) {
 
   @media only screen and (max-width: 767px) {
     #stories-gallery, #curate-gallery {
@@ -60,10 +67,10 @@ body.trunity:not(.companies):not(.profile):not(.edit) {
 
   @media only screen and (min-width: 1200px) {
     &.stories.index {
-      .filters-container.visible-md-block.short {
+      .search-and-filters.visible-md-block.short {
         // margin: 10px 2px 0 0;
       }
-      .filters-container.visible-md-block.tall {
+      .search-and-filters.visible-md-block.tall {
       }
     }
   }

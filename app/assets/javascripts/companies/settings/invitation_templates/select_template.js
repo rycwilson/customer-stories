@@ -32,18 +32,19 @@ function selectTemplateListeners () {
               setTimeout(function () {
                 var $form = $('#invitation-template-form'),
                     $button = $('button[type="submit"][form="invitation-template-form"]'),
-                    isNewTemplate = $form.find('input[name="_method"][value="put"]').length === 0;
-                $('#invitation-template-submit p').empty();
+                    isNewTemplate = $form.find('input[name="_method"][value="put"]').length === 0,
+                    $submissionFooter = $('.submission-footer--invitation-template');
+                $submissionFooter.find('p').empty();
                 if (isNewTemplate) {
                   $button.css('width', '135px').find('span').text('Create template');
-                  $('#invitation-template-submit p').append('New template');
+                  $submissionFooter.find('p').append('New template');
                 } else {
                   $button.css('width', '114px').find('span').text('Save changes');
-                  $('#invitation-template-submit p').append(
+                  $submissionFooter.find('p').append(
                     'Template:\xa0\xa0' + $('select.invitation-template').find('option:selected').text()
                   );
                 }
-                $('#invitation-template-submit').addClass('show');
+                $submissionFooter.addClass('show');
               }, 200);
             };
 
@@ -93,9 +94,9 @@ function selectTemplateListeners () {
       // keep the existing selection in place pending confirmation
       var templateId = $select.val();
 
-      $('#invitation-template-submit').removeClass('show');
+      $('.submission-footer--invitation-template').removeClass('show');
       // why is the timeout necessary??
-      // setTimeout(function () { $('#invitation-template-submit').removeClass('show'); }, 0);
+      // setTimeout(function () { $('.submission-footer--invitation-template').removeClass('show'); }, 0);
       $select.val(previousTemplateId).trigger('change.select2');
 
       if ( $('#invitation-template-form').data('dirty') ) {

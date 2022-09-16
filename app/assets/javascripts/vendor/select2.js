@@ -5,30 +5,32 @@
   Only one .select2() call per element will work, others ignored
 */
 function initSelect2 () {
-
   var prependTagType = function () {
     var tagId, tagText;
-    $('.filters-container .select2-selection__rendered li:not(:last-of-type)')
+    $('.search-and-filters .select2-selection__rendered li:not(:last-of-type)')
       .each(function (index, tag) {
-        tagId = $('#grouped-stories-filter').select2('data')[index].id;
-        tagText = $('#grouped-stories-filter').select2('data')[index].text;
+        tagId = $('.stories-filter__select--grouped').select2('data')[index].id;
+        tagText = $('.stories-filter__select--grouped').select2('data')[index].text;
         if (!tag.innerHTML.includes('Category:') && !tag.innerHTML.includes('Product:')) {
           tag.innerHTML = tag.innerHTML.replace(
               tagText,
-              tagId.includes('c') ? 'Category:\xa0' + tagText : 'Product:\xa0' + tagText
+              tagId.includes('c') ?
+                'Category:\xa0' + '<span style="font-weight: bold">' + tagText + '</span>' : 
+                'Product:\xa0' + '<span style="font-weight: bold">' + tagText + '</span>'
             );
         }
       });
   };
 
   var prependCustomerName = function () {
-    var storyId, storyTitle, storyCustomer;
-    $('#edit-plugins ul.select2-selection__rendered li.select2-selection__choice')
+    var storyId, storyTitle, storyCustomer,
+        $storiesSelect = $('[name="plugin[stories][]"]');
+    $('.plugin-config ul.select2-selection__rendered li.select2-selection__choice')
       .each(function (index, story) {
-        storyId = $('select.plugin-stories').select2('data')[index].id;
-        storyTitle = $('select.plugin-stories').select2('data')[index].text;
+        storyId = $storiesSelect.select2('data')[index].id;
+        storyTitle = $storiesSelect.select2('data')[index].text;
         customerName = JSON.parse(
-          $('select.plugin-stories').find('option[value="' + storyId + '"]').data('customer')
+          $storiesSelect.find('option[value="' + storyId + '"]').data('customer')
         );
         if (!story.innerHTML.match(new RegExp('^' + customerName))) {
           story.innerHTML = story.innerHTML.replace(
@@ -39,58 +41,68 @@ function initSelect2 () {
       });
   };
 
+  // remove title attribute that select2 adds by default
+  $(document).on('change', 'select', (e) => {
+    if ($(e.target).data('select2')) {
+      $(e.target)
+        .next('.select2')
+          .find('.select2-selection__rendered, .select2-selection__choice')
+            .attr('title', '');
+    }
+  })
+
   // for customers, successes, contributors, referrers => don't initialize if the form submission modal is still open
 
   /**
    * customer (includes new success, new contributor, new story)
    */
-  $("select.customer:not(.modal.in select)").select2({
-    theme: "bootstrap",
-    tags: true,  // to allow custom input
-    selectOnClose: true,
-    placeholder: 'Select or Create',
-  });
+  $('.modal:not(.in) select.customer')
+    .select2({
+      theme: 'bootstrap',
+      tags: true,               // allows for custom input
+      selectOnClose: true,
+      placeholder: 'Select or Create',
+    })
 
   /**
    * success (includes new contributor, new story)
    */
-  $("select.success:not(.modal.in select)").select2({
-    theme: "bootstrap",
-    tags: true,  // to allow custom input
-    selectOnClose: true,
-    placeholder: 'Select or Create',
-  });
+  $('.modal:not(.in) select.success')
+    .select2({
+      theme: 'bootstrap',
+      tags: true,
+      selectOnClose: true,
+      placeholder: 'Select or Create',
+    })
 
   /**
    * contributor (includes new success, new contributor)
-   */
-  $('select.contributor:not(.modal.in select)').select2({
-    theme: 'bootstrap',
-    // minimumResultsForSearch: -1,
-    placeholder: 'Select or Create'
-  });
-
-  /**
    * referrer (includes new success, new referrer)
    */
-  $('select.referrer:not(.modal.in)').select2({
-    theme: 'bootstrap',
-    placeholder: 'Select or Create'
-  });
+  $('.modal:not(.in) select.contributor, select.referrer')
+    .select2({
+      theme: 'bootstrap',
+      placeholder: 'Select or Create'
+    });
+
+  // https://github.com/select2/select2/issues/5993
+  $('.modal:not(.in)')
+    .find('select.customer, select.success, select.contributor, select.referrer')
+      .next('.select2')
+        // .find('.select2-selection__rendered').attr('title', '').end()
+        // .end()
+      .on('select2:open', (e) => {
+        document.querySelector('.select2-container--open .select2-search__field').focus();
+      })
 
   /**
    * curator (includes new success, new contributor)
+   * invitation template
    */
-   $('.new-success.curator').select2({
-     theme: 'bootstrap',
-     placeholder: 'Select'
-   });
-
-  $('.new-contributor.invitation-template').select2({
-    theme: "bootstrap",
+  $('.new-success.curator, .new-contributor.invitation-template').select2({
+    theme: 'bootstrap',
     placeholder: 'Select'
-  });
-
+  })
 
   /**
    * may not be present if datatables not yet rendered
@@ -101,66 +113,126 @@ function initSelect2 () {
        .select2({
          theme: 'bootstrap',
          width: 'style',
+         allowClear: true,
+         placeholder: 'Select',
          minimumResultsForSearch: -1   // hides text input
        })
-       // select2 is inserting an empty <option> for some reason
-       .children('option').not('[value]').remove();
+        .on('select2:unselecting', function (e) {
+          $(this).data('unselecting', true);
+        })
+        .on('select2:open', function (e) {
+          if ($(this).data('unselecting')) {
+            $(this).removeData('unselecting')
+            $(this).select2('close');
+          }
+        })
+        .on('change.select2', function (e) {
+          if ($(this).val()) {
+            $(this).next('.select2').addClass('select2-container--allow-clear')
+          } else {
+            $(this).next('.select2').removeClass('select2-container--allow-clear')
+          }
+        })
+
     $('.dt-filter').select2({
        theme: 'bootstrap',
        width: 'style',
-       // allowClear: true
-    });
+       placeholder: 'Search / Select',
+       allowClear: true
+    })
+      .on('select2:unselecting', function (e) {
+        $(this).data('unselecting', true);
+      })
+      .on('select2:open', function (e) {
+        if ($(this).data('unselecting')) {
+          $(this).removeData('unselecting')
+          $(this).select2('close');
+        }
+      })
+      .on('change.select2', function (e) {
+        if ($(this).val()) {
+          $(this).next('.select2').addClass('select2-container--allow-clear')
+        } else {
+          $(this).next('.select2').removeClass('select2-container--allow-clear')
+        }
+      })
   }
 
   // story settings has its own init routine
-  $('.story-tags:not(.story-settings)').select2({
-    theme: 'bootstrap',
-    placeholder: 'Select'
-  });
-
-  $('#curate-filters select').select2({
-    theme: 'bootstrap',
-    width: 'style',
-    placeholder: 'Select',
-    allowClear: true
-  })
-    .on("select2:unselecting", function (e) {
-      $(this).data('state', 'unselected');
+  $('.story-tags:not(.story-settings)')
+    .select2({
+      theme: 'bootstrap',
+      placeholder: 'Select'
     })
-    .on("select2:open", function (e) {
-      if ($(this).data('state') === 'unselected') {
-        $(this).removeData('state');
-        var self = $(this);
-        setTimeout(function() { self.select2('close'); }, 0);
-      }
-    });
+    .on('select2:select, select2:unselect, change.select2', function () {
+      $(this).next('.select2')
+               .find('.select2-selection__choice__remove')
+                 .html('<i class="fa fa-fw fa-remove"></i>');
+    })
 
-  $('.stories-filter').select2({
+  $('#curate-filters select')
+    .select2({
+      theme: 'bootstrap',
+      width: 'style',
+      placeholder: 'Select',
+      allowClear: true
+    })
+    .on('select2:unselecting', function (e) {
+      $(this).data('unselecting', true);
+    })
+    .on('select2:open', function (e) {
+      if ($(this).data('unselecting')) {
+        $(this).removeData('unselecting')
+               .select2('close');
+      }
+    })
+    .on('change.select2', function (e) {
+      if ($(this).val()) {
+        $(this).next('.select2').addClass('select2-container--allow-clear')
+      } else {
+        $(this).next('.select2').removeClass('select2-container--allow-clear')
+      }
+    })
+  $('#curate .layout-sidebar .curate-stories').attr('data-init', true);
+
+  // main gallery filters
+  $('.stories-filter__select--category, .stories-filter__select--product')
+    .select2({
       theme: 'bootstrap',
       placeholder: 'Select',
       allowClear: true,
-      width: 'style'   // get the width from stories.scss
+      width: 'style'   
     })
-    // ref https://stackoverflow.com/questions/29618382/disable-dropdown-opening-on-select2-clear
-    .on('select2:unselecting', function() {
-        $(this).data('unselecting', true);
-      })
-    .on('select2:opening', function(e) {
-       if ($(this).data('unselecting')) {
-         $(this).removeData('unselecting');
-         e.preventDefault();
-        }
-      });
+    .on('select2:unselecting', function (e) {
+      $(this).data('unselecting', true);
+    })
+    .on('select2:open', function (e) {
+      if ($(this).data('unselecting')) {
+        $(this).removeData('unselecting')
+              .select2('close');
+      }
+    })
+    .on('change.select2', function (e) {
+      if ($(this).val()) {
+        $(this).next('.select2').addClass('select2-container--allow-clear')
+      } else {
+        $(this).next('.select2').removeClass('select2-container--allow-clear')
+      }
+    })
+    .each(function (e) {
+      // pre-selected value
+      if ($(this).val()) {
+        $(this).next('.select2').addClass('select2-container--allow-clear')
+      }
+    })
 
-  $('.filters-container.visible-md-block select').css('visibility', 'visible');
-
-
-  $('#grouped-stories-filter').select2({
-    theme: 'bootstrap',
-    placeholder: 'Select Category and/or Product',
-    tags: true,
-    width: 'style',
-  })
+  $('.stories-filter__select--grouped')
+    .select2({
+      theme: 'bootstrap',
+      placeholder: 'Select Category and/or Product',
+      tags: true,
+      width: 'style',
+    })
     // ref https://stackoverflow.com/questions/29618382/disable-dropdown-opening-on-select2-clear
     // the answer that worked above did not work for this one, but this one does:
     .on('select2:unselecting', function (e) {
@@ -176,18 +248,33 @@ function initSelect2 () {
         siblings[i].selected = false;
       }
     })
-    .on('select2:select', prependTagType)
-    .on('select2:unselect', prependTagType);
+    .on('select2:select, select2:unselect, change.select2', function () {
+      prependTagType();
+      $(this).next('.select2')
+               .find('.select2-selection__choice__remove')
+                 .html('<i class="fa fa-fw fa-remove"></i>');
+    })
 
+  // modify close button
+  $('.stories-filter__select--grouped')
+    .next('.select2')
+      .find('.select2-selection__choice__remove')
+        .html('<i class="fa fa-fw fa-remove"></i>');
 
-  if ($('body').hasClass('stories index')) {
-    prependTagType();
-    $('.filters-container.visible-xs-block').css('visibility', 'visible');
-  }
+  if ($('body').hasClass('stories index')) prependTagType();
+
+  // restore last selected value
+  // change the selected item, but avoid 'change' event
+  $('[class*="stories-filter__select"]').each(function () {
+    if (preSelect = $(this).data('pre-select')) {
+      $(this).val(preSelect.toString()).trigger('change.select2');
+    }
+  });
+  $('.search-and-filters').attr('data-init', true);
 
   // TODO Is this an issue?  http://stackoverflow.com/questions/36497723
-  // $('.stories-filter').data('init', true);
-  // $('.stories-filter').each(function () {
+  // $('[class*="search-and-filters__filter]').data('init', true);
+  // $('[class*="search-and-filters__filter]').each(function () {
   //   if ($(this)[0].getAttribute('data-init') === null) {
   //     // console.log("init'ing select2");
   //     $(this).select2({
@@ -214,12 +301,28 @@ function initSelect2 () {
   Thus, company tag select boxes should not show a list of options, because the
   options are being created at this stage.  There is nothing to select.
   */
-  $('.company-tags').select2({
-    theme: 'bootstrap',
-    tags: true,
-    placeholder: 'Add tags',
-    selectOnClose: true
-  });
+  $('.company-tags')
+    .select2({
+      theme: 'bootstrap',
+      tags: true,
+      placeholder: 'Add tags',
+      // selectOnClose: true
+    })
+    .next('.select2')
+      .find('.select2-selection__choice')
+        .attr('title', '')
+        .end()
+      .end()
+    .on('select2:select, select2:unselect, change.select2', function () {
+      $(this).next('.select2')
+               .find('.select2-selection__choice__remove')
+                 .html('<i class="fa fa-fw fa-remove"></i>');
+    })
+  $('#company-tags-form')
+    .find('.select2-selection__choice__remove')
+      .html('<i class="fa fa-fw fa-remove"></i>')
+      .end()
+    .attr('data-init', true);
 
   $('select.invitation-template').select2({
     theme: 'bootstrap',
@@ -239,20 +342,24 @@ function initSelect2 () {
         tags: true,
         width: 'style',
         createTag: function(params) {
-            return undefined;
+          return undefined;
         }
       })
-        .on('select2:select', prependCustomerName)
-        .on('select2:unselect', prependCustomerName)
-        .on('select2:unselecting', function() {
-            $(this).data('unselecting', true);
-          })
-        .on('select2:opening', function(e) {
-           if ($(this).data('unselecting')) {
-             $(this).removeData('unselecting');
-             e.preventDefault();
-            }
-          });
+        .on('select2:unselecting', function (e) {
+          $(this).data('unselecting', true);
+        })
+        .on('select2:open', function (e) {
+          if ($(this).data('unselecting')) {
+            $(this).removeData('unselecting')
+                   .select2('close');
+          }
+        })
+        .on('select2:select, select2:unselect, change.select2', function () {
+          prependCustomerName();
+          $(this).next('.select2')
+                   .find('.select2-selection__choice__remove')
+                     .html('<i class="fa fa-fw fa-remove"></i>');
+        })
 
       var ul = $(select).next('.select2-container').first('ul.select2-selection__rendered');
       ul.sortable({
@@ -273,48 +380,53 @@ function initSelect2 () {
     }
   });
 
-  $('.content__select--category select').select2({
-    theme: 'bootstrap',
-    placeholder: 'Select Category',
-    allowClear: true,
-    width: 'style'
-  })
-    // ref https://stackoverflow.com/questions/29618382/disable-dropdown-opening-on-select2-clear
-    .on('select2:unselecting', function() {
-        $(this).data('unselecting', true);
-      })
-    .on('select2:opening', function(e) {
-       if ($(this).data('unselecting')) {
-         $(this).removeData('unselecting');
-         e.preventDefault();
-        }
-      });
+  $('[name="plugin[category]"]')
+    .select2({
+      theme: 'bootstrap',
+      placeholder: 'Select Category',
+      allowClear: true,
+      width: 'style'
+    })
+    .on('select2:unselecting', function (e) {
+      $(this).data('unselecting', true);
+    })
+    .on('select2:open', function (e) {
+      if ($(this).data('unselecting')) {
+        $(this).removeData('unselecting')
+               .select2('close');
+      }
+    })
+    .on('change.select2', function (e) {
+      if ($(this).val()) {
+        $(this).next('.select2').addClass('select2-container--allow-clear')
+      } else {
+        $(this).next('.select2').removeClass('select2-container--allow-clear')
+      }
+    })
 
-  $('.content__select--product select').select2({
-    theme: 'bootstrap',
-    placeholder: 'Select Product',
-    allowClear: true,
-    width: 'style'
-  })
-    // ref https://stackoverflow.com/questions/29618382/disable-dropdown-opening-on-select2-clear
-    .on('select2:unselecting', function() {
-        $(this).data('unselecting', true);
-      })
-    .on('select2:opening', function(e) {
-       if ($(this).data('unselecting')) {
-         $(this).removeData('unselecting');
-         e.preventDefault();
-        }
-      });
-
-  // restore last selected value
-  // change the selected item, but avoid 'change' event
-  $('select').each(function () {
-    if ($(this).hasClass('stories-filter') &&
-        (preSelect = $(this).data('pre-select'))) {
-      $(this).val(preSelect.toString()).trigger('change.select2');
-    }
-  });
+  $('[name="plugin[product]"]')
+    .select2({
+      theme: 'bootstrap',
+      placeholder: 'Select Product',
+      allowClear: true,
+      width: 'style'
+    })
+    .on('select2:unselecting', function (e) {
+      $(this).data('unselecting', true);
+    })
+    .on('select2:open', function (e) {
+      if ($(this).data('unselecting')) {
+        $(this).removeData('unselecting')
+              .select2('close');
+      }
+    })
+    .on('change.select2', function (e) {
+      if ($(this).val()) {
+        $(this).next('.select2').addClass('select2-container--allow-clear')
+      } else {
+        $(this).next('.select2').removeClass('select2-container--allow-clear')
+      }
+    })
 
   $('#charts-story-select, #visitors-story-select')
     .select2({
@@ -325,7 +437,7 @@ function initSelect2 () {
   // this works, but only hides options on removing a tag
   // for hiding options whether adding or removing a tag, css is used to hide the results
   // ref: https://github.com/select2/select2/issues/3320
-  function select2Listeners () {
+  function select2Listeners (foo, bar, lorem) {
       // .on('select2:unselecting', function (e) {
       //   $(this).data('unselecting', true);
       // })

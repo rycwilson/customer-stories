@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
 <!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
@@ -12,9 +13,13 @@
   <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,400italic,600,600italic,800,800italic">
   <link href='https://fonts.googleapis.com/css?family=Lato:300,400,700' rel='stylesheet' type='text/css'>
   <!-- csp assets -->
-  <link rel="stylesheet" href="<%= asset_path('views/plugins/demo.css') %>">
   <link href="https://fonts.googleapis.com/css?family=Montserrat:400,500,600,700&amp;lang=en" rel="stylesheet" type="text/css">
-  <script src="<%= asset_path('plugins/demo.js') %>"></script>
+  <style>
+    html, body {
+      height: 100%;
+    } 
+  </style>
+  <!-- <script src="<%#= asset_path('plugins/demo.js') %>"></script> -->
   <%= favicon_link_tag 'favicon.ico' %>
   <%= custom_google_fonts(@company) %>
 </head>
@@ -26,21 +31,7 @@
     <a href="javascript:;" data-plugin-type="tabbed_carousel" class="<%#= @params[:type] == 'tabbed_carousel' ? 'active' : '' %>">Tabbed Carousel</a>
   </div> -->
 
-  <% if params[:type] == 'gallery' %>
-
-    <div id="cs-gallery"></div>
-    <script src="<%= root_url + 'plugins/gallery/cs.js' %>" data-demo="1" <%= params_to_data_attrs(params) %>></script>
-
-  <% elsif params[:type] == 'carousel' %>
-
-    <div id="cs-carousel"></div>
-    <script src="<%= root_url + 'plugins/carousel/cs.js' %>" data-demo="1" <%= params_to_data_attrs(params) %>></script>
-
-  <% elsif params[:type] == 'tabbed_carousel' %>
-
-    <div id="cs-tabbed-carousel"></div>
-    <script src="<%= root_url + 'plugins/tabbed_carousel/cs.js' %>" data-demo="1" <%= params_to_data_attrs(params) %>></script>
-
-  <% end %>
+  <div id="cs-<%= params[:type].gsub('_', '-') %>" class="cs-plugin">
+  <script src="<%= root_url + "plugins/#{params[:type]}/cs.js" %>" data-demo="1" <%= demo_plugin_data_attrs(params) %>></script>
 
 </body>

@@ -1,0 +1,21 @@
+
+<div class="submission-footer submission-footer--<%= modifier %> container">
+
+  <div class="row">
+
+    <div class="col-sm-8 col-sm-offset-4 col-md-9 col-md-offset-3 text-right">
+      <p class="pull-left"><%= modifier == 'story' ? story.title.truncate(80) : '' %></p>
+      <button type="submit" 
+              class="btn btn-success text-center"
+              style="width: 114px"
+              form="<%= modifier == 'story' ? 'story-content-form' : 'invitation-template-form' %>">
+        <span><%= modifier == 'story' ? 'Save changes' : '' %></span>
+        <i class="fa fa-spin fa-circle-o-notch" style="display: none"></i>
+        <i class='fa fa-check' style="display:none"></i>
+      </button>
+    </div>
+
+  </div>
+
+</div>
+

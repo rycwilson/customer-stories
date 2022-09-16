@@ -2,7 +2,7 @@
 function newContributorListeners() {
 
   var isCurateView = function () {
-        return $('#workflow-tabs li.active a').attr('href') === '#curate';
+        return $('.nav-workflow li.active a').attr('href') === '#curate';
       },
       noCustomerContributors = function () {
         // length of 2 accounts for empty option and - Create New Contributor -
@@ -51,7 +51,7 @@ function newContributorListeners() {
           .select2({
             theme: "bootstrap",
             tags: true,
-            selectOnClose: true,
+            // selectOnClose: true,
             placeholder: 'Select or Create',
             data: successOptionsData
           });

@@ -1,54 +1,61 @@
 
-ruby '2.3.0'
+ruby '2.7.6'
 source 'https://rubygems.org'
 
-# NOTE: Front-end assets are all managed through the bower-rails gem
-#  see Bowerfile
-#  run rake bower:install to install assets listed in Bowerfile
-
 gem 'activerecord-import'
-gem 'aws-sdk', '~> 2'
+gem 'awesome_print'
+gem 'aws-sdk-rails', '~> 3.0'
+gem 'aws-sdk-s3', '~> 1.0'
+gem 'bootsnap', require: false
 gem 'bootstrap-tab-history-rails'
-gem 'bower-rails', '~> 0.11.0'
+# gem 'bower-rails', '~> 0.11.0'
 gem 'browser-timezone-rails'
 gem 'connection_pool'
-gem 'dalli'
-# gem 'delayed_job_active_record'
+# gem 'dalli'
 gem 'devise'
 gem 'devise-doorkeeper'
 gem 'doorkeeper'
 gem 'ffaker'
 gem 'figaro'
 gem 'font-awesome-rails'
-gem 'friendly_id', '~> 5.1.0'
+gem 'friendly_id'
 gem 'gon'
 gem 'googlecharts'
-gem 'google-adwords-api', '1.4.0'
+gem 'google-adwords-api', '1.5'
 gem 'html_to_plain_text'
-gem 'jazz_hands', github: 'nixme/jazz_hands', branch: 'bring-your-own-debugger'
+
+gem 'jquery-rails'
+gem 'jquery-ui-rails'
 gem 'jquery-minicolors-rails'
+
 gem 'local_time'
 # gem 'miro'
 gem 'multi_json'
 # gem 'oauth2'
 gem 'order_as_specified'
 gem 'pg'
-gem 'pry-byebug'
+gem 'pretender'
+gem 'pry-rails' 
+gem 'pry-remote'
 gem 'pry-theme'
-gem 'rails', '>= 5.0.0.rc2', '< 5.1'
+gem 'rails', '5.2.8'
 gem 'rails_admin'
 gem 'rails-html-sanitizer'
+gem 'rack-cors'
 gem 'rack_password'
-gem 'rack-timeout'
+gem 'rack-timeout', require: "rack/timeout/base"
 gem 'reverse_markdown'
-# gem 'sass-rails', '~> 5.0'
-gem 'sassc-rails'
+
+gem 'bootstrap-sass', '3.3.6'
+gem 'sassc-rails', '>= 2.1.0'
+
+gem 'slim-rails', '~> 3.0'
+gem 'sprockets', '~> 3.0'
 gem 'summernote-rails'
-gem 'switch_user'
-gem 'turbolinks', '~> 5.0.0'
+gem 'turbolinks'
 gem 'typhoeus'
-gem 'uglifier', '>= 1.3.0'
-gem 'wicked_pdf'
+gem 'uglifier'
+gem 'wicked_pdf', '~> 2.0'
 gem 'wkhtmltopdf-binary'
 
 group :production do
@@ -58,19 +65,18 @@ group :production do
 
 end
 
-group :development, :test do
-
-
-  # gem 'rack-mini-profiler'
-  # gem 'flamegraph'
-  # gem 'stackprof'
-  # gem 'whenever', require: false
-  gem 'better_errors'
+group :development do
   # Access an IRB console on exception pages or by using <%= console %> in views
+  gem 'web-console'
+end
 
-  # Spring speeds up development by keeping your application running in the background. Read more: https://github.com/rails/spring
-  gem 'spring'
-  gem 'web-console', '~> 3.0'
+group :development, :test do
+  gem 'rspec-rails', '~> 5.0'
+  gem 'pry-byebug'
   gem 'binding_of_caller'
+  gem 'better_errors'
 
+  # Spring speeds up development by keeping your application running in the background. 
+  # Read more: https://github.com/rails/spring
+  gem 'spring'
 end

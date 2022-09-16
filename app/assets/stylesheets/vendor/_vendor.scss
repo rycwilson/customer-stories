@@ -1,18 +1,25 @@
-
-// datatables-plugins is left over from mvp 2.1.1 (all other DataTables assets
-// downloaded upgraded with direct download from datatables.net)
-@import 'datatables-plugins/integration/bootstrap/3/dataTables.bootstrap';
-@import 'DataTables/DataTables-1.10.15/css/dataTables.bootstrap';
-@import 'DataTables/datatables';
-@import 'datatables-editor-trial/css/dataTables.editor';
 @import 'select2/dist/css/select2';
 @import 'select2-bootstrap-theme/dist/select2-bootstrap';
+
+// datatables - old
+// @import 'integration/bootstrap/3/dataTables.bootstrap';
+// @import 'DataTables-1.10.15/css/dataTables.bootstrap';
+// @import 'datatables';
+// @import 'css/dataTables.editor';
+
+@import 'datatables.net-bs/css/dataTables.bootstrap';
+@import 'css/editor.bootstrap';
+
+// not sure what this provides...
+// @import 'RowGroup-1.0.0/css/rowGroup.bootstrap';
+
 @import 'jquery.minicolors';
-@import 'bootstrap-switch/dist/css/bootstrap3/bootstrap-switch';
+@import 'jquery3-bootstrap-switch/dist/css/bootstrap3/bootstrap-switch';
 @import 'bootstrap-daterangepicker/daterangepicker';
 @import 'summernote';
 
-// override plugin stylesheets
+// csp overrides
+@import 'bootstrap';
 @import 'select2';
 @import 'summernote_csp';
-@import 'turbolinks';
+@import 'datatables';

@@ -17,8 +17,8 @@ function constructPlugins () {
   // these funtions all copied over from config.js (plugin configuration)
   // (make sure initSelect2() is called first - it defines $.fn.select2Sortable)
   var customStoriesToJson = function () {
-        var storyIds = $('select.plugin-stories').val() ?
-                         $('select.plugin-stories').val().map(function (id) { return +id; }) :
+        var storyIds = $('[name="plugin[stories][]"]').val() ?
+                         $('[name="plugin[stories][]"]').val().map(function (id) { return +id; }) :
                          [];
         return JSON.stringify(storyIds);
       },
@@ -36,8 +36,8 @@ function constructPlugins () {
         if (typeof $.fn.select2Sortable !== 'function') {
           setTimeout(initSelect2Sortable, 25);
         } else {
-          $('select.plugin-stories').select2Sortable(updateScriptTag);
-          $('select.plugin-stories').show();
+          $('[name="plugin[stories][]"]').select2Sortable(updateScriptTag);
+          $('[name="plugin[stories][]"]').show();
         }
       };
 
@@ -50,7 +50,7 @@ function constructPlugins () {
   initTooltips();
   initClicky();
 
-  $("input[type='tel']").inputmask("999-999-9999");
+  // $("input[type='tel']").inputmask("999-999-9999");
   $('.mini-colors').not('#edit-plugins .minicolors').minicolors({ theme: 'bootstrap' });
   $('#edit-plugins .mini-colors').minicolors({ theme: 'bootstrap', inline: false });
 
@@ -61,12 +61,14 @@ function constructPlugins () {
         pixleeImg = new Image();
 
     pixleeImg.onload = function () {
-      $('.pixlee-cta .cta__image').css('background', 'url("http://assets.pixlee.com/website/webinar/webinar-hero.png") center / cover no-repeat');
-      pixleeCtaTop = $('.pixlee-cta').offset().top;
+      setTimeout(function () {
+        $('.pixlee-cta .cta__image').css('background', 'url("http://assets.pixlee.com/website/webinar/webinar-hero.png") center / cover no-repeat');
+        pixleeCtaTop = $('.pixlee-cta').offset().top;
+      }, 100);
     };
     pixleeImg.src = 'http://assets.pixlee.com/website/webinar/webinar-hero.png';
 
-    $(document).on('scroll', function () {
+    $(document).on('scroll', _.throttle(function () {
       var currentScroll = $(window).scrollTop();
       if (currentScroll > pixleeCtaTop - 95) {
         $('.pixlee-cta').css({
@@ -81,7 +83,7 @@ function constructPlugins () {
           position: 'static'
         });
       }
-    });
+    }));
 
   }
 

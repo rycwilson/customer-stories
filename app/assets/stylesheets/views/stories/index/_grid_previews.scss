@@ -1,7 +1,7 @@
 
 // ref https://tympanus.net/codrops/2013/03/19/thumbnail-grid-with-expanding-preview/
 
-.grid-item.og-expanded > a::after {
+.og-expanded > a::after {
   bottom: -11px;
   border: solid transparent;
   content: " ";

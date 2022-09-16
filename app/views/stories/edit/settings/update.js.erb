@@ -4,8 +4,8 @@
   var res = <%= raw @response_data.to_json %>,
       $table = $('#promoted-stories-table'),
       story = <%= raw @story.to_json({
-                    only: [:id, :title, :logo_published, :preview_published, :published],
-                    methods: [:previous_changes, :csp_story_path],
+                    only: [:id, :title, :slug, :logo_published, :preview_published, :published],
+                    methods: [:csp_story_path],
                     include: {
                       success: {
                         only: [],
@@ -17,15 +17,37 @@
                   }) %>,
       $hiddenAdInputs = $('#story-settings__ads-inputs'),
 
+      updateStoryCard = function (story) {
+        $('.story-card[data-story-id="' + story.id + '"]')
+          .attr('data-story-slug', story.slug)
+          .find('.story-card__title p')
+            .text(story.title)
+      },
+
+      updateStoryHeader = function (story) {
+        $('#story-header__title')
+          .children('span:nth-of-type(2)')
+            .text(story.title)
+            .end()
+          .find('a')
+            .attr('href', story.csp_story_path + '?preview=true');
+      },
+
       // update any story attributes that fall under Settings
       updateStory = function () {
         var storyIndex = CSP.stories.findIndex(function (st) { return st.id === story.id });
-        CSP.stories[storyIndex].csp_story_path = story.csp_story_path;
-        CSP.stories[storyIndex].logo_published = story.logo_published;
-        CSP.stories[storyIndex].preview_published = story.preview_published;
-        CSP.stories[storyIndex].published = story.published;
-        CSP.stories[storyIndex].title = story.title;
-        $('#story-header__title > span:nth-of-type(2)').text(story.title);
+        var storyObj = CSP.stories[storyIndex];
+        
+        // this covers both title being changed and product present/absent in the path
+        if (storyObj.csp_story_path !== story.csp_story_path) {
+          updateStoryHeader(story);
+          updateStoryCard(story);
+          storyObj.csp_story_path = story.csp_story_path
+        }
+        storyObj.logo_published = story.logo_published;
+        storyObj.preview_published = story.preview_published;
+        storyObj.published = story.published;
+        storyObj.title = story.title;
       },
 
       flash = function () {
@@ -98,11 +120,14 @@
         }
       };
 
-  console.log('res', res);
+  $('.hidden-link__copy')
+    .attr('title', 'Copy')
+    .tooltip('fixTitle')
+    .removeClass('disabled');
 
-  updateStory();
   toggleFormDone($('#story-settings-form'), true)
   flash();
+  updateStory();
 
   /**
    *  update the hidden ad inputs

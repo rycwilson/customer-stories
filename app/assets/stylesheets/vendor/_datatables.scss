@@ -1,0 +1,161 @@
+
+table thead tr th,  
+table tfoot tr th {
+  font-weight: 400;
+  font-size: 14px;
+  border-bottom-width: 1px;
+}
+
+.dataTables_paginate {
+  display: none;
+}
+
+table.dataTable {
+  thead {
+    th {
+      background-color: #dfdfdf;
+      font-weight: 600;
+      border: 1px solid #c6c6c6;
+    }
+    
+    > tr {
+      > th.sorting:before {
+        content: none;
+      }
+      
+      > th.sorting:after {
+        font-family: 'Glyphicons Halflings';
+        content: "\e150";
+        opacity: 0.2;
+        top: 8px;
+        right: 8px;
+        bottom: 8px;
+        line-height: initial;
+        font-size: initial;
+      }
+
+      > th.sorting_asc:after,
+      > th.sorting_desc:after {
+        color: $nav-blue;
+        opacity: 1;
+      }
+
+      > th.sorting_asc:after {
+        content: "\e155";
+      }
+
+      > th.sorting_desc:after {
+        content: "\e156";
+      }
+    }
+  }
+
+  tbody tr.highlight {
+    background-color: #dff0d8 !important;
+  }
+
+  tr.group td {
+    background-color: #efefef;
+    font-weight: 600;
+  }
+
+  &.table-hover > tbody > tr:hover > * {
+    box-shadow: none;
+  }
+}
+
+.table-bordered > thead > tr > th, .table-bordered > thead > tr > td {
+  border-bottom-width: 1px;  // bootstrap 2px
+}
+
+.table.dataTable tbody tr.active td,
+.table.dataTable tbody tr.active th,
+.table.dataTable tbody tr.active:hover td,
+.table.dataTable tbody tr.active:hover th {
+	background-color: #e8ffff !important; // $nav-blue !important;
+}
+
+div.dataTables_wrapper > div.dataTables_info {
+  visibility: hidden;
+}
+
+// settings apply for div.dataTables_info as it appears in headers
+div.dataTables_wrapper [class*="header"] div.dataTables_info {
+  margin-bottom: 0;
+  padding: 0;
+}
+
+// override bootstrap rule
+.table > thead > tr > th, 
+.table > thead > tr > td, 
+.table > tbody > tr > th, 
+.table > tbody > tr > td, 
+.table > tfoot > tr > th, 
+.table > tfoot > tr > td {
+  vertical-align: middle;
+}
+
+td {
+  i[class*="fa-caret"] { 
+    color: #999;
+  }
+
+  &:hover {
+    i[class*="fa-caret"] {
+      color: #222;
+    }
+  } 
+}
+
+td.status.dropdown, td.actions.dropdown {
+  position: relative;
+  text-align: center;
+  padding: 0;
+
+  > a {
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+}
+
+.datatable {
+  a {
+    text-decoration: none !important;
+  }
+
+  // child row
+  tr.active:hover + tr:not(.group) > td[colspan]:not(.dataTables_empty) {
+    // border-color: #0095ff !important; // #0075b0
+  }
+
+  th.actions {
+    text-align: center;
+    padding: 8px 12px;
+  }
+}
+
+div.DTE_Inline {
+  div.DTE_Inline_Field div.DTE_Field > label {
+    display: initial;
+    width: 100%;
+    padding-left: 0;
+    margin-bottom: 5px;
+  }
+  div.DTE_Inline_Field, div.DTE_Inline_Buttons {
+    display: block;
+    width: 100% !important;
+  }
+  div.DTE_Inline_Buttons div.DTE_Form_Buttons button {
+    margin: 0 0 0 8px;
+  }
+}
+
+input.select2-search__field[aria-controls*="DTE_Field"] {
+  display: none;
+}

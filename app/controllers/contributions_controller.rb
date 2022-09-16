@@ -18,36 +18,42 @@ class ContributionsController < ApplicationController
     # Get contributions data for a win story. Success and contributor data already exist in the client.
     if params[:win_story]
       success = Success.find(params[:success_id])
+      # https://stackoverflow.com/questions/42846286/pginvalidcolumnreference-error-for-select-distinct-order-by-expressions-mus#answer-64919233
       data = {
         invitation_templates: JSON.parse(success.invitation_templates.to_json({ only: [:id, :name] })),
-        questions: JSON.parse(success.questions.distinct.to_json({ only: [:id, :question, :invitation_template_id] })),
+        questions: JSON.parse(success.questions.unscope(:order).distinct.to_json({ only: [:id, :question, :invitation_template_id] })),
         answers: JSON.parse(success.answers.to_json({ only: [:answer, :contribution_id, :contributor_question_id] }))
       }.to_json
 
     else  # datatables source data (contributors)
-      if params[:success_id]
-        contributions = Success.find(params[:success_id]).contributions
-      else
-        contributions = company.contributions
+      contributions = params[:success_id].present? ? 
+                        Success.find(params[:success_id]).contributions :
+                        company.contributions  
+      cache_key = params[:success_id].present? ? 
+                    "#{company.subdomain}/successes/#{params[:success_id]}/contributions-json" :
+                    "#{company.subdomain}/contributions-json"
+      data = Rails.cache.fetch(cache_key) do
+        contributions.to_json({
+          only: [:id, :status, :publish_contributor, :contributor_unpublished],
+          methods: [:display_status, :timestamp],
+          include: {
+            success: {
+              only: [:id, :customer_id, :curator_id, :name],
+              include: {
+                curator: { only: [:id], methods: [:full_name] },
+                customer: { only: [:id, :name, :slug] },
+                story: { 
+                  only: [:id, :title, :published, :slug],
+                  methods: [:csp_story_path] 
+                }
+              }
+            },
+            contributor: { only: [:id, :email, :first_name, :last_name, :phone, :title, :linkedin_url], methods: [:full_name] },
+            referrer: { only: [:id, :email, :first_name, :last_name, :title], methods: [:full_name] },
+            invitation_template: { only: [:id, :name] },
+          }
+        })
       end
-      data = contributions.to_json({
-        only: [:id, :status, :publish_contributor, :contributor_unpublished],
-        methods: [:display_status, :timestamp],
-        include: {
-          success: {
-            only: [:id, :customer_id, :curator_id, :name],
-            include: {
-              curator: { only: [:id], methods: [:full_name] },
-              customer: { only: [:id, :name, :slug] },
-              story: { only: [:id, :title, :published, :slug],
-                       methods: [:csp_story_path] }
-            }
-          },
-          contributor: { only: [:id, :email, :first_name, :last_name, :phone, :title, :linkedin_url], methods: [:full_name] },
-          referrer: { only: [:id, :email, :first_name, :last_name, :title], methods: [:full_name] },
-          invitation_template: { only: [:id, :name] },
-        }
-      })
     end
     # pp(JSON.parse(data))
     respond_to { |format| format.json { render({ json: data }) } }
@@ -130,7 +136,7 @@ class ContributionsController < ApplicationController
     @contribution = Contribution.new(contribution_params)
     if @contribution.save
     else
-      # this should not be necessary with addition of .find_dup_users
+      # this should not be necessary with addition of .find_dup_user
       # if @contribution.contributor.errors.full_messages[0] == "Email has already been taken"
       #   @contribution.contributor.id = User.find_by(email: @contribution.contributor.email).id
       #   @contribution.contributor.reload

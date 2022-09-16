@@ -201,6 +201,7 @@
         background-color: #d9534f;
       }
     }
+/* <<<<<<< HEAD */
     button.cta-url-params__new {
       // margin-bottom: -12px;
       padding: 8px;
@@ -220,6 +221,37 @@
         }
         div.col-sm-4:last-of-type {
           padding-left: 0;
+/* =======
+    // [data-target="#new-cta-modal"] {
+    //   cursor: pointer;
+    //   color: #666;
+    //   i {
+    //     // TODO: Font Awesome 5 has font variants that allow different weights
+    //     -webkit-text-stroke: 1px #efefef;
+    //   }
+    //   &:hover {
+    //     color: #222;
+    //   }
+    // }
+    .form-horizontal.cta-list {
+      #new-cta-button {
+        margin: 0 0 20px 0;
+      }
+      > .control-label {
+        padding-top: 15px;
+      }
+      #primary-cta, #secondary-ctas {
+        // width: 500px;
+        &#primary-cta {
+          #primary-cta-colors {
+            div.col-sm-4:first-of-type {
+              padding-right: 0;
+            }
+            div.col-sm-4:last-of-type {
+              padding-left: 0;
+            }
+          }
+>>>>>>> master */
         }
       }
     }

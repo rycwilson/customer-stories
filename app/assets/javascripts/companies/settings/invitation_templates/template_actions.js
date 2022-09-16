@@ -19,7 +19,7 @@ function templateActionsListeners () {
   $(document)
 
     .on('click', 'button.new-template, button.copy-template', function () {
-      $('#invitation-template-submit').removeClass('show');
+      $('.submission-footer--invitation-template').removeClass('show');
       if ($(this).hasClass('copy-template')) {
         sourceTemplateId = $('select.invitation-template').val();
       } else {
@@ -44,9 +44,9 @@ function templateActionsListeners () {
               $('#invitation-template-form input[id="invitation_template_name"]')[0].focus();
               // reset select to placeholder
               $('select.invitation-template').val('').trigger('change.select2');
-              $('#invitation-template-submit p').empty().append('New template');
-              $('#invitation-template-submit').find('button').css('width', '135px').find('span').text('Create template');
-              $('#invitation-template-submit').addClass('show');
+              $('.submission-footer--invitation-template p').empty().append('New template');
+              $('.submission-footer--invitation-template').find('button').css('width', '135px').find('span').text('Create template');
+              $('.submission-footer--invitation-template').addClass('show');
             });
         });
     })

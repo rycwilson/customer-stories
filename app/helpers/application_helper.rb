@@ -1,5 +1,10 @@
 module ApplicationHelper
 
+  def custom_stylesheet?(company=nil)
+    ['centerforcustomerengagement', 'compas', 'pixlee', 'trunity', 'varmour']
+      .include?(company.try(:subdomain))
+  end
+
   def custom_google_fonts(company)
     return nil if company.blank? || !['stories', 'plugins', 'companies'].include?(controller_name)
     fonts = case company.subdomain
@@ -37,14 +42,6 @@ module ApplicationHelper
     ENV['HOST_NAME'] == 'customerstories.org'
   end
 
-  def mvp_stylesheet
-    if ['companies', 'stories', 'profile', 'contributions'].include?(controller_name)
-      stylesheet_link_tag('mvpready-admin', media: 'all', 'data-turbolinks-track' => 'reload')
-    else
-      stylesheet_link_tag('mvpready-landing', media: 'all', 'data-turbolinks-track' => 'reload')
-    end
-  end
-
   # method determines if title 'Customer Stories' should be displayed as plural
   def stories?
     (controller_name == 'companies' && action_name != 'new') ||
@@ -77,6 +74,19 @@ module ApplicationHelper
     else
       'Customer Stories'
     end
+  end
+
+  def background_color_contrast(hex_color)
+    # make sure it's a six-character hex value (not counting #)
+    if hex_color.length < 7
+      loop do
+        hex_color << hex_color.last
+        break if hex_color.length == 7
+      end
+    end
+    rgb = { r: hex_color[1..2].hex, g: hex_color[3..4].hex, b: hex_color[5..6].hex }
+    o = (((rgb[:r] * 299) + (rgb[:g] * 587) + (rgb[:b] * 114)) / 1000).round
+    return (o > 125) ? 'light-background' : 'dark-background';
   end
 
 end

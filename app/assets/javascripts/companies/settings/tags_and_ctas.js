@@ -79,7 +79,16 @@ function storyCTAsListeners () {
     .on('click', '.section-header .help-block a', function () {
       $(this).closest('.help-block').find('a').toggle()
              .closest('.section-header').find('p.help-block').toggle();
-    })
+/* 
+trimmed from master on merge
+      $(this)
+        .add($(this).siblings())
+          .toggle()
+          .end()
+        .closest('.section-header')
+          .find('p.help-block')
+            .toggle(); */
+    }) 
 
     /**
      *  New CTA

@@ -1,38 +1,34 @@
 
 function curate () {
 
+
+  var $curatorSelect = $('.curate-filters__curator');
   // don't need to call this here as the auto curator-select change event will trigger it
   // filterCurateGallery();
-  $('#curate-filters .curator').val(
-      $('#curate-filters .curator').children('[value="' + CSP.current_user.id + '"]').val()
-    ).trigger('change', { auto: true });
+  $curatorSelect
+    .val(CSP.current_user.id)
+    .trigger('change', { auto: true });
+
 }
 
 // keep track of filters with session cookies
 function preselectFilters () {
-  $('#curate-filters').find('select.curator').val(Cookies.get('csp-curate-filter-curator') || CSP.current_user.id).trigger('change');
-  $('#curate-filters').find('select.customer').val(Cookies.get('csp-curate-filter-customer') || 0).trigger('change');
-  $('#curate-filters').find('select.category').val(Cookies.get('csp-curate-filter-category') || 0).trigger('change');
-  $('#curate-filters').find('select.product').val(Cookies.get('csp-curate-filter-product') || 0).trigger('change');
-
-  // control the default by choosing 'true' or 'false' for comparison
-  $('#status-filters .published').prop('checked', Cookies.get('csp-curate-filter-published') === 'true' ? true : false).trigger('change');
-  $('#status-filters .logo-published').prop('checked', Cookies.get('csp-curate-filter-logo-published') === 'false' ? false : true).trigger('change');
-  $('#status-filters .preview-published').prop('checked', Cookies.get('csp-curate-filter-preview-published') === 'false' ? false : true).trigger('change');
-  $('#status-filters .pending').prop('checked', Cookies.get('csp-curate-filter-pending') === 'false' ? false : true).trigger('change');
+  $('.curate-filters__curator').val(Cookies.get('csp-curate-filter-curator') || CSP.current_user.id).trigger('change');
+  $('.curate-filters__customer').val(Cookies.get('csp-curate-filter-customer') || 0).trigger('change');
+  $('.curate-filters__category').val(Cookies.get('csp-curate-filter-category') || 0).trigger('change');
+  $('.curate-filters__product').val(Cookies.get('csp-curate-filter-product') || 0).trigger('change');
 }
 
 function curateListeners () {
 
   var loading = function ($storyCard) {
-        $storyCard.addClass('loading');
-        setTimeout(function () { $storyCard.addClass('still-loading'); }, 1000);
-        $('#curate-gallery li').css('pointer-events', 'none');
+        $storyCard.addClass('loading still-loading');
+        $('#curate-gallery .story-card').css('pointer-events', 'none');
       },
       cancelLoading = function () {
-        $('#curate-stories li').each(function () {
-          $(this).removeClass('loading still-loading');
-          $(this).css('pointer-events', 'auto');
+        $('#curate-gallery .story-card').each(function () {
+          $(this).removeClass('loading still-loading')
+                 .css('pointer-events', 'auto');
         });
       };
 
@@ -45,17 +41,35 @@ function curateListeners () {
       });
     })
 
-    .on('show.bs.tab', 'a[href="#curate-stories"]', cancelLoading)
+    .on('show.bs.tab', 'a[href=".curate-stories"]', function () {
+      cancelLoading();
+    })
+    .on('shown.bs.tab', 'a[href="#curate"], a[href=".curate-stories"]', function () {
+      // truncate story titles
+      // discussion: http://hackingui.com/front-end/a-pure-css-solution-for-multiline-text-truncation/
+      var truncateStoryTitles = function () {
+        $('.story-card__title').each(function () {
+          var $title = $(this).find('p');
+          while ($title.outerHeight() > $(this).height()) {
+            $title.text(function (index, text) {
+              return text.replace(/\W*\s(\S)*$/, '...');
+            });
+          }
+        });
+      };
+      truncateStoryTitles();
+      // $('a[href=".curate-stories"]').one('shown.bs.tab', truncateStoryTitles);
 
-    .on('click', '#curate-gallery > li > a', function (e) {
+    })
 
+    .on('click', '#curate-gallery .story-card', function (e) {
       e.preventDefault();
 
-      var $storyCard = $(this).closest('li'), storySlug = $storyCard.data('story-slug'),
+      var $storyCard = $(this), 
+          storySlug = $storyCard.data('story-slug'),
           customerSlug = $storyCard.data('customer-slug');
 
       loading($storyCard);
-
   // replacing state ensure turbolinks:false for the first tab state
       window.history.replaceState(
         { turbolinks: false }, null, '/curate'
@@ -69,12 +83,12 @@ function curateListeners () {
 
       $.ajax({
         url: '/stories/' + $storyCard.data('story-id') + '/edit',
-        method: 'get',
+        method: 'GET',
         dataType: 'html'
       })
         .done(function (html, status, xhr) {
           var showTab = function () {
-            $('a[href="#edit-story"]')
+            $('a[href=".edit-story"]')
               .one('shown.bs.tab', function () { window.scrollTo(0, 0); })
               .tab('show');
           };
@@ -89,22 +103,12 @@ function curateListeners () {
     .on('change', '#curate-filters select',
       function (e) {
         var filterCookieName = 'csp-curate-filter-' + $(this).attr('class').split(' ')[0],
-            filterCookieVal;
-
-        // toggle the X icon
-        // if ($(this).val() === '') {
-        //   $(this).prev().css('display', 'none');
-        // } else {
-        //   $(this).prev().css('display', 'inline-block');
-        // }
-
+        filterCookieVal;    
         if ($(this).is('select')) filterCookieVal = $(this).val();
         else filterCookieVal = $(this).prop('checked');
         Cookies.set(filterCookieName, filterCookieVal);
         filterCurateGallery();
       });
-
-
 
 }
 
@@ -112,11 +116,11 @@ function filterCurateGallery (context) {
   var stories = [],
       $gallery = $('#curate-gallery'),
       storiesTemplate = _.template($('#stories-template').html()),
-      customerId = $('#curate-filters .customer').val(),
-      curatorId = $('#curate-filters .curator').val(),
-      categoryId = $('#curate-filters .category').val(),
-      productId = $('#curate-filters .product').val(),
-      status = $('#curate-filters .status').val();
+      customerId = $('.curate-filters__customer').val(),
+      curatorId = $('.curate-filters__curator').val(),
+      categoryId = $('.curate-filters__category').val(),
+      productId = $('.curate-filters__product').val(),
+      status = $('.curate-filters__status').val();
 
       // showPending = $('#status-filters .pending').prop('checked'),
       // showLogoPublished = $('#status-filters .logo-published').prop('checked'),
@@ -183,10 +187,35 @@ function filterCurateGallery (context) {
   $gallery.empty();
 
   if (stories.length === 0) {
-    $gallery.append('<li><h3 style="padding-top: 15px;" class="lead grid-item">No Stories found</h3></li>');
+    $gallery.append('<li><h3 style="padding-top: 15px;" class="lead">No Stories found</h3></li>');
+
   } else {
-    $gallery.append($(storiesTemplate({ stories: stories, isCurator: true })))
-            .hide().show('fast');
+    $gallery.hide()
+            .append( 
+                $(storiesTemplate({ 
+                  stories: stories, 
+                  subdomain: location.href.match(/:\/\/((\w|-)+)\./)[1],
+                  isDashboard: true,
+                  cardClass: 'card'
+                })) 
+              )
+            .imagesLoaded(function () {
+              $gallery.show({
+                duration: 0,
+                complete: function () {
+                  // truncate titles
+                  $gallery.find('.story-card__title')
+                            .each(function (index, wrapper) {
+                              var $title = $(wrapper).find('p');
+                              while ($title.outerHeight() > $(wrapper).height()) {
+                                $title.text(function (index, text) {
+                                  return text.replace(/\W*\s(\S)*$/, '...');
+                                });
+                              }
+                            });
+                }
+              });
+            });
   }
 
 }

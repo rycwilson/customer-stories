@@ -1,90 +1,90 @@
 
-(function () {
+(() => {
+  console.log('yes')
+  const {
+    promotedStory,
+    promoteIsDisabled,
+    previousChanges,
+    isStatusUpdate,
+    isImagesUpdate,
+    gadsErrors } = <%= raw @res_data.to_json %>;
+  const $table = $('#promoted-stories-table');
+  const dt = $table.DataTable();
+  const $row = $table.find(`[data-story-id="${promotedStory.id}"]`);
 
-  var res = <%= raw @response_data.to_json %>,
-      $table = $('#promoted-stories-table'),
-      promoteIsDisabled = !$table.data('promote-tr'),
-      dt = $table.DataTable(),
-      $row = $table.find('[data-story-id="' + res.promotedStory.id + '"]'),
-      isStatusUpdate = res.previousChanges && (res.previousChanges[0] === 'status'),
-
-      // this mirrors the createdRow option in the table setup
-      addClickBlockers = function () {
-        $row.find('td.promoted-story-images, td.promoted-story-title, td.status')
-              .prepend('<div class="click-blocker"></div>');
-        if (promoteIsDisabled) {
-          $row.find('td.status .click-blocker')
-                .attr({
-                  'data-toggle': 'tooltip',
-                  'data-placement': 'left',
-                  'data-title': 'Contact Customer Stories to enable this feature'
-                })
-        }
-      },
-      initStatusSwitch = function () {
-        $row.find('.bs-switch.promote-control')
-              .bootstrapSwitch({ size: 'small', disabled: promoteIsDisabled })
-              .end()
-            .find('td.status [data-toggle="tooltip"]')  // may or may not be there depending on company.promote-tr
-              .tooltip({
-                container: 'body',
-                delay: { show: 500, hide: 0 }
-              });
-      },
-      updateRow = function () {
-        dt.row($row).data(res.promotedStory);
-        addClickBlockers();  //  this must run before initStatusSwitch()
-        initStatusSwitch();
-        $row.attr('data-submitted', '');
-      },
-      flashError = function () {
-        $row.find('td.flash > div')
-              .addClass('alert alert-danger')
-              .end()        
-            .children()
-              .toggle();
-      },
-      flashImagesSuccess = function () {
-        var $td = $row.find('td.promoted-story-images'),
-            landscapeImages = dt.row($row).data().ads_images.filter(function (image) {
-                                return image.type === 'LandscapeImage'
-                              });
-        $td.addClass('alert alert-success')
-           .html('<i class="fa fa-fw fa-check"></i>&nbsp;&nbsp;<span>Updated</span>');
-        setTimeout(function () {
-          $td.empty()
-             .removeClass('alert alert-success')
-             .html(
-               '<div class="fileinput">' +
-                 '<div class="fileinput-preview thumbnail">' +
-                   '<img src="' + (landscapeImages.length ? landscapeImages[0].image_url : '') + '" alt="promoted story image">' +
-                 '</div>' +
-                 '<input type="file" name="image_url" id="image_url" class="hidden" ' +
-               '</div>'
-             )
-        }, 2500);
-      };
-
-  console.log('res', res);
-
-  if (res.isImagesUpdate) {
-    toggleFormDone($('#ads-images-form'), false);
-    $('#ads-images-modal')
-      .one('hidden.bs.modal', function () {
-        if (res.gadsErrors) {
-          flashError()
-        } else {
-          flashImagesSuccess();
-          // console.log($row.data('submitted'))
-          setTimeout(updateRow, 2500);
-        }
+  // this mirrors the createdRow option in the table setup
+  const addClickBlockers = () => {
+    $row.find('td.promoted-story-title, td.status').prepend('<div class="click-blocker"></div>');
+    if (promoteIsDisabled) {
+      $row.find('td.status .click-blocker').attr({
+        'data-toggle': 'tooltip',
+        'data-placement': 'left',
+        'data-title': 'Contact Customer Stories to enable this feature'
       })
-      .modal('hide');
-    if (!res.gadsErrors) updateRow();
+    }
+  };
+  const initStatusSwitch = () => {
+    $row
+      .find('.bs-switch.promote-control')
+        .bootstrapSwitch({ size: 'small', disabled: promoteIsDisabled })
+        .end()
+      .find('td.status [data-toggle="tooltip"]')  // may or may not be there depending on company.promote-tr
+        .tooltip({ container: 'body', delay: { show: 500, hide: 0 } });
+  };
+  const updateRow = () => {
+    dt.row($row).data(promotedStory);
+    addClickBlockers();  //  this must run before initStatusSwitch()
+    initStatusSwitch();
+    $row.attr('data-submitted', '');
+  };
 
-  } else if (isStatusUpdate) {
-    var $switch = $row.find('.bootstrap-switch'),
-        prevStatus = res.previousChanges[1][0],
+  toggleFormDone($('#ads-images-form'), false);
+  updateRow();
+  $('#ads-images-modal')
+    .one('hidden.bs.modal', () => {
+      // https://datatables.net/forums/discussion/46673/flash-animation-of-the-table-row-that-has-been-edited#Comment_123539
+      setTimeout(() => {
+        $row.addClass('highlight');
+        setTimeout(() => {
+          $row.addClass('noHighlight').removeClass('highlight');
+          setTimeout(() => $row.removeClass('noHighlight'), 550);
+        }, 500);
+      }, 20);
+    })
+    .modal('hide');
+  
+  /*
+  const flashError = () => (
+    $row
+      .find('td.flash > div')
+        .addClass('alert alert-danger')
+        .end()        
+      .children()
+        .toggle();
+  );
+  const flashImagesSuccess = () => {
+    var $td = $row.find('td.promoted-story-images'),
+        landscapeImages = dt.row($row).data().ads_images.filter(function (image) {
+                            return image.type === 'LandscapeImage'
+                          });
+    $td.addClass('alert alert-success')
+        .html('<i class="fa fa-fw fa-check"></i>&nbsp;&nbsp;<span>Updated</span>');
+    setTimeout(function () {
+      $td.empty()
+          .removeClass('alert alert-success')
+          .html(
+            '<div class="fileinput">' +
+              '<div class="fileinput-preview thumbnail">' +
+                '<img src="' + (landscapeImages.length ? landscapeImages[0].image_url : '') + '" alt="promoted story image">' +
+              '</div>' +
+              '<input type="file" name="image_url" id="image_url" class="hidden" ' +
+            '</div>'
+          )
+    }, 2500);
+  };
+  if (isStatusUpdate) {
+    const $switch = $row.find('.bootstrap-switch');
+    const prevStatus = previousChanges[1][0];
         newStatus = res.gadsErrors ? prevStatus : res.previousChanges[1][1];
 
     if (res.gadsErrors) {
@@ -107,6 +107,20 @@
             .toggle();
       setTimeout(updateRow, 2500);
     }
+  } else if (isImagesUpdate) {
+    toggleFormDone($('#ads-images-form'), false);
+    $('#ads-images-modal')
+      .one('hidden.bs.modal', function () {
+        if (gadsErrors) {
+          flashError()
+        } else {
+          flashImagesSuccess();
+          // console.log($row.data('submitted'))
+          setTimeout(updateRow, 2500);
+        }
+      })
+      .modal('hide');
+    if (!gadsErrors) updateRow();
   }
-
-}());
+  */
+})();

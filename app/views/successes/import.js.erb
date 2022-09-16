@@ -20,7 +20,7 @@
           $button.attr('type', 'button');
           $button.find('span').text('Ok')
           $button[0].blur();
-          $('.prospect.curator-select').val('0').trigger('change'  );
+          $('.prospect.curator-select').val('').trigger('change');
           // console.log(newSuccesses)
           successes.forEach(function (success) {
             if (newSuccesses.find(function (s) { return s.id === success.id; })) {

@@ -24,8 +24,7 @@
           var ignoreClick = function (e) { e.stopPropagation(); };
           $('.successes.curator-select').val(success.curator.id).trigger('change')
           $('#successes-filter').val('success-' + success.id).trigger('change');
-
-          $('#successes-filter').select2('focus');
+          $('#successes-filter').next('.select2').addClass('select2-container--focus');
           // don't let modal reset actions trigger the unfocus
           $(document).on('click', '#new-success-modal *', ignoreClick);
           $(document).one('click', function (e) {

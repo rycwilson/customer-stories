@@ -16,12 +16,17 @@ ADWORDS_CSP_PRODUCTION_CLIENT_CUSTOMER_ID = '836-316-8926'
 
 RESPONSIVE_AD_SHORT_HEADLINE_MAX = 30
 RESPONSIVE_AD_LONG_HEADLINE_MAX = 90
-RESPONSIVE_AD_SQUARE_IMAGE_MIN = '300x300'
+RESPONSIVE_AD_MAX_MARKETING_IMAGES = 15
+RESPONSIVE_AD_MAX_LOGOS = 5
+RESPONSIVE_AD_ASPECT_RATIO_TOLERANCE = 0.01
+RESPONSIVE_AD_SQUARE_IMAGE_MIN = 300
 RESPONSIVE_AD_SQUARE_IMAGE_PLACEHOLDER = 'https://s3-us-west-1.amazonaws.com/csp-production-assets/placeholders/300x300.png'
+RESPONSIVE_AD_LANDSCAPE_IMAGE_ASPECT_RATIO = 1.91
 RESPONSIVE_AD_LANDSCAPE_IMAGE_MIN = '600x314'
 RESPONSIVE_AD_LANDSCAPE_IMAGE_PLACEHOLDER = 'https://s3-us-west-1.amazonaws.com/csp-production-assets/placeholders/600x314.png'
-RESPONSIVE_AD_SQUARE_LOGO_MIN = '128x128'
+RESPONSIVE_AD_SQUARE_LOGO_MIN = 128
 RESPONSIVE_AD_SQUARE_LOGO_PLACEHOLDER = 'https://s3-us-west-1.amazonaws.com/csp-production-assets/placeholders/128x128.png'
+RESPONSIVE_AD_LANDSCAPE_LOGO_ASPECT_RATIO = 4
 RESPONSIVE_AD_LANDSCAPE_LOGO_MIN = '512x128'
 RESPONSIVE_AD_LANDSCAPE_LOGO_PLACEHOLDER = 'https://s3-us-west-1.amazonaws.com/csp-production-assets/placeholders/512x128.png'
 
@@ -55,6 +60,12 @@ CONTRIBUTOR_LINKEDIN_AUTH_URL = "https://www.linkedin.com/oauth/v2/authorization
 #                                       scope=r_liteprofile%20w_share%20w_member_social&\
 #                                       state=#{ENV['LINKEDIN_STATE']}&".gsub(/\s+/, '')
 
+FACEBOOK_SHARE_WINDOW_WIDTH = 600
+FACEBOOK_SHARE_WINDOW_HEIGHT = 424
+TWITTER_SHARE_WINDOW_WIDTH = 500
+TWITTER_SHARE_WINDOW_HEIGHT = 446
+LINKEDIN_SHARE_WINDOW_WIDTH = 550
+LINKEDIN_SHARE_WINDOW_HEIGHT = 540
 
 # the parameters must be defined in the typhoeus request
 LINKEDIN_TOKEN_BASE_URL = "https://www.linkedin.com/oauth/v2/accessToken"
@@ -64,6 +75,7 @@ LINKEDIN_PROFILE_JS = "https://platform.linkedin.com/badges/js/profile.js"
 LINKEDIN_SHARE_URL = "https://www.linkedin.com/shareArticle?mini=true&url="
 TWITTER_SHARE_URL = "https://twitter.com/share?url="
 FACEBOOK_SHARE_URL = "https://www.facebook.com/sharer.php?u="
+FACEBOOK_APP_ID = "291034101286863"
 
 GETCLICKY_API_BASE_URL = "http://api.clicky.com/api/stats/4"
 GETCLICKY_TRACKING_URL = "http://in.getclicky.com/in.php"

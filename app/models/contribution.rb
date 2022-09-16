@@ -22,17 +22,23 @@ class Contribution < ApplicationRecord
 
   # associations
   belongs_to :success, inverse_of: :contributions
-  belongs_to :contributor, class_name: 'User', foreign_key: 'contributor_id'
+  belongs_to :contributor, class_name: 'User', foreign_key: 'contributor_id', optional: true
 
   # this is a handy way to select a limited set of attributes
-  belongs_to :win_story_contributor, -> { select('users.id, users.first_name, users.last_name, users.email, users.linkedin_url') }, class_name: 'User', foreign_key: 'contributor_id'
-  belongs_to :referrer, class_name: 'User', foreign_key: 'referrer_id'
+  belongs_to(
+    :win_story_contributor, 
+    -> { select('users.id, users.first_name, users.last_name, users.email, users.linkedin_url') }, 
+    class_name: 'User', 
+    foreign_key: 'contributor_id',
+    optional: true
+  )
+  belongs_to :referrer, class_name: 'User', foreign_key: 'referrer_id', optional: true
   has_one :customer, through: :success
   has_one :company, through: :success
   has_one :curator, through: :success
   has_one :story, through: :success
   has_one :email_contribution_request, dependent: :destroy
-  belongs_to :invitation_template
+  belongs_to :invitation_template, optional: true
   has_many :contributor_questions, through: :invitation_template
   alias_attribute :questions, :contributor_questions
   has_many :contributor_answers, dependent: :destroy do
@@ -82,21 +88,27 @@ class Contribution < ApplicationRecord
     end
   )
 
-  after_commit(on: [:update]) do
-    # if (self.previous_changes.keys &
-    #     ['status', 'contribution', 'feedback', 'notes', 'request_received_at',
-    #      'complete', 'publish_contributor', 'preview_contributor']).any?
-    # end
+  after_commit(on: [:create, :destroy]) do
+    # TODO: Why doesn't self.company association method work on destroy?
+    # TODO ... probably because associated models have been destroyed - changed bahavior in rails 5?
+    # self.company.expire_ll_cache('successes-json', 'contributions-json') 
+    self.success.customer.company.expire_ll_cache('successes-json', 'contributions-json') 
+  end
+
+  after_update_commit do
     if self.previous_changes.key?('publish_contributor') && self.story.present?
       expire_published_contributor_cache
     end
-
     if self.previous_changes.key?('preview_contributor')
       # when selecting or de-selecting a preview contributor,
       # expire the story tile and index as a whole
-      self.company.expire_stories_json_cache
+      self.company.expire_ll_cache('stories-json')
       self.story.expire_story_card_fragment_cache
       self.company.increment_stories_gallery_fragments_memcache_iterator
+    end
+    if (self.previous_changes.keys & ['status', 'publish_contributor', 'contributor_unpublished']).any?
+      self.company.expire_ll_cache('contributions-json')
+      self.company.expire_ll_cache('successes-json') if self.previous_changes.key?('status')
     end
   end
 

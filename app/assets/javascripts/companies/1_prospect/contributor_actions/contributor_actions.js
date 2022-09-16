@@ -72,7 +72,11 @@ function contributorActionsListeners () {
     .on('click', '.contributor-actions .view-success', function () {
       var successId = $(this).closest('tr').data('success-id');
       $('#successes-filter').val('success-' + successId).trigger('change');
-      $('#successes-filter').select2('focus');
+      
+      // Why doesn't this work? (Uncaught TypeError: instance[options] is not a function)
+      // $('#successes-filter').select2('focus');
+      $('#successes-filter').next('.select2').addClass('select2-container--focus');
+      
       $(document)
         .one('click', function () {
           $('#successes-filter').next().removeClass('select2-container--focus');

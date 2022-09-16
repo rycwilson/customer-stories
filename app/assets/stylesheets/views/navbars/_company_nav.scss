@@ -1,113 +1,108 @@
 
-#company-nav.unregistered {
-  #workflow-tabs {
-    pointer-events: none;
-    opacity: 0.5;
+$workflow-tab-width: 98;
+$dropdowns-tab-width: 64;
+
+@mixin nav-tab-border {
+  border: {
+    width: 2px 0 2px 0;
+    style: solid;
+    color: transparent;
   }
 }
 
-// example of bolding items without affecting spacing: http://jsfiddle.net/85LbG/
 #company-nav {
-  position: relative;
-  height: 48px;
   margin-bottom: 40px;
   background-color: #fff;
   border-bottom: 1px solid #dfdfdf;
-  // box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.16), 0 0 1px -1px rgba(0, 0, 0, 0.08);
-  .row {
-    height: 48px;
-    display: flex;
-    align-items: center;
-  }
-
-  li {
-    position: relative;
-  }
-
-  #workflow-tabs {
-    margin-bottom: 0;
-    font-size: 16px;
-    li.active {
-      a {
-        color: #0095ff; // #d74b4b;  // #4885ed;
-        font-weight: bold;
-        border: transparent;
-        border-bottom: 1px solid #0095ff; //#d74b4b;  // #4885ed;
-      }
-      a:hover, a:focus {
-        color: #0095ff; // #d74b4b;  // #4885ed;
-        border-bottom: 1px solid #0095ff; //  #d74b4b;  // #4885ed;
-      }
-    }
-    li {
-      a {
-        text-decoration: none;
-        // display: block;
-        background-color: #ffffff;
-        // margin: 0;
-        font-family: 'Lato';
-        color: #666;
-        font-weight: 400;
-        padding: 12px 12px;
-        letter-spacing: normal;
-        border: 0;  // overrides bootstrap
-      }
-      a:hover, a:focus {
-        background-color: #ffffff;
-        color: #222;
-        // font-weight: bold;
-        border-color: transparent;
-      }
+  &.unregistered {
+    .nav-workflow {
+      pointer-events: none;
+      opacity: 0.5;
     }
   }
-
-  #company-nav-tabs {
-    margin: 0;
-    border-bottom: 1px solid transparent;
-    li.dropdown {
-      a { border: 0; }
-      a.dropdown-toggle {
-        font-size: 16px;
-        padding: 12px 14px;
-        &:hover, &:focus {
-          background-color: #ffffff;
-          color: #222;
-          // border-color: transparent;
-        }
-      }
-      &.open {
-        > a {
-          background-color: #fff;
-          color: #333;
-          border-top: transparent;
-          border-right: transparent;
-          border-left: transparent;
-          border-bottom: 1px solid #0095ff; // #d74b4b;  // #4885ed;
-        }
-        // remove the caret from dropdown
-        .dropdown-menu::after, .dropdown-menu::before {
-          display:none;
-        }
-      }
-      ul.dropdown-menu {
-        top: 104%;
-        border-color: #f2f2f2;
-        border-top-right-radius: 0;
-        border-top-left-radius: 0;
-        li {
-          a {
-            color: #666;
-            font-size: 13px;
-            padding: 6px 12px;
-            border-radius: 4px;
-          }
-          a:hover, a:focus {
-            color: #333;
-            background-color: #f2f2f2;
-          }
-        }
-      }
-    }
-  }
-
 }
+
+.nav-tabs.nav-workflow {
+  font-size: 16px;
+  border-bottom: 0;
+
+  // hard-coded widths prevent width from changing when text is bolded 
+  // (the trick outlined here didn't work: http://jsfiddle.net/85LbG/)
+  > li:nth-of-type(1) {
+    width: 102px
+  }
+  > li:nth-of-type(2) {
+    width: 89px
+  }
+  > li:nth-of-type(3) {
+    width: 101px;
+  }
+  > li:nth-of-type(4) {
+    width: 101px;
+  }
+  > li {
+    @include tab-arrows($workflow-tab-width);
+
+    // hard-coded widths prevent width from changing when text is bolded 
+    // (the trick outlined here didn't work: http://jsfiddle.net/85LbG/)
+    width: #{$workflow-tab-width}px;
+    margin-bottom: 0;
+    > a {
+      @include nav-tab-border;
+      display: flex;
+      justify-content: center;
+      background-color: #fff;
+      font-family: 'Lato';
+      color: #666;
+      font-weight: 400;
+      &:hover, &:focus {
+        @include nav-tab-border;
+        background-color: #fff;
+        color: #222;
+      }
+    }
+    &.active {
+      > a, > a:hover, > a:focus {
+        @include nav-tab-border;
+        color: $nav-blue; // #0095ff; // #d74b4b;  // #4885ed;
+        font-weight: bold;
+        border-bottom-color: $nav-blue; // #0095ff; //#d74b4b;  // #4885ed;
+      }
+    }
+    
+  }
+}
+
+.nav-tabs.nav-settings {
+  border: 0;
+  li.dropdown {
+    @include tab-arrows($dropdowns-tab-width);  
+    > a {
+      @include nav-tab-border;
+      font-size: 16px;
+      &:hover, &:focus {
+        @include nav-tab-border;
+        color: #222;
+        background-color: transparent;
+      }
+    }
+    &.active {
+      > a, > a:hover, > a:focus {
+        @include nav-tab-border;
+        color: $nav-blue; 
+        border-bottom-color: $nav-blue;
+      }
+    }
+    &.open:not(.active) {
+      > a {
+        background-color: #fff;  // this prevents background color flicker when closing the dropdown
+        color: #222;
+      }
+      // remove the caret from dropdown
+      // .dropdown-menu::after, .dropdown-menu::before {
+      //   display:none;
+      // }
+    }
+  }
+} 
+

@@ -1,4 +1,5 @@
 Rails.application.configure do
+  # Settings specified here will take precedence over those in config/application.rb.
 
   # restrict access to staging site
   # if ENV['HOST_NAME'] == 'customerstories.org'
@@ -8,19 +9,7 @@ Rails.application.configure do
   #     custom_rule: proc { |request| request.params.keys.include?('is_plugin') }
   # end
 
-  if ENV['HOST_NAME'] == 'customerstories.net'
-    config.session_store(:cookie_store, key: '_csp_session', domain: 'customerstories.net', tld_length: 2)
-  elsif ENV['HOST_NAME'] == 'customerstories.org'
-    config.session_store(:cookie_store, key: '_csp_session', domain: 'customerstories.org', tld_length: 2)
-  end
-
-  # Use the lowest log level to ensure availability of diagnostic information
-  # when problems arise.
-  if ENV['HOST_NAME'] == 'customerstories.net'
-    config.log_level = :warn
-  else
-    config.log_level = :info
-  end
+  config.session_store(:cookie_store, key: '_csp_session', domain: "customerstories.#{ENV['HOST_NAME'] == 'customerstories.net' ? 'net' : 'org'}", tld_length: 2)
 
   # Code is not reloaded between requests.
   config.cache_classes = true
@@ -33,24 +22,29 @@ Rails.application.configure do
 
   # Full error reports are disabled and caching is turned on.
   config.consider_all_requests_local       = false
-  config.action_controller.perform_caching = true
-  config.cache_store = :dalli_store,
-                       (ENV["MEMCACHIER_SERVERS"] || "").split(","),
-                       {:username => ENV["MEMCACHIER_USERNAME"],
-                        :password => ENV["MEMCACHIER_PASSWORD"],
-                        :failover => true,
-                        :socket_timeout => 1.5,
-                        :socket_failure_delay => 0.2,
-                        :down_retry_delay => 60,
-                        :pool_size => 5  # server threads/concurrency
-                       }
+  config.action_controller.perform_caching = false
+  # config.cache_store = :dalli_store,
+  #                      (ENV["MEMCACHIER_SERVERS"] || "").split(","),
+  #                      {
+  #                        :username => ENV["MEMCACHIER_USERNAME"],
+  #                        :password => ENV["MEMCACHIER_PASSWORD"],
+  #                        :failover => true,
+  #                        :socket_timeout => 1.5,
+  #                        :socket_failure_delay => 0.2,
+  #                        :down_retry_delay => 60,
+  #                        :pool_size => 5  # server threads/concurrency
+  #                      }
+
+  # Ensures that a master key has been made available in either ENV["RAILS_MASTER_KEY"]
+  # or in config/master.key. This key is used to decrypt credentials (and other encrypted files).
+  # config.require_master_key = true
 
   # Disable serving static files from the `/public` folder by default since
   # Apache or NGINX already handles this.
   config.public_file_server.enabled = ENV['RAILS_SERVE_STATIC_FILES'].present?
 
   # Compress JavaScripts and CSS.
-  config.assets.js_compressor = :uglifier
+  config.assets.js_compressor = Uglifier.new(harmony: true)
   # config.assets.css_compressor = :sass
 
   # Do not fallback to assets pipeline if a precompiled asset is missed.
@@ -65,20 +59,31 @@ Rails.application.configure do
   # config.action_dispatch.x_sendfile_header = 'X-Sendfile' # for Apache
   # config.action_dispatch.x_sendfile_header = 'X-Accel-Redirect' # for NGINX
 
+  # Store uploaded files on the local file system (see config/storage.yml for options)
+  config.active_storage.service = :local
+
   # Mount Action Cable outside main process or domain
   # config.action_cable.mount_path = nil
   # config.action_cable.url = 'wss://example.com/cable'
   # config.action_cable.allowed_request_origins = [ 'http://example.com', /http:\/\/example.*/ ]
 
   # Force all access to the app over SSL, use Strict-Transport-Security, and use secure cookies.
-  config.force_ssl = true
+  # config.force_ssl = true
+
+  # Use the lowest log level to ensure availability of diagnostic information when problems arise.
+  # default: config.log_level = :debug
+  config.log_level = ENV['HOST_NAME'] == 'customerstories.net' ? :warn : :info
 
   # Prepend all log lines with the following tags.
   config.log_tags = [ :request_id ]
 
+  # Use a different cache store in production.
+  # config.cache_store = :mem_cache_store
+
   # Use a real queuing backend for Active Job (and separate queues per environment)
   # config.active_job.queue_adapter     = :resque
   # config.active_job.queue_name_prefix = "csp_#{Rails.env}"
+
   config.action_mailer.perform_caching = false
 
   # Ignore bad email addresses and do not raise email delivery errors.
@@ -119,7 +124,7 @@ Rails.application.configure do
   if ENV["RAILS_LOG_TO_STDOUT"].present?
     logger           = ActiveSupport::Logger.new(STDOUT)
     logger.formatter = config.log_formatter
-    config.logger = ActiveSupport::TaggedLogging.new(logger)
+    config.logger    = ActiveSupport::TaggedLogging.new(logger)
   end
 
   # Do not dump schema after migrations.

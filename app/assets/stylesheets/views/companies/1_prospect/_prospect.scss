@@ -13,10 +13,6 @@
     margin-top: 8px;
   }
 
-  .layout-main {
-    padding-bottom: 100px;  // leaves room for dropdown
-  }
-
 }
 
 .link-dialog {
@@ -60,7 +56,7 @@
   }
   tr.group,
   tr.group:hover {
-    background-color: #ddd;
+    // background-color: #ddd;
   }
   td.status {
     // this ensures newlines will be respected
@@ -216,48 +212,26 @@
 }
 
 .successes-header, .contributors-header {
-  margin-bottom: 12px;
-  > [class*="col-"]:first-child {
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-    height: 100%;
-    padding-bottom: 2px;  // hack to account for checkbox height discrepancy
-    .dropdown {
-      margin: 0 45px;
-    }
-    label.checkbox-filter {
-      margin-left: 17px;
-    }
-  }
-  > [class*="col-"]:last-child {
-    label.checkbox-filter {
-      font-weight: normal;
-      margin-bottom: 5px;
-    }
-  }
+  background-color: #efefef;
+  margin: -7px 0 -6px 0;
+  padding: 20px 0;
   .form-group {
     width: 100%;
+    margin-bottom: 12px;
   }
-  .form-group.search > div {
-    position: relative;
-    i {
-      position: absolute;
-      color: #999;
-      right: 30px;
-      top: 10px;
-      z-index: 100;
-      cursor: pointer;
-    }
+  .checkbox-filters label {
+    margin-bottom: 5px;
   }
+  
   select + span > span:first-child > span {
     padding-right: 30px; // matches search box
     text-align: left;
   }
   select + span.select2 {
-    margin-bottom: 12px;
+    // margin-bottom: 12px;
   }
   .select2-container {
     width: 100%;
   }
+
 }
