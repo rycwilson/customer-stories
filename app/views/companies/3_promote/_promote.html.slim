@@ -13,24 +13,28 @@
             a href="#promote-settings" data-toggle="tab"
               i.fa.fa-gear
               | &nbsp;&nbsp;Settings
-        - if admin_signed_in?
-          #gads-set-reset.text-center
-            button.btn.btn-primary {
-              type="button" 
-              data-action="/companies/#{company.id}/set_reset_gads" }
-              span Set/Reset
-              i.fa.fa-spin.fa-circle-o-notch style="display:none"
-          label Checklist
-          ul#gads-checklist
-            li 
-              | company.promote_tr = true
-            li 
-              | default headline
-            li
-              | default images w/ valid asset_id
-          #gads-results__wrapper
-            label Results
-            ul#gads-results
+        - if current_user.admin?
+          .admin
+            h4 Admin
+            #gads-set-reset.text-center
+              button.btn.btn-secondary.disabled {
+                type="button" 
+                disabled=""
+                data-action="/companies/#{company.id}/set_reset_gads" }
+                span Set/Reset
+                i.fa.fa-spin.fa-circle-o-notch style="display:none"
+            div style="opacity: 0.5"
+              label Checklist
+              ul#gads-checklist
+                li 
+                  | company.promote_tr = true
+                li 
+                  | default headline
+                li
+                  | default images w/ valid asset_id
+              #gads-results__wrapper
+                label Results
+                ul#gads-results
 
       .layout-main.col-sm-8.col-lg-9
         .tab-content

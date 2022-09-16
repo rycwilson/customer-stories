@@ -111,35 +111,6 @@ function promotedStoriesListeners () {
       openPromotedStoriesEditor(promotedStoriesEditor, $row);
     })
 
-    .on('switchChange.bootstrapSwitch', 'input.promote-control', function (e) {
-      // console.log('switchChange')
-      var $input = $(this),
-          isEnabled = $input.bootstrapSwitch('state'),  // true or false
-          $switch = $input.closest('.bootstrap-switch'),
-          $form = $switch.closest('form');
-      $switch
-        .find(isEnabled ? '.bootstrap-switch-handle-on' : '.bootstrap-switch-handle-off')
-          .find('.fa-spin, ' + (isEnabled ? '.fa-play' : '.fa-pause'))
-            .toggle()
-            .end()
-          .end()
-        .next()
-          .children('.help-block')
-            .hide()  // will show when the row gets drawn
-            .end()
-          .end()
-        .nextAll('input[type="checkbox"]')
-          .prop('checked', isEnabled)
-          .end()
-        .closest('tr')
-          .attr('data-submitted', true);
-      $form.submit();
-    })
-
-    // .on('click', '.bootstrap-switch-wrapper', function () {
-    //   => click only registers when it's on .bootstrap-switch-label (not .bootstrap-switch-handle)
-    // })
-
     .on('input', 'td.promoted-story-title textarea', (e) => {
       $(e.target).closest('td')
         .removeClass('form-is-clean')
@@ -155,4 +126,32 @@ function promotedStoriesListeners () {
         .children().toggle();
     })
 
+    // .on('switchChange.bootstrapSwitch', 'input.promote-control', function (e) {
+    //   // console.log('switchChange')
+    //   var $input = $(this),
+    //       isEnabled = $input.bootstrapSwitch('state'),  // true or false
+    //       $switch = $input.closest('.bootstrap-switch'),
+    //       $form = $switch.closest('form');
+    //   $switch
+    //     .find(isEnabled ? '.bootstrap-switch-handle-on' : '.bootstrap-switch-handle-off')
+    //       .find('.fa-spin, ' + (isEnabled ? '.fa-play' : '.fa-pause'))
+    //         .toggle()
+    //         .end()
+    //       .end()
+    //     .next()
+    //       .children('.help-block')
+    //         .hide()  // will show when the row gets drawn
+    //         .end()
+    //       .end()
+    //     .nextAll('input[type="checkbox"]')
+    //       .prop('checked', isEnabled)
+    //       .end()
+    //     .closest('tr')
+    //       .attr('data-submitted', true);
+    //   $form.submit();
+    // })
+
+    // .on('click', '.bootstrap-switch-wrapper', function () {
+    //   => click only registers when it's on .bootstrap-switch-label (not .bootstrap-switch-handle)
+    // })
 }

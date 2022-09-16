@@ -1,11 +1,10 @@
 (() => {
   const { 
-    savedImage, 
-    swappedDefaultImage, 
-    prevDefaultImage, 
+    savedImage,
+    swappedDefaultImageId, 
+    prevDefaultImageId, 
     collection,
     imageType,
-    cardClassName,
     typeClassName,
     removedImageId } = <%= raw @res_data.to_json %>;
   const errors = <%= raw @errors.to_json %>;
@@ -13,35 +12,9 @@
   const $form = $('#gads-form');
   const $modal = $('#ads-images-modal');
   const $defaultImageCard = imageType && $form.find(`.gads-default[class*="${typeClassName}"]`);
-  const $swappedImageCard = swappedDefaultImage && 
-    $form.find('.ad-image-card').has(`> input[name*="[image_url]"][value="${swappedDefaultImage.image_url}"]`);
-  
-  console.log('prevDefaultImage', prevDefaultImage)
-  console.log('swappedDefaultImage', swappedDefaultImage)
-  console.log('savedImage', savedImage)
-  console.log('collection', collection);
-  console.log('imageType', imageType);
-  console.log('cardClassName', cardClassName)
-  console.log('typeClassname', typeClassName);
-  console.log('removedImageId', removedImageId)
-  console.log('$defaultImageCard', $defaultImageCard)
-  console.log('$swappedImageCard', $swappedImageCard)
-  console.log('$list', $list)
-
-  const modalImageTemplate = savedImage && `
-    <li class="${cardClassName}" data-image-id="${savedImage.id}">
-      <img src="${savedImage.image_url}" alt="marketing image">
-      <div class="check">
-        <div>
-          <div></div>
-          <span class="fa-stack fa-lg">
-          <i class="fa fa-circle-o fa-stack-2x"></i>
-          <i class="fa fa-check fa-stack-1x"></i>
-        </div>
-      </div>
-    </li>
-  `;
-
+  const $swappedImageCard = swappedDefaultImageId && 
+    $form.find('.ad-image-card').has(`> input[name*="[id]"][value="${swappedDefaultImageId}"]`);
+    
   const customizeErrorMessages = (errors) => errors.map(mesg => {
     if (mesg === "Adwords images media can't be blank") {
       return 'Error uploading to service';
@@ -65,7 +38,7 @@
 
   if (errors) {
     errors = customizeErrorMessages(errors);
-    $formGroup.removeClass('to-bee-added has-success').addClass('has-error')
+    $formGroup.removeClass('has-success').addClass('has-error')
               .find('.help-block').text(errors[0]);
   }
 
@@ -73,7 +46,7 @@
   if (savedImage) {
     if (savedImage.default) {
       $defaultImageCard.replaceWith(`<%= @saved_image.try(:[], :default) ? j(@saved_image_card) : nil %>`)
-      if (prevDefaultImage) {
+      if (prevDefaultImageId) {
         $list.children().first()
           .after(`<%= @saved_image && @prev_default_image ? j(@prev_default_image_card) : nil %>`)
       }
@@ -82,25 +55,29 @@
         .after(`<%= @saved_image.try(:[], :default) ? nil : j(@saved_image_card) %>`)
         .replaceWith(`<%= j @new_image_card %>`)
     }
+    $modal
+      .find(imageType.includes('Logo') ? 'ul.ad-logo-selections' : 'ul.ad-image-selections')
+        .append(`<%= @saved_image.present? ? j(@modal_image_card) : nil %>`)
 
   // existing image was set as new default
-  } else if (swappedDefaultImage) { 
+  } else if (swappedDefaultImageId) { 
     $defaultImageCard.replaceWith(`<%= @swapped_default_image ? j(@swapped_default_image_card) : nil %>`);
     $list.children().first().after(`<%= @swapped_default_image ? j(@prev_default_image_card) : nil %>`);
     $swappedImageCard.remove();
-    $form.find(`.gads-default[class*="${typeClassName}"]`)
-      .addClass('ad-image-card--did-save')
-      .get(0).scrollIntoView({ block: 'center' });
+    $form
+      .find(`.gads-default[class*="${typeClassName}"]`)
+        .addClass('ad-image-card--did-save')
+        .get(0).scrollIntoView({ block: 'center' });
 
   // image was removed
   } else if (removedImageId) {
-    $modal.find('li[data-image-id="' + removedImageId + '"]').remove();
+    $modal.find(`li[data-image-id="${removedImageId}"]`).remove();
     $form.attr('data-submitted', '');
     console.log('reloading data table...')
     $('#promoted-stories-table').DataTable().ajax.reload();
 
   } else {
-    console.log('no')
+    console.error('something went wrong')
   }
 
   setTimeout(updateIndices);
@@ -120,15 +97,5 @@
         )
       );
     $('.bootbox.confirm-ad-image-removal').modal('hide');
-  }
-
-  /**
-   *  cleanup
-   */
-  //reEnableAllInputs();
-  if (savedImage) {
-    $modal
-      .find(savedImage.type.includes('Image') ? 'ul.marketing' : 'ul.logos')
-        .append(modalImageTemplate)
   }
 })()

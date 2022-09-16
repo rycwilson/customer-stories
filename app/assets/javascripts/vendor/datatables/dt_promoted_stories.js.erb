@@ -23,23 +23,6 @@ function initPromotedStoriesTable () {
         name: 'long_headline',
         data: 'ads_long_headline'
       },
-      /*
-      {
-        name: 'ads_images',
-        data: 'ads_images',
-        render: (ads_images, type, row, meta) => {
-          const landscapeImages = ads_images.filter(image => image.type === 'LandscapeImage');
-          return `
-            <div class="fileinput">
-              <div class="fileinput-preview thumbnail">
-                <img src="${landscapeImages.length ? landscapeImages[0].image_url : ''}" alt="promoted story image">
-              </div>
-              <input type="file" name="image_url" id="image_url" class="hidden">
-            </div>
-          `;
-        }
-      },
-      */
       {
         name: 'status',
         data: 'ads_status',
@@ -216,7 +199,7 @@ function initPromotedStoriesTable () {
       //renderPreviewSelect();
       addClickBlockers();
       initStatusSwitch();
-      initEditorFlash();
+      // initEditorFlash();
       promotedStoriesEditor = newPromotedStoriesEditor();
       promotedStoriesEditor.on('open', (e) => {
         $('.DTE')

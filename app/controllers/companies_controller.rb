@@ -85,19 +85,16 @@ class CompaniesController < ApplicationController
         @collection = image_type&.split(/(?=[A-Z])/).try(:[], 1)&.downcase.try(:concat, 's') || ''
         @res_data = {
           'savedImage' => @saved_image,
-          'swappedDefaultImage' => @swapped_default_image,
-          'prevDefaultImage' => @prev_default_image,
+          'swappedDefaultImageId' => @swapped_default_image&.id,
+          'prevDefaultImageId' => @prev_default_image&.id,
           'collection' => @collection,
           'imageType' => image_type,
-          # 'cardClassName' => (
-          #   @saved_image &&
-          #   helpers.ad_image_card_class_name(type: image_type, default: image_type[:default])
-          # ),
           'typeClassName' => image_type&.split(/(?=[A-Z])/)&.reverse&.join('--')&.downcase&.sub(/\A/, 'gads-'),
           'removedImageId' => removed_ad_image_id(ad_images_params),
         }
-        awesome_print(@res_data)
+        # awesome_print(@res_data)
         @saved_image_card = image_card(@saved_image, @collection)
+        @modal_image_card = image_card(@saved_image, @collection, false)
         @swapped_default_image_card = image_card(@swapped_default_image, @collection)
         @prev_default_image_card = image_card(@prev_default_image, @collection)
         @new_image_card = @saved_image && !@prev_default_image ? image_card({}, @collection) : nil
@@ -245,9 +242,9 @@ class CompaniesController < ApplicationController
       .delete_if { |image_ads| image_ads[:ads_params].empty? }  # no affected ads
   end
 
-  def image_card(image, collection)
+  def image_card(image, collection, is_form_input=true)
     return nil unless image
-    base_locals = { image_index: '?', collection: collection }
+    base_locals = { image_index: is_form_input ? '?' : nil, collection: collection }
     render_to_string(partial: 'adwords_images/ad_image_card', locals: base_locals.merge(ad_image: image))
   end
 
