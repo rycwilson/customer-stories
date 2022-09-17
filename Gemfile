@@ -1,5 +1,5 @@
 
-ruby '2.7.6'
+ruby '3.1.2'
 source 'https://rubygems.org'
 
 gem 'activerecord-import'
@@ -32,6 +32,9 @@ gem 'jquery-minicolors-rails'
 gem 'local_time'
 # gem 'miro'
 gem 'multi_json'
+
+gem 'net-smtp', require: false
+
 # gem 'oauth2'
 gem 'order_as_specified'
 gem 'pg'
