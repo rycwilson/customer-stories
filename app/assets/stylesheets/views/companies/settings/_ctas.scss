@@ -42,18 +42,17 @@
 //   }
 // }
 
-#configure-ctas {
+.cta-config {
+  @include horizontal-form;
   // #new-cta-button {
   //   margin: 0 0 20px 0;
   // }
+  .collapsing {
+    transition: height 0s step-end;
+  }
+
   > .control-label {
     padding-top: 15px;
-  }
-  .col-md-2 {
-    width: 15%;
-  }
-  .col-md-10 {
-    width: 85%
   }
 
   button.new-item {
@@ -82,7 +81,6 @@
     display: flex;
     justify-content: space-between;
     margin-bottom: 0;
-    width: 500px;
     button.cta-action__new {
       padding: 12px;
     }
@@ -105,7 +103,6 @@
   }
 
   #cta-url-params {
-    width: 500px;
     > div {
       padding: 10px 7.5px 10px 7.5px;
       background-color: #efefef;
@@ -212,7 +209,6 @@
   }
 
   #primary-cta, #secondary-ctas {
-    width: 500px;
     margin-bottom: 15px;
     &#primary-cta {
       #primary-cta-colors {
@@ -262,6 +258,7 @@
     background: #efefef;
     padding: 0;  // overrides bootstrap 10px 15px
     overflow: hidden;  // ensure border-radius is obeyed on child elements
+    
     .cta-header {
       height: 50px;
       display: flex;

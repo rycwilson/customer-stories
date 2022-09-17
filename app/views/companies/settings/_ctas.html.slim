@@ -1,0 +1,71 @@
+
+- content_for(:underscore_templates) do 
+  = render('ctas/cta_template')
+  = render('companies/settings/cta_url_params_template') 
+
+= render('companies/settings/new_cta_modal', { company: @company, })
+
+/ .section-header.row style="margin-bottom: 25px"
+/   .col-sm-12.col-lg-10.col-lg-offset-1
+/     p.lead style="color: #666; margin-bottom: 5px;"
+/       | Manage <strong>Call-to-action</strong> (CTA) elements, inlcuding web forms and links to conversion actions or other resources.&nbsp;&nbsp;<span class="help-block" style="display: inline-block; font-size: 13px; font-weight: 500; margin: 0"><a href="javascript:;">Show more</a><a href="javascript:;" style="display: none;">Show less</a></span>
+/     p.help-block style="display: none"
+/       | The Primary CTA will appear with all published stories as a header button (desktop and tablet devices) or a footer button (mobile devices). Other links will appear adjacent to the story to which they've been assigned. You can also include links (but not forms) directly in a story narrative.</p>
+/   .visible-lg-block.col-lg-1
+
+/ .row
+.cta-config.form-horizontal
+
+  .form-group
+    .col-sm-offset-3.col-sm-9.col-md-8.col-lg-6
+      .cta-actions
+        button.cta-actions__new.new-item type="button" data-toggle="modal" data-target="#new-cta-modal"
+          span.fa-stack.fa-lg
+            i.fa.fa-circle-o.fa-stack-2x
+            i.fa.fa-plus.fa-stack-1x
+          | &nbsp;&nbsp;
+          span New CTA
+        button.cta-actions__params type="button" data-toggle="collapse" data-target="#cta-url-params"
+          i.fa.fa-fw.fa-chevron-down
+          i.fa.fa-fw.fa-chevron-up style="display: none;"
+          span URL Parameters
+
+      #cta-url-params class="collapse"
+        div
+          // existing params will be rendered in the client here
+
+          div style="margin-top: 5px; display: flex; justify-content: space-between; align-items: center"
+            button.cta-url-params__new.new-item type="button"
+              span.fa-stack.fa-lg
+                i.fa.fa-circle-o.fa-stack-2x
+                i.fa.fa-plus.fa-stack-1x
+              | &nbsp;&nbsp;
+              span New Parameter
+            button.cta-url-params__apply.btn.btn-sm.btn-success.text-center {
+              type="button" 
+              style="width: 80px" 
+              disabled="" }
+              span Apply
+              i.fa.fa-spin.fa-circle-o-notch style="display:none"
+              i.fa.fa-fw.fa-check style="display:none"
+
+  
+  .form-group
+    label.col-sm-3.control-label Primary
+    .col-sm-9.col-md-8.col-lg-6
+      ul.cta-config__primary.list-group
+        li.list-group-item data-cta-id="#{company.ctas.primary.try(:id) || ''}"
+          - if company.ctas.primary
+            = render('ctas/cta', { company: company, cta: company.ctas.primary })
+          - else
+            a href="javascript:;" data-toggle="modal" data-target="#new-cta-modal"
+              em Add a Primary CTA
+
+  .form-group
+    label.col-sm-3.control-label Additional
+    .col-sm-9.col-md-8.col-lg-6
+      ul.cta-config__additional.list-group
+        - company.ctas.secondary.order(created_at: :desc).each do |cta|
+          li.list-group-item data-cta-id="#{cta.id}"
+            = render('ctas/cta', { company: company, cta: cta })
+

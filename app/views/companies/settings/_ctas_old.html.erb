@@ -1,5 +1,6 @@
 
 <%= content_for(:underscore_templates) { render('ctas/cta_template') } %>
+<%= content_for(:underscore_templates) { render('companies/settings/cta_url_params_template') } %>
 
 <%= render('companies/settings/new_cta_modal', { company: @company, }) %>
 
@@ -62,74 +63,61 @@
         </div>
       </div>
 
-<!-- trimmed from master on merge >
-<div class="form-horizontal cta-list">
-
-  <div class="form-group">
-    <div class="col-sm-3"></div>
-    <div class="col-sm-6">
-      <button id="new-cta-button" type='button' class='btn btn-secondary' data-toggle='modal' data-target='#new-cta-modal'>
-          <i class='fa fa-plus-circle fa-fw'></i>&nbsp;New CTA&nbsp;
-      </button>
--->
-
     </div>
-    <div class="col-sm-3"></div>
-  </div>
     
-  <div class="form-group">
-    <label class="col-sm-3 control-label">
-      Primary
-    </label>
-    <div class="col-sm-6">
+    <div class="form-group">
+      <label class="col-sm-3 control-label">
+        Primary
+      </label>
+      <div class="col-sm-6">
 
-      <ul id="primary-cta" class="list-group">
-        <li class="list-group-item" data-cta-id="<%= company.ctas.primary.try(:id) || '' %>">
+        <ul id="primary-cta" class="list-group">
+          <li class="list-group-item" data-cta-id="<%= company.ctas.primary.try(:id) || '' %>">
 
-        <% if company.ctas.primary %>
+          <% if company.ctas.primary %>
 
-          <%= render 'ctas/cta', { company: company, cta: company.ctas.primary } %>
+            <%= render 'ctas/cta', { company: company, cta: company.ctas.primary } %>
 
-        <% else %>
+          <% else %>
 
-          <a href="javascript:;" data-toggle="modal" data-target="#new-cta-modal"><em>Add a Primary CTA</em></a>
+            <a href="javascript:;" data-toggle="modal" data-target="#new-cta-modal"><em>Add a Primary CTA</em></a>
+
+          <% end %>
+
+          </li>
+        </ul>
+
+
+      </div>
+      <div class="col-sm-3"></div>
+    </div>
+
+    <div class="form-group">
+
+      <label class="col-sm-3 control-label">
+        Additional
+      </label>
+      <div class="col-sm-6">
+
+        <ul id='secondary-ctas' class='list-group'>
+
+        <% company.ctas.secondary.order(created_at: :desc).each do |cta| %>
+
+          <li class="list-group-item" data-cta-id="<%= cta.id %>">
+
+            <%= render 'ctas/cta', { company: company, cta: cta } %>
+
+          </li>
 
         <% end %>
 
-        </li>
-      </ul>
+        </ul>
 
-
-    </div>
-    <div class="col-sm-3"></div>
-  </div>
-
-  <div class="form-group">
-
-    <label class="col-sm-3 control-label">
-      Additional
-    </label>
-    <div class="col-sm-6">
-
-      <ul id='secondary-ctas' class='list-group'>
-
-      <% company.ctas.secondary.order(created_at: :desc).each do |cta| %>
-
-        <li class="list-group-item" data-cta-id="<%= cta.id %>">
-
-          <%= render 'ctas/cta', { company: company, cta: cta } %>
-
-        </li>
-
-      <% end %>
-
-      </ul>
+      </div>
+      <div class="col-sm-3"></div>
 
     </div>
-    <div class="col-sm-3"></div>
-
   </div>
-  
 </div>
 
 

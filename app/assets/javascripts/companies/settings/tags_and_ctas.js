@@ -1,7 +1,5 @@
 
-function storyTagsListeners () {
-
-}
+function storyTagsListeners () {}
 
 function storyCTAsListeners () {
 
@@ -93,7 +91,7 @@ trimmed from master on merge
     /**
      *  New CTA
      */
-    .on('click', '#primary-cta [data-target="#new-cta-modal"]', function () {
+    .on('click', '.cta-config__primary [data-target="#new-cta-modal"]', function () {
       makeNewCtaPrimary = true;
     })
     .on('shown.bs.modal', '#new-cta-modal', function () {
@@ -128,8 +126,9 @@ trimmed from master on merge
         $(this).next().collapse('toggle')
       }
     })
-    .on('shown.bs.collapse hidden.bs.collapse', '[id*="edit-cta-"]', function (e) {
+    .on('show.bs.collapse hide.bs.collapse', '[id*="edit-cta-"]', function (e) {
       $(this).prev().find('> button:first-of-type i').toggle();
+      $(this).closest('.list-group-item').toggleClass
       e.type === 'shown' ?
         $(this).closest('.list-group-item').addClass('shown') :
         $(this).closest('.list-group-item').removeClass('shown');
@@ -137,10 +136,7 @@ trimmed from master on merge
     .on('show.bs.collapse', '[id*="edit-cta-"]', function (e) {
       hideShownCtas();
     })
-    .on('shown.bs.collapse', '[id*="edit-cta-"]', function () {
-      var top = $(this).prev().offset().top - (window.innerHeight / 2) + (($(this).outerHeight() + $(this).prev().outerHeight()) / 2);
-      window.scrollTo(0, top);
-    })
+    .on('shown.bs.collapse', '[id*="edit-cta-"]', (e) => e.target.scrollIntoView({ block: 'center' }))
 
 
     /**
@@ -152,11 +148,11 @@ trimmed from master on merge
     .on('click', 'body:not(.list-group-item.remove)', function () {
       $('.list-group-item.remove').removeClass('remove');
     })
-    .on('click', '#configure-ctas .confirm-removal__button', function (e) {
+    .on('click', '.cta-config .confirm-removal__button', function (e) {
       var $li = $(this).closest('li'),
           id = $li.data('cta-id');
-      if ($(this).closest('ul').is('#primary-cta')) {
-        $('#primary-cta li')
+      if ($(this).closest('ul').is('.cta-config__primary')) {
+        $('.cta-config__primary li')
           .removeClass('remove')
           .attr('data-cta-id', '')
           .empty()
