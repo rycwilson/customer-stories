@@ -4,7 +4,6 @@
 
 function promote () {
   // console.log('promote')
-
   const imageHasPersisted = ($img) => $img.attr('src').includes('http');
   const setCardClassName = ($imageCard, type) => {
     console.log(`setCardClassName(${type})`, $imageCard.prop('class'))
@@ -18,6 +17,7 @@ function promote () {
     );
   };
 
+  // http://stackoverflow.com/questions/39488774
   const validateFileSize = ($fileInput) => {
     console.log('validating file size...')
     if ($fileInput[0].files[0].size > $fileInput.data('max-file-size')) {
@@ -105,8 +105,6 @@ function promote () {
     }
   }
 
-  // TODO: check file size
-  // http://stackoverflow.com/questions/39488774
   const initFormValidator = () => {
     $('#gads-form').validator({
       focus: false,
@@ -114,61 +112,6 @@ function promote () {
       custom: {
         'max-file-size': validateFileSize,
         'min-dimensions': validateImageDimensions,
-
-        'fileupload-init': function ($fileInput) {
-          console.log('checking that fileupload input was initialized (skipping)...')
-          return false
-
-          const validator = this;
-          const $formGroup = $fileInput.closest('.form-group');
-          const $img = $formGroup.find('img');
-          const fileSizeIsValid = () => !validator.options.custom['max-file-size']($fileInput)
-          const imageSizeIsValid = () => !validator.options.custom['min-dimensions']($fileInput, true)
-              
-              // MutationObserver = window.MutationObserver || window.WebKitMutationObserver || window.MozMutationObserver,
-              /*
-              observer = new MutationObserver(function (mutations) {
-                var isEnabledSubmit = function (mutation) {
-                  return mutation.type === 'attributes' &&
-                          mutation.attributeName === 'disabled' &&
-                          !mutation.target.disabled;
-                }
-                mutations.forEach(function (mutation) {
-                  if (isEnabledSubmit(mutation)) {
-                    // $(mutation.target).removeClass('has-success');
-                    observer.disconnect();
-                    $formGroup.addClass('to-be-added');
-                    return;
-                  }
-                });
-              });
-              */
-
-          if (imageHasPersisted($img)) return false;
-
-          // don't want to initialize s3 if the image isn't valid (because it's currently set to autoupload)
-          if (fileSizeIsValid() && imageSizeIsValid()) {
-            try {
-              // check if initialized by trying to read an option
-              $fileInput.fileupload('option', 'url')
-
-              // at this point we are done with validation and can supply our own to-be-added class,
-              // because has-success only indicates (a) bs jasny uploaded a local file or
-              // (b) bs validator validated an existing image (neither what we want)
-              // observer.observe($imageCard.find('button[type="submit"]')[0], { attributes: true });
-
-              // => actually, validation is really done after s3 upload confirmation
-            } catch (e) {
-              return 'Error initializing file upload';
-            }
-          } else {
-            // do nothing => size validation failed and will return true
-          }
-        },
-        'upload-error': function ($fileInput) {
-          // might take a look at successful s3 upload here,
-          // but means would have to run validation after some timeout
-        },
         'required-image': function ($fileInput) {
           console.log('checking for required image (skipping)...', $fileInput)
         }
@@ -229,33 +172,14 @@ function promote () {
         }
       });
   };
-
   initFormValidator();
-  initTooltips();
   initPopovers();
 }
 
 function promoteListeners () {
-
   promotedStoriesListeners();
   promoteSettingsListeners();
-
-  var readyForGads = function (requirementsChecklist) {
-        var $items = $('#gads-checklist li');
-        $items.eq(0).addClass(requirementsChecklist.promote_enabled ? 'checked' : 'unchecked');
-        $items.eq(1).addClass(requirementsChecklist.default_headline ? 'checked' : 'unchecked');
-        $items.eq(2).addClass(
-            requirementsChecklist.square_image &&
-            requirementsChecklist.landscape_image &&
-            requirementsChecklist.valid_defaults ? 'checked' : 'unchecked'
-          );
-        return $items.toArray().every(function (item) {
-                  return $(item).hasClass('checked') ? true : false;
-                });
-      };
-
   $(document)
-
     .on(
       'show.bs.tab', 
       '.image-library__collection a[data-toggle="tab"], .image-selections__collection a[data-toggle="tab"]', 
@@ -264,84 +188,94 @@ function promoteListeners () {
         for (link of btnGroup.children) link.classList.toggle('active');
       }
     )
-
-    .on('click', '#gads-set-reset button', function () {
-      var $btn = $(this),
-          storyIds = [],
-          storyResult = function (storyTitle, newGads) {
-            var errors = newGads.errors;
-            return '<li class="' + (errors ? 'errors' : 'success') + '">' +
-                      '<p>' + storyTitle + '</p>' +
-                      '<p>' + (errors ? errors[0] : 'topic: ' + newGads.topic.ad_id) + '</p>' +
-                      (errors ? '' : '<p>retarget: ' + newGads.retarget.ad_id + '</p>') +
-                      // '<p>retarget ad: ' + (errors ? errors[1] : newGads.retarget.ad_id) + '</p>' +
-                   '</li>'
-          },
-          resetGads = function () {
-            if (storyIds.length === 0) {
-              $btn.prop('disabled', false).children().toggle();
-              $('#gads-checklist li').removeClass('checked');
-              $('#promoted-stories-table').DataTable().ajax.reload(function () {
-                console.log('set/reset complete')
-              });
-              return;  // terminate if array exhausted
-            } else if (storyIds.length)
-
-            $.ajax({
-              url: '/stories/' + storyIds.shift() + '/create_gads',
-              method: 'put',
-              dataType: 'json'
-            })
-              .done(function (data, status, xhr) {
-                console.log(data);
-                var story = data.story,
-                    newGads = data.newGads;
-                if ($('#gads-results__wrapper').is(':not(:visible)')) {
-                  $('#gads-results__wrapper').show();
-                }
-                $('#gads-results').append(storyResult(story.title, newGads));
-                // TODO: add to promoted stories table
-                resetGads();
-              })
-          };
-
-      $('#gads-checklist li').removeClass('checked unchecked');
-      $('#gads-results__wrapper').find('li').remove().end().hide();
-      $btn.prop('disabled', true).children().toggle();
-      $.ajax({
-        url: $btn.data('action'),
-        method: 'get',
-        dataType: 'json'
-      })
-        .done(function (data, status, xhr) {
-          console.log(data)
-          if (readyForGads(data.requirementsChecklist)) {
-            storyIds = data.publishedStoryIds;
-            resetGads();
-          } else {
-            $btn.prop('disabled', false).children().toggle();
-          }
-        })
-
+    .on('click', '#promote .layout-sidebar a', (e) => {
+      Cookies.set('promote-tab', $(e.currentTarget).attr('href'));
     })
-
-    .on('click', '#promote .layout-sidebar a', function () {
-      Cookies.set('promote-tab', $(this).attr('href'));
-    })
+    // manually hide the tooltip when navigating away (since it has container: body)
+    .on('mouseout', '#promote-settings', () => $('[data-toggle="tooltip"]').tooltip('hide'));
 
     // changing the scroll-on-focus offset for bootstrap validator isn't working,
     // so do this instead...
-    .on('click', 'a[href="#promote-settings"]', function () {
-      if ($('#company_adwords_short_headline').val() === '') {
-        var position = $(window).scrollTop();
-        $('#company_adwords_short_headline').focus();
-        $(window).scrollTop(position);
-      }
-    })
+    // .on('click', 'a[href="#promote-settings"]', function () {
+    //   if ($('#company_adwords_short_headline').val() === '') {
+    //     var position = $(window).scrollTop();
+    //     $('#company_adwords_short_headline').focus();
+    //     $(window).scrollTop(position);
+    //   }
+    // })
 
-    // manually hide the tooltip when navigating away (since it has container: body)
-    .on('mouseout', '#promote-settings', function () {
-      $('[data-toggle="tooltip"]').tooltip('hide');
-    })
 
+    // .on('click', '#gads-set-reset button', function () {
+    //   var $btn = $(this),
+    //       storyIds = [],
+    //       storyResult = function (storyTitle, newGads) {
+    //         var errors = newGads.errors;
+    //         return '<li class="' + (errors ? 'errors' : 'success') + '">' +
+    //                   '<p>' + storyTitle + '</p>' +
+    //                   '<p>' + (errors ? errors[0] : 'topic: ' + newGads.topic.ad_id) + '</p>' +
+    //                   (errors ? '' : '<p>retarget: ' + newGads.retarget.ad_id + '</p>') +
+    //                   // '<p>retarget ad: ' + (errors ? errors[1] : newGads.retarget.ad_id) + '</p>' +
+    //                '</li>'
+    //       },
+    //       resetGads = function () {
+    //         if (storyIds.length === 0) {
+    //           $btn.prop('disabled', false).children().toggle();
+    //           $('#gads-checklist li').removeClass('checked');
+    //           $('#promoted-stories-table').DataTable().ajax.reload(function () {
+    //             console.log('set/reset complete')
+    //           });
+    //           return;  // terminate if array exhausted
+    //         } else if (storyIds.length)
+
+    //         $.ajax({
+    //           url: '/stories/' + storyIds.shift() + '/create_gads',
+    //           method: 'put',
+    //           dataType: 'json'
+    //         })
+    //           .done(function (data, status, xhr) {
+    //             console.log(data);
+    //             var story = data.story,
+    //                 newGads = data.newGads;
+    //             if ($('#gads-results__wrapper').is(':not(:visible)')) {
+    //               $('#gads-results__wrapper').show();
+    //             }
+    //             $('#gads-results').append(storyResult(story.title, newGads));
+    //             // TODO: add to promoted stories table
+    //             resetGads();
+    //           })
+    //       };
+
+    //   $('#gads-checklist li').removeClass('checked unchecked');
+    //   $('#gads-results__wrapper').find('li').remove().end().hide();
+    //   $btn.prop('disabled', true).children().toggle();
+    //   $.ajax({
+    //     url: $btn.data('action'),
+    //     method: 'get',
+    //     dataType: 'json'
+    //   })
+    //     .done(function (data, status, xhr) {
+    //       console.log(data)
+    //       if (readyForGads(data.requirementsChecklist)) {
+    //         storyIds = data.publishedStoryIds;
+    //         resetGads();
+    //       } else {
+    //         $btn.prop('disabled', false).children().toggle();
+    //       }
+    //     })
+
+    // })
+
+  // function readyForGads(requirementsChecklist) {
+  //   var $items = $('#gads-checklist li');
+  //   $items.eq(0).addClass(requirementsChecklist.promote_enabled ? 'checked' : 'unchecked');
+  //   $items.eq(1).addClass(requirementsChecklist.default_headline ? 'checked' : 'unchecked');
+  //   $items.eq(2).addClass(
+  //       requirementsChecklist.square_image &&
+  //       requirementsChecklist.landscape_image &&
+  //       requirementsChecklist.valid_defaults ? 'checked' : 'unchecked'
+  //     );
+  //   return $items.toArray().every(function (item) {
+  //             return $(item).hasClass('checked') ? true : false;
+  //           });
+  // };
 }

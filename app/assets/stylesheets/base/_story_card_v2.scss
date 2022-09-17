@@ -6,22 +6,27 @@
     position: center;
     repeat: no-repeat;
   }
+
   &.loading, &.cs-loading {
     .story-card__link > .story-card__hover-view {
       visibility: visible;
       opacity: 1;
     }
+
     .story-card__logo {
       visibility: hidden;
       opacity: 0;
     }
+
     .story-card__title, .story-card__cta {
       filter: brightness(95%);
     }
+
     .story-card__logo, .story-card__title, .story-card__cta {
       opacity: 0;
       transition: opacity 1s step-end;
     }
+
     &.still-loading .story-card__loading,
     &.cs-still-loading .story-card__loading {
       opacity: 1;
@@ -31,6 +36,7 @@
       }
     }
   }
+
   .story-card__link {
     position: relative;
     display: flex;
@@ -40,6 +46,7 @@
     background-color: rgba(0, 0, 0, 0.5);
     padding: 0;
     border: none;
+
     > .story-card__hover-view {
       position: absolute;
       visibility: hidden;
@@ -53,9 +60,11 @@
       flex-direction: column;
       justify-content: space-between;
     }
+
     .story-card__hover-view, .story-card__logo {
       transition: visibility 0s, opacity 0.5s ease;
     }
+
     &:hover {
       .story-card__hover-view {
         visibility: visible;
@@ -66,29 +75,30 @@
         opacity: 0;
       }
     }
+
     &:active {
       .story-card__title, .story-card__cta {
         filter: brightness(85%);
       }
     }
   }
+
   .story-card__logo {
     max-height: 65%;
     max-width: 65%;
     filter: brightness(0) invert(1);
   }
+
   .story-card__title {
-    overflow: hidden;
-    text-overflow: ellipsis;
-    display: -webkit-box;
-    -webkit-line-clamp: 3;  /* number of lines to show */
-    -webkit-box-orient: vertical;
+    @include max-lines(3);
+
     p {
       text-align: left;
       color: #fff !important;
       margin-bottom: 0;
     }
   }
+
   .story-card__cta {
     display: flex; 
     align-items: center;
@@ -101,6 +111,7 @@
     // backdrop-filter: blur(10px);
     // -webkit-backdrop-filter: blur(10px);
   }
+  
   @media only screen and (min-width: 768px) and (max-width: 991px) {
     .story-card__cta {
       height: 34px;

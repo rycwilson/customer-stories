@@ -1,10 +1,12 @@
+- is_form_input = image_index.present?
+
 li.ad-image-card {
   class="#{ad_image_card_class_name(ad_image, collection)}"
   data-placeholder-url="#{ad_image[:placeholder_image_url]}"
   data-image-id=(ad_image[:id] if ad_image)
   data-toggle=('popover' unless image_index) }
 
-  - unless image_index
+  - unless is_form_input
     .ad-image-card__frame
       .thumbnail
         img src=ad_image[:image_url] alt="#{ad_image[:type].split(/(?=[A-Z])/)&.join(' ')}"

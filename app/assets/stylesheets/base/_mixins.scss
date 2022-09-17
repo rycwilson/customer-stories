@@ -1,3 +1,11 @@
+@mixin max-lines($max) {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  -webkit-line-clamp: $max;  /* number of lines to show */
+  -webkit-box-orient: vertical;
+}
+
 @mixin image-collection-btn-group {
   a.btn-secondary {
     width: 50%;
