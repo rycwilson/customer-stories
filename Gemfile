@@ -33,7 +33,7 @@ gem 'local_time'
 # gem 'miro'
 gem 'multi_json'
 
-gem 'net-smtp', require: false
+gem 'net-smtp', require: false    # https://stackoverflow.com/questions/70500220
 
 # gem 'oauth2'
 gem 'order_as_specified'
