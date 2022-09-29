@@ -38,6 +38,7 @@ gem 'pretender'
 gem 'pry-rails' 
 gem 'pry-remote'
 gem 'pry-theme'
+gem 'puma', '~> 5.0'
 gem 'rails', '5.2.8'
 gem 'rails_admin'
 gem 'rails-html-sanitizer'
@@ -57,13 +58,6 @@ gem 'typhoeus'
 gem 'uglifier'
 gem 'wicked_pdf', '~> 2.0'
 gem 'wkhtmltopdf-binary'
-
-group :production do
-
-  gem 'puma'
-  gem 'rails_12factor'
-
-end
 
 group :development do
   # Access an IRB console on exception pages or by using <%= console %> in views
