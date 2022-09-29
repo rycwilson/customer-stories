@@ -363,11 +363,11 @@ class StoriesController < ApplicationController
     # check if the ads still exist on google
     # => this won't work if the ad_id is bad
     elsif story.was_unpublished?
-      return [
-               story_params[:topic_ad_attributes].try(:[], :ad_id),
-               story_params[:retarget_ad_attributes].try(:[], :ad_id)
-             ]
-               .any? { |ad_id| ad_id.present? ? GoogleAds::get_ad(ad_id) : false }
+      # return [
+      #          story_params[:topic_ad_attributes].try(:[], :ad_id),
+      #          story_params[:retarget_ad_attributes].try(:[], :ad_id)
+      #        ]
+      #          .any? { |ad_id| ad_id.present? ? GoogleAds::get_ad(ad_id) : false }
     end
   end
 

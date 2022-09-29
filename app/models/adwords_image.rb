@@ -35,7 +35,7 @@ class AdwordsImage < ApplicationRecord
   end
 
   def upload_to_google
-    GoogleAds::upload_image_asset(self)
+    # GoogleAds::upload_image_asset(self)
   end
 
   def update_ads

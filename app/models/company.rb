@@ -62,7 +62,7 @@ class Company < ApplicationRecord
     end
     def with_ads
       self.select do |story|
-        story.topic_ad.present? && story.retarget_ad.present?
+        story.publish_date && story.topic_ad.present? && story.retarget_ad.present?
       end
       .sort_by { |story| story.publish_date }.reverse
     end
@@ -1017,15 +1017,15 @@ class Company < ApplicationRecord
   end
 
   def gads_requirements_checklist
-    {
-      promote_enabled: self.promote_tr?,
-      default_headline: self.adwords_short_headline.present?,
-      square_image: self.adwords_images.square_images.default.present?,
-      landscape_image: self.adwords_images.landscape_images.default.present?,
-      valid_defaults: GoogleAds::get_image_assets(
-          self.adwords_images.default.map { |image| image.asset_id }
-        ).try(:length) == self.adwords_images.default.length
-    }
+    # {
+    #   promote_enabled: self.promote_tr?,
+    #   default_headline: self.adwords_short_headline.present?,
+    #   square_image: self.adwords_images.square_images.default.present?,
+    #   landscape_image: self.adwords_images.landscape_images.default.present?,
+    #   valid_defaults: GoogleAds::get_image_assets(
+    #       self.adwords_images.default.map { |image| image.asset_id }
+    #     ).try(:length) == self.adwords_images.default.length
+    # }
   end
 
   def ready_for_gads?
@@ -1062,18 +1062,18 @@ class Company < ApplicationRecord
   # }
   def google_ads_meta_data
     data = { topic: {}, retarget: {} }
-    campaigns = GoogleAds::get_campaigns([ nil, nil ], self.subdomain)
-    [:topic, :retarget].each do |campaign_type|
-      campaign = campaigns.try(:select) { |c| c[:name].match("display #{ campaign_type }") }.try(:first)
-      data[campaign_type][:name] = campaign.try(:[], :name)
-      data[campaign_type][:campaign_id] = campaign.try(:[], :id)
-      if campaign.present?
-        ad_group = GoogleAds::get_ad_groups([ data[campaign_type][:campaign_id] ]).try(:first)
-        data[campaign_type][:ad_group_id] = ad_group.try(:[], :id)
-      end
-    end
-    # puts data
-    return data
+    # campaigns = GoogleAds::get_campaigns([ nil, nil ], self.subdomain)
+    # [:topic, :retarget].each do |campaign_type|
+    #   campaign = campaigns.try(:select) { |c| c[:name].match("display #{ campaign_type }") }.try(:first)
+    #   data[campaign_type][:name] = campaign.try(:[], :name)
+    #   data[campaign_type][:campaign_id] = campaign.try(:[], :id)
+    #   if campaign.present?
+    #     ad_group = GoogleAds::get_ad_groups([ data[campaign_type][:campaign_id] ]).try(:first)
+    #     data[campaign_type][:ad_group_id] = ad_group.try(:[], :id)
+    #   end
+    # end
+    # # puts data
+    # return data
   end
 
   def sync_gads_campaigns
@@ -1133,86 +1133,86 @@ class Company < ApplicationRecord
 
   # this is a copy of what's happening in the stories controller
   def create_all_gads
-    self.stories.published.map do |story|
-      new_gads = {}
-      if story.topic_ad.blank? || story.retarget_ad.blank?
-        if story.topic_ad.blank?
-          story.create_topic_ad(adwords_ad_group_id: story.company.topic_ad_group.id, status: 'ENABLED')
-        else
-          new_topic_gad = GoogleAds::create_ad(story.topic_ad)
-          if new_topic_gad[:ad].present?
-            story.topic_ad.update(ad_id: new_topic_gad[:ad][:id])
-          else
-            new_gads[:topic] = { errors: new_topic_gad[:errors] }
-          end
-        end
-        new_gads[:topic] = story.topic_ad.slice(:ad_id, :long_headline)
+    # self.stories.published.map do |story|
+    #   new_gads = {}
+    #   if story.topic_ad.blank? || story.retarget_ad.blank?
+    #     if story.topic_ad.blank?
+    #       story.create_topic_ad(adwords_ad_group_id: story.company.topic_ad_group.id, status: 'ENABLED')
+    #     else
+    #       new_topic_gad = GoogleAds::create_ad(story.topic_ad)
+    #       if new_topic_gad[:ad].present?
+    #         story.topic_ad.update(ad_id: new_topic_gad[:ad][:id])
+    #       else
+    #         new_gads[:topic] = { errors: new_topic_gad[:errors] }
+    #       end
+    #     end
+    #     new_gads[:topic] = story.topic_ad.slice(:ad_id, :long_headline)
 
-        if story.retarget_ad.blank?
-          story.create_retarget_ad(adwords_ad_group_id: story.company.retarget_ad_group.id, status: 'ENABLED')
-        else
-          new_retarget_gad = GoogleAds::create_ad(story.retarget_ad)
-          if new_retarget_gad[:ad].present?
-            story.retarget_ad.update(ad_id: new_retarget_gad[:ad][:id])
-          else
-            new_gads[:retarget] = { errors: new_retarget_gad[:errors] }
-          end
-        end
-        new_gads[:retarget] = story.retarget_ad.slice(:ad_id, :long_headline)
+    #     if story.retarget_ad.blank?
+    #       story.create_retarget_ad(adwords_ad_group_id: story.company.retarget_ad_group.id, status: 'ENABLED')
+    #     else
+    #       new_retarget_gad = GoogleAds::create_ad(story.retarget_ad)
+    #       if new_retarget_gad[:ad].present?
+    #         story.retarget_ad.update(ad_id: new_retarget_gad[:ad][:id])
+    #       else
+    #         new_gads[:retarget] = { errors: new_retarget_gad[:errors] }
+    #       end
+    #     end
+    #     new_gads[:retarget] = story.retarget_ad.slice(:ad_id, :long_headline)
 
-      else
+    #   else
 
-        # ensure default images are assigned
-        # (in above case this happens automatically in AdwordsAd callback)
-        default_images = self.adwords_images.default
-        [ story.topic_ad, story.retarget_ad ].each do |ad|
-          ad.square_images << default_images.square_images unless ad.square_images.present?
-          ad.landscape_images << default_images.landscape_images unless ad.landscape_images.present?
-          ad.square_logos << default_images.square_logos unless ad.square_logos.present?
-          ad.landscape_logos << default_images.landscape_logos unless ad.landscape_logos.present?
-        end
-        new_gads = GoogleAds::create_story_ads(story)
-        if new_gads[:errors]
-          new_gads[:errors].map! do |error|
-            case error[:type]
-            when 'INVALID_ID'
-              "Not found: #{ error[:field].underscore.humanize.downcase.singularize }"
-            when 'REQUIRED'
-              "Required: #{ error[:field].underscore.humanize.downcase.singularize }"
-            # when something else
-            else
-            end
-          end
-          new_gads[:topic] = { errors: new_gads[:errors].first }
-          new_gads[:retarget] = { errors: new_gads[:errors].last }
-        else
-          story.topic_ad.update(ad_id: new_gads[:topic][:ad_id])
-          story.retarget_ad.update(ad_id: new_gads[:retarget][:ad_id])
-        end
-      end
-      { story_id: story.id }.merge(new_gads)
-    end
+    #     # ensure default images are assigned
+    #     # (in above case this happens automatically in AdwordsAd callback)
+    #     default_images = self.adwords_images.default
+    #     [ story.topic_ad, story.retarget_ad ].each do |ad|
+    #       ad.square_images << default_images.square_images unless ad.square_images.present?
+    #       ad.landscape_images << default_images.landscape_images unless ad.landscape_images.present?
+    #       ad.square_logos << default_images.square_logos unless ad.square_logos.present?
+    #       ad.landscape_logos << default_images.landscape_logos unless ad.landscape_logos.present?
+    #     end
+    #     new_gads = GoogleAds::create_story_ads(story)
+    #     if new_gads[:errors]
+    #       new_gads[:errors].map! do |error|
+    #         case error[:type]
+    #         when 'INVALID_ID'
+    #           "Not found: #{ error[:field].underscore.humanize.downcase.singularize }"
+    #         when 'REQUIRED'
+    #           "Required: #{ error[:field].underscore.humanize.downcase.singularize }"
+    #         # when something else
+    #         else
+    #         end
+    #       end
+    #       new_gads[:topic] = { errors: new_gads[:errors].first }
+    #       new_gads[:retarget] = { errors: new_gads[:errors].last }
+    #     else
+    #       story.topic_ad.update(ad_id: new_gads[:topic][:ad_id])
+    #       story.retarget_ad.update(ad_id: new_gads[:retarget][:ad_id])
+    #     end
+    #   end
+    #   { story_id: story.id }.merge(new_gads)
+    # end
   end
 
   def remove_all_gads(start_with_known_gads=true)
-    # first remove the ones we know about
-    # => may want to skip this when copying production db to staging
-    if start_with_known_gads
-      gads_to_remove = self.ads.with_google_id.map do |ad|
-                          { ad_group_id: ad.ad_group.ad_group_id, ad_id: ad.ad_id }
-                        end
-      GoogleAds::remove_ads(gads_to_remove) if gads_to_remove.present?
-    end
+    # # first remove the ones we know about
+    # # => may want to skip this when copying production db to staging
+    # if start_with_known_gads
+    #   gads_to_remove = self.ads.with_google_id.map do |ad|
+    #                       { ad_group_id: ad.ad_group.ad_group_id, ad_id: ad.ad_id }
+    #                     end
+    #   GoogleAds::remove_ads(gads_to_remove) if gads_to_remove.present?
+    # end
 
-    self.ads.with_google_id.update_all(ad_id: nil)
+    # self.ads.with_google_id.update_all(ad_id: nil)
 
-    # now remove any orphans that may exist
-    gads = GoogleAds::get_ad_group_ads([ self.topic_ad_group.ad_group_id, self.retarget_ad_group.ad_group_id ])
-    if gads.present?
-      GoogleAds::remove_ads(
-        gads.map { |ad| { ad_group_id: ad[:ad_group_id], ad_id: ad[:ad][:id] } }
-      )
-    end
+    # # now remove any orphans that may exist
+    # gads = GoogleAds::get_ad_group_ads([ self.topic_ad_group.ad_group_id, self.retarget_ad_group.ad_group_id ])
+    # if gads.present?
+    #   GoogleAds::remove_ads(
+    #     gads.map { |ad| { ad_group_id: ad[:ad_group_id], ad_id: ad[:ad][:id] } }
+    #   )
+    # end
   end
 
   # returns "light" or "dark" to indicate font color for a given background color (header_color_2)

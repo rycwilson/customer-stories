@@ -21,7 +21,7 @@ gem 'font-awesome-rails'
 gem 'friendly_id'
 gem 'gon'
 gem 'googlecharts'
-gem 'google-adwords-api', '1.5'
+# gem 'google-adwords-api', '1.5'
 gem 'html_to_plain_text'
 
 gem 'jquery-rails'

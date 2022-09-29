@@ -71,7 +71,7 @@ class AdwordsAd < ApplicationRecord
   before_create :create_gad, if: :promote_enabled?
   before_destroy :remove_gad, if: :promote_enabled?
 
-  after_commit :clear_promoted_stories_cache, on: [:create, :update, :destroy]
+  # after_commit :clear_promoted_stories_cache, on: [:create, :update, :destroy]
 
   def google_ad
     campaign_type = self.ad_group.campaign.type.match('Topic') ? 'topic' : 'retarget'
@@ -142,17 +142,17 @@ class AdwordsAd < ApplicationRecord
   end
 
   def create_gad
-    new_gad = GoogleAds::create_ad(self)
-    if new_gad[:id].present?
-      self[:ad_id] = new_gad[:id]
-    else
+    # new_gad = GoogleAds::create_ad(self)
+    # if new_gad[:id].present?
+    #   self[:ad_id] = new_gad[:id]
+    # else
       # don't want to trigger invalidation because we want the model even if the ad fails
       # the failure can be ignored when updating the story (publishing, unpublishing),
       # and flagged in the promoted stories table
 
       # this doesn't seem to work
-      new_gad[:errors].each { |error| self.story.errors[:base] << google_error(error) }
-    end
+    #   new_gad[:errors].each { |error| self.story.errors[:base] << google_error(error) }
+    # end
   end
 
   def validate_images
@@ -166,7 +166,7 @@ class AdwordsAd < ApplicationRecord
 
 
   def remove_gad
-    GoogleAds::remove_ads([ { ad_group_id: self.ad_group.ad_group_id, ad_id: self.ad_id } ])
+    # GoogleAds::remove_ads([ { ad_group_id: self.ad_group.ad_group_id, ad_id: self.ad_id } ])
   end
 
   def assign_defaults

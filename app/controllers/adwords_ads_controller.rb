@@ -7,38 +7,38 @@ class AdwordsAdsController < ApplicationController
     # if they already exist (expected), create them together
     if story.topic_ad.blank? || story.retarget_ad.blank?
       if story.topic_ad.blank?
-        story.create_topic_ad(adwords_ad_group_id: story.company.topic_ad_group.id, status: 'ENABLED')
+        story.create_topic_ad(adwords_ad_group_id: story.company.topic_ad_group.id, status: 'PAUSED')
       else
-        new_topic_gad = GoogleAds::create_ad(story.topic_ad)
-        if new_topic_gad[:ad].present?
-          story.topic_ad.update(ad_id: new_topic_gad[:ad][:id])
-        else
-          # error
-        end
+        # new_topic_gad = GoogleAds::create_ad(story.topic_ad)
+        # if new_topic_gad[:ad].present?
+        #   story.topic_ad.update(ad_id: new_topic_gad[:ad][:id])
+        # else
+        #   # error
+        # end
       end
-      new_gads[:topic] = story.topic_ad.slice(:ad_id, :long_headline)
+      # new_gads[:topic] = story.topic_ad.slice(:ad_id, :long_headline)
 
       if story.retarget_ad.blank?
-        story.create_retarget_ad(adwords_ad_group_id: story.company.retarget_ad_group.id, status: 'ENABLED')
+        story.create_retarget_ad(adwords_ad_group_id: story.company.retarget_ad_group.id, status: 'PAUSED')
       else
-        new_retarget_gad = GoogleAds::create_ad(story.retarget_ad)
-        if new_retarget_gad[:ad].present?
-          story.retarget_ad.update(ad_id: new_retarget_gad[:ad][:id])
-        else
-          # error
-        end
+        # new_retarget_gad = GoogleAds::create_ad(story.retarget_ad)
+        # if new_retarget_gad[:ad].present?
+        #   story.retarget_ad.update(ad_id: new_retarget_gad[:ad][:id])
+        # else
+        #   # error
+        # end
       end
-      new_gads[:retarget] = story.retarget_ad.slice(:ad_id, :long_headline)
+      # new_gads[:retarget] = story.retarget_ad.slice(:ad_id, :long_headline)
 
     else
       add_missing_default_images(story)
-      new_gads = GoogleAds::create_story_ads(story)
-      if new_gads[:errors]
-        new_gads[:errors] = customize_gads_errors(new_gads)
-      else
-        story.topic_ad.update(ad_id: new_gads[:topic][:ad_id])
-        story.retarget_ad.update(ad_id: new_gads[:retarget][:ad_id])
-      end
+      # new_gads = GoogleAds::create_story_ads(story)
+      # if new_gads[:errors]
+      #   new_gads[:errors] = customize_gads_errors(new_gads)
+      # else
+      #   story.topic_ad.update(ad_id: new_gads[:topic][:ad_id])
+      #   story.retarget_ad.update(ad_id: new_gads[:retarget][:ad_id])
+      # end
     end
     respond_to do |format|
       format.json do

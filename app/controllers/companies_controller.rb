@@ -107,7 +107,7 @@ class CompaniesController < ApplicationController
     if company.ready_for_gads?
 
       # force to get campaigns by name => because staging won't match production
-      campaigns = GoogleAds::get_campaigns([ nil, nil ], company.subdomain)
+      # campaigns = GoogleAds::get_campaigns([ nil, nil ], company.subdomain)
 
       # create campaigns if they don't exist on google
       # new_campaigns = nil
