@@ -70,7 +70,7 @@ class StoriesController < ApplicationController
           json = { html: render_story_partial(@story, @contributors, params[:window_width]) }.to_json
           callback = params[:callback]
           jsonp = callback + "(" + json + ")"
-          render(text: jsonp)
+          render(plain: jsonp)
         end
       end and return
     end
