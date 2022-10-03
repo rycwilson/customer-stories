@@ -122,9 +122,9 @@
         = label_tag('plugin_logo_style_card', class: 'radio') do
           = radio_button_tag('plugin[logo_style]', 'card', false)
           | Card with logo
-        = label_tag('plugin_logo_style_card-image', class: 'radio') do
-          = radio_button_tag('plugin[logo_style]', 'card-image', false)
-          | Card with logo and background image
+        / = label_tag('plugin_logo_style_card-image', class: 'radio') do
+        /   = radio_button_tag('plugin[logo_style]', 'card-image', false)
+        /   | Card with logo and background image
         label.checkbox for="plugin_grayscale"
           = check_box_tag('plugin[grayscale]', true, false)
           | Grayscale
@@ -134,11 +134,11 @@
     .col-sm-9.col-md-8.col-lg-6
       a.plugin-demo.btn.btn-secondary href="javascript:;" disabled=('true' if company.stories.blank?)
         i.fa.fa-fw.fa-external-link
-        | Demo
+        span = ' Demo'
       button.copy.btn.btn-secondary type="button"
         i.fa.fa-fw.fa-clipboard
-        | Copy 
-        i.fa.fa-fw.fa-check
+        span = ' Copy'
+        i.fa.fa-fw.fa-check.hidden
 
   .plugin-config__code.form-group
     div.col-sm-3

@@ -57,7 +57,8 @@ Rails.application.routes.draw do
 
     # specifying a default format for plugins#show because (for unknown reason) ajax jsonp
     # request sent from IE11 was resulting in request interpreted as html
-    get '/plugins/:type/show', to: 'plugins#show', as: 'plugin_view', format: 'js'
+    # get '/plugins/:type/show', to: 'plugins#show', as: 'plugin_view', format: 'js'
+    get '/plugins/:type/show', to: 'plugins#show', as: 'plugin_view'
     get '/plugins/:type/init', to: 'plugins#init', as: 'plugin_init'
     get '/plugins/track', to: 'plugins#track'
     get '/plugins/demo', to: 'plugins#demo'

@@ -1,6 +1,11 @@
 
 .plugin-config {
   @include horizontal-form;
+
+  label.radio-inline {
+    margin-right: 1rem;
+  }
+  
   & .plugin-config__type, 
   & .plugin-config__content-buttons, 
   & .plugin-config__code-buttons {
@@ -12,19 +17,24 @@
   .form-group {
     margin: 0;
   }
+
   .help-block {
     margin: 10px 0;
   }
+
   label {
     margin-right: 5px;
   }
+
   .tab-content {
     padding: 15px;
     background-color: $medium-gray;
   }
+
   .input-group.spinner {
     @include fa-spinner(60px);
   }
+
   .tab-pane--gallery {
     .checkbox {
       display: inline-flex;
@@ -35,18 +45,22 @@
       }
     }
   }
+
   .tab-pane--carousel {
     .control-label {
       margin-right: 15px;
     }
   }
+
   .tab-pane--tabbed-carousel {
     [name="tabbed_carousel[tab_color]"] {
       margin-right: 15px;
     }
+
     .form-inline:first-child {
       margin-bottom: 15px;
     }
+
     .minicolors {
       display: inline-block;
     }
@@ -63,11 +77,13 @@
 .plugin-config__appearance {
   .btn-group-vertical {
     padding-left: 20px;
+
     label {
       font-weight: normal;
       cursor: pointer;
     }
   }
+
   label[for="plugin_grayscale"] {
     padding-top: 14px;
   }
@@ -76,11 +92,6 @@
 .plugin-config__code-buttons {
   .btn {
     width: 100px;
-    & + .btn {
-      margin-left: 5px;
-    }
-    &.copy i:last-of-type {
-      display: none;
-    }
+    margin-right: 5px;
   }
 }

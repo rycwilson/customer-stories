@@ -17,15 +17,20 @@ class PluginsController < ApplicationController
   end
 
   def show
-    # DEPRECATION WARNING: `render :text` is deprecated because it does not actually render a `text/plain` response.
-    # Switch to `render plain: 'plain text'` to render as `text/plain`, `render html: '<strong>HTML</strong>'` to render as `text/html`,
-    # or `render body: 'raw'` to match the deprecated behavior and render with the default Content-Type, which is `text/plain`.
-    # (called from block (2 levels) in show at /Users/wilson/dev/csp/app/controllers/plugins_controller.rb:34)
     respond_to do |format|
+      format.json {
+        render json: {
+          is_demo: params[:is_demo],
+          stories: JSON.parse(params[:stories]),
+        }
+      }
       format.js do
         json = { html: plugin_view(@company, params) }.to_json
-        callback = params[:callback]
-        jsonp = callback + "(" + json + ")"
+        jsonp = "#{params[:callback]}(#{json})"
+
+        # DEPRECATION WARNING: `render :text` is deprecated because it does not actually render a `text/plain` response.
+        # Switch to `render plain: 'plain text'` to render as `text/plain`, `render html: '<strong>HTML</strong>'` to render as `text/html`,
+        # or `render body: 'raw'` to match the deprecated behavior and render with the default Content-Type, which is `text/plain`.
         # render(text: jsonp)
         render(plain: jsonp)
       end

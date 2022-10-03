@@ -1,0 +1,38 @@
+(() => {
+
+  //const plugin = <%= raw @plugin.to_json %>
+  const isDemo = true
+  const stylesheetLink = Object.assign(
+    document.createElement('link'), 
+    { rel: 'stylesheet', type: 'text/css', href: '<%= @stylesheet_url %>' }
+  )
+
+  // const container = document.querySelector(`.cs-${plugin.type}${isDemo ? '' : `-${plugin.id}`}`)
+  const script = document.querySelector(isDemo ? 'script' : `script[data-id="${plugin.id}`)
+
+  stylesheetLink.onload = () => {
+    //console.log('stylesheet loaded')
+  }
+
+  document.head.appendChild(stylesheetLink)
+  
+  getHtml()
+    .then((data) => {
+      console.log(data)
+    })
+
+  async function getHtml() {
+    const response = await fetch(
+      '<%= URI.join(root_url, plugin_view_path(@type)) %>.json?' +
+      new URLSearchParams({
+        is_demo: isDemo,
+        stories: JSON.stringify([1,2,3])
+      }), 
+      {
+        method: 'GET',
+      }
+    )
+    return response.json()
+  }
+  
+})()

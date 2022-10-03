@@ -267,34 +267,42 @@ function pluginConfigListeners () {
       $(this).popupWindow(e, window.innerWidth * 0.85, window.innerHeight * 0.85);
     })
 
-    // ref http://bootsnipp.com/snippets/featured/input-spinner-with-min-and-max-values
-    .on('click', '#gallery-settings .spinner button', function () {
-      var $input = $(this).closest('.spinner').find('input'),
-          isIncrement = $(this).hasClass('btn--inc'),
-          step = isIncrement ? 1 : -1,
-          min = parseInt($input.attr('min')),
-          max = parseInt($input.attr('max')),
-          oldVal = parseInt($input.val()), 
-          newVal = oldVal + step;
-      $input.val(newVal).trigger('change');
-      if (newVal === min || newVal === max) {
-        $(this).prop('disabled', true);
-      } else {
-        $(this).add($(this).siblings()).prop('disabled', false);
-      }
-    })
-
-    .on('click', '.copy', function () {
-      var htmlText = $('.plugin-config').find('textarea[readonly]').text(),
-          $temp = $("<textarea></textarea>");
-      $("body").append($temp);
-      $temp.text(htmlText).select();
-      document.execCommand("copy");
-      $temp.remove();
-      $('button.copy span, button.copy i').toggle();
-      setTimeout(function () {
-        $('button.copy span, button.copy i').toggle();
-      }, 1500);
-    });
-
+    .on('click', '.plugin-config .spinner button', pickNumber)
+    .on('click', 'button.copy', copyPluginCode);
+    
+  // https://codepen.io/Thomas-Lebeau/pen/nRqWvp
+  function pickNumber(e) {
+    const btn = e.currentTarget;
+    const input = btn.closest('.spinner').children[0];
+    const shouldIncrement = btn.classList.contains('btn--inc');
+    const step = shouldIncrement ? 1 : -1;
+    const newVal = parseInt(input.value, 10) + step;
+    input.value = newVal;
+    input.dispatchEvent(new Event('change', { bubbles: true }));
+    if (newVal === parseInt(input.min, 10) || newVal === parseInt(input.max, 10)) {
+      btn.disabled = true;
+    } else {
+      const sibling = btn.previousElementSibling || btn.nextElementSibling;
+      btn.disabled = false;
+      sibling.disabled = false;
+    }
+  }
+  
+  function copyPluginCode(e) {
+    const btn = e.currentTarget;
+    const temp = document.createElement('textarea');
+    const toggleBtn = (didCopy) => {
+      const children = document.querySelector('.plugin-config button.copy').children;
+      Array.from(children).forEach(child => child.classList.toggle('hidden'));
+      btn.disabled = didCopy;
+      btn.style.cursor = didCopy ? 'default' : 'pointer';
+    };
+    temp.innerText = document.querySelector('.plugin-config textarea[readonly]').textContent;
+    document.body.appendChild(temp);
+    temp.select();
+    document.execCommand('copy');
+    temp.remove();
+    toggleBtn(true);
+    setTimeout(() => toggleBtn(false), 1500); 
+  }
 }
