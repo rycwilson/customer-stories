@@ -41,6 +41,11 @@ label {
   font-weight: 600;
 }
 
+input[type="radio"],
+input[type="checkbox"] {
+  accent-color: $nav-blue;
+}
+
 hr {
   border-top: 1px solid #dfdfdf;
 }
