@@ -1,0 +1,57 @@
+
+.cs-overlay-container class=('pre-selected' if pre_selected_story_id.present?)
+  .cs-main
+    .cs-grid.cs-grid-carousel
+
+      .cs-carousel.cs-container-fluid {
+        class="cs-carousel--#{carousel_version} #{background ? 'cs-carousel--' + background + '-background' : ''}" }
+        .cs-row
+          .cs-carousel__arrow.cs-carousel__arrow--left.col-xs-2.col-sm-1
+            button
+          .cs-carousel__carousel.cs-rh-container.col-xs-8col-sm-10
+            / text-center in case not enough stories to fill carousel
+            .cs-row.row-horizon.text-center
+              / the bootstrap styling starts to break down after 30 stories
+              - stories.each do |story|
+                .col-xs-12
+                  = render( \
+                      'stories/shared/story_card',
+                      { story: story,
+                        card_class: story_card_class(story, false, false, true, is_grayscale, pre_selected_story_id),
+                        plugin_type: 'carousel',
+                        background: background,
+                        is_dashboard: false,
+                        is_plugin: true,
+                        is_external: true })
+          .cs-carousel__arrow.cs-carousel__arrow--right.col-xs-2.col-sm-1
+            button
+        .cs-carousel__scroll-xs
+          button.cs-carousel__arrow-xs.cs-carousel__arrow-xs--left type="button"
+            i.fa.fa-fw.fa-angle-left
+          .cs-carousel__pagination-xs.text-center
+          button.cs-carousel__arrow-xs.cs-carousel__arrow-xs--right type="button"
+            i.fa.fa-fw.fa-angle-right
+        .cs-carousel__pagination
+        .cs-carousel__prev-next
+          button.cs-carousel__prev.cs-carousel__prev--bookend type="button" Previous
+          span
+          button.cs-carousel__next type="button" Next
+
+    section.cs-content
+      .scroll-wrap
+        - stories.each do |story|
+          .content__item.content__item--carousel
+            - if pre_selected_story_id == story.id
+              = render( \
+                  story.published? ? 'stories/show/story' : 'stories/show/preview',
+                  { company: story.company,
+                    story: story,
+                    contributors: contributors,
+                    related_stories: nil,
+                    is_plugin: true,
+                    plugin_type: 'carousel',
+                    window_width: window_width })
+      button.visible-xs-inline.cs-close-xs type="button"
+        span.fa-stack
+          i.fa.fa-circle.fa-stack-2x
+          i.fa.fa-times-thin.fa-inverse.fa-stack-1x

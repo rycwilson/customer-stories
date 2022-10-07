@@ -49,10 +49,20 @@ class PluginsController < ApplicationController
   end
 
   def demo
+    @plugin = plugin_params
+    @category_slug = StoryCategory.find_by_id(@plugin[:category])&.slug
+    @product_slug = StoryCategory.find_by_id(@plugin[:product])&.slug
+    awesome_print(@plugin)
     render(layout: false)
   end
 
   private
+
+  def plugin_params
+    params.require(:plugin).permit(
+      :type, :category, :product, :grayscale, :logos_only, stories: [], gallery: {}, carousel: {}, tabbed_carousel: {}
+    )
+  end
 
   # if invalid category or product filters, return all stories
   def plugin_view (company, params)
@@ -72,7 +82,7 @@ class PluginsController < ApplicationController
         tab_color: params[:tab_color],
         text_color: params[:text_color],
         carousel_version: company.subdomain == 'pixlee' ? 'v2' : 'v1',
-        logo_style: params[:logo_style],
+        logos_only: params[:logos_only],
         is_grayscale: params[:grayscale].present? && params[:grayscale] != 'false',
         is_curator: false,
         is_plugin: true,

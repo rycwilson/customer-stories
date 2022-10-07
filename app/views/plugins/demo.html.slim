@@ -1,0 +1,28 @@
+doctype html 
+html lang="en-US"
+  head
+    meta charset="utf-8"
+    meta name="viewport" content="width=device-width, initial-scale=1.0"
+    title Customer Stories Plugin Demo
+    link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,400italic,600,600italic,800,800italic"
+    link rel="stylesheet" href='https://fonts.googleapis.com/css?family=Lato:300,400,700' 
+    link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Montserrat:400,500,600,700&amp;lang=en"
+    = custom_google_fonts(@company)
+    css:
+      html, body { height: 100%; } 
+    /script src="#{asset_path('/plugins/demo.js')}"
+  body.plugin-demo class="#{demo_class_name(@company, @plugin)}"
+    .cs-plugin id="cs-#{@plugin[:type].sub('_', '-')}"
+    script {
+      src="#{root_url}plugins/#{@plugin[:type]}/cs.js" 
+      data-demo="true" 
+      data-stories=@plugin[:stories]
+      data-category=@category_slug
+      data-product=@product_slug
+      data-logos-only=@plugin[:logos_only]
+      data-grayscale=@plugin[:grayscale]
+      data-max-rows=@plugin.dig(:gallery, :max_rows)
+      data-background=@plugin.dig(:carousel, :background)
+      data-tab-color=@plugin.dig(:tabbed_carousel, :tab_color)
+      data-text-color=@plugin.dig(:tabbed_carousel, :text_color)
+      data-delay=@plugin.dig(:tabbed_carousel, :delay) }

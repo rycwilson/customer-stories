@@ -1,4 +1,3 @@
-
 table {
   background-color: #fff;
 }
@@ -44,4 +43,12 @@ ul.dropdown-menu {
 .pagination > .active > span:focus {
   background-color: $nav-blue;
   border-color: $nav-blue;
+}
+
+.radio-inline,
+.checkbox-inline {
+  label,
+  input {
+    cursor: pointer;
+  }
 }
