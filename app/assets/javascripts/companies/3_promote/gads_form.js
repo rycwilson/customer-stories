@@ -3,80 +3,23 @@ function promoteSettingsListeners () {
 
   let imageTimer, inputObserver;
 
-  // the data-validate attribute is to prevent premature validation (per bootstrap-validator)
-  const imageDidLoad = ($imageCard, $img) => {
-    if ($img[0].complete) {
-      clearInterval(imageTimer);
-      console.log('image did load')
-      $imageCard
-        .addClass($imageCard.is('.gads-default') ? 'ad-image-card--new' : '')
-        .find('input:file').attr('data-validate', 'true');
-      $('#gads-form').validator('update').validator('validate');
-      return true;
-    }
-  };
-
-  const isSuccessfulUpload = ($formGroup, $urlInput, mutation) => (
-    $(mutation.target).is($urlInput) &&
-    mutation.type === 'attributes' &&
-    mutation.attributeName === 'value' &&
-    $formGroup.is(':not(.has-error)')
-  );
-      
-  const handleS3Upload = ($imageCard) => {
-    console.log('handleS3Upload()')
-    const $img = $imageCard.find('img');
-    const $formGroup = $imageCard.find('.form-group');
-    const $urlInput = $imageCard.children('input[name*="[image_url]"]');
-    inputObserver = new MutationObserver((mutations) => {
-      for (m of mutations) {
-        if (isSuccessfulUpload($formGroup, $urlInput, m)) {
-          inputObserver.disconnect();
-          console.log('isSuccessfulUpload', $urlInput.val())
-          // formGroupObserver.disconnect();
-
-          if ($imageCard.is('.gads-default.has-image')) {
-            const $idInput = $imageCard.children('input[name*="[id]"]');
-            const prevDefaultId = $idInput.val();
-            keepPreviousDefault(prevDefaultId);
-            $idInput.val('');
-          }
-
-          // pre-load the image so it will be in browsder cache when response arrives (no flicker)
-          $formGroup.find('img')
-            .one('load', () => $formGroup.find('.btn-success').trigger('click'))
-            .attr('src', $urlInput.val());
-          break;
-        }
-      };
-    });
-    inputObserver.observe($urlInput[0], { attributes: true });
-    if (!imageDidLoad($imageCard, $img)) imageTimer = setInterval(imageDidLoad, 100, $imageCard, $img);
-  };
-
-  const keepPreviousDefault = (id) => {
-    const $form = $('#gads-form');
-    const i = $form.find('.ad-image-card').length;
-    $form.append(`
-      <input type="hidden" name="company[adwords_images_attributes][${i}][id]" value="${id}">
-      <input type="hidden" name="company[adwords_images_attributes][${i}][default]" value="false">
-      <input class="hidden" type="checkbox" name="company[adwords_images_attributes][${i}][default]" value="true">
-    `);
-  };
-
   const confirmImageRemoval = ($imageCard, affectedStories) => {
+    displayAffectedStories = affectedStories.slice(0, 6);
+    undisplayedCount = affectedStories.length - displayAffectedStories.length
     bootbox.confirm({
       className: 'confirm-ad-image-removal',
       closeButton: false,
       title: '<i class="fa fa-warning"></i>\xa0\xa0\xa0\xa0<span>Are you sure?</span>',
       message: `
         <p>The selected image is utilized in these Promoted Stories:<p>
-        <ul style="margin: 25px 0">
-          ${affectedStories.reduce((listItems, storyTitle) => {
-            return `${listItems}<li>${storyTitle}</li>`
-          })}
+        <ul>
+          ${displayAffectedStories.map(storyTitle => `<li>${storyTitle}</li>`).join('')}
         </ul>
-        <p>You can remove the image and it will be replaced by the current default image of the same type (square or landscape).\ 
+        ${affectedStories.length !== displayAffectedStories.length ? 
+            `<em><p style="padding-left:40px">plus ${undisplayedCount} more</p></em>` :
+            ''
+        }
+        <p>You can remove the image and it will be replaced by the current default image of the same type (square or landscape). \ 
         The Promoted Stories will be updated to include the replacement image and no further action will be required.</p>
       `,
       buttons: {
@@ -145,6 +88,69 @@ function promoteSettingsListeners () {
     }
   }
 
+  function handleS3Upload($imageCard) {
+    // console.log('handleS3Upload()')
+    const $img = $imageCard.find('img');
+    const $formGroup = $imageCard.find('.form-group');
+    const $urlInput = $imageCard.children('input[name*="[image_url]"]');
+    inputObserver = new MutationObserver((mutations) => {
+      for (m of mutations) {
+        if (isSuccessfulUpload($formGroup, $urlInput, m)) {
+          inputObserver.disconnect();
+          // console.log('isSuccessfulUpload', $urlInput.val())
+
+          if ($imageCard.is('.gads-default.has-image')) {
+            const $idInput = $imageCard.children('input[name*="[id]"]');
+            const prevDefaultId = $idInput.val();
+            keepPreviousDefault(prevDefaultId);
+            $idInput.val('');
+          }
+
+          // pre-load the image so it will be in browsder cache when response arrives (no flicker)
+          $formGroup.find('img')
+            .one('load', () => $formGroup.find('.btn-success').trigger('click'))
+            .attr('src', $urlInput.val());
+          break;
+        }
+      };
+    });
+    inputObserver.observe($urlInput[0], { attributes: true });
+    if (!imageDidLoad($imageCard, $img)) imageTimer = setInterval(imageDidLoad, 100, $imageCard, $img);
+  }
+
+  function isSuccessfulUpload($formGroup, $urlInput, mutation) {
+    return (
+      $(mutation.target).is($urlInput) &&
+      mutation.type === 'attributes' &&
+      mutation.attributeName === 'value' &&
+      $formGroup.is(':not(.has-error)')
+    )
+  }
+
+  function imageDidLoad($imageCard, $img) {
+    if ($img[0].complete) {
+      clearInterval(imageTimer);
+      // console.log('image did load')
+
+      // the data-validate attribute is to prevent premature validation (per bootstrap-validator)
+      $imageCard
+        .addClass($imageCard.is('.gads-default') ? 'ad-image-card--new' : '')
+        .find('input:file').attr('data-validate', 'true');
+      $('#gads-form').validator('update').validator('validate');
+      return true;
+    }
+  }
+
+  function keepPreviousDefault(id) {
+    const $form = $('#gads-form');
+    const i = $form.find('.ad-image-card').length;
+    $form.append(`
+      <input type="hidden" name="company[adwords_images_attributes][${i}][id]" value="${id}">
+      <input type="hidden" name="company[adwords_images_attributes][${i}][default]" value="false">
+      <input class="hidden" type="checkbox" name="company[adwords_images_attributes][${i}][default]" value="true">
+    `);
+  };
+
   function onFileInputValidation(e) {
     // console.log('validated.bs.validator')
     const $input = $(e.relatedTarget)
@@ -168,8 +174,8 @@ function promoteSettingsListeners () {
   }
 
   function onInvalidFileInput(e) {
-    const $input = $(e.relatedTarget);
-    console.log('invalid.bs.validator')
+    // const $input = $(e.relatedTarget);
+    // console.log('invalid.bs.validator')
     inputObserver.disconnect();
   }
 
@@ -244,7 +250,6 @@ function promoteSettingsListeners () {
         .find('input:checkbox[name*="_destroy"]').prop('checked', true).end()
         .find('.form-group').addClass('to-be-removed');
     }
-
   }
 
   function cancelUpdate(e) {
