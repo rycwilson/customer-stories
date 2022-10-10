@@ -14,8 +14,9 @@
               i.fa.fa-gear
               | &nbsp;&nbsp;Settings
         - if current_user.admin?
-          .admin
+          .admin-sidebar
             h4 Admin
+            p The connection to Google Ads is presently disabled.
             #gads-set-reset.text-center
               button.btn.btn-secondary.disabled {
                 type="button" 

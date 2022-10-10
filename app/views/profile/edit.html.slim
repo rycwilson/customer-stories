@@ -24,21 +24,23 @@
 
       - if current_user.admin? || @original_user.try(:admin?)
 
-        div style="display: flex; justify-content: center"
-          #switch-user.dropdown
-            button.btn.btn-default.dropdown-toggle {
-              type="button" 
-              data-toggle="dropdown" 
-              aria-haspopup="true" 
-              aria-expanded="true" }
-              | Switch User &nbsp;&nbsp;
-              span.caret
-            ul.dropdown-menu aria-labelledby="switch-user"
-              - @switch_users.each do |user|
-                li
-                  = form_tag(switch_user_path, method: 'POST', remote: true) do
-                    = hidden_field_tag(:switch_user_id, user[:id])
-                    = submit_tag(user[:name], style: 'background: none; border: none')
+        .admin-sidebar
+          h4 Admin
+          .text-center
+            #switch-user.dropdown
+              button.btn.btn-default.dropdown-toggle {
+                type="button" 
+                data-toggle="dropdown" 
+                aria-haspopup="true" 
+                aria-expanded="true" }
+                | Switch User &nbsp;&nbsp;
+                span.caret
+              ul.dropdown-menu aria-labelledby="switch-user"
+                - @switch_users.each do |user|
+                  li
+                    = form_tag(switch_user_path, method: 'POST', remote: true) do
+                      = hidden_field_tag(:switch_user_id, user[:id])
+                      = submit_tag(user[:name], style: 'background: none; border: none')
 
     .col-sm-8.col-lg-9.layout-main
 
