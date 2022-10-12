@@ -44,7 +44,7 @@ gem 'pry-remote'
 gem 'pry-theme'
 gem 'puma', '~> 5.0'
 gem 'rails', '~> 6.0'
-gem 'rails_admin'
+gem 'rails_admin', '~> 2.0'
 # gem 'rails-html-sanitizer'    # required by rails, no need to add separately
 gem 'rack-cors'
 gem 'rack_password'
