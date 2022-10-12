@@ -1,21 +1,7 @@
 module PluginsHelper
 
-  def demo_plugin_data_attrs params
-    puts params
-    [
-      params[:stories].present? ? "data-stories=#{params[:stories]}" : '',
-      params[:category].present? ? "data-category=#{params[:category]}" : '',
-      params[:product].present? ? "data-product=#{params[:product]}" : '',
-      params[:max_rows].present? ? "data-max-rows=#{params[:max_rows]}" : '',
-      params[:background].present? ? "data-background=#{params[:background]}" : '',
-      params[:logo_style].present? ? "data-logo-style=#{params[:logo_style]}" : '',
-      params[:grayscale].present? ? "data-grayscale=true" : '',
-      params[:tab_color].present? ? "data-tab-color=#{params[:tab_color]}" : '',
-      params[:text_color].present? ? "data-text-color=#{params[:text_color]}" : '',
-      params[:delay].present? ? "data-delay=#{params[:delay]}" : '',
-    ]
-      .delete_if { |attr| attr.blank? }
-      .join(' ')
+  def demo_class_name(company, plugin)
+    "#{company.subdomain} #{plugin[:type].sub('_', '-')} #{plugin[:carousel] ? 'bg-' + plugin[:carousel][:background] : ''}"
   end
 
   # method provides for auto-populating settings for legacy plugins that won't

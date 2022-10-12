@@ -12,7 +12,7 @@ ul#stories-gallery.grid.list-unstyled.text-center class=('no-filters' if no_filt
       = render( \
           'stories/shared/story_card',
           { story: story,
-            card_class: story_card_class(story, 'card'),
+            card_class: story_card_class(story, false),
             is_dashboard: false,
             is_plugin: false,
             is_external: false })

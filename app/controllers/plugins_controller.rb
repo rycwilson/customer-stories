@@ -18,18 +18,23 @@ class PluginsController < ApplicationController
 
   def show
     respond_to do |format|
+      format.json {
+        render json: {
+          is_demo: params[:is_demo],
+          stories: JSON.parse(params[:stories]),
+        }
+      }
       format.js do
         json = { html: plugin_view(@company, params) }.to_json
-        callback = params[:callback]
-        jsonp = callback + "(" + json + ")"
+        jsonp = "#{params[:callback]}(#{json})"
+
+        # DEPRECATION WARNING: `render :text` is deprecated because it does not actually render a `text/plain` response.
+        # Switch to `render plain: 'plain text'` to render as `text/plain`, `render html: '<strong>HTML</strong>'` to render as `text/html`,
+        # or `render body: 'raw'` to match the deprecated behavior and render with the default Content-Type, which is `text/plain`.
         # render(text: jsonp)
         render(plain: jsonp)
       end
     end
-    # DEPRECATION WARNING: `render :text` is deprecated because it does not actually render a `text/plain` response.
-    # Switch to `render plain: 'plain text'` to render as `text/plain`, `render html: '<strong>HTML</strong>'` to render as `text/html`,
-    # or `render body: 'raw'` to match the deprecated behavior and render with the default Content-Type, which is `text/plain`.
-    # (called from block (2 levels) in show at /Users/wilson/dev/csp/app/controllers/plugins_controller.rb:34)
   end
 
   def init
@@ -44,10 +49,20 @@ class PluginsController < ApplicationController
   end
 
   def demo
+    @plugin = plugin_params
+    @category_slug = StoryCategory.find_by_id(@plugin[:category])&.slug
+    @product_slug = StoryCategory.find_by_id(@plugin[:product])&.slug
+    awesome_print(@plugin)
     render(layout: false)
   end
 
   private
+
+  def plugin_params
+    params.require(:plugin).permit(
+      :type, :category, :product, :grayscale, :logos_only, stories: [], gallery: {}, carousel: {}, tabbed_carousel: {}
+    )
+  end
 
   # if invalid category or product filters, return all stories
   def plugin_view (company, params)
@@ -67,7 +82,7 @@ class PluginsController < ApplicationController
         tab_color: params[:tab_color],
         text_color: params[:text_color],
         carousel_version: company.subdomain == 'pixlee' ? 'v2' : 'v1',
-        logo_style: params[:logo_style],
+        logos_only: params[:logos_only],
         is_grayscale: params[:grayscale].present? && params[:grayscale] != 'false',
         is_curator: false,
         is_plugin: true,

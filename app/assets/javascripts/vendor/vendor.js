@@ -23,9 +23,9 @@ function constructPlugins () {
         return JSON.stringify(storyIds);
       },
       updateScriptTag = function () {
-        var isFirstSelection = !$('.script-tag textarea').text().match(/data-stories/);
-        $('.script-tag textarea').text(
-          $('.script-tag textarea').text()
+        var isFirstSelection = !$('.plugin-config__code textarea').text().match(/data-stories/);
+        $('.plugin-config__code textarea').text(
+          $('.plugin-config__code textarea').text()
             .replace(
               isFirstSelection ? /><\/script>/ : /\xa0data-stories="\[((\d+(,)?)+)?\]"/,
               '\xa0data-stories="' + customStoriesToJson() + '"' + (isFirstSelection ? '></script>' : '')

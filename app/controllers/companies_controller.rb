@@ -18,9 +18,9 @@ class CompaniesController < ApplicationController
     @workflow_stage = params[:workflow_stage]
     @prospect_tab = request.cookies['prospect-tab'] || '#successes'
     @promote_tab = request.cookies['promote-tab'] || '#promoted-stories'
-    @recent_activity = Rails.cache.fetch("#{@company.subdomain}/recent-activity") { @company.recent_activity(30) }
-    @story_views_30_day_count = PageView.joins(:visitor_session)
-                                .company_story_views_since(@company.id, 30).count
+    # @recent_activity = Rails.cache.fetch("#{@company.subdomain}/recent-activity") { @company.recent_activity(30) }
+    @recent_activity = @company.recent_activity(30)
+    @story_views_30_day_count = PageView.joins(:visitor_session).company_story_views_since(@company.id, 30).count
     # note: app data is obtained via json (see set_gon() in application controller)
     @curate_view = 'stories'
   end
@@ -81,12 +81,14 @@ class CompaniesController < ApplicationController
         @saved_image = saved_ad_image(ad_images_params)
         @swapped_default_image = swapped_default_ad_image(ad_images_params)
         @prev_default_image = prev_default_ad_image(ad_images_params)
+        awesome_print(@swapped_default_image)
+        awesome_print(@prev_default_image)
         image_type = (@saved_image || @swapped_default_image).try(:[], :type)
         @collection = image_type&.split(/(?=[A-Z])/).try(:[], 1)&.downcase.try(:concat, 's') || ''
         @res_data = {
           'savedImage' => @saved_image,
-          'swappedDefaultImageId' => @swapped_default_image&.id,
-          'prevDefaultImageId' => @prev_default_image&.id,
+          'swappedDefaultImageId' => @swapped_default_image.try(:[], :id),
+          'prevDefaultImageId' => @prev_default_image.try(:[], :id),
           'collection' => @collection,
           'imageType' => image_type,
           'typeClassName' => image_type&.split(/(?=[A-Z])/)&.reverse&.join('--')&.downcase&.sub(/\A/, 'gads-'),
@@ -107,7 +109,7 @@ class CompaniesController < ApplicationController
     if company.ready_for_gads?
 
       # force to get campaigns by name => because staging won't match production
-      campaigns = GoogleAds::get_campaigns([ nil, nil ], company.subdomain)
+      # campaigns = GoogleAds::get_campaigns([ nil, nil ], company.subdomain)
 
       # create campaigns if they don't exist on google
       # new_campaigns = nil
@@ -248,9 +250,9 @@ class CompaniesController < ApplicationController
     render_to_string(partial: 'adwords_images/ad_image_card', locals: base_locals.merge(ad_image: image))
   end
 
-  def saved_ad_image(ad_images_params)
-    new_image = ad_images_params.try(:select) { |index, image| image[:id].blank? }
-    new_image = new_image.try(:[], new_image.try(:keys).try(:first))
+  def saved_ad_image(_params)
+    new_image = _params&.select { |index, image| image[:id].blank? }
+    new_image = new_image.try(:[], new_image&.keys&.first)
     if new_image.present?
       AdwordsImage.where(image_url: new_image[:image_url]).take
         &.slice(:id, :type, :image_url, :default)
@@ -260,40 +262,36 @@ class CompaniesController < ApplicationController
     end
   end
 
-  def prev_default_ad_image(ad_images_params)
-    if ad_images_params.try(:length) == 2
-      new_image_is_present = ad_images_params.try(:select) { |i, image| image[:id].blank? }.present?
-      key = new_image_is_present ? ad_images_params.keys.last : ad_images_params.keys.first
-      AdwordsImage.find(ad_images_params[key][:id])
+  # the swapped out default image
+  # this one has to be looked up in the db because the client does not preserve its type and image_url
+  def prev_default_ad_image(_params)
+    if _params&.length == 2
+      new_image_is_present = _params&.select { |i, image| image[:id].blank? }.present?
+      key = new_image_is_present ? _params.keys.last : _params.keys.first
+      AdwordsImage.find(_params[key][:id])
     else
       nil
     end
   end
 
-  # the swapped-in image (not swapped-out; that's the previous_default)
-  def swapped_default_ad_image(images_attrs)
-    # no default present, assign one
-    if images_attrs.try(:length) == 1 &&
-       !removed_ad_image_id(images_attrs) &&
-       images_attrs[images_attrs.keys.first][:id].present?
-       images_attrs[images_attrs.keys.first][:default] == 'true'
-      images_attrs[images_attrs.keys.first]
-    # default is present, assign a new one (could be new or existing)
-    # if it's new, get the id
-    elsif images_attrs.try(:length) == 2 &&
-          images_attrs[images_attrs.keys.last][:default] == 'true'
-      images_attrs[images_attrs.keys.last][:id].present? ?
-        images_attrs[images_attrs.keys.last] :
-        new_ad_image(images_attrs)
+  # the swapped in default image
+  # no need to look up in the db, all needed info is in the params
+  def swapped_default_ad_image(_params)
+    default_is_blank = _params&.length == 1 && !removed_ad_image_id(_params) && _params[_params.keys.first][:id].present?
+    default_is_present = _params&.length == 2 && _params[_params.keys.last][:default] == 'true'
+    if default_is_blank
+      _params[_params.keys.first]
+    elsif default_is_present
+      _params[_params.keys.last]
     else
       nil
     end
   end
 
-  def removed_ad_image_id(images_attrs)
-    images_attrs.try(:length) == 1 &&
-    images_attrs[images_attrs.keys.first][:_destroy] == 'true' ?
-      images_attrs[images_attrs.keys.first][:id] :
+  def removed_ad_image_id(_params)
+    _params.try(:length) == 1 &&
+    _params[_params.keys.first][:_destroy] == 'true' ?
+      _params[_params.keys.first][:id] :
       nil
   end
 

@@ -21,7 +21,7 @@ gem 'font-awesome-rails'
 gem 'friendly_id'
 gem 'gon'
 gem 'googlecharts'
-gem 'google-adwords-api', '1.5'
+# gem 'google-adwords-api', '1.5'
 gem 'html_to_plain_text'
 
 gem 'jbuilder', '~> 2.7'
@@ -42,6 +42,7 @@ gem 'pretender'
 gem 'pry-rails' 
 gem 'pry-remote'
 gem 'pry-theme'
+gem 'puma', '~> 5.0'
 gem 'rails', '~> 6.0'
 gem 'rails_admin'
 # gem 'rails-html-sanitizer'    # required by rails, no need to add separately
@@ -61,11 +62,6 @@ gem 'typhoeus'
 gem 'uglifier'
 gem 'wicked_pdf', '~> 2.0'
 gem 'wkhtmltopdf-binary'
-
-group :production do
-  gem 'puma'
-  gem 'rails_12factor'
-end
 
 group :development, :test do
   gem 'rspec-rails', '~> 5.0'

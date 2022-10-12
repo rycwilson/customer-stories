@@ -1,86 +1,72 @@
-
 .plugin-config {
   @include horizontal-form;
-  & .plugin-config__type, 
-  & .plugin-config__content-buttons, 
-  & .plugin-config__code-buttons {
-    margin-bottom: 10px;
+
+  label.radio-inline,
+  label.checkbox-inline {
+    margin-right: 1rem;
+    font-weight: normal;
+  }
+
+  .input-group.spinner {
+    margin-right: 1.75rem;
+  }
+
+  > .form-group {
+    margin-bottom: 2rem;
+  
+    &[class*="type"],
+    &[class*="content"],
+    &[class*="code-actions"] {
+      margin-bottom: 1rem;
+    }
   }
 }
 
-.plugin-config__type-settings {
+.plugin-config__gallery,
+.plugin-config__carousel,
+.plugin-config__tabbed-carousel {
+  background-color: $medium-gray;
+  padding: 1.5rem;
+
   .form-group {
     margin: 0;
   }
-  .help-block {
-    margin: 10px 0;
-  }
+
   label {
-    margin-right: 5px;
+    margin-right: 1rem;
   }
-  .tab-content {
-    padding: 15px;
-    background-color: $medium-gray;
-  }
+
   .input-group.spinner {
     @include fa-spinner(60px);
   }
-  .tab-pane--gallery {
-    .checkbox {
-      display: inline-flex;
-      align-items: center;
-      padding: 0;
-      input {
-        margin: 0 5px 0 20px;
-      }
-    }
-  }
-  .tab-pane--carousel {
-    .control-label {
-      margin-right: 15px;
-    }
-  }
-  .tab-pane--tabbed-carousel {
-    [name="tabbed_carousel[tab_color]"] {
-      margin-right: 15px;
-    }
-    .form-inline:first-child {
-      margin-bottom: 15px;
-    }
-    .minicolors {
-      display: inline-block;
-    }
+}
+
+.plugin-config__gallery {
+  .checkbox-inline {
+    display: flex;
+    padding-top: 0;
   }
 }
 
-.plugin-config__content-select {
-  // show/hide on the select2 input doesn't work well => use a parent container
-  > div > div:not(:first-child) {
-    display: none;
+.plugin-config__carousel {
+  label {
+    margin-right: 2rem;
   }
 }
 
-.plugin-config__appearance {
-  .btn-group-vertical {
-    padding-left: 20px;
-    label {
-      font-weight: normal;
-      cursor: pointer;
-    }
+.plugin-config__tabbed-carousel {
+  [name*="tab_color"] {
+    margin-right: 1.5rem;
   }
-  label[for="plugin_grayscale"] {
-    padding-top: 14px;
+  
+  .minicolors {
+    display: inline-block;
   }
 }
 
-.plugin-config__code-buttons {
+.plugin-config__code-actions {
   .btn {
-    width: 100px;
-    & + .btn {
-      margin-left: 5px;
-    }
-    &.copy i:last-of-type {
-      display: none;
-    }
+    width: 96px;
+    margin-right: 1rem;
   }
 }

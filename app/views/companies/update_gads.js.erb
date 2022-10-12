@@ -15,6 +15,8 @@
   const $swappedImageCard = swappedDefaultImageId && 
     $form.find('.ad-image-card').has(`> input[name*="[id]"][value="${swappedDefaultImageId}"]`);
     
+  console.log(swappedDefaultImageId, prevDefaultImageId)
+
   const customizeErrorMessages = (errors) => errors.map(mesg => {
     if (mesg === "Adwords images media can't be blank") {
       return 'Error uploading to service';

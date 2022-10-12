@@ -12,7 +12,7 @@ module GoogleAds
   #   }
   # ]
 
-  require 'adwords_api'
+  # require 'adwords_api'
   API_VERSION = :v201809
 
   class << self

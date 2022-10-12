@@ -6,7 +6,7 @@ function promote () {
   // console.log('promote')
   const imageHasPersisted = ($img) => $img.attr('src').includes('http');
   const setCardClassName = ($imageCard, type) => {
-    console.log(`setCardClassName(${type})`, $imageCard.prop('class'))
+    // console.log(`setCardClassName(${type})`, $imageCard.prop('class'))
     const typeClassName = type ? `$&--${type.match(/Square|Landscape/)[0].toLowerCase()}` : '';
     $imageCard.attr(
       'class',

@@ -338,7 +338,7 @@ function initSelect2 () {
       var select = $(this);
       $(select).select2({
         theme: 'bootstrap',
-        placeholder: 'Select Stories or leave blank for default sort',
+        placeholder: 'Select Stories OR leave blank for default sort',
         tags: true,
         width: 'style',
         createTag: function(params) {

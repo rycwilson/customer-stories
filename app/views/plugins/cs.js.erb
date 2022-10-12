@@ -114,7 +114,7 @@
           background: $script.data('background'),
           tab_color: $script.data('tab-color'),
           text_color: $script.data('text-color'),
-          logo_style: $script.data('logo-style'),
+          logos_only: $script.data('logos-only'),
           grayscale: $script.data('grayscale'),
           window_width: window.innerWidth
         }
@@ -128,7 +128,7 @@
           }
 
           adjustForWeebly();
-
+          
           // wait for all images to load so dimension calculations are correct
           var $images = $container.find('img'), loadedImages = 0;
           $images.on('load', function (e) {

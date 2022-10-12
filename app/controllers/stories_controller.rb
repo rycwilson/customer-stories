@@ -68,9 +68,8 @@ class StoriesController < ApplicationController
       respond_to do |format|
         format.js do
           json = { html: render_story_partial(@story, @contributors, params[:window_width]) }.to_json
-          callback = params[:callback]
-          jsonp = callback + "(" + json + ")"
-          render(text: jsonp)
+          jsonp = "#{params[:callback]}(#{json})"
+          render(plain: jsonp)
         end
       end and return
     end
@@ -363,11 +362,11 @@ class StoriesController < ApplicationController
     # check if the ads still exist on google
     # => this won't work if the ad_id is bad
     elsif story.was_unpublished?
-      return [
-               story_params[:topic_ad_attributes].try(:[], :ad_id),
-               story_params[:retarget_ad_attributes].try(:[], :ad_id)
-             ]
-               .any? { |ad_id| ad_id.present? ? GoogleAds::get_ad(ad_id) : false }
+      # return [
+      #          story_params[:topic_ad_attributes].try(:[], :ad_id),
+      #          story_params[:retarget_ad_attributes].try(:[], :ad_id)
+      #        ]
+      #          .any? { |ad_id| ad_id.present? ? GoogleAds::get_ad(ad_id) : false }
     end
   end
 
