@@ -22,7 +22,8 @@ Rails.application.config.assets.paths += %w(
 # Rails.application.config.assets.precompile += %w( admin.js admin.css )
 
 # ref: https://stackoverflow.com/questions/10905905/using-fonts-with-rails-asset-pipeline
-Rails.application.config.assets.precompile << /\.(?:svg|eot|woff|ttf|otf)\z/
+# Rails.application.config.assets.precompile << /\.(?:svg|eot|woff|ttf|otf)\z/
+Rails.application.config.assets.precompile << ['*.svg', '*.eot', '*.woff', '*.woff2', '*.ttf', '*.otf']
 
 Rails.application.config.assets.precompile += %w(
   pdf.css
