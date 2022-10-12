@@ -42,6 +42,14 @@ namespace :clicky do
     Rake::Task["clicky:cache"].invoke
   end
 
+  task :get_visitors, [:start_date, :end_date] => :environment do |task, args|
+    puts args
+    puts "#{args[:start_date]},#{args[:end_date]}"
+    visitors_list = get_visitors_range("#{args[:start_date]},#{args[:end_date]}")
+    awesome_print(visitors_list)
+    puts visitors_list.count
+  end
+
   task update: :environment do
     next if ENV['HOST_NAME'] == 'customerstories.org'  # https://stackoverflow.com/questions/2316475
     # for added redundancy and because heroku scheduler is "best effort",
