@@ -34,6 +34,8 @@ gem 'local_time'
 gem 'multi_json'
 
 gem 'net-smtp', require: false    # https://stackoverflow.com/questions/70500220
+gem 'net-imap', require: false
+gem 'net-pop', require: false
 
 # gem 'oauth2'
 gem 'order_as_specified'
