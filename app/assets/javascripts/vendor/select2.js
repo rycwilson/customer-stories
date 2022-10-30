@@ -88,7 +88,7 @@ function initSelect2 () {
   // https://github.com/select2/select2/issues/5993
   $('.modal:not(.in)')
     .find('select.customer, select.success, select.contributor, select.referrer')
-      .next('.select2')
+      // .next('.select2')
         // .find('.select2-selection__rendered').attr('title', '').end()
         // .end()
       .on('select2:open', (e) => {
@@ -306,13 +306,16 @@ function initSelect2 () {
       theme: 'bootstrap',
       tags: true,
       placeholder: 'Add tags',
-      // selectOnClose: true
+      selectOnClose: true
     })
-    .next('.select2')
-      .find('.select2-selection__choice')
-        .attr('title', '')
-        .end()
-      .end()
+    // .next('.select2')
+    //   .find('.select2-selection__choice')
+    //     .attr('title', '')
+    //     .end()
+    //   .end()
+    // .on('select2:opening', function () {
+    //   return false
+    // })
     .on('select2:select, select2:unselect, change.select2', function () {
       $(this).next('.select2')
                .find('.select2-selection__choice__remove')
