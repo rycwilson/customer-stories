@@ -24,7 +24,8 @@ function initGoogleCharts (asyncLoad, charts) {
     if (visitors.length === 1) {   // 1 day
       xDelta = 0;
     } else if (visitors.length > 1) {
-      xDelta = moment.duration(new Date(visitors[1][0]) - new Date(visitors[0][0])).asDays();
+      // xDelta = moment.duration(new Date(visitors[1][0]) - new Date(visitors[0][0])).asDays();
+      xDelta = (new Date(visitors[1][0]) - new Date(visitors[0][0])) / (1000 * 3600 * 24)
       if (xDelta < 0) { xDelta += 365; }  // account for ranges that span new year
     }
     if (xDelta <= 1)  {
