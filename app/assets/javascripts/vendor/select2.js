@@ -306,25 +306,20 @@ function initSelect2 () {
       theme: 'bootstrap',
       tags: true,
       placeholder: 'Add tags',
-      selectOnClose: true
+      selectOnClose: true,
+      containerCssClass: 'story-tags__select',
+      dropdownCssClass: 'story-tags__dropdown'
     })
-    // .next('.select2')
-    //   .find('.select2-selection__choice')
-    //     .attr('title', '')
-    //     .end()
-    //   .end()
-    // .on('select2:opening', function () {
-    //   return false
-    // })
+    .next('.select2')
+      .find('.select2-selection__choice')
+        .attr('title', '')
+        .end()
+      .end()
     .on('select2:select, select2:unselect, change.select2', function () {
-      $(this).next('.select2')
-               .find('.select2-selection__choice__remove')
-                 .html('<i class="fa fa-fw fa-remove"></i>');
+      $(this).next('.select2').find('.select2-selection__choice__remove').html('<i class="fa fa-fw fa-remove"></i>');
     })
   $('#company-tags-form')
-    .find('.select2-selection__choice__remove')
-      .html('<i class="fa fa-fw fa-remove"></i>')
-      .end()
+    .find('.select2-selection__choice__remove').html('<i class="fa fa-fw fa-remove"></i>').end()
     .attr('data-init', true);
 
   $('select.invitation-template').select2({

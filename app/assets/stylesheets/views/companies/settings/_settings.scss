@@ -13,6 +13,7 @@ p.lead {
     display: flex; 
     justify-content: space-around
   }
+
   label:not([class*="col-"]) {
     padding: 0;
     font-weight: normal;
@@ -23,12 +24,30 @@ p.lead {
 #company-profile-form, #company-tags-form  {
   @include horizontal-form; 
 }
+
 #company-tags-form {
   @include hide-until-init;
+
+  &.form-horizontal .control-label {
+    padding-top: 11px;
+  }
+
+  .select2-selection__rendered {
+    cursor: text;
+  }
+}
+
+.select2-container--bootstrap.select2-container--open.select2-container--below .select2-selection.story-tags__select {
+  border-bottom-right-radius: $input-border-radius;
+  border-bottom-left-radius: $input-border-radius;
+  border-bottom-color: #66afe9; 
+}
+
+.story-tags__dropdown {
+  display: none;
 }
 
 .companies.edit {
-
   // for safari
   input::-webkit-contacts-auto-fill-button {
     visibility: hidden;
@@ -47,5 +66,4 @@ p.lead {
   #select2-category_tags_-results, #select2-product_tags_-results {
     // display: none;
   }
-
 }
