@@ -66,7 +66,7 @@ gem 'wicked_pdf', '~> 2.0'
 gem 'wkhtmltopdf-binary'
 
 group :development, :test do
-  gem 'rspec-rails', '~> 5.0'
+  gem 'rspec-rails', '~> 6.0'
   gem 'pry-byebug'
   gem 'better_errors'
   gem 'binding_of_caller'   # needed for better_errors features
