@@ -34,7 +34,9 @@ class User < ApplicationRecord
       .joins(:contributions)
       .distinct()
       .where('users.id = ? OR contributions.contributor_id = ? OR contributions.referrer_id = ?', self.id, self.id, self.id)
-      .each { |company| company.expire_ll_cache('successes-json', 'contributions-json') }
+      .each do |company| 
+        # company.expire_ll_cache('successes-json', 'contributions-json') 
+      end
   end
   
   after_commit(on: [:update]) { expire_published_contributor_cache } if Proc.new do |user|
@@ -79,11 +81,11 @@ class User < ApplicationRecord
   end
 
   def expire_published_contributor_cache
-    self.own_contributions.each do |contribution|
-      if contribution.publish_contributor? && contribution.story.present?
-        contribution.story.expire_published_contributor_cache(self.id)
-      end
-    end
+    # self.own_contributions.each do |contribution|
+    #   if contribution.publish_contributor? && contribution.story.present?
+    #     contribution.story.expire_published_contributor_cache(self.id)
+    #   end
+    # end
   end
 
   def missing_info

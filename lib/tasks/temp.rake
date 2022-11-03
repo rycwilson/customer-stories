@@ -230,7 +230,7 @@ namespace :temp do
   end
 
   task copy_default_invitation_templates: :environment do
-    csp = Company::CSP
+    csp = Company.find_by(name: 'CSP')
     Company.all.each do |company|
       company.invitation_templates.customer.update(
         request_body: csp.invitation_templates.customer.request_body

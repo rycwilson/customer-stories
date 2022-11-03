@@ -92,23 +92,23 @@ class Contribution < ApplicationRecord
     # TODO: Why doesn't self.company association method work on destroy?
     # TODO ... probably because associated models have been destroyed - changed bahavior in rails 5?
     # self.company.expire_ll_cache('successes-json', 'contributions-json') 
-    self.success.customer.company.expire_ll_cache('successes-json', 'contributions-json') 
+    # self.success.customer.company.expire_ll_cache('successes-json', 'contributions-json') 
   end
 
   after_update_commit do
     if self.previous_changes.key?('publish_contributor') && self.story.present?
-      expire_published_contributor_cache
+      # expire_published_contributor_cache
     end
     if self.previous_changes.key?('preview_contributor')
       # when selecting or de-selecting a preview contributor,
       # expire the story tile and index as a whole
-      self.company.expire_ll_cache('stories-json')
-      self.story.expire_story_card_fragment_cache
-      self.company.increment_stories_gallery_fragments_memcache_iterator
+      # self.company.expire_ll_cache('stories-json')
+      # self.story.expire_story_card_fragment_cache
+      # self.company.increment_stories_gallery_fragments_memcache_iterator
     end
     if (self.previous_changes.keys & ['status', 'publish_contributor', 'contributor_unpublished']).any?
-      self.company.expire_ll_cache('contributions-json')
-      self.company.expire_ll_cache('successes-json') if self.previous_changes.key?('status')
+      # self.company.expire_ll_cache('contributions-json')
+      # self.company.expire_ll_cache('successes-json') if self.previous_changes.key?('status')
     end
   end
 

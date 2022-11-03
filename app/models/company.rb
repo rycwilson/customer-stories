@@ -1,9 +1,6 @@
 class Company < ApplicationRecord
 
-  include GoogleAds
-
-  CSP = self.find(5)
-  V = self.find(10)
+  # include GoogleAds
 
   before_validation :smart_add_url_protocol
 
@@ -311,7 +308,7 @@ class Company < ApplicationRecord
     self.create_plugin
 
     # default invitation templates (formerly email templates, futurely invitation templates)
-    Company::CSP.invitation_templates.each do |factory_template|
+    Company.find_by(name: 'CSP').invitation_templates.each do |factory_template|
       if ['Customer', 'Customer Success', 'Sales'].include?(factory_template.name)
         company_template = factory_template.dup
         self.invitation_templates << company_template

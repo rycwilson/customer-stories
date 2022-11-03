@@ -79,8 +79,8 @@ class Success < ApplicationRecord
   end
 
   after_commit do 
-    self.company.expire_ll_cache('successes-json') 
-    self.company.expire_ll_cache('contributions-json') if self.previous_changes.key?('name')
+    # self.company.expire_ll_cache('successes-json') 
+    # self.company.expire_ll_cache('contributions-json') if self.previous_changes.key?('name')
   end
 
   # after_commit(on: [:create, :destroy]) do
@@ -175,13 +175,13 @@ class Success < ApplicationRecord
   end
 
   def expire_category_tags_cache (category)
-    category.company.expire_ll_cache('stories-json')
-    category.company.increment_category_select_fragments_memcache_iterator
+    # category.company.expire_ll_cache('stories-json')
+    # category.company.increment_category_select_fragments_memcache_iterator
   end
 
   def expire_product_tags_cache (product)
-    product.company.expire_ll_cache('stories-json')
-    product.company.increment_product_select_fragments_memcache_iterator
+    # product.company.expire_ll_cache('stories-json')
+    # product.company.increment_product_select_fragments_memcache_iterator
   end
 
   def referrer

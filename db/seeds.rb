@@ -2,8 +2,8 @@
 require File.expand_path('../seeds/demo_customers', __FILE__)
 require File.expand_path('../seeds/contributions', __FILE__)
 require File.expand_path('../seeds/stories', __FILE__)
-require File.expand_path('../seeds/visitors', __FILE__)
-require File.expand_path('../seeds/email_templates', __FILE__)
+# require File.expand_path('../seeds/visitors', __FILE__)
+# require File.expand_path('../seeds/email_templates', __FILE__)
 
 # ref: http://stackoverflow.com/questions/619840/
 # require "#{Rails.root}/db/seeds/contributions.rb"
@@ -166,40 +166,40 @@ def seed_company company, *users
       # 10.times { success.visitors << VisitorsSeed::create }
 
       # Contributions
-      ContributionsSeed::create( success.id, ROLES[rand(ROLES.length)], 1.day.ago, 'contribution', users[0] )
-      ContributionsSeed::create( success.id, ROLES[rand(ROLES.length)], 2.days.ago, 'contribution', users[1] )
-      ContributionsSeed::create( success.id, ROLES[rand(ROLES.length)], 3.days.ago, 'contribution', users[2] )
-      ContributionsSeed::create( success.id, ROLES[rand(ROLES.length)], 4.days.ago, 'contribution', users[3] )
-      ContributionsSeed::create( success.id, ROLES[rand(ROLES.length)], nil, 'pre_request', users[4] )
-      ContributionsSeed::create( success.id, ROLES[rand(ROLES.length)], nil, 'request', users[5] )
-      ContributionsSeed::create( success.id, ROLES[rand(ROLES.length)], 5.days.ago, 'feedback' )
-      ContributionsSeed::create( success.id, ROLES[rand(ROLES.length)], nil, 'did_not_respond', nil, 10.days.ago )
-      ContributionsSeed::create( success.id, ROLES[rand(ROLES.length)], nil, 'opt_out' )
-      ContributionsSeed::create( success.id, ROLES[rand(ROLES.length)], nil, 'unsubscribe' )
+      # ContributionsSeed::create( success.id, ROLES[rand(ROLES.length)], 1.day.ago, 'contribution', users[0] )
+      # ContributionsSeed::create( success.id, ROLES[rand(ROLES.length)], 2.days.ago, 'contribution', users[1] )
+      # ContributionsSeed::create( success.id, ROLES[rand(ROLES.length)], 3.days.ago, 'contribution', users[2] )
+      # ContributionsSeed::create( success.id, ROLES[rand(ROLES.length)], 4.days.ago, 'contribution', users[3] )
+      # ContributionsSeed::create( success.id, ROLES[rand(ROLES.length)], nil, 'pre_request', users[4] )
+      # ContributionsSeed::create( success.id, ROLES[rand(ROLES.length)], nil, 'request', users[5] )
+      # ContributionsSeed::create( success.id, ROLES[rand(ROLES.length)], 5.days.ago, 'feedback' )
+      # ContributionsSeed::create( success.id, ROLES[rand(ROLES.length)], nil, 'did_not_respond', nil, 10.days.ago )
+      # ContributionsSeed::create( success.id, ROLES[rand(ROLES.length)], nil, 'opt_out' )
+      # ContributionsSeed::create( success.id, ROLES[rand(ROLES.length)], nil, 'unsubscribe' )
 
-      ContributionsSeed::create( success.id, ROLES[rand(ROLES.length)], 1.days.ago, 'contribution', users[6] )
-      ContributionsSeed::create( success.id, ROLES[rand(ROLES.length)], 2.days.ago, 'contribution', users[7] )
-      ContributionsSeed::create( success.id, ROLES[rand(ROLES.length)], 3.days.ago, 'contribution', users[8] )
-      ContributionsSeed::create( success.id, ROLES[rand(ROLES.length)], 4.days.ago, 'contribution', users[9] )
-      ContributionsSeed::create( success.id, ROLES[rand(ROLES.length)], nil, 'pre_request', users[10] )
-      ContributionsSeed::create( success.id, ROLES[rand(ROLES.length)], nil, 'request', nil)
-      ContributionsSeed::create( success.id, ROLES[rand(ROLES.length)], 5.days.ago, 'feedback' )
-      ContributionsSeed::create( success.id, ROLES[rand(ROLES.length)], nil, 'did_not_respond', nil, 10.days.ago )
-      ContributionsSeed::create( success.id, ROLES[rand(ROLES.length)], nil, 'opt_out' )
-      ContributionsSeed::create( success.id, ROLES[rand(ROLES.length)], nil, 'unsubscribe' )
+      # ContributionsSeed::create( success.id, ROLES[rand(ROLES.length)], 1.days.ago, 'contribution', users[6] )
+      # ContributionsSeed::create( success.id, ROLES[rand(ROLES.length)], 2.days.ago, 'contribution', users[7] )
+      # ContributionsSeed::create( success.id, ROLES[rand(ROLES.length)], 3.days.ago, 'contribution', users[8] )
+      # ContributionsSeed::create( success.id, ROLES[rand(ROLES.length)], 4.days.ago, 'contribution', users[9] )
+      # ContributionsSeed::create( success.id, ROLES[rand(ROLES.length)], nil, 'pre_request', users[10] )
+      # ContributionsSeed::create( success.id, ROLES[rand(ROLES.length)], nil, 'request', nil)
+      # ContributionsSeed::create( success.id, ROLES[rand(ROLES.length)], 5.days.ago, 'feedback' )
+      # ContributionsSeed::create( success.id, ROLES[rand(ROLES.length)], nil, 'did_not_respond', nil, 10.days.ago )
+      # ContributionsSeed::create( success.id, ROLES[rand(ROLES.length)], nil, 'opt_out' )
+      # ContributionsSeed::create( success.id, ROLES[rand(ROLES.length)], nil, 'unsubscribe' )
 
 
       # Result
-      success.results << Result.create(description: "Achieves #{rand(50)+50}% higher Data Center speeds",
-                                          success_id: success.id)
+      # success.results << Result.create(description: "Achieves #{rand(50)+50}% higher Data Center speeds",
+      #                                     success_id: success.id)
 
-      # Prompts
-      success.prompts << Prompt.create(description: "What was the challenge?",
-                                          success_id: success.id)
-      success.prompts << Prompt.create(description: "What was the solution?",
-                                          success_id: success.id)
-      success.prompts << Prompt.create(description: "What are your estimated or measured results?",
-                                          success_id: success.id)
+      # # Prompts
+      # success.prompts << Prompt.create(description: "What was the challenge?",
+      #                                     success_id: success.id)
+      # success.prompts << Prompt.create(description: "What was the solution?",
+      #                                     success_id: success.id)
+      # success.prompts << Prompt.create(description: "What are your estimated or measured results?",
+      #                                     success_id: success.id)
 
     end  # story create
   end

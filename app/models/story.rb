@@ -46,13 +46,13 @@ class Story < ApplicationRecord
     :topic_ad,
     -> (ad) { where(adwords_ad_group_id: ad.company.topic_campaign.ad_group.id) },
     class_name: 'AdwordsAd',
-    dependent: :destroy
+    # dependent: :destroy
   )
   has_one(
     :retarget_ad,
     -> (ad) { where(adwords_ad_group_id: ad.company.retarget_campaign.ad_group.id) },
     class_name: 'AdwordsAd',
-    dependent: :destroy
+    # dependent: :destroy
   )
 
   accepts_nested_attributes_for(:topic_ad, allow_destroy: true)
@@ -136,7 +136,7 @@ class Story < ApplicationRecord
 
   before_create { self.og_title = self.title }
   after_update_commit do
-    self.expire_fragment("#{self.company.subdomain}/stories/#{self.id}/meta-tags")
+    # self.expire_fragment("#{self.company.subdomain}/stories/#{self.id}/meta-tags")
     # TODO: pro-actively expire social network cache on changing og-* fields
     # request = Typhoeus::Request.new(
     #   "https://graph.facebook.com",
@@ -161,7 +161,7 @@ class Story < ApplicationRecord
   before_save(:update_publish_state)
 
   after_commit(on: [:create, :destroy]) do
-    self.company.expire_ll_cache('stories-json')
+    # self.company.expire_ll_cache('stories-json')
   end
 
   # note: the _changed? methods for attributes don't work in the
@@ -171,11 +171,11 @@ class Story < ApplicationRecord
 
   # on change of publish state
   after_update_commit do
-    expire_story_card_fragment_cache
-    expire_filter_select_fragment_cache
-    self.company.increment_stories_gallery_fragments_memcache_iterator
-    self.company.expire_ll_cache('stories-json', 'contributions-json')
-    self.company.expire_fragment_cache('plugin-config')
+    # expire_story_card_fragment_cache
+    # expire_filter_select_fragment_cache
+    # self.company.increment_stories_gallery_fragments_memcache_iterator
+    # self.company.expire_ll_cache('stories-json', 'contributions-json')
+    # self.company.expire_fragment_cache('plugin-config')
   end if Proc.new { |story|
            ( story.previous_changes.keys &
              ['published', 'preview_published', 'logo_published'] ).any?
@@ -185,41 +185,41 @@ class Story < ApplicationRecord
   # expire stories gallery cache on change of title/summary/quote data;
   # also json cache
   after_update_commit do
-    expire_story_card_fragment_cache
-    self.company.increment_stories_gallery_fragments_memcache_iterator
-    self.company.expire_ll_cache('stories-json')
+    # expire_story_card_fragment_cache
+    # self.company.increment_stories_gallery_fragments_memcache_iterator
+    # self.company.expire_ll_cache('stories-json')
   end if Proc.new { |story|
            ( (story.published? || story.preview_published?) &&
              (story.previous_changes.keys & ['title', 'summary', 'quote']).any? )
          }
 
   after_update_commit do
-    expire_story_video_info_cache
-    expire_story_video_xs_fragment_cache
+    # expire_story_video_info_cache
+    # expire_story_video_xs_fragment_cache
   end if Proc.new { |story| story.previous_changes.key?('video_url') }  
 
   after_update_commit do
-    expire_story_testimonial_fragment_cache
+    # expire_story_testimonial_fragment_cache
   end if Proc.new { |story|
             (story.previous_changes.keys &
             ['video_url', 'quote', 'quote_attr_name', 'quote_attr_title']).any?
           }
 
   after_update_commit do
-    expire_csp_story_path_cache
-    expire_story_narrative_fragment_cache
-    self.company.expire_fragment_cache('plugin-config')
-    self.company.expire_ll_cache('successes-json', 'contributions-json')
+    # expire_csp_story_path_cache
+    # expire_story_narrative_fragment_cache
+    # self.company.expire_fragment_cache('plugin-config')
+    # self.company.expire_ll_cache('successes-json', 'contributions-json')
   end if Proc.new { |story| story.previous_changes.key?('title') }
 
   after_update_commit do
-    expire_story_narrative_fragment_cache
+    # expire_story_narrative_fragment_cache
   end if Proc.new { |story| (story.previous_changes.keys & ['title', 'narrative']).any? }
 
   before_destroy do
-    expire_filter_select_fragment_cache
-    self.company.increment_stories_gallery_fragments_memcache_iterator
-    self.company.expire_ll_cache('stories-json')
+    # expire_filter_select_fragment_cache
+    # self.company.increment_stories_gallery_fragments_memcache_iterator
+    # self.company.expire_ll_cache('stories-json')
   end
 
   # method takes an active record relation
@@ -297,9 +297,9 @@ class Story < ApplicationRecord
   end
 
   def expire_csp_story_path_cache
-    Rails.cache.delete("#{self.company.subdomain}/csp-story-#{self.id}-path")
-    self.expire_fragment_cache_on_path_change
-    self.company.expire_ll_cache('stories-json', 'contributions-json')
+    # Rails.cache.delete("#{self.company.subdomain}/csp-story-#{self.id}-path")
+    # self.expire_fragment_cache_on_path_change
+    # self.company.expire_ll_cache('stories-json', 'contributions-json')
   end
 
   # method returns a friendly id url that either contains or omits a product

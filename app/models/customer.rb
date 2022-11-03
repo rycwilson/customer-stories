@@ -22,10 +22,10 @@ class Customer < ApplicationRecord
   end
 
   def expire_cache
-    expire_story_fragments
-    self.stories.each { |story| story.expire_csp_story_path_cache }
-    self.company.expire_fragment_cache('plugin-config')
-    self.company.expire_ll_cache('successes-json', 'contributions-json', 'stories-json')
+    # expire_story_fragments
+    # self.stories.each { |story| story.expire_csp_story_path_cache }
+    # self.company.expire_fragment_cache('plugin-config')
+    # self.company.expire_ll_cache('successes-json', 'contributions-json', 'stories-json')
   end
 
   def expire_story_fragments
