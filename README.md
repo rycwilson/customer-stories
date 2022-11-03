@@ -1,90 +1,212 @@
-== README
+## [Customer Stories Platform (CSP)](https://customerstories.net)
 
-This README would normally document whatever steps are necessary to get the
-application up and running.
-
-Things you may want to cover:
-
-* Ruby version
-
-* System dependencies
-
-* Configuration
-
-* Database creation
-
-* Database initialization
-
-* How to run the test suite
-
-* Services (job queues, cache servers, search engines, etc.)
-
-* Deployment instructions
-
-* ...
-
-
-Please feel free to use a different markup language if you do not plan to run
-<tt>rake doc:app</tt>.
-
-## Heroku
-#### Database
-To copy from production to staging:
-(assumes `staging` is a git remote repo)
-
-[reference](https://http://stackoverflow.com/questions/10673630)
-
-1. turn off the web dynos in staging: ```heroku maintenance:on -r staging```
-2. if there are non-web-dynos, turn them off too: ```heroku ps:scale worker=0 -r staging```
-3. copy: ```heroku pg:copy floating-spire-2927::HEROKU_POSTGRESQL_GOLD_URL HEROKU_POSTGRESQL_MAUVE_URL -r staging```
-4. (to confirm database names: ```heroku pg:info```)
-
-Turn stuff back on:
-
-1. ```heroku maintenance:off -r staging```
-2. ```heroku ps:scale worker=1 -r staging``` (or however many workers, if any)
-
-
-
-## Amazon Web Services (AWS)
-####Account
-- Ryan owns account, Dan has root permissions
-- TODO: at what point is it no longer free?
-
-#### Buckets - development and production
-- user-uploaded images are in uploads/
-- CORS config - new company deployments must be added to the list (dev and prod)
-- TODO: script to clean up orphaned files
-- TODO: limit image size
-- TODO: How to automate addition of new company to CORS list?
-
-#### CLI
-- [About](http://docs.aws.amazon.com/cli/latest/userguide/cli-chap-welcome.html)
-- installed, next step [configure](http://docs.aws.amazon.com/cli/latest/userguide/cli-chap-getting-started.html)
-
-## Hosting / DNS / SSL
-<br>
 <hr>
 
-#### DNS
-- staging is registered and hosted on DNSimple (user=***REMOVED***, pass=Epld1212)
-- production is registered on GoDaddy and hosted on DNSimple
-- DNSimple: For a stable app, give TTL a relatively high value.
+### Table of Contents
 
-####Heroku
+#### Features
+- [Import CRM Data](#import)
+- [Crowdsource Content](#crowdsource)
+- [Publish](#publish)
+- [Promote](#promote)
+- [Measure](#measure)
+- [Website Plugin](#website-plugin)
+
+#### Deployment
+
+- [DNSimple](#dnsimple)
+- [Heroku](#heroku)
+- [SSL Certificates](#ssl-certificates)
+- [Database](#database)
+
+#### Development
+- [Installation](#installation)
+- [Testing](#testing)
+- [Notes](#notes)
+
+#### Services
+- [Clicky](#clicky)
+- [AWS S3](#aws-s3)
+- [SendGrid](#sendgrid)
+- [Zapier](#zapier)
+- [Google Ads](#google-ads)
+- [Heroku Scheduler](#heroku-scheduler)
+
+<hr>
+
+<!-- <a name="features"></a> -->
+
+### Features 
+
+<a name="import"></a>
+
+##### Import CRM Data
+- import with CSV file or Zapier
+- or create anew
+- LinkedIn badges
+
+<a name="crowdsource"></a>
+
+##### Crowdsource Content
+- Templates: default, custom
+- Invite Contributors
+- Contributor Questions
+- Contributor Answers
+- Inserting contributor content
+
+<a name="publish"></a>
+
+##### Publish
+- Customer Story anatomy: highlighted customer quote, customer results, narrative (HTML editor), more info
+- publish levels: logo, preview, story, etc
+- CTAs
+- Sharing
+- SEO
+
+<a name="promote"></a>
+
+##### Promote
+- Google Ads
+- search results / keywords configuration
+- uploading and assigning images
+
+<a name="measure"></a>
+
+##### Measure
+- charts and tables
+
+<a name="website-plugin"></a>
+
+##### Website Plugin 
+- multiple types
+- fully featured story overlays
+
+<!-- <a name="development"></a> -->
+
+<hr>
+
+### Deployment
+
+<a name="dnsimple"></a>
+
+##### DNSimple
+- administrator@customerstories.net / Dan's usual password
+- "For a stable app, give TTL a relatively high value."
+
+<a name="heroku"></a>
+
+##### Heroku
+- [Staging dashboard]((https://dashboard.heroku.com/apps/csp-staging))
+- [Production dashboard](https://dashboard.heroku.com/apps/floating-spire-2927)
+- Both staging and production use hobby [dynos](https://devcenter.heroku.com/categories/dynos) 
+- Environment variables / API keys: figaro, application.yml, apply to heroku
+- common CLI commands
+- env variables / api keys
 - Heroku doesn't like A-records, may lead to instability in DNS resolution
 	- [The Limitations of DNS A-Records](https://devcenter.heroku.com/articles/apex-domains)
 	- [Stack Overflow](http://stackoverflow.com/questions/13478008/heroku-godaddy-naked-domain), [Stack Overflow](http://stackoverflow.com/questions/11492563/heroku-godaddy-send-naked-domain-to-www), [Stack Overflow](http://stackoverflow.com/questions/16022324/how-to-setup-dns-for-an-apex-domain-no-www-pointing-to-a-heroku-app)
 
-####SSL Certificate
-- Wildcard certificate for *.customerstories.net purchased from DNSimple
-- Files are in ssl/ (.gitignore)
-- Staging has a self-signed certificate
-- Heroku installation (staging and production) per [Heroku SSL](https://devcenter.heroku.com/articles/ssl-beta)
+<a name="ssl-certificates"></a>
 
-## Wistia
-- user = ***REMOVED***, pass = ***REMOVED***
+##### SSL Certificates
+- Heroku [does not support](https://devcenter.heroku.com/articles/automated-certificate-management) wildcard SSL certificates (needed for subdomains)
+- [Production certificate](https://dnsimple.com/a/60286/domains/customerstories.net/ssl_certificates) good until 3/18/23
+- Free approach: Staging certificate was created with [certbot](https://certbot.eff.org/)
+  - assuming a macOS environment
+  - contact Ryan for DNSimple credentials (`certbot-creds.ini` file)
+  1. `sudo pip3 install certbot`
+  2. `sudo pip3 install certbot-dns-dnsimple` 
+  3. For any other DNS registrars, need to install the corresponding [DNS plugin](https://eff-certbot.readthedocs.io/en/stable/using.html#dns-plugins). Run `certbot plugins` to check.
+  4. Create the wildcard certificate:
+    `sudo certbot certonly --dns-dnsimple --dns-dnsimple-credentials ./certbot-creds.ini -d 'customerstories.org' -d '*.customerstories.org'`
+  5. The certificate is placed in `/etc/letsencrypt/live/customerstories.org`. Subsequent renewals will overwrite this directory.
+  6. The above folder has super user permissions. You can make a copy (`sudo cp -r /etc/letsencrypt/live/customerstories.org .`) and then change permissions on the directory (`sudo chown -R username customerstories.org`). Now you can cd into the directory.
+  7. Upload to heroku: `heroku certs:add fullchain.pem -a [csp-staging|floating-spire-2927]`
+  8. Check the certificate with `heroku certs -a [csp-staging|floating-spire-2927]` or under Settings in the app dashboard
 
+<a name="database"></a>
 
+##### Database
+Copy the production database to staging:
+  - assumes `staging` is a remote repo on heroku corresponding to customerstories.org
+  - to find database names: `heroku pg:info -a [csp-staging|floating-spire-2927]`
+  - [reference](https://stackoverflow.com/questions/10673630/how-do-i-transfer-production-database-to-staging-on-heroku-using-pgbackups-gett)
+  1. turn off the web dynos on staging: `heroku maintenance:on -r staging`
+  2. turn off worker dynos (if any): `heroku ps:scale worker=0 -r staging`
+  3. `heroku pg:copy floating-spire-2927::HEROKU_POSTGRESQL_GOLD_URL HEROKU_POSTGRESQL_MAUVE_URL -r staging`
+  4. `heroku maintenance:off -r staging`
+  5. `heroku ps:scale worker=1 -r staging` (or however many workers, if any)
 
+<hr>
 
+### Development
+
+##### Installation
+- System dependencies: Ruby 3.1.2, PosgresSQL@14, [Heroku CLI](https://devcenter.heroku.com/articles/heroku-cli), [AWS CLI](https://docs.aws.amazon.com/cli/latest/userguide/getting-started-install.html)
+- Clone repo
+- Set up DB
+- install dependencies
+- Add heroku remotes
+
+<a name="testing"></a>
+
+##### Testing
+- Not enough!
+- zapier: google sheets
+- csv import
+
+<a name="notes"></a>
+
+##### Notes
+- AWS S3: buckets, CORS
+- local tunneling with ngrok
+- plugin JSONP
+- file/image upload: aws s3, CORS
+- copying production database
+
+<hr>
+
+### Services
+- for all: username(s), password, account tier, api keys
+
+<a name="clicky"></a>
+
+##### Clicky
+- models (`VisitorSession`, `Visitor`, `VisitorAction`, `PageView`, `StoryShare`)
+- tasks
+- updates presently disabled
+
+<a name="aws-s3"></a>
+
+##### AWS S3
+- permissions
+- adding subdomains to CORS list (todo: automate this)
+- separate buckets for development and production
+- user uploads are in `uploads/`
+
+<a name="sendgrid"></a>
+
+##### SendGrid
+- read receipts
+- limits
+
+<a name="zapier"></a>
+
+##### Zapier
+- Customer Stories app
+- test spreadsheets
+
+<a name="google-ads"></a>
+
+##### Google Ads
+- models (AdwordsCampaign, AdwordsAdGroup, AdwordsAd, AdwordsImage)
+- configuration (search/keywords, topic, retarget)
+
+<a name="heroku-scheduler"></a>
+
+##### Heroku Scheduler
+- send invitation reminders
+- download clicky data (disabled)
+- clean adwords images (disabled)
+
+###### TODO: connect to video accounts YouTube, Vimeo, Wistia
