@@ -40,14 +40,14 @@
 
 <a name="import"></a>
 
-##### Import CRM Data
+#### Import CRM Data
 - import with CSV file or Zapier
 - or create anew
 - LinkedIn badges
 
 <a name="crowdsource"></a>
 
-##### Crowdsource Content
+#### Crowdsource Content
 - Templates: default, custom
 - Invite Contributors
 - Contributor Questions
@@ -56,7 +56,7 @@
 
 <a name="publish"></a>
 
-##### Publish
+#### Publish
 - Customer Story anatomy: highlighted customer quote, customer results, narrative (HTML editor), more info
 - publish levels: logo, preview, story, etc
 - CTAs
@@ -65,19 +65,19 @@
 
 <a name="promote"></a>
 
-##### Promote
+#### Promote
 - Google Ads
 - search results / keywords configuration
 - uploading and assigning images
 
 <a name="measure"></a>
 
-##### Measure
+#### Measure
 - charts and tables
 
 <a name="website-plugin"></a>
 
-##### Website Plugin 
+#### Website Plugin 
 - multiple types
 - fully featured story overlays
 
@@ -89,13 +89,13 @@
 
 <a name="dnsimple"></a>
 
-##### DNSimple
+#### DNSimple
 - administrator@customerstories.net / Dan's usual password
 - "For a stable app, give TTL a relatively high value."
 
 <a name="heroku"></a>
 
-##### Heroku
+#### Heroku
 - [Staging dashboard]((https://dashboard.heroku.com/apps/csp-staging))
 - [Production dashboard](https://dashboard.heroku.com/apps/floating-spire-2927)
 - Both staging and production use hobby [dynos](https://devcenter.heroku.com/categories/dynos) 
@@ -108,7 +108,7 @@
 
 <a name="ssl-certificates"></a>
 
-##### SSL Certificates
+#### SSL Certificates
 - Heroku [does not support](https://devcenter.heroku.com/articles/automated-certificate-management) wildcard SSL certificates (needed for subdomains)
 - [Production certificate](https://dnsimple.com/a/60286/domains/customerstories.net/ssl_certificates) good until 3/18/23
 - Free approach: Staging certificate was created with [certbot](https://certbot.eff.org/)
@@ -126,7 +126,7 @@
 
 <a name="database"></a>
 
-##### Database
+#### Database
 Copy the production database to staging:
   - assumes `staging` is a remote repo on heroku corresponding to customerstories.org
   - to find database names: `heroku pg:info -a [csp-staging|floating-spire-2927]`
@@ -141,7 +141,7 @@ Copy the production database to staging:
 
 ### Development
 
-##### Installation
+#### Installation
 - System dependencies: Ruby 3.1.2, PosgresSQL@14, [Heroku CLI](https://devcenter.heroku.com/articles/heroku-cli), [AWS CLI](https://docs.aws.amazon.com/cli/latest/userguide/getting-started-install.html)
 - Clone repo
 - Set up DB
@@ -150,14 +150,14 @@ Copy the production database to staging:
 
 <a name="testing"></a>
 
-##### Testing
+#### Testing
 - Not enough!
 - zapier: google sheets
 - csv import
 
 <a name="notes"></a>
 
-##### Notes
+#### Notes
 - AWS S3: buckets, CORS
 - local tunneling with ngrok
 - plugin JSONP
@@ -171,14 +171,14 @@ Copy the production database to staging:
 
 <a name="clicky"></a>
 
-##### Clicky
+#### Clicky
 - models (`VisitorSession`, `Visitor`, `VisitorAction`, `PageView`, `StoryShare`)
 - tasks
 - updates presently disabled
 
 <a name="aws-s3"></a>
 
-##### AWS S3
+#### AWS S3
 - permissions
 - adding subdomains to CORS list (todo: automate this)
 - separate buckets for development and production
@@ -186,25 +186,25 @@ Copy the production database to staging:
 
 <a name="sendgrid"></a>
 
-##### SendGrid
+#### SendGrid
 - read receipts
 - limits
 
 <a name="zapier"></a>
 
-##### Zapier
+#### Zapier
 - Customer Stories app
 - test spreadsheets
 
 <a name="google-ads"></a>
 
-##### Google Ads
+#### Google Ads
 - models (AdwordsCampaign, AdwordsAdGroup, AdwordsAd, AdwordsImage)
 - configuration (search/keywords, topic, retarget)
 
 <a name="heroku-scheduler"></a>
 
-##### Heroku Scheduler
+#### Heroku Scheduler
 - send invitation reminders
 - download clicky data (disabled)
 - clean adwords images (disabled)
