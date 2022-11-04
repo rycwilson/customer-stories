@@ -2,20 +2,24 @@ require 'rails_helper'
 
 RSpec.describe Company, type: :model do
   # pending "add some examples to (or delete) #{__FILE__}"
-  required_attributes = { name: 'Acme Corporation', subdomain: 'acme', website: 'http://acme.com' }
+  valid_attributes = { name: 'Acme Corporation', subdomain: 'acme', website: 'http://acme.com' }
   it "is valid with valid attributes" do
     # expect(Company.new).to be_valid
   end
   it "is not valid without a name" do
-    company = Company.new(required_attributes.reject { |attr, value| attr == :name })
+    company = Company.new(valid_attributes.reject { |attr, value| attr == :name })
     expect(company).to_not be_valid
   end
   it "is not valid without a subdomain" do
-    company = Company.new(required_attributes.reject { |attr, value| attr == :subdomain })
+    company = Company.new(valid_attributes.reject { |attr, value| attr == :subdomain })
     expect(company).to_not be_valid
   end
   it "is not valid without a website" do
-    company = Company.new(required_attributes.reject { |attr, value| attr == :website })
+    company = Company.new(valid_attributes.reject { |attr, value| attr == :website })
+    expect(company).to_not be_valid
+  end
+  it "is not valid without a validated website" do
+    company = Company.new(valid_attributes.merge({ website: 'nowaythiswebsiteexists.com'}))
     expect(company).to_not be_valid
   end
 end
