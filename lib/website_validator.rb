@@ -14,7 +14,7 @@ class WebsiteValidator < ActiveModel::EachValidator
       true
       # ! %W(4 5).include?(res.code[0]) # Not from 4xx or 5xx families
     end
-  rescue Errno::ENOENT, SocketError, Errno::ECONNREFUSED, Net::OpenTimeout, OpenSSL::SSL::SSLError
+  rescue URI::InvalidURIError, Errno::ENOENT, SocketError, Errno::ECONNREFUSED, Net::OpenTimeout, OpenSSL::SSL::SSLError
     false
   end
 
