@@ -96,7 +96,7 @@
 <a name="heroku"></a>
 
 #### Heroku
-- [Staging dashboard]((https://dashboard.heroku.com/apps/csp-staging))
+- [Staging dashboard](https://dashboard.heroku.com/apps/csp-staging)
 - [Production dashboard](https://dashboard.heroku.com/apps/floating-spire-2927)
 - Both staging and production use hobby [dynos](https://devcenter.heroku.com/categories/dynos) 
 - Environment variables / API keys: figaro, application.yml, apply to heroku
