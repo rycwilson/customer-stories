@@ -128,12 +128,12 @@
 
 #### Database
 Copy the production database to staging:
-  - assumes `staging` is a remote repo on heroku corresponding to customerstories.org
-  - to find database names: `heroku pg:info -a [csp-staging|floating-spire-2927]`
-  - [reference](https://stackoverflow.com/questions/10673630/how-do-i-transfer-production-database-to-staging-on-heroku-using-pgbackups-gett)
-  1. turn off the web dynos on staging: `heroku maintenance:on -r staging`
-  2. turn off worker dynos (if any): `heroku ps:scale worker=0 -r staging`
-  3. `heroku pg:copy floating-spire-2927::HEROKU_POSTGRESQL_GOLD_URL HEROKU_POSTGRESQL_MAUVE_URL -r staging`
+  - Assumes `staging` is a remote repo on heroku corresponding to customerstories.org. Also works: `-a csp-staging`
+  - Assumes the primary database (as indicated by `DATABASE_URL` in the heroku configuration) on production is being copied to the primary database on staging. If copying to/from another db, make sure to use the correct name instaed of `DATABASE_URL`
+  - To find database names: `heroku pg:info -a [csp-staging|floating-spire-2927]`
+  1. Turn off the web dynos on staging: `heroku maintenance:on -r staging`
+  2. Turn off worker dynos (if any): `heroku ps:scale worker=0 -r staging`
+  3. `heroku pg:copy floating-spire-2927::DATABASE_URL DATABASE_URL -r staging`
   4. `heroku maintenance:off -r staging`
   5. `heroku ps:scale worker=1 -r staging` (or however many workers, if any)
 
