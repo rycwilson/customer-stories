@@ -10,7 +10,7 @@ gem 'bootsnap', '>= 1.4.4', require: false
 gem 'bootstrap-tab-history-rails'
 # gem 'bower-rails', '~> 0.11.0'
 gem 'browser-timezone-rails'
-gem 'connection_pool'
+# gem 'connection_pool'
 # gem 'dalli'
 gem 'devise'
 gem 'devise-doorkeeper'
