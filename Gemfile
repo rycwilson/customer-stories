@@ -62,8 +62,8 @@ gem 'summernote-rails'
 gem 'turbolinks'
 gem 'typhoeus'
 gem 'uglifier'
-gem 'wicked_pdf', '~> 2.0'
-gem 'wkhtmltopdf-binary'
+# gem 'wicked_pdf', '~> 2.0'
+# gem 'wkhtmltopdf-binary'
 
 group :development, :test do
   gem 'rspec-rails', '~> 6.0'
