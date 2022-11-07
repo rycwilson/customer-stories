@@ -18,12 +18,12 @@ class PluginsController < ApplicationController
 
   def show
     respond_to do |format|
-      format.json {
-        render json: {
-          is_demo: params[:is_demo],
-          stories: JSON.parse(params[:stories]),
-        }
-      }
+      # format.json {
+      #   render json: {
+      #     is_demo: params[:is_demo],
+      #     stories: JSON.parse(params[:stories]),
+      #   }
+      # }
       format.js do
         json = { html: plugin_view(@company, params) }.to_json
         jsonp = "#{params[:callback]}(#{json})"
