@@ -28,6 +28,15 @@
   line-height: 2em !important;
 }
 
+.story-card__customer {
+  line-height: 1.55;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;  /* number of lines to show */
+  -webkit-box-orient: vertical;
+}
+
 .story-card {
   #curate-gallery & {
     margin: 8px;
