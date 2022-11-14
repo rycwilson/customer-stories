@@ -57,7 +57,7 @@ gem 'bootstrap-sass', '3.3.6'
 gem 'sassc-rails', '>= 2.1.0'
 
 gem 'slim-rails', '~> 3.0'
-gem 'sprockets', '~> 4.0'
+# gem 'sprockets', '~> 4.0'
 gem 'summernote-rails'
 gem 'turbolinks'
 gem 'typhoeus'

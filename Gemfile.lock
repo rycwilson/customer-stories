@@ -440,7 +440,6 @@ DEPENDENCIES
   sassc-rails (>= 2.1.0)
   slim-rails (~> 3.0)
   spring
-  sprockets (~> 4.0)
   summernote-rails
   turbolinks
   typhoeus
