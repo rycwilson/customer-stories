@@ -137,6 +137,14 @@ Copy the production database to staging:
   4. `heroku maintenance:off -r staging`
   5. `heroku ps:scale worker=1 -r staging` (or however many workers, if any)
 
+#### Caching
+There were some issues with caching when upgrading to Rails 6. To minimize complexity caching (mostly in the form of rails low-level caching) has been disabled on staging and production.
+
+#### SEO
+- json/ld in `app/views/stories/index/seo_meta_tags.html` and `app/views/stories/show/seo_meta_tags.html`
+- [Google Search Console](https://search.google.com/u/2/search-console/not-verified?original_url=/search-console/r/unknown-type/drilldown&original_resource_id)
+
+
 <hr>
 
 ### Development
@@ -163,6 +171,7 @@ Copy the production database to staging:
 - plugin JSONP
 - file/image upload: aws s3, CORS
 - copying production database
+- account customization: stylesheets etc
 
 <hr>
 
