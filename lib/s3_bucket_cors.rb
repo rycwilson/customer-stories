@@ -2,13 +2,8 @@
 class S3BucketCors
   attr_reader :bucket_cors
 
-  SUBDOMAINS = %w(csp acme-test pixlee varmour retailnext trunity compas centerforcustomerengagement corefact juniper saucelabs)
-  DEV_ORIGINS = SUBDOMAINS.map { |subdomain| "http://#{subdomain}.lvh.me:3000" }
-  PROD_ORIGINS = SUBDOMAINS.map { |subdomain| "https://#{subdomain}.customerstories.net" }
-
   # @param bucket_cors [Aws::S3::BucketCors] A bucket CORS object configured with an existing bucket.
   def initialize(bucket_cors=nil)
-    # @bucket_cors = bucket_cors
     @bucket_cors = S3_BUCKET.cors  # set in aws.rb
   end
 
@@ -23,7 +18,7 @@ class S3BucketCors
         cors_rules: [
           {
             allowed_methods: ['GET', 'POST', 'PUT'],
-            allowed_origins: Rails.env.development? ? DEV_ORIGINS : PROD_ORIGINS,
+            allowed_origins: company_origins,
             allowed_headers: %w[*],
             max_age_seconds: 3600
           }
@@ -36,4 +31,16 @@ class S3BucketCors
     false
   end
 
+  private
+
+  def company_origins
+    subdomains = Company.all.map { |company| company.subdomain }
+    if Rails.env.development?
+      subdomains.map { |subdomain| "http://#{subdomain}.lvh.me:3000" }
+    else
+      subdomains.flat_map do |subdomain| 
+        ["https://#{subdomain}.customerstories.org", "https://#{subdomain}.customerstories.net"]
+      end
+    end
+  end
 end
