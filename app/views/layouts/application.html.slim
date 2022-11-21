@@ -13,20 +13,21 @@ html lang="en-US" prefix="og: http://ogp.me/ns# fb: http://ogp.me/ns/fb#"
     
     = yield(:head) if content_for?(:head)
 
-    script {
-      src="https://code.jquery.com/jquery-3.6.1.min.js" 
-      integrity="sha256-o88AwQnZB+VDvE9tvIXrMQaPlFFSUTR+nldQm1LuPXQ=" 
-      crossorigin="anonymous" }
-    script {
-      src="https://cdnjs.cloudflare.com/ajax/libs/jquery-ujs/1.2.3/rails.min.js" 
-      integrity="sha512-yDJWVxuRSkQa1u9/Zif6Gh93Gk0Urboz98JLEPcERMQ+pTHz/c27d0Xz08G+lgutFyKklB9UILtnhG6bth6B4A==" 
-      crossorigin="anonymous" 
-      referrerpolicy="no-referrer" }
-    script {
-      src="https://code.jquery.com/ui/1.13.2/jquery-ui.min.js"
-      integrity="sha256-lSjKY0/srUM9BE3dPm+c4fBo1dky2v27Gdjm2uoZaL0="
-      crossorigin="anonymous"
-    }
+    / TODO: performance of including jquery in bundle vs. not? On the surface, doesn't seem like a big improvement
+    / script {
+    /   src="https://code.jquery.com/jquery-3.6.1.min.js" 
+    /   integrity="sha256-o88AwQnZB+VDvE9tvIXrMQaPlFFSUTR+nldQm1LuPXQ=" 
+    /   crossorigin="anonymous" }
+    / script {
+    /   src="https://cdnjs.cloudflare.com/ajax/libs/jquery-ujs/1.2.3/rails.min.js" 
+    /   integrity="sha512-yDJWVxuRSkQa1u9/Zif6Gh93Gk0Urboz98JLEPcERMQ+pTHz/c27d0Xz08G+lgutFyKklB9UILtnhG6bth6B4A==" 
+    /   crossorigin="anonymous" 
+    /   referrerpolicy="no-referrer" }
+    / script {
+    /   src="https://code.jquery.com/ui/1.13.2/jquery-ui.min.js"
+    /   integrity="sha256-lSjKY0/srUM9BE3dPm+c4fBo1dky2v27Gdjm2uoZaL0="
+    /   crossorigin="anonymous"
+    / }
 
     = javascript_include_tag('application', { 'data-turbolinks-track' => 'reload' })
 
