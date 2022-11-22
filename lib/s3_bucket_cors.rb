@@ -36,9 +36,11 @@ class S3BucketCors
   def company_origins
     subdomains = Company.all.map { |company| company.subdomain }
     if Rails.env.development?
-      subdomains.map { |subdomain| "http://#{subdomain}.lvh.me:3000" }
+      origins = ['http://lvh.me:3000']
+      origins.concat subdomains.map { |subdomain| "http://#{subdomain}.lvh.me:3000" }
     else
-      subdomains.flat_map do |subdomain| 
+      origins = ['https://customerstories.org', 'https://customerstories.net']
+      origins.concat subdomains.flat_map do |subdomain| 
         ["https://#{subdomain}.customerstories.org", "https://#{subdomain}.customerstories.net"]
       end
     end
