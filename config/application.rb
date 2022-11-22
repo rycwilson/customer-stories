@@ -40,7 +40,8 @@ module Csp
     # config.assets.precompile << %r(bootstrap-sass/assets/fonts/bootstrap/[\w-]+\.(?:eot|svg|ttf|woff2?)$)
 
     # load custom classes
-    config.autoload_paths += Dir["#{config.root}/lib/**/"]
+    # this if from rails4, autoload behavior changed in rails 5: config.autoload_paths += Dir["#{config.root}/lib/**/"]
+    config.eager_load_paths << Rails.root.join('lib')
 
     # config.active_job.queue_adapter = :delayed_job
   end
