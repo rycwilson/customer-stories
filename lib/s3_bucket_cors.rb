@@ -36,11 +36,11 @@ class S3BucketCors
   def csp_origins
     subdomains = Company.all.map { |company| company.subdomain }
     if Rails.env.development?
-      company_origins = subdomains.map { |subdomain| 'http://#{subdomain}.lvh.me:3000' }
+      company_origins = subdomains.map { |subdomain| "http://#{subdomain}.lvh.me:3000" }
       ['http://lvh.me:3000'].concat(company_origins)
     else
       company_origins = subdomains.flat_map do |subdomain| 
-        ['https://#{subdomain}.customerstories.org', 'https://#{subdomain}.customerstories.net']
+        ["https://#{subdomain}.customerstories.org", "https://#{subdomain}.customerstories.net"]
       end
       ['https://customerstories.org', 'https://customerstories.net'].concat(company_origins)
     end
