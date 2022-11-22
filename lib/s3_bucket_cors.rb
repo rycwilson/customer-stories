@@ -18,7 +18,7 @@ class S3BucketCors
         cors_rules: [
           {
             allowed_methods: ['GET', 'POST', 'PUT'],
-            allowed_origins: company_origins,
+            allowed_origins: csp_origins,
             allowed_headers: %w[*],
             max_age_seconds: 3600
           }
@@ -33,16 +33,16 @@ class S3BucketCors
 
   private
 
-  def company_origins
+  def csp_origins
     subdomains = Company.all.map { |company| company.subdomain }
     if Rails.env.development?
-      origins = ['http://lvh.me:3000']
-      origins.concat subdomains.map { |subdomain| "http://#{subdomain}.lvh.me:3000" }
+      company_origins = subdomains.map { |subdomain| 'http://#{subdomain}.lvh.me:3000' }
+      ['http://lvh.me:3000'].concat(company_origins)
     else
-      origins = ['https://customerstories.org', 'https://customerstories.net']
-      origins.concat subdomains.flat_map do |subdomain| 
-        ["https://#{subdomain}.customerstories.org", "https://#{subdomain}.customerstories.net"]
+      company_origins = subdomains.flat_map do |subdomain| 
+        ['https://#{subdomain}.customerstories.org', 'https://#{subdomain}.customerstories.net']
       end
+      ['https://customerstories.org', 'https://customerstories.net'].concat(company_origins)
     end
   end
 end
