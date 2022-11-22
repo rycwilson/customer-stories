@@ -1,13 +1,13 @@
 module DirtyAssociations
 
-  attr_accessor :dirty_associations?
+  attr_accessor :dirty_associations
 
   def dirty_associations
-    self.dirty_associations? = true
+    self.dirty_associations = true
   end
 
   def changed?
-    dirty_associations? || super
+    dirty_associations || super
   end
 
 end
