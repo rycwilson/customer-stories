@@ -67,7 +67,7 @@ class CompaniesController < ApplicationController
   def update_gads
     # sleep 3
     puts 'companies#update_gads'
-    awesome_print(company_params.to_h)
+    # awesome_print(company_params.to_h)
     company = Company.find(params[:id])
     if company.update(company_params)
       # if company.promote_tr? && ads must be modified (e.g. short headline changed, images removed)
@@ -81,12 +81,11 @@ class CompaniesController < ApplicationController
         @saved_image = saved_ad_image(ad_images_params)
         @swapped_default_image = swapped_default_ad_image(ad_images_params)
         @prev_default_image = prev_default_ad_image(ad_images_params)
-        awesome_print(@swapped_default_image)
-        awesome_print(@prev_default_image)
         image_type = (@saved_image || @swapped_default_image).try(:[], :type)
         @collection = image_type&.split(/(?=[A-Z])/).try(:[], 1)&.downcase.try(:concat, 's') || ''
         @res_data = {
           'savedImage' => @saved_image,
+          's3DirectPostFields' => @saved_image.present? && set_s3_direct_post().fields,
           'swappedDefaultImageId' => @swapped_default_image.try(:[], :id),
           'prevDefaultImageId' => @prev_default_image.try(:[], :id),
           'collection' => @collection,
