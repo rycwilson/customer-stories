@@ -59,8 +59,10 @@ function initS3Upload($form, $input) {
       done: (e, data) => {
         console.log('s3 done...')
         const key = $(data.jqXHR.responseXML).find('Key').text();
-        const url = `https://${formData.host}/${key}`;
+        const url = `https://${location.hostname.includes('lvh.me') ? formData.host : formData.cloudfrontHost}/${key}`;
         let $imageUrlInput;
+
+        console.log('url is: ', url)
 
         /*
         * find the image_url input, may be different for:

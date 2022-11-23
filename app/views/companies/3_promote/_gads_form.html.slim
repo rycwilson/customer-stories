@@ -11,7 +11,8 @@
       data: { \
         url: @s3_direct_post.url,
         host: URI.parse(@s3_direct_post.url).host,
-        'form-data' => (@s3_direct_post.fields) }}) do |f|
+        'form-data' => (@s3_direct_post.fields),
+        cloudfront_host: Rails.application.config.asset_host }}) do |f|
         
   .row 
     .form-group.short-headline
