@@ -62,8 +62,6 @@ function initS3Upload($form, $input) {
         const url = `https://${location.hostname.includes('lvh.me') ? formData.host : formData.cloudfrontHost}/${key}`;
         let $imageUrlInput;
 
-        console.log('url is: ', url)
-
         /*
         * find the image_url input, may be different for:
         * - company logo

@@ -23,9 +23,6 @@
 /yarn-error.log
 /vendor/assets/yarn.lock
 
-# ssl certificates
-/ssl
-
 # dependencies
 /vendor/assets/*
 !/vendor/assets/package.json
@@ -44,8 +41,9 @@
 # heroku local config
 /.env
 
-# pre-compiled assets (uncomment for github push, comment for heroku)
-public/assets
+# compiled assets are served from aws cloudfront/s3, so only need to track the manifest
+/public/assets/**
+!/public/assets/.sprockets-manifest-*
 
 
 
