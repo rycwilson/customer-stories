@@ -76,9 +76,6 @@ li.ad-image-card {
           = image_tag( \
               ad_image[:image_url] || ad_image_placeholder(ad_image[:type]),
               alt: ad_image[:type]&.split(/(?=[A-Z])/)&.join(' '))
-          / img {
-          /   src="#{ad_image[:image_url] || ad_image[:placeholder_image_url]}"
-          /   alt=(ad_image[:type]&.split(/(?=[A-Z])/)&.join(' ')) }
         .btn-file
           input {
             type="file"

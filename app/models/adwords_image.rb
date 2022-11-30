@@ -19,14 +19,7 @@ class AdwordsImage < ApplicationRecord
   # https://medium.com/appaloosa-store-engineering/caution-when-using-before-destroy-with-model-association-71600b8bfed2
   before_destroy :update_ads, prepend: true, if: :promote_enabled?
 
-  after_destroy_commit(:s3_delete) if ENV['HOST_NAME'] == 'customerstories.net'
-
-  # don't delete these default adwords images; may be used to seed adwords
-  NO_DELETE = [
-    "https://csp-production-assets.s3-us-west-1.amazonaws.com/uploads/1f398239-e32f-4ae6-b3d1-224dbde4b9e6/retailnext_landscape_1.png",
-    "https://csp-production-assets.s3-us-west-1.amazonaws.com/uploads/488cc685-1be1-420f-b111-20e8e8ade5a0/varmour-existing.jpeg",
-    "https://csp-production-assets.s3-us-west-1.amazonaws.com/uploads/413d1bfd-a71d-4f11-9af2-0cd886fadaba/acme_landscape.png"
-  ]
+  after_destroy_commit { S3Util::delete_object(S3_BUCKET, self.image_url) }
 
   private
 
@@ -52,20 +45,6 @@ class AdwordsImage < ApplicationRecord
       end
     end
     # GoogleAds::update_ads(ads)
-  end
-
-  def s3_delete
-    S3_BUCKET.delete_objects(
-      delete: {
-        objects: [
-          key: self.image_url[/.com\/(.+)/, 1]
-        ]
-      }
-    ) unless (
-      !self.image_url.is_a?(String) ||
-      !self.image_url.include?('https') ||
-      NO_DELETE.include?(self.image_url)
-    )
   end
 
 end
