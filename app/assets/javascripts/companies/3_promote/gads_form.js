@@ -213,7 +213,7 @@ function promoteSettingsListeners () {
         .children('.fileinput')
           .removeClass('has-error has-danger')
           .fileinput('reset')
-          .find('input:file').attr('data-validate', 'false')
+          .find('input:file').attr('data-validate', 'false');
     }
     if ($imageCard.is('.ad-image-card--new')) {
       if (isDefaultImage) {
@@ -222,7 +222,7 @@ function promoteSettingsListeners () {
         )
         $imageCard.find('img').one('load', resetInvalidImage).attr('src', imageUrl);
       } else {
-        resetInvalidImage()
+        resetInvalidImage();
       }
       $('#gads-form').validator('update');
       return false;

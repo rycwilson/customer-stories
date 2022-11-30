@@ -98,37 +98,41 @@ module StoriesHelper
     keywords.present? ? keywords.join(', ') : ''
   end
 
-  def og_image company, provider
-    provider == 'all' ? (width = '400'; height = '400') : (width = '300'; height = '160') # linkedin
-    case company.subdomain
-    when 'trunity'
-      provider == 'all' ? (image = TRUNITY_400X400_URL) : (image = TRUNITY_300X160_URL) # linkedin
-    when 'compas'
-      provider == 'all' ? (image = COMPAS_400X400_URL) : (image = COMPAS_300X160_URL) # linkedin
-    when 'corefact'
-      provider == 'all' ? (image = COREFACT_400X400_URL) : (image = COREFACT_300X160_URL) # linkedin
-    when 'varmour'
-      provider == 'all' ? (image = VARMOUR_400X400_URL) : (image = VARMOUR_300X160_URL) # linkedin
-    when 'zoommarketing'
-      provider == 'all' ? (image = ZOOM_400X400_URL) : (image = ZOOM_300X160_URL) # linkedin
-    when 'saucelabs'
-      provider == 'all' ? (image = SAUCELABS_400X400_URL) : (image = SAUCELABS_300X160_URL) # linkedin
-    when 'centerforcustomerengagement'
-      provider == 'all' ? (image = CCE_400X400_URL) : (image = CCE_300X160_URL) # linkedin
-    when 'zeniq'
-      provider == 'all' ? (image = ZENIQ_400X400_URL) : (image = ZENIQ_300X160_URL) # linkedin
-    when 'retailnext'
-      provider == 'all' ? (image = RETAILNEXT_400X400_URL) : (image = RETAILNEXT_300X160_URL) # linkedin
-    when 'smartpaymentplan'
-      provider == 'all' ? (image = SPP_400X400_URL) : (image = SPP_300X160_URL)
-    when 'pixlee'
-      provider == 'all' ? (image = PIXLEE_400X400_URL) : (image = PIXLEE_300X160_URL)
-    else
-      # width = '1200'
-      # height = '630'
-      # image = CS_FULL_LOGO_URL
-    end
-    { image: image, width: width, height: height }
+  def og_image(company, provider='all-providers')
+    width, height = (provider == 'linkedin') ? ['300', '160'] : ['400', '400']
+    # case company.subdomain
+    # when 'trunity'
+    #   image = (provider == 'linkedin') ? TRUNITY_300X160_URL : TRUNITY_400X400_URL
+    # when 'compas'
+    #   image = (provider == 'linkedin') ? COMPAS_300X160_URL : COMPAS_400X400_URL
+    # when 'corefact'
+    #   image = (provider == 'linkedin') ? COREFACT_300X160_URL : COREFACT_400X400_URL
+    # when 'varmour'
+    #   image = (provider == 'linkedin') ? VARMOUR_300X160_URL : VARMOUR_400X400_URL
+    # when 'zoommarketing'
+    #   image = (provider == 'linkedin') ? ZOOM_300X160_URL : ZOOM_400X400_URL
+    # when 'saucelabs'
+    #   image = (provider == 'linkedin') ? SAUCELABS_300X160_URL : SAUCELABS_400X400_URL
+    # when 'centerforcustomerengagement'
+    #   image = (provider == 'linkedin') ? CCE_300X160_URL : CCE_400X400_URL
+    # when 'zeniq'
+    #   image = (provider == 'linkedin') ? ZENIQ_300X160_URL : ZENIQ_400X400_URL
+    # when 'retailnext'
+    #   image = (provider == 'linkedin') ? RETAILNEXT_300X160_URL : RETAILNEXT_400X400_URL
+    # when 'smartpaymentplan'
+    #   image = (provider == 'linkedin') ? SPP_300X160_URL : SPP_400X400_URL
+    # when 'pixlee'
+    #   image = (provider == 'linkedin') ? SAUCELABS_300X160_URL : SAUCELABS_400X400_URL
+    # else
+    #   # width = '1200'
+    #   # height = '630'
+    #   # image = CS_FULL_LOGO_URL
+    # end
+    Rails.env.development? ? {} : { 
+      image: asset_url("companies/#{company.subdomain}/#{provider == 'linkedin' ? 'og_300x160.png' : 'og_400x400.png'}"), 
+      width: width, 
+      height: height 
+    }
   end
 
   def stories_header_class(company)

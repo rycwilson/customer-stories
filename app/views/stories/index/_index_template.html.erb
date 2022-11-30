@@ -31,7 +31,7 @@
             {{ if (story.success.customer.logo_url) { }}
               <img class="story-card__logo" src="{{= story.success.customer.logo_url }}">
             {{ } else { }}
-              <img class="story-card__logo" src="<%= LOGO_PLACEHOLDER_URL %>">
+              <img class="story-card__logo" src="<%= asset_path(LOGO_PLACEHOLDER) %>">
             {{ } }}
 
             <div class="story-card__hover-view">
@@ -56,7 +56,7 @@
                 {{ if (story.success.customer.logo_url) { }}
                   <img src="{{= story.success.customer.logo_url }}">
                 {{ } else { }}
-                  <img src="<%= LOGO_PLACEHOLDER_URL %>">
+                  <img src="<%= asset_path(LOGO_PLACEHOLDER) %>">
                 {{ } }}
 
               </div>

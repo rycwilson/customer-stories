@@ -241,10 +241,10 @@
         background-size: cover;
       }
       .cs-scroll-xs-left {
-        background-image: url('https://s3-us-west-1.amazonaws.com/csp-production-assets/varmour/nav-arrow-left.png');
+        background-image: asset-url('companies/varmour/nav-arrow-left.png')
       }
       .cs-scroll-xs-right {
-        background-image: url('https://s3-us-west-1.amazonaws.com/csp-production-assets/varmour/nav-arrow-right.png');
+        background-image: asset-url('companies/varmour/nav-arrow-right.png')
       }
     }
   }
@@ -267,10 +267,10 @@
       background-size: cover;
     }
     .cs-scroll-left {
-      background-image: url('https://s3-us-west-1.amazonaws.com/csp-production-assets/varmour/nav-arrow-left.png');
+      background-image: asset-url('companies/varmour/nav-arrow-left.png');
     }
     .cs-scroll-right {
-      background-image: url('https://s3-us-west-1.amazonaws.com/csp-production-assets/varmour/nav-arrow-right.png');
+      background-image: asset-url('companies/varmour/nav-arrow-right.png');
     }
   }
 

@@ -17,9 +17,9 @@
   <meta property='og:image' content="<%= og_image(company,'linkedin')[:image] %>">
   <meta property='og:image:width' content="<%= og_image(company,'linkedin')[:width] %>">
   <meta property='og:image:height' content="<%= og_image(company,'linkedin')[:height] %>">
-  <meta property='og:image' content="<%= og_image(company,'all')[:image] %>">
-  <meta property='og:image:width' content="<%= og_image(company,'all')[:width] %>">
-  <meta property='og:image:height' content="<%= og_image(company,'all')[:height] %>">
+  <meta property='og:image' content="<%= og_image(company)[:image] %>">
+  <meta property='og:image:width' content="<%= og_image(company)[:width] %>">
+  <meta property='og:image:height' content="<%= og_image(company)[:height] %>">
   <meta name="twitter:card" content="summary">
 <% end %>
 
@@ -48,7 +48,7 @@
     "description": "<%= company.name + '/' + success.customer.name + ' Customer Story' %>",
     "image": {
       "@type": "ImageObject",
-      "url": "<%= CS_FULL_LOGO_URL %>",
+      "url": "<%= asset_url(CSP_FULL_LOGO) %>",
       "height": 1200,
       "width": 630
     },

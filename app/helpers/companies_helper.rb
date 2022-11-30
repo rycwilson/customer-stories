@@ -47,4 +47,19 @@ module CompaniesHelper
     # end
   end
 
+  def ad_image_placeholder(type)
+    case type
+    when 'SquareImage'
+      RESPONSIVE_AD_SQUARE_IMAGE_PLACEHOLDER
+    when 'LandscapeImage'
+      RESPONSIVE_AD_LANDSCAPE_IMAGE_PLACEHOLDER
+    when 'SquareLogo'
+      RESPONSIVE_AD_SQUARE_LOGO_PLACEHOLDER
+    when 'LandscapeLogo'
+      RESPONSIVE_AD_LANDSCAPE_LOGO_PLACEHOLDER
+    else 
+      ''
+    end
+  end
+
 end

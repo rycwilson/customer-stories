@@ -8,11 +8,9 @@
           class: 'company-header__logo navbar-brand navbar-brand-img'
         ) do %>
 
-      <%= image_tag(
-            company.logo_url || LOGO_PLACEHOLDER_URL, 
-            alt: "company logo", 
-            class: ' img-responsive'
-          ) unless company.logo_url.blank? %>
+      <% if company.logo_url.present? %>
+        <%= image_tag(company.logo_url || LOGO_PLACEHOLDER, class: 'img-responsive', alt: 'company logo') %>
+      <% end %>
 
     <% end %>
 
@@ -34,11 +32,7 @@
           target: '_blank'
         ) do %>
 
-      <%= image_tag(
-            company.logo_url || LOGO_PLACEHOLDER_URL, 
-            alt: "#{company.name} logo", 
-            class: 'img-responsive' 
-          ) %>
+      <%= image_tag(company.logo_url || LOGO_PLACEHOLDER, class: 'img-responsive', alt: "#{company.name} logo") %>
 
     <% end %>
 

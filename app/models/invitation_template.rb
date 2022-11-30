@@ -51,7 +51,7 @@ class InvitationTemplate < ApplicationRecord
     if curator.photo_url.present?
       self.request_body.sub!("[curator_img_url]", curator.photo_url)
     else
-      self.request_body.sub!("[curator_img_url]", ActionController::Base.helpers.asset_path("user-photo-missing.png"))
+      self.request_body.sub!("[curator_img_url]", ActionController::Base.helpers.asset_path("placeholders/user-photo-missing.png"))
     end
     # give anchor links a format that allows for editing text of the link
     # don't want to include actual links, as they'll be broken (placeholders instead of actual urls)

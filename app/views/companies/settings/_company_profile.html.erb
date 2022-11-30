@@ -44,11 +44,11 @@
               style="background-color: <%= company.header_color_1 %>">
           <div class="fileinput-new thumbnail company-logo-upload__logo company-logo-upload__logo--placeholder" 
                 data-trigger="fileinput">
-            <%= image_tag(LOGO_PLACEHOLDER_URL, alt: 'logo') %>
+            <%= image_tag(LOGO_PLACEHOLDER, alt: 'logo') %>
           </div>
           <div class="fileinput-preview fileinput-exists thumbnail company-logo-upload__logo company-logo-upload__logo--exists"
                 data-trigger="fileinput">
-            <%= image_tag(company.logo_url || LOGO_PLACEHOLDER_URL, alt: 'company logo') %>
+            <%= image_tag(company.logo_url || LOGO_PLACEHOLDER, alt: 'company logo') %>
           </div>
           <div class="btn-file">
             <%= f.file_field(:logo_url) %>

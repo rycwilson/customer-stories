@@ -17,7 +17,7 @@
         <% if story.title.present? %>
           <p class="thumbnail-view-hover"><%= story.title %></p>
         <% end %>
-        <img src="<%= story.customer.logo_url || LOGO_PLACEHOLDER_URL %>">
+        <img src="<%= story.customer.logo_url || asset_path(LOGO_PLACEHOLDER) %>">
       </div>
 
       <div class="caption"

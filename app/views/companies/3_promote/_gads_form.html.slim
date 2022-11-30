@@ -78,8 +78,7 @@
                   ad_image: company.ad_images.square_images.default.take || { \
                     id: '',
                     type: 'SquareImage',
-                    default: true,
-                    placeholder_image_url: RESPONSIVE_AD_SQUARE_IMAGE_PLACEHOLDER }})
+                    default: true }})
             = render( \
                 'adwords_images/ad_image_card',
                 { image_index: '1',
@@ -87,8 +86,7 @@
                   ad_image: company.ad_images.landscape_images.default.take || { \
                     id: '',
                     type: 'LandscapeImage',
-                    default: true,
-                    placeholder_image_url: RESPONSIVE_AD_LANDSCAPE_IMAGE_PLACEHOLDER }})
+                    default: true }})
 
       .row style="margin-left:-30px;margin-right:-30px;margin-bottom:25px"
         label.col-sm-3.control-label All Images
@@ -141,8 +139,7 @@
                   ad_image: company.ad_images.square_logos.default.take || { \
                     id: '',
                     type: 'SquareLogo',
-                    default: true,
-                    placeholder_image_url: RESPONSIVE_AD_SQUARE_LOGO_PLACEHOLDER }})
+                    default: true }})
             = render( \
                 'adwords_images/ad_image_card',
                 { image_index: (4 + company.ad_images.marketing.where.not(default: true).count).to_s,
@@ -150,8 +147,7 @@
                   ad_image: company.ad_images.landscape_logos.default.take || { \
                     id: '',
                     type: 'LandscapeLogo',
-                    default: true,
-                    placeholder_image_url: RESPONSIVE_AD_LANDSCAPE_LOGO_PLACEHOLDER }})
+                    default: true }})
 
       .row style="margin-left:-30px;margin-right:-30px;margin-bottom:25px"
         label.col-sm-3.control-label All Logos

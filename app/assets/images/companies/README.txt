@@ -1,0 +1,1 @@
+For the open graph images (og-*) the company subdirectories MUST match the company subdomain

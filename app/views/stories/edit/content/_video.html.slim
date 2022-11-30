@@ -28,8 +28,4 @@
       data-video-url=story.video_url }
 
   - else
-    img {
-      id="video-placeholder" 
-      src="#{asset_path('video_placeholder.jpg')}"
-      class=('hidden' if story.video_url.present?)
-      alt="video placeholder" }
+    = image_tag('placeholders/video-placeholder.jpg', id: 'video-placeholder', alt: 'video thumbnail')

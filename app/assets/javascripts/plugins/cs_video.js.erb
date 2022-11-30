@@ -37,7 +37,7 @@ function cspInitVideo ($, $storyOverlay, $storyCard) {
         },
         loadPlaceholder = function () {
           $thumbContainers.empty().append(
-            '<img id="cs-video-placeholder" src="' + VIDEO_PLACEHOLDER_URL + '" alt="video placeholder">'
+            '<img id="cs-video-placeholder" src="' + <%= asset_url('placeholders/video-placeholder.jpg') %> + '" alt="video placeholder">'
           );
         };
 

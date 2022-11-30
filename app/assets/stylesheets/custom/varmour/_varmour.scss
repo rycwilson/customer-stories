@@ -45,7 +45,7 @@ body.varmour {
   @include stories-header-title;
   box-shadow: 0 9px 22px -6px rgba(0, 0, 0, 0.07);
   // background-color: #21597a;
-  // background: url('https://csp-production-assets.s3-us-west-1.amazonaws.com/varmour/header-background.png');
+  // background: asset-url('companies/varmour/header-background.png');
   // => extracted colors: #c4d9e0, #0b1114, #21597a, #4794b5, #7aaebf
 
   .search-stories {

@@ -2,7 +2,7 @@
 
 li.ad-image-card {
   class="#{ad_image_card_class_name(ad_image, collection)}"
-  data-placeholder-url="#{ad_image[:placeholder_image_url]}"
+  data-placeholder-url="#{asset_url(ad_image_placeholder(ad_image[:type]))}"
   data-image-id=(ad_image[:id] if ad_image)
   data-toggle=('popover' unless image_index) }
 
@@ -73,9 +73,12 @@ li.ad-image-card {
           i.fa.fa-warning
           .help-block.with-errors
         .fileinput-preview.thumbnail
-          img {
-            src="#{ad_image[:image_url] || ad_image[:placeholder_image_url]}"
-            alt=(ad_image[:type]&.split(/(?=[A-Z])/)&.join(' ')) }
+          = image_tag( \
+              ad_image[:image_url] || ad_image_placeholder(ad_image[:type]),
+              alt: ad_image[:type]&.split(/(?=[A-Z])/)&.join(' '))
+          / img {
+          /   src="#{ad_image[:image_url] || ad_image[:placeholder_image_url]}"
+          /   alt=(ad_image[:type]&.split(/(?=[A-Z])/)&.join(' ')) }
         .btn-file
           input {
             type="file"

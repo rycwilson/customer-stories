@@ -4,7 +4,7 @@
   <div class="{{= className }}" data-placeholder="{{= placeholder }}">
     <div>
 
-      <img style="max-height:65px" src="{{= customer.logo_url || '<%= LOGO_PLACEHOLDER_URL %>' }}" alt="Customer Logo">
+      <img style="max-height:65px" src="{{= customer.logo_url || '<%= asset_path(LOGO_PLACEHOLDER) %>' }}" alt="Customer Logo">
 
       {{ if (customer.show_name_with_logo) { }}
 

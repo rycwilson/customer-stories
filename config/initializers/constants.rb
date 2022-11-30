@@ -5,8 +5,8 @@ SAMPLE_COMPANY_ID = 10  # varmour
 
 INDUSTRIES = ['Education', 'Government', 'Financial Services', 'Healthcare', 'Hospitality', 'Manufacturing', 'Media and Entertainment', 'Service Provider', 'Technology', 'IT', 'Telecommunications'];
 
-LOGO_PLACEHOLDER_URL = "https://s3-us-west-1.amazonaws.com/csp-production-assets/shared/logo-placeholder.png"
-VIDEO_PLACEHOLDER_URL = "https://s3-us-west-1.amazonaws.com/csp-production-assets/video_placeholder.jpg"
+# LOGO_PLACEHOLDER_URL = "https://s3-us-west-1.amazonaws.com/csp-production-assets/shared/logo-placeholder.png"
+LOGO_PLACEHOLDER = 'placeholders/logo-placeholder.png'
 
 # Google Ads
 ADWORDS_CSP_TEST_MANAGER_CUSTOMER_ID = '811-996-7666'
@@ -20,15 +20,19 @@ RESPONSIVE_AD_MAX_MARKETING_IMAGES = 15
 RESPONSIVE_AD_MAX_LOGOS = 5
 RESPONSIVE_AD_ASPECT_RATIO_TOLERANCE = 0.01
 RESPONSIVE_AD_SQUARE_IMAGE_MIN = 300
-RESPONSIVE_AD_SQUARE_IMAGE_PLACEHOLDER = 'https://s3-us-west-1.amazonaws.com/csp-production-assets/placeholders/300x300.png'
+# RESPONSIVE_AD_SQUARE_IMAGE_PLACEHOLDER = 'https://s3-us-west-1.amazonaws.com/csp-production-assets/placeholders/300x300.png'
+RESPONSIVE_AD_SQUARE_IMAGE_PLACEHOLDER = 'placeholders/300x300.png'
 RESPONSIVE_AD_LANDSCAPE_IMAGE_ASPECT_RATIO = 1.91
 RESPONSIVE_AD_LANDSCAPE_IMAGE_MIN = '600x314'
-RESPONSIVE_AD_LANDSCAPE_IMAGE_PLACEHOLDER = 'https://s3-us-west-1.amazonaws.com/csp-production-assets/placeholders/600x314.png'
+# RESPONSIVE_AD_LANDSCAPE_IMAGE_PLACEHOLDER = 'https://s3-us-west-1.amazonaws.com/csp-production-assets/placeholders/600x314.png'
+RESPONSIVE_AD_LANDSCAPE_IMAGE_PLACEHOLDER = 'placeholders/600x314.png'
 RESPONSIVE_AD_SQUARE_LOGO_MIN = 128
-RESPONSIVE_AD_SQUARE_LOGO_PLACEHOLDER = 'https://s3-us-west-1.amazonaws.com/csp-production-assets/placeholders/128x128.png'
+# RESPONSIVE_AD_SQUARE_LOGO_PLACEHOLDER = 'https://s3-us-west-1.amazonaws.com/csp-production-assets/placeholders/128x128.png'
+RESPONSIVE_AD_SQUARE_LOGO_PLACEHOLDER = 'placeholders/128x128.png'
 RESPONSIVE_AD_LANDSCAPE_LOGO_ASPECT_RATIO = 4
 RESPONSIVE_AD_LANDSCAPE_LOGO_MIN = '512x128'
-RESPONSIVE_AD_LANDSCAPE_LOGO_PLACEHOLDER = 'https://s3-us-west-1.amazonaws.com/csp-production-assets/placeholders/512x128.png'
+# RESPONSIVE_AD_LANDSCAPE_LOGO_PLACEHOLDER = 'https://s3-us-west-1.amazonaws.com/csp-production-assets/placeholders/512x128.png'
+RESPONSIVE_AD_LANDSCAPE_LOGO_PLACEHOLDER = 'placeholders/512x128.png'
 
 # the parameters can be hard-coded here because this will be used in a simple re-direct
 CURATOR_LINKEDIN_AUTH_URL = "https://www.linkedin.com/oauth/v2/authorization?\
@@ -84,44 +88,38 @@ YOUTUBE_BASE_URL = "https://www.youtube.com/embed/"
 VIMEO_BASE_URL = "https://player.vimeo.com/video/"
 WISTIA_BASE_URL = "https://fast.wistia.com/embed/medias/"
 
-ADWORDS_IMAGE_PLACEHOLDER_URL = "https://s3-us-west-1.amazonaws.com/csp-production-assets/adwords/adwords_image_placeholder.png"
+# CS_FULL_LOGO_URL = "https://s3-us-west-1.amazonaws.com/csp-production-assets/cs_logo_full_1200x630.png"
+CSP_FULL_LOGO = 'cs_logo_full_1200x630.png'
 
-CS_LOGO_URL = "https://s3-us-west-1.amazonaws.com/csp-production-assets/cs_logo.png"
-CS_FULL_LOGO_URL = "https://s3-us-west-1.amazonaws.com/csp-production-assets/cs_logo_full_1200x630.png"
-CS_POWERED_LOGO_URL = "https://s3-us-west-1.amazonaws.com/csp-production-assets/CS-powered-by.png"
+# TRUNITY_400X400_URL = "https://s3-us-west-1.amazonaws.com/csp-production-assets/trunity/trunity_400x400.png"
+# TRUNITY_300X160_URL = "https://s3-us-west-1.amazonaws.com/csp-production-assets/trunity/trunity_300x160.png"
 
-ZAPIER_LOGO_URL = "https://s3-us-west-1.amazonaws.com/csp-production-assets/zapier_logo.png"
+# COMPAS_400X400_URL = "https://s3-us-west-1.amazonaws.com/csp-production-assets/compas/compas_400x400.png"
+# COMPAS_300X160_URL = "https://s3-us-west-1.amazonaws.com/csp-production-assets/compas/compas_300x160.png"
 
-TRUNITY_400X400_URL = "https://s3-us-west-1.amazonaws.com/csp-production-assets/trunity/trunity_400x400.png"
-TRUNITY_300X160_URL = "https://s3-us-west-1.amazonaws.com/csp-production-assets/trunity/trunity_300x160.png"
+# COREFACT_400X400_URL = "https://s3-us-west-1.amazonaws.com/csp-production-assets/corefact/corefact_400x400.png"
+# COREFACT_300X160_URL = "https://s3-us-west-1.amazonaws.com/csp-production-assets/corefact/corefact_300x160.png"
 
-COMPAS_400X400_URL = "https://s3-us-west-1.amazonaws.com/csp-production-assets/compas/compas_400x400.png"
-COMPAS_300X160_URL = "https://s3-us-west-1.amazonaws.com/csp-production-assets/compas/compas_300x160.png"
+# VARMOUR_400X400_URL = "https://s3-us-west-1.amazonaws.com/csp-production-assets/varmour/varmour_400x400.png"
+# VARMOUR_300X160_URL = "https://s3-us-west-1.amazonaws.com/csp-production-assets/varmour/varmour_300x160.png"
 
-COREFACT_400X400_URL = "https://s3-us-west-1.amazonaws.com/csp-production-assets/corefact/corefact_400x400.png"
-COREFACT_300X160_URL = "https://s3-us-west-1.amazonaws.com/csp-production-assets/corefact/corefact_300x160.png"
+# ZOOM_400X400_URL = "https://s3-us-west-1.amazonaws.com/csp-production-assets/zoom/zoom_400x400.png"
+# ZOOM_300X160_URL = "https://s3-us-west-1.amazonaws.com/csp-production-assets/zoom/zoom_300x160.png"
 
-VARMOUR_400X400_URL = "https://s3-us-west-1.amazonaws.com/csp-production-assets/varmour/varmour_400x400.png"
-VARMOUR_300X160_URL = "https://s3-us-west-1.amazonaws.com/csp-production-assets/varmour/varmour_300x160.png"
+# SAUCELABS_400X400_URL = "https://s3-us-west-1.amazonaws.com/csp-production-assets/saucelabs/saucelabs_400x400.png"
+# SAUCELABS_300X160_URL = "https://s3-us-west-1.amazonaws.com/csp-production-assets/saucelabs/saucelabs_300x160.png"
 
-ZOOM_400X400_URL = "https://s3-us-west-1.amazonaws.com/csp-production-assets/zoom/zoom_400x400.png"
-ZOOM_300X160_URL = "https://s3-us-west-1.amazonaws.com/csp-production-assets/zoom/zoom_300x160.png"
+# CCE_400X400_URL = "https://s3-us-west-1.amazonaws.com/csp-production-assets/cce/cce_400x400.png"
+# CCE_300X160_URL = "https://s3-us-west-1.amazonaws.com/csp-production-assets/cce/cce_300x160.png"
 
-SAUCELABS_400X400_URL = "https://s3-us-west-1.amazonaws.com/csp-production-assets/saucelabs/saucelabs_400x400.png"
-SAUCELABS_300X160_URL = "https://s3-us-west-1.amazonaws.com/csp-production-assets/saucelabs/saucelabs_300x160.png"
+# ZENIQ_400X400_URL = "https://s3-us-west-1.amazonaws.com/csp-production-assets/zeniq/zeniq_400x400.png"
+# ZENIQ_300X160_URL = "https://s3-us-west-1.amazonaws.com/csp-production-assets/zeniq/zeniq_300x160.png"
 
-CCE_400X400_URL = "https://s3-us-west-1.amazonaws.com/csp-production-assets/cce/cce_400x400.png"
-CCE_300X160_URL = "https://s3-us-west-1.amazonaws.com/csp-production-assets/cce/cce_300x160.png"
+# RETAILNEXT_400X400_URL = "https://s3-us-west-1.amazonaws.com/csp-production-assets/retailnext/retailnext_400x400.png"
+# RETAILNEXT_300X160_URL = "https://s3-us-west-1.amazonaws.com/csp-production-assets/retailnext/retailnext_300x160.png"
 
-ZENIQ_400X400_URL = "https://s3-us-west-1.amazonaws.com/csp-production-assets/zeniq/zeniq_400x400.png"
-ZENIQ_300X160_URL = "https://s3-us-west-1.amazonaws.com/csp-production-assets/zeniq/zeniq_300x160.png"
+# SPP_400X400_URL = "https://s3-us-west-1.amazonaws.com/csp-production-assets/spp/spp_400x400.jpeg"
+# SPP_300X160_URL = "https://s3-us-west-1.amazonaws.com/csp-production-assets/spp/spp_300x160.png"
 
-RETAILNEXT_400X400_URL = "https://s3-us-west-1.amazonaws.com/csp-production-assets/retailnext/retailnext_400x400.png"
-RETAILNEXT_300X160_URL = "https://s3-us-west-1.amazonaws.com/csp-production-assets/retailnext/retailnext_300x160.png"
-
-SPP_400X400_URL = "https://s3-us-west-1.amazonaws.com/csp-production-assets/spp/spp_400x400.jpeg"
-SPP_300X160_URL = "https://s3-us-west-1.amazonaws.com/csp-production-assets/spp/spp_300x160.png"
-
-PIXLEE_400X400_URL = "https://s3-us-west-1.amazonaws.com/csp-production-assets/pixlee/pixlee_400x400.png"
-PIXLEE_300X160_URL = "https://s3-us-west-1.amazonaws.com/csp-production-assets/pixlee/pixlee_300x160.png"
-
+# PIXLEE_400X400_URL = "https://s3-us-west-1.amazonaws.com/csp-production-assets/pixlee/pixlee_400x400.png"
+# PIXLEE_300X160_URL = "https://s3-us-west-1.amazonaws.com/csp-production-assets/pixlee/pixlee_300x160.png"

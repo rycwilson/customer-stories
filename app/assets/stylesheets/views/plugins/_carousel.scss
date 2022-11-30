@@ -6,10 +6,10 @@
 $carousel-vertical-padding: 20px;
 $carousel-nav-size: 14px !default;
 
-$gray-chevron-left: 'https://s3-us-west-1.amazonaws.com/csp-production-assets/shared/chevron-gray-left.png';
-$gray-chevron-right: 'https://s3-us-west-1.amazonaws.com/csp-production-assets/shared/chevron-gray-right.png';
-$white-chevron-left: 'https://s3-us-west-1.amazonaws.com/csp-production-assets/shared/chevron-white-left.png';
-$white-chevron-right: 'https://s3-us-west-1.amazonaws.com/csp-production-assets/shared/chevron-white-right.png';
+$gray-chevron-left: asset-url('icons/chevron-gray-left.png');
+$gray-chevron-right: asset-url('icons/chevron-gray-right.png');
+$white-chevron-left: asset-url('icons/chevron-white-left.png');
+$white-chevron-right: asset-url('icons/chevron-white-right.png');
 
 .cs-carousel__scroll-xs {
   display: none;

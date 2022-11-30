@@ -93,7 +93,7 @@ function loadVideoThumbnail (cbSuccess) {
 } // loadThumbnail
 
 function loadVideoPlaceholder () {
-  var placeholderUrl = "<%= asset_path('video_placeholder.jpg') %>";
+  var placeholderUrl = "<%= asset_path('placeholders/video-placeholder.jpg') %>";
   $('.video-thumb-container').empty().append(
     '<img id="video-placeholder" src="' + placeholderUrl + '" alt="video placeholder">'
   );

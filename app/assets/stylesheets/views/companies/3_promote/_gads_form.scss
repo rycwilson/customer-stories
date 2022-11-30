@@ -54,17 +54,17 @@ ul.ad-logo-selections {
     margin: 0 8px 8px;
   }
 
-  .form-group {
+  // .form-group {
     // don't show a new uploaded image that hasn't been validated;
     // ignore existing images as indicated by src attribute
     // &.has-feedback:not(.to-be-added) {
-    &.has-feedback {
-      // .fileinput-preview img:not([src*="http"]) {
-      img:not([src*="http"]) {
-        visibility: hidden;  // show img only if valid
-      }
-    }
-  }
+    // &.has-feedback {
+    //   // .fileinput-preview img:not([src*="http"]) {
+    //   img:not([src*="http"]) {
+    //     visibility: hidden;  // show img only if valid
+    //   }
+    // }
+  // }
 
   .btn-success {
     position: relative;
