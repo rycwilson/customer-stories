@@ -28,15 +28,20 @@ class User < ApplicationRecord
   after_update_commit do 
     dont_publish_as_contributor if linkedin_profile_removed?
 
+    photo_was_updated = previous_changes.keys.include?('photo_url') && previous_changes[:photo_url].first.present?
+    if photo_was_updated
+      S3Util::delete_object(S3_BUCKET, previous_changes[:photo_url].first)
+    end
+    
     # expire cache
-    Company
-      .joins(:curators)
-      .joins(:contributions)
-      .distinct()
-      .where('users.id = ? OR contributions.contributor_id = ? OR contributions.referrer_id = ?', self.id, self.id, self.id)
-      .each do |company| 
+    # Company
+      # .joins(:curators)
+      # .joins(:contributions)
+      # .distinct()
+      # .where('users.id = ? OR contributions.contributor_id = ? OR contributions.referrer_id = ?', self.id, self.id, self.id)
+      # .each do |company| 
         # company.expire_ll_cache('successes-json', 'contributions-json') 
-      end
+      # end
   end
   
   after_commit(on: [:update]) { expire_published_contributor_cache } if Proc.new do |user|

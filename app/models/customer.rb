@@ -14,7 +14,11 @@ class Customer < ApplicationRecord
   friendly_id :name, use: [:slugged, :scoped], scope: :company_id
 
   after_update_commit do
-    expire_cache if (self.previous_changes.keys & ['name', 'logo_url', 'show_name_with_logo']).any?
+    # expire_cache if (self.previous_changes.keys & ['name', 'logo_url', 'show_name_with_logo']).any?
+    logo_was_updated = previous_changes.keys.include?('logo_url') && previous_changes[:logo_url].first.present?
+    if logo_was_updated
+      S3Util::delete_object(S3_BUCKET, previous_changes[:logo_url].first)
+    end
   end
 
   def should_generate_new_friendly_id?
