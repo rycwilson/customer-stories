@@ -9,11 +9,12 @@ class ProfileController < ApplicationController
     '***REMOVED***', 
     'heather@trunity.com', 
     'haley@pixleeteam.com',
-    'bill@c4ce.com',
-    'colin@pixleeteam.com',
-    'carlos@compas.global',
     'awad@pixleeteam.com',
-    'kturner@varmour.com'
+    'colin@pixleeteam.com',
+    'bill@c4ce.com',
+    'carlos@compas.global',
+    'kturner@varmour.com',
+    'alex.salai@retailnext.net'
   ]
 
   def switch
