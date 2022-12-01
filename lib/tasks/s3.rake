@@ -1,6 +1,11 @@
 namespace :s3 do
-
-  desc 'copy production uploads'
+  desc 'copy production uploads from csp-production-assets to csp-dev-assets or csp-prod-assets'
+  # This task requires that files be downloaded to the file system.
+  # =>  This seems to not be reliable on heroku. While all downloads and uploads execute without error,
+  #     the s3 bucket is missing a bunch of the uploads
+  # =>  But works fine in local dev environment. So for staging and production, first run this task
+  #     locally (make sure to change the bucket_to variable to 'csp-prod-assets'), 
+  #     then run the update_links task in the production environment
   task copy_bucket: :environment do
     require 'fileutils'
     def object_downloaded?(s3_client, bucket_name, object_key, local_path)
@@ -13,11 +18,11 @@ namespace :s3 do
       puts "Error getting object: #{e.message}"
     end
     def object_uploaded?(s3_client, bucket_name, object_key, local_path)
-      response = nil
+      # response = nil
       File.open(local_path.to_s, 'rb') do |file|
         response = s3_client.put_object({ body: file, bucket: bucket_name, key: object_key })
+        return response.etag.present?
       end
-      return response.etag.present?
     rescue StandardError => e
       puts "Error uploading object: #{e.message}"
       return false
@@ -60,6 +65,29 @@ namespace :s3 do
     Customer.all.each { |customer| copy_object(s3_client, customer, :logo_url) }
     Story.all.each { |story| copy_object(s3_client, story, :og_image_url) }
     AdwordsImage.all.each { |image| copy_object(s3_client, image, :image_url) }
+  end
+
+  desc 'update s3 upload links'
+  task update_links: :environment do 
+    def update_link(instance, url_field)
+      key, file_name = instance[url_field]
+        &.match(/csp-production-assets\.s3(?:\.|-)us-west-1\.amazonaws\.com\/uploads\/([0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12})\/(.*)/)
+        &.captures
+      return false if key.nil? || file_name.nil?
+      object_key = "uploads/#{key}/#{file_name}"
+      unless instance.update(
+        url_field => Rails.env.development? ?
+          "https://csp-dev-assets.s3.us-west-1.amazonaws.com/#{object_key}" :
+          "https://#{ENV['CLOUDFRONT_HOST_NAME']}/#{object_key}"
+      )
+        puts "error updating model: #{instance.errors.full_messages}"
+      end
+    end
+    User.all.each { |user| update_link(user, :photo_url) }
+    Company.all.each { |company| [:logo_url, :adwords_logo_url].each { |field| update_link(company, field) }}
+    Customer.all.each { |customer| update_link(customer, :logo_url) }
+    Story.all.each { |story| update_link(story, :og_image_url) }
+    AdwordsImage.all.each { |image| update_link(image, :image_url) }
   end
 
   desc "clean uploads"
