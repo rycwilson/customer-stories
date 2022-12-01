@@ -60,11 +60,19 @@ namespace :s3 do
       end
     end
     s3_client = Aws::S3::Client.new(region: 'us-west-1')
-    User.all.each { |user| copy_object(s3_client, user, :photo_url) }
-    Company.all.each { |company| [:logo_url, :adwords_logo_url].each { |field| copy_object(s3_client, company, field) }}
-    Customer.all.each { |customer| copy_object(s3_client, customer, :logo_url) }
-    Story.all.each { |story| copy_object(s3_client, story, :og_image_url) }
-    AdwordsImage.all.each { |image| copy_object(s3_client, image, :image_url) }
+    # User.all.each { |user| copy_object(s3_client, user, :photo_url) }
+    User.limit(1).where.not(photo_url: ['', nil]).each { |user| copy_object(s3_client, user, :photo_url) }
+    # Company.all.each { |company| [:logo_url, :adwords_logo_url].each { |field| copy_object(s3_client, company, field) }}
+    Company.limit(1)
+      .where.not(logo_url: ['', nil])
+      .where.not(adwords_logo_url: ['', nil])
+      .each { |company| [:logo_url, :adwords_logo_url].each { |field| copy_object(s3_client, company, field) }}
+    # Customer.all.each { |customer| copy_object(s3_client, customer, :logo_url) }
+    Customer.limit(1).where.not(logo_url: ['', nil]).each { |customer| copy_object(s3_client, customer, :logo_url) }
+    # Story.all.each { |story| copy_object(s3_client, story, :og_image_url) }
+    Story.limit(1).where.not(og_image_url: ['', nil]).each { |story| copy_object(s3_client, story, :og_image_url) }
+    # AdwordsImage.all.each { |image| copy_object(s3_client, image, :image_url) }
+    AdwordsImage.limit(1).where.not(image_url: ['', nil]).each { |image| copy_object(s3_client, image, :image_url) }
   end
 
   desc 'update s3 upload links'
