@@ -58,6 +58,7 @@ Rails.application.configure do
   # `config.assets.precompile` and `config.assets.version` have moved to config/initializers/assets.rb
 
   # Enable serving of images, stylesheets, and JavaScripts from an asset server.
+  # Why protocol included? https://github.com/richpeck/exception_handler/issues/102
   config.asset_host = "https://#{ENV['CLOUDFRONT_HOST_NAME']}"
 
   # Specifies the header that your server uses for sending files.
