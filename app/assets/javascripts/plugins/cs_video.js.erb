@@ -36,8 +36,9 @@ function cspInitVideo ($, $storyOverlay, $storyCard) {
           );
         },
         loadPlaceholder = function () {
+          const placeholderUrl = "<%= asset_url('placeholders/video-placeholder.jpg') %>"
           $thumbContainers.empty().append(
-            '<img id="cs-video-placeholder" src="' + <%= asset_url('placeholders/video-placeholder.jpg') %> + '" alt="video placeholder">'
+            `<img id="cs-video-placeholder" src="${placeholderUrl}" alt="video placeholder">`
           );
         };
 

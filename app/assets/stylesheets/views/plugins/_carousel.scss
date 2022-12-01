@@ -6,25 +6,23 @@
 $carousel-vertical-padding: 20px;
 $carousel-nav-size: 14px !default;
 
-$gray-chevron-left: asset-url('icons/chevron-gray-left.png');
-$gray-chevron-right: asset-url('icons/chevron-gray-right.png');
-$white-chevron-left: asset-url('icons/chevron-white-left.png');
-$white-chevron-right: asset-url('icons/chevron-white-right.png');
-
 .cs-carousel__scroll-xs {
   display: none;
   // display: flex; // see media query below
   align-items: center;
   justify-content: space-evenly;
   height: 60px;
+
   .cs-carousel__arrow-xs {
     background: none;
     border: none;
     outline: none;
+
     > i {
       font-size: 40px;
     }
   }
+
   .cs-carousel__pagination-xs {
     min-width: 100px;
     // display: flex;
@@ -32,16 +30,21 @@ $white-chevron-right: asset-url('icons/chevron-white-right.png');
     // justify-content: center;
     // height: 25px;
   }
+
   .cs-carousel__page-count-xs {
     color: #999;
   }
+
   .cs-carousel--light-background & {
-    .cs-carousel__arrow-xs i, .cs-carousel__page-count-xs {
+    .cs-carousel__arrow-xs i, 
+    .cs-carousel__page-count-xs {
       color: rgba(0, 0, 0, 0.6)
     }
   }
+
   .cs-carousel--dark-background & {
-    .cs-carousel__arrow-xs i, .cs-carousel__page-count-xs {
+    .cs-carousel__arrow-xs i, 
+    .cs-carousel__page-count-xs {
       color: rgba(255, 255, 255, 0.6)
     }
   }
@@ -53,15 +56,19 @@ $white-chevron-right: asset-url('icons/chevron-white-right.png');
   width: 10px;
   margin: 0 4px;
   border-radius: 8px;
+
   .cs-carousel--light-background & {
     background-color: #bbb;
+
     &--current {
       background-color: #333;
     }
   }
+
   .cs-carousel--dark-background & {
     border: 1px solid #fff;
     background-color: transparent;
+
     &--current {
       background-color: #fff;
     }
@@ -74,6 +81,7 @@ $white-chevron-right: asset-url('icons/chevron-white-right.png');
   display: flex;
   align-items: center;
   height: 100%;
+
   > button {
     border: none;
     // cursor: pointer;
@@ -81,25 +89,30 @@ $white-chevron-right: asset-url('icons/chevron-white-right.png');
     width: 50px;
     padding: 15px;
   }
+
   &--left {
     justify-content: flex-end;
+
     > button {
       .cs-carousel--light-background & {
-        background: url($gray-chevron-left) no-repeat center / contain content-box;
+        background: image-url('icons/chevron-gray-left.png') no-repeat center / contain content-box;
       }
+
       .cs-carousel--dark-background & {
-        background: url($white-chevron-left) no-repeat center / contain content-box;
+        background: image-url('icons/chevron-white-left.png') no-repeat center / contain content-box;
       }
     }
   }
   &--right {
     justify-content: flex-start;
+
     > button {
       .cs-carousel--light-background & {
-        background: url($gray-chevron-right) no-repeat center / contain content-box;
+        background: image-url('icons/chevron-gray-right.png') no-repeat center / contain content-box;
       }
+
       .cs-carousel--dark-background & {
-        background: url($white-chevron-right) no-repeat center / contain content-box;
+        background: image-url('icons/chevron-white-right.png') no-repeat center / contain content-box;
       }
     }
   } 
@@ -109,18 +122,22 @@ $white-chevron-right: asset-url('icons/chevron-white-right.png');
   display: flex;
   align-items: center;
   // background-color: #d1cfc0;
+
   &.cs-carousel__pagination {  // don't use class selector lest it include pagination-xs
     justify-content: center;
   }
+
   &[class*="__prev-next"] {
     font-size: $carousel-nav-size;
     justify-content: flex-end;
     padding: 0;
     // color: rgba(0, 0, 0, 0.6);
     transition: color 0.25s ease;
+
     .cs-carousel--light-background & {
       color: rgba(0, 0, 0, 0.6)
     }
+
     .cs-carousel--dark-background & {
       color: rgba(255, 255, 255, 0.6)
     }
@@ -133,15 +150,19 @@ $white-chevron-right: asset-url('icons/chevron-white-right.png');
   outline: none;
   padding: 8px;
   transition: color 0.25s ease;
+
   &--bookend {
     pointer-events: none;
     transition: color 0s;
   }
+
   .cs-carousel--light-background & {
     &--bookend {
       color: rgba(0, 0, 0, 0.3);
     }
-    &:hover, &:active {
+
+    &:hover, 
+    &:active {
       color: rgba(0, 0, 0, 0.9);
     }
   }
@@ -149,7 +170,9 @@ $white-chevron-right: asset-url('icons/chevron-white-right.png');
     &--bookend {
       color: rgba(255, 255, 255, 0.3);
     }
-    &:hover, &:active {
+
+    &:hover, 
+    &:active {
       color: rgba(255, 255, 255, 0.9);
     }
   }
@@ -170,6 +193,7 @@ $white-chevron-right: asset-url('icons/chevron-white-right.png');
     margin: 0;
     padding: 0;
   }
+
   > .cs-row {
     height: calc(#{$carousel-story-card-height} + #{$carousel-vertical-padding});
     margin-bottom: 20px;
@@ -179,6 +203,7 @@ $white-chevron-right: asset-url('icons/chevron-white-right.png');
     // background-color: #d9e3da;
     height: calc(#{$carousel-story-card-height} + #{$carousel-vertical-padding});
     padding: 0;
+
     .row-horizon {
       height: 100%;
       padding: calc(#{$carousel-vertical-padding / 2}) 0;
@@ -195,6 +220,7 @@ $white-chevron-right: asset-url('icons/chevron-white-right.png');
         padding-left: 15px;  
         padding-right: 15px;
         box-sizing: border-box;
+
         .story-card {
           position: absolute;
         }
@@ -212,9 +238,11 @@ $white-chevron-right: asset-url('icons/chevron-white-right.png');
     .cs-carousel__arrow {
       display: none;
     }
+
     .cs-carousel__carousel {
       width: 100%;
     }
+
     .cs-carousel__pagination {
       display: none;
     }
@@ -224,15 +252,19 @@ $white-chevron-right: asset-url('icons/chevron-white-right.png');
     .cs-carousel__arrow {
       width: 0%;
     }
+
     .cs-carousel__carousel {
       width: 100%;
     }
+
     .cs-carousel__pagination {
       display: none;
     }
+
     .cs-carousel__prev-next {
       justify-content: center;
     }
+
     &--v1 {
       .cs-carousel__scroll-xs {
         display: flex;
@@ -245,26 +277,31 @@ $white-chevron-right: asset-url('icons/chevron-white-right.png');
       .cs-carousel__arrow {
         width: 10%;
       }
+
       .cs-carousel__carousel {
         width: 80%;
       }
     }
   }
+  
   @media only screen and (min-width: 992px) {
     &--v1 {
       .cs-carousel__arrow {
         width: 12%;
       }
+
       .cs-carousel__carousel {
         width: 76%;
       }
     }
   }
+
   @media only screen and (min-width: 1200px) {
     &--v1 {
       .cs-carousel__arrow {
         width: 10%;
       }
+
       .cs-carousel__carousel {
         width: 80%;
       }
