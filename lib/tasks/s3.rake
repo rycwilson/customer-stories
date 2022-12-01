@@ -13,10 +13,11 @@ namespace :s3 do
       puts "Error getting object: #{e.message}"
     end
     def object_uploaded?(s3_client, bucket_name, object_key, local_path)
+      response = nil
       File.open(local_path.to_s, 'rb') do |file|
         response = s3_client.put_object({ body: file, bucket: bucket_name, key: object_key })
-        return response.etag.present?
       end
+      return response.etag.present?
     rescue StandardError => e
       puts "Error uploading object: #{e.message}"
       return false
