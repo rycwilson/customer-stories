@@ -31,14 +31,26 @@ namespace :s3 do
       object_key = "uploads/#{key}/#{file_name}"
       FileUtils.mkdir_p Rails.root.join('tmp', 'uploads', "#{key}")
       local_path = Rails.root.join('tmp', 'uploads', "#{key}", "#{file_name}")
+      puts "Downloading #{instance.class.name} #{url_field} id=#{instance.id} #{instance[url_field]}..."
+      puts "\tobject key: #{object_key}"
+      puts "\tlocal path: #{local_path}"
       if object_downloaded?(s3_client, bucket_from, object_key, local_path)
+        puts '...download ok'
+        puts 'Uploading...'
         if object_uploaded?(s3_client, bucket_to, object_key, local_path)
-          instance.update(
+          puts '...upload ok'
+          unless instance.update(
             url_field => bucket_to.include?('dev') ?
               "https://csp-dev-assets.s3.us-west-1.amazonaws.com/#{object_key}" :
               "https://#{ENV['CLOUDFRONT_HOST_NAME']}/#{object_key}"
           )
+            puts "error updating model: #{instance.errors.full_messages}"
+          end
+        else
+          puts "...upload failed" 
         end
+      else
+        puts "...download failed" 
       end
     end
     s3_client = Aws::S3::Client.new(region: 'us-west-1')
