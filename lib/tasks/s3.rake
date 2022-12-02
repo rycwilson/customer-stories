@@ -18,7 +18,6 @@ namespace :s3 do
       puts "Error getting object: #{e.message}"
     end
     def object_uploaded?(s3_client, bucket_name, object_key, local_path)
-      # response = nil
       File.open(local_path.to_s, 'rb') do |file|
         response = s3_client.put_object({ body: file, bucket: bucket_name, key: object_key })
         return response.etag.present?
@@ -52,27 +51,35 @@ namespace :s3 do
           )
             puts "error updating model: #{instance.errors.full_messages}"
           end
-        else
+        else  
           puts "...upload failed" 
         end
       else
         puts "...download failed" 
       end
     end
-    s3_client = Aws::S3::Client.new(region: 'us-west-1')
-    # User.all.each { |user| copy_object(s3_client, user, :photo_url) }
-    User.limit(1).where.not(photo_url: ['', nil]).each { |user| copy_object(s3_client, user, :photo_url) }
-    # Company.all.each { |company| [:logo_url, :adwords_logo_url].each { |field| copy_object(s3_client, company, field) }}
-    Company.limit(1)
-      .where.not(logo_url: ['', nil])
-      .where.not(adwords_logo_url: ['', nil])
-      .each { |company| [:logo_url, :adwords_logo_url].each { |field| copy_object(s3_client, company, field) }}
-    # Customer.all.each { |customer| copy_object(s3_client, customer, :logo_url) }
-    Customer.limit(1).where.not(logo_url: ['', nil]).each { |customer| copy_object(s3_client, customer, :logo_url) }
-    # Story.all.each { |story| copy_object(s3_client, story, :og_image_url) }
-    Story.limit(1).where.not(og_image_url: ['', nil]).each { |story| copy_object(s3_client, story, :og_image_url) }
-    # AdwordsImage.all.each { |image| copy_object(s3_client, image, :image_url) }
-    AdwordsImage.limit(1).where.not(image_url: ['', nil]).each { |image| copy_object(s3_client, image, :image_url) }
+    s3_client = Aws::S3::Client.new
+    # User.limit(1)
+    #   .where("photo_url LIKE '%csp-production-assets%'")
+    #   .each { |user| copy_object(s3_client, user, :photo_url) }
+    User.all.each { |user| copy_object(s3_client, user, :photo_url) }
+    # Company.limit(1)
+    #   .where("logo_url LIKE '%csp-production-assets%'")
+    #   .where("adwords_logo_url LIKE '%csp-production-assets%'")
+    #   .each { |company| [:logo_url, :adwords_logo_url].each { |field| copy_object(s3_client, company, field) } }
+    Company.all.each { |company| [:logo_url, :adwords_logo_url].each { |field| copy_object(s3_client, company, field) }}
+    # Customer.limit(1)
+    #   .where("logo_url LIKE '%csp-production-assets%'")
+    #   .each { |customer| copy_object(s3_client, customer, :logo_url) }
+    Customer.all.each { |customer| copy_object(s3_client, customer, :logo_url) }
+    # AdwordsImage.limit(1)
+    #   .where("image_url LIKE '%csp-production-assets%'")
+    #   .each { |image| copy_object(s3_client, image, :image_url) }
+    AdwordsImage.all.each { |image| copy_object(s3_client, image, :image_url) }
+    # Story.limit(1)
+    #   .where("og_image_url LIKE '%csp-production-assets%'")
+    #   .each { |story| copy_object(s3_client, story, :og_image_url) }
+    Story.all.each { |story| copy_object(s3_client, story, :og_image_url) }
   end
 
   desc 'update s3 upload links'
