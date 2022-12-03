@@ -1,9 +1,12 @@
 module S3Util
   class << self 
     def delete_object(bucket, object_url)
-      unless !object_url.is_a?(String) || !object_url.include?('https')
+      key = object_url.match(/(amazonaws\.com|cloudfront\.net)\/(.*)/).try(:[], 2)
+      if key
         bucket.delete_objects({
-          delete: { objects: [{ key: object_url[/.com\/(.+)/, 1] }] }
+          delete: { 
+            objects: [{ key: key }] 
+          }
         })
       end
     end
