@@ -59,7 +59,7 @@
         .replaceWith(`<%= j @new_image_card %>`)
     }
     // update form data so that the next upload has a unique key...
-    $form.data('formData', s3DirectPostFields)
+    $form.data('s3Data', s3DirectPostFields)
     $modal
       .find(imageType.includes('Logo') ? 'ul.ad-logo-selections' : 'ul.ad-image-selections')
         .append(`<%= @saved_image.present? ? j(@modal_image_card) : nil %>`)
