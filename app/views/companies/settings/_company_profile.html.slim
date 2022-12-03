@@ -1,0 +1,70 @@
+= form_for(company, form_options) do |f|
+  
+  .form-group.required-input
+    = f.label(:name, class: 'col-sm-3 control-label')
+    .col-sm-9.col-md-8.col-lg-6
+      = f.text_field(:name, class: 'form-control')
+  
+  .form-group.required-input
+    = f.label(:subdomain, class: 'col-sm-3 control-label')
+    .col-sm-9.col-md-8.col-lg-6
+      - if company.persisted?
+        = f.text_field(:subdomain, class: 'form-control', disabled: true)
+      - else
+        = f.text_field(:subdomain, class: 'form-control')
+
+  .form-group.required-input
+    = f.label(:website, class: 'col-sm-3 control-label')
+    .col-sm-9.col-md-8.col-lg-6
+      = f.text_field(:website, class: 'form-control')
+
+  .form-group
+    label.col-sm-3.control-label Header Logo
+    .col-sm-9.col-md-8.col-lg-6
+      .company-logo-upload
+        div
+          button.company-logo-upload__button.btn type="button"
+            i.fa.fa-fw.fa-upload
+            |&nbsp;Upload a logo
+        .company-logo-upload__company-header.fileinput {
+          class="#{company.logo_url.present? ? 'fileinput-exists' : 'fileinput-new'}" 
+          style="background-color: #{company.header_color_1}"
+          data-provides="fileinput" }
+          .fileinput-new.thumbnail.company-logo-upload__logo.company-logo-upload__logo--placeholder {
+            data-trigger="fileinput" } 
+            = image_tag(LOGO_PLACEHOLDER, alt: 'company logo')
+          .fileinput-preview.fileinput-exists.thumbnail.company-logo-upload__logo.company-logo-upload__logo--exists {
+            data-trigger="fileinput" }
+            = image_tag(company.logo_url || LOGO_PLACEHOLDER, alt: 'company logo')
+          .btn-file
+            = f.file_field(:logo_url)
+        .company-logo-upload__stories-header {
+          class=".company-logo-upload__stories-header--#{background_color_contrast(company.header_color_2)}"
+            style="#{stories_header_custom_colors(company)}" }
+          h3 Customer Stories
+
+  .form-group.headers-color-picker
+    = f.label(nil, 'Header Colors', class: 'col-sm-3 control-label')
+    .col-sm-9.col-md-8.col-lg-6
+      div
+        = f.label(:header_color_1, 'Upper', class: 'control-label')
+        = f.text_field(:header_color_1, class: 'form-control mini-colors upper')
+      div
+        = f.label(:header_color_2, 'Lower', class: 'control-label')
+        = f.text_field(:header_color_2, class: 'form-control mini-colors lower')
+      div
+        = f.label(:header_text_color, 'Text', class: 'control-label')
+        = f.text_field(:header_text_color, class: 'form-control mini-colors text')
+
+  .form-group
+    = f.label(:gtm_id, 'Google Tag Manager ID', class: 'col-sm-3 control-label')
+    .col-sm-9.col-md-8.col-lg-6
+      = f.text_field(:gtm_id, class: 'form-control')
+
+  .form-group
+    .col-sm-12.col-md-offset-3.col-md-8.col-lg-6.text-right
+      button.btn.btn-success type="submit" form="company-profile-form" style="width: 114px"
+        span
+          = company.new_record? ? 'Register' : 'Save changes'
+        i.fa.fa-spin.fa-circle-o-notch style="display: none"
+        i.fa.fa-check style="display: none"
