@@ -59,7 +59,7 @@ function initS3Upload($form, $input) {
       done: (e, data) => {
         console.log('s3 done...')
         const key = $(data.jqXHR.responseXML).find('Key').text();
-        const url = `https://${formData.assetHost ? formData.assetHost : formData.host}/${key}`;
+        const url = formData.assetHost ? `${formData.assetHost}/${key}` : `https://${formData.host}/${key}`;
         let $imageUrlInput;
 
         /*
