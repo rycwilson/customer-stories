@@ -30,8 +30,9 @@ class ProfileController < ApplicationController
     @user = current_user
     @company = @user.company
     @original_user = User.find_by_id(session[:original_user_id])
+    @is_admin = current_user.admin? || @original_user&.admin?
     set_s3_direct_post()
-    if current_user.admin? || @original_user.try(:admin?)
+    if @is_admin
       @switch_users = User.where(email: SWITCH_USERS).map do |user|
         { 
           id: user.id, 

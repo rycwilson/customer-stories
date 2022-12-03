@@ -22,8 +22,7 @@
             span
               | Change Password
 
-      - if current_user.admin? || @original_user.try(:admin?)
-
+      - if @is_admin
         .admin-sidebar
           h4 Admin
           .text-center
@@ -41,13 +40,10 @@
                     = form_tag(switch_user_path, method: 'POST', remote: true) do
                       = hidden_field_tag(:switch_user_id, user[:id])
                       = submit_tag(user[:name], style: 'background: none; border: none')
-
+                      
     .col-sm-8.col-lg-9.layout-main
-
       .tab-content
         #profile-tab.tab-pane.fade.in.active
-          = render( \
-              'profile/user_profile', 
-              { user: @user, s3_direct_post: @s3_direct_post })
+          = render('profile/user_profile', { user: @user, s3_direct_post: @s3_direct_post })
         #password-tab.tab-pane.fade
           = render('profile/change_password', { user: @user })
