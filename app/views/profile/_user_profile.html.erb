@@ -10,9 +10,10 @@
           autocomplete: 'off',
           class: 'user-profile directUpload form-horizontal',
           data: {
-            'form-data' => (s3_direct_post.fields),
-            'url' => s3_direct_post.url,
-            'host' => URI.parse(s3_direct_post.url).host
+            url: s3_direct_post.url,
+            host: URI.parse(s3_direct_post.url).host,
+            asset_host: Rails.application.config.asset_host,
+            s3_data: s3_direct_post.fields
           }
         }
       }

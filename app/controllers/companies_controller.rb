@@ -201,7 +201,8 @@ class CompaniesController < ApplicationController
         data: {
           url: @s3_direct_post.url,
           host: URI.parse(@s3_direct_post.url).host,
-          'form-data' => (@s3_direct_post.fields)
+          asset_host: Rails.application.config.asset_host,
+          s3_data: @s3_direct_post.fields
         }
       }
     }

@@ -10,7 +10,7 @@ function initS3Upload($form, $input) {
       type: 'POST',
       url: formData.url,
       autoUpload: true,
-      formData: formData.formData,
+      formData: formData.s3Data,
       paramName: 'file',  // S3 does not like nested name fields i.e. name="user[avatar_url]"
       dataType: 'XML',    // S3 returns XML if success_action_status is set to 201
       replaceFileInput: false,
@@ -59,7 +59,7 @@ function initS3Upload($form, $input) {
       done: (e, data) => {
         console.log('s3 done...')
         const key = $(data.jqXHR.responseXML).find('Key').text();
-        const url = `https://${location.hostname.includes('lvh.me') ? formData.host : formData.cloudfrontHost}/${key}`;
+        const url = `https://${formData.assetHost ? formData.assetHost : formData.host}/${key}`;
         let $imageUrlInput;
 
         /*

@@ -1,17 +1,18 @@
 = form_for( \
-      story,
-      url: story_path(story.id),
-      authenticity_token: true,
-      html: { \
-        id: 'story-settings-form',
-        method: 'put',
-        remote: true,
-        class: 'form-horizontal directUpload', 
-        autocomplete: 'off',
-        data: { \
-          url: @s3_direct_post.url,
-          host: URI.parse(@s3_direct_post.url).host,
-          'form-data' => (@s3_direct_post.fields) } } ) do |story_form|
+    story,
+    url: story_path(story.id),
+    authenticity_token: true,
+    html: { \
+      id: 'story-settings-form',
+      method: 'PUT',
+      remote: true,
+      class: 'form-horizontal directUpload', 
+      autocomplete: 'off',
+      data: { \
+        url: @s3_direct_post.url,
+        host: URI.parse(@s3_direct_post.url).host,
+        asset_host: Rails.application.config.asset_host,
+        s3_data: @s3_direct_post.fields }}) do |story_form|
 
   / #story-settings__ads-inputs
       topic
