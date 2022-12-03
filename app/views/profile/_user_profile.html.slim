@@ -1,0 +1,80 @@
+
+= form_for( \
+    user, 
+    { url: registration_path(user), 
+      method: 'PUT', 
+      remote: true, 
+      authenticity_token: true,
+      html: { \
+        id: 'user-profile-form',
+        autocomplete: 'off',
+        class: 'user-profile directUpload form-horizontal',
+        data: { \
+          url: s3_direct_post.url,
+          host: URI.parse(s3_direct_post.url).host,
+          asset_host: Rails.application.config.asset_host,
+          s3_data: s3_direct_post.fields }}}) do |f|
+
+  .visible-sm-block.visible-md-block
+    .form-group
+      .col-sm-offset-3.col-sm-9
+        = render('profile/user_photo', { user: user, user_form: f })
+    .form-group
+      = f.label(:first_name, 'First Name', class: 'col-sm-3 control-label')
+      .col-sm-9.col-md-8
+        = f.text_field(:first_name, class: 'form-control')
+    .form-group
+      = f.label(:last_name, 'Last Name', class: 'col-sm-3 control-label')
+      .col-sm-9.col-md-8
+        = f.text_field(:last_name, class: 'form-control')
+    .form-group
+      = f.label(:title, 'Job Title', class: 'col-sm-3 control-label')
+      .col-sm-9.col-md-8
+        = f.text_field(:title, class: 'form-control')
+    .form-group
+      = f.label(:email, 'Email', class: 'col-sm-3 control-label')
+      .col-sm-9.col-md-8
+        = f.email_field(:email, class: 'form-control')
+    .form-group
+      = f.label(:phone, 'Phone', class: 'col-sm-3 control-label')
+      .col-sm-9.col-md-8
+        = f.telephone_field(:phone, class: 'form-control')
+    .form-group
+      .col-sm-12.col-md-offset-3.col-md-8.text-right
+        button type="submit" class="btn btn-success" form="user-profile-form" style="width:114px"
+          span Save changes
+          i.fa.fa-spin.fa-circle-o-notch style="display: none"
+          i.fa.fa-check style="display: none"
+
+  .visible-lg-block
+    .row
+      .col-lg-3 style="display: flex; justify-content: flex-end; padding: 0"
+        .form-group
+          = render('profile/user_photo', { user: user, user_form: f })
+      .col-lg-6
+        .form-group
+          = f.label(:first_name, 'First Name', class: 'col-lg-4 control-label', style: 'width: 25%')
+          .col-lg-8 style="width: 75%"
+            = f.text_field(:first_name, class: 'form-control')
+        .form-group
+          = f.label(:last_name, 'Last Name', class: 'col-lg-4 control-label', style: 'width: 25%')
+          .col-lg-8 style="width: 75%"
+            = f.text_field(:last_name, class: 'form-control')
+        .form-group
+          = f.label(:title, 'Job Title', class: 'col-lg-4 control-label', style: 'width: 25%')
+          .col-lg-8 style="width: 75%"
+            = f.text_field(:title, class: 'form-control')
+        .form-group
+          = f.label(:email, 'Email', class: 'col-sm-3 control-label', style: 'width: 25%')
+          .col-lg-8 style="width: 75%"
+            = f.email_field(:email, class: 'form-control')
+        .form-group
+          = f.label(:phone, 'Phone', class: 'col-sm-3 control-label', style: 'width: 25%')
+          .col-lg-8 style="width: 75%"
+            = f.telephone_field(:phone, class: 'form-control')
+        .form-group
+          .col-lg-12.text-right
+            button type="submit" class="btn btn-success" form="user-profile-form" style="width:114px"
+              span Save changes
+              i.fa.fa-spin.fa-circle-o-notch style="display:none"
+              i.fa.fa-check style="display: none"
