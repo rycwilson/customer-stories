@@ -2,9 +2,10 @@ class CustomersController < ApplicationController
 
   respond_to(:html, :js, :json)
 
-  def show
+  def edit
     customer = Customer.find(params[:id])
-    respond_with(customer, only: [:id, :name, :description, :logo_url, :show_name_with_logo])
+    customer.s3_direct_post_fields = set_s3_direct_post().fields
+    respond_with(customer, only: [:id, :name, :description, :logo_url, :show_name_with_logo], methods: [:s3_direct_post_fields])
   end
 
   def update

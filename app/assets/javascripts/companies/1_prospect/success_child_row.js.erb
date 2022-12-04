@@ -12,7 +12,6 @@ function successChildRowListeners () {
       customButtonHelpPopoverContent = "You can insert contributions in their original form or with a placeholder. The latter is useful for organizing your document while in Edit mode, but will preclude any changes to the underlying content. Toggle to the View mode to see the populated/saved content.",
       winStory, winStoryText, winStoryCompleted,
       winStoryRecipientsSelectOptions,
-      customerPath = function (customerId) { return '/customers/' + customerId; },
       successPath = function (successId) { return '/successes/' + successId; },
       contributionsDataPath = function (successId) { return '/successes/' + successId + '/contributions'; },
       expandedViewHeight = function ($tr, isEditMode) {
@@ -557,23 +556,16 @@ function successChildRowListeners () {
       $form.submit();
     })
 
-    .on('click', 'button[data-target="#edit-customer-modal"]', function (e) {
-      // clicking a row group will normally sort alphabetically; prevent this
-      e.stopImmediatePropagation();
-      $.ajax({
-        url: customerPath($(this).data('customer-id')),
-        method: 'get',
-        dataType: 'json'
-      })
-        .done(function (customer, status, xhr) {
-          $.when(
-            $('#edit-customer-modal .modal-body').append(
-              _.template($('#customer-form-template').html())({
-                customer: customer
-              })
-            )
-          ).done(function () { initS3Upload($('#customer-form')) })
-        })
+    .on('click', 'button[data-target="#edit-customer-modal"]', (e) => {
+      e.stopImmediatePropagation();   // prevent row group sorting
+      fetch(`/customers/${e.currentTarget.dataset.customerId}/edit.json`)
+        .then(res => res.json())
+        .then(customer => {
+          const templateFn = _.template(document.getElementById('customer-form-template').innerHTML);
+          const modalBody = document.getElementById('edit-customer-modal').querySelector('.modal-body');
+          modalBody.innerHTML = templateFn({ customer });
+          setTimeout(() => initS3Upload($(document.getElementById('customer-form'))));
+        });
     })
 
     .on('click', '.customer-logo__upload', function () {

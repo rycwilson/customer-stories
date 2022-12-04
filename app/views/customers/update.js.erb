@@ -1,11 +1,4 @@
-
-(function () {
-
-  var customer = <%= raw @customer.to_json %>;
-
-  // update in datatables
-
-  toggleFormDone($('#customer-form'), true)
+(() => {
+  toggleFormDone($('#customer-form'), true);
   $('#edit-customer-modal').modal('hide');
-
-}());
+})();

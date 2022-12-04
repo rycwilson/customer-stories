@@ -31,20 +31,20 @@
   <script id="customer-form-template" type="text/template">
 
     <form 
+      method="POST" 
+      accept-charset="UTF-8" 
+      action="/customers/{{= customer.id }}" 
+      enctype="multipart/form-data" 
       id="customer-form" 
       class="directUpload form-horizontal" 
-      enctype="multipart/form-data" 
-      action="/customers/{{= customer.id }}" 
-      accept-charset="UTF-8" 
-      method="POST" 
       data-remote="true"
       data-url="<%= @s3_direct_post.url %>" 
       data-host="<%= URI.parse(@s3_direct_post.url).host %>" 
       data-asset-host="<%= Rails.application.config.asset_host %>"
-      data-s3-data="<%= @s3_direct_post.fields.to_json %>">
+      data-s3-data='{{= JSON.stringify(customer.s3_direct_post_fields) }}'>
 
       <input name="utf8" type="hidden" value="✓">
-      <input type="hidden" name="_method" value="put">
+      <input type="hidden" name="_method" value="PUT">
       <input type="hidden" name="authenticity_token" value="{{= document.querySelectorAll('meta[name=csrf-token]')[0].getAttribute('content') }}">
       <input type="hidden" name="customer[id]" value="{{= customer.id }}">
 

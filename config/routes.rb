@@ -94,7 +94,7 @@ Rails.application.routes.draw do
       get '/settings', to: 'companies#edit', as: 'company_settings'
 
       resources :companies, only: [:show, :edit, :update] do
-        resources :customers, only: [:show, :create, :update, :destroy], shallow: true
+        resources :customers, only: [:edit, :create, :update, :destroy], shallow: true
         resources :successes, only: [:show, :create, :update, :destroy], shallow: true do
           resources :contributions, only: [:index]
           resources :results, only: [:create, :destroy]
