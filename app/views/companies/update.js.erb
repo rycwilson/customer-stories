@@ -1,31 +1,13 @@
-(function () {
-
-  var company = <%= raw @company.to_json({ only: [], methods: [:previous_changes, :color_contrast] }) %>,
-      flash = <%= raw @flash.to_json %>,
-      $form = $('form[data-submitted="true"]'),
-      backgroundColorContrast = '<%= @background_color_contrast %>';
-
+(() => {
+  const company = <%= raw @company.to_json({ only: [], methods: [:previous_changes, :color_contrast] }) %>;
+  const flash = <%= raw @flash.to_json %>;
+  const form = document.querySelector('form[data-submitted="true"]');
+  const s3DirectPostFields = <%= raw @s3_direct_post_fields&.to_json || {} %>;
+  // const backgroundColorContrast = '<%= @background_color_contrast %>';
   if (company.previous_changes.logo_url) {
-    $('.company-header__logo img').attr('src', company.previous_changes.logo_url[1]);
+    document.querySelector('.company-header__logo img').src = company.previous_changes.logo_url[1];
+    form.dataset.s3Data = JSON.stringify(s3DirectPostFields);
   }
-
-  if (company.previous_changes.header_color_1) {
-    $('.company-header, .company-logo-upload__company-header')
-      .css('background-color', company.previous_changes.header_color_1[1]);
-  }
-
-  if (company.previous_changes.header_color_2) {
-    $('.stories-header')
-      .css('background-color', company.previous_changes.header_color_2[1])
-      .removeClass('stories-header--light-background stories-header--dark-background')
-      .addClass('stories-header--' + backgroundColorContrast);
-  }
-
-  if (flash.mesg) {
-    flashDisplay(flash.mesg, flash.status);
-    toggleFormDone($form, false);
-  } else {
-    toggleFormDone($form, true);
-  }
-
-}());
+  if (flash.mesg) flashDisplay(flash.mesg, flash.status);
+  toggleFormDone($(form), !flash.mesg);
+})();

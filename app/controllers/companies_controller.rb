@@ -57,9 +57,12 @@ class CompaniesController < ApplicationController
       @company.update(company_params) ?
         @flash = {} :
         @flash = { mesg: @company.errors.full_messages.join(', '), status: 'danger' }
+      if @company.previous_changes[:logo_url]
+        @s3_direct_post_fields = set_s3_direct_post().fields
+      end
     end
     respond_to do |format| 
-      @background_color_contrast = helpers.background_color_contrast(@company.header_color_2)
+      # @background_color_contrast = helpers.background_color_contrast(@company.header_color_2)
       format.js {}
     end
   end
@@ -192,7 +195,7 @@ class CompaniesController < ApplicationController
     end
   end
 
-  def set_form_options (params, company=nil)
+  def set_form_options(params, company=nil)
     options = {
       html: {
         id: 'company-profile-form',
@@ -208,7 +211,7 @@ class CompaniesController < ApplicationController
     }
     if params[:action] == 'edit'
       # why auth token? # https://github.com/rails/rails/issues/22807
-      options.merge({ url: company_path(company), method: 'put', remote: 'true', authenticity_token: true })
+      options.merge({ url: company_path(company), method: 'PUT', remote: 'true', authenticity_token: true })
     else  # new
       options.merge({ url: create_company_path })
     end
