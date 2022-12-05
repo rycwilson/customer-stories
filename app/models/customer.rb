@@ -2,8 +2,6 @@ class Customer < ApplicationRecord
 
   include FriendlyId
 
-  attr_accessor :s3_direct_post_fields    # for the dynamically loaded customer form
-
   belongs_to :company
   has_many :successes, dependent: :destroy
   has_many :stories, through: :successes

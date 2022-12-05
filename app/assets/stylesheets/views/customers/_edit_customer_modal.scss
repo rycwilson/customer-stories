@@ -1,104 +1,139 @@
+#customer-form {
+  .col-sm-2 {
+    width: 20%;
+  }
 
-#edit-customer-modal {
-  #customer-form {
+  .col-sm-10 {
+    width: 80%;
+  }
 
-    .col-sm-2 {
-      width: 20%;
-    }
-    .col-sm-10 {
-      width: 80%;
-    }
+  .customer-logo {
+    position: relative;
+    background-color: #efefef;
+    padding: 4rem 2.5rem 0 2.5rem;
 
-    .fileinput.customer-logo {
-      background-color: #efefef;
-      position: relative;
+    .fileinput {
       width: 100%;
       margin-bottom: 0;
-      padding: 40px 30px;
-      .fileinput-new, .fileinput-preview {
-        margin-bottom: 0;
+    }
+    
+    .thumbnail {
+      padding: 20px 0;
+      width: 100%;
+      margin-bottom: 0;
+      
+      img {
+        max-height: 80px;
+        max-width: 50%;
       }
-      .customer-logo__header {
-        position: absolute;
-        top: 0;
-        left: 0;
-        height: 40px;
-        width: 100%;
-        text-align: center;
-        .customer-logo__flash {
-          position: absolute;
-          background-color: #d9534f;
-          color: #fff;
-          width: 100%;
-          height: 100%;
-          border-radius: 0;
-          align-items: center;
-          justify-content: center;
-          display: none;
-        }
-        &.has-error {
-          .customer-logo__flash {
-            display: flex;
-            opacity: 1;
-          }
-          .customer-logo__upload {
-            display: none;
-          }
-        }
-      }
-      .thumbnail {
-        padding: 20px 0;
-        width: 100%;
-        img {
-          max-height: 80px;
-          max-width: 50%;
-        }
-        .customer-name {
-          color: #666;
-          font-size: 16px;
-          margin-top: 20px;
-        }
-      }
-      .customer-logo__upload, .customer-logo__show-name {
+    }
+
+    .customer-name {
+      display: none;
+      position: absolute;
+      height: 5.5rem;
+      left: 0;
+      right: 0;
+      bottom: 4rem;
+      font-size: 16px;
+      color: #666;
+    }
+
+    &.with-customer-name {
+      .customer-name {
         display: flex;
         align-items: center;
         justify-content: center;
-        position: absolute;
-        left: 0;
-        width: 100%;
-        height: 40px;  // matches padding
-        &.customer-logo__upload {
-          top: 0;
-          span {
-            cursor: pointer;
-            i {
-              font-size: 16px;
-              margin-right: 2px;
-              color: #666;
-            }
-            &.hover {
-              i { color: #222; }
-            }
-          }
-        }
-        &.customer-logo__show-name {
-          bottom: 0;
-          .checkbox-inline {
-            margin-right: 0;
-            padding-top: 0;
-          }
-        }
+        bottom: 4rem;
       }
-      div.image-requirements {
-        margin-bottom: 10px;
-      }
+
       .thumbnail {
-        // margin: 0;
-      }
-      .help-block {
-        margin: 6px 0;
+        padding-bottom: 5.5rem;
       }
     }
+  }
 
+  .customer-logo__header,
+  .customer-logo__footer {
+    height: 4rem;
+  }
+
+  .customer-logo__header {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    text-align: center;
+    
+    > * {
+      height: 100%;
+    }
+
+    &.has-error {
+      .customer-logo__flash {
+        display: flex;
+        opacity: 1;
+      }
+      
+      .customer-logo__upload {
+        display: none;
+      }
+    }
+  }
+
+  .customer-logo__upload, 
+  .customer-logo__footer {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    left: 0;
+    width: 100%;
+  }
+  
+  .customer-logo__upload {
+    position: absolute;
+    top: 0;
+
+    i {
+      font-size: 16px;
+    }
+
+    button {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border: none;
+      background: transparent;
+      color: #666;
+
+      &:hover,
+      &:hover i {
+        color: #222;
+      }
+    }
+  }
+  
+  .customer-logo__footer {
+    // bottom: 0;
+    height: 4rem;
+    background-color: #efefef;
+
+    .checkbox {
+      display: flex; 
+      align-items: center;
+      padding-top: 0; 
+    }
+  }
+
+  .customer-logo__flash {
+    position: absolute;
+    background-color: #d9534f;
+    color: #fff;
+    width: 100%;
+    height: 100%;
+    border-radius: 0;
+    align-items: center;
+    justify-content: center;
+    display: none;
   }
 }

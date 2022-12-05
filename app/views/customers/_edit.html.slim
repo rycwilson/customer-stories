@@ -1,0 +1,51 @@
+= form_with( \
+    model: customer,
+    remote: true,
+    html: { \
+      id: 'customer-form',
+      class: 'directUpload form-horizontal',
+      data: { \
+        url: s3_direct_post.url,
+        host: URI.parse(s3_direct_post.url).host,
+        asset_host: Rails.application.config.asset_host,
+        s3_data: s3_direct_post.fields }}) do |form|
+
+  .form-group
+    = form.label(:name, class: 'col-sm-2 control-label')
+    .col-sm-10
+      = form.text_field(:name, autocomplete: 'off', class: 'form-control')
+
+  .form-group
+    = form.label(:description, class: 'col-sm-2 control-label')
+    .col-sm-10
+      = form.text_area(:description, class: 'form-control', style: 'width: 100%', rows: 4) 
+
+  .form-group
+    = form.label(:logo_url, 'Logo', class: 'col-sm-2 control-label')
+    .col-sm-10
+      .customer-logo class=('with-customer-name' if customer.show_name_with_logo?)
+        .fileinput.fileinput-exists data-provides="fileinput"
+
+          .customer-logo__header
+            .customer-logo__flash
+              span Spaces in file name not allowed
+            .customer-logo__upload.text-center 
+              button type="button" data-trigger="fileinput"
+                i.fa.fa-fw.fa-upload
+                |&nbsp;&nbsp;
+                span Upload an image
+
+          .fileinput-preview.thumbnail
+            = image_tag(customer.logo_url.present? ? customer.logo_url : LOGO_PLACEHOLDER, alt: 'customer logo url')
+            
+          .customer-name.text-center 
+            = customer.name
+
+          .btn-file.hidden
+            input type="file" name="customer[logo_url]"
+
+        .customer-logo__footer.text-center
+          .checkbox
+            = form.label(:show_name_with_logo)
+              = form.check_box(:show_name_with_logo)
+              = 'Show name with logo'

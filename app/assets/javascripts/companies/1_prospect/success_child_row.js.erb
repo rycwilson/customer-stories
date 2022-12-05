@@ -556,52 +556,19 @@ function successChildRowListeners () {
       $form.submit();
     })
 
+    // Customer form listeners
     .on('click', 'button[data-target="#edit-customer-modal"]', (e) => {
       e.stopImmediatePropagation();   // prevent row group sorting
-      fetch(`/customers/${e.currentTarget.dataset.customerId}/edit.json`)
-        .then(res => res.json())
-        .then(customer => {
-          const templateFn = _.template(document.getElementById('customer-form-template').innerHTML);
-          const modalBody = document.getElementById('edit-customer-modal').querySelector('.modal-body');
-          modalBody.innerHTML = templateFn({ customer });
-          setTimeout(() => initS3Upload($(document.getElementById('customer-form'))));
-        });
+      fetch(`/customers/${e.currentTarget.dataset.customerId}/edit.js`)
+        .then(res => res.text())
+        .then(txt => eval(txt))
     })
-
-    .on('click', '.customer-logo__upload', function () {
-      var $previewImg = $(this).closest('.fileinput').find('.fileinput-preview img');
-      if ($previewImg.attr('src')) {
-        // click on the preview
-        $(this).closest('.fileinput').find('.thumbnail')[1].click();
-      } else {
-        // click on the placeholder
-        $(this).closest('.fileinput').find('.thumbnail')[0].click();
-      }
+    .on('hidden.bs.modal', '#edit-customer-modal', (e) => {
+      const modalBody = e.currentTarget.querySelector('.modal-body');
+      modalBody.removeChild(modalBody.firstChild);
     })
-
-    // remove the templated form
-    .on('hidden.bs.modal', '#edit-customer-modal', function () {
-      $(this).find('.modal-body').empty();
-    })
-
-    // on file upload, the customer name will get removed by jasny js => replace it
-    .on('change.bs.fileinput', '#customer-form .fileinput', function (e) {
-      var customerName = $(this).find('.fileinput-new .customer-name').text().trim(),
-          showName = $(this).find('input[type="checkbox"][name="customer[show_name_with_logo]"]')
-                            .prop('checked');
-      // execute on file upload only
-      if ($(e.target).is(':not([type="checkbox"])')) {
-        $(this)
-          .find('.fileinput-preview')
-          .append(
-            '<div class="customer-name" style="line-height: 18px !important; ' + (showName ? '' : 'display:none') +  '">' +
-              '<span>' + customerName + '</span>' +
-            '</div>'
-          )
-      }
-    })
-    .on('change', '.customer-logo input[name*="show_name_with_logo"]', function () {
-      $(this).closest('.customer-logo').find('.customer-name').toggle();
+    .on('change', '[name="customer[show_name_with_logo]"]', (e) => {
+      e.target.closest('.customer-logo').classList.toggle('with-customer-name');
     })
 
     .on('click', 'td.toggle-success-child', function () {

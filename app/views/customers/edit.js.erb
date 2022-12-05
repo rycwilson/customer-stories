@@ -1,0 +1,5 @@
+(() => {
+  const modalBody = document.getElementById('edit-customer-modal').querySelector('.modal-body');
+  modalBody.innerHTML = "<%= j render('customers/edit', { customer: @customer, s3_direct_post: @s3_direct_post }) %>";
+  setTimeout(() => initS3Upload($(document.getElementById('customer-form'))));
+})();
