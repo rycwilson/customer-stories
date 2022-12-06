@@ -96,7 +96,6 @@ class CompaniesController < ApplicationController
           'typeClassName' => image_type&.split(/(?=[A-Z])/)&.reverse&.join('--')&.downcase&.sub(/\A/, 'gads-'),
           'removedImageId' => removed_ad_image_id(ad_images_params),
         }
-        # awesome_print(@res_data)
         @saved_image_card = image_card(@saved_image, @collection)
         @modal_image_card = image_card(@saved_image, @collection, false)
         @swapped_default_image_card = image_card(@swapped_default_image, @collection)

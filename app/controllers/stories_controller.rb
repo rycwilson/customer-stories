@@ -175,15 +175,39 @@ class StoriesController < ApplicationController
       end
       respond_to do |format|
         format.js do
-          @response_data = {}
-          @response_data[:promoteEnabled] = @story.company.promote_tr?
-          @response_data[:previousChanges] = @story.previous_changes
-          @response_data[:storyErrors] = @story.errors.full_messages
-          @response_data[:newAds] = new_ads(@story, story_params.to_h)
-          @response_data[:gadsWereCreated] = gads_were_created?(@story, story_params.to_h)
-          @response_data[:gadsErrors] = gads_errors?(@story, story_params.to_h)
-          @response_data[:adsWereDestroyed] = ads_were_destroyed?(story_params.to_h)
-          @response_data[:gadsWereRemoved] = gads_were_removed?(@story, story_params.to_h)
+          @res_data = {
+            'story' => @story.as_json({
+              only: [:id, :title, :slug, :logo_published, :preview_published, :published],
+              methods: [:csp_story_path],
+              include: {
+                success: {
+                  only: [],
+                  include: {
+                    customer: { only: [:name] }
+                  }
+                }
+              }
+            }),
+            'storyErrors' => @story.errors.full_messages,
+            's3DirectPostFields' => @story.previous_changes[:og_image_url] && set_s3_direct_post().fields,
+            'storyWasPublished' => (@story.previous_changes[:published].try(:[], 1) && 'Story published'),
+            'previewStateChanged' => (
+              (@story.previous_changes[:logo_published].try(:[], 1) && 'Logo published') ||
+              (@story.previous_changes[:logo_published].try(:[], 0) && 'Logo unpublished') || 
+              (@story.previous_changes[:preview_published].try(:[], 1) && 'Preview published') ||
+              (@story.previous_changes[:preview_published].try(:[], 0) && 'Preview unpublished')
+            ),
+            'publishStateChanged' => (
+              (@story.previous_changes[:published].try(:[], 1) && 'Story published') ||
+              (@story.previous_changes[:published].try(:[], 0) && 'Story unpublished')
+            )
+            # 'promoteEnabled' => @story.company.promote_tr?,
+            # 'newAds' => new_ads(@story, story_params.to_h),
+            # 'gadsWereCreated' => gads_were_created?(@story, story_params.to_h),
+            # 'gadsErrors' => gads_errors?(@story, story_params.to_h),
+            # 'adsWereDestroyed' => ads_were_destroyed?(story_params.to_h),
+            # 'gadsWereRemoved' => gads_were_removed?(@story, story_params.to_h),
+          }
           render({ action: 'edit/settings/update' })
         end
       end

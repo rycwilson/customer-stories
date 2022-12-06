@@ -1,154 +1,119 @@
+(() => {
+  const {
+    story,
+    storyErrors,
+    s3DirectPostFields,
+    storyWasPublished,
+    previewStateChanged,
+    publishStateChanged,
+    promoteEnabled = false,
+    newAds = false,
+    gadsErrors = false,
+    adsWereDestroyed = false
+  } = <%= raw @res_data.to_json %>;
+  const $table = $('#promoted-stories-table');
+  const form = document.getElementById('story-settings-form');
+  const hiddenAdInputs = document.querySelector('#story-settings__ads-inputs');
+  const hiddenLinkCopyBtn = document.querySelector('.hidden-link__copy');
+  const updateStoryCard = (story) => {
+    const card = document.querySelector(`.story-card[data-story-id="${story.id}"]`);
+    card.dataset.storySlug = story.slug;
+    card.querySelector('.story-card__title p').textContent = story.title;
+  };
+  const updateStoryHeader = () => {
+    const container = document.getElementById('edit-story-layout');
+    const header = document.querySelector('.story-header__wrapper');
+    header.remove();
+    container.insertAdjacentHTML('afterbegin', "<%= j render('stories/edit/story_header', { story: @story }) %>");
+  };
 
-(function () {
-
-  var res = <%= raw @response_data.to_json %>,
-      $table = $('#promoted-stories-table'),
-      story = <%= raw @story.to_json({
-                    only: [:id, :title, :slug, :logo_published, :preview_published, :published],
-                    methods: [:csp_story_path],
-                    include: {
-                      success: {
-                        only: [],
-                        include: {
-                          customer: { only: [:name] }
-                        }
-                      }
-                    }
-                  }) %>,
-      $hiddenAdInputs = $('#story-settings__ads-inputs'),
-
-      updateStoryCard = function (story) {
-        $('.story-card[data-story-id="' + story.id + '"]')
-          .attr('data-story-slug', story.slug)
-          .find('.story-card__title p')
-            .text(story.title)
-      },
-
-      updateStoryHeader = function (story) {
-        $('#story-header__title')
-          .children('span:nth-of-type(2)')
-            .text(story.title)
-            .end()
-          .find('a')
-            .attr('href', story.csp_story_path + '?preview=true');
-      },
-
-      // update any story attributes that fall under Settings
-      updateStory = function () {
-        var storyIndex = CSP.stories.findIndex(function (st) { return st.id === story.id });
-        var storyObj = CSP.stories[storyIndex];
+  // update any story attributes that fall under Settings
+  const updateStory = () => {
+    const storyIndex = CSP.stories.findIndex(_story => _story.id === story.id);
+    const storyObj = CSP.stories[storyIndex];
+    //console.log('storyObj before update: ', storyObj)
         
-        // this covers both title being changed and product present/absent in the path
-        if (storyObj.csp_story_path !== story.csp_story_path) {
-          updateStoryHeader(story);
-          updateStoryCard(story);
-          storyObj.csp_story_path = story.csp_story_path
-        }
-        storyObj.logo_published = story.logo_published;
-        storyObj.preview_published = story.preview_published;
-        storyObj.published = story.published;
-        storyObj.title = story.title;
-      },
+    // this covers both title being changed and product present/absent in the path
+    if (storyObj.csp_story_path !== story.csp_story_path) {
+      updateStoryCard(story);
+      updateStoryHeader();
+      storyObj.csp_story_path = story.csp_story_path
+    }
+    Object.assign(
+      storyObj, 
+      Object.fromEntries(
+        Object.entries(story).filter(([attr, val]) => (
+          ['title', 'logo_published', 'preview_published', 'published'].includes(attr)
+        ))
+      )
+    );
+    //console.log('storyObj after update: ', storyObj)
+  };
 
-      flash = function () {
-        var $flash = $('#story-header__flash'),
-            logoWasPublished = res.previousChanges.logo_published &&
-                               res.previousChanges.logo_published[1] &&
-                               'Logo published',
-            logoWasUnpublished = res.previousChanges.logo_published &&
-                                 res.previousChanges.logo_published[0] &&
-                                 'Logo unpublished',
-            previewWasPublished = res.previousChanges.preview_published &&
-                                  res.previousChanges.preview_published[1] &&
-                                  'Preview published',
-            previewWasUnpublished = res.previousChanges.preview_published &&
-                                    res.previousChanges.preview_published[0] &&
-                                    'Preview unpublished',
-            storyWasPublished = res.previousChanges.published &&
-                                res.previousChanges.published[1] &&
-                                'Story published',
-            storyWasUnpublished = res.previousChanges.published &&
-                                  res.previousChanges.published[0] &&
-                                  'Story unpublished',
-            flashIsPresent = logoWasPublished || logoWasUnpublished ||
-                             previewWasPublished || previewWasUnpublished ||
-                             storyWasPublished || storyWasUnpublished;
+  const showFlash = () => {
+    const flash = document.querySelector('.story-header__flash');
+    
+    /**
+      *  in the event there are two changes (e.g. logo published and story published),
+      *  limit flash to publish state / google ads
+      */
+    if (publishStateChanged) {
+      $table.DataTable().ajax.reload(() => {});
+      flash.classList.add('alert', `alert-${gadsErrors ? 'warning' : 'success'}`);
+      flash.innerHTML = `
+        <ul class="fa-ul">
+          <li>
+            <strong><i class="fa fa-fw fa-check"></i></strong>&nbsp;&nbsp;
+            <p>${publishStateChanged} successfully</p>
+          </li>
+          <li>
+            <strong><i class="fa fa-fw ${gadsErrors ? 'fa-warning' : 'fa-check'}"></i></strong>&nbsp;&nbsp;
+            <p>
+              ${gadsErrors ?
+                `Errors when ${storyWasPublished ? 'creating' : 'removing'} Promoted Story` :
+                `Promoted Story ${storyWasPublished ? 'created' : 'removed'} successfully`
+              }
+            </p>
+          </li>
+        </ul>
+      `.trim();
+    } else if (previewStateChanged) {
+      flash.classList.add('alert',  'alert-success');
+      flash.innerHTML = `
+        <ul class="fa-ul">
+          <li>
+            <strong><i class="fa fa-fw fa-check"></i></strong>&nbsp;&nbsp;
+            <p>${previewStateChanged} successfully</p>
+          </li>
+        </ul>
+      `.trim();
+    }
+    if (publishStateChanged || previewStateChanged) {
+      setTimeout(() => {
+        flash.classList.remove('alert', 'alert-success', 'alert-info', 'alert-warning', 'alert-danger');
+      }, 2500);
+    }
+  };
 
-        /**
-         *  in the event there are two changes (e.g. logo published and story published),
-         *  limit flash to publish state / google ads
-         */
-        if (storyWasPublished || storyWasUnpublished) {
-          $table.DataTable().ajax.reload(function () {
-          });
-          $('#story-header__flash')
-            .addClass('alert ' + (res.gadsErrors ? 'alert-warning' : 'alert-success'))
-            .html(
-              '<ul class="fa-ul">' +
-                '<li>' +
-                  '<strong><i class="fa fa-fw fa-check"></i></strong>&nbsp;&nbsp;' +
-                  '<p>' + (storyWasPublished || storyWasUnpublished) + ' successfully' + '</p>' +
-                '</li>' +
-                '<li>' +
-                  '<strong><i class="fa fa-fw ' + (res.gadsErrors ? 'fa-warning' : 'fa-check') + '"></i></strong>&nbsp;&nbsp;' +
-                  '<p>' +
-                    (res.gadsErrors ?
-                      'Errors when ' + (storyWasPublished ? 'creating' : 'removing') + ' Promoted Story' :
-                      'Promoted Story ' + (storyWasPublished ? 'created' : 'removed') + ' successfully') +
-                  '</p>' +
-                '</li>' +
-              '</ul>'
-            );
+  scrollTo(0,0);
 
-        } else if (logoWasPublished || logoWasUnpublished || previewWasPublished || previewWasUnpublished) {
-          $('#story-header__flash')
-            .addClass('alert alert-success')
-            .html(
-              '<ul class="fa-ul">' +
-                '<li>' +
-                  '<strong><i class="fa fa-fw fa-check"></i></strong>&nbsp;&nbsp;' +
-                  '<p>' + (logoWasPublished || logoWasUnpublished || previewWasPublished || previewWasUnpublished) + ' successfully</p>' +
-                '</li>' +
-              '</ul>'
-            );
-        }
+  // update the form with new a new s3 upload key
+  if (s3DirectPostFields) form.dataset.s3Data = JSON.stringify(s3DirectPostFields);
 
-        if (flashIsPresent) {
-          setTimeout(function () {
-            $flash.removeClass('alert alert-success alert-info alert-warning alert-danger')
-          }, 2500);
-        }
-      };
-
-  $('.hidden-link__copy')
-    .attr('title', 'Copy')
-    .tooltip('fixTitle')
-    .removeClass('disabled');
-
-  toggleFormDone($('#story-settings-form'), true)
-  flash();
+  // hiddenAdInputs.querySelectorAll('input').forEach(input => input.disabled = true);
+  hiddenLinkCopyBtn.setAttribute('title', 'Copy');
+  hiddenLinkCopyBtn.classList.remove('disabled');
+  $(hiddenLinkCopyBtn).tooltip('fixTitle');
+  toggleFormDone($(form), true);
+  showFlash();
   updateStory();
-
-  /**
-   *  update the hidden ad inputs
-   */
-  $hiddenAdInputs.find('input').prop('disabled', true);
-  if (res.newAds) {
-    $hiddenAdInputs
-      .find('[name*="topic"][name*="[id]"]')
-        .val(res.newAds.topic.id)
-        .end()
-      .find('[name*="topic"][name*="[ad_id]"]')
-        .val(res.newAds.topic.ad_id)
-      .find('[name*="retarget"][name*="[id]"]')
-        .val(res.newAds.retarget.id)
-      .find('[name*="retarget"][name*="[ad_id]"]')
-        .val(res.newAds.retarget.ad_id);
-
-  } else if (res.adsWereDestroyed) {
-    $hiddenAdInputs
-      .find('[name*="[id]"]').val('').end()
-      .find('[name*="[_destroy]"]').prop('checked', false);
+  if (newAds) {
+    hiddenAdInputs.querySelector('[name*="topic"][name*="[id]"]').value = newAds.topic.id;
+    hiddenAdInputs.querySelector('[name*="topic"][name*="[ad_id]"]').value = newAds.topic.ad_id;
+    hiddenAdInputs.querySelector('[name*="retarget"][name*="[id]"]').value = newAds.retarget.id;
+    hiddenAdInputs.querySelector('[name*="retarget"][name*="[ad_id]"]').value = newAds.retarget.ad_id;
+  } else if (adsWereDestroyed) {
+    hiddenAdInputs.querySelector('[name*="[id]"]').value = '';
+    hiddenAdInputs.querySelector('[name*="[_destroy]"]').checked = false;
   }
-
-}());
+})();

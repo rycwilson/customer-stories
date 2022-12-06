@@ -5,41 +5,7 @@
   data-customer-id=story.customer.id
   data-customer-slug=story.customer.slug }
 
-  #story-header__wrapper
-
-    #story-header__spacekeeper
-
-    #story-header
-      div
-        span
-          label Customer
-        span 
-          = story.customer.name
-        span
-          button.btn.btn-sm.btn-secondary {
-            type="button" 
-            data-toggle="modal" 
-            data-target="#edit-customer-modal" 
-            data-customer-id=story.customer.id
-            style="width: 100%" }
-            i.fa.fa-fw.fa-pencil.fa-fw
-            |&nbsp;&nbsp;Edit Customer&nbsp;
-      #story-header__title
-        span
-          label Story Title
-        span 
-          = story.title
-        span
-          = link_to( \
-              "#{story.csp_story_path}?preview=true",
-              { class: "btn btn-sm btn-secondary pull-right", 
-                style: "width: 100%", 
-                target: "_blank" }) do
-            i.glyphicon.glyphicon-new-window
-            |&nbsp;&nbsp;View Story&nbsp;
-      #story-header__flash class=('promote-enabled' if story.company.promote_tr?)
-        p Story published successfully
-        p Errors when creating Promoted Story
+  = render('stories/edit/story_header', { story: story })
 
   .tab-content
 

@@ -1,3 +1,22 @@
+@mixin absolute-centered {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%,-50%);
+}
+
+@mixin flex-centered {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+@mixin flex-align-center-justify-between {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
 @mixin max-lines($max) {
   overflow: hidden;
   text-overflow: ellipsis;

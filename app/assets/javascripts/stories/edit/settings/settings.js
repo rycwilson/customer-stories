@@ -55,7 +55,7 @@ function storiesEditSettingsListeners () {
       } else if (publishingPreview) {
         if ($('#story_summary').val() === '') {
           // flashDisplay('There is no Summary for this Story. Create one under Story Content.', 'danger');
-          $('#story-header__flash')
+          $('.story-header__flash')
             .addClass('alert alert-warning')
             .html(
               '<ul class="fa-ul">' +
@@ -66,7 +66,7 @@ function storiesEditSettingsListeners () {
               '</ul>'
             )
             setTimeout(function () {
-              $('#story-header__flash').removeClass('alert alert-warning')
+              $('.story-header__flash').removeClass('alert alert-warning')
             }, 2500);
           $previewInput.bootstrapSwitch('toggleState');
         } else {

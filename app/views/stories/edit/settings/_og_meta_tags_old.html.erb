@@ -21,7 +21,7 @@
         </div>
       </div>
 
-      <div class="og-image-upload form-group">
+      <div class="og-image form-group">
         <%= story_form.hidden_field(:og_image_width) %>
         <%= story_form.hidden_field(:og_image_height) %>
 
@@ -29,26 +29,26 @@
 
           <div style="display: flex; align-items: center; justify-content: space-between">
             <label style="margin-bottom: 0; font-weight: 400">Image</label>
-            <button type="button" class="og-image-upload__button btn">
+            <button type="button" class="og-image__button btn">
               <i class="fa fa-upload"></i>&nbsp;
               Upload
             </button>
           </div>
 
-          <div class="og-image-upload__fileinput fileinput <%= story.og_image_url.present? ? 'fileinput-exists' : 'fileinput-new' %>" 
+          <div class="og-image__fileinput fileinput <%= story.og_image_url.present? ? 'fileinput-exists' : 'fileinput-new' %>" 
               data-provides="fileinput">
           
             <div style="height: 100%; position: relative">
     
-              <div class="og-image-upload__thumbnail fileinput-new thumbnail form-control" data-trigger="fileinput">
+              <div class="og-image__thumbnail fileinput-new thumbnail form-control" data-trigger="fileinput">
                 <%= image_tag(RESPONSIVE_AD_LANDSCAPE_IMAGE_PLACEHOLDER, alt: 'og:image placeholder') %>
               </div>
 
-              <div class="og-image-upload__thumbnail fileinput-preview fileinput-exists thumbnail form-control" data-trigger="fileinput">
+              <div class="og-image__thumbnail fileinput-preview fileinput-exists thumbnail form-control" data-trigger="fileinput">
                 <%= image_tag(story.og_image_url, alt: 'og:image') if story.og_image_url.present? %>
               </div>
 
-              <div class="og-image-upload__errors">
+              <div class="og-image__errors">
                 <div>
                   <i class="fa fa-warning"></i>
                   <span class="help-block with-errors"></span>

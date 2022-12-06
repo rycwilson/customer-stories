@@ -58,12 +58,7 @@
               value="ENABLED" disabled>
       <% end %>
 
-
   = hidden_field_tag('settings', true)
-
-  / = story_form.fields_for(:success) do |success_form|
-  / = success_form.fields_for(:customer) do |customer_form|
-
 
   .form-group.required-input
     = story_form.label(:title, class: 'control-label col-sm-3')

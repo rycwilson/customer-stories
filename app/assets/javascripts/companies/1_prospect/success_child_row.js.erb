@@ -564,8 +564,10 @@ function successChildRowListeners () {
         .then(txt => eval(txt))
     })
     .on('hidden.bs.modal', '#edit-customer-modal', (e) => {
-      const modalBody = e.currentTarget.querySelector('.modal-body');
-      modalBody.removeChild(modalBody.firstChild);
+      document.getElementById('customer-form').remove();
+      for (const btn of document.querySelectorAll('[data-target="#edit-customer-modal"]')) {
+        if (btn.isSameNode(document.activeElement)) btn.blur();
+      }
     })
     .on('change', '[name="customer[show_name_with_logo]"]', (e) => {
       e.target.closest('.customer-logo').classList.toggle('with-customer-name');

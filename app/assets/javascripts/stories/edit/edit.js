@@ -1,4 +1,3 @@
-
 //= require ./validator
 //= require ./settings/settings
 //= require ./content/content
@@ -25,33 +24,17 @@ function initStoriesEdit (shownTabHandler) {
 }
 
 function storiesEditListeners () {
-
-  var checkForNewImage, checkImageLoaded;  // timer ids
-  var imageDidLoad = function ($img) {
-    if ($img[0].complete) {
+  let imageTimer;
+  const imageDidLoad = (img) => {
+    if (img.complete) {
+      clearInterval(imageTimer);
       // console.log('image did load')
-      $('.og-image-upload').attr('data-ready-to-validate', true)
-      clearInterval(checkImageLoaded);
-      $('#story-settings-form').validator('validate');
+      
+      // the data-validate attribute is to prevent premature validation (per bootstrap-validator)
+      img.closest('.form-group').querySelector('input[type="file"]').setAttribute('data-validate', 'true');
+      $('#story-settings-form').validator('update').validator('validate');
       return true;
-    } else {
-      // console.log('image did not load')
-    }
-  };
-
-   // bs validator will attempt to validate the image that existed prior to upload
-  // => check for new image before validating
-  var imageIsNew = function ($img) {
-    if ($img.attr('src') && $img.attr('src').includes('data:')) {
-      // console.log('image is new')
-      clearInterval(checkForNewImage);
-      if (!imageDidLoad($img)) {
-        checkImageLoaded = setInterval(imageDidLoad, 100, $img);
-      }
-      return true;
-    } else {
-      // console.log('image is not new')
-    }
+    } 
   };
 
   storiesEditSettingsListeners();
@@ -60,50 +43,36 @@ function storiesEditListeners () {
 
   $(document)
 
-    .on('click', '.og-image-upload__button', function () {
-      $(this).blur();
-      var $existingImage = $('.og-image-upload__thumbnail.fileinput-exists img');
-      var $newImage = $('.og-image-upload__thumbnail.fileinput-new img');
-      $existingImage.attr('src') ? $existingImage.click() : $newImage.click();
-      $('.og-image-upload').attr('data-ready-to-validate', '');
-    })
+    .on('click', '.og-image button', (e) => e.currentTarget.blur())
 
-    .on('validate.bs.validator', '#story-settings-form', function () {
+    .on('validate.bs.validator', '#story-settings-form', (e) => {
       // console.log('validate.bs.validator')
     })
 
-    .on('change.bs.fileinput', '.og-image-upload .fileinput', function (e) {
-      // console.log('change.bs.fileinput')
-      var $previewImage = $('.og-image-upload__thumbnail.fileinput-preview img');
-
-      $('.og-image-upload').removeClass('has-error')
-      $previewImage.css('visibility', 'hidden');  // validate first
-
-      if (!imageIsNew($previewImage)) {
-        checkForNewImage = setInterval(imageIsNew, 100, $previewImage);
+    .on('change.bs.fileinput', '.og-tags', (e) => {
+      if (e.target.classList.contains('fileinput')) {
+        // console.log('change.bs.fileinput')
+        const img = e.target.querySelector('img');
+        // img.classList.remove('has-error');
+        img.style.visibility = 'hidden';  // validate first
+        if (!imageDidLoad(img)) imageTimer = setInterval(imageDidLoad, 100, img)
       }
     })
 
     .on('click', '#curate a.all-stories', function (e) {
       // replacing state ensure turbolinks:false for the first tab state
-      window.history.replaceState(
-        { turbolinks: false }, null, window.location.pathname
-      );
-      window.history.pushState(
-        { turbolinks: true }, null, '/curate'
-      );
+      window.history.replaceState({ turbolinks: false }, null, window.location.pathname);
+      window.history.pushState({ turbolinks: true }, null, '/curate');
       $('a[href=".curate-stories"]').tab('show');
-      setTimeout(function() { window.scrollTo(0, 0); }, 1);
+      setTimeout(() => scrollTo(0, 0));
+
       // TODO: why does the tab switch fail if the below code is absent??
       $('#curate-filters .curator').val(
         $('#curate-filters .curator').children('[value="' + CSP.current_user.id.toString() + '"]').val()
       ).trigger('change', { auto: true });
-
     })
 
     .on('click', '#edit-story .nav a', function () {
       Cookies.set('csp-edit-story-tab', $(this).attr('href'));
     });
-
 }
-

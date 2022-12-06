@@ -203,11 +203,8 @@ ul.ad-logo-selections {
   }
 
   .uploading-spinner {
-    position: absolute;
-    top: 50%;
-    left: 50%;
+    @include absolute-centered;
     display: none;
-    transform: translate(-50%,-50%);
     font-size: 24px;
     z-index: 1;
   }
@@ -333,8 +330,8 @@ ul.ad-logo-selections {
   }
 
   .fileinput, .fileinput-preview {
-    margin: 0;  // override jasny bootstrap
     position: relative;
+    margin: 0;  // override jasny bootstrap
   }
 }
 

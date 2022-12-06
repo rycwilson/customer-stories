@@ -28,7 +28,7 @@ function promote () {
 
   // only want to validate new images => a url indicates an existing image
   const validateImageDimensions = ($fileInput, justChecking) => {
-    console.log('validating image dimensions...')
+    // console.log('validating image dimensions...')
 
     const $img = $fileInput.closest('.form-group').find('img');
     if (imageHasPersisted($img)) return false;
