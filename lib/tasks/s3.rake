@@ -71,15 +71,15 @@ namespace :s3 do
         &.captures
       return false if key.nil? || file_name.nil?
       object_key = "uploads/#{key}/#{file_name}"
-      puts "https://csp-production-assets.s3-us-west-1.amazonaws.com/#{object_key}"
-      # unless instance.update(
-      #   url_field => Rails.env.development? ?
-      #     "https://csp-dev-assets.s3.us-west-1.amazonaws.com/#{object_key}" :
-      #     "https://csp-production-assets.s3-us-west-1.amazonaws.com/#{object_key}"
+      # puts "https://csp-production-assets.s3-us-west-1.amazonaws.com/#{object_key}"
+      unless instance.update(
+        url_field => Rails.env.development? ?
+          "https://csp-dev-assets.s3.us-west-1.amazonaws.com/#{object_key}" :
+          "https://csp-production-assets.s3-us-west-1.amazonaws.com/#{object_key}"
 
-      # )
-      #   puts "error updating model: #{instance.errors.full_messages}"
-      # end
+      )
+        puts "error updating model: #{instance.errors.full_messages}"
+      end
     end
     User.all.each { |user| update_link(user, :photo_url) }
     Company.all.each { |company| [:logo_url, :adwords_logo_url].each { |field| update_link(company, field) }}
