@@ -63,19 +63,18 @@ namespace :s3 do
   desc 'update s3 upload links'
   task update_links: :environment do 
     def update_link(instance, url_field)
-      # key, file_name = instance[url_field]
-      #   &.match(/csp-production-assets\.s3(?:\.|-)us-west-1\.amazonaws\.com\/uploads\/([0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12})\/(.*)/)
-      #   &.captures
       key, file_name = instance[url_field]
-        &.match(/dzejzh0z08ew0.cloudfront.net\/uploads\/([0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12})\/(.*)/)
+        &.match(/csp-production-assets\.s3(?:\.|-)us-west-1\.amazonaws\.com\/uploads\/([0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12})\/(.*)/)
         &.captures
+      # key, file_name = instance[url_field]
+      #   &.match(/dzejzh0z08ew0.cloudfront.net\/uploads\/([0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12})\/(.*)/)
+      #   &.captures
       return false if key.nil? || file_name.nil?
       object_key = "uploads/#{key}/#{file_name}"
-      # puts "https://csp-production-assets.s3-us-west-1.amazonaws.com/#{object_key}"
       unless instance.update(
         url_field => Rails.env.development? ?
           "https://csp-dev-assets.s3.us-west-1.amazonaws.com/#{object_key}" :
-          "https://csp-production-assets.s3-us-west-1.amazonaws.com/#{object_key}"
+          "https://#{ENV['CLOUDFRONT_HOST_NAME']}/#{object_key}"
 
       )
         puts "error updating model: #{instance.errors.full_messages}"
