@@ -11,7 +11,7 @@
       .form-group
         .col-sm-12
           = story_form.label(:og_description, 'Description')
-          = story_form.text_area(:og_description, class: 'form-control', rows: 2, placeholder: 'og:description')
+          = story_form.text_area(:og_description, class: 'form-control', rows: 3, placeholder: 'og:description')
 
       .form-group.og-image.fileinput.fileinput-exists data-provides="fileinput"
         = story_form.hidden_field(:og_image_width)
@@ -52,4 +52,4 @@
       .form-group
         .col-sm-12
           = story_form.label(:og_image_alt, 'Image Description')
-          = story_form.text_area(:og_image_alt, class: 'form-control', rows: 2, placeholder: 'og:image:alt')
+          = story_form.text_area(:og_image_alt, class: 'form-control', rows: 3, placeholder: 'og:image:alt')
