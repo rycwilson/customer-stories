@@ -558,8 +558,15 @@ function successChildRowListeners () {
     // Customer form listeners
     .on('click', 'button[data-target="#edit-customer-modal"]', (e) => {
       e.stopImmediatePropagation();   // prevent row group sorting
-      fetch(`/customers/${e.currentTarget.dataset.customerId}/edit.js`)
-        .then(res => res.text())
+
+      // setting X-Requested-With allows the js request without an InvalidCrossOriginRequest error  
+      // https://api.rubyonrails.org/classes/ActionController/RequestForgeryProtection.html
+      // see bottom answer: https://stackoverflow.com/questions/29310187/rails-invalidcrossoriginrequest
+      fetch(`/customers/${e.currentTarget.dataset.customerId}/edit`, {
+        headers: {
+          'X-Requested-With': 'XMLHttpRequest',
+        }
+      }).then(res => res.text())
         .then(txt => eval(txt))
     })
     .on('hidden.bs.modal', '#edit-customer-modal', (e) => {

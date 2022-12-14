@@ -1,11 +1,6 @@
 class CustomersController < ApplicationController
 
-  respond_to(:html, :js, :json)
-  # Disable forgery protection in order to get a js response and work around this:
-  # ActionController::InvalidCrossOriginRequest - Security warning: 
-  #   an embedded <script> tag on another site requested protected JavaScript.
-  # TODO: why is this necessary when requesting from the same domain?
-  protect_from_forgery(except: :edit)
+  # respond_to(:html, :js, :json)
 
   def edit
     @customer = Customer.find(params[:id])

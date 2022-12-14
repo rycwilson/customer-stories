@@ -245,6 +245,8 @@ class ContributionsController < ApplicationController
 
     elsif params[:completed]
       @contribution.update(contribution_params)
+      # TODO: respond_with sends an empty response - why?
+      # https://github.com/heartcombo/responders/issues/154
       respond_to do |format|
         format.json do
           render(json: @contribution.to_json(only: [:id, :status], methods: [:display_status]))

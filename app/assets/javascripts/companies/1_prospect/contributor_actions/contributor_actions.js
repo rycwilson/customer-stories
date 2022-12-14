@@ -21,7 +21,7 @@ function contributorActionsListeners () {
         const modal = document.querySelector('.contributions-modal');
         const modalTitle = modal.querySelector('.modal-title');
         const modalBody = modal.querySelector('.modal-body');
-        [modalTitle, modalBody].forEach(el => el.replaceChildren());
+        for (const el of [modalTitle, modalBody]) el.replaceChildren();
         modalTitle.insertAdjacentHTML(
           'afterbegin', `Contribution &#8212; submitted ${formattedDate(contribution.submitted_at)}`
         );
@@ -61,7 +61,7 @@ function contributorActionsListeners () {
     // const $tdStatus = $row.find('td.status');
     const newStatus = `${rowData.status.includes('contribution') ? 'contribution' : 'feedback'}_completed`;
     const csrfToken = document.querySelector('[name="csrf-token"]').content;
-    fetch(`/contributions/${rowData.id}.json?completed=true`, { 
+    fetch(`/contributions/${rowData.id}?completed=true`, { 
       method: 'PATCH',
       headers: {
         'Content-Type': 'application/json',
@@ -71,9 +71,9 @@ function contributorActionsListeners () {
     })
       .then(res => res.json())
       .then(contribution => {
-        [dt, dtOther].filter(_dt => _dt).forEach(_dt => {
-          _dt.row(`[data-contribution-id="${contribution.id}"]`).data(Object.assign({}, rowData, contribution))
-        });
+        for (const _dt of [dt, dtOther]) {
+          if (_dt) _dt.row(`[data-contribution-id="${contribution.id}"]`).data(Object.assign({}, rowData, contribution));
+        };
         //     $tdStatus.find('i').toggle();
         //     setTimeout(function () {
         //       $tdStatus.find('i').toggle();
