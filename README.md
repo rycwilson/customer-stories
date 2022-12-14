@@ -187,11 +187,15 @@ There were some issues with caching when upgrading to Rails 6. To minimize compl
 
 <a name="aws-s3"></a>
 
-#### AWS S3
-- permissions
-- adding subdomains to CORS list (todo: automate this)
-- separate buckets for development and production
-- user uploads are in `uploads/`
+#### AWS S3/Cloudfront
+- [Console](https://us-west-1.console.aws.amazon.com/console/home?region=us-west-1) - root user is `@administrator@customerstories.net`
+- A separate user `csp-user` is used to generate credentials for interacting with the S3 bucket from the application. See the [IAM Management Console](https://us-east-1.console.aws.amazon.com/iamv2/home?region=us-east-1#/users).
+- In the [production S3 bucket](https://s3.console.aws.amazon.com/s3/buckets/csp-prod-assets?region=us-west-1&tab=objects&tab=permissions), note the bucket policy which is necessary for the [Cloudfront distribution](https://us-east-1.console.aws.amazon.com/cloudfront/v3/home?region=us-west-1#/distributions/E3F8UC3PNEEQNK/origins) to read from the bucket, and the CORS list which is necessary for user uploads and font requests.
+- Public access to the production S3 bucket (used by both `.org` and `.net`) is blocked, however since the development environment does not request assets through Cloudfront, public access to the [development S3 bucket](https://s3.console.aws.amazon.com/s3/buckets/csp-dev-assets?region=us-west-1&tab=permissions) must be turned on. The bucket policy ensures only requests from development domains are allowed.
+- For the Cloudfront distribution, the only additional steps beyond creating the distribution (and accepting default values) were 
+  - [Creating the origin access control](https://us-east-1.console.aws.amazon.com/cloudfront/v3/home?region=us-west-1#/originAccess) via [these steps](https://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/private-content-restricting-access-to-s3.html)
+  - [Editing the default behavior](https://us-east-1.console.aws.amazon.com/cloudfront/v3/home?region=us-west-1#/distributions/E3F8UC3PNEEQNK/behaviors/0/edit) to include Origin headers in the cache key (required for subdomains)
+
 
 <a name="sendgrid"></a>
 
