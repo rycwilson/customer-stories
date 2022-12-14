@@ -13,7 +13,6 @@ function successChildRowListeners () {
       winStory, winStoryText, winStoryCompleted,
       winStoryRecipientsSelectOptions,
       successPath = function (successId) { return '/successes/' + successId; },
-      contributionsDataPath = function (successId) { return '/successes/' + successId + '/contributions'; },
       expandedViewHeight = function ($tr, isEditMode) {
         var totalHeight = window.innerHeight,  // the total height available
             childRowPadding = parseInt($('tr.shown').next().children().css('padding-top'), 10) +
@@ -621,29 +620,18 @@ function successChildRowListeners () {
 
       } else {
         toggleButton.children().toggle();  // caret icons
-        $.when(
-          $.ajax({
-            url: successPath(successId),
-            method: 'get',
-            dataType: 'json'
-          }),
-          $.ajax({
-            url: contributionsDataPath(successId),
-            method: 'get',
-            data: { win_story: true },
-            dataType: 'json'
-          })
-        )
-          .done(function (res1, res2) {
-            // console.log(res1[0])
-            contributionsData = res2[0];
-            // console.log(res2[0])
-            renderWinStory(res1[0].win_story_html, res1[0].win_story_completed);
+
+        Promise.all([
+          fetch(`/successes/${successId}.json`).then(res => res.json()),
+          fetch(`/successes/${successId}/contributions.json?win_story=true`).then(res => res.json())
+        ])
+          .then(([success, contributionsData]) => {
+            renderWinStory(success.win_story_html, success.win_story_completed);
             initWinStoryRecipientsSelect(
-              res1[0].win_story_recipients_select_options,
+              success.win_story_recipients_select_options,
               contributionsData.invitation_templates
             );
-          })
+          });
 
         dt.row($tr).child(
           _.template($('#success-child-row-template').html())({

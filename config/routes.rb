@@ -110,10 +110,13 @@ Rails.application.routes.draw do
           # need to distinguish '/contributions/:id' routes from '/contributions/:token' routes;
           # hence :update is excluded above and added below
           # (note :edit always uses '/contributions/:token/:type' route
-          member { put :update, constraints: { id: /\d+/ } }
+          member do 
+            put :update, constraints: { id: /\d+/ }
+            patch :update, constraints: { id: /\d+/ }
+          end
         end
         resources :ctas, only: [:show, :create, :update, :destroy], shallow: true
-        resources :invitation_templates, except: [:index]
+        resources :invitation_templates
         member { put :update_gads }
         member { get :set_reset_gads }
         member { get '/promote-settings', to: 'companies#show' }

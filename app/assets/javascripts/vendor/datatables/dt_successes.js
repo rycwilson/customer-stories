@@ -153,7 +153,7 @@ function initSuccessesTable (dtSuccessesInit) {
             <span>${action} Contributors</span>
           </a>
         </li>
-      `.trim();
+      `;
     })();
     return `
       <a href="javascript:;" class="dropdown-toggle" data-toggle="dropdown">
@@ -185,7 +185,7 @@ function initSuccessesTable (dtSuccessesInit) {
                       <span>Customer Story ${section}</span>
                     </a>
                   </li>
-                `.trim();
+                `;
               }).join('') : `
             ${contributorsAction}
             <li role="separator" class="divider"></li>
@@ -205,6 +205,6 @@ function initSuccessesTable (dtSuccessesInit) {
           </a>
         </li>
       </ul>
-    `.trim();
+    `;
   }
 }

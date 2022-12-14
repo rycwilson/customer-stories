@@ -276,7 +276,7 @@ class Contribution < ApplicationRecord
   end
 
   def send_alert
-    UserMailer.contribution_alert(self).deliver_now
+    # UserMailer.contribution_alert(self).deliver_now
   end
 
   def set_contributor_id_for_new_success_referrer

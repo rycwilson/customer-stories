@@ -1,0 +1,26 @@
+.contributions-modal {
+  .modal-header, 
+  .modal-footer {
+    background: #f5f5f5;
+  }
+  
+  .contribution__title {
+    margin-bottom: 0.5rem;
+  }
+
+  .contribution__contributor {
+    margin-bottom: 1rem;
+
+    p {
+      margin-bottom: 0.25rem;
+
+      &:first-of-type {
+        font-weight: 600;
+      }
+    }
+  }
+
+  hr {
+    margin: 1.5rem 0;
+  }
+}

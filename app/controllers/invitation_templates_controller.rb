@@ -1,10 +1,18 @@
 
 class InvitationTemplatesController < ApplicationController
 
-  before_action() { @company = Company.find(params[:company_id]) }
-  before_action({ except: [:new, :create] }) do
+  before_action(:set_company)
+  before_action({ except: [:index, :new, :create] }) do
     unless params[:restore].present?
       @template = params[:id] == '0' ? nil : InvitationTemplate.find(params[:id])
+    end
+  end
+
+  def index
+    respond_to do |format|
+      format.json do 
+        render(json: @company.invitation_templates.to_json(only: [:id, :name])) 
+      end
     end
   end
 
@@ -66,6 +74,10 @@ class InvitationTemplatesController < ApplicationController
         { templates_questions_attributes: [:id, :invitation_template_id, :contributor_question_id, :_destroy] },
         { contributor_questions_attributes: [:id, :company_id, :question] }
       )
+  end
+
+  def set_company 
+    @company = Company.find_by_id(params[:company_id]) || Company.find_by_subdomain(request.subdomain)
   end
 
   def restore_templates (template_ids)

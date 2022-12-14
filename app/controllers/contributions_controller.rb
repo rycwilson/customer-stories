@@ -244,19 +244,10 @@ class ContributionsController < ApplicationController
       render :confirm_opt_out_remove
 
     elsif params[:completed]
-      if @contribution.contribution.present?
-        @contribution.update(status: 'contribution_completed')
-      else
-        @contribution.udpate(status: 'feedback_completed')
-      end
+      @contribution.update(contribution_params)
       respond_to do |format|
         format.json do
-          render({
-            json: {
-              status: @contribution.status,
-              display_status: @contribution.display_status
-            }
-          })
+          render(json: @contribution.to_json(only: [:id, :status], methods: [:display_status]))
         end
       end
 
@@ -275,9 +266,7 @@ class ContributionsController < ApplicationController
 
   def destroy
     @contribution.destroy
-    respond_to do |format|
-      format.json { render({ json: @contribution.to_json({ only: [:id] }) }) }
-    end
+    head(:ok)
   end
 
   def confirm
