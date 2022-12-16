@@ -101,7 +101,7 @@ function initSuccessesTable (dtSuccessesInit) {
             </span>
           </td>
           <td colspan="1">
-            <button data-toggle="modal" data-target="#edit-customer-modal" data-customer-id="${customerId}">
+            <button class="edit-customer" type="button" data-customer-id="${customerId}">
               <i class="glyphicon glyphicon-pencil"></i>
             </button>
           </td>

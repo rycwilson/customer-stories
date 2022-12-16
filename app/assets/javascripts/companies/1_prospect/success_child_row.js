@@ -555,29 +555,7 @@ function successChildRowListeners () {
       $form.submit();
     })
 
-    // Customer form listeners
-    .on('click', 'button[data-target="#edit-customer-modal"]', (e) => {
-      e.stopImmediatePropagation();   // prevent row group sorting
-
-      // setting X-Requested-With allows the js request without an InvalidCrossOriginRequest error  
-      // https://api.rubyonrails.org/classes/ActionController/RequestForgeryProtection.html
-      // see bottom answer: https://stackoverflow.com/questions/29310187/rails-invalidcrossoriginrequest
-      fetch(`/customers/${e.currentTarget.dataset.customerId}/edit`, {
-        headers: {
-          'X-Requested-With': 'XMLHttpRequest',
-        }
-      }).then(res => res.text())
-        .then(txt => eval(txt))
-    })
-    .on('hidden.bs.modal', '#edit-customer-modal', (e) => {
-      document.getElementById('customer-form').remove();
-      for (const btn of document.querySelectorAll('[data-target="#edit-customer-modal"]')) {
-        if (btn.isSameNode(document.activeElement)) btn.blur();
-      }
-    })
-    .on('change', '[name="customer[show_name_with_logo]"]', (e) => {
-      e.target.closest('.customer-logo').classList.toggle('with-customer-name');
-    })
+    .on('click', 'button.edit-customer', editCustomer)
 
     .on('click', 'td.toggle-success-child', function () {
       var toggleButton = $(this),
@@ -685,4 +663,18 @@ function successChildRowListeners () {
       }
     });
 
+  // fetches a script that initializes the customer modal
+  function editCustomer(e) {
+    e.stopImmediatePropagation();   // prevent row group sorting
+  
+    // setting X-Requested-With allows the js request without an InvalidCrossOriginRequest error  
+    // https://api.rubyonrails.org/classes/ActionController/RequestForgeryProtection.html
+    // see bottom answer: https://stackoverflow.com/questions/29310187/rails-invalidcrossoriginrequest
+    fetch(`/customers/${e.currentTarget.dataset.customerId}/edit`, {
+      headers: {
+        'X-Requested-With': 'XMLHttpRequest',
+      }
+    }).then(res => res.text())
+      .then(txt => eval(txt));
+  }
 }

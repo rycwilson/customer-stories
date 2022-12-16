@@ -183,7 +183,7 @@
     }
     td:last-of-type {  // edit
       padding: 0;
-      button[data-target="#edit-customer-modal"] {
+      button.edit-customer {
         display: none;
         width: 100%;
         height: 100%;
@@ -207,7 +207,7 @@
     }
     &:hover {
       td:last-of-type {
-        button[data-target="#edit-customer-modal"] {
+        button.edit-customer {
           display: block;
         }
       }
