@@ -666,15 +666,32 @@ function successChildRowListeners () {
   // fetches a script that initializes the customer modal
   function editCustomer(e) {
     e.stopImmediatePropagation();   // prevent row group sorting
-  
+    const btn = e.currentTarget;
+    
+    // dynamically add and remove the spin behavior so that the page isn't full of perpetually spinning elements
+    const toggleSpinner = () => btn.lastElementChild.children[0].classList.toggle('fa-spin');
+    const loadingTimer = setTimeout(() => {
+      toggleSpinner();
+      btn.classList.add('still-loading');
+    }, 1000);
+    btn.classList.add('loading');
+    
     // setting X-Requested-With allows the js request without an InvalidCrossOriginRequest error  
     // https://api.rubyonrails.org/classes/ActionController/RequestForgeryProtection.html
     // see bottom answer: https://stackoverflow.com/questions/29310187/rails-invalidcrossoriginrequest
-    fetch(`/customers/${e.currentTarget.dataset.customerId}/edit`, {
+    fetch(`/customers/${btn.dataset.customerId}/edit`, {
       headers: {
         'X-Requested-With': 'XMLHttpRequest',
       }
-    }).then(res => res.text())
-      .then(txt => eval(txt));
+    }).then(res => {
+        clearTimeout(loadingTimer);
+        return res.text();
+      })
+      .then(txt => {
+        eval(txt);
+        btn.classList.remove('loading', 'still-loading');
+        toggleSpinner();
+      })
+      .catch(error => console.error(error));
   }
 }

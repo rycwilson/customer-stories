@@ -1,17 +1,15 @@
-
 #successes-table {
-  /**
-   * hide sorting icon for successes; doesn't presently work in light of row grouping
-   */
+  // hide sorting icon for successes; doesn't presently work in light of row grouping
   th[aria-label*="Customer Win"] {
     pointer-events: none;
-  }
-  th[aria-label*="Customer Win"]:after {
-    content: "" !important;
+
+    &:after {
+      content: "" !important;
+    }
   }
 
   td.status {
-    line-height: 1.6
+    line-height: 1.6;
   }
 
   td.toggle-success-child.disabled {
@@ -23,43 +21,56 @@
     max-width: 100%;  // don't allow to expand horizontally
     background-color: #f9f9f9;
     overflow-y: scroll;
-    p, & + .note-editor p {
+
+    p, 
+    & + .note-editor p {
       margin-bottom: 0;
     }
+
     &.expanded {
       // overflow-y: scroll;
     }
-    & .individual-contribution, & .group-contribution,
-    & + .note-editor .individual-contribution, & + .note-editor .group-contribution {
+
+    & .individual-contribution,
+    & .group-contribution,
+    & + .note-editor .individual-contribution,
+    & + .note-editor .group-contribution {
       // styles are set via <style> tag for Copy feature to work
     }
+
     & + .note-editor {
       margin-bottom: 0;
+      
       .note-toolbar {
         .note-para {
           .note-btn:nth-of-type(2) {
             border-top-right-radius: 3px;
             border-bottom-right-radius: 3px;
           }
+
           // don't need paragraph alignment options
           .btn-group {
             display: none;
           }
         }
+
         .summernote-custom.contributions {
           right: -107px;
         }
       }
+
       .placeholder {
         background-color: #f2f2f2;
         line-height: 2;
         margin: 0 -10px 0 -10px;
         padding: 0 10px 0 10px;  // matches .note-editable padding
       }
+
       .note-customButton {
         float: right;
         padding-right: 38px;
         margin-right: 0;
+
         label.insert-contributions {
           position: absolute;
           left: -44px;
@@ -67,12 +78,14 @@
           transform: translate(0, -50%);
           margin-bottom: 0;
         }
+
         .note-btn-group:last-of-type {
           button {
             border-top-right-radius: 3px;
             border-bottom-right-radius: 3px;
           }
         }
+
         button.help {
           position: absolute;
           background: none;
@@ -81,10 +94,12 @@
           padding: 6px;
           top: 50%;
           transform: translate(0, -50%);
+
           i {
             font-size: 20px;
             color: #555;
           }
+
           &:hover {
             i {
               color: #222;
@@ -92,10 +107,12 @@
           }
         }
       }
+
       .summernote-custom {
         // max-height: set via js when editor is initiated
         overflow-x: hidden;
         overflow-y: scroll;
+
         li {
           a {
             white-space: nowrap;
@@ -103,9 +120,11 @@
             text-overflow: ellipsis;
             word-wrap: break-word;
           }
+
           &.dropdown-section {
             pointer-events: none;
             padding: 3px 10px;
+
             span:first-of-type {
               font-weight: bold;
             }
@@ -120,14 +139,17 @@
     .form-group.win-story {
       margin-bottom: 15px;
     }
+
     .form-group.submit {
       max-width: 100%;
     }
+
     button[type="submit"] {
       // make the widths explicit so width doesn't collapse when toggling icons
       &.mark-completed {
         width: 130.77px;
       }
+
       &.save-changes {
         width: 97.28px;
       }
@@ -140,17 +162,21 @@
     color: #555;
     padding: 0;
     margin-right: 6px;
+
     &:hover:not(:disabled) {
       color: #222;
     }
+
     &[class*="__expand"] {
       margin-right: 0;
       i {
         transform: rotate(-45deg);
       }
     }
+
     &[class*="__zapier"] {
       position: relative;
+
       img {
         height: 13px;
         position: absolute;
@@ -159,60 +185,94 @@
         transform: translate(0, -50%);
         opacity: 0.7;
       }
+
       span {
         padding-left: 17px;
       }
+
       &:hover img {
         opacity: 0.9;
       }
     }
+
     &:disabled {
       opacity: 0.5;
       cursor: not-allowed;
     }
+
     &:not(:only-of-type):not(:last-of-type) {  // only-of-type excludes the expand button
       border-right: 1px solid #ccc;
       padding-right: 10px;
     }
-
   }
 
   tr.group {
     td:first-of-type {  // customer name
       border-right-width: 0;
     }
+
     td:last-of-type {  // edit
+      position: relative;
       padding: 0;
-      button.edit-customer {
-        display: none;
-        width: 100%;
-        height: 100%;
-        background: none;
-        border: none;
-        cursor: pointer;
-        // unable to overcome top/bottom padding of 8px set by datatables, so...
-        margin-top: -8px;
-        padding-top: 8px;
-        margin-bottom: -8px;
-        padding-bottom: 8px;
-        i {
-          color: #777;
-        }
-        &:hover {
-          i {
-            color: #333;
-          }
-        }
-      }
-    }
-    &:hover {
-      td:last-of-type {
-        button.edit-customer {
-          display: block;
-        }
-      }
     }
 
+    &:hover {
+      button.edit-customer {
+        display: initial;
+      }
+    }
   }
 
+  button.edit-customer {
+    display: none;
+    position: absolute;
+    width: 100%;
+    background: none;
+    border: none;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    padding: 0;
+
+    > i,
+    > div {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      color: #777;
+    }
+
+    > div {
+      opacity: 0;
+      visibility: hidden;
+    }
+
+    &:hover > i,
+    > div > i {
+      color: #333;
+    }
+
+    &.loading {
+      display: initial;
+    }
+
+    &.still-loading {
+      > i,
+      > div {
+        transition: opacity 0.25s ease-in-out;
+      }
+
+      > i {
+        opacity: 0;
+        visibility: hidden;
+      }
+  
+      > div {
+        opacity: 1;
+        visibility: visible;
+      }
+    }
+  }
 }

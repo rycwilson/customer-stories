@@ -1,7 +1,5 @@
 class CustomersController < ApplicationController
 
-  # respond_to(:html, :js, :json)
-
   def edit
     @customer = Customer.find(params[:id])
     @s3_direct_post = set_s3_direct_post()
