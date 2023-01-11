@@ -62,7 +62,7 @@
 }
 
 .og-image__header {
-  @include flex-align-center-justify-between;
+  @include flex-row-center-between;
   
   label {
     margin-bottom: 0;

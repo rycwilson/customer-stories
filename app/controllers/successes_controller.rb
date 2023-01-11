@@ -58,6 +58,15 @@ class SuccessesController < ApplicationController
     )
   end
 
+  def edit
+    @success = Success.includes(
+        :invitation_template_identifiers, 
+        contributions_for_win_story: [:contributor], 
+        contributor_answers: [:contributor_question]
+      )
+      .find(params[:id])
+  end
+
   def create
     # puts "successes#create"
     if params[:zapier_create].present?
@@ -207,10 +216,16 @@ class SuccessesController < ApplicationController
   end
 
   def update
-    # puts success_params.to_h
     params[:success][:win_story_completed] = ActiveRecord::Type::Boolean.new.cast(success_params[:win_story_completed])
-    @success.update(success_params)
-    respond_to { |format| format.js {} }
+    respond_to do |format|
+      if @success.update(success_params)
+        format.json do 
+          render(json: @success, only: [:id, :win_story_completed], methods: [:display_status, :previous_changes])
+        end
+      else
+        format.json { render(json: { errors: @success.errors.full_messages }) }
+      end
+    end
   end
 
   def destroy
@@ -257,8 +272,6 @@ class SuccessesController < ApplicationController
       invitation_template_attributes: [:name, :company_id]
     )
   end
-
-
 
   # find a success previously created in this import (or in db) and return id
   def find_dup_success (success, success_lookup=nil)

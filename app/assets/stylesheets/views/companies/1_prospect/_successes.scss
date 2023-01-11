@@ -12,206 +12,18 @@
     line-height: 1.6;
   }
 
-  td.toggle-success-child.disabled {
+  td.toggle-child.disabled {
     pointer-events: none;
   }
 
-  #win-story-editor {
-    height: 200px;
-    max-width: 100%;  // don't allow to expand horizontally
-    background-color: #f9f9f9;
-    overflow-y: scroll;
 
-    p, 
-    & + .note-editor p {
-      margin-bottom: 0;
-    }
-
-    &.expanded {
-      // overflow-y: scroll;
-    }
-
-    & .individual-contribution,
-    & .group-contribution,
-    & + .note-editor .individual-contribution,
-    & + .note-editor .group-contribution {
-      // styles are set via <style> tag for Copy feature to work
-    }
-
-    & + .note-editor {
-      margin-bottom: 0;
-      
-      .note-toolbar {
-        .note-para {
-          .note-btn:nth-of-type(2) {
-            border-top-right-radius: 3px;
-            border-bottom-right-radius: 3px;
-          }
-
-          // don't need paragraph alignment options
-          .btn-group {
-            display: none;
-          }
-        }
-
-        .summernote-custom.contributions {
-          right: -107px;
-        }
-      }
-
-      .placeholder {
-        background-color: #f2f2f2;
-        line-height: 2;
-        margin: 0 -10px 0 -10px;
-        padding: 0 10px 0 10px;  // matches .note-editable padding
-      }
-
-      .note-customButton {
-        float: right;
-        padding-right: 38px;
-        margin-right: 0;
-
-        label.insert-contributions {
-          position: absolute;
-          left: -44px;
-          top: 50%;
-          transform: translate(0, -50%);
-          margin-bottom: 0;
-        }
-
-        .note-btn-group:last-of-type {
-          button {
-            border-top-right-radius: 3px;
-            border-bottom-right-radius: 3px;
-          }
-        }
-
-        button.help {
-          position: absolute;
-          background: none;
-          border: none;
-          right: 0;
-          padding: 6px;
-          top: 50%;
-          transform: translate(0, -50%);
-
-          i {
-            font-size: 20px;
-            color: #555;
-          }
-
-          &:hover {
-            i {
-              color: #222;
-            }
-          }
-        }
-      }
-
-      .summernote-custom {
-        // max-height: set via js when editor is initiated
-        overflow-x: hidden;
-        overflow-y: scroll;
-
-        li {
-          a {
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
-            word-wrap: break-word;
-          }
-
-          &.dropdown-section {
-            pointer-events: none;
-            padding: 3px 10px;
-
-            span:first-of-type {
-              font-weight: bold;
-            }
-          }
-        }
-      }
-
-    }
-  }
-
-  form[id*="success-form-"] {
-    .form-group.win-story {
-      margin-bottom: 15px;
-    }
-
-    .form-group.submit {
-      max-width: 100%;
-    }
-
-    button[type="submit"] {
-      // make the widths explicit so width doesn't collapse when toggling icons
-      &.mark-completed {
-        width: 130.77px;
-      }
-
-      &.save-changes {
-        width: 97.28px;
-      }
-    }
-  }
-
-  button[class*="win-story-actions"] {
-    background: none;
-    border: none;
-    color: #555;
-    padding: 0;
-    margin-right: 6px;
-
-    &:hover:not(:disabled) {
-      color: #222;
-    }
-
-    &[class*="__expand"] {
-      margin-right: 0;
-      i {
-        transform: rotate(-45deg);
-      }
-    }
-
-    &[class*="__zapier"] {
-      position: relative;
-
-      img {
-        height: 13px;
-        position: absolute;
-        left: 0;
-        top: 50%;
-        transform: translate(0, -50%);
-        opacity: 0.7;
-      }
-
-      span {
-        padding-left: 17px;
-      }
-
-      &:hover img {
-        opacity: 0.9;
-      }
-    }
-
-    &:disabled {
-      opacity: 0.5;
-      cursor: not-allowed;
-    }
-
-    &:not(:only-of-type):not(:last-of-type) {  // only-of-type excludes the expand button
-      border-right: 1px solid #ccc;
-      padding-right: 10px;
-    }
-  }
 
   tr.group {
     td:first-of-type {  // customer name
       border-right-width: 0;
     }
 
-    td:last-of-type {  // edit
+    td:last-of-type {  // edit customer
       position: relative;
       padding: 0;
     }
@@ -273,6 +85,368 @@
         opacity: 1;
         visibility: visible;
       }
+    }
+  }
+}   // #successes-table
+
+// success-form-(id) or a placeholder element (success-form
+.success-form {
+  display: flex;
+  padding: 0 0.5rem;
+
+  .win-story {
+    width: 600px;
+    flex-shrink: 0;
+  }
+
+  .btn-view,
+  .btn-compress,
+  .btn-save {
+    display: none;
+  }
+
+  &.is-edit-mode {
+    .btn-edit,
+    .btn-mark-completed {
+      display: none;
+    }
+    
+    .btn-view,
+    .btn-save {
+      display: initial;
+    }
+  }
+  
+  &.is-expanded {
+    .btn-expand {
+      display: none;
+    }
+    
+    .btn-compress {
+      display: initial;
+    }
+  }
+
+  &.has-changes {
+    .btn-mark-completed {
+      display: none;
+    }
+
+    .btn-save {
+      display: initial;
+    }
+  }
+
+  &.win-story-completed {
+    .btn-mark-completed {
+      display: none;
+    }
+  }
+
+  button[type="submit"] {
+    position: relative;
+
+    // pseudo element keeps the button size consistent while submitting/disabled
+    &:has(.btn__dots)::before {
+      content: attr(data-content);
+      visibility: hidden;
+    }
+
+    .btn__content,
+    .btn__dots {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+    }
+
+    .btn__dots {
+      @include flex-row-center;
+      visibility: hidden;
+      opacity: 0;
+
+      i {
+        opacity: 0;
+        font-size: 0.5em;
+        animation: dot 1s infinite;
+        margin: 0 0.35em;
+      }
+
+      :nth-child(1) {
+        animation-delay: 0.0s;
+      }
+
+      :nth-child(2) {
+        animation-delay: 0.1s;
+      }
+
+      :nth-child(3) {
+        animation-delay: 0.2s;
+      }
+      
+      @keyframes dot {
+        0% { opacity: 0; }
+        50% { opacity: 0; }
+        100% { opacity: 1; }
+      }
+    }
+
+    &.still-working {
+      .btn__content,
+      .btn__dots {
+        transition: visibility 1s step-end, opacity 1s step-end;
+      }
+
+      .btn__content {
+        visibility: hidden;
+        opacity: 0;
+      }
+  
+      .btn__dots {
+        visibility: visible;
+        opacity: 1;
+      }
+    }
+  }
+}
+
+.win-story__header {
+  @include flex-row-end-between;
+
+  label {
+    margin-bottom: 0.5rem;  // match button padding
+  }
+
+  div {
+    display: flex;
+    width: 18rem;
+    justify-content: space-around;
+  }
+
+  button {
+    display: inline-flex;
+    align-items: center;
+    background: none;
+    border: none;
+    color: #555;
+    padding: 0.5rem;
+
+    i {
+      margin-right: 0.4rem;
+
+      &.fa-expand,
+      &.fa-compress {
+        margin-right: 0.15rem
+      }
+    }
+  
+    &:hover:not(:disabled) {
+      color: #222;
+    }
+  
+    &.btn-expand,
+    &.btn-compress {
+      i {
+        transform: rotate(-45deg);
+      }
+    }
+  
+    &[class*="__zapier"] {
+      position: relative;
+  
+      img {
+        height: 13px;
+        position: absolute;
+        left: 0;
+        top: 50%;
+        transform: translate(0, -50%);
+        opacity: 0.7;
+      }
+  
+      span {
+        padding-left: 17px;
+      }
+  
+      &:hover img {
+        opacity: 0.9;
+      }
+    }
+  
+    &:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+  
+    &:not(:last-of-type) {
+      // border-right: 1px solid #ccc;
+    }
+  }
+}
+
+.win-story__footer {
+  text-align: right;
+}
+
+.success-form__contacts {
+  padding: 3rem 0 0 1.75rem;
+  flex-grow: 1;
+
+  p {
+    margin-bottom: 1.5rem;
+  }
+}
+
+// the .form-control is necessary for specifity / overriding bootstrap
+.win-story__summernote.form-control {
+  width: 100%;
+  height: 20rem;
+  // max-width: 100%;  // don't allow to expand horizontally
+  background-color: #f9f9f9;
+  overflow-y: scroll;
+  margin-bottom: 2rem;
+
+  &,
+  & + .note-editor {
+    margin-bottom: 2rem;
+
+    p {
+      margin-bottom: 0;
+    }
+  }
+
+  & + .note-editor {
+    .note-toolbar {
+      .note-para {
+        .note-btn:nth-of-type(2) {
+          border-top-right-radius: 3px;
+          border-bottom-right-radius: 3px;
+        }
+
+        // don't need paragraph alignment options
+        .btn-group {
+          display: none;
+        }
+      }
+    }
+
+    .placeholder {
+      background-color: #f2f2f2;
+      line-height: 2;
+      margin: 0 -10px 0 -10px;
+      padding: 0 10px 0 10px;  // matches .note-editable padding
+    }
+
+    .note-customButton {
+      float: right;
+      padding-right: 38px;
+      margin-right: 0;
+
+      label {
+        position: absolute;
+        left: -44px;
+        top: 50%;
+        transform: translate(0, -50%);
+        margin-bottom: 0;
+      }
+
+      .note-btn-group:last-of-type {
+        button {
+          border-top-right-radius: 3px;
+          border-bottom-right-radius: 3px;
+        }
+      }
+
+      .btn-help {
+        position: absolute;
+        top: 50%;
+        right: 0;
+        display: flex;
+        background: none;
+        border: none;
+        padding: 6px;
+        transform: translate(0, -50%);
+
+        i {
+          font-size: 20px;
+          color: #555;
+        }
+
+        &:hover {
+          i {
+            color: #222;
+          }
+        }
+      }
+    }
+
+    .dropdown-menu.summernote-custom {
+      // max-height: set via js when editor is initiated or resized
+      max-width: 440px;
+      min-height: 150px;
+      overflow-y: auto;
+
+      a,
+      li.dropdown-section {
+        @include truncate-text;
+        padding: 0.5em 1em;
+      }
+      
+      li.dropdown-section {
+        pointer-events: none;
+        font-size: 1.25rem;
+        color: #999;
+        font-weight: 600;
+      }
+    }
+  }
+
+  & .individual-contribution,
+  & .group-contribution,
+  & + .note-editor .individual-contribution,
+  & + .note-editor .group-contribution {
+    // styles are set via <style> tag for Copy feature to work
+  }
+
+  .spinner {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    opacity: 0;
+    font-size: 2rem;
+  }
+
+  &.loading {
+    .spinner {
+      opacity: 1;
+      transition: opacity 0.2s ease-in-out;
+    }
+  }
+}
+
+.popover.inserting-contributions {
+  min-width: 400px;
+
+  .custom-title {
+    @include flex-row-center-between;
+    background-color: #efefef;
+  }
+
+  .popover-title {
+    background-color: transparent;
+  }
+
+  button.close {
+    position: relative;
+    top: -3px;
+    right: 14px;
+  }
+
+  .popover-content {
+    padding: 15px;
+
+    :last-child {
+      margin-bottom: 0;
     }
   }
 }

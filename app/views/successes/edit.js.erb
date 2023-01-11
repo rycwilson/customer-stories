@@ -1,0 +1,516 @@
+(() => {
+  const { id: successId, name: successName } = <%= raw @success.to_json %>; 
+  const contributions = <%= raw @success.contributions_for_win_story.to_json(
+    include: { contributor: { only: [:id, :title], methods: [:full_name] }}
+  ) %>;
+  const answers = <%= raw @success.answers.map { |a| a.attributes.merge(question: a.question.attributes) }.to_json %>; 
+  const invitationTemplates = <%= raw @success.invitation_template_identifiers.to_json %>;
+  const table = document.getElementById('successes-table');
+  const dt = $(table).DataTable();
+  const tr = table.querySelector(`tr[data-success-id="${successId}"]`);
+  const defaultWinStoryHeight = '20rem';
+
+  // console.log(contributions)
+  // console.log(answers)
+  // console.log(invitationTemplates)
+
+  // elements to be defined when the child row is rendered
+  let childRow, form, note, emailModal;
+
+  // elements to be defined when the summernote editor is initialized
+  let codable, editable, editingArea, editor, statusbar, toolbar;
+
+  // conversion to markdown calls for removal of all whitespace and newlines
+  // ref https://stackoverflow.com/questions/1539367
+  jQuery.fn.htmlClean = jQuery.fn.htmlClean || function () {
+    this.contents().filter(function () {
+      if (this.nodeType != 3) {
+        $(this).htmlClean();
+        return false;
+      } else {
+        this.textContent = $.trim(this.textContent);
+        return !/\S/.test(this.nodeValue);
+      }
+    }).remove();
+    return this;
+  }
+
+  renderWinStory();
+  renderEmailModal();
+  attachObservers();
+  attachListeners();
+  // initWinStoryEmailEditor(); 
+  // initEmailRecipientsSelect();
+
+  function attachObservers() {
+    const childRowObserver = new MutationObserver((mutations, observer) => {
+      const closedChildRow = mutations[0].removedNodes[0];
+      if (closedChildRow && closedChildRow.isSameNode(childRow)) {
+        emailModal.remove(); 
+        document.removeEventListener('click', closePopover);
+        observer.disconnect();
+      }
+    });
+    childRowObserver.observe(table.querySelector('tbody'), { childList: true, subtree: false });
+  }
+
+  function attachListeners() {
+    form.querySelectorAll('.btn-expand, .btn-compress').forEach(el => el.addEventListener('click', resizeWinStory));
+    form.querySelector('.btn-edit').addEventListener('click', initWinStoryEditor);
+    form.querySelector('.btn-view').addEventListener('click', viewWinStory);
+    //form.querySelector('.btn-email').addEventListener('click', openWinStoryEmail);
+    form.querySelectorAll('button[type="submit"]').forEach(button => button.addEventListener('click', onBeforeSubmit));
+    enableSubmitOnChanges();
+    document.addEventListener('click', closePopover);
+  }
+
+  function renderWinStory() {
+    dt.row(tr).child("<%= j render('successes/win_story_form', { success: @success }) %>", 'child-row');
+    childRow = tr.nextElementSibling;
+    form = childRow.querySelector('form');
+    note = form.querySelector('.win-story__summernote');
+  };
+
+  function renderEmailModal() {
+    document.body.insertAdjacentHTML(
+      'beforeend', 
+      "<%= j render('companies/1_prospect/successes/win_story/win_story_email_modal', { success: @success }) %>"
+    )
+    emailModal = document.body.lastChild;
+    $(`#win-story-email-modal-${successId}`).modal({ show: false });
+    $(emailModal).on('show.bs.collapse hide.bs.collapse', '.add-template-recipients', (e) => (
+      e.target.previousElementSibling.querySelectorAll('i').forEach(i => i.classList.toggle('hidden'))
+    ))
+  };
+
+  function resizeWinStory(e) {
+    const isExpanded = e.currentTarget.classList.contains('btn-expand');
+    const isEditMode = form.classList.contains('is-edit-mode');
+    
+    // to resize, the editor must be destroyed and re-initialized
+    if (isEditMode) {
+      $(note).summernote('destroy');
+      initWinStoryEditor(isExpanded);  // this function will handle the 'is-expanded' class toggling
+    } else {
+      note.style.height = `${calcWinStoryHeight(isExpanded, isEditMode)}px`;
+      form.classList.toggle('is-expanded');
+    }
+    isExpanded ? tr.scrollIntoView() : childRow.scrollIntoView({ block: 'center' });
+  }
+
+  // use contenteditable instead of textarea because html can't be renderd in textarea
+  function initWinStoryEditor(isExpanded) {
+    form.classList.add('is-edit-mode'); // do this first so that the correct height is calculated
+    $(`#win-story__summernote--${successId}`)
+      .prop('contenteditable', 'true')
+      .summernote({
+        height: calcWinStoryHeight(isExpanded, true),
+        // dialogsInBody: true,
+        focus: true,
+        toolbar: [
+          ['font', ['bold', 'italic', 'underline']], //, 'clear']],
+          ['para', ['ul', 'ol', 'paragraph']],
+          ['customButton', ['contributionsDropdown', 'placeholdersDropdown']],
+          // code editor is handy in development
+          // ['view', <%= Rails.env.development? ? ['codeview'] : [] %>],
+        ],
+        buttons: {
+          contributionsDropdown: winStoryDropdownInitializer('contributions'),
+          placeholdersDropdown: winStoryDropdownInitializer('placeholders')
+        },
+        callbacks: {
+          // without this, insertion of a new line doesn't trigger input; critical for inserting placeholders
+          onInit: (summernote) => {
+            // convert jquery elements to native elements
+            // (note the wrapping parend syntax since these variables are already declared)
+            ({ codable, editable, editingArea, editor, statusbar, toolbar } = (
+              Object.fromEntries(Object.entries(summernote).map(([key, element]) => [key, element[0]]))
+            ));
+            const setMaxDropdownHeight = () => {
+              const dropdownMenus = toolbar.querySelectorAll('.dropdown-menu.summernote-custom');
+              for (ul of dropdownMenus) ul.style.maxHeight = `${0.95 * editable.clientHeight}px`;
+            }
+            setMaxDropdownHeight();
+            observeEditor(note, editable, setMaxDropdownHeight);
+            depopulatePlaceholders();
+            $(editable).on('click', (e) => $(note).summernote('saveRange'));
+            initCustomToolbar(toolbar.querySelector('.note-customButton'));
+            tr.scrollIntoView();
+            isExpanded ? form.classList.add('is-expanded') : form.classList.remove('is-expanded');
+            form.querySelector('.btn-copy').disabled = true;
+          },
+          onEnter: function (e) {
+            // $(this).summernote('pasteHTML', '<br></br>');
+            // e.preventDefault();
+          },
+          onFocus: function (e) {},
+          onPaste: function () {},
+          onChange: function (content) {}
+        }
+      });
+  }
+
+  function viewWinStory() {
+    const isExpanded = form.classList.contains('is-expanded');
+    const newHeight = isExpanded ? getComputedStyle(editor).height : defaultWinStoryHeight;
+    form.classList.remove('is-edit-mode');
+    if (form.classList.contains('has-changes')) {
+      // submit form
+    } else {
+
+    }
+    const html = populatePlaceholders($(note).summernote('code'));
+    $(note).summernote('destroy');
+    note.innerHTML = html;
+    note.style.height = newHeight;
+    note.contentEditable = 'false';
+    form.querySelector('.btn-copy').disabled = false;
+    isExpanded ? tr.scrollIntoView() : childRow.scrollIntoView({ block: 'center' });
+  }
+
+  function openWinStoryEmail(e) {
+    const emailEditor = document.getElementById(`win-story-email-editor-${successId}`);
+    const winStoryHtml = $(note).data('summernote') ? $(note).summernote('code') : $(note).html();
+    // $(emailEditor).summernote('code', winStoryHtml);
+    emailEditor.replaceChildren();
+    emailEditor.insertAdjacentHTML('afterbegin', winStoryHtml);
+    $(`#win-story-email-modal-${successId}`).modal('show');
+  }
+
+  function initWinStoryEmailEditor() {
+    $(emailModal).find('.win-story-email-editor').summernote({
+      // focus: true,
+      toolbar: [
+        ['font', ['bold', 'italic', 'underline']], //, 'clear']],
+        ['para', ['ul', 'ol', 'paragraph']],
+      ],
+      callbacks: {
+        onInit: function (summernote) {
+        },
+        onChange: function (content) {
+          // what to do with changes??
+          // $('form[id*="success-form"]')
+          //   .find('button[type="submit"]').prop('disabled', false);
+          // $('input[type="hidden"][name="success[win_story_html]"]')
+          //   // .val(JSON.stringify(content));
+          //   .val(content);
+        }
+      }
+    });
+  }
+
+  function onBeforeSubmit(e) {
+    e.preventDefault();
+    e.stopImmediatePropagation();
+    const toggleChildBtn = tr.querySelector('td.toggle-child');
+    const submitBtn = e.currentTarget;
+    const editBtn = form.querySelector('.btn-edit');
+    const markedAsCompleted = submitBtn.classList.contains('btn-mark-completed');
+    const winStoryHtml = form.classList.contains('is-edit-mode') ? 
+      populatePlaceholders($(note).summernote('code')) : 
+      $(note).html();
+    const htmlInput = form.querySelector('[name="success[win_story_html]"]');
+    const textInput = form.querySelector('[name="success[win_story_text]"]');
+    const markdownInput = form.querySelector('[name="success[win_story_markdown]"]');
+    const winStoryCompletedInput = form.querySelector('[name="success[win_story_completed]"]');
+    const tempWrapper = document.createElement('div');
+
+    console.log('winStoryHtml', winStoryHtml);
+
+    // disallow toggling either the child row or view/edit mode
+    toggleChildBtn.classList.add('disabled');
+    editBtn.disabled = true;
+
+    // html input
+    htmlInput.value = winStoryHtml;    
+    
+    // text input
+    // add line breaks after paragraphs (summernote doesn't)
+    tempWrapper.innerHTML = winStoryHtml.replace(/<\/p>/g, "</p>\r\n");  
+    textInput.value = tempWrapper.textContent;
+
+    // markdown input
+    // preserve spaces around italicized text (htmlClean will have removed)
+    tempWrapper.innerHTML = winStoryHtml
+    markdownInput.value = $(tempWrapper).htmlClean()[0].innerHTML.replace(/<i>/, " <i>").replace(/<\/i>/, "<\/i> ");
+
+    if (markedAsCompleted) winStoryCompletedInput.value = 'true';
+
+    // this needs to be a jquery listener as long as using jquery-ujs instead of rails-ujs
+    $(form).one('ajax:complete', onFormResponse({ submitBtn, toggleChildBtn, editBtn }));
+
+    // the .submit method won't trigger a submit event, which rails-ujs needs for the remote:true form
+    form.requestSubmit();
+  }
+
+  function onFormResponse(buttons) {
+    const { submitBtn, toggleChildBtn, editBtn } = buttons;
+    const timer = setTimeout(() => submitBtn.classList.add('still-working'), 1000);
+    return (e, xhr, status, error) => {
+      // the 'disable-with' behavior will result in BOTH buttons being enabled upon completion of this callback
+      setTimeout(() => form.querySelector('.btn-save').disabled = true);
+      if (error) {
+      } else {
+        clearTimeout(timer);
+        const success = xhr.responseJSON;
+        console.log('res', success)
+        const winStoryCompletedChange = success.previous_changes.win_story_completed;
+        const winStoryWasCompleted = winStoryCompletedChange && !winStoryCompletedChange[0] && winStoryCompletedChange[1];
+        if (winStoryWasCompleted) {
+          console.log('winStoryWasCompleted')
+          dt.row(tr).data(Object.assign(dt.row(tr).data(), { display_status: success.display_status })).draw();
+          form.classList.add('win-story-completed');
+        } else {
+          setTimeout(() => submitBtn.disabled = true);
+        }
+        editBtn.disabled = false;
+        toggleChildBtn.classList.remove('disabled');
+        submitBtn.classList.remove('still-working');
+        form.classList.remove('has-changes');
+        enableSubmitOnChanges();
+      }
+    }
+  }
+
+  function enableSubmitOnChanges() {
+    form.addEventListener('input', (e) => {
+      form.classList.add('has-changes');
+      form.querySelector('.btn-save').disabled = false;
+    }, { once: true });
+  }
+
+  function initCustomToolbar(customToolbar) {
+    if (contributions.length === 0) customToolbar.querySelectorAll('.note-btn').forEach(btn => btn.disabled = true);
+    customToolbar.insertAdjacentHTML(
+      'beforeend', `
+        <label>Insert</label>
+        <button type="button" class="btn btn-help" title="Inserting Contributions">
+          <i class="fa fa-fw fa-question-circle-o"></i>
+        </button>
+      `
+    );
+    $(customToolbar.querySelector('.btn-help')).popover({
+      container: 'body',
+      html: true,
+      placement: 'left',
+      animation: false,
+      template: `
+        <div class="popover inserting-contributions" role="tooltip">
+          <div class="arrow"></div>
+          <div class="custom-title">
+            <h3 class="popover-title"></h3>
+            <button id="close-popover-${successId}" class="close" type="button" aria-label="Close">&times;</button>
+          </div>
+          <div class="popover-content"></div>
+        </div>
+      `,
+      content: `
+        <p>You can insert contributions in their original form or with a placeholder.</p>
+        <p>Placeholders are useful for organizing your document while in Edit mode, \
+but will preclude any changes to the underlying content.</p>
+        <p>Switch to View mode to see the inserted content.</p>
+      `,
+    });
+  }
+
+  function observeEditor(note, editable, setMaxDropdownHeight) {
+    let debounceTimer;
+    const resizeObserver = new MutationObserver(mutations => {
+      clearTimeout(debounceTimer);
+      debounceTimer = setTimeout(() => {
+        if (mutations[0].attributeName === 'style') {
+          const oldHeight = mutations[0].oldValue.match(/height:\s(?<height>\d+(\.\d+)?px);/).groups.height;
+          const newHeight = mutations[0].target.style.height
+          if (oldHeight !== newHeight) setMaxDropdownHeight();
+        }
+      }, 200); 
+    });
+    const editorWasDestroyed = (mutations) => (
+      mutations.some(m => m.attributeName === 'contenteditable' && m.oldValue === 'true')
+    );
+    const summernoteObserver = new MutationObserver((mutations, observer) => {
+      if (editorWasDestroyed(mutations)) {
+        observer.disconnect();
+        resizeObserver.disconnect();
+      }
+    });
+    resizeObserver.observe(editable, { attributes: true, attributeOldValue: true })
+    summernoteObserver.observe(note, { attributes: true, attributeOldValue: true });
+  }
+
+  function winStoryDropdownInitializer(type) {
+    return (context) => {
+      const ui = $.summernote.ui;
+      const buttonGroup = ui.buttonGroup([
+        ui.button({
+          className: `btn btn-default dropdown-toggle ${type}`,
+          //tooltip: 'Insert contributions',
+          data: { toggle: 'dropdown', placement: 'top' },
+          contents: (
+            `${type === 'contributions' ? 'Contributions' : 'Placeholders'}&nbsp;&nbsp;<span class="caret"></span>`
+          )
+          // tooltip: 'Insert a data placeholder'
+        }),
+        ui.dropdown({
+          className: `summernote-custom dropdown-menu-right ${type}`,
+          contents: type === 'contributions' ? 
+            "<%= j render('successes/win_story_dropdown_menu', { success: @success, type: 'contributions' }) %>" : 
+            "<%= j render('successes/win_story_dropdown_menu', { success: @success, type: 'placeholders' }) %>",
+          callback: ($dropdown) => {
+            $dropdown[0].querySelectorAll('a').forEach(link => {
+              link.addEventListener('click', (e) => {
+                const li = link.parentElement;
+                const isContributionsDropdown = li.parentElement.classList.contains('contributions');
+                const isPlaceholdersDropdown = li.dataset.placeholder;
+                let pasteHtml;
+                if (isContributionsDropdown && li.dataset.contributionId) {
+                  pasteHtml = individualContributionTemplate(li.dataset.contributionId);
+                } else if (isContributionsDropdown && li.dataset.questionId) {
+                  pasteHtml = groupContributionTemplate(li.dataset.questionId);
+                } else if (isPlaceholdersDropdown) {
+                  pasteHtml = li.dataset.placeholder; 
+                }
+                $(note).summernote('restoreRange');   // restore cursor position
+                $(note).summernote('pasteHTML', pasteHtml)
+                $(note).summernote('saveRange');  // save cursor position
+              });
+            });
+          }
+        })
+      ]);
+      return buttonGroup.render();   // return button as jquery object
+    }
+  }
+
+  function initEmailRecipientsSelect() {
+    $(`#win-story-email-modal-${successId} [name="win_story_email[recipients]"]`).select2({
+      theme: "bootstrap",
+      tags: true,
+      data: success.win_story_recipients_select_options,
+      placeholder: 'Add Recipients',
+    });
+  }
+
+  function modifyEmailRecipients(e) {
+    const contributors = $('#prospect-contributors-table').DataTable().rows().data().toArray();
+    const templateId = e.target.value;
+    const successId = $('tr.shown').data('success-id');
+    const recipientIds = $('select[name="win_story_email[recipients]"]').val();
+    const templateContributorIds = contributors
+      .filter(contribution => {
+        const template = contribution.invitation_template;
+        return template && template.id && (contribution.successId === successId);
+      })
+      .map(contribution => contribution.contributor.id.toString());  //  select2 wants a string
+    const newRecipientIds = e.target.checked ? 
+      new Set([...recipientIds, ...templateContributorIds]) :
+      recipientIds.filter(id => templateContributorIds.indexOf(id) === -1);
+    $('select[name="win_story_email[recipients]"]').val(recipientIds).trigger('change.select2');
+  }
+
+  function populatePlaceholders(html) {
+    const wrapper = document.createElement('div');
+    wrapper.innerHTML = html;
+    [...wrapper.getElementsByClassName('placeholder')].forEach(placeholderEl => {
+      placeholderEl.outerHTML = placeholderEl.dataset.questionId ?
+        groupContributionTemplate(placeholderEl.dataset.questionId, placeholderEl) :
+        individualContributionTemplate(placeholderEl.dataset.contributionId, placeholderEl);
+    });
+    return wrapper.innerHTML;
+  }
+
+  function depopulatePlaceholders() {
+    [...editable.getElementsByClassName('group-contribution'), ...editable.getElementsByClassName('individual-contribution')]
+      .forEach(population => {
+        if (population.dataset.placeholder) population.outerHTML = population.dataset.placeholder;
+      });
+  }
+
+  function groupContributionTemplate(questionId, placeholderEl) {
+    let questionText;
+    answers.some(answer => {
+      if (answer.question.id == questionId) {
+        questionText = answer.question.question;
+        return true;
+      }
+    });
+    const qAnswers = answers.filter(answer => answer.question.id == questionId);
+    const answerTemplate = (answer) => {
+      const contribution = contributions.find(c => c.id == answer.contribution_id);
+      return `
+        <li>
+          <p>${contribution.contributor.full_name}</p>
+          <p>${contribution.contributor.title}</p>
+          <p><i>${answer.answer}</i></p>
+        </li>
+      `;
+    };
+    return `
+      <div
+        class="group-contribution"
+        data-question-id="${questionId}"
+        ${placeholderEl ? `data-placeholder="${placeholderEl.outerHTML.replace(/"/g, "'")}"` : ''}>
+        <p>${questionText}</p>
+        ${qAnswers.length > 0 ?
+          `<ul>${qAnswers.map(answerTemplate).join('')}</ul>` :
+          '<div style="color:#d11302">No answers to this question</div>'
+        }
+      </div><br>
+    `;
+  }
+
+  function individualContributionTemplate(contributionId, placeholderEl) {
+    const contribution = contributions.find(c => c.id == contributionId);
+    const cAnswers = answers.filter(a => a.contribution_id == contributionId);
+    const questionAnswerTemplate = (answer) => {
+      return !answer.answer ? 
+        [] : `
+        <li>
+          <p>${answer.question.question}</p>
+          <p><i>${answer.answer}</i></p>
+        </li>
+      `;
+    }
+    return `
+      <div 
+        class="individual-contribution" 
+        data-contribution-id="${contributionId}" 
+        ${placeholderEl ? `data-placeholder="${placeholderEl.outerHTML.replace(/"/g, "'")}"` : ''}">
+        <p>${contribution.contributor.full_name}</p>
+        <p>${contribution.contributor.title}</p>
+        ${cAnswers.length > 0 ?
+          `<ul>${cAnswers.flatMap(questionAnswerTemplate).join('')}</ul>` :
+          '<div style="color:#d11302">No answers from this contributor</div>'
+        }
+      </div><br>
+    `;
+  }
+
+  function calcWinStoryHeight(isExpanded, isEditMode) {
+    // these values can't be calculated until the editor is initialized, so just hard code them for now
+    const summernoteToolbarHeight = 42; // childRow.querySelector('.note-toolbar');
+    const summernoteResizebarHeight = 20; // childRow.querySelector('.note-resizebar');
+    const chromeHeight = isEditMode ? summernoteToolbarHeight + summernoteResizebarHeight : 0;
+    if (isExpanded) {
+      const headerHeight = childRow.querySelector('.win-story__header').clientHeight;
+      const footerHeight = childRow.querySelector('.win-story__footer').clientHeight;
+      const gapHeight = [
+        getComputedStyle(childRow.firstElementChild).paddingTop, 
+        getComputedStyle(childRow.firstElementChild).paddingBottom,
+        getComputedStyle(note).marginBottom
+      ].reduce((totalGapHeight, segmentHeight) => totalGapHeight + parseInt(segmentHeight, 10), 0);
+      const reservedHeight = tr.clientHeight + gapHeight + headerHeight + footerHeight + chromeHeight;
+      return window.innerHeight - reservedHeight;
+    } else {
+      // convert default height specified in rem to px
+      return (
+        parseInt(getComputedStyle(document.documentElement).fontSize, 10) * parseInt(defaultWinStoryHeight, 10) 
+        - chromeHeight
+      );
+    }
+  }
+
+  function closePopover(e) {
+    if (e.target.id == `close-popover-${successId}`) toolbar.querySelector('.note-customButton .btn-help').click();
+  }
+})()

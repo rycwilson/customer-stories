@@ -192,10 +192,10 @@ function prospectListeners () {
       })
 
     // close a child row
-    .on('click', 'div.success-child-row button[type="reset"], ' +
-                 'div.contributor-child-row button[type="reset"]', function () {
-        $(this).closest('tr').prev().find('td.toggle-success-child, td.toggle-contributor-child').trigger('click');
-      })
+    // .on('click', 'div.success-child-row button[type="reset"], ' +
+    //              'div.contributor-child-row button[type="reset"]', function () {
+    //     $(this).closest('tr').prev().find('#successes-table td.toggle-child, [id*="contributors-table"] td.toggle-contributor-child').trigger('click');
+    //   })
 
     // validate form inputs
     .on('change',

@@ -1,0 +1,70 @@
+= form_with( \
+    model: success,
+    remote: true,
+    format: :json,
+    html: { \
+      id: "success-form-#{success.id}",
+      class: "success-form #{'win-story-completed' if success.win_story_completed?}" }) do |form|
+  
+  - %i(win_story_html win_story_text win_story_markdown win_story_completed).each do |field|
+    = form.hidden_field(field)
+  
+  .win-story
+    .win-story__header
+      label for="win-story__summernote--#{success.id}" Win Story
+      div 
+        button.btn-expand type="button"
+          i.fa.fa-expand
+          span Max
+        button.btn-compress type="button"
+          i.fa.fa-compress 
+          span Min
+        button.btn-edit type="button"
+          i.fa.fa-pencil
+          span Edit
+        button.btn-view type="button"
+          i.fa.fa-search
+          span View
+        button.btn-copy type="button"
+          i.fa.fa-clipboard
+          span Copy
+        /button.btn-email type="button"
+          i.fa.fa-envelope-o 
+          span Email
+        /- if Rails.env.development?
+          button.win-story__pdf type="button" disabled=""
+            i class="fa fa-fw fa-file-pdf-o"
+            span PDF
+          button.win-story__zapier {
+            type="button" data-toggle="modal" data-target="#win-story-zapier-modal" style="position:relative" }
+            = image_tag('zapier-brand.png', alt: 'Zapier')
+            span Zapier
+    .win-story__summernote.form-control contenteditable="false" id="win-story__summernote--#{success.id}"
+      = success.win_story_html&.html_safe
+    .win-story__footer
+      - ['Mark as Completed', 'Save changes'].each do |button_content|
+        = button_tag( \
+            button_content,
+            class: "btn btn-sm btn-success #{button_content.include?('Mark') ? 'btn-mark-completed' : 'btn-save'}",
+            disabled: button_content.include?('Save'),
+            data: { \
+              content: button_content,
+              disable_with: "\
+                <div class=\"btn__content\">#{button_content}</div>\
+                <div class=\"btn__dots\">\
+                  <i class=\"fa fa-fw fa-circle\"></i>\
+                  <i class=\"fa fa-fw fa-circle\"></i>\
+                  <i class=\"fa fa-fw fa-circle\"></i>\
+                </div>".html_safe })
+
+  .success-form__contacts 
+    label for="curator_name" Curator
+    p = success.curator.full_name
+
+    - if success.referrer
+      label Referrer
+      p = "#{success.referrer['first_name']} #{success.referrer['last_name']}"
+
+    - if success.contact
+      label Customer Contact
+      p = "#{success.contact['first_name']} #{success.contact['last_name']}"

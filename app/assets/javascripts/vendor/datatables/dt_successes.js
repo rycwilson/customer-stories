@@ -17,8 +17,10 @@ function initSuccessesTable (dtSuccessesInit) {
       {
         data: null,
         render: (data, type, row) => `
-          <i class="fa fa-caret-right"></i>
-          <i class="fa fa-caret-down" style="display:none"></i>
+          <button type="button" class="btn">
+            <i class="fa fa-caret-right"></i>
+            <i class="fa fa-caret-down"></i>
+          </button>
         `
       },
       {
@@ -80,7 +82,7 @@ function initSuccessesTable (dtSuccessesInit) {
         orderable: false,
         searchable: false,
         createdCell: (td, cellData, rowData, row, col) => (
-          $(td).addClass(col === 0 ? 'toggle-success-child' : 'actions dropdown')
+          $(td).addClass(col === 0 ? 'toggle-child' : 'actions dropdown')
         )
       },
       { targets: [customerIndex, curatorIndex, storyIndex],  width: '0%' },  // hidden
@@ -112,7 +114,7 @@ function initSuccessesTable (dtSuccessesInit) {
     createdRow: function (row, data, index) {
       $(row).attr('data-customer-id', data.customer.id);
       $(row).attr('data-success-id', data.id);
-      $(row).children().eq(0).addClass('toggle-success-child');
+      $(row).children().eq(0).addClass('toggle-child');
       $(row).children().eq(1).attr('data-filter', data.id);
       $(row).children().eq(2).addClass('status');
       $(row).children().eq(3).addClass('actions dropdown');

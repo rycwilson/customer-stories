@@ -1,0 +1,27 @@
+li.dropdown-section
+  | Individual Contributions
+
+- success.contributions_for_win_story.each do |contribution|
+  - if type == 'contributions'
+    li data-contribution-id="#{contribution.id}"
+      a href="javascript:;" 
+        = contribution.contributor.full_name
+  - elsif type == 'placeholders'
+    li data-placeholder="<div class='placeholder' data-contribution-id='#{contribution.id}' contenteditable='false'>[Individual Contribution: #{contribution.contributor.full_name}]</div><br>"
+      a href="javascript:;"
+        = contribution.contributor.full_name
+
+li.divider role="separator"
+
+li.dropdown-section
+  | Group Contributions
+
+- success.answers.map { |answer| answer.question }.uniq { |question| question.id }.each do |question|
+  - if type == 'contributions'
+    li data-question-id="#{question.id}"
+      a href="javascript:;"
+        = question.question
+  - elsif type == 'placeholders'
+    li data-placeholder="<div class='placeholder' data-question-id='#{question.id}' contenteditable='false'>[Group Contribution: #{question.question}]</div><br>"
+      a href="javascript:;"
+        = question.question

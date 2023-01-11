@@ -41,7 +41,8 @@ function contributorChildRowListeners () {
             contribution: contribution,
             contributor: contribution.contributor,
             workflowStage: workflowStage
-          })
+          }),
+          'contributor-child-row'
         ).show();
         $trContribution.find('td.contributor-name > span').addClass('shown');
         $trContribution.addClass('shown active');

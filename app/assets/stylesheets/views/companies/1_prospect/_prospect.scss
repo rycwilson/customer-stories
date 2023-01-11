@@ -1,4 +1,3 @@
-
 @import 'successes';
 @import 'contributors';
 @import 'contributor_invitation_modal';
@@ -7,11 +6,9 @@
 @import 'bootbox_modals';
 
 #prospect {
-
   div[id*="table_wrapper"] {
     margin-top: 8px;
   }
-
 }
 
 .link-dialog {
@@ -23,8 +20,13 @@
   }
 }
 
-#successes-table, #prospect-contributors-table, #curate-contributors-table {
-  th.toggle-success-child, td.toggle-success-child, th.toggle-contributor-child, td.toggle-contributor-child {
+#successes-table, 
+#prospect-contributors-table, 
+#curate-contributors-table {
+  th.toggle-child, 
+  td.toggle-child, 
+  th.toggle-contributor-child, 
+  td.toggle-contributor-child {
     // padding necessary to override datatables css that adds padding-right: 30px to the th,
     // thus preventing text from centering horizontally
     padding: 8px;
@@ -33,30 +35,65 @@
     cursor: pointer;
     color: #666;
   }
-  // child rows
-  tr:not(.group) > td[colspan]:not(.dataTables_empty) {
-    padding: 20px 10px;
+
+  td.toggle-child {
+    position: relative;
+    padding: 0;
+
+    button {
+      position: absolute;
+      top: 0;
+      right: 0;
+      bottom: 0;
+      left: 0;
+      background-color: transparent;
+      padding: 0;
+
+      i:last-child {
+        display: none;
+      }
+    }
+  }
+
+  tr.dt-hasChild {
+    td.toggle-child button {
+      i:first-child {
+        display: none;
+      }
+
+      i:last-child {
+        display: initial;
+      }
+    }
+  }
+
+  // child rows (must be nested under table id selectors to override datatables)
+  td.child-row,
+  td.contributor-child-row {
+    padding: 1.75rem 1rem 2rem;
     background-color: #efefef;
     // border: 1px solid #08c;
+    // border-bottom: 3px solid #dfdfdf;
+  
     .form-group {
       width: 100%;
       margin-bottom: 20px;
+  
       .form-control {
         width: 100%;
         font-size: 13px;
       }
     }
+  
     .col-sm-3 {
       padding-left: 0;
     }
+  
     .col-sm-9 {
       padding: 0;
     }
   }
-  tr.group,
-  tr.group:hover {
-    // background-color: #ddd;
-  }
+
   td.status {
     // this ensures newlines will be respected
     // ref: https://stackoverflow.com/questions/10937218
@@ -64,37 +101,47 @@
   }
 }
 
-#new-success-modal, #new-contributor-modal {
+#new-success-modal, 
+#new-contributor-modal {
   &#new-success-modal.in {
     overflow-y: scroll;  // force scroll so create/import are consistent
   }
+
   .modal-header {
     .close {
       font-size: 26px;
     }
   }
+
   .modal-body {
     padding: 25px 20px;
+
     .new-records {
       display: none;
       min-height: 117px;  // matches the file upload view
+
       label {
         margin-bottom: 10px;
       }
+
       li {
         margin-bottom: 5px;
       }
     }
+
     label:not(.radio-inline) {
       padding-right: 5px;
     }
+
     .form-group {
       span.help-block {
         display: none;
       }
     }
+
     .form-group.has-error, .form-group.has-warning {
       margin-bottom: 0;
+
       span.help-block {
         display: block;
       }
@@ -113,6 +160,7 @@
         background-color: #efebd7;
       }
     }
+
     .form-group.has-error {
       .input-group-addon:hover {
         color: #a94442;
@@ -120,7 +168,9 @@
         background-color: #e0cfcf;
       }
     }
-    .create-contributor, .create-referrer {
+
+    .create-contributor, 
+    .create-referrer {
       background: #eee;
       .form-group:last-of-type {
         span.help-block {
@@ -128,10 +178,13 @@
         }
       }
     }
-    .create-contributor, .create-referrer.new-success {
+
+    .create-contributor, 
+    .create-referrer.new-success {
       margin: -68px -9px 16px -10px;
       padding: 68px 9px 9px 10px;
     }
+
     // this one doesn't have a bottom margin, hence the difference from above
     .create-referrer.new-contributor {
       margin: -43px -9px -4px -10px;
@@ -143,7 +196,6 @@
       font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
       padding-left: 12px;
     }
-
   }
 }
 
@@ -151,22 +203,28 @@
   .col-sm-3 {
     width: 23%;
   }
+
   .col-sm-9 {
     width: 77%
   }
+  
   .form-group.source {
     margin-bottom: 15px;
   }
+
   .form-group.csv-file {
     display: none;
     // margin-bottom: 15px;
+
     > * {
       // margin-top: 10px;
     }
+
     .fileinput {
       margin-bottom: 0;
       padding-bottom: 33px; // leaves space for .help-block
     }
+
     // ref: https://stackoverflow.com/questions/19695053
     .fileinput .form-control {
       margin-bottom: 0;
@@ -181,23 +239,30 @@
         color: #999;
       }
     }
+
     // fix for cursor:pointer not working on file inputs: https://stackoverflow.com/questions/572768
     label[for="csv-file-input"] {
       cursor: pointer;
       margin-bottom: 0;
       padding: 0;
+
       #csv-file-input {
         display: none;
       }
     }
   }
-  .form-group.csv-file.has-error, .form-group.csv-file.has-warning, .form-group.csv-file.has-success {
+
+  .form-group.csv-file.has-error, 
+  .form-group.csv-file.has-warning, 
+  .form-group.csv-file.has-success {
     .fileinput {
       padding-bottom: 0;
     }
   }
+
   .form-group.contact-email,
-  .form-group.win-story, .form-group.csv-file {
+  .form-group.win-story, 
+  .form-group.csv-file {
     margin-bottom: 0;
   }
 }
@@ -210,14 +275,17 @@
   }
 }
 
-.successes-header, .contributors-header {
+.successes-header, 
+.contributors-header {
   background-color: #efefef;
   margin: -7px 0 -6px 0;
   padding: 20px 0;
+
   .form-group {
     width: 100%;
     margin-bottom: 12px;
   }
+
   .checkbox-filters label {
     margin-bottom: 5px;
   }
@@ -226,11 +294,12 @@
     padding-right: 30px; // matches search box
     text-align: left;
   }
+
   select + span.select2 {
     // margin-bottom: 12px;
   }
+
   .select2-container {
     width: 100%;
   }
-
 }

@@ -8,7 +8,6 @@
 / include templates for both companies#show and stories#edit
 - content_for(:underscore_templates) do
   = render('companies/1_prospect//successes/successes_table_header_template')
-  = render('companies/1_prospect/successes/success_child_row_template')
   = render('companies/1_prospect/successes/win_story/note_insertion_dropdown_template')
   = render('companies/1_prospect/successes/win_story/individual_contribution_template')
   = render('companies/1_prospect/successes/win_story/group_contribution_template')
@@ -25,7 +24,6 @@
 / include modals for both companies#show and stories#edit
 = render('customers/customer_modal', { company: @company })
 = render('companies/1_prospect/successes/new_success_modal', { company: @company })
-= render('companies/1_prospect/successes/win_story/win_story_email_modal', { company: @company })
 = render('companies/1_prospect/successes/win_story/win_story_zapier_modal', { company: @company })
 = render('companies/1_prospect/contributors/new_contributor_modal', { company: @company })
 = render('companies/1_prospect/contributors/contribution_request_modal', { company: @company})

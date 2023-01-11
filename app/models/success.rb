@@ -32,10 +32,27 @@ class Success < ApplicationRecord
       where(status: 'contribution_submitted')
     end
   end
+  has_many(
+    :contributions_for_win_story, 
+    -> { 
+      joins(:contributor_answers)
+      .where.not(contributions: { contributor_answers: { id: nil } })
+      .select(:id, :success_id, :contributor_id, :invitation_template_id)
+      .distinct 
+    }, 
+    class_name: 'Contribution'
+  )
+
   # alias the association to user -> Success.find(id).contributors
   # note: contributor is an alias - see contribution.rb
   has_many :contributors, through: :contributions, source: :contributor
   has_many :invitation_templates, -> { distinct }, through: :contributions
+  has_many(
+    :invitation_template_identifiers, 
+    -> { select(:id, :name).distinct }, 
+    through: :contributions, 
+    source: :invitation_template
+  )
 
   # there is an issue using -> { distinct } here, I think due to there being a default order on ContributorQuestion
   # => works ok if .distinct method is used; see contributions#index

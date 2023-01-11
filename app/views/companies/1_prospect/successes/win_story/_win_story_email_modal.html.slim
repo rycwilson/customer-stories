@@ -1,0 +1,39 @@
+.modal.fade.win-story-email-modal id="win-story-email-modal-#{success.id}" role="dialog"
+  .modal-dialog role="document"
+    .modal-content
+
+      .modal-header
+        h4.modal-title 
+          i.fa.fa-fw.fa-envelope-o
+          | Customer Win Story
+
+      .modal-body
+        .form-horizontal
+          .form-group
+            label.col-sm-1.control-label To
+            .col-sm-11
+              select name="win_story_email[recipients]" multiple=""
+              span.help-block {
+                style="cursor: pointer" 
+                data-toggle="collapse" 
+                data-target="#add-template-recipients-#{success.id}" }
+                span Add by Invitation Template
+                |&nbsp;
+                i.fa.fa-fw.fa-chevron-right
+                i.fa.fa-fw.fa-chevron-down.hidden
+              .collapse.add-template-recipients id="add-template-recipients-#{success.id}"
+                - success.invitation_templates.select { |template| template.name != 'Customer' }.each do |template|
+                  div 
+                    label for="template-checkbox-#{template.id}"
+                      input type="checkbox" id="template-checkbox-#{template.id}" value="#{template.id}"
+                      |&nbsp;&nbsp;
+                      span 
+                        = template.name
+          .form-group
+            label.col-sm-1.control-label Subject
+            .col-sm-11
+              input.form-control name="win_story_email[subject]" value="#{success.name}"
+        .win-story-email-editor.form-control id="win-story-email-editor-#{success.id}" contenteditable="false"
+          // will be added when the modal is opened
+      
+      .modal-footer

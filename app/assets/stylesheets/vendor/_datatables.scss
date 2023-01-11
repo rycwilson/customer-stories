@@ -1,4 +1,3 @@
-
 table thead tr th,  
 table tfoot tr th {
   font-weight: 400;
@@ -68,10 +67,10 @@ table.dataTable {
   border-bottom-width: 1px;  // bootstrap 2px
 }
 
-.table.dataTable tbody tr.active td,
-.table.dataTable tbody tr.active th,
-.table.dataTable tbody tr.active:hover td,
-.table.dataTable tbody tr.active:hover th {
+.table.dataTable tbody .dt-hasChild td,
+.table.dataTable tbody .dt-hasChild th,
+.table.dataTable tbody .dt-hasChild:hover td,
+.table.dataTable tbody .dt-hasChild:hover th {
 	background-color: #e8ffff !important; // $nav-blue !important;
 }
 
@@ -130,7 +129,7 @@ td.status.dropdown, td.actions.dropdown {
   }
 
   // child row
-  tr.active:hover + tr:not(.group) > td[colspan]:not(.dataTables_empty) {
+  .dt-hasChild:hover + tr:not(.group) > td[colspan]:not(.dataTables_empty) {
     // border-color: #0095ff !important; // #0075b0
   }
 

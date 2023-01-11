@@ -44,7 +44,7 @@ function contributorActionsListeners () {
       .one('shown.bs.tab', 'a[href="#successes"]', () => {
         scrollTo(0,0);
         console.log($('#successes-table').find(`tr[data-success-id="${successId}"]`))
-        $('#successes-table').find(`tr[data-success-id="${successId}"] .toggle-success-child`).trigger('click');
+        $('#successes-table').find(`tr[data-success-id="${successId}"] .toggle-child button`).trigger('click');
       });
     $('a[href="#successes"]').tab('show');
   }
