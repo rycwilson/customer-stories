@@ -27,9 +27,7 @@
   }
 }
 
-ul[class*="image-library"],
-ul.ad-image-selections,
-ul.ad-logo-selections {
+ul:is([class*="image-library"], .ad-image-selections, .ad-logo-selections) {
   display: flex;
   flex-wrap: wrap;
   align-items: center;

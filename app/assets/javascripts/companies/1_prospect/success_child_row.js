@@ -49,7 +49,7 @@ function successChildRowListeners() {
   // fetches a script that initializes the customer modal
   function editCustomer(e) {
     e.stopImmediatePropagation();   // prevent row group sorting
-    const btn = e.currentTarget;
+    const btn = this;
     
     // dynamically add and remove the spin behavior so that the page isn't full of perpetually spinning elements
     const toggleSpinner = () => btn.lastElementChild.children[0].classList.toggle('fa-spin');
@@ -81,7 +81,7 @@ function successChildRowListeners() {
   function toggleChildRow(e) {
     const table = document.getElementById('successes-table');
     const dt = $(table).DataTable();
-    const td = e.currentTarget;
+    const td = this;
     const tr = td.parentElement;
     const success = dt.row(tr).data();
     const isShown = dt.row(tr).child.isShown();

@@ -84,7 +84,7 @@
   };
 
   function resizeWinStory(e) {
-    const isExpanded = e.currentTarget.classList.contains('btn-expand');
+    const isExpanded = this.classList.contains('btn-expand');
     const isEditMode = form.classList.contains('is-edit-mode');
     
     // to resize, the editor must be destroyed and re-initialized
@@ -202,8 +202,8 @@
   function onBeforeSubmit(e) {
     e.preventDefault();
     e.stopImmediatePropagation();
+    const submitBtn = this;
     const toggleChildBtn = tr.querySelector('td.toggle-child');
-    const submitBtn = e.currentTarget;
     const editBtn = form.querySelector('.btn-edit');
     const markedAsCompleted = submitBtn.classList.contains('btn-mark-completed');
     const winStoryHtml = form.classList.contains('is-edit-mode') ? 
