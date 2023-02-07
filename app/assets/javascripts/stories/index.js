@@ -12,19 +12,6 @@ function storiesIndex () {
   // for a sync load, this isn't necessary => server will provide pre select
   // but what about a turbolinks restore?
   // preSelectFilters(getQueryString('category'), getQueryString('product'));
-
-  // truncate story titles
-  $('.story-card__title').each(function () {
-    if ($(this).closest('.story-card').hasClass('story-card--card')) {
-      var $title = $(this).find('p');
-      while ($title.outerHeight() > $(this).height()) {
-        $title.text(function (index, text) {
-          return text.replace(/\W*\s(\S)*$/, '...');
-        });
-      }
-    }
-  });
-
 }
 
 function storiesIndexListeners () {
@@ -302,19 +289,7 @@ function updateGallery ($stories) {
       .append($stories)
       .hide()
       .show('fast', function () {
-        initGridPreviews();
-        
-        // truncate story titles
-        $('.story-card__title').each(function () {
-          if ($(this).closest('.story-card').hasClass('story-card--card')) {
-            var $title = $(this).find('p');
-            while ($title.outerHeight() > $(this).height()) {
-              $title.text(function (index, text) {
-                return text.replace(/\W*\s(\S)*$/, '...');
-              });
-            }
-          }
-        });
+        // initGridPreviews();
       });
   });
 }

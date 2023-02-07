@@ -44,23 +44,6 @@ function curateListeners () {
     .on('show.bs.tab', 'a[href=".curate-stories"]', function () {
       cancelLoading();
     })
-    .on('shown.bs.tab', 'a[href="#curate"], a[href=".curate-stories"]', function () {
-      // truncate story titles
-      // discussion: http://hackingui.com/front-end/a-pure-css-solution-for-multiline-text-truncation/
-      var truncateStoryTitles = function () {
-        $('.story-card__title').each(function () {
-          var $title = $(this).find('p');
-          while ($title.outerHeight() > $(this).height()) {
-            $title.text(function (index, text) {
-              return text.replace(/\W*\s(\S)*$/, '...');
-            });
-          }
-        });
-      };
-      truncateStoryTitles();
-      // $('a[href=".curate-stories"]').one('shown.bs.tab', truncateStoryTitles);
-
-    })
 
     .on('click', '#curate-gallery .story-card', function (e) {
       e.preventDefault();

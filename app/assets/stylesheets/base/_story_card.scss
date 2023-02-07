@@ -20,6 +20,8 @@
 }
 
 .story-card__title p {
+  @include max-lines(3);
+  
   font: {
     family: inherit !important;
     size: $story-card-title-size !important;
