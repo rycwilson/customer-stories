@@ -20,34 +20,27 @@ class StoriesController < ApplicationController
 
   def index
     @pre_selected_filters = { category: '', product: '' }
-    @stories_gallery_cache_key = @company.stories_gallery_cache_key(@pre_selected_filters)
-    @category_select_cache_key = @company.category_select_cache_key(0)
-    @product_select_cache_key = @company.product_select_cache_key(0)
+    # @stories_gallery_cache_key = @company.stories_gallery_cache_key(@pre_selected_filters)
+    # @category_select_cache_key = @company.category_select_cache_key(0)
+    # @product_select_cache_key = @company.product_select_cache_key(0)
     set_or_redirect_to_story_preview(params[:preview], session[:preview_story_slug])
 
     filter_params = get_filters_from_query_or_plugin(@company, params)
     if filter_params.present?
       @pre_selected_filters = filter_params
-      @stories_gallery_cache_key = @company.stories_gallery_cache_key(filter_params)
-      unless fragment_exist?(@stories_gallery_cache_key)
-        @stories = @company.filter_stories(filter_params)
-      end
+      @stories = @company.filter_stories(filter_params)
       category_stories = product_stories = []
       if filter_params['category'].present?
-        @category_select_cache_key = @company.category_select_cache_key(filter_params['category'])
         category_stories = Story.company_public_filter_category(@company.id, filter_params['category'])
         @category_results = "#{category_stories.size} #{'story'.pluralize(category_stories.size)} found"
       end
       if filter_params['product'].present?
-        @product_select_cache_key = @company.product_select_cache_key(filter_params['product'])
         product_stories = Story.company_public_filter_product(@company.id, filter_params['product'])
         @product_results = "#{product_stories.size} #{'story'.pluralize(product_stories.size)} found"
       end
       @applied_filters_results = filters_results(category_stories, product_stories)
     else
-      unless fragment_exist?(@stories_gallery_cache_key)
-        @stories = @company.public_stories
-      end
+      @stories = @company.public_stories
     end
   end
 
