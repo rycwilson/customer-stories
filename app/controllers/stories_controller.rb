@@ -23,19 +23,8 @@ class StoriesController < ApplicationController
     @stories_gallery_cache_key = @company.stories_gallery_cache_key(@pre_selected_filters)
     @category_select_cache_key = @company.category_select_cache_key(0)
     @product_select_cache_key = @company.product_select_cache_key(0)
+    set_or_redirect_to_story_preview(params[:preview], session[:preview_story_slug])
 
-    # from plugin clicks on a preview-published story
-    if params[:preview].present?
-      session[:preview_story_slug] = params[:preview]
-      redirect_to(root_url(subdomain: @company.subdomain))
-    elsif session[:preview_story_slug].present?
-      story = Story.friendly.exists?(session[:preview_story_slug]) &&
-              Story.friendly.find(session[:preview_story_slug])
-      if story && story.preview_published?
-        gon.push({ preview_story: story.id })
-        session.delete(:preview_story_slug)
-      end
-    end
     filter_params = get_filters_from_query_or_plugin(@company, params)
     if filter_params.present?
       @pre_selected_filters = filter_params
@@ -399,6 +388,20 @@ class StoriesController < ApplicationController
       @company = Company.find(params[:company_id])
     else
       @company = Company.find_by(subdomain: request.subdomain)
+    end
+  end
+
+  def set_or_redirect_to_story_preview(params_story_slug, session_story_slug)
+    should_redirect = params_story_slug
+    was_redirected = session_story_slug
+    if should_redirect
+      session[:preview_story_slug] = params_story_slug
+      redirect_to(root_url(subdomain: @company.subdomain))
+    elsif was_redirected
+      story = Story.friendly.exists?(session_story_slug) && Story.friendly.find(session_story_slug)
+      binding.pry
+      gon.push({ preview_story: story.id }) if (story && story.preview_published?)
+      session.delete(:preview_story_slug)
     end
   end
 
