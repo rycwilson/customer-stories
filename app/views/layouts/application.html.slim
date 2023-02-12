@@ -6,10 +6,11 @@ html lang="en-US" prefix="og: http://ogp.me/ns# fb: http://ogp.me/ns/fb#"
       name="viewport"
       content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" }
     = csrf_meta_tags()
-    - if staging? || @company.try(:subdomain) == 'pixlee'
+    
+    - if disallow_search_indexing?(@company)
       meta name="robots" content="noindex"
 
-    title = title_helper(controller_name, action_name, @company, @story)
+    title = 'Customer Stories'
     
     = yield(:head) if content_for?(:head)
 
@@ -31,9 +32,7 @@ html lang="en-US" prefix="og: http://ogp.me/ns# fb: http://ogp.me/ns/fb#"
 
     = javascript_include_tag('application', { 'data-turbolinks-track' => 'reload' })
 
-    = stylesheet_link_tag( \
-        custom_stylesheet?(@company) ? "custom/wrappers/#{@company.subdomain}" : 'application', 
-        media: 'all', 'data-turbolinks-track' => 'reload')
+    = stylesheet_link_tag('application', media: 'all', 'data-turbolinks-track' => 'reload')
 
     - unless ['companies', 'stories', 'profile', 'contributions'].include?(controller_name)
       = stylesheet_link_tag('mvpready-landing', media: 'all', 'data-turbolinks-track' => 'reload')

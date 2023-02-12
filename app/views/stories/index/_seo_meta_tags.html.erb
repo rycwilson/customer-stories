@@ -1,7 +1,3 @@
-<!--
-  locals: company: @company
--->
-
 <script type='application/ld+json'>
   {
     "@context": "https://schema.org/",
@@ -16,7 +12,7 @@
       },
       "owns": <%= raw company.products_jsonld.to_json %>
     },
-    "description": "<%= company.name + ' Customer Success Stories' %>",
+    "description": "<%= company.name + ' Customer Stories' %>",
     "about": {
       "@type": "Corporation",
       "name": "<%= company.name %>",
@@ -32,4 +28,3 @@
     "isFamilyFriendly": "true"
   }
 </script>
-

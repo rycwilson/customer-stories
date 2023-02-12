@@ -18,6 +18,7 @@
             company.story_categories.public_select_options,
             pre_selected_filters['category'].present? ? pre_selected_filters['category'] : ''),
           { include_blank: true,
+            placeholder: 'Select',
             class: 'stories-filter__select stories-filter__select--category',
             style: 'width: 100%' })
       .text-right
@@ -34,6 +35,7 @@
             company.products.public_select_options,
             pre_selected_filters['product'].present? ? [pre_selected_filters['product']] : []),
           { include_blank: true,
+            placeholder: 'Select',
             class: 'stories-filter__select stories-filter__select--product',
             style: 'width: 100%' })
       .text-right

@@ -1,10 +1,5 @@
 module ApplicationHelper
 
-  def custom_stylesheet?(company=nil)
-    ['centerforcustomerengagement', 'compas', 'pixlee', 'trunity', 'varmour']
-      .include?(company.try(:subdomain))
-  end
-
   def custom_google_fonts(company)
     return nil if company.blank? || !['stories', 'plugins', 'companies'].include?(controller_name)
     fonts = case company.subdomain
@@ -63,16 +58,6 @@ module ApplicationHelper
       url.sub(request.subdomain + '.', '')
     else
       url
-    end
-  end
-
-  def title_helper controller, action, company=nil, story=nil
-    if controller == 'stories' && action == 'show'
-      story.title
-    elsif controller == 'stories' && action == 'index'
-      company.name + ' Customer Stories'
-    else
-      'Customer Stories'
     end
   end
 

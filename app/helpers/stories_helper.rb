@@ -1,18 +1,12 @@
 module StoriesHelper
 
-  def render_seo_meta_tags(stories_view, company, story=nil)
-    if stories_view == 'index'
-      cache("#{company.subdomain}/stories/seo-meta-tags", expires_in: 1.week) do
-        render('stories/index/seo_meta_tags', { company: @company })
-      end
-    elsif stories_view == 'show'
-      cache("#{company.subdomain}/stories/#{story.id}/seo-meta-tags", skip_digest: true, expires_in: 1.week) do
-        render(
-          'stories/show/seo_meta_tags',
-          { company: company, success: story.success, story: story }
-        )
-      end
-    end
+  def disallow_search_indexing?(company=nil)
+    staging? || company&.subdomain == 'pixlee'
+  end
+
+  def custom_stylesheet?(company)
+    %w(centerforcustomerengagement compas pixlee trunity varmour)
+      .include?(company.subdomain)
   end
 
   def linkedin_widget_width(window_width)

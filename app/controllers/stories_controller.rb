@@ -42,6 +42,7 @@ class StoriesController < ApplicationController
     else
       @stories = @company.public_stories
     end
+    render(layout: 'stories')
   end
 
   def show

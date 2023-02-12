@@ -1,0 +1,43 @@
+doctype html
+html lang="en-US" prefix="og: http://ogp.me/ns# fb: http://ogp.me/ns/fb#"
+  head
+    meta charset="utf-8"
+    meta name="viewport" content="width=device-width, initial-scale=1.0"
+    = csrf_meta_tags()
+    - if disallow_search_indexing?(@company)
+      meta name="robots" content="noindex"
+    title 
+      = @company.name + " Customer Stories#{action_name == 'show' ? ': ' + @story.title : ''}"
+    - render( \
+        "stories/#{action_name == 'index' ? 'index/seo_meta_tags' : 'show/story_meta_tags'}",
+        { company: @company, success: @story&.success, story: @story })
+    
+    link href="https://cdn.jsdelivr.net/npm/tom-select@2.2.2/dist/css/tom-select.bootstrap4.css" rel="stylesheet"
+    script src="https://cdn.jsdelivr.net/npm/tom-select@2.2.2/dist/js/tom-select.complete.min.js"
+    
+    = javascript_include_tag('stories', defer: true)
+    = stylesheet_link_tag('stories')
+    /= stylesheet_link_tag( \
+        custom_stylesheet?(@company) ? "custom/wrappers/#{@company.subdomain}" : 'application')
+
+    / Google Fonts - https://developers.google.com/fonts/docs/getting_started
+    link rel="preconnect" href="https://fonts.gstatic.com" 
+    link {
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,400italic,600,600italic,800,800italic" }
+    link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lato:300,400,700"
+    link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Slabo+27px:400&amp;lang=en" 
+    link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Montserrat:400,500,600,700&amp;lang=en"
+    = custom_google_fonts(@company)
+
+    = favicon_link_tag('favicon.ico')
+
+  body class="stories #{action_name} #{@company.subdomain}" style=('visibility:hidden' if @is_social_share_redirect)
+    - if @is_social_share_redirect
+      = yield 
+    - else
+      = render('shared/navbars/company_header', { company: @company })
+      = yield
+      /= yield(:underscore_templates)
+      - if production? && !user_signed_in?
+        = render('analytics/analytics', { company: @company })
