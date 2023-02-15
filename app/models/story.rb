@@ -92,6 +92,17 @@ class Story < ApplicationRecord
     company_all(company_id)
     .where('stories.created_at >= ?', days_ago.days.ago)
   }
+
+  scope :featured, -> {
+    where('logo_published IS TRUE OR preview_published IS TRUE')
+  }
+  scope :tagged, ->(tags) {
+    _tags = tags.map { |tag, tag_id| ["#{tag}_tags".to_sym, tag_id] }.to_h
+    stories = Story.joins(*_tags.keys)
+    _tags.each { |tag, tag_id| stories = stories.where(tag => { id: tag_id }) }
+    stories
+  }
+
   scope :company_published, ->(company_id) {
     company_public(company_id).where(published: true)
   }
