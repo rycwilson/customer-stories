@@ -19,8 +19,9 @@ class StoryCategory < ApplicationRecord
     self.company.expire_fragment_cache('story-tags')
   end
 
+  scope :featured, -> { joins(:stories).merge(Story.featured).distinct }
+
   def should_generate_new_friendly_id?
     new_record? || name_changed? || slug.blank?
   end
-
 end
