@@ -8,7 +8,8 @@
       = select_tag( \
           :filter_select,
           grouped_options_for_select( \
-            company.stories_filter_public_grouped_options,
+            { 'Category' => company.story_categories.select_options(true), 'Product' => company.products.select_options(true) } \
+              .delete_if { |tag, options| options.blank? },
             [ preselected_filters['category'].present? ? "c#{preselected_filters['category']}" : '',
               preselected_filters['product'].present? ? "p#{preselected_filters['product']}" : ''].delete_if { |item| item.blank? }),
           { include_blank: true,
