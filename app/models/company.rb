@@ -36,7 +36,7 @@ class Company < ApplicationRecord
   has_many :contributions, -> { includes(:contributor, :referrer, success: { customer: {} }) }, through: :successes
   has_many :contributors, -> { distinct }, through: :customers, source: :contributors
   has_many :referrers, -> { distinct }, through: :contributions, source: :referrer
-  has_many :stories, through: :successes do 
+  has_many :stories, through: :successes do
     def select_options
       self.published
           .map { |story| [ story.title, story.id ] }
@@ -76,9 +76,9 @@ class Company < ApplicationRecord
   has_many :visitor_sessions, -> { select('visitor_sessions.*, visitor_sessions.clicky_session_id, visitor_actions.timestamp').distinct }, through: :visitor_actions
   has_many :visitors, -> { select('visitors.*, visitor_sessions.clicky_session_id, visitor_actions.timestamp').distinct }, through: :visitor_sessions
   has_many :story_categories, dependent: :destroy do
-    def select_options
-      self.map do |category|
-        [ category.name, category.id, { data: { slug: category.slug } } ]
+    def select_options(for_multi_select=nil)
+      (for_multi_select ? self.featured : self).map do |category| 
+        [category.name, for_multi_select ? "category-#{category.id}" : category.id, { data: { slug: category.slug } }]
       end.sort
     end
     def public_select_options
@@ -92,9 +92,9 @@ class Company < ApplicationRecord
   # alias
   has_many :category_tags, class_name: 'StoryCategory'
   has_many :products, dependent: :destroy do
-    def select_options
-      self.map do |product|
-        [ product.name, product.id, { data: { slug: product.slug } } ]
+    def select_options(for_multi_select=nil)
+      (for_multi_select ? self.featured : self).map do |product| 
+        [product.name, for_multi_select ? "product-#{product.id}" : product.id, { data: { slug: product.slug } }]
       end.sort
     end
     def public_select_options
@@ -381,7 +381,7 @@ class Company < ApplicationRecord
   # end
 
   # TODO: faster? http://stackoverflow.com/questions/20014292
-  def filter_stories (filter_params)
+  def filter_stories(filter_params)
     story_ids = []
     if filter_params.empty?
       self.public_stories
@@ -394,29 +394,6 @@ class Company < ApplicationRecord
       end
       Story.where(id: story_ids).order_as_specified(id: story_ids)
     end
-  end
-
-  def stories_filter_public_grouped_options
-    options = {}
-    category_options = StoryCategory
-                         .joins(:stories)
-                         .where({ company_id: self.id })
-                         .where("stories.logo_published = TRUE OR stories.preview_published = TRUE")
-                         .distinct
-                         .map { |tag| [tag.name, "c#{tag.id}", { data: { slug: tag.slug } }] }
-    product_options = Product
-                        .joins(:stories)
-                        .where({ company_id: self.id })
-                        .where("stories.logo_published = TRUE OR stories.preview_published = TRUE")
-                        .distinct
-                        .map { |tag| [tag.name, "p#{tag.id}", { data: { slug: tag.slug } }] }
-    if category_options.length > 1
-      options.merge!({ 'Category' => category_options })
-    end
-    if product_options.length > 1
-      options.merge!({ 'Product' => product_options })
-    end
-    options
   end
 
   #
