@@ -12,5 +12,5 @@
   .text-right
     span.search-stories__results.help-block
 
-- if include_category_filter?(company) && include_product_filter?(company)
+- if company.story_categories.featured.present? && company.products.featured.present?
   hr.visible-md-block.visible-lg-block

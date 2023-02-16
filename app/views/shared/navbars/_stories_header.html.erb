@@ -63,7 +63,7 @@
         </div>
 
         <div class="col-sm-6">
-          <% if !include_category_filter?(company) && !include_product_filter?(company) %>
+          <% if company.story_categories.featured.blank? && company.products.featured.blank? %>
             <%= render('stories/shared/search_form', { company: company }) %>
           <% end %>
         </div>

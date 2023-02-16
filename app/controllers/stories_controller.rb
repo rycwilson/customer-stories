@@ -19,15 +19,15 @@ class StoriesController < ApplicationController
   before_action :set_s3_direct_post, only: :edit
 
   def index
-    @pre_selected_filters = { category: '', product: '' }
-    # @stories_gallery_cache_key = @company.stories_gallery_cache_key(@pre_selected_filters)
+    @preselected_filters = { category: '', product: '' }
+    # @stories_gallery_cache_key = @company.stories_gallery_cache_key(@preselected_filters)
     # @category_select_cache_key = @company.category_select_cache_key(0)
     # @product_select_cache_key = @company.product_select_cache_key(0)
     set_or_redirect_to_story_preview(params[:preview], session[:preview_story_slug])
 
     filter_params = get_filters_from_query_or_plugin(@company, params)
     if filter_params.present?
-      @pre_selected_filters = filter_params
+      @preselected_filters = filter_params
       @stories = @company.filter_stories(filter_params)
       category_stories = product_stories = []
       if filter_params['category'].present?
@@ -393,7 +393,6 @@ class StoriesController < ApplicationController
       redirect_to(root_url(subdomain: @company.subdomain))
     elsif was_redirected
       story = Story.friendly.exists?(session_story_slug) && Story.friendly.find(session_story_slug)
-      binding.pry
       gon.push({ preview_story: story.id }) if (story && story.preview_published?)
       session.delete(:preview_story_slug)
     end

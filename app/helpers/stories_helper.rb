@@ -47,18 +47,6 @@ module StoriesHelper
     "position: #{is_xs ? 'fixed' : 'relative' }; background-color: #{company.primary_cta_background_color}; color:#{company.primary_cta_text_color}"
   end
 
-  def include_filters? (company)
-    include_category_filter?(company) || include_product_filter?(company)
-  end
-
-  def include_category_filter? (company)
-    company.story_categories.public_select_options.length > 1
-  end
-
-  def include_product_filter? (company)
-    company.products.public_select_options.length > 1
-  end
-
   def csp_landing
     if ENV['HOST_NAME'] == 'customerstories.net'
       'https://customerstories.net'
