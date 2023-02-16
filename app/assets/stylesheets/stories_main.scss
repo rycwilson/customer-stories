@@ -68,3 +68,14 @@
   @import 'views/stories/shared/cookie_consent';
   @import 'views/stories/shared/gallery';
 }
+
+.plugin-clear_button {
+  .clear-button {
+    font-size: 1.75rem;
+    transition: opacity 0s;
+  }
+  
+  &.single .clear-button {
+    right: 3.5rem;
+  }
+}
