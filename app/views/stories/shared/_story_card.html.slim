@@ -7,6 +7,8 @@
 div {
   class="#{card_class}" 
   data-story-id="#{story.id}" 
+  data-category=(story.category_tags.pluck(:id))
+  data-product=(story.product_tags.pluck(:id))
   style="background-image: url(#{story.og_image_url})" }
 
   / grid__item is for the overlays; not implemented internally
