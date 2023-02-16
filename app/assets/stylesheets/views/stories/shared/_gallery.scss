@@ -1,9 +1,12 @@
-
-
 #stories-gallery {
   margin: 0 auto;
   min-height: 100vh;  // accommodate the sign-in footer
   padding-bottom: 20px;
+
+  > li {
+    display: inline-block;
+    vertical-align: top;
+  }
 }
 
 @media only screen and (max-width: 767px) {
