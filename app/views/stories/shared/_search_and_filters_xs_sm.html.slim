@@ -1,21 +1,26 @@
-.search-and-filters.visible-xs-block class=('visible-sm-block' unless company.category_tags.blank? && company.product_tags.blank?)
+.search-and-filters.visible-xs-block {
+  class=('visible-sm-block' unless company.story_categories.featured.blank? && company.products.featured.blank?) }
   
   = render('stories/shared/search_form', { company: company })
 
   - if company.story_categories.featured.present? && company.products.featured.present?
     .stories-filter.form-group
-      = label_tag(:filter_select, "Filter")
-      = select_tag( \
-          :filter_select,
-          grouped_options_for_select( \
-            { 'Category' => company.story_categories.select_options(true), 'Product' => company.products.select_options(true) } \
-              .delete_if { |tag, options| options.blank? },
-            [ preselected_filters['category'].present? ? "c#{preselected_filters['category']}" : '',
-              preselected_filters['product'].present? ? "p#{preselected_filters['product']}" : ''].delete_if { |item| item.blank? }),
-          { include_blank: true,
-            class: 'stories-filter__select stories-filter__select--grouped',
-            multiple: true,
-            style: 'width: 100%' })
+      /= label_tag(:filter_select, "Filter")
+      .input-group.tom-select.multi
+        span.input-group-addon
+          i.fa.fa-fw.fa-filter
+        = select_tag( \
+            :filter_select,
+            grouped_options_for_select( \
+              { 'Category' => company.story_categories.select_options(true), 'Product' => company.products.select_options(true) } \
+                .delete_if { |tag, options| options.blank? },
+              [ preselected_filters['category'].present? ? "category-#{preselected_filters['category']}" : '',
+                preselected_filters['product'].present? ? "product-#{preselected_filters['product']}" : ''] \
+                .delete_if { |item| item.blank? }),
+            { placeholder: 'Select Category and/or Product',
+              class: 'stories-filter__select stories-filter__select--grouped',
+              multiple: true,
+              style: 'width: 100%' })
 
       .text-right
         span.stories-filter__results--grouped.help-block

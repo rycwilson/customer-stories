@@ -1,6 +1,6 @@
 = form_tag(search_stories_path, { method: 'GET', class: "search-stories" }) do
   / = hidden_field_tag(:search, '')
-  .input-group
+  .input-group.tom-select
     = text_field_tag( \
         :q, 
         nil, 

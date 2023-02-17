@@ -69,13 +69,98 @@
   @import 'views/stories/shared/gallery';
 }
 
-.plugin-clear_button {
-  .clear-button {
-    font-size: 1.75rem;
-    transition: opacity 0s;
+.stories.index {
+  .ts-dropdown {
+    .active {
+      color: #fff;
+      background-color: $nav-blue;
+    }
+
+    .optgroup-header {
+      font-size: 12px;
+    }
+    
+    .optgroup-header {
+      padding: 0.75rem;
+    }
+
+    .option {
+      padding: 4px 0.75rem;
+    }
+  }
+
+  .input-group.tom-select,
+  .stories-filter__select {
+    height: 34px;
+
+    .ts-wrapper.multi,
+    .ts-control,
+    .input-group-btn,
+    .input-group-btn button {
+      height: 100%;
+    }
+  }
+
+  .ts-wrapper {
+    &.multi.has-items {
+      .ts-control {
+        padding: 8px;
+      }
+
+      .item {
+        display: flex;
+        align-items: center;
+        padding: 2px 0 2px 10px;
+
+        &:not(:last-of-type) {
+          margin-bottom: 8px;
+        }
+      }
+
+      .tag-type {
+        color: #666;
+      }
+
+      .tag-name {
+        color: #555;
+        font-weight: bold;
+      }
+
+      .clear-button {
+        font-size: 20px;
+        padding: 0 10px;
+      }
+    }
+  }
+
+  .stories-filter__select.ts-wrapper input {
+    caret-color: transparent;   // hide the blinking cursor since search is disabled
   }
   
-  &.single .clear-button {
-    right: 3.5rem;
+  .plugin-clear_button {
+    .clear-button {
+      font-size: 1.75rem;
+      transition: opacity 0s;
+    }
+    
+    &.single .clear-button,
+    &.multi .clear-button {
+      right: 3.5rem;
+    }
+  }
+  
+  // add the dropdown caret to the multi-select filter
+  .ts-wrapper.multi:not(.search-stories__input) .ts-control:after {
+    content: " ";
+    display: block;
+    position: absolute;
+    top: 50%;
+    right: calc(0.75rem + 5px);
+    margin-top: -3px;
+    width: 0;
+    height: 0;
+    border-style: solid;
+    border-width: 5px 5px 0 5px;
+    border-color: #343a40 transparent transparent transparent;
   }
 }
