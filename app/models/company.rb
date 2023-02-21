@@ -76,33 +76,19 @@ class Company < ApplicationRecord
   has_many :visitor_sessions, -> { select('visitor_sessions.*, visitor_sessions.clicky_session_id, visitor_actions.timestamp').distinct }, through: :visitor_actions
   has_many :visitors, -> { select('visitors.*, visitor_sessions.clicky_session_id, visitor_actions.timestamp').distinct }, through: :visitor_sessions
   has_many :story_categories, dependent: :destroy do
-    def select_options(for_multi_select=nil)
-      (for_multi_select ? self.featured : self).map do |category| 
+    def select_options(only_featured=false, for_multi_select=false)
+      (only_featured ? self.featured : self).map do |category| 
         [category.name, for_multi_select ? "category-#{category.id}" : category.id, { data: { slug: category.slug } }]
       end.sort
-    end
-    def public_select_options
-      self.joins(:stories)
-          .where(stories: { logo_published: true })
-          .distinct
-          .map { |category| [ category.name, category.id, { data: { slug: category.slug } } ] }
-          .sort
     end
   end
   # alias
   has_many :category_tags, class_name: 'StoryCategory'
   has_many :products, dependent: :destroy do
-    def select_options(for_multi_select=nil)
-      (for_multi_select ? self.featured : self).map do |product| 
+    def select_options(only_featured=false, for_multi_select=false)
+      (only_featured ? self.featured : self).map do |product| 
         [product.name, for_multi_select ? "product-#{product.id}" : product.id, { data: { slug: product.slug } }]
       end.sort
-    end
-    def public_select_options
-      self.joins(:stories)
-          .where(stories: { logo_published: true })
-          .distinct
-          .map { |product| [ product.name, product.id, { data: { slug: product.slug } } ] }
-          .sort
     end
   end
   # alias
@@ -361,6 +347,7 @@ class Company < ApplicationRecord
   end
 
   def public_stories_filter_category (category_id)
+
     story_ids = Story.default_order(Story.company_public_filter_category(self.id, category_id)).pluck(:id)
     Story.where(id: story_ids).order_as_specified(id: story_ids)
   end
