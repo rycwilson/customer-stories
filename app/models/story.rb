@@ -94,13 +94,16 @@ class Story < ApplicationRecord
   }
 
   scope :featured, -> {
-    where('logo_published IS TRUE OR preview_published IS TRUE')
+    joins(:customer)
+    .where.not(customers: { logo_url: [nil, ''] })
+    .where('logo_published IS TRUE OR preview_published IS TRUE')
   }
   scope :tagged, ->(tags) {
     _tags = tags.map { |tag, tag_id| ["#{tag}_tags".to_sym, tag_id] }.to_h
-    stories = Story.joins(*_tags.keys)
+    # eager load tags for counting results
+    stories = Story.includes(:category_tags, :product_tags).joins(*_tags.keys)
     _tags.each { |tag, tag_id| stories = stories.where(tag => { id: tag_id }) }
-    stories
+    where(id: stories.pluck(:id))
   }
 
   scope :company_published, ->(company_id) {
