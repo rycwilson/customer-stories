@@ -1,4 +1,6 @@
-ul#stories-gallery.grid.list-unstyled.text-center class=('no-filters' if no_filters_present)
+ul#stories-gallery.grid.list-unstyled.text-center {
+  class=('no-filters' if no_filters_present)
+  data-is-sync-filtered=('true' if filtered_story_ids) }
 
   / cache(cache_key, skip_digest: true) do
 
@@ -8,7 +10,7 @@ ul#stories-gallery.grid.list-unstyled.text-center class=('no-filters' if no_filt
           "#{company.subdomain}/story-card-#{story.id}-memcache-iterator-#{company.story_card_fragments_memcache_iterator}",
           { skip_digest: true }) do
     / TODO semantic markup: https://stackoverflow.com/questions/19307443/semantic-html-of-an-articles-list#answer-54258592
-    li role="article"
+    li role="article" class=('hidden' if filtered_story_ids && filtered_story_ids.exclude?(story.id))
 
       = render( \
           'stories/shared/story_card',

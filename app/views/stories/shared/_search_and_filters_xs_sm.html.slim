@@ -5,54 +5,54 @@
 
   - if company.story_categories.featured.present? && company.products.featured.present?
     .stories-filter.form-group
-      /= label_tag(:filter_select, "Filter")
       .input-group.tom-select.multi
         span.input-group-addon
           i.fa.fa-fw.fa-filter
         = select_tag( \
             :filter_select,
             grouped_options_for_select( \
-              { 'Category' => company.story_categories.select_options(true), 'Product' => company.products.select_options(true) } \
-                .delete_if { |tag, options| options.blank? },
-              [ preselected_filters['category'].present? ? "category-#{preselected_filters['category']}" : '',
-                preselected_filters['product'].present? ? "product-#{preselected_filters['product']}" : ''] \
-                .delete_if { |item| item.blank? }),
+              { 'Category' => company.story_categories.select_options(true, true), 
+                'Product' => company.products.select_options(true, true) }.delete_if { |tag_type, options| options.blank? },
+              tags_filter.map { |tag_type, tag_id| "#{tag_type}-#{tag_id}" }),
             { placeholder: 'Select Category and/or Product',
               class: 'stories-filter__select stories-filter__select--grouped',
               multiple: true,
               style: 'width: 100%' })
-
       .text-right
-        span.stories-filter__results--grouped.help-block
-          - if preselected_filters['category'].present? || preselected_filters['product'].present?
-            = applied_filters_results
+        span.stories-filter__results--combined.help-block
+          - if tags_filter_results.present?
+            = "#{tags_filter_results['combined']} #{'story'.pluralize(tags_filter_results['combined'])} found"
 
   - elsif company.story_categories.featured.present?
     .form-group
-      = label_tag(:category_select, "Category")
+      label Category
       = select_tag( \
           nil,
           options_for_select( \
-            company.story_categories.public_select_options,
-            preselected_filters['category'].present? ? preselected_filters['category'] : ''),
+            company.story_categories.select_options(true, false),
+            tags_filter['category']),
           { include_blank: true,
+            placeholder: 'Select',
             class: 'stories-filter__select stories-filter__select--category',
             style: 'width: 100%' })
       .text-right
         span.stories-filter__results--category.help-block
-          = category_results if preselected_filters['category'].present?
+          - if tags_filter['category'].present?
+            = "#{tags_filter_results['category']} #{'story'.pluralize(tags_filter_results['category'])} found"
 
   - elsif company.products.featured.present?
     .form-group
-      = label_tag(:product_select, "Product")
+      label Product
       = select_tag( \
           nil,
           options_for_select( \
-            company.products.public_select_options,
-            preselected_filters['product'].present? ? [preselected_filters['product']] : []),
+            company.products.select_options(true, false),
+            tags_filter['product']),
           { include_blank: true,
+            placeholder: 'Select',
             class: 'stories-filter__select stories-filter__select--product',
             style: 'width: 100%' })
       .text-right
         span.stories-filter__results--product.help-block
-          = product_results if preselected_filters['product'].present?
+          - if tags_filter['product'].present?
+            = "#{tags_filter_results['product']} #{'story'.pluralize(tags_filter_results['product'])} found"

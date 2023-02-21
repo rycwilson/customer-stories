@@ -14,30 +14,23 @@
   = render( \
       'stories/shared/search_and_filters_xs_sm',
       { company: @company,
-        preselected_filters: @preselected_filters,
-        applied_filters_results: @applied_filters_results,
-        category_results: @category_results,
-        product_results: @product_results })
+        tags_filter: @tags_filter,
+        tags_filter_results: @tags_filter_results })
 
   // if no filters, the search input will appear in the header
   - if @company.story_categories.featured.present? || @company.products.featured.present?
-
     = render( \
         'stories/shared/search_and_filters_md_lg',
         { company: @company,
-          category_select_cache_key: nil,
-          product_select_cache_key: nil,
-          preselected_filters: @preselected_filters,
-          applied_filters_results: @applied_filters_results,
-          category_results: @category_results,
-          product_results: @product_results,
+          tags_filter: @tags_filter,
+          tags_filter_results: @tags_filter_results,
           both_filters_present: @company.story_categories.featured.present? && @company.products.featured.present? })
 
   = render( \
     'stories/shared/gallery',
     { company: @company,
-      stories: @stories,
-      cache_key: nil,
+      stories: @featured_stories,
+      filtered_story_ids: @filtered_story_ids,
       no_filters_present: @company.story_categories.featured.blank? && @company.products.featured.blank? })
 
 - unless user_signed_in?

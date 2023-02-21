@@ -19,28 +19,15 @@ class StoriesController < ApplicationController
   before_action :set_s3_direct_post, only: :edit
 
   def index
-    @preselected_filters = { category: '', product: '' }
-    # @stories_gallery_cache_key = @company.stories_gallery_cache_key(@preselected_filters)
-    # @category_select_cache_key = @company.category_select_cache_key(0)
-    # @product_select_cache_key = @company.product_select_cache_key(0)
     set_or_redirect_to_story_preview(params[:preview], session[:preview_story_slug])
 
-    filter_params = get_filters_from_query_or_plugin(@company, params)
-    if filter_params.present?
-      @preselected_filters = filter_params
-      @stories = @company.filter_stories(filter_params)
-      category_stories = product_stories = []
-      if filter_params['category'].present?
-        category_stories = Story.company_public_filter_category(@company.id, filter_params['category'])
-        @category_results = "#{category_stories.size} #{'story'.pluralize(category_stories.size)} found"
-      end
-      if filter_params['product'].present?
-        product_stories = Story.company_public_filter_product(@company.id, filter_params['product'])
-        @product_results = "#{product_stories.size} #{'story'.pluralize(product_stories.size)} found"
-      end
-      @applied_filters_results = filters_results(category_stories, product_stories)
-    else
-      @stories = @company.public_stories
+    @tags_filter = get_filters_from_query_or_plugin(@company, params)
+
+    @featured_stories = @company.stories.featured.order([published: :desc, preview_published: :desc, updated_at: :desc])
+    if @tags_filter.present?
+      @filtered_story_ids = @featured_stories.tagged(@tags_filter).pluck(:id)
+      @tags_filter_results = @tags_filter.map { |type, id| [type, @featured_stories.tagged(type => id).count] }.to_h
+      @tags_filter_results.merge!('combined' => @filtered_story_ids.count)
     end
     render(layout: 'stories')
   end
@@ -482,16 +469,4 @@ class StoriesController < ApplicationController
   def remove_video?
     # request.xhr? &&  && params[:remove_video].present?
   end
-
-  # one or both will be present
-  def filters_results(category_stories, product_stories)
-    if category_stories.empty?
-      "#{product_stories.size} #{'story'.pluralize(product_stories.size)} found"
-    elsif product_stories.empty?
-      "#{category_stories.size} #{'story'.pluralize(category_stories.size)} found"
-    else
-      "#{(category_stories & product_stories).size} #{'story'.pluralize((category_stories & product_stories).size)} found"
-    end
-  end
-
 end
