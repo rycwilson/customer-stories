@@ -128,11 +128,22 @@ module StoriesHelper
     #   # height = '630'
     #   # image = CS_FULL_LOGO_URL
     # end
-    Rails.env.development? ? {} : { 
-      image: asset_url("companies/#{company.subdomain}/#{provider == 'linkedin' ? 'og_300x160.png' : 'og_400x400.png'}"), 
-      width: width, 
-      height: height 
-    }
+    if Rails.env.development? 
+      {}
+    elsif %w(trunity compas corefact varmour zoommarketing saucelabs centerforcustomerengagement zeniq retailnext smartpaymentplan pixlee) 
+      .include?(company.subdomain)
+      { 
+        image: asset_url("companies/#{company.subdomain}/#{provider == 'linkedin' ? 'og_300x160.png' : 'og_400x400.png'}"), 
+        width: width, 
+        height: height 
+      }
+    else 
+      {
+        image: asset_url('cs_logo_full_1200x630.png'),
+        width: '1200',
+        height: '630'
+      }
+    end
   end
 
   def stories_header_class(company)
