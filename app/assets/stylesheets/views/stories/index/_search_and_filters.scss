@@ -72,21 +72,24 @@
 }
 
 .search-stories__clear {
-  display: none;
   position: absolute;
-  right: 42px;  // matches submit button width
-  top: 50%;
-  transform: translate(0, -50%);
+  top: 0;
+  bottom: 0;
+  right: 43px;  // matches submit button width
   z-index: 100;
-  font-size: 14px;
-  width: 35px;
-  padding: 8px;
-  color: #999;
-  cursor: pointer;
+  display: none;
+  border: none;
+  // width: 35px;
+  padding: 0 12px;
+  background: transparent;
+  font-size: 1.75rem;
+  color: #6f6f6f;
+  // cursor: pointer;
 
-  &:hover { 
-    color: #666; 
+  form.search-stories.was-executed > .input-group:hover & {
+    display: initial;
   }
+   
 }
 
 .search-and-filters {

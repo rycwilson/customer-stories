@@ -229,48 +229,13 @@ class StoriesController < ApplicationController
   end
 
   def search
-    @search_string = params[:search]
-    @story_ids = Story.company_public(@company.id)
-                      .where(
-                        "lower(title) LIKE ? OR lower(narrative) LIKE ?",
-                        "%#{@search_string.downcase}%",
-                        "%#{@search_string.downcase}%"
-                      )
-                      .pluck(:id)
-    @story_ids.concat(
-      Story.company_public(@company.id)
-           .joins(:customer)
-           .where("lower(customers.name) LIKE ?", "%#{@search_string.downcase}%")
-           .pluck(:id)
-    )
-    @story_ids.concat(
-      Story.company_public(@company.id)
-           .joins(:category_tags)
-           .where("lower(story_categories.name) LIKE ?", "%#{@search_string.downcase}%")
-           .pluck(:id)
-    )
-    @story_ids.concat(
-      Story.company_public(@company.id)
-           .joins(:product_tags)
-           .where("lower(products.name) LIKE ?", "%#{@search_string.downcase}%")
-           .pluck(:id)
-    )
-    @story_ids.concat(
-      Story.company_public(@company.id)
-           .joins(:results)
-           .where("lower(results.description) LIKE ?", "%#{@search_string.downcase}%")
-           .pluck(:id)
-    )
-    # it's possible a matching Result or CallToAction doesn't have an associated story,
-    # since they're associated with the Success model
-    @story_ids.concat(
-      Story.company_public(@company.id)
-           .joins(:ctas)
-           .where("lower(call_to_actions.display_text) LIKE ?", "%#{@search_string.downcase}%")
-           .pluck(:id)
-    )
-    @story_ids.uniq!
-    respond_to { |format| format.js {} }
+    sleep 2
+    q = params[:query]
+    stories = @company.stories.featured
+    results = stories.content_like(q) + stories.customer_like(q) + stories.tags_like(q) + stories.results_like(q)
+    respond_to do |format| 
+      format.json { render(json: { query: q, results: results.pluck(:id).uniq }) }
+    end
   end
 
   def share_on_linkedin

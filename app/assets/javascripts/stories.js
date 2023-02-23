@@ -2,27 +2,23 @@
   const searchContainers = [...document.querySelectorAll('.search-and-filters')]
   for (container of searchContainers) container.setAttribute('data-init', 'true')
   
-  const searchForms = document.querySelectorAll('form.search-stories');
-  const searchResults = document.querySelectorAll('\
-    .search-stories__results, \
-    .stories-filter__results--category, \
-    .stories-filter__results--product, \
-    .search-and-filters__results--combined \
-  ')
-  // console.log(searchForms, searchResults)
-  
-  const gallery = document.getElementById('stories-gallery');
-  const featuredStories = gallery.querySelectorAll('.story-card');
-  searchForms.forEach(form => {
-    form.addEventListener('input', syncSearchInputs);
-    form.addEventListener('click', onBeforeSubmit);
-  
-    new TomSelect(form.querySelector('input[type="search"]'), {})
-  });
-
+  const featuredStories = document.querySelectorAll('.story-card');
   // console.log('featuredStories', featuredStories)
+  const searchForms = document.querySelectorAll('form.search-stories');
   
+  initSearchForms();
   initFilters();
+  
+  function initSearchForms() {
+    searchForms.forEach(form => {
+      form.addEventListener('input', syncSearchInputs);
+      form.addEventListener('click', onBeforeSubmit);
+      form.querySelector('.search-stories__clear').addEventListener('click', (e) => {
+        clearSearch();
+        updateGallery([...featuredStories]);
+      });
+    });
+  }
 
   function initFilters() {
     const filters = document.querySelectorAll('.stories-filter__select:not(.ts-wrapper)');
@@ -33,13 +29,16 @@
         select.multiple ? multiSelectOptions() : singleSelectOptions()
       );
       const ts = new TomSelect(select, tsOptions);
-      if (select.multiple) ts.on('item_add', (value, item) => onMultiSelectItemAdd(ts, item));
+      if (select.multiple) {
+        // add clearing behavior
+        ts.wrapper.querySelectorAll('.item').forEach(item => onMultiSelectItemAdd(ts, item));
+        ts.on('item_add', (value, item) => onMultiSelectItemAdd(ts, item));
+      };
     })
   }
   
   function initFilterChangeHandler(changedSelect, otherSelects) {
     return function onFilterChange(value) {
-      console.log('change', value)
       const isMulti = Array.isArray(value);
       const tagsFilter = {};
       // const urlParams = Object.fromEntries(
@@ -86,24 +85,40 @@
           }
         });
       }
-
-      // console.log('urlParams', urlParams)
-      console.log('tagsFilter', tagsFilter)
-
+      // console.log('tagsFilter', tagsFilter)
+      clearSearch();
+      clearFilterResults();
+      filterStories(tagsFilter).then(showResults);
       syncFilters(changedSelect, otherSelects, tagsFilter, isMulti);
-      filterStories(tagsFilter).then(showFilterResults);
-      history.replaceState(null, null, `${formatTagParams(tagsFilter)}`)
+      history.replaceState(null, null, `${formatTagParams(tagsFilter)}`);
     };
   }
 
-  function onBeforeSubmit({ target, currentTarget: form }) {
-    if (target.type !== 'submit') return false;
-    if (form.querySelector('input[type="search"]').value === '') {
+  function onBeforeSubmit(e) {
+    e.preventDefault();
+    const form = this;
+    const btn = e.target;
+    if (btn.type !== 'submit') return false;
+    const query = form.querySelector('input[type="search"]').value;
+    const noResultsMesg = `Sorry, we couldn't find any stories matching \"${query}\"`
+    if (!query) {
       location.reload(false);   // false => reload from cache if available; true => reload from server
     } else {
-      searchResults.forEach(result => result.textContent = '');
-      // replaceStateStoriesIndex('', '');
-      //form.submit();
+      updateGallery([]);
+      clearFilterSelections();
+      fetch('/stories/search?' + new URLSearchParams({ query }), {
+        headers: {
+          'Content-Type': 'application/json',
+          'X-CSRF-Token': document.querySelector('[name="csrf-token"]').content
+        }
+      }).then(res => res.json()).then(({ query, results }) => {
+        const storyIds = results;
+        const filteredStories = [...featuredStories].filter(card => storyIds.includes(parseInt(card.dataset.storyId, 10)));
+
+        form.classList.add('was-executed');
+        showResults({ search: filteredStories.length });
+        updateGallery(filteredStories, noResultsMesg); 
+      })
     }
   }
 
@@ -121,13 +136,44 @@
         return activeFilters;
       }, [])
     );
+    const noResultsMesg = "Sorry, we couldn't find any stories matching the selected filter(s)";
     if (Object.keys(results).length) Object.assign(results, { combined: filteredStories.length })
-    gallery.replaceChildren(...filteredStories.map(card => {
-      const li = document.createElement('li');
-      li.appendChild(card);
-      return li;
-    }));
+    updateGallery(filteredStories, noResultsMesg);
     return Promise.resolve(results);
+  }
+  
+  function updateGallery(filteredStories, noResultsMesg) {
+    const gallery = document.getElementById('stories-gallery');
+    const createItem = (content) => {
+      const li = document.createElement('li');
+      if (typeof content === 'string') {
+        li.insertAdjacentHTML('afterbegin', content);
+      } else {
+        li.appendChild(content);
+      }
+      return li;
+    }
+    if (!filteredStories.length && noResultsMesg) {
+      gallery.replaceChildren(createItem(`<h4 id="no-search-results">${noResultsMesg}</h4>`));
+    } else {
+      gallery.replaceChildren(...filteredStories.map(createItem));
+    }
+  }
+
+  function showResults(results) {
+    // console.log('results', results)
+    const format = (count) => `${count} ${count === 1 ? 'story' : 'stories'} found`;
+    if (results.search) {
+      document.querySelectorAll('.search-stories__results').forEach(result => {
+        result.textContent = format(results.search);
+      });
+    } else {
+      for (const [tagType, count] of Object.entries(results)) {
+        document.querySelectorAll(`.stories-filter__results--${tagType}`).forEach(result => {
+          result.textContent = `${tagType === 'combined' ? 'Applied filters:\xa0\xa0' : ''}${format(count)}`;
+        });
+      }
+    }
   }
 
   function syncSearchInputs(e) {
@@ -135,10 +181,6 @@
     [...searchForms]
       .filter(form => !form.isSameNode(this))
       .forEach(form => form.querySelector('input[type="search"]').value = query);
-        
-    // $('.search-stories__input').not($(this)).val($(this).val());
-    // $('.search-stories input[type="hidden"]').val($(this).val());
-    // $('.search-stories__clear').hide();
   }
 
   function syncFilters(changedSelect, otherSelects, tagsFilter, multiChanged) {
@@ -166,26 +208,27 @@
     }
   }
 
-  function showFilterResults(results) {
-    console.log('results', results)
+  function clearSearch() {
+    searchForms.forEach(form => {
+      form.classList.remove('was-executed');
+      form.querySelector('.search-stories__input').value = '';
+      form.querySelector('.search-stories__results').textContent = ''
+    })
+  }
+
+  function clearFilterSelections() {
+    document.querySelectorAll('.stories-filter__select:not(.ts-wrapper)').forEach(select => select.tomselect.clear(true));
     clearFilterResults();
-    for (const [tagType, count] of Object.entries(results)) {
-      document.querySelectorAll(`.stories-filter__results--${tagType}`).forEach(result => {
-        result.textContent = `
-          ${tagType === 'combined' ? 'Applied filters:\xa0\xa0' : ''}${count} ${count === 1 ? 'story' : 'stories'} found
-        `;
-      });
-    }
   }
 
   function clearFilterResults() {
     document.querySelectorAll('[class*="stories-filter__results"]').forEach(result => result.textContent = '');
   }
 
-  function onMultiSelectItemAdd(multiTomSelect, item) {
+  function onMultiSelectItemAdd(ts, item) {
     item.querySelector('.clear-button').addEventListener('click', (e) => {
-      e.stopPropagation();  // don't open dropdown
-      removeMultiSelectItem(multiTomSelect, item);
+      e.stopPropagation();  // don't highlight active or open dropdown
+      removeMultiSelectItem(ts, item);
     });
   }
 
@@ -214,7 +257,7 @@
       plugins: {
         'clear_button': {
           title: 'Clear selection',
-          html: (config) => (`<div class="${config.className}" title="${config.title}"><div>&times;</div></div>`)
+          html: (config) => (`<button type="button" class="btn ${config.className}" title="${config.title}">&times;</button>`)
         }
       }
     };
@@ -236,7 +279,7 @@
               <div>
                 <span class="tag-type">${tagType}:</span>&nbsp;<span class="tag-name">${escape(data.text)}</span>
               </div>
-              <div class="clear-button" title="Clear selection">&times;</div>
+              <button type="button" class="btn clear-button" title="Clear selection">&times;</button>
             </div>
           `
         }

@@ -1,11 +1,12 @@
-= form_tag(search_stories_path, { method: 'GET', class: "search-stories" }) do
-  / = hidden_field_tag(:search, '')
-  .input-group.tom-select
+form.search-stories
+  .input-group
     = text_field_tag( \
-        :q, 
+        :query, 
         nil, 
-        { type: 'search', class: 'search-stories__input form-control', placeholder: 'Search' }) 
-    i.fa.fa-remove.fa-fw.search-stories__clear
+        { type: 'search', class: 'search-stories__input form-control', placeholder: 'Search', autocomplete: 'off' }) 
+    / i.fa.fa-remove.fa-fw.search-stories__clear
+    button.btn.search-stories__clear type="button"
+      |&times;
     span.input-group-btn
       button.btn.btn-default type="submit"
         i.fa.fa-search.fa-fw
