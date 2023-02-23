@@ -105,6 +105,23 @@ class Story < ApplicationRecord
     _tags.each { |tag, tag_id| stories = stories.where(tag => { id: tag_id }) }
     where(id: stories.pluck(:id))
   }
+  scope :content_like, ->(query) {
+    where('lower(title) LIKE ? OR lower(narrative) LIKE ?', "%#{query.downcase}%", "%#{query.downcase}%")
+  }
+  scope :customer_like, ->(query) {
+    joins(:customer)
+    .where('lower(customers.name) LIKE ?', "%#{query.downcase}%")
+  }
+  scope :tags_like, ->(query) {
+    joins(:category_tags, :product_tags)
+    .where(
+      'lower(story_categories.name) LIKE ? OR lower(products.name) LIKE ?', 
+      "%#{query.downcase}%", "%#{query.downcase}%"
+    )
+  }
+  scope :results_like, ->(query) {
+    joins(:results).where('lower(results.description) LIKE ?', "%#{query.downcase}%")
+  }
 
   scope :company_published, ->(company_id) {
     company_public(company_id).where(published: true)
