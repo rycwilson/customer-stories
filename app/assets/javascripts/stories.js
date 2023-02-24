@@ -8,6 +8,7 @@
   
   initSearchForms();
   initFilters();
+  initStoryCards();
   
   function initSearchForms() {
     searchForms.forEach(form => {
@@ -35,6 +36,54 @@
         ts.on('item_add', (value, item) => onMultiSelectItemAdd(ts, item));
       };
     })
+  }
+
+  function initStoryCards() {
+    const storyLoading = (e) => {
+      const card = e.target.closest('.story-card');
+      card.classList.add('loading', 'still-loading');
+      document.body.style.pointerEvents = 'none';
+
+      // This comment + code is from years ago. Still relevant? Doesn't seem so
+      // "don't appy this change to current $storyCard or link won't be followed"
+      // $('.story-card').not($storyCard).css('pointer-events', 'none');
+    }
+    featuredStories.forEach(card => {
+      const link = card.children[0];
+      if (link.classList.contains('published')) {
+        link.addEventListener('click', (e) => {
+          console.log('click', link.href)
+          if (card.classList.contains('hover')) return false;
+          storyLoading(card);
+        });
+
+        link.addEventListener('touchstart', (e) => {
+          console.log('touchstart', link.href)
+          if (card.classList.contains('hover')) return false;
+          e.preventDefault();
+          card.classList.add('hover');
+
+          // stop the subsequent touchend event from triggering the <a> tag
+          link.addEventListener('touchend', (e) => e.preventDefault(), { once: true })
+
+          // next tap => load story
+          link.addEventListener('touch', storyLoading)
+
+          // undo hover and click listener if clicking anywhere outside the story card
+          document.body.addEventListener('touchstart', (e) => {
+            if (card.contains(e.target)) return false;
+            card.classList.remove('hover');
+            link.removeEventListener('touch', storyLoading);
+          }, { once: true })
+
+          // remove hover from other cards
+          featuredStories.forEach
+          $('.story-card').not($storyCard).each(function () {
+            $(this).removeClass('hover');
+          });
+        });
+      }
+    })    
   }
   
   function initFilterChangeHandler(changedSelect, otherSelects) {
