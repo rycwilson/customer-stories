@@ -229,7 +229,6 @@ class StoriesController < ApplicationController
   end
 
   def search
-    sleep 2
     q = params[:query]
     stories = @company.stories.featured
     results = stories.content_like(q) + stories.customer_like(q) + stories.tags_like(q) + stories.results_like(q)
