@@ -33,6 +33,7 @@ Rails.application.config.assets.precompile += %w(
   jquery-textfill/source/jquery.textfill.js
   plugins/cs_video.js
   plugins/cs_overlays.js
+  vendor/vendor.js
 )
 
 # companies with custom styles
