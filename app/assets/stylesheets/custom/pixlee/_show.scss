@@ -40,7 +40,7 @@ body.pixlee.stories.show, .cs-plugin .cs-overlay-container {
 
   .cta__image {
     height: 200px;
-    background: url('http://assets.pixlee.com/website/webinar/webinar-hero.png') center / cover no-repeat;
+    background: asset-url('companies/pixlee/webinar-hero.webp') center / cover no-repeat;
   }
   .cta__wrapper {
     height: 200px;
@@ -138,7 +138,7 @@ body.pixlee.stories.show, .cs-plugin .cs-overlay-container {
       }
     }
     .cta__topography {
-      background: url('https://assets.pixlee.com/bnw_website_images/images/topography.png') center / cover repeat transparent;
+      background: asset-url('companies/pixlee/topography.webp') center / cover repeat transparent;
       display: block;
       position: absolute;
       margin-bottom: 25px;

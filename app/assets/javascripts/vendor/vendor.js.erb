@@ -62,11 +62,11 @@ function constructPlugins () {
 
     pixleeImg.onload = function () {
       setTimeout(function () {
-        $('.pixlee-cta .cta__image').css('background', 'url("http://assets.pixlee.com/website/webinar/webinar-hero.png") center / cover no-repeat');
+        $('.pixlee-cta .cta__image').css('background', "<%= asset_url('companies/pixlee/webinar-hero.webp') %> center / cover no-repeat");
         pixleeCtaTop = $('.pixlee-cta').offset().top;
       }, 100);
     };
-    pixleeImg.src = 'http://assets.pixlee.com/website/webinar/webinar-hero.png';
+    pixleeImg.src = "<%= asset_url('companies/pixlee/webinar-hero.webp') %>";
 
     $(document).on('scroll', _.throttle(function () {
       var currentScroll = $(window).scrollTop();
