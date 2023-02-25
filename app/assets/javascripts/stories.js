@@ -42,6 +42,10 @@
     const toggleSpinner = (card) => {
       card.classList.add('loading', 'still-loading');
       document.body.style.pointerEvents = 'none';
+      onbeforeunload = (e) => {
+        card.classList.remove('loading', 'still-loading');
+        document.body.style.pointerEvents = 'auto';
+      }
     };
     const followLink = (e) => {
       toggleSpinner(link.parentElement);
