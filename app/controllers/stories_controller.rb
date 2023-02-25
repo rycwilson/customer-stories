@@ -233,7 +233,7 @@ class StoriesController < ApplicationController
     stories = @company.stories.featured
     results = stories.content_like(q) + stories.customer_like(q) + stories.tags_like(q) + stories.results_like(q)
     respond_to do |format| 
-      format.json { render(json: { query: q, results: results.pluck(:id).uniq }) }
+      format.json { render(json: results.pluck(:id).uniq) }
     end
   end
 

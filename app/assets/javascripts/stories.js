@@ -13,7 +13,7 @@
   function initSearchForms() {
     searchForms.forEach(form => {
       form.addEventListener('input', syncSearchInputs);
-      form.addEventListener('click', onBeforeSubmit);
+      form.addEventListener('click', (e) => { if (e.target.type === 'submit') onBeforeSubmit(e) });
       form.querySelector('.search-stories__clear').addEventListener('click', (e) => {
         clearSearch();
         updateGallery([...featuredStories]);
@@ -39,48 +39,38 @@
   }
 
   function initStoryCards() {
-    const storyLoading = (e) => {
-      const card = e.target.closest('.story-card');
+    const toggleSpinner = (card) => {
       card.classList.add('loading', 'still-loading');
       document.body.style.pointerEvents = 'none';
-
-      // This comment + code is from years ago. Still relevant? Doesn't seem so
-      // "don't appy this change to current $storyCard or link won't be followed"
-      // $('.story-card').not($storyCard).css('pointer-events', 'none');
+    };
+    const followLink = (e) => {
+      toggleSpinner(link.parentElement);
+      location = e.currentTarget.href;
     }
     featuredStories.forEach(card => {
       const link = card.children[0];
       if (link.classList.contains('published')) {
         link.addEventListener('click', (e) => {
-          console.log('click', link.href)
+          // console.log('click', link.href)
           if (card.classList.contains('hover')) return false;
-          storyLoading(card);
+          toggleSpinner(card);
         });
 
         link.addEventListener('touchstart', (e) => {
-          console.log('touchstart', link.href)
+          // console.log('touchstart', link.href)
           if (card.classList.contains('hover')) return false;
           e.preventDefault();
           card.classList.add('hover');
 
-          // stop the subsequent touchend event from triggering the <a> tag
-          link.addEventListener('touchend', (e) => e.preventDefault(), { once: true })
-
           // next tap => load story
-          link.addEventListener('touch', storyLoading)
+          link.addEventListener('touchstart', followLink, { once: true })
 
-          // undo hover and click listener if clicking anywhere outside the story card
-          document.body.addEventListener('touchstart', (e) => {
+          // undo hover and touchstart listener if clicking anywhere outside the story card
+          document.addEventListener('touchstart', (e) => {
             if (card.contains(e.target)) return false;
-            card.classList.remove('hover');
-            link.removeEventListener('touch', storyLoading);
-          }, { once: true })
-
-          // remove hover from other cards
-          featuredStories.forEach
-          $('.story-card').not($storyCard).each(function () {
-            $(this).removeClass('hover');
-          });
+            card.classList.remove('hover');  
+            link.removeEventListener('touchstart', followLink);
+          }, { once: true, capture: true })
         });
       }
     })    
@@ -145,9 +135,7 @@
 
   function onBeforeSubmit(e) {
     e.preventDefault();
-    const form = this;
-    const btn = e.target;
-    if (btn.type !== 'submit') return false;
+    const form = e.currentTarget;
     const query = form.querySelector('input[type="search"]').value;
     const noResultsMesg = `Sorry, we couldn't find any stories matching \"${query}\"`
     if (!query) {
@@ -160,8 +148,7 @@
           'Content-Type': 'application/json',
           'X-CSRF-Token': document.querySelector('[name="csrf-token"]').content
         }
-      }).then(res => res.json()).then(({ query, results }) => {
-        const storyIds = results;
+      }).then(res => res.json()).then((storyIds) => {
         const filteredStories = [...featuredStories].filter(card => storyIds.includes(parseInt(card.dataset.storyId, 10)));
 
         form.classList.add('was-executed');
