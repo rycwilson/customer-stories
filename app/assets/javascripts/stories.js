@@ -51,12 +51,6 @@
     })    
   }
 
-  addEventListener('pageshow', () => {
-    console.log('pageshow')
-    featuredStories.forEach(card => card.classList.remove('loading', 'still-loading'));
-    document.body.style.pointerEvents = 'initial';
-  })
-
   function visitStory(e) {
     e.preventDefault();
     const link = this;
@@ -64,10 +58,10 @@
     const toggleSpinner = () => {
       card.classList.add('loading', 'still-loading');
       document.body.style.pointerEvents = 'none';
-      // addEventListener('visibilitychange', (e) => {
-      //   card.classList.remove('loading', 'still-loading');
-      //   document.body.style.pointerEvents = 'initial';
-      // })
+      addEventListener('visibilitychange', (e) => {
+        card.classList.remove('loading', 'still-loading', 'hover');
+        document.body.style.pointerEvents = 'initial';
+      }, { once: true })
     }
     const followLink = () => {
       toggleSpinner();
