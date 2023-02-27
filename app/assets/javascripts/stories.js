@@ -60,7 +60,7 @@
     }
     const followLink = () => {
       toggleSpinner();
-      location = link.href;
+      setTimeout(() => location = link.href);
     }
     if (e.type === 'click') {
       followLink();
