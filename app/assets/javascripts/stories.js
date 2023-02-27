@@ -50,6 +50,7 @@
     })    
   }
 
+  
   function visitStory(e) {
     e.preventDefault();
     const link = this;
@@ -57,6 +58,10 @@
     const toggleSpinner = () => {
       card.classList.add('loading', 'still-loading');
       document.body.style.pointerEvents = 'none';
+      addEventListener('visibilitychange', (e) => {
+        card.classList.remove('loading', 'still-loading');
+        document.body.style.pointerEvents = 'initial';
+      })
     }
     const followLink = () => {
       toggleSpinner();
