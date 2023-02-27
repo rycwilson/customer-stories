@@ -33,6 +33,7 @@ class StoriesController < ApplicationController
   end
 
   def show
+    sleep 3
     if params[:is_plugin]
       # @is_plugin = @is_external = true
       respond_to do |format|

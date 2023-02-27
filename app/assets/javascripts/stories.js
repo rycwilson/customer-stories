@@ -1,6 +1,8 @@
+'use strict';
+
 (function CSP() {
   const searchContainers = [...document.querySelectorAll('.search-and-filters')]
-  for (container of searchContainers) container.setAttribute('data-init', 'true')
+  for (const container of searchContainers) container.setAttribute('data-init', 'true')
   
   const featuredStories = document.querySelectorAll('.story-card');
   // console.log('featuredStories', featuredStories)
@@ -39,45 +41,42 @@
   }
 
   function initStoryCards() {
-    const toggleSpinner = (card) => {
-      card.classList.add('loading', 'still-loading');
-      document.body.style.pointerEvents = 'none';
-      onbeforeunload = (e) => {
-        card.classList.remove('loading', 'still-loading');
-        document.body.style.pointerEvents = 'auto';
-      }
-    };
-    const followLink = (e) => {
-      toggleSpinner(link.parentElement);
-      location = e.currentTarget.href;
-    }
     featuredStories.forEach(card => {
       const link = card.children[0];
       if (link.classList.contains('published')) {
-        link.addEventListener('click', (e) => {
-          // console.log('click', link.href)
-          if (card.classList.contains('hover')) return false;
-          toggleSpinner(card);
-        });
-
-        link.addEventListener('touchstart', (e) => {
-          // console.log('touchstart', link.href)
-          if (card.classList.contains('hover')) return false;
-          e.preventDefault();
-          card.classList.add('hover');
-
-          // next tap => load story
-          link.addEventListener('touchstart', followLink, { once: true })
-
-          // undo hover and touchstart listener if clicking anywhere outside the story card
-          document.addEventListener('touchstart', (e) => {
-            if (card.contains(e.target)) return false;
-            card.classList.remove('hover');  
-            link.removeEventListener('touchstart', followLink);
-          }, { once: true, capture: true })
-        });
+        link.addEventListener('click', visitStory);
+        link.addEventListener('touchstart', visitStory);
       }
     })    
+  }
+
+  function visitStory(e) {
+    e.preventDefault();
+    const link = this;
+    const card = link.parentElement;
+    const toggleSpinner = () => {
+      card.classList.add('loading', 'still-loading');
+      document.body.style.pointerEvents = 'none';
+    }
+    const followLink = () => {
+      toggleSpinner();
+      location = link.href;
+    }
+    if (e.type === 'click') {
+      followLink();
+    } else if (e.type === 'touchstart' && !card.classList.contains('hover')) {
+      card.classList.add('hover');
+
+      // next tap => load story
+      link.addEventListener('touchstart', followLink, { once: true });
+
+      // undo hover and touchstart listener if clicking anywhere outside the story card
+      document.addEventListener('touchstart', (e) => {
+        if (card.contains(e.target)) return false;
+        card.classList.remove('hover');  
+        link.removeEventListener('touchstart', followLink);
+      }, { once: true, capture: true });
+    }
   }
   
   function initFilterChangeHandler(changedSelect, otherSelects) {
