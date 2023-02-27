@@ -50,9 +50,7 @@
 // Utility classes
 @import "bootstrap/utilities";
 @import "bootstrap/responsive-utilities";
-
 // end bootstrap imports
-
 
 @import 'font-awesome';
 @import 'base/variables';
@@ -95,7 +93,8 @@
     }
 
     .optgroup-header {
-      font-size: 12px;
+      font-size: 13px;
+      background: #efefef;
     }
     
     .optgroup-header {
@@ -135,6 +134,7 @@
         display: flex;
         align-items: center;
         padding: 2px 0 2px 10px;
+        margin-right: 36px;
 
         &:not(:last-of-type) {
           margin-bottom: 8px;
@@ -142,7 +142,7 @@
       }
 
       .tag-type {
-        color: #666;
+        color: #6c757d;
       }
 
       .tag-name {

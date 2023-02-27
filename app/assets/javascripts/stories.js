@@ -58,9 +58,9 @@
     const toggleSpinner = () => {
       card.classList.add('loading', 'still-loading');
       document.body.style.pointerEvents = 'none';
-      addEventListener('visibilitychange', (e) => {
+      document.addEventListener('visibilitychange', (e) => {
         card.classList.remove('loading', 'still-loading', 'hover');
-        document.body.style.pointerEvents = 'initial';
+        document.body.style.pointerEvents = 'auto';
       }, { once: true })
     }
     const followLink = () => {
@@ -180,7 +180,7 @@
         return activeFilters;
       }, [])
     );
-    const noResultsMesg = "Sorry, we couldn't find any stories matching the selected filter(s)";
+    const noResultsMesg = "Sorry, we couldn't find any stories matching the selected filters";
     if (Object.keys(results).length) Object.assign(results, { combined: filteredStories.length })
     updateGallery(filteredStories, noResultsMesg);
     return Promise.resolve(results);

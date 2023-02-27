@@ -17,8 +17,8 @@ html lang="en-US" prefix="og: http://ogp.me/ns# fb: http://ogp.me/ns/fb#"
     
     = javascript_include_tag('stories', defer: true)
     = stylesheet_link_tag('stories')
-    /= stylesheet_link_tag( \
-        custom_stylesheet?(@company) ? "custom/wrappers/#{@company.subdomain}" : 'application')
+    - if custom_stylesheet?(@company)
+      = stylesheet_link_tag("custom/wrappers/#{@company.subdomain}")
 
     / Google Fonts - https://developers.google.com/fonts/docs/getting_started
     link rel="preconnect" href="https://fonts.gstatic.com" 

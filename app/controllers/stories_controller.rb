@@ -33,7 +33,6 @@ class StoriesController < ApplicationController
   end
 
   def show
-    sleep 3
     if params[:is_plugin]
       # @is_plugin = @is_external = true
       respond_to do |format|
@@ -60,6 +59,7 @@ class StoriesController < ApplicationController
     # @story_narrative = HtmlToPlainText.plain_text(@story.narrative)
     @related_stories = @story.related_stories
     @more_stories = @company.public_stories
+    render(layout: 'stories')
   end
 
   def edit
