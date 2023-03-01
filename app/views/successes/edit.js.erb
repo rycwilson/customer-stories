@@ -115,8 +115,8 @@
           // ['view', <%= Rails.env.development? ? ['codeview'] : [] %>],
         ],
         buttons: {
-          contributionsDropdown: winStoryDropdownInitializer('contributions'),
-          placeholdersDropdown: winStoryDropdownInitializer('placeholders')
+          contributionsDropdown: initWinStoryDropdown.bind(null, 'contributions'),
+          placeholdersDropdown: initWinStoryDropdown.bind(null, 'placeholders')
         },
         callbacks: {
           // without this, insertion of a new line doesn't trigger input; critical for inserting placeholders
@@ -236,39 +236,37 @@
 
     if (markedAsCompleted) winStoryCompletedInput.value = 'true';
 
-    // this needs to be a jquery listener as long as using jquery-ujs instead of rails-ujs
-    $(form).one('ajax:complete', onFormResponse({ submitBtn, toggleChildBtn, editBtn }));
+    // needs to be a jquery listener as long as using jquery-ujs instead of rails-ujs
+    const timer = setTimeout(() => submitBtn.classList.add('still-working'), 1000);
+    $(form).one('ajax:complete', onFormResponse.bind(null, timer, { submitBtn, toggleChildBtn, editBtn }));
 
     // the .submit method won't trigger a submit event, which rails-ujs needs for the remote:true form
     form.requestSubmit();
   }
 
-  function onFormResponse(buttons) {
+  function onFormResponse(timer, buttons, e, xhr, status, error) {
+    // the 'disable-with' behavior will result in BOTH buttons being enabled upon completion of this callback
+    setTimeout(() => form.querySelector('.btn-save').disabled = true);
     const { submitBtn, toggleChildBtn, editBtn } = buttons;
-    const timer = setTimeout(() => submitBtn.classList.add('still-working'), 1000);
-    return (e, xhr, status, error) => {
-      // the 'disable-with' behavior will result in BOTH buttons being enabled upon completion of this callback
-      setTimeout(() => form.querySelector('.btn-save').disabled = true);
-      if (error) {
+    if (error) {
+    } else {
+      clearTimeout(timer);
+      const success = xhr.responseJSON;
+      console.log('res', success)
+      const winStoryCompletedChange = success.previous_changes.win_story_completed;
+      const winStoryWasCompleted = winStoryCompletedChange && !winStoryCompletedChange[0] && winStoryCompletedChange[1];
+      if (winStoryWasCompleted) {
+        console.log('winStoryWasCompleted')
+        dt.row(tr).data(Object.assign(dt.row(tr).data(), { display_status: success.display_status })).draw();
+        form.classList.add('win-story-completed');
       } else {
-        clearTimeout(timer);
-        const success = xhr.responseJSON;
-        console.log('res', success)
-        const winStoryCompletedChange = success.previous_changes.win_story_completed;
-        const winStoryWasCompleted = winStoryCompletedChange && !winStoryCompletedChange[0] && winStoryCompletedChange[1];
-        if (winStoryWasCompleted) {
-          console.log('winStoryWasCompleted')
-          dt.row(tr).data(Object.assign(dt.row(tr).data(), { display_status: success.display_status })).draw();
-          form.classList.add('win-story-completed');
-        } else {
-          setTimeout(() => submitBtn.disabled = true);
-        }
-        editBtn.disabled = false;
-        toggleChildBtn.classList.remove('disabled');
-        submitBtn.classList.remove('still-working');
-        form.classList.remove('has-changes');
-        enableSubmitOnChanges();
+        setTimeout(() => submitBtn.disabled = true);
       }
+      editBtn.disabled = false;
+      toggleChildBtn.classList.remove('disabled');
+      submitBtn.classList.remove('still-working');
+      form.classList.remove('has-changes');
+      enableSubmitOnChanges();
     }
   }
 
@@ -338,48 +336,46 @@ but will preclude any changes to the underlying content.</p>
     summernoteObserver.observe(note, { attributes: true, attributeOldValue: true });
   }
 
-  function winStoryDropdownInitializer(type) {
-    return (context) => {
-      const ui = $.summernote.ui;
-      const buttonGroup = ui.buttonGroup([
-        ui.button({
-          className: `btn btn-default dropdown-toggle ${type}`,
-          //tooltip: 'Insert contributions',
-          data: { toggle: 'dropdown', placement: 'top' },
-          contents: (
-            `${type === 'contributions' ? 'Contributions' : 'Placeholders'}&nbsp;&nbsp;<span class="caret"></span>`
-          )
-          // tooltip: 'Insert a data placeholder'
-        }),
-        ui.dropdown({
-          className: `summernote-custom dropdown-menu-right ${type}`,
-          contents: type === 'contributions' ? 
-            "<%= j render('successes/win_story_dropdown_menu', { success: @success, type: 'contributions' }) %>" : 
-            "<%= j render('successes/win_story_dropdown_menu', { success: @success, type: 'placeholders' }) %>",
-          callback: ($dropdown) => {
-            $dropdown[0].querySelectorAll('a').forEach(link => {
-              link.addEventListener('click', (e) => {
-                const li = link.parentElement;
-                const isContributionsDropdown = li.parentElement.classList.contains('contributions');
-                const isPlaceholdersDropdown = li.dataset.placeholder;
-                let pasteHtml;
-                if (isContributionsDropdown && li.dataset.contributionId) {
-                  pasteHtml = individualContributionTemplate(li.dataset.contributionId);
-                } else if (isContributionsDropdown && li.dataset.questionId) {
-                  pasteHtml = groupContributionTemplate(li.dataset.questionId);
-                } else if (isPlaceholdersDropdown) {
-                  pasteHtml = li.dataset.placeholder; 
-                }
-                $(note).summernote('restoreRange');   // restore cursor position
-                $(note).summernote('pasteHTML', pasteHtml)
-                $(note).summernote('saveRange');  // save cursor position
-              });
+  function initWinStoryDropdown(type, context) {
+    const ui = $.summernote.ui;
+    const buttonGroup = ui.buttonGroup([
+      ui.button({
+        className: `btn btn-default dropdown-toggle ${type}`,
+        //tooltip: 'Insert contributions',
+        data: { toggle: 'dropdown', placement: 'top' },
+        contents: (
+          `${type === 'contributions' ? 'Contributions' : 'Placeholders'}&nbsp;&nbsp;<span class="caret"></span>`
+        )
+        // tooltip: 'Insert a data placeholder'
+      }),
+      ui.dropdown({
+        className: `summernote-custom dropdown-menu-right ${type}`,
+        contents: type === 'contributions' ? 
+          "<%= j render('successes/win_story_dropdown_menu', { success: @success, type: 'contributions' }) %>" : 
+          "<%= j render('successes/win_story_dropdown_menu', { success: @success, type: 'placeholders' }) %>",
+        callback: ($dropdown) => {
+          $dropdown[0].querySelectorAll('a').forEach(link => {
+            link.addEventListener('click', (e) => {
+              const li = link.parentElement;
+              const isContributionsDropdown = li.parentElement.classList.contains('contributions');
+              const isPlaceholdersDropdown = li.dataset.placeholder;
+              let pasteHtml;
+              if (isContributionsDropdown && li.dataset.contributionId) {
+                pasteHtml = individualContributionTemplate(li.dataset.contributionId);
+              } else if (isContributionsDropdown && li.dataset.questionId) {
+                pasteHtml = groupContributionTemplate(li.dataset.questionId);
+              } else if (isPlaceholdersDropdown) {
+                pasteHtml = li.dataset.placeholder; 
+              }
+              $(note).summernote('restoreRange');   // restore cursor position
+              $(note).summernote('pasteHTML', pasteHtml)
+              $(note).summernote('saveRange');  // save cursor position
             });
-          }
-        })
-      ]);
-      return buttonGroup.render();   // return button as jquery object
-    }
+          });
+        }
+      })
+    ]);
+    return buttonGroup.render();   // return button as jquery object
   }
 
   function initEmailRecipientsSelect() {

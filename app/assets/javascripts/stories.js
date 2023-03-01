@@ -15,7 +15,7 @@
   function initSearchForms() {
     searchForms.forEach(form => {
       form.addEventListener('input', syncSearchInputs);
-      form.addEventListener('click', (e) => { if (e.target.type === 'submit') onBeforeSubmit(e) });
+      form.addEventListener('click', (e) => { if (e.target.type === 'submit') onBeforeSearchSubmit(e) });
       form.querySelector('.search-stories__clear').addEventListener('click', (e) => {
         clearSearch();
         updateGallery([...featuredStories]);
@@ -41,7 +41,6 @@
   }
 
   function initStoryCards() {
-    console.log('initStoryCards()')
     featuredStories.forEach(card => {
       const link = card.children[0];
       if (link.classList.contains('published')) {
@@ -84,64 +83,62 @@
     }
   }
   
-  function initFilterChangeHandler(changedSelect, otherSelects) {
-    return function onFilterChange(value) {
-      const isMulti = Array.isArray(value);
-      const tagsFilter = {};
-      // const urlParams = Object.fromEntries(
-      //   [...new URLSearchParams(location.search)].filter(([tagType, tagSlug]) => tagType.match(/category|product/))
-      // );
-      const getTagSlug = (select, selectedValue) => !selectedValue ? '' : (
-        Object.values(select.tomselect.options).find(option => option.value === selectedValue).slug
-      );
+  function onFilterChange(changedSelect, otherSelects, value) {
+    const isMulti = Array.isArray(value);
+    const tagsFilter = {};
+    // const urlParams = Object.fromEntries(
+    //   [...new URLSearchParams(location.search)].filter(([tagType, tagSlug]) => tagType.match(/category|product/))
+    // );
+    const getTagSlug = (select, selectedValue) => !selectedValue ? '' : (
+      Object.values(select.tomselect.options).find(option => option.value === selectedValue).slug
+    );
 
-      if (isMulti) {
-        const tagTypeIds = value;   // e.g. 'category-4', 'product-7'
+    if (isMulti) {
+      const tagTypeIds = value;   // e.g. 'category-4', 'product-7'
 
-        // reverse => ensures FIFO behavior
-        // reduce => build the tagsFilter object, with only one instance of a given tag type
-        // sort => category always goes first
-        const newTagTypeIds = tagTypeIds
-          .reverse()   
-          .reduce((acc, tagTypeId) => {
-            const tagType = tagTypeId.slice(0, tagTypeId.lastIndexOf('-'));
-            const isRepeatedType = acc.find(_tagTypeId => _tagTypeId.includes(tagType));
-            if (isRepeatedType) {
-              return acc;
-            } else {
-              // build the tagsFilter object
-              tagsFilter[`${tagType}`] = { 
-                id: parseInt(tagTypeId.slice(tagTypeId.lastIndexOf('-') + 1), 10), 
-                slug: getTagSlug(changedSelect, tagTypeId) 
-              };
-              return [...acc, tagTypeId];
-            }
-          }, [])
-          .sort(categoryFirst);
-        if (newTagTypeIds.length) changedSelect.tomselect.setValue(newTagTypeIds, true);
-
-      } else {
-        const tagType = singleSelectTagType(changedSelect);
-
-        // build the tagsFilter object
-        if (value) tagsFilter[`${tagType}`] = { id: parseInt(value, 10), slug: getTagSlug(changedSelect, value) };
-        otherSelects.forEach(select => {
-          const thisTagType = singleSelectTagType(select);
-          if (!select.multiple && select.value && (thisTagType !== tagType)) {
-            tagsFilter[thisTagType] = { id: parseInt(select.value, 10), slug: getTagSlug(select, select.value) }; 
+      // reverse => ensures FIFO behavior
+      // reduce => build the tagsFilter object, with only one instance of a given tag type
+      // sort => category always goes first
+      const newTagTypeIds = tagTypeIds
+        .reverse()   
+        .reduce((acc, tagTypeId) => {
+          const tagType = tagTypeId.slice(0, tagTypeId.lastIndexOf('-'));
+          const isRepeatedType = acc.find(_tagTypeId => _tagTypeId.includes(tagType));
+          if (isRepeatedType) {
+            return acc;
+          } else {
+            // build the tagsFilter object
+            tagsFilter[`${tagType}`] = { 
+              id: parseInt(tagTypeId.slice(tagTypeId.lastIndexOf('-') + 1), 10), 
+              slug: getTagSlug(changedSelect, tagTypeId) 
+            };
+            return [...acc, tagTypeId];
           }
-        });
-      }
-      // console.log('tagsFilter', tagsFilter)
-      clearSearch();
-      clearFilterResults();
-      filterStories(tagsFilter).then(showResults);
-      syncFilters(changedSelect, otherSelects, tagsFilter, isMulti);
-      history.replaceState(null, null, `${formatTagParams(tagsFilter)}`);
-    };
+        }, [])
+        .sort(categoryFirst);
+      if (newTagTypeIds.length) changedSelect.tomselect.setValue(newTagTypeIds, true);
+
+    } else {
+      const tagType = singleSelectTagType(changedSelect);
+
+      // build the tagsFilter object
+      if (value) tagsFilter[`${tagType}`] = { id: parseInt(value, 10), slug: getTagSlug(changedSelect, value) };
+      otherSelects.forEach(select => {
+        const thisTagType = singleSelectTagType(select);
+        if (!select.multiple && select.value && (thisTagType !== tagType)) {
+          tagsFilter[thisTagType] = { id: parseInt(select.value, 10), slug: getTagSlug(select, select.value) }; 
+        }
+      });
+    }
+    // console.log('tagsFilter', tagsFilter)
+    clearSearch();
+    clearFilterResults();
+    filterStories(tagsFilter).then(showResults);
+    syncFilters(changedSelect, otherSelects, tagsFilter, isMulti);
+    history.replaceState(null, null, `${formatTagParams(tagsFilter)}`);
   }
 
-  function onBeforeSubmit(e) {
+  function onBeforeSearchSubmit(e) {
     e.preventDefault();
     const form = e.currentTarget;
     const query = form.querySelector('input[type="search"]').value;
@@ -154,11 +151,10 @@
       fetch('/stories/search?' + new URLSearchParams({ query }), {
         headers: {
           'Content-Type': 'application/json',
-          'X-CSRF-Token': document.querySelector('[name="csrf-token"]').content
+          'X-CSRF-Token': document.querySelector('[name="csrf-token" ]').content
         }
       }).then(res => res.json()).then((storyIds) => {
         const filteredStories = [...featuredStories].filter(card => storyIds.includes(parseInt(card.dataset.storyId, 10)));
-
         form.classList.add('was-executed');
         showResults({ search: filteredStories.length });
         updateGallery(filteredStories, noResultsMesg); 
@@ -292,7 +288,7 @@
         // disallow search
         select.nextElementSibling.querySelector('input').addEventListener('keypress', (e) => e.preventDefault());
       },
-      onChange: initFilterChangeHandler(select, otherSelects)
+      onChange: onFilterChange.bind(null, select, otherSelects)
     };
   }
   

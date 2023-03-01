@@ -41,10 +41,7 @@ function promote () {
     const hasCorrectAspectRatio = (requiredAspectRatio) => {
       const aspectRatioTolerance = Number($fileInput.data('aspect-ratio-tolerance')); 
       const plusMinus = aspectRatioTolerance * requiredAspectRatio;
-      return (
-        aspectRatio >= (requiredAspectRatio - plusMinus) && 
-        aspectRatio <= (requiredAspectRatio + plusMinus)
-      );
+      return aspectRatio >= (requiredAspectRatio - plusMinus) && aspectRatio <= (requiredAspectRatio + plusMinus);
     }
     const { 
       SquareImage: { width: squareImageMin }, 
@@ -60,21 +57,13 @@ function promote () {
         aspect_ratio: landscapeLogoAspectRatio
       }
     } = $fileInput.data('min-dimensions');
-    const isSquareImage = (
-      width >= squareImageMin && 
-      height >= squareImageMin && 
-      hasCorrectAspectRatio(1)
-    );
+    const isSquareImage = width >= squareImageMin && height >= squareImageMin && hasCorrectAspectRatio(1);
     const isLandscapeImage = (
       width >= landscapeImageMinWidth &&
       height >= landscapeImageMinHeight &&
       hasCorrectAspectRatio(landscapeImageAspectRatio)
     );
-    const isSquareLogo = (
-      width >= squareLogoMin && 
-      height >= squareLogoMin && 
-      hasCorrectAspectRatio(1)
-    );
+    const isSquareLogo = width >= squareLogoMin && height >= squareLogoMin && hasCorrectAspectRatio(1);
     const isLandscapeLogo = (
       width >= landscapeLogoMinWidth &&
       height >= landscapeLogoMinHeight && 
