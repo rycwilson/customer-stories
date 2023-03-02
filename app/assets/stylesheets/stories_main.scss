@@ -200,17 +200,15 @@
     }
   }
   
-  .plugin-clear_button {
+  .plugin-clear_button,   // needed for specificity in single tom-select
+  .ts-wrapper {
     .clear-button {
-      font-size: 1.75rem;
-      transition: opacity 0s;
-      box-shadow: none;
-      color: #6c757d;
-    }
-    
-    &.single .clear-button,
-    &.multi .clear-button {
       right: 2.75rem;
+      transition: opacity 0s;
+      background: transparent;
+      box-shadow: none;
+      font-size: 1.75rem;
+      color: #6c757d;
     }
   }
 }
