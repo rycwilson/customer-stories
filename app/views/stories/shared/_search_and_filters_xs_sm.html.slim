@@ -14,8 +14,7 @@
               { 'Category' => company.story_categories.select_options(true, true), 
                 'Product' => company.products.select_options(true, true) }.delete_if { |tag_type, options| options.blank? },
               tags_filter.map { |tag_type, tag_id| "#{tag_type}-#{tag_id}" }),
-            { placeholder: 'Select Category and/or Product',
-              class: 'stories-filter__select stories-filter__select--grouped',
+            { class: 'stories-filter__select stories-filter__select--grouped',
               multiple: true,
               style: 'width: 100%' })
       .text-right
@@ -32,7 +31,6 @@
             company.story_categories.select_options(true, false),
             tags_filter['category']),
           { include_blank: true,
-            placeholder: 'Select',
             class: 'stories-filter__select stories-filter__select--category',
             style: 'width: 100%' })
       .text-right

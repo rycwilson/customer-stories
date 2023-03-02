@@ -17,7 +17,6 @@
             company.story_categories.select_options(true, false),
             tags_filter['category']),
           { include_blank: true,
-            placeholder: 'Select',
             class: 'stories-filter__select stories-filter__select--category',
             style: 'width: 100%' })
       .text-right
@@ -34,7 +33,6 @@
             company.products.select_options(true, false),
             tags_filter['product']),
           { include_blank: true,
-            placeholder: 'Select',
             class: 'stories-filter__select stories-filter__select--product',
             style: 'width: 100%' })
       .text-right

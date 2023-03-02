@@ -119,46 +119,85 @@
     }
   }
 
-  .ts-wrapper {
-    &.multi.has-items {
-      .ts-control {
-        padding: 8px;
+  .stories-filter__select.ts-wrapper {
+    // change the caret color
+    .ts-control:after {
+      border-color: #6c757d transparent transparent transparent;
 
-        // wrap items
-        display: flex;
-        flex-direction: column;
-        align-items: flex-start;
+      input {
+        // caret-color: transparent;   // hide the blinking cursor since search is disabled
+        
       }
+    } 
 
-      .item {
-        display: flex;
-        align-items: center;
-        padding: 2px 0 2px 10px;
-        margin-right: 36px;
-
-        &:not(:last-of-type) {
-          margin-bottom: 8px;
-        }
-      }
-
-      .tag-type {
+    // with tom-select controlInput set to null (disable search), placeholder disappears
+    // => use pseudo element
+    &:not(.has-items) {
+      .ts-control::before {
         color: #6c757d;
       }
 
-      .tag-name {
-        color: #555;
-        font-weight: bold;
+      &.single .ts-control::before {
+        content: 'Select';
       }
-
-      .clear-button {
-        font-size: 20px;
-        padding: 0 10px;
+      
+      &.multi .ts-control::before {
+        content: 'Select Category and/or Product'
       }
     }
-  }
 
-  .stories-filter__select.ts-wrapper input {
-    caret-color: transparent;   // hide the blinking cursor since search is disabled
+    &.multi {
+      // add the dropdown caret to the multi-select filter
+      .ts-control:after {
+        content: " ";
+        display: block;
+        position: absolute;
+        top: 50%;
+        right: calc(0.75rem + 5px);
+        margin-top: -3px;
+        width: 0;
+        height: 0;
+        border-style: solid;
+        border-width: 5px 5px 0 5px;
+        border-color: #6c757d transparent transparent transparent;
+      }
+
+      &.has-items {
+        .ts-control {
+          padding: 8px;
+  
+          // wrap items
+          display: flex;
+          flex-direction: column;
+          align-items: flex-start;
+        }
+  
+        .item {
+          display: flex;
+          align-items: center;
+          padding: 2px 0 2px 10px;
+          margin-right: 36px;
+  
+          &:not(:last-of-type) {
+            margin-bottom: 8px;
+          }
+        }
+  
+        .tag-type {
+          color: #6c757d;
+        }
+  
+        .tag-name {
+          color: #555;
+          font-weight: bold;
+        }
+  
+        .clear-button {
+          font-size: 20px;
+          padding: 0 10px;
+        }
+      }
+    }
   }
   
   .plugin-clear_button {
@@ -166,35 +205,12 @@
       font-size: 1.75rem;
       transition: opacity 0s;
       box-shadow: none;
-      color: #6f6f6f;
+      color: #6c757d;
     }
     
     &.single .clear-button,
     &.multi .clear-button {
       right: 2.75rem;
     }
-  }
-  
-  // add the dropdown caret to the multi-select filter
-  .ts-wrapper.multi .ts-control:after {
-    content: " ";
-    display: block;
-    position: absolute;
-    top: 50%;
-    right: calc(0.75rem + 5px);
-    margin-top: -3px;
-    width: 0;
-    height: 0;
-    border-style: solid;
-    border-width: 5px 5px 0 5px;
-    border-color: #6f6f6f transparent transparent transparent;
-  }
-
-  // change the caret color
-  .ts-wrapper.single,
-  .ts-wrapper.multi {
-    .ts-control:after {
-      border-color: #6f6f6f transparent transparent transparent;
-    } 
   }
 }

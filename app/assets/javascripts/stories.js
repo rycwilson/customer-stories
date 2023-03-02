@@ -275,19 +275,12 @@
   function removeMultiSelectItem(multiTomSelect, item) {
     multiTomSelect.removeItem(item.dataset.value);
     multiTomSelect.blur();
-
-    // when the last item is removed the placeholder disappears, so set it manually (related to hidePlaceholder setting)
-    if (multiTomSelect.getValue().length === 0) {
-      multiTomSelect.control_input.placeholder = multiTomSelect.settings.placeholder;
-    }
   };
 
   function sharedSelectOptions(select, otherSelects) {
     return {
-      onInitialize() {
-        // disallow search
-        select.nextElementSibling.querySelector('input').addEventListener('keypress', (e) => e.preventDefault());
-      },
+      controlInput: null,   // disable search; note this causes placeholder to disappear (fixed with ::before content)
+      onInitialize() {},
       onChange: onFilterChange.bind(null, select, otherSelects)
     };
   }
@@ -305,7 +298,6 @@
 
   function multiSelectOptions() {
     return { 
-      hidePlaceholder: true,
       closeAfterSelect: true,
       render: {
         item: (data, escape) => {
