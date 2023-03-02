@@ -281,6 +281,10 @@
     return {
       controlInput: null,   // disable search; note this causes placeholder to disappear (fixed with ::before content)
       onInitialize() {},
+      onFocus() {
+        const dropdownMaxHeight = document.documentElement.clientHeight - this.wrapper.getBoundingClientRect().bottom;
+        this.dropdown.children[0].style.maxHeight = `${dropdownMaxHeight - 10}px`;
+      },
       onChange: onFilterChange.bind(null, select, otherSelects)
     };
   }
