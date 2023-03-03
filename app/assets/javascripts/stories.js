@@ -45,7 +45,9 @@
       const link = card.children[0];
       if (link.classList.contains('published')) {
         link.addEventListener('click', visitStory);
-        link.addEventListener('touchstart', visitStory);
+
+        // set passive: false to override Chrome default behavior; see TouchEvent MDN docs
+        link.addEventListener('touchstart', visitStory, { passive: false });
       }
     })    
   }
