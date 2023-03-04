@@ -251,47 +251,56 @@
 
   @media only screen and (max-width: 767px) {
     #primary-cta-xs, .primary-cta-xs {
-      display: flex;
-      align-items: center;
-      // justify-content: center;
-      font-size: 16px;
       position: fixed;
-      height: 50px;
-      bottom: -50px;
       left: 0;
       right: 0;
+      bottom: -50px;
+      display: flex;
+      align-items: center;
+      font-size: 16px;
+      height: 50px;
       // these two set inline with helper
       // background-color: ;
       // color: ;
       margin: 0 auto;
-      padding-left: 15px;
       z-index: 100;
       min-width: 300px;
       max-width: 400px;
       transform: translateY(0%);
       transition: all 0.4s;
-          box-shadow: 0 2px 8px 0px rgba(0, 0, 0, 0.2);
-      a, button {
+      box-shadow: 0 2px 8px 0px rgba(0, 0, 0, 0.2);
+
+      a {
+        flex-grow: 1;
+        display: flex;
+        align-items: center;
+        height: 100%;
+        padding-left: 15px;
+
+        &, 
+        i {
+          font-weight: 600;
+        }
+      }
+
+      button {
+        background: none;
+        border: none;
+        height: 100%;
+        padding: 0 15px;
+      }
+
+      a, 
+      button {
         text-decoration: none;
         color: unset;  // let the parent container set the color
       }
-      a, a i {
-        font-weight: 600;
-      }
-      button {
-        position: absolute;
-        top: 0;
-        bottom: 0;
-        right: 0;
-        margin: auto;
-        background: none;
-        border: 0;
-        padding: 12px 15px;
-      }
+
       &.open {
         transform: translateY(-100%);
         transition: all 0.4s;
       }
+
       @media only screen and (min-width: 400px) {
         & {
           border-top-left-radius: 3px;

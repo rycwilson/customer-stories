@@ -4,14 +4,34 @@
 (function CSP() {
   'use strict';
 
-  const featuredStories = document.querySelectorAll('.story-card');
-  const searchForms = document.querySelectorAll('form.search-stories');
-  
-  initFilters();
-  document.querySelectorAll('.search-and-filters').forEach(container => container.setAttribute('data-init', 'true'));
-  
-  initSearchForms();
-  initStoryCards();
+  let featuredStories, searchForms;
+
+  if (location.pathname === '/') {
+    featuredStories = document.querySelectorAll('.story-card');
+    searchForms = document.querySelectorAll('form.search-stories');
+    initFilters();
+    initSearchForms();
+    initStoryCards();
+
+  } else {
+    const socialShareRedirectURI = (new URL(location)).searchParams.get('redirect_uri');
+    if (socialShareRedirectURI) 
+      location = socialShareRedirectURI;
+    initMobileCta();
+
+  }
+
+  function initMobileCta() {
+    const cta = document.getElementById('primary-cta-xs');
+    const removeCta = (e) => {
+      if (e.target.closest('button')) cta.remove();
+    };
+    if (cta) {
+      setTimeout(() => cta.classList.add('open'), 3000);
+      cta.addEventListener('click', removeCta);
+      cta.addEventListener('touchend', removeCta);
+    }
+  }
 
   function initSearchForms() {
     searchForms.forEach(form => {
@@ -38,7 +58,10 @@
         ts.wrapper.querySelectorAll('.item').forEach(item => onMultiSelectItemAdd(ts, item));
         ts.on('item_add', (value, item) => onMultiSelectItemAdd(ts, item));
       };
-    })
+    });
+    setTimeout(() => (
+      document.querySelectorAll('.search-and-filters').forEach(container => container.setAttribute('data-init', 'true'))
+    ));
   }
 
   function initStoryCards() {
