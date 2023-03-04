@@ -1,6 +1,11 @@
 //= require tom-select/dist/js/tom-select.base
 //= require tom-select/dist/js/plugins/clear_button
 
+// story page modals (video, web form)
+// TODO replace with native js
+//= require jquery3
+//= require bootstrap/modal
+
 (function CSP() {
   'use strict';
 
@@ -17,7 +22,10 @@
     const socialShareRedirectURI = (new URL(location)).searchParams.get('redirect_uri');
     if (socialShareRedirectURI) 
       location = socialShareRedirectURI;
+    
     initMobileCta();
+    
+    document.querySelector('.story-wrapper').classList.remove('hidden');
 
   }
 
