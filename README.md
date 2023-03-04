@@ -90,8 +90,6 @@
 <a name="dnsimple"></a>
 
 #### DNSimple
-- administrator@customerstories.net / Dan's usual password
-- "For a stable app, give TTL a relatively high value."
 
 <a name="heroku"></a>
 
@@ -110,8 +108,7 @@
 
 #### SSL Certificates
 - Heroku [does not support](https://devcenter.heroku.com/articles/automated-certificate-management) wildcard SSL certificates (needed for subdomains)
-- [Production certificate](https://dnsimple.com/a/60286/domains/customerstories.net/ssl_certificates) good until 3/18/23
-- Free approach: Staging certificate was created with [certbot](https://certbot.eff.org/)
+- Certificates created with [certbot](https://certbot.eff.org/)
   - assuming a macOS environment
   - contact Ryan for DNSimple credentials (`certbot-creds.ini` file)
   1. `sudo pip3 install certbot`
@@ -136,6 +133,11 @@ Copy the production database to staging:
   3. `heroku pg:copy floating-spire-2927::DATABASE_URL DATABASE_URL -r staging`
   4. `heroku maintenance:off -r staging`
   5. `heroku ps:scale worker=1 -r staging` (or however many workers, if any)
+
+Copy the production database to local:
+  - First must drop the local db: `bundle exec rails db:drop`
+  - `heroku pg:pull DATABASE_URL csp_development -r production` 
+  - `RAILS_ENV=development bundle exec rails db:environment:set`
 
 #### Caching
 There were some issues with caching when upgrading to Rails 6. To minimize complexity caching (mostly in the form of rails low-level caching) has been disabled on staging and production.
@@ -188,7 +190,7 @@ There were some issues with caching when upgrading to Rails 6. To minimize compl
 <a name="aws-s3"></a>
 
 #### AWS S3/Cloudfront
-- [Console](https://us-west-1.console.aws.amazon.com/console/home?region=us-west-1) - root user is `administrator@customerstories.net`
+- [Console](https://us-west-1.console.aws.amazon.com/console/home?region=us-west-1)
 - A separate user `csp-user` is used to generate credentials for interacting with the S3 bucket from the application. See the [IAM Management Console](https://us-east-1.console.aws.amazon.com/iamv2/home?region=us-east-1#/users).
 - In the [production S3 bucket](https://s3.console.aws.amazon.com/s3/buckets/csp-prod-assets?region=us-west-1&tab=objects&tab=permissions), note the bucket policy which is necessary for the [Cloudfront distribution](https://us-east-1.console.aws.amazon.com/cloudfront/v3/home?region=us-west-1#/distributions/E3F8UC3PNEEQNK/origins) to read from the bucket, and the CORS list which is necessary for user uploads and font requests.
 - Public access to the production S3 bucket (used by both `.org` and `.net`) is blocked, however since the development environment does not request assets through Cloudfront, public access to the [development S3 bucket](https://s3.console.aws.amazon.com/s3/buckets/csp-dev-assets?region=us-west-1&tab=permissions) must be turned on. The bucket policy ensures only requests from development domains are allowed.
