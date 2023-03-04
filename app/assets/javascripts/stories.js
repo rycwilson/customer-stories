@@ -1,17 +1,18 @@
-'use strict';
+//= require tom-select/dist/js/tom-select.base
+//= require tom-select/dist/js/plugins/clear_button
 
 (function CSP() {
-  const searchContainers = [...document.querySelectorAll('.search-and-filters')]
-  for (const container of searchContainers) container.setAttribute('data-init', 'true')
-  
+  'use strict';
+
   const featuredStories = document.querySelectorAll('.story-card');
-  // console.log('featuredStories', featuredStories)
   const searchForms = document.querySelectorAll('form.search-stories');
   
-  initSearchForms();
   initFilters();
-  initStoryCards();
+  document.querySelectorAll('.search-and-filters').forEach(container => container.setAttribute('data-init', 'true'));
   
+  initSearchForms();
+  initStoryCards();
+
   function initSearchForms() {
     searchForms.forEach(form => {
       form.addEventListener('input', syncSearchInputs);
@@ -292,6 +293,7 @@
   }
   
   function singleSelectOptions() {
+    TomSelect.define('clear_button', globalThis.clear_button);
     return {
       plugins: {
         'clear_button': {

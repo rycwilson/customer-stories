@@ -12,9 +12,6 @@ html lang="en-US" prefix="og: http://ogp.me/ns# fb: http://ogp.me/ns/fb#"
         "stories/#{action_name == 'index' ? 'index/seo_meta_tags' : 'show/story_meta_tags'}",
         { company: @company, success: @story&.success, story: @story })
     
-    link href="https://cdn.jsdelivr.net/npm/tom-select@2.2.2/dist/css/tom-select.bootstrap4.css" rel="stylesheet"
-    script src="https://cdn.jsdelivr.net/npm/tom-select@2.2.2/dist/js/tom-select.complete.min.js"
-    
     = javascript_include_tag('stories', defer: true)
     = stylesheet_link_tag('stories')
     - if custom_stylesheet?(@company)

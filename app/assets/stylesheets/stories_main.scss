@@ -56,19 +56,16 @@
 @import 'base/variables';
 @import 'base/mixins';
 @import 'base/globals';
+// @import 'tom-select/dist/scss/tom-select.bootstrap4';
 
 @import 'views/navbars/navbars';
 @import 'views/stories/index/index';
 @import 'views/stories/show/show';
 
-.stories.show, 
-.stories.index {
-  @import 'views/stories/shared/cookie_consent';
-  @import 'views/stories/shared/gallery';
-}
+@import 'views/stories/shared/cookie_consent';
+@import 'views/stories/shared/gallery';
 
 .stories.index {
-
   // match tom-select style (specificity needed to override bootstrap)
   .search-stories .input-group input[type="search"] {
     padding: 0.375rem 0.75rem;
@@ -124,10 +121,10 @@
     .ts-control:after {
       border-color: #6c757d transparent transparent transparent;
 
-      input {
+      // input {
         // caret-color: transparent;   // hide the blinking cursor since search is disabled
         
-      }
+      // }
     } 
 
     // with tom-select controlInput set to null (disable search), placeholder disappears
