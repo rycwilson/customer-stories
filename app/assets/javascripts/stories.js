@@ -23,10 +23,33 @@
     if (socialShareRedirectURI) 
       location = socialShareRedirectURI;
     
+    document.querySelector('.story-wrapper').classList.remove('hidden');
+    
     initMobileCta();
     
-    document.querySelector('.story-wrapper').classList.remove('hidden');
+    initMoreStories();
+  }
 
+  function initMoreStories () {
+    const minStories = 4;
+    const delay = 5;
+    const storySlug = location.pathname.slice(location.pathname.lastIndexOf('/') + 1);
+    const shouldInit = (
+      document.body.className.search(/pixlee|varmour/) === -1 && 
+      window.innerWidth >= 768
+      // TODO: # of featured|related stories >= minStories (implement in server)
+    )
+    if (!shouldInit) return false;
+    const container = document.createElement('div');
+    container.id = 'cs-tabbed-carousel';
+    container.classList.add('cs-plugin');
+    const scriptTag = document.createElement('script');
+    scriptTag.src = `${location.origin}/plugins/tabbed_carousel/cs.js`; 
+    scriptTag.setAttribute('data-delay', delay);
+    scriptTag.setAttribute('data-title', 'More Stories');
+    scriptTag.setAttribute('data-skip', storySlug)
+    document.body.appendChild(container);
+    document.body.appendChild(scriptTag);
   }
 
   function initMobileCta() {
