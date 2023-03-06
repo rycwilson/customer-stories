@@ -1,15 +1,6 @@
-
 / turbolinks caching problematic with linkedin widgets
-- content_for(:head) do
-  meta name="turbolinks-cache-control" content="no-cache"
-
-  / TODO: handle both story and index meta tags; with this method removed, it's only handling story
-  / = render_seo_meta_tags('show', @company, @story) if production?
-
-  - cache("#{@company.subdomain}/stories/#{@story.id}/meta-tags", { skip_digest: true }) do
-    = render( \
-        'stories/show/story_meta_tags',
-        { company: @company, success: @story.success, story: @story }) 
+/ - content_for(:head) do
+  /meta name="turbolinks-cache-control" content="no-cache"
 
 / - content_for(:underscore_templates) do
     = render('companies/1_prospect/contributors/csp_linkedin_widget_template')
@@ -46,10 +37,3 @@
           i.fa.fa-fw.fa-caret-right
       button type="button" class="remove"
         .fa.fa-fw.fa-remove
-
-
-
-
-
-
-

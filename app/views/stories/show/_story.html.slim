@@ -1,0 +1,63 @@
+- if is_plugin
+  script type="text/javascript" src="https://platform.linkedin.com/badges/js/profile.js" async="" defer=""
+
+div class="#{'cs-' if is_plugin}story-wrapper hidden"
+  article
+    - if is_plugin
+      .cs-story-header.hidden-xs
+        button.cs-close type="button"
+          i.fa.fa-fw.fa-arrow-left-thin.fa-2x
+        button.cs-close type="button"
+          i.fa.fa-fw.fa-times-thin.fa-2x
+
+    / includes video
+    section class="#{'cs-' if is_plugin}testimonial #{'no-video' if story.video_url.blank?}"
+      / include_video necessary in the event video fails and must be removed; see stories#show
+      = render( \
+          'stories/show/testimonial',
+          { story: story,
+            long_customer_name: story.customer.name.length > 20,
+            include_video: story.video_url.present?,
+            is_plugin: is_plugin })
+
+    .visible-xs-block.title-xs
+      div class="#{'cs-' if is_plugin}container"
+        div class="#{'cs-' if is_plugin}row"
+          .col-xs-12
+            .section-title.story-title.text-center
+              h3 = story.title
+            = render( \
+                'stories/shared/share_buttons', 
+                { story: story, 
+                  container_class: "#{'cs-' if is_plugin}share-buttons",
+                  button_class: "#{'cs-' if is_plugin}share-button" })
+
+    section class="#{'cs-' if is_plugin}story-video-xs #{story.video_url.present? ? 'visible-xs-block' : 'hidden'}"
+      div class="#{'cs-' if is_plugin}container"
+        div class="#{'cs-' if is_plugin}row"
+          .col-xs-12
+            = render('stories/show/video', { story: story, is_plugin: is_plugin, is_xs_view: true })
+
+    div class="#{'cs-' if is_plugin}story-content"
+      = render( \
+          'stories/show/story_content',
+          { company: company,
+            story: story,
+            contributors: contributors,
+            related_stories: related_stories,
+            is_plugin: is_plugin,
+            window_width: is_plugin ? window_width : nil })
+
+    - unless is_plugin || user_signed_in?
+      = render('stories/shared/sign_in_footer')
+
+  / web form not presently supported for mobile view 
+  - if is_plugin && company.ctas.try(:primary).present? && company.ctas.primary.type == 'CTALink'
+    .visible-xs-block
+      div.primary-cta-xs style="#{primary_cta_style(company, true)}"
+        a href="#{company.ctas.primary.link_url}"
+          span = company.ctas.primary.display_text
+          span
+            i.fa.fa-fw.fa-caret-right
+        button type="button" class="remove"
+          i.fa.fa-fw.fa-remove
