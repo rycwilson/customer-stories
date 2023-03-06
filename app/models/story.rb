@@ -390,21 +390,22 @@ class Story < ApplicationRecord
   #  "https://fast.wistia.com/embed/medias/#{wistia_id}.jsonp"
   #
   def video_info
-    Rails.cache.fetch("#{self.company.subdomain}/story-#{self.id}-video-info") do
-      return { provider: nil, id: nil } if self.video_url.blank?
-      if self.video_url.include? "youtube"
-        { provider: 'youtube',
-          id: video_url.slice(video_url.rindex('/') + 1, video_url.length) }
-      elsif self.video_url.include? "vimeo"
-        { provider: 'vimeo',
-          id: video_url.slice(video_url.rindex('/') + 1, video_url.length) }
-      elsif self.video_url.include? "wistia"
-        { provider: 'wistia',
-          id: self.video_url.match(/\/(?<id>\w+)(\.\w+$)/)[:id] }
-      else
-        # error
-      end
+    provider = video_url&.match(/youtube|vimeo|wistia/).try(:[], 0)
+    id = case provider 
+    when /youtube|vimeo/
+      video_url.slice(video_url.rindex('/') + 1, video_url.length)
+    when 'wistia'
+      video_url.match(/\/(?<id>\w+)(\.\w+$)/).try(:[], :id) 
     end
+    thumbnail_src = id.nil? ? nil : case provider
+    when 'youtube'
+      "https://img.youtube.com/vi/#{id}/hqdefault.jpg"
+    when 'vimeo'
+      uri = URI("https://vimeo.com/api/oembed.json?url=https%3A//vimeo.com/#{id}")
+      res = Net::HTTP.get_response(uri)
+      JSON.parse(res.body).try(:[], 'thumbnail_url_with_play_button')
+    end
+    { provider: provider, id: id, thumbnail_src: thumbnail_src }
   end
 
   # this method closely resembles the 'set_contributors' method in stories controller;
