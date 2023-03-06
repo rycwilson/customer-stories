@@ -1,3 +1,4 @@
+//= require js-cookie/dist/js.cookie
 //= require tom-select/dist/js/tom-select.base
 //= require tom-select/dist/js/plugins/clear_button
 
@@ -20,14 +21,20 @@
 
   } else {
     const socialShareRedirectURI = (new URL(location)).searchParams.get('redirect_uri');
-    if (socialShareRedirectURI) 
-      location = socialShareRedirectURI;
+    const signInFooter = document.getElementById('sign-in-footer');
+    const editStoryLink = document.querySelector('.stories-header__edit');
+
+    if (socialShareRedirectURI) location = socialShareRedirectURI;
     
     document.querySelector('.story-wrapper').classList.remove('hidden');
     
     initMobileCta();
     
     initMoreStories();
+
+    if (signInFooter) addFooterScrollListener(signInFooter.clientHeight);
+    if (editStoryLink)
+      editStoryLink.addEventListener('click', () => Cookies.set('csp-edit-story-tab', '#story-content'));
   }
 
   function initMoreStories () {
@@ -54,14 +61,27 @@
 
   function initMobileCta() {
     const cta = document.getElementById('primary-cta-xs');
-    const removeCta = (e) => {
-      if (e.target.closest('button')) cta.remove();
-    };
     if (cta) {
+      const removeCta = (e) => { if (e.target.closest('button')) cta.remove(); };
       setTimeout(() => cta.classList.add('open'), 3000);
       cta.addEventListener('click', removeCta);
       cta.addEventListener('touchend', removeCta);
     }
+  }
+
+  // TODO how to determine if carousel is present given that it won't appear until X seconda after load?
+  function addFooterScrollListener(footerHeight) {
+    const carousel = document.getElementById('cs-tabbed-carousel');
+    document.addEventListener('scroll', (e) => {
+      // TODO memoize this?
+      const scrollBottom = document.documentElement.scrollHeight - document.documentElement.clientHeight - scrollY;
+
+      if (scrollBottom < footerHeight) {
+        carousel.classList.add('hidden');
+      } else if (!document.cookie.includes('cs-tabbed-carousel-removed')) {
+        carousel.classList.remove('hidden')
+      }
+    }, { passive: true });
   }
 
   function initSearchForms() {
@@ -172,7 +192,7 @@
             return [...acc, tagTypeId];
           }
         }, [])
-        .sort(categoryFirst);
+        .sort(byTagType.bind(null, 'category'));
       if (newTagTypeIds.length) changedSelect.tomselect.setValue(newTagTypeIds, true);
 
     } else {
@@ -299,7 +319,7 @@
       if (multiSelect) {
         const newTagTypeIds = Object.entries(tagsFilter)
           .flatMap(([tagType, { id: tagId }]) => tagId ? `${tagType}-${tagId}` : [])
-          .sort(categoryFirst);
+          .sort(byTagType.bind(null, 'category'));
          multiSelect.tomselect.setValue(newTagTypeIds, true);
       }
     }
@@ -402,7 +422,7 @@
     return tagMatch ? tagMatch.groups.tagType : '';
   }
 
-  function categoryFirst(a, b) {
-    return a.includes('category') ? -1 : (b.includes('category') ? 1 : 0);
+  function byTagType(tagType, a, b) {
+    return a.includes(tagType) ? -1 : (b.includes(tagType) ? 1 : 0);
   }
 })()
