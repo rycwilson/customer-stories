@@ -134,13 +134,26 @@
   }
 
   function initSearchForms() {
+    const syncInputs = (e) => {
+      [...searchForms]
+        .filter(form => !form.isSameNode(e.currentTarget))
+        .forEach(form => form.querySelector('input[type="search"]').value = e.target.value);
+    }
     searchForms.forEach(form => {
-      form.addEventListener('input', syncSearchInputs);
+      form.addEventListener('input', syncInputs);
       form.addEventListener('click', (e) => { if (e.target.type === 'submit') onBeforeSearchSubmit(e) });
       form.querySelector('.search-stories__clear').addEventListener('click', (e) => {
         clearSearch();
         updateGallery([...featuredStories]);
       });
+    });
+  }
+
+  function clearSearch() {
+    searchForms.forEach(form => {
+      form.classList.remove('was-executed');
+      form.querySelector('.search-stories__input').value = '';
+      form.querySelector('.search-stories__results').textContent = '';
     });
   }
 
@@ -342,13 +355,6 @@
     }
   }
 
-  function syncSearchInputs(e) {
-    const query = e.target.value;
-    [...searchForms]
-      .filter(form => !form.isSameNode(this))
-      .forEach(form => form.querySelector('input[type="search"]').value = query);
-  }
-
   function syncFilters(changedSelect, otherSelects, tagsFilter, multiChanged) {
     otherSelects.forEach(select => {
       if (multiChanged) {
@@ -372,14 +378,6 @@
          multiSelect.tomselect.setValue(newTagTypeIds, true);
       }
     }
-  }
-
-  function clearSearch() {
-    searchForms.forEach(form => {
-      form.classList.remove('was-executed');
-      form.querySelector('.search-stories__input').value = '';
-      form.querySelector('.search-stories__results').textContent = ''
-    })
   }
 
   function clearFilterSelections() {
