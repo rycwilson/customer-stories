@@ -62,6 +62,11 @@ class Story < ApplicationRecord
   # virtual attribute for accepting a standard format video url
   attr_accessor :formatted_video_url
 
+  # presence of video is determined by a valid thumbnail url which must be fetched and confirmed
+  # => ensure the fetch only happens once by assigning to a virtual attribute
+  # => story.video = story.video_info() on :show and :edit actions only
+  attribute(:video)   
+
   # Note: no explicit association to friendly_id_slugs, but it's there
   # Story has many friendly_id_slugs -> captures history of slug changes
 
@@ -391,21 +396,20 @@ class Story < ApplicationRecord
   #
   def video_info
     provider = video_url&.match(/youtube|vimeo|wistia/).try(:[], 0)
-    id = case provider 
-    when /youtube|vimeo/
-      video_url.slice(video_url.rindex('/') + 1, video_url.length)
-    when 'wistia'
-      video_url.match(/\/(?<id>\w+)(\.\w+$)/).try(:[], :id) 
-    end
-    thumbnail_src = id.nil? ? nil : case provider
+    video_path = provider ? URI(video_url)&.path : nil
+    id = video_path ? video_path.slice(video_path.rindex('/') + 1, video_path.length).sub(/\.\w+\z/, '') : nil
+    thumbnail = !id ? nil : case provider
     when 'youtube'
-      "https://img.youtube.com/vi/#{id}/hqdefault.jpg"
+      # "https://img.youtube.com/vi/#{id}/hqdefault.jpg"
+      thumbnail_url = "https://i.ytimg.com/vi_webp/#{id}/mqdefault.webp"
+      res = Net::HTTP.get_response(URI(thumbnail_url))
+      res.code == '200' ? thumbnail_url : nil
     when 'vimeo'
-      uri = URI("https://vimeo.com/api/oembed.json?url=https%3A//vimeo.com/#{id}")
-      res = Net::HTTP.get_response(uri)
-      JSON.parse(res.body).try(:[], 'thumbnail_url_with_play_button')
+      video_data_url = "https://vimeo.com/api/oembed.json?url=https%3A//vimeo.com/#{id}"
+      res = Net::HTTP.get_response(URI(video_data_url))
+      JSON.parse(res.body).try(:[], 'thumbnail_url_with_play_button') rescue nil
     end
-    { provider: provider, id: id, thumbnail_src: thumbnail_src }
+    { provider: provider, id: id, thumbnail_url: thumbnail }.compact
   end
 
   # this method closely resembles the 'set_contributors' method in stories controller;

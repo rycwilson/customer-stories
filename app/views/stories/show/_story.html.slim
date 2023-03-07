@@ -10,14 +10,12 @@ div class="#{'cs-' if is_plugin}story-wrapper hidden"
         button.cs-close type="button"
           i.fa.fa-fw.fa-times-thin.fa-2x
 
-    / includes video
-    section class="#{'cs-' if is_plugin}testimonial #{'no-video' if story.video_url.blank?}"
-      / include_video necessary in the event video fails and must be removed; see stories#show
+    section class="#{'cs-' if is_plugin}testimonial #{'no-video' unless has_video}"
       = render( \
           'stories/show/testimonial',
           { story: story,
             long_customer_name: story.customer.name.length > 20,
-            include_video: story.video_info[:thumbnail_src].present?,
+            has_video: has_video,
             is_plugin: is_plugin })
 
     .visible-xs-block.title-xs
@@ -32,17 +30,19 @@ div class="#{'cs-' if is_plugin}story-wrapper hidden"
                   container_class: "#{'cs-' if is_plugin}share-buttons",
                   button_class: "#{'cs-' if is_plugin}share-button" })
 
-    section class="#{'cs-' if is_plugin}story-video-xs #{story.video_url.present? ? 'visible-xs-block' : 'hidden'}"
-      div class="#{'cs-' if is_plugin}container"
-        div class="#{'cs-' if is_plugin}row"
-          = render( \
-              'stories/show/video', 
-              { video_url: story.video_url,
-                provider: story.video_info[:provider],
-                provider_id: story.video_info[:id],
-                thumbnail_src: story.video_info[:thumbnail_src],
-                is_plugin: is_plugin, 
-                is_xs_view: true })
+    - if has_video 
+      section.visible-xs-block class="#{'cs-' if is_plugin}story-video-xs"
+        div class="#{'cs-' if is_plugin}container"
+          div class="#{'cs-' if is_plugin}row"
+            - if has_video
+              = render( \
+                  'stories/show/video', 
+                  { video_url: story.video_url,
+                    provider: story.video[:provider],
+                    provider_id: story.video[:id],
+                    thumbnail_url: story.video[:thumbnail_url],
+                    is_plugin: is_plugin, 
+                    is_xs_view: true })
 
     div class="#{'cs-' if is_plugin}story-content"
       = render( \

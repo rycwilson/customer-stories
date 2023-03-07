@@ -1,7 +1,7 @@
 div class="#{'cs-' if is_plugin}container"
   div class="#{'cs-' if is_plugin}row"
 
-    .col-xs-12 class="#{include_video ? 'col-sm-6 col-md-7' : 'no-video'}"
+    .col-xs-12 class="#{has_video ? 'col-sm-6 col-md-7' : 'no-video'}"
 
       .customer-logo-quote.visible-xs-block 
         div class="#{'cs-' if is_plugin}customer-logo"
@@ -24,14 +24,14 @@ div class="#{'cs-' if is_plugin}container"
 
       .customer-logo-quote.hidden-xs class="#{'cs-' if is_plugin}row"
         div
-          .text-center class="#{include_video ? 'col-sm-12' : (long_customer_name ? 'col-sm-4' : 'col-sm-4 col-lg-3')}"
+          .text-center class="#{has_video ? 'col-sm-12' : (long_customer_name ? 'col-sm-4' : 'col-sm-4 col-lg-3')}"
             .customer-logo
               = image_tag(story.customer.logo_url || LOGO_PLACEHOLDER, class: 'img-responsive')
 
               - if story.customer.show_name_with_logo?
-                .customer-name class=('no-video' unless include_video)
+                .customer-name class=('no-video' unless has_video)
                   span = story.customer.name
-          div class="#{'cs-' if is_plugin}customer-quote #{include_video ? 'col-sm-12' : (long_customer_name ? 'col-sm-8' : 'col-sm-8 col-lg-9')}"
+          div class="#{'cs-' if is_plugin}customer-quote #{has_video ? 'col-sm-12' : (long_customer_name ? 'col-sm-8' : 'col-sm-8 col-lg-9')}"
             - if story.quote.present?
               blockquote
                 / puts index, [34, 39, 8220, 8221].include?(char.ord)
@@ -43,14 +43,14 @@ div class="#{'cs-' if is_plugin}container"
                     p.cite-name = story.quote_attr_name
                     p.cite-title = story.quote_attr_title
           / filler
-          div class="#{include_video ? 'hidden' : 'col-lg-1'}"
+          div class="#{has_video ? 'hidden' : 'col-lg-1'}"
 
-    - if include_video
+    - if has_video
       = render( \
         'stories/show/video', 
         { video_url: story.video_url,
-          provider: story.video_info[:provider],
-          provider_id: story.video_info[:id],
-          thumbnail_src: story.video_info[:thumbnail_src],
+          provider: story.video[:provider],
+          provider_id: story.video[:id],
+          thumbnail_url: story.video[:thumbnail_url],
           is_plugin: is_plugin, 
           is_xs_view: false })

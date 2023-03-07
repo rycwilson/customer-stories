@@ -7,7 +7,7 @@
 //= require jquery3
 //= require bootstrap/modal
 
-(function CSP() {
+;(function CSP() {
   'use strict';
 
   let featuredStories, searchForms;
@@ -473,4 +473,4 @@
   function byTagType(tagType, a, b) {
     return a.includes(tagType) ? -1 : (b.includes(tagType) ? 1 : 0);
   }
-})()
+})();

@@ -33,6 +33,7 @@ class StoriesController < ApplicationController
   end
 
   def show
+    @story.video = @story.video_info()
     if params[:is_plugin]
       # @is_plugin = @is_external = true
       respond_to do |format|
@@ -65,6 +66,7 @@ class StoriesController < ApplicationController
   def edit
     authenticate_user!
     @story = Story.find_by_id(params[:id]) || Story.friendly.find(params[:story_slug])
+    @story.video = @story.video_info()
     if request.path != curate_story_path(@story.customer.slug, @story.slug) # friendly path changed
       # old story title slug requested, redirect to current
       return redirect_to(

@@ -21,13 +21,13 @@ div class="#{is_xs_view ? 'col-xs-12' : ('cs-' if is_plugin).to_s + 'story-video
         iframe.embed-responsive-item.hidden src=""
       - elsif is_xs_view
         iframe.embed-responsive-item.hidden src="" webkitallowfullscreen="" mozallowfullscreen="" allowfullscreen=""
-        img src="#{thumbnail_src}"
+        img src="#{thumbnail_url}"
         - if provider == 'youtube'
           .play-button
             i.fa.fa-2x.fa-inverse.fa-play
       - else    
         / iframe will be in a modal
-        img src="#{thumbnail_src}"
+        img src="#{thumbnail_url}"
         - if provider == 'youtube'
           .play-button
             i.fa.fa-2x.fa-inverse.fa-play
