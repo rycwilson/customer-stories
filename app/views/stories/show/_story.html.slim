@@ -17,7 +17,7 @@ div class="#{'cs-' if is_plugin}story-wrapper hidden"
           'stories/show/testimonial',
           { story: story,
             long_customer_name: story.customer.name.length > 20,
-            include_video: story.video_url.present?,
+            include_video: story.video_info[:thumbnail_src].present?,
             is_plugin: is_plugin })
 
     .visible-xs-block.title-xs
@@ -35,8 +35,14 @@ div class="#{'cs-' if is_plugin}story-wrapper hidden"
     section class="#{'cs-' if is_plugin}story-video-xs #{story.video_url.present? ? 'visible-xs-block' : 'hidden'}"
       div class="#{'cs-' if is_plugin}container"
         div class="#{'cs-' if is_plugin}row"
-          .col-xs-12
-            = render('stories/show/video', { story: story, is_plugin: is_plugin, is_xs_view: true })
+          = render( \
+              'stories/show/video', 
+              { video_url: story.video_url,
+                provider: story.video_info[:provider],
+                provider_id: story.video_info[:id],
+                thumbnail_src: story.video_info[:thumbnail_src],
+                is_plugin: is_plugin, 
+                is_xs_view: true })
 
     div class="#{'cs-' if is_plugin}story-content"
       = render( \

@@ -26,15 +26,63 @@
 
     if (socialShareRedirectURI) location = socialShareRedirectURI;
     
+    // TODO: wait for video thumnail to load
     document.querySelector('.story-wrapper').classList.remove('hidden');
     
     initMobileCta();
-    
     initMoreStories();
+    initVideo();
 
     if (signInFooter) addFooterScrollListener(signInFooter.clientHeight);
     if (editStoryLink)
       editStoryLink.addEventListener('click', () => Cookies.set('csp-edit-story-tab', '#story-content'));
+  }
+
+  function initVideo() {
+    document.querySelectorAll('.video-thumb-container').forEach(container => {
+      container.addEventListener('click', playVideo);
+      container.addEventListener('touchend', playVideo);
+    })
+  }
+  
+  function playVideo(e) {
+    if (e.target.closest('iframe')) return false;
+    const isMobileView = document.documentElement.clientWidth < 768;
+    const provider = this.dataset.provider;
+    const url = this.dataset.videoUrl;
+    const sharedParams = 'autoplay=1';
+    const youtubeParams = 'enablejsapi=1&controls=0&iv_load_policy=3&showinfo=0&rel=0';
+    const params = (
+      `${url.includes('?') ? '&' : '?'}` + sharedParams + `${provider === 'youtube' ? `&${youtubeParams}` : ''}`
+    );
+    const modal = document.getElementById('video-modal');
+    const videoFrame = isMobileView ? document.querySelector('.story-video-xs iframe') : modal.querySelector('iframe');
+    const pauseVideo = (e) => {
+      videoFrame.contentWindow.postMessage(
+        provider === 'youtube' ? '{"event":"command","func":"pauseVideo","args":""}' : '{"method":"pause"}', 
+        '*'
+      );
+    }
+    if (isMobileView) {
+      videoFrame.addEventListener('load', function () {
+        console.log(this)
+        this.classList.remove('hidden');
+        [...this.parentElement.children].forEach(el => { if (!el.isSameNode(this)) el.remove(); });
+      }, { once: true });
+      videoFrame.src = url + params;
+
+    // attach one-time listeners since the postMessage will differ by provider
+    } else {
+      const closeBtn = modal.querySelector('button.close');
+      videoFrame.contentWindow.location.replace(url + params);
+      closeBtn.addEventListener('click', pauseVideo);
+      $(modal)
+        .on('hide.bs.modal', pauseVideo)
+        .one('hidden.bs.modal', (e) => {
+          closeBtn.removeEventListener('click', pauseVideo);
+          $(modal).off('hide.bs.modal', pauseVideo);
+        })
+    }
   }
 
   function initMoreStories () {

@@ -45,5 +45,12 @@ div class="#{'cs-' if is_plugin}container"
           / filler
           div class="#{include_video ? 'hidden' : 'col-lg-1'}"
 
-    div class="#{'cs-' if is_plugin}story-video #{include_video ? 'hidden-xs col-sm-6 col-md-5' : 'hidden'}"
-      = render('stories/show/video', { story: story, is_plugin: is_plugin, is_xs_view: false })
+    - if include_video
+      = render( \
+        'stories/show/video', 
+        { video_url: story.video_url,
+          provider: story.video_info[:provider],
+          provider_id: story.video_info[:id],
+          thumbnail_src: story.video_info[:thumbnail_src],
+          is_plugin: is_plugin, 
+          is_xs_view: false })
