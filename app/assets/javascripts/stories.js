@@ -1,4 +1,5 @@
 //= require js-cookie/dist/js.cookie
+//= require imagesloaded/imagesloaded.pkgd
 //= require tom-select/dist/js/tom-select.base
 //= require tom-select/dist/js/plugins/clear_button
 
@@ -12,30 +13,30 @@
 
   let featuredStories, searchForms;
 
+  // stories gallery
   if (location.pathname === '/') {
     featuredStories = document.querySelectorAll('.story-card');
     searchForms = document.querySelectorAll('form.search-stories');
+    imagesLoaded('#stories-gallery', (e) => e.elements[0].classList.remove('hidden'));
     initFilters();
     initSearchForms();
     initStoryCards();
 
+  // story
   } else {
     const socialShareRedirectURI = (new URL(location)).searchParams.get('redirect_uri');
-    const signInFooter = document.getElementById('sign-in-footer');
-    const editStoryLink = document.querySelector('.stories-header__edit');
-
     if (socialShareRedirectURI) location = socialShareRedirectURI;
     
-    // TODO: wait for video thumnail to load
-    document.querySelector('.story-wrapper').classList.remove('hidden');
-    
+    imagesLoaded('.story-wrapper', (e) => e.elements[0].classList.remove('hidden'));
     initMobileCta();
     initMoreStories();
     initVideo();
 
+    const signInFooter = document.getElementById('sign-in-footer');
     if (signInFooter) addFooterScrollListener(signInFooter.clientHeight);
-    if (editStoryLink)
-      editStoryLink.addEventListener('click', () => Cookies.set('csp-edit-story-tab', '#story-content'));
+    
+    const editStoryLink = document.querySelector('.stories-header__edit');
+    if (editStoryLink) editStoryLink.addEventListener('click', () => Cookies.set('csp-edit-story-tab', '#story-content'));
   }
 
   function initVideo() {
@@ -64,10 +65,10 @@
       );
     }
     if (isMobileView) {
-      videoFrame.addEventListener('load', function () {
-        console.log(this)
-        this.classList.remove('hidden');
-        [...this.parentElement.children].forEach(el => { if (!el.isSameNode(this)) el.remove(); });
+      videoFrame.addEventListener('load', (e) => {
+        const frame = e.currentTarget;
+        frame.classList.remove('hidden');
+        [...frame.parentElement.children].forEach(el => { if (!el.isSameNode(frame)) el.remove(); });
       }, { once: true });
       videoFrame.src = url + params;
 
