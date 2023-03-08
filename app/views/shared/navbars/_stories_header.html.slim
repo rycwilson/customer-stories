@@ -1,0 +1,41 @@
+nav {
+  class="#{stories_header_class(company)} #{action_name} navbar navbar-default" 
+  style="#{stories_header_custom_colors(company)}" }
+
+  .container.navbar-container
+
+    .visible-xs-block style="height: 100%"
+      / don't add .visible-xs-block to .row, as the display: flex setting will be overridden -->
+      .row
+        .col-xs-10.navbar-header
+          h3.stories-header__title Customer Stories
+        .col-xs-2
+          - if curator?(company)
+            a.stories-header__home href="/curate"
+              i.fa.fa-home
+
+    .row.hidden-xs
+      .navbar-header class="#{curator?(company) && !is_preview ? 'col-sm-8 col-lg-5' : 'col-sm-6'}"
+        h3.stories-header__title Customer Stories
+
+      - if curator?(company) && !is_preview
+        .visible-lg.col-lg-2.text-center style="height: 100%"
+          = link_to( curate_story_path(story.customer.slug, story.slug), class: "stories-header__edit" ) do
+            i.fa.fa-pencil
+            |&nbsp;&nbsp;Edit Story
+        .col-sm-4.col-lg-5
+          a.stories-header__home href="/curate"
+            i.fa.fa-home
+
+      - elsif current_page?(action: 'index')
+        .col-sm-6
+          - if company.story_categories.featured.blank? && company.products.featured.blank?
+            = render('stories/shared/search_form', { company: company })
+
+      - elsif current_page?(action: 'show')
+        .col-sm-6
+          = render( \
+              'stories/shared/share_buttons', 
+              { story: story, 
+                container_class: 'share-buttons',
+                button_class: 'share-button' })
