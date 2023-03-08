@@ -32,9 +32,6 @@
     initMoreStories();
     initVideo();
     initFixedCta();
-
-    const signInFooter = document.getElementById('sign-in-footer');
-    if (signInFooter) addFooterScrollListener(signInFooter.clientHeight);
     
     const editStoryLink = document.querySelector('.stories-header__edit');
     if (editStoryLink) editStoryLink.addEventListener('click', () => Cookies.set('csp-edit-story-tab', '#story-content'));
@@ -96,16 +93,34 @@
       // TODO: # of featured|related stories >= minStories (implement in server)
     )
     if (!shouldInit) return false;
-    const container = document.createElement('div');
-    container.id = 'cs-tabbed-carousel';
-    container.classList.add('cs-plugin');
+    const carousel = document.createElement('div');
+    carousel.id = 'cs-tabbed-carousel';
+    carousel.classList.add('cs-plugin');
     const scriptTag = document.createElement('script');
     scriptTag.src = `${location.origin}/plugins/tabbed_carousel/cs.js`; 
     scriptTag.setAttribute('data-delay', delay);
     scriptTag.setAttribute('data-title', 'More Stories');
     scriptTag.setAttribute('data-skip', storySlug)
-    document.body.appendChild(container);
+    document.body.appendChild(carousel);
     document.body.appendChild(scriptTag);
+
+    // prevent the carousel tab from covering up user sign in
+    const signInFooter = document.getElementById('sign-in-footer');
+    if (signInFooter) addFooterScrollListener(carousel, signInFooter);    
+  }
+
+  // TODO how to determine if carousel is present given that it won't appear until X seconda after load?
+  function addFooterScrollListener(carousel, footer) {
+    document.addEventListener('scroll', (e) => {
+      // TODO memoize this?
+      const scrollBottom = document.documentElement.scrollHeight - document.documentElement.clientHeight - scrollY;
+
+      if (scrollBottom < footer.clientHeight) {
+        carousel.classList.add('hidden');
+      } else if (!document.cookie.includes('cs-tabbed-carousel-removed')) {
+        carousel.classList.remove('hidden');
+      }
+    }, { passive: true });
   }
 
   function initMobileCta() {
@@ -116,21 +131,6 @@
       cta.addEventListener('click', removeCta);
       cta.addEventListener('touchend', removeCta);
     }
-  }
-
-  // TODO how to determine if carousel is present given that it won't appear until X seconda after load?
-  function addFooterScrollListener(footerHeight) {
-    const carousel = document.getElementById('cs-tabbed-carousel');
-    document.addEventListener('scroll', (e) => {
-      // TODO memoize this?
-      const scrollBottom = document.documentElement.scrollHeight - document.documentElement.clientHeight - scrollY;
-
-      if (scrollBottom < footerHeight) {
-        carousel.classList.add('hidden');
-      } else if (!document.cookie.includes('cs-tabbed-carousel-removed')) {
-        carousel.classList.remove('hidden')
-      }
-    }, { passive: true });
   }
 
   function initSearchForms() {
