@@ -3,14 +3,17 @@
 / the class names will be prepended with cs- if this is for the plugin 
 div class="#{class_name.pluralize} #{'no-video' if story.video[:thumbnail_url].blank?}"
   
-  a href="#{FACEBOOK_SHARE_URL + url_encode(story.csp_story_url)}" class="#{class_name} #{class_name}--facebook"
-    i.fa.fa-fw.fa-facebook
-  
-  a href="#{TWITTER_SHARE_URL + url_encode(story.csp_story_url)}" class="#{class_name} #{class_name}--twitter"
-    i.fa.fa-fw.fa-twitter
- 
-  a href="#{LINKEDIN_SHARE_URL + url_encode(story.csp_story_url)}" class="#{class_name} #{class_name}--linkedin"
-    i.fa.fa-fw.fa-linkedin
+  - [ { platform: 'facebook', url: FACEBOOK_SHARE_URL, width: FACEBOOK_SHARE_WINDOW_WIDTH, height: FACEBOOK_SHARE_WINDOW_HEIGHT },
+      { platform: 'twitter', url: TWITTER_SHARE_URL, width: TWITTER_SHARE_WINDOW_WIDTH, height: TWITTER_SHARE_WINDOW_HEIGHT },
+      { platform: 'linkedin', url: LINKEDIN_SHARE_URL, width: LINKEDIN_SHARE_WINDOW_WIDTH, height: LINKEDIN_SHARE_WINDOW_HEIGHT } ] \
+      .each do |share|
+
+    a {
+      href="#{share[:url] + url_encode(story.csp_story_url)}" 
+      class="#{class_name} #{class_name}--#{share[:platform]}"
+      data-window-width="#{share[:width]}"
+      data-window-height="#{share[:height]}" }
+      i.fa.fa-fw class="fa-#{share[:platform]}"
 
   a href="mailto:?subject=#{story.title}&body=#{story.csp_story_url}" class="#{class_name} #{class_name}--email"
     i.fa.fa-fw.fa-envelope

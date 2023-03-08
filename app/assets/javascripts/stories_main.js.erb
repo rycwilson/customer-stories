@@ -32,6 +32,7 @@
     initMoreStories();
     initVideo();
     initFixedCta();
+    initShareButtons()
     
     const editStoryLink = document.querySelector('.stories-header__edit');
     if (editStoryLink) editStoryLink.addEventListener('click', () => Cookies.set('csp-edit-story-tab', '#story-content'));
@@ -131,6 +132,23 @@
       cta.addEventListener('click', removeCta);
       cta.addEventListener('touchend', removeCta);
     }
+  }
+
+  function initShareButtons(e) {
+    document.querySelectorAll('.share-button').forEach(link => {
+      link.addEventListener('click', (e) => {
+        e.preventDefault();   // don't follow the link
+        const width = parseInt(link.dataset.windowWidth);
+        const height = parseInt(link.dataset.windowHeight);
+        const top = screenTop + (document.documentElement.clientHeight / 2) - (height / 2);
+        const left = screenLeft + (document.documentElement.clientWidth / 2) - (width / 2);
+        window.open(
+          e.currentTarget.href, 
+          'Share Customer Story', 
+          `width=${width},height=${height},top=${top},left=${left},resizable=no`
+        );
+      });
+    });
   }
 
   function initSearchForms() {
