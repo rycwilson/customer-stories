@@ -476,20 +476,21 @@
   function isMobileView() {
     return document.documentElement.clientWidth < 768;
   }
-
-  //TODO: move this behavior to html + css
+  
+  //TODO: move this behavior to html + css (position: sticky)
   function initFixedCta() {
-    if (!document.body.classList.contains('pixlee') || isMobileView()) return false;
+    const isPixleeStory = ['stories', 'show', 'pixlee'].every(token => document.body.classList.contains(token));
     const sidebar = document.querySelector('.story-sidebar');
     const cta = document.querySelector('.pixlee-cta');
+    if (!isPixleeStory || isMobileView() || !sidebar || !cta) return false;
     let ctaTop;
     const img = new Image();
     img.onload = () => {
       setTimeout(() => {
-        const backgroundDiv = document.querySelector('.pixlee-cta .cta__image');
+        const backgroundDiv = cta.querySelector('.cta__image');
         backgroundDiv.style.background = "<%= asset_url('companies/pixlee/webinar-hero.webp') %> center / cover no-repeat";
-        ctaTop = backgroundDiv.getBoundingClientRect().top;
-      });
+        ctaTop = scrollY + backgroundDiv.getBoundingClientRect().top;
+      }, 100);
     }
     img.src = "<%= asset_url('companies/pixlee/webinar-hero.webp') %>";
     document.addEventListener('scroll', (e) => {
