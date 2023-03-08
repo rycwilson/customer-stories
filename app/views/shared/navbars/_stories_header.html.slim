@@ -34,8 +34,4 @@ nav {
 
       - elsif current_page?(action: 'show')
         .col-sm-6
-          = render( \
-              'stories/shared/share_buttons', 
-              { story: story, 
-                container_class: 'share-buttons',
-                button_class: 'share-button' })
+          = render('stories/shared/share_buttons', { story: story, is_plugin: false })

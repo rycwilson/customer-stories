@@ -24,11 +24,7 @@ div class="#{'cs-' if is_plugin}story-wrapper hidden"
           .col-xs-12
             .section-title.story-title.text-center
               h3 = story.title
-            = render( \
-                'stories/shared/share_buttons', 
-                { story: story, 
-                  container_class: "#{'cs-' if is_plugin}share-buttons",
-                  button_class: "#{'cs-' if is_plugin}share-button" })
+            = render('stories/shared/share_buttons', { story: story, is_plugin: is_plugin })
 
     - if has_video 
       section.visible-xs-block class="#{'cs-' if is_plugin}story-video-xs"

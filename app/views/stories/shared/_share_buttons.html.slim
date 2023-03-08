@@ -1,0 +1,16 @@
+- class_name = "#{'cs-' if is_plugin}share-button"
+
+/ the class names will be prepended with cs- if this is for the plugin 
+div class="#{class_name.pluralize} #{'no-video' if story.video[:thumbnail_url].blank?}"
+  
+  a href="#{FACEBOOK_SHARE_URL + url_encode(story.csp_story_url)}" class="#{class_name} #{class_name}--facebook"
+    i.fa.fa-fw.fa-facebook
+  
+  a href="#{TWITTER_SHARE_URL + url_encode(story.csp_story_url)}" class="#{class_name} #{class_name}--twitter"
+    i.fa.fa-fw.fa-twitter
+ 
+  a href="#{LINKEDIN_SHARE_URL + url_encode(story.csp_story_url)}" class="#{class_name} #{class_name}--linkedin"
+    i.fa.fa-fw.fa-linkedin
+
+  a href="mailto:?subject=#{story.title}&body=#{story.csp_story_url}" class="#{class_name} #{class_name}--email"
+    i.fa.fa-fw.fa-envelope

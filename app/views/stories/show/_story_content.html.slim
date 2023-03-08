@@ -1,0 +1,71 @@
+div class="#{'cs-' if is_plugin}container"
+  div class="#{'cs-' if is_plugin}row"
+    .col-xs-12.col-sm-6.col-md-7
+
+      /- cache("#{company.subdomain}/stories/#{story.id}/#{is_plugin ? 'cs-' : ''}narrative", skip_digest: true) do
+      = render('stories/show/narrative', { company: company, story: story, is_plugin: is_plugin })
+
+      .visible-xs-block
+        - if story.results.present?
+          hr
+          /- cache("#{company.subdomain}/stories/#{story.id}/#{is_plugin ? 'cs-' : ''}results", skip_digest: true) do
+          = render('stories/show/results', { company: company, story: story, is_plugin: is_plugin })
+
+        - if story.ctas.present?
+          hr
+          = render('stories/show/ctas', { story: story, is_plugin: is_plugin })
+
+        - if related_stories.present? && related_stories.length >= 2
+          = render('stories/show/related_stories', { company: company, related_stories: related_stories })
+
+        - if company.subdomain != 'pixlee' && contributors.present? && (window_width.nil? || window_width.to_i < 768)
+          hr
+          = render( \
+              'stories/show/contributors',
+              { company: company, contributors: contributors, is_plugin: is_plugin, window_width: window_width }) 
+
+      .hidden-xs
+        - if related_stories.present? && related_stories.length >= 2
+          = render('stories/show/related_stories', { company: company, related_stories: related_stories })
+
+    .story-sidebar.hidden-xs.col-sm-6.col-md-5
+      - if story.results.present?
+        /- cache("#{company.subdomain}/stories/#{story.id}/#{is_plugin ? 'cs-' : ''}results", skip_digest: true) do
+        = render('stories/show/results', { company: company, story: story, is_plugin: is_plugin })
+
+      - if story.ctas.present?
+        = render('stories/show/ctas', { story: story, is_plugin: is_plugin })
+
+      - if company.subdomain == 'pixlee'
+        .pixlee-cta
+          .cta__image
+          .cta__wrapper
+            .cta__text
+              div
+                = image_tag('companies/pixlee/square_20logo_2_3_1.png')
+                span Inspire purchases with real customer stories.
+            .cta__button
+              div
+                .primary-cta
+                  a.btn href="https://landing.pixlee.com/request-demo?utm_source=Customer_Stories"
+                    span REQUEST DEMO
+                  div
+                    span REQUEST DEMO
+            .cta__topography
+
+      - elsif is_plugin
+        section style="margin-bottom: 25px"
+          .cs-row style="margin: auto; height: 42px; margin-bottom: 0"
+            .col-sm-1 style="display: flex; align-items: center; justify-content: center; height: 100%; padding: 0"
+              .fa.fa-fw.fa-share style="font-size: 14px;"
+            .col-sm-11 style="padding: 0"
+              = render('stories/shared/share_buttons', { story: story, is_plugin: is_plugin })
+
+      - if company.subdomain != 'pixlee' && contributors.present? && (window_width.nil? || window_width.to_i >= 768)
+        /- cache("#{company.subdomain}/stories/#{story.id}/contributors", skip_digest: true) do
+        = render( \
+            'stories/show/contributors',
+            { company: company,
+              contributors: contributors,
+              is_plugin: is_plugin,
+              window_width: window_width })
