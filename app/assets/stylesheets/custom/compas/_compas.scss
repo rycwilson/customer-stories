@@ -1,6 +1,8 @@
+$company-logo-max-height: 40px;
 
 .company-header.company-header--compas {
   opacity: 0.9;
+
   .navbar-container {
     .row {
       .primary-cta a  {
@@ -15,6 +17,7 @@
         text-align: center;
         font-weight: 600;
         transition: background .25s ease;
+        
         &:hover, &:focus {
           // background: #dd443b;
           box-shadow: 0 2px 4px 0 rgba(246,75,66,.6);
@@ -27,6 +30,3 @@
 .stories-header.stories-header--compas {
   box-shadow: none;
 }
-
-
-

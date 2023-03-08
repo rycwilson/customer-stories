@@ -31,8 +31,9 @@ html lang="en-US" prefix="og: http://ogp.me/ns# fb: http://ogp.me/ns/fb#"
     / }
 
     = javascript_include_tag('application', { 'data-turbolinks-track' => 'reload' })
-
-    = stylesheet_link_tag('application', media: 'all', 'data-turbolinks-track' => 'reload')
+    = stylesheet_link_tag( \
+        custom_stylesheet?(@company) ? "custom/wrappers/#{@company.subdomain}" : 'application',
+        'data-turbolinks-track' => 'reload')
 
     - unless ['companies', 'stories', 'profile', 'contributions'].include?(controller_name)
       = stylesheet_link_tag('mvpready-landing', media: 'all', 'data-turbolinks-track' => 'reload')

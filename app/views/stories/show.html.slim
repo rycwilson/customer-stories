@@ -10,7 +10,7 @@
 - @story.ctas.forms.each do |form| 
   = render('ctas/cta_form_modal', { form: form })
 
-= render('shared/navbars/stories_header', { company: @company, story: @story, is_preview: @is_preview, is_plugin: false })
+= render('shared/navbars/stories_header', { company: @company, story: @story, is_preview: @is_preview })
 
 = render( \
     'stories/show/story',

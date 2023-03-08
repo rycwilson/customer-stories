@@ -14,6 +14,7 @@ Rails.application.config.assets.version = '1.0'
 # (even partial files within this search path will be precompiled => don't want that)
 Rails.application.config.assets.paths += %w(
   app/assets/stylesheets/custom/wrappers
+  app/assets/stylesheets/custom/stories_wrappers
   app/assets/stylesheets/custom/plugin_wrappers
 )
 
@@ -44,6 +45,11 @@ Rails.application.config.assets.precompile += %w(
   custom/wrappers/pixlee.css
   custom/wrappers/trunity.css
   custom/wrappers/varmour.css
+  custom/stories_wrappers/centerforcustomerengagement.css
+  custom/stories_wrappers/compas.css
+  custom/stories_wrappers/pixlee.css
+  custom/stories_wrappers/trunity.css
+  custom/stories_wrappers/varmour.css
 )
 
 # all companies should appear here for basic plugin styles

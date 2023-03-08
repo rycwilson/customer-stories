@@ -20,18 +20,19 @@ nav {
 
       - if curator?(company) && !is_preview
         .visible-lg.col-lg-2.text-center style="height: 100%"
-          = link_to( curate_story_path(story.customer.slug, story.slug), class: "stories-header__edit" ) do
-            i.fa.fa-pencil
-            |&nbsp;&nbsp;Edit Story
+          - if action_name == 'show'
+            = link_to( curate_story_path(story.customer.slug, story.slug), class: "stories-header__edit" ) do
+              i.fa.fa-pencil
+              |&nbsp;&nbsp;Edit Story
         .col-sm-4.col-lg-5
           a.stories-header__home href="/curate"
             i.fa.fa-home
 
-      - elsif current_page?(action: 'index')
+      - elsif action_name == 'index'
         .col-sm-6
           - if company.story_categories.featured.blank? && company.products.featured.blank?
             = render('stories/shared/search_form', { company: company })
 
-      - elsif current_page?(action: 'show')
+      - elsif action_name == 'show'
         .col-sm-6
           = render('stories/shared/share_buttons', { story: story, is_plugin: false })
