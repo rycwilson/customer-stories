@@ -34,6 +34,7 @@ Rails.application.config.assets.precompile += %w(
   plugins/cs_video.js
   plugins/cs_overlays.js
   vendor/vendor.js
+  stories_main.js
 )
 
 # companies with custom styles
