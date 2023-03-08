@@ -12,7 +12,7 @@ html lang="en-US" prefix="og: http://ogp.me/ns# fb: http://ogp.me/ns/fb#"
         "stories/#{action_name == 'index' ? 'index/seo_meta_tags' : 'show/story_meta_tags'}",
         { company: @company, success: @story&.success, story: @story })
     
-    = javascript_include_tag('stories', defer: true)
+    = javascript_include_tag('stories_main', defer: true)
     = stylesheet_link_tag('stories')
     - if custom_stylesheet?(@company)
       = stylesheet_link_tag("custom/wrappers/#{@company.subdomain}")

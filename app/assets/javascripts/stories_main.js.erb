@@ -31,6 +31,7 @@
     initMobileCta();
     initMoreStories();
     initVideo();
+    initFixedCta();
 
     const signInFooter = document.getElementById('sign-in-footer');
     if (signInFooter) addFooterScrollListener(signInFooter.clientHeight);
@@ -48,7 +49,6 @@
   
   function playVideo(e) {
     if (e.target.closest('iframe')) return false;
-    const isMobileView = document.documentElement.clientWidth < 768;
     const provider = this.dataset.provider;
     const url = this.dataset.videoUrl;
     const sharedParams = 'autoplay=1';
@@ -57,14 +57,14 @@
       `${url.includes('?') ? '&' : '?'}` + sharedParams + `${provider === 'youtube' ? `&${youtubeParams}` : ''}`
     );
     const modal = document.getElementById('video-modal');
-    const videoFrame = isMobileView ? document.querySelector('.story-video-xs iframe') : modal.querySelector('iframe');
+    const videoFrame = isMobileView() ? document.querySelector('.story-video-xs iframe') : modal.querySelector('iframe');
     const pauseVideo = (e) => {
       videoFrame.contentWindow.postMessage(
         provider === 'youtube' ? '{"event":"command","func":"pauseVideo","args":""}' : '{"method":"pause"}', 
         '*'
       );
     }
-    if (isMobileView) {
+    if (isMobileView()) {
       videoFrame.addEventListener('load', (e) => {
         const frame = e.currentTarget;
         frame.classList.remove('hidden');
@@ -225,9 +225,9 @@
   function onFilterChange(changedSelect, otherSelects, value) {
     const isMulti = Array.isArray(value);
     const tagsFilter = {};
-    // const urlParams = Object.fromEntries(
-    //   [...new URLSearchParams(location.search)].filter(([tagType, tagSlug]) => tagType.match(/category|product/))
-    // );
+    const urlParams = Object.fromEntries(
+      [...new URLSearchParams(location.search)].filter(([tagType, tagSlug]) => tagType.match(/category|product/))
+    );
     const getTagSlug = (select, selectedValue) => !selectedValue ? '' : (
       Object.values(select.tomselect.options).find(option => option.value === selectedValue).slug
     );
@@ -403,7 +403,7 @@
 
   function sharedSelectOptions(select, otherSelects) {
     return {
-      controlInput: null,   // disable search; note this causes placeholder to disappear (fixed with ::before content)
+      // controlInput: null,   disable search; note this causes placeholder to disappear (fixed with ::before content)
       onInitialize() {},
       onFocus() {
         const dropdownMaxHeight = document.documentElement.clientHeight - this.wrapper.getBoundingClientRect().bottom;
@@ -471,5 +471,41 @@
 
   function byTagType(tagType, a, b) {
     return a.includes(tagType) ? -1 : (b.includes(tagType) ? 1 : 0);
+  }
+
+  function isMobileView() {
+    return document.documentElement.clientWidth < 768;
+  }
+
+  //TODO: move this behavior to html + css
+  function initFixedCta() {
+    if (!document.body.classList.contains('pixlee') || isMobileView()) return false;
+    const sidebar = document.querySelector('.story-sidebar');
+    const cta = document.querySelector('.pixlee-cta');
+    let ctaTop;
+    const img = new Image();
+    img.onload = () => {
+      setTimeout(() => {
+        const backgroundDiv = document.querySelector('.pixlee-cta .cta__image');
+        backgroundDiv.style.background = "<%= asset_url('companies/pixlee/webinar-hero.webp') %> center / cover no-repeat";
+        ctaTop = backgroundDiv.getBoundingClientRect().top;
+      });
+    }
+    img.src = "<%= asset_url('companies/pixlee/webinar-hero.webp') %>";
+    document.addEventListener('scroll', (e) => {
+      if (scrollY > ctaTop - 95) {
+        cta.style.position = 'fixed';
+        cta.style.top = '95px';
+        cta.style.left = `${sidebar.getBoundingClientRect().left + parseFloat(getComputedStyle(sidebar).paddingLeft)}px`;
+        cta.style.height = '400px';
+        cta.style.width = `${
+          parseFloat(getComputedStyle(sidebar).width) - 
+          parseFloat(getComputedStyle(sidebar).paddingLeft) - 
+          parseFloat(getComputedStyle(sidebar).paddingRight)
+        }px`;
+      } else {
+        cta.style.position = 'static';
+      }
+    }, { passive: true });
   }
 })();
