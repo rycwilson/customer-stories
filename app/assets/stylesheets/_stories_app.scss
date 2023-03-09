@@ -7,153 +7,151 @@
 
 @import 'views/navbars/company_header';
 @import 'views/navbars/stories_header';
-@import 'views/stories/index/index';
+@import 'views/stories/index/search_and_filters';
 @import 'views/stories/show/show';
 
 @import 'views/stories/shared/cookie_consent';
 @import 'views/stories/shared/gallery';
 
-.stories.index {
-  // match tom-select style (specificity needed to override bootstrap)
-  .search-stories .input-group input[type="search"] {
-    padding: 0.375rem 0.75rem;
-    border: 1px solid #ced4da;
-    border-radius: 0.25rem;
-    box-shadow: none;
+// match tom-select style (specificity needed to override bootstrap)
+.search-stories .input-group input[type="search"] {
+  padding: 0.375rem 0.75rem;
+  border: 1px solid #ced4da;
+  border-radius: 0.25rem;
+  box-shadow: none;
 
-    &::placeholder {
+  &::placeholder {
+    color: #6c757d;
+  }
+
+  & ~ .input-group-btn button[type="submit"] {
+    border-top-right-radius: 0.25rem;
+    border-bottom-right-radius: 0.25rem;
+  }
+}
+
+.ts-dropdown {
+  .active {
+    color: #fff;
+    background-color: $ts-active-option-background;
+  }
+
+  .optgroup-header {
+    font-size: 13px;
+    background: #efefef;
+  }
+  
+  .optgroup-header {
+    padding: 0.75rem;
+  }
+
+  .option {
+    padding: 4px 0.75rem;
+  }
+}
+
+form.search-stories > .input-group,
+.input-group.tom-select,
+.stories-filter__select {
+  height: 34px;
+
+  .ts-wrapper.multi,
+  .ts-control,
+  .input-group-btn,
+  .input-group-btn button {
+    height: 100%;
+  }
+}
+
+.stories-filter__select.ts-wrapper {
+  // change the caret color
+  .ts-control:after {
+    border-color: #6c757d transparent transparent transparent;
+
+    // input {
+      // caret-color: transparent;   // hide the blinking cursor since search is disabled
+      
+    // }
+  } 
+
+  // with tom-select controlInput set to null (disable search), placeholder disappears
+  // => use pseudo element
+  &:not(.has-items) {
+    .ts-control::before {
       color: #6c757d;
     }
 
-    & ~ .input-group-btn button[type="submit"] {
-      border-top-right-radius: 0.25rem;
-      border-bottom-right-radius: 0.25rem;
-    }
-  }
-
-  .ts-dropdown {
-    .active {
-      color: #fff;
-      background-color: $nav-blue;
-    }
-
-    .optgroup-header {
-      font-size: 13px;
-      background: #efefef;
+    &.single .ts-control::before {
+      content: 'Select';
     }
     
-    .optgroup-header {
-      padding: 0.75rem;
-    }
-
-    .option {
-      padding: 4px 0.75rem;
+    &.multi .ts-control::before {
+      content: 'Select Category and/or Product'
     }
   }
 
-  form.search-stories > .input-group,
-  .input-group.tom-select,
-  .stories-filter__select {
-    height: 34px;
-
-    .ts-wrapper.multi,
-    .ts-control,
-    .input-group-btn,
-    .input-group-btn button {
-      height: 100%;
-    }
-  }
-
-  .stories-filter__select.ts-wrapper {
-    // change the caret color
+  &.multi {
+    // add the dropdown caret to the multi-select filter
     .ts-control:after {
+      content: " ";
+      display: block;
+      position: absolute;
+      top: 50%;
+      right: calc(0.75rem + 5px);
+      margin-top: -3px;
+      width: 0;
+      height: 0;
+      border-style: solid;
+      border-width: 5px 5px 0 5px;
       border-color: #6c757d transparent transparent transparent;
+    }
 
-      // input {
-        // caret-color: transparent;   // hide the blinking cursor since search is disabled
-        
-      // }
-    } 
+    &.has-items {
+      .ts-control {
+        padding: 8px;
 
-    // with tom-select controlInput set to null (disable search), placeholder disappears
-    // => use pseudo element
-    &:not(.has-items) {
-      .ts-control::before {
+        // wrap items
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+      }
+
+      .item {
+        display: flex;
+        align-items: center;
+        padding: 2px 0 2px 10px;
+        margin-right: 36px;
+
+        &:not(:last-of-type) {
+          margin-bottom: 8px;
+        }
+      }
+
+      .tag-type {
         color: #6c757d;
       }
 
-      &.single .ts-control::before {
-        content: 'Select';
-      }
-      
-      &.multi .ts-control::before {
-        content: 'Select Category and/or Product'
-      }
-    }
-
-    &.multi {
-      // add the dropdown caret to the multi-select filter
-      .ts-control:after {
-        content: " ";
-        display: block;
-        position: absolute;
-        top: 50%;
-        right: calc(0.75rem + 5px);
-        margin-top: -3px;
-        width: 0;
-        height: 0;
-        border-style: solid;
-        border-width: 5px 5px 0 5px;
-        border-color: #6c757d transparent transparent transparent;
+      .tag-name {
+        color: #555;
+        font-weight: bold;
       }
 
-      &.has-items {
-        .ts-control {
-          padding: 8px;
-  
-          // wrap items
-          display: flex;
-          flex-direction: column;
-          align-items: flex-start;
-        }
-  
-        .item {
-          display: flex;
-          align-items: center;
-          padding: 2px 0 2px 10px;
-          margin-right: 36px;
-  
-          &:not(:last-of-type) {
-            margin-bottom: 8px;
-          }
-        }
-  
-        .tag-type {
-          color: #6c757d;
-        }
-  
-        .tag-name {
-          color: #555;
-          font-weight: bold;
-        }
-  
-        .clear-button {
-          font-size: 20px;
-          padding: 0 10px;
-        }
+      .clear-button {
+        font-size: 20px;
+        padding: 0 10px;
       }
     }
   }
-  
-  .plugin-clear_button,   // needed for specificity in single tom-select
-  .ts-wrapper {
-    .clear-button {
-      right: 2.75rem;
-      transition: opacity 0s;
-      background: transparent;
-      box-shadow: none;
-      font-size: 1.75rem;
-      color: #6c757d;
-    }
+}
+
+.plugin-clear_button,   // needed for specificity in single tom-select
+.ts-wrapper {
+  .clear-button {
+    right: 2.75rem;
+    transition: opacity 0s;
+    background: transparent;
+    box-shadow: none;
+    font-size: 1.75rem;
+    color: #6c757d;
   }
 }
