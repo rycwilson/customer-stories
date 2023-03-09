@@ -501,16 +501,17 @@
     const sidebar = document.querySelector('.story-sidebar');
     const cta = document.querySelector('.pixlee-cta');
     if (!isPixleeStory || isMobileView() || !sidebar || !cta) return false;
+    const backgroundDiv = cta.querySelector('.cta__image');
+    const backgroundUrl = backgroundDiv.dataset.backgroundUrl;
     let ctaTop;
     const img = new Image();
     img.onload = () => {
       setTimeout(() => {
-        const backgroundDiv = cta.querySelector('.cta__image');
-        backgroundDiv.style.background = "<%= asset_url('companies/pixlee/webinar-hero.webp') %> center / cover no-repeat";
+        backgroundDiv.style.background = `${backgroundUrl} center / cover no-repeat`;
         ctaTop = scrollY + backgroundDiv.getBoundingClientRect().top;
       }, 100);
     }
-    img.src = "<%= asset_url('companies/pixlee/webinar-hero.webp') %>";
+    img.src = backgroundUrl;
     document.addEventListener('scroll', (e) => {
       if (scrollY > ctaTop - 95) {
         cta.style.position = 'fixed';
