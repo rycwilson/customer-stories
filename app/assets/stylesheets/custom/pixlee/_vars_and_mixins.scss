@@ -6,12 +6,14 @@ $pixlee-blue: #56ccf2;
 $pixlee-blue-darkened: #3db3d9;  // darkened 10%;
 $border-color: #f2f2f2;
 
-@import url(https://fonts.googleapis.com/css?family=Muli);
+//@import url(https://fonts.googleapis.com/css?family=Muli);
 
 $company-header-height: 67px;
 
-$company-body-font: 'Muli', 'Open Sans', sans-serif;
-$company-title-font: 'Bowlby One', 'Muli', 'Open Sans', sans-serif;
+// $company-body-font: 'Muli', 'Open Sans', sans-serif;
+// $company-title-font: 'Bowlby One', 'Muli', 'Open Sans', sans-serif;
+$company-body-font: 'Inter', 'Open Sans', sans-serif;
+$company-title-font: $company-body-font;
 
 $company-logo-max-height: 20px;
 
@@ -24,9 +26,7 @@ $carousel-nav-size: 13px;
 
 @mixin stories-header-title {
   h3 {
-    text-transform: uppercase;
-    padding-top: 2px;
-    font-weight: 400;
+    font-weight: 600;
   }
 }
 
@@ -41,17 +41,20 @@ $carousel-nav-size: 13px;
       filter: brightness(94%);
     }
     
-    #stories-gallery &, .related-stories & {
-      .story-card__title p, .story-card__caption span {
-        // font-family: $company-body-font !important;
+    #stories-gallery &, 
+    .related-stories & {
+      .story-card__title p {
+        font-weight: 500 !important;
       }
     }
+
     .story-card__cta:after {
       color: $pixlee-blue;
       font-weight: 700 !important;
       text-decoration: none;
       text-transform: uppercase;
     }
+    
     .cs-plugin & .story-card__cta:after {
       content: 'Read Case Study';
     }

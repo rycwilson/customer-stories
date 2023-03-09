@@ -1,14 +1,13 @@
-
 $light-gray: #f9f9f9;
 $medium-gray: #efefef;
 $dark-gray: #e5e5e5;
 $nav-blue: #039be5; // #0288d1 // #0074eb;  // #0095ff; //#d74b4b;  // #4885ed;
 
-$csp-body-font: 'Open Sans', 'Trebuchet MS', arial, sans-serif;
-$csp-title-font: 'Lato', 'Open Sans', 'Trebuchet MS', arial, sans-serif;
+$csp-body-font: 'Open Sans', sans-serif;
+$csp-title-font: 'Lato', 'Open Sans', sans-serif;
 
 $company-body-font: $csp-body-font !default;
-$company-title-font: $company-body-font !default;
+$company-title-font: $csp-title-font !default;
 
 $company-header-height: 70px !default;
 $company-logo-max-height: 50px !default;

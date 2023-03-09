@@ -4,11 +4,15 @@ module ApplicationHelper
     return nil if company.blank? || !['stories', 'plugins', 'companies'].include?(controller_name)
     fonts = case company.subdomain
       when 'pixlee'
-        'Muli:300,400,600,700|Bowlby+One'
+        'Inter:wght@400;500;600;700'
+      when 'varmour'
+        'Montserrat:wght@400;500;600;700'
       else
         ''
       end
-    fonts.present? ? "<link href='https://fonts.googleapis.com/css?family=#{fonts}' rel='stylesheet'>".html_safe : nil
+    fonts.present? ? 
+      "<link href=\"https://fonts.googleapis.com/css2?family=#{fonts}&display=swap\" rel=\"stylesheet\">".html_safe : 
+      nil
   end
 
   def admin_navbar? controller

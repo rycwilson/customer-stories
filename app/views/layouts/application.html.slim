@@ -6,48 +6,27 @@ html lang="en-US" prefix="og: http://ogp.me/ns# fb: http://ogp.me/ns/fb#"
       name="viewport"
       content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" }
     = csrf_meta_tags()
-    
     - if disallow_search_indexing?(@company)
       meta name="robots" content="noindex"
-
     title = 'Customer Stories'
-    
     = yield(:head) if content_for?(:head)
-
-    / TODO: performance of including jquery in bundle vs. not? On the surface, doesn't seem like a big improvement
-    / script {
-    /   src="https://code.jquery.com/jquery-3.6.1.min.js" 
-    /   integrity="sha256-o88AwQnZB+VDvE9tvIXrMQaPlFFSUTR+nldQm1LuPXQ=" 
-    /   crossorigin="anonymous" }
-    / script {
-    /   src="https://cdnjs.cloudflare.com/ajax/libs/jquery-ujs/1.2.3/rails.min.js" 
-    /   integrity="sha512-yDJWVxuRSkQa1u9/Zif6Gh93Gk0Urboz98JLEPcERMQ+pTHz/c27d0Xz08G+lgutFyKklB9UILtnhG6bth6B4A==" 
-    /   crossorigin="anonymous" 
-    /   referrerpolicy="no-referrer" }
-    / script {
-    /   src="https://code.jquery.com/ui/1.13.2/jquery-ui.min.js"
-    /   integrity="sha256-lSjKY0/srUM9BE3dPm+c4fBo1dky2v27Gdjm2uoZaL0="
-    /   crossorigin="anonymous"
-    / }
-
     = javascript_include_tag('application', { 'data-turbolinks-track' => 'reload' })
-    = stylesheet_link_tag( \
-        custom_stylesheet?(@company) ? "custom/wrappers/#{@company.subdomain}" : 'application',
-        'data-turbolinks-track' => 'reload')
-
-    - unless ['companies', 'stories', 'profile', 'contributions'].include?(controller_name)
-      = stylesheet_link_tag('mvpready-landing', media: 'all', 'data-turbolinks-track' => 'reload')
     
     / Google Fonts - https://developers.google.com/fonts/docs/getting_started
-    link rel="preconnect" href="https://fonts.gstatic.com" 
+    / https://www.cdnplanet.com/blog/faster-google-webfonts-preconnect/
+    link rel="preconnect" href="https://fonts.googleapis.com"
+    link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="" 
     link {
       rel="stylesheet"
       href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,400italic,600,600italic,800,800italic" }
     link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lato:300,400,700"
-    link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Slabo+27px:400&amp;lang=en" 
-    link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Montserrat:400,500,600,700&amp;lang=en"
+    /link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Slabo+27px:400&amp;lang=en" 
     = custom_google_fonts(@company)
-
+    = stylesheet_link_tag( \
+        custom_stylesheet?(@company) ? "custom/wrappers/#{@company.subdomain}" : 'application',
+        'data-turbolinks-track' => 'reload')
+    - unless ['companies', 'stories', 'profile', 'contributions'].include?(controller_name)
+      = stylesheet_link_tag('mvpready-landing', media: 'all', 'data-turbolinks-track' => 'reload')
     = favicon_link_tag('favicon.ico')
 
   / TODO: fixed navbar - leave padding as below (false is temp. blocker)
