@@ -1,0 +1,21 @@
+section.story-ctas
+  .section-title.text-center
+    h4#ctas-heading Learn More
+  div
+    ul.list-unstyled aria-labelledby="ctas-heading"
+      - story.ctas.each do |cta|
+        li
+          .cta
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" class="bi bi-chevron-right" viewBox="0 0 16 16">
+              <path fill-rule="evenodd" d="M4.646 1.646a.5.5 0 0 1 .708 0l6 6a.5.5 0 0 1 0 .708l-6 6a.5.5 0 0 1-.708-.708L10.293 8 4.646 2.354a.5.5 0 0 1 0-.708z"/>
+            </svg>
+            - if cta.type == 'CTALink'
+              a.cta-link href="#{cta.link_url}" target="_blank"
+                = cta.display_text
+            - else
+              a.cta-form {
+                href="#cta-form-#{cta.id}-modal" 
+                class="cta-form" 
+                data-toggle="modal" 
+                data-target="#cta-form-#{cta.id}-modal" }
+                = cta.display_text

@@ -1,17 +1,16 @@
-
-
 $facebook-blue: #3B5998;
 $twitter-blue: #4099ff;
 $linkedin-blue: #0077b5;
 
-.share-buttons, .cs-share-buttons {
+.share-buttons, 
+.cs-share-buttons {
+  display: flex;
+
   .stories-header & {
     float: right;
   }
 
-  // overlays only
-  &:not(.share-buttons) {
-    display: flex;
+  &.cs-share-buttons {
     align-items: center;
     justify-content: space-evenly;
   }
@@ -21,89 +20,96 @@ $linkedin-blue: #0077b5;
     justify-content: space-between;
     margin: 20px auto;
     width: 280px;
+
     &.no-video {
       margin-bottom: 25px;
     }
   }
 }
 
-.share-button, .cs-share-button {
+.share-button, 
+.cs-share-button {
   display: inline-flex;
-  align-items: center;
-  justify-content: center;
+  background: transparent;
   height: 34px;
   width: 34px;
-  border-radius: 17px;
+  border-radius: 50%;
   margin: 0 10px;
-  transition: all 0.2s ease-in-out;
-  i {
-    font-size: 16px;
-  }
+
   .stories-header--light-background & {
-    background-color: rgba(51, 51, 51, 0.9);
-    color: #fff;
+    svg {
+      fill: #333;
+    }
   }
+
   .stories-header--dark-background & {
-    background-color: rgba(255, 255, 255, 0.9);
-    color: #555;
+    svg {
+      fill: white;
+      fill-opacity: 0.9;
+    }
+
     &:hover {
+      background: white;
       box-shadow: 0 0 2px 2px rgba(255, 255, 255, 0.9);
     }
   }
+
   &:link, &:visited, &:hover, &:active {
     text-decoration: none;
   }
-  &:hover {
-    color: #fff;
-  }
 
   @media only screen and (max-width: 767px) {
-    height: 42px;
     width: 42px;
-    font-size: 18px;
-    border-radius: 21px;
-    color: #fff;
+    height: 42px;
     margin: 0;
-    &--facebook {
-      background-color: $facebook-blue;
+
+    &--facebook svg {
+      fill: $facebook-blue;
     }
-    &--twitter {
-      background-color: $twitter-blue;
+
+    &--twitter svg {
+      fill: $twitter-blue;
     }
-    &--linkedin {
-      background-color: $linkedin-blue;
+
+    &--linkedin svg {
+      fill: $linkedin-blue;
     }
+
     &--email {
-      background-color: #555;
+      fill: #555;
     }
   }
   
   @media only screen and (min-width: 768px) {
-    
-    // overlays only
-    &:not(.share-button) {
-      background-color: #fff;
+    &.cs-share-button {
+      background: #333;
       border: 2px solid #ddd;
       width: 42px;
       height: 42px;
-      border-radius: 21px;
-      color: #555;
+
+      svg {
+        fill: white;
+      }
+
       &:hover {
-        color: #fff;
+        background: white;
       }
     }
     
-    &--facebook:hover {
-      background-color: $facebook-blue;
+    &--facebook:hover svg {
+      fill: $facebook-blue;
     }
-    &--twitter:hover {
-      background-color: $twitter-blue;
+
+    &--twitter:hover svg {
+      fill: $twitter-blue;
     }
-    &--linkedin:hover {
-      background-color: $linkedin-blue;
+
+    &--linkedin:hover svg {
+      fill: $linkedin-blue;
     }
-    &--email:hover {
-      background-color: #333;
+
+    &--email:hover svg {
+      fill: black;
     }
   }
 }

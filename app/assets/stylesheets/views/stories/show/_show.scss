@@ -140,66 +140,65 @@
         font-style: italic;
       }
     }
-    .story-results, .story-ctas {
-      a {
-        font-weight: 600;
-        color: #999;
-        text-decoration: none;
-        &:hover {
-          color: #333;
-        }
-      }
+
+    .story-results, 
+    .story-ctas {
       li {
         line-height: 1.5 !important;
+
+        &:not(:last-child) {
+          margin-bottom: 1rem;
+        }
       }
-      .row, .cs-row {
+
+      .result,
+      .cta {
         display: flex;
         align-items: center;
-        min-height: 30px;
-        margin-bottom: 10px;
-        div:first-child {
-          text-align: center;
-          padding-right: 0;
-          i {
-            font-size: 14px !important;
-          }
+        min-height: 2.75rem;
+
+        svg {
+          flex-shrink: 0;
         }
-        // span, a {
-        //   line-height: 1.5 !important;
-        // }
-      }
-      &.visible-xs-block {
-        .section-title {
-          margin-bottom: 15px;
+
+        &.result svg {
+          fill: #333;
         }
-        ul {
-          // display: inline-block;  // so it can be centered
+
+        // the chevron bootstrap svg is a little thinner than the checkmark => compensate with darker fill
+        &.cta svg {
+          fill: black;
+        }
+
+        p,
+        a {
+          padding-left: 1.5rem;
+          font-size: 1.4rem;
+        }
+
+        p {
           margin-bottom: 0;
-          li {
-            font-size: 14px; // important;
-            margin-bottom: 10px;
-            padding-left: 6px;
+        }
+
+        a {
+          text-decoration: none;
+          color: #999;
+          font-weight: 600;
+  
+          &:hover {
+            color: #333;
           }
         }
-        // .ul-container {
-          // display: flex;
-          // justify-content: center;
-        // }
       }
-      @media only screen and (min-width: 768px) {
-        span, a {
-          font-size: 13px; // important;
-        }
-      }
-      @media only screen and (min-width: 992px) {
-        i {
-          font-size: 15px; // important;
-        }
-        span, a {
-          font-size: 14px; // important;
+
+      & > div {
+        @media only screen and (max-width: 767px) {
+          display: flex;
+          justify-content: center;
         }
       }
     }
+
     .related-stories {
       // padding-bottom: 0;
       // line-height: 1.5;
