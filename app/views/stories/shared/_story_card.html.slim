@@ -16,7 +16,6 @@ div {
     href="#{story.csp_story_link(is_dashboard, is_plugin, is_external, plugin_type)}"
     class="#{story.status}"
     class=('grid__item--carousel' if plugin_type == 'carousel')
-    class=('has-video' if story.video_url.present?)
     class=("bg-#{background}" if background)
     target=('_blank' if is_external)
     data-customer=(story.customer.name.to_json if !is_external)

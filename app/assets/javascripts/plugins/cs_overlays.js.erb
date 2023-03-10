@@ -1,10 +1,40 @@
-
 //= require modernizr/widget_modernizr
 //= require js/classie
 //= require vendor/grid_overlays
 //= require css-element-queries/src/ResizeSensor
 
 function cspInitOverlays ($, $container, subdomain, isDemo, env) {
+  //console.log('cspInitOverlays()')
+
+  // subset of playVideo function in stories_main
+  const playVideo = (e) => {
+    if (e.target.closest('iframe')) return false;   // trigger this function ONLY by clicking the thumbnail image or play button
+    const provider = e.currentTarget.dataset.provider;
+    const url = e.currentTarget.dataset.videoUrl;
+    const sharedParams = 'autoplay=1';
+    const youtubeParams = 'enablejsapi=1&controls=0&iv_load_policy=3&showinfo=0&rel=0';
+    const params = (
+      `${url.includes('?') ? '&' : '?'}` + sharedParams + `${provider === 'youtube' ? `&${youtubeParams}` : ''}`
+    );
+    const videoFrame = e.currentTarget.querySelector('iframe');
+    console.log()
+    const pauseVideo = (e) => {
+      videoFrame.contentWindow.postMessage(
+        provider === 'youtube' ? '{"event":"command","func":"pauseVideo","args":""}' : '{"method":"pause"}', 
+        '*'
+      );
+    }
+    videoFrame.addEventListener('load', (e) => {
+      const frame = e.currentTarget;
+      frame.classList.remove('hidden');
+      [...frame.parentElement.children].forEach(el => { if (!el.isSameNode(frame)) el.remove(); });
+    }, { once: true });
+    videoFrame.src = url + params;
+    videoFrame.closest('.cs-story-wrapper').querySelectorAll('.cs-story-header button').forEach(btn => {
+      btn.addEventListener('click', pauseVideo);
+      btn.addEventListener('touchend', pauseVideo);
+    });
+  }
 
   var pixleeCtaTop, getPixleeCtaTop, showPixleeTab,
       doPixleeStuff = function () {
@@ -75,7 +105,7 @@ function cspInitOverlays ($, $container, subdomain, isDemo, env) {
         }, 3000);
       },
       initOverlay = function ($storyCard, $storyOverlay) {
-        // console.log('initOverlay()')
+        console.log('initOverlay()')
         $storyOverlay.find('*').addClass('cs');
         $storyOverlay.find('.cs-share-buttons a').each(function () {
           var redirectUrl, replaceRegex, replacement;
@@ -115,9 +145,11 @@ function cspInitOverlays ($, $container, subdomain, isDemo, env) {
           $(this).attr('href', $(this).attr('href').replace(replaceRegex, replacement))
         });
 
-        if ($storyCard.find('a').hasClass('has-video')) {
-          cspInitVideo($, $storyOverlay, $storyCard);
-        }
+        $storyOverlay[0].querySelectorAll('.video-thumb-container').forEach(container => {
+          container.addEventListener('click', playVideo);
+          container.addEventListener('touchend', playVideo);
+        })
+
         LI2Observer($storyOverlay);
         // initLinkedIn();
         trackStoryVisitor($storyCard);
@@ -158,7 +190,6 @@ function cspInitOverlays ($, $container, subdomain, isDemo, env) {
 
       },
       openOrGetStory = function ($storyCard, $storyOverlay) {
-        // console.log('openOrGetStory()')
         if ($storyCard.hasClass('cs-loaded')) {
           // grid overlays handler will open overlay
           showPrimaryCtaXs($storyOverlay);

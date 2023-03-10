@@ -30,7 +30,7 @@
 = render('companies/shared/contributions_modal')
 = render('companies/3_promote/ads_images_modal', { company: @company })
 = render('stories/shared/new_story_modal', { company: @company })
-= render('stories/show/video_modal', { is_plugin: false })
+= render('stories/show/video_modal')
 
 - cache("#{@company.subdomain}/#{@workflow_stage}/company-nav") do
   = render( \

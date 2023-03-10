@@ -34,27 +34,18 @@ class StoriesController < ApplicationController
 
   def show
     @story.video = @story.video_info()
+    
     if params[:is_plugin]
       # @is_plugin = @is_external = true
       respond_to do |format|
         format.js do
-          json = { html: render_story_partial(@story, @contributors, params[:window_width]) }.to_json
+          json = { html: render_story_partial_to_string(@story, @contributors, params[:window_width]) }.to_json
           jsonp = "#{params[:callback]}(#{json})"
           render(plain: jsonp)
         end
       end and return
     end
-    if params[:remove_video].present?
-      render(
-        partial: 'stories/show/testimonial',
-        locals: { 
-          story: @story, 
-          long_customer_name: @story.customer.name.length > 20,
-          include_video: false, 
-          is_plugin: params[:is_plugin]
-        }
-      ) 
-    end
+
     @is_preview = params[:preview].present?
     # convert the story narrative to plain text (for SEO tags)
     # @story_narrative = HtmlToPlainText.plain_text(@story.narrative)
@@ -356,16 +347,17 @@ class StoriesController < ApplicationController
   #   @story = Story.find_by_id(params[:id]) || Story.friendly.find(params[:story_slug])
   # end
 
-  def render_story_partial (story, contributors, window_width)
+  def render_story_partial_to_string (story, contributors, window_width)
     render_to_string({
       partial: story.status == 'published' ? 'stories/show/story' : 'stories/show/preview',
       locals: {
         company: story.company,
         story: story,
+        has_video: story.video[:thumbnail_url].present?,
         contributors: contributors,
         related_stories: nil,
         is_plugin: true,
-        plugin_type: 'gallery',
+        # plugin_type: 'gallery',
         window_width: window_width
       }
     })
@@ -431,9 +423,5 @@ class StoriesController < ApplicationController
     else
       # error
     end
-  end
-
-  def remove_video?
-    # request.xhr? &&  && params[:remove_video].present?
   end
 end

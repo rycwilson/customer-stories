@@ -1,5 +1,5 @@
 
-.cs-overlay-container class=('pre-selected' if pre_selected_story_id.present?)
+.cs-overlay-container class=('pre-selected' if preselected_story_id.present?)
   .cs-main
     .cs-grid.cs-grid-carousel
 
@@ -17,7 +17,7 @@
                   = render( \
                       'stories/shared/story_card',
                       { story: story,
-                        card_class: story_card_class(story, false, false, true, is_grayscale, pre_selected_story_id),
+                        card_class: story_card_class(story, false, false, true, is_grayscale, preselected_story_id),
                         plugin_type: 'carousel',
                         background: background,
                         is_dashboard: false,
@@ -41,15 +41,15 @@
       .scroll-wrap
         - stories.each do |story|
           .content__item.content__item--carousel
-            - if pre_selected_story_id == story.id
+            - if preselected_story_id == story.id
               = render( \
-                  story.published? ? 'stories/show/story' : 'stories/show/preview',
+                  "stories/show/#{story.published? ? 'story' : 'preview'}",
                   { company: story.company,
                     story: story,
+                    has_video: story.video[:thumbnail_url].present?,
                     contributors: contributors,
                     related_stories: nil,
                     is_plugin: true,
-                    plugin_type: 'carousel',
                     window_width: window_width })
       button.visible-xs-inline.cs-close-xs type="button"
         span.fa-stack

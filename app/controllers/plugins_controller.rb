@@ -52,7 +52,7 @@ class PluginsController < ApplicationController
     @plugin = plugin_params
     @category_slug = StoryCategory.find_by_id(@plugin[:category])&.slug
     @product_slug = StoryCategory.find_by_id(@plugin[:product])&.slug
-    awesome_print(@plugin)
+    # awesome_print(@plugin)
     render(layout: false)
   end
 
@@ -68,7 +68,7 @@ class PluginsController < ApplicationController
   def plugin_view (company, params)
     # puts params.permit(params.keys).to_h
     stories = plugin_stories(company, params)
-    pre_selected_story = get_pre_selected_story(company, params)
+    preselected_story = get_preselected_story(company, params)
     render_to_string(
       partial: params[:type] || 'tabbed_carousel',
       layout: false,
@@ -86,23 +86,24 @@ class PluginsController < ApplicationController
         is_grayscale: params[:grayscale].present? && params[:grayscale] != 'false',
         is_curator: false,
         is_plugin: true,
-        is_external: request.referer.match(/^(?!.*plugins\/demo).*(lvh\.me|customerstories\.org|customerstories\.net).*$/) ?
-                       false :
-                       true,
+        is_external: !request.referer.match(/^(?!.*plugins\/demo).*(lvh\.me|customerstories\.org|customerstories\.net).*$/),
         window_width: params[:window_width],
-        pre_selected_story_id: pre_selected_story.try(:id),
-        contributors: pre_selected_story && set_contributors(pre_selected_story)
+        preselected_story_id: preselected_story&.id,
+        contributors: preselected_story && set_contributors(preselected_story)
       }
     )
   end
 
-  def get_pre_selected_story(company, params)
-    story = params[:pre_selected_story].present? &&
-            Story.friendly.exists?(params[:pre_selected_story]) &&
-            Story.friendly.find(params[:pre_selected_story])
-    return story.try(:company).try(:id) == company.id &&
-      ( story.try(:published?) || story.try(:preview_published?) ) &&
-      story
+  def get_preselected_story(company, params)
+    story = (
+      params[:preselected_story].present? &&
+      Story.friendly.exists?(params[:preselected_story]) &&
+      Story.friendly.find(params[:preselected_story])
+    ) || nil
+    if (story&.company&.id == company.id) && (story&.published? || story&.preview_published?)
+      story.video = story.video_info()
+      return story
+    end
   end
 
   def plugin_stories(company, params)

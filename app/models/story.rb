@@ -394,6 +394,11 @@ class Story < ApplicationRecord
   #  "https://player.vimeo.com/video/#{vimeo_id}"
   #  "https://fast.wistia.com/embed/medias/#{wistia_id}.jsonp"
   #
+  #  TODO
+  #  the video params can be set here instead of in javascript, e.g.
+  #  https://fast.wistia.com/embed/iframe/b0767e8ebb?version=v1&controlsVisibleOnLoad=true&playerColor=aae3d
+  #
+  #
   def video_info
     provider = video_url&.match(/youtube|vimeo|wistia/).try(:[], 0)
     video_path = provider ? URI(video_url)&.path : nil
@@ -408,6 +413,12 @@ class Story < ApplicationRecord
       video_data_url = "https://vimeo.com/api/oembed.json?url=https%3A//vimeo.com/#{id}"
       res = Net::HTTP.get_response(URI(video_data_url))
       JSON.parse(res.body).try(:[], 'thumbnail_url_with_play_button') rescue nil
+
+    # in this case it's the actual video url instead of a thumbnail or data url; fetching cofirms its availability
+    # wistia videos are self-contained and won't reference video_info[:thumnbanil_url]
+    when 'wistia'
+      res = Net::HTTP.get_response(URI(video_url))
+      res.code == '200' ? true : nil 
     end
     { provider: provider, id: id, thumbnail_url: thumbnail }.compact
   end

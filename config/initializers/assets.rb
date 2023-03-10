@@ -32,7 +32,6 @@ Rails.application.config.assets.precompile += %w(
   google/ads_preview.js
   google/ads_preview.css
   jquery-textfill/source/jquery.textfill.js
-  plugins/cs_video.js
   plugins/cs_overlays.js
   vendor/vendor.js
   stories_main.js

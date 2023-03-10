@@ -136,7 +136,7 @@ module StoriesHelper
     "background-color: #{company.header_color_2}; color: #{company.header_text_color}"
   end
 
-  def story_card_class(story, logos_only=false, is_dashboard=false, is_plugin=false, is_grayscale=false, pre_selected_story_id=nil)
+  def story_card_class(story, logos_only=false, is_dashboard=false, is_plugin=false, is_grayscale=false, preselected_story_id=nil)
     [
       'story-card',
       "story-card--#{ story.company.subdomain }",
@@ -145,7 +145,7 @@ module StoriesHelper
       is_dashboard ? 'story-card--dashboard' : '',
       is_plugin ? 'story-card--plugin' : '',
       is_grayscale ? 'story-card--grayscale' : '',
-      pre_selected_story_id == story.id ? 'cs-loaded' : ''
+      preselected_story_id == story.id ? 'cs-loaded' : ''
     ].join(' ')
   end
 

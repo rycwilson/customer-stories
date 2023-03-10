@@ -109,8 +109,9 @@
           skip: $script.data('skip'),
           category: $script.data('category'),
           product: $script.data('product'),
-          pre_selected_story: (new URL(window.location)).searchParams.get('cs') ||
-                              (new URL(window.location)).searchParams.get('story'),
+          preselected_story: (
+            (new URL(window.location)).searchParams.get('cs') || (new URL(window.location)).searchParams.get('story')
+          ),
           background: $script.data('background'),
           tab_color: $script.data('tab-color'),
           text_color: $script.data('text-color'),
@@ -151,16 +152,11 @@
   }
 
   function initPlugin (type, $container, $script, isDemo, env, preSelectedStoryIndex) {
-    var initVideo = $.Deferred(),
-        initOverlays = $.Deferred(),
+    var initOverlays = $.Deferred(),
         maxGalleryRows = parseInt($script.data('max-rows'), 10),
         tabbedCarouselDelay = ((type === 'tabbed_carousel') && parseInt($script.data('delay'), 10) || 0);
     
     trackPluginVisitor($container, isDemo, env);
-
-    $.getScript("<%= asset_url('plugins/cs_video.js') %>", function () {
-        initVideo.resolve();
-      });
 
     if (type !== 'tabbed_carousel') {
       $.getScript("<%= asset_url('plugins/cs_overlays.js') %>", function () {
@@ -171,7 +167,7 @@
       initOverlays.resolve();
     }
 
-    $.when(initVideo, initOverlays).done(function () {
+    $.when([initOverlays]).done(function () {
         $.ajax({
           url: "<%= URI.join(root_url, plugin_init_path(@type)) %>",
           method: 'GET',

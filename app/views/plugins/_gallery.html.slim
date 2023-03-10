@@ -1,11 +1,11 @@
-.cs-overlay-container class=('pre-selected' if pre_selected_story_id.present?)
+.cs-overlay-container class=('pre-selected' if preselected_story_id.present?)
   .cs-main
     section.cs-grid style="visibility: hidden"
       - stories.each do |story|
         = render( \
             'stories/shared/story_card',
             { story: story,
-              card_class: story_card_class(story, logos_only, false, true, is_grayscale, pre_selected_story_id),
+              card_class: story_card_class(story, logos_only, false, true, is_grayscale, preselected_story_id),
               plugin_type: 'gallery',
               is_dashboard: false,
               is_plugin: true,
@@ -14,15 +14,15 @@
       .scroll-wrap
         - stories.each do |story|
           .content__item
-            - if pre_selected_story_id == story.id
+            - if preselected_story_id == story.id
               = render( \
-                  story.published? ? 'stories/show/story' : 'stories/show/preview',
+                  "stories/show/#{story.published? ? 'story' : 'preview'}",
                   { company: story.company,
                     story: story,
+                    has_video: story.video[:thumbnail_url].present?,
                     contributors: contributors,
                     related_stories: nil,
                     is_plugin: true,
-                    plugin_type: 'gallery',
                     window_width: window_width })
       button.visible-xs-inline.cs-close-xs type="button"
         span.fa-stack

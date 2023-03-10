@@ -1,7 +1,7 @@
 - if is_plugin
   script type="text/javascript" src="https://platform.linkedin.com/badges/js/profile.js" async="" defer=""
 
-div class="#{'cs-' if is_plugin}story-wrapper hidden"
+div class="#{'cs-' if is_plugin}story-wrapper #{'hidden' unless is_plugin}"
   article
     - if is_plugin
       .cs-story-header.hidden-xs
