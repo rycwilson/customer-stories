@@ -35,18 +35,8 @@ function cspInitOverlays ($, $container, subdomain, isDemo, env) {
     });
   }
 
-  var pixleeCtaTop, getPixleeCtaTop, showPixleeTab,
+  var pixleeCtaTop, getPixleeCtaTop
       doPixleeStuff = function () {
-        var overlayAnimationTime = 200;
-        showPixleeTab = function (showTheTab) {
-          if (showTheTab) {
-             setTimeout(function () {
-              $('button.olark-launch-button').css({ opacity: '1', 'pointer-events': 'auto' });
-            }, overlayAnimationTime)
-          } else {
-            $('button.olark-launch-button').css({ opacity: '0', 'pointer-events': 'none' });
-          }
-        };
         getPixleeCtaTop = function ($storyOverlay) {
           return parseInt($storyOverlay.find('.cs-story-wrapper').css('margin-top'), 10) +
                  $storyOverlay.find('.cs-story-header').outerHeight(true) +
@@ -73,7 +63,7 @@ function cspInitOverlays ($, $container, subdomain, isDemo, env) {
               });
             }
           }
-        }, true);
+        }, { capture: true, passive: true });
       },
       applyScrollBoundaries = function () {
         var maxY, startY = 0;
@@ -209,7 +199,6 @@ function cspInitOverlays ($, $container, subdomain, isDemo, env) {
           showPrimaryCtaXs($storyOverlay);
           if (subdomain === 'pixlee') {
             pixleeCtaTop = getPixleeCtaTop($storyOverlay);
-            showPixleeTab(false);
           }
         } else {
           storyLoading($storyCard);
@@ -245,9 +234,6 @@ function cspInitOverlays ($, $container, subdomain, isDemo, env) {
     .on('click', '.cs-close-xs', function (e) {
       // there are multiple close buttons in the story header; don't trigger them all
       $('.content__item--show .cs-close').first().trigger('click');
-    })
-    .on('click', '.cs-close', function (e) {
-      if (subdomain === 'pixlee') showPixleeTab(true);  // show Pixlee's tab on their home page
     })
 
     .on('click', '.linkedin-widget', function () {
