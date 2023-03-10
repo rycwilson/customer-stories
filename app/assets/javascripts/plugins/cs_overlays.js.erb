@@ -17,7 +17,6 @@ function cspInitOverlays ($, $container, subdomain, isDemo, env) {
       `${url.includes('?') ? '&' : '?'}` + sharedParams + `${provider === 'youtube' ? `&${youtubeParams}` : ''}`
     );
     const videoFrame = e.currentTarget.querySelector('iframe');
-    console.log()
     const pauseVideo = (e) => {
       videoFrame.contentWindow.postMessage(
         provider === 'youtube' ? '{"event":"command","func":"pauseVideo","args":""}' : '{"method":"pause"}', 
@@ -105,7 +104,7 @@ function cspInitOverlays ($, $container, subdomain, isDemo, env) {
         }, 3000);
       },
       initOverlay = function ($storyCard, $storyOverlay) {
-        console.log('initOverlay()')
+        // console.log('initOverlay()')
         $storyOverlay.find('*').addClass('cs');
         $storyOverlay.find('.cs-share-buttons a').each(function () {
           var redirectUrl, replaceRegex, replacement;
@@ -149,6 +148,21 @@ function cspInitOverlays ($, $container, subdomain, isDemo, env) {
           container.addEventListener('click', playVideo);
           container.addEventListener('touchend', playVideo);
         })
+
+        $storyOverlay[0].querySelectorAll('.cs-share-button').forEach(link => {
+          link.addEventListener('click', (e) => {
+            e.preventDefault();   // don't follow the link
+            const width = parseInt(link.dataset.windowWidth);
+            const height = parseInt(link.dataset.windowHeight);
+            const top = screenTop + (document.documentElement.clientHeight / 2) - (height / 2);
+            const left = screenLeft + (document.documentElement.clientWidth / 2) - (width / 2);
+            window.open(
+              e.currentTarget.href, 
+              'Share Customer Story', 
+              `width=${width},height=${height},top=${top},left=${left},resizable=no`
+            );
+          });
+        });
 
         LI2Observer($storyOverlay);
         // initLinkedIn();
@@ -223,7 +237,6 @@ function cspInitOverlays ($, $container, subdomain, isDemo, env) {
 
   applyScrollBoundaries();
   initPreselected();
-  defineJqueryPlugins();
 
   if (subdomain === 'pixlee') doPixleeStuff();
 
@@ -283,17 +296,6 @@ function cspInitOverlays ($, $container, subdomain, isDemo, env) {
           resetStoryCardListener($storyCard);
         }
       }
-    })
-    .on('click', '.cs-share-button', function (e) {
-      var width = $(this).is('[class*="facebook"]') ? <%= FACEBOOK_SHARE_WINDOW_WIDTH %> :
-                    $(this).is('[class*="twitter"]') ? <%= TWITTER_SHARE_WINDOW_WIDTH %> :
-                      <%= LINKEDIN_SHARE_WINDOW_WIDTH %>,
-          height = $(this).is('[class*="facebook"]') ? <%= FACEBOOK_SHARE_WINDOW_HEIGHT %> :
-                    $(this).is('[class*="twitter"]') ? <%= TWITTER_SHARE_WINDOW_HEIGHT %> :
-                      <%= LINKEDIN_SHARE_WINDOW_HEIGHT %>;
-      $(window).width() < 768 ? 
-        $(this).popupWindow(e) : 
-        $(this).popupWindow(e, width, height);
     });
 
   function trackStoryVisitor ($storyCard) {
@@ -350,30 +352,4 @@ function cspInitOverlays ($, $container, subdomain, isDemo, env) {
       observer.observe(this, { attributes: true, childList: true });
     });
   }
-
-  function defineJqueryPlugins () {
-    $.fn.popupWindow = function (e, width, height) {
-      // Prevent default anchor event
-      e.preventDefault();
-      // Fixes dual-screen position                         Most browsers      Firefox
-      var dualScreenLeft = window.screenLeft !== undefined ? window.screenLeft : screen.left;
-      var dualScreenTop = window.screenTop !== undefined ? window.screenTop : screen.top;
-
-      var windowWidth = window.innerWidth ? window.innerWidth : document.documentElement.clientWidth ? document.documentElement.clientWidth : screen.width;
-      var windowHeight = window.innerHeight ? window.innerHeight : document.documentElement.clientHeight ? document.documentElement.clientHeight : screen.height;
-
-      // Set values for window
-      width = width || windowWidth;
-      height = height || windowHeight;
-
-      var left = ((windowWidth / 2) - (width / 2)) + dualScreenLeft;
-      var top = ((windowHeight / 2) - (height / 2)) + dualScreenTop;
-
-      // Set title and open popup with focus on it
-      var strTitle = ((typeof this.attr('title') !== 'undefined') ? this.attr('title') : 'Social Share'),
-          strParam = 'width=' + width + ',height=' + height + ',top=' + top + ',left=' + left + ',resizable=no',
-          objWindow = window.open(this.attr('href'), 'shareWindow', strParam).focus();
-    };
-  }
-
 }
