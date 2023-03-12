@@ -32,7 +32,7 @@
     initMoreStories();
     initVideo();
     initFixedCta();
-    initShareButtons()
+    initShareButtons();
     
     const editStoryLink = document.querySelector('.stories-header__edit');
     if (editStoryLink) editStoryLink.addEventListener('click', () => Cookies.set('csp-edit-story-tab', '#story-content'));
@@ -40,12 +40,11 @@
 
   function initVideo() {
     document.querySelectorAll('.video-thumb-container').forEach(container => {
-      container.addEventListener('click', playVideo);
-      container.addEventListener('touchend', playVideo);
+      ['click', 'touchend'].forEach(event => container.addEventListener(event, loadVideo));
     })
   }
   
-  function playVideo(e) {
+  function loadVideo(e) {
     if (e.target.closest('iframe')) return false;
     const provider = this.dataset.provider;
     const url = this.dataset.videoUrl;
@@ -83,8 +82,8 @@
         })
     }
   }
-
   function initMoreStories () {
+    if (isMobileView() && document.getElementById('primary-cta-xs')) return false;
     const minStories = 4;
     const delay = 5;
     const storySlug = location.pathname.slice(location.pathname.lastIndexOf('/') + 1);
@@ -211,16 +210,15 @@
     e.preventDefault();
     const link = this;
     const card = link.parentElement;
-    const toggleSpinner = () => {
-      card.classList.add('loading', 'still-loading');
-      document.body.style.pointerEvents = 'none';
-      document.addEventListener('visibilitychange', (e) => {
-        card.classList.remove('loading', 'still-loading', 'hover');
-        document.body.style.pointerEvents = 'auto';
-      }, { once: true })
-    }
+    const revertStyle = (e) => {
+      card.classList.remove('loading', 'still-loading', 'hover');
+      document.body.style.pointerEvents = 'auto';
+    };
     const followLink = () => {
-      toggleSpinner();
+      card.classList.add('loading');
+      document.body.style.pointerEvents = 'none';
+      document.addEventListener('visibilitychange', revertStyle, { once: true });
+      setTimeout(() => card.classList.add('still-loading'), 1000);
       setTimeout(() => location = link.href);
     }
     if (e.type === 'click') {
@@ -421,7 +419,7 @@
 
   function sharedSelectOptions(select, otherSelects) {
     return {
-      // controlInput: null,   disable search; note this causes placeholder to disappear (fixed with ::before content)
+      controlInput: null,   // disable search; note this causes placeholder to disappear (fixed with ::before content)
       onInitialize() {},
       onFocus() {
         const dropdownMaxHeight = document.documentElement.clientHeight - this.wrapper.getBoundingClientRect().bottom;
