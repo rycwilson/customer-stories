@@ -27,10 +27,10 @@
             button
         .cs-carousel__scroll-xs
           button.cs-carousel__arrow-xs.cs-carousel__arrow-xs--left type="button"
-            i.fa.fa-fw.fa-angle-left
+            = image_tag('icons/bs_chevron_left', alt: 'scroll-left')
           .cs-carousel__pagination-xs.text-center
           button.cs-carousel__arrow-xs.cs-carousel__arrow-xs--right type="button"
-            i.fa.fa-fw.fa-angle-right
+            = image_tag('icons/bs_chevron_right', alt: 'scroll-right')
         .cs-carousel__pagination
         .cs-carousel__prev-next
           button.cs-carousel__prev.cs-carousel__prev--bookend type="button" Previous
@@ -52,6 +52,4 @@
                     is_plugin: true,
                     window_width: window_width })
       button.visible-xs-inline.cs-close-xs type="button"
-        span.fa-stack
-          i.fa.fa-circle.fa-stack-2x
-          i.fa.fa-times-thin.fa-inverse.fa-stack-1x
+        = image_tag('icons/bs_x_lg', alt: 'close')

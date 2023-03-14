@@ -23,7 +23,7 @@ body.plugin-demo {
   // this file is copied from the font-awesome-rails gem and the @at-root is wrapped around @font-face
   // => else the icons won't work
   // => https://github.com/sass/sass/issues/1251
-  @import './font_awesome';
+  //@import './font_awesome';
 
   @import 'bootstrap-plugins'; 
   @import 'bootstrap-horizon/src/bootstrap-horizon';

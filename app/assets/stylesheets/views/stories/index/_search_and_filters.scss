@@ -4,7 +4,7 @@
 }
 
 .search-stories {
-  width: 100%;
+  // width: 100%;
 
   .input-group {
     input {
@@ -28,7 +28,6 @@
       background-color: $nav-blue;
       border-color: $nav-blue;
       border-left: 0;
-      color: #fff;
       border-top-left-radius: 0;
       border-bottom-left-radius: 0;
 
@@ -41,6 +40,11 @@
         background-color: #0082cc;
         border-color: #0082cc;
         outline: 0;
+      }
+
+      img {
+        @include svg-fill(white);
+        height: 16px;
       }
     }
   }
@@ -94,6 +98,11 @@
 
 .search-and-filters {
   @include hide-until-init;
+
+  .input-group-addon img {
+    @include svg-fill(#555555);
+    height: 16px;
+  }
 
   .form-group {
     margin-bottom: 0;

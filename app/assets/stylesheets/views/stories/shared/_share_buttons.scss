@@ -12,7 +12,7 @@ $linkedin-blue: #0077b5;
 
   &.cs-share-buttons {
     align-items: center;
-    justify-content: space-evenly;
+    justify-content: space-around;
   }
 
   @media only screen and (max-width: 767px) {
@@ -59,8 +59,8 @@ $linkedin-blue: #0077b5;
   }
 
   @media only screen and (max-width: 767px) {
-    width: 42px;
-    height: 42px;
+    width: 38px;
+    height: 38px;
     margin: 0;
 
     &--facebook svg {
@@ -82,10 +82,10 @@ $linkedin-blue: #0077b5;
   
   @media only screen and (min-width: 768px) {
     &.cs-share-button {
-      background: #333;
+      background: #555;
       border: 2px solid #ddd;
-      width: 42px;
-      height: 42px;
+      width: 36px;
+      height: 36px;
 
       svg {
         fill: white;
@@ -109,7 +109,7 @@ $linkedin-blue: #0077b5;
     }
 
     &--email:hover svg {
-      fill: black;
+      fill: #333;
     }
   }
 }

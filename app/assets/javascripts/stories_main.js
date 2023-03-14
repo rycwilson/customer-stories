@@ -83,7 +83,7 @@
     }
   }
   function initMoreStories () {
-    if (isMobileView() && document.getElementById('primary-cta-xs')) return false;
+    if (isMobileView() && document.querySelector('.primary-cta-xs')) return false;
     const minStories = 4;
     const delay = 5;
     const storySlug = location.pathname.slice(location.pathname.lastIndexOf('/') + 1);
@@ -124,7 +124,7 @@
   }
 
   function initMobileCta() {
-    const cta = document.getElementById('primary-cta-xs');
+    const cta = document.querySelector('.primary-cta-xs');
     if (cta) {
       const removeCta = (e) => { if (e.target.closest('button')) cta.remove(); };
       setTimeout(() => cta.classList.add('open'), 3000);

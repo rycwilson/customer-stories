@@ -1,42 +1,65 @@
-
 // note body class on story / edit content page may be .stories.edit (sync load)
 // or .companies.show (async load)
 
+#video-modal {
+  .modal-content {
+    background-color: black;
+  }
+
+  .modal-body {
+    padding-top: 0;
+  }
+
+  button.close {
+    opacity: 0.5;
+    margin-right: -15px;
+    padding: 6px 15px;
+    font-size: 30px;
+    color: white;
+    text-shadow: none;
+    
+    &:hover {
+      opacity: 1;
+    }
+  }
+}
+
 // ref: http://www.labnol.org/internet/light-youtube-embeds/27941/
 .video-thumb-container {
-  // position: relative;
-  // padding-bottom: 56.25%;  // ??  but apparently necessary
-  // overflow: hidden;
   cursor: pointer;
-  img {
+
+  > img {
     width: 100%;
   }
-  img, .play-button, .fa-play {
+
+  .play-button {
     position: absolute;
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
-  }
-  .play-button {
-    width: 70px;
-    height: 45px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 20%;
+    height: 20%;
     background-color: rgba(0,0,0,0.6);
     border-radius: 4px;
+
+    img {
+      @include svg-fill($light-gray);
+      height: 80%;
+    }
   }
 }
 
 @media only screen and (min-width: 768px) {
-  #video-modal iframe, #cs-video-modal iframe {
+  #video-modal iframe {
     height: 330px;
   }
 }
 
 @media only screen and (min-width: 992px) {
-  #video-modal iframe, #cs-video-modal iframe {
+  #video-modal iframe {
     height: 490px;
   }
-}
-
-@media only screen and (min-width: 1200px) {
-
 }

@@ -412,7 +412,7 @@ class Story < ApplicationRecord
     when 'vimeo'
       video_data_url = "https://vimeo.com/api/oembed.json?url=https%3A//vimeo.com/#{id}"
       res = Net::HTTP.get_response(URI(video_data_url))
-      JSON.parse(res.body).try(:[], 'thumbnail_url_with_play_button') rescue nil
+      JSON.parse(res.body).try(:[], 'thumbnail_url') rescue nil
 
     # in this case it's the actual video url instead of a thumbnail or data url; fetching cofirms its availability
     # wistia videos are self-contained and won't reference video_info[:thumnbanil_url]

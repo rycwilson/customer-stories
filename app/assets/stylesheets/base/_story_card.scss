@@ -8,14 +8,15 @@
 
 .story-card__loading {
   position: absolute;
-  opacity: 0;
   top: 50%;
   left: 50%;
+  visibility: hidden;
+  opacity: 0;
   transform: translate(-50%, -50%);
-
-  i {
-    font-size: 20px !important;
-    color: #666;
+  
+  img {
+    @include svg-fill(#555555);
+    height: 24px;
   }
 }
 

@@ -54,8 +54,11 @@ div class="#{'cs-' if is_plugin}container"
             .cta__topography
 
       - elsif is_plugin
-        section style="margin-bottom: 25px"
-          .cs-row style="margin: auto; height: 42px; margin-bottom: 0"
+        section.cs-share
+          = image_tag('icons/bs_share', class: 'bs-share', alt: 'share')
+          = render('stories/shared/share_buttons', { story: story, is_plugin: is_plugin })
+        
+          /.cs-row style="margin: auto; height: 42px; margin-bottom: 0"
             .col-sm-1 style="display: flex; align-items: center; justify-content: center; height: 100%; padding: 0"
               .fa.fa-fw.fa-share style="font-size: 14px;"
             .col-sm-11 style="padding: 0"

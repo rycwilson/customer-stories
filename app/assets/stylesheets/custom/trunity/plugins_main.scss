@@ -8,7 +8,11 @@ $trunity-orange: #FEBE57;
 
   .cs-header {
     background-color: $trunity-orange;
-    color: #fff;
+    color: #333;
+
+    img {
+      @include svg-fill(#333333);
+    }
   }
 
   .cs-drawer-content {

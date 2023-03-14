@@ -1,23 +1,33 @@
-
-.testimonial, .cs-testimonial {
+.testimonial, 
+.cs-testimonial {
   position: relative;
-  > .container > .row, > .cs-container > .cs-row {
-    display: flex;
-    align-items: center;
+  
+  > .container > .row, 
+  > .cs-container > .cs-row {
+    @include flex-row-center;
   }
-  .customer-logo-quote.visible-xs-block {
-    .customer-logo, .cs-customer-logo {
-      @include customer-logo(#fff);
+  
+  .customer-logo-quote {
+    &.visible-xs-block .customer-logo {
+      @include customer-logo(white);
+    }
+
+    &.visible-xs-block .cs-customer-logo {
+      @include customer-logo($light-gray);
     }
   }
+
   .customer-logo-quote.hidden-xs {
     .col-lg-3 {
       width: 30%;
     }
+
     .col-lg-9 {
       width: 70%;
     }
-    .customer-logo, .cs-customer-logo {
+
+    .customer-logo, 
+    .cs-customer-logo {
       img {
         margin: 0 auto;
         max-height: 80px;
@@ -25,32 +35,25 @@
         mix-blend-mode: multiply;
       }
     }
-    .customer-name {
-      margin-top: 20px !important;  // pixlee blog override
-      &.no-video {
-        // margin-bottom: 0;
-      }
-    }
   }
-  .story-video.hidden-xs, .cs-story-video.hidden-xs {
+
+  .story-video.hidden-xs, 
+  .cs-story-video.hidden-xs {
     margin: 0;
   }
+
   &.no-video {
     margin-bottom: 15px;
-    .customer-logo-quote.hidden-xs {
-      > div {
-        display: flex;
-        align-items: center;
-        .customer-logo {
-          img {
-            margin: 0 auto;
-          }
-        }
-        .customer-name {
-        }
+
+    .customer-logo-quote.hidden-xs > div {
+      @include flex-row-center;
+
+      .customer-logo img {
+        margin: 0 auto;
       }
     }
   }
+
   &:after {
     content: '';
     position: absolute;
@@ -62,33 +65,39 @@
     background-repeat: repeat-x;
     // filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#fff2f2f2', endColorstr='#ffffffff', GradientType=0);
   }
+
   &.testimonial {
-    p, span {
+    p, 
+    span {
       color: #666 !important;
     }
   }
+
   &.cs-testimonial {
-    p, span {
+    p, 
+    span {
       font-family: inherit !important;
       color: #444 !important;
     }
+
     &:after {
       content: none;
     }
+
     .customer-logo-quote.visible-xs-block {
       .customer-logo {
         background-color: if(variable-exists(stories-bg-color), $stories-bg-color, $light-gray);
       }
     }
+
     .customer-logo-quote.hidden-xs {
       .customer-logo {
         background-color: if(variable-exists(stories-bg-color), $stories-bg-color, $light-gray);
+
         img {
           max-height: 80px;
           max-width: 60%;
         }
-      }
-      .customer-name {
       }
     }
   }

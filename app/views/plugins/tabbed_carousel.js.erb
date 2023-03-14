@@ -5,7 +5,7 @@ function cspInitTabbedCarousel ($, $container, delay, isDemo) {
   var attachListeners = function () {
         scrollListeners($container);
         $container
-          .on('click', '.cs-header [class*="remove"]', function (e, data) {
+          .on('click', '.cs-header .cs-close', function (e, data) {
             $container.hide();
             if (!isDemo) {
               // set a cookie to keep the plugin hidden for a day
@@ -31,7 +31,8 @@ function cspInitTabbedCarousel ($, $container, delay, isDemo) {
               .css({ opacity: 0, visibility: "visible" })
               .animate({ opacity: 1 }, 200)
               .animate({ bottom: 0 }, 'fast');
-  }, isDemo ? 0 : delay * 1000);
+  //}, isDemo ? 0 : delay * 1000);
+  }, true ? 0 : delay * 1000);
 
   function setCookie (name, value, expires, path, domain, secure) {
     document.cookie = name + "=" + escape(value) +

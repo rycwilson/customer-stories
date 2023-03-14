@@ -1,4 +1,3 @@
-
 // selecting a parent in sass (see share_buttons.scss) only works if the css structure is NOT nested 
 // => e.g. won't work if this import statement is moved inside .stories.show {}
 @import '../shared/share_buttons';
@@ -18,11 +17,13 @@
 
   .LI-profile-badge {
     @include LI-profile-badge(#fff);
+
     &:last-child {   // does this apply to contributor view?
       .LI-badge-container {
         margin-bottom: 0;
       }
     }
+
     @media screen and (max-width: 767px) {
       max-width: 400px;
       margin: 0 auto;
@@ -41,40 +42,61 @@
 
   &.cs-overlay-container {
     background-color: transparent;
+
+    section.cs-share {
+      @include flex-row-center; 
+      margin-bottom: 25px;
+      
+      .bs-share {
+        @include svg-fill(#333333);
+        margin-right: 20px;
+        height: 16px;
+
+        & + div {
+          flex-grow: 1;
+        }
+      }
+    }
+
     article {
       min-height: 100vh;
       background-color: $stories-bg-color;
+
       .cs-story-header {
-        height: 55px;
-        background-color: #fff;
-        box-shadow: 0 2px 2px rgba(0, 0, 0, 0.05);
         display: flex;
         justify-content: space-between;
-        font-size: 16px !important;  // buttons will inherit this, icons will be 2em
+        box-shadow: 0 2px 2px rgba(0, 0, 0, 0.05);
+        background-color: #fff;
+
         button {
-          height: 100%;
+          display: flex;
+          align-items: center;
           background: none;
           border: none;
-          color: #666;
-          padding: 0 12px;
-          &:last-of-type i {
-            position: relative;
-            top: -3px;
+          padding: 15px 20px;
+
+          img {
+            @include svg-fill(#666666);
+            height: 20px;
           }
-          &:hover {
-            color: #222;
+
+          &:hover img {
+            @include svg-fill(#333333);
           }
         }
       }
     }
+
     // skinny up the X icon (ref: https://sridharkatakam.com/thin-font-awesome-close-icon/)
     .fa-times-thin:before {
       content: '\00d7';
     }
+
     .fa-arrow-left-thin:before {
       content: '\2190';
       vertical-align: middle;
     }
+
     hr {
       border-color: #ccc;
     }
@@ -88,9 +110,11 @@
   }
 
 
-  .story-content, .cs-story-content {
+  .story-content, 
+  .cs-story-content {
     background-color: $stories-bg-color;
     padding-bottom: 60px;
+
     &.cs-story-content {
       h1, h2, h3, h4, h5, h6, span, li, p, a, i:not(.fa-facebook):not(.fa-twitter):not(.fa-linkedin):not(.fa-envelope) {
         &:not(i) {
@@ -99,42 +123,51 @@
             weight: normal !important;
           }
         }
+
         &:not(a) {
           color: #444 !important;
         }
+
         @media screen and (min-width: 768px) {
           &:not(a) {
             color: #333 !important;
           }
         }
       }
+
       section {
         @media only screen and (max-width: 767px) {
           background-color: transparent;
         }
       }
     }
+
     section {
       padding: 20px;
       border: 1px solid #e3e3e3;
       background-color: #fff;
       margin-bottom: 25px;
+
       @media only screen and (max-width: 767px) {
         border: none;
         padding: 0;
       }
     }
+
     .section-title h4 {
       margin-top: 5px;
       font-size: 22px !important;
     }
+
     .narrative {
       .story-title h3 {
         margin-top: 0;
       }
+
       h1, h2, h3, h4, h5, h6 {
         line-height: 1.3 !important;
       }
+
       blockquote,
       blockquote p {
         font-style: italic;
@@ -147,33 +180,37 @@
         line-height: 1.5 !important;
 
         &:not(:last-child) {
-          margin-bottom: 1rem;
+          margin-bottom: 15px;
         }
+      }
+
+      #results-heading,
+      #ctas-heading {
+        margin-bottom: 20px;
       }
 
       .result,
       .cta {
         display: flex;
         align-items: center;
-        min-height: 2.75rem;
 
-        svg {
-          flex-shrink: 0;
+        &.result img,
+        &.cta img {
+          height: 18px;
         }
 
-        &.result svg {
-          fill: #333;
+        &.result img {
+          @include svg-fill(#333333);
         }
 
-        // the chevron bootstrap svg is a little thinner than the checkmark => compensate with darker fill
-        &.cta svg {
-          fill: black;
-        }
+        // the chevron bootstrap svg is a little thinner than the checkmark 
+        // => compensate with darker fill
+        // ==> svgs have fill="black" by default
+        // &.cta img {}
 
         p,
         a {
-          padding-left: 1.5rem;
-          font-size: 1.4rem;
+          padding-left: 20px;
         }
 
         p {
@@ -220,9 +257,11 @@
         }
       }
     }
+
     .story-contributors {
       visibility: hidden;  // can't use display: none because it will preclude ResizeSensor
     }
+
     &.cs-story-content {
       @media only screen and (max-width: 767px) {
         // @include LI-profile-badge(#fff);
@@ -249,37 +288,30 @@
   }
 
   @media only screen and (max-width: 767px) {
-    #primary-cta-xs, .primary-cta-xs {
+    .primary-cta-xs {
       position: fixed;
       left: 0;
       right: 0;
       bottom: -50px;
       display: flex;
-      align-items: center;
-      font-size: 16px;
+      z-index: 100;
+      transform: translateY(0%);
+      transition: all 0.4s;
+      margin: 0 auto;
+      min-width: 300px;
+      max-width: 400px;
       height: 50px;
+      font-size: 16px;
+      box-shadow: 0 2px 8px 0px rgba(0, 0, 0, 0.2);
       // these two set inline with helper
       // background-color: ;
       // color: ;
-      margin: 0 auto;
-      z-index: 100;
-      min-width: 300px;
-      max-width: 400px;
-      transform: translateY(0%);
-      transition: all 0.4s;
-      box-shadow: 0 2px 8px 0px rgba(0, 0, 0, 0.2);
 
       a {
         flex-grow: 1;
-        display: flex;
-        align-items: center;
         height: 100%;
         padding-left: 15px;
-
-        &, 
-        i {
-          font-weight: 600;
-        }
+        font-weight: 600;
       }
 
       button {
@@ -291,8 +323,14 @@
 
       a, 
       button {
-        text-decoration: none;
+        @include flex-row-center;
         color: unset;  // let the parent container set the color
+        text-decoration: none;
+      }
+
+      img {
+        @include svg-fill(white);
+        height: 16px;
       }
 
       &.open {
@@ -307,49 +345,64 @@
         }
       }
     }
-    .testimonial, .cs-testimonial {
+
+    .testimonial, 
+    .cs-testimonial {
       margin-bottom: 20px;
-      > .container, > .cs-container {
+
+      > .container,
+      > .cs-container {
         max-width: $max-xs-width;
       }
+
       &:after {
         content: none;
       }
-      &.cs-testimonial {
+
+      //&.cs-testimonial {
         // margin-top: 25px;
-      }
+      //}
     }
     .title-xs {
       > .container, .cs-container {
         max-width: $max-xs-width;
+
         h3 {
           line-height: 1.3 !important;
         }
       }
     }
-    .story-video-xs, .cs-story-video-xs {
-      &:not(.cs-story-video-xs) { background-color: #fff; }
-      > .container, > .cs-container {
-        max-width: $max-xs-width;
 
+    .story-video-xs, .cs-story-video-xs {
+
+      &:not(.cs-story-video-xs) { 
+        background-color: #fff; 
+      }
+
+      > .container, 
+      > .cs-container {
+        max-width: $max-xs-width;
       }
     }
+
     button.primary-cta {
       padding: 10px 32px;  // doubles bootstrap horizontal padding
       opacity: 0.9;
       border: 1px solid transparent;
-      &:hover, &:focus {
+
+      &:hover, 
+      &:focus {
         opacity: 1;
       }
+
       a {
         text-decoration: none;
         color: unset;  // let the style attribute on the button define the color
-        span {
-          // font-weight: 600;
-        }
       }
     }
-    .story-content, .cs-story-content {
+
+    .story-content, 
+    .cs-story-content {
       background-color: transparent;
       h4 {
         // font-size: 20px !important;
@@ -357,6 +410,7 @@
       }
       > .container, > .cs-container {
         max-width: $max-xs-width;
+        
         .narrative {
           &:not(.cs) {
             span, li, p, a {

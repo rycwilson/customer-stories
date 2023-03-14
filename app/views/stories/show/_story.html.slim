@@ -6,9 +6,9 @@ div class="#{'cs-' if is_plugin}story-wrapper #{'hidden' unless is_plugin}"
     - if is_plugin
       .cs-story-header.hidden-xs
         button.cs-close type="button"
-          i.fa.fa-fw.fa-arrow-left-thin.fa-2x
+          = image_tag('icons/bs_arrow_left', alt: 'arrow-left')
         button.cs-close type="button"
-          i.fa.fa-fw.fa-times-thin.fa-2x
+          = image_tag('icons/bs_x_lg', alt: 'close')
 
     section class="#{'cs-' if is_plugin}testimonial #{'no-video' unless has_video}"
       = render( \
@@ -54,12 +54,5 @@ div class="#{'cs-' if is_plugin}story-wrapper #{'hidden' unless is_plugin}"
       = render('stories/shared/sign_in_footer')
 
   / web form not presently supported for mobile view 
-  - if is_plugin && company.ctas.try(:primary).present? && company.ctas.primary.type == 'CTALink'
-    .visible-xs-block
-      div.primary-cta-xs style="#{primary_cta_style(company, true)}"
-        a href="#{company.ctas.primary.link_url}"
-          span = company.ctas.primary.display_text
-          span
-            i.fa.fa-fw.fa-caret-right
-        button type="button" class="remove"
-          i.fa.fa-fw.fa-remove
+  - if is_plugin && company.ctas&.primary && company.ctas.primary.type == 'CTALink'
+    = render('stories/shared/cta_footer', { company: company, is_plugin: is_plugin })

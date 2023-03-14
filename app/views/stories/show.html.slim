@@ -23,13 +23,5 @@
       is_external: false })
 
 / web form not presently supported for mobile view
-- if @company.ctas.try(:primary).present? && @company.ctas.primary.type == 'CTALink'
-  .visible-xs-block
-    #primary-cta-xs style="#{primary_cta_style(@company, true)}"
-      a href="#{@company.ctas.primary.link_url}"
-        span
-          = @company.ctas.primary.display_text
-        span
-          i.fa.fa-fw.fa-caret-right
-      button type="button" class="remove"
-        .fa.fa-fw.fa-remove
+- if @company.ctas&.primary && @company.ctas.primary.type == 'CTALink'
+  = render('stories/shared/cta_footer', { company: @company, is_plugin: @is_plugin })

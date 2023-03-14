@@ -31,13 +31,13 @@
 
 .ts-dropdown {
   .active {
-    color: #fff;
+    color: white;
     background-color: $ts-active-option-background;
   }
 
   .optgroup-header {
     font-size: 13px;
-    background: #efefef;
+    background: $medium-gray;
   }
   
   .optgroup-header {
@@ -62,15 +62,20 @@ form.search-stories > .input-group,
   }
 }
 
+.stories-filter.form-group .input-group-addon {
+  border-top-left-radius: 0.25rem;
+  border-bottom-left-radius: 0.25rem;
+  
+  img {
+    @include svg-fill(#555555);
+    height: 16px;
+  }
+}
+
 .stories-filter__select.ts-wrapper {
   // change the caret color
   .ts-control:after {
     border-color: #6c757d transparent transparent transparent;
-
-    // input {
-      // caret-color: transparent;   // hide the blinking cursor since search is disabled
-      
-    // }
   } 
 
   // with tom-select controlInput set to null (disable search), placeholder disappears

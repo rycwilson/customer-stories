@@ -70,13 +70,13 @@
           if (preSelectedStorySlug) {
             // z-index is just a touch greater than the 100000 that is set on .cs-main when an overlay is opened
             // TODO: constantize this number
-            $('body').append(
-              '<div id="cs-loading-pre-select" style="z-index:100001; display:block; position:fixed; height:' + window.innerHeight + 'px; top:0; left:0; right:0; background-color:' + (window.innerWidth < xsBreakpoint ? 'rgba(242,242,242,0.9)' : 'rgba(0,0,0,0.75)') + '; transition: opacity 0.12s">' +
-                '<div style="position:absolute; top:50%; left:50%; transform:translate(-50%, -50%)">' +
-                  '<i class="fa fa-spin fa-circle-o-notch" style="font-size: 36px !important; color:' + (window.innerWidth < xsBreakpoint ? '#555' : 'rgba(255,255,255,0.85)') + ' !important"></i>' +
-                '</div>' +
-              '</div>'
-            );
+            $('body').append(`
+              <div id="cs-loading-pre-select" style="z-index:100001; display:block; position:fixed; height:${window.innerHeight}px; top:0; left:0; right:0; background-color:${(window.innerWidth < xsBreakpoint ? 'rgba(242,242,242,0.9)' : 'rgba(0,0,0,0.75)')}; transition: opacity 0.12s">
+                <div style="position:absolute; top:50%; left:50%; transform:translate(-50%, -50%)">
+                  <img src="<%= asset_url('icons/180-ring', alt: 'loading') %>" style="height: 50px !important; color: ${window.innerWidth < xsBreakpoint ? '#555' : 'rgba(255,255,255,0.85)'} !important">
+                </div>
+              </div>
+            `);
 
             // $container[0].scrollIntoView({ block:'center' });
 
@@ -235,13 +235,10 @@
           // Set drawer to hide
           drawer.hide(options, div);
         }
-        $container.on(
-          'click',
-          '.visible-xs-block .cs-header:not([class*="remove"]), .hidden-xs .cs-header:not([class*="remove"])',
-          function () {
-            drawer.toggle(options, div);
-          }
-        );
+        $container.on('click', '.cs-toggle', function (e) {
+          if (e.target.closest('button.cs-close')) return false;
+          drawer.toggle(options, div);
+        });
       },
       toggle: function (options, div) {
         ($(div).height() + options.borderHeight === options.drawerHeight) ?
@@ -250,7 +247,6 @@
       },
       slide: function (div, height, speed) {
         $(div).animate({ 'height': height }, speed, 'swing', function () {
-          $container.find('.cs-header i[class*="fa-chevron"]').toggle();
           $container.find('header').toggleClass('open closed');
         });
       },

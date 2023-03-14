@@ -347,9 +347,9 @@ class StoriesController < ApplicationController
   #   @story = Story.find_by_id(params[:id]) || Story.friendly.find(params[:story_slug])
   # end
 
-  def render_story_partial_to_string (story, contributors, window_width)
+  def render_story_partial_to_string(story, contributors, window_width)
     render_to_string({
-      partial: story.status == 'published' ? 'stories/show/story' : 'stories/show/preview',
+      partial: "stories/show/#{story.published? ? 'story' : 'preview'}",
       locals: {
         company: story.company,
         story: story,
@@ -357,7 +357,6 @@ class StoriesController < ApplicationController
         contributors: contributors,
         related_stories: nil,
         is_plugin: true,
-        # plugin_type: 'gallery',
         window_width: window_width
       }
     })
