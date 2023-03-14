@@ -4,11 +4,6 @@ module StoriesHelper
     staging? || company&.subdomain == 'pixlee'
   end
 
-  def custom_stylesheet?(company)
-    %w(centerforcustomerengagement compas pixlee trunity varmour)
-      .include?(company.subdomain)
-  end
-
   def linkedin_widget_width(window_width)
     case window_width.to_i
     when 0...370

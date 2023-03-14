@@ -15,6 +15,11 @@ module ApplicationHelper
       nil
   end
 
+  def custom_stylesheet?(company)
+    %w(centerforcustomerengagement compas pixlee trunity varmour)
+      .include?(company&.subdomain)
+  end
+
   def admin_navbar? controller
     ['companies', 'stories', 'profile'].include?(controller)
   end

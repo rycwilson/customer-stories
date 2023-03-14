@@ -1,13 +1,13 @@
-
-
 .site {
   .cc-window {
     font-family: inherit;
+
     .cc-btn {
       font-weight: 600;
       color: #fff;
       text-decoration: none;
     }
+
     .cc-btn.cc-allow {
       background-color: #6685a4;
       border-color: #54718d;
@@ -15,11 +15,13 @@
       border-width: 1px;
       box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.15), 0 1px 1px rgba(0, 0, 0, 0.075);
     }
+
     .cc-btn.cc-allow:hover {
       background-color: #516c87;
       border-color: #3d5267;
     }
   }
+
   // instead of displaying the default tab,
   // include a link on privacy page that triggers a click of .cc-revoke
   .cc-revoke {
@@ -28,7 +30,6 @@
 }
 
 .site.index {
-
   .testimonial-content {
     margin-bottom: 30px;
   }
@@ -44,29 +45,27 @@
     margin: 0 160px;
   }
 
-  #section-features {
-
-  }
-
   #section-benefits {
     background-color: #f3f3f3;
+
     i.fa {
       padding: 0 40px 40px 40px;
     }
   }
 
   #section-testimonials {
-    padding-bottom: 115px;
+    // padding-bottom: 115px;
     
     .clients-list {
-
       li {
         position: relative;
         height: 70px;
         width: 200px;
         margin-bottom: 20px;
+
         a {
           line-height: 70px;
+
           img {
             margin: auto;
             vertical-align: middle;
@@ -76,18 +75,22 @@
       }
 
       @media only screen and (min-width: 768px) {
-        margin-bottom: 30px;
+        // margin-bottom: 30px;
+
         li {
           margin: 0 10px 25px 10px;
         }
       }
+
       @media only screen and (min-width: 992px) {
         li {
           margin: 0 40px 30px 40px;
         }
       }
+
       @media only screen and (min-width: 1200px) {
-        margin-bottom: 70px;
+        // margin-bottom: 70px;
+
         li {
           margin: 0 12px 0 12px;
         }
@@ -95,7 +98,6 @@
     }
 
     .testimonials-list {
-
       width: 100%;
       padding: 0;
       margin: 0;
@@ -109,6 +111,7 @@
         text-align: center;
         width: 340px;
         height: 480px;
+
         .linkedin-widget {
           position: absolute;
           left: 0;
@@ -122,46 +125,56 @@
         li {
           margin: 0 10px 25px 10px;
         }
+
         li:first-of-type {
           margin-bottom: 30px;
         }
+
         li:last-of-type {
           margin-bottom: 0px;
-        }
-        li:last-of-type {
           height: 450px;
         }
+
         li:first-of-type .linkedin-widget {
           bottom: 0;
         }
+
         li:nth-of-type(2) .linkedin-widget {
           bottom: 6px;
         }
+
         li:last-of-type .linkedin-widget {
           bottom: 30px;
         }
       }
+
       @media only screen and (min-width: 992px) {
         li {
           margin: 0 50px 40px 50px;
         }
+
         li:first-of-type .linkedin-widget {
           bottom: 0;
         }
+
         li:nth-of-type(2) .linkedin-widget {
           bottom: 0;
         }
+
         li:last-of-type .linkedin-widget {
           bottom: 30px;
         }
       }
+
       @media only screen and (min-width: 1200px) {
         li {
           margin: 0 16px;
         }
+
         li:last-of-type {
           height: 480px;
         }
+
         li:last-of-type .linkedin-widget {
           bottom: 30px;
         }
@@ -173,7 +186,5 @@
   #section-contact {
     background-color: #f3f3f3;
     padding: 50px 35px;
-
   }
-
 }
