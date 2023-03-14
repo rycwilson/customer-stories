@@ -241,7 +241,7 @@ function cspInitOverlays ($, $container, subdomain, isDemo, env) {
     })
 
     .on('click', '.primary-cta-xs.open', function (e) {
-      if ($(e.target).is('[class*="remove"]')) {  // the target may be the icon
+      if ($(e.target).closest('button').length) { 
         $('.primary-cta-xs').each(function () { $(this).remove(); });
         // TODO add a cookie
       } else if (!$(e.target).is('a')) {
