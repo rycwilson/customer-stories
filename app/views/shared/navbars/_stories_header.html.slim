@@ -12,7 +12,7 @@ nav {
         .col-xs-2.text-right
           - if curator?(company)
             a.stories-header__home href="/curate"
-              = image_tag('icons/bs_home', alt: 'home')
+              = image_tag('icons/bs_home.svg', alt: 'home')
 
     .row.hidden-xs
       .navbar-header class="#{curator?(company) && !is_preview ? 'col-sm-8 col-lg-5' : 'col-sm-6'}"
@@ -26,7 +26,7 @@ nav {
               |&nbsp;&nbsp;Edit Story
         .col-sm-4.col-lg-5
           a.stories-header__home href="/curate"
-            = image_tag('icons/bs_home', alt: 'home')
+            = image_tag('icons/bs_home.svg', alt: 'home')
 
       - elsif action_name == 'index'
         .col-sm-6
