@@ -30,7 +30,8 @@
 
     &:hover {
       button.edit-customer {
-        display: initial;
+        // display: initial;
+        display: revert;
       }
     }
   }
@@ -67,7 +68,8 @@
     }
 
     &.loading {
-      display: initial;
+      // display: initial;
+      display: revert;
     }
 
     &.still-loading {
@@ -113,7 +115,8 @@
     
     .btn-view,
     .btn-save {
-      display: initial;
+      // display: initial;
+      display: revert;
     }
   }
   
@@ -123,7 +126,8 @@
     }
     
     .btn-compress {
-      display: initial;
+      // display: initial;
+      display: revert;
     }
   }
 
@@ -133,7 +137,8 @@
     }
 
     .btn-save {
-      display: initial;
+      // display: initial;
+      display: revert;
     }
   }
 

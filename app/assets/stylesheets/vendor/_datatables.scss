@@ -141,7 +141,8 @@ td.status.dropdown, td.actions.dropdown {
 
 div.DTE_Inline {
   div.DTE_Inline_Field div.DTE_Field > label {
-    display: initial;
+    // display: initial;
+    display: revert;
     width: 100%;
     padding-left: 0;
     margin-bottom: 5px;

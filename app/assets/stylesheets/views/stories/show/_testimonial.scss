@@ -7,13 +7,10 @@
     @include flex-row-center;
   }
   
-  .customer-logo-quote {
-    &.visible-xs-block .customer-logo {
-      @include customer-logo(white);
-    }
-
-    &.visible-xs-block .cs-customer-logo {
-      @include customer-logo($light-gray);
+  .customer-logo-quote.visible-xs-block {
+    .customer-logo,
+    .cs-customer-logo {
+      @include customer-logo($stories-bg-color);
     }
   }
 

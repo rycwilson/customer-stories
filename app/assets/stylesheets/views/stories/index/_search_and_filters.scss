@@ -90,9 +90,16 @@
   color: #6f6f6f;
   // cursor: pointer;
 
-  form.search-stories.was-executed > .input-group:hover & {
-    display: initial;
+  form.search-stories.was-executed > .input-group:hover &,
+  .visible-xs-block form.search-stories.was-executed > .input-group & {
+    display: revert;
   }
+
+  // @media only screen and (max-width: 767px) {
+  //   .search-and-filters & {
+  //     margin-top: 15px;
+  //   }
+  // }
    
 }
 

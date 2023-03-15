@@ -62,7 +62,8 @@
       }
 
       i:last-child {
-        display: initial;
+        // display: initial;
+        display: revert;
       }
     }
   }

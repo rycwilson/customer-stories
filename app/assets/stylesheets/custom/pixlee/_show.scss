@@ -1,35 +1,38 @@
-
-body.pixlee.stories.show, .cs-plugin .cs-overlay-container {
+body.pixlee.stories.show, 
+.cs-plugin .cs-overlay-container {
   
   &.cs-overlay-container {
     article {
       background-color: $stories-bg-color;
+
       .cs-story-header {
         background-color: $stories-header-color;
         border-bottom: 1px solid $border-color;
         box-shadow: 0 0;
+
         button:last-of-type i {
           position: relative;
           top: -1px;
         }
       }
-      p {
-        padding-top: 0;  // overrides a host setting
-      }
     }
   }
 
-  .testimonial, .cs-testimonial {
+  .testimonial, 
+  .cs-testimonial {
     margin-bottom: 100px;
+
     &:after {
       background-image: linear-gradient(to top, $stories-bg-color 0%, #ffffff 100%);
     }
+
     &.cs-testimonial {
       .customer-logo-quote.visible-xs-block {
         .customer-logo {
           background-color: $stories-bg-color;
         }
       }
+
       .customer-logo-quote.hidden-xs {
         .customer-logo {
           background-color: $stories-bg-color;

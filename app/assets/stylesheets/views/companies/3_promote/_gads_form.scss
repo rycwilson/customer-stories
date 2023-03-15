@@ -166,7 +166,8 @@ ul:is([class*="image-library"], .ad-image-selections, .ad-logo-selections) {
   }
 
   .ad-image-card--did-save & .did-save {
-    display: initial;
+    // display: initial;
+    display: revert;
   }
 }
 
@@ -213,7 +214,8 @@ ul:is([class*="image-library"], .ad-image-selections, .ad-logo-selections) {
 
   .ad-image-card--new .form-group:not(.has-error) & {
     .uploading-spinner {
-      display: initial;
+      // display: initial;
+      display: revert;
     }
   }
 }

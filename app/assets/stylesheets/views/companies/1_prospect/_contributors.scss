@@ -105,7 +105,8 @@
       }
       &.error {
         .LI-profile__error {
-          display: initial;
+          // display: initial;
+          display: revert;
           color: #c9302c;
         }
       }
