@@ -22,7 +22,8 @@ function preselectFilters () {
 function curateListeners () {
 
   var loading = function ($storyCard) {
-        $storyCard.addClass('loading still-loading');
+        $storyCard.addClass('loading');
+        setTimeout(() => $storyCard.addClass('still-loading'), 1000);
         $('#curate-gallery .story-card').css('pointer-events', 'none');
       },
       cancelLoading = function () {
