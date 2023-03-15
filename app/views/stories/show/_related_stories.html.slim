@@ -1,0 +1,38 @@
+/hr class="hidden-xs"
+
+section.related-stories.hidden-xs
+  .row
+    .col-sm-12
+      / need the container for providing inherited styling -->
+      .section-title style="display:inline-block"
+        h4 Related Stories
+      |&nbsp;&nbsp;
+      a href='/' All Stories
+
+  .grid-container
+    ul.grid.list-unstyled.text-center
+      - related_stories.each do |story|
+        li style="display:inline-block; vertical-align:top"
+          = render( \
+                'stories/shared/story_card',
+                { story: story,
+                  card_class: story_card_class(story),
+                  is_dashboard: false,
+                  is_plugin: false,
+                  is_external: false })
+
+/section.related-stories.visible-xs
+  .text-center.section-title
+    h4 Related Stories
+    a href='/' All Stories
+  .grid-container
+    ul.grid.list-unstyled.text-center
+      = related_stories.each do |story|
+        li
+          = render( \
+              'stories/shared/story_card',
+              { story: story,
+                card_class: story_card_class(story),
+                is_dashboard: false,
+                is_plugin: false,
+                is_external: false })

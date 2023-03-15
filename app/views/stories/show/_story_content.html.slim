@@ -2,8 +2,16 @@ div class="#{'cs-' if is_plugin}container"
   div class="#{'cs-' if is_plugin}row"
     .col-xs-12.col-sm-6.col-md-7
 
-      /- cache("#{company.subdomain}/stories/#{story.id}/#{is_plugin ? 'cs-' : ''}narrative", skip_digest: true) do
-      = render('stories/show/narrative', { company: company, story: story, is_plugin: is_plugin })
+      .visible-xs-block
+        section.narrative
+          div = story.narrative.html_safe
+
+      .hidden-xs
+        section.narrative
+          / need the container for providing inherited styling
+          .story-title
+            h3 = story.title
+            = story.narrative.html_safe
 
       .visible-xs-block
         - if story.results.present?
