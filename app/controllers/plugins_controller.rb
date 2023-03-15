@@ -80,7 +80,7 @@ class PluginsController < ApplicationController
         max_rows: params[:max_rows].to_i,
         background: params[:background] || 'light',
         tab_color: params[:tab_color],
-        text_color: params[:text_color] || params[:font_color],
+        text_color: params[:text_color],
         carousel_version: company.subdomain == 'pixlee' ? 'v2' : 'v1',
         logos_only: params[:logos_only],
         is_grayscale: params[:grayscale].present? && params[:grayscale] != 'false',
