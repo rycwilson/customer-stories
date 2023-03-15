@@ -8,7 +8,9 @@
   }
   
   .customer-logo-quote.visible-xs-block {
-    .customer-logo,
+    .customer-logo {
+      @include customer-logo(white);
+    }
     .cs-customer-logo {
       @include customer-logo($stories-bg-color);
     }

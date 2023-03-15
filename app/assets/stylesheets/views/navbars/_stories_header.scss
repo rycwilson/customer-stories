@@ -84,6 +84,14 @@
   @include flex-row-center;
 }
 
+.hidden-xs > .navbar-header ~ [class*="col-"] {
+  @include flex-row-center;
+
+  &:last-child {
+    justify-content: flex-end;
+  }
+}
+
 .stories-header__edit,
 .stories-header__home {
   opacity: 0.85;
@@ -125,7 +133,7 @@
 }
 
 .stories-header__home {
-  float: right;
+  // float: right;
 
   img {
     height: 2rem;
