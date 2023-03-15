@@ -63,7 +63,7 @@ div class="#{'cs-' if is_plugin}container"
 
       - elsif is_plugin
         section.cs-share
-          = image_tag('icons/bs_share', class: 'bs-share', alt: 'share')
+          = image_tag('icons/bs_share.svg', class: 'bs-share', alt: 'share')
           = render('stories/shared/share_buttons', { story: story, is_plugin: is_plugin })
         
           /.cs-row style="margin: auto; height: 42px; margin-bottom: 0"

@@ -22,7 +22,7 @@ nav {
         .visible-lg.col-lg-2.text-center
           - if action_name == 'show'
             = link_to( curate_story_path(story.customer.slug, story.slug), class: "stories-header__edit" ) do
-              = image_tag('icons/bs_pencil', alt: 'edit')
+              = image_tag('icons/bs_pencil.svg', alt: 'edit')
               |&nbsp;&nbsp;Edit Story
         .col-sm-4.col-lg-5
           a.stories-header__home href="/curate"
