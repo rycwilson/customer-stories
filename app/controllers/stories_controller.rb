@@ -33,8 +33,10 @@ class StoriesController < ApplicationController
   end
 
   def show
+    sleep 3 if params[:sleep]
+    # response.set_header('Cache-Control', 'max-age=0, no-cache, no-store, must-revalidate, private')
     @story.video = @story.video_info()
-    
+
     if params[:is_plugin]
       # @is_plugin = @is_external = true
       respond_to do |format|

@@ -11,6 +11,7 @@
 ;(function CSP() {
   'use strict';
 
+  const gallery = document.querySelector('#stories-gallery');
   let featuredStories, searchForms;
 
   // stories gallery
@@ -26,7 +27,7 @@
   } else {
     const socialShareRedirectURI = (new URL(location)).searchParams.get('redirect_uri');
     if (socialShareRedirectURI) location = socialShareRedirectURI;
-    
+
     imagesLoaded('.story-wrapper', (e) => e.elements[0].classList.remove('hidden'));
     initMobileCta();
     initMoreStories();
@@ -198,7 +199,7 @@
     featuredStories.forEach(card => {
       const link = card.children[0];
       if (link.classList.contains('published')) {
-        link.addEventListener('click', visitStory);
+        // link.addEventListener('click', visitStory);
 
         // set passive: false to override Chrome default behavior; see TouchEvent MDN docs
         link.addEventListener('touchstart', visitStory, { passive: false });
@@ -209,17 +210,37 @@
   function visitStory(e) {
     e.preventDefault();
     const link = this;
+    // if (!link.dataset.ready) {
+    //   e.preventDefault();
+    // } else {
+    //   link.dataset.ready = false;
+    //   return false;
+    // }
     const card = link.parentElement;
+    let loadingTimer;
+    const toggleOtherCards = (shouldEnable) => {
+      featuredStories.forEach(_card => { 
+        if (!_card.isSameNode(card)) 
+          _card.style.pointerEvents = shouldEnable ? '' : 'none';
+      });
+    }
     const revertStyle = (e) => {
-      card.classList.remove('loading', 'still-loading', 'hover');
-      document.body.style.pointerEvents = 'auto';
+      if (e.persisted) {
+        clearTimeout(loadingTimer);
+        card.classList.remove('loading', 'still-loading', 'hover');
+        toggleOtherCards(true);
+      }
     };
     const followLink = () => {
+      toggleOtherCards(false);
+      addEventListener('pagehide', revertStyle, { once: true });
       card.classList.add('loading');
-      document.body.style.pointerEvents = 'none';
-      document.addEventListener('visibilitychange', revertStyle, { once: true });
-      setTimeout(() => card.classList.add('still-loading'), 1000);
-      setTimeout(() => location = link.href);
+      loadingTimer = setTimeout(() => card.classList.add('still-loading'), 1000);
+      
+      location = link.href;
+      // setTimeout(() => location = link.href)
+      // link.dataset.ready = true;
+      // link.click();
     }
     if (e.type === 'click') {
       followLink();
