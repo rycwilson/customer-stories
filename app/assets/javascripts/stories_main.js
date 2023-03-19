@@ -199,7 +199,7 @@
     featuredStories.forEach(card => {
       const link = card.children[0];
       if (link.classList.contains('published')) {
-        // link.addEventListener('click', visitStory);
+        link.addEventListener('click', visitStory);
 
         // set passive: false to override Chrome default behavior; see TouchEvent MDN docs
         link.addEventListener('touchstart', visitStory, { passive: false });
@@ -234,6 +234,7 @@
     const followLink = () => {
       toggleOtherCards(false);
       addEventListener('pagehide', revertStyle, { once: true });
+      console.log('WHAT THE FUCK IS HAPPENING', card)
       card.classList.add('loading');
       loadingTimer = setTimeout(() => card.classList.add('still-loading'), 1000);
       
