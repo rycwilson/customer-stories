@@ -11,8 +11,7 @@
 ;(function CSP() {
   'use strict';
 
-  const gallery = document.querySelector('#stories-gallery');
-  let featuredStories, searchForms;
+  let featuredStories, relatedStories, searchForms;
 
   // stories gallery
   if (location.pathname === '/') {
@@ -21,14 +20,16 @@
     imagesLoaded('#stories-gallery', (e) => e.elements[0].classList.remove('hidden'));
     initFilters();
     initSearchForms();
-    initStoryCards();
+    initStoryCards(featuredStories);
 
   // story
   } else {
     const socialShareRedirectURI = (new URL(location)).searchParams.get('redirect_uri');
     if (socialShareRedirectURI) location = socialShareRedirectURI;
 
+    relatedStories = document.querySelectorAll('.story-card');
     imagesLoaded('.story-wrapper', (e) => e.elements[0].classList.remove('hidden'));
+    initStoryCards(relatedStories)
     initMobileCta();
     initMoreStories();
     initVideo();
@@ -195,8 +196,8 @@
     ));
   }
 
-  function initStoryCards() {
-    featuredStories.forEach(card => {
+  function initStoryCards(cards) {
+    cards.forEach(card => {
       const link = card.children[0];
       if (link.classList.contains('published')) {
         link.addEventListener('click', visitStory);
@@ -217,12 +218,11 @@
     //   return false;
     // }
     const card = link.parentElement;
+    const otherCards = [...(location.pathname === '/' ? featuredStories : relatedStories)]
+      .filter(_card => !_card.isSameNode(card));
     let loadingTimer;
     const toggleOtherCards = (shouldEnable) => {
-      featuredStories.forEach(_card => { 
-        if (!_card.isSameNode(card)) 
-          _card.style.pointerEvents = shouldEnable ? '' : 'none';
-      });
+      otherCards.forEach(_card => _card.style.pointerEvents = shouldEnable ? '' : 'none');
     }
     const revertStyle = (e) => {
       if (e.persisted) {
