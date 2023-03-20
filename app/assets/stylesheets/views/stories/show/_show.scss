@@ -172,6 +172,10 @@
       blockquote p {
         font-style: italic;
       }
+
+      img {
+        max-width: 100% !important;
+      }
     }
 
     .story-results, 
