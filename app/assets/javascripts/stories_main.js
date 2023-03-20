@@ -28,12 +28,15 @@
     if (socialShareRedirectURI) location = socialShareRedirectURI;
 
     relatedStories = document.querySelectorAll('.story-card');
-    imagesLoaded('.story-wrapper', (e) => e.elements[0].classList.remove('hidden'));
+    imagesLoaded('.story-wrapper', (e) => {
+      e.elements[0].classList.remove('hidden')
+      initFixedCta();
+    });
     initStoryCards(relatedStories)
     initMobileCta();
     initMoreStories();
     initVideo();
-    initFixedCta();
+    // initFixedCta();
     initShareButtons();
     
     const editStoryLink = document.querySelector('.stories-header__edit');
@@ -234,7 +237,6 @@
     const followLink = () => {
       toggleOtherCards(false);
       addEventListener('pagehide', revertStyle, { once: true });
-      console.log('WHAT THE FUCK IS HAPPENING', card)
       card.classList.add('loading');
       loadingTimer = setTimeout(() => card.classList.add('still-loading'), 1000);
       
@@ -522,18 +524,10 @@
     const cta = document.querySelector('.pixlee-cta');
     if (!isPixleeStory || isMobileView() || !sidebar || !cta) return false;
     const backgroundDiv = cta.querySelector('.cta__image');
-    const backgroundUrl = backgroundDiv.dataset.backgroundUrl;
-    let ctaTop;
-    const img = new Image();
-    img.onload = () => {
-      setTimeout(() => {
-        backgroundDiv.style.background = `${backgroundUrl} center / cover no-repeat`;
-        ctaTop = scrollY + backgroundDiv.getBoundingClientRect().top;
-      }, 100);
-    }
-    img.src = backgroundUrl;
+    const ctaTop = scrollY + backgroundDiv.getBoundingClientRect().top;
     document.addEventListener('scroll', (e) => {
       if (scrollY > ctaTop - 95) {
+        console.log('fix', scrollY, ctaTop)
         cta.style.position = 'fixed';
         cta.style.top = '95px';
         cta.style.left = `${sidebar.getBoundingClientRect().left + parseFloat(getComputedStyle(sidebar).paddingLeft)}px`;
@@ -544,8 +538,38 @@
           parseFloat(getComputedStyle(sidebar).paddingRight)
         }px`;
       } else {
+        console.log('no fix')
         cta.style.position = 'static';
       }
     }, { passive: true });
+    // if ($('body').hasClass('stories show pixlee') && CSP.screenSize !== 'xs') {
+    //   var pixleeCtaTop,
+    //       pixleeImg = new Image();
+  
+    //   pixleeImg.onload = function () {
+    //     setTimeout(function () {
+    //       $('.pixlee-cta .cta__image').css('background', "<%= asset_url('companies/pixlee/webinar-hero.webp') %> center / cover no-repeat");
+    //       pixleeCtaTop = $('.pixlee-cta').offset().top;
+    //     }, 100);
+    //   };
+    //   pixleeImg.src = "<%= asset_url('companies/pixlee/webinar-hero.webp') %>";
+  
+    //   $(document).on('scroll', () => {
+    //     var currentScroll = $(window).scrollTop();
+    //     if (currentScroll > pixleeCtaTop - 95) {
+    //       $('.pixlee-cta').css({
+    //         position: 'fixed',
+    //         height: '400px',
+    //         width: $('.story-sidebar').width().toString() + 'px',
+    //         top: '95px',
+    //         left: ($('.story-sidebar').offset().left + parseInt($('.story-sidebar').css('padding-left'), 10)).toString() + 'px'
+    //       });
+    //     } else {
+    //       $('.pixlee-cta').css({
+    //         position: 'static'
+    //       });
+    //     }
+    //   }, { passive: true });
+    // }
   }
 })();
