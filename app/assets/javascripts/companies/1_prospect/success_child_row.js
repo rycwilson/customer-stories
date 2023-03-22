@@ -54,7 +54,7 @@ function successChildRowListeners() {
     // dynamically add and remove the spin behavior so that the page isn't full of perpetually spinning elements
     const toggleSpinner = () => btn.lastElementChild.children[0].classList.toggle('fa-spin');
     const loadingTimer = setTimeout(() => {
-      toggleSpinner();
+      if (location.pathname === '/prospect') toggleSpinner();
       btn.classList.add('still-loading');
     }, 1000);
     btn.classList.add('loading');
@@ -74,7 +74,7 @@ function successChildRowListeners() {
       .catch(error => console.error(error))
       .finally(() => {
         btn.classList.remove('loading', 'still-loading');
-        toggleSpinner();
+        if (location.pathname === '/prospect') toggleSpinner();
       });
   }
 

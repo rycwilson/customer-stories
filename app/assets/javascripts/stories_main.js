@@ -542,34 +542,5 @@
         cta.style.position = 'static';
       }
     }, { passive: true });
-    // if ($('body').hasClass('stories show pixlee') && CSP.screenSize !== 'xs') {
-    //   var pixleeCtaTop,
-    //       pixleeImg = new Image();
-  
-    //   pixleeImg.onload = function () {
-    //     setTimeout(function () {
-    //       $('.pixlee-cta .cta__image').css('background', "<%= asset_url('companies/pixlee/webinar-hero.webp') %> center / cover no-repeat");
-    //       pixleeCtaTop = $('.pixlee-cta').offset().top;
-    //     }, 100);
-    //   };
-    //   pixleeImg.src = "<%= asset_url('companies/pixlee/webinar-hero.webp') %>";
-  
-    //   $(document).on('scroll', () => {
-    //     var currentScroll = $(window).scrollTop();
-    //     if (currentScroll > pixleeCtaTop - 95) {
-    //       $('.pixlee-cta').css({
-    //         position: 'fixed',
-    //         height: '400px',
-    //         width: $('.story-sidebar').width().toString() + 'px',
-    //         top: '95px',
-    //         left: ($('.story-sidebar').offset().left + parseInt($('.story-sidebar').css('padding-left'), 10)).toString() + 'px'
-    //       });
-    //     } else {
-    //       $('.pixlee-cta').css({
-    //         position: 'static'
-    //       });
-    //     }
-    //   }, { passive: true });
-    // }
   }
 })();
