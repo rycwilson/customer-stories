@@ -8,7 +8,7 @@ html lang="en-US" prefix="og: http://ogp.me/ns# fb: http://ogp.me/ns/fb#"
       meta name="robots" content="noindex"
     title 
       = @company.name + " Customer Stories#{action_name == 'show' ? ': ' + @story.title : ''}"
-    - render( \
+    = render( \
         "stories/#{action_name == 'index' ? 'index/seo_meta_tags' : 'show/story_meta_tags'}",
         { company: @company, success: @story&.success, story: @story })
     = javascript_include_tag('stories_main', defer: true)

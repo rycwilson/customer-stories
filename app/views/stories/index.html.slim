@@ -1,12 +1,3 @@
-- content_for(:head) do
-  meta name="turbolinks-cache-control" content="no-cache"
-  - if production?
-    = render_seo_meta_tags('index', @company)
-
-- content_for(:underscore_templates) do
-  = render('stories/index/index_template', { company: @company })
-  // = render('companies/1_prospect/contributors/csp_linkedin_widget_template')
-
 = render('shared/navbars/stories_header', { company: @company, story: nil, is_preview: false })
 
 .container.grid-container
