@@ -1,0 +1,75 @@
+(() => {
+  const contributions = <%= raw @story.success.contributions_for_win_story.to_json(
+    include: { contributor: { only: [:id, :title], methods: [:full_name] } }
+  ) %>;
+  const answers = <%= raw @story.success.answers.map { |a| a.attributes.merge(question: a.question.attributes) }.to_json %>; 
+  const questions = answers.map(answer => answer.question).filter((question, i, questions) => (
+    i === questions.findIndex(q => q.id === question.id)
+  ));
+  const container = document.getElementById('show-contributions');
+
+  container.dataset.didLoad = true;
+
+  questions.forEach(question => {
+    const answersExist = answers.find(answer => answer.answer && answer.contributor_question_id === question.id);
+    if (answersExist)
+      container.querySelector('.questions').insertAdjacentHTML('beforeend', groupContributionTemplate(question.id));
+  });
+
+  contributions.forEach(contribution => {
+    // the contributions_for_win_story association will ensure only contributions with answers
+    container
+      .querySelector('.contributors')
+        .insertAdjacentHTML('beforeend', individualContributionTemplate(contribution.id));
+  });
+
+  function groupContributionTemplate(questionId) {
+    let questionText;
+    answers.some(answer => {
+      if (answer.question.id == questionId) {
+        questionText = answer.question.question;
+        return true;
+      }
+    });
+    const qAnswers = answers.filter(answer => answer.question.id == questionId);
+    const answerTemplate = (answer) => {
+      const contribution = contributions.find(c => c.id == answer.contribution_id);
+      return !answer.answer ? '' : `
+        <li>
+          <p>${contribution.contributor.full_name}</p>
+          <!-- <p>${contribution.contributor.title}</p> -->
+          <p><em>${answer.answer}</em></p>
+        </li>
+      `;
+    };
+    return `
+      <figure class="group-contribution">
+        <figcaption><p><strong>${questionText}</strong><p></figcaption>
+        <ul>${qAnswers.map(answerTemplate).join('')}</ul>
+      </figure>
+    `;
+  }
+
+  function individualContributionTemplate(contributionId) {
+    const contribution = contributions.find(c => c.id == contributionId);
+    const cAnswers = answers.filter(a => a.contribution_id == contributionId);
+    const questionAnswerTemplate = (answer) => {
+      return !answer.answer ? 
+        [] : `
+        <li>
+          <p>${answer.question.question}</p>
+          <p><em>${answer.answer}</em></p>
+        </li>
+      `;
+    }
+    return `
+      <figure class="individual-contribution">
+        <figcaption>
+          <p><strong>${contribution.contributor.full_name}</strong></p>
+          <!-- <p>${contribution.contributor.title}</p> -->
+        </figcaption>
+        <ul>${cAnswers.flatMap(questionAnswerTemplate).join('')}</ul>
+      </figure>
+    `;
+  }
+})();

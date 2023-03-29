@@ -94,11 +94,16 @@ function initNarrativeEditor () {
         <div class="btn-group">
           <label>Group by</label>
           <label class="radio-inline" style="font-weight: normal">
-            <input type="radio" name="group-contributions" value="question" disabled>Question</label>
+            <input type="radio" name="group-contributions-by" value="question" checked>
+            Question
+          </label>
           <label class="radio-inline" style="font-weight: normal">
-            <input type="radio" name="group-contributions" value="contributor" disabled>Contributor</label>
+            <input type="radio" name="group-contributions-by" value="contributor">
+            Contributor
+          </label>
         </div>
-        <div class="contributions"></div>
+        <div class="questions"></div>
+        <div class="contributors hidden"></div>
       </div>
     </div>
   `);

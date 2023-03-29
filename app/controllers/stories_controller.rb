@@ -1,4 +1,3 @@
-
 require 'stories_and_plugins'
 class StoriesController < ApplicationController
   include StoriesHelper
@@ -60,44 +59,46 @@ class StoriesController < ApplicationController
     authenticate_user!
     @story = Story.find_by_id(params[:id]) || Story.friendly.find(params[:story_slug])
     @story.video = @story.video_info()
-    if request.path != curate_story_path(@story.customer.slug, @story.slug) # friendly path changed
-      # old story title slug requested, redirect to current
-      return redirect_to(
-        curate_story_path(@story.customer.slug, @story.slug), 
-        status: :moved_permanently
-      )
-    end
-    user_authorized?(@story, current_user)
-    # want to catch ajax requests but ignore tubolinks
-    if request.xhr? && !request.env["HTTP_TURBOLINKS_REFERRER"]
+    
+    # if request.path != curate_story_path(@story.customer.slug, @story.slug) # friendly path changed
+    #   # old story title slug requested, redirect to current
+    #   return redirect_to(
+    #     curate_story_path(@story.customer.slug, @story.slug), 
+    #     status: :moved_permanently
+    #   )
+    # end
+    # user_authorized?(@story, current_user)
+
+    if params[:edit_story_partial]
       respond_to do |format|
         format.html do
-          render({
+          render(
             partial: 'stories/edit/edit',
-            locals: {
-              company: @company,
-              story: @story,
-              workflow_stage: 'curate',
-              tab: '#story-settings'
-            }
-          })
-        end
-        format.json do
-          render({
-            json: {
-              invitation_templates: JSON.parse(
-                @story.success.invitation_templates.to_json({ only: [:id, :name] })
-              ),
-              questions: JSON.parse(
-                @story.success.questions.distinct.to_json({ only: [:id, :question] })
-              ),
-              answers: JSON.parse(
-                @story.success.answers.to_json({ only: [:answer, :contribution_id, :contributor_question_id] })
-              )
-            }.to_json
-          })
+            locals: { company: @company, story: @story, workflow_stage: 'curate', tab: '#story-settings' }
+          )
         end
       end
+
+    elsif params[:contributions]
+      respond_to do |format|
+        format.js { render(action: 'edit/content/contributions') }
+        # format.json do
+        #   render({
+        #     json: {
+        #       invitation_templates: JSON.parse(
+        #         @story.success.invitation_templates.to_json({ only: [:id, :name] })
+        #       ),
+        #       questions: JSON.parse(
+        #         @story.success.questions.distinct.to_json({ only: [:id, :question] })
+        #       ),
+        #       answers: JSON.parse(
+        #         @story.success.answers.to_json({ only: [:answer, :contribution_id, :contributor_question_id] })
+        #       )
+        #     }.to_json
+        #   })
+        # end
+      end
+
     else
       # provide data for both stories#edit and companies#show views
       @customer = @story.success.customer
@@ -385,7 +386,6 @@ class StoriesController < ApplicationController
   #   - the correct link if outdated slug is used
   #   - company's story index if not published or not curator
   def set_public_story_or_redirect company
-    # binding.remote_pry
     @story = Story.find_by(hidden_link: request.url) ||
              Story.friendly.find(params[:title])
     if params[:hidden_link].present? 

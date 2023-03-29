@@ -118,7 +118,7 @@ function successActionsListeners () {
             <div class="contribution__contributor">
               <p>${contribution.contributor.full_name}</p>
               <p>${contribution.contributor.title || '<span style="color:#D9534F">No job title specified</span>'}</p>
-              <p>${contribution.customer.name}</p>
+              <!-- <p>${contribution.customer.name}</p> -->
             </div>
             ${contribution.answers.length ? `
               <ul>
