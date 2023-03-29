@@ -54,9 +54,12 @@ class Success < ApplicationRecord
     source: :invitation_template
   )
 
-  # there is an issue using -> { distinct } here, I think due to there being a default order on ContributorQuestion
-  # => works ok if .distinct method is used; see contributions#index
-  has_many :contributor_questions, through: :invitation_templates
+  # must select the fields that are used in the default_scope of each model
+  has_many(
+    :contributor_questions, 
+    -> { select('invitation_templates.name, templates_questions.created_at, contributor_questions.created_at').distinct }, 
+    through: :invitation_templates
+  )
   alias_attribute :questions, :contributor_questions
   has_many :contributor_answers, through: :contributions
   alias_attribute :answers, :contributor_answers
