@@ -64,23 +64,22 @@ function curateListeners () {
       window.history.pushState(
         { turbolinks: true }, null, '/curate/' + customerSlug + '/' + storySlug
       );
-
-      $.ajax({
-        url: '/stories/' + $storyCard.data('story-id') + '/edit',
-        method: 'GET',
-        dataType: 'html'
-      })
-        .done(function (html, status, xhr) {
-          var showTab = function () {
+      
+      fetch(`/stories/${$storyCard[0].dataset.storyId}/edit?` + new URLSearchParams({ edit_story_partial: true }), {
+        headers: { 
+          'Content-Type': 'text/html'
+        }
+      }).then(res => res.text())
+        .then(html => {
+          const container = document.getElementById('edit-story');
+          container.replaceChildren();
+          container.insertAdjacentHTML('afterbegin', html);
+          Cookies.set('csp-edit-story-tab', '#story-settings');
+          initStoriesEdit(() => {
             $('a[href=".edit-story"]')
-              .one('shown.bs.tab', function () { window.scrollTo(0, 0); })
+              .one('shown.bs.tab', () => scrollTo(0, 0))
               .tab('show');
-          };
-          $.when( $('#edit-story').empty().append(html) )
-            .done(function () {
-              Cookies.set('csp-edit-story-tab', '#story-settings');
-              initStoriesEdit(showTab);
-            });
+          });
         });
     })
 
