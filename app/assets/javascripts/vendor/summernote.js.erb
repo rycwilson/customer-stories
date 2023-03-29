@@ -31,11 +31,9 @@ function initNarrativeEditor () {
     var button = ui.buttonGroup([
       ui.button({
         className: 'btn btn-default',
-        data: {},
-        disabled: true,
         tooltip: 'Show/Hide Contributions',
+        data: { toggle: 'collapse', target: '#show-contributions' },
         contents: '<i class="fa fa-fw fa-comments-o"></i>',
-        // tooltip: 'Insert a data placeholder'
       })
     ]);
     return button.render();   // return button as jquery object
@@ -90,10 +88,20 @@ function initNarrativeEditor () {
     }
   });
 
-  $('#narrative-editor').next().find('.note-editing-area').prepend(
-    _.template($('#show-contributions-template').html())()
-  )
-
+  $('#narrative-editor').next().find('.note-editing-area').prepend(`
+    <div id="show-contributions" class="collapse">
+      <div>
+        <div class="btn-group">
+          <label>Group by</label>
+          <label class="radio-inline" style="font-weight: normal">
+            <input type="radio" name="group-contributions" value="question" disabled>Question</label>
+          <label class="radio-inline" style="font-weight: normal">
+            <input type="radio" name="group-contributions" value="contributor" disabled>Contributor</label>
+        </div>
+        <div class="contributions"></div>
+      </div>
+    </div>
+  `);
 }
 
 function initInvitationEditor () {
