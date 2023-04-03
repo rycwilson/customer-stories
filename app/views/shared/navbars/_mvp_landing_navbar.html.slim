@@ -1,0 +1,35 @@
+= render('shared/flash')
+
+nav.navbar.navbar-default.landing role="banner"
+  .container
+
+    .navbar-header
+      button.navbar-toggle.collapsed type="button" data-toggle="collapse" data-target=".navbar-collapse"
+        span.sr-only Toggle navigation
+        i.fa.fa-bars
+      = link_to(root_path, class: 'navbar-brand') do
+        = image_tag('mvp-landing/logo_full.png', alt: 'Customer Stories logo')
+
+    .collapse.navbar-collapse role="navigation"
+      ul.nav.navbar-nav.navbar-right
+        /li
+          a href="/" Home
+        li
+          a href="/product" Product
+        li 
+          a href="/plans" Plans
+
+        - if user_signed_in? && current_user.company_id.present?
+          li
+            = link_to( \
+                company_url(subdomain: current_user.company.subdomain, id: current_user.company_id),
+                class: 'navbar-brand') do
+              - if current_user.company.logo_url.present?
+                = image_tag current_user.company.logo_url
+              - else
+                = image_tag(LOGO_PLACEHOLDER, alt: "logo")
+        - else
+          li role="menu"
+            = link_to('Sign up', new_user_registration_path)
+          li role="menu"
+            = link_to('Sign in', new_user_session_path)

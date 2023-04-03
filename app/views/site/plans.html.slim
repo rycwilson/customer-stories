@@ -1,0 +1,68 @@
+#wrapper
+
+  .masthead
+    .container
+        h1.masthead-subtitle Plans
+
+  .content
+    .container
+
+      .heading-block.heading-minimal.heading-center
+        h1 Customer Stories Plans and Pricing
+        p.lead
+          em Everything you need to curate, promote, and measure your customer stories.
+          br
+          em Scale your story promotion with intelligent online targeting to maximize revenue opportunity.
+
+      .pricing-tables
+        .row
+
+          .col-md-3.hidden-sm.hidden-xs.pricing-col
+            .pricing-table.pricing-table-index
+              ul.pricing-table-content
+                li Crowdsource Automation
+                li Curation Control
+                li SEO Optimization
+                li CRM Integration
+                li Corporate Subdomain
+                li Website Integration
+                li Reporting and Analytics
+                li Media Retargeting
+                li CRM Database Targeting
+                li Look-alike Targeting
+                li High Volume Targeting
+                li Custom Billing
+
+          .col-md-2.pricing-col
+            = render( \
+                'site/pricing_column',
+                { title: 'Retarget Promote', 
+                  byline: 'Curate, Promote, Measure',
+                  amount: '$1990/mo',
+                  included: Array.new(8, true) + Array.new(4, false) })
+
+          .col-md-2.pricing-col
+            = render( \
+                'site/pricing_column',
+                { title: 'CRM Promote', 
+                  byline: 'Target Ideal Known Prospects',
+                  amount: 'Contact Us',
+                  included: Array.new(9, true) + Array.new(2, false) + Array.new(1, true) })
+
+          .col-md-2.pricing-col
+            = render( \
+                'site/pricing_column',
+                { title: 'Audience Promote', 
+                  byline: 'Target Ideal Known & Unknown Prospects',
+                  amount: 'Contact Us',
+                  included: Array.new(10, true) + Array.new(1, false) + Array.new(1, true) })
+
+          .col-md-2.pricing-col
+            = render( \
+                'site/pricing_column',
+                { title: 'High Volume Promote', 
+                  byline: 'Custom High Volume Targeting',
+                  amount: 'Contact Us',
+                  included: Array.new(12, true) })
+
+      br.xs-60
