@@ -235,7 +235,8 @@ Rails.application.routes.draw do
   get '/', to: 'site#invalid_subdomain', constraints: { subdomain: /.+/ }
   get '/*all', to: 'site#invalid_subdomain', constraints: { subdomain: /.+/ }
 
-  root 'site#index'
+  root 'site#landing', { landing_page: 'index' }
+  get '/:landing_page', to: 'site#landing', constraints: { landing_page: /product|plans|our-company|team|tos|privacy|our-story/ }
 
   # these will be without subdomain
   get   '/register', to: 'companies#new', as: 'register_company'
@@ -256,7 +257,6 @@ Rails.application.routes.draw do
   # and updating a Contribution by checking or unchecking a LinkedIn Profile box
   put   '/contributions/:token', to: 'contributions#update'
 
-
   devise_for :users, controllers: {
       sessions: 'users/sessions',
       registrations: 'users/registrations',
@@ -265,14 +265,4 @@ Rails.application.routes.draw do
       unlocks_controller: 'users/unlocks',
       omniauth_callbacks_controller: 'users/omniauth_callbacks'
     }
-
-  # Store Front
-  get '/product', to: 'site#store_front'
-  get '/plans', to: 'site#store_front'
-  get '/our-company', to: 'site#store_front'
-  get '/team', to: 'site#store_front'
-  get '/tos', to: 'site#store_front', as: 'tos'
-  get '/privacy', to: 'site#store_front'
-  get '/our-story', to: 'site#store_front'
-
 end

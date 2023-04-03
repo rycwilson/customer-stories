@@ -1,0 +1,30 @@
+doctype html
+html lang="en-US"
+  head
+    meta charset="utf-8"
+    meta name="viewport" content="width=device-width, initial-scale=1.0"
+    = csrf_meta_tags()
+    title Customer Stories
+
+    / Google Fonts - https://developers.google.com/fonts/docs/getting_started
+    / https://www.cdnplanet.com/blog/faster-google-webfonts-preconnect/
+    link rel="preconnect" href="https://fonts.googleapis.com"
+    link rel="preconnect" href="https://fonts.gstatic.com" crossorigin=""
+    link {
+      rel="stylesheet" 
+      href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@300;400;600&family=Lato:wght@300;400;700&display=swap" }
+
+    = stylesheet_link_tag('landing')
+    = favicon_link_tag('favicon.ico')
+
+  body class="site #{action_name}" style=('visibility:hidden' if @is_social_share_redirect)
+    = render('shared/navbars/mvp_landing_navbar')
+    = yield 
+    = render('shared/landing_footer')
+    
+    /= render('analytics/cookieconsent', { company: company, controller: controller_name })
+
+    / clicky for browsers with js disabled (see clicky.js for $.getScript)
+    noscript
+      p
+        img alt="Clicky" width="1" height="1" src="//in.getclicky.com/100886848ns.gif"

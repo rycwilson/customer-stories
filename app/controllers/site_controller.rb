@@ -1,9 +1,10 @@
 class SiteController < ApplicationController
 
   skip_before_action :verify_authenticity_token, only: :esp_notifications
-  before_action(only: [:index, :store_front]) { set_gon }
+  # before_action(only: [:index, :landing]) { set_gon }
 
   def index
+    render(layout: 'landing')
   end
 
   def strip_subdomain
@@ -22,25 +23,8 @@ class SiteController < ApplicationController
     redirect_to root_url(host: request.domain)
   end
 
-  def store_front
-    case request.path
-    when /\/(product)(.html)?/
-      render :product
-    when /\/(plans)(.html)?/
-      render :plans
-    when /\/(our-company)(.html)?/
-      render :our_company
-    when /\/(team)(.html)?/
-      render :team
-    when /\/(tos)(.html)?/
-      render :tos
-    when /\/(privacy)(.html)?/
-      render :privacy
-    when /\/(our-story)(.html)?/
-      render :our_story
-    else
-      redirect_to root_path
-    end
+  def landing
+    render(action: params[:landing_page], layout: 'landing')
   end
 
   def sitemap

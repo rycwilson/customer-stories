@@ -183,7 +183,7 @@ class ApplicationController < ActionController::Base
       true
     elsif request.subdomain.blank? &&
           params[:controller] == 'site' &&
-          (['index', 'store_front'].include?(params[:action]))
+          (['index', 'landing'].include?(params[:action]))
       # logged in, navigating to store front
       true
     elsif user_subdomain.nil?  # user not associated with a company
@@ -244,9 +244,8 @@ class ApplicationController < ActionController::Base
     end
   end
 
-  # removes the subdomain from the url upon signing out
   def after_sign_out_path_for resource
-    url_for({ subdomain: nil, controller: '/site', action: 'index' })
+    url_for(subdomain: nil, controller: '/site', action: 'landing', landing_page: 'index')
   end
 
   def invalid_subdomain?

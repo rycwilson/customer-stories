@@ -1,0 +1,93 @@
+@import 'font-awesome';
+@import 'landing_bootstrap';
+@import 'mvpready-landing-2_1_1';
+@import 'base/variables';
+@import 'views/navbars/landing';
+@import 'views/site';
+
+#flash {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 85px;
+  border-radius: 0;
+  font-size: 16px;
+  margin: 0;
+}
+
+// MVP overrides
+
+// replace Oswald with Lato
+// note the need to change font weight: Lato only has 300,400,700 but Oswald uses 500,600
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+.h1,
+.h2,
+.h3,
+.h4,
+.h5,
+.h6,
+.table-bordered thead tr th,
+.table-bordered tfoot tr th,
+.navbar-nav > li > a {
+  font-family: 'Lato', 'Trebuchet MS', 'Open Sans', arial, sans-serif;
+
+  .table-bordered thead tr &,
+  .table-bordered tfoot tr th {
+    font-weight: bold;
+  }
+
+  .navbar-nav > li > & {
+    font-weight: normal;
+  }
+}
+
+.masthead,
+.footer {
+  background-color: #85CEE6;
+}
+
+.feature-sm {
+  padding: 0 10px 0 10px;
+  font-size: 20px;
+}
+
+.feature-lg-label {
+  font-size: 40px;
+}
+
+.pricing-table-head {
+  height: 80px;  // from 70px
+  background-color: #85CEE6;
+}
+
+.pricing-table-index {
+  margin-top: 130px;  // from 120px (related to .pricing-table-head change)
+}
+
+.copyright {
+  background: white;
+  color: #8ba6bd;
+}
+
+.footer a {
+  color: #4D5861;
+}
+
+// .feature-linkedin {
+//   position: relative;
+//   padding:  15px;
+//   margin-bottom: 0px;
+//   padding-left: 0px;
+// }
+
+@media (min-width: 768px) {
+  .home-section:first-child,
+  .content-feature:first-child {
+    padding-top: 75px;
+  }
+}

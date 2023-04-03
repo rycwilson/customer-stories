@@ -29,17 +29,17 @@
   }
 }
 
-.site.index {
+.site.landing {
   .testimonial-content {
     margin-bottom: 30px;
   }
 
-  .LI-profile-badge {
-    @include LI-profile-badge(#fff);
+  //.LI-profile-badge {
+    //@include LI-profile-badge(#fff);
     // width: 100%;
     // position: absolute;
     // bottom: 0;
-  }
+  //}
 
   #cs-rel-container {
     margin: 0 160px;
