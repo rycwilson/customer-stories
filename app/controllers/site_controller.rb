@@ -24,6 +24,7 @@ class SiteController < ApplicationController
   end
 
   def landing
+    @features = %w(crowdsource curate showcase search retarget target_crm target_lookalike measure integrate)
     render(action: params[:landing_page], layout: 'landing')
   end
 

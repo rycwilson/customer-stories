@@ -17,6 +17,20 @@
 
 // MVP overrides
 
+body {
+  color: #334a52;
+
+}
+
+.masthead-subtitle {
+  font-weight: normal;
+  color: inherit;
+
+  &--product {
+    margin-bottom: 15px;
+  }
+}
+
 // replace Oswald with Lato
 // note the need to change font weight: Lato only has 300,400,700 but Oswald uses 500,600
 h1,
@@ -46,18 +60,77 @@ h6,
   }
 }
 
+.btn-secondary {
+  box-shadow: none;
+  text-shadow: none;
+  
+  &, &:focus {
+    background-color: #005368;
+    border-color: #005368;
+  }
+
+  &:hover {
+    background-color: #003a4f;
+    border-color: #003a4f;
+  }
+
+  &:active,
+  &:active:focus,
+  &:active:hover {
+    box-shadow: none;
+    background-color: #002035;
+    border-color: #002035;
+  }
+}
+
 .masthead,
 .footer {
   background-color: #85CEE6;
+
+  &.masthead--product {
+    padding-top: 20px;
+    padding-bottom: 50px;
+  }
 }
 
 .feature-sm {
-  padding: 0 10px 0 10px;
-  font-size: 20px;
+  // padding: 0 10px 0 10px;
+  // font-size: 20px;
+  
+  ul {
+    padding-left: 15px;
+  }
+  
+  i {
+    top: 5px;
+    color: #005368;
+  }
+
+  &.promote {
+    i {
+      font-size: 25px;
+      
+      &.fa-bullhorn  {
+        top: 32px;
+      }
+  
+      &:not(.fa-bullhorn) {
+        left: 20px;
+      }
+    }
+  }
+}
+
+.feature-sm-label {
+  line-height: 25px;
 }
 
 .feature-lg-label {
   font-size: 40px;
+}
+
+li.feature-sm-content {
+  line-height: 1.7em;
 }
 
 .pricing-table-head {
@@ -91,3 +164,10 @@ h6,
     padding-top: 75px;
   }
 }
+
+// @media (max-width: 991px) {
+//   section.content-feature .row {
+//     margin: 0 auto;
+//     max-width: 650px;
+//   }
+// }

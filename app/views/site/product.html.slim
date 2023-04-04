@@ -1,0 +1,38 @@
+#wrapper
+
+  .masthead.masthead--product
+    .container
+      .row
+        .col-md-10
+          h1.masthead-subtitle.masthead-subtitle--product 
+            | Customer Marketing Automation for Modern Marketing & Sales
+          a.masthead-actions.visible-xs.btn.btn-secondary.pull-right type="button" Request a Demo
+          a.masthead-actions.hidden-xs.btn.btn-secondary.btn-jumbo.pull-right type="button" Request a Demo
+
+  .content 
+    section.content-feature 
+      .container
+        .heading-block.heading-minimal.heading-center 
+          h1 Features
+
+        .row.visible-xs-block
+          - @features.each do |feature|
+            .col-xs-12
+              = render("site/features/#{feature}")
+
+        - @features.each_slice(2) do |chunk|
+          .row.visible-sm-block
+            div class="#{chunk[1] ? 'col-sm-6' : 'col-sm-offset-3 col-sm-6'}"
+              = render("site/features/#{chunk[0]}")
+            - if chunk[1] 
+              .col-sm-6
+                = render("site/features/#{chunk[1]}")
+
+        - @features.each_slice(3) do |chunk|
+          .row.hidden-xs.hidden-sm
+            .col-md-4
+              = render("site/features/crowdsource")
+            .col-md-4
+              = render("site/features/#{chunk[1]}")
+            .col-md-4
+              = render("site/features/#{chunk[2]}")
