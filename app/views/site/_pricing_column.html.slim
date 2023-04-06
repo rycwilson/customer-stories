@@ -7,42 +7,12 @@
   .pricing-table-amount = amount
 
   ul.pricing-table-content
-    li
-      i.fa class="#{included[0] ? 'fa-check text-success' : 'fa-times text-danger'}"
-      span.hidden-md.hidden-lg Crowdsource Automation
-    li
-      i.fa class="#{included[1] ? 'fa-check text-success' : 'fa-times text-danger'}"
-      span.hidden-md.hidden-lg Curation Tools
-    li
-      i.fa class="#{included[2] ? 'fa-check text-success' : 'fa-times text-danger'}"
-      span.hidden-md.hidden-lg SEO Optimization
-    li
-      i.fa class="#{included[3] ? 'fa-check text-success' : 'fa-times text-danger'}"
-      span.hidden-md.hidden-lg CRM Integration
-    li
-      i.fa class="#{included[4] ? 'fa-check text-success' : 'fa-times text-danger'}"
-      span.hidden-md.hidden-lg Corporate Subdomain
-    li
-      i.fa class="#{included[5] ? 'fa-check text-success' : 'fa-times text-danger'}"
-      span.hidden-md.hidden-lg Website Integration
-    li
-      i.fa class="#{included[6] ? 'fa-check text-success' : 'fa-times text-danger'}"
-      span.hidden-md.hidden-lg Reporting and Analytics
-    li
-      i.fa class="#{included[7] ? 'fa-check text-success' : 'fa-times text-danger'}"
-      span.hidden-md.hidden-lg Media Retargeting
-    li
-      i.fa class="#{included[8] ? 'fa-check text-success' : 'fa-times text-danger'}"                 
-      span.hidden-md.hidden-lg CRM Database Targeting
-    li
-      i.fa class="#{included[9] ? 'fa-check text-success' : 'fa-times text-danger'}"                  
-      span.hidden-md.hidden-lg Look-alike Targeting
-    li
-      i.fa class="#{included[10] ? 'fa-check text-success' : 'fa-times text-danger'}"                  
-      span.hidden-md.hidden-lg High Volume Targeting
-    li
-      i.fa class="#{included[11] ? 'fa-check text-success' : 'fa-times text-danger'}"                  
-      span.hidden-md.hidden-lg Custom Billing
+    - @feature_names.each_with_index do |name, i|
+      li 
+        i.fa class="#{included[i] ? 'fa-check text-success' : 'fa-times text-danger'}"
+        span.hidden-md.hidden-lg 
+          |&nbsp;&nbsp;&nbsp;
+          = name
 
   .pricing-table-footer
     - if amount == 'Contact Us'

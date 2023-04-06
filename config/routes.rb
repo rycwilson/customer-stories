@@ -235,8 +235,8 @@ Rails.application.routes.draw do
   get '/', to: 'site#invalid_subdomain', constraints: { subdomain: /.+/ }
   get '/*all', to: 'site#invalid_subdomain', constraints: { subdomain: /.+/ }
 
-  root 'site#landing', { landing_page: 'index' }
-  get '/:landing_page', to: 'site#landing', constraints: { landing_page: /product|plans|our-company|team|tos|privacy|our-story/ }
+  root 'site#landing', { action: 'home' }
+  get '/:page', to: 'site#landing', constraints: { page: /product|plans|our-company|team|tos|privacy|our-story/ }
 
   # these will be without subdomain
   get   '/register', to: 'companies#new', as: 'register_company'

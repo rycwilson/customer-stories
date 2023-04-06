@@ -1,19 +1,19 @@
-= render('shared/flash')
-
 nav.navbar.navbar-default.landing role="banner"
   .container
 
     .navbar-header
-      button.navbar-toggle.collapsed type="button" data-toggle="collapse" data-target=".navbar-collapse"
+      button.navbar-toggle.collapsed type="button" data-toggle="collapse" data-target=".navbar-collapse" aria-expanded="false"
         span.sr-only Toggle navigation
         i.fa.fa-bars
       = link_to(root_path, class: 'navbar-brand') do
-        = image_tag('mvp-landing/logo_full.png', alt: 'Customer Stories logo')
+        = image_tag('landing/logo_full_med_blue.webp', alt: 'Customer Stories logo')
 
     .collapse.navbar-collapse role="navigation"
       ul.nav.navbar-nav.navbar-right
-        /li
-          a href="/" Home
+        li.hidden.active
+          a href="/" 
+            | Home
+            span.sr-only (current)
         li
           a href="/product" Product
         li 

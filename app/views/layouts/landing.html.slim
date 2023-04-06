@@ -5,6 +5,7 @@ html lang="en-US"
     meta name="viewport" content="width=device-width, initial-scale=1.0"
     = csrf_meta_tags()
     title Customer Stories
+    = javascript_include_tag('landing', defer: true)
 
     / Google Fonts - https://developers.google.com/fonts/docs/getting_started
     / https://www.cdnplanet.com/blog/faster-google-webfonts-preconnect/
@@ -17,7 +18,7 @@ html lang="en-US"
     = stylesheet_link_tag('landing')
     = favicon_link_tag('favicon.ico')
 
-  body class="site #{action_name}" style=('visibility:hidden' if @is_social_share_redirect)
+  body class="site #{@page}" style=('visibility:hidden' if @is_social_share_redirect)
     = render('shared/navbars/mvp_landing_navbar')
     = yield 
     = render('shared/landing_footer')
