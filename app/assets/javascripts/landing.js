@@ -4,3 +4,4 @@
 //= require mvpready-core
 //= require mvpready-helpers
 //= require mvpready-landing
+//= require bootstrap-validator/dist/validator
