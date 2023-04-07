@@ -10,14 +10,24 @@ nav.navbar.navbar-default.landing role="banner"
 
     .collapse.navbar-collapse role="navigation"
       ul.nav.navbar-nav.navbar-right
-        li.hidden.active
+
+        li.hidden
           a href="/" 
             | Home
-            span.sr-only (current)
-        li
-          a href="/product" Product
-        li 
-          a href="/plans" Plans
+            - if page == 'home'
+              span.sr-only (current)
+
+        li class=('active' if page == 'product')
+          a href="/product"
+            | Product 
+            - if page == 'product'
+              span.sr-only (current)
+
+        li class=('active' if page == 'plans')
+          a href="/plans" 
+            | Plans
+            - if page == 'plans'
+              span.sr-only (current)
 
         - if user_signed_in? && current_user.company_id.present?
           li
@@ -29,7 +39,13 @@ nav.navbar.navbar-default.landing role="banner"
               - else
                 = image_tag(LOGO_PLACEHOLDER, alt: "logo")
         - else
-          li role="menu"
-            = link_to('Sign up', new_user_registration_path)
-          li role="menu"
-            = link_to('Sign in', new_user_session_path)
+          li class=('active' if controller_name == 'registrations')
+            = link_to(new_user_registration_path) do
+              | Create Account 
+              - if controller_name == 'registrations'
+                span.sr-only (current)
+          li class=('active' if controller_name == 'sessions')
+            = link_to(new_user_session_path) do 
+              | Sign in
+              - if controller_name == 'sessions'
+                span.sr-only (current)
