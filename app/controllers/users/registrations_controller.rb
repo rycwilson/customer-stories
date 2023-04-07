@@ -5,6 +5,7 @@ class Users::RegistrationsController < Devise::RegistrationsController
 # before_action :configure_account_update_params, only: [:update]
 # before_action :set_s3_direct_post, only: [:edit, :update]
 
+  layout('landing')
   respond_to :html, :js
 
   # GET /resource/sign_up
