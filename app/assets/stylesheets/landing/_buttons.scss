@@ -1,0 +1,132 @@
+$darker-blue: #003c51;
+$darkest-blue: #002237;
+
+// MVP overrides
+
+.btn-jumbo {
+  border-width: 2px;  // match border of .btn-transparent
+}
+
+.btn-secondary,
+.btn-transparent {
+  box-shadow: none;
+  text-shadow: none;
+
+  &:active,
+  &.active,
+  &:active:focus,
+  &:active:hover {
+    box-shadow: none;
+  }
+}
+
+.btn-secondary,
+#back-to-top {
+  background-color: $dark-blue;
+  border-color: $dark-blue;
+
+  &:focus,
+  &.focus,
+  &:hover,
+  &:active,
+  &.active,
+  .open > .dropdown-toggle.btn-secondary {
+    border-color: $darker-blue;
+    background-color: $darker-blue;
+  }
+
+  &:active:hover,
+  &.active:hover,
+  .open > .dropdown-toggle.btn-secondary:hover,
+  &:active:focus,
+  &.active:focus,
+  .open > .dropdown-toggle.btn-secondary:focus,
+  &:active.focus,
+  &.active.focus,
+  .open > .dropdown-toggle.btn-secondary.focus {
+    border-color: $darkest-blue;
+    background-color: $darkest-blue;
+  }
+}
+
+.btn-secondary.disabled,
+.btn-secondary[disabled],
+fieldset[disabled] .btn-secondary,
+.btn-secondary.disabled:hover,
+.btn-secondary[disabled]:hover,
+fieldset[disabled] .btn-secondary:hover,
+.btn-secondary.disabled:focus,
+.btn-secondary[disabled]:focus,
+fieldset[disabled] .btn-secondary:focus,
+.btn-secondary.disabled.focus,
+.btn-secondary[disabled].focus,
+fieldset[disabled] .btn-secondary.focus,
+.btn-secondary.disabled:active,
+.btn-secondary[disabled]:active,
+fieldset[disabled] .btn-secondary:active,
+.btn-secondary.disabled.active,
+.btn-secondary[disabled].active,
+fieldset[disabled] .btn-secondary.active {
+  background-color: $dark-blue;
+  border-color: $dark-blue;
+}
+
+.btn-secondary .badge {
+  color: $dark-blue;
+}
+
+.btn-transparent {
+  border-color: $dark-blue;
+  color: $dark-blue;
+
+  &:focus,
+  &.focus,
+  &:hover {
+    border-color: $darker-blue;
+    background-color: rgba(0, 0, 0, 0.1);
+    color: $darker-blue;
+  }
+
+  &:active,
+  &.active,
+  .open > .dropdown-toggle.btn-transparent,
+  &:active:hover,
+  &.active:hover,
+  .open > .dropdown-toggle.btn-transparent:hover,
+  &:active:focus,
+  &.active:focus,
+  .open > .dropdown-toggle.btn-transparent:focus,
+  .btn-transparent:active.focus,
+  &:active.focus,
+  .open > .dropdown-toggle.btn-transparent.focus {
+    color: $darkest-blue;
+    background-color: rgba(0, 0, 0, 0.2);
+    border-color: $darkest-blue;
+  }
+}
+
+.btn-transparent.disabled,
+.btn-transparent[disabled],
+fieldset[disabled] .btn-transparent,
+.btn-transparent.disabled:hover,
+.btn-transparent[disabled]:hover,
+fieldset[disabled] .btn-transparent:hover,
+.btn-transparent.disabled:focus,
+.btn-transparent[disabled]:focus,
+fieldset[disabled] .btn-transparent:focus,
+.btn-transparent.disabled.focus,
+.btn-transparent[disabled].focus,
+fieldset[disabled] .btn-transparent.focus,
+.btn-transparent.disabled:active,
+.btn-transparent[disabled]:active,
+fieldset[disabled] .btn-transparent:active,
+.btn-transparent.disabled.active,
+.btn-transparent[disabled].active,
+fieldset[disabled] .btn-transparent.active {
+  border-color: $dark-blue;
+}
+
+.btn-transparent .badge {
+  color: transparent;
+  background-color: $dark-blue;
+}
