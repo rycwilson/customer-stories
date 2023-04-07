@@ -1,0 +1,87 @@
+footer.footer
+  .container
+    .row
+      .col-xs-12.col-sm-6.col-md-offset-1.col-md-5.col-lg-offset-0.col-lg-6
+        .heading-block
+          h4 Narrate Systems, Inc.
+        .row.visible-xs-block
+          .col-xs-12
+            ul.icons-list   
+              li
+                i.icon-li.fa.fa-pencil-square-o
+                a href="/terms" Terms of Service
+              li
+                i.icon-li.fa.fa-shield
+                a href="/privacy" Privacy Policy
+              li
+                i.icon-li.fa.fa-building
+                a href="/company" Company
+              li
+                i.icon-li.fa.fa-group
+                a href="/our-story" Our Story
+        .row.visible-sm-block.visible-md-block
+          .col-sm-6 
+            ul.icons-list   
+              li
+                i.icon-li.fa.fa-pencil-square-o
+                a href="/terms" Terms of Service
+              li
+                i.icon-li.fa.fa-shield
+                a href="/privacy" Privacy Policy
+          .col-sm-6 
+            ul.icons-list
+              li
+                i.icon-li.fa.fa-building
+                a href="/company" Company
+              li
+                i.icon-li.fa.fa-group
+                a href="/our-story" Our Story
+        .visible-lg-block
+          ul.icons-list.list-inline
+            li
+              i.icon-li.fa.fa-pencil-square-o 
+              a href="/terms" Terms of Service
+            li
+              i.icon-li.fa.fa-shield
+              a href="/privacy" Privacy Policy
+            li
+              i.icon-li.fa.fa-building 
+              a href="/company" Company
+            li style="padding-left:2em;"
+              i.icon-li.fa.fa-group 
+              a href="/our-story" Our Story
+
+      .col-xs-12.col-sm-offset-1.col-sm-5.col-md-offset-1.col-md-4.col-lg-offset-0.col-lg-6
+        .heading-block
+          h4 Contact Us
+        ul.icons-list.hidden-lg
+          li 
+            i.icon-li.fa.fa-envelope
+            a href="mailto:info@customerstories.net" info@customerstories.net
+        .visible-lg-block 
+          div style="display:flex; justify-content:space-between"
+            ul.icons-list
+              li style="padding-left:2em;"
+                i.icon-li.fa.fa-envelope
+                a href="mailto:info@customerstories.net" info@customerstories.net
+            div
+              a.social href="https://linkedin.com/company/customerstories" target="_blank"
+                i.fa.fa-linkedin
+              a.social href="https://facebook.com/customerstories" target="_blank" style="margin:0 15px"
+                i.fa.fa-facebook
+              a.social href="javascript:;"
+                i.fa.fa-twitter
+
+        .hidden-lg
+          a.social href="https://linkedin.com/company/customerstories" target="_blank"
+            i.fa.fa-linkedin
+          a.social href="https://facebook.com/customerstories" target="_blank" style="margin:0 15px"
+            i.fa.fa-facebook
+          a.social href="javascript:;"
+            i.fa.fa-twitter
+
+footer.copyright
+  .container
+    .row
+      .col-sm-12.text-center
+        p = "Copyright \u00a9 #{DateTime.current.year} customerstories.net by Narrate Systems, Inc."
