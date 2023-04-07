@@ -1,0 +1,87 @@
+.pricing-table-head {
+  height: 80px;   // from 70px;
+  background-color: $gray;
+  
+  @media (min-width: 992px) {
+    height: 120px;
+  }
+
+  @media (min-width: 1200px) {
+    height: 96px;
+  }
+}
+
+.pricing-table-head-title,
+.pricing-table-head-byline {
+  color: $body-text-color;
+}
+
+.pricing-table-head {
+  border-bottom-color: $light-gray;
+
+}
+
+@media (max-width: 991px) {
+  .pricing-table-head,
+  .pricing-table-amount,
+  .pricing-table-content {
+    border-right: 1px solid $light-gray;
+  }
+}
+
+.pricing-table {
+  @media (max-width: 991px) {
+    border-color: transparent;
+  }
+}
+
+.pricing-table-content,
+.pricing-tables .pricing-col:last-child .pricing-table-amount,
+.pricing-tables .pricing-col:last-child .pricing-table-content {
+  border-color: $light-gray;
+}
+
+.pricing-table-footer,
+.pricing-tables .pricing-col:last-child .pricing-table-footer {
+  border-color: white;
+  padding-top: 25px;
+}
+
+.pricing-table-content {
+  li {
+    border-color: $light-gray;
+  
+    &:nth-child(2n+1) {
+      border-color: $light-gray;
+      background-color: $light-blue;
+    }
+  }
+  
+  @media (max-width: 991px) {
+    span {
+      display: inline-block;
+    }
+  }
+}
+
+.pricing-table-index {
+  margin-top: 170px;  // from 120px (tracks to .pricing-table-head change)
+
+  .pricing-table-content,
+  .pricing-table-content li {
+    border-color: white;
+    background-color: white;
+  }
+
+  @media (min-width: 1200px) {
+    margin-top: 146px;
+  }
+}
+
+.pricing-table-amount {
+  border-left-color: $light-gray;
+  background-color: white;
+  font-weight: 600;
+  font-size: 1.35em;
+  color: $dark-blue;
+}

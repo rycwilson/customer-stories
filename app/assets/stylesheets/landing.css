@@ -1,5 +1,5 @@
 /*
- *= require landing_main
+ *= require landing/landing_main
  *
  * NOTE: must use this file instead of the one in node_modules/animate.css
  *= require mvpready-animate

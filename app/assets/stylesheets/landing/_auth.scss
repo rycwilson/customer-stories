@@ -1,0 +1,13 @@
+body.auth {
+  #wrapper {
+    background-color: $light-gray;
+  }
+
+  .account-body {
+    border: none;
+    background-color: transparent;
+    box-shadow: none;
+    color: $body-text-color;
+  }
+
+}
