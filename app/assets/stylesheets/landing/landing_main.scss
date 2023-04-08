@@ -73,6 +73,10 @@ body,
   color: $body-text-color;
 }
 
+br {
+  display: block !important;
+}
+
 a:not(.btn),
 .footer a {
   &:link,
