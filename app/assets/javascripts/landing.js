@@ -11,6 +11,8 @@ let resizeTimer;
 setViewportHeight();
 collapseHeaderOnScroll();
 
+$('.account-form').validator({ focus: false });
+
 addEventListener('resize', (e) => {
   clearTimeout(resizeTimer);
   resizeTimer = setTimeout(setViewportHeight, 500);
@@ -30,10 +32,7 @@ function collapseHeaderOnScroll() {
   const minScroll = 10;
   let isScrolling = false;
   let lastScrollTop = 0;
-
-  window.addEventListener('scroll', onScroll, { passive: true });
-  
-  function toggleCollapse() {
+  const toggleCollapse = () => {
     const scrollTop = window.scrollY;
     if (Math.abs(lastScrollTop - scrollTop) <= minScroll) return false;
     if (scrollTop > lastScrollTop && scrollTop > navbar.offsetHeight) {
@@ -47,13 +46,12 @@ function collapseHeaderOnScroll() {
     }
     lastScrollTop = scrollTop;
   }
-
-  function onScroll() {
+  window.addEventListener('scroll', function onScroll() {
     if (isScrolling) return false;
     isScrolling = true;
     setTimeout(() => {
       toggleCollapse();
       isScrolling = false;
     }, 250);
-  }
+  }, { passive: true });
 }

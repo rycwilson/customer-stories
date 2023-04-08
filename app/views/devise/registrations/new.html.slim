@@ -28,19 +28,19 @@
             = f.label(:email, class: 'control-label')
             = f.email_field( \
                 :email,
-                { class: 'form-control', autofocus: true, autocomplete: 'off', placeholder: 'Email address' })
+                { class: 'form-control', required: true, autofocus: true, autocomplete: 'off', placeholder: 'Email address' })
 
           .form-group
             = f.label(:first_name, class: 'control-label')
-            = f.text_field(:first_name, { class: 'form-control', autocomplete: 'off', placeholder: 'First name' })
+            = f.text_field(:first_name, { class: 'form-control', required: true, autocomplete: 'off', placeholder: 'First name' })
 
           .form-group
             = f.label(:last_name, class: 'control-label')
-            = f.text_field(:last_name, { class: 'form-control', autocomplete: 'off', placeholder: 'Last name' })
+            = f.text_field(:last_name, { class: 'form-control', required: true, autocomplete: 'off', placeholder: 'Last name' })
 
           .form-group
             = f.label(:password, class: 'control-label')
-            = f.password_field(:password, { class: 'form-control', autocomplete: "off", placeholder: 'Password' })
+            = f.password_field(:password, { class: 'form-control', required: true, autocomplete: "off", placeholder: 'Password' })
             - if @validatable
               span.help-block
                 = "Must be at least #{@minimum_password_length} characters"
@@ -56,7 +56,7 @@
           - if request.path == '/users/sign_up' || request.path == '/users'
             .form-group
               = f.label(:sign_up_code, class: 'control-label')
-              = f.text_field(:sign_up_code, { class: 'form-control', placeholder: 'Sign up code' })
+              = f.text_field(:sign_up_code, { class: 'form-control', required: true, placeholder: 'Sign up code' })
           - elsif request.path == '/admins/sign_up' || request.path == '/admins'
             .form-group
               = f.label(:admin_access_code, 'Admin code', class: 'control-label')

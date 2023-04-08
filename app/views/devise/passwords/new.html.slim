@@ -22,7 +22,7 @@
           = devise_error_messages!
 
           .form-group
-            = f.email_field(:email, { autofocus: true, class: 'form-control', id: 'login-username', placeholder: 'email' })
+            = f.email_field(:email, { autofocus: true, class: 'form-control', id: 'login-username', placeholder: 'Email address' })
 
           .form-group
             = f.submit('Send reset link', class: "btn btn-secondary btn-block btn-lg", disabled: true)

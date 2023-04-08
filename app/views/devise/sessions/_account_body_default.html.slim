@@ -21,11 +21,11 @@ p
 
   .form-group
     = f.label(:email, class: 'control-label')
-    = f.email_field(:email, { class: 'form-control', autofocus: true, autocomplete: 'off', placeholder: 'Email address' })
+    = f.email_field(:email, { class: 'form-control', required: true, autofocus: true, autocomplete: 'off', placeholder: 'Email address' })
 
   .form-group style="margin-bottom:0"
     = f.label(:password, class: 'control-label')
-    = f.password_field(:password, { class: 'form-control', autocomplete: 'off', placeholder: 'Password' })
+    = f.password_field(:password, { class: 'form-control', required: true, autocomplete: 'off', placeholder: 'Password' })
 
   div style="margin-bottom:40px"
     - if devise_mapping.rememberable?

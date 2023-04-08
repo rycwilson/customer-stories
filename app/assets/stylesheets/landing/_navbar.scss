@@ -1,6 +1,3 @@
-$mobile-navbar-height: 62px;
-$navbar-height: 85px;   // from mvp-landing
-
 .navbar-default {
   @include bs-xs {
     height: $mobile-navbar-height;  // height must be explicitly set for transition
