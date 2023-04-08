@@ -2,20 +2,22 @@
 <!-- ref: http://stackoverflow.com/questions/10808109/script-tag-async-defer -->
 <!-- ref: http://stackoverflow.com/questions/6026645/document-readyfunction-vs-script-at-the-bottom-of-page -->
 
-<% if company.try(:subdomain) == 'varmour' && company.try(:gtm_id).present? %>
+<%# if company.try(:subdomain) == 'varmour' && company.try(:gtm_id).present? %>
 
-  <%= render('analytics/google_tag_manager', { company: company }) %>
-  <%= render('analytics/google_adwords', { company: company }) %>
+  <%#= render('analytics/google_tag_manager', { company: company }) %>
+  <%#= render('analytics/google_adwords', { company: company }) %>
 
-<% elsif company.try(:subdomain) == 'varmour' %>
+<%# elsif company.try(:subdomain) == 'varmour' %>
 
-  <%= render('analytics/google_adwords', { company: company }) %>
+  <%#= render('analytics/google_adwords', { company: company }) %>
 
-<% else %>
+<%# else %>
 
-  <%= render('analytics/cookieconsent', { company: company, controller: controller_name }) %>
+  <%#= render('analytics/cookieconsent', { company: company, controller: controller_name }) %>
 
-<% end %>
+<%# end %>
+
+<%= render('analytics/cookieconsent', { company: company, controller: controller_name }) %>
 
 <!-- clicky for browsers with js disabled (see clicky.js for $.getScript) -->
 <noscript>
