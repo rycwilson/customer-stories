@@ -5,6 +5,7 @@
 @import 'base/mixins';
 @import 'views/site';
 
+$mobile-navbar-height: 62px;
 $navbar-height: 85px;   // from mvp-landing
 
 // Most of these come from this palette generator: https://mycolor.space/?hex=%2385CEE6&sub=1
@@ -41,7 +42,13 @@ body {
 }
 
 body {
-  padding-top: $navbar-height;
+  @include bs-xs {
+    padding-top: $mobile-navbar-height;
+  }
+
+  @include bs-sm {
+    padding-top: $navbar-height;
+  }
 
   // give padded space the right color
   &.home,
@@ -71,10 +78,6 @@ body {
 body,
 .copyright p {
   color: $body-text-color;
-}
-
-br {
-  display: block !important;
 }
 
 a:not(.btn),
@@ -179,8 +182,6 @@ h6 {
   color: $dark-blue;
 }
 
-
-
 .masthead {
   background-color: $sky-blue;
 }
@@ -203,7 +204,7 @@ h6 {
   border-radius: 5px;
 
   body.home & {
-    @media (min-width: 992px) {
+    @include bs-md {
       max-height: 180px;
     }
   }
@@ -262,8 +263,6 @@ li.feature-sm-content {
   height: 65px;
 }
 
-
-
 .copyright {
   background: white;
 }
@@ -282,7 +281,6 @@ li.feature-sm-content {
 
   img.compas {
     height: 40px;
-
   }
 
   img.varmour {
@@ -291,7 +289,6 @@ li.feature-sm-content {
 
   img.trunity {
     height: 46px;
-
   }
 
   img.cce {
@@ -300,7 +297,7 @@ li.feature-sm-content {
     height: 74px;
   }
 
-  @media only screen and (min-width: 1200px) {
+  @include bs-lg {
     li {
       margin-left: 12px;
       margin-right: 12px;
@@ -318,21 +315,21 @@ li.feature-sm-content {
     }
   }
 
-  @media (min-width: 768px) {
+  @include bs-sm {
     li {
       margin-left: 10px;
       margin-right: 10px;
     }
   }
 
-  @media (min-width: 992px) {
+  @include bs-md {
     li {
       margin-left: 25px;
       margin-right: 25px;
     }
   }
 
-  @media (min-width: 1200px) {
+  @include bs-lg {
     li {
       margin-bottom: 0 !important;
       margin-left: 15px;
@@ -340,7 +337,6 @@ li.feature-sm-content {
     }
   }
 }
-
 
 body.home {
   .feature-sm {
@@ -350,7 +346,7 @@ body.home {
       margin-bottom: 30px;
     }
     
-    @media (max-width: 767px) {
+    @include bs-xs {
       padding: 0 10%;
     }
   }
@@ -362,14 +358,33 @@ body.home {
   }
 
   .carousel .item {
-    @media (max-width: 767px) {
+    @include bs-xs {
       padding: 30px 0;
     }
-    @media (max-width: 991px) {
+    @include bs-sm {
       padding: 60px 0;
     }
-    @media (min-width: 992px) {
+    @include bs-md {
       padding: 60px 0 0;
+    }
+    // @media (max-width: 767px) {
+    //   padding: 30px 0;
+    // }
+    // @media (max-width: 991px) {
+    //   padding: 60px 0;
+    // }
+    // @media (min-width: 992px) {
+    //   padding: 60px 0 0;
+    // }
+  }
+
+  .feature-lg {
+    @include bs-xs {
+      margin-bottom: 50px;
+    }
+
+    @include bs-md {
+      margin-bottom: 80px;
     }
   }
 }
@@ -384,7 +399,7 @@ body.product {
       height: 100%;
     }
 
-    @media (min-width: 768px) {
+    @include bs-sm{
       height: 143px;  // explicit height is needed to center the column w/ button
 
       > [class*="col-"]:last-child {
@@ -392,7 +407,7 @@ body.product {
       }
     }
 
-    @media (min-width: 992px) {
+    @include bs-md {
       .btn-wrapper {
         justify-content: flex-start;
       }
@@ -415,7 +430,7 @@ body.our-story {
 }
 
 #section-features .feature-lg img {
-  @media (min-width: 1200px) {
+  @include bs-lg {
     max-width: 75%;
     margin: 0 auto;
   }
@@ -435,7 +450,7 @@ body.our-story {
   padding: 50px 0;
 }
 
-@media (min-width: 768px) {
+@include bs-sm {
   .home-section:first-child,
   .content-feature:first-child {
     padding-top: 75px;
