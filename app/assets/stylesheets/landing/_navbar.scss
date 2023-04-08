@@ -1,7 +1,8 @@
 .navbar-default {
   transition: top 0.2s ease-out;
 
-  // ripped from instapage, then use hexcolortool.com to set R to 195 (matches #$sky-blue R)
+  // ripped from instapage: 0 4px 3px 0 rgba(34,90,182,.12), 0 0 1px 0 rgba(41,92,176,.25)
+  // then use hexcolortool.com to set top bar (full color spectrum) to 195 (matches $sky-blue and $dark-blue)
   box-shadow: 0 4px 3px 0 rgba(33,144,181,.12), 0 0 1px 0 rgba(42,144,178,.25);
 
   // don't use class name 'collapse' or it will conflict with the bootstrap class and the transition won't work
