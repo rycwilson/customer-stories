@@ -1,20 +1,12 @@
-#wrapper
-  .content
-    .container
-      br.xs-30
-      / hr.spacer-sm
-      .account-wrapper
-        .row
-          = render( \
-              @zap_auth_initial_req || @zap_auth_retry ? 'account_body_zapier' : 'account_body_default',
-              { path: request.path, resource: resource, zap_auth_initial_req: @zap_auth_initial_req })
+.content
+  .container
+    / br.xs-30
+    / hr.spacer-sm
+    .account-wrapper
 
-        .account-footer
-          p
-            | Forgot password?&nbsp;&nbsp;
-            = link_to('Reset', request.path.include?('users') ? new_user_password_path : new_admin_password_path)
-          p
-            | Don't have an account?&nbsp;&nbsp;
-            = link_to( \
-                'Sign up', 
-                request.path.include?('users') ? strip_subdomain(new_user_registration_url) : new_admin_registration_path)
+      .account-body
+        = render( \
+            @zap_auth_initial_req || @zap_auth_retry ? 'account_body_zapier' : 'account_body_default',
+            { path: request.path, resource: resource, zap_auth_initial_req: @zap_auth_initial_req })
+
+      .account-footer

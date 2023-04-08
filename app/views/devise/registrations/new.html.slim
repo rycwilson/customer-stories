@@ -1,121 +1,76 @@
-#wrapper
-
-  .masthead style="border-bottom:0"
-    .container
-      / hr.spacer-sm
-      .row.text-center.masthead-text.animated.fadeInDownBig style="margin-top:15px"
+.content
+  .container
+    / hr.spacer-sm
+    .account-wrapper
+      .account-body
         - if request.path == '/users/sign_up' || request.path == '/users'
-          h6.masthead-title
-            | For a demo or to get access to an account please <a href="mailto:info@customerstories.net">contact us.</a>
+          h3 Create your Account
+        - elsif request.path == '/admins/sign_up' || request.path == '/admins'
+          h3 Admin Registration   
 
-  .content style="padding-top:5px; background-color:#85CEE6"
-    .container
-      / hr.spacer-sm
-      .account-wrapper
-        .account-body
-          - if request.path == '/users/sign_up' || request.path == '/users'
-            h3 style="margin-bottom:5px" Create an Account
-          - elsif request.path == '/admins/sign_up' || request.path == '/admins'
-            h3 style="margin-bottom:5px" Admin Registration
-
-          = form_for( \
-              resource, 
-              as: resource_name,
-              url: registration_path(resource_name),
-              html: { \
-                class: 'form form-horizontal account-form',
-                style: 'margin-top:23px' }) do |f|
-
-            = devise_error_messages!
-
-            .form-group style="margin-bottom:5px"
-              = f.label(:email, class: 'control-label col-md-3')
-              .col-md-9
-                = f.email_field( \
-                    :email,
-                    { class: 'form-control',
-                      id: 'signup-email',
-                      tabindex: '1',
-                      autofocus: true,
-                      autocomplete: 'off' })
-
-            .form-group style="margin-bottom:5px"
-              = f.label(:first_name, class: 'control-label col-md-3')
-              .col-md-9
-                = f.text_field( \
-                    :first_name,
-                    { class: 'form-control',
-                      id: 'signup-first-name',
-                      tabindex: '2',
-                      autocomplete: 'off' })
-
-            .form-group style="margin-bottom:5px"
-              = f.label(:last_name, class: 'control-label col-md-3')
-              .col-md-9
-                = f.text_field( \
-                    :last_name,
-                    { class: 'form-control',
-                      id: 'signup-last-name',
-                      tabindex: '3',
-                      autocomplete: 'off' })
-
-
-            .form-group style="margin-bottom:5px"
-              = f.label(:password, class: 'control-label col-md-3')
-              .col-md-9
-                = f.password_field( \
-                    :password,
-                    { class: 'form-control',
-                      id: 'signup-pw',
-                      tabindex: '4',
-                      autocomplete: "off" })
-              - if @validatable
-                span.help-block
-                  = "Must be at least #{@minimum_password_length} characters"
-
-            /.form-group style="margin-bottom:5px"
-                  <%#= f.label :password_confirmation, class: 'control-label col-md-3'
-                  .col-md-9
-                    <%#= f.password_field :password, { class: 'form-control',
-                        id: 'signup-pw-conf', tabindex: '5', autocomplete: "off" }
-                  </div>
-                </div>
-
-            - if request.path == '/users/sign_up' || request.path == '/users'
-              .form-group style="margin-bottom:5px"
-                = f.label(:sign_up_code, class: 'control-label col-md-3')
-                .col-md-9
-                  = f.text_field( \
-                      :sign_up_code,
-                      { class: 'form-control',
-                        id: 'sign_up_code',
-                        tabindex: '5' })
-            - elsif request.path == '/admins/sign_up' || request.path == '/admins'
-              .form-group style="margin-bottom:5px"
-                = f.label(:admin_access_code, 'Admin code', class: 'control-label col-md-3')
-                .col-md-9
-                  = f.text_field( \
-                      :admin_access_code,
-                      { class: 'form-control',
-                        id: 'sign_up_code',
-                        tabindex: '5' })
-
-            .form-group
-              = button_tag(type: 'submit', tabindex: '6', class: 'btn btn-success btn-block btn-lg') do
-                | Create My Account&nbsp;
-                i.fa.fa-play-circle
-
-            - if request.path == '/users/sign_up'
-              .form-group.text-center
-                p
-                  | Please review the <a href="/tos">Terms of Service</a> and <a href="/privacy">Privacy Policy</a>
-                p
-                  | By creating an account, you are agreeing to these terms and conditions
-
-        .account-footer
-          p 
-            | Already have an account?&nbsp;&nbsp;
+        div style="margin-bottom: 20px"
+          p
+            | Already have an account?&nbsp;&nbsp;&nbsp;
             = link_to('Sign in', request.path.include?('users') ? new_user_session_path : new_admin_session_path)
-          /p
-            | Didn't get confirmation?&nbsp;&nbsp;
-            = link_to()'Resend email', new_user_confirmation_path)
+          p 
+            | Need a sign up code?&nbsp;&nbsp;&nbsp;
+            = link_to('Contact us', 'mailto:info@customerstories.net')
+
+        = form_for( \
+            resource, 
+            as: resource_name,
+            url: registration_path(resource_name),
+            html: { class: 'form account-form' }) do |f|
+
+          = devise_error_messages!
+
+          .form-group
+            = f.label(:email, class: 'control-label')
+            = f.email_field( \
+                :email,
+                { class: 'form-control', autofocus: true, autocomplete: 'off', placeholder: 'Email address' })
+
+          .form-group
+            = f.label(:first_name, class: 'control-label')
+            = f.text_field(:first_name, { class: 'form-control', autocomplete: 'off', placeholder: 'First name' })
+
+          .form-group
+            = f.label(:last_name, class: 'control-label')
+            = f.text_field(:last_name, { class: 'form-control', autocomplete: 'off', placeholder: 'Last name' })
+
+          .form-group
+            = f.label(:password, class: 'control-label')
+            = f.password_field(:password, { class: 'form-control', autocomplete: "off", placeholder: 'Password' })
+            - if @validatable
+              span.help-block
+                = "Must be at least #{@minimum_password_length} characters"
+
+          /.form-group
+                <%#= f.label :password_confirmation, class: 'control-label col-md-3'
+                .col-md-9
+                  <%#= f.password_field :password, { class: 'form-control',
+                      id: 'signup-pw-conf', tabindex: '5', autocomplete: "off" }
+                </div>
+              </div>
+
+          - if request.path == '/users/sign_up' || request.path == '/users'
+            .form-group
+              = f.label(:sign_up_code, class: 'control-label')
+              = f.text_field(:sign_up_code, { class: 'form-control', placeholder: 'Sign up code' })
+          - elsif request.path == '/admins/sign_up' || request.path == '/admins'
+            .form-group
+              = f.label(:admin_access_code, 'Admin code', class: 'control-label')
+              = f.text_field(:admin_access_code, { class: 'form-control' })
+
+          .form-group
+            = f.submit('Create Account', { class: 'btn btn-secondary btn-block btn-lg' })
+              /i.fa.fa-play-circle
+
+          - if controller_name == 'registrations'
+            .form-group.text-center
+              p Please review the <a href="/terms">Terms of Service</a> and <a href="/privacy">Privacy Policy</a>. By creating an account, you are agreeing to these terms and conditions.
+
+      .account-footer
+        /p
+          | Didn't get confirmation?&nbsp;&nbsp;
+          = link_to()'Resend email', new_user_confirmation_path)

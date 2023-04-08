@@ -1,0 +1,48 @@
+- if path == '/users/sign_in'
+  h3 Sign in to your account
+- elsif path == '/admins/sign_in'
+  h3 CSP Admin
+
+  / p
+  /   | Forgot password?&nbsp;&nbsp;
+  /   = link_to('Reset', request.path.include?('users') ? new_user_password_path : new_admin_password_path)
+
+p
+  | Don't have an account?&nbsp;&nbsp;&nbsp;
+  = link_to( \
+      'Sign up', 
+      request.path.include?('users') ? strip_subdomain(new_user_registration_url) : new_admin_registration_path)
+
+= form_for( \
+    resource, 
+    as: resource_name,
+    url: session_path(resource_name),
+    html: { class: 'form account-form' }) do |f|
+
+  .form-group
+    = f.label(:email, class: 'control-label')
+    = f.email_field(:email, { class: 'form-control', autofocus: true, autocomplete: 'off', placeholder: 'Email address' })
+
+  .form-group style="margin-bottom:0"
+    = f.label(:password, class: 'control-label')
+    = f.password_field(:password, { class: 'form-control', autocomplete: 'off', placeholder: 'Password' })
+
+  div style="margin-bottom:40px"
+    - if devise_mapping.rememberable?
+      .form-group style="display:flex; align-items:center; justify-content:space-between"
+        .checkbox-inline style="margin: 0"
+          = f.check_box(:remember_me)
+          = f.label(:remember_me, style: 'margin:0')
+        = link_to('Forgot password?', request.path.include?('users') ? new_user_password_path : new_admin_password_path)
+    - else 
+      = link_to( \
+          'Forgot password?', 
+          request.path.include?('users') ? new_user_password_path : new_admin_password_path,
+          class: 'pull-right')
+
+  .form-group
+    = f.submit('Sign in', { class: 'btn btn-secondary btn-block btn-lg' })
+
+- if path == '/users/sign_in'
+.form-group.text-center
+  p By signing in you are agreeing to the <a href="/terms">Terms of Service</a> and <a href="/privacy">Privacy Policy</a>.
