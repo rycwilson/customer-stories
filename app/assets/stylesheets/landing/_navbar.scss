@@ -40,11 +40,6 @@ $navbar-height: 85px;   // from mvp-landing
   }
 
   .navbar-nav {
-    // > li:not(:last-of-type) {
-    // :not([aria-expanded="false"]) > & > li {
-    //   margin-right: 12px;
-    // }
-
     > li > a {
       font-weight: 300;
 

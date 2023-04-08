@@ -9,7 +9,7 @@
 let resizeTimer;
 
 setViewportHeight();
-// collapseHeaderOnScroll();
+collapseHeaderOnScroll();
 
 addEventListener('resize', (e) => {
   clearTimeout(resizeTimer);
@@ -34,7 +34,6 @@ function collapseHeaderOnScroll() {
   window.addEventListener('scroll', onScroll, { passive: true });
   
   function toggleCollapse() {
-    console.log('toggleCollapse()')
     const scrollTop = window.scrollY;
     if (Math.abs(lastScrollTop - scrollTop) <= minScroll) return false;
     if (scrollTop > lastScrollTop && scrollTop > navbar.offsetHeight) {
@@ -42,10 +41,8 @@ function collapseHeaderOnScroll() {
         navbarCollapse.collapse('hide');
         navbarCollapse.blur();
       }
-      console.log('collapse')
       navbar.classList.add('collapse-header');
     } else {
-      console.log('expand')
       navbar.classList.remove('collapse-header');
     }
     lastScrollTop = scrollTop;
