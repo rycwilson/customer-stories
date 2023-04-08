@@ -1,40 +1,38 @@
-#wrapper
+.masthead
+  .container
+    .row 
+      .col-xs-12.col-sm-8
+        h2.masthead-subtitle style=""
+          | Customer Marketing Automation for Modern Marketing & Sales
+      .col-xs-12.col-sm-4
+        .btn-wrapper
+          a.btn.btn-secondary.btn-lg type="button"
+            | Request a Demo
 
-  .masthead
+.content 
+  section.content-feature 
     .container
-      .row 
-        .col-xs-12.col-sm-8
-          h2.masthead-subtitle style=""
-            | Customer Marketing Automation for Modern Marketing & Sales
-        .col-xs-12.col-sm-4
-          .btn-wrapper
-            a.btn.btn-secondary.btn-lg type="button"
-              | Request a Demo
+      .heading-block.heading-minimal.heading-center 
+        h1 Features
 
-  .content 
-    section.content-feature 
-      .container
-        .heading-block.heading-minimal.heading-center 
-          h1 Features
+      .row.visible-xs-block
+        - @feature_partials.each do |feature|
+          .col-xs-12
+            = render("site/features/#{feature}")
 
-        .row.visible-xs-block
-          - @feature_partials.each do |feature|
-            .col-xs-12
-              = render("site/features/#{feature}")
-
-        - @feature_partials.each_slice(2) do |chunk|
-          .row.visible-sm-block
-            div class="#{chunk[1] ? 'col-sm-6' : 'col-sm-offset-3 col-sm-6'}"
-              = render("site/features/#{chunk[0]}")
-            - if chunk[1] 
-              .col-sm-6
-                = render("site/features/#{chunk[1]}")
-
-        - @feature_partials.each_slice(3) do |chunk|
-          .row.hidden-xs.hidden-sm
-            .col-md-4
-              = render("site/features/#{chunk[0]}")
-            .col-md-4
+      - @feature_partials.each_slice(2) do |chunk|
+        .row.visible-sm-block
+          div class="#{chunk[1] ? 'col-sm-6' : 'col-sm-offset-3 col-sm-6'}"
+            = render("site/features/#{chunk[0]}")
+          - if chunk[1] 
+            .col-sm-6
               = render("site/features/#{chunk[1]}")
-            .col-md-4
-              = render("site/features/#{chunk[2]}")
+
+      - @feature_partials.each_slice(3) do |chunk|
+        .row.hidden-xs.hidden-sm
+          .col-md-4
+            = render("site/features/#{chunk[0]}")
+          .col-md-4
+            = render("site/features/#{chunk[1]}")
+          .col-md-4
+            = render("site/features/#{chunk[2]}")

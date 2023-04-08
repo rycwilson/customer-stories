@@ -3,8 +3,9 @@
 @import 'mvpready-landing-2_1_1';
 @import 'base/variables';
 @import 'base/mixins';
-@import 'views/navbars/landing';
 @import 'views/site';
+
+$navbar-height: 85px;   // from mvp-landing
 
 // Most of these come from this palette generator: https://mycolor.space/?hex=%2385CEE6&sub=1
 $body-text-color: #425961;
@@ -16,8 +17,9 @@ $light-blue: #f0ffff; // eaf6fb
 $gray: #e0e8eb; // #b8d5d7;
 $light-gray: #eaf2f5;
 
+@import 'navbar';
 @import 'buttons';
-@import 'auth';
+@import 'devise';
 @import 'pricing';
 @import 'footer';
 
@@ -25,7 +27,7 @@ $light-gray: #eaf2f5;
   display: flex;
   align-items: center;
   justify-content: center;
-  height: 85px;
+  height: $navbar-height;
   border-radius: 0;
   font-size: 16px;
   margin: 0;
@@ -35,45 +37,34 @@ $light-gray: #eaf2f5;
 html,
 body {
   font-size: 14px;
+  // min-height: 100%;  // challenge: the footers do not have explicit height
 }
 
-.navbar-default .navbar-nav {
-  > li:not(:last-of-type) {
-    margin-right: 12px;
+body {
+  padding-top: $navbar-height;
+
+  // give padded space the right color
+  &.home,
+  &.product,
+  &.plans,
+  &.terms,
+  &.privacy,
+  &.company,
+  &.our-story {
+    background-color: $sky-blue;
+
+    #wrapper {
+      background-color: white;
+    }
   }
 
-  > li > a {
-    font-weight: 300;
-
-    &:link,
-    &:visited {
-      color: $body-text-color;
-    }
-    
-    &:hover,
-    &:active {
-      color: black;
-    }
-  }
-
-  > li.active > a,
-  > li.active > a:hover {
+  &.devise {
     background-color: $light-gray;
-    color: black;
   }
 }
 
-.navbar-default .navbar-toggle {
-  border-color: $medium-blue;
-
-  i {
-    color: $medium-blue;
-  }
-
-  &:hover,
-  &:focus {
-    background-color: $light-gray;
-  }
+#wrapper {
+  min-height: 100vh;  // this will hide the footers => ok
 }
 
 // MVP overrides

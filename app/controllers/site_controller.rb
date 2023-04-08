@@ -4,7 +4,7 @@ class SiteController < ApplicationController
   # before_action(only: [:index, :landing]) { set_gon }
 
   def index
-    render(layout: 'landing')
+    render(action: 'home', layout: 'landing')
   end
 
   def strip_subdomain
@@ -24,10 +24,10 @@ class SiteController < ApplicationController
   end
 
   def landing
-    @page = params[:page] || 'home'
+    @storefront_page = params[:page] || 'home'
     @feature_partials = %w(crowdsource curate showcase search retarget target_crm target_lookalike measure integrate)
     @feature_names = %w(Crowdsource\ Automation Curate\ Control SEO\ Optimization CRM\ Integration Corporate\ Subdomain Website\ Integration Reporting\ and\ Analytics Media\ Retargeting CRM\ Database\ Retargeting Lookalike\ Targeting High\ Volume\ Targeting Custom\ Billing)
-    render(action: @page.gsub('-', '_'), layout: 'landing')
+    render(action: @storefront_page.gsub('-', '_'), layout: 'landing')
   end
 
   def sitemap

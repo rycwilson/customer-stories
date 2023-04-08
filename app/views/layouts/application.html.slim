@@ -54,9 +54,6 @@ html lang="en-US" prefix="og: http://ogp.me/ns# fb: http://ogp.me/ns/fb#"
 
       = yield(:underscore_templates)
 
-      - if !(@zap_auth_initial_req || @zap_auth_retry) && (devise_controller? || controller_name == 'site')
-        = render('shared/landing_footer')
-
       - if production? && !user_signed_in? && ['site', 'stories'].include?(controller_name)
         = render('analytics/analytics', { company: @company })
       
