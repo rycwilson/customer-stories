@@ -25,6 +25,8 @@ function setViewportHeight() {
 // https://medium.com/@mariusc23/hide-header-on-scroll-down-show-on-scroll-up-67bbaae9a78c
 function collapseHeaderOnScroll() {
   const navbar = document.querySelector('.navbar-fixed-top');
+  const navbarCollapse = navbar.querySelector('.navbar-collapse');
+  const navbarToggle = navbar.querySelector('.navbar-toggle');
   const minScroll = 10;
   let isScrolling = false;
   let lastScrollTop = 0;
@@ -35,6 +37,7 @@ function collapseHeaderOnScroll() {
     const scrollTop = window.scrollY;
     if (Math.abs(lastScrollTop - scrollTop) <= minScroll) return false;
     if (scrollTop > lastScrollTop && scrollTop > navbar.offsetHeight) {
+      if (navbarCollapse.classList.contains('in')) navbarToggle.click();
       navbar.classList.add('collapse-header');
     } else {
       navbar.classList.remove('collapse-header');

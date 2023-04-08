@@ -59,7 +59,8 @@ body {
   &.our-story {
     background-color: $sky-blue;
 
-    #wrapper {
+    #wrapper,
+    .navbar-collapse {
       background-color: white;
     }
   }
