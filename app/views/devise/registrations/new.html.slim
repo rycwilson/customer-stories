@@ -8,13 +8,12 @@
         - elsif request.path == '/admins/sign_up' || request.path == '/admins'
           h3 Admin Registration   
 
-        div style="margin-bottom: 20px"
-          p
-            | Already have an account?&nbsp;&nbsp;&nbsp;
-            = link_to('Sign in', request.path.include?('users') ? new_user_session_path : new_admin_session_path)
-          p 
-            | Need a sign up code?&nbsp;&nbsp;&nbsp;
-            = link_to('Contact us', 'mailto:info@customerstories.net')
+        p
+          | Already have an account?&nbsp;&nbsp;&nbsp;
+          = link_to('Sign in', request.path.include?('users') ? new_user_session_path : new_admin_session_path)
+        p 
+          | Need a sign up code?&nbsp;&nbsp;&nbsp;
+          = link_to('Contact us', 'mailto:info@customerstories.net')
 
         = form_for( \
             resource, 

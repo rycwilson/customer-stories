@@ -2,11 +2,6 @@
   h3 Sign in to your account
 - elsif path == '/admins/sign_in'
   h3 CSP Admin
-
-  / p
-  /   | Forgot password?&nbsp;&nbsp;
-  /   = link_to('Reset', request.path.include?('users') ? new_user_password_path : new_admin_password_path)
-
 p
   | Don't have an account?&nbsp;&nbsp;&nbsp;
   = link_to( \
@@ -27,7 +22,7 @@ p
     = f.label(:password, class: 'control-label')
     = f.password_field(:password, { class: 'form-control', required: true, autocomplete: 'off', placeholder: 'Password' })
 
-  div style="margin-bottom:40px"
+  div style="margin-bottom:30px"
     - if devise_mapping.rememberable?
       .form-group style="display:flex; align-items:center; justify-content:space-between"
         .checkbox-inline style="margin: 0"
