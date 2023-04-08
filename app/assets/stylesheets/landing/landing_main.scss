@@ -360,6 +360,18 @@ body.home {
     // font-weight: 300;
     color: $body-text-color;
   }
+
+  .carousel .item {
+    @media (max-width: 767px) {
+      padding: 30px 0;
+    }
+    @media (max-width: 991px) {
+      padding: 60px 0;
+    }
+    @media (min-width: 992px) {
+      padding: 60px 0 0;
+    }
+  }
 }
 
 body.product {  
