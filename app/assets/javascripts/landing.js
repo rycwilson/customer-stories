@@ -13,10 +13,24 @@ collapseHeaderOnScroll();
 
 $('.account-form').validator({ focus: false });
 
+if (location.host.includes('.net')) initClicky();
+
 addEventListener('resize', (e) => {
   clearTimeout(resizeTimer);
   resizeTimer = setTimeout(setViewportHeight, 500);
 })
+
+function initClicky() {
+  $.getScript('//static.getclicky.com/js', () => {
+    try {
+      clicky_custom = clicky_custom || {};
+      clicky_custom.outbound_disable = 1;
+      clicky.init(100886848);
+    } catch (e) {
+      // handle exception
+    }
+  });
+}
 
 // https://css-tricks.com/snippets/jquery/done-resizing-event/
 function setViewportHeight() {
