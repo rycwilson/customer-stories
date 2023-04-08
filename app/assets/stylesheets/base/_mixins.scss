@@ -234,25 +234,25 @@
 // }
 
 @mixin bs-xs {
-  @media screen and (max-width: 767px) {
+  @media (max-width: 767px) {
     @content;
   }
 }
 
 @mixin bs-sm {
-  @media screen and (min-width: 768px) {
+  @media (min-width: 768px) {
     @content;
   }
 }
 
 @mixin bs-md {
-  @media screen and (min-width: 992px) {
+  @media (min-width: 992px) {
     @content;
   }
 }
 
 @mixin bs-lg {
-  @media screen and (min-width: 1200px) {
+  @media (min-width: 1200px) {
     @content;
   }
 }
