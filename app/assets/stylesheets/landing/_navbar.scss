@@ -33,13 +33,17 @@ $navbar-height: 85px;   // from mvp-landing
 
     border-color: transparent;
     background-color: white;
+
+    &:not([aria-expanded="true"]) > .navbar-nav > li {
+      margin-right: 12px;
+    }
   }
 
   .navbar-nav {
     // > li:not(:last-of-type) {
-    > li {
-      margin-right: 12px;
-    }
+    // :not([aria-expanded="false"]) > & > li {
+    //   margin-right: 12px;
+    // }
 
     > li > a {
       font-weight: 300;

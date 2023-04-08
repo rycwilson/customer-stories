@@ -37,7 +37,10 @@ function collapseHeaderOnScroll() {
     const scrollTop = window.scrollY;
     if (Math.abs(lastScrollTop - scrollTop) <= minScroll) return false;
     if (scrollTop > lastScrollTop && scrollTop > navbar.offsetHeight) {
-      if (navbarCollapse.classList.contains('in')) navbarToggle.click();
+      if (navbarCollapse.ariaExpanded == 'true') {
+        navbarCollapse.collapse('hide');
+        navbarCollapse.blur();
+      }
       navbar.classList.add('collapse-header');
     } else {
       navbar.classList.remove('collapse-header');
