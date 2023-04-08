@@ -1,12 +1,14 @@
 .navbar-default {
+  transition: top 0.2s ease-out;
+
   // ripped from instapage, then use hexcolortool.com to set R to 195 (matches #$sky-blue R)
   box-shadow: 0 4px 3px 0 rgba(33,144,181,.12), 0 0 1px 0 rgba(42,144,178,.25);
-  transition: top 0.2s ease-in-out;
 
-  // TODO: why doesn't the transition work with this approach?
-  // &.collapse {
-  //   top: calc(#{$navbar-height * -1});
-  // }
+  // don't use class name 'collapse' or it will conflict with the bootstrap class and the transition won't work
+  &.navbar-collapse {
+    transition: top 0.2s ease-in;
+    top: calc(#{$navbar-height * -1});
+  }
 
   .navbar-brand img {
     max-height: 100%;

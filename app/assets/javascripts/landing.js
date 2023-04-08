@@ -35,11 +35,9 @@ function collapseHeaderOnScroll() {
     const scrollTop = window.scrollY;
     if (Math.abs(lastScrollTop - scrollTop) <= minScroll) return false;
     if (scrollTop > lastScrollTop && scrollTop > navbar.offsetHeight) {
-      // navbar.classList.add('collapse');
-      navbar.style.top = '-85px'
+      navbar.classList.add('navbar-collapse');
     } else {
-      // navbar.classList.remove('collapse');
-      navbar.style.top = '0px'
+      navbar.classList.remove('navbar-collapse');
     }
     lastScrollTop = scrollTop;
   }
