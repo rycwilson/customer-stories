@@ -1,4 +1,4 @@
-nav.navbar.navbar-default.landing role="banner"
+nav.navbar.navbar-default.navbar-fixed-top role="banner"
   .container
 
     .navbar-header
@@ -14,19 +14,19 @@ nav.navbar.navbar-default.landing role="banner"
         li.hidden
           a href="/" 
             | Home
-            - if page == 'home'
+            - if storefront_page == 'home'
               span.sr-only (current)
 
-        li class=('active' if page == 'product')
+        li class=('active' if storefront_page == 'product')
           a href="/product"
             | Product 
-            - if page == 'product'
+            - if storefront_page == 'product'
               span.sr-only (current)
 
-        li class=('active' if page == 'plans')
+        li class=('active' if storefront_page == 'plans')
           a href="/plans" 
             | Plans
-            - if page == 'plans'
+            - if storefront_page == 'plans'
               span.sr-only (current)
 
         - if user_signed_in? && current_user.company_id.present?
@@ -39,13 +39,13 @@ nav.navbar.navbar-default.landing role="banner"
               - else
                 = image_tag(LOGO_PLACEHOLDER, alt: "logo")
         - else
-          li class=('active' if controller_name == 'registrations')
+          li class=('active' if is_sign_up)
             = link_to(new_user_registration_path) do
               | Create Account 
-              - if controller_name == 'registrations'
+              - if is_sign_up
                 span.sr-only (current)
-          li class=('active' if controller_name == 'sessions')
+          li class=('active' if is_sign_in)
             = link_to(new_user_session_path) do 
               | Sign in
-              - if controller_name == 'sessions'
+              - if is_sign_in
                 span.sr-only (current)

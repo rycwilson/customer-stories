@@ -1,0 +1,64 @@
+.navbar-default {
+  // ripped from instapage, then use hexcolortool.com to set R to 195 (matches #$sky-blue R)
+  box-shadow: 0 4px 3px 0 rgba(33,144,181,.12), 0 0 1px 0 rgba(42,144,178,.25);
+  transition: top 0.2s ease-in-out;
+
+  // &.collapse {
+  //   top: calc(#{$navbar-height * -1});
+  // }
+
+  .navbar-brand img {
+    max-height: 100%;
+  }
+
+  .navbar-nav {
+    > li:not(:last-of-type) {
+      margin-right: 12px;
+    }
+
+    > li > a {
+      font-weight: 300;
+
+      &:link,
+      &:visited {
+        color: $body-text-color;
+      }
+      
+      &:hover,
+      &:active {
+        color: black;
+      }
+    }
+
+    > li.active > a,
+    > li.active > a:hover {
+      background-color: $light-gray;
+      color: black;
+    }
+  }
+
+  .navbar-toggle {
+    border-color: $medium-blue;
+  
+    i {
+      color: $medium-blue;
+    }
+  
+    &:hover,
+    &:focus {
+      background-color: $light-gray;
+    }
+  }
+}
+
+// signed in user
+.navbar-right .navbar-brand {
+  padding-left: 26px;
+  line-height: 20px;          // for centering image vertically (matches font of adjacent items)
+
+  img {
+    display: inline-block;    // for centering image vertically
+    vertical-align: middle;   // for centering image vertically
+    margin: auto;             // for centering image vertically
+  }
+}
