@@ -1,4 +1,11 @@
+$mobile-navbar-height: 62px;
+$navbar-height: 85px;   // from mvp-landing
+
 .navbar-default {
+  @include bs-xs {
+    height: $mobile-navbar-height;  // height must be explicitly set for transition
+  }
+
   transition: top 0.2s ease-out;
 
   // ripped from instapage: 0 4px 3px 0 rgba(34,90,182,.12), 0 0 1px 0 rgba(41,92,176,.25)
@@ -6,7 +13,11 @@
   box-shadow: 0 4px 3px 0 rgba(33,144,181,.12), 0 0 1px 0 rgba(42,144,178,.25);
 
   // don't use class name 'collapse' or it will conflict with the bootstrap class and the transition won't work
-  &.navbar-collapse {
+  &.collapse-header {
+    @include bs-xs {
+      top: calc(#{$mobile-navbar-height * -1});
+    }
+
     transition: top 0.2s ease-in;
     top: calc(#{$navbar-height * -1});
   }
