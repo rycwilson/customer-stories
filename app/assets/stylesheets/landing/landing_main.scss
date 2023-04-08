@@ -58,11 +58,10 @@ body {
   &.company,
   &.our-story {
     background-color: $sky-blue;
+  }
 
-    #wrapper,
-    .navbar-collapse {
-      background-color: white;
-    }
+  #wrapper {
+    background-color: white;
   }
 
   &.devise {
