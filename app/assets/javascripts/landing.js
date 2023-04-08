@@ -38,8 +38,8 @@ function collapseHeaderOnScroll() {
     if (Math.abs(lastScrollTop - scrollTop) <= minScroll) return false;
     if (scrollTop > lastScrollTop && scrollTop > navbar.offsetHeight) {
       if (navbarCollapse.ariaExpanded == 'true') {
-        navbarCollapse.collapse('hide');
-        navbarCollapse.blur();
+        $(navbarCollapse).collapse('hide');
+        navbarToggle.blur();
       }
       navbar.classList.add('collapse-header');
     } else {
