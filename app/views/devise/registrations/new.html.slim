@@ -1,8 +1,14 @@
+.masthead 
+  .container 
+    p.text-center.text-lg style="margin:0; padding: 15px 0; color:#16556a"
+      | For a demo or sign up code, please <strong><a href="mailto:info@customerstories.net">contact us</a>.</strong>
+
 .content
   .container
     / hr.spacer-sm
     .account-wrapper
       .account-body
+
         - if request.path == '/users/sign_up' || request.path == '/users'
           h3 Create your Account
         - elsif request.path == '/admins/sign_up' || request.path == '/admins'
@@ -11,9 +17,6 @@
         p
           | Already have an account?&nbsp;&nbsp;&nbsp;
           = link_to('Sign in', request.path.include?('users') ? new_user_session_path : new_admin_session_path)
-        p 
-          | Need a sign up code?&nbsp;&nbsp;&nbsp;
-          = link_to('Contact us', 'mailto:info@customerstories.net')
 
         = form_for( \
             resource, 
