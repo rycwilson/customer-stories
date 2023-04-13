@@ -6,10 +6,10 @@
 .content
   .container
     .heading-block.heading-minimal.heading-center
-      p.lead Customer Stories is a collective of marketing, advertising, sales, and customer success leaders with a core premise: Connecting prospects to customer success stories is a universal priority in modern revenue generation strategy.
-      p.lead Yet customer reference solutions have not evolved to meet today's buying process.  There was no turn key modern solution to curate, promote, and measure customer stories throughtout a buyer's journey.  So we created it.
+      p.lead.text-lg Customer Stories is a collective of marketing, advertising, sales, and customer success leaders with a core premise: Connecting prospects to customer success stories is a universal priority in modern revenue generation strategy.
+      p.lead.text-lg Yet customer reference solutions have not evolved to meet today's buying process.  There was no turn key modern solution to curate, promote, and measure customer stories throughtout a buyer's journey.  So we created it.
 
-    .heading-block.heading-minimal.heading-center
+    .text-center style="margin-bottom:50px"
       h2 Connecting Prospects to Customer Successes
     
     .feature-lg
@@ -18,16 +18,15 @@
           figure.feature-figure
             = image_tag( \
                 'landing/marketer_survey.webp', 
-                { class: 'img-responsive figure-shadow center-block', style: 'width: 90%;', alt: '' })
+                { class: 'img-responsive figure-shadow center-block', alt: '' })
         .col-sm-6
-          .feature-content
             h3 The Marketer Survey Results
-            p Customer stories are the #1 most influential marketing content in driving new business opportunity.
-            p Customers trust peer stories more than any other marketing or sales information to learn about solutions and products.</p>
-            p Source: LinkedIn B2B Content Marketing Trends Survey
+            p.text-lg Customer stories are the #1 most influential marketing content in driving new business opportunity.
+            p.text-lg Customers trust peer stories more than any other marketing or sales information to learn about solutions and products.</p>
+            p.text-lg Source: LinkedIn B2B Content Marketing Trends Survey
 
 
-    br.xs-50.lg-100
+    / br.xs-50.lg-100
 
     .feature-lg.figure-right
       .row
@@ -35,19 +34,22 @@
           figure.feature-figure
             = image_tag( \
                 'landing/trust_in_ads.webp',
-                { class: 'img-responsive figure-shadow center-block', style: 'width: 90%;', alt: '' })
+                { class: 'img-responsive figure-shadow center-block', alt: '' })
         .col-sm-6.col-sm-pull-6
           .feature-content
             h3 The Buyer's Opinion
-            p 92% of enterprise buyers are highly influenced by customer stories in the purchasing cycle.
-            p Customers are 32% more likely to purchase when a customer story is encountered during the buying process.
-            p Source:  Nielsen Global Trust in Advertising Survey
+            p.text-lg 92% of enterprise buyers are highly influenced by customer stories in the purchasing cycle.
+            p.text-lg Customers are 32% more likely to purchase when a customer story is encountered during the buying process.
+            p.text-lg Source:  Nielsen Global Trust in Advertising Survey
 
+#section-contact
+  .container 
     .row
-      .col-sm-offset-3.col-sm-6
-        .feature-content
-          h3 Connecting Prospects to Successes Using Authentic and Persuasive Customer Stories
-          p By creating an easy to use turn-key solution to crowdsource stories, curating control, ad channel promotion, and measurement, we closed the loop. Please contact us to learn more.
-
-          a.btn.btn-secondary.btn-lg type="button"
-            | Request a Demo
+      .col-sm-8
+        h2 Connecting Prospects to Successes Using Authentic and Persuasive Customer Stories
+        p.text-lg
+          | By creating an easy to use turn-key solution to crowdsource stories, curating control, ad channel promotion, and measurement, we closed the loop. Please <strong><a href="mailto:info@customerstories.net">contact us</a></strong> to learn more.
+      .col-sm-4.text-center
+        br
+        br
+        a.btn.btn-secondary.btn-lg href="mailto:info@customerstories.net?subject=Demo Request" Request a Demo

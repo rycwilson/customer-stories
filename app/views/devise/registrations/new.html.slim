@@ -3,7 +3,7 @@
     p.text-center.text-lg style="margin:0; padding: 15px 0; color:#16556a"
       | For a demo or sign up code, please <strong><a href="mailto:info@customerstories.net">contact us</a>.</strong>
 
-.content
+.content style="padding-top:15px"
   .container
     / hr.spacer-sm
     .account-wrapper
@@ -30,7 +30,7 @@
             = f.label(:email, class: 'control-label')
             = f.email_field( \
                 :email,
-                { class: 'form-control', required: true, autofocus: true, autocomplete: 'off', placeholder: 'Email address' })
+                { class: 'form-control', required: true, autocomplete: 'off', placeholder: 'Email address' })
 
           .form-group
             = f.label(:first_name, class: 'control-label')

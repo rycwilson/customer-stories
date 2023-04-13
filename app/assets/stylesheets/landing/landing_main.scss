@@ -106,10 +106,6 @@ p.lead {
   line-height: 1.5;
   font-weight: normal;
   color: inherit;
-
-  .heading-block & {
-    font-size: 21px;
-  }
 }
 
 i,
@@ -338,7 +334,8 @@ li.feature-sm-content {
   }
 }
 
-body.home {
+body.home,
+body.company {
   .feature-sm {
     padding-left: 10px;
     
@@ -349,12 +346,6 @@ body.home {
     @include bs-xs {
       padding: 0 10%;
     }
-  }
-
-  .feature-sm-content {
-    font-size: 18px;
-    // font-weight: 300;
-    color: $body-text-color;
   }
 
   .carousel .item {
@@ -378,13 +369,25 @@ body.home {
     // }
   }
 
-  .feature-lg {
+  .feature-lg:not(:last-child) {
     @include bs-xs {
+      margin-bottom: 50px;
+    }
+
+    @include bs-sm {
       margin-bottom: 50px;
     }
 
     @include bs-md {
       margin-bottom: 80px;
+    }
+  }
+}
+
+body.company {
+  .feature-figure {
+    @include bs-xs {
+      margin-bottom: 50px;
     }
   }
 }
