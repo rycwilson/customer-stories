@@ -28,6 +28,7 @@ gem 'jbuilder', '~> 2.7'
 gem 'jquery-rails'
 gem 'jquery-ui-rails'
 gem 'jquery-minicolors-rails'
+gem 'jsbundling-rails'
 
 gem 'local_time'
 # gem 'miro'
