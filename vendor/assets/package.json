@@ -3,8 +3,10 @@
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
+  "type": "module",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "esbuild ../../app/javascript/app.js --bundle --sourcemap --outdir=../../app/assets/builds"
   },
   "repository": {
     "type": "git",
@@ -30,6 +32,7 @@
     "datatables-helper": "^1.0.0",
     "datatables.net-bs": "^1.12.1",
     "datatables.net-plugins": "^1.11.5",
+    "esbuild": "^0.17.19",
     "flot": "^0.8.3",
     "flot-orderbars": "^1.0.0",
     "html2rtf": "^0.2.1",

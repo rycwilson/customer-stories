@@ -46,7 +46,5 @@
 !/public/assets/.sprockets-manifest-*
 
 
-
-
-
-
+/app/assets/builds/*
+!/app/assets/builds/.keep
