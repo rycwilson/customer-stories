@@ -1,0 +1,86 @@
+nav#company-nav class="#{'unregistered' unless company&.persisted?}"
+  .container.company-nav-container
+    .row
+      
+      .col-sm-7
+
+        - if controller_name == 'profile' && !current_user.company_registered?
+          span Are you a Customer Reference Program Manager?
+          |&nbsp;&nbsp;
+          = link_to('Register your Company', register_company_path)
+        -else
+          / https://stackoverflow.com/questions/556153
+          ul.nav.nav-tabs.nav-workflow role="tablist"
+            li#prospect-tab class="#{'active' if workflow_stage == 'prospect'}" role="presentation"
+              a href="#prospect" role="tab" data-toggle="tab" aria-controls="prospect" data-turbolinks="false"
+                | Prospect
+              div
+            li#curate-tab class="#{'active' if workflow_stage == 'curate'}" role="presentation"
+              a href="#curate" role="tab" data-toggle="tab" aria-controls="curate" data-turbolinks="false"
+                | Curate
+              div
+            li#promote-tab class="#{'active' if workflow_stage == 'promote'}" role="presentation"
+              a href="#promote" role="tab" data-toggle="tab" aria-controls="promote" data-turbolinks="false"
+                | Promote
+              div
+            li#measure-tab class="#{'active' if workflow_stage == 'measure'}" role="presentation"
+              a href="#measure" role="tab" data-toggle="tab" aria-controls="measure" data-turbolinks="false"
+                | Measure
+              div
+
+      .col-sm-5
+
+        ul.nav.nav-tabs.nav-settings.pull-right role="tablist"
+
+          li.dropdown.user-profile
+            a.dropdown-toggle data-toggle="dropdown" href="javascript:;"
+              i.fa.fa-fw.fa-user-circle-o style="margin-right: 0.2em"
+              i.fa.fa-caret-down
+            ul.dropdown-menu.dropdown-menu-right role="menu"
+              - if curator?(company)
+                li
+                  a href="/user-profile"
+                    i.fa.fa-fw.fa-user-circle-o
+                    |&nbsp;&nbsp;&nbsp;
+                    = current_user.full_name
+              - else
+                li
+                  = link_to(edit_profile_no_company_path) do
+                    i.fa.fa-fw.fa-user-circle-o
+                    |&nbsp;&nbsp;&nbsp;
+                    = current_user.full_name
+              / <li role="separator" class="divider"></li>
+              li
+                = link_to(destroy_user_session_path, method: :delete) do
+                  i.fa.fa-fw.fa-sign-out
+                  |&nbsp;&nbsp;&nbsp;Sign out
+            div
+            
+          li.dropdown.company-settings
+            a.dropdown-toggle data-toggle="dropdown" href="javascript:;"
+              i.fa.fa-fw.fa-gear style="margin-right: 0.2em"
+              i.fa.fa-caret-down
+            ul.dropdown-menu.dropdown-menu-right role="menu"
+              li
+                a href="/settings#company-profile"
+                  i.fa.fa-fw.fa-globe
+                  |&nbsp;&nbsp;&nbsp;Company Profile
+              / <li role="separator" class="divider"></li>
+              li
+                a href="/settings#crowdsource"
+                  i.fa.fa-fw.fa-users
+                  |&nbsp;&nbsp;&nbsp;Crowdsource Settings
+              /<li role="separator" class="divider"></li>
+              li
+                a href="/settings#plugins"
+                  i.fa.fa-fw.fa-plug
+                  |&nbsp;&nbsp;&nbsp;Customer Stories Plugin
+              li
+                a href="/settings#ctas"
+                  i.fa.fa-fw.fa-hand-pointer-o
+                  |&nbsp;&nbsp;&nbsp;Link &amp Form CTAs
+              li
+                a href="/settings#tags"
+                  i.fa.fa-fw.fa-tags
+                  |&nbsp;&nbsp;&nbsp;Story Tags
+            div
