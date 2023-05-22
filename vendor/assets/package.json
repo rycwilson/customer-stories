@@ -6,7 +6,7 @@
   "type": "module",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "build": "esbuild ../../app/javascript/app.js --bundle --sourcemap --outdir=../../app/assets/builds"
+    "build": "NODE_PATH=node_modules:/Users/wilson/.rbenv/versions/3.1.2/lib/ruby/gems/3.1.0/gems esbuild ../../app/javascript/app.js --bundle --sourcemap --outdir=../../app/assets/builds"
   },
   "repository": {
     "type": "git",
