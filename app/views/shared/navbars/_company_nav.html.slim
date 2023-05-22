@@ -12,19 +12,19 @@ nav#company-nav class="#{'unregistered' unless company&.persisted?}"
           / https://stackoverflow.com/questions/556153
           ul.nav.nav-tabs.nav-workflow role="tablist"
             li#prospect-tab class="#{'active' if workflow_stage == 'prospect'}" role="presentation"
-              a href="#prospect" role="tab" data-toggle="tab" aria-controls="prospect" data-turbolinks="false"
+              a href="#prospect" role="tab" data-toggle="tab" aria-controls="prospect" data-turbo="false"
                 | Prospect
               div
             li#curate-tab class="#{'active' if workflow_stage == 'curate'}" role="presentation"
-              a href="#curate" role="tab" data-toggle="tab" aria-controls="curate" data-turbolinks="false"
+              a href="#curate" role="tab" data-toggle="tab" aria-controls="curate" data-turbo="false"
                 | Curate
               div
             li#promote-tab class="#{'active' if workflow_stage == 'promote'}" role="presentation"
-              a href="#promote" role="tab" data-toggle="tab" aria-controls="promote" data-turbolinks="false"
+              a href="#promote" role="tab" data-toggle="tab" aria-controls="promote" data-turbo="false"
                 | Promote
               div
             li#measure-tab class="#{'active' if workflow_stage == 'measure'}" role="presentation"
-              a href="#measure" role="tab" data-toggle="tab" aria-controls="measure" data-turbolinks="false"
+              a href="#measure" role="tab" data-toggle="tab" aria-controls="measure" data-turbo="false"
                 | Measure
               div
 
@@ -32,7 +32,7 @@ nav#company-nav class="#{'unregistered' unless company&.persisted?}"
 
         ul.nav.nav-tabs.nav-settings.pull-right role="tablist"
 
-          li.dropdown.user-profile
+          li.dropdown.user-profile class="#{'active' if controller_name == 'profile'}"
             a.dropdown-toggle data-toggle="dropdown" href="javascript:;"
               i.fa.fa-fw.fa-user-circle-o style="margin-right: 0.2em"
               i.fa.fa-caret-down
@@ -56,7 +56,7 @@ nav#company-nav class="#{'unregistered' unless company&.persisted?}"
                   |&nbsp;&nbsp;&nbsp;Sign out
             div
             
-          li.dropdown.company-settings
+          li.dropdown.company-settings class="#{'active' if current_page?(controller: 'companies', action: 'edit')}"
             a.dropdown-toggle data-toggle="dropdown" href="javascript:;"
               i.fa.fa-fw.fa-gear style="margin-right: 0.2em"
               i.fa.fa-caret-down
