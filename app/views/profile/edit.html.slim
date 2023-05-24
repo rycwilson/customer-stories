@@ -38,7 +38,7 @@
                 - @switch_users.each do |user|
                   li
                     = form_tag(switch_user_path, method: 'POST', remote: true) do
-                      = hidden_field_tag(:switch_user_id, user[:id])
+                      = hidden_field_tag(:switch_user_id, user[:id], id: nil)
                       = submit_tag(user[:name], style: 'background: none; border: none')
                       
     .col-sm-8.col-lg-9.layout-main
