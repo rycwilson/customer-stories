@@ -10,7 +10,7 @@ html lang="en-US" prefix="og: http://ogp.me/ns# fb: http://ogp.me/ns/fb#"
       meta name="robots" content="noindex"
     title = 'Customer Stories'
     = yield(:head) if content_for?(:head)
-    = javascript_include_tag('app', { 'data-turbolinks-track' => 'reload' })
+    = javascript_include_tag('app', 'data-turbo-track' => 'reload', defer: true)
     
     / Google Fonts - https://developers.google.com/fonts/docs/getting_started
     / https://www.cdnplanet.com/blog/faster-google-webfonts-preconnect/
@@ -24,9 +24,9 @@ html lang="en-US" prefix="og: http://ogp.me/ns# fb: http://ogp.me/ns/fb#"
     = custom_google_fonts(@company)
     = stylesheet_link_tag( \
         custom_stylesheet?(@company) ? "custom/wrappers/#{@company.subdomain}" : 'application',
-        'data-turbolinks-track' => 'reload')
+        'data-turbo-track' => 'reload')
     - unless ['companies', 'stories', 'profile', 'contributions'].include?(controller_name)
-      = stylesheet_link_tag('mvpready-landing', media: 'all', 'data-turbolinks-track' => 'reload')
+      = stylesheet_link_tag('mvpready-landing', media: 'all', 'data-turbo-track' => 'reload')
     = favicon_link_tag('favicon.ico')
 
   / TODO: fixed navbar - leave padding as below (false is temp. blocker)
