@@ -3,26 +3,34 @@ import {} from 'jquery-ujs/src/rails.js';
 import {} from 'jquery-ui/dist/jquery-ui.js';
 import {} from './bootstrap.js';
 import { Turbo } from 'turbo-rails-1.3.2/app/assets/javascripts/turbo.js';
+import * as turboCallbacks from './turbo_callbacks';
 import Cookies from 'js-cookie';
 
-import dashboard from './views/dashboard';
+import dashboard from './views/dashboard.js';
 
-// Turbo.start();   
+document.addEventListener('turbo:load', onPageLoad, { once: true });
 
-// dashboard.addListeners();
-
-document.addEventListener('turbo:load', (e) => {
-  console.log('load', e)
-
-  window.onpopstate = showActiveTabContent;
-
+function onPageLoad() {
+  console.log('turbo:load (once)', e)
+  
+  addTurboListeners();
+  
   document.addEventListener('click', onWorkflowTabClick);
-
-  document.addEventListener('click', onMenuItemClick);
-
+  
+  // window.onpopstate = showActiveTabContent;
+  // document.addEventListener('click', onMenuItemClick);
+  
   dashboard.addListeners();
+}
 
-}, { once: true });
+function addTurboListeners() {
+  document.addEventListener('turbo:load', turboCallbacks.onLoad)
+  document.addEventListener('turbo:render', turboCallbacks.onRender)
+  document.addEventListener('turbo:visit', turboCallbacks.onVisit)
+  document.addEventListener('turbo:before-fetch-request', turboCallbacks.onBeforeFetchRequest)
+  document.addEventListener('turbo:before-fetch-response', turboCallbacks.onBeforeFetchResponse)
+  document.addEventListener('turbo:before-cache', turboCallbacks.onBeforeCache)
+}
 
 function onWorkflowTabClick(e) {
   const isWorkflowTab = (
@@ -32,6 +40,24 @@ function onWorkflowTabClick(e) {
   if (isWorkflowTab) {
     e.preventDefault();
     workflowTurboVisit(e.target);
+  }
+}
+
+function workflowTurboVisit(link) {
+  const newWorkflowPath = `/${link.getAttribute('href').slice(1, link.getAttribute('href').length)}`;
+  const currentlyOnDashboard = document.body.classList.contains('companies') && document.body.classList.contains('show');
+  if (currentlyOnDashboard) {
+    // replacing state ensures turbo:false for the first tab state
+    history.replaceState({ turbo: false }, null, location.pathname);
+    history.pushState(
+      { turbo: { restorationIdentifier: Turbo.navigator.history.restorationIdentifier } }, 
+      null, 
+      newWorkflowPath
+    );
+  } else {
+    // const dropdowns = document.querySelectorAll('#company-nav .nav-settings > li.dropdown');
+    // dropdowns.forEach(dropdown => dropdown.classList.remove('active'));
+    Turbo.visit(newWorkflowPath);
   }
 }
 
@@ -56,9 +82,10 @@ function showActiveTabContent(e) {
   const workflowStage = workflowMatch && workflowMatch[1];
   const curateView = workflowStage === 'curate' && (workflowMatch[2] ? 'story' : 'stories');
   if (workflowStage) {
-    console.log('workflowStage', workflowStage)
-    // $(`.nav-workflow a[href="#${workflowStage}"]`).tab('show');
-    document.querySelector(`.nav-workflow a[href="#${workflowStage}"]`).click()
+    let tab = $(`.nav-workflow a[href="#${workflowStage}"]`)[0]
+    console.log(workflowStage, tab)
+    $(`.nav-workflow a[href="#${workflowStage}"]`).tab('show');
+    // document.querySelector(`.nav-workflow a[href="#${workflowStage}"]`).click()
     if (curateView) {
       curateView === 'stories' ? $('a[href=".curate-stories"]').tab('show') : $('a[href=".edit-story"]').tab('show');
       
@@ -70,19 +97,5 @@ function showActiveTabContent(e) {
         //   .trigger('change', { auto: true });
       }
     }
-  }
-}
-
-function workflowTurboVisit(link) {
-  const newWorkflowPath = `/${link.getAttribute('href').slice(1, link.getAttribute('href').length)}`;
-  const currentlyOnDashboard = document.body.classList.contains('companies') && document.body.classList.contains('show');
-  if (currentlyOnDashboard) {
-    // replacing state ensures turbo:false for the first tab state
-    history.replaceState({ turbo: false }, null, location.pathname);
-    history.pushState({ turbo: true }, null, newWorkflowPath);
-  } else {
-    const dropdowns = document.querySelectorAll('#company-nav .nav-settings > li.dropdown');
-    dropdowns.forEach(dropdown => dropdown.classList.remove('active'));
-    Turbo.visit(newWorkflowPath);
   }
 }
