@@ -10,21 +10,21 @@ nav#company-nav class="#{'unregistered' unless company&.persisted?}"
           = link_to('Register your Company', register_company_path)
         -else
           / https://stackoverflow.com/questions/556153
-          ul.nav.nav-tabs.nav-workflow role="tablist"
+          ul.nav.nav-tabs.nav-workflow role="tablist" data-turbo="false"
             li#prospect-tab class="#{'active' if workflow_stage == 'prospect'}" role="presentation"
-              a href="#prospect" role="tab" data-toggle="tab" aria-controls="prospect" data-turbo="false"
+              a href="#prospect" role="tab" data-toggle="tab" aria-controls="prospect"
                 | Prospect
               div
             li#curate-tab class="#{'active' if workflow_stage == 'curate'}" role="presentation"
-              a href="#curate" role="tab" data-toggle="tab" aria-controls="curate" data-turbo="false"
+              a href="#curate" role="tab" data-toggle="tab" aria-controls="curate"
                 | Curate
               div
             li#promote-tab class="#{'active' if workflow_stage == 'promote'}" role="presentation"
-              a href="#promote" role="tab" data-toggle="tab" aria-controls="promote" data-turbo="false"
+              a href="#promote" role="tab" data-toggle="tab" aria-controls="promote"
                 | Promote
               div
             li#measure-tab class="#{'active' if workflow_stage == 'measure'}" role="presentation"
-              a href="#measure" role="tab" data-toggle="tab" aria-controls="measure" data-turbo="false"
+              a href="#measure" role="tab" data-toggle="tab" aria-controls="measure"
                 | Measure
               div
 
