@@ -3,18 +3,32 @@ import {} from 'jquery-ujs/src/rails.js';
 import {} from 'jquery-ui/dist/jquery-ui.js';
 import {} from './bootstrap.js';
 import { Turbo } from 'turbo-rails-1.3.2/app/assets/javascripts/turbo.js';
-import * as turboCallbacks from './turbo_callbacks';
+import * as turboCallbacks from './turbo_callbacks.js';
 import cookies from 'js-cookie';
 window.Cookies = cookies
 import companies from './views/companies.js';
 import profile from './views/user_profile.js';
 import { initView } from './views';
 
-document.addEventListener('turbo:load', (e) => {
-  console.log('turbo:load (once)', e)
-  addAllListeners();
-  initView(document.body.dataset.controller, document.body.dataset.action);
-}, { once: true });
+window.CSP = window.CSP || cspApp();
+CSP.init();
+
+function cspApp() {
+  const app = {
+    data: {},
+    screenSize: null,
+    init() {
+      const controller = document.body.dataset.controller;
+      const action = document.body.dataset.action;
+      document.addEventListener('turbo:load', (e) => {
+        console.log('turbo:load (once)', e)
+        addAllListeners();
+        initView(controller, action);
+      }, { once: true });
+    }
+  }
+  return app;
+}
 
 function addAllListeners(e) {
   addTurboListeners();

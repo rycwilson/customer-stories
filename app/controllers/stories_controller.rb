@@ -326,11 +326,11 @@ class StoriesController < ApplicationController
   end
 
   def set_company
-    if params[:company_id]  # create story
-      @company = Company.find(params[:company_id])
-    else
-      @company = Company.find_by(subdomain: request.subdomain)
-    end
+    @company = (
+      Company.find_by(id: params[:company_id]) || 
+      Company.find_by(subdomain: params[:company_id]) ||
+      Company.find_by(subdomain: request.subdomain)
+    )
   end
 
   def set_or_redirect_to_story_preview(params_story_slug, session_story_slug)
