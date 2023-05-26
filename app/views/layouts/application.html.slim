@@ -33,7 +33,9 @@ html lang="en-US" prefix="og: http://ogp.me/ns# fb: http://ogp.me/ns/fb#"
   body {
     class="#{controller_name} #{action_name} #{@company&.subdomain}"
     style="#{@is_social_share_redirect ? 'visibility:hidden;' : ''} \
-      #{admin_navbar?(controller_name) && false ? 'padding-top:65px;' : ''}" }
+      #{admin_navbar?(controller_name) && false ? 'padding-top:65px;' : ''}"
+    data-controller="#{controller_name}"
+    data-action="#{action_name}" }
 
     - if @is_social_share_redirect
       = yield 

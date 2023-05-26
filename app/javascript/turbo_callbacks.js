@@ -1,9 +1,19 @@
+import { initView } from './views';
+
 export function onLoad(e) {
-  console.log('turbo:load', e)
+  console.log('turbo:load')
+  initView(document.body.dataset.controller, document.body.dataset.action);
 }
 
 export function onBeforeRender(e) {
   console.log('turbo:before-render')
+  // e.preventDefault()   // pause render
+  // e.detail.resume()   // resume render
+
+  // custom render
+  // e.detail.render = (currentEl, newEl) => {
+    // return custom element
+  // }
 }
 
 export function onRender(e) {
@@ -20,6 +30,8 @@ export function onVisit(e) {
 
 export function onBeforeFetchRequest(e) {
   console.log('turbo:before-fetch-request');
+  // e.preventDefault()
+  // e.detail.resume()
 }
 
 export function onBeforeFetchResponse(e) {
