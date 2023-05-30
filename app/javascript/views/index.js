@@ -12,7 +12,6 @@ const views = {
 }
 
 export function initView(controller, action) {
-  if (!views[controller] || !views[controller][action] || typeof views[controller][action].init !== 'function')
-    return false;
-  views[controller][action].init();
+  if (views[controller] && views[controller][action] && typeof views[controller][action].init === 'function')
+    views[controller][action].init();
 };

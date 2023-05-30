@@ -8,8 +8,6 @@ import * as turboCallbacks from './turbo_callbacks.js';
 
 import DataTable from 'datatables.net-bs';
 window.DataTable = DataTable;
-// import Editor from 'Editor-1.9.2/js/dataTables.editor.cjs';
-// import {} from 'Editor-1.9.2/js/editor.bootstrap.js';
 
 import cookies from 'js-cookie';
 window.Cookies = cookies;
