@@ -2,10 +2,18 @@ import {} from './jquery.js';   // creates global $, jQuery
 import {} from 'jquery-ujs/src/rails.js';
 import {} from 'jquery-ui/dist/jquery-ui.js';
 import {} from './bootstrap.js';
+
 import { Turbo } from 'turbo-rails-1.3.2/app/assets/javascripts/turbo.js';
 import * as turboCallbacks from './turbo_callbacks.js';
+
+import DataTable from 'datatables.net-bs';
+window.DataTable = DataTable;
+// import Editor from 'Editor-1.9.2/js/dataTables.editor.cjs';
+// import {} from 'Editor-1.9.2/js/editor.bootstrap.js';
+
 import cookies from 'js-cookie';
-window.Cookies = cookies
+window.Cookies = cookies;
+
 import companies from './views/companies.js';
 import profile from './views/user_profile.js';
 import { initView } from './views';
