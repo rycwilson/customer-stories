@@ -11,7 +11,7 @@
 
         ul.nav
           li class=('active' if tab == '#successes' || tab.nil?)
-            a href="#successes" data-toggle="tab"
+            a id="customer-wins-tab" href="#successes" data-toggle="tab"
               span
                 i.fa.fa-fw.fa-rocket
                 span 
@@ -26,7 +26,7 @@
                     i.fa.fa-circle-o.fa-stack-2x
                     i.fa.fa-plus.fa-stack-1x
           li class=('active' if tab == '#prospect-contributors')
-            a href="#prospect-contributors" data-toggle="tab"
+            a id="contributors-tab" href="#prospect-contributors" data-toggle="tab"
               span
                 i class="fa fa-fw fa-users"
                 span 
@@ -44,11 +44,17 @@
       .col-sm-8.col-lg-9.layout-main
         .tab-content
 
-          #successes.tab-pane.fade class=('active in' if tab == '#successes' || tab.nil?)
+          #successes.tab-pane.fade {
+            class=('active in' if tab == '#successes' || tab.nil?) 
+            role="tabpanel" 
+            aria-labelledby="customer-wins-tab" }
             = render( \
                 'companies/1_prospect/successes/successes_table',
                 { company: company })
-          #prospect-contributors.tab-pane.fade class=('active in' if tab == '#prospect-contributors')
+          #prospect-contributors.tab-pane.fade {
+            class=('active in' if tab == '#prospect-contributors')
+            role="tabpanel"
+            aria-labelledby="contributors-tab" }
             = render( \
                 'companies/1_prospect/contributors/contributors_table',
                 { company: company, workflow_stage: 'prospect' })
