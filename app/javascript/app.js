@@ -26,6 +26,9 @@ CSP.init();
 
 function cspApp() {
   const app = {
+    currentUser: Object.fromEntries(
+      Object.entries(JSON.parse(document.body.dataset.currentUser)).map(([k, v]) => [k === 'full_name' ? 'name' : k, v]),
+    ),
     data: {},
     screenSize: null,
     init() {
