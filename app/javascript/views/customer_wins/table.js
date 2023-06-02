@@ -1,3 +1,5 @@
+let table, tableWrapper, tableControls, dt;
+
 export default {
   init(successes) {
     const colIndices = {
@@ -8,7 +10,10 @@ export default {
       story: 5,
       actions: 6,
     }
-    const table = new DataTable('#successes-table', {
+    table = document.getElementById('successes-table');
+    tableWrapper = table.parentElement;
+    tableControls = table.previousElementSibling;
+    dt = new DataTable('#successes-table', {
       // ajax: {
       //   url: '/successes',
       //   dataSrc: ''
@@ -22,6 +27,7 @@ export default {
         zeroRecords: 'No Customer Wins found'
       },
       order: [[colIndices.customer, 'asc'], [colIndices.success, 'desc']],
+
       columns: [
         {
           data: null,
@@ -84,6 +90,7 @@ export default {
           render: (data, type, row, meta) => actionsDropdownTemplate(data, row)
         }
       ],
+
       columnDefs: [
         { targets: [colIndices.customer, colIndices.curator, colIndices.story], visible: false },
         {
@@ -100,6 +107,7 @@ export default {
         { targets: colIndices.status, width: '26%' },
         { targets: colIndices.actions, width: '8%' }
       ],
+
       rowGroup: {
         dataSrc: 'customer.name',
         startRender: function (groupRows, successName) {
@@ -120,6 +128,7 @@ export default {
           `);
         }
       },
+
       createdRow: function (row, data, index) {
         $(row).attr('data-customer-id', data.customer.id);
         $(row).attr('data-success-id', data.id);
@@ -128,18 +137,19 @@ export default {
         $(row).children().eq(2).addClass('status');
         $(row).children().eq(3).addClass('actions dropdown');
       },
-      initComplete: function (settings, json) {
-        const $tableWrapper = $(this).closest('[id*="table_wrapper"]');
-        
-        // remove default search field.  Disabling via options also disables api, so can't do that
-        $tableWrapper.children('.row:first-child').remove();
-        
+
+      initComplete(settings) {
+        // console.log(settings)
+
+        // the table api captured in the dt variable is not available until after a timeout
+        setTimeout(() => {
+          initTableControls();
+          // table.closeststyle.visibility = 'visible';
+        })
+
         // trigger curator select and show tables
         // dtSuccessesInit.resolve();
-        console.log('successes initComplete')
   
-        $('.working--prospect').addClass('successes-loaded');
-        $tableWrapper.find('.dataTables_paginate').show();
   
         // $table.on('draw.dt', function (e) {
         //   console.log('draw')
@@ -150,6 +160,40 @@ export default {
       }
     });
   }
+}
+
+function initTableControls() {
+  const addBtn = document.getElementById('prospect').querySelector('layout-sidebar .nav .btn-add');
+  const paginationBtns = tableWrapper.querySelector('.dataTables_paginate');
+  const initFilters = () => {
+    tableControls.querySelectorAll('select').forEach(select => {
+      const ts = new TomSelect(select, {
+        sortField: 'text',
+        onInitialize() {
+        },
+        onChange() {
+        },
+        plugins: {
+          'clear_button': {
+            title: 'Clear selection',
+            html: (config) => (`<button type="button" class="btn ${config.className}" title="${config.title}">&times;</button>`)
+          }
+        }
+      })
+    })
+  };
+  const cloneFilterResults = () => {
+    const originalResults = tableWrapper.querySelector('.dataTables_info');
+    const clone = originalResults.cloneNode();
+    clone.id = `${originalResults.id$}--clone`;
+    clone.classList.add('help-block', 'text-right');
+    clone.textContent = originalResults.textContent.replace(/\sentries/g, '');
+    tableWrapper.querySelector('.select-filters').appendChild(clone);
+  };
+  $(addBtn).show();
+  $(paginationBtns).show();
+  initFilters();
+  cloneFilterResults();
 }
 
 function actionsDropdownTemplate(displayStatus, rowData) {
