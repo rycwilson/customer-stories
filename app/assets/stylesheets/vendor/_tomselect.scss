@@ -1,0 +1,27 @@
+.ts-wrapper.form-control {
+  height: 34px;
+
+  .ts-control {
+    height: 100%;
+  }
+}
+
+.ts-dropdown {
+  .active {
+    color: white;
+    background-color: $ts-active-option-background;
+  }
+
+  .optgroup-header {
+    font-size: 13px;
+    background: $medium-gray;
+  }
+  
+  .optgroup-header {
+    padding: 0.75rem;
+  }
+
+  .option {
+    padding: 4px 0.75rem;
+  }
+}

@@ -1,5 +1,5 @@
-@import 'select2/dist/css/select2';
-@import 'select2-bootstrap-theme/dist/select2-bootstrap';
+// @import 'select2/dist/css/select2';
+// @import 'select2-bootstrap-theme/dist/select2-bootstrap';
 
 @import 'datatables.net-bs/css/dataTables.bootstrap';
 @import 'css/editor.bootstrap';
@@ -14,6 +14,7 @@
 
 // csp overrides
 @import 'bootstrap';
-@import 'select2';
+// @import 'select2';
 @import 'summernote_csp';
 @import 'datatables';
+@import 'tomselect';
