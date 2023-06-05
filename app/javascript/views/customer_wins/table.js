@@ -180,6 +180,7 @@ function initTableControls() {
           }
         }
       })
+      if (select.classList.contains('curator-select')) ts.setValue(CSP.currentUser.id);
     })
   };
   const cloneFilterResults = () => {
