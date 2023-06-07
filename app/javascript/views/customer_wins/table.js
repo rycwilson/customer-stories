@@ -1,4 +1,17 @@
-let table, tableWrapper, tableControls, dt;
+const tsBaseOptions = {
+  sortField: 'text',
+  maxOptions: null,
+  onInitialize() {
+  },
+  plugins: {
+    'clear_button': {
+      title: 'Clear selection',
+      html: (config) => (`<button type="button" class="btn ${config.className}" title="${config.title}">&times;</button>`)
+    }
+  }
+};
+
+let table, tableWrapper, tableControls, dt, tsCurator, tsFilter;
 
 export default {
   init(successes) {
@@ -26,7 +39,7 @@ export default {
         emptyTable: 'No Customer Wins found',
         zeroRecords: 'No Customer Wins found'
       },
-      order: [[colIndices.customer, 'asc'], [colIndices.success, 'desc']],
+      order: [colIndices.success, 'desc'],
 
       columns: [
         {
@@ -48,18 +61,16 @@ export default {
               customerId: row.customer.id
             }),
             display: 'name',
-            filter: 'name',
+            filter: 'id',
             sort: 'timestamp' // success.created_at
-          },
+          }
         },
         {
           name: 'customer',
           data: {
-            _: function (row, type, set, meta) {
-              return { id: row.customer.id, name: row.customer.name };
-            },
+            _: (row, type, set, meta) => ({ id: row.customer.id, name: row.customer.name }),
             display: 'customer.name',
-            filter: 'customer.name',
+            filter: 'customer.id',
             sort: 'customer.name'
           }
         },
@@ -101,9 +112,10 @@ export default {
             $(td).addClass(col === 0 ? 'toggle-child' : 'actions dropdown')
           )
         },
-        { targets: [colIndices.customer, colIndices.curator, colIndices.story],  width: '0%' },  // hidden
+        { targets: [colIndices.curator, colIndices.story],  width: '0%' },  // hidden
         { targets: 0, width: '5%' },
         { targets: colIndices.success, width: '61%' },
+        { targets: colIndices.customer, width: '0%'},
         { targets: colIndices.status, width: '26%' },
         { targets: colIndices.actions, width: '8%' }
       ],
@@ -144,57 +156,62 @@ export default {
         // the table api captured in the dt variable is not available until after a timeout
         setTimeout(() => {
           initTableControls();
+          cloneFilterResults();
           // table.closeststyle.visibility = 'visible';
         })
-
-        // trigger curator select and show tables
-        // dtSuccessesInit.resolve();
-  
-  
-        // $table.on('draw.dt', function (e) {
-        //   console.log('draw')
-        //   $tableWrapper.find('.dataTables_info')
-        //                .addClass('help-block text-right')
-        //                .appendTo($tableWrapper.find('.select-filters'));
-        // });
       }
     });
   }
 }
 
+function cloneFilterResults() {
+  const originalResults = tableWrapper.querySelector('.dataTables_info');
+  const clone = originalResults.cloneNode();
+  const formatText = () => clone.textContent = originalResults.textContent.replace(/\sentries/g, '');
+  clone.id = `${originalResults.id}--clone`;
+  clone.classList.add('help-block', 'text-right');
+  formatText();
+  tableWrapper.querySelector('.select-filters').appendChild(clone);
+  $(table).on('draw.dt', formatText);
+};
+
 function initTableControls() {
   const addBtn = document.getElementById('prospect').querySelector('layout-sidebar .nav .btn-add');
   const paginationBtns = tableWrapper.querySelector('.dataTables_paginate');
-  const initFilters = () => {
-    tableControls.querySelectorAll('select').forEach(select => {
-      const ts = new TomSelect(select, {
-        sortField: 'text',
-        onInitialize() {
-        },
-        onChange() {
-        },
-        plugins: {
-          'clear_button': {
-            title: 'Clear selection',
-            html: (config) => (`<button type="button" class="btn ${config.className}" title="${config.title}">&times;</button>`)
-          }
-        }
-      })
-      if (select.classList.contains('curator-select')) ts.setValue(CSP.currentUser.id);
-    })
-  };
-  const cloneFilterResults = () => {
-    const originalResults = tableWrapper.querySelector('.dataTables_info');
-    const clone = originalResults.cloneNode();
-    clone.id = `${originalResults.id$}--clone`;
-    clone.classList.add('help-block', 'text-right');
-    clone.textContent = originalResults.textContent.replace(/\sentries/g, '');
-    tableWrapper.querySelector('.select-filters').appendChild(clone);
-  };
+  let curatorId = CSP.currentUser.id;
+  let filterVal = '';
   $(addBtn).show();
   $(paginationBtns).show();
-  initFilters();
-  cloneFilterResults();
+  tsCurator = new TomSelect(
+    tableControls.querySelector('select.curator-select'), 
+    Object.assign({}, tsBaseOptions, { onChange: (newVal) => searchTable(curatorId = newVal, filterVal) })
+  );
+  tsCurator.setValue(CSP.currentUser.id);
+  tsFilter = new TomSelect(
+    tableControls.querySelector('select.dt-filter'),
+    Object.assign({}, tsBaseOptions, { 
+      onChange: (newVal) => searchTable(curatorId, filterVal = newVal), 
+      onType: (q) => searchTable(curatorId, filterVal = q, true)
+    })
+  );
+  document.getElementById('show-wins-with-story').addEventListener('change', (e) => searchTable(curatorId, filterVal));
+}
+
+function searchTable(curatorId, filterVal, isSearchInput) {
+  console.log(`searchTable(${curatorId}, ${filterVal})`)
+  let dtSearch = dt
+    .search('')
+    .columns().search('')
+    .column('curator:name').search(curatorId ? `^${curatorId}$` : '', true, false)
+    .column('story:name').search(document.getElementById('show-wins-with-story').checked ? '' : '^false$', true, false);
+  if (isSearchInput) {
+    dtSearch = dtSearch.search(filterVal);
+  } else if (filterVal) {
+    const filterColumn = filterVal.slice(0, filterVal.indexOf('-'));
+    const filterId = filterVal.slice(filterVal.indexOf('-') + 1, filterVal.length);
+    dtSearch = dtSearch.column(`${filterColumn}:name`).search(`^${filterId}$`, true, false);
+  }
+  dtSearch.draw();
 }
 
 function actionsDropdownTemplate(displayStatus, rowData) {

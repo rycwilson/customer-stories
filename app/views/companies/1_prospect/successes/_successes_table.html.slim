@@ -32,26 +32,19 @@
                 options_from_collection_for_select(company.curators, :id, :full_name),
                 { include_blank: true,
                   placeholder: 'Search / Select',
-                  class: 'prospect successes curator-select form-control',
-                  data: { column: 'curator' },
-                  style: 'border-color: #66afe9' })
+                  class: 'prospect successes curator-select form-control' })
         .form-group.search
           label.col-sm-3.col-sm-offset-1.control-label for="successes-filter" Filter
           .col-sm-8 style="padding:0"
             = select_tag( \
                 nil,
                 grouped_options_for_select( \
-                  'Customer' => company.customers.map do |customer| \
-                    [customer.name, "customer-#{customer.id}", { 'data-column' => 'customer' }] \
-                  end,
-                  'Customer Win' => company.successes.map do |success| \
-                    [success.name, "success-#{success.id}", { 'data-column' => 'success' }] \
-                  end),
+                  'Customer' => company.customers.map { |customer| [customer.name, "customer-#{customer.id}"] },
+                  'Customer Win' => company.successes.map { |success| [success.name, "success-#{success.id}"] }),
                 { include_blank: true,
                   placeholder: 'Search / Select',
                   id: 'successes-filter',
-                  class: 'dt-filter form-control',
-                  data: { column: 'customer' } })
+                  class: 'dt-filter form-control' })
 
   table#successes-table.table.datatable.table-hover.table-bordered width="100%"
     thead
