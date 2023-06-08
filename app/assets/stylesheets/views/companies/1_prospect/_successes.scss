@@ -1,3 +1,8 @@
+#successes-filter + .ts-wrapper .create, 
+#successes-filter + .ts-wrapper .create +.optgroup::before {
+  display: none;
+}
+
 #successes-table {
   // hide sorting icon for successes; doesn't presently work in light of row grouping
   th[aria-label*="Customer Win"] {

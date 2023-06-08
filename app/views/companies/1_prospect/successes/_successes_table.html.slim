@@ -39,7 +39,7 @@
             = select_tag( \
                 nil,
                 grouped_options_for_select( \
-                  'Customer' => company.customers.map { |customer| [customer.name, "customer-#{customer.id}"] },
+                  'Customer' => company.customers.map { |customer| [customer.name, "customer-#{customer.id}", { 'data-foo' => 'bar' }] },
                   'Customer Win' => company.successes.map { |success| [success.name, "success-#{success.id}"] }),
                 { include_blank: true,
                   placeholder: 'Search / Select',

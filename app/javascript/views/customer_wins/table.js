@@ -1,5 +1,6 @@
 const tsBaseOptions = {
-  sortField: 'text',
+  create: true,
+  persist: false,
   maxOptions: null,
   onInitialize() {
   },
@@ -11,7 +12,7 @@ const tsBaseOptions = {
   }
 };
 
-let table, tableWrapper, tableControls, dt, tsCurator, tsFilter;
+let table, tableWrapper, tableControls, dt;
 
 export default {
   init(successes) {
@@ -178,38 +179,76 @@ function cloneFilterResults() {
 function initTableControls() {
   const addBtn = document.getElementById('prospect').querySelector('layout-sidebar .nav .btn-add');
   const paginationBtns = tableWrapper.querySelector('.dataTables_paginate');
+  const addStoryFlagListener = () => (
+    document.getElementById('show-wins-with-story').addEventListener('change', (e) => searchTable(curatorId, filterVal))
+  );
   let curatorId = CSP.currentUser.id;
   let filterVal = '';
+  let currentFilterOptions;   // the select options resulting from search
   $(addBtn).show();
   $(paginationBtns).show();
-  tsCurator = new TomSelect(
+  addStoryFlagListener();
+  const tsCurator = new TomSelect(
     tableControls.querySelector('select.curator-select'), 
     Object.assign({}, tsBaseOptions, { onChange: (newVal) => searchTable(curatorId = newVal, filterVal) })
   );
   tsCurator.setValue(CSP.currentUser.id);
-  tsFilter = new TomSelect(
+  const tsFilter = new TomSelect(
     tableControls.querySelector('select.dt-filter'),
     Object.assign({}, tsBaseOptions, { 
-      onChange: (newVal) => searchTable(curatorId, filterVal = newVal), 
-      onType: (q) => searchTable(curatorId, filterVal = q, true)
+      onChange(newVal) {
+        searchTable(curatorId, filterVal = newVal)
+        if (!newVal) this.close();
+      }, 
+      onType() {
+        currentFilterOptions = this.currentResults.items;
+        const searchResults = this.currentResults.items
+          .map(item => item.id)
+          .reduce((results, result) => {
+            const column = result.slice(0, result.indexOf('-'));
+            const id = result.slice(result.indexOf('-') + 1, result.length);
+            if (!results[column]) results[column] = `${id}`
+            else results[column] = `${results[column]}|${id}`;
+            return results;
+          }, {});
+        searchTable(curatorId, filterVal = searchResults, true);
+      },
+      onDropdownOpen(dropdown) {
+        // if a search string exists, manually set the current results
+        if (this.getValue() === '0') this.currentResults.items = currentFilterOptions;
+      },
+      onDropdownClose(dropdown) {
+        // default behavior is that text input is cleared when the dropdown closes, 
+        // but we want to keep it since the search results are reflected in the table
+        // => accomplished by adding and selecting an option to match the search text
+        if (!this.getValue() && this.lastQuery) {
+          this.addOption({ value: 0, text: this.lastQuery }, true);   // true => option will be removed on clear
+          this.addItem(0, true);    // true => don't trigger change event
+        }
+      }
     })
   );
-  document.getElementById('show-wins-with-story').addEventListener('change', (e) => searchTable(curatorId, filterVal));
 }
 
-function searchTable(curatorId, filterVal, isSearchInput) {
-  console.log(`searchTable(${curatorId}, ${filterVal})`)
+function searchTable(curatorId, filterVal) {
+  // console.log(`searchTable(${curatorId}, ${filterVal})`)
   let dtSearch = dt
     .search('')
     .columns().search('')
     .column('curator:name').search(curatorId ? `^${curatorId}$` : '', true, false)
     .column('story:name').search(document.getElementById('show-wins-with-story').checked ? '' : '^false$', true, false);
-  if (isSearchInput) {
-    dtSearch = dtSearch.search(filterVal);
+  
+  // as the user types, search the table for the found options in the select box
+  // => this ensures the datatables search matches the tomselect search
+  if (typeof filterVal === 'object') {
+    console.log(filterVal)
+    Object.keys(filterVal).forEach(column => {
+      dtSearch = dtSearch.column(`${column}:name`).search(`^(${filterVal[column]})$`, true, false);
+    });
   } else if (filterVal) {
-    const filterColumn = filterVal.slice(0, filterVal.indexOf('-'));
-    const filterId = filterVal.slice(filterVal.indexOf('-') + 1, filterVal.length);
-    dtSearch = dtSearch.column(`${filterColumn}:name`).search(`^${filterId}$`, true, false);
+    const column = filterVal.slice(0, filterVal.indexOf('-'));
+    const id = filterVal.slice(filterVal.indexOf('-') + 1, filterVal.length);
+    dtSearch = dtSearch.column(`${column}:name`).search(`^${id}$`, true, false);
   }
   dtSearch.draw();
 }
