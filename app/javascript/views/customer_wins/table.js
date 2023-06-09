@@ -1,4 +1,4 @@
-import { toggleRowStripes } from '../dashboard/tables.js';
+import { toggleRowGroups } from '../dashboard/tables.js';
 
 const tsBaseOptions = {
   create: true,
@@ -14,7 +14,7 @@ const tsBaseOptions = {
   }
 };
 
-let table, tableWrapper, tableControls, dt;
+let table, tableWrapper, tableControls, dt, rowGroupsSwitch;
 
 export default {
   init(successes) {
@@ -29,12 +29,14 @@ export default {
     table = document.getElementById('successes-table');
     tableWrapper = table.parentElement;
     tableControls = table.previousElementSibling;
+    rowGroupsSwitch = tableControls.querySelector('#group-by-customer');
     dt = new DataTable('#successes-table', {
       // ajax: {
       //   url: '/successes',
       //   dataSrc: ''
       // },
       data: successes,
+      deferRender: true,
       autoWidth: false,
       dom: 'tip',
       pageLength: 100,
@@ -154,13 +156,23 @@ export default {
       },
 
       initComplete(settings) {
-        // console.log(settings)
-
         // the table api captured in the dt variable is not available until after a timeout
         setTimeout(() => {
           initTableControls();
           cloneFilterResults();
           // table.closeststyle.visibility = 'visible';
+        })
+
+        // this.on('draw.dt', (e) => {
+        // })
+      },
+
+      drawCallback(settings) {
+        const rowGroups = this.api().rowGroup();
+        // without a timeout, the row groups get duplicated
+        setTimeout(() => {
+          if (!rowGroupsSwitch.checked && rowGroups.enabled()) rowGroups.disable().draw();
+          if (rowGroupsSwitch.checked && !rowGroups.enabled()) rowGroups.enable().draw();
         })
       }
     });
@@ -181,14 +193,10 @@ function cloneFilterResults() {
 function initTableControls() {
   const addBtn = document.getElementById('prospect').querySelector('layout-sidebar .nav .btn-add');
   const paginationBtns = tableWrapper.querySelector('.dataTables_paginate');
-  const addRowGroupsListener = () => (
-    document.getElementById('toggle-group-by-customer').addEventListener('change', (e) => {
-      toggleRowStripes(table, e.currentTarget.checked)
-      // table.classList.toggle('table-striped');
-      // table.querySelectorAll('.dtrg-group').forEach(tr => tr.classList.toggle('hidden'));
-    })
+  const addRowGroupsCheckboxListener = () => (
+    document.getElementById('group-by-customer').addEventListener('change', (e) => toggleRowGroups(table))
   );
-  const addStoryFlagListener = () => (
+  const addStoryCheckboxListener = () => (
     document.getElementById('show-wins-with-story').addEventListener('change', (e) => searchTable(curatorId, filterVal))
   );
   let curatorId = CSP.currentUser.id;
@@ -196,8 +204,8 @@ function initTableControls() {
   let currentFilterOptions;   // the select options resulting from search
   $(addBtn).show();
   $(paginationBtns).show();
-  addRowGroupsListener();
-  addStoryFlagListener();
+  addRowGroupsCheckboxListener();
+  addStoryCheckboxListener();
   const tsCurator = new TomSelect(
     tableControls.querySelector('select.curator-select'), 
     Object.assign({}, tsBaseOptions, { onChange: (newVal) => searchTable(curatorId = newVal, filterVal) })
@@ -251,7 +259,6 @@ function searchTable(curatorId, filterVal) {
   // as the user types, search the table for the found options in the select box
   // => this ensures the datatables search matches the tomselect search
   if (typeof filterVal === 'object') {
-    console.log(filterVal)
     Object.keys(filterVal).forEach(column => {
       dtSearch = dtSearch.column(`${column}:name`).search(`^(${filterVal[column]})$`, true, false);
     });
