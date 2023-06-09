@@ -37,7 +37,7 @@ export default {
       //   dataSrc: ''
       // },
       data: successes,
-      deferRender: true,
+      // deferRender: true,
       autoWidth: false,
       dom: 'tip',
       pageLength: 100,
