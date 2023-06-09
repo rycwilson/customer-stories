@@ -4,10 +4,8 @@ const tsBaseOptions = {
   create: true,
   persist: false,
   maxOptions: null,
+  closeAfterSelect: true,
   onInitialize() {
-  },
-  onChange() {
-    if (!newVal) this.close();
   },
   plugins: {
     'clear_button': {
