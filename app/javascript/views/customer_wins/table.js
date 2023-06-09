@@ -6,6 +6,9 @@ const tsBaseOptions = {
   maxOptions: null,
   onInitialize() {
   },
+  onChange() {
+    if (!newVal) this.close();
+  },
   plugins: {
     'clear_button': {
       title: 'Clear selection',
@@ -215,8 +218,7 @@ function initTableControls() {
     tableControls.querySelector('select.dt-filter'),
     Object.assign({}, tsBaseOptions, { 
       onChange(newVal) {
-        searchTable(curatorId, filterVal = newVal)
-        if (!newVal) this.close();
+        searchTable(curatorId, filterVal = newVal);
       }, 
       onType() {
         currentFilterOptions = this.currentResults.items;
