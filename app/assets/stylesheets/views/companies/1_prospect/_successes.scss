@@ -21,9 +21,7 @@
     pointer-events: none;
   }
 
-
-
-  tr.group {
+  tr.dtrg-group {
     td:first-of-type {  // customer name
       border-right-width: 0;
     }
@@ -37,6 +35,26 @@
       button.edit-customer {
         // display: initial;
         display: revert;
+      }
+    }
+  }
+
+  // datatables table-striped class does not take row groups into account, so roll our own
+  &:not(.has-row-groups) > tbody > tr.even {
+    background-color: #f9f9f9;
+  }
+
+  & > tbody, 
+  &:not(.has-row-groups) > tbody {
+    > tr:not(.dtrg-group),
+    > tr:not(.dtrg-group).even {
+      > td {
+        transition: background-color 0.2s ease-in-out;
+      }
+    
+      &:hover > td {
+        background-color: $light-blue;
+        transition: background-color 0.2s ease-in-out;
       }
     }
   }

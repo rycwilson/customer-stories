@@ -1,3 +1,5 @@
+import { toggleRowStripes } from '../dashboard/tables.js';
+
 const tsBaseOptions = {
   create: true,
   persist: false,
@@ -179,6 +181,13 @@ function cloneFilterResults() {
 function initTableControls() {
   const addBtn = document.getElementById('prospect').querySelector('layout-sidebar .nav .btn-add');
   const paginationBtns = tableWrapper.querySelector('.dataTables_paginate');
+  const addRowGroupsListener = () => (
+    document.getElementById('toggle-group-by-customer').addEventListener('change', (e) => {
+      toggleRowStripes(table, e.currentTarget.checked)
+      // table.classList.toggle('table-striped');
+      // table.querySelectorAll('.dtrg-group').forEach(tr => tr.classList.toggle('hidden'));
+    })
+  );
   const addStoryFlagListener = () => (
     document.getElementById('show-wins-with-story').addEventListener('change', (e) => searchTable(curatorId, filterVal))
   );
@@ -187,6 +196,7 @@ function initTableControls() {
   let currentFilterOptions;   // the select options resulting from search
   $(addBtn).show();
   $(paginationBtns).show();
+  addRowGroupsListener();
   addStoryFlagListener();
   const tsCurator = new TomSelect(
     tableControls.querySelector('select.curator-select'), 

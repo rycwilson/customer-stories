@@ -8,6 +8,7 @@ import * as turboCallbacks from './turbo_callbacks.js';
 
 import DataTable from 'datatables.net-bs';
 window.DataTable = DataTable;
+import 'datatables.net-rowgroup';
 
 import cookies from 'js-cookie';
 window.Cookies = cookies;
