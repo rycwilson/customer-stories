@@ -1,20 +1,6 @@
 import { toggleRowGroups } from '../dashboard/tables.js';
 import { actionsDropdownTemplate } from './actions.js';
-
-const tsBaseOptions = {
-  create: true,
-  persist: false,
-  maxOptions: null,
-  closeAfterSelect: true,
-  onInitialize() {
-  },
-  plugins: {
-    'clear_button': {
-      title: 'Clear selection',
-      html: (config) => (`<button type="button" class="btn ${config.className}" title="${config.title}">&times;</button>`)
-    }
-  }
-};
+import { tsBaseOptions } from '../../tomselect.js';
 
 let table, tableWrapper, tableControls, dt, rowGroupsSwitch;
 
