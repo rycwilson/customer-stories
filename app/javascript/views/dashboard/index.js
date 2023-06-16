@@ -6,7 +6,7 @@ const dashboard = {
   panels: {
     prospect: {
       init() {
-        console.log('init prospect')
+        // console.log('init prospect')
         getProspectData().then(([successes, contributions]) => {
           // Object.assign(CSP.data, { customerWins, contributions })
           customerWinsPanel.init(successes);
@@ -14,22 +14,22 @@ const dashboard = {
         })
       },
       addListeners() {
-        console.log('prospect listeners')
+        // console.log('prospect listeners')
         customerWinsPanel.addListeners();
         contributorsPanel.addListeners();
       }
     },
     curate: {
       init() {
-        console.log('init curate')
+        // console.log('init curate')
       },
       addListeners() {
-        console.log('curate listeners')
+        // console.log('curate listeners')
       }
     },
     promote: {
       init() {
-        console.log('init promote')
+        // console.log('init promote')
         getPromotedStories().then(promotedStories => {
           // Object.assign(CSP.data, { promotedStories })
           // console.log(promotedStories)
@@ -37,15 +37,15 @@ const dashboard = {
         })
       },
       addListeners() {
-        console.log('promote listeners')
+        // console.log('promote listeners')
       }
     },
     measure: {
       init() {
-        console.log('init measure')
+        // console.log('init measure')
       },
       addListeners() {
-        console.log('measure listeners')
+        // console.log('measure listeners')
       }
     }
   }
@@ -107,6 +107,22 @@ export function dashboardTurboVisit(link) {
     // dropdowns.forEach(dropdown => dropdown.classList.remove('active'));
     Turbo.visit(newDashboardPath);
   }
+}
+
+export function onShownActionsDropdown() {
+  const $dropdownMenu = $(this).find('.dropdown-menu');
+  const windowBottom = window.scrollY + window.innerHeight;
+  const dropdownBottom = $dropdownMenu.offset().top + $dropdownMenu.outerHeight();
+  $(this).closest('tr').addClass('active');
+  if (dropdownBottom > windowBottom) $dropdownMenu.addClass('flip shown')
+  else $dropdownMenu.addClass('shown');
+}
+
+export function onHiddenActionsDropdown() {
+  $(this).find('.dropdown-menu').removeClass('flip shown');
+  
+  // don't remove .active if the child row is open
+  if (!$(this).closest('tr').hasClass('shown')) $(this).closest('tr').removeClass('active');
 }
 
 async function getProspectData() {
