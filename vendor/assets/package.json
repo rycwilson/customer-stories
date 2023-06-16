@@ -22,7 +22,7 @@
     "animate.css": "^4.1.1",
     "arrive": "^2.4.1",
     "blueimp-file-upload": "^10.32.0",
-    "bootbox": "^5.5.3",
+    "bootbox": "^6.0.0",
     "bootstrap-datepicker": "^1.9.0",
     "bootstrap-daterangepicker": "^3.1.0",
     "bootstrap-horizon": "^1.0.1",
