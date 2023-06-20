@@ -1,261 +1,185 @@
-import { toggleRowGroups } from '../dashboard/tables.js';
-import { actionsDropdownTemplate } from './actions.js';
-import { tsBaseOptions } from '../../tomselect.js';
+import { initTableControls, cloneFilterResults, toggleRowGroups, redrawRowGroups } from '../dashboard/tables.js';
+import { actionsDropdownTemplate, showContributions, confirmDelete as deleteCustomerWin } from './actions.js';
 
-let table, tableWrapper, tableControls, dt, rowGroupsSwitch;
+let tableControls, tableWrapper, table, dt;
 
 export default {
-  dataTable() {
-    return dt;
-  },
   init(successes) {
-    const colIndices = {
-      success: 1,
-      customer: 2,
-      curator: 3,
-      status: 4,
-      story: 5,
-      actions: 6,
-    }
+    console.log('init customer wins', successes)
     table = document.getElementById('successes-table');
-    tableWrapper = table.parentElement;
-    tableControls = table.previousElementSibling;
-    rowGroupsSwitch = tableControls.querySelector('#group-by-customer');
-    dt = new DataTable('#successes-table', {
-      // ajax: {
-      //   url: '/successes',
-      //   dataSrc: ''
-      // },
-      data: successes,
-      // deferRender: true,
-      autoWidth: false,
-      dom: 'tip',
-      pageLength: 100,
-      language: {
-        emptyTable: 'No Customer Wins found',
-        zeroRecords: 'No Customer Wins found'
+    dt = initDataTable(successes);
+  },
+  addListeners() {
+    document.addEventListener('change', (e) => {
+      if (e.target.id === 'group-by-customer') toggleRowGroups(table);
+    })
+    document.addEventListener('click', (e) => { 
+      const isAction = e.target.closest('.actions.dropdown > ul') && e.target.role !== 'separator';
+      if (isAction) handleAction(e); 
+    });
+  }
+}
+
+function initDataTable(successes) {
+  const colIndices = { success: 1, customer: 2, curator: 3, status: 4, story: 5, actions: 6 };
+  return new DataTable(table, {
+    // ajax: {
+    //   url: '/successes',
+    //   dataSrc: ''
+    // },
+    data: successes,
+    // deferRender: true,
+    autoWidth: false,
+    dom: 'tip',
+    pageLength: 100,
+    language: {
+      emptyTable: 'No Customer Wins found',
+      zeroRecords: 'No Customer Wins found'
+    },
+    order: [colIndices.success, 'desc'],
+
+    columns: [
+      {
+        data: null,
+        render: (data, type, row) => `
+          <button type="button" class="btn">
+            <i class="fa fa-caret-right"></i>
+            <i class="fa fa-caret-down"></i>
+          </button>
+        `
       },
-      order: [colIndices.success, 'desc'],
-
-      columns: [
-        {
-          data: null,
-          render: (data, type, row) => `
-            <button type="button" class="btn">
-              <i class="fa fa-caret-right"></i>
-              <i class="fa fa-caret-down"></i>
-            </button>
-          `
-        },
-        {
-          name: 'success',
-          data: {
-            _: (row, type, set, meta) => ({
-              id: row.id,
-              name: row.name,
-              curatorId: row.curator.id,
-              customerId: row.customer.id
-            }),
-            display: 'name',
-            filter: 'id',
-            sort: 'timestamp' // success.created_at
-          }
-        },
-        {
-          name: 'customer',
-          data: {
-            _: (row, type, set, meta) => ({ id: row.customer.id, name: row.customer.name }),
-            display: 'customer.name',
-            filter: 'customer.id',
-            sort: 'customer.name'
-          }
-        },
-        {
-          name: 'curator',
-          data: {
-            _: 'curator.full_name',
-            filter: 'curator.id'
-          }
-        },
-        {
-          name: 'status',
-          data: {
-            _: 'display_status',
-          }
-        },
-        {
-          name: 'story',
-          data: {
-            _: (row, type, set, meta) => (
-              row.story && { id: row.story.id, title: row.story.title }
-            )
-          },
-          defaultContent: 'false'
-        },
-        {
-          data: 'display_status',
-          render: (data, type, row, meta) => actionsDropdownTemplate(data, row)
+      {
+        name: 'success',
+        data: {
+          _: (row, type, set, meta) => ({
+            id: row.id,
+            name: row.name,
+            curatorId: row.curator.id,
+            customerId: row.customer.id
+          }),
+          display: 'name',
+          filter: 'id',
+          sort: 'timestamp' // success.created_at
         }
-      ],
-
-      columnDefs: [
-        { targets: [colIndices.customer, colIndices.curator, colIndices.story], visible: false },
-        {
-          targets: [0, colIndices.actions],
-          orderable: false,
-          searchable: false,
-          createdCell: (td, cellData, rowData, row, col) => (
-            $(td).addClass(col === 0 ? 'toggle-child' : 'actions dropdown')
+      },
+      {
+        name: 'customer',
+        data: {
+          _: (row, type, set, meta) => ({ id: row.customer.id, name: row.customer.name }),
+          display: 'customer.name',
+          filter: 'customer.id',
+          sort: 'customer.name'
+        }
+      },
+      {
+        name: 'curator',
+        data: {
+          _: 'curator.full_name',
+          filter: 'curator.id'
+        }
+      },
+      {
+        name: 'status',
+        data: {
+          _: 'display_status',
+        }
+      },
+      {
+        name: 'story',
+        data: {
+          _: (row, type, set, meta) => (
+            row.story && { id: row.story.id, title: row.story.title }
           )
         },
-        { targets: [colIndices.curator, colIndices.story],  width: '0%' },  // hidden
-        { targets: 0, width: '5%' },
-        { targets: colIndices.success, width: '61%' },
-        { targets: colIndices.customer, width: '0%'},
-        { targets: colIndices.status, width: '26%' },
-        { targets: colIndices.actions, width: '8%' }
-      ],
-
-      rowGroup: {
-        dataSrc: 'customer.name',
-        startRender: function (groupRows, successName) {
-          // console.log($(this))   //  [RowGroup]
-          const customerId = $('#successes-table').DataTable().rows(groupRows[0][0]).data()[0].customer.id;
-          return $('<tr/>').append(`
-            <td colspan="3">
-              <span style="font-weight:600">
-                ${groupRows.data()[0].customer.name}
-              </span>
-            </td>
-            <td colspan="1">
-              <button type="button" class="edit-customer" data-customer-id="${customerId}">
-                <i class="glyphicon glyphicon-pencil"></i>
-                <div><i class="fa fa-circle-o-notch"></i></div>
-              </button>
-            </td>
-          `);
-        }
+        defaultContent: 'false'
       },
-
-      createdRow: function (row, data, index) {
-        $(row).attr('data-customer-id', data.customer.id);
-        $(row).attr('data-success-id', data.id);
-        $(row).children().eq(0).addClass('toggle-child');
-        $(row).children().eq(1).attr('data-filter', data.id);
-        $(row).children().eq(2).addClass('status');
-        $(row).children().eq(3).addClass('actions dropdown');
-      },
-
-      initComplete(settings) {
-        // the table api captured in the dt variable is not available until after a timeout
-        setTimeout(() => {
-          initTableControls();
-          cloneFilterResults();
-          // table.closeststyle.visibility = 'visible';
-        })
-
-        // this.on('draw.dt', (e) => {
-        // })
-      },
-
-      drawCallback(settings) {
-        const rowGroups = this.api().rowGroup();
-        // without a timeout, the row groups get duplicated
-        setTimeout(() => {
-          if (!rowGroupsSwitch.checked && rowGroups.enabled()) rowGroups.disable().draw();
-          if (rowGroupsSwitch.checked && !rowGroups.enabled()) rowGroups.enable().draw();
-        })
+      {
+        data: 'display_status',
+        render: (data, type, row, meta) => actionsDropdownTemplate(data, row)
       }
-    });
-  }
+    ],
+
+    columnDefs: [
+      { targets: [colIndices.customer, colIndices.curator, colIndices.story], visible: false },
+      {
+        targets: [0, colIndices.actions],
+        orderable: false,
+        searchable: false,
+        createdCell: (td, cellData, rowData, row, col) => (
+          $(td).addClass(col === 0 ? 'toggle-child' : 'actions dropdown')
+        )
+      },
+      { targets: [colIndices.curator, colIndices.story],  width: '0%' },  // hidden
+      { targets: 0, width: '5%' },
+      { targets: colIndices.success, width: '61%' },
+      { targets: colIndices.customer, width: '0%'},
+      { targets: colIndices.status, width: '26%' },
+      { targets: colIndices.actions, width: '8%' }
+    ],
+
+    rowGroup: {
+      dataSrc: 'customer.name',
+      startRender: function (groupRows, successName) {
+        // console.log($(this))   //  [RowGroup]
+        const customerId = $('#successes-table').DataTable().rows(groupRows[0][0]).data()[0].customer.id;
+        return $('<tr/>').append(`
+          <td colspan="3">
+            <span style="font-weight:600">
+              ${groupRows.data()[0].customer.name}
+            </span>
+          </td>
+          <td colspan="1">
+            <button type="button" class="edit-customer" data-customer-id="${customerId}">
+              <i class="glyphicon glyphicon-pencil"></i>
+              <div><i class="fa fa-circle-o-notch"></i></div>
+            </button>
+          </td>
+        `);
+      }
+    },
+
+    createdRow: function (row, data, index) {
+      $(row).attr('data-customer-id', data.customer.id);
+      $(row).attr('data-success-id', data.id);
+      $(row).children().eq(0).addClass('toggle-child');
+      $(row).children().eq(1).attr('data-filter', data.id);
+      $(row).children().eq(2).addClass('status');
+      $(row).children().eq(3).addClass('actions dropdown');
+    },
+
+    initComplete(settings) {
+      // console.log('settings', settings)
+      // const dt = this.api()
+      tableWrapper = table.parentElement;
+      tableControls = tableWrapper.previousElementSibling;
+      initTableControls(tableControls, tableWrapper, table);
+      cloneFilterResults(tableControls, tableWrapper, table);
+
+      // this.on('draw.dt', (e) => {
+      // })
+    },
+
+    drawCallback(settings) {
+      redrawRowGroups(tableControls, this.api().rowGroup());
+    }
+  });
 }
 
-function cloneFilterResults() {
-  const originalResults = tableWrapper.querySelector('.dataTables_info');
-  const clone = originalResults.cloneNode();
-  const formatText = () => clone.textContent = originalResults.textContent.replace(/\sentries/g, '');
-  clone.id = `${originalResults.id}--clone`;
-  clone.classList.add('help-block', 'text-right');
-  formatText();
-  tableWrapper.querySelector('.select-filters').appendChild(clone);
-  $(table).on('draw.dt', formatText);
-};
+function handleAction({ target }) {
+  const row = dt.row(target.closest('tr'));
+  const isViewContributions = target.closest('.view-contributions');
+  const isDelete = target.closest('.delete-row');
+  if (isViewContributions) {
 
-function initTableControls() {
-  const addBtn = document.getElementById('prospect').querySelector('layout-sidebar .nav .btn-add');
-  const paginationBtns = tableWrapper.querySelector('.dataTables_paginate');
-  const addRowGroupsCheckboxListener = () => (
-    document.getElementById('group-by-customer').addEventListener('change', (e) => toggleRowGroups(table))
-  );
-  const addStoryCheckboxListener = () => (
-    document.getElementById('show-wins-with-story').addEventListener('change', (e) => searchTable(curatorId, filterVal))
-  );
-  let curatorId = CSP.currentUser.id;
-  let filterVal = '';
-  let currentFilterOptions;   // the select options resulting from search
-  $(addBtn).show();
-  $(paginationBtns).show();
-  addRowGroupsCheckboxListener();
-  addStoryCheckboxListener();
-  const tsCurator = new TomSelect(
-    tableControls.querySelector('select.curator-select'), 
-    Object.assign({}, tsBaseOptions, { onChange: (newVal) => searchTable(curatorId = newVal, filterVal) })
-  );
-  tsCurator.setValue(CSP.currentUser.id);
-  const tsFilter = new TomSelect(
-    tableControls.querySelector('select.dt-filter'),
-    Object.assign({}, tsBaseOptions, { 
-      onChange(newVal) {
-        searchTable(curatorId, filterVal = newVal);
-      }, 
-      onType() {
-        currentFilterOptions = this.currentResults.items;
-        const searchResults = this.currentResults.items
-          .map(item => item.id)
-          .reduce((results, result) => {
-            const column = result.slice(0, result.indexOf('-'));
-            const id = result.slice(result.indexOf('-') + 1, result.length);
-            if (!results[column]) results[column] = `${id}`
-            else results[column] = `${results[column]}|${id}`;
-            return results;
-          }, {});
-        searchTable(curatorId, filterVal = searchResults, true);
-      },
-      onDropdownOpen(dropdown) {
-        // if a search string exists, manually set the current results
-        if (this.getValue() === '0') this.currentResults.items = currentFilterOptions;
-      },
-      onDropdownClose(dropdown) {
-        // default behavior is that text input is cleared when the dropdown closes, 
-        // but we want to keep it since the search results are reflected in the table
-        // => accomplished by adding and selecting an option to match the search text
-        if (!this.getValue() && this.lastQuery) {
-          this.addOption({ value: 0, text: this.lastQuery }, true);   // true => option will be removed on clear
-          this.addItem(0, true);    // true => don't trigger change event
-        }
-      }
-    })
-  );
-}
-
-function searchTable(curatorId, filterVal) {
-  // console.log(`searchTable(${curatorId}, ${filterVal})`)
-  let dtSearch = dt
-    .search('')
-    .columns().search('')
-    .column('curator:name').search(curatorId ? `^${curatorId}$` : '', true, false)
-    .column('story:name').search(document.getElementById('show-wins-with-story').checked ? '' : '^false$', true, false);
-  
-  // as the user types, search the table for the found options in the select box
-  // => this ensures the datatables search matches the tomselect search
-  if (typeof filterVal === 'object') {
-    Object.keys(filterVal).forEach(column => {
-      dtSearch = dtSearch.column(`${column}:name`).search(`^(${filterVal[column]})$`, true, false);
-    });
-  } else if (filterVal) {
-    const column = filterVal.slice(0, filterVal.indexOf('-'));
-    const id = filterVal.slice(filterVal.indexOf('-') + 1, filterVal.length);
-    dtSearch = dtSearch.column(`${column}:name`).search(`^${id}$`, true, false);
+    // can't search on successId given current setup of the table data
+    // const contributionIds = $('#prospect-contributors-table').DataTable().rows().data().toArray()
+    //   .filter(contribution => (
+    //     contribution.success.id == successId &&
+    //     (contribution.status && contribution.status.match(/(contribution|feedback)/))
+    //   ))
+    //   .map(contribution => contribution.id);
+    // showContributions(e)
+  } else if (isDelete) {
+    deleteCustomerWin(row);
   }
-  dtSearch.draw();
 }

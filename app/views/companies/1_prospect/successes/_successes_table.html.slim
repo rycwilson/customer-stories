@@ -11,15 +11,15 @@
           .col-sm-9
             .checkbox
               label.successes.checkbox-filter for="group-by-customer"
-                input type="checkbox" id="group-by-customer" checked=""
+                input type="checkbox" id="group-by-customer" class="toggle-row-groups" checked=""
                 span 
                   |&nbsp;&nbsp;by Customer
         .form-group
           label.col-sm-3.control-label Show
           .col-sm-9
-            .checkbox.checkbox-filters
-              label.checkbox-filter for="show-wins-with-story"
-                input type="checkbox" id="show-wins-with-story" checked=""
+            .checkbox
+              label for="show-wins-with-story"
+                input type="checkbox" id="show-wins-with-story" class="checkbox-filter" checked=""
                 span 
                   |&nbsp;&nbsp;Customer Wins with Story started
     .col-sm-6.select-filters
@@ -39,7 +39,7 @@
             = select_tag( \
                 nil,
                 grouped_options_for_select( \
-                  'Customer' => company.customers.map { |customer| [customer.name, "customer-#{customer.id}", { 'data-foo' => 'bar' }] },
+                  'Customer' => company.customers.map { |customer| [customer.name, "customer-#{customer.id}"] },
                   'Customer Win' => company.successes.map { |success| [success.name, "success-#{success.id}"] }),
                 { include_blank: true,
                   placeholder: 'Search / Select',

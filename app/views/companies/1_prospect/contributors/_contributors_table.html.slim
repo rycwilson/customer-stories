@@ -1,17 +1,69 @@
+.contributors
+
+  .row.contributors-header
+    .col-sm-6
+      .row.form-horizontal
+        .form-group
+          label.col-sm-3.control-label Group
+          .col-sm-9
+            .checkbox
+              label.successes.checkbox-filter for="group-by-customer-win"
+                input type="checkbox" id="group-by-customer-win" class="toggle-row-groups" checked=""
+                span 
+                  |&nbsp;&nbsp;by Customer Win / Story
+        .form-group
+          label.col-sm-3.control-label Show
+          .col-sm-9
+            .checkbox
+              / label.contributors.checkbox-filter for="show-completed"
+              label for="show-completed"
+                input type="checkbox" id="show-completed" class="checkbox-filter" checked=""
+                span
+                  |&nbsp;&nbsp;Contributors with a completed Contribution
+              / label.contributors.checkbox-filter for="show-published"
+              label for="show-published"
+                input type="checkbox" id="show-published" class="checkbox-filter" checked=""
+                span
+                  |&nbsp;&nbsp;Contributors to published Customer Stories
+
+    .col-sm-6.select-filters
+      .row.form-horizontal
+        .form-group
+          label.col-sm-3.col-sm-offset-1.control-label Curator
+          .col-sm-8 style="padding:0"
+            = select_tag( \
+                nil,
+                options_from_collection_for_select(company.curators, :id, :full_name),
+                { include_blank: true,
+                  placeholder: 'Search / Select',
+                  class: 'prospect contributors curator-select form-control' })
+        .form-group.search
+          label.col-sm-3.col-sm-offset-1.control-label Filter
+          .col-sm-8 style="padding:0;"
+            = select_tag( \
+                nil,
+                grouped_options_for_select( \
+                  'Customer' => company.customers.map { |customer| [customer.name, "customer-#{customer.id}"] },
+                  'Customer Win' => company.successes.map { |success| [success.name, "success-#{success.id}"] },
+                  'Contributor' => company.contributors.map { |user| [user.full_name, "contributor-#{user.id}"] }),
+                { include_blank: true,
+                  placeholder: 'Search / Select',
+                  id: 'contributors-filter',
+                  class: 'dt-filter form-control' })
+
 
 / it's actually a contributions table, but presented to user as Contributors
 table {
   id="#{workflow_stage}-contributors-table" 
-  class="datatable table table-hover table-bordered" 
+  class="datatable table table-bordered has-row-groups" 
   cellspacing="0" 
-  width="100%" 
-  style="visibility: hidden" }
+  width="100%" }
 
   thead
     tr
-      th class="toggle-contributor-child"
+      th.toggle-contributor-child
         / padding ensures a min width; specified in dt init but may fall short
-        i class="fa fa-user" style="color:#666; padding: 0 6px"
+        i.fa.fa-user style="color:#666; padding: 0 6px"
       th Contributor
 
       / hidden
@@ -24,7 +76,7 @@ table {
       th Customer
       
       th Status
-      th class="actions" Actions
+      th.actions Actions
 
       / hidden boolean
       th Story Published

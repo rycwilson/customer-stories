@@ -1,5 +1,5 @@
-import customerWinsPanel from '../customer_wins';
-import contributorsPanel from '../contributors';
+import customerWinsTable from '../customer_wins/table.js';
+import contributorsTable from '../contributors/table.js';
 import promotedStoriesPanel from '../stories/promoted_stories.js';
 
 const dashboard = {
@@ -9,14 +9,14 @@ const dashboard = {
         // console.log('init prospect')
         getProspectData().then(([successes, contributions]) => {
           // Object.assign(CSP.data, { customerWins, contributions })
-          customerWinsPanel.init(successes);
-          contributorsPanel.init(contributions);
+          customerWinsTable.init(successes);
+          contributorsTable.init(contributions);
         })
       },
       addListeners() {
         // console.log('prospect listeners')
-        customerWinsPanel.addListeners();
-        contributorsPanel.addListeners();
+        customerWinsTable.addListeners();
+        contributorsTable.addListeners();
       }
     },
     curate: {
