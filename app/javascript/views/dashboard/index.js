@@ -14,9 +14,15 @@ const dashboard = {
         })
       },
       addListeners() {
-        // console.log('prospect listeners')
+        document.addEventListener('click', onSidebarTabClick);
+        document.addEventListener('change', onCuratorChange);
         customerWinsTable.addListeners();
         contributorsTable.addListeners();
+        
+        // https://www.gyrocode.com/articles/jquery-datatables-column-width-issues-with-bootstrap-tabs/
+        // $(document).on('shown.bs.tab', '#prospect a[data-toggle="tab"]', () => {
+        //   $($.fn.dataTable.tables(true)).DataTable().columns.adjust();
+        // })
       }
     },
     curate: {
@@ -150,4 +156,21 @@ function requestHeaders() {
     'Content-Type': 'application/json', 
     'X-CSRF-Token': document.querySelector('[name="csrf-token" ]').content
   };
+}
+
+function onSidebarTabClick(e) {
+  const isProspectTab = (
+    e.target.closest('a[href="#successes"]') || e.target.closest('a[href="#prospect-contributors"]')
+  );
+  if (isProspectTab) Cookies.set('csp-prospect-tab', e.target.closest('a').getAttribute('href'));
+}
+
+function onCuratorChange(e) {
+  if (e.target.className.includes('curator-select')) {
+    document.getElementById('prospect').querySelectorAll('.curator-select:not(.ts-wrapper)').forEach(select => {
+      if (!select.isSameNode(e.target)) 
+        console.log('ok');
+        select.tomselect.setValue(e.target.value)
+    })
+  }
 }

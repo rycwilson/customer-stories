@@ -141,13 +141,13 @@ class Contribution < ApplicationRecord
       when 'did_not_respond'
         return "did not respond\n(email #{self.request_received_at.present? ? '' : 'not' } opened)"
       when 'contribution_submitted'
-        return '<span><a href="javascript:;" class="view-contribution">Contribution</a> submitted</span>'.html_safe
+        return "<span><a href=\"javascript:;\" id=\"show-contribution-#{self.id}\">Contribution</a> submitted</span>".html_safe
       when 'feedback_submitted'
-        return '<span><a href="javascript:;" class="view-contribution">Feedback</a> submitted</span>'.html_safe
+        return "<span><a href=\"javascript:;\" id=\"show-contribution-#{self.id}\">Feedback</a> submitted</span>".html_safe
       when 'contribution_completed'
-        return '<span><a href="javascript:;" class="view-contribution">Contribution</a> completed<i class="fa fa-check pull-right"></i></span>'.html_safe
+        return "<span><a href=\"javascript:;\" id=\"show-contribution-#{self.id}\">Contribution</a> completed<i class=\"fa fa-check pull-right\"></i></span>".html_safe
       when 'feedback_completed'
-        return '<span><a href="javascript:;" class="view-contribution">Feedback</a> completed<i class="fa fa-check pull-right"></i></span>'.html_safe
+        return "<span><a href=\"javascript:;\" id=\"show-contribution-#{self.id}\">Feedback</a> completed<i class=\"fa fa-check pull-right\"></i></span>".html_safe
       when 'opted_out'
         return "opted out&nbsp;&nbsp;<i data-toggle='tooltip' data-placement='top' title='Contributor has opted out of participating in this Customer Win/Story' style='font-size:16px;color:#666' class='fa fa-question-circle-o'></i>".html_safe
       when 'removed'

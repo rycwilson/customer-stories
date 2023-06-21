@@ -1,5 +1,5 @@
 import { initTableControls, cloneFilterResults, toggleRowGroups, redrawRowGroups } from '../dashboard/tables.js';
-import { actionsDropdownTemplate, showContributions, confirmDelete as deleteCustomerWin } from './actions.js';
+import { actionsDropdownTemplate, handleDropdownAction } from './actions.js';
 
 let tableControls, tableWrapper, table, dt;
 
@@ -12,10 +12,10 @@ export default {
   addListeners() {
     document.addEventListener('change', (e) => {
       if (e.target.id === 'group-by-customer') toggleRowGroups(table);
-    })
+    });
     document.addEventListener('click', (e) => { 
-      const isAction = e.target.closest('.actions.dropdown > ul') && e.target.role !== 'separator';
-      if (isAction) handleAction(e); 
+      const isDropdownAction = e.target.closest('.actions.dropdown > ul.success-actions') && e.target.role !== 'separator';
+      if (isDropdownAction) handleDropdownAction(e.target, dt.row(e.target.closest('tr'))); 
     });
   }
 }
@@ -163,23 +163,4 @@ function initDataTable(successes) {
       redrawRowGroups(tableControls, this.api().rowGroup());
     }
   });
-}
-
-function handleAction({ target }) {
-  const row = dt.row(target.closest('tr'));
-  const isViewContributions = target.closest('.view-contributions');
-  const isDelete = target.closest('.delete-row');
-  if (isViewContributions) {
-
-    // can't search on successId given current setup of the table data
-    // const contributionIds = $('#prospect-contributors-table').DataTable().rows().data().toArray()
-    //   .filter(contribution => (
-    //     contribution.success.id == successId &&
-    //     (contribution.status && contribution.status.match(/(contribution|feedback)/))
-    //   ))
-    //   .map(contribution => contribution.id);
-    // showContributions(e)
-  } else if (isDelete) {
-    deleteCustomerWin(row);
-  }
 }

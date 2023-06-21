@@ -18,7 +18,7 @@ export function initTableControls(tableControls, tableWrapper, table) {
     tableControls.querySelector('select.curator-select'), 
     Object.assign({}, tsBaseOptions, { onChange: (newVal) => searchTable(dt, checkboxFilters, curatorId = newVal, filterVal) })
   );
-  tsCurator.setValue(CSP.currentUser.id);
+  tsCurator.setValue(CSP.currentUser.id, true);   // don't emit change event on initilization
   const tsFilter = new TomSelect(
     tableControls.querySelector('select.dt-filter'),
     Object.assign({}, tsBaseOptions, { 
@@ -53,6 +53,9 @@ export function initTableControls(tableControls, tableWrapper, table) {
       }
     })
   );
+
+  // Need to explicitly search the table due to curator change event being silenced
+  searchTable(dt, checkboxFilters, curatorId, filterVal);
 }
 
 // toggle table stripes when alternating between row grouping and no row grouping
@@ -91,21 +94,21 @@ export function cloneFilterResults(tableControls, tableWrapper, table) {
 };
 
 function searchTable(dt, checkboxFilters, curatorId, filterVal) {
-  // console.log(`searchTable(${curatorId}, ${filterVal})`)
+  console.log(`searchTable(${curatorId}, ${filterVal})`)
   let dtSearch = dt
     .search('')
     .columns().search('')
     .column('curator:name').search(curatorId ? `^${curatorId}$` : '', true, false);
 
-  checkboxFilters.forEach(checkbox => {
-    if (checkbox.id === 'show-wins-with-story') {
-      dtSearch = dtSearch.column('story:name').search(checkbox.checked ? '' : '^false$', true, false);
-    } else if (checkbox.id === 'show-completed') {
-      dtSearch = dtSearch.column('status:name').search(checkbox.checked ? '' : '^((?!completed).)*$', true, false);
-    } else if (checkbox.id === 'show-published') {
-      dtSearch = dtSearch.column('storyPublished:name').search(checkbox.checked ? '' : 'false');
-    }
-  });
+  // checkboxFilters.forEach(checkbox => {
+  //   if (checkbox.id === 'show-wins-with-story') {
+  //     dtSearch = dtSearch.column('story:name').search(checkbox.checked ? '' : '^false$', true, false);
+  //   } else if (checkbox.id === 'show-completed') {
+  //     dtSearch = dtSearch.column('status:name').search(checkbox.checked ? '' : '^((?!completed).)*$', true, false);
+  //   } else if (checkbox.id === 'show-published') {
+  //     dtSearch = dtSearch.column('storyPublished:name').search(checkbox.checked ? '' : 'false');
+  //   }
+  // });
   
   // as the user types, search the table for the found options in the select box
   // => this ensures the datatables search matches the tomselect search

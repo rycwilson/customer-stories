@@ -1,5 +1,5 @@
 import { initTableControls, cloneFilterResults, toggleRowGroups, redrawRowGroups } from '../dashboard/tables.js';
-import { actionsDropdownTemplate } from './actions.js';
+import { actionsDropdownTemplate, handleDropdownAction, showContribution } from './actions.js';
 
 let tableControls, tableWrapper, table, dt;
 
@@ -13,10 +13,17 @@ export default {
     document.addEventListener('change', (e) => {
       if (e.target.id === 'group-by-customer-win') toggleRowGroups(table);
     })
-    // document.addEventListener('click', (e) => { 
-    //   const isAction = e.target.closest('.actions.dropdown > ul') && e.target.role !== 'separator';
-    //   if (isAction) handleAction(e); 
-    // });
+    document.addEventListener('click', (e) => { 
+      const isDropdownAction = e.target.closest('.actions.dropdown > ul.contributor-actions') && e.target.role !== 'separator';
+      const isShowContribution = e.target.id && e.target.id.includes('show-contribution');
+      if (isDropdownAction || isShowContribution) {
+        const row = dt.row(e.target.closest('tr'));
+        if (isDropdownAction) handleDropdownAction(e.target, row); 
+        if (isShowContribution) showContribution(row.data().id);
+      }
+    });
+    document.addEventListener('click', onRowGroupCustomerWinLinkClick);
+    document.addEventListener('click', onRowGroupStoryLinkClick);
   }
 }
 
@@ -74,7 +81,7 @@ function initDataTable(contributions, workflowStage = 'prospect') {
             curatorId: row.success.curator.id
           }),
           display: 'contributor.full_name',
-          filter: 'contributor.full_name',
+          filter: 'contributor.id',
           sort: 'timestamp'  // contribution.created_at
         },
       },
@@ -83,7 +90,7 @@ function initDataTable(contributions, workflowStage = 'prospect') {
         defaultContent: 'Customer Win',
         data: {
           _: (row, type, set, meta) => ({ id: row.success.id, name: row.success.name }),
-          filter: 'success.name',
+          filter: 'success.id',
           sort: 'success.name'
         }
       },
@@ -109,7 +116,7 @@ function initDataTable(contributions, workflowStage = 'prospect') {
         name: 'customer',
         data: {
           _: (row, type, set, meta) => ({ id: row.success.customer.id, name: row.success.customer.name }),
-          filter: 'success.customer.name',
+          filter: 'success.customer.id',
           sort: 'success.customer.name'
         },
         // orderData: [[colIndices.customer, 'asc'], [colIndices.success, 'asc'], [colIndices.contributor, 'desc']]
@@ -153,29 +160,7 @@ function initDataTable(contributions, workflowStage = 'prospect') {
       { targets: colIndices.actions, width: '8%' }
     ],
 
-    rowGroup: workflowStage === 'curate' ? null : {
-      dataSrc: 'success.name',
-      startRender: (groupRows, successName) => {
-        // console.log(successName + ': ', groupRows);
-        // customer and story (if exists) data same for all rows, so just look at [0]th row
-        const customerSlug = groupRows.data()[0].success.customer.slug;
-        const customerName = groupRows.data()[0].success.customer.name;
-        const story = groupRows.data()[0].success.story;
-        const storySlug = story && story.slug;
-        const storyTitle = story && story.title;
-        const storyPath = story && (story.published ? story.csp_story_path : `/curate/${customerSlug}/${storySlug}`);
-        return $('<tr/>').append(`
-          <td colspan="5">
-            <span>${customerName}</span>
-            <span class="emdash">&nbsp;&nbsp;&#8211;&nbsp;&nbsp;</span>
-            ${story ? 
-              `<a href="${storyPath}" class="story">${storyTitle}</a>` :
-              `<a href="javascript:;" class="success">${successName}</a>`
-            }
-          </td>
-        `);
-      }
-    },
+    rowGroup: workflowStage === 'curate' ? null : { dataSrc: 'success.name', startRender: rowGroupTemplate },
 
     createdRow: (row, data, index) => {
       const isPreInvite = data.status === 'pre_request';
@@ -239,6 +224,40 @@ function initDataTable(contributions, workflowStage = 'prospect') {
   });
 }
 
-function handleAction({ target }) {
-  const row = dt.row(target.closest('tr'));
+function rowGroupTemplate(groupRows, successName) {
+  // console.log(successName + ': ', groupRows);
+  // customer and story (if exists) data same for all rows, so just look at [0]th row
+  const success = groupRows.data()[0].success;
+  const story = success.story;
+  const storySlug = story && story.slug;
+  const storyTitle = story && story.title;
+  const storyPath = story && (story.published ? story.csp_story_path : `/curate/${success.customer.slug}/${storySlug}`);
+  return $('<tr/>').append(`
+    <td colspan="5">
+      <span>${success.customer.name}</span>
+      <span class="emdash">&nbsp;&nbsp;&#8211;&nbsp;&nbsp;</span>
+      ${story ? 
+        `<a href="${storyPath}" id="contributors-row-group-link-story-${story.id}">${storyTitle}</a>` :
+        `<a href="javascript:;" id="contributors-row-group-link-cw-${success.id}">${successName}</a>`
+      }
+    </td>
+  `);
+}
+
+function onRowGroupCustomerWinLinkClick(e) {
+  const rowGroupLink = e.target.id && e.target.id.includes('contributors-row-group-link-cw-') && e.target;
+  if (rowGroupLink) {
+    e.stopPropagation();  // prevent row group sorting 
+    const successId = rowGroupLink.id.slice(rowGroupLink.id.lastIndexOf('-') + 1, rowGroupLink.id.length);
+    $('a[href="#successes"]').tab('show');
+    document.getElementById('successes-filter').tomselect.setValue(`success-${successId}`);
+  }
+}
+
+function onRowGroupStoryLinkClick(e) {
+  const rowGroupLink = e.target.id && e.target.id.includes('contributors-row-group-link-story-') && e.target;
+  if (rowGroupLink) {
+    e.stopPropagation();  // prevent row group sorting 
+    Cookies.set('csp-edit-story-tab', '#story-contributors');
+  }
 }
