@@ -2,16 +2,29 @@ import customerWinsTable from '../customer_wins/table.js';
 import contributorsTable from '../contributors/table.js';
 import promotedStoriesPanel from '../stories/promoted_stories.js';
 
+let successes, contributions;
+
 const dashboard = {
   panels: {
     prospect: {
       init() {
-        // console.log('init prospect')
-        getProspectData().then(([successes, contributions]) => {
-          // Object.assign(CSP.data, { customerWins, contributions })
+        console.log('init prospect')
+        const initTables = () => {
           customerWinsTable.init(successes);
           contributorsTable.init(contributions);
-        })
+        }
+        const dataDidLoad = successes && contributions;
+        // console.log('init prospect')
+        if (dataDidLoad) {
+          initTables();
+        } else {
+          getProspectData().then(([_successes, _contributions]) => {
+            // Object.assign(CSP.data, { customerWins, contributions })
+            successes = _successes;
+            contributions = _contributions;
+            initTables();
+          })
+        }   
       },
       addListeners() {
         document.addEventListener('click', onSidebarTabClick);
@@ -27,7 +40,7 @@ const dashboard = {
     },
     curate: {
       init() {
-        // console.log('init curate')
+        console.log('init curate')
       },
       addListeners() {
         // console.log('curate listeners')

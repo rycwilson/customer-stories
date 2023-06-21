@@ -5,6 +5,10 @@ export function onLoad(e) {
   initView(document.body.dataset.controller, document.body.dataset.action);
 }
 
+export function onClick(e) {
+  console.log('turbo:click')
+}
+
 export function onBeforeRender(e) {
   console.log('turbo:before-render')
   // e.preventDefault()   // pause render

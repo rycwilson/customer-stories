@@ -257,7 +257,9 @@ function onRowGroupCustomerWinLinkClick(e) {
 function onRowGroupStoryLinkClick(e) {
   const rowGroupLink = e.target.id && e.target.id.includes('contributors-row-group-link-story-') && e.target;
   if (rowGroupLink) {
+    e.preventDefault();   // turbo link (see below)
     e.stopPropagation();  // prevent row group sorting 
     Cookies.set('csp-edit-story-tab', '#story-contributors');
+    Turbo.visit(rowGroupLink.href);
   }
 }

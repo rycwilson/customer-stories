@@ -36,7 +36,7 @@ function cspApp() {
       const controller = document.body.dataset.controller;
       const action = document.body.dataset.action;
       document.addEventListener('turbo:load', (e) => {
-        console.log('turbo:load (once)', e)
+        console.log('turbo:load (once)')
         addAllListeners();
         initView(controller, action);
       }, { once: true });
@@ -52,7 +52,9 @@ function addAllListeners(e) {
 
 function addTurboListeners() {
   document.addEventListener('turbo:load', turboCallbacks.onLoad)
+  document.addEventListener('turbo:click', turboCallbacks.onClick)
   document.addEventListener('turbo:render', turboCallbacks.onRender)
+  document.addEventListener('turbo:before-visit', turboCallbacks.onBeforeVisit)
   document.addEventListener('turbo:visit', turboCallbacks.onVisit)
   document.addEventListener('turbo:before-fetch-request', turboCallbacks.onBeforeFetchRequest)
   document.addEventListener('turbo:before-fetch-response', turboCallbacks.onBeforeFetchResponse)
