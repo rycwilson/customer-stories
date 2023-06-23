@@ -1,0 +1,11 @@
+li class="#{'active' if workflow_stage == tab_name}" role="presentation"
+  a {
+    href="##{tab_name}" 
+    data-toggle="tab" 
+    data-controller="dashboardTab"
+    data-action="dashboardTab#onClick" 
+    data-dashboard-target="#{'tab' if workflow_stage}"
+    role="tab" 
+    aria-controls="#{tab_name}" }
+    = tab_name.capitalize
+  div

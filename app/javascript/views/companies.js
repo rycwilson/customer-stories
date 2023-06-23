@@ -9,7 +9,7 @@ export default {
 
   show: {
     init() {
-      // console.log('init dashboard')
+      console.log('init dashboard')
       const activeTab = document.querySelector(`a[href="${location.pathname.replace('/', '#')}"]`);
       const inactiveTabs = document.querySelectorAll('.nav-workflow > li:not(.active) > a');
       initTabPanel({ target: activeTab });
@@ -17,10 +17,10 @@ export default {
     },
     addListeners() {
       // console.log('dashboard listeners')
-      document.addEventListener('click', onDashboardTabClick);
+      // document.addEventListener('click', onDashboardTabClick);
       $(document).on('shown.bs.dropdown', '.actions.dropdown', onShownActionsDropdown);
       $(document).on('hidden.bs.dropdown', '.actions.dropdown', onHiddenActionsDropdown);
-      window.onpopstate = showActiveTabPanel;
+      // window.onpopstate = showActiveTabPanel;
       Object.keys(dashboard.panels).forEach(panel => dashboard.panels[panel].addListeners());
     }
   }, 

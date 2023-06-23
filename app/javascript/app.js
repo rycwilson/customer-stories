@@ -3,7 +3,8 @@ import 'jquery-ujs/src/rails.js';
 import 'jquery-ui/dist/jquery-ui.js';
 import './bootstrap.js';
 
-import { Turbo } from 'turbo-rails-1.3.2/app/assets/javascripts/turbo.js';
+import "@hotwired/turbo-rails";
+import './controllers';
 import * as turboCallbacks from './turbo_callbacks.js';
 
 import DataTable from 'datatables.net-bs';

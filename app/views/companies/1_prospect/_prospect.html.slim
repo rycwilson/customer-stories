@@ -1,4 +1,4 @@
-#prospect.tab-pane.fade role="tabpanel" class=('active in' if workflow_stage == 'prospect')
+#prospect.tab-pane.fade data-dashboard-target="tabPanel" role="tabpanel" class=('active in' if workflow_stage == 'prospect')
 
   .working.working--prospect style="display:none"
     div
@@ -46,6 +46,8 @@
 
           #successes.tab-pane.fade {
             class=('active in' if tab == '#successes' || tab.nil?) 
+            data-dashboard-target="subPanel"
+            data-controller-name="customerWins"
             role="tabpanel" 
             aria-labelledby="customer-wins-tab" }
             = render( \
@@ -53,6 +55,8 @@
                 { company: company })
           #prospect-contributors.tab-pane.fade {
             class=('active in' if tab == '#prospect-contributors')
+            data-dashboard-target="subPanel"
+            data-controller-name="contributors"
             role="tabpanel"
             aria-labelledby="contributors-tab" }
             = render( \

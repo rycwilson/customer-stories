@@ -29,13 +29,6 @@ module Csp
     # ref https://gist.github.com/anotheruiguy/7379570
     config.assets.paths << Rails.root.join('app', 'assets', 'fonts')
 
-    config.assets.paths << Rails.root.join('vendor', 'assets', 'node_modules')
-
-    # bower setup no longer needed:
-    # Rails.root.join('vendor', 'assets', 'bower_components').to_s.tap do |bower_path|
-    #   config.sass.load_paths << bower_path
-    #   config.assets.paths << bower_path
-    # end
     # Precompile Bootstrap fonts
     # config.assets.precompile << %r(bootstrap-sass/assets/fonts/bootstrap/[\w-]+\.(?:eot|svg|ttf|woff2?)$)
 

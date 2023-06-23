@@ -61,8 +61,8 @@ gem 'slim-rails', '~> 3.0'
 # gem 'sprockets', '~> 4.0'
 gem 'summernote-rails'
 # gem 'turbolinks'
-# gem 'turbo-rails', '~> 1.3'
-# gem 'stimulus-rails', '~> 1.2'
+gem 'turbo-rails', '~> 1.3'
+gem 'stimulus-rails', '~> 1.2'
 
 gem 'typhoeus'
 gem 'uglifier'
@@ -86,3 +86,6 @@ group :development do
   # gem 'rack-mini-profiler', '~> 2.0'
   gem 'listen', '~> 3.3'
 end
+
+# Use Redis for Action Cable
+gem 'redis', '~> 4.0'

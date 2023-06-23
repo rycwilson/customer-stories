@@ -5,7 +5,7 @@ export default {
       console.log('init user profile')
     },
     addListeners() {
-      console.log('user profile listeners')
+      // console.log('user profile listeners')
     }
   },
 

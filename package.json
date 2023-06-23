@@ -6,7 +6,7 @@
   "type": "module",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "build": "NODE_PATH=.:node_modules:/Users/wilson/.rbenv/versions/3.1.2/lib/ruby/gems/3.1.0/gems esbuild ../../app/javascript/app.js --bundle --sourcemap --outdir=../../app/assets/builds"
+    "build": "NODE_PATH=/Users/wilson/.rbenv/versions/3.1.2/lib/ruby/gems/3.1.0/gems:$NODE_PATH esbuild app/javascript/app.js --bundle --sourcemap --outdir=app/assets/builds"
   },
   "repository": {
     "type": "git",
@@ -19,6 +19,8 @@
   },
   "homepage": "https://github.com/dlindblodev/csp#readme",
   "dependencies": {
+    "@hotwired/stimulus": "^3.2.1",
+    "@hotwired/turbo-rails": "^7.3.0",
     "animate.css": "^4.1.1",
     "arrive": "^2.4.1",
     "blueimp-file-upload": "^10.32.0",
