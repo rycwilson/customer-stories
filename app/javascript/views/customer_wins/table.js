@@ -152,8 +152,8 @@ function initDataTable(successes) {
       // const dt = this.api()
       tableWrapper = table.parentElement;
       tableControls = tableWrapper.previousElementSibling;
-      initTableControls(tableControls, tableWrapper, table);
-      cloneFilterResults(tableControls, tableWrapper, table);
+      // initTableControls(tableControls, tableWrapper, table);
+      // cloneFilterResults(tableControls, tableWrapper, table);
 
       // this.on('draw.dt', (e) => {
       // })

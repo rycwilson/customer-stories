@@ -8,7 +8,7 @@ const dashboard = {
   panels: {
     prospect: {
       init() {
-        // console.log('init prospect')
+        console.log('init prospect')
         const initTables = () => {
           customerWinsTable.init(successes);
           contributorsTable.init(contributions);
@@ -28,9 +28,9 @@ const dashboard = {
       },
       addListeners() {
         document.addEventListener('click', onSidebarTabClick);
-        document.addEventListener('change', onCuratorChange);
-        customerWinsTable.addListeners();
-        contributorsTable.addListeners();
+        // document.addEventListener('change', onCuratorChange);
+        // customerWinsTable.addListeners();
+        // contributorsTable.addListeners();
         
         // https://www.gyrocode.com/articles/jquery-datatables-column-width-issues-with-bootstrap-tabs/
         // $(document).on('shown.bs.tab', '#prospect a[data-toggle="tab"]', () => {

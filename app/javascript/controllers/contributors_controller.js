@@ -9,11 +9,13 @@ export default class extends Controller {
   }
 
   connect() {
+    console.log('curatorId', this.curatorIdValue)
     // console.log('connect customer wins')
     getJSON(this.dataPathValue).then(contributions => {
       console.log('contributions: ', contributions)
-      contributorsTable.init(contributions);
-      this.dispatch('load', { detail: { panelId: 'prospect', resourceClassName: 'contributors' }})
+      // contributorsTable.init(contributions);
+      const panel = this.element.closest('[data-dashboard-target="tabPanel"]');
+      this.dispatch('load', { detail: { panel, resourceClassName: 'contributors' }})
     })
   }
 

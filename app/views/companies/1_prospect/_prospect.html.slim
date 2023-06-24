@@ -1,7 +1,7 @@
 #prospect.tab-pane.fade {
   class=('active in' if workflow_stage == 'prospect')
   data-dashboard-target="tabPanel"
-  data-action="customerWins:load->dashboard#dataDidLoad contributors:load->dashboard#dataDidLoad"
+  data-action="customer-wins:load->dashboard#dataDidLoad contributors:load->dashboard#dataDidLoad"
   role="tabpanel" }
 
   .working.working--prospect style="display:none"
@@ -28,8 +28,8 @@
                   span.fa-stack.fa-lg                    
                     i.fa.fa-circle-o.fa-stack-2x
                     i.fa.fa-plus.fa-stack-1x
-          li class=('active' if tab == '#prospect-contributors')
-            a id="prospect-contributors-tab" href="#prospect-contributors" data-toggle="tab" aria-controls="prospect-contributors" role="tab"
+          li class=('active' if tab == '#contributors')
+            a id="prospect-contributors-tab" href="#contributors" data-toggle="tab" aria-controls="contributors" role="tab"
               span
                 i class="fa fa-fw fa-users"
                 span 
@@ -37,7 +37,7 @@
               span
                 button.btn-add {
                   type="button"
-                  class=('shown' if tab == '#prospect-contributors')
+                  class=('shown' if tab == '#contributors')
                   data-toggle="modal" 
                   data-target="#new-contributor-modal" }
                   span.fa-stack.fa-lg
@@ -50,23 +50,21 @@
           #customer-wins.tab-pane.fade {
             class=('active in' if tab == '#customer-wins' || tab.nil?) 
             data-dashboard-target="subPanel"
-            data-controller-id="customerWins"
-            data-customerWins-data-path-value="/successes"
+            data-customer-wins-data-path-value="/successes"
+            data-action="\
+tomselect:change-curator->customer-wins#searchTable \
+tomselect:change-filter->customer-wins#searchTable \
+tomselect:search->customer-wins#searchTable"
             aria-labelledby="customer-wins-tab"
             role="tabpanel" }
             = render('companies/1_prospect/successes/successes_table', { company: company })
 
-          #prospect-contributors.tab-pane.fade {
-            class=('active in' if tab == '#prospect-contributors')
+          #contributors.tab-pane.fade {
+            class=('active in' if tab == '#contributors')
             data-dashboard-target="subPanel"
-            data-controller-id="contributors"
             data-contributors-data-path-value="/companies/0/contributions"
-            aria-labelledby="prospect-contributors-tab"
+            aria-labelledby="contributors-tab"
             role="tabpanel" }
             = render( \
                 'companies/1_prospect/contributors/contributors_table',
                 { company: company, workflow_stage: 'prospect' })
-
-
-
-

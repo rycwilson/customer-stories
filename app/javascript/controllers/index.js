@@ -17,7 +17,10 @@ application.register('dashboardTab', DashboardTabController);
 // application.register('dashboardTabPanel', DashboardTabPanelController);
 
 import CustomerWinsController from './customer_wins_controller';
-application.register('customerWins', CustomerWinsController);
+application.register('customer-wins', CustomerWinsController);
 
 import ContributorsController from './contributors_controller';
 application.register('contributors', ContributorsController);
+
+import TomselectController from './tomselect_controller';
+application.register('tomselect', TomselectController);

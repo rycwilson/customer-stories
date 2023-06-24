@@ -22,9 +22,10 @@ export default class extends Controller {
   }
 
   dataDidLoad(e) {
-    const { panelId, resourceClassName } = e.detail;
-    const panel = this.tabPanelTargets.find(panel => panel.id === panelId);
-    panel.classList.add(`${resourceClassName}-did-load`);
+    const { panel, resourceClassName } = e.detail;
+
+    // wait for datatable to render
+    setTimeout(() => panel.classList.add(`${resourceClassName}-did-load`));
   }
 
   showActiveTabPanel() {
@@ -51,15 +52,9 @@ export default class extends Controller {
   initTabPanel(panel) {
     this.subPanelTargets
       .filter(subPanel => panel.contains(subPanel))
-      .forEach(subPanel => {
-        if (!subPanel.dataset.controller) {
-          subPanel.dataset.controller = subPanel.dataset.controllerId; 
-          subPanel.removeAttribute('controller-id');
-        }
+      .forEach(subPanel => { 
+        const hasNotConnected = !subPanel.dataset.controller;
+        if (hasNotConnected) subPanel.setAttribute('data-controller', subPanel.id); 
       });
   }
-
-  // get customerWins() {
-    // return customer wins table target datatable data
-  // }
 }
