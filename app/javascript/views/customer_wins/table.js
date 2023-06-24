@@ -5,7 +5,7 @@ let tableControls, tableWrapper, table, dt;
 
 export default {
   init(successes) {
-    console.log('init customer wins', successes)
+    // console.log('init customer wins', successes)
     table = document.getElementById('successes-table');
     dt = initDataTable(successes);
   },

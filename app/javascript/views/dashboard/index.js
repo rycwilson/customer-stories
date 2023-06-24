@@ -8,7 +8,7 @@ const dashboard = {
   panels: {
     prospect: {
       init() {
-        console.log('init prospect')
+        // console.log('init prospect')
         const initTables = () => {
           customerWinsTable.init(successes);
           contributorsTable.init(contributions);
@@ -40,7 +40,7 @@ const dashboard = {
     },
     curate: {
       init() {
-        console.log('init curate')
+        // console.log('init curate')
       },
       addListeners() {
         // console.log('curate listeners')
@@ -182,7 +182,6 @@ function onCuratorChange(e) {
   if (e.target.className.includes('curator-select')) {
     document.getElementById('prospect').querySelectorAll('.curator-select:not(.ts-wrapper)').forEach(select => {
       if (!select.isSameNode(e.target)) 
-        console.log('ok');
         select.tomselect.setValue(e.target.value)
     })
   }

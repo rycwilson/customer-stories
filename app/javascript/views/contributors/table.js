@@ -5,7 +5,7 @@ let tableControls, tableWrapper, table, dt;
 
 export default {
   init(contributions) {
-    console.log('init contributors', contributions)
+    // console.log('init contributors', contributions)
     table = document.getElementById('prospect-contributors-table');
     dt = initDataTable(contributions);
   },

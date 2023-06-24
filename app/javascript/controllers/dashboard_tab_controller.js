@@ -1,9 +1,6 @@
 import { Controller } from "@hotwired/stimulus"
 
-export default class DashboardTabController extends Controller {
-  connect() {
-  }
-
+export default class extends Controller {
   onClick(e) {
     e.preventDefault();
     const newDashboardPath = `/${this.element.getAttribute('href').slice(1, this.element.getAttribute('href').length)}`;

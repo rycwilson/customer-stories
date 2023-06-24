@@ -2,10 +2,10 @@ li class="#{'active' if workflow_stage == tab_name}" role="presentation"
   a {
     href="##{tab_name}" 
     data-toggle="tab" 
-    data-controller="dashboardTab"
-    data-action="dashboardTab#onClick" 
+    data-controller="dashboard-tab"
+    data-action="dashboard#onTabClick dashboardTab#onClick"
     data-dashboard-target="#{'tab' if workflow_stage}"
-    role="tab" 
-    aria-controls="#{tab_name}" }
+    aria-controls="#{tab_name}"
+    role="tab" }
     = tab_name.capitalize
   div

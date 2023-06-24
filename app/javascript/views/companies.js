@@ -9,19 +9,19 @@ export default {
 
   show: {
     init() {
-      console.log('init dashboard')
-      const activeTab = document.querySelector(`a[href="${location.pathname.replace('/', '#')}"]`);
-      const inactiveTabs = document.querySelectorAll('.nav-workflow > li:not(.active) > a');
-      initTabPanel({ target: activeTab });
-      inactiveTabs.forEach(tab => $(tab).one('show.bs.tab', initTabPanel));
+      // console.log('init dashboard')
+      // const activeTab = document.querySelector(`a[href="${location.pathname.replace('/', '#')}"]`);
+      // const inactiveTabs = document.querySelectorAll('.nav-workflow > li:not(.active) > a');
+      // initTabPanel({ target: activeTab });
+      // inactiveTabs.forEach(tab => $(tab).one('show.bs.tab', initTabPanel));
     },
     addListeners() {
       // console.log('dashboard listeners')
       // document.addEventListener('click', onDashboardTabClick);
-      $(document).on('shown.bs.dropdown', '.actions.dropdown', onShownActionsDropdown);
-      $(document).on('hidden.bs.dropdown', '.actions.dropdown', onHiddenActionsDropdown);
+      // $(document).on('shown.bs.dropdown', '.actions.dropdown', onShownActionsDropdown);
+      // $(document).on('hidden.bs.dropdown', '.actions.dropdown', onHiddenActionsDropdown);
       // window.onpopstate = showActiveTabPanel;
-      Object.keys(dashboard.panels).forEach(panel => dashboard.panels[panel].addListeners());
+      // Object.keys(dashboard.panels).forEach(panel => dashboard.panels[panel].addListeners());
     }
   }, 
 

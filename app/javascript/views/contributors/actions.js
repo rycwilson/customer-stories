@@ -126,11 +126,12 @@ function showCustomerWin(successId) {
   document.getElementById('successes-filter').tomselect.setValue(`success-${successId}`);
   const tr = document.getElementById('successes-table').querySelector('tr:last-of-type');
   const toggleChildRowBtn = tr.children[0].children[0];
-  $(document).one('shown.bs.tab', 'a[href="#successes"]', () => {
+  $(document).one('shown.bs.tab', 'a[href="#customer-wins"]', () => {
     scrollTo(0,0);
     toggleChildRowBtn.click();
   });
-  $('a[href="#successes"]').tab('show');
+  // $('a[href="#successes"]').tab('show');
+  $('a[href="#customer-wins"]').tab('show');
 }
 
 // see also contributionsTemplate in success_actions.js

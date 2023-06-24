@@ -1,25 +1,30 @@
 import { Controller } from "@hotwired/stimulus";
 
-export default class DashboardController extends Controller {
+export default class extends Controller {
   static targets = ['tab', 'tabPanel', 'subPanel'];
+  static values = { activeTab: String };    // prospect | curate | promote | measure
 
-  initialize() {
-    console.log('dashboard initialize()')
-    this.workflowStage = this.element.dataset.workflowStage;
-    window.onpopstate = this.showActiveTabPanel;
+  connect() {
+    addEventListener('popstate', this.showActiveTabPanel);
+  }
 
-    this.tabTargets.forEach(tab => {
-      const isActive = tab.parentElement.classList.contains('active');
-      if (isActive) {
-        this.initTabPanel(tab.getAttribute('aria-controls'));
-          // .then remove loading spinner
-      } else {
-        $(tab).one('show.bs.tab', () => this.initTabPanel(tab.getAttribute('aria-controls')));
-      }
-    })
+  disconnect() {
+    removeEventListener('popstate', this.showActiveTabPanel);
+  }
 
-    // const controller = this.application.getControllerForElementAndIdentifier()
-    // document.addEventListener('DOMContentLoaded', (e) => )
+  onTabClick(e) {
+    this.activeTabValue = e.target.getAttribute('aria-controls');
+  }
+
+  activeTabValueChanged() {
+    const activeTabPanel = this.tabPanelTargets.find(panel => panel.id === this.activeTabValue);
+    this.initTabPanel(activeTabPanel);
+  }
+
+  dataDidLoad(e) {
+    const { panelId, resourceClassName } = e.detail;
+    const panel = this.tabPanelTargets.find(panel => panel.id === panelId);
+    panel.classList.add(`${resourceClassName}-did-load`);
   }
 
   showActiveTabPanel() {
@@ -43,16 +48,18 @@ export default class DashboardController extends Controller {
     }
   }
 
-  initTabPanel(panelId) {
+  initTabPanel(panel) {
     this.subPanelTargets
-      .filter(subPanel => subPanel.closest(`#${panelId}`))
+      .filter(subPanel => panel.contains(subPanel))
       .forEach(subPanel => {
-        subPanel.dataset.controller = subPanel.dataset.controllerName;
-        subPanel.removeAttribute('controller-name');
+        if (!subPanel.dataset.controller) {
+          subPanel.dataset.controller = subPanel.dataset.controllerId; 
+          subPanel.removeAttribute('controller-id');
+        }
       });
   }
 
-  get customerWins() {
+  // get customerWins() {
     // return customer wins table target datatable data
-  }
+  // }
 }

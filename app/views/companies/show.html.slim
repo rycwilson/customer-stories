@@ -30,7 +30,7 @@
 = render('stories/shared/new_story_modal', { company: @company })
 = render('stories/show/video_modal')
 
-.dashboard data-controller="dashboard" data-workflow-stage="#{@workflow_stage}"
+.dashboard data-controller="dashboard" data-dashboard-active-tab-value="#{@workflow_stage}"
 
   = render('shared/navbars/company_nav', { company: @company, workflow_stage: @workflow_stage })
 
