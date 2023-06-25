@@ -24,3 +24,6 @@ application.register('contributors', ContributorsController);
 
 import TomselectController from './tomselect_controller';
 application.register('tomselect', TomselectController);
+
+import DatatableController from './datatable_controller';
+application.register('datatable', DatatableController);

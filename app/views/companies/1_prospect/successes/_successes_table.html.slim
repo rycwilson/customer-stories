@@ -11,7 +11,13 @@
           .col-sm-9
             .checkbox
               label.successes.checkbox-filter for="group-by-customer"
-                input type="checkbox" id="group-by-customer" class="toggle-row-groups" checked=""
+                input {
+                  type="checkbox" 
+                  id="group-by-customer" 
+                  class="toggle-row-groups" 
+                  data-customer-wins-target="filterCheckbox"
+                  data-action="customer-wins#toggleRowGroups"
+                  checked="" }
                 span 
                   |&nbsp;&nbsp;by Customer
         .form-group
@@ -48,7 +54,12 @@
                   class: 'dt-filter form-control',
                   data: { controller: 'tomselect', tomselect_type_value: 'filter', customer_wins_target: 'filterSelect' } })
 
-  table#successes-table.table.datatable.table-bordered.has-row-groups width="100%"
+  table#successes-table.table.datatable.table-bordered.has-row-groups {
+    data-customer-wins-target="datatable"
+    data-controller="datatable"
+    data-datatable-row-groups-value="true"
+    data-action="datatable:init->customer-wins#tableInitComplete"
+    width="100%" }
     thead
       tr
         th.toggle-child
