@@ -10,12 +10,11 @@
           label.col-sm-3.control-label Group
           .col-sm-9
             .checkbox
-              label.successes.checkbox-filter for="group-by-customer"
+              label for="group-by-customer"
                 input {
                   type="checkbox" 
-                  id="group-by-customer" 
-                  class="toggle-row-groups" 
-                  data-customer-wins-target="filterCheckbox"
+                  id="group-by-customer"
+                  data-customer-wins-target="rowGroupsCheckbox"
                   data-action="customer-wins#toggleRowGroups"
                   checked="" }
                 span 
@@ -57,7 +56,7 @@
   table#successes-table.table.datatable.table-bordered.has-row-groups {
     data-customer-wins-target="datatable"
     data-controller="datatable"
-    data-datatable-row-groups-value="true"
+    data-datatable-enable-row-groups-value="true"
     data-action="datatable:init->customer-wins#tableInitComplete"
     width="100%" }
     thead

@@ -52,9 +52,9 @@
             data-dashboard-target="subPanel"
             data-customer-wins-data-path-value="/successes"
             data-action="\
-tomselect:change-curator->customer-wins#searchTable \
-tomselect:change-filter->customer-wins#searchTable \
-tomselect:search->customer-wins#searchTable"
+              tomselect:change-curator->customer-wins#searchTable \
+              tomselect:change-filter->customer-wins#searchTable \
+              tomselect:search->customer-wins#searchTable"
             aria-labelledby="customer-wins-tab"
             role="tabpanel" }
             = render('companies/1_prospect/successes/successes_table', { company: company })
@@ -63,6 +63,10 @@ tomselect:search->customer-wins#searchTable"
             class=('active in' if tab == '#contributors')
             data-dashboard-target="subPanel"
             data-contributors-data-path-value="/companies/0/contributions"
+            data-action="\
+              tomselect:change-curator->contributorss#searchTable \
+              tomselect:change-filter->contributors#searchTable \
+              tomselect:search->contributors#searchTable"
             aria-labelledby="contributors-tab"
             role="tabpanel" }
             = render( \

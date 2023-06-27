@@ -1,8 +1,9 @@
 import { Controller } from "@hotwired/stimulus";
+import { searchTable } from '../actions/tables.js';
 import { getJSON } from '../util';
 
 export default class extends Controller {
-  static targets = ['filterCheckbox', 'curatorSelect', 'filterSelect', 'datatable'];
+  static targets = ['rowGroupsCheckbox', 'filterCheckbox', 'curatorSelect', 'filterSelect', 'datatable'];
   static values = { dataPath: String };
 
   static customerWins = [];
@@ -11,6 +12,8 @@ export default class extends Controller {
 
   connect() {
     // console.log('connect customer wins')
+    this.element.customerWins = this;
+
     getJSON(this.dataPathValue).then(successes => {
       this.customerWins = successes;
       console.log('customer wins: ', this.customerWins)
@@ -20,16 +23,16 @@ export default class extends Controller {
     })
   }
 
-  searchTable(e) {
-    console.log('searchTable', e.detail)
+  searchTable(e = { detail: {} }) {
+    searchTable.bind(this)(e.detail.searchResults);
+  }
+  
+  tableInitComplete(e) {
+    this.searchTable();
   }
 
   toggleRowGroups() {
-    const shouldEnable = this.filterCheckboxTargets.find(target => target.id === 'group-by-customer').checked;
-    this.datatableTarget.setAttribute('data-datatable-row-groups-value', shouldEnable);
-  }
-
-  tableInitComplete(e) {
+    this.datatableTarget.setAttribute('data-datatable-enable-row-groups-value', this.rowGroupsCheckbox.checked);
   }
 
   tableConfig() {
