@@ -5,7 +5,7 @@ export default class extends Controller {
   static values = { type: String }
 
   connect() {
-    console.log('tomselect connect')
+    // console.log('tomselect connect')
     this.currentSearchResults = [];
     this.ts = new TomSelect(this.element, Object.assign({}, tsBaseOptions, {
       // use arrow functions so 'this' refers to the controller

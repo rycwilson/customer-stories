@@ -27,3 +27,6 @@ application.register('tomselect', TomselectController);
 
 import DatatableController from './datatable_controller';
 application.register('datatable', DatatableController);
+
+import ActionsDropdownController from './actions_dropdown_controller';
+application.register('actions-dropdown', ActionsDropdownController);

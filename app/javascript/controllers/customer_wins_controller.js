@@ -55,7 +55,8 @@ export default class extends Controller {
               <i class="fa fa-caret-right"></i>
               <i class="fa fa-caret-down"></i>
             </button>
-          `
+          `,
+          createdCell: (td) => td.classList.add('toggle-child')
         },
         {
           name: 'success',
@@ -91,7 +92,8 @@ export default class extends Controller {
           name: 'status',
           data: {
             _: 'display_status',
-          }
+          },
+          createdCell: (td) => td.classList.add('status')
         },
         {
           name: 'story',
@@ -104,7 +106,11 @@ export default class extends Controller {
         },
         {
           data: 'display_status',
-          render: (data, type, row, meta) => this.actionsDropdownTemplate(data, row)
+          render: (data, type, row, meta) => this.actionsDropdownTemplate(data, row),
+          createdCell: (td) => {
+            td.classList.add('dropdown');
+            td.setAttribute('data-controller', 'actions-dropdown');
+          }
         }
       ],
   
@@ -151,10 +157,7 @@ export default class extends Controller {
         row.setAttribute('data-datatable-target', 'dtRow')
         $(row).attr('data-customer-id', data.customer.id);
         $(row).attr('data-success-id', data.id);
-        $(row).children().eq(0).addClass('toggle-child');
         $(row).children().eq(1).attr('data-filter', data.id);
-        $(row).children().eq(2).addClass('status');
-        $(row).children().eq(3).addClass('actions dropdown');
       }
     }
   }

@@ -102,7 +102,8 @@ td {
   } 
 }
 
-td.status.dropdown, td.actions.dropdown {
+td.status.dropdown, 
+td[data-controller="actions-dropdown"] {
   position: relative;
   text-align: center;
   padding: 0;
