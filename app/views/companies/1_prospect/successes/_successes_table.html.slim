@@ -51,11 +51,16 @@
                   placeholder: 'Search / Select',
                   id: 'successes-filter',
                   class: 'dt-filter form-control',
-                  data: { controller: 'tomselect', tomselect_type_value: 'filter', customer_wins_target: 'filterSelect' } })
+                  data: { \
+                    controller: 'tomselect', 
+                    tomselect_type_value: 'filter', 
+                    customer_wins_target: 'filterSelect',
+                    dashboard_target: 'customerWinsFilter' } })
 
   table#successes-table.table.datatable.table-bordered.has-row-groups {
-    data-customer-wins-target="datatable"
     data-controller="datatable"
+    data-customer-wins-target="datatable"
+    data-datatable-customer-wins-outlet="#customer-wins"
     data-datatable-enable-row-groups-value="true"
     data-action="datatable:init->customer-wins#tableInitComplete"
     width="100%" }

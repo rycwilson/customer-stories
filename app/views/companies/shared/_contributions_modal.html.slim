@@ -1,12 +1,12 @@
-.contributions-modal.modal.fade tabindex="-1" role="dialog"
+.contributions-modal.modal.fade data-controller="contributions-modal" tabindex="-1" role="dialog"
   .modal-dialog role="document"
     .modal-content
       .modal-header
         button type="button" class="close" data-dismiss="modal" aria-label="Close"
           span aria-hidden="true"
             |&times;
-        h4.modal-title
-      .modal-body style="min-height:200px"
+        h4.modal-title data-contributions-modal-target="title"
+      .modal-body data-contributions-modal-target="body" style="min-height:200px"
         / list goes here
       .modal-footer
         button type="button" class="btn btn-default" data-dismiss="modal"

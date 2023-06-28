@@ -1,7 +1,8 @@
 import { Controller } from "@hotwired/stimulus";
 
 export default class extends Controller {
-  static targets = ['dtRow'];
+  static targets = ['row'];   // excludes row groups
+  static outlets = ['customer-wins', 'contributors', 'stories'];
   static values = { 
     ready: { type: Boolean, default: false },
     enableRowGroups: { type: Boolean, default: false },
@@ -9,22 +10,22 @@ export default class extends Controller {
   };
 
   static baseOptions;
+  dt;
   didInitialize = false;
 
   initialize() {
-    const controller = this;
+    const ctrl = this;
     this.baseOptions = {
       // deferRender: true,
       autoWidth: false,
       dom: 'tip',
       pageLength: 100,
       drawCallback(settings) {
-        if (controller.didInitialize) controller.redrawRowGroups();
+        if (ctrl.didInitialize) ctrl.redrawRowGroups();
       },
       initComplete(settings) {
-        console.log('initComplete')
-        controller.didInitialize = true;
-        controller.dispatch('init', { detail: {} });
+        ctrl.didInitialize = true;
+        ctrl.dispatch('init', { detail: { dt: this.api() } });
       }
     }
   }
@@ -32,13 +33,10 @@ export default class extends Controller {
   connect() {
   }
 
-  search() {
-
-  }
 
   readyValueChanged(dataIsReady) {
     if (dataIsReady)
-      this.dt = new DataTable(this.element, Object.assign({}, this.baseOptions, this.parentController().tableConfig()));
+      this.dt = new DataTable(this.element, Object.assign({}, this.baseOptions, this.parentCtrl().tableConfig()));
   }
 
   searchParamsValueChanged(params) {
@@ -84,8 +82,8 @@ export default class extends Controller {
   enableRowGroupsValueChanged(shouldEnable) {
     if (this.didInitialize) {
       this.element.classList.toggle('has-row-groups');
-      this.dtRowTargets.forEach(tr => tr.classList.remove('even', 'odd'));
-      if (!shouldEnable) this.dtRowTargets.forEach((tr, i) => tr.classList.add(i % 2 === 0 ? 'even' : 'odd'));
+      this.rowTargets.forEach(tr => tr.classList.remove('even', 'odd'));
+      if (!shouldEnable) this.rowTargets.forEach((tr, i) => tr.classList.add(i % 2 === 0 ? 'even' : 'odd'));
       this.dt.draw();
     }
   }
@@ -101,13 +99,17 @@ export default class extends Controller {
     })
   }
 
-  parentController() {
-    const parentControllerElement = (
-      this.element.closest('[data-dashboard-target="subPanel"]') || 
-      this.element.closest('[data-dashboard-target="tabPanel"]')
+  parentCtrl() {
+    return (
+      (this.element.getAttribute('data-datatable-customer-wins-outlet') && this.customerWinsOutlet) ||
+      (this.element.getAttribute('data-datatable-contributors-outlet') && this.contributorsOutlet)
     );
-    return this.application.getControllerForElementAndIdentifier(
-      parentControllerElement, parentControllerElement.getAttribute('data-controller')
-    );
+    // const parentControllerElement = (
+    //   this.element.closest('[data-dashboard-target="subPanel"]') || 
+    //   this.element.closest('[data-dashboard-target="tabPanel"]')
+    // );
+    // return this.application.getControllerForElementAndIdentifier(
+    //   parentControllerElement, parentControllerElement.getAttribute('data-controller')
+    // );
   }
 }

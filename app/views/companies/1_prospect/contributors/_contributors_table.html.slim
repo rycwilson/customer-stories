@@ -56,15 +56,18 @@
                   placeholder: 'Search / Select',
                   id: 'contributors-filter',
                   class: 'dt-filter form-control',
-                  data: { controller: 'tomselect', tomselect_type_value: 'filter', contributors_target: 'filterSelect' } })
+                  data: { \
+                    controller: 'tomselect', 
+                    tomselect_type_value: 'filter', 
+                    contributors_target: 'filterSelect',
+                    dashboard_target: 'contributorsFilter' } })
 
 
 / it's actually a contributions table, but presented to user as Contributors
-table {
-  id="contributors-table" 
-  class="datatable table table-bordered has-row-groups"
-  data-contributors-target="datatable"
+table#contributors-table.datatable.table.table-bordered.has-row-groups {
   data-controller="datatable"
+  data-contributors-target="datatable"
+  data-datatable-contributors-outlet="#contributors"
   data-datatable-enable-row-groups-value="true"
   data-action="datatable:init->contributors#tableInitComplete"
   cellspacing="0" 

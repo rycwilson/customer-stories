@@ -1,12 +1,13 @@
 import { Controller } from "@hotwired/stimulus"
-import { searchTable } from '../actions/tables.js';
 import { getJSON } from '../util.js';
+import { searchTable as _searchTable } from '../actions/tables.js';
 
 export default class extends Controller {
   static targets = ['rowGroupsCheckbox', 'filterCheckbox', 'curatorSelect', 'filterSelect', 'datatable'];
   static values = { dataPath: String };
 
-  static contributions = [];
+  contributions = [];
+  dt = {};
 
   initialize() {
   }
@@ -23,10 +24,11 @@ export default class extends Controller {
   }
 
   searchTable(e = { detail: {} }) {
-    searchTable.bind(this)(e.detail.searchResults);
+    _searchTable.bind(this)(e.detail.searchResults);
   }
 
   tableInitComplete(e) {
+    this.dt = e.detail.dt;
     this.searchTable();
   }
 

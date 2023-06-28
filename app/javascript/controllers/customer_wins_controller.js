@@ -1,18 +1,19 @@
 import { Controller } from "@hotwired/stimulus";
-import { searchTable } from '../actions/tables.js';
 import { getJSON } from '../util';
+import { searchTable as _searchTable } from '../actions/tables.js';
 
 export default class extends Controller {
   static targets = ['rowGroupsCheckbox', 'filterCheckbox', 'curatorSelect', 'filterSelect', 'datatable'];
   static values = { dataPath: String };
 
-  static customerWins = [];
+  customerWins;
+  dt;
 
   initialize() {}
 
   connect() {
     // console.log('connect customer wins')
-    this.element.customerWins = this;
+    // this.element.customerWins = this;
 
     getJSON(this.dataPathValue).then(successes => {
       this.customerWins = successes;
@@ -24,10 +25,11 @@ export default class extends Controller {
   }
 
   searchTable(e = { detail: {} }) {
-    searchTable.bind(this)(e.detail.searchResults);
+    _searchTable.bind(this)(e.detail.searchResults);
   }
   
   tableInitComplete(e) {
+    this.dt = e.detail.dt;
     this.searchTable();
   }
 
@@ -106,10 +108,11 @@ export default class extends Controller {
         },
         {
           data: 'display_status',
-          render: (data, type, row, meta) => this.actionsDropdownTemplate(data, row),
+          render: (data, type, row, meta) => '',    // customer win controller will render the dropdown
           createdCell: (td) => {
             td.classList.add('dropdown');
             td.setAttribute('data-controller', 'actions-dropdown');
+            td.setAttribute('data-customer-win-target', 'actionsDropdown');
           }
         }
       ],
@@ -153,83 +156,18 @@ export default class extends Controller {
         }
       },
   
-      createdRow: function (row, data, index) {
-        row.setAttribute('data-datatable-target', 'dtRow')
-        $(row).attr('data-customer-id', data.customer.id);
-        $(row).attr('data-success-id', data.id);
-        $(row).children().eq(1).attr('data-filter', data.id);
+      createdRow(row, data, index) {
+        const { id, display_status: status, customer, story } = data;
+        row.setAttribute('data-controller', 'customer-win');
+        row.setAttribute('data-customer-win-contributors-outlet', '#contributors')
+        row.setAttribute('data-customer-win-contributions-modal-outlet', '.contributions-modal')
+        row.setAttribute('data-customer-win-row-data-value', JSON.stringify({ id, status, customer, story }));
+        row.setAttribute('data-datatable-target', 'row');
+
+        // $(row).attr('data-customer-id', data.customer.id);
+        // $(row).attr('data-success-id', data.id);
+        // $(row).children().eq(1).attr('data-filter', data.id);
       }
     }
-  }
-
-  actionsDropdownTemplate(displayStatus, rowData) {
-    const noContributorsAdded = displayStatus.match(/0.+Contributors\sadded/);
-    const noContributorsInvited = displayStatus.match(/0.+Contributors\sinvited/);
-    const contributionsExist = displayStatus.match(/[^0]&nbsp;&nbsp;Contributions\ssubmitted/);
-    const storyExists = rowData.story;
-    const storyPath = storyExists && `/curate/${rowData.customer.slug}/${rowData.story.slug}`;
-    const contributorsAction = (() => {
-      const className = `${noContributorsAdded ? 'add' : 'invite'}-contributors`;
-      const action = noContributorsAdded ? 'Add' : (noContributorsInvited ? 'Invite' : 'Manage');
-      return `
-        <li class="${className}">
-          <a href="javascript:;">
-            <i class="fa fa-users fa-fw action"></i>&nbsp;&nbsp;
-            <span>${action} Contributors</span>
-          </a>
-        </li>
-      `;
-    })();
-    return `
-      <a href="javascript:;" class="dropdown-toggle" data-toggle="dropdown">
-        <i class="fa fa-caret-down"></i>
-      </a>
-      <ul class="success-actions dropdown-menu dropdown-menu-right">
-        ${contributionsExist ? `
-            <li class="view-contributions">
-              <a href="javascript:;">
-                <i class="fa fa-comments fa-fw action"></i>&nbsp;&nbsp;
-                <span>View Contributions</span>
-              </a>
-            </li>
-            <li role="separator" class="divider"></li>
-          ` : 
-          ''
-        }
-        ${storyExists ? 
-            [['story-settings', 'fa-gear'], ['story-content', 'fa-edit'], ['story-contributors', 'fa-users']]
-              .map(([className, icon]) => {
-                const section = (
-                  className[className.indexOf('-') + 1].toUpperCase() + 
-                  className.slice(className.indexOf('-') + 2, className.length)
-                )
-                return `
-                  <li class="${className}">
-                    <a href="${storyPath}">
-                      <i class="fa ${icon} fa-fw action"></i>&nbsp;&nbsp;
-                      <span>Customer Story ${section}</span>
-                    </a>
-                  </li>
-                `;
-              }).join('') : `
-            ${contributorsAction}
-            <li role="separator" class="divider"></li>
-            <li class="start-curation">
-              <a href="javascript:;">
-                <i class="fa fa-play fa-fw action"></i>&nbsp;&nbsp;
-                <span>Start Customer Story</span>
-              </a>
-            </li>
-          `
-        }
-        <li role="separator" class="divider"></li>
-        <li class="delete-row">
-          <a href="javascript:;">
-            <i class="fa fa-remove fa-fw action"></i>&nbsp;&nbsp;
-            <span>Remove</span>
-          </a>
-        </li>
-      </ul>
-    `;
   }
 }

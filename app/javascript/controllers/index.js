@@ -7,6 +7,12 @@ import { application } from "./application"
 // import HelloController from "./hello_controller"
 // application.register("hello", HelloController)
 
+import TomselectController from './tomselect_controller';
+application.register('tomselect', TomselectController);
+
+import DatatableController from './datatable_controller';
+application.register('datatable', DatatableController);
+
 import DashboardController from './dashboard_controller';
 application.register('dashboard', DashboardController);
 
@@ -19,14 +25,17 @@ application.register('dashboardTab', DashboardTabController);
 import CustomerWinsController from './customer_wins_controller';
 application.register('customer-wins', CustomerWinsController);
 
+import CustomerWinController from './customer_win_controller';
+application.register('customer-win', CustomerWinController);
+
 import ContributorsController from './contributors_controller';
 application.register('contributors', ContributorsController);
 
-import TomselectController from './tomselect_controller';
-application.register('tomselect', TomselectController);
-
-import DatatableController from './datatable_controller';
-application.register('datatable', DatatableController);
-
 import ActionsDropdownController from './actions_dropdown_controller';
 application.register('actions-dropdown', ActionsDropdownController);
+
+import NewContributorModalController from './new_contributor_modal_controller';
+application.register('new-contributor-modal', NewContributorModalController);
+
+import ContributionsModalController from './contributions_modal_controller';
+application.register('contributions-modal', ContributionsModalController);

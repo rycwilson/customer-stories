@@ -30,7 +30,11 @@
 = render('stories/shared/new_story_modal', { company: @company })
 = render('stories/show/video_modal')
 
-.dashboard data-controller="dashboard" data-dashboard-active-tab-value="#{@workflow_stage}"
+.dashboard {
+  data-controller="dashboard" 
+  data-dashboard-active-tab-value="#{@workflow_stage}"
+  data-dashboard-new-contributor-modal-outlet="#new-contributor-modal"
+  data-action="customer-win:add-contributors->dashboard#addCustomerWinContributors" }
 
   = render('shared/navbars/company_nav', { company: @company, workflow_stage: @workflow_stage })
 

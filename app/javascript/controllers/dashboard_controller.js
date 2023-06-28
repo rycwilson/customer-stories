@@ -1,7 +1,10 @@
 import { Controller } from "@hotwired/stimulus";
 
 export default class extends Controller {
-  static targets = ['tab', 'tabPanel', 'subPanel'];
+  static outlets = ['new-contributor-modal'];
+  static targets = [
+    'tab', 'tabPanel', 'subPanel', 'customerWinsTab', 'customerWinsFilter', 'contributorsTab', 'contributorsFilter',
+  ];
   static values = { activeTab: String };    // prospect | curate | promote | measure
 
   connect() {
@@ -26,6 +29,25 @@ export default class extends Controller {
 
     // wait for datatable to render
     setTimeout(() => panel.classList.add(`${resourceClassName}-did-load`));
+  }
+
+  addCustomerWinContributors({ detail: { successId } }) {
+    $(this.contributorsTabTarget).one('shown.bs.tab', () => {
+      $(this.newContributorModalOutlet.element).modal('show');
+      // $('select.new-contributor.customer').prop('disabled', true).val(customerId).trigger('change');
+      // $('select.new-contributor.success').prop('disabled', true).val(successId).trigger('change');
+    });
+    this.showCustomerWinContributors({ detail: { successId } });
+  }
+
+  showCustomerWinContributors({ detail: { successId } }) {
+    this.contributorsFilterTarget.tomselect.setValue(`success-${successId}`);
+    $(this.contributorsTabTarget).one('shown.bs.tab', () => scrollTo(0, 65));
+    $(this.contributorsTabTarget).tab('show');
+      
+    // TODO: change filters IF necessary to find customer win
+    // all filters enabled (nothing hidden)
+    // $('.contributors .checkbox-filter').prop('checked', true).trigger('change');
   }
 
   showActiveTabPanel() {
