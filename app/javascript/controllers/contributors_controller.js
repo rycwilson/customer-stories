@@ -1,16 +1,13 @@
 import { Controller } from "@hotwired/stimulus"
 import { getJSON } from '../util.js';
-import { searchTable as _searchTable } from '../actions/tables.js';
 
 export default class extends Controller {
-  static targets = ['rowGroupsCheckbox', 'filterCheckbox', 'curatorSelect', 'filterSelect', 'datatable'];
+  static outlets = ['dashboard', 'customer-wins'];
+  static targets = ['filterCheckbox', 'curatorSelect', 'filterSelect', 'filterResults', 'datatable'];
   static values = { dataPath: String };
 
-  contributions = [];
-  dt = {};
-
-  initialize() {
-  }
+  contributions;
+  dt;
 
   connect() {
     // console.log('connect contributors')
@@ -23,8 +20,20 @@ export default class extends Controller {
     });
   }
 
-  searchTable(e = { detail: {} }) {
-    _searchTable.bind(this)(e.detail.searchResults);
+  searchTable(e = { type: '', detail: {} }) {
+    const isUserInput = e.type;
+    if (e.type.includes('change-curator')) {
+      this.customerWinsOutlet.curatorSelectTarget.tomselect.setValue(this.curatorSelectTarget.value, true);
+    } else if (e.type.includes('change-filter') && !this.filterSelectTarget.value.includes('contributor')) {
+      this.customerWinsOutlet.filterSelectTarget.tomselect.setValue(this.filterSelectTarget.value, true);
+    }
+
+    // allow the visible table to be drawn before searching the other table
+    if (isUserInput && e.target.dataset.syncTables)
+      this.element.addEventListener('datatable:contributors-drawn', () => {
+        setTimeout(() => this.dashboardOutlet.searchTable.bind(this.customerWinsOutlet)());
+      }, { once: true });
+    this.dashboardOutlet.searchTable.bind(this)(e.detail && e.detail.searchResults);
   }
 
   tableInitComplete(e) {
@@ -32,12 +41,11 @@ export default class extends Controller {
     this.searchTable();
   }
 
-  toggleRowGroups() {
-    this.datatableTarget.setAttribute('data-datatable-enable-row-groups-value', this.rowGroupsCheckbox.checked);
+  toggleRowGroups(e) {
+    this.datatableTarget.setAttribute('data-datatable-enable-row-groups-value', e.target.checked);
   }
 
-  tableConfig() {
-    const workflowStage = 'prospect';
+  tableConfig(workflowStage = 'prospect') {
     const colIndices = {
       contributor: 1,
       success: 2,
@@ -64,9 +72,12 @@ export default class extends Controller {
           name: 'childRow',
           data: 'success.id',
           render: (data, type, row) => `
-            <i class="fa fa-caret-right"></i>
-            <i class="fa fa-caret-down" style="display:none"></i>
-          `
+            <button type="button" class="btn">
+              <i class="fa fa-caret-right"></i>
+              <i class="fa fa-caret-down"></i>
+            </button>
+          `,
+          createdCell: (td) => td.classList.add('toggle-child')
         },
         {
           name: 'contributor',
@@ -98,7 +109,8 @@ export default class extends Controller {
             _: 'invitation_template.id',
             display: 'invitation_template.name'
           },
-          defaultContent: '<span class="placeholder">Select</span>'
+          defaultContent: '<span class="placeholder">Select</span>',
+          createdCell: (td) => td.classList.add('invitation-template')
         },
   
         {  // <td data-search="<%= contribution.success.curator.id %>"></td>
@@ -123,12 +135,18 @@ export default class extends Controller {
           data: {
             _: 'status',
             display: 'display_status'
-          }
+          },
+          createdCell: (td) => td.classList.add('status')
         },
         {
           // data is status as this will determine actions available
           data: 'status',
-          render: (data, type, row, meta) => this.actionsDropdownTemplate(data, row, workflowStage)
+          render: (data, type, row, meta) => '',
+          createdCell: (td) => {
+            td.classList.add('dropdown');
+            td.setAttribute('data-controller', 'actions-dropdown');
+            td.setAttribute('data-contribution-target', 'actionsDropdown');
+          }
         },
         {
           name: 'storyPublished',
@@ -160,127 +178,49 @@ export default class extends Controller {
       rowGroup: workflowStage === 'curate' ? null : { dataSrc: 'success.name', startRender: this.rowGroupTemplate },
   
       createdRow: (row, data, index) => {
-        const isPreInvite = data.status === 'pre_request';
-        const didNotRespond = data.status === 'did_not_respond';
-        $(row)
-          .attr('data-contribution-id', data.id)
-          .attr('data-success-id', data.success.id)
-          .attr('data-contributor-id', data.contributor.id)
-          .children()
-            .eq(0).addClass('toggle-contributor-child').end()
-            .eq(1).addClass('contributor').end()
-            .eq(2)
-              .addClass('invitation-template')
-              .addClass(isPreInvite || didNotRespond ? '' : 'disabled')
-              .append(isPreInvite || didNotRespond ? '<i class="fa fa-caret-down"></i>' : '')
-              .end()
-            .eq(3).addClass('status').end()
-            .eq(4).addClass('actions dropdown')
+        // const isPreInvite = data.status === 'pre_request';
+        // const didNotRespond = data.status === 'did_not_respond';
+        // $(row)
+        //   .attr('data-contribution-id', data.id)
+        //   .attr('data-success-id', data.success.id)
+        //   .attr('data-contributor-id', data.contributor.id)
+        //   .children()
+        //     .eq(0).addClass('toggle-contributor-child').end()
+        //     .eq(1).addClass('contributor').end()
+        //     .eq(2)
+        //       .addClass('invitation-template')
+        //       .addClass(isPreInvite || didNotRespond ? '' : 'disabled')
+        //       .append(isPreInvite || didNotRespond ? '<i class="fa fa-caret-down"></i>' : '')
+        //       .end()
+        //     .eq(3).addClass('status').end()
+        //     .eq(4).addClass('actions dropdown')
+
+        const { id, status, contributor, invitation_template: invitationTemplate, success: customerWin } = data;
+        row.setAttribute('data-controller', 'contribution');
+        row.setAttribute('data-contribution-customer-wins-outlet', '#customer-wins')
+        row.setAttribute(
+          'data-contribution-row-data-value', JSON.stringify({ id, status, contributor, invitationTemplate, customerWin })
+        );
+        row.setAttribute('data-datatable-target', 'row');
       }
     }
-  }
-
-  actionsDropdownTemplate(status, rowData, workflowStage) {
-    const isPreInvite = rowData.status === 'pre_request';
-    const invitationTemplate = rowData.invitation_template;
-    const didNotRespond = rowData.status === 'did_not_respond';
-    const wasSubmitted = rowData.status && rowData.status.includes('submitted');
-    const story = rowData.success.story;
-    const viewStoryPath = story && story.csp_story_path;
-    const editStoryPath = story && `/curate/${rowData.success.customer.slug}/${rowData.success.story.slug}`;
-    const storyActions = [['story-settings', 'fa-gear'], ['story-content', 'fa-edit'], ['story-contributors', 'fa-users']]
-      .map(([className, icon]) => {
-        const section = (
-          className[className.indexOf('-') + 1].toUpperCase() + 
-          className.slice(className.indexOf('-') + 2, className.length)
-        )
-        return `
-          <li class="${className}">
-            <a href="${editStoryPath}">
-              <i class="fa ${icon} fa-fw action"></i>&nbsp;&nbsp;
-              <span>Customer Story ${section}</span>
-            </a>
-          </li>
-        `;
-      }).join('');
-    return `
-      <a href="javascript:;" class="dropdown-toggle" data-toggle='dropdown'>
-        <i class="fa fa-caret-down"></i>
-      </a>
-      <ul class="contributor-actions dropdown-menu dropdown-menu-right dropdown-actions">
-        <li class="${isPreInvite ? `compose-invitation ${invitationTemplate ? '' : 'disabled'}` : 'view-request'}">
-          <a href="javascript:;">
-            <i class="fa fa-${isPreInvite ? 'envelope' : 'search'} fa-fw action"></i>&nbsp;&nbsp;
-            <span>${isPreInvite ? 'Compose Invitation' : 'View Sent Invitation'}</span>
-          </a>
-        </li>
-        ${didNotRespond ? `
-            <li class="resend-invitation">
-              <a href="javascript:;">
-                <i class="fa fa-envelope fa-fw action"></i>&nbsp;&nbsp;
-                <span>Re-send Invitation</span>
-              </a>
-            </li>
-          ` : ''
-        }
-        ${wasSubmitted ? `
-            <li class="completed">
-              <a href="javascript:;">
-                <i class="fa fa-check fa-fw action"></i>&nbsp;&nbsp;
-                <span>Mark as completed</span>
-              </a>
-            </li>
-          ` : ''
-        }
-        <li role="separator" class="divider"></li>
-        ${workflowStage === 'prospect' ? `
-            ${story && story.published ? `
-                <li>
-                  <a href="${viewStoryPath}"}>
-                    <i class="fa fa-search fa-fw action"></i>&nbsp;&nbsp;
-                    <span>View Story</span>
-                  </a>
-                </li>
-                <li role="separator" class="divider"></li>
-              ` : ''
-            }
-            ${story ? storyActions : `
-                <li class="view-success">
-                  <a href="javascript:;"}>
-                    <i class="fa fa-rocket fa-fw action"></i>&nbsp;&nbsp;
-                    <span>View Customer Win</span>
-                  </a>
-                </li>
-              `
-            }
-            <li role="separator" class="divider"></li>
-          ` : ''
-        }
-        <li class="remove">
-          <a href="javascript:;">
-            <i class="fa fa-remove fa-fw action"></i>&nbsp;&nbsp;
-            <span>Remove</span>
-          </a>
-        </li>
-      </ul>
-    `;
   }
 
   rowGroupTemplate(groupRows, successName) {
     // console.log(successName + ': ', groupRows);
     // customer and story (if exists) data same for all rows, so just look at [0]th row
-    const success = groupRows.data()[0].success;
-    const story = success.story;
+    const customerWin = groupRows.data()[0].success;
+    const story = customerWin.story;
     const storySlug = story && story.slug;
     const storyTitle = story && story.title;
-    const storyPath = story && (story.published ? story.csp_story_path : `/curate/${success.customer.slug}/${storySlug}`);
+    const storyPath = story && (story.published ? story.csp_story_path : `/curate/${customerWin.customer.slug}/${storySlug}`);
     return $('<tr/>').append(`
       <td colspan="5">
-        <span>${success.customer.name}</span>
+        <span>${customerWin.customer.name}</span>
         <span class="emdash">&nbsp;&nbsp;&#8211;&nbsp;&nbsp;</span>
         ${story ? 
           `<a href="${storyPath}" id="contributors-row-group-link-story-${story.id}">${storyTitle}</a>` :
-          `<a href="javascript:;" id="contributors-row-group-link-cw-${success.id}">${successName}</a>`
+          `<a href="javascript:;" id="contributors-row-group-link-cw-${customerWin.id}">${successName}</a>`
         }
       </td>
     `);

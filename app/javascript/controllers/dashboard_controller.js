@@ -31,17 +31,23 @@ export default class extends Controller {
     setTimeout(() => panel.classList.add(`${resourceClassName}-did-load`));
   }
 
-  addCustomerWinContributors({ detail: { successId } }) {
-    $(this.contributorsTabTarget).one('shown.bs.tab', () => {
+  addCustomerWinContributors({ target: { dataset: { customerWinId } } }) {
+    if (this.showingCustomerWins()) {
+      $(this.contributorsTabTarget).one('shown.bs.tab', () => {
+        $(this.newContributorModalOutlet.element).modal('show');
+        // $('select.new-contributor.customer').prop('disabled', true).val(customerId).trigger('change');
+        // $('select.new-contributor.success').prop('disabled', true).val(successId).trigger('change');
+      });
+    } else if (this.showingContributors()) {
       $(this.newContributorModalOutlet.element).modal('show');
-      // $('select.new-contributor.customer').prop('disabled', true).val(customerId).trigger('change');
-      // $('select.new-contributor.success').prop('disabled', true).val(successId).trigger('change');
-    });
-    this.showCustomerWinContributors({ detail: { successId } });
+    }
+    // this.showCustomerWinContributors({ target: { dataset: { customerWinId } } });
   }
 
-  showCustomerWinContributors({ detail: { successId } }) {
-    this.contributorsFilterTarget.tomselect.setValue(`success-${successId}`);
+  // inviteCustomerWinContributors({ target: dataset})
+
+  showCustomerWinContributors({ target: { dataset: { customerWinId } } }) {
+    this.contributorsFilterTarget.tomselect.setValue(`success-${customerWinId}`);
     $(this.contributorsTabTarget).one('shown.bs.tab', () => scrollTo(0, 65));
     $(this.contributorsTabTarget).tab('show');
       
@@ -79,4 +85,39 @@ export default class extends Controller {
         if (hasNotConnected) subPanel.setAttribute('data-controller', subPanel.id); 
       });
   }
+
+  // search customer wins or contributors
+  searchTable(searchResults) {
+    const subPanelCtrl = this;
+    console.log('searching...', this.identifier)
+    const columnFilters = subPanelCtrl.filterCheckboxTargets.map(checkbox => {
+      console.log('checkbox', checkbox)
+      if (checkbox.id === 'show-wins-with-story')
+        return { column: 'story', q: checkbox.checked ? '' : '^false$', regEx: true, smartSearch: false };
+      else if (checkbox.id === 'show-completed')
+        return { column: 'status', q: checkbox.checked ? '' : '^((?!completed).)*$', regEx: true, smartSearch: false };
+      else if (checkbox.id === 'show-published')
+        return { column: 'storyPublished', q: checkbox.checked ? '' : 'false', regEx: false, smartSearch: false }
+      else 
+        console.error('Unrecognized column filter');
+    });
+    console.log('columnFilters', columnFilters)
+    subPanelCtrl.datatableTarget.setAttribute(
+      'data-datatable-search-params-value', 
+      JSON.stringify(Object.assign(
+        { curatorId: subPanelCtrl.curatorSelectTarget.value },
+        { columnFilters },
+        searchResults ? { searchResults } : { filterVal: subPanelCtrl.filterSelectTarget.value }
+      ))
+    );
+  }
+
+  showingCustomerWins() {
+    return this.activeTabValue === 'prospect' && this.customerWinsTabTarget.getAttribute('aria-expanded') === 'true';
+  }
+
+  showingContributors() {
+    return this.activeTabValue === 'prospect' && this.contributorsTabTarget.getAttribute('aria-expanded') === 'true';
+  }
+
 }

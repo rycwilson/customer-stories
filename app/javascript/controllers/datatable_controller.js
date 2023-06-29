@@ -12,6 +12,7 @@ export default class extends Controller {
   static baseOptions;
   dt;
   didInitialize = false;
+  searchDebounceTimer;
 
   initialize() {
     const ctrl = this;
@@ -21,9 +22,12 @@ export default class extends Controller {
       dom: 'tip',
       pageLength: 100,
       drawCallback(settings) {
+        console.log('drawCallback()')
         if (ctrl.didInitialize) ctrl.redrawRowGroups();
+        ctrl.dispatch(`${ctrl.parentCtrl().identifier}-drawn`)
       },
       initComplete(settings) {
+        ctrl.cloneFilterResults();
         ctrl.didInitialize = true;
         ctrl.dispatch('init', { detail: { dt: this.api() } });
       }
@@ -33,27 +37,28 @@ export default class extends Controller {
   connect() {
   }
 
-
   readyValueChanged(dataIsReady) {
     if (dataIsReady)
       this.dt = new DataTable(this.element, Object.assign({}, this.baseOptions, this.parentCtrl().tableConfig()));
   }
 
   searchParamsValueChanged(params) {
-    // console.log(this.element.id, 'searchParamsValueChanged()', params, this.didInitialize)
-    
-    // this.didInitialize does not work as a blocker because the ValueChanged callback is being called twice
-    // What is it about a default empty object that causes the callback to repeat?
-    // Note that explicitly setting data-datatable-search-params-value on the element prevents the double callback
-    // if (this.didInitialize) {
-    if (Object.keys(params).length !== 0) {
-      // console.log(`${this.element.id} searchParams: `, searchParams)
-      this.search(params)
-    }
+    console.log('searchParamsValueChanged()', params)
+    clearTimeout(this.searchDebounceTimer);
+    this.searchDebounceTimer = setTimeout(() => {
+      // this.didInitialize does not work as a blocker because the ValueChanged callback is being called twice
+      // What is it about a default empty object that causes the callback to repeat?
+      // Note that explicitly setting data-datatable-search-params-value on the element prevents the double callback
+      // if (this.didInitialize) {
+      if (Object.keys(params).length !== 0) {
+        // console.log(`${this.element.id} searchParams: `, searchParams)
+        this.search(params)
+      }
+    }, 200);    
   }
 
   search({ curatorId, columnFilters, filterVal, searchResults }) {
-    // console.log(`searchTable(${curatorId}, ${filterVal || searchResults})`)
+    console.log('search')
     let dtSearch = this.dt
       .search('')
       .columns().search('')
@@ -72,6 +77,7 @@ export default class extends Controller {
     } else if (filterVal) {
       const column = filterVal.slice(0, filterVal.indexOf('-'));
       const id = filterVal.slice(filterVal.indexOf('-') + 1, filterVal.length);
+      console.log(`${column}:name`, `^${id}$`)
       dtSearch = dtSearch.column(`${column}:name`).search(`^${id}$`, true, false);
     }
     dtSearch.draw();
@@ -98,6 +104,16 @@ export default class extends Controller {
       if (shouldEnable && !rowGroups.enabled()) rowGroups.enable().draw();
     })
   }
+
+  cloneFilterResults() {
+    const originalResults = this.element.nextElementSibling;
+    const clone = originalResults.cloneNode();
+    const formatText = () => clone.textContent = originalResults.textContent.replace(/\sentries/g, '');
+    clone.id = `${originalResults.id}--clone`;
+    formatText();
+    this.parentCtrl().filterResultsTarget.appendChild(clone);
+    $(this.element).on('draw.dt', formatText);
+  };
 
   parentCtrl() {
     return (

@@ -31,6 +31,9 @@ application.register('customer-win', CustomerWinController);
 import ContributorsController from './contributors_controller';
 application.register('contributors', ContributorsController);
 
+import ContributionController from './contribution_controller';
+application.register('contribution', ContributionController);
+
 import ActionsDropdownController from './actions_dropdown_controller';
 application.register('actions-dropdown', ActionsDropdownController);
 

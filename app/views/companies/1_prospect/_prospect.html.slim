@@ -62,13 +62,13 @@
           #customer-wins.tab-pane.fade {
             class=('active in' if tab == '#customer-wins' || tab.nil?) 
             data-dashboard-target="subPanel"
+            data-customer-wins-dashboard-outlet=".dashboard"
+            data-customer-wins-contributors-outlet="#contributors"
             data-customer-wins-data-path-value="/successes"
             data-action="\
               tomselect:change-curator->customer-wins#searchTable \
               tomselect:change-filter->customer-wins#searchTable \
-              tomselect:search->customer-wins#searchTable \
-              customer-wins:add-contributors->dashboard#addCustomerWinContributors \
-              customer-wins:show-contributors->dashboard#showCustomerWinContributors"
+              tomselect:search->customer-wins#searchTable"
             aria-labelledby="customer-wins-tab"
             role="tabpanel" }
             = render('companies/1_prospect/successes/successes_table', { company: company })
@@ -76,9 +76,11 @@
           #contributors.tab-pane.fade {
             class=('active in' if tab == '#contributors')
             data-dashboard-target="subPanel"
+            data-contributors-dashboard-outlet=".dashboard"
+            data-contributors-customer-wins-outlet="#customer-wins"
             data-contributors-data-path-value="/companies/0/contributions"
             data-action="\
-              tomselect:change-curator->contributorss#searchTable \
+              tomselect:change-curator->contributors#searchTable \
               tomselect:change-filter->contributors#searchTable \
               tomselect:search->contributors#searchTable"
             aria-labelledby="contributors-tab"

@@ -26,7 +26,7 @@ export default class extends Controller {
           // but we want to keep it since the search results are reflected in the table
           // => accomplished by adding and selecting an option to match the search text
           if (!this.ts.getValue() && this.ts.lastQuery) {
-            this.ts.addOption({ value: 0, text: this.lastQuery }, true);   // true => option will be removed on clear
+            this.ts.addOption({ value: 0, text: this.ts.lastQuery }, true);   // true => option will be removed on clear
             this.ts.addItem(0, true);    // true => don't trigger change event
           }
         }

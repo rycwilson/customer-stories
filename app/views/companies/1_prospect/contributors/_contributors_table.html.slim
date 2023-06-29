@@ -3,36 +3,44 @@
   .row.contributors-header
     .col-sm-6
       .row.form-horizontal
+
         .form-group
           label.col-sm-3.control-label Group
           .col-sm-9
             .checkbox
               label for="group-by-customer-win"
-                input {
-                  type="checkbox" 
-                  id="group-by-customer-win" 
-                  data-contributors-target="rowGroupsCheckbox"
-                  data-action="contributors#toggleRowGroups"
-                  checked="" }
+                input type="checkbox" id="group-by-customer-win" data-action="contributors#toggleRowGroups" checked=""
                 span 
                   |&nbsp;&nbsp;by Customer Win / Story
+                  
         .form-group
           label.col-sm-3.control-label Show
           .col-sm-9
             .checkbox
               / label.contributors.checkbox-filter for="show-completed"
               label for="show-completed"
-                input type="checkbox" id="show-completed" class="checkbox-filter" checked=""
+                input {
+                  type="checkbox" 
+                  id="show-completed" 
+                  data-contributors-target="filterCheckbox"
+                  data-action="contributors#searchTable" 
+                  checked="" }
                 span
                   |&nbsp;&nbsp;Contributors with a completed Contribution
               / label.contributors.checkbox-filter for="show-published"
               label for="show-published"
-                input type="checkbox" id="show-published" class="checkbox-filter" checked=""
+                input {
+                  type="checkbox" 
+                  id="show-published" 
+                  data-contributors-target="filterCheckbox"
+                  data-action="contributors#searchTable" 
+                  checked="" }
                 span
                   |&nbsp;&nbsp;Contributors to published Customer Stories
 
     .col-sm-6.select-filters
       .row.form-horizontal
+
         .form-group
           label.col-sm-3.col-sm-offset-1.control-label Curator
           .col-sm-8 style="padding:0"
@@ -42,7 +50,12 @@
                 { include_blank: true,
                   placeholder: 'Search / Select',
                   class: 'prospect contributors curator-select form-control',
-                  data: { controller: 'tomselect', tomselect_type_value: 'curator', contributors_target: 'curatorSelect' } })
+                  data: { \
+                    controller: 'tomselect', 
+                    tomselect_type_value: 'curator', 
+                    contributors_target: 'curatorSelect',
+                    sync_tables: 'true' } })
+
         .form-group.search
           label.col-sm-3.col-sm-offset-1.control-label Filter
           .col-sm-8 style="padding:0;"
@@ -60,8 +73,10 @@
                     controller: 'tomselect', 
                     tomselect_type_value: 'filter', 
                     contributors_target: 'filterSelect',
-                    dashboard_target: 'contributorsFilter' } })
+                    dashboard_target: 'contributorsFilter',
+                    sync_tables: 'true' } })
 
+      .help-block.text-right data-contributors-target="filterResults"
 
 / it's actually a contributions table, but presented to user as Contributors
 table#contributors-table.datatable.table.table-bordered.has-row-groups {

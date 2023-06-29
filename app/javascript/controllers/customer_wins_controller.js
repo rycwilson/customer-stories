@@ -1,19 +1,16 @@
 import { Controller } from "@hotwired/stimulus";
 import { getJSON } from '../util';
-import { searchTable as _searchTable } from '../actions/tables.js';
 
 export default class extends Controller {
-  static targets = ['rowGroupsCheckbox', 'filterCheckbox', 'curatorSelect', 'filterSelect', 'datatable'];
+  static outlets = ['dashboard', 'contributors'];
+  static targets = ['filterCheckbox', 'curatorSelect', 'filterSelect', 'filterResults', 'datatable'];
   static values = { dataPath: String };
 
   customerWins;
   dt;
 
-  initialize() {}
-
   connect() {
     // console.log('connect customer wins')
-    // this.element.customerWins = this;
 
     getJSON(this.dataPathValue).then(successes => {
       this.customerWins = successes;
@@ -24,8 +21,20 @@ export default class extends Controller {
     })
   }
 
-  searchTable(e = { detail: {} }) {
-    _searchTable.bind(this)(e.detail.searchResults);
+  searchTable(e = { type: '', detail: {} }) {
+    const isUserInput = e.type;
+    if (e.type.includes('change-curator')) {
+      this.contributorsOutlet.curatorSelectTarget.tomselect.setValue(this.curatorSelectTarget.value, true);
+    } else if (e.type.includes('change-filter')) {
+      this.contributorsOutlet.filterSelectTarget.tomselect.setValue(this.filterSelectTarget.value, true);
+    }
+    
+    // allow the visible table to be drawn before searching the other table
+    if (isUserInput && e.target.dataset.syncTables)
+      this.element.addEventListener('datatable:customer-wins-drawn', () => {
+        setTimeout(() => this.dashboardOutlet.searchTable.bind(this.contributorsOutlet)());
+      }, { once: true });
+    this.dashboardOutlet.searchTable.bind(this)(e.detail && e.detail.searchResults);
   }
   
   tableInitComplete(e) {
@@ -33,9 +42,21 @@ export default class extends Controller {
     this.searchTable();
   }
 
-  toggleRowGroups() {
-    this.datatableTarget.setAttribute('data-datatable-enable-row-groups-value', this.rowGroupsCheckbox.checked);
+  toggleRowGroups(e) {
+    this.datatableTarget.setAttribute('data-datatable-enable-row-groups-value', e.target.checked);
   }
+
+  cloneFilterResults(tableControls, tableWrapper, table) {
+    const originalResults = this.element.nextElementSibling;
+    const clone = originalResults.cloneNode();
+    const formatText = () => clone.textContent = originalResults.textContent.replace(/\sentries/g, '');
+    clone.id = `${originalResults.id}--clone`;
+    clone.classList.add('help-block', 'text-right');
+    formatText();
+    tableControls.querySelector('.select-filters').appendChild(clone);
+    this.dispatch('clone-filter-results', { detail: clone })
+    $(table).on('draw.dt', formatText);
+  };
 
   tableConfig() {
     const colIndices = { success: 1, customer: 2, curator: 3, status: 4, story: 5, actions: 6 };
@@ -113,6 +134,9 @@ export default class extends Controller {
             td.classList.add('dropdown');
             td.setAttribute('data-controller', 'actions-dropdown');
             td.setAttribute('data-customer-win-target', 'actionsDropdown');
+            ['add', 'invite', 'show'].forEach(action => (
+              td.setAttribute(`customer-win:${action}-contributors`, `dashboard#${action}CustomerWinContributors`)
+            ));
           }
         }
       ],

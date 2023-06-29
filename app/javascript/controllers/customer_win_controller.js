@@ -19,12 +19,8 @@ export default class extends Controller {
     return Boolean(this.story);
   }
 
-  storyPath() {
+  editStoryPath() {
     return this.storyExists() && `/curate/${this.customer.slug}/${this.story.slug}`;
-  }
-
-  addContributors() {
-    this.dispatch('add-contributors', { detail: { successId: this.id } });
   }
 
   showContributions() {
@@ -90,15 +86,22 @@ export default class extends Controller {
     const noContributorsAdded = Boolean(this.status.match(/0.+Contributors\sadded/));
     const noContributorsInvited = Boolean(this.status.match(/0.+Contributors\sinvited/));
     const contributionsExist = Boolean(this.status.match(/[^0]&nbsp;&nbsp;Contributions\ssubmitted/));
-    const action = noContributorsAdded ? 'Add' : (noContributorsInvited ? 'Invite' : 'Manage');
+    const action = noContributorsAdded ? 'Add' : (noContributorsInvited ? 'Invite' : '');
     return `
-      <a href="#" class="dropdown-toggle" data-toggle="dropdown"><i class="fa fa-caret-down"></i></a>
-      <ul class="dropdown-menu dropdown-menu-right">
+      <a id="customer-wins-actions-dropdown-${this.id}" 
+        href="#" 
+        class="dropdown-toggle" 
+        data-toggle="dropdown"
+        aria-haspopup="true" 
+        aria-expanded="false">
+        <i class="fa fa-caret-down"></i>
+      </a>
+      <ul class="dropdown-menu dropdown-menu-right" aria-labelledby="customer-wins-actions-dropdown-${this.id}">
         ${contributionsExist ? `
             <li>
               <a href="javascript:;" data-action="customer-win#showContributions">
                 <i class="fa fa-comments fa-fw action"></i>&nbsp;&nbsp;
-                <span>View Contributions</span>
+                <span>Contributions</span>
               </a>
             </li>
             <li class="divider" role="separator"></li>
@@ -114,7 +117,7 @@ export default class extends Controller {
                 )
                 return `
                   <li class="${className}">
-                    <a href="${this.storyPath}">
+                    <a href="${this.editStoryPath}">
                       <i class="fa ${icon} fa-fw action"></i>&nbsp;&nbsp;
                       <span>Customer Story ${section}</span>
                     </a>
@@ -122,7 +125,9 @@ export default class extends Controller {
                 `;
               }).join('') : `
             <li>
-              <a href="javascript:;" data-action="customer-win#${action.toLowerCase()}Contributors">
+              <a href="javascript:;" 
+                data-action="dashboard#${action.toLowerCase() || 'show'}CustomerWinContributors" 
+                data-customer-win-id="${this.id}">
                 <i class="fa fa-users fa-fw action"></i>&nbsp;&nbsp;
                 <span>${action} Contributors</span>
               </a>
