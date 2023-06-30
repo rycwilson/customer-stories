@@ -13,16 +13,17 @@ export default class extends Controller {
   dt;
   didInitialize = false;
   searchDebounceTimer;
+  parentController;
 
   initialize() {
     const ctrl = this;
     this.baseOptions = {
-      // deferRender: true,
+      deferRender: true,
       autoWidth: false,
       dom: 'tip',
-      pageLength: 100,
+      pageLength: 75,
       drawCallback(settings) {
-        console.log('drawCallback()')
+        // console.log('drawCallback()')
         if (ctrl.didInitialize) ctrl.redrawRowGroups();
         ctrl.dispatch(`${ctrl.parentCtrl().identifier}-drawn`)
       },
@@ -43,7 +44,7 @@ export default class extends Controller {
   }
 
   searchParamsValueChanged(params) {
-    console.log('searchParamsValueChanged()', params)
+    // console.log('searchParamsValueChanged()', params)
     clearTimeout(this.searchDebounceTimer);
     this.searchDebounceTimer = setTimeout(() => {
       // this.didInitialize does not work as a blocker because the ValueChanged callback is being called twice
@@ -58,7 +59,7 @@ export default class extends Controller {
   }
 
   search({ curatorId, columnFilters, filterVal, searchResults }) {
-    console.log('search')
+    // console.log('search')
     let dtSearch = this.dt
       .search('')
       .columns().search('')
@@ -87,7 +88,7 @@ export default class extends Controller {
   // the Datatables table-striped class does not take row groups into account, hence this approach
   enableRowGroupsValueChanged(shouldEnable) {
     if (this.didInitialize) {
-      this.element.classList.toggle('has-row-groups');
+      // this.element.classList.toggle('has-row-groups');
       this.rowTargets.forEach(tr => tr.classList.remove('even', 'odd'));
       if (!shouldEnable) this.rowTargets.forEach((tr, i) => tr.classList.add(i % 2 === 0 ? 'even' : 'odd'));
       this.dt.draw();
@@ -97,11 +98,13 @@ export default class extends Controller {
   redrawRowGroups() {
     const rowGroups = this.dt.rowGroup();
     const shouldEnable = this.enableRowGroupsValue;
+    const shouldRedraw = (!shouldEnable && rowGroups.enabled()) || (shouldEnable && !rowGroups.enabled());
     
     // without a timeout, the row groups get duplicated
     setTimeout(() => {
-      if (!shouldEnable && rowGroups.enabled()) rowGroups.disable().draw();
-      if (shouldEnable && !rowGroups.enabled()) rowGroups.enable().draw();
+      if (shouldEnable && shouldRedraw) rowGroups.enable().draw();
+      if (!shouldEnable && shouldRedraw) rowGroups.disable().draw();
+      if (shouldRedraw) this.element.classList.toggle('has-row-groups');
     })
   }
 
@@ -113,19 +116,13 @@ export default class extends Controller {
     formatText();
     this.parentCtrl().filterResultsTarget.appendChild(clone);
     $(this.element).on('draw.dt', formatText);
-  };
+  }
 
   parentCtrl() {
-    return (
-      (this.element.getAttribute('data-datatable-customer-wins-outlet') && this.customerWinsOutlet) ||
-      (this.element.getAttribute('data-datatable-contributors-outlet') && this.contributorsOutlet)
+    this.parentController = this.parentController || (
+      (this.element.hasAttribute('data-datatable-customer-wins-outlet') && this.customerWinsOutlet) ||
+      (this.element.hasAttribute('data-datatable-contributors-outlet') && this.contributorsOutlet)
     );
-    // const parentControllerElement = (
-    //   this.element.closest('[data-dashboard-target="subPanel"]') || 
-    //   this.element.closest('[data-dashboard-target="tabPanel"]')
-    // );
-    // return this.application.getControllerForElementAndIdentifier(
-    //   parentControllerElement, parentControllerElement.getAttribute('data-controller')
-    // );
+    return this.parentController;
   }
 }

@@ -16,6 +16,7 @@ export default class extends Controller {
       this.customerWins = successes;
       console.log('customer wins: ', this.customerWins)
       this.datatableTarget.setAttribute('data-datatable-ready-value', 'true');
+      // this.datatableTarget.readyValue = true;
       const panel = this.element.closest('[data-dashboard-target="tabPanel"]');
       this.dispatch('load', { detail: { panel, resourceClassName: 'customer-wins' }});
     })
@@ -161,22 +162,28 @@ export default class extends Controller {
   
       rowGroup: {
         dataSrc: 'customer.name',
-        startRender: function (groupRows, successName) {
-          // console.log($(this))   //  [RowGroup]
-          const customerId = $('#successes-table').DataTable().rows(groupRows[0][0]).data()[0].customer.id;
-          return $('<tr/>').append(`
-            <td colspan="3">
-              <span style="font-weight:600">
-                ${groupRows.data()[0].customer.name}
-              </span>
-            </td>
-            <td colspan="1">
-              <button type="button" class="edit-customer" data-customer-id="${customerId}">
-                <i class="glyphicon glyphicon-pencil"></i>
-                <div><i class="fa fa-circle-o-notch"></i></div>
-              </button>
-            </td>
-          `);
+        startRender(groupRows, customerName) {
+          const customerId = groupRows.data()[0].customer.id;
+          const turboFrameAttrs = { id: `customer-${customerId}`, src: `/customers/${customerId}/edit` };
+          return $(`
+            <tr />`).append(`
+              <td colspan="3">
+                <span style="font-weight:600">${customerName}</span>
+              </td>
+              <td colspan="1">
+                <button 
+                  type="button" 
+                  class="edit-customer" 
+                  data-controller="modal-button"
+                  data-modal-button-modal-outlet=".customer-modal"
+                  data-modal-button-title-value="Edit Customer"
+                  data-modal-button-turbo-frame-attrs-value=${JSON.stringify(turboFrameAttrs)}
+                  data-action="modal-button#showModal">
+                  <i class="glyphicon glyphicon-pencil"></i>
+                  <!-- <div><i class="fa fa-circle-o-notch"></i></div> -->
+                </button>
+              </td>
+            `);
         }
       },
   
@@ -188,9 +195,9 @@ export default class extends Controller {
         row.setAttribute('data-customer-win-row-data-value', JSON.stringify({ id, status, customer, story }));
         row.setAttribute('data-datatable-target', 'row');
 
-        // $(row).attr('data-customer-id', data.customer.id);
-        // $(row).attr('data-success-id', data.id);
-        // $(row).children().eq(1).attr('data-filter', data.id);
+        $(row).attr('data-customer-id', data.customer.id);
+        $(row).attr('data-success-id', data.id);
+        $(row).children().eq(1).attr('data-filter', data.id);
       }
     }
   }

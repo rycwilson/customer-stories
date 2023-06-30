@@ -39,26 +39,6 @@
     }
   }
 
-  // datatables table-striped class does not take row groups into account, so roll our own
-  &:not(.has-row-groups) > tbody > tr.even {
-    background-color: #f9f9f9;
-  }
-
-  & > tbody, 
-  &:not(.has-row-groups) > tbody {
-    > tr:not(.dtrg-group),
-    > tr:not(.dtrg-group).even {
-      > td {
-        transition: background-color 0.2s ease-in-out;
-      }
-    
-      &:hover > td {
-        background-color: $light-blue;
-        transition: background-color 0.2s ease-in-out;
-      }
-    }
-  }
-
   button.edit-customer {
     display: none;
     position: absolute;

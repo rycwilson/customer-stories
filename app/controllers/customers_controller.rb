@@ -3,14 +3,19 @@ class CustomersController < ApplicationController
   def edit
     @customer = Customer.find(params[:id])
     @s3_direct_post = set_s3_direct_post()
+    render(:edit, layout: false)
   end
 
   def update
     @customer = Customer.friendly.find(params[:id])
-    @customer.update(customer_params)
+    unless @customer.update(customer_params)
+      @errors = @customer.errors.full_messages
+    end
     respond_to do |format|
       format.html { redirect_to('/prospect', flash: { success: "Customer updated" }) }
-      format.js {}
+      format.json do 
+        render(json: { status: @errors ? :unprocessable_entity : :ok, errors: @errors })
+      end
     end
   end
 

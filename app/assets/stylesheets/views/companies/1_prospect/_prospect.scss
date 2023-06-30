@@ -21,7 +21,7 @@
 }
 
 #successes-table, 
-#prospect-contributors-table, 
+#contributors-table, 
 #curate-contributors-table {
   th.toggle-child, 
   td.toggle-child, 
@@ -99,6 +99,29 @@
     // this ensures newlines will be respected
     // ref: https://stackoverflow.com/questions/10937218
     white-space: pre;
+  }
+}
+
+#successes-table,
+#contributors-table {
+  // datatables table-striped class does not take row groups into account, so roll our own
+  &:not(.has-row-groups) > tbody > tr.even {
+    background-color: #f9f9f9;
+  }
+
+  & > tbody, 
+  &:not(.has-row-groups) > tbody {
+    > tr:not(.dtrg-group),
+    > tr:not(.dtrg-group).even {
+      > td {
+        transition: background-color 0.2s ease-in-out;
+      }
+    
+      &:hover > td {
+        background-color: $light-blue;
+        transition: background-color 0.2s ease-in-out;
+      }
+    }
   }
 }
 

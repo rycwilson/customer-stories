@@ -42,3 +42,9 @@ application.register('new-contributor-modal', NewContributorModalController);
 
 import ContributionsModalController from './contributions_modal_controller';
 application.register('contributions-modal', ContributionsModalController);
+
+import ModalController from './modal_controller';
+application.register('modal', ModalController);
+
+import ModalButtonController from './modal_buttton_controller';
+application.register('modal-button', ModalButtonController);

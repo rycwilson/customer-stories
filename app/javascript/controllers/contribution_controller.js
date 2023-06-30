@@ -1,7 +1,6 @@
 import { Controller } from "@hotwired/stimulus";
 
 export default class extends Controller {
-  static outlets = ['customer-wins'];
   static targets = ['actionsDropdown'];
   static values = { rowData: Object, workflowStage: { type: String, default: 'prospect' } };
 
@@ -11,7 +10,12 @@ export default class extends Controller {
   invitationTemplate;
   customerWin;
 
+  // contribution;
+
+  initialize() {}
+  
   connect() {
+    // console.log('connect contribution')
     Object.keys(this.rowDataValue).forEach(field => this[field] = this.rowDataValue[field]);
     this.actionsDropdownTarget.insertAdjacentHTML('afterbegin', this.actionsDropdownTemplate());
   }

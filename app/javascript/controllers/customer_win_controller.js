@@ -1,4 +1,4 @@
-import { Controller } from "@hotwired/stimulus";
+import { Controller } from '@hotwired/stimulus';
 
 export default class extends Controller {
   static outlets = ['contributors', 'contributions-modal'];
@@ -11,6 +11,7 @@ export default class extends Controller {
   story;      // { id, title, slug }
 
   connect() {
+    // console.log('connect customer win')
     Object.keys(this.rowDataValue).forEach(field => this[field] = this.rowDataValue[field]);
     this.actionsDropdownTarget.insertAdjacentHTML('afterbegin', this.actionsDropdownTemplate());
   }
@@ -30,7 +31,7 @@ export default class extends Controller {
       ))
       .map(contribution => contribution.id);
     Promise
-      .all(contributionIds.map(id => fetch(`/contributions/${id}.json?get_submission=true`).then(res => res.json())))
+      .all(contributionIds.map(id => fetch(`/contributions/${id}.json? _submission=true`).then(res => res.json())))
       .then(contributions => {
         const modal = this.contributionsModalOutlet.element;
         const modalTitle = this.contributionsModalOutlet.titleTarget;

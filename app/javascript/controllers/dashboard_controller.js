@@ -32,6 +32,11 @@ export default class extends Controller {
   }
 
   addCustomerWinContributors({ target: { dataset: { customerWinId } } }) {
+    const modalCtrl = this.newContributorModalOutlet;
+    const showModal = () => {
+      modalCtrl.element.setAttribute('data-new-contributor-modal-customer-id-value', )
+      $(this.newContributorModalOutlet.element).modal('show');
+    }
     if (this.showingCustomerWins()) {
       $(this.contributorsTabTarget).one('shown.bs.tab', () => {
         $(this.newContributorModalOutlet.element).modal('show');
@@ -89,19 +94,19 @@ export default class extends Controller {
   // search customer wins or contributors
   searchTable(searchResults) {
     const subPanelCtrl = this;
-    console.log('searching...', this.identifier)
-    const columnFilters = subPanelCtrl.filterCheckboxTargets.map(checkbox => {
-      console.log('checkbox', checkbox)
-      if (checkbox.id === 'show-wins-with-story')
-        return { column: 'story', q: checkbox.checked ? '' : '^false$', regEx: true, smartSearch: false };
-      else if (checkbox.id === 'show-completed')
-        return { column: 'status', q: checkbox.checked ? '' : '^((?!completed).)*$', regEx: true, smartSearch: false };
-      else if (checkbox.id === 'show-published')
-        return { column: 'storyPublished', q: checkbox.checked ? '' : 'false', regEx: false, smartSearch: false }
-      else 
-        console.error('Unrecognized column filter');
-    });
-    console.log('columnFilters', columnFilters)
+    // console.log('searching', this.identifier, '...')
+    const columnFilters = subPanelCtrl.filterCheckboxTargets
+      .filter(checkbox => !checkbox.checked)
+      .map(checkbox => {
+        if (checkbox.id === 'show-wins-with-story')
+          return { column: 'story', q: '^false$', regEx: true, smartSearch: false };
+        else if (checkbox.id === 'show-completed')
+          return { column: 'status', q: '^((?!completed).)*$', regEx: true, smartSearch: false };
+        else if (checkbox.id === 'show-published')
+          return { column: 'storyPublished', q: 'false', regEx: false, smartSearch: false }
+        else 
+          console.error('Unrecognized column filter');
+      });
     subPanelCtrl.datatableTarget.setAttribute(
       'data-datatable-search-params-value', 
       JSON.stringify(Object.assign(
@@ -120,4 +125,7 @@ export default class extends Controller {
     return this.activeTabValue === 'prospect' && this.contributorsTabTarget.getAttribute('aria-expanded') === 'true';
   }
 
+  setNavCookie(e) {
+    Cookies.set(`csp-${this.activeTabValue}-tab`, e.target.closest('a').getAttribute('href'));
+  }
 }

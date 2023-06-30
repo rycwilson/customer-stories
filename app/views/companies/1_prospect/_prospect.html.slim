@@ -19,6 +19,7 @@
               href="#customer-wins" 
               data-toggle="tab"
               data-dashboard-target="customerWinsTab"
+              data-action="dashboard#setNavCookie"
               aria-controls="customer-wins" 
               role="tab" }
               span
@@ -40,6 +41,7 @@
               href="#contributors" 
               data-toggle="tab"
               data-dashboard-target="contributorsTab"
+              data-action="dashboard#setNavCookie"
               aria-controls="contributors" 
               role="tab" }
               span
@@ -64,6 +66,7 @@
             data-dashboard-target="subPanel"
             data-customer-wins-dashboard-outlet=".dashboard"
             data-customer-wins-contributors-outlet="#contributors"
+            data-foo="#{dom_id(Customer.last)}"
             data-customer-wins-data-path-value="/successes"
             data-action="\
               tomselect:change-curator->customer-wins#searchTable \

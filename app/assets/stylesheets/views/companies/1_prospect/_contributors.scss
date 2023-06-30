@@ -1,12 +1,10 @@
-
-#prospect-contributors-table, #curate-contributors-table {
+#contributors-table, #curate-contributors-table {
   
-  /**
-   * hide sorting icon for contributors; doesn't presently work in light of row grouping
-   */
+  // hide sorting icon for contributors; doesn't presently work in light of row grouping
   th[aria-label*="Contributor"] {
     pointer-events: none;
   }
+
   th[aria-label*="Contributor"]:after {
     content: "" !important;
   }
@@ -21,6 +19,7 @@
     cursor: pointer;
     position: relative;
     padding-right: 40px;
+
     i.fa-caret-down, i.fa-check {
       position: absolute;
       right: 20px;
@@ -31,14 +30,17 @@
 
   td.invitation-template.editor-is-open {
     padding-right: 8px;
+
     .DTE_Form_Buttons {
       .btn {
         float: right;
       }
+
       .btn:first-of-type {
         margin-left: 8px;  // matches td padding
       }
     }
+
     .DTE_Form_Buttons :first-child {
       width: 48px;
     }
@@ -48,9 +50,11 @@
     span.select2 {
       margin-bottom: 8px;
     }
+
     .btn-success {
       float: right;
     }
+    
     .placeholder {
       color: #999;
     }
@@ -59,6 +63,7 @@
   td.status {
     position: relative;
     line-height: 1.6;
+
     i {
       position: absolute;
       display: none;
@@ -71,15 +76,19 @@
 
   .contributor-child-row {
     @include LI-profile-badge(#fff);
+
     .LI-badge-container {
       // margin-bottom: 0;  // override the mixin
     }
+
     .form-group.LI-profile {
       // margin-bottom: 0;
     }
+
     .LI-profile__error {
       display: none;
     }
+
     .LI-profile__container {
       display: flex;
       align-items: center;
@@ -89,20 +98,25 @@
       // border: 1px solid #ccc;
       background-color: #f9f9f9;
       box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.16), 0 0 0 1px rgba(0, 0, 0, 0.08);
+
       i {
         color: #555;
         font-size: 18px;
       }
+
       &.loaded, &.error {
         i { display: none; }
       }
+
       &.loaded {
         background: none;
         box-shadow: none;
+
         .LI-profile-badge {
           width: 100%;
         }
       }
+
       &.error {
         .LI-profile__error {
           // display: initial;
@@ -112,5 +126,4 @@
       }
     }
   }
-
 }

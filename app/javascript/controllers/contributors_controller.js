@@ -178,6 +178,7 @@ export default class extends Controller {
       rowGroup: workflowStage === 'curate' ? null : { dataSrc: 'success.name', startRender: this.rowGroupTemplate },
   
       createdRow: (row, data, index) => {
+        console.log('createdRow')
         // const isPreInvite = data.status === 'pre_request';
         // const didNotRespond = data.status === 'did_not_respond';
         // $(row)
@@ -197,7 +198,7 @@ export default class extends Controller {
 
         const { id, status, contributor, invitation_template: invitationTemplate, success: customerWin } = data;
         row.setAttribute('data-controller', 'contribution');
-        row.setAttribute('data-contribution-customer-wins-outlet', '#customer-wins')
+        row.setAttribute('data-contribution-contributors-outlet', '#contributors')
         row.setAttribute(
           'data-contribution-row-data-value', JSON.stringify({ id, status, contributor, invitationTemplate, customerWin })
         );

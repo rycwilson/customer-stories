@@ -1,10 +1,19 @@
-.customer-modal.modal.fade tabindex="-1" role="dialog"
+.customer-modal.modal.fade {
+  data-controller="modal" 
+  data-action="turbo:frame-render->modal#onFrameRender" 
+  tabindex="-1" 
+  role="dialog" }
+
   .modal-dialog role="document"
     .modal-content
+
       .modal-header
-        h4.modal-title Edit Customer
+        h4.modal-title data-modal-target="title" Edit Customer
+
       .modal-body
-        / dynamic customer form will go here
+        turbo-frame id="" src="" data-modal-target="turboFrame"
+          div Loading...
+          
       .modal-footer
         button.btn.btn-default type="button" data-dismiss="modal" Cancel
         button.btn.btn-success type="submit" form="customer-form" style="width:114px"
