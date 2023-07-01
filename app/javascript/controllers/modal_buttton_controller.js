@@ -11,11 +11,10 @@ export default class extends Controller {
   }
 
   showModal() {
+    const { id: turboFrameId, src: turboFrameSrc } = this.turboFrameAttrsValue;
     this.modalOutlet.titleTarget.textContent = this.titleValue;
-    if (this.modalOutlet.hasTurboFrameTarget) {
-      const frame = this.modalOutlet.turboFrameTarget;
-      frame.id = this.turboFrameAttrsValue.id;
-      frame.src = this.turboFrameAttrsValue.src;
+    if (turboFrameId && turboFrameSrc && this.modalOutlet.hasTurboFrameTarget) {
+      this.modalOutlet.turboFrameAttrsValue = { ...this.turboFrameAttrsValue };
     }
     this.modalOutlet.show();
   }

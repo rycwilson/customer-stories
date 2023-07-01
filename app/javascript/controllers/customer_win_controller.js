@@ -31,14 +31,13 @@ export default class extends Controller {
       ))
       .map(contribution => contribution.id);
     Promise
-      .all(contributionIds.map(id => fetch(`/contributions/${id}.json? _submission=true`).then(res => res.json())))
+      .all(contributionIds.map(id => fetch(`/contributions/${id}.json?get_submission=true`).then(res => res.json())))
       .then(contributions => {
-        const modal = this.contributionsModalOutlet.element;
-        const modalTitle = this.contributionsModalOutlet.titleTarget;
-        const modalBody = this.contributionsModalOutlet.bodyTarget;
-        [modalTitle, modalBody].forEach(el => el.replaceChildren());
-        modalTitle.innerText = 'Contributions and Feedback';
-        modalBody.insertAdjacentHTML('afterbegin', this.contributionsTemplate(contributions));
+        console.log('contributions', contributions)
+        const { element: modal, titleTarget: title, bodyTarget: body } = this.contributionsModalOutlet;
+        [title, body].forEach(el => el.replaceChildren());
+        title.innerText = 'Contributions and Feedback';
+        body.insertAdjacentHTML('afterbegin', this.contributionsTemplate(contributions));
         $(modal).modal('show');
       })
   }

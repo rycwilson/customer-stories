@@ -175,7 +175,7 @@ export default class extends Controller {
                   type="button" 
                   class="edit-customer" 
                   data-controller="modal-button"
-                  data-modal-button-modal-outlet=".customer-modal"
+                  data-modal-button-modal-outlet="#main-modal"
                   data-modal-button-title-value="Edit Customer"
                   data-modal-button-turbo-frame-attrs-value=${JSON.stringify(turboFrameAttrs)}
                   data-action="modal-button#showModal">
@@ -195,9 +195,9 @@ export default class extends Controller {
         row.setAttribute('data-customer-win-row-data-value', JSON.stringify({ id, status, customer, story }));
         row.setAttribute('data-datatable-target', 'row');
 
-        $(row).attr('data-customer-id', data.customer.id);
-        $(row).attr('data-success-id', data.id);
-        $(row).children().eq(1).attr('data-filter', data.id);
+        // $(row).attr('data-customer-id', data.customer.id);
+        // $(row).attr('data-success-id', data.id);
+        // $(row).children().eq(1).attr('data-filter', data.id);
       }
     }
   }
