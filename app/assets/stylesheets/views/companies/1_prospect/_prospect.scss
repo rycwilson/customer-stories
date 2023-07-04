@@ -78,7 +78,37 @@
       color: #666;
     }
   }
+}
 
+.popover[data-controller="table-display-options"] {
+  max-width: revert;
+
+  label {
+    padding-right: 0;
+  }
+
+  .form-group:not(:first-child):not(:last-child) {
+    margin-bottom: 0.25em;
+  }
+
+  .popover-content {
+    position: relative;
+    padding: 1.25em 0;
+  }
+
+  &[data-table-display-options-customer-wins-outlet] {
+    .popover-content {
+      left: -1em;
+      width: 25em;
+    }
+  }
+
+  &[data-table-display-options-contributors-outlet] {
+    .popover-content {
+      left: -2em;
+      width: 30em;
+    }
+  }
 }
 
 #prospect {

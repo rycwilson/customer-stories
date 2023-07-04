@@ -154,8 +154,8 @@ export default class extends Controller {
     const content = `
       <div class="form-horizontal">
         <div class="form-group">
-          <label class="col-sm-2 control-label" style="padding-left:0; padding-right:0">Group</label>
-          <div class="col-sm-10">
+          <label class="col-sm-3 control-label">Group</label>
+          <div class="col-sm-9">
             <div class="checkbox">
               <label for="group-by-${groupByResource.toLowerCase().replace(/\s/g, '-')}">
                 <input 
@@ -168,10 +168,10 @@ export default class extends Controller {
             </div>
           </div>
         </div>
-        ${Object.entries(this.checkboxFiltersValue).map(([filterId, filter]) => (`
+        ${Object.entries(this.checkboxFiltersValue).map(([filterId, filter], i) => (`
           <div class="form-group">
-            <label class="col-sm-2 control-label" style="padding-left:0; padding-right:0">Show</label>
-            <div class="col-sm-10">
+            <label class="col-sm-3 control-label">${i === 0 ? 'Show' : ''}</label>
+            <div class="col-sm-9">
               <div class="checkbox">
                 <label for="${filterId}">
                   <input 
@@ -184,7 +184,7 @@ export default class extends Controller {
               </div>
             </div>
           </div>
-        `))}
+        `)).join('')}
       </div>
     `;
     if (isReset) $(btn).data()['bs.popover'].options.content = content;
@@ -200,12 +200,11 @@ export default class extends Controller {
           data-controller="table-display-options" 
           data-table-display-options-dashboard-outlet=".dashboard"
           data-table-display-options-${this.identifier}-outlet="#${this.identifier}"
-          role="tooltip" 
-          style="max-width:revert">
+          role="tooltip">
 
           <div class="arrow"></div>
           <h3 class="popover-title label-secondary"></h3>
-          <div class="popover-content" style="width:25em; padding: 1em 1.25em">
+          <div class="popover-content">
             <!-- the template below goes here -->
           </div>
         </div>
