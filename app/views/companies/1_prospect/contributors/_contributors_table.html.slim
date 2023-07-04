@@ -1,9 +1,66 @@
-.contributors
+.table-controls 
+  div 
+    .curator-select 
+      label 
+        span Curator
+      = select_tag( \
+          nil,
+          options_from_collection_for_select(company.curators, :id, :full_name, current_user.id),
+          { include_blank: true,
+            placeholder: 'Select',
+            class: 'form-control',
+            data: { \
+              controller: 'tomselect', 
+              tomselect_type_value: 'curator', 
+              contributors_target: 'curatorSelect',
+              sync_tables: 'true' } })
 
-  .row.contributors-header
-    .col-sm-6
-      .row.form-horizontal
+    .filter-select
+      = select_tag( \
+          nil,
+          grouped_options_for_select( \
+            'Customer' => company.customers.map { |customer| [customer.name, "customer-#{customer.id}"] },
+            'Customer Win' => company.successes.map { |success| [success.name, "success-#{success.id}"] },
+            'Contributor' => company.contributors.map { |user| [user.full_name, "contributor-#{user.id}"] }),
+          { include_blank: true,
+            placeholder: 'Search / Select',
+            id: 'contributors-filter',
+            class: 'dt-filter form-control',
+            data: { \
+              controller: 'tomselect', 
+              tomselect_type_value: 'filter', 
+              contributors_target: 'filterSelect',
+              dashboard_target: 'contributorsFilter',
+              sync_tables: 'true' } })
+  
+  div
+    div
+      / empty label for spacing
+      /label 
+      /button.btn.btn-secondary {
+        type="button"
+        data-controller="modal-button"
+        data-modal-button-modal-outlet="#main-modal"
+        data-modal-button-title-value="New Contributor"
+        data-modal-button-turbo-frame-attrs="{\"id\":\"new-contributor\",\"src\":\"#{company_contributions_path(company)}\"}"
+        data-action="modal-button#showModal" }
+        i.fa.fa-fw.fa-plus-circle
+        |&nbsp;&nbsp;New Contributor
+      button.btn.btn-default type="button" aria-label="New Contributor"
+        i.fa.fa-fw.fa-plus
+      button.btn.btn-default {
+        type="button" 
+        aria-label="Table Display Options" 
+        data-contributors-target="tableDisplayOptionsBtn" }
+        i.fa.fa-fw.fa-server
+    div 
+      .help-block.text-right data-contributors-target="filterResults"
 
+
+
+  /.row.contributors-header
+    .col-sm-7
+      .form-horizontal
         .form-group
           label.col-sm-3.control-label Group
           .col-sm-9
@@ -12,13 +69,12 @@
                 input type="checkbox" id="group-by-customer-win" data-action="contributors#toggleRowGroups" checked=""
                 span 
                   |&nbsp;&nbsp;by Customer Win / Story
-                  
         .form-group
           label.col-sm-3.control-label Show
           .col-sm-9
             .checkbox
               / label.contributors.checkbox-filter for="show-completed"
-              label for="show-completed"
+              label for="show-completed" style="margin-bottom:5px"
                 input {
                   type="checkbox" 
                   id="show-completed" 
@@ -37,13 +93,11 @@
                   checked="" }
                 span
                   |&nbsp;&nbsp;Contributors to published Customer Stories
-
-    .col-sm-6.select-filters
-      .row.form-horizontal
-
+    .col-sm-5.select-filters
+      .form-horizontal
         .form-group
-          label.col-sm-3.col-sm-offset-1.control-label Curator
-          .col-sm-8 style="padding:0"
+          label.col-sm-3.control-label Curator
+          .col-sm-9 style="padding:0"
             = select_tag( \
                 nil,
                 options_from_collection_for_select(company.curators, :id, :full_name, current_user.id),
@@ -55,10 +109,9 @@
                     tomselect_type_value: 'curator', 
                     contributors_target: 'curatorSelect',
                     sync_tables: 'true' } })
-
         .form-group.search
-          label.col-sm-3.col-sm-offset-1.control-label Filter
-          .col-sm-8 style="padding:0;"
+          label.col-sm-3.control-label Filter
+          .col-sm-9 style="padding:0;"
             = select_tag( \
                 nil,
                 grouped_options_for_select( \
@@ -75,13 +128,13 @@
                     contributors_target: 'filterSelect',
                     dashboard_target: 'contributorsFilter',
                     sync_tables: 'true' } })
-
       .help-block.text-right data-contributors-target="filterResults"
 
 / it's actually a contributions table, but presented to user as Contributors
 table#contributors-table.datatable.table.table-bordered.has-row-groups {
   data-controller="datatable"
   data-contributors-target="datatable"
+  data-datatable-dashboard-outlet=".dashboard"
   data-datatable-contributors-outlet="#contributors"
   data-datatable-enable-row-groups-value="true"
   data-action="datatable:init->contributors#tableInitComplete"

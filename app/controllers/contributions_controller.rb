@@ -59,6 +59,11 @@ class ContributionsController < ApplicationController
     respond_to { |format| format.json { render({ json: data }) } }
   end
 
+  def new
+    @company = Company.find_by(subdomain: request.subdomain)
+    @success = Success.find(params[:success_id])
+  end
+
   def show
     if params[:get_invitation]
       @contribution.copy_invitation_template if params[:send]

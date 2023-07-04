@@ -5,6 +5,82 @@
 @import 'win_story_email_modal';
 @import 'bootbox_modals';
 
+.table-controls {
+  background-color: $medium-gray;
+  padding: 1.5em;
+
+  > div {
+    @include flex-row-center-between;
+    width: 100%;
+
+    &:first-child {
+      flex-wrap: wrap;
+    }
+  }
+
+  button:not(.clear-button) {
+    // background: transparent;
+    padding: 0.1em 0.2em;
+    font-size: 1.5em;
+    color: #666;
+
+    &:hover {
+      color: #222;
+    }
+
+    &:first-of-type {
+      margin-right: 0.75em;
+    }
+  }
+
+  // TODO: Why does this result in different widths for the labels? Workaround is below
+  // label {
+  //   display: inline-block;
+  //   margin: 0 1em 0 0;
+  //   width: 60px;
+  // }
+
+  label {
+    position: relative;
+    margin: 0;
+
+    > * {
+      position: absolute;
+      right: 0.75em; 
+      top: 50%;
+      transform: translate(0, -50%);
+    }
+
+    &::before {
+      content: '';
+      display: inline-block;
+      width: 4.75em;
+    }
+  }
+
+  .curator-select,
+  .filter-select {
+    @include flex-row-center;
+    min-width: 225px; 
+    padding-bottom: 1.25em;
+
+    select {
+      flex-grow: 1;
+    }
+  }
+
+  .filter-select {
+    flex-grow: 1;
+    max-width: 375px;
+
+    i {
+      font-size: 1.5em;
+      color: #666;
+    }
+  }
+
+}
+
 #prospect {
   div[id*="table_wrapper"] {
     margin-top: 8px;

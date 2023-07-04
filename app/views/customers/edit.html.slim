@@ -2,7 +2,7 @@ turbo-frame id="customer-#{@customer.id}"
 
   = form_with( \
       model: @customer,
-      remote: true,
+      local: false,
       format: :json,
       html: { \
         id: 'customer-form',

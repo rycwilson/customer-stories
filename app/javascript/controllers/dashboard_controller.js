@@ -1,9 +1,10 @@
 import { Controller } from "@hotwired/stimulus";
 
 export default class extends Controller {
-  static outlets = ['new-contributor-modal'];
+  static outlets = ['modal'];
   static targets = [
     'tab', 'tabPanel', 'subPanel', 'customerWinsTab', 'customerWinsFilter', 'contributorsTab', 'contributorsFilter',
+    'addCustomerWinBtn', 'addContributorBtn'
   ];
   static values = { activeTab: String };    // prospect | curate | promote | measure
 
@@ -31,21 +32,29 @@ export default class extends Controller {
     setTimeout(() => panel.classList.add(`${resourceClassName}-did-load`));
   }
 
-  addCustomerWinContributors({ target: { dataset: { customerWinId } } }) {
-    const modalCtrl = this.newContributorModalOutlet;
-    const showModal = () => {
-      modalCtrl.element.setAttribute('data-new-contributor-modal-customer-id-value', )
-      $(this.newContributorModalOutlet.element).modal('show');
-    }
-    if (this.showingCustomerWins()) {
-      $(this.contributorsTabTarget).one('shown.bs.tab', () => {
-        $(this.newContributorModalOutlet.element).modal('show');
-        // $('select.new-contributor.customer').prop('disabled', true).val(customerId).trigger('change');
-        // $('select.new-contributor.success').prop('disabled', true).val(successId).trigger('change');
-      });
-    } else if (this.showingContributors()) {
-      $(this.newContributorModalOutlet.element).modal('show');
-    }
+  addCustomerWinContributors({ target: { dataset: { customerWinId, newContributionPath } } }) {
+    // const modalCtrl = this.newContributorModalOutlet;
+    // const showModal = () => {
+    //   modalCtrl.element.setAttribute('data-new-contributor-modal-customer-id-value', )
+    //   $(this.newContributorModalOutlet.element).modal('show');
+    // }
+    // if (this.showingCustomerWins()) {
+    //   $(this.contributorsTabTarget).one('shown.bs.tab', () => {
+    //     $(this.newContributorModalOutlet.element).modal('show');
+
+    //     this.showCustomerWinContributors({ target: { dataset: { customerWinId } } });
+
+    //     this.modalOutlet.turboFrameAttrsValue = { id: 'new-contribution', src: newContributionPath };
+    //     }
+    //     this.modalOutlet.show();
+
+    //     // $('select.new-contributor.customer').prop('disabled', true).val(customerId).trigger('change');
+    //     // $('select.new-contributor.success').prop('disabled', true).val(successId).trigger('change');
+    //   });
+    //   this.showCustomerWinContributors({ target: { dataset: { customerWinId } } });
+    // } else if (this.showingContributors()) {
+    //   $(this.newContributorModalOutlet.element).modal('show');
+    // }
     // this.showCustomerWinContributors({ target: { dataset: { customerWinId } } });
   }
 
@@ -95,14 +104,14 @@ export default class extends Controller {
   searchTable(searchResults) {
     const subPanelCtrl = this;
     // console.log('searching', this.identifier, '...')
-    const columnFilters = subPanelCtrl.filterCheckboxTargets
-      .filter(checkbox => !checkbox.checked)
-      .map(checkbox => {
-        if (checkbox.id === 'show-wins-with-story')
+    const columnFilters = Object.entries(subPanelCtrl.checkboxFiltersValue)
+      .filter(([filterId, filter]) => !filter.checked)
+      .map(([filterId, filter]) => {
+        if (filterId === 'show-wins-with-story')
           return { column: 'story', q: '^false$', regEx: true, smartSearch: false };
-        else if (checkbox.id === 'show-completed')
+        else if (filterId === 'show-completed')
           return { column: 'status', q: '^((?!completed).)*$', regEx: true, smartSearch: false };
-        else if (checkbox.id === 'show-published')
+        else if (filterId === 'show-published')
           return { column: 'storyPublished', q: 'false', regEx: false, smartSearch: false }
         else 
           console.error('Unrecognized column filter');
@@ -127,5 +136,81 @@ export default class extends Controller {
 
   setNavCookie(e) {
     Cookies.set(`csp-${this.activeTabValue}-tab`, e.target.closest('a').getAttribute('href'));
+  }
+
+  // this method will be bound to 'datatable' or 'table-display-options' controller
+  parentCtrl() {
+    this.parentController = this.parentController || (
+      (this.element.hasAttribute(`data-${this.identifier}-customer-wins-outlet`) && this.customerWinsOutlet) ||
+      (this.element.hasAttribute(`data-${this.identifier}-contributors-outlet`) && this.contributorsOutlet)
+    );
+    return this.parentController;
+  }
+
+  // this method will be bound to 'customer-wins' or 'contributors' controller
+  initTableDisplayOptionsPopover(isReset) {
+    const btn = this.tableDisplayOptionsBtnTarget;
+    const groupByResource = this.identifier === 'customer-wins' ? 'Customer' : 'Customer Win';
+    const content = `
+      <div class="form-horizontal">
+        <div class="form-group">
+          <label class="col-sm-2 control-label" style="padding-left:0; padding-right:0">Group</label>
+          <div class="col-sm-10">
+            <div class="checkbox">
+              <label for="group-by-${groupByResource.toLowerCase().replace(/\s/g, '-')}">
+                <input 
+                  type="checkbox" 
+                  id="group-by-${groupByResource.toLowerCase().replace(/\s/g, '-')}" 
+                  data-action="table-display-options#toggleRowGroups"
+                  ${this.datatableTarget.getAttribute('data-datatable-enable-row-groups-value') === 'true'  ? 'checked' : ''}>
+                <span>&nbsp;&nbsp;by ${groupByResource}</span>
+              </label>
+            </div>
+          </div>
+        </div>
+        ${Object.entries(this.checkboxFiltersValue).map(([filterId, filter]) => (`
+          <div class="form-group">
+            <label class="col-sm-2 control-label" style="padding-left:0; padding-right:0">Show</label>
+            <div class="col-sm-10">
+              <div class="checkbox">
+                <label for="${filterId}">
+                  <input 
+                    type="checkbox" 
+                    id="${filterId}" 
+                    data-action="table-display-options#toggleFilter"
+                    ${filter.checked ? 'checked' : ''}>
+                  <span>&nbsp;&nbsp;${filter.label}</span>
+                </label>
+              </div>
+            </div>
+          </div>
+        `))}
+      </div>
+    `;
+    if (isReset) $(btn).data()['bs.popover'].options.content = content;
+    else $(btn).popover({
+      html: true,
+      container: 'body',
+      title: 'Display Options',
+      placement: 'auto right',
+      // trigger: 'focus',
+      template: `
+        <div 
+          class="popover" 
+          data-controller="table-display-options" 
+          data-table-display-options-dashboard-outlet=".dashboard"
+          data-table-display-options-${this.identifier}-outlet="#${this.identifier}" 
+          role="tooltip" 
+          style="max-width:revert">
+
+          <div class="arrow"></div>
+          <h3 class="popover-title label-secondary"></h3>
+          <div class="popover-content" style="width:25em; padding: 1em 1.25em">
+            <!-- the template below goes here -->
+          </div>
+        </div>
+      `,
+      content
+    });
   }
 }

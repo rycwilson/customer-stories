@@ -88,7 +88,7 @@ export default class extends Controller {
     const contributionsExist = Boolean(this.status.match(/[^0]&nbsp;&nbsp;Contributions\ssubmitted/));
     const action = noContributorsAdded ? 'Add' : (noContributorsInvited ? 'Invite' : '');
     return `
-      <a id="customer-wins-actions-dropdown-${this.id}" 
+      <a id="customer-win-actions-dropdown-${this.id}" 
         href="#" 
         class="dropdown-toggle" 
         data-toggle="dropdown"
@@ -96,7 +96,7 @@ export default class extends Controller {
         aria-expanded="false">
         <i class="fa fa-caret-down"></i>
       </a>
-      <ul class="dropdown-menu dropdown-menu-right" aria-labelledby="customer-wins-actions-dropdown-${this.id}">
+      <ul class="dropdown-menu dropdown-menu-right" aria-labelledby="customer-win-actions-dropdown-${this.id}">
         ${contributionsExist ? `
             <li>
               <a href="javascript:;" data-action="customer-win#showContributions">
@@ -127,7 +127,8 @@ export default class extends Controller {
             <li>
               <a href="javascript:;" 
                 data-action="dashboard#${action.toLowerCase() || 'show'}CustomerWinContributors" 
-                data-customer-win-id="${this.id}">
+                data-customer-win-id="${this.id}"
+                data-new-contribution-path="/successes/${this.id}/contributions/new">
                 <i class="fa fa-users fa-fw action"></i>&nbsp;&nbsp;
                 <span>${action} Contributors</span>
               </a>

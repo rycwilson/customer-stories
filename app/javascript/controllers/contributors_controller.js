@@ -3,8 +3,17 @@ import { getJSON } from '../util.js';
 
 export default class extends Controller {
   static outlets = ['dashboard', 'customer-wins'];
-  static targets = ['filterCheckbox', 'curatorSelect', 'filterSelect', 'filterResults', 'datatable'];
-  static values = { dataPath: String };
+  static targets = ['curatorSelect', 'filterSelect', 'filterResults', 'datatable', 'tableDisplayOptionsBtn'];
+  static values = { 
+    dataPath: String,
+    checkboxFilters: { 
+      type: Object, 
+      default: { 
+        'show-completed': { checked: true, label: 'Contributors with a completed Contribution' },
+        'show-published': { checked: true, label: 'Contributors to published Customer Stories' } 
+      }
+    }
+  };
 
   contributions;
   dt;
@@ -38,7 +47,12 @@ export default class extends Controller {
 
   tableInitComplete(e) {
     this.dt = e.detail.dt;
+    this.dashboardOutlet.initTableDisplayOptionsPopover.bind(this)();
     this.searchTable();
+  }
+  
+  checkboxFiltersValueChanged() {
+    // TODO: search
   }
 
   toggleRowGroups(e) {

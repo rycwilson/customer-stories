@@ -1,5 +1,3 @@
-
-
 @media (min-width: 1200px) {
   .container {
     // width: 1200px;
@@ -9,6 +7,7 @@
 .layout-main {
   min-height: 100vh;   // TODO: replace with html, body { height: 100% }
   padding-bottom: 100px;
+
   .companies.edit &,
   .companies.new &,
   .profile.edit & {
@@ -20,7 +19,8 @@
   // border: 1px solid #dfdfdf;
   .nav {
     > li {
-      margin: 0;      
+      margin: 0;    
+
       > a {
         display: flex;
         align-items: center;
@@ -32,18 +32,22 @@
         font-size: 14px;
         color: #666;
         padding: 10px 20px;
+
         > span {
           display: flex;
           align-items: center;
         }
+
         &[href="#successes"], &[href*="contributors"] {
           padding: 10px 10px 10px 20px;
           justify-content: space-between;
         }
+
         i:not([class*="fa-stack"]) {
           font-size: 1.25em;
           margin-right: 13px;
         }
+
         &:hover, &:focus {
           background-color: #e5e5e5;
           // border-left: 2px solid #e5e5e5;
@@ -53,7 +57,9 @@
       }
       &.active {
         // margin-right: 0;
-        > a, a:hover, a:focus {
+        > a, 
+        a:hover, 
+        a:focus {
           // border-left: 2px solid $nav-blue; // #0095ff;
           border-left: 2px solid $nav-blue; // #0095ff;
           // border-right-color: transparent; 
@@ -69,6 +75,8 @@
     color: #ccc; 
   }
 
+  
+
   // New customer wins, New contributors
   .btn-add {
     @include fa-button($medium-gray);
@@ -79,6 +87,7 @@
       display: none;  
       opacity: 1; 
       transition: opacity 0.15s linear;  // matches bootstrap tab .fade transition
+
       &:not(.shown) {
         visibility: hidden;
         opacity: 0;

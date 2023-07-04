@@ -26,7 +26,17 @@
                 i.fa.fa-fw.fa-rocket
                 span 
                   | Customer Wins
-              span
+              
+              /button.btn-add {
+                type="button"
+                data-controller="modal-button"
+                data-modal-button-modal-outlet="#main-modal"
+                data-modal-button-title-value="New Customer Win"
+                data-modal-button-turbo-frame-attrs="{\"id\":\"new-contribution\",\"src\":\"#{new_company_success_path(company)}\"}"
+                data-action="modal-button#showModal" }
+                i.fa.fa-fw.fa-plus-circle
+
+              /span
                 button.btn-add {
                   type="button"
                   class=('shown' if tab == '#customer-wins' || tab.nil?)
@@ -48,7 +58,7 @@
                 i class="fa fa-fw fa-users"
                 span 
                   | Contributors
-              span
+              /span
                 button.btn-add {
                   type="button"
                   class=('shown' if tab == '#contributors')

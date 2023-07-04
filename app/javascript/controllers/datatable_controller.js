@@ -2,7 +2,7 @@ import { Controller } from "@hotwired/stimulus";
 
 export default class extends Controller {
   static targets = ['row'];   // excludes row groups
-  static outlets = ['customer-wins', 'contributors', 'stories'];
+  static outlets = ['dashboard', 'customer-wins', 'contributors', 'stories'];
   static values = { 
     ready: { type: Boolean, default: false },
     enableRowGroups: { type: Boolean, default: false },
@@ -119,10 +119,11 @@ export default class extends Controller {
   }
 
   parentCtrl() {
-    this.parentController = this.parentController || (
-      (this.element.hasAttribute('data-datatable-customer-wins-outlet') && this.customerWinsOutlet) ||
-      (this.element.hasAttribute('data-datatable-contributors-outlet') && this.contributorsOutlet)
-    );
-    return this.parentController;
+    return this.dashboardOutlet.parentCtrl.bind(this)();
+    // this.parentController = this.parentController || (
+    //   (this.element.hasAttribute('data-datatable-customer-wins-outlet') && this.customerWinsOutlet) ||
+    //   (this.element.hasAttribute('data-datatable-contributors-outlet') && this.contributorsOutlet)
+    // );
+    // return this.parentController;
   }
 }

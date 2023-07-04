@@ -37,9 +37,6 @@ application.register('contribution', ContributionController);
 import ActionsDropdownController from './actions_dropdown_controller';
 application.register('actions-dropdown', ActionsDropdownController);
 
-import NewContributorModalController from './new_contributor_modal_controller';
-application.register('new-contributor-modal', NewContributorModalController);
-
 import ContributionsModalController from './contributions_modal_controller';
 application.register('contributions-modal', ContributionsModalController);
 
@@ -48,3 +45,9 @@ application.register('modal', ModalController);
 
 import ModalButtonController from './modal_buttton_controller';
 application.register('modal-button', ModalButtonController);
+
+import ContributionFormController from './contribution_form_controller';
+application.register('contribution-form', ContributionFormController);
+
+import TableDisplayOptionsController from './table_display_options_controller';
+application.register('table-display-options', TableDisplayOptionsController);

@@ -1,0 +1,28 @@
+ .create-contact.hidden class="#{form} create-#{contact_type}"
+
+  = contribution_form.fields_for( \
+      contact_type,
+      contact_type == 'referrer' ? contribution_form.object.build_referrer : contribution_form.object.build_contributor \
+    ) do |contact_fields|
+
+    = contact_fields.hidden_field(:sign_up_code, value: 'csp_beta', disabled: true)
+    = contact_fields.hidden_field(:password, disabled: true)
+
+    .form-group.contact-first-name.required-input
+      = contact_fields.label(:first_name, 'First Name', class: 'col-sm-3 control-label')
+      .col-sm-9
+        / tabindex: '-1' allows manual focus
+        = contact_fields.text_field(:first_name, class: 'form-control', disabled: true, tabindex: "-1")
+        span.help-block Required
+
+    .form-group.contact-last-name.required-input
+      = contact_fields.label(:last_name, 'Last Name', class: 'col-sm-3 control-label')
+      .col-sm-9
+        = contact_fields.text_field(:last_name, class: 'form-control', disabled: true)
+        span.help-block Required
+
+    .form-group.contact-email.required-input
+      = contact_fields.label(:email, 'Email', class: 'col-sm-3 control-label')
+      .col-sm-9
+        = contact_fields.email_field(:email, class: 'form-control', disabled: true)
+        span.help-block
