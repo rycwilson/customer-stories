@@ -43,19 +43,11 @@ export default class extends Controller {
       this.dt = new DataTable(this.element, Object.assign({}, this.baseOptions, this.parentCtrl().tableConfig()));
   }
 
-  searchParamsValueChanged(params) {
-    // console.log('searchParamsValueChanged()', params)
-    clearTimeout(this.searchDebounceTimer);
-    this.searchDebounceTimer = setTimeout(() => {
-      // this.didInitialize does not work as a blocker because the ValueChanged callback is being called twice
-      // What is it about a default empty object that causes the callback to repeat?
-      // Note that explicitly setting data-datatable-search-params-value on the element prevents the double callback
-      // if (this.didInitialize) {
-      if (Object.keys(params).length !== 0) {
-        // console.log(`${this.element.id} searchParams: `, searchParams)
-        this.search(params)
-      }
-    }, 200);    
+  searchParamsValueChanged(newVal, oldVal) {
+    if (oldVal !== undefined) {
+      clearTimeout(this.searchDebounceTimer);
+      this.searchDebounceTimer = setTimeout(() => this.search(newVal), 200);
+    }
   }
 
   search({ curatorId, columnFilters, filterVal, searchResults }) {
