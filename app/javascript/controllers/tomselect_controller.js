@@ -13,8 +13,11 @@ export default class extends Controller {
         this.dispatch(`change-${this.typeValue}`, { detail: { newVal } });
       },
       onType: () => { if (this.isFilter()) this.onSearch(); },
+      onFocus() {
+        const dropdownMaxHeight = document.documentElement.clientHeight - this.wrapper.getBoundingClientRect().bottom;
+        this.dropdown.children[0].style.maxHeight = `${dropdownMaxHeight - 15}px`;
+      },
       onDropdownOpen: (dropdown) => {
-        // TODO: adjust size to fit viewport height
         if (this.isFilter()) {
           // if a search string exists, manually set the current results
           if (this.ts.getValue() === '0') this.ts.currentResults.items = this.currentSearchResults;
