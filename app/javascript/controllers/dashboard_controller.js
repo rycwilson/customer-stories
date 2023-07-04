@@ -190,16 +190,16 @@ export default class extends Controller {
     if (isReset) $(btn).data()['bs.popover'].options.content = content;
     else $(btn).popover({
       html: true,
+      animation: false,
       container: 'body',
       title: 'Display Options',
       placement: 'auto right',
-      // trigger: 'focus',
       template: `
         <div 
           class="popover" 
           data-controller="table-display-options" 
           data-table-display-options-dashboard-outlet=".dashboard"
-          data-table-display-options-${this.identifier}-outlet="#${this.identifier}" 
+          data-table-display-options-${this.identifier}-outlet="#${this.identifier}"
           role="tooltip" 
           style="max-width:revert">
 

@@ -120,10 +120,5 @@ export default class extends Controller {
 
   parentCtrl() {
     return this.dashboardOutlet.parentCtrl.bind(this)();
-    // this.parentController = this.parentController || (
-    //   (this.element.hasAttribute('data-datatable-customer-wins-outlet') && this.customerWinsOutlet) ||
-    //   (this.element.hasAttribute('data-datatable-contributors-outlet') && this.contributorsOutlet)
-    // );
-    // return this.parentController;
   }
 }
