@@ -70,7 +70,7 @@ export default class extends Controller {
     } else if (filterVal) {
       const column = filterVal.slice(0, filterVal.indexOf('-'));
       const id = filterVal.slice(filterVal.indexOf('-') + 1, filterVal.length);
-      console.log(`${column}:name`, `^${id}$`)
+      // console.log(`${column}:name`, `^${id}$`)
       dtSearch = dtSearch.column(`${column}:name`).search(`^${id}$`, true, false);
     }
     dtSearch.draw();

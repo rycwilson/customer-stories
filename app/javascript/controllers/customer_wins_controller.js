@@ -3,7 +3,7 @@ import { getJSON } from '../util';
 
 export default class extends Controller {
   static outlets = ['dashboard', 'contributors'];
-  static targets = ['curatorSelect', 'filterSelect', 'filterResults', 'datatable', 'tableDisplayOptionsBtn'];
+  static targets = ['curatorSelect', 'filterSelect', 'filterResults', 'datatable', 'newCustomerWinBtn', 'tableDisplayOptionsBtn'];
   static values = { 
     dataPath: String, 
     checkboxFilters: { 
@@ -18,8 +18,6 @@ export default class extends Controller {
   dt;
 
   connect() {
-    // console.log('connect customer wins')
-
     getJSON(this.dataPathValue).then(successes => {
       this.customerWins = successes;
       console.log('customer wins: ', this.customerWins)
@@ -28,6 +26,12 @@ export default class extends Controller {
       const panel = this.element.closest('[data-dashboard-target="tabPanel"]');
       this.dispatch('load', { detail: { panel, resourceClassName: 'customer-wins' }});
     })
+  }
+
+  tableInitComplete(e) {
+    this.dt = e.detail.dt;
+    this.dashboardOutlet.initTableDisplayOptionsPopover.bind(this)();
+    this.searchTable();
   }
 
   searchTable(e = { type: '', detail: {} }) {
@@ -45,11 +49,14 @@ export default class extends Controller {
       }, { once: true });
     this.dashboardOutlet.searchTable.bind(this)(e.detail && e.detail.searchResults);
   }
-  
-  tableInitComplete(e) {
-    this.dt = e.detail.dt;
-    this.dashboardOutlet.initTableDisplayOptionsPopover.bind(this)();
-    this.searchTable();
+
+  onCuratorChange(e) {
+    this.searchTable(e);
+  }
+
+  onFilterChange(e) {
+    this.contributorsOutlet.updateNewContributionPath(e.target.value);
+    this.searchTable(e);
   }
   
   checkboxFiltersValueChanged(newVal, oldVal) {
@@ -177,7 +184,7 @@ export default class extends Controller {
         dataSrc: 'customer.name',
         startRender(groupRows, customerName) {
           const customerId = groupRows.data()[0].customer.id;
-          const turboFrameAttrs = { id: `customer-${customerId}`, src: `/customers/${customerId}/edit` };
+          const turboFrameAttrs = { id: `edit-customer-${customerId}`, src: `/customers/${customerId}/edit` };
           return $(`
             <tr />`).append(`
               <td colspan="3">
@@ -187,11 +194,11 @@ export default class extends Controller {
                 <button 
                   type="button" 
                   class="edit-customer" 
-                  data-controller="modal-button"
-                  data-modal-button-modal-outlet="#main-modal"
-                  data-modal-button-title-value="Edit Customer"
-                  data-modal-button-turbo-frame-attrs-value=${JSON.stringify(turboFrameAttrs)}
-                  data-action="modal-button#showModal">
+                  data-controller="modal-trigger"
+                  data-modal-trigger-modal-outlet="#main-modal"
+                  data-modal-trigger-title-value="Edit Customer"
+                  data-modal-trigger-turbo-frame-attrs-value=${JSON.stringify(turboFrameAttrs)}
+                  data-action="modal-trigger#showModal">
                   <i class="glyphicon glyphicon-pencil"></i>
                   <!-- <div><i class="fa fa-circle-o-notch"></i></div> -->
                 </button>
@@ -204,6 +211,7 @@ export default class extends Controller {
         const { id, display_status: status, customer, story } = data;
         row.setAttribute('data-controller', 'customer-win');
         row.setAttribute('data-customer-win-contributors-outlet', '#contributors')
+        row.setAttribute('data-customer-win-modal-outlet', '#main-modal');
         row.setAttribute('data-customer-win-contributions-modal-outlet', '.contributions-modal')
         row.setAttribute('data-customer-win-row-data-value', JSON.stringify({ id, status, customer, story }));
         row.setAttribute('data-datatable-target', 'row');
