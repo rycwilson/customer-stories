@@ -37,14 +37,11 @@ application.register('contribution', ContributionController);
 import ActionsDropdownController from './actions_dropdown_controller';
 application.register('actions-dropdown', ActionsDropdownController);
 
-import ContributionsModalController from './contributions_modal_controller';
-application.register('contributions-modal', ContributionsModalController);
-
 import ModalController from './modal_controller';
 application.register('modal', ModalController);
 
-import ModalButtonController from './modal_buttton_controller';
-application.register('modal-button', ModalButtonController);
+import ModalTriggerController from './modal_trigger_controller';
+application.register('modal-trigger', ModalTriggerController);
 
 import ContributionFormController from './contribution_form_controller';
 application.register('contribution-form', ContributionFormController);
