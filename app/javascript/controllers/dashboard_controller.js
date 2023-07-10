@@ -32,35 +32,24 @@ export default class extends Controller {
     setTimeout(() => panel.classList.add(`${resourceClassName}-did-load`));
   }
 
-  addCustomerWinContributors({ target: { dataset: { customerWinId, newContributionPath } } }) {
-    // const modalCtrl = this.newContributorModalOutlet;
-    // const showModal = () => {
-    //   modalCtrl.element.setAttribute('data-new-contributor-modal-customer-id-value', )
-    //   $(this.newContributorModalOutlet.element).modal('show');
-    // }
-    // if (this.showingCustomerWins()) {
-    //   $(this.contributorsTabTarget).one('shown.bs.tab', () => {
-    //     $(this.newContributorModalOutlet.element).modal('show');
-
-    //     this.showCustomerWinContributors({ target: { dataset: { customerWinId } } });
-
-    //     this.modalOutlet.turboFrameAttrsValue = { id: 'new-contribution', src: newContributionPath };
-    //     }
-    //     this.modalOutlet.show();
-
-    //     // $('select.new-contributor.customer').prop('disabled', true).val(customerId).trigger('change');
-    //     // $('select.new-contributor.success').prop('disabled', true).val(successId).trigger('change');
-    //   });
-    //   this.showCustomerWinContributors({ target: { dataset: { customerWinId } } });
-    // } else if (this.showingContributors()) {
-    //   $(this.newContributorModalOutlet.element).modal('show');
-    // }
-    // this.showCustomerWinContributors({ target: { dataset: { customerWinId } } });
+  addCustomerWinContributors({ currentTarget: { dataset: { customerWinId, turboFrameAttrs } } }) {
+    const showModal = () => {
+      this.modalOutlet.titleValue = 'New Contributor';
+      this.modalOutlet.turboFrameAttrsValue = JSON.parse(turboFrameAttrs);
+      this.modalOutlet.show();
+    };
+    if (this.showingCustomerWins()) {
+      $(this.contributorsTabTarget).one('shown.bs.tab', showModal);
+      this.showCustomerWinContributors({ currentTarget: { dataset: { customerWinId } } });
+    } else if (this.showingContributors()) {
+      showModal();
+    }
   }
 
   // inviteCustomerWinContributors({ target: dataset})
 
-  showCustomerWinContributors({ target: { dataset: { customerWinId } } }) {
+  showCustomerWinContributors({ currentTarget: { dataset: { customerWinId } } }) {
+    // console.log(`showCustomerWinContributors(${customerWinId})`)
     this.contributorsFilterTarget.tomselect.setValue(`success-${customerWinId}`);
     $(this.contributorsTabTarget).one('shown.bs.tab', () => scrollTo(0, 65));
     $(this.contributorsTabTarget).tab('show');
