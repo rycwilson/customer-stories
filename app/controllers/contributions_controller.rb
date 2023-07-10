@@ -2,7 +2,7 @@ require 'successes_and_contributions'
 class ContributionsController < ApplicationController
   include SuccessesAndContributions
 
-  before_action :set_contribution, except: [:index, :create]
+  before_action :set_contribution, except: [:index, :new, :create]
   # before_action :check_opt_out_list, only: [:confirm_request]
   skip_before_action(
     :verify_authenticity_token,
@@ -61,7 +61,11 @@ class ContributionsController < ApplicationController
 
   def new
     @company = Company.find_by(subdomain: request.subdomain)
-    @success = Success.find(params[:success_id])
+    @customer_id = params[:customer_id]
+    @contributor_id = params[:contributor_id]
+
+    # success_id will be 0 if customer win isn't specified in the client
+    @success = Success.find_by(id: params[:success_id])
   end
 
   def show
