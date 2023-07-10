@@ -6,6 +6,7 @@ li class="#{'active' if workflow_stage == tab_name}" role="presentation"
     data-action="dashboard#onTabClick dashboardTab#onClick"
     data-dashboard-target="#{'tab' if workflow_stage}"
     aria-controls="#{tab_name}"
+    aria-expanded="#{workflow_stage == tab_name ? 'true' : 'false'}"
     role="tab" }
     = tab_name.capitalize
   div
