@@ -1,97 +1,134 @@
-turbo-frame id="new-contribution"
+= turbo_frame_tag('new-contribution')
 
   = form_with( \
-      model: @success ? @success.contributions.build : Contribution.new,
+      model: @success&.contributions&.build || Contribution.new,
       url: company_contributions_path(@company),
       local: false,
       class: 'form-horizontal',
-      html: { 
+      html: { \
+        id: 'new-contribution-form',
         autocomplete: 'off',
-        data: { controller: 'contribution-form' } }) do |form|
+        data: { \
+          controller: 'contribution-form',
+          contribution_form_customer_wins_outlet: '#customer-wins',
+          contribution_form_contributors_outlet: '#contributors',
+          modal_target: 'form',
+          submit_btn_text: 'Add Contributor' } }) do |form|
 
     /= form.hidden_field(:success_id)
 
-    = form.fields_for(:success, form.object.build_success) do |success_fields|
+    = form.fields_for(:success, @success || form.object.build_success) do |success_fields|
       / = success_fields.hidden_field(:id)
       = success_fields.hidden_field(:name)
       / = success_fields.hidden_field(:customer_id)
-      = success_fields.hidden_field(:curator_id, value: current_user.id)
-      = success_fields.fields_for(:customer, success_fields.object.build_customer) do |customer_fields|
+      = success_fields.hidden_field(:curator_id, value: success_fields.object.curator_id || current_user.id)
+      = success_fields.fields_for(:customer, success_fields.object.customer || success_fields.object.build_customer) do |customer_fields|
         / = customer_fields.hidden_field(:id)
-        = customer_fields.hidden_field(:name)
-        = customer_fields.hidden_field(:company_id, value: @company.id)
+        = customer_fields.hidden_field(:name, data: { contribution_form_target: 'customerField' })
+        = customer_fields.hidden_field(:company_id, value: @company.id, data: { contribution_form_target: 'customerField' })
 
-    .form-group.customer.required-input
-      = success_fields.label(:customer_id, 'Customer', class: 'col-sm-3 control-label')
-      .col-sm-9
-        = success_fields.collection_select( \
-            :customer_id,
-            @company.customers.sort_by { |customer| customer.name.downcase },
-            :id,
-            :name,
-            { include_blank: true,
-              disabled: [] },
-            { class: 'new-contributor customer form-control',
-              style: 'width:100%',
-              required: true })
-        span.help-block Required
+      .form-group.customer.required-input
+        = success_fields.label(:customer_id, 'Customer', class: 'col-sm-3 control-label')
+        .col-sm-9
+          = success_fields.collection_select( \
+              :customer_id,
+              @company.customers.sort_by { |customer| customer.name.downcase },
+              :id,
+              :name,
+              { include_blank: true }.merge(@customer_id ? { selected: @customer_id } : {}),
+              { class: 'new-contributor customer form-control',
+                placeholder: 'Select or Create',
+                style: 'width:100%',
+                required: true,
+                data: { \
+                  controller: 'tomselect',
+                  tomselect_type_value: Customer.name,
+                  action: 'change->contribution-form#onCustomerChange input->contribution-form#onCustomerInput',
+                  contribution_form_target: 'customerSelect' } })
+          span.help-block Required
 
-    .form-group.success.required-input
-      = form.label(:success_id, 'Customer Win', class: 'col-sm-3 control-label')
-      .col-sm-9
-        = form.collection_select( \
-            :success_id,
-            @company.successes.sort_by { |s| s.name }.map { |s| [s.name, s.id] },
-            { include_blank: true },
-            { class: 'new-contributor success form-control',
-              style: 'width:100%',
-              required: true })
-        span.help-block Required
+      .form-group.success.required-input {
+        data-action="\
+          change->contribution-form#onCustomerWinChange \
+          input->contribution-form#onCustomerWinInput \
+          tomselect:dropdown-open->contribution-form#filterCustomerWins" }
+        = form.label(:success_id, 'Customer Win', class: 'col-sm-3 control-label')
+        .col-sm-9
+          = form.collection_select( \
+              :success_id,
+              @company.successes.sort_by { |s| s.name },
+              :id,
+              :name,
+              { include_blank: true },
+              { class: 'new-contributor success form-control',
+                placeholder: 'Select or Create',
+                style: 'width:100%',
+                required: true,
+                data: { \
+                  controller: 'tomselect',
+                  tomselect_type_value: Success.name,
+                  contribution_form_target: 'customerWinSelect' } })
+          span.help-block Required
 
-    .form-group.contributor.required-input
-      = form.label(:contributor_id, 'Contributor', class: 'col-sm-3 control-label')
-      .col-sm-9
-        = contribution_form.collection_select( \
-          :contributor_id,
-          (@company.contributors - @company.referrers - @company.curators) \
-            .sort_by { |contributor| contributor.last_name } \
-            .unshift(User.new(id: 0, first_name: '- Create New Contributor -', last_name:'')),
-          :id,
-          :full_name,
-          { include_blank: true },
-          { class: 'new-contributor contributor form-control',
-            style: 'width:100%',
-            required: true })
-        span.help-block Required
+      .form-group.contributor.required-input {
+        data-action="\
+          change->contribution-form#onContributorChange" }
+        = form.label(:contributor_id, 'Contributor', class: 'col-sm-3 control-label')
+        .col-sm-9
+          = form.collection_select( \
+              :contributor_id,
+              (@company.contributors + @company.referrers).uniq \
+                .sort_by { |contact| contact.last_name } \
+                .unshift(User.new(id: 0, first_name: '- Create New Contributor -', last_name:'')),
+              :id,
+              :full_name,
+              { include_blank: true,
+                selected: @contributor_id || [],
+                disabled: @success ? @success.contributors.map { |contributor| contributor.id } : [] },
+              { class: 'new-contributor contributor form-control',
+                placeholder: 'Select or Create',
+                style: 'width:100%',
+                required: true,
+                data: { \
+                  controller: 'tomselect',
+                  tomselect_type_value: 'Contributor',
+                  contribution_form_target: 'contributorSelect' } })
+          span.help-block Required
 
-    = render( \
-      'companies/shared/create_contact', 
-      { form: 'new-contributor', contribution_form: form, contact_type: 'contributor' })
+      = render( \
+        'companies/shared/create_contact', 
+        { form: 'new-contributor', contribution_form: form, contact_type: 'contributor' })
 
-    .form-group.invitation-template
-      = form.label(:invitation_template_id, 'Invitation Template', class: 'col-sm-3 control-label')
-      .col-sm-9
-        = form.collection_select( \
-            :invitation_template_id,
-            @company.invitation_templates.sort_by { |t| t.name },
-            :id,
-            :name,
-            { include_blank: true },
-            { class: 'new-contributor invitation-template form-control', style: 'width:100%' })
+      .form-group.invitation-template
+        = form.label(:invitation_template_id, 'Invitation Template', class: 'col-sm-3 control-label')
+        .col-sm-9
+          = form.collection_select( \
+              :invitation_template_id,
+              @company.invitation_templates.sort_by { |t| t.name },
+              :id,
+              :name,
+              { include_blank: true },
+              { class: 'new-contributor invitation-template form-control',
+                placeholder: 'Select',
+                data: { controller: 'tomselect', tomselect_type_value: InvitationTemplate.name },
+                style: 'width:100%' })
 
-    .form-group.referrer
-      = form.label(:referrer_id, 'Referred by', class: 'col-sm-3 control-label')
-      .col-sm-9
-        = form.collection_select( \
-            :referrer_id,
-            @company.referrers \
-              .sort_by { |referrer| referrer.last_name } \
-              .unshift(User.new(id: 0, first_name: '- Create New Contact -', last_name:'')),
-            :id,
-            :full_name,
-            { include_blank: true },
-            { class: 'new-contributor referrer form-control', style: 'width:100%' })
+      .form-group.referrer
+        = form.label(:referrer_id, 'Referred by', class: 'col-sm-3 control-label')
+        .col-sm-9
+          = form.collection_select( \
+              :referrer_id,
+              (@company.contributors + @company.referrers).uniq \
+                .sort_by { |contact| contact.last_name } \
+                .unshift(User.new(id: 0, first_name: '- Create New Contact -', last_name:'')),
+              :id,
+              :full_name,
+              { include_blank: true },
+              { class: 'new-contributor referrer form-control',
+                placeholder: 'Select or Create',
+                data: { controller: 'tomselect', tomselect_type_value: 'Referrer' },
+                style: 'width:100%' })
 
-    = render( \
-        'companies/shared/create_contact',
-        { form: 'new-contributor', contribution_form: contribution_form, contact_type: 'referrer' })
+      = render( \
+          'companies/shared/create_contact',
+          { form: 'new-contributor', contribution_form: form, contact_type: 'referrer' })
