@@ -3,7 +3,7 @@ import { getJSON } from '../util.js';
 
 export default class extends Controller {
   static outlets = ['dashboard', 'customer-wins'];
-  static targets = ['curatorSelect', 'filterSelect', 'filterResults', 'datatable', 'tableDisplayOptionsBtn'];
+  static targets = ['curatorSelect', 'filterSelect', 'filterResults', 'datatable', 'newContributorBtn', 'tableDisplayOptionsBtn'];
   static values = { 
     dataPath: String,
     checkboxFilters: { 
@@ -19,7 +19,6 @@ export default class extends Controller {
   dt;
 
   connect() {
-    // console.log('connect contributors')
     getJSON(this.dataPathValue).then(contributions => {
       this.contributions = contributions;
       console.log('contributions: ', contributions)
@@ -27,6 +26,12 @@ export default class extends Controller {
       const panel = this.element.closest('[data-dashboard-target="tabPanel"]');
       this.dispatch('load', { detail: { panel, resourceClassName: 'contributors' }})
     });
+  }
+
+  tableInitComplete(e) {
+    this.dt = e.detail.dt;
+    this.dashboardOutlet.initTableDisplayOptionsPopover.bind(this)();
+    this.searchTable();
   }
 
   searchTable(e = { type: '', detail: {} }) {
@@ -45,12 +50,28 @@ export default class extends Controller {
     this.dashboardOutlet.searchTable.bind(this)(e.detail && e.detail.searchResults);
   }
 
-  tableInitComplete(e) {
-    this.dt = e.detail.dt;
-    this.dashboardOutlet.initTableDisplayOptionsPopover.bind(this)();
-    this.searchTable();
+  onCuratorChange(e) {
+    this.searchTable(e);
+  }
+
+  onFilterChange(e) {
+    this.updateNewContributionPath(e.target.value);
+    this.searchTable(e);
   }
   
+  updateNewContributionPath(filterVal) {
+    const type = filterVal.slice(0, filterVal.lastIndexOf('-'));
+    const id = filterVal.slice(filterVal.lastIndexOf('-') + 1, filterVal.length);
+    const queryParam = type === 'customer' ? `?customer_id=${id}` : (type === 'contributor' ? `?contributor_id=${id}` : ''); 
+    this.newContributorBtnTarget.setAttribute(
+      'data-modal-trigger-turbo-frame-attrs-value', 
+      JSON.stringify({ 
+        id: 'new-contribution', 
+        src: `/successes/${type === 'success' ? id : '0'}/contributions/new${queryParam}` 
+      })
+    );
+  }
+
   checkboxFiltersValueChanged(newVal, oldVal) {
     if (oldVal !== undefined) this.searchTable();
   }
