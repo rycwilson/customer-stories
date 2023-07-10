@@ -1,14 +1,57 @@
-
 .modal:not(#video-modal):not(.bootbox) {
   .modal-content {
-    overflow: hidden;
-    .modal-header {
-      background: #f9f9f9;
-      color: #555;
-    }
-    .modal-footer {
-      background: #f9f9f9;
-    }
+    // overflow: hidden;
+  }
+
+  // tomselect option e.g. '- Create New Contributor -'
+  [data-value="0"] {
+    font-weight: 600;
+  }
+
+  .modal-header,
+  .modal-footer {
+    background: $light-gray;
+
+    // changing the background color necessitates:
+    border-top-right-radius: $border-radius-base;
+    border-top-left-radius: $border-radius-base;
+  }
+
+  .modal-header {
+    position: relative;
+
+    // changing the background color necessitates:
+    border-top-right-radius: $border-radius-base;
+    border-top-left-radius: $border-radius-base;
+  }
+
+  .modal-footer {
+    border-bottom-right-radius: $border-radius-base;
+    border-bottom-left-radius: $border-radius-base;
+  }
+
+  button.close {
+    position: absolute;
+    right: $modal-title-padding;
+    top: 50%;
+    transform: translate(0, -50%);
+    font-size: 2.5em;
+  }
+
+  .modal-body {
+    padding: #{2 * $modal-inner-padding} #{2 * $modal-inner-padding} $modal-inner-padding;
+  }
+
+  .control-label {
+    padding-right: 0;
+  }
+
+  .form-group {
+    margin-bottom: 2em;
+  }
+
+  .help-block {
+    display: none;
   }
 }
 
