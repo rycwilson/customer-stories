@@ -1,14 +1,15 @@
 import { Controller } from '@hotwired/stimulus';
 
 export default class extends Controller {
-  static outlets = ['contributors', 'contributions-modal'];
+  static outlets = ['contributors', 'modal'];
   static targets = ['actionsDropdown'];
   static values = { rowData: Object };
 
   id;
   status;
-  customer;   // { id, name, slug }
-  story;      // { id, title, slug }
+  customer;             // { id, name, slug }
+  story;                // { id, title, slug }
+  contributionsHtml;
 
   connect() {
     // console.log('connect customer win')
@@ -24,22 +25,28 @@ export default class extends Controller {
     return this.storyExists() && `/curate/${this.customer.slug}/${this.story.slug}`;
   }
 
+  // TODO: move template to the server
+  // TODO: should occasionally check for new data? or set up an action cable
   showContributions() {
-    const contributionIds = this.contributorsOutlet.dt.data().toArray()
-      .filter(contribution => (
-        (contribution.success.id == this.id) && contribution.status && contribution.status.match(/(contribution|feedback)/)
-      ))
-      .map(contribution => contribution.id);
-    Promise
-      .all(contributionIds.map(id => fetch(`/contributions/${id}.json?get_submission=true`).then(res => res.json())))
-      .then(contributions => {
-        console.log('contributions', contributions)
-        const { element: modal, titleTarget: title, bodyTarget: body } = this.contributionsModalOutlet;
-        [title, body].forEach(el => el.replaceChildren());
-        title.innerText = 'Contributions and Feedback';
-        body.insertAdjacentHTML('afterbegin', this.contributionsTemplate(contributions));
-        $(modal).modal('show');
-      })
+    const showInModal = () => {
+      this.modalOutlet.titleValue = 'Contributions and Feedback';
+      this.modalOutlet.bodyContentValue = this.contributionsHtml;
+      this.modalOutlet.show();
+    };
+    if (this.contributionsHtml) showInModal();
+    else {
+      const contributionIds = this.contributorsOutlet.dt.data().toArray()
+        .filter(contribution => (
+          (contribution.success.id == this.id) && contribution.status && contribution.status.match(/(contribution|feedback)/)
+        ))
+        .map(contribution => contribution.id);
+      Promise
+        .all(contributionIds.map(id => fetch(`/contributions/${id}.json?get_submission=true`).then(res => res.json())))
+        .then(contributions => {
+          this.contributionsHtml = this.contributionsTemplate(contributions);
+          showInModal();
+        });
+    }
   }
   
   // see also contributionTemplate in contributor_actions.js
@@ -87,6 +94,11 @@ export default class extends Controller {
     const noContributorsInvited = Boolean(this.status.match(/0.+Contributors\sinvited/));
     const contributionsExist = Boolean(this.status.match(/[^0]&nbsp;&nbsp;Contributions\ssubmitted/));
     const action = noContributorsAdded ? 'Add' : (noContributorsInvited ? 'Invite' : '');
+    // TODO: add the new invitation path
+    const turboFrameAttrs = action.match(/Add|Invite/) && {
+      id: `new-${action === 'Add' ? 'contribution' : 'invitation'}`,
+      src: action === 'Add' ? `/successes/${this.id}/contributions/new` : '' 
+    };
     return `
       <a id="customer-win-actions-dropdown-${this.id}" 
         href="#" 
@@ -126,9 +138,9 @@ export default class extends Controller {
               }).join('') : `
             <li>
               <a href="javascript:;" 
-                data-action="dashboard#${action.toLowerCase() || 'show'}CustomerWinContributors" 
+                data-action="click->dashboard#${action.toLowerCase() || 'show'}CustomerWinContributors" 
                 data-customer-win-id="${this.id}"
-                data-new-contribution-path="/successes/${this.id}/contributions/new">
+                data-turbo-frame-attrs=${JSON.stringify(turboFrameAttrs) || ''}>
                 <i class="fa fa-users fa-fw action"></i>&nbsp;&nbsp;
                 <span>${action} Contributors</span>
               </a>
