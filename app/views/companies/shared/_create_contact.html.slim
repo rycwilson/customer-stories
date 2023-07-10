@@ -1,9 +1,10 @@
- .create-contact.hidden class="#{form} create-#{contact_type}"
+.create-contact.hidden class="#{form} create-#{contact_type}"
 
   = contribution_form.fields_for( \
       contact_type,
-      contact_type == 'referrer' ? contribution_form.object.build_referrer : contribution_form.object.build_contributor \
-    ) do |contact_fields|
+      contact_type == 'referrer' ? \
+        contribution_form.object.build_referrer : \
+        contribution_form.object.build_contributor) do |contact_fields|
 
     = contact_fields.hidden_field(:sign_up_code, value: 'csp_beta', disabled: true)
     = contact_fields.hidden_field(:password, disabled: true)

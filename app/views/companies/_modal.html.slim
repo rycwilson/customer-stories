@@ -1,8 +1,5 @@
 #main-modal.modal.fade {
   data-controller="modal"
-  data-modal-new-action-class-name-value="modal-footer--new"
-  data-modal-show-action-class-name-value="modal-footer--show"
-  data-modal-edit-action-class-name-value="modal-footer--edit"  
   data-action="turbo:frame-render->modal#onFrameRender" 
   tabindex="-1" 
   role="dialog" }
@@ -16,15 +13,9 @@
             | &times;
         h4.modal-title data-modal-target="title"
 
-      .modal-body
-        turbo-frame id="" src="" data-modal-target="turboFrame"
-          div Loading...
+      .modal-body data-modal-target="body" data-action="contribution-form:contributor-changed->modal#changeSubmitBtnText"
+        = turbo_frame_tag('', src: '', data: { modal_target: 'turboFrame', placeholder: '<div>Loading...</div>' })
           
       .modal-footer data-modal-target="footer"
-        button.btn.btn-default type="button" data-dismiss="modal" Cancel
-
-        button.btn.btn-default type="button" data-dismiss="modal" Close
-
-        button.btn.btn-success type="submit" form="" style="width:114px" Save changes
-
-        button.btn.btn-success type="submit" form="" style="width:80px" Create
+        button.btn.btn-default type="button" data-dismiss="modal" data-modal-target="dismissBtn"
+        = submit_tag('', class: 'btn btn-success hidden', data: { modal_target: 'submitBtn' })

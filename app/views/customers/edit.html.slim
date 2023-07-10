@@ -1,4 +1,4 @@
-turbo-frame id="customer-#{@customer.id}"
+= turbo_frame_tag("edit-customer-#{@customer.id}")
 
   = form_with( \
       model: @customer,
@@ -12,7 +12,8 @@ turbo-frame id="customer-#{@customer.id}"
           host: URI.parse(@s3_direct_post.url).host,
           asset_host: Rails.application.config.asset_host,
           s3_data: @s3_direct_post.fields,
-          modal_target: 'railsForm',
+          modal_target: 'form',
+          submit_btn_text: 'Save changes',
           turbo_frame: '_top' } }) do |form|
 
     .form-group
