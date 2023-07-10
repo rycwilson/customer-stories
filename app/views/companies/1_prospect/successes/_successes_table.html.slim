@@ -3,7 +3,7 @@
 
 .table-controls
   div
-    .curator-select
+    .curator-select data-action="tomselect:change-curator->customer-wins#onCuratorChange"
       label
         span Curator
       = select_tag( \
@@ -18,7 +18,7 @@
               customer_wins_target: 'curatorSelect',
               sync_tables: 'true' } })
     
-    .filter-select
+    .filter-select data-action="tomselect:change-filter->customer-wins#onFilterChange tomselect:search->customer-wins#searchTable"
       label
         i.fa.fa-filter
       = select_tag( \
@@ -43,14 +43,22 @@
       /label 
       /button.btn.btn-secondary {
         type="button"
-        data-controller="modal-button"
-        data-modal-button-modal-outlet="#main-modal"
-        data-modal-button-title-value="New Customer Win"
-        data-modal-button-turbo-frame-attrs="{\"id\":\"new-contribution\",\"src\":\"#{new_company_success_path(company)}\"}"
-        data-action="modal-button#showModal" }
+        data-controller="modal-trigger"
+        data-modal-trigger-modal-outlet="#main-modal"
+        data-modal-trigger-title-value="New Customer Win"
+        data-modal-trigger-turbo-frame-attrs="{\"id\":\"new-contribution\",\"src\":\"#{new_company_success_path(company)}\"}"
+        data-action="modal-trigger#showModal" }
         i.fa.fa-fw.fa-plus-circle
         |&nbsp;&nbsp;New Customer Win
-      button.btn.btn-default type="button" aria-label="New Customer Win"
+      button.btn.btn-default {
+        type="button" 
+        data-customer-wins-target="newCustomerWinBtn"
+        data-controller="modal-trigger"
+        data-modal-trigger-modal-outlet="#main-modal"
+        data-modal-trigger-title-value="New Customer Win"
+        data-modal-trigger-turbo-frame-attrs-value={ }.to_json
+        data-action="modal-trigger#showModal"
+        aria-label="New Customer Win" }
         i.fa.fa-fw.fa-plus
       button.btn.btn-default {
         type="button" 

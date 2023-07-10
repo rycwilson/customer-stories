@@ -1,6 +1,6 @@
 .table-controls 
   div 
-    .curator-select 
+    .curator-select data-action="tomselect:change-curator->contributors#onCuratorChange"
       label 
         span Curator
       = select_tag( \
@@ -15,7 +15,9 @@
               contributors_target: 'curatorSelect',
               sync_tables: 'true' } })
 
-    .filter-select
+    .filter-select data-action="tomselect:change-filter->contributors#onFilterChange tomselect:search->contributors#searchTable"
+      label
+        i.fa.fa-filter
       = select_tag( \
           nil,
           grouped_options_for_select( \
@@ -39,14 +41,23 @@
       /label 
       /button.btn.btn-secondary {
         type="button"
-        data-controller="modal-button"
-        data-modal-button-modal-outlet="#main-modal"
-        data-modal-button-title-value="New Contributor"
-        data-modal-button-turbo-frame-attrs="{\"id\":\"new-contributor\",\"src\":\"#{company_contributions_path(company)}\"}"
-        data-action="modal-button#showModal" }
+        data-controller="modal-trigger"
+        data-modal-trigger-modal-outlet="#main-modal"
+        data-modal-trigger-title-value="New Contributor"
+        data-modal-trigger-turbo-frame-attrs="{\"id\":\"new-contributor\",\"src\":\"#{company_contributions_path(company)}\"}"
+        data-action="modal-trigger#showModal" }
         i.fa.fa-fw.fa-plus-circle
         |&nbsp;&nbsp;New Contributor
-      button.btn.btn-default type="button" aria-label="New Contributor"
+      button.btn.btn-default {
+        type="button" 
+        data-contributors-target="newContributorBtn"
+        data-controller="modal-trigger"
+        data-modal-trigger-modal-outlet="#main-modal"
+        data-modal-trigger-title-value="New Contributor"
+        data-modal-trigger-turbo-frame-attrs-value={ id: 'new-contribution', src: '/successes/0/contributions/new' }.to_json
+        data-modal-trigger-submit-button-text-value="Add Contributor"
+        data-action="modal-trigger#showModal"
+        aria-label="New Contributor" }
         i.fa.fa-fw.fa-plus
       button.btn.btn-default {
         type="button" 
