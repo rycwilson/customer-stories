@@ -2,35 +2,46 @@ import { Controller } from "@hotwired/stimulus";
 import { tsBaseOptions } from '../tomselect.js';
 
 export default class extends Controller {
-  static values = { type: String }
+  static values = { type: String };
 
   connect() {
     // console.log('tomselect connect')
+    const ctrl = this;
+
     this.currentSearchResults = [];
-    this.ts = new TomSelect(this.element, Object.assign({}, tsBaseOptions, {
-      // use arrow functions so 'this' refers to the controller
-      onChange: (newVal) => {
-        this.dispatch(`change-${this.typeValue}`, { detail: { newVal } });
+
+    this.ts = new TomSelect(ctrl.element, Object.assign({}, tsBaseOptions, {
+      onInitialize() {
+        if (ctrl.typeValue === 'Contributor') {
+        }
       },
-      onType: () => { if (this.isFilter()) this.onSearch(); },
+      onChange(newVal) {
+        ctrl.dispatch(`change-${ctrl.typeValue}`, { detail: { newVal } });
+      },
+      onType() { 
+        if (ctrl.isFilter()) ctrl.onSearch(); 
+      },
+
+      // 'this' refers to the TomSelect instance
       onFocus() {
         const dropdownMaxHeight = document.documentElement.clientHeight - this.wrapper.getBoundingClientRect().bottom;
         this.dropdown.children[0].style.maxHeight = `${dropdownMaxHeight - 15}px`;
       },
-      onDropdownOpen: (dropdown) => {
-        if (this.isFilter()) {
+      onDropdownOpen(dropdown) {
+        ctrl.dispatch('dropdown-open');
+        if (ctrl.isFilter()) {
           // if a search string exists, manually set the current results
-          if (this.ts.getValue() === '0') this.ts.currentResults.items = this.currentSearchResults;
+          if (ctrl.ts.getValue() === '0') ctrl.ts.currentResults.items = ctrl.currentSearchResults;
         }
       },
-      onDropdownClose: (dropdown) => {
-        if (this.isFilter()) {
+      onDropdownClose(dropdown) {
+        if (ctrl.isFilter()) {
           // default behavior is that text input is cleared when the dropdown closes, 
           // but we want to keep it since the search results are reflected in the table
           // => accomplished by adding and selecting an option to match the search text
-          if (!this.ts.getValue() && this.ts.lastQuery) {
-            this.ts.addOption({ value: 0, text: this.ts.lastQuery }, true);   // true => option will be removed on clear
-            this.ts.addItem(0, true);    // true => don't trigger change event
+          if (!ctrl.ts.getValue() && ctrl.ts.lastQuery) {
+            ctrl.ts.addOption({ value: 0, text: ctrl.ts.lastQuery }, true);   // true => option will be removed on clear
+            ctrl.ts.addItem(0, true);    // true => don't trigger change event
           }
         }
       }
