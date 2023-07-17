@@ -16,6 +16,6 @@
       .modal-body data-modal-target="body" data-action="contribution-form:contributor-changed->modal#changeSubmitBtnText"
         = turbo_frame_tag('', src: '', data: { modal_target: 'turboFrame', placeholder: '<div>Loading...</div>' })
           
-      .modal-footer data-modal-target="footer"
+      .modal-footer.hidden data-modal-target="footer"
         button.btn.btn-default type="button" data-dismiss="modal" data-modal-target="dismissBtn"
-        = submit_tag('', class: 'btn btn-success hidden', data: { modal_target: 'submitBtn' })
+        = submit_tag('', class: 'btn btn-success', data: { modal_target: 'submitBtn' })

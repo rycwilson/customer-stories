@@ -1,7 +1,7 @@
 import { Controller } from '@hotwired/stimulus';
 
 export default class extends Controller {
-  static targets = ['title', 'body', 'turboFrame', 'form', 'dismissBtn', 'submitBtn'];
+  static targets = ['title', 'body', 'turboFrame', 'form', 'footer', 'dismissBtn', 'submitBtn'];
   static values = { 
     title: { type: String, default: 'title is missing' },
     turboFrameAttrs: { type: Object, default: {} },
@@ -10,13 +10,11 @@ export default class extends Controller {
 
   static hiddenHandler;
   static ajaxSuccessHandler;
-  // static beforeFrameRenderHandler;
   formId;
   
   initialize() {
     this.hiddenHandler = this.onHidden.bind(this);
     this.ajaxSuccessHandler = this.onAjaxSuccess.bind(this);
-    // this.beforeFrameRenderHandler = this.beforeFrameRender.bind(this);
   }
 
   connect() {
@@ -57,7 +55,7 @@ export default class extends Controller {
     if (this.hasFormTarget) {
       this.dismissBtnTarget.textContent = 'Cancel';
       this.submitBtnTarget.value = this.formTarget.dataset.submitBtnText;
-      this.submitBtnTarget.classList.remove('hidden');
+      this.footerTarget.classList.remove('hidden');
       this.submitBtnTarget.setAttribute('form', this.formTarget.id);
       $(this.formTarget).on('ajax:success', this.ajaxSuccessHandler);
     } else {
@@ -91,5 +89,6 @@ export default class extends Controller {
     this.bodyContentValue = '';
     this.dismissBtnTarget.textContent = '';
     this.submitBtnTarget.value = '';
+    this.footerTarget.classList.add('hidden');
   }
 }

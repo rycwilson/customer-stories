@@ -53,7 +53,28 @@
   .help-block {
     display: none;
   }
+
+  // // TODO: break this out into forms.scss
+  // .form-horizontal {
+  //   .form-group.contributor {
+  //     margin: -1em 0 1em;
+  //     padding: 1em 0
+  //   }
+
+  //   .new-contact {
+  //     display: flex;
+  //     flex-direction: column;
+  //     background-color: $medium-gray;
+  //     margin: -1em #{-1 * $modal-inner-padding} 1em;
+  //     padding: 1em $modal-inner-padding 0;
+
+  //     .form-group:last-child {
+  //       margin-bottom: 1em;
+  //     }
+  //   }
+  // }
 }
+
 
 .modal[id^='cta-form'] {
   .modal-header {
