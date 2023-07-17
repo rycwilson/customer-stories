@@ -48,3 +48,6 @@ application.register('contribution-form', ContributionFormController);
 
 import TableDisplayOptionsController from './table_display_options_controller';
 application.register('table-display-options', TableDisplayOptionsController);
+
+import NewContactController from './new_contact_controller';
+application.register('new-contact', NewContactController);
