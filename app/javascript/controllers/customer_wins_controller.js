@@ -60,7 +60,8 @@ export default class extends Controller {
   }
   
   checkboxFiltersValueChanged(newVal, oldVal) {
-    if (oldVal !== undefined) this.searchTable();
+    if (oldVal === undefined) return false;
+    this.searchTable();
   }
 
   toggleRowGroups(e) {
