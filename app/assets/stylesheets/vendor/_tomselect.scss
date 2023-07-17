@@ -3,10 +3,32 @@
 
   .ts-control {
     height: 100%;
+
+    [data-value="0"] {
+      color: #666;
+    }
   }
 }
 
 .ts-dropdown {
+  .create,
+  .create-contact {
+    color: $text-color;
+
+    &:not(.active) :not(.user-input) {
+      color: #666;
+    }
+
+    :nth-child(2) {
+      font-weight: 600;
+    }
+
+    i {
+      margin-right: 0.5em;
+    }
+  }
+
+  .active.create,
   .active {
     color: white;
     background-color: $ts-active-option-background;
