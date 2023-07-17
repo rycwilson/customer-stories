@@ -2,23 +2,37 @@ import { Controller } from '@hotwired/stimulus';
 
 export default class extends Controller {
   static outlets = ['customer-wins', 'contributors'];
-  static targets = ['customerSelect', 'customerField', 'customerWinSelect', 'contributorSelect'];
+  static targets = [
+    'customerSelect', 'customerField', 'customerId', 'customerName', 'customerWinSelect', 'successCustomerId', 
+    'contributorSelect', 'referrerSelect', 'contributorFields', 'referrerFields'
+  ];
 
   customerCustomerWinIds;
   customerWinsWereFiltered;
+  beforeAjaxHandler;
+
+  initialize() {
+    this.beforeAjaxHandler = this.beforeAjax.bind(this);
+  }
 
   connect() {
     this.setCustomerCustomerWinIds();
   }
 
   onCustomerChange(e) {
-    const customerId = Number(e.target.value);
-    this.customerWinSelectTarget.tomselect.clear();
-    this.setCustomerCustomerWinIds(customerId);
+    const customerVal = e.target.value;
+    const customerId = isNaN(customerVal) ? null : customerVal;
+    const customerWinWasSelected = this.customerWinSelectTarget.value && !isNaN(this.customerWinSelectTarget.value);
+    this.successCustomerIdTarget.value = customerId;
     this.customerFieldTargets.forEach(field => field.disabled = Boolean(customerId));
-  }
-
-  onCustomerInput(e) {
+    if (customerId) {
+      this.setCustomerCustomerWinIds(customerId);
+      this.customerWinSelectTarget.tomselect.clear();
+    } else {
+      this.customerIdTarget.value = '';
+      this.customerNameTarget.value = customerVal;
+      if (customerWinWasSelected) this.customerWinSelectTarget.tomselect.clear();
+    }
   }
 
   onCustomerWinChange(e) {
@@ -46,15 +60,17 @@ export default class extends Controller {
     }
   }
 
-  onCustomerWinInput(e) {
-    console.log(e)
+  onContactChange({ target: select }) {
+    console.log('what?', select.value)
+    const isNewContact = select.value === '0';
+    const contactFields = select.isSameNode(this.contributorSelectTarget) ? 
+      this.contributorFieldsTarget : 
+      this.referrerFieldsTarget;
+    contactFields.setAttribute('data-new-contact-should-enable-value', isNewContact)
   }
 
-  onContributorChange({ target: { value: contributorId } }) {
-    this.dispatch(
-      'contributor-changed', 
-      { detail: { submitBtnText: `${contributorId === '0' ? 'Create' : 'Add'} Contributor` } }
-    );
+  beforeAjax(a, b, c) {
+    // a.preventDefault()
   }
 
   filterCustomerWins(e) {
@@ -67,10 +83,10 @@ export default class extends Controller {
     this.customerWinsWereFiltered = true;
   }
 
-  setCustomerCustomerWinIds(customerId = Number(this.customerSelectTarget.value)) {
+  setCustomerCustomerWinIds(customerId = this.customerSelectTarget) {
     this.customerCustomerWinIds = customerId ?
       this.customerWinsOutlet.dt.column('success:name').data().toArray()
-        .filter(customerWin => customerWin.customerId === customerId)
+        .filter(customerWin => customerWin.customerId === Number(customerId))
         .map(customerWin => customerWin.id) :
       [];
     this.customerWinsWereFiltered = false;
