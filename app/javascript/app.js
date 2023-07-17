@@ -19,9 +19,9 @@ import clearButton from 'tom-select/dist/js/plugins/clear_button.js';
 // do not change the 'clear_button' name, else styles won't work
 TomSelect.define('clear_button', clearButton);
 
-import companies from './views/companies.js';
-import profile from './views/user_profile.js';
-import { initView } from './views';
+// import companies from './views/companies.js';
+// import profile from './views/user_profile.js';
+// import { initView } from './views';
 
 window.CSP = window.CSP || cspApp();
 CSP.init();
@@ -39,7 +39,7 @@ function cspApp() {
       document.addEventListener('turbo:load', (e) => {
         console.log('turbo:load (once)')
         addAllListeners();
-        initView(controller, action);
+        // initView(controller, action);
       }, { once: true });
     }
   }
@@ -48,7 +48,7 @@ function cspApp() {
 
 function addAllListeners(e) {
   addTurboListeners();
-  [companies, profile].forEach(controller => controller.addListeners());
+  // [companies, profile].forEach(controller => controller.addListeners());
 }
 
 function addTurboListeners() {
