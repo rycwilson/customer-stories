@@ -2,7 +2,7 @@ import { Controller } from "@hotwired/stimulus";
 import { tsBaseOptions } from '../tomselect.js';
 
 export default class extends Controller {
-  static values = { type: String };
+  static values = { type: String, customOptions: { type: Object, default: {} } };
 
   connect() {
     // console.log('tomselect connect')
@@ -10,15 +10,29 @@ export default class extends Controller {
 
     this.currentSearchResults = [];
 
-    this.ts = new TomSelect(ctrl.element, Object.assign({}, tsBaseOptions, {
-      onInitialize() {
-        if (ctrl.typeValue === 'Contributor') {
-        }
+    this.ts = new TomSelect(ctrl.element, Object.assign({}, tsBaseOptions, this.customOptionsValue, {
+      render: {
+        option(data, escape) {
+          return data.value === '0' ?
+            `<div class="create-contact">
+              <i class="fa fa-plus"></i><span>${escape(data.text)}</span>
+            </div>` :
+            `<div>${escape(data.text)}</div>`
+        },
+        option_create(data, escape) {
+          return `
+            <div class="create">
+              <i class="fa fa-plus"></i><span>New ${ctrl.typeValue}:</span>&nbsp;&nbsp;<span class="user-input">${escape(data.input)}</span>
+            </div>
+          `;
+        } 
       },
-      onChange(newVal) {
+
+      onChange(newVal, oldVal) {
         ctrl.dispatch(`change-${ctrl.typeValue}`, { detail: { newVal } });
       },
-      onType() { 
+
+      onType(userInput) { 
         if (ctrl.isFilter()) ctrl.onSearch(); 
       },
 
@@ -27,21 +41,23 @@ export default class extends Controller {
         const dropdownMaxHeight = document.documentElement.clientHeight - this.wrapper.getBoundingClientRect().bottom;
         this.dropdown.children[0].style.maxHeight = `${dropdownMaxHeight - 15}px`;
       },
+
       onDropdownOpen(dropdown) {
-        ctrl.dispatch('dropdown-open');
+        ctrl.dispatch('dropdown-did-open');
         if (ctrl.isFilter()) {
           // if a search string exists, manually set the current results
-          if (ctrl.ts.getValue() === '0') ctrl.ts.currentResults.items = ctrl.currentSearchResults;
+          if (this.getValue() === '0') this.currentResults.items = ctrl.currentSearchResults;
         }
       },
+
       onDropdownClose(dropdown) {
         if (ctrl.isFilter()) {
           // default behavior is that text input is cleared when the dropdown closes, 
           // but we want to keep it since the search results are reflected in the table
           // => accomplished by adding and selecting an option to match the search text
-          if (!ctrl.ts.getValue() && ctrl.ts.lastQuery) {
-            ctrl.ts.addOption({ value: 0, text: ctrl.ts.lastQuery }, true);   // true => option will be removed on clear
-            ctrl.ts.addItem(0, true);    // true => don't trigger change event
+          if (!this.getValue() && this.lastQuery) {
+            this.addOption({ value: 0, text: this.lastQuery }, true);   // true => option will be removed on clear
+            this.addItem(0, true);    // true => don't trigger change event
           }
         }
       }
