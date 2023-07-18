@@ -1,8 +1,10 @@
 .new-contact.hidden { 
   data-controller="new-contact"
-  data-new-contact-contribution-form-outlet="#new-contribution-form"
+  data-new-contact-customer-win-form-outlet=('#new-success-form' if form == 'new-success')
+  data-new-contact-contribution-form-outlet=('#new-contribution-form' if form == 'new-contributor')
   data-new-contact-parent-select-target-value="#{contact_type}SelectTarget"
-  data-contribution-form-target="#{contact_type}Fields"
+  data-customer-win-form-target=("#{contact_type}Fields" if form == 'new-success')
+  data-contribution-form-target=("#{contact_type}Fields" if form == 'new-contributor')
   class="#{form} create-#{contact_type}" }
 
   = contribution_form.fields_for( \
