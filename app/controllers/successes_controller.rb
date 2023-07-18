@@ -4,7 +4,7 @@ class SuccessesController < ApplicationController
 
   respond_to(:html, :js, :json)
 
-  before_action({ except: [:zapier_trigger, :index, :create, :import] }) do
+  before_action({ except: [:zapier_trigger, :index, :new, :create, :import] }) do
     @success = Success.find(params[:id])
   end
   skip_before_action(
@@ -42,6 +42,13 @@ class SuccessesController < ApplicationController
       })
     end
     respond_to { |format| format.json { render({ json: data }) } }
+  end
+
+  def new 
+    @company = Company.find_by(id: params[:company_id]) || Company.find_by(subdomain: params[:company_id])
+    @customer_id = params[:customer_id]
+    @curator_id = params[:curator_id]
+    @success = Success.new
   end
 
   def show

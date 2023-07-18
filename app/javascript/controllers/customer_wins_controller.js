@@ -51,10 +51,15 @@ export default class extends Controller {
   }
 
   onCuratorChange(e) {
+    this.updateNewCustomerWinPath();
     this.searchTable(e);
   }
 
   onFilterChange(e) {
+    const filterVal = e.target.value;
+    const type = filterVal.slice(0, filterVal.lastIndexOf('-'));
+    const id = filterVal.slice(filterVal.lastIndexOf('-') + 1, filterVal.length);
+    if (type === 'customer') this.updateNewCustomerWinPath({ customerId: id });
     this.contributorsOutlet.updateNewContributionPath(e.target.value);
     this.searchTable(e);
   }
@@ -78,7 +83,19 @@ export default class extends Controller {
     tableControls.querySelector('.select-filters').appendChild(clone);
     this.dispatch('clone-filter-results', { detail: clone })
     $(table).on('draw.dt', formatText);
-  };
+  }
+
+  updateNewCustomerWinPath({ customerId } = {}) {
+    const subdomain = location.href.match(/:\/\/((\w|-)+)\./)[1];
+    const queryParams = `?curator_id=${this.curatorSelectTarget.value}${customerId ? `&customer_id=${customerId}` : ''}`; 
+    this.newCustomerWinBtnTarget.setAttribute(
+      'data-modal-trigger-turbo-frame-attrs-value', 
+      JSON.stringify({ 
+        id: 'new-customer-win', 
+        src: `/companies/${subdomain}/successes/new${queryParams}` 
+      })
+    );
+  }
 
   tableConfig() {
     const colIndices = { success: 1, customer: 2, curator: 3, status: 4, story: 5, actions: 6 };

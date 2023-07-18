@@ -22,11 +22,20 @@ application.register('dashboardTab', DashboardTabController);
 // import DashboardTabPanelController from './dashboard_tab_panel_controller';
 // application.register('dashboardTabPanel', DashboardTabPanelController);
 
+import ModalController from './modal_controller';
+application.register('modal', ModalController);
+
+import ModalTriggerController from './modal_trigger_controller';
+application.register('modal-trigger', ModalTriggerController);
+
 import CustomerWinsController from './customer_wins_controller';
 application.register('customer-wins', CustomerWinsController);
 
 import CustomerWinController from './customer_win_controller';
 application.register('customer-win', CustomerWinController);
+
+import CustomerWinFormController from './customer_win_form_controller';
+application.register('customer-win-form', CustomerWinFormController);
 
 import ContributorsController from './contributors_controller';
 application.register('contributors', ContributorsController);
@@ -34,20 +43,14 @@ application.register('contributors', ContributorsController);
 import ContributionController from './contribution_controller';
 application.register('contribution', ContributionController);
 
-import ActionsDropdownController from './actions_dropdown_controller';
-application.register('actions-dropdown', ActionsDropdownController);
-
-import ModalController from './modal_controller';
-application.register('modal', ModalController);
-
-import ModalTriggerController from './modal_trigger_controller';
-application.register('modal-trigger', ModalTriggerController);
-
 import ContributionFormController from './contribution_form_controller';
 application.register('contribution-form', ContributionFormController);
 
 import TableDisplayOptionsController from './table_display_options_controller';
 application.register('table-display-options', TableDisplayOptionsController);
+
+import ActionsDropdownController from './actions_dropdown_controller';
+application.register('actions-dropdown', ActionsDropdownController);
 
 import NewContactController from './new_contact_controller';
 application.register('new-contact', NewContactController);

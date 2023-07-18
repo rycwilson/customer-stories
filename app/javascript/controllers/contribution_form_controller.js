@@ -61,7 +61,6 @@ export default class extends Controller {
   }
 
   onContactChange({ target: select }) {
-    console.log('what?', select.value)
     const isNewContact = select.value === '0';
     const contactFields = select.isSameNode(this.contributorSelectTarget) ? 
       this.contributorFieldsTarget : 
