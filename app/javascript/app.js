@@ -1,11 +1,11 @@
-import './jquery.js';   // creates global $, jQuery
-import 'jquery-ujs/src/rails.js';
-import 'jquery-ui/dist/jquery-ui.js';
-import './bootstrap.js';
+import './jquery';   // creates global $, jQuery
+import 'jquery-ujs/src/rails';
+import 'jquery-ui/dist/jquery-ui';
+import './bootstrap';
 
 import "@hotwired/turbo-rails";
 import './controllers';
-import * as turboCallbacks from './turbo_callbacks.js';
+import * as turboCallbacks from './turbo_callbacks';
 
 import DataTable from 'datatables.net-bs';
 window.DataTable = DataTable;
@@ -14,8 +14,8 @@ import 'datatables.net-rowgroup';
 import cookies from 'js-cookie';
 window.Cookies = cookies;
 
-import './tomselect.js';
-import clearButton from 'tom-select/dist/js/plugins/clear_button.js';
+import './tomselect';
+import clearButton from 'tom-select/dist/js/plugins/clear_button';
 // do not change the 'clear_button' name, else styles won't work
 TomSelect.define('clear_button', clearButton);
 

@@ -1,5 +1,5 @@
 import { Controller } from "@hotwired/stimulus"
-import { getJSON } from '../util.js';
+import { getJSON } from '../util';
 
 export default class extends Controller {
   static outlets = ['dashboard', 'customer-wins'];
