@@ -1,6 +1,6 @@
 
 class User < ApplicationRecord
-  # RYAN = self.find_by(email:'***REMOVED***')
+  # RYAN = self.find_by(email:'rycwilson@gmail.com')
 
   belongs_to :company, optional: true
   validates :first_name, presence: true

@@ -340,10 +340,13 @@
   
   .form-group.source {
     margin-bottom: 15px;
+
+    label.radio-inline:first-child {
+      margin-right: 1em;
+    }
   }
 
   .form-group.csv-file {
-    display: none;
     // margin-bottom: 15px;
 
     > * {

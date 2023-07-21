@@ -28,14 +28,14 @@ STATUS_OPTIONS = ['pre_request', 'request', 'remind1', 'remind2', 'feedback', 'c
 #                       #    successes* join tables, contributions, email_contribution_requests
 # User.destroy_all
 # Company.destroy_all
-# User.where.not("email IN ('***REMOVED***', '***REMOVED***', '***REMOVED***', '***REMOVED***')").destroy_all
+# User.where.not("email IN ('rycwilson@gmail.com', 'dlindblodev@gmail.com', 'ryan@customerstories.net', 'rydub@yahoo.com')").destroy_all
 
-# dan = User.find_by(email:'***REMOVED***')
+# dan = User.find_by(email:'dlindblodev@gmail.com')
 dan = User.find_by(email:'acme-test@customerstories.net')
 dan.update(last_name:'Lindblom', title:'Customer Engagement Manager')
-# dan = User.create(first_name:'Dan', last_name:'Lindblom', email:'***REMOVED***', linkedin_url:'https://www.linkedin.com/in/danlindblom', sign_up_code:'csp_beta', password:'password', photo_url: 'https://csp-production-assets.s3-us-west-1.amazonaws.com/uploads/0e2caaaf-d808-4279-b7ca-9929cfc6400c/dan.png')
-ryan = User.find_by(email:'***REMOVED***')
-# ryan = User.create(first_name:'Ryan', last_name:'Wilson', email:'***REMOVED***', linkedin_url:'https://www.linkedin.com/in/wilsonryanc', sign_up_code:'csp_beta', password:'password', photo_url: 'https://csp-production-assets.s3-us-west-1.amazonaws.com/uploads/099b59d3-1f35-4d8b-9183-a162a80bfbac/ryan.png')
+# dan = User.create(first_name:'Dan', last_name:'Lindblom', email:'dlindblodev@gmail.com', linkedin_url:'https://www.linkedin.com/in/danlindblom', sign_up_code:'csp_beta', password:'password', photo_url: 'https://csp-production-assets.s3-us-west-1.amazonaws.com/uploads/0e2caaaf-d808-4279-b7ca-9929cfc6400c/dan.png')
+ryan = User.find_by(email:'rycwilson@gmail.com')
+# ryan = User.create(first_name:'Ryan', last_name:'Wilson', email:'rycwilson@gmail.com', linkedin_url:'https://www.linkedin.com/in/wilsonryanc', sign_up_code:'csp_beta', password:'password', photo_url: 'https://csp-production-assets.s3-us-west-1.amazonaws.com/uploads/099b59d3-1f35-4d8b-9183-a162a80bfbac/ryan.png')
 
 acme = Company.find_by(name:'Acme Test')
 acme.update(logo_url:'https://csp-production-assets.s3-us-west-1.amazonaws.com/uploads/eba0bc48-1b9f-489b-a8c2-1fcf82cbde73/acme.png',

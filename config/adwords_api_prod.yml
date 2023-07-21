@@ -1,0 +1,20 @@
+---
+:authentication:
+  :method: OAuth2
+  :oauth2_client_id: 329313322179-h7cts8hojfvp080a1339qgenjvsv34s3.apps.googleusercontent.com
+  :oauth2_client_secret: 5WBa41AA3C4Lt5MNd-gYPin9
+  :developer_token: k65d1wRxWpRpQRpYMwU-pw
+  :client_customer_id: 836-316-8926
+  :user_agent: csp
+  :oauth2_token:
+    :access_token: ya29.Glt-BfqdL2DIjmqIw6WFPlewjlu6XJ9f6CqlLTz9PJgK9qT1pDh0pyA7KLxD_01eYwHft_-cFGIAgpXVJTpXcviktf4fXpBwG_kFDO2gefMuIxFPSRSq-LXe6QCv
+    :refresh_token: 1/WVZ5YlJkdAAWjTtbeI6to2ARGNlhDqhhlpsGZQhwgq_6UDGrQm8VKyDfNGAepgjk
+    :issued_at: 2018-03-14 15:39:17.110343000 -07:00
+    :expires_in: 3600
+    :id_token:
+:service:
+  :environment: PRODUCTION
+:connection:
+  :enable_gzip: false
+:library:
+  :log_level: INFO

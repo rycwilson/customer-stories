@@ -7,6 +7,6 @@ class Object
     @_acme ||= Company.find(1)
   end
   def ryan
-    @_ryan ||= User.find_by(email:'***REMOVED***')
+    @_ryan ||= User.find_by(email:'ryan@customerstories.net')
   end
 end

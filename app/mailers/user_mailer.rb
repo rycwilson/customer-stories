@@ -4,7 +4,7 @@ class UserMailer < ApplicationMailer
 
   default from: 'no-reply@customerstories.net'
 
-  CSP_EMAILS = ['***REMOVED***', '***REMOVED***', '***REMOVED***', '***REMOVED***', '***REMOVED***', '***REMOVED***', '***REMOVED***']
+  CSP_EMAILS = ['rycwilson@gmail.com', 'rydub@yahoo.com', 'ryan@customerstories.net', 'dlindblodev@gmail.com', 'dlindblo@gmail.com', 'dan@customerstories.net', 'staging@customerstories.net']
 
   def win_story
     send_mail('win_story')
@@ -65,13 +65,13 @@ class UserMailer < ApplicationMailer
   # type is one of: request, remind, alert, test
   def send_mail (type, sender, recipient, subject)
     if Rails.env.development?
-      recipient_address = "#{recipient.full_name} <***REMOVED***>"
+      recipient_address = "#{recipient.full_name} <ryan@customerstories.net>"
       sender_address = "#{sender.full_name} <dev-test@customerstories.net>"
     elsif ENV['HOST_NAME'] == 'customerstories.org'  # staging
       if CSP_EMAILS.include?(sender.email)
         recipient_address = "#{recipient.full_name} <#{sender.email}>"
       else
-        recipient_address = "#{recipient.full_name} <***REMOVED***>"
+        recipient_address = "#{recipient.full_name} <staging@customerstories.net>"
       end
       sender_address = "#{sender.full_name} <#{sender.email}>"
     elsif recipient.email == sender.email

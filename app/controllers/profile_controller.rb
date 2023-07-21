@@ -1,12 +1,12 @@
 class ProfileController < ApplicationController
 
   SWITCH_USERS = [
-    '***REMOVED***', 
-    '***REMOVED***', 
+    'dan@customerstories.net', 
+    'dlindblo@gmail.com', 
     'demo@customerstories.net',
     'acme-test@customerstories.net',
     'ryanbpalo@customerstories.com',
-    '***REMOVED***', 
+    'rycwilson@gmail.com', 
     'heather@trunity.com', 
     'haley@pixleeteam.com',
     'awad@pixleeteam.com',

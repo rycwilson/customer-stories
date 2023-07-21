@@ -40,14 +40,14 @@ end
 #       {
 #         to: [
 #           {
-#             email: "***REMOVED***"
+#             email: "rycwilson@gmail.com"
 #           }
 #         ],
 #         subject: "sendgrid api test"
 #       }
 #     ],
 #     from: {
-#       email: "***REMOVED***"
+#       email: "ryan@customerstories.net"
 #     },
 #     content: [
 #       {
