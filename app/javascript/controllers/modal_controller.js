@@ -79,8 +79,8 @@ export default class extends Controller {
     $(this.element).modal('hide');
   }
 
-  changeSubmitBtnText({ detail: { submitBtnText } }) {
-    this.submitBtnTarget.value = submitBtnText;
+  setSubmitBtnText({ detail: btnText }) {
+    this.submitBtnTarget.value = btnText;
   }
 
   onHidden() {
