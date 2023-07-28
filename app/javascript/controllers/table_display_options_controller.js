@@ -1,4 +1,5 @@
 import { Controller } from '@hotwired/stimulus';
+import { parentCtrl } from '../util';
 
 export default class extends Controller {
   static outlets = ['dashboard', 'customer-wins', 'contributors'];
@@ -15,31 +16,31 @@ export default class extends Controller {
   }
 
   disconnect() {
-    this.dashboardOutlet.initTableDisplayOptionsPopover.bind(this.parentCtrl())(true);
+    this.dashboardOutlet.initTableDisplayOptionsPopover.bind(this.parentCtrl)(true);
     document.removeEventListener('click', this.clickAwayHandler);
   }
 
   onClickAway(e) {
-    if (!this.element || this.element.contains(e.target) || this.parentCtrl().tableDisplayOptionsBtnTarget.contains(e.target))
+    if (!this.element || this.element.contains(e.target) || this.parentCtrl.tableDisplayOptionsBtnTarget.contains(e.target))
       return false;
     
     // $(this.element).popover('hide')
-    this.parentCtrl().tableDisplayOptionsBtnTarget.click();
+    this.parentCtrl.tableDisplayOptionsBtnTarget.click();
   }
 
   toggleRowGroups(e) {
-    this.parentCtrl().toggleRowGroups(e);
+    this.parentCtrl.toggleRowGroups(e);
   }
 
   toggleFilter(e) {
     const { id, checked } = e.target;
-    const label = this.parentCtrl().checkboxFiltersValue[id].label;
-    this.parentCtrl().checkboxFiltersValue = Object.assign({}, this.parentCtrl().checkboxFiltersValue, { 
+    const label = this.parentCtrl.checkboxFiltersValue[id].label;
+    this.parentCtrl.checkboxFiltersValue = Object.assign({}, this.parentCtrl.checkboxFiltersValue, { 
       [`${id}`]: { checked, label }
     });
   }
 
-  parentCtrl() {
-    return this.dashboardOutlet.parentCtrl.bind(this)();
+  get parentCtrl() {
+    return parentCtrl.bind(this)();
   }
 }

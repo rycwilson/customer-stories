@@ -1,4 +1,5 @@
 import { Controller } from "@hotwired/stimulus";
+import { parentCtrl } from '../util';
 
 export default class extends Controller {
   static targets = ['row'];   // excludes row groups
@@ -25,7 +26,7 @@ export default class extends Controller {
       drawCallback(settings) {
         // console.log('drawCallback()')
         if (ctrl.didInitialize) ctrl.redrawRowGroups();
-        ctrl.dispatch(`${ctrl.parentCtrl().identifier}-drawn`)
+        ctrl.dispatch(`${ctrl.parentCtrl.identifier}-drawn`)
       },
       initComplete(settings) {
         ctrl.cloneFilterResults();
@@ -40,7 +41,7 @@ export default class extends Controller {
 
   readyValueChanged(dataIsReady) {
     if (dataIsReady)
-      this.dt = new DataTable(this.element, Object.assign({}, this.baseOptions, this.parentCtrl().tableConfig()));
+      this.dt = new DataTable(this.element, Object.assign({}, this.baseOptions, this.parentCtrl.tableConfig()));
   }
 
   searchParamsValueChanged(newVal, oldVal) {
@@ -106,11 +107,11 @@ export default class extends Controller {
     const formatText = () => clone.textContent = originalResults.textContent.replace(/\sentries/g, '');
     clone.id = `${originalResults.id}--clone`;
     formatText();
-    this.parentCtrl().filterResultsTarget.appendChild(clone);
+    this.parentCtrl.filterResultsTarget.appendChild(clone);
     $(this.element).on('draw.dt', formatText);
   }
 
-  parentCtrl() {
-    return this.dashboardOutlet.parentCtrl.bind(this)();
+  get parentCtrl() {
+    return parentCtrl.bind(this)();
   }
 }
