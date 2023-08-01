@@ -243,7 +243,7 @@ class ApplicationController < ActionController::Base
   end
 
   def after_sign_out_path_for resource
-    url_for(subdomain: nil, controller: '/site', action: 'landing', landing_page: 'index')
+    url_for(subdomain: nil, controller: '/site', action: 'landing')
   end
 
   def invalid_subdomain?
