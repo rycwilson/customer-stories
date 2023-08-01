@@ -13,7 +13,7 @@ module SuccessesAndContributions
 
   def find_dup_customer (customer_params, is_zap, current_user)
     if is_zap || !is_zap  # works for either
-      if (customer = Customer.where(name: customer_params.try(:[], :name), company_id: current_user.company_id).take)
+      if (customer = Customer.where('lower(name) = ?', customer_params.try(:[], :name).downcase, company_id: current_user.company_id).take)
         # puts existing customer
         customer_params[:id] = customer.id
         customer_params.delete_if { |k, v| k != 'id' }

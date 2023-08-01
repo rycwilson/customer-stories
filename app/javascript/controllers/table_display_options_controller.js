@@ -35,9 +35,9 @@ export default class extends Controller {
   toggleFilter(e) {
     const { id, checked } = e.target;
     const label = this.parentCtrl.checkboxFiltersValue[id].label;
-    this.parentCtrl.checkboxFiltersValue = Object.assign({}, this.parentCtrl.checkboxFiltersValue, { 
-      [`${id}`]: { checked, label }
-    });
+    this.parentCtrl.checkboxFiltersValue = (
+      {...this.parentCtrl.checkboxFiltersValue, ...{ [`${id}`]: { checked, label } } }
+    );
   }
 
   get parentCtrl() {

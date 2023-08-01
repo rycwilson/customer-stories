@@ -21,8 +21,7 @@ export default class extends Controller {
   }
 
   activeTabValueChanged() {
-    const activeTabPanel = this.tabPanelTargets.find(panel => panel.id === this.activeTabValue);
-    this.initTabPanel(activeTabPanel);
+    this.initTabPanel(this.activeTabPanel);
   }
 
   dataDidLoad(e) {
@@ -127,15 +126,6 @@ export default class extends Controller {
     Cookies.set(`csp-${this.activeTabValue}-tab`, e.target.closest('a').getAttribute('href'));
   }
 
-  // this method will be bound to 'datatable' or 'table-display-options' controller
-  parentCtrl() {
-    this.parentController = this.parentController || (
-      (this.element.hasAttribute(`data-${this.identifier}-customer-wins-outlet`) && this.customerWinsOutlet) ||
-      (this.element.hasAttribute(`data-${this.identifier}-contributors-outlet`) && this.contributorsOutlet)
-    );
-    return this.parentController;
-  }
-
   // this method will be bound to 'customer-wins' or 'contributors' controller
   initTableDisplayOptionsPopover(isReset) {
     const btn = this.tableDisplayOptionsBtnTarget;
@@ -200,5 +190,9 @@ export default class extends Controller {
       `,
       content
     });
+  }
+
+  get activeTabPanel() {
+    return this.tabPanelTargets.find(panel => panel.id === this.activeTabValue);
   }
 }
