@@ -104,11 +104,6 @@ class ContributionsController < ApplicationController
   end
 
   def create
-    if params[:zapier_create].present?
-      puts "Zapier -> CSP, create contributor"
-      puts contribution_params.to_h
-    end
-
     @company = Company.find_by(subdomain: request.subdomain) || current_user.company
 
     if contribution_params[:success_attributes].to_h.has_key?(:customer_attributes)
