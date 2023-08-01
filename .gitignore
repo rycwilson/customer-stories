@@ -17,16 +17,9 @@
 !/log/.keep
 /tmp
 
-# from webpacker branch
-/public/packs
-/node_modules
-/yarn-error.log
-/vendor/assets/yarn.lock
-
 # dependencies
+/node_modules
 /vendor/assets/*
-!/vendor/assets/package.json
-!/vendor/assets/package-lock.json
 !/vendor/assets/javascripts
 !/vendor/assets/stylesheets
 !/vendor/assets/*.zip
