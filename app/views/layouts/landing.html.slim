@@ -30,7 +30,7 @@ html lang="en-US"
 
     main = yield 
     
-    = render('site/footer')
+    = render('site/footer', footer_links: @footer_links)
     
     /= render('analytics/cookieconsent', { company: company, controller: controller_name })
 

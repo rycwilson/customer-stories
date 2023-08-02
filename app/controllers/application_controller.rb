@@ -10,6 +10,8 @@ class ApplicationController < ActionController::Base
   # Devise - whitelist User params
   before_action :configure_permitted_parameters, if: :devise_controller?
 
+  before_action :set_footer_links, if: -> { (controller_name == 'site') || :devise_controller? }
+
   before_action(
     :check_subdomain,
     if: Proc.new { user_signed_in? },
@@ -330,5 +332,11 @@ class ApplicationController < ActionController::Base
       controller: 'application',
       action: 'linkedin_auth_callback'
     })
+  end
+
+  def set_footer_links
+    @footer_links = %w(terms privacy company our-story).map do |path| 
+      [ path, File.join(root_url(subdomain: nil), path) ]
+    end.to_h
   end
 end
