@@ -80,12 +80,16 @@ export default class extends Controller {
   }
 
   initTabPanel(panel) {
-    this.subPanelTargets
-      .filter(subPanel => panel.contains(subPanel))
-      .forEach(subPanel => { 
-        const hasNotConnected = !subPanel.dataset.controller;
-        if (hasNotConnected) subPanel.setAttribute('data-controller', subPanel.id); 
-      });
+    if (panel.id === 'prospect') {
+      this.subPanelTargets
+        .filter(subPanel => panel.contains(subPanel))
+        .forEach(subPanel => { 
+          const hasNotConnected = !subPanel.dataset.controller;
+          if (hasNotConnected) subPanel.setAttribute('data-controller', subPanel.id); 
+        });
+    } else if (panel.id === 'curate' && !panel.dataset.controller) {
+      panel.setAttribute('data-controller', 'stories');
+    }
   }
 
   // search customer wins or contributors

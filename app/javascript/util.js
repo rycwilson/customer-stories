@@ -8,7 +8,7 @@ export async function getJSON(dataPath) {
     //   fetch('/successes', headers).then(res => res.json()), 
     //   fetch('/companies/0/contributions', headers).then(res => res.json())
     // ]);
-    return await fetch(dataPath, headers).then(res => res.json());
+    return await fetch(`${dataPath}.json`, headers).then(res => res.json());
   } catch(err) {
     console.error(err);
   }

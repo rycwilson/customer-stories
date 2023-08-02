@@ -28,6 +28,9 @@ application.register('modal', ModalController);
 import ModalTriggerController from './modal_trigger_controller';
 application.register('modal-trigger', ModalTriggerController);
 
+import StoriesController from './stories_controller';
+application.register('stories', StoriesController);
+
 import CustomerWinsController from './customer_wins_controller';
 application.register('customer-wins', CustomerWinsController);
 

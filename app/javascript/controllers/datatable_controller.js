@@ -40,12 +40,11 @@ export default class extends Controller {
   }
 
   readyValueChanged(dataIsReady) {
-    console.log('dataIsReady', dataIsReady)
-    if (this.element.id === 'successes-table') console.log('1', this.baseOptions)
-    if (dataIsReady)
-      this.dt = new DataTable(this.element, { ...this.baseOptions, ...this.parentCtrl.tableConfig });
-    if (this.element.id === 'successes-table') console.log('2', this.baseOptions)
-    
+    // console.log('dataIsReady', dataIsReady)
+    if (dataIsReady) {
+      console.log(this.parentCtrl.tableConfig())
+      this.dt = new DataTable(this.element, { ...this.baseOptions, ...this.parentCtrl.tableConfig() });
+    }
   }
 
   searchParamsValueChanged(newVal, oldVal) {

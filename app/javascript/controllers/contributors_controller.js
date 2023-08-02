@@ -214,7 +214,6 @@ export default class extends Controller {
       rowGroup: workflowStage === 'curate' ? null : { dataSrc: 'success.name', startRender: this.rowGroupTemplate },
   
       createdRow: (row, data, index) => {
-        console.log('createdRow')
         // const isPreInvite = data.status === 'pre_request';
         // const didNotRespond = data.status === 'did_not_respond';
         // $(row)

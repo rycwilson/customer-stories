@@ -1,5 +1,9 @@
 
-#curate.tab-pane.fade role="tabpanel" class=('active in' if workflow_stage == 'curate')
+#curate.tab-pane.fade {
+  class=('active in' if workflow_stage == 'curate')
+  data-dashboard-target="tabPanel"
+  data-stories-data-path-value="/stories"
+  role="tabpanel" }
 
   .hidden
     ul.nav.nav-tabs

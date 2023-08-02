@@ -28,7 +28,26 @@ class StoriesController < ApplicationController
       @tags_filter_results = @tags_filter.map { |type, id| [type, @featured_stories.tagged(type => id).count] }.to_h
       @tags_filter_results.merge!('combined' => @filtered_story_ids.count)
     end
-    render(layout: 'stories')
+    respond_to do |format|
+      format.html do 
+        binding.pry
+        render(layout: 'stories') 
+      end
+      format.json do 
+        binding.pry
+        render(
+          json: Story.default_order(@company.stories).as_json(
+            only: [:id, :title, :summary, :quote, :quote_attr_name, :quote_attr_title, :published, :logo_published, :preview_published, :publish_date, :updated_at],
+            methods: [:csp_story_path, :published_contributors, :preview_contributor],
+            include: {
+              success: {
+                only: [:curator_id],
+                include: {
+                  customer: { only: [:id, :name, :logo_url] },
+                  story_categories: { only: [:id, :name, :slug] },
+                  products: { only: [:id, :name, :slug] } } } } ) )
+      end
+    end
   end
 
   def show
