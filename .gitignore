@@ -16,14 +16,10 @@
 /log
 !/log/.keep
 /tmp
-
-# from webpacker branch
-/public/packs
-/node_modules
 /yarn-error.log
-/vendor/assets/yarn.lock
 
 # dependencies
+/node_modules
 /vendor/assets/*
 !/vendor/assets/package.json
 !/vendor/assets/package-lock.json
@@ -44,9 +40,3 @@
 # compiled assets are served from aws cloudfront/s3, so only need to track the manifest
 /public/assets/**
 !/public/assets/.sprockets-manifest-*
-
-
-
-
-
-

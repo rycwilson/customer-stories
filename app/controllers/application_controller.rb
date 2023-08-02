@@ -7,10 +7,12 @@ class ApplicationController < ActionController::Base
   # For APIs, you may want to use :null_session instead.
   protect_from_forgery with: :exception
 
-  # before_action { binding.remote_pry }
+  # before_action { binding.pry }
   
   # Devise - whitelist User params
   before_action :configure_permitted_parameters, if: :devise_controller?
+
+  before_action :set_footer_links, if: -> { (controller_name == 'site') || :devise_controller? }
 
   before_action(
     :check_subdomain,
@@ -245,7 +247,7 @@ class ApplicationController < ActionController::Base
   end
 
   def after_sign_out_path_for resource
-    url_for(subdomain: nil, controller: '/site', action: 'landing', landing_page: 'index')
+    url_for(subdomain: nil, controller: '/site', action: 'landing')
   end
 
   def invalid_subdomain?
@@ -342,5 +344,11 @@ class ApplicationController < ActionController::Base
       controller: 'application',
       action: 'linkedin_auth_callback'
     })
+  end
+
+  def set_footer_links
+    @footer_links = %w(terms privacy company our-story).map do |path| 
+      [ path, File.join(root_url(subdomain: nil), path) ]
+    end.to_h
   end
 end

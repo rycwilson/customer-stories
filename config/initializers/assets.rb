@@ -6,8 +6,7 @@ Rails.application.config.assets.version = '1.0'
 # Add additional assets to the asset load path
 # Rails.application.config.assets.paths << Emoji.images_path
 # Add Yarn node_modules folder to the asset load path.
-# TODO Is yarn required in rails6?
-# Rails.application.config.assets.paths << Rails.root.join('node_modules')
+Rails.application.config.assets.paths << Rails.root.join('node_modules')
 
 # by using a custom/wrappers directory, we can include a single entry here
 # and avoid unwanted partial sass file precompilation

@@ -29,6 +29,10 @@ html lang="en-US" prefix="og: http://ogp.me/ns# fb: http://ogp.me/ns/fb#"
       = stylesheet_link_tag('mvpready-landing', media: 'all', 'data-turbolinks-track' => 'reload')
     = favicon_link_tag('favicon.ico')
 
+    / TODO: this is a temporary hack to avoid compiling assets, overcomes a Firefox-specific style snafu
+    scss:
+      #successes-table .toggle-child > button { width: 100% }
+
   / TODO: fixed navbar - leave padding as below (false is temp. blocker)
   body {
     class="#{controller_name} #{action_name} #{@company&.subdomain}"
