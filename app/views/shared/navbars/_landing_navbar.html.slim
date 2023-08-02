@@ -5,7 +5,7 @@ nav.navbar.navbar-default.navbar-fixed-top role="banner"
       button.navbar-toggle.collapsed type="button" data-toggle="collapse" data-target=".navbar-collapse" aria-expanded="false"
         span.sr-only Toggle navigation
         i.fa.fa-bars
-      = link_to(root_path, class: 'navbar-brand') do
+      = link_to(root_url(subdomain: nil), class: 'navbar-brand') do
         = image_tag('landing/logo_full_med_blue.webp', alt: 'Customer Stories logo')
 
     .collapse.navbar-collapse role="navigation"
@@ -18,13 +18,13 @@ nav.navbar.navbar-default.navbar-fixed-top role="banner"
               span.sr-only (current)
 
         li class=('active' if storefront_page == 'product')
-          a href="/product"
+          a href="#{File.join(root_url(subdomain: nil), 'product')}"
             | Product 
             - if storefront_page == 'product'
               span.sr-only (current)
 
         li class=('active' if storefront_page == 'plans')
-          a href="/plans" 
+          a href="#{File.join(root_url(subdomain: nil), 'plans')}" 
             | Plans
             - if storefront_page == 'plans'
               span.sr-only (current)
@@ -40,7 +40,7 @@ nav.navbar.navbar-default.navbar-fixed-top role="banner"
                 = image_tag(LOGO_PLACEHOLDER, alt: "logo")
         - else
           li class=('active' if is_sign_up)
-            = link_to(new_user_registration_path) do
+            = link_to(File.join(root_url(subdomain: nil), new_user_registration_path)) do
               | Create Account 
               - if is_sign_up
                 span.sr-only (current)
