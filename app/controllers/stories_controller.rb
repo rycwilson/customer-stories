@@ -18,36 +18,25 @@ class StoriesController < ApplicationController
   before_action :set_s3_direct_post, only: :edit
 
   def index
-    set_or_redirect_to_story_preview(params[:preview], session[:preview_story_slug])
-
-    @tags_filter = get_filters_from_query_or_plugin(@company, params)
-
-    @featured_stories = @company.stories.featured.order([published: :desc, preview_published: :desc, updated_at: :desc])
-    if @tags_filter.present?
-      @filtered_story_ids = @featured_stories.tagged(@tags_filter).pluck(:id)
-      @tags_filter_results = @tags_filter.map { |type, id| [type, @featured_stories.tagged(type => id).count] }.to_h
-      @tags_filter_results.merge!('combined' => @filtered_story_ids.count)
-    end
-    respond_to do |format|
-      format.html do 
-        binding.pry
-        render(layout: 'stories') 
-      end
-      format.json do 
-        binding.pry
-        render(
-          json: Story.default_order(@company.stories).as_json(
-            only: [:id, :title, :summary, :quote, :quote_attr_name, :quote_attr_title, :published, :logo_published, :preview_published, :publish_date, :updated_at],
-            methods: [:csp_story_path, :published_contributors, :preview_contributor],
-            include: {
-              success: {
-                only: [:curator_id],
-                include: {
-                  customer: { only: [:id, :name, :logo_url] },
-                  story_categories: { only: [:id, :name, :slug] },
-                  products: { only: [:id, :name, :slug] } } } } ) )
+    @is_dashboard = request.headers['TURBO-FRAME'] == 'stories'
+    
+    if @is_dashboard
+      @tags_filter = {}
+      @tags_filter_results = {}
+      @stories = Story.default_order(@company.stories)
+    else
+      set_or_redirect_to_story_preview(params[:preview], session[:preview_story_slug])
+      @tags_filter = get_filters_from_query_or_plugin(@company, params)
+      @featured_stories = @company.stories.featured.order([published: :desc, preview_published: :desc, updated_at: :desc])
+      if @tags_filter.present?
+        @filtered_story_ids = @featured_stories.tagged(@tags_filter).pluck(:id)
+        @tags_filter_results = @tags_filter.map { |type, id| [type, @featured_stories.tagged(type => id).count] }.to_h
+        @tags_filter_results.merge!('combined' => @filtered_story_ids.count)
       end
     end
+
+    render(layout: false) and return if @is_dashboard
+    render(layout: 'stories') 
   end
 
   def show

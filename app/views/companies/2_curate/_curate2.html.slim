@@ -1,0 +1,7 @@
+#curate.tab-pane.fade {
+  class=('active in' if workflow_stage == 'curate')
+  data-dashboard-target="tabPanel"
+  role="tabpanel" }
+
+  .container 
+    = turbo_frame_tag('stories', src: '/stories', loading: 'lazy')

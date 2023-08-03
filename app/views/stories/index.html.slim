@@ -1,28 +1,36 @@
-= render('shared/navbars/stories_header', { company: @company, story: nil, is_preview: false })
+- unless @is_dashboard
+  = render('shared/navbars/stories_header', { company: @company, story: nil, is_preview: false })
 
-.container.grid-container
+.container
 
-  = render( \
-      'stories/shared/search_and_filters_xs_sm',
-      { company: @company,
-        tags_filter: @tags_filter,
-        tags_filter_results: @tags_filter_results })
+  = turbo_frame_tag('stories')
 
-  // if no filters, the search input will appear in the header
-  - if @company.story_categories.featured.present? || @company.products.featured.present?
-    = render( \
-        'stories/shared/search_and_filters_md_lg',
+    div data-controller="stories" data-action="tomselect:did-initialize->stories#onInitFilter"
+
+      = render( \
+          'stories/shared/search_and_filters_xs_sm',
+          { company: @company,
+            tags_filter: @tags_filter,
+            tags_filter_results: @tags_filter_results,
+            is_dashboard: @is_dashboard })
+
+      // if no filters, the search input will appear in the header
+      - if @is_dashboard || @company.story_categories.featured.present? || @company.products.featured.present?
+        = render( \
+            'stories/shared/search_and_filters_md_lg',
+            { company: @company,
+              tags_filter: @tags_filter,
+              tags_filter_results: @tags_filter_results,
+              both_filters_present: \
+                @is_dashboard || (@company.story_categories.featured.present? && @company.products.featured.present?),
+              is_dashboard: @is_dashboard })
+
+      = render( \
+        'stories/shared/gallery',
         { company: @company,
-          tags_filter: @tags_filter,
-          tags_filter_results: @tags_filter_results,
-          both_filters_present: @company.story_categories.featured.present? && @company.products.featured.present? })
-
-  = render( \
-    'stories/shared/gallery',
-    { company: @company,
-      stories: @featured_stories,
-      filtered_story_ids: @filtered_story_ids,
-      no_filters_present: @company.story_categories.featured.blank? && @company.products.featured.blank? })
+          stories: @is_dashboard ? @stories : @featured_stories,
+          filtered_story_ids: @is_dashboard ? [] : @filtered_story_ids,
+          no_filters_present: !@is_dashboard && @company.story_categories.featured.blank? && @company.products.featured.blank? })
 
 - unless user_signed_in?
   = render('stories/shared/sign_in_footer')

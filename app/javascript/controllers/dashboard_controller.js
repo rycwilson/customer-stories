@@ -87,8 +87,6 @@ export default class extends Controller {
           const hasNotConnected = !subPanel.dataset.controller;
           if (hasNotConnected) subPanel.setAttribute('data-controller', subPanel.id); 
         });
-    } else if (panel.id === 'curate' && !panel.dataset.controller) {
-      panel.setAttribute('data-controller', 'stories');
     }
   }
 

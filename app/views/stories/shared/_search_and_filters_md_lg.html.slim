@@ -1,4 +1,6 @@
-.search-and-filters.visible-md-block.visible-lg-block class=(both_filters_present ? 'tall' : 'short')
+.search-and-filters.visible-md-block.visible-lg-block {
+  class=(both_filters_present ? 'tall' : 'short')
+  data-stories-target="searchAndFilters" }
 
   = render('stories/shared/search_form', { company: company })
 
@@ -8,7 +10,7 @@
         - if tags_filter_results.present?
           | Applied filters:&nbsp;&nbsp;#{tags_filter_results['combined']} #{'story'.pluralize(tags_filter_results['combined'])} found
 
-  - if company.story_categories.featured.present?
+  - if is_dashboard || company.story_categories.featured.present?
     .stories-filter.form-group
       label Category
       = select_tag( \
@@ -18,13 +20,16 @@
             tags_filter['category']),
           { include_blank: true,
             class: 'stories-filter__select stories-filter__select--category',
-            style: 'width: 100%' })
+            style: 'width: 100%',
+            data: { \
+              controller: 'tomselect',
+              stories_target: 'filterSelect' } })
       .text-right
         span.stories-filter__results--category.help-block
           - if tags_filter['category'].present?
             = "#{tags_filter_results['category']} #{'story'.pluralize(tags_filter_results['category'])} found" 
 
-  - if company.products.featured.present?
+  - if is_dashboard || company.products.featured.present?
     .stories-filter.form-group
       label Product
       = select_tag( \
@@ -34,7 +39,10 @@
             tags_filter['product']),
           { include_blank: true,
             class: 'stories-filter__select stories-filter__select--product',
-            style: 'width: 100%' })
+            style: 'width: 100%',
+            data: { \
+              controller: 'tomselect',
+              stories_target: 'filterSelect' } })
       .text-right
         span.stories-filter__results--product.help-block
           - if tags_filter['product'].present?

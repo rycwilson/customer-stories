@@ -1,9 +1,10 @@
 .search-and-filters.visible-xs-block {
-  class=('visible-sm-block' unless company.story_categories.featured.blank? && company.products.featured.blank?) }
+  class=('visible-sm-block' unless !is_dashboard && company.story_categories.featured.blank? && company.products.featured.blank?) 
+  data-stories-target="searchAndFilters" }
   
   = render('stories/shared/search_form', { company: company })
 
-  - if company.story_categories.featured.present? && company.products.featured.present?
+  - if is_dashboard || (company.story_categories.featured.present? && company.products.featured.present?)
     .stories-filter.form-group
       .input-group.tom-select.multi
         span.input-group-addon
@@ -16,7 +17,10 @@
               tags_filter.map { |tag_type, tag_id| "#{tag_type}-#{tag_id}" }),
             { class: 'stories-filter__select stories-filter__select--grouped',
               multiple: true,
-              style: 'width: 100%' })
+              style: 'width: 100%',
+              data: { \
+                controller: 'tomselect',
+                stories_target: 'filterSelect' } })
       .text-right
         span.stories-filter__results--combined.help-block
           - if tags_filter_results.present?
@@ -32,7 +36,10 @@
             tags_filter['category']),
           { include_blank: true,
             class: 'stories-filter__select stories-filter__select--category',
-            style: 'width: 100%' })
+            style: 'width: 100%',
+            data: { \
+              controller: 'tomselect',
+              stories_target: 'filterSelect' } })
       .text-right
         span.stories-filter__results--category.help-block
           - if tags_filter['category'].present?
@@ -49,7 +56,10 @@
           { include_blank: true,
             placeholder: 'Select',
             class: 'stories-filter__select stories-filter__select--product',
-            style: 'width: 100%' })
+            style: 'width: 100%',
+            data: { \
+              controller: 'tomselect',
+              stories_target: 'filterSelect' } })
       .text-right
         span.stories-filter__results--product.help-block
           - if tags_filter['product'].present?

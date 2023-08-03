@@ -1,17 +1,21 @@
 import { Controller } from '@hotwired/stimulus';
-import { getJSON } from '../util';
-
+import imagesLoaded from 'imagesloaded/imagesloaded.pkgd';
 
 export default class extends Controller {
-  static values = { dataPath: String };
+  static targets = ['searchAndFilters', , 'filterSelect', 'gallery'];
 
-  stories;
+  readyFilters = 0;
 
   connect() {
-    console.log('connect stories', this.dataPathValue)
-    getJSON(this.dataPathValue).then(stories => {
-      this.stories = stories;
-      console.log('stories: ', this.stories);
+    console.log('connect stories')
+    imagesLoaded('#stories-gallery', (e) => {
+      console.log('images loaded', e)
+      this.galleryTarget.classList.remove('hidden');
     })
+  }
+
+  onInitFilter(e) {
+    if (++this.readyFilters === this.filterSelectTargets.length) 
+      this.searchAndFiltersTargets.forEach(container => container.setAttribute('data-init', 'true'));
   }
 }
