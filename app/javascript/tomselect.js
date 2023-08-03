@@ -2,8 +2,6 @@ import tomSelect from 'tom-select/dist/js/tom-select.base.js';
 window.TomSelect = tomSelect;
 
 export const tsBaseOptions = {
-  // create: true,
-  persist: false,
   maxOptions: null,
   closeAfterSelect: true,
   onInitialize() {
