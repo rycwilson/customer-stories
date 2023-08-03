@@ -28,6 +28,10 @@ export default class extends Controller {
         } 
       },
 
+      onInitialize() {
+        ctrl.dispatch('did-initialize', { detail: ctrl.element })
+      },
+
       onChange(newVal, oldVal) {
         ctrl.dispatch(`change-${ctrl.typeValue}`, { detail: { newVal } });
       },
