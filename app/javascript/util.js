@@ -23,8 +23,8 @@ export function capitalize(word) {
 export function parentCtrl() {
   if (this.parentController === undefined)
     this.parentController = (
-      (this.element.hasAttribute(`data-${this.identifier}-customer-wins-outlet`) && this.customerWinsOutlet) ||
-      (this.element.hasAttribute(`data-${this.identifier}-contributors-outlet`) && this.contributorsOutlet)
+      (this.hasCustomerWinsOutlet && this.customerWinsOutlet) || 
+      (this.hasContributorsOutlet && this.contributorsOutlet)
     );
   return this.parentController;
 }
