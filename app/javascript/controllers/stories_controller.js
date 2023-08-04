@@ -2,7 +2,7 @@ import { Controller } from '@hotwired/stimulus';
 import imagesLoaded from 'imagesloaded/imagesloaded.pkgd';
 
 export default class extends Controller {
-  static targets = ['searchAndFilters', , 'filterSelect', 'gallery'];
+  static targets = ['searchAndFilters', 'filterSelect', 'gallery', 'card'];
 
   readyFilters = 0;
 

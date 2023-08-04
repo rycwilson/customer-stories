@@ -5,19 +5,21 @@
 - is_grayscale = is_grayscale || nil
 
 div {
-  class="#{card_class}" 
+  class="#{card_class}"
   data-story-id="#{story.id}" 
   data-category=(story.category_tags.pluck(:id))
   data-product=(story.product_tags.pluck(:id))
+  data-stories-target="card"
   style="background-image: url(#{story.og_image_url})" }
 
   / grid__item is for the overlays; not implemented internally
   a.story-card__link.grid__item {
-    href="#{story.csp_story_link(is_dashboard, is_plugin, is_external, plugin_type)}"
+    href="#{is_dashboard ? edit_story_path(story.slug) : story.csp_story_link(is_dashboard, is_plugin, is_external, plugin_type)}"
     class="#{story.status}"
     class=('grid__item--carousel' if plugin_type == 'carousel')
     class=("bg-#{background}" if background)
     target=('_blank' if is_external)
+    data-turbo-frame=('_top' if is_dashboard)
     data-customer=(story.customer.name.to_json if !is_external)
     data-logosrc=(story.customer.logo_url if !is_external)
     data-summary=(story.summary&.to_json if !is_external)

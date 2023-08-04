@@ -78,12 +78,12 @@ Rails.application.routes.draw do
             # params[:id] = request.env['warden'].user(:user).try(:company_id).to_s
             params[:workflow_stage].match(/(prospect|curate|promote|measure)/)
             # params[:id].present?  # i.e. user signed in
-          }, as: 'company_main'
-    get '/curate/:customer_slug/:story_slug', to: 'stories#edit',
-          constraints: lambda { |params, request|
-            Customer.friendly.exists?(params[:customer_slug]) &&
-            Story.friendly.exists?(params[:story_slug])
-          }, as: 'curate_story'
+          }, as: 'dashboard'
+    # get '/curate/:customer_slug/:story_slug', to: 'stories#edit',
+    #       constraints: lambda { |params, request|
+    #         Customer.friendly.exists?(params[:customer_slug]) &&
+    #         Story.friendly.exists?(params[:story_slug])
+    #       }, as: 'curate_story'
     get '/promote/preview/:story_slug', to: 'adwords_ads#preview',
           constraints: lambda { |params, request|
             Story.friendly.exists?(params[:story_slug])

@@ -65,7 +65,8 @@ class StoriesController < ApplicationController
 
   def edit
     authenticate_user!
-    @story = Story.find_by_id(params[:id]) || Story.friendly.find(params[:story_slug])
+    # @story = Story.find_by_id(params[:id]) || Story.friendly.find(params[:story_slug])
+    @story = Story.friendly.find(params[:id])
     @story.video = @story.video_info()
     
     # if request.path != curate_story_path(@story.customer.slug, @story.slug) # friendly path changed
@@ -110,17 +111,18 @@ class StoriesController < ApplicationController
     else
       # provide data for both stories#edit and companies#show views
       @customer = @story.success.customer
-      @referrer_select = @story.success.contributions
-                               .map { |c| [ c.contributor.full_name, c.contributor.id ] }
-                               .unshift( [""] )
+
       # measure
-      @recent_activity = Rails.cache.fetch("#{@company.subdomain}/recent-activity") { @company.recent_activity(30) }
-      @story_views_30_day_count = PageView.joins(:visitor_session)
-                                    .company_story_views_since(@company.id, 30).count
-      @workflow_stage = 'curate'
-      @curate_view = 'story'  # instead of 'stories'
+      # @recent_activity = Rails.cache.fetch("#{@company.subdomain}/recent-activity") { @company.recent_activity(30) }
+      # @story_views_30_day_count = PageView.joins(:visitor_session)
+      #                               .company_story_views_since(@company.id, 30).count
+
+      # @workflow_stage = 'curate'
+      # @curate_view = 'story'  # instead of 'stories'
       @edit_story_tab = request.cookies['csp-edit-story-tab'] || '#story-settings'
-      render('companies/show')
+      @workflow_stage = 'story'
+      # render('companies/show')
+      render(layout: 'application')
     end
   end
 

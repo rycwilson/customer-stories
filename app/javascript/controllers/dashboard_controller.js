@@ -6,7 +6,10 @@ export default class extends Controller {
     'tab', 'tabPanel', 'subPanel', 'customerWinsTab', 'customerWinsFilter', 'contributorsTab', 'contributorsFilter',
     'addCustomerWinBtn', 'addContributorBtn'
   ];
-  static values = { activeTab: String };    // prospect | curate | promote | measure
+  static values = { 
+    activeTab: String,    // prospect | curate | promote | measure
+    story: { type: Object, default: {} }    // edit story
+  };    
 
   connect() {
     addEventListener('popstate', this.showActiveTabPanel);
@@ -22,6 +25,12 @@ export default class extends Controller {
 
   activeTabValueChanged() {
     this.initTabPanel(this.activeTabPanel);
+  }
+  
+  storyValueChanged(newVal, oldVal) {
+    if (newVal.id) {
+      
+    }
   }
 
   dataDidLoad(e) {

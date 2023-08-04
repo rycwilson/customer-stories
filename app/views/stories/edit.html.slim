@@ -1,0 +1,10 @@
+.dashboard {
+  data-controller="dashboard" 
+  data-dashboard-active-tab-value="#{@workflow_stage}"
+  data-dashboard-modal-outlet="#main-modal"
+  data-action="customer-win:add-contributors->dashboard#addCustomerWinContributors" }
+
+  = render('shared/navbars/company_nav', { company: @company, workflow_stage: @workflow_stage })
+
+  .container
+    = link_to('Back to dashboard', dashboard_path('curate'))
