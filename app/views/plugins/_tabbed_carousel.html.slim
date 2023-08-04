@@ -67,7 +67,7 @@ section.cs-tabbed-carousel style="visibility: hidden"
                 = render( \
                     'stories/shared/story_card',
                     { story: story,
-                      card_class: story_card_class(story, false, false, true).concat(' story-card--small'),
+                      card_class: story_card_class(story, **{ is_plugin: true }).concat(' story-card--small'),
                       plugin_type: 'tabbed_carousel',
                       is_dashboard: false,
                       is_plugin: is_plugin,

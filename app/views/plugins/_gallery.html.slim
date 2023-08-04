@@ -5,7 +5,7 @@
         = render( \
             'stories/shared/story_card',
             { story: story,
-              card_class: story_card_class(story, logos_only, false, true, is_grayscale, preselected_story_id),
+              card_class: story_card_class(story, **{ is_plugin: true, logos_only: logos_only, is_grayscale: is_grayscale, preselected_story_id: preselected_story_id }),
               plugin_type: 'gallery',
               is_dashboard: false,
               is_plugin: true,
