@@ -38,8 +38,6 @@ html lang="en-US" prefix="og: http://ogp.me/ns# fb: http://ogp.me/ns/fb#"
     class="#{controller_name} #{action_name} #{@company&.subdomain}"
     style="#{@is_social_share_redirect ? 'visibility:hidden;' : ''} \
       #{admin_navbar?(controller_name) && false ? 'padding-top:65px;' : ''}"
-    data-controller="#{controller_name}"
-    data-action="#{action_name}" 
     data-current-user="#{current_user.to_json(only: [:id], methods: [:full_name])}" }
 
     - if @is_social_share_redirect
