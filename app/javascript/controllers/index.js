@@ -17,7 +17,7 @@ import DashboardController from './dashboard_controller';
 application.register('dashboard', DashboardController);
 
 import DashboardTabController from './dashboard_tab_controller';
-application.register('dashboardTab', DashboardTabController);
+application.register('dashboard-tab', DashboardTabController);
 
 // import DashboardTabPanelController from './dashboard_tab_panel_controller';
 // application.register('dashboardTabPanel', DashboardTabPanelController);
