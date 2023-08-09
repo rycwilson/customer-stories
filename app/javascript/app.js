@@ -31,11 +31,8 @@ function cspApp() {
     currentUser: Object.fromEntries(
       Object.entries(JSON.parse(document.body.dataset.currentUser)).map(([k, v]) => [k === 'full_name' ? 'name' : k, v]),
     ),
-    data: {},
     screenSize: null,
     init() {
-      const controller = document.body.dataset.controller;
-      const action = document.body.dataset.action;
       document.addEventListener('turbo:load', (e) => {
         console.log('turbo:load (once)')
         addAllListeners();

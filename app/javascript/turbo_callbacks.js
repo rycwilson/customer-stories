@@ -2,7 +2,7 @@ import { initView } from './views';
 
 export function onLoad(e) {
   console.log('turbo:load')
-  initView(document.body.dataset.controller, document.body.dataset.action);
+  // initView(document.body.dataset.controller, document.body.dataset.action);
 }
 
 export function onClick(e) {
