@@ -6,7 +6,7 @@ li {
     href="##{tab_name == 'story' ? 'curate' : tab_name}" 
     data-toggle="tab" 
     data-controller="dashboard-tab"
-    data-action="dashboard#onTabClick dashboardTab#onClick"
+    data-action="dashboard#onTabClick dashboard-tab#onClick"
     data-dashboard-target="#{'tab' if workflow_stage}"
     aria-controls="#{tab_name == 'story' ? 'curate' : tab_name}"
     aria-expanded="#{workflow_stage == tab_name ? 'true' : 'false'}"
