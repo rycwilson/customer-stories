@@ -7,8 +7,7 @@ export default class extends Controller {
     'addCustomerWinBtn', 'addContributorBtn'
   ];
   static values = { 
-    activeTab: String,    // prospect | curate | promote | measure
-    story: { type: Object, default: {} }    // edit story
+    activeTab: { type: String, default: '' }   // prospect | curate | promote | measure
   };    
 
   connect() {
@@ -20,19 +19,14 @@ export default class extends Controller {
   }
 
   onTabClick(e) {
-    this.activeTabValue = e.target.getAttribute('aria-controls');
+    $(e.target).one('shown.bs.tab', () => setTimeout(() => this.activeTabValue = e.target.getAttribute('aria-controls')));
   }
 
-  activeTabValueChanged() {
-    this.initTabPanel(this.activeTabPanel);
+  activeTabValueChanged(activeTab) {
+    // console.log('activeTab', activeTab)
+    if (activeTab) this.initTabPanel(this.activeTabPanel);
   }
   
-  storyValueChanged(newVal, oldVal) {
-    if (newVal.id) {
-      
-    }
-  }
-
   dataDidLoad(e) {
     const { panel, resourceClassName } = e.detail;
 
