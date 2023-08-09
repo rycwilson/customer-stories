@@ -14,18 +14,30 @@ export default class extends Controller {
     }
   }
 
-  customerWins;
   dt;
 
+  initialize() {
+    // console.log('init customer wins')
+  }
+  
   connect() {
-    getJSON(this.dataPathValue).then(successes => {
-      this.customerWins = successes;
-      console.log('customer wins: ', this.customerWins)
-      this.datatableTarget.setAttribute('data-datatable-ready-value', 'true');
-      // this.datatableTarget.readyValue = true;
-      const panel = this.element.closest('[data-dashboard-target="tabPanel"]');
-      this.dispatch('load', { detail: { panel, resourceClassName: 'customer-wins' }});
-    })
+    // console.log('connect customer wins')
+    if (CSP.customerWins) {
+      this.initTable();
+    } else {
+      getJSON(this.dataPathValue).then(successes => {
+        CSP.customerWins = successes;
+        this.initTable();
+      })
+    }
+  }
+
+  initTable() {
+    console.log('customer wins: ', CSP.customerWins)
+    this.datatableTarget.setAttribute('data-datatable-ready-value', 'true');
+    // this.datatableTarget.readyValue = true;
+    const panel = this.element.closest('[data-dashboard-target="tabPanel"]');
+    this.dispatch('load', { detail: { panel, resourceClassName: 'customer-wins' }});
   }
 
   tableInitComplete(e) {
@@ -100,7 +112,7 @@ export default class extends Controller {
   tableConfig() {
     const colIndices = { success: 1, customer: 2, curator: 3, status: 4, story: 5, actions: 6 };
     return {
-      data: this.customerWins,
+      data: CSP.customerWins,
       
       language: { 
         emptyTable: 'No Customer Wins found',

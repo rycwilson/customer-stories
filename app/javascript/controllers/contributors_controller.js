@@ -15,17 +15,25 @@ export default class extends Controller {
     }
   };
 
-  contributions;
   dt;
 
   connect() {
-    getJSON(this.dataPathValue).then(contributions => {
-      this.contributions = contributions;
-      console.log('contributions: ', contributions)
-      this.datatableTarget.setAttribute('data-datatable-ready-value', 'true');
-      const panel = this.element.closest('[data-dashboard-target="tabPanel"]');
-      this.dispatch('load', { detail: { panel, resourceClassName: 'contributors' }})
-    });
+    if (CSP.contributions) {
+      this.initTable();
+    } else {
+      getJSON(this.dataPathValue).then(contributions => {
+        CSP.contributions = contributions;
+        this.initTable();
+      })
+    }
+  }
+
+  initTable() {
+    console.log('contributions: ', CSP.contributions)
+    this.datatableTarget.setAttribute('data-datatable-ready-value', 'true');
+    // this.datatableTarget.readyValue = true;
+    const panel = this.element.closest('[data-dashboard-target="tabPanel"]');
+    this.dispatch('load', { detail: { panel, resourceClassName: 'contributors' }});
   }
 
   tableInitComplete(e) {
@@ -93,7 +101,7 @@ export default class extends Controller {
       storyPublished: 8
     };
     return {
-      data: this.contributions,
+      data: CSP.contributions,
       // select: true,  // https://datatables.net/extensions/select/
       
       language: {
