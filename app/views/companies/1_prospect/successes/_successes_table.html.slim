@@ -3,7 +3,7 @@
 
 .table-controls
   div
-    .curator-select data-action="tomselect:change-curator->customer-wins#onCuratorChange"
+    .curator-select data-action="tomselect:change-curator->resource#onCuratorChange"
       label
         span Curator
       = select_tag( \
@@ -15,10 +15,9 @@
             data: { \
               controller: 'tomselect', 
               tomselect_type_value: 'curator', 
-              customer_wins_target: 'curatorSelect',
-              sync_tables: 'true' } })
+              resource_target: 'curatorSelect' } })
     
-    .filter-select data-action="tomselect:change-filter->customer-wins#onFilterChange tomselect:search->customer-wins#searchTable"
+    .filter-select data-action="tomselect:change-filter->resource#onFilterChange tomselect:search->resource#searchTable"
       label
         i.fa.fa-filter
       = select_tag( \
@@ -33,9 +32,8 @@
             data: { \
               controller: 'tomselect', 
               tomselect_type_value: 'filter', 
-              customer_wins_target: 'filterSelect',
-              dashboard_target: 'customerWinsFilter',
-              sync_tables: true } })
+              resource_target: 'filterSelect',
+              dashboard_target: 'customerWinsFilter' } })
 
   div
     div
@@ -52,7 +50,7 @@
         |&nbsp;&nbsp;New Customer Win
       button.btn.btn-default {
         type="button" 
-        data-customer-wins-target="newCustomerWinBtn"
+        data-resource-target="newItemBtn"
         data-controller="modal-trigger"
         data-modal-trigger-modal-outlet="#main-modal"
         data-modal-trigger-title-value="New Customer Win"
@@ -61,13 +59,15 @@
         data-action="modal-trigger#showModal"
         aria-label="New Customer Win" }
         i.fa.fa-fw.fa-plus
+
       button.btn.btn-default {
         type="button" 
         aria-label="Table Display Options" 
-        data-customer-wins-target="tableDisplayOptionsBtn" }
+        data-resource-target="tableDisplayOptionsBtn" }
         i.fa.fa-fw.fa-server
+
     div 
-      .help-block.text-right data-customer-wins-target="filterResults"
+      .help-block.text-right data-resource-target="filterResults"
 
 /.row.successes-header
   .col-sm-7
@@ -131,11 +131,11 @@
 
 table#successes-table.table.datatable.table-bordered.has-row-groups {
   data-controller="datatable"
-  data-customer-wins-target="datatable"
+  data-resource-target="datatable"
   data-datatable-dashboard-outlet=".dashboard"
-  data-datatable-customer-wins-outlet="#customer-wins"
+  data-datatable-resource-outlet="#customer-wins"
   data-datatable-enable-row-groups-value="true"
-  data-action="datatable:init->customer-wins#tableInitComplete"
+  data-action="datatable:init->resource#tableInitComplete"
   width="100%" }
   thead
     tr

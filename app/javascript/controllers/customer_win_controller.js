@@ -1,7 +1,7 @@
 import { Controller } from '@hotwired/stimulus';
 
 export default class extends Controller {
-  static outlets = ['contributors', 'modal'];
+  static outlets = ['resource', 'modal'];
   static targets = ['actionsDropdown'];
   static values = { rowData: Object };
 
@@ -15,6 +15,10 @@ export default class extends Controller {
     // console.log('connect customer win')
     Object.keys(this.rowDataValue).forEach(field => this[field] = this.rowDataValue[field]);
     this.actionsDropdownTarget.insertAdjacentHTML('afterbegin', this.actionsDropdownTemplate());
+  }
+
+  get contributorsCtrl() {
+    return this.resourceOutlet;
   }
 
   storyExists() {

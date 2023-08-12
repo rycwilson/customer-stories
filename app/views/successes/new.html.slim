@@ -5,7 +5,7 @@
       format: :js,
       local: false,
       id: 'new-success-form',
-      class: 'form-horizontal',
+      class: 'form-horizontal prospect-form',
       data: { \
         controller: 'customer-win-form',
         action: 'ajax:before->customer-win-form#beforeAjax',
@@ -163,7 +163,7 @@
                       controller: 'tomselect',
                       tomselect_type_value: 'Contributor',
                       customer_win_form_target: 'contributorSelect',
-                      action: 'customer-win-form#onContactChange customer-win-form#onContributorChange',
+                      action: 'customer-win-form#onContactChange',
                       field_name: "#{contribution_fields.object_name}[contributor_id]" } })
 
           = render( \

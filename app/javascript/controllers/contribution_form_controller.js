@@ -1,7 +1,7 @@
 import { Controller } from '@hotwired/stimulus';
 
 export default class extends Controller {
-  static outlets = ['customer-wins', 'contributors'];
+  static outlets = ['resource'];
   static targets = [
     'customerSelect', 'customerField', 'customerId', 'customerName', 'customerWinSelect', 'successCustomerId', 
     'contributorSelect', 'referrerSelect', 'contributorFields', 'referrerFields'
@@ -17,6 +17,19 @@ export default class extends Controller {
 
   connect() {
     this.setCustomerCustomerWinIds();
+  }
+
+  // resourceOutletConnected(outlet) {
+  //   if (outlet.resourceName === 'customerWins') this.customerWinsCtrl = outlet;
+  //   if (outlet.resourceName === 'contributors') this.contributorsCtrl = outlet;
+  // }
+
+  get customerWinsCtrl() {
+    return this.resourceOutlets.find(outlet => outlet.resourceName === 'customerWins');
+  }
+
+  get contributorsCtrl() {
+    return this.resourceOutlets.find(outlet => outlet.resourceName === 'contributors');
   }
 
   onCustomerChange(e) {
@@ -36,9 +49,9 @@ export default class extends Controller {
   }
 
   onCustomerWinChange(e) {
-    const customerWin = this.customerWinsOutlet.dt.column('success:name').data().toArray()
+    const customerWin = this.customerWinsCtrl.dt.column('success:name').data().toArray()
       .find(customerWin => customerWin.id === Number(e.target.value));
-    const customerWinContributorIds = customerWin && this.contributorsOutlet.dt.data().toArray()
+    const customerWinContributorIds = customerWin && this.contributorsCtrl.dt.data().toArray()
       .filter(contribution => contribution.success.id === customerWin.id)
       .map(contribution => contribution.contributor.id);
     const tsOptions = this.contributorSelectTarget.tomselect.options;
@@ -84,7 +97,7 @@ export default class extends Controller {
 
   setCustomerCustomerWinIds(customerId = this.customerSelectTarget) {
     this.customerCustomerWinIds = customerId ?
-      this.customerWinsOutlet.dt.column('success:name').data().toArray()
+      this.customerWinsCtrl.dt.column('success:name').data().toArray()
         .filter(customerWin => customerWin.customerId === Number(customerId))
         .map(customerWin => customerWin.id) :
       [];

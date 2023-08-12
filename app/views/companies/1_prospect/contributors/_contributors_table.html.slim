@@ -1,6 +1,6 @@
 .table-controls 
   div 
-    .curator-select data-action="tomselect:change-curator->contributors#onCuratorChange"
+    .curator-select data-action="tomselect:change-curator->resource#onCuratorChange"
       label 
         span Curator
       = select_tag( \
@@ -12,10 +12,9 @@
             data: { \
               controller: 'tomselect', 
               tomselect_type_value: 'curator', 
-              contributors_target: 'curatorSelect',
-              sync_tables: 'true' } })
+              resource_target: 'curatorSelect' } })
 
-    .filter-select data-action="tomselect:change-filter->contributors#onFilterChange tomselect:search->contributors#searchTable"
+    .filter-select data-action="tomselect:change-filter->resource#onFilterChange tomselect:search->resource#searchTable"
       label
         i.fa.fa-filter
       = select_tag( \
@@ -31,9 +30,8 @@
             data: { \
               controller: 'tomselect', 
               tomselect_type_value: 'filter', 
-              contributors_target: 'filterSelect',
-              dashboard_target: 'contributorsFilter',
-              sync_tables: 'true' } })
+              resource_target: 'filterSelect',
+              dashboard_target: 'contributorsFilter' } })
   
   div
     div
@@ -50,7 +48,7 @@
         |&nbsp;&nbsp;New Contributor
       button.btn.btn-default {
         type="button" 
-        data-contributors-target="newContributorBtn"
+        data-resource-target="newItemBtn"
         data-controller="modal-trigger"
         data-modal-trigger-modal-outlet="#main-modal"
         data-modal-trigger-title-value="New Contributor"
@@ -62,10 +60,10 @@
       button.btn.btn-default {
         type="button" 
         aria-label="Table Display Options" 
-        data-contributors-target="tableDisplayOptionsBtn" }
+        data-resource-target="tableDisplayOptionsBtn" }
         i.fa.fa-fw.fa-server
     div 
-      .help-block.text-right data-contributors-target="filterResults"
+      .help-block.text-right data-resource-target="filterResults"
 
 
 
@@ -144,11 +142,11 @@
 / it's actually a contributions table, but presented to user as Contributors
 table#contributors-table.datatable.table.table-bordered.has-row-groups {
   data-controller="datatable"
-  data-contributors-target="datatable"
+  data-resource-target="datatable"
   data-datatable-dashboard-outlet=".dashboard"
-  data-datatable-contributors-outlet="#contributors"
+  data-datatable-resource-outlet="#contributors"
   data-datatable-enable-row-groups-value="true"
-  data-action="datatable:init->contributors#tableInitComplete"
+  data-action="datatable:init->resource#tableInitComplete"
   cellspacing="0" 
   width="100%" }
 

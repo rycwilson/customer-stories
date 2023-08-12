@@ -1,110 +1,85 @@
 import { Controller } from "@hotwired/stimulus";
-import { getJSON } from '../util';
+import { getJSON, kebabize } from '../util';
+import { 
+  init as initTable,
+  initComplete as tableInitComplete,
+  search as searchTable
+} from '../tables';
+import { newCustomerWinPath } from '../customer_wins/customer_wins';
+import { newContributionPath } from '../contributions/contributions';
 
 export default class extends Controller {
-  static outlets = ['dashboard', 'contributors'];
-  static targets = ['curatorSelect', 'filterSelect', 'filterResults', 'datatable', 'newCustomerWinBtn', 'tableDisplayOptionsBtn'];
-  static values = { 
-    dataPath: String, 
-    checkboxFilters: { 
-      type: Object, 
-      default: { 
-        'show-wins-with-story': { checked: true, label: 'Customer Wins with Story started' } 
-      }
-    }
-  }
+  static outlets = ['dashboard', 'resource'];
+  static targets = ['curatorSelect', 'filterSelect', 'filterResults', 'datatable', 'newItemBtn', 'tableDisplayOptionsBtn'];
+  static values = { dataPath: String, checkboxFilters: { type: Object, default: {} } }
 
   dt;
+  resourceName;
 
   initialize() {
-    // console.log('init customer wins')
+    console.log(`init ${this.element.dataset.resourceName}`);
+    this.resourceName = this.element.dataset.resourceName;
   }
   
   connect() {
-    // console.log('connect customer wins')
-    if (CSP.customerWins) {
-      this.initTable();
+    console.log(`connect ${this.resourceName}`)
+    if (CSP[this.resourceName]) {
+      initTable(this);
     } else {
-      getJSON(this.dataPathValue).then(successes => {
-        CSP.customerWins = successes;
-        this.initTable();
+      getJSON(this.dataPathValue).then(data => {
+        CSP[this.resourceName] = data;
+        initTable(this);
       })
     }
   }
 
-  initTable() {
-    console.log('customer wins: ', CSP.customerWins)
-    this.datatableTarget.setAttribute('data-datatable-ready-value', 'true');
-    // this.datatableTarget.readyValue = true;
-    const panel = this.element.closest('[data-dashboard-target="tabPanel"]');
-    this.dispatch('load', { detail: { panel, resourceClassName: 'customer-wins' }});
-  }
-
   tableInitComplete(e) {
-    this.dt = e.detail.dt;
-    this.dashboardOutlet.initTableDisplayOptionsPopover.bind(this)();
-    this.searchTable();
+    tableInitComplete(this, e.detail.dt);
   }
 
   searchTable(e = { type: '', detail: {} }) {
-    const isUserInput = e.type;
-    if (e.type.includes('change-curator')) {
-      this.contributorsOutlet.curatorSelectTarget.tomselect.setValue(this.curatorSelectTarget.value, true);
-    } else if (e.type.includes('change-filter')) {
-      this.contributorsOutlet.filterSelectTarget.tomselect.setValue(this.filterSelectTarget.value, true);
-    }
-    
-    // allow the visible table to be drawn before searching the other table
-    if (isUserInput && e.target.dataset.syncTables)
-      this.element.addEventListener('datatable:customer-wins-drawn', () => {
-        setTimeout(() => this.dashboardOutlet.searchTable.bind(this.contributorsOutlet)());
-      }, { once: true });
-    this.dashboardOutlet.searchTable.bind(this)(e.detail && e.detail.searchResults);
+    searchTable(this, e, this.contributorsOutlet);
   }
 
   onCuratorChange(e) {
-    this.updateNewCustomerWinPath();
-    this.searchTable(e);
+    // this.updateNewCustomerWinPath();
+    this.updateNewItemPath();
+    searchTable(this, e, this.contributorsOutlet);
   }
 
   onFilterChange(e) {
-    const filterVal = e.target.value;
-    const type = filterVal.slice(0, filterVal.lastIndexOf('-'));
-    const id = filterVal.slice(filterVal.lastIndexOf('-') + 1, filterVal.length);
-    if (type === 'customer') this.updateNewCustomerWinPath({ customerId: id });
-    this.contributorsOutlet.updateNewContributionPath(e.target.value);
-    this.searchTable(e);
+    this.updateNewItemPath();
+    // this.contributorsOutlet.updateNewItemPath(e.target.value);
+    searchTable(this, e, this.contributorsOutlet);
   }
   
   checkboxFiltersValueChanged(newVal, oldVal) {
-    if (oldVal === undefined) return false;
-    this.searchTable();
+    if (Object.keys(oldVal).length === 0) return false;
+    searchTable(this);
   }
 
-  toggleRowGroups(e) {
-    this.datatableTarget.setAttribute('data-datatable-enable-row-groups-value', e.target.checked);
-  }
-
-  cloneFilterResults(tableControls, tableWrapper, table) {
-    const originalResults = this.element.nextElementSibling;
-    const clone = originalResults.cloneNode();
-    const formatText = () => clone.textContent = originalResults.textContent.replace(/\sentries/g, '');
-    clone.id = `${originalResults.id}--clone`;
-    clone.classList.add('help-block', 'text-right');
-    formatText();
-    tableControls.querySelector('.select-filters').appendChild(clone);
-    this.dispatch('clone-filter-results', { detail: clone })
-    $(table).on('draw.dt', formatText);
-  }
-
-  updateNewCustomerWinPath({ customerId } = {}) {
-    const subdomain = location.href.match(/:\/\/((\w|-)+)\./)[1];
-    const queryParams = `?curator_id=${this.curatorSelectTarget.value}${customerId ? `&customer_id=${customerId}` : ''}`; 
-    this.newCustomerWinBtnTarget.setAttribute(
-      'data-modal-trigger-turbo-frame-attrs-value', 
+  updateNewItemPath() {
+    const filterVal = this.filterSelectTarget.value;
+    const type = filterVal && filterVal.slice(0, filterVal.lastIndexOf('-'));
+    const id = filterVal && filterVal.slice(filterVal.lastIndexOf('-') + 1, filterVal.length);
+    const customerWinId = type === 'customer' && id;
+    const params = new URLSearchParams();
+    params.set('curator_id', this.curatorSelectTarget.value);
+    if (filterVal) params.set(`${type}_id`, id);
+    this.newItemBtnTarget.setAttribute(
+      'data-modal-trigger-turbo-frame-attrs-value',
       JSON.stringify({ 
-        id: 'new-customer-win', 
-        src: `/companies/${subdomain}/successes/new${queryParams}` 
+        id: `new-${kebabize(this.resourceName)}`.slice(0, -1),  // remove the trailing 's' 
+        src: (() => {
+          switch (this.resourceName) {
+            case 'customerWins':
+              return newCustomerWinPath(params);
+            case 'contributions':
+              return newContributionPath(customerWinId, params);
+            default: 
+              return '';
+          }
+        })()
       })
     );
   }

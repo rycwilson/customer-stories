@@ -22,6 +22,9 @@ application.register('dashboard-tab', DashboardTabController);
 // import DashboardTabPanelController from './dashboard_tab_panel_controller';
 // application.register('dashboardTabPanel', DashboardTabPanelController);
 
+import ResourceController from './resource_controller';
+application.register('resource', ResourceController);
+
 import ModalController from './modal_controller';
 application.register('modal', ModalController);
 
@@ -31,11 +34,11 @@ application.register('modal-trigger', ModalTriggerController);
 import StoriesController from './stories_controller';
 application.register('stories', StoriesController);
 
-import CustomerWinsController from './customer_wins_controller';
-application.register('customer-wins', CustomerWinsController);
+// import CustomerWinsController from './customer_wins_controller';
+// application.register('customer-wins', CustomerWinsController);
 
-import CustomerWinController from './customer_win_controller';
-application.register('customer-win', CustomerWinController);
+// import CustomerWinController from './customer_win_controller';
+// application.register('customer-win', CustomerWinController);
 
 import CustomerWinFormController from './customer_win_form_controller';
 application.register('customer-win-form', CustomerWinFormController);

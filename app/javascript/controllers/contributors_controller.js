@@ -1,92 +1,84 @@
 import { Controller } from "@hotwired/stimulus"
-import { getJSON } from '../util';
+import { getJSON, kebabize } from '../util';
+import { 
+  init as initTable,
+  initComplete as tableInitComplete,
+  search as searchTable
+} from '../tables';
+import { newCustomerWinPath } from '../customer_wins/customer_wins';
+import { newContributionPath } from '../contributions/contributions';
 
 export default class extends Controller {
   static outlets = ['dashboard', 'customer-wins'];
-  static targets = ['curatorSelect', 'filterSelect', 'filterResults', 'datatable', 'newContributorBtn', 'tableDisplayOptionsBtn'];
-  static values = { 
-    dataPath: String,
-    checkboxFilters: { 
-      type: Object, 
-      default: { 
-        'show-completed': { checked: true, label: 'Contributors with a completed Contribution' },
-        'show-published': { checked: true, label: 'Contributors to published Customer Stories' } 
-      }
-    }
-  };
+  static targets = ['curatorSelect', 'filterSelect', 'filterResults', 'datatable', 'newItemBtn', 'tableDisplayOptionsBtn'];
+  static values = { dataPath: String, checkboxFilters: { type: Object, default: {} } };
 
   dt;
+  resourceName;
 
-  connect() {
-    if (CSP.contributions) {
-      this.initTable();
-    } else {
-      getJSON(this.dataPathValue).then(contributions => {
-        CSP.contributions = contributions;
-        this.initTable();
-      })
-    }
+  initialize() {
+    this.resourceName = this.element.dataset.resourceName;
+    console.log(`init ${this.resourceName}`)
   }
 
-  initTable() {
-    console.log('contributions: ', CSP.contributions)
-    this.datatableTarget.setAttribute('data-datatable-ready-value', 'true');
-    // this.datatableTarget.readyValue = true;
-    const panel = this.element.closest('[data-dashboard-target="tabPanel"]');
-    this.dispatch('load', { detail: { panel, resourceClassName: 'contributors' }});
+  connect() {
+    console.log(`connect ${this.resourceName}`)
+    if (CSP[this.resourceName]) {
+      initTable(this);
+    } else {
+      getJSON(this.dataPathValue).then(data => {
+        CSP[this.resourceName] = data;
+        initTable(this);
+      })
+    }
   }
 
   tableInitComplete(e) {
-    this.dt = e.detail.dt;
-    this.dashboardOutlet.initTableDisplayOptionsPopover.bind(this)();
-    this.searchTable();
+    tableInitComplete(this, e.detail.dt);
   }
 
   searchTable(e = { type: '', detail: {} }) {
-    const isUserInput = e.type;
-    if (e.type.includes('change-curator')) {
-      this.customerWinsOutlet.curatorSelectTarget.tomselect.setValue(this.curatorSelectTarget.value, true);
-    } else if (e.type.includes('change-filter') && !this.filterSelectTarget.value.includes('contributor')) {
-      this.customerWinsOutlet.filterSelectTarget.tomselect.setValue(this.filterSelectTarget.value, true);
-    }
-
-    // allow the visible table to be drawn before searching the other table
-    if (isUserInput && e.target.dataset.syncTables)
-      this.element.addEventListener('datatable:contributors-drawn', () => {
-        setTimeout(() => this.dashboardOutlet.searchTable.bind(this.customerWinsOutlet)());
-      }, { once: true });
-    this.dashboardOutlet.searchTable.bind(this)(e.detail && e.detail.searchResults);
+    searchTable(this, e, this.customerWinsOutlet)
   }
 
   onCuratorChange(e) {
-    this.searchTable(e);
+    searchTable(this, e, this.customerWinsOutlet);
   }
 
   onFilterChange(e) {
-    this.updateNewContributionPath(e.target.value);
-    this.searchTable(e);
-  }
-  
-  updateNewContributionPath(filterVal) {
-    const type = filterVal.slice(0, filterVal.lastIndexOf('-'));
-    const id = filterVal.slice(filterVal.lastIndexOf('-') + 1, filterVal.length);
-    const queryParam = type === 'customer' ? `?customer_id=${id}` : (type === 'contributor' ? `?contributor_id=${id}` : ''); 
-    this.newContributorBtnTarget.setAttribute(
-      'data-modal-trigger-turbo-frame-attrs-value', 
-      JSON.stringify({ 
-        id: 'new-contribution', 
-        src: `/successes/${type === 'success' ? id : '0'}/contributions/new${queryParam}` 
-      })
-    );
+    this.updateNewItemPath(e.target.value);
+    searchTable(this, e, this.customerWinsOutlet);
   }
 
   checkboxFiltersValueChanged(newVal, oldVal) {
-    if (oldVal === undefined) return false;
-    this.searchTable();
+    if (Object.keys(oldVal).length === 0) return false;
+    searchTable(this);
   }
 
-  toggleRowGroups(e) {
-    this.datatableTarget.setAttribute('data-datatable-enable-row-groups-value', e.target.checked);
+  updateNewItemPath() {
+    const filterVal = this.filterSelectTarget.value;
+    const type = filterVal && filterVal.slice(0, filterVal.lastIndexOf('-'));
+    const id = filterVal && filterVal.slice(filterVal.lastIndexOf('-') + 1, filterVal.length);
+    const customerWinId = type === 'customer' && id;
+    const params = new URLSearchParams();
+    params.set('curator_id', this.curatorSelectTarget.value);
+    if (filterVal) params.set(`${type}_id`, id);
+    this.newItemBtnTarget.setAttribute(
+      'data-modal-trigger-turbo-frame-attrs-value',
+      JSON.stringify({ 
+        id: `new-${kebabize(this.resourceName)}`.slice(0, -1),  // remove the trailing 's' 
+        src: (() => {
+          switch (this.resourceName) {
+            case 'customerWins':
+              return newCustomerWinPath(params);
+            case 'contributions':
+              return newContributionPath(customerWinId, params);
+            default: 
+              return '';
+          }
+        })()
+      })
+    );
   }
 
   tableConfig(workflowStage = 'prospect') {

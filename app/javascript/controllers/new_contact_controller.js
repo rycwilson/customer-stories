@@ -13,7 +13,7 @@ export default class extends Controller {
   shouldEnableValueChanged(shouldEnable, wasEnabled) {
     if (wasEnabled === undefined) return false;
     this.element.classList.toggle('hidden', !shouldEnable);
-    this.formCtrl()[this.parentSelectTargetValue].disabled = shouldEnable;
+    this.formCtrl[this.parentSelectTargetValue].disabled = shouldEnable;
     this.contactFieldTargets.forEach(input => {
       input.disabled = !shouldEnable;
       if (!shouldEnable && input.type !== 'hidden') input.value = '';
@@ -26,10 +26,10 @@ export default class extends Controller {
   }
 
   // parent form controller
-  formCtrl() {
+  get formCtrl() {
     this.formController = this.formController || (
-      (this.element.hasAttribute(`data-${this.identifier}-customer-win-form-outlet`) && this.customerWinFormOutlet) ||
-      (this.element.hasAttribute(`data-${this.identifier}-contribution-form-outlet`) && this.contributionFormOutlet)
+      (this.hasCustomerWinFormOutlet && this.customerWinFormOutlet) ||
+      (this.hasContributionFormOutlet && this.contributionFormOutlet)
     );
     return this.formController;
   }

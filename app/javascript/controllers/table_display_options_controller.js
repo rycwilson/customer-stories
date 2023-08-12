@@ -1,10 +1,9 @@
 import { Controller } from '@hotwired/stimulus';
-import { parentCtrl } from '../util';
+import { toggleRowGroups, initDisplayOptions as resetDisplayOptions } from '../tables';
 
 export default class extends Controller {
-  static outlets = ['dashboard', 'customer-wins', 'contributors'];
+  static outlets = ['dashboard', 'resource'];
 
-  parentController;
   clickAwayHandler;
 
   initialize() {
@@ -16,31 +15,27 @@ export default class extends Controller {
   }
 
   disconnect() {
-    this.dashboardOutlet.initTableDisplayOptionsPopover.bind(this.parentCtrl)(true);
+    resetDisplayOptions(this.resourceOutlet, true);
     document.removeEventListener('click', this.clickAwayHandler);
   }
-
+  
   onClickAway(e) {
-    if (!this.element || this.element.contains(e.target) || this.parentCtrl.tableDisplayOptionsBtnTarget.contains(e.target))
+    if (!this.element || this.element.contains(e.target) || this.resourceOutlet.tableDisplayOptionsBtnTarget.contains(e.target))
       return false;
     
     // $(this.element).popover('hide')
-    this.parentCtrl.tableDisplayOptionsBtnTarget.click();
+    this.resourceOutlet.tableDisplayOptionsBtnTarget.click();
   }
 
   toggleRowGroups(e) {
-    this.parentCtrl.toggleRowGroups(e);
+    toggleRowGroups(this.resourceOutlet, e.target.checked);
   }
 
   toggleFilter(e) {
     const { id, checked } = e.target;
-    const label = this.parentCtrl.checkboxFiltersValue[id].label;
-    this.parentCtrl.checkboxFiltersValue = (
-      {...this.parentCtrl.checkboxFiltersValue, ...{ [`${id}`]: { checked, label } } }
+    const label = this.resourceOutlet.checkboxFiltersValue[id].label;
+    this.resourceOutlet.checkboxFiltersValue = (
+      {...this.resourceOutlet.checkboxFiltersValue, ...{ [`${id}`]: { checked, label } } }
     );
-  }
-
-  get parentCtrl() {
-    return parentCtrl.bind(this)();
   }
 }

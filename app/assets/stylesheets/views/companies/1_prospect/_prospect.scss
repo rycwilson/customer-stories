@@ -96,14 +96,14 @@
     padding: 1.25em 0;
   }
 
-  &[data-table-display-options-customer-wins-outlet] {
+  &[data-table-display-options-resource-outlet="#customer-wins"] {
     .popover-content {
       left: -1em;
       width: 25em;
     }
   }
 
-  &[data-table-display-options-contributors-outlet] {
+  &[data-table-display-options-resource-outlet="#contributors"] {
     .popover-content {
       left: -2em;
       width: 30em;

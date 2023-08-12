@@ -18,13 +18,10 @@ export function capitalize(word) {
   return word.charAt(0).toUpperCase() + word.slice(1);
 }
 
-// this method will be bound to 'datatable' or 'table-display-options' controller
-// => enables access to the parent controller that manages the resource data
-export function parentCtrl() {
-  if (this.parentController === undefined)
-    this.parentController = (
-      (this.hasCustomerWinsOutlet && this.customerWinsOutlet) || 
-      (this.hasContributorsOutlet && this.contributorsOutlet)
-    );
-  return this.parentController;
+export function kebabToCamel(str) {
+  return str.replace(/-./g, (char) => char[1].toUpperCase());
+}
+
+export function kebabize(str) {
+  return str.replace(/[A-Z]+(?![a-z])|[A-Z]/g, ($, ofs) => (ofs ? "-" : "") + $.toLowerCase());
 }

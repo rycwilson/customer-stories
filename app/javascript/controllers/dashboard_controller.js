@@ -11,6 +11,7 @@ export default class extends Controller {
   };    
 
   connect() {
+    // console.log('connect dashboard')
     addEventListener('popstate', this.showActiveTabPanel);
   }
 
@@ -88,7 +89,8 @@ export default class extends Controller {
         .filter(subPanel => panel.contains(subPanel))
         .forEach(subPanel => { 
           const hasNotConnected = !subPanel.dataset.controller;
-          if (hasNotConnected) subPanel.setAttribute('data-controller', subPanel.id); 
+          // if (hasNotConnected) subPanel.setAttribute('data-controller', subPanel.id); 
+          if (hasNotConnected) subPanel.setAttribute('data-controller', 'resource'); 
         });
     }
   }
@@ -129,72 +131,6 @@ export default class extends Controller {
 
   setNavCookie(e) {
     Cookies.set(`csp-${this.activeTabValue}-tab`, e.target.closest('a').getAttribute('href'));
-  }
-
-  // this method will be bound to 'customer-wins' or 'contributors' controller
-  initTableDisplayOptionsPopover(isReset) {
-    const btn = this.tableDisplayOptionsBtnTarget;
-    const groupByResource = this.identifier === 'customer-wins' ? 'Customer' : 'Customer Win';
-    const content = `
-      <div class="form-horizontal">
-        <div class="form-group">
-          <label class="col-sm-3 control-label">Group</label>
-          <div class="col-sm-9">
-            <div class="checkbox">
-              <label for="group-by-${groupByResource.toLowerCase().replace(/\s/g, '-')}">
-                <input 
-                  type="checkbox" 
-                  id="group-by-${groupByResource.toLowerCase().replace(/\s/g, '-')}" 
-                  data-action="table-display-options#toggleRowGroups"
-                  ${this.datatableTarget.getAttribute('data-datatable-enable-row-groups-value') === 'true'  ? 'checked' : ''}>
-                <span>&nbsp;&nbsp;by ${groupByResource}</span>
-              </label>
-            </div>
-          </div>
-        </div>
-        ${Object.entries(this.checkboxFiltersValue).map(([filterId, filter], i) => (`
-          <div class="form-group">
-            <label class="col-sm-3 control-label">${i === 0 ? 'Show' : ''}</label>
-            <div class="col-sm-9">
-              <div class="checkbox">
-                <label for="${filterId}">
-                  <input 
-                    type="checkbox" 
-                    id="${filterId}" 
-                    data-action="table-display-options#toggleFilter"
-                    ${filter.checked ? 'checked' : ''}>
-                  <span>&nbsp;&nbsp;${filter.label}</span>
-                </label>
-              </div>
-            </div>
-          </div>
-        `)).join('')}
-      </div>
-    `;
-    if (isReset) $(btn).data()['bs.popover'].options.content = content;
-    else $(btn).popover({
-      html: true,
-      animation: false,
-      container: 'body',
-      title: 'Display Options',
-      placement: 'auto right',
-      template: `
-        <div 
-          class="popover" 
-          data-controller="table-display-options" 
-          data-table-display-options-dashboard-outlet=".dashboard"
-          data-table-display-options-${this.identifier}-outlet="#${this.identifier}"
-          role="tooltip">
-
-          <div class="arrow"></div>
-          <h3 class="popover-title label-secondary"></h3>
-          <div class="popover-content">
-            <!-- the template below goes here -->
-          </div>
-        </div>
-      `,
-      content
-    });
   }
 
   get activeTabPanel() {

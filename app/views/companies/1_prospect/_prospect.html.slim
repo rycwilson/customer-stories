@@ -1,7 +1,7 @@
 #prospect.tab-pane.fade {
   class=('active in' if workflow_stage == 'prospect')
   data-dashboard-target="tabPanel"
-  data-action="customer-wins:load->dashboard#dataDidLoad contributors:load->dashboard#dataDidLoad"
+  data-action="resource:load->dashboard#dataDidLoad contributors:load->dashboard#dataDidLoad"
   role="tabpanel" }
 
   .working.working--prospect style="display:none"
@@ -73,22 +73,29 @@
       .col-sm-8.col-lg-9.layout-main
         .tab-content
 
-          #customer-wins.tab-pane.fade {
+          #customer-wins.resource-ctrl.tab-pane.fade {
             class=('active in' if tab == '#customer-wins' || tab.nil?) 
             data-dashboard-target="subPanel"
-            data-customer-wins-dashboard-outlet=".dashboard"
-            data-customer-wins-contributors-outlet="#contributors"
-            data-customer-wins-data-path-value="/successes"
+            data-resource-dashboard-outlet=".dashboard"
+            data-resource-resource-outlet="#contributors"
+            data-resource-data-path-value="/successes"
+            data-resource-checkbox-filters-value={ \
+              'show-wins-with-story': { checked: true, label: 'Customer Wins with Story started'} }.to_json
+            data-resource-name="customerWins"
             aria-labelledby="customer-wins-tab"
             role="tabpanel" }
             = render('companies/1_prospect/successes/successes_table', { company: company })
 
-          #contributors.tab-pane.fade {
+          #contributors.resource-ctrl.tab-pane.fade {
             class=('active in' if tab == '#contributors')
             data-dashboard-target="subPanel"
-            data-contributors-dashboard-outlet=".dashboard"
-            data-contributors-customer-wins-outlet="#customer-wins"
-            data-contributors-data-path-value="/companies/0/contributions"
+            data-resource-dashboard-outlet=".dashboard"
+            data-resource-resource-outlet="#customer-wins"
+            data-resource-data-path-value="/companies/0/contributions"
+            data-resource-checkbox-filters-value={ \
+              'show-completed': { checked: true, label: 'Contributors with a completed Contribution' },
+              'show-published': { checked: true, label: 'Contributors to published Customer Stories' } }.to_json
+            data-resource-name="contributions"
             aria-labelledby="contributors-tab"
             role="tabpanel" }
             = render( \

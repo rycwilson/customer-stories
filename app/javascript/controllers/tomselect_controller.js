@@ -37,6 +37,7 @@ export default class extends Controller {
       },
 
       onType(userInput) { 
+        console.log(`onType(${userInput})`)
         if (ctrl.isFilter()) ctrl.onSearch(); 
       },
 
@@ -81,6 +82,7 @@ export default class extends Controller {
         else results[column] = `${results[column]}|${id}`;
         return results;
       }, {});
+    console.log('searchResults', searchResults)
     this.dispatch('search', { detail: { searchResults }});
   }
 }

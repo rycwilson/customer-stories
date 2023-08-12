@@ -1,9 +1,8 @@
 import { Controller } from "@hotwired/stimulus";
-import { parentCtrl } from '../util';
 
 export default class extends Controller {
   static targets = ['row'];   // excludes row groups
-  static outlets = ['dashboard', 'customer-wins', 'contributors', 'stories'];
+  static outlets = ['resource', 'stories'];
   static values = { 
     ready: { type: Boolean, default: false },
     enableRowGroups: { type: Boolean, default: false },
@@ -14,7 +13,7 @@ export default class extends Controller {
   dt;
   didInitialize = false;
   searchDebounceTimer;
-  parentController;
+  // parentController;
 
   initialize() {
     const ctrl = this;
@@ -26,7 +25,7 @@ export default class extends Controller {
       drawCallback(settings) {
         // console.log('drawCallback()')
         if (ctrl.didInitialize) ctrl.redrawRowGroups();
-        ctrl.dispatch(`${ctrl.parentCtrl.identifier}-drawn`)
+        ctrl.dispatch('drawn');
       },
       initComplete(settings) {
         ctrl.cloneFilterResults();
@@ -42,17 +41,18 @@ export default class extends Controller {
   readyValueChanged(dataIsReady) {
     // console.log('dataIsReady', dataIsReady)
     if (dataIsReady)
-      this.dt = new DataTable(this.element, { ...this.baseOptions, ...this.parentCtrl.tableConfig() });
+      this.dt = new DataTable(this.element, { ...this.baseOptions, ...this.resourceOutlet.tableConfig() });
   }
 
   searchParamsValueChanged(newVal, oldVal) {
+    console.log('searchParams', newVal)
     if (oldVal !== undefined) {
       clearTimeout(this.searchDebounceTimer);
       this.searchDebounceTimer = setTimeout(() => this.search(newVal), 200);
     }
   }
 
-  search({ curatorId, columnFilters, filterVal, searchResults }) {
+  search({ curatorId, columnFilters, filterVal, tsSearchResults }) {
     // console.log('search')
     let dtSearch = this.dt
       .search('')
@@ -65,9 +65,9 @@ export default class extends Controller {
     
     // as the user types, search the table for the found options in the select box
     // => this ensures the datatables search matches the tomselect search
-    if (searchResults) {
-      Object.keys(searchResults).forEach(column => {
-        dtSearch = dtSearch.column(`${column}:name`).search(`^(${searchResults[column]})$`, true, false);
+    if (tsSearchResults) {
+      Object.keys(tsSearchResults).forEach(column => {
+        dtSearch = dtSearch.column(`${column}:name`).search(`^(${tsSearchResults[column]})$`, true, false);
       });
     } else if (filterVal) {
       const column = filterVal.slice(0, filterVal.indexOf('-'));
@@ -108,11 +108,7 @@ export default class extends Controller {
     const formatText = () => clone.textContent = originalResults.textContent.replace(/\sentries/g, '');
     clone.id = `${originalResults.id}--clone`;
     formatText();
-    this.parentCtrl.filterResultsTarget.appendChild(clone);
+    this.resourceOutlet.filterResultsTarget.appendChild(clone);
     $(this.element).on('draw.dt', formatText);
-  }
-
-  get parentCtrl() {
-    return parentCtrl.bind(this)();
   }
 }

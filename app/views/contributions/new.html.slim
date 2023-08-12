@@ -4,14 +4,13 @@
       model: @success&.contributions&.build || Contribution.new,
       url: company_contributions_path(@company),
       local: false,
-      class: 'form-horizontal',
+      class: 'form-horizontal prospect-form',
       html: { \
         id: 'new-contribution-form',
         autocomplete: 'off',
         data: { \
           controller: 'contribution-form',
-          contribution_form_customer_wins_outlet: '#customer-wins',
-          contribution_form_contributors_outlet: '#contributors',
+          contribution_form_resource_outlet: '.resource-ctrl',
           action: 'ajax:before->contribution-form#beforeAjax',
           modal_target: 'form',
           submit_btn_text: 'Add Contributor' } }) do |form|
