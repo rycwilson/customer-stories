@@ -1,3 +1,5 @@
+import { kebabize } from './util';
+
 export function init(resourceCtrl) {
   resourceCtrl.datatableTarget.setAttribute('data-datatable-ready-value', 'true');
 }
@@ -61,25 +63,54 @@ export function search(resourceCtrl, e = { type: '', detail: {} }, syncedResourc
 export function initDisplayOptions(resourceCtrl, isReset = false) {
   const btn = resourceCtrl.tableDisplayOptionsBtnTarget;
   const resourceIdentifier = resourceCtrl.resourceName === 'customerWins' ? 'customer-wins' : 'contributors';
-  const groupByResource = resourceCtrl.resourceName === 'customerWins' ? 'Customer' : 'Customer Win';
-  const content = `
+  const groupByResourceName = resourceCtrl.resourceName === 'customerWins' ? 'Customer' : 'Customer Win';
+  const enableRowGroups = resourceCtrl.datatableTarget.getAttribute('data-datatable-enable-row-groups-value') === 'true';
+  const content = displayOptionsPopoverContent(groupByResourceName, enableRowGroups, resourceCtrl.checkboxFiltersValue);
+  if (isReset) $(btn).data()['bs.popover'].options.content = content;
+  else $(btn).popover({
+    content,
+    html: true,
+    animation: false,
+    container: 'body',
+    title: 'Display Options',
+    placement: 'auto right',
+    template: `
+      <div 
+        class="popover" 
+        data-controller="table-display-options" 
+        data-table-display-options-dashboard-outlet=".dashboard"
+        data-table-display-options-resource-outlet="#${resourceIdentifier}"
+        role="tooltip">
+      
+        <div class="arrow"></div>
+        <h3 class="popover-title label-secondary"></h3>
+        <div class="popover-content">
+          <!-- the template below goes here -->
+        </div>
+      </div>
+    `,
+  });
+}
+
+function displayOptionsPopoverContent(groupByResourceName, enableRowGroups, checkboxFilters) {
+  return `
     <div class="form-horizontal">
       <div class="form-group">
         <label class="col-sm-3 control-label">Group</label>
         <div class="col-sm-9">
           <div class="checkbox">
-            <label for="group-by-${groupByResource.toLowerCase().replace(/\s/g, '-')}">
+            <label for="group-by-${kebabize(groupByResourceName)}">
               <input 
                 type="checkbox" 
-                id="group-by-${groupByResource.toLowerCase().replace(/\s/g, '-')}" 
+                id="group-by-${kebabize(groupByResourceName)}" 
                 data-action="table-display-options#toggleRowGroups"
-                ${resourceCtrl.datatableTarget.getAttribute('data-datatable-enable-row-groups-value') === 'true'  ? 'checked' : ''}>
-              <span>&nbsp;&nbsp;by ${groupByResource}</span>
+                ${enableRowGroups ? 'checked' : ''}>
+              <span>&nbsp;&nbsp;by ${groupByResourceName}</span>
             </label>
           </div>
         </div>
       </div>
-      ${Object.entries(resourceCtrl.checkboxFiltersValue).map(([filterId, filter], i) => (`
+      ${Object.entries(checkboxFilters).map(([filterId, filter], i) => (`
         <div class="form-group">
           <label class="col-sm-3 control-label">${i === 0 ? 'Show' : ''}</label>
           <div class="col-sm-9">
@@ -98,28 +129,4 @@ export function initDisplayOptions(resourceCtrl, isReset = false) {
       `)).join('')}
     </div>
   `;
-  if (isReset) $(btn).data()['bs.popover'].options.content = content;
-  else $(btn).popover({
-    html: true,
-    animation: false,
-    container: 'body',
-    title: 'Display Options',
-    placement: 'auto right',
-    template: `
-      <div 
-        class="popover" 
-        data-controller="table-display-options" 
-        data-table-display-options-dashboard-outlet=".dashboard"
-        data-table-display-options-resource-outlet="#${resourceIdentifier}"
-        role="tooltip">
-
-        <div class="arrow"></div>
-        <h3 class="popover-title label-secondary"></h3>
-        <div class="popover-content">
-          <!-- the template below goes here -->
-        </div>
-      </div>
-    `,
-    content
-  });
 }
