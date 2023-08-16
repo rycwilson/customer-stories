@@ -14,13 +14,15 @@ p
     url: session_path(resource_name),
     html: { class: 'form account-form' }) do |f|
 
+  = render('devise/shared/error_messages', resource: resource) if flash[:alert]
+
   .form-group
     = f.label(:email, class: 'control-label')
     = f.email_field(:email, { class: 'form-control', required: true, autocomplete: 'off', placeholder: 'Email address' })
 
   .form-group style="margin-bottom:0"
     = f.label(:password, class: 'control-label')
-    = f.password_field(:password, { class: 'form-control', required: true, autocomplete: 'off', placeholder: 'Password' })
+    = f.password_field(:password, { class: 'form-control', required: true, minlength: 8, autocomplete: 'off', placeholder: 'Password' })
 
   div style="margin-bottom:30px"
     - if devise_mapping.rememberable?

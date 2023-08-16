@@ -36,11 +36,12 @@ class CompaniesController < ApplicationController
     @company = Company.new(company_params)
     if @company.save
       @company.users << current_user
-      if current_user.linkedin_url.present?
-        redirect_to File.join(request.protocol + "#{@company.subdomain}." + request.domain + request.port_string, company_path(@company)), flash: { success: "Account setup complete" }
-      else
-        redirect_to File.join(request.protocol + "#{@company.subdomain}." + request.domain + request.port_string, edit_profile_path), flash: { info: "Complete your account setup by connecting to LinkedIn" }
-      end
+      redirect_to File.join(request.protocol + "#{@company.subdomain}." + request.domain + request.port_string, company_path(@company)), flash: { success: "Account setup complete" }
+      # if current_user.linkedin_url.present?
+      #   redirect_to File.join(request.protocol + "#{@company.subdomain}." + request.domain + request.port_string, company_path(@company)), flash: { success: "Account setup complete" }
+      # else
+      #   redirect_to File.join(request.protocol + "#{@company.subdomain}." + request.domain + request.port_string, edit_profile_path), flash: { info: "Complete your account setup by connecting to LinkedIn" }
+      # end
     else
       # validation(s): presence / uniqueness of name, presence of subdomain
       flash[:danger] = @company.errors.full_messages.join(', ')
