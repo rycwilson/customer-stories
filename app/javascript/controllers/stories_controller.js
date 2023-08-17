@@ -7,9 +7,9 @@ export default class extends Controller {
   readyFilters = 0;
 
   connect() {
-    console.log('connect stories')
+    // console.log('connect stories')
     imagesLoaded('#stories-gallery', (e) => {
-      console.log('images loaded', e)
+      // console.log('images loaded', e)
       this.galleryTarget.classList.remove('hidden');
     })
   }

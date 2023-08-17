@@ -12,7 +12,7 @@ export default class extends Controller {
   contributionsHtml;
 
   connect() {
-    // console.log('connect customer win')
+    console.log('connect customer win')
     Object.keys(this.rowDataValue).forEach(field => this[field] = this.rowDataValue[field]);
     this.actionsDropdownTarget.insertAdjacentHTML('afterbegin', this.actionsDropdownTemplate());
   }
