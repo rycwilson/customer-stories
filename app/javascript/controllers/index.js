@@ -43,9 +43,6 @@ application.register('stories', StoriesController);
 import CustomerWinFormController from './customer_win_form_controller';
 application.register('customer-win-form', CustomerWinFormController);
 
-import ContributorsController from './contributors_controller';
-application.register('contributors', ContributorsController);
-
 import ContributionController from './contribution_controller';
 application.register('contribution', ContributionController);
 
