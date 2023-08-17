@@ -1,15 +1,21 @@
 import { Controller } from '@hotwired/stimulus';
+import { childRowPlaceholderTemplate } from '../customer_wins/win_story';
 
 export default class extends Controller {
   static outlets = ['resource', 'modal'];
   static targets = ['actionsDropdown'];
-  static values = { rowData: Object };
+  static values = { 
+    childRowTurboFrameAttrs: { type: Object, default: {} }, 
+    rowData: Object 
+  };
 
   id;
   status;
+  curator;
   customer;             // { id, name, slug }
   story;                // { id, title, slug }
   contributionsHtml;
+  winStoryHtml;
 
   connect() {
     console.log('connect customer win')
@@ -21,12 +27,30 @@ export default class extends Controller {
     return this.resourceOutlet;
   }
 
+  get childRowShown() {
+    return this.element.classList.contains('dt-hasChild');
+  }
+
+  get hasChildRow() {
+    return this.childRowTurboFrameAttrsValue.id && this.childRowTurboFrameAttrsValue.src;
+  }
+
   storyExists() {
     return Boolean(this.story);
   }
 
   editStoryPath() {
     return this.storyExists() && `/curate/${this.customer.slug}/${this.story.slug}`;
+  }
+
+  toggleChildRow() {
+    if (!this.hasChildRow) return false;
+    const html = this.childRowShown ? null : `
+      <turbo-frame id="${this.childRowTurboFrameAttrsValue.id}" src="${this.childRowTurboFrameAttrsValue.src}">
+        ${childRowPlaceholderTemplate(this.curator.full_name)}
+      </turbo-frame>
+    `;
+    this.dispatch('toggle-child-row', { detail: { tr: this.element, html } });
   }
 
   // TODO: move template to the server
@@ -39,7 +63,7 @@ export default class extends Controller {
     };
     if (this.contributionsHtml) showInModal();
     else {
-      const contributionIds = this.contributorsOutlet.dt.data().toArray()
+      const contributionIds = this.contributorsCtrl.dt.data().toArray()
         .filter(contribution => (
           (contribution.success.id == this.id) && contribution.status && contribution.status.match(/(contribution|feedback)/)
         ))

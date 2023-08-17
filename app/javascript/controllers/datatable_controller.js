@@ -1,7 +1,7 @@
 import { Controller } from "@hotwired/stimulus";
 
 export default class extends Controller {
-  static targets = ['row'];   // excludes row groups
+  static targets = ['row'];   // rowTargets exclude row groups
   static outlets = ['resource', 'stories'];
   static values = { 
     ready: { type: Boolean, default: false },
@@ -45,10 +45,22 @@ export default class extends Controller {
   }
 
   searchParamsValueChanged(newVal, oldVal) {
-    console.log('searchParams', newVal)
+    // console.log('searchParams', newVal)
     if (oldVal !== undefined) {
       clearTimeout(this.searchDebounceTimer);
       this.searchDebounceTimer = setTimeout(() => this.search(newVal), 200);
+    }
+  }
+
+  toggleChildRow(e) {
+    const { tr, html } = e.detail;
+    const row = this.dt.row(tr);
+    if (row.child.isShown()) {
+      row.child.hide();
+    } else {
+      row.child(html, 'child-row').show();
+      const childRow = tr.nextElementSibling;
+      childRow && childRow.scrollIntoView({ block: 'center' });
     }
   }
 

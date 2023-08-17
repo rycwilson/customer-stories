@@ -1,3 +1,7 @@
+function editCustomerWinPath(successId) {
+  return `/successes/${successId}/edit`;
+}
+
 export function newCustomerWinPath(params) {
   const subdomain = location.host.split('.')[0];
   return `/companies/${subdomain}/successes/new${params.size > 0 ? `?${params}` : ''}`;
@@ -19,7 +23,7 @@ export function tableConfig() {
       {
         data: null,
         render: (data, type, row) => `
-          <button type="button" class="btn">
+          <button type="button" class="btn" data-action="customer-win#toggleChildRow">
             <i class="fa fa-caret-right"></i>
             <i class="fa fa-caret-down"></i>
           </button>
@@ -132,14 +136,16 @@ export function tableConfig() {
     },
 
     createdRow(row, data, index) {
-      const { id, display_status: status, customer, story } = data;
+      const { id, display_status: status, curator, customer, story } = data;
       row.setAttribute('data-controller', 'customer-win');
       row.setAttribute('data-customer-win-resource-outlet', '#contributors')
       row.setAttribute('data-customer-win-modal-outlet', '#main-modal');
       row.setAttribute('data-customer-win-contributions-modal-outlet', '.contributions-modal')
-      row.setAttribute('data-customer-win-row-data-value', JSON.stringify({ id, status, customer, story }));
-      row.setAttribute('data-datatable-target', 'row');
-
+      row.setAttribute('data-customer-win-row-data-value', JSON.stringify({ id, status, curator, customer, story }));
+      row.setAttribute(
+        'data-customer-win-child-row-turbo-frame-attrs-value', 
+        JSON.stringify({ id: 'edit-customer-win', src: editCustomerWinPath(id) })
+      );
       // $(row).attr('data-customer-id', data.customer.id);
       // $(row).attr('data-success-id', data.id);
       // $(row).children().eq(1).attr('data-filter', data.id);
