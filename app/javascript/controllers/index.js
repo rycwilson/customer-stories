@@ -34,11 +34,8 @@ application.register('modal-trigger', ModalTriggerController);
 import StoriesController from './stories_controller';
 application.register('stories', StoriesController);
 
-// import CustomerWinsController from './customer_wins_controller';
-// application.register('customer-wins', CustomerWinsController);
-
-// import CustomerWinController from './customer_win_controller';
-// application.register('customer-win', CustomerWinController);
+import CustomerWinController from './customer_win_controller';
+application.register('customer-win', CustomerWinController);
 
 import CustomerWinFormController from './customer_win_form_controller';
 application.register('customer-win-form', CustomerWinFormController);
