@@ -11,6 +11,8 @@ import DataTable from 'datatables.net-bs';
 window.DataTable = DataTable;
 import 'datatables.net-rowgroup';
 
+import 'summernote/dist/summernote';
+
 import cookies from 'js-cookie';
 window.Cookies = cookies;
 
