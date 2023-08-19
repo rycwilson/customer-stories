@@ -25,3 +25,14 @@ export function kebabToCamel(str) {
 export function kebabize(str) {
   return str.replace(/[A-Z]+(?![a-z])|[A-Z]/g, ($, ofs) => (ofs ? "-" : "") + $.toLowerCase());
 }
+
+export function copyToClipboard(str) {
+  const onCopy = (e) => {
+    e.clipboardData.setData("text/html", str);
+    e.clipboardData.setData("text/plain", str);
+    e.preventDefault();
+  };
+  document.addEventListener("copy", onCopy);
+  document.execCommand("copy");
+  document.removeEventListener("copy", onCopy);
+}
