@@ -1,4 +1,6 @@
 import { Controller } from '@hotwired/stimulus';
+import { getJSON } from '../util';
+import { editCustomerWinPath } from '../customer_wins/customer_wins';
 import { childRowPlaceholderTemplate } from '../customer_wins/win_story';
 
 export default class extends Controller {
@@ -21,7 +23,7 @@ export default class extends Controller {
     console.log('connect customer win')
     Object.keys(this.rowDataValue).forEach(field => this[field] = this.rowDataValue[field]);
     this.actionsDropdownTarget.insertAdjacentHTML('afterbegin', this.actionsDropdownTemplate());
-    this.element.id = `customer-win-${id}`;  // will be needed for win story outlet
+    this.element.id = `customer-win-${this.id}`;  // will be needed for win story outlet
   }
 
   get contributorsCtrl() {
@@ -32,7 +34,7 @@ export default class extends Controller {
     return this.element.classList.contains('dt-hasChild');
   }
 
-  get hasChildRow() {
+  get hasChildRowContent() {
     return this.childRowTurboFrameAttrsValue.id && this.childRowTurboFrameAttrsValue.src;
   }
 
@@ -45,7 +47,7 @@ export default class extends Controller {
   }
 
   toggleChildRow() {
-    if (!this.hasChildRow) return false;
+    if (!this.hasChildRowContent) return false;
     const html = this.childRowShown ? null : `
       <turbo-frame id="${this.childRowTurboFrameAttrsValue.id}" src="${this.childRowTurboFrameAttrsValue.src}">
         ${childRowPlaceholderTemplate(this.curator.full_name)}

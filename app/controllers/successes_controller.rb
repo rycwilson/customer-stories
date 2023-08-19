@@ -72,6 +72,8 @@ class SuccessesController < ApplicationController
         contributor_answers: [:contributor_question]
       )
       .find(params[:id])
+    @win_story_contributions = @success.contributions_for_win_story.to_json(include: { contributor: { only: [], methods: [:full_name] } })
+    @win_story_answers = @success.answers.to_json(include: { question: { only: [:id, :question] } })
   end
 
   def create

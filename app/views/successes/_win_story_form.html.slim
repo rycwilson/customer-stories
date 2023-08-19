@@ -7,7 +7,9 @@
       class: "success-form #{'win-story-completed' if success.win_story_completed?}",
       data: { \
         controller: 'win-story',
-        win_story_customer_win_outlet: "customer-win-#{success.id}" }) do |form|
+        win_story_customer_win_outlet: "#customer-win-#{success.id}",
+        win_story_contributions_value: @win_story_contributions,
+        win_story_answers_value: @win_story_answers } }) do |form|
   
   - %i(win_story_html win_story_text win_story_markdown win_story_completed).each do |field|
     = form.hidden_field(field)
@@ -22,10 +24,10 @@
         button.btn-compress type="button" data-action="win-story#resize"
           i.fa.fa-compress 
           span Min
-        button.btn-edit type="button"
+        button.btn-edit type="button" data-action="win-story#initEditor"
           i.fa.fa-pencil
           span Edit
-        button.btn-view type="button"
+        button.btn-view type="button" data-action="win-story#view"
           i.fa.fa-search
           span View
         button.btn-copy type="button"
@@ -42,10 +44,7 @@
             type="button" data-toggle="modal" data-target="#win-story-zapier-modal" style="position:relative" }
             = image_tag('zapier-brand.png', alt: 'Zapier')
             span Zapier
-    .win-story__summernote.form-control {
-      id="win-story__summernote--#{success.id}"
-      contenteditable="false"
-      data-win-story-target="note" }
+    .win-story__summernote.form-control contenteditable="false" data-win-story-target="note"
       = success.win_story_html&.html_safe
     .win-story__footer data-win-story-target="footer"
       - ['Mark as Completed', 'Save changes'].each do |button_content|
