@@ -37,6 +37,9 @@ application.register('stories', StoriesController);
 import CustomerWinController from './customer_win_controller';
 application.register('customer-win', CustomerWinController);
 
+import WinStoryController from './win_story_controller';
+application.register('win-story', WinStoryController);
+
 import CustomerWinFormController from './customer_win_form_controller';
 application.register('customer-win-form', CustomerWinFormController);
 

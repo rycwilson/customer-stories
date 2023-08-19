@@ -21,6 +21,7 @@ export default class extends Controller {
     console.log('connect customer win')
     Object.keys(this.rowDataValue).forEach(field => this[field] = this.rowDataValue[field]);
     this.actionsDropdownTarget.insertAdjacentHTML('afterbegin', this.actionsDropdownTemplate());
+    this.element.id = `customer-win-${id}`;  // will be needed for win story outlet
   }
 
   get contributorsCtrl() {
