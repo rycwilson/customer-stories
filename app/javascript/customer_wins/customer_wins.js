@@ -1,10 +1,10 @@
-function editCustomerWinPath(successId) {
-  return `/successes/${successId}/edit`;
-}
-
 export function newCustomerWinPath(params) {
   const subdomain = location.host.split('.')[0];
   return `/companies/${subdomain}/successes/new${params.size > 0 ? `?${params}` : ''}`;
+}
+
+export function editCustomerWinPath(successId) {
+  return `/successes/${successId}/edit`;
 }
 
 export function tableConfig() {
