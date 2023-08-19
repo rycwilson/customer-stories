@@ -36,3 +36,11 @@ export function copyToClipboard(str) {
   document.execCommand("copy");
   document.removeEventListener("copy", onCopy);
 }
+
+export function distinctItems(items) {
+  return items.filter((item, i, _items) => i === _items.indexOf(item));
+}
+
+export function distinctObjects(objects, attr) {
+  return objects.filter((obj, i, _objects) => i === _objects.findIndex(_obj => _obj[attr] === obj[attr]));
+}
