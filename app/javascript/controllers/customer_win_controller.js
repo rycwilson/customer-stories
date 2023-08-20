@@ -1,5 +1,4 @@
 import { Controller } from '@hotwired/stimulus';
-import { getJSON } from '../util';
 import { editCustomerWinPath } from '../customer_wins/customer_wins';
 import { childRowPlaceholderTemplate } from '../customer_wins/win_story';
 
@@ -17,7 +16,7 @@ export default class extends Controller {
   customer;             // { id, name, slug }
   story;                // { id, title, slug }
   contributionsHtml;
-  winStoryHtml;
+  winStoryFormEl;
 
   connect() {
     console.log('connect customer win')
@@ -48,12 +47,13 @@ export default class extends Controller {
 
   toggleChildRow() {
     if (!this.hasChildRowContent) return false;
-    const html = this.childRowShown ? null : `
+    const onFrameRendered = (e) => this.winStoryFormEl ??= e.target.firstElementChild; 
+    const content = this.childRowShown ? null : this.winStoryFormEl || `
       <turbo-frame id="${this.childRowTurboFrameAttrsValue.id}" src="${this.childRowTurboFrameAttrsValue.src}">
         ${childRowPlaceholderTemplate(this.curator.full_name)}
       </turbo-frame>
     `;
-    this.dispatch('toggle-child-row', { detail: { tr: this.element, html } });
+    this.dispatch('toggle-child-row', { detail: { tr: this.element, content, onFrameRendered } });
   }
 
   // TODO: move template to the server

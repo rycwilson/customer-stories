@@ -53,13 +53,14 @@ export default class extends Controller {
   }
 
   toggleChildRow(e) {
-    const { tr, html } = e.detail;
+    const { tr, content, onFrameRendered } = e.detail;
     const row = this.dt.row(tr);
     if (row.child.isShown()) {
       row.child.hide();
     } else {
-      row.child(html, 'child-row').show();
+      row.child(content, 'child-row').show();
       const childRow = tr.nextElementSibling;
+      if (onFrameRendered) childRow.addEventListener('turbo:frame-render', onFrameRendered, { once: true });
       childRow && childRow.scrollIntoView({ block: 'center' });
     }
   }

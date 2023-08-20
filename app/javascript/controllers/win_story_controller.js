@@ -1,7 +1,13 @@
 import { Controller } from '@hotwired/stimulus';
 import { summernoteConfig } from '../customer_wins/win_story'; 
 
-export default class extends Controller {
+const defaultHeight = '20rem';
+
+// these values can't be calculated until the editor is initialized, so just hard code them for now
+const summernoteToolbarHeight = 42; // childRow.querySelector('.note-toolbar');
+const summernoteResizebarHeight = 20; // childRow.querySelector('.note-resizebar');
+
+export default class WinStoryController extends Controller {
   static outlets = ['customer-win'];
   static targets = ['header', 'note', 'footer'];
   static values = {
@@ -11,27 +17,21 @@ export default class extends Controller {
     answers: { type: Array, default: [] }
   };
 
-  static defaultHeight = '20rem';
-  
-  // these values can't be calculated until the editor is initialized, so just hard code them for now
-  static summernoteToolbarHeight = 42; // childRow.querySelector('.note-toolbar');
-  static summernoteResizebarHeight = 20; // childRow.querySelector('.note-resizebar');
+
+  initialize() {
+    console.log('init win story')
+  }
 
   connect() {
     console.log('connect win story');
-    console.log('contributions', this.contributionsValue)
-    console.log('answers', this.answersValue)
+    // console.log('contributions', this.contributionsValue)
+    // console.log('answers', this.answersValue)
   }
   
   // use contenteditable instead of textarea because html can't be renderd in textarea
   initEditor(e) {
-    // this.element.classList.add('is-edit-mode');   // do this first so that the correct height is calculated
+    // this.element.classList.add('is-edit-mode');   /
     this.isEditableValue = true;
-    setTimeout(() => {
-      $(this.noteTarget)
-        .prop('contenteditable', 'true')
-        .summernote( summernoteConfig(this.calcHeight, this.contributionsValue, this.answersValue) );
-    })
   }
 
   view() {
@@ -67,7 +67,14 @@ export default class extends Controller {
   isEditableValueChanged(isEditable, wasEditable) {
     if (wasEditable === undefined) return false;
     this.element.classList.toggle('is-edit-mode');
-    if (isEditable) this.isExpandedValue = true;
+    if (isEditable) {
+      this.isExpandedValue = true;  // do this first so correct height is calculated
+      this.noteTarget.setAttribute(
+        'data-summernote-config-value', 
+        JSON.stringify( summernoteConfig(this.calcHeight, this.contributionsValue, this.answersValue) )
+      ); 
+      this.noteTarget.setAttribute('data-summernote-enabled-value', 'true');
+    }
   }
 
   // to resize, the editor must be destroyed and re-initialized
@@ -92,11 +99,15 @@ export default class extends Controller {
         getComputedStyle(this.noteTarget).marginBottom
       ].reduce((totalGapHeight, segmentHeight) => totalGapHeight + parseInt(segmentHeight, 10), 0);
       const reservedHeight = this.parentRow.clientHeight + gapHeight + headerHeight + footerHeight + this.chromeHeight;
+      console.log('headerHeight', headerHeight)
+      console.log('footerHeight', footerHeight)
+      console.log('gapHeight', gapHeight)
+      console.log('reservedHeight', reservedHeight)
       return window.innerHeight - reservedHeight;
     } else {
       // convert default height specified in rem to px
       return (
-        parseInt(getComputedStyle(document.documentElement).fontSize, 10) * parseInt(this.defaultHeight, 10) 
+        parseInt(getComputedStyle(document.documentElement).fontSize, 10) * parseInt(defaultHeight, 10) 
         - this.chromeHeight
       );
     }
@@ -111,6 +122,6 @@ export default class extends Controller {
   }
 
   get chromeHeight() {
-    return this.isEditableValue ? this.summernoteToolbarHeight + this.summernoteResizebarHeight : 0;
+    return this.isEditableValue ? summernoteToolbarHeight + summernoteResizebarHeight : 0;
   }
 }

@@ -44,7 +44,11 @@
             type="button" data-toggle="modal" data-target="#win-story-zapier-modal" style="position:relative" }
             = image_tag('zapier-brand.png', alt: 'Zapier')
             span Zapier
-    .win-story__summernote.form-control contenteditable="false" data-win-story-target="note"
+    .win-story__summernote.form-control {
+      contenteditable="false" 
+      data-controller="summernote"
+      data-summernote-enabled-value="false"
+      data-win-story-target="note" }
       = success.win_story_html&.html_safe
     .win-story__footer data-win-story-target="footer"
       - ['Mark as Completed', 'Save changes'].each do |button_content|

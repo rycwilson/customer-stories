@@ -13,6 +13,9 @@ application.register('tomselect', TomselectController);
 import DatatableController from './datatable_controller';
 application.register('datatable', DatatableController);
 
+import SummernoteController from './summernote_controller';
+application.register('summernote', SummernoteController);
+
 import DashboardController from './dashboard_controller';
 application.register('dashboard', DashboardController);
 

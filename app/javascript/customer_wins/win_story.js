@@ -45,6 +45,7 @@ export function childRowPlaceholderTemplate(curatorName) {
 }
 
 export function summernoteConfig(height, contributions, answers) {
+  console.log('summernote height', height)
   return {
     height,
     // dialogsInBody: true,
@@ -63,6 +64,7 @@ export function summernoteConfig(height, contributions, answers) {
     callbacks: {
       // without this, insertion of a new line doesn't trigger input; critical for inserting placeholders
       onInit: (summernote) => {
+        console.log('summernote', summernote)
         // convert jquery elements to native elements
         // (note the wrapping parend syntax since these variables are already declared)
         // ({ codable, editable, editingArea, editor, statusbar, toolbar } = (
@@ -92,7 +94,6 @@ export function summernoteConfig(height, contributions, answers) {
 }
 
 function initDropdown(type, contributions, answers, context) {
-  console.log('answers', answers)
   const questions = distinctObjects(answers.map(answer => answer.question), 'id');
   const ui = $.summernote.ui;
   const buttonGroup = ui.buttonGroup([
@@ -137,7 +138,6 @@ function initDropdown(type, contributions, answers, context) {
 }
 
 function dropdownTemplate(type, contributions, questions) {
-  console.log('questions', questions)
   const individualItem = (contribution) => {
     const link = `<a href="javascript:;">${contribution.contributor.full_name}</a>`;
     const placeholder = type === 'placeholders' && `
