@@ -47,12 +47,12 @@ export default class extends Controller {
 
   toggleChildRow() {
     if (!this.hasChildRowContent) return false;
-    const onFrameRendered = (e) => this.winStoryFormEl ??= e.target.firstElementChild; 
-    const content = this.childRowShown ? null : this.winStoryFormEl || `
+    const onFrameRendered = (e) => this.winStoryFormEl ??= e.target.firstElementChild;
+    const content = this.childRowShown ? null : (this.winStoryFormEl || `
       <turbo-frame id="${this.childRowTurboFrameAttrsValue.id}" src="${this.childRowTurboFrameAttrsValue.src}">
         ${childRowPlaceholderTemplate(this.curator.full_name)}
       </turbo-frame>
-    `;
+    `);
     this.dispatch('toggle-child-row', { detail: { tr: this.element, content, onFrameRendered } });
   }
 
