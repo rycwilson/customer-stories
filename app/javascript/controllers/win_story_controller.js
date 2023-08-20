@@ -1,36 +1,36 @@
 import { Controller } from '@hotwired/stimulus';
-import { summernoteConfig } from '../customer_wins/win_story'; 
-
-const defaultHeight = '20rem';
 
 // these values can't be calculated until the editor is initialized, so just hard code them for now
 const summernoteToolbarHeight = 42; // childRow.querySelector('.note-toolbar');
-const summernoteResizebarHeight = 20; // childRow.querySelector('.note-resizebar');
+const summernoteResizebarHeight = 17; // childRow.querySelector('.note-resizebar');
 
-export default class WinStoryController extends Controller {
-  static outlets = ['customer-win'];
+export default class extends Controller {
+  // summernote outlet is needed to pass config object with nested functions 
+  // (can't JSON stringify as necessary for setting attribute)
+  static outlets = ['customer-win'];    
   static targets = ['header', 'note', 'footer'];
   static values = {
-    isExpanded: { type: Boolean, default: false },
+    isExpanded: { type: Boolean, default: true },   // expand on first time enabling editor
     isEditable: { type: Boolean, default: false },
     contributions: { type: Array, default: [] },
     answers: { type: Array, default: [] }
   };
 
+  defaultHeight;
 
   initialize() {
-    console.log('init win story')
+    // console.log('init win story')
   }
 
   connect() {
-    console.log('connect win story');
+    // console.log('connect win story');
     // console.log('contributions', this.contributionsValue)
     // console.log('answers', this.answersValue)
+    this.defaultHeight = parseInt( getComputedStyle(this.noteTarget).height, 10);
   }
   
-  // use contenteditable instead of textarea because html can't be renderd in textarea
+  
   initEditor(e) {
-    // this.element.classList.add('is-edit-mode');   /
     this.isEditableValue = true;
   }
 
@@ -67,13 +67,15 @@ export default class WinStoryController extends Controller {
   isEditableValueChanged(isEditable, wasEditable) {
     if (wasEditable === undefined) return false;
     this.element.classList.toggle('is-edit-mode');
+
+    // TODO: this isn't going to work when minimizing an editable win story
     if (isEditable) {
-      this.isExpandedValue = true;  // do this first so correct height is calculated
       this.noteTarget.setAttribute(
-        'data-summernote-config-value', 
-        JSON.stringify( summernoteConfig(this.calcHeight, this.contributionsValue, this.answersValue) )
-      ); 
+        'data-summernote-config-args-value', 
+        JSON.stringify([this.calcHeight, this.contributionsValue, this.answersValue])
+      )
       this.noteTarget.setAttribute('data-summernote-enabled-value', 'true');
+      this.isExpandedValue ? this.parentRow.scrollIntoView() : this.childRow.scrollIntoView({ block: 'center' });
     }
   }
 
@@ -89,27 +91,19 @@ export default class WinStoryController extends Controller {
   }
 
   get calcHeight() {
-    console.log('calcHeight', this.isExpandedValue, this.isEditableValue)
+    const chromeHeight = this.isEditableValue ? summernoteToolbarHeight + summernoteResizebarHeight : 0;
     if (this.isExpandedValue) {
       const headerHeight = this.headerTarget.clientHeight;
       const footerHeight = this.footerTarget.clientHeight;
       const gapHeight = [
-        getComputedStyle(this.element.firstElementChild).paddingTop, 
-        getComputedStyle(this.element.firstElementChild).paddingBottom,
-        getComputedStyle(this.noteTarget).marginBottom
+        getComputedStyle(this.childRow.firstElementChild).paddingTop, 
+        getComputedStyle(this.childRow.firstElementChild).paddingBottom,
+        getComputedStyle(this.noteTarget || this.noteTarget.nextElementSibling).marginBottom
       ].reduce((totalGapHeight, segmentHeight) => totalGapHeight + parseInt(segmentHeight, 10), 0);
-      const reservedHeight = this.parentRow.clientHeight + gapHeight + headerHeight + footerHeight + this.chromeHeight;
-      console.log('headerHeight', headerHeight)
-      console.log('footerHeight', footerHeight)
-      console.log('gapHeight', gapHeight)
-      console.log('reservedHeight', reservedHeight)
+      const reservedHeight = this.parentRow.clientHeight + gapHeight + headerHeight + footerHeight + chromeHeight;
       return window.innerHeight - reservedHeight;
     } else {
-      // convert default height specified in rem to px
-      return (
-        parseInt(getComputedStyle(document.documentElement).fontSize, 10) * parseInt(defaultHeight, 10) 
-        - this.chromeHeight
-      );
+      return this.defaultHeight - chromeHeight;
     }
   }
     
@@ -119,9 +113,5 @@ export default class WinStoryController extends Controller {
 
   get childRow() {
     return this.parentRow.nextElementSibling;
-  }
-
-  get chromeHeight() {
-    return this.isEditableValue ? summernoteToolbarHeight + summernoteResizebarHeight : 0;
   }
 }
