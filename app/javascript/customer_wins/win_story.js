@@ -44,7 +44,7 @@ export function childRowPlaceholderTemplate(curatorName) {
   `
 }
 
-export function summernoteConfig(height, contributions, answers) {
+export function summernoteConfig(summernoteCtrl, height, contributions, answers) {
   console.log('summernote height', height)
   return {
     height,
@@ -64,23 +64,23 @@ export function summernoteConfig(height, contributions, answers) {
     callbacks: {
       // without this, insertion of a new line doesn't trigger input; critical for inserting placeholders
       onInit: (summernote) => {
-        console.log('summernote', summernote)
+        // console.log('summernote', summernote)
+
         // convert jquery elements to native elements
-        // (note the wrapping parend syntax since these variables are already declared)
-        // ({ codable, editable, editingArea, editor, statusbar, toolbar } = (
-        //   Object.fromEntries(Object.entries(summernote).map(([key, element]) => [key, element[0]]))
-        // ));
-        const setMaxDropdownHeight = () => {
-          const dropdownMenus = toolbar.querySelectorAll('.dropdown-menu.summernote-custom');
-          for (ul of dropdownMenus) ul.style.maxHeight = `${0.95 * editable.clientHeight}px`;
-        }
+        const { codable, editable, editingArea, editor, statusbar, toolbar } = (
+          Object.fromEntries(Object.entries(summernote).map(([key, element]) => [key, element[0]]))
+        );
+        summernoteCtrl.dispatch('init', { detail: { codable, editable, editingArea, editor, statusbar, toolbar } })
+
+        // const setMaxDropdownHeight = () => {
+        //   const dropdownMenus = toolbar.querySelectorAll('.dropdown-menu.summernote-custom');
+        //   for (ul of dropdownMenus) ul.style.maxHeight = `${0.95 * editable.clientHeight}px`;
+        // }
         // setMaxDropdownHeight();
         // observeEditor(note, editable, setMaxDropdownHeight);
-        // depopulatePlaceholders();
-        // $(editable).on('click', (e) => $(note).summernote('saveRange'));
-        // initCustomToolbar(toolbar.querySelector('.note-customButton'));
-        // tr.scrollIntoView();
-        // form.querySelector('.btn-copy').disabled = true;
+
+        depopulatePlaceholders(editable);
+        initCustomToolbar(toolbar.querySelector('.note-customButton'), contributions.length);
       },
       onEnter: function (e) {
         // $(this).summernote('pasteHTML', '<br></br>');
@@ -91,6 +91,119 @@ export function summernoteConfig(height, contributions, answers) {
       onChange: function (content) {}
     }
   }
+}
+
+export function populatePlaceholders(html, contributions, answers) {
+  const wrapper = document.createElement('div');
+  wrapper.innerHTML = html;
+  [...wrapper.getElementsByClassName('placeholder')].forEach(placeholderEl => {
+    placeholderEl.outerHTML = placeholderEl.dataset.questionId ?
+      groupContributionTemplate(placeholderEl.dataset.questionId, contributions, answers, placeholderEl) :
+      individualContributionTemplate(placeholderEl.dataset.contributionId, contributions, answers, placeholderEl);
+  });
+  return wrapper.innerHTML;
+}
+
+function depopulatePlaceholders(editable) {
+  [...editable.getElementsByClassName('group-contribution'), ...editable.getElementsByClassName('individual-contribution')]
+    .forEach(population => {
+      if (population.dataset.placeholder) population.outerHTML = population.dataset.placeholder;
+    });
+}
+
+export function individualContributionTemplate(contributionId, contributions, answers, placeholderEl) {
+  const contribution = contributions.find(c => c.id == contributionId);
+  const cAnswers = answers.filter(a => a.contribution_id == contributionId);
+  const questionAnswerTemplate = (answer) => {
+    return !answer.answer ? 
+      [] : `
+      <li>
+        <p>${answer.question.question}</p>
+        <p><i>${answer.answer}</i></p>
+      </li>
+    `;
+  }
+  return `
+    <div 
+      class="individual-contribution" 
+      data-contribution-id="${contributionId}" 
+      ${placeholderEl ? `data-placeholder="${placeholderEl.outerHTML.replace(/"/g, "'")}"` : ''}">
+      <p>${contribution.contributor.full_name}</p>
+      <p>${contribution.contributor.title}</p>
+      ${cAnswers.length > 0 ?
+        `<ul>${cAnswers.flatMap(questionAnswerTemplate).join('')}</ul>` :
+        '<div style="color:#d11302">No answers from this contributor</div>'
+      }
+    </div><br>
+  `;
+}
+
+export function groupContributionTemplate(questionId, contributions, answers, placeholderEl) {
+  let questionText;
+  answers.some(answer => {
+    if (answer.question.id == questionId) {
+      questionText = answer.question.question;
+      return true;
+    }
+  });
+  const qAnswers = answers.filter(answer => answer.question.id == questionId);
+  const answerTemplate = (answer) => {
+    const contribution = contributions.find(c => c.id == answer.contribution_id);
+    return `
+      <li>
+        <p>${contribution.contributor.full_name}</p>
+        <p>${contribution.contributor.title}</p>
+        <p><i>${answer.answer}</i></p>
+      </li>
+    `;
+  };
+  return `
+    <div
+      class="group-contribution"
+      data-question-id="${questionId}"
+      ${placeholderEl ? `data-placeholder="${placeholderEl.outerHTML.replace(/"/g, "'")}"` : ''}>
+      <p>${questionText}</p>
+      ${qAnswers.length > 0 ?
+        `<ul>${qAnswers.map(answerTemplate).join('')}</ul>` :
+        '<div style="color:#d11302">No answers to this question</div>'
+      }
+    </div><br>
+  `;
+}
+
+function initCustomToolbar(customToolbar, hasContributions) {
+  const successId = 'CHANGEME'
+  if (!hasContributions) customToolbar.querySelectorAll('.note-btn').forEach(btn => btn.disabled = true);
+  customToolbar.insertAdjacentHTML(
+    'beforeend', `
+      <label>Insert</label>
+      <button type="button" class="btn btn-help" title="Inserting Contributions">
+        <i class="fa fa-fw fa-question-circle-o"></i>
+      </button>
+    `
+  );
+  $(customToolbar.querySelector('.btn-help')).popover({
+    container: 'body',
+    html: true,
+    placement: 'left',
+    animation: false,
+    template: `
+      <div class="popover inserting-contributions" role="tooltip">
+        <div class="arrow"></div>
+        <div class="custom-title">
+          <h3 class="popover-title"></h3>
+          <button id="close-popover-${successId}" class="close" type="button" aria-label="Close">&times;</button>
+        </div>
+        <div class="popover-content"></div>
+      </div>
+    `,
+    content: `
+      <p>You can insert contributions in their original form or with a placeholder.</p>
+      <p>Placeholders are useful for organizing your document while in Edit mode, \
+but will preclude any changes to the underlying content.</p>
+      <p>Switch to View mode to see the inserted content.</p>
+    `,
+  });
 }
 
 function initDropdown(type, contributions, answers, context) {
@@ -109,27 +222,9 @@ function initDropdown(type, contributions, answers, context) {
     ui.dropdown({
       className: `summernote-custom dropdown-menu-right ${type}`,
       contents: dropdownTemplate(type, contributions, questions),
-      // contents: type === 'contributions' ? 
-      //   "<%= j render('successes/win_story_dropdown_menu', { success: @success, type: 'contributions' }) %>" : 
-      //   "<%= j render('successes/win_story_dropdown_menu', { success: @success, type: 'placeholders' }) %>",
       callback: ($dropdown) => {
-        $dropdown[0].querySelectorAll('a').forEach(link => {
-          link.addEventListener('click', (e) => {
-            const li = link.parentElement;
-            const isContributionsDropdown = li.parentElement.classList.contains('contributions');
-            const isPlaceholdersDropdown = li.dataset.placeholder;
-            let pasteHtml;
-            if (isContributionsDropdown && li.dataset.contributionId) {
-              pasteHtml = individualContributionTemplate(li.dataset.contributionId);
-            } else if (isContributionsDropdown && li.dataset.questionId) {
-              pasteHtml = groupContributionTemplate(li.dataset.questionId);
-            } else if (isPlaceholdersDropdown) {
-              pasteHtml = li.dataset.placeholder; 
-            }
-            $(note).summernote('restoreRange');   // restore cursor position
-            $(note).summernote('pasteHTML', pasteHtml)
-            $(note).summernote('saveRange');  // save cursor position
-          });
+        $dropdown.find('a').each((i, link) => {
+          link.setAttribute('data-action', 'win-story#pasteContributionOrPlaceholder')
         });
       }
     })

@@ -9,7 +9,8 @@
         controller: 'win-story',
         win_story_customer_win_outlet: "#customer-win-#{success.id}",
         win_story_contributions_value: @win_story_contributions,
-        win_story_answers_value: @win_story_answers } }) do |form|
+        win_story_answers_value: @win_story_answers,
+        action: 'summernote:init->win-story#onSummernoteInit' } }) do |form|
   
   - %i(win_story_html win_story_text win_story_markdown win_story_completed).each do |field|
     = form.hidden_field(field)
@@ -24,13 +25,13 @@
         button.btn-compress type="button" data-action="win-story#resize"
           i.fa.fa-compress 
           span Min
-        button.btn-edit type="button" data-action="win-story#initEditor"
+        button.btn-edit type="button" data-action="win-story#edit"
           i.fa.fa-pencil
           span Edit
         button.btn-view type="button" data-action="win-story#view"
           i.fa.fa-search
           span View
-        button.btn-copy type="button"
+        button.btn-copy type="button" data-win-story-target="copyBtn"
           i.fa.fa-clipboard
           span Copy
         /button.btn-email type="button"
@@ -47,9 +48,9 @@
     .win-story__summernote.form-control {
       contenteditable="false" 
       data-controller="summernote"
-      data-summernote-enabled-value="false"
       data-summernote-config-key-value="win-story"
-      data-win-story-target="note" }
+      data-win-story-target="note"
+      data-action="summernote:init->summernote#onInitComplete" }
       = success.win_story_html&.html_safe
     .win-story__footer data-win-story-target="footer"
       - ['Mark as Completed', 'Save changes'].each do |button_content|

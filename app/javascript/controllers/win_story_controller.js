@@ -1,4 +1,8 @@
 import { Controller } from '@hotwired/stimulus';
+import { 
+  populatePlaceholders, 
+  individualContributionTemplate, 
+  groupContributionTemplate } from '../customer_wins/win_story';
 
 // these values can't be calculated until the editor is initialized, so just hard code them for now
 const summernoteToolbarHeight = 42; // childRow.querySelector('.note-toolbar');
@@ -8,14 +12,15 @@ export default class extends Controller {
   // summernote outlet is needed to pass config object with nested functions 
   // (can't JSON stringify as necessary for setting attribute)
   static outlets = ['customer-win'];    
-  static targets = ['header', 'note', 'footer'];
+  static targets = ['header', 'note', 'footer', 'copyBtn'];
   static values = {
-    isExpanded: { type: Boolean, default: true },   // expand on first time enabling editor
+    isExpanded: { type: Boolean, default: false },
     isEditable: { type: Boolean, default: false },
     contributions: { type: Array, default: [] },
     answers: { type: Array, default: [] }
   };
 
+  editor;
   defaultHeight;
 
   initialize() {
@@ -24,70 +29,92 @@ export default class extends Controller {
 
   connect() {
     // console.log('connect win story');
-    // console.log('contributions', this.contributionsValue)
-    // console.log('answers', this.answersValue)
-    this.defaultHeight = parseInt( getComputedStyle(this.noteTarget).height, 10);
+    this.defaultHeight = parseInt( getComputedStyle(this.noteTarget).height, 10 );
   }
   
-  
-  initEditor(e) {
+  edit(e) {
     this.isEditableValue = true;
+    if (!this.isExpandedValue) this.resize();
+    this.enableEditor();
+    this.scrollToWinStory();
   }
 
   view() {
-    const newHeight = this.isExpandedValue ? getComputedStyle(editor).height : defaultWinStoryHeight;
-    this.element.classList.remove('is-edit-mode');
-    if (this.element.classList.contains('has-changes')) {
-      // submit form
-    } else {
-
-    }
-    const html = populatePlaceholders($(this.noteTarget).summernote('code'));
-    $(this.noteTarget).summernote('destroy');
-    this.noteTarget.innerHTML = html;
+    this.isEditableValue = false;
+    const newHeight = this.isExpandedValue ? getComputedStyle(this.editor).height : `${this.defaultHeight}px`;
+    const populatedHtml = populatePlaceholders( 
+      $(this.noteTarget).summernote('code'), this.contributionsValue, this.answersValue 
+    )
     this.noteTarget.style.height = newHeight;
-    this.noteTarget.contentEditable = 'false';
-    this.element.querySelector('.btn-copy').disabled = false;
-    this.isExpandedValue ? this.parentRow.scrollIntoView() : this.childRow.scrollIntoView({ block: 'center' });
+    $(this.noteTarget).summernote('code', populatedHtml);
+    this.copyBtnTarget.disabled = false;
+    this.disableEditor();
+    this.scrollToWinStory();
   }
 
-  // toggleIsExpanded() {
-  //   this.isExpandedValue = !this.isExpandedValue;
-  // }
+  resize(e) {
+    const isAutoResize = !e;
+    this.isExpandedValue = !this.isExpandedValue;
+    if (this.isEditableValue && !isAutoResize) {
+      // to resize, the editor must be destroyed and re-initialized
+      this.disableEditor();
+      setTimeout(() => this.enableEditor());
+    } else {
+      this.noteTarget.style.height = `${this.calcHeight}px`;
+    }
+    this.scrollToWinStory();
+  }
 
-  // toggleIsEditable() {
-  //   this.isEditable = !this.isEditable;
-  // }
+  onSummernoteInit(e) {
+    this.editor = e.detail.editor;    // other summernote elements are in this payload => assign as needed
+    this.copyBtnTarget.disabled = true;
+  }
+
+  enableEditor() {
+    this.noteTarget.setAttribute(
+      'data-summernote-config-args-value', 
+      JSON.stringify([this.calcHeight, this.contributionsValue, this.answersValue])
+    );
+    this.noteTarget.setAttribute('data-summernote-enabled-value', 'true');
+  }
+
+  disableEditor() {
+    this.noteTarget.setAttribute('data-summernote-enabled-value', 'false');
+  }
+
+  scrollToWinStory() {
+    setTimeout(() => (
+      this.isExpandedValue ? this.parentRow.scrollIntoView() : this.childRow.scrollIntoView({ block: 'center' })
+    ));
+  }
+
+  isEditableValueChanged(isEditable, wasEditable) {
+    if (wasEditable === undefined) return false;
+    this.element.classList.toggle('is-editable');
+  }
 
   isExpandedValueChanged(isExpanded, wasExpanded) {
     if (wasExpanded === undefined) return false;
     this.element.classList.toggle('is-expanded');
   }
 
-  isEditableValueChanged(isEditable, wasEditable) {
-    if (wasEditable === undefined) return false;
-    this.element.classList.toggle('is-edit-mode');
-
-    // TODO: this isn't going to work when minimizing an editable win story
-    if (isEditable) {
-      this.noteTarget.setAttribute(
-        'data-summernote-config-args-value', 
-        JSON.stringify([this.calcHeight, this.contributionsValue, this.answersValue])
-      )
-      this.noteTarget.setAttribute('data-summernote-enabled-value', 'true');
-      this.isExpandedValue ? this.parentRow.scrollIntoView() : this.childRow.scrollIntoView({ block: 'center' });
+  pasteContributionOrPlaceholder(e) {
+    const link = e.target;    
+    const li = link.parentElement;
+    const isPlaceholder = li.dataset.placeholder;
+    const isIndividualContribution = li.dataset.contributionId && !isPlaceholder;
+    const isGroupContribution = li.dataset.questionId && !isPlaceholder;
+    let pasteHtml;
+    if (isIndividualContribution) {
+      pasteHtml = individualContributionTemplate(li.dataset.contributionId, this.contributionsValue, this.answersValue);
+    } else if (isGroupContribution) {
+      pasteHtml = groupContributionTemplate(li.dataset.questionId, this.contributionsValue, this.answersValue);
+    } else if (isPlaceholder) {
+      pasteHtml = li.dataset.placeholder; 
     }
-  }
-
-  // to resize, the editor must be destroyed and re-initialized
-  resize() {
-    if (this.isEditableValue) {
-      $(this.noteTarget).summernote('destroy');
-      // init
-    } else {
-      this.noteTarget.style.height = `${this.calcHeight}px`;
-      this.element.classList.toggle('is-expanded');
-    }
+    $(this.noteTarget).summernote('restoreRange');   // restore cursor position
+    $(this.noteTarget).summernote('pasteHTML', pasteHtml)
+    $(this.noteTarget).summernote('saveRange');  // save cursor position
   }
 
   get calcHeight() {

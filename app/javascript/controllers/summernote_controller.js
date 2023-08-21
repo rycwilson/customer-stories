@@ -16,10 +16,16 @@ export default class extends Controller {
   static values = {
     enabled: { type: Boolean, default: false },
     configKey: { type: String, default: 'default' },
-    configArgs: { type: Array, default: [220] }   // height is necessary, any others will depend on the specific configuration
+    configArgs: { type: Array, default: [this, 220] }   // height is necessary, any others will depend on the specific configuration
   }
 
   configFactory;
+  codable;
+  editable;
+  editingArea;
+  editor;
+  statusbar;
+  toolbar;
 
   connect() {
     // console.log('connect summernote')
@@ -31,14 +37,33 @@ export default class extends Controller {
 
   // use contenteditable instead of textarea because html can't be rendered in textarea
   init() {
-    $(this.element).prop('contenteditable', 'true').summernote( this.configFactory(...this.configArgsValue) );
+    this.element.contentEditable = 'true';
+    $(this.element).summernote( this.configFactory(this, ...this.configArgsValue) );
+  }
+
+  onInitComplete(e) {
+    this.codable = e.detail.codable;
+    this.editable = e.detail.editable;
+    this.editingArea = e.detail.editingArea;
+    this.editor = e.detail.editor;
+    this.statusbar = e.detail.statusbar;
+    this.toolbar = e.detail.toolbar;
+    $(this.editable).on('click', (e) => $(this.element).summernote('saveRange'));
+    // console.log('codable', codable)
+    // console.log('editable', editable)
+    // console.log('editingArea', editingArea)
+    // console.log('editor', editor)
+    // console.log('statusbar', statusbar)
+    // console.log('toolbar', toolbar)
   }
 
   destroy() {
     $(this.element).summernote('destroy');
+    this.element.contentEditable = 'false';
   }
 
-  enabledValueChanged(shouldEnable) {
-    shouldEnable ? this.init() : this.destroy();
+  enabledValueChanged(isEnabled, wasEnabled) {
+    if (wasEnabled === undefined) return false;
+    isEnabled ? this.init() : this.destroy();
   }
 }
