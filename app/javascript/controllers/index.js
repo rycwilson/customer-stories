@@ -46,6 +46,9 @@ application.register('win-story', WinStoryController);
 import CustomerWinFormController from './customer_win_form_controller';
 application.register('customer-win-form', CustomerWinFormController);
 
+import CustomerFormController from './customer_form_controller';
+application.register('customer-form', CustomerFormController);
+
 import ContributionController from './contribution_controller';
 application.register('contribution', ContributionController);
 

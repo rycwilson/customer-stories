@@ -8,6 +8,7 @@
         id: 'customer-form',
         class: 'directUpload form-horizontal',
         data: { \
+          controller: 'customer-form',
           url: @s3_direct_post.url,
           host: URI.parse(@s3_direct_post.url).host,
           asset_host: Rails.application.config.asset_host,
@@ -29,7 +30,11 @@
     .form-group
       = form.label(:logo_url, 'Logo', class: 'col-sm-2 control-label')
       .col-sm-10
-        .customer-logo class=('with-customer-name' if @customer.show_name_with_logo?)
+
+        .customer-logo {
+          class="#{'with-customer-name' if @customer.show_name_with_logo?}" 
+          data-customer-form-target="logoContainer" }
+
           .fileinput.fileinput-exists data-provides="fileinput"
 
             .customer-logo__header
@@ -44,7 +49,7 @@
             .fileinput-preview.thumbnail
               = image_tag(@customer.logo_url.present? ? @customer.logo_url : LOGO_PLACEHOLDER, alt: 'customer logo url')
               
-            .customer-name.text-center 
+            .customer-name.text-center
               = @customer.name
 
             .btn-file.hidden
@@ -53,5 +58,5 @@
           .customer-logo__footer.text-center
             .checkbox
               = form.label(:show_name_with_logo)
-                = form.check_box(:show_name_with_logo)
+                = form.check_box(:show_name_with_logo, data: { action: 'customer-form#toggleShowName' })
                 = 'Show name with logo'
