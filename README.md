@@ -67,8 +67,7 @@
 
 #### Promote
 - Google Ads
-- search results / keywords configuration
-- uploading and assigning images
+- NOTE that ad blockers may detect Google markup on the ads preview page and block content. The page only mimics Google Ads content and does not load anything from Google. Disable your ad blocker to ensure all content loads
 
 <a name="measure"></a>
 
