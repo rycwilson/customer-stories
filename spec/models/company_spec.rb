@@ -1,25 +1,48 @@
 require 'rails_helper'
 
 RSpec.describe Company, type: :model do
-  # pending "add some examples to (or delete) #{__FILE__}"
-  valid_attributes = { name: 'Acme Corporation', subdomain: 'acme', website: 'http://acme.com' }
-  it "is valid with valid attributes" do
-    # expect(Company.new).to be_valid
+  pending 'does some other stuff'
+  it 'does even more things'
+
+  subject { described_class.new(name: 'Acme Corporation', subdomain: 'acme', website: 'https://acme.com') }
+
+  it 'is valid with valid attributes' do
+    expect(subject).to be_valid
   end
-  it "is not valid without a name" do
-    company = Company.new(valid_attributes.reject { |attr, value| attr == :name })
-    expect(company).to_not be_valid
+
+  it 'is unique'
+  # will need db test data for this one
+
+  it 'is not valid without a name' do
+    subject.name = nil
+    expect(subject).to_not be_valid
   end
-  it "is not valid without a subdomain" do
-    company = Company.new(valid_attributes.reject { |attr, value| attr == :subdomain })
-    expect(company).to_not be_valid
+
+  it 'is not valid without a subdomain' do
+    subject.subdomain = nil
+    expect(subject).to_not be_valid
   end
-  it "is not valid without a website" do
-    company = Company.new(valid_attributes.reject { |attr, value| attr == :website })
-    expect(company).to_not be_valid
+
+  it 'has a unique subdomain'
+
+  it 'is not valid without proper subdomain format' do
+    # test the constraint
   end
-  it "is not valid without a validated website" do
-    company = Company.new(valid_attributes.merge({ website: 'nowaythiswebsiteexists.com'}))
-    expect(company).to_not be_valid
+
+  it 'is not valid without a website' do
+    subject.website = nil
+    expect(subject).to_not be_valid
   end
+
+  it 'is not valid without a website that exists' do
+    subject.website = 'nowaythiswebsiteexists.com'
+    expect(subject).to_not be_valid
+  end
+
+  it 'is not valid without a secure website' do
+    subject.website = subject.website.sub('https', 'http')
+    expect(subject).to_not be_valid
+  end
+
+  it 'has a unique website'
 end
