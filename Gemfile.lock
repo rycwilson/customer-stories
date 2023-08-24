@@ -284,7 +284,6 @@ GEM
     rb-fsevent (0.11.2)
     rb-inotify (0.10.1)
       ffi (~> 1.0)
-    redis (4.8.1)
     remotipart (1.4.4)
     request_store (1.5.1)
       rack (>= 1.4)
@@ -417,7 +416,6 @@ DEPENDENCIES
   rack_password
   rails (~> 6.0)
   rails_admin (~> 2.0)
-  redis (~> 4.0)
   reverse_markdown
   rspec-rails (~> 6.0)
   sassc-rails (>= 2.1.0)
