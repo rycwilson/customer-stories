@@ -59,6 +59,6 @@ html lang="en-US" prefix="og: http://ogp.me/ns# fb: http://ogp.me/ns/fb#"
 
       = yield(:underscore_templates)
 
-      - if production? && !user_signed_in? && ['site', 'stories'].include?(controller_name)
+      /- if production? && !user_signed_in? && ['site', 'stories'].include?(controller_name)
         = render('analytics/analytics', { company: @company })
       

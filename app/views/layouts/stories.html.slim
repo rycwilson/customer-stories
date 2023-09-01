@@ -33,5 +33,5 @@ html lang="en-US" prefix="og: http://ogp.me/ns# fb: http://ogp.me/ns/fb#"
       = render('shared/navbars/company_header', { company: @company })
       = yield
       /= yield(:underscore_templates)
-      - if production? && !user_signed_in?
+      /- if production? && !user_signed_in?
         = render('analytics/analytics', { company: @company })
