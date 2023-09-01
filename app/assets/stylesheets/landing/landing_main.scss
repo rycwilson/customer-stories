@@ -18,11 +18,24 @@ $light-blue: #f0ffff; // eaf6fb
 $gray: #e0e8eb; // #b8d5d7;
 $light-gray: #eaf2f5;
 
+$alert-red: #d9534f;
+
 @import 'navbar';
 @import 'buttons';
 @import 'devise';
 @import 'pricing';
 @import 'footer';
+
+.has-error {
+  .control-label {
+    color: $alert-red;
+  }
+
+  .form-control,
+  .form-control:focus {
+    border-color: $alert-red;
+  }
+}
 
 #flash {
   display: flex;
