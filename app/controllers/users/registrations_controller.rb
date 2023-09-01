@@ -8,6 +8,8 @@ class Users::RegistrationsController < Devise::RegistrationsController
   layout('landing')
   respond_to :html, :js
 
+  before_action(only: [:new]) { set_preserved_form_data }
+
   # GET /resource/sign_up
   def new
     super
@@ -15,7 +17,42 @@ class Users::RegistrationsController < Devise::RegistrationsController
 
   # POST /resource
   def create
-    super
+    # super
+    build_resource(sign_up_params)
+
+    resource.save
+    yield resource if block_given?
+    if resource.persisted?
+      if resource.active_for_authentication?
+        set_flash_message! :notice, :signed_up
+        sign_up(resource_name, resource)
+        respond_with resource, location: after_sign_up_path_for(resource)
+      else
+        set_flash_message! :notice, :"signed_up_but_#{resource.inactive_message}"
+        expire_data_after_sign_in!
+        respond_with resource, location: after_inactive_sign_up_path_for(resource)
+      end
+    else
+      clean_up_passwords resource
+      set_minimum_password_length
+      # respond_with resource
+      session[:sign_up_email] = resource.email
+      session[:sign_up_first_name] = resource.first_name
+      session[:sign_up_last_name] = resource.last_name
+      redirect_back(
+        fallback_location: { action: 'new' }, 
+        flash: {
+          alert: resource.errors.full_messages.map do |mesg|
+            case mesg
+            when 'Sign up code is not included in the list'
+              'Invalid sign up code'
+            else
+              mesg
+            end
+          end
+        }
+      )
+    end
   end
 
   # GET /resource/edit
@@ -103,7 +140,7 @@ class Users::RegistrationsController < Devise::RegistrationsController
 
   # The path used after sign up.
   # def after_sign_up_path_for(resource)
-  #   # a page to direct them to check their email
+    # a page to direct them to check their email
   # end
 
   # The path used after sign up for inactive accounts.
@@ -113,4 +150,12 @@ class Users::RegistrationsController < Devise::RegistrationsController
 
   private
 
+  def set_preserved_form_data
+    @sign_up_email = session[:sign_up_email]
+    @sign_up_first_name = session[:sign_up_first_name]
+    @sign_up_last_name = session[:sign_up_last_name]
+    session.delete(:sign_up_email)
+    session.delete(:sign_up_first_name)
+    session.delete(:sign_up_last_name)
+  end
 end
