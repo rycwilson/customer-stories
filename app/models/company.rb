@@ -5,11 +5,8 @@ class Company < ApplicationRecord
   before_validation :smart_add_url_protocol
 
   validates :name, presence: true, uniqueness: true
-  validates :subdomain, presence: true, uniqueness: true
+  validates :subdomain, presence: true, uniqueness: true, subdomain: true
   validates :website, presence: true, uniqueness: true, website: true
-  validates_length_of :subdomain, maximum: 32, message: "must be 32 characters or less"
-  validates_format_of :subdomain, with: /\A[a-z0-9-]*\z/, on: [:create, :update], message: "may only contain lowercase alphanumerics or hyphens"
-  validates_exclusion_of :subdomain, in: ['www', 'mail', 'ftp'], message: "is not available"
 
   has_many :users # no dependent: :destroy users, handle more gracefully
 
@@ -301,7 +298,7 @@ class Company < ApplicationRecord
     end
   end
 
-  after_commit(on: [:create]) do
+  after_commit(on: [:create], unless: -> { skip_callbacks }) do
     self.create_plugin
 
     # default invitation templates (formerly email templates, futurely invitation templates)
@@ -321,13 +318,9 @@ class Company < ApplicationRecord
     end
   end
 
-  after_commit :expire_gallery_fragment_cache, on: :update,
-    if: Proc.new { |company|
-      (company.previous_changes.keys & ['header_color_1', 'header_text_color']).any?
-    }
-
   # virtual attributes
   attr_writer :default_ad_image_url
+  attr_accessor :skip_callbacks
 
   def published_stories
     Story.default_order(Story.company_published(self.id)).pluck(:id)
