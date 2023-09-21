@@ -71,6 +71,7 @@ gem 'uglifier'
 
 group :development, :test do
   gem 'rspec-rails', '~> 6.0'
+  gem 'factory_bot_rails'
   gem 'pry-byebug'
   gem 'better_errors'
   gem 'binding_of_caller'   # needed for better_errors features
