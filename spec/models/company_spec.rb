@@ -42,17 +42,17 @@ RSpec.describe Company, type: :model do
     expect(subject).not_to be_valid
   end
 
-  it 'is not valid with a subdomain that starts with a hyphen' do
+  it 'is not valid when the subdomain starts with a hyphen' do
     subject.subdomain = '-subdomain'
     expect(subject).not_to be_valid
   end
 
-  it 'is not valid with a subdomain that ends with a hyphen' do
+  it 'is not valid when the subdomain ends with a hyphen' do
     subject.subdomain = 'subdomain-'
     expect(subject).not_to be_valid
   end
 
-  it 'is not valid with a subdomain that has consecutive hyphens' do
+  it 'is not valid when the subdomain contains consecutive hyphens' do
     subject.subdomain = 'sub--domain'
     expect(subject).not_to be_valid
   end
