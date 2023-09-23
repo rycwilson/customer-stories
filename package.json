@@ -58,5 +58,8 @@
     "summernote": "^0.8.20",
     "tom-select": "^2.2.2",
     "underscore": "^1.13.3"
+  },
+  "devDependencies": {
+    "typescript": "^5.2.2"
   }
 }
