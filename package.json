@@ -22,7 +22,6 @@
     "@hotwired/stimulus": "^3.2.1",
     "@hotwired/turbo-rails": "^7.3.0",
     "animate.css": "^4.1.1",
-    "arrive": "^2.4.1",
     "blueimp-file-upload": "^10.32.0",
     "bootbox": "^6.0.0",
     "bootstrap-datepicker": "^1.9.0",
