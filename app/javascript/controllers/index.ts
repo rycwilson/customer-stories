@@ -2,64 +2,64 @@
 // Run that command whenever you add a new controller or create them with
 // ./bin/rails generate stimulus controllerName
 
-import { application } from "./application"
+import { application } from "./application.js"
 
 // import HelloController from "./hello_controller"
 // application.register("hello", HelloController)
 
-import TomselectController from './tomselect_controller';
+import TomselectController from './tomselect_controller.js';
 application.register('tomselect', TomselectController);
 
-import DatatableController from './datatable_controller';
+import DatatableController from './datatable_controller.js';
 application.register('datatable', DatatableController);
 
-import SummernoteController from './summernote_controller';
+import SummernoteController from './summernote_controller.js';
 application.register('summernote', SummernoteController);
 
-import DashboardController from './dashboard_controller';
+import DashboardController from './dashboard_controller.js';
 application.register('dashboard', DashboardController);
 
-import DashboardTabController from './dashboard_tab_controller';
+import DashboardTabController from './dashboard_tab_controller.js';
 application.register('dashboard-tab', DashboardTabController);
 
-// import DashboardTabPanelController from './dashboard_tab_panel_controller';
+// import DashboardTabPanelController from './dashboard_tab_panel_controller.js';
 // application.register('dashboardTabPanel', DashboardTabPanelController);
 
-import ResourceController from './resource_controller';
+import ResourceController from './resource_controller.js';
 application.register('resource', ResourceController);
 
-import ModalController from './modal_controller';
+import ModalController from './modal_controller.js';
 application.register('modal', ModalController);
 
-import ModalTriggerController from './modal_trigger_controller';
+import ModalTriggerController from './modal_trigger_controller.js';
 application.register('modal-trigger', ModalTriggerController);
 
-import StoriesController from './stories_controller';
+import StoriesController from './stories_controller.js';
 application.register('stories', StoriesController);
 
-import CustomerWinController from './customer_win_controller';
+import CustomerWinController from './customer_win_controller.js';
 application.register('customer-win', CustomerWinController);
 
-import WinStoryController from './win_story_controller';
+import WinStoryController from './win_story_controller.js';
 application.register('win-story', WinStoryController);
 
-import CustomerWinFormController from './customer_win_form_controller';
+import CustomerWinFormController from './customer_win_form_controller.js';
 application.register('customer-win-form', CustomerWinFormController);
 
-import CustomerFormController from './customer_form_controller';
+import CustomerFormController from './customer_form_controller.js';
 application.register('customer-form', CustomerFormController);
 
-import ContributionController from './contribution_controller';
+import ContributionController from './contribution_controller.js';
 application.register('contribution', ContributionController);
 
-import ContributionFormController from './contribution_form_controller';
+import ContributionFormController from './contribution_form_controller.js';
 application.register('contribution-form', ContributionFormController);
 
-import TableDisplayOptionsController from './table_display_options_controller';
+import TableDisplayOptionsController from './table_display_options_controller.js';
 application.register('table-display-options', TableDisplayOptionsController);
 
-import ActionsDropdownController from './actions_dropdown_controller';
+import ActionsDropdownController from './actions_dropdown_controller.js';
 application.register('actions-dropdown', ActionsDropdownController);
 
-import NewContactController from './new_contact_controller';
+import NewContactController from './new_contact_controller.js';
 application.register('new-contact', NewContactController);
