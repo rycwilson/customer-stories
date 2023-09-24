@@ -1,12 +1,12 @@
 import { Controller } from "@hotwired/stimulus";
 
-export default class extends Controller {
+export default class extends Controller<HTMLTableRowElement> {
   static targets = ['actionsDropdown'];
   static values = { rowData: Object, workflowStage: { type: String, default: 'prospect' } };
 
-  id;
-  status;
-  contributor;
+  id: number | undefined = undefined;
+  status: string | undefined = undefined;
+  contributor: object | undefined = undefined;
   invitationTemplate;
   customerWin;
 

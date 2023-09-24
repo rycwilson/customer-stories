@@ -1,7 +1,7 @@
 import { Controller } from '@hotwired/stimulus';
 import { toggleRowGroups, initDisplayOptions as resetDisplayOptions } from '../tables';
 
-export default class extends Controller {
+export default class extends Controller<HTMLDivElement> {
   static outlets = ['dashboard', 'resource'];
 
   clickAwayHandler;

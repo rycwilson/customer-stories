@@ -12,7 +12,7 @@ const configFactories = {
   'default': undefined
 }
 
-export default class extends Controller {
+export default class extends Controller<HTMLDivElement> {
   static values = {
     enabled: { type: Boolean, default: false },
     configKey: { type: String, default: 'default' },

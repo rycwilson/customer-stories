@@ -1,6 +1,6 @@
 import { Controller } from "@hotwired/stimulus"
 
-export default class extends Controller {
+export default class extends Controller<HTMLAnchorElement> {
   onClick(e) {
     e.preventDefault();
     const newDashboardPath = `/${this.element.getAttribute('href').slice(1, this.element.getAttribute('href').length)}`;

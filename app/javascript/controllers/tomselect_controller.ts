@@ -1,7 +1,7 @@
 import { Controller } from "@hotwired/stimulus";
 import { tsBaseOptions } from '../tomselect.js';
 
-export default class extends Controller {
+export default class extends Controller<HTMLSelectElement> {
   static values = { type: String, customOptions: { type: Object, default: {} } };
 
   connect() {

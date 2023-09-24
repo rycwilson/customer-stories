@@ -8,7 +8,7 @@ import {
 const summernoteToolbarHeight = 42; // childRow.querySelector('.note-toolbar');
 const summernoteResizebarHeight = 17; // childRow.querySelector('.note-resizebar');
 
-export default class extends Controller {
+export default class extends Controller<HTMLFormElement> {
   // summernote outlet is needed to pass config object with nested functions 
   // (can't JSON stringify as necessary for setting attribute)
   static outlets = ['customer-win'];    

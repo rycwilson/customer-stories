@@ -8,7 +8,7 @@ import {
 import { tableConfig as customerWinsTableConfig, newCustomerWinPath } from '../customer_wins/customer_wins';
 import { tableConfig as contributorsTableConfig, newContributionPath } from '../contributions/contributions';
 
-export default class extends Controller {
+export default class extends Controller<HTMLDivElement> {
   static outlets = ['dashboard', 'resource'];
   static targets = ['curatorSelect', 'filterSelect', 'filterResults', 'datatable', 'newItemBtn', 'tableDisplayOptionsBtn'];
   static values = { dataPath: String, checkboxFilters: { type: Object, default: {} } }

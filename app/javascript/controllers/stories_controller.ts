@@ -1,7 +1,7 @@
 import { Controller } from '@hotwired/stimulus';
 import imagesLoaded from 'imagesloaded/imagesloaded.pkgd';
 
-export default class extends Controller {
+export default class extends Controller<HTMLDivElement> {
   static targets = ['searchAndFilters', 'filterSelect', 'gallery', 'card'];
 
   readyFilters = 0;

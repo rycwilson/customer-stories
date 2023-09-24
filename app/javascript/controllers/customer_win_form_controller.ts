@@ -1,7 +1,7 @@
 import { Controller } from '@hotwired/stimulus';
 import { capitalize } from '../util';
 
-export default class extends Controller {
+export default class extends Controller<HTMLFormElement> {
   static outlets = ['modal'];
   static targets = [
     'referrerSelect', 'referrerFields', 'contributorSelect', 'contributorFields', 'successCustomerId', 

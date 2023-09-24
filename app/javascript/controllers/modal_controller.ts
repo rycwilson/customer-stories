@@ -1,6 +1,6 @@
 import { Controller } from '@hotwired/stimulus';
 
-export default class extends Controller {
+export default class extends Controller<HTMLDivElement> {
   static targets = ['title', 'body', 'turboFrame', 'form', 'footer', 'dismissBtn', 'submitBtn'];
   static values = { 
     title: { type: String, default: 'title is missing' },

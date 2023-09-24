@@ -1,6 +1,6 @@
 import { Controller } from "@hotwired/stimulus";
 
-export default class extends Controller {
+export default class extends Controller<HTMLTableElement> {
   static targets = ['row'];   // rowTargets exclude row groups
   static outlets = ['resource', 'stories'];
   static values = { 

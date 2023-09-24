@@ -2,7 +2,7 @@ import { Controller } from '@hotwired/stimulus';
 import { editCustomerWinPath } from '../customer_wins/customer_wins';
 import { childRowPlaceholderTemplate } from '../customer_wins/win_story';
 
-export default class extends Controller {
+export default class extends Controller<HTMLTableRowElement> {
   static outlets = ['resource', 'modal'];
   static targets = ['actionsDropdown'];
   static values = { 
