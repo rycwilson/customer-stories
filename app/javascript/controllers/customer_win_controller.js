@@ -68,7 +68,7 @@ export default class extends Controller {
     else {
       const contributionIds = this.contributorsCtrl.dt.data().toArray()
         .filter(contribution => (
-          (contribution.success.id == this.id) && contribution.status && contribution.status.match(/(contribution|feedback)/)
+          (contribution.success.id == this.id) && contribution.status && /(contribution|feedback)/.test(contribution.status)
         ))
         .map(contribution => contribution.id);
       Promise
@@ -121,12 +121,12 @@ export default class extends Controller {
   }
 
   actionsDropdownTemplate() {
-    const noContributorsAdded = Boolean(this.status.match(/0.+Contributors\sadded/));
-    const noContributorsInvited = Boolean(this.status.match(/0.+Contributors\sinvited/));
-    const contributionsExist = Boolean(this.status.match(/[^0]&nbsp;&nbsp;Contributions\ssubmitted/));
+    const noContributorsAdded = /0.+Contributors\sadded/.test(this.status);
+    const noContributorsInvited = /0.+Contributors\sinvited/.test(this.status);
+    const contributionsExist = /[^0]&nbsp;&nbsp;Contributions\ssubmitted/.test(this.status);
     const action = noContributorsAdded ? 'Add' : (noContributorsInvited ? 'Invite' : '');
     // TODO: add the new invitation path
-    const turboFrameAttrs = action.match(/Add|Invite/) && {
+    const turboFrameAttrs = /Add|Invite/.test(action) && {
       id: `new-${action === 'Add' ? 'contribution' : 'invitation'}`,
       src: action === 'Add' ? `/successes/${this.id}/contributions/new` : '' 
     };

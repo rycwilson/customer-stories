@@ -41,7 +41,7 @@ export default class extends Controller {
 
   turboFrameAttrsValueChanged(attrs) {
     if (attrs.id && attrs.src) {
-      if (attrs.id.match(/^(new|edit)/)) this.actionValue = attrs.id.match(/^(?<action>new|edit)/).groups.action;
+      if (/^(new|edit)/.test(attrs.id)) this.actionValue = attrs.id.match(/^(?<action>new|edit)/).groups.action;
       this.turboFrameTarget.insertAdjacentHTML('afterbegin', this.turboFrameTarget.dataset.placeholder);
       this.turboFrameTarget.id = attrs.id;
       this.turboFrameTarget.src = attrs.src;

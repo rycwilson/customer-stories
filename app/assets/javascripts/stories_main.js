@@ -266,7 +266,7 @@
     const isMulti = Array.isArray(value);
     const tagsFilter = {};
     const urlParams = Object.fromEntries(
-      [...new URLSearchParams(location.search)].filter(([tagType, tagSlug]) => tagType.match(/category|product/))
+      [...new URLSearchParams(location.search)].filter(([tagType, tagSlug]) => /category|product/.test(tagType))
     );
     const getTagSlug = (select, selectedValue) => !selectedValue ? '' : (
       Object.values(select.tomselect.options).find(option => option.value === selectedValue).slug

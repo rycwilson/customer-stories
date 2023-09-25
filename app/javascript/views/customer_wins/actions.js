@@ -13,9 +13,9 @@ export function handleDropdownAction(target, row) {
 }
 
 export function actionsDropdownTemplate(displayStatus, rowData) {
-  const noContributorsAdded = displayStatus.match(/0.+Contributors\sadded/);
-  const noContributorsInvited = displayStatus.match(/0.+Contributors\sinvited/);
-  const contributionsExist = displayStatus.match(/[^0]&nbsp;&nbsp;Contributions\ssubmitted/);
+  const noContributorsAdded = /0.+Contributors\sadded/.test(displayStatus);
+  const noContributorsInvited = /0.+Contributors\sinvited/.test(displayStatus);
+  const contributionsExist = /[^0]&nbsp;&nbsp;Contributions\ssubmitted/.test(displayStatus);
   const storyExists = rowData.story;
   const storyPath = storyExists && `/curate/${rowData.customer.slug}/${rowData.story.slug}`;
   const contributorsAction = (() => {
@@ -106,7 +106,7 @@ function showContributions(successId) {
   const contributionIds = $('#prospect-contributors-table').DataTable().data().toArray()
     .filter(contribution => (
       contribution.success.id == successId &&
-      (contribution.status && contribution.status.match(/(contribution|feedback)/))
+      (contribution.status && /(contribution|feedback)/.test(contribution.status))
     ))
     .map(contribution => contribution.id);
   console.log('contributionIds', contributionIds)
