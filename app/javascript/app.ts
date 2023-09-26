@@ -48,10 +48,6 @@ function appFactory(): CustomerStoriesApp {
   }
 }
 
-interface User {
-  id: number;
-  name: string;
-}
 interface CustomerStoriesApp {
   readonly currentUser: User | null;
   // screenSize: string;
