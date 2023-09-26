@@ -1,5 +1,11 @@
-import tomSelect from 'tom-select/dist/js/tom-select.base.js';
-window.TomSelect = tomSelect;
+import TomSelect from 'tom-select/dist/esm/tom-select.js';
+
+// do not change the 'clear_button' name, else styles won't work
+import clearButton from 'tom-select/dist/js/plugins/clear_button';
+
+TomSelect.define('clear_button', clearButton);
+
+export default TomSelect;
 
 export const tsBaseOptions = {
   maxOptions: null,
@@ -9,7 +15,7 @@ export const tsBaseOptions = {
   plugins: {
     'clear_button': {
       title: 'Clear selection',
-      html: (config) => (`<button type="button" class="btn ${config.className}" title="${config.title}">&times;</button>`)
+      // html: (config: object) => (`<button type="button" class="btn ${config.className}" title="${config.title}">&times;</button>`)
     }
   }
 };
