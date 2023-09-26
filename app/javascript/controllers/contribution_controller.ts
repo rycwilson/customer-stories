@@ -1,35 +1,41 @@
 import { Controller } from "@hotwired/stimulus";
 
-export default class extends Controller<HTMLTableRowElement> {
+export default class ContributionController extends Controller<HTMLTableRowElement> {
   static targets = ['actionsDropdown'];
   static values = { rowData: Object, workflowStage: { type: String, default: 'prospect' } };
+
+  declare readonly rowDataValue: { [key: string]: any };
+  declare readonly workflowStageValue: 'prospect' | 'curate';
+  declare readonly actionsDropdownTarget: HTMLTableCellElement;
 
   id: number | undefined = undefined;
   status: string | undefined = undefined;
   contributor: object | undefined = undefined;
-  invitationTemplate;
-  customerWin;
-
+  invitationTemplate: string | undefined = undefined;
+  customerWin: CustomerWin | undefined = undefined;
   // contribution;
 
   initialize() {}
   
   connect() {
     // console.log('connect contribution')
-    Object.keys(this.rowDataValue).forEach(field => this[field] = this.rowDataValue[field]);
+    Object.keys(this.rowDataValue).forEach((key: string): void => {
+      const field: keyof this['rowDataValue'] = key;
+      this[field] = this.rowDataValue[key];
+    });
     this.actionsDropdownTarget.insertAdjacentHTML('afterbegin', this.actionsDropdownTemplate());
   }
 
   storyExists() {
-    return Boolean(this.customerWin.story);
+    return Boolean(this.customerWin?.story);
   }
 
   storyPath() {
-    return this.storyExists() && this.customerWin.story.csp_story_path;
+    return this.storyExists() && this.customerWin?.story.csp_story_path;
   }
 
   editStoryPath() {
-    return this.storyExists() && `/curate/${this.customerWin.customer.slug}/${this.customerWin.story.slug}`;
+    return this.storyExists() && `/curate/${this.customerWin?.customer.slug}/${this.customerWin.story.slug}`;
   }
 
   actionsDropdownTemplate() {
