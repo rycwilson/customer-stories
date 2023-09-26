@@ -5,7 +5,7 @@ import './bootstrap';
 
 import "@hotwired/turbo-rails";
 import './controllers';
-import * as turboCallbacks from './turbo_callbacks';
+import * as turboCallbacks from './turbo_callbacks.js';
 
 import DataTable from 'datatables.net-bs';
 window.DataTable = DataTable;
@@ -16,24 +16,28 @@ import 'summernote/dist/summernote';
 import cookies from 'js-cookie';
 window.Cookies = cookies;
 
-import './tomselect';
-import clearButton from 'tom-select/dist/js/plugins/clear_button';
-// do not change the 'clear_button' name, else styles won't work
-TomSelect.define('clear_button', clearButton);
+import TomSelect from './tomselect.js';
+window.TomSelect = TomSelect;
 
-// import companies from './views/companies.js';
-// import profile from './views/user_profile.js';
-// import { initView } from './views';
+window.CSP = window.CSP || appFactory();
+window.CSP.init();
 
-window.CSP = window.CSP || cspApp();
-CSP.init();
-
-function cspApp() {
-  const app = {
-    currentUser: Object.fromEntries(
-      Object.entries(JSON.parse(document.body.dataset.currentUser)).map(([k, v]) => [k === 'full_name' ? 'name' : k, v]),
-    ),
-    screenSize: null,
+function appFactory(): CustomerStoriesApp {
+  const parseCurrentUser = (): User | null => {
+    try {
+      const parsedData: any = JSON.parse(document.body.dataset.currentUser || '');
+      if (typeof parsedData === 'object' && parsedData !== null && 'id' in parsedData && 'full_name' in parsedData) {
+        const { id, full_name } = parsedData;
+        return { id, full_name };
+      }
+    } catch (error) {
+      return null;
+    }
+    return null;
+  }
+  return {
+    currentUser: parseCurrentUser(),
+    // screenSize: null,
     init() {
       document.addEventListener('turbo:load', (e) => {
         console.log('turbo:load (once)')
@@ -42,10 +46,15 @@ function cspApp() {
       }, { once: true });
     }
   }
-  return app;
 }
 
-function addAllListeners(e) {
+interface CustomerStoriesApp {
+  readonly currentUser: User | null;
+  // screenSize: string;
+  init(): void;
+}
+
+function addAllListeners() {
   addTurboListeners();
   // [companies, profile].forEach(controller => controller.addListeners());
 }
