@@ -1,8 +1,10 @@
 import { Controller } from '@hotwired/stimulus';
-import { editCustomerWinPath } from '../customer_wins/customer_wins';
-import { childRowPlaceholderTemplate } from '../customer_wins/win_story';
+import ResourceController from './resource_controller.js';
+import ModalController from './modal_controller.js';
+import { editCustomerWinPath } from '../customer_wins/customer_wins.js';
+import { childRowPlaceholderTemplate } from '../customer_wins/win_story.js';
 
-export default class extends Controller<HTMLTableRowElement> {
+export default class CusomterWinController extends Controller<HTMLTableRowElement> {
   static outlets = ['resource', 'modal'];
   static targets = ['actionsDropdown'];
   static values = { 
@@ -10,17 +12,26 @@ export default class extends Controller<HTMLTableRowElement> {
     rowData: Object 
   };
 
-  id;
-  status;
-  curator;
-  customer;             // { id, name, slug }
-  story;                // { id, title, slug }
-  contributionsHtml;
-  winStoryFormEl;
+  declare readonly resourceOutlet: ResourceController;
+  declare readonly modalOutlet: ModalController;
+  declare readonly childRowTurboFrameAttrsValue: { id: string, src: string };
+  declare readonly rowDataValue: { [key: string]: any };
+  declare readonly actionsDropdownTarget: HTMLTableCellElement;
+
+  id: number | undefined = undefined;
+  status: string | undefined = undefined;
+  curator: User | undefined = undefined;
+  customer: Customer | undefined = undefined;
+  story: Story | undefined = undefined;      
+  contributionsHtml: string | undefined = undefined;          
+  winStoryFormEl: HTMLFormElement | undefined = undefined;
 
   connect() {
-    console.log('connect customer win')
-    Object.keys(this.rowDataValue).forEach(field => this[field] = this.rowDataValue[field]);
+    // console.log('connect customer win')
+    Object.keys(this.rowDataValue).forEach((key): void => {
+      const field: keyof this['rowDataValue'] = key;
+      this[field] = this.rowDataValue[key];
+    });
     this.actionsDropdownTarget.insertAdjacentHTML('afterbegin', this.actionsDropdownTemplate());
     this.element.id = `customer-win-${this.id}`;  // will be needed for win story outlet
   }
@@ -42,15 +53,17 @@ export default class extends Controller<HTMLTableRowElement> {
   }
 
   editStoryPath() {
-    return this.storyExists() && `/curate/${this.customer.slug}/${this.story.slug}`;
+    return this.storyExists() && `/curate/${this.customer?.slug}/${this.story?.slug}`;
   }
 
   toggleChildRow() {
     if (!this.hasChildRowContent) return false;
-    const onFrameRendered = (e) => this.winStoryFormEl ??= e.target.firstElementChild;
+    const onFrameRendered = (e: Event) => (
+      this.winStoryFormEl ??= (e.target as HTMLElement).firstElementChild as HTMLFormElement
+    );
     const content = this.childRowShown ? null : (this.winStoryFormEl || `
       <turbo-frame id="${this.childRowTurboFrameAttrsValue.id}" src="${this.childRowTurboFrameAttrsValue.src}">
-        ${childRowPlaceholderTemplate(this.curator.full_name)}
+        ${childRowPlaceholderTemplate(this.curator?.full_name)}
       </turbo-frame>
     `);
     this.dispatch('toggle-child-row', { detail: { tr: this.element, content, onFrameRendered } });
@@ -61,18 +74,18 @@ export default class extends Controller<HTMLTableRowElement> {
   showContributions() {
     const showInModal = () => {
       this.modalOutlet.titleValue = 'Contributions and Feedback';
-      this.modalOutlet.bodyContentValue = this.contributionsHtml;
+      this.modalOutlet.bodyContentValue = this.contributionsHtml as string;
       this.modalOutlet.show();
     };
     if (this.contributionsHtml) showInModal();
     else {
       const contributionIds = this.contributorsCtrl.dt.data().toArray()
-        .filter(contribution => (
-          (contribution.success.id == this.id) && contribution.status && /(contribution|feedback)/.test(contribution.status)
+        .filter((contribution: Contribution) => (
+          (contribution.success?.id == this.id) && contribution.status && /(contribution|feedback)/.test(contribution.status)
         ))
-        .map(contribution => contribution.id);
+        .map((contribution: Contribution) => contribution.id);
       Promise
-        .all(contributionIds.map(id => fetch(`/contributions/${id}.json?get_submission=true`).then(res => res.json())))
+        .all(contributionIds.map((id: number) => fetch(`/contributions/${id}.json?get_submission=true`).then(res => res.json())))
         .then(contributions => {
           this.contributionsHtml = this.contributionsTemplate(contributions);
           showInModal();
@@ -81,26 +94,44 @@ export default class extends Controller<HTMLTableRowElement> {
   }
   
   // see also contributionTemplate in contributor_actions.js
-  contributionsTemplate(contributions) {
-    return `
-      ${contributions.map((contribution, i) => `
+  contributionsTemplate(contributions: Contribution[]) {
+    return `${
+      contributions.map((_contribution, i) => {
+        const { 
+          contribution,
+          feedback,
+          submitted_at,
+          answers,
+          invitation_template,
+          contributor,
+          customer
+        }: { 
+          contribution?: string,
+          feedback?: string,
+          submitted_at?: string,
+          answers?: Answer[],
+          invitation_template?: InvitationTemplate, 
+          contributor?: User,
+          customer?: Customer
+        } = _contribution;
+        return `
           <section class="contribution">
             <h5 class="contribution__title">
-              <span>${contribution.answers.length || contribution.contribution ? 'Contribution' : 'Feedback'}</span>
+              <span>${answers?.length || contribution ? 'Contribution' : 'Feedback'}</span>
               &nbsp;&nbsp;&#8212;&nbsp;&nbsp;
               <span>submitted ${
-                new Date(contribution.submitted_at).toLocaleDateString('en-US', { day: 'numeric', month: 'short', year: 'numeric' })
+                new Date(submitted_at as string).toLocaleDateString('en-US', { day: 'numeric', month: 'short', year: 'numeric' })
               }</span>
             </h5>
-            <p>Invitation Template:&nbsp;&nbsp;${contribution.invitation_template.name}</p>
+            <p>Invitation Template:&nbsp;&nbsp;${invitation_template?.name}</p>
             <div class="contribution__contributor">
-              <p>${contribution.contributor.full_name}</p>
-              <p>${contribution.contributor.title || '<span style="color:#D9534F">No job title specified</span>'}</p>
-              <!-- <p>${contribution.customer.name}</p> -->
+              <p>${contributor?.full_name}</p>
+              <p>${contributor?.title || '<span style="color:#D9534F">No job title specified</span>'}</p>
+              <!-- <p>${customer?.name}</p> -->
             </div>
-            ${contribution.answers.length ? `
+            ${answers?.length ? `
               <ul>
-                ${contribution.answers.sort((a,b) => a.contributor_question_id - b.contributor_question_id).map(answer => `
+                ${answers.sort((a,b) => a.contributor_question_id - b.contributor_question_id).map(answer => `
                     <li>
                       <p>${answer.question.question}</p>
                       <p><em>${answer.answer}</em></p>
@@ -109,21 +140,22 @@ export default class extends Controller<HTMLTableRowElement> {
                 }
               </ul>
             ` : (
-              contribution.contribution ?
-                `<p><em>${contribution.contribution}</em></p>` :
-                (contribution.feedback ? `<p><em>${contribution.feedback}</em></p>` : '')
+              contribution ?
+                `<p><em>${contribution}</em></p>` :
+                (feedback ? `<p><em>${feedback}</em></p>` : '')
             )}
           </section>
           ${i < contributions.length - 1 ? '<hr>' : ''}
-        `).join('')
-      }
-    `;
+        `
+      }).join('')
+    }`;
   }
 
   actionsDropdownTemplate() {
-    const noContributorsAdded = /0.+Contributors\sadded/.test(this.status);
-    const noContributorsInvited = /0.+Contributors\sinvited/.test(this.status);
-    const contributionsExist = /[^0]&nbsp;&nbsp;Contributions\ssubmitted/.test(this.status);
+    const status = this.status as string;
+    const noContributorsAdded = /0.+Contributors\sadded/.test(status);
+    const noContributorsInvited = /0.+Contributors\sinvited/.test(status);
+    const contributionsExist = /[^0]&nbsp;&nbsp;Contributions\ssubmitted/.test(status);
     const action = noContributorsAdded ? 'Add' : (noContributorsInvited ? 'Invite' : '');
     // TODO: add the new invitation path
     const turboFrameAttrs = /Add|Invite/.test(action) && {
@@ -195,5 +227,4 @@ export default class extends Controller<HTMLTableRowElement> {
       </ul>
     `;
   }
-  
 }
