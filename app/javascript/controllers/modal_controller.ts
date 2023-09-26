@@ -8,8 +8,17 @@ export default class extends Controller<HTMLDivElement> {
     bodyContent: { type: String, default: '' },
   };
 
-  static hiddenHandler;
-  static ajaxSuccessHandler;
+  declare titleValue: string;
+  declare bodyContentValue: string;
+  declare turboFrameAttrsValue: { id: string, src: string };
+  declare readonly titleTarget: HTMLHeadingElement;
+  declare readonly bodyTarget: HTMLDivElement;
+  declare readonly hasTurboFrameTarget: boolean;
+  declare hiddenHandler: () => void;
+  declare ajaxSuccessHandler: (e: Event, data: object, status: string, xhr: XMLHttpRequest) => void;
+
+  static hiddenHandler: () => void;
+  static ajaxSuccessHandler: (e: Event, data: object, status: string, xhr: XMLHttpRequest) => void;
   formId;
   
   initialize() {

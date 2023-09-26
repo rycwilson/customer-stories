@@ -1,14 +1,14 @@
 import { Controller } from "@hotwired/stimulus";
-import { getJSON, kebabize } from '../util';
+import { getJSON, kebabize } from '../util.js';
 import { 
   init as initTable,
   initComplete as tableInitComplete,
   search as searchTable
-} from '../tables';
+} from '../tables.js';
 import { tableConfig as customerWinsTableConfig, newCustomerWinPath } from '../customer_wins/customer_wins';
 import { tableConfig as contributorsTableConfig, newContributionPath } from '../contributions/contributions';
 
-export default class extends Controller<HTMLDivElement> {
+export default class ResourceController extends Controller<HTMLDivElement> {
   static outlets = ['dashboard', 'resource'];
   static targets = ['curatorSelect', 'filterSelect', 'filterResults', 'datatable', 'newItemBtn', 'tableDisplayOptionsBtn'];
   static values = { dataPath: String, checkboxFilters: { type: Object, default: {} } }

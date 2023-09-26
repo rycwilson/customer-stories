@@ -1,4 +1,5 @@
 import { Controller } from '@hotwired/stimulus';
+import ModalController from './modal_controller.js';
 
 export default class extends Controller<HTMLButtonElement> {
   static outlets = ['modal'];
@@ -6,6 +7,10 @@ export default class extends Controller<HTMLButtonElement> {
     title: { type: String, default: 'Title is missing' },
     turboFrameAttrs: { type: Object, default: {} }
   };
+
+  declare readonly modalOutlet: ModalController;
+  declare readonly titleValue: string;
+  declare readonly turboFrameAttrsValue: { id: string, src: string };
 
   connect() {
   }
