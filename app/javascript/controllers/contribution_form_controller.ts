@@ -1,4 +1,6 @@
 import { Controller } from '@hotwired/stimulus';
+import ResourceController from './resource_controller';
+import type { TomselectOption, TomselectOptions } from '../tomselect';
 
 export default class extends Controller<HTMLFormElement> {
   static outlets = ['resource'];
@@ -7,12 +9,24 @@ export default class extends Controller<HTMLFormElement> {
     'contributorSelect', 'referrerSelect', 'contributorFields', 'referrerFields'
   ];
 
-  customerCustomerWinIds;
-  customerWinsWereFiltered;
-  beforeAjaxHandler;
+  declare readonly resourceOutlets: ResourceController[];
+  declare readonly customerSelectTarget: HTMLSelectElement;
+  declare readonly customerFieldTargets: HTMLInputElement[];
+  declare readonly customerIdTarget: HTMLInputElement;
+  declare readonly customerNameTarget: HTMLInputElement;
+  declare readonly customerWinSelectTarget: HTMLSelectElement;
+  declare readonly successCustomerIdTarget: HTMLInputElement;
+  declare readonly contributorSelectTarget: HTMLSelectElement;
+  declare readonly referrerSelectTarget: HTMLSelectElement;
+  declare readonly contributorFieldsTarget: HTMLDivElement;
+  declare readonly referrerFieldsTarget: HTMLDivElement;
+
+  customerCustomerWinIds: number[] = [];
+  customerWinsWereFiltered: boolean = false;
+  // beforeAjaxHandler: () => void = 
 
   initialize() {
-    this.beforeAjaxHandler = this.beforeAjax.bind(this);
+    // this.beforeAjaxHandler = this.beforeAjax.bind(this);
   }
 
   connect() {
@@ -32,11 +46,15 @@ export default class extends Controller<HTMLFormElement> {
     return this.resourceOutlets.find(outlet => outlet.resourceName === 'contributors');
   }
 
-  onCustomerChange(e) {
-    const customerVal = e.target.value;
-    const customerId = isNaN(customerVal) ? null : customerVal;
-    const customerWinWasSelected = this.customerWinSelectTarget.value && !isNaN(this.customerWinSelectTarget.value);
-    this.successCustomerIdTarget.value = customerId;
+  onCustomerChange(e: Event) {
+    if (!(e.target instanceof HTMLSelectElement)) return;
+    const select = e.target;
+    const customerVal = select.value;
+    const customerId = isNaN(+customerVal) ? null : customerVal;
+    const customerWinWasSelected = (
+      this.customerWinSelectTarget.value && typeof +this.customerWinSelectTarget.value === 'number'
+    );
+    this.successCustomerIdTarget.value = customerId || '';
     this.customerFieldTargets.forEach(field => field.disabled = Boolean(customerId));
     if (customerId) {
       this.setCustomerCustomerWinIds(customerId);
@@ -48,13 +66,20 @@ export default class extends Controller<HTMLFormElement> {
     }
   }
 
-  onCustomerWinChange(e) {
+  onCustomerWinChange(e: Event) {
+    if (
+      !(this.customerWinsCtrl instanceof ResourceController) ||
+      !(this.contributorsCtrl instanceof ResourceController) ||
+      !(e.target instanceof HTMLSelectElement)
+    ) return;
+    const select = e.target;
+    const customerWinId = +select.value;
     const customerWin = this.customerWinsCtrl.dt.column('success:name').data().toArray()
-      .find(customerWin => customerWin.id === Number(e.target.value));
-    const customerWinContributorIds = customerWin && this.contributorsCtrl.dt.data().toArray()
-      .filter(contribution => contribution.success.id === customerWin.id)
-      .map(contribution => contribution.contributor.id);
-    const tsOptions = this.contributorSelectTarget.tomselect.options;
+      .find((customerWin: CustomerWin) => customerWin.id === customerWinId);
+    const customerWinContributorIds: number[] = customerWin && this.contributorsCtrl.dt.data().toArray()
+      .filter((contribution: Contribution) => contribution.success?.id === customerWin.id)
+      .map((contribution: Contribution) => contribution.contributor?.id);
+    const tsOptions: TomselectOptions = this.contributorSelectTarget.tomselect.options;
     if (customerWin) {
       this.customerSelectTarget.tomselect.setValue(customerWin.customerId, true);
       this.setCustomerCustomerWinIds(customerWin.customerId);
@@ -66,41 +91,45 @@ export default class extends Controller<HTMLFormElement> {
         );
       });
     } else {
-      Object.entries(tsOptions).forEach(([value, option]) => {
-        if (option.disabled)
-          this.contributorSelectTarget.tomselect.updateOption(value, { value, text: option.text, disabled: false })
+      Object.entries(tsOptions).forEach(([value, option]: [string, TomselectOption]) => {
+        if (option.disabled) {
+          this.contributorSelectTarget.tomselect.updateOption(value, { value, text: option.text, disabled: false });
+        }
       });
     }
   }
 
-  onContactChange({ target: select }) {
+  onContactChange(e: Event) {
+    if (!(e.target instanceof HTMLSelectElement)) return;
+    const select = e.target;
     const isNewContact = select.value === '0';
     const contactFields = select.isSameNode(this.contributorSelectTarget) ? 
       this.contributorFieldsTarget : 
       this.referrerFieldsTarget;
-    contactFields.setAttribute('data-new-contact-should-enable-value', isNewContact)
+    contactFields.setAttribute('data-new-contact-should-enable-value', isNewContact.toString());
   }
 
-  beforeAjax(a, b, c) {
-    // a.preventDefault()
-  }
+  // beforeAjax(e: Event, xhr: XMLHttpRequest, settings: object) {
+  //   // a.preventDefault()
+  // }
 
-  filterCustomerWins(e) {
+  filterCustomerWins(e: Event) {
     if (this.customerWinsWereFiltered) return false;
     Object.keys(this.customerWinSelectTarget.tomselect.options).forEach(customerWinId => {
       const tsOption = this.customerWinSelectTarget.tomselect.getOption(customerWinId);
-      const shouldHide = this.customerCustomerWinIds.length && !this.customerCustomerWinIds.includes(Number(customerWinId));
+      const shouldHide = this.customerCustomerWinIds.length && !this.customerCustomerWinIds.includes(+customerWinId);
       tsOption.classList.toggle('hidden', shouldHide);
     });
     this.customerWinsWereFiltered = true;
   }
 
-  setCustomerCustomerWinIds(customerId = this.customerSelectTarget) {
-    this.customerCustomerWinIds = customerId ?
-      this.customerWinsCtrl.dt.column('success:name').data().toArray()
-        .filter(customerWin => customerWin.customerId === Number(customerId))
-        .map(customerWin => customerWin.id) :
-      [];
+  setCustomerCustomerWinIds(customerId = this.customerSelectTarget.value) {
+    if (customerId) {
+      if (!(this.customerWinsCtrl instanceof ResourceController)) return;
+      this.customerCustomerWinIds = this.customerWinsCtrl.dt.column('success:name').data().toArray()
+        .filter((customerWin: CustomerWin) => customerWin.customer.id === +customerId)
+        .map((customerWin: CustomerWin) => customerWin.id)
+    }
     this.customerWinsWereFiltered = false;
   }
 }
