@@ -25,12 +25,12 @@ window.CSP.init();
 function appFactory(): CustomerStoriesApp {
   const parseCurrentUser = (): User | null => {
     try {
-      const parsedData: any = JSON.parse(document.body.dataset.currentUser || '');
-      if (typeof parsedData === 'object' && parsedData !== null && 'id' in parsedData && 'full_name' in parsedData) {
+      const parsedData: User | undefined = JSON.parse(document.body.dataset.currentUser || '');
+      if (parsedData && typeof parsedData === 'object') {
         const { id, full_name } = parsedData;
         return { id, full_name };
       }
-    } catch (error) {
+    } catch (err) {
       return null;
     }
     return null;
