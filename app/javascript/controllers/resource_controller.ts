@@ -1,4 +1,5 @@
 import { Controller } from "@hotwired/stimulus";
+import DashboardController from "./dashboard_controller.js";
 import { getJSON, kebabize } from '../util.js';
 import { 
   init as initTable,
@@ -10,8 +11,18 @@ import { tableConfig as contributorsTableConfig, newContributionPath } from '../
 
 export default class ResourceController extends Controller<HTMLDivElement> {
   static outlets = ['dashboard', 'resource'];
-  static targets = ['curatorSelect', 'filterSelect', 'filterResults', 'datatable', 'newItemBtn', 'tableDisplayOptionsBtn'];
   static values = { dataPath: String, checkboxFilters: { type: Object, default: {} } }
+  static targets = ['curatorSelect', 'filterSelect', 'filterResults', 'datatable', 'newItemBtn', 'tableDisplayOptionsBtn'];
+
+  declare readonly dashboardOutlet: DashboardController;
+  declare readonly resourceOutlet: ResourceController;
+  declare readonly dataPathValue: string;
+  declare readonly curatorSelectTarget: HTMLSelectElement;
+  declare readonly filterSelectTarget: HTMLSelectElement;
+  declare readonly filterResultsTarget: HTMLDivElement;
+  declare readonly datatableTarget: HTMLDivElement;
+  declare readonly newItemBtnTarget: HTMLButtonElement;
+  declare readonly tableDisplayOptionsBtnTarget: HTMLButtonElement;
 
   dt;
   resourceName;

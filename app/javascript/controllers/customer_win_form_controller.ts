@@ -8,8 +8,10 @@ export default class extends Controller<HTMLFormElement> {
     'customerField', 'customerId', 'customerName', 'customerContactBoolField'
   ];
 
-  onSourceChange(e) {
-    $(e.target).tab('show');
+  onSourceChange(e: Event) {
+    if (!(e.target instanceof HTMLInputElement)) return;
+    const { target: input } = e;
+    $(input).tab('show');
     this.dispatch('source-changed', { detail: capitalize(e.target.value) })
     // TODO: reset validation for whichever panel was hidden
   }

@@ -1,20 +1,23 @@
 import { kebabize } from './util';
+import ResourceController from './controllers/resource_controller';
 
-export function init(resourceCtrl) {
+export function init(resourceCtrl: ResourceController) {
   resourceCtrl.datatableTarget.setAttribute('data-datatable-ready-value', 'true');
 }
 
-export function initComplete(resourceCtrl, dt) {
+export function initComplete(resourceCtrl: ResourceController, dt: JQueryDataTableApi) {
   resourceCtrl.dt = dt;
   initDisplayOptions(resourceCtrl);
   search(resourceCtrl);
 }
 
-export function toggleRowGroups(resourceCtrl, shouldEnable) {
-  resourceCtrl.datatableTarget.setAttribute('data-datatable-enable-row-groups-value', shouldEnable);
+export function toggleRowGroups(resourceCtrl: ResourceController, shouldEnable: boolean) {
+  resourceCtrl.datatableTarget.setAttribute('data-datatable-enable-row-groups-value', shouldEnable.toString());
 }
 
-export function search(resourceCtrl, e = { type: '', detail: {} }, syncedResourceCtrl) {
+export function search(
+  resourceCtrl: ResourceController | , e: Event = { type: '', detail: {} }, syncedResourceCtrl: ResourceController | null = null
+) {
   if (!resourceCtrl) return false;
   const isUserInput = e.type;
   const isCuratorChange = isUserInput && e.type.includes('change-curator');
@@ -37,10 +40,12 @@ export function search(resourceCtrl, e = { type: '', detail: {} }, syncedResourc
     });
 
   // sync curator and filter selections, but not search text input
-  if (isCuratorChange) {
-    syncedResourceCtrl.curatorSelectTarget.tomselect.setValue(resourceCtrl.curatorSelectTarget.value, true);
-  } else if (isFilterChange) {
-    syncedResourceCtrl.filterSelectTarget.tomselect.setValue(resourceCtrl.filterSelectTarget.value, true);
+  if (syncedResourceCtrl) {
+    if (isCuratorChange) {
+      syncedResourceCtrl.curatorSelectTarget.tomselect.setValue(resourceCtrl.curatorSelectTarget.value, true);
+    } else if (isFilterChange) {
+      syncedResourceCtrl.filterSelectTarget.tomselect.setValue(resourceCtrl.filterSelectTarget.value, true);
+    }
   }
   
   // wait for the visible table to be drawn before searching the sync'ed table
