@@ -7,6 +7,22 @@ TomSelect.define('clear_button', clearButton);
 
 export default TomSelect;
 
+
+export interface TomselectOption { 
+  $id: string; 
+  $option: HTMLOptionElement; 
+  $order: number; 
+  disabled: boolean; 
+  optgroup: HTMLOptGroupElement | undefined;
+  slug: string;
+  text: string;
+  value: string;
+}
+
+export interface TomselectOptions { 
+  [key: string]: TomselectOption 
+};
+
 export const tsBaseOptions = {
   maxOptions: null,
   closeAfterSelect: true,

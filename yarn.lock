@@ -340,6 +340,13 @@
   dependencies:
     "@types/sizzle" "*"
 
+"@types/jquery@^3.5.19":
+  version "3.5.19"
+  resolved "https://registry.yarnpkg.com/@types/jquery/-/jquery-3.5.19.tgz#f9b6cb7ed82cd92584ce33238ee8425798358365"
+  integrity sha512-KFbmk+dXfphHGuVCmlopgcNRCegN/21mkeoD4BzuJhVH0SJW3Uo2mLuAwb6oqTNV79EsRp6J7yC1BbKymjpx/g==
+  dependencies:
+    "@types/sizzle" "*"
+
 "@types/js-cookie@^3.0.4":
   version "3.0.4"
   resolved "https://registry.yarnpkg.com/@types/js-cookie/-/js-cookie-3.0.4.tgz#23475b6d3b03acc84192e7c24da88eb38c1039ef"

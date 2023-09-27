@@ -3,13 +3,22 @@ export {}
 declare global {
   interface Window {
     CSP: CustomerStoriesApp;
+    $: JQueryStatic;
+    jQuery: JQueryStatic;
     Stimulus: object;
     DataTable: object;
-    // Cookies: object;
+    Cookies: object;
     TomSelect: object;
     ContributionController: typeof ContributionController;
   }
 
+  interface JQuery {
+    tab: (action: string) => void;
+  }
+
+  interface HTMLSelectElement {
+    tomselect: TomSelect;
+  }
   interface Customer {
     id?: number;
     name?: string;

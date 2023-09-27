@@ -58,6 +58,7 @@
     "underscore": "^1.13.3"
   },
   "devDependencies": {
+    "@types/jquery": "^3.5.19",
     "@types/js-cookie": "^3.0.4",
     "esbuild": "0.19.3",
     "typescript": "^5.2.2"

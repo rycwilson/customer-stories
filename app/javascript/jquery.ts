@@ -4,4 +4,4 @@ import jquery from 'jquery/dist/jquery.js';
 window.$ = jquery;
 window.jQuery = jquery;
 
-export default jquery;
+export {};
