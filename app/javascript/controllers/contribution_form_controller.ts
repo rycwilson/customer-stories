@@ -46,9 +46,8 @@ export default class extends Controller<HTMLFormElement> {
     return this.resourceOutlets.find(outlet => outlet.resourceName === 'contributors');
   }
 
-  onCustomerChange(e: Event) {
-    if (!(e.target instanceof HTMLSelectElement)) return;
-    const select = e.target;
+  onCustomerChange({ target: select }: { target: EventTarget }) {
+    if (!(select instanceof HTMLSelectElement)) return;
     const customerVal = select.value;
     const customerId = isNaN(+customerVal) ? null : customerVal;
     const customerWinWasSelected = (
@@ -99,9 +98,8 @@ export default class extends Controller<HTMLFormElement> {
     }
   }
 
-  onContactChange(e: Event) {
-    if (!(e.target instanceof HTMLSelectElement)) return;
-    const select = e.target;
+  onContactChange({ target: select }: { target: EventTarget }) {
+    if (!(select instanceof HTMLSelectElement)) return;
     const isNewContact = select.value === '0';
     const contactFields = select.isSameNode(this.contributorSelectTarget) ? 
       this.contributorFieldsTarget : 

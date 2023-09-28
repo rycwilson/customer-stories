@@ -1,4 +1,5 @@
 import { Controller } from '@hotwired/stimulus';
+import ResourceController from './resource_controller';
 import { capitalize } from '../util';
 
 export default class extends Controller<HTMLFormElement> {
@@ -8,18 +9,29 @@ export default class extends Controller<HTMLFormElement> {
     'customerField', 'customerId', 'customerName', 'customerContactBoolField'
   ];
 
-  onSourceChange(e: Event) {
-    if (!(e.target instanceof HTMLInputElement)) return;
-    const { target: input } = e;
+  declare readonly modalOutlet: ResourceController;
+  declare readonly referrerSelectTarget: HTMLSelectElement;
+  declare readonly referrerFieldsTarget: HTMLDivElement;
+  declare readonly contributorSelectTarget: HTMLSelectElement;
+  declare readonly contributorFieldsTarget: HTMLDivElement;
+  declare readonly successCustomerIdTarget: HTMLInputElement;
+  declare readonly customerFieldTargets: HTMLInputElement[];
+  declare readonly customerIdTarget: HTMLInputElement;
+  declare readonly customerNameTarget: HTMLInputElement;
+  declare readonly customerContactBoolField: HTMLInputElement;
+
+  onSourceChange({ target: input }: { target: EventTarget }) {
+    if (!(input instanceof HTMLInputElement)) return;
     $(input).tab('show');
     this.dispatch('source-changed', { detail: capitalize(e.target.value) })
     // TODO: reset validation for whichever panel was hidden
   }
 
-  onCustomerChange(e) {
-    const customerVal = e.target.value;
-    const customerId = isNaN(customerVal) ? null : customerVal;
-    this.successCustomerIdTarget.value = customerId;
+  onCustomerChange({ target: select }: { target: EventTarget }) {
+    if (!(select instanceof HTMLSelectElement)) return;
+    const customerVal = select.value;
+    const customerId = isNaN(+customerVal) ? null : customerVal;
+    this.successCustomerIdTarget.value = customerId || '';
     this.customerFieldTargets.forEach(field => field.disabled = Boolean(customerId));
     if (customerId) {
       // ...
@@ -29,7 +41,8 @@ export default class extends Controller<HTMLFormElement> {
     }
   }
 
-  onContactChange({ target: select }) {
+  onContactChange({ target: select }: { target: EventTarget }) {
+    if (!(select instanceof HTMLSelectElement)) return;
     const isNewContact = select.value === '0';
     const isExistingContact = select.value && !isNewContact;
     const shouldDisableSelect = isNewContact || !isExistingContact;
@@ -41,11 +54,12 @@ export default class extends Controller<HTMLFormElement> {
     // the field is initially disabled via an empty name attribute
     // thereafter, the select can be disabled without affecting tomselect,
     // however better to be consistent and stick with enabling/disabling via name attribute
-    select.name = shouldDisableSelect ? '' : select.dataset.fieldName;
-    contactFields.setAttribute('data-new-contact-should-enable-value', isNewContact);
+    select.name = shouldDisableSelect ? '' : select.dataset.fieldName || '';
+    contactFields.setAttribute('data-new-contact-should-enable-value', isNewContact.toString());
   }
 
-  onCustomerContactChange({ target: select }) {
+  onCustomerContactChange({ target: select }: { target: EventTarget }) {
+    if (!(select instanceof HTMLSelectElement)) return;
     this.customerContactBoolField.disabled = !select.value;
   }
 }
