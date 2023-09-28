@@ -5,7 +5,7 @@ import './bootstrap';
 
 import "@hotwired/turbo-rails";
 import './controllers';
-import * as turboCallbacks from './turbo_callbacks.js';
+import * as turboCallbacks from './turbo_callbacks';
 
 import DataTable from 'datatables.net-bs';
 window.DataTable = DataTable;
@@ -16,27 +16,17 @@ import 'summernote/dist/summernote';
 import cookies from 'js-cookie';
 window.Cookies = cookies;
 
-import TomSelect from './tomselect.js';
+import TomSelect from './tomselect';
 window.TomSelect = TomSelect;
+
+import { parseDatasetObject } from './util';
 
 window.CSP = window.CSP || appFactory();
 window.CSP.init();
 
 function appFactory(): CustomerStoriesApp {
-  const parseCurrentUser = (): User | null => {
-    try {
-      const parsedData: User | undefined = JSON.parse(document.body.dataset.currentUser || '');
-      if (parsedData && typeof parsedData === 'object') {
-        const { id, full_name } = parsedData;
-        return { id, full_name };
-      }
-    } catch (err) {
-      return null;
-    }
-    return null;
-  }
   return {
-    currentUser: parseCurrentUser(),
+    currentUser: parseDatasetObject(document.body, 'currentUser', 'id', 'full_name'),
     // screenSize: null,
     init() {
       document.addEventListener('turbo:load', (e) => {

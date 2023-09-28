@@ -1,3 +1,15 @@
+export function parseDatasetObject<Type>(element: HTMLElement, prop: string, ...requiredProps: string[]): Type | null {
+  try {
+    const parsedData: Type = JSON.parse(element.dataset[prop] || '');
+    if (parsedData && typeof parsedData === 'object') {
+      return requiredProps.every(prop => parsedData.hasOwnProperty(prop)) ? parsedData : null;
+    }
+  } catch (err) {
+    return null;
+  }
+  return null;
+}
+
 export async function getJSON(dataPath: string) {
   const csrfTokenMeta = document.querySelector<HTMLMetaElement>('[name="csrf-token" ]');
   const csrfToken = csrfTokenMeta?.content;
