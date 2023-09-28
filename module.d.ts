@@ -19,6 +19,17 @@ declare global {
   interface HTMLSelectElement {
     tomselect: TomSelect;
   }
+
+  interface TurboFrameAttributes {
+    id: string;
+    src: string;
+    loading?: string;
+    target?: string;
+    disable?: boolean;  
+    dataTurboAction?: string;
+    dataAutoScrollBlock?: boolean | { block?: string, behavior?: string, inline?: string };
+  }
+  
   interface Customer {
     id?: number;
     name?: string;
