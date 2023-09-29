@@ -1,6 +1,6 @@
 import { Controller } from "@hotwired/stimulus";
-import DashboardController from "./dashboard_controller.js";
-import { getJSON, kebabize } from '../util.js';
+import DashboardController from "./dashboard_controller";
+import { getJSON, kebabize } from '../util';
 import { 
   init as initTable,
   initComplete as tableInitComplete,
@@ -24,13 +24,7 @@ export default class ResourceController extends Controller<HTMLDivElement> {
   declare readonly newItemBtnTarget: HTMLButtonElement;
   declare readonly tableDisplayOptionsBtnTarget: HTMLButtonElement;
 
-  dt;
-  resourceName;
-
-  initialize() {
-    // console.log(`init ${this.element.dataset.resourceName}`);
-    this.resourceName = this.element.dataset.resourceName;
-  }
+  dt: JQueryDataTableApi | undefined = undefined;
   
   connect() {
     // console.log(`connect ${this.resourceName}`)
@@ -44,26 +38,30 @@ export default class ResourceController extends Controller<HTMLDivElement> {
     }
   }
 
-  tableInitComplete(e) {
+  get resourceName() {
+    return this.element.dataset.resourceName as 'customerWins' | 'contributions';
+  }
+
+  tableInitComplete(e: CustomEvent) {
     tableInitComplete(this, e.detail.dt);
   }
 
-  searchTable(e = { type: '', detail: {} }) {
+  searchTable(e: CustomEvent = { type: '', detail: {} } as CustomEvent) {
     searchTable(this, e, this.resourceOutlet);
   }
 
-  onCuratorChange(e) {
+  onCuratorChange(e: CustomEvent) {
     this.updateNewItemPath();
     searchTable(this, e, this.resourceOutlet);
   }
 
-  onFilterChange(e) {
+  onFilterChange(e: CustomEvent) {
     this.updateNewItemPath();
-    this.resourceOutlets.forEach(outlet => outlet.updateNewItemPath());
+    this.resourceOutlet.updateNewItemPath();
     searchTable(this, e, this.resourceOutlet);
   }
   
-  checkboxFiltersValueChanged(newVal, oldVal) {
+  checkboxFiltersValueChanged(newVal: object, oldVal: object) {
     if (Object.keys(oldVal).length === 0) return false;
     searchTable(this);
   }
