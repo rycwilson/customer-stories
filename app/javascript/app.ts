@@ -13,16 +13,13 @@ import 'datatables.net-rowgroup';
 
 import 'summernote/dist/summernote';
 
-import cookies from 'js-cookie';
-window.Cookies = cookies;
-
 import TomSelect from './tomselect';
 window.TomSelect = TomSelect;
 
 import { parseDatasetObject } from './util';
 
-window.CSP = window.CSP || appFactory();
-window.CSP.init();
+CSP ||= appFactory();
+CSP.init();
 
 function appFactory(): CustomerStoriesApp {
   return {
@@ -36,12 +33,6 @@ function appFactory(): CustomerStoriesApp {
       }, { once: true });
     }
   }
-}
-
-interface CustomerStoriesApp {
-  readonly currentUser: User | null;
-  // screenSize: string;
-  init(): void;
 }
 
 function addAllListeners() {

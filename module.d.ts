@@ -1,15 +1,24 @@
 export {}
 
 declare global {
+  // https://stackoverflow.com/questions/38906359/create-a-global-variable-in-typescript#answer-56984941
+  var CSP: CustomerStoriesApp;
+
   interface Window {
-    CSP: CustomerStoriesApp;
     $: JQueryStatic;
     jQuery: JQueryStatic;
     Stimulus: object;
     DataTable: object;
-    Cookies: object;
     TomSelect: object;
     ContributionController: typeof ContributionController;
+
+  }
+  interface CustomerStoriesApp {
+    customerWins: CustomerWin[] | undefined;
+    contributions: Contribution[] | undefined;
+    currentUser: User | null;
+    // screenSize: string;
+    init(): void;
   }
 
   interface JQuery {
@@ -29,7 +38,7 @@ declare global {
     dataTurboAction?: string;
     dataAutoScrollBlock?: boolean | { block?: string, behavior?: string, inline?: string };
   }
-  
+
   interface Customer {
     id?: number;
     name?: string;
@@ -51,7 +60,6 @@ declare global {
       csp_story_path: string; 
     }
   }
-
 
   interface Story {
     id: number;
