@@ -1,14 +1,35 @@
 import { Controller } from "@hotwired/stimulus";
+import Cookies from 'js-cookie';
+import ModalController from './modal_controller';
+import { parseDatasetObject } from '../util';
 
-export default class extends Controller<HTMLDivElement> {
+// excludes stories#edit, which also renders the dashboard
+enum DashboardTab {
+  Prospect = 'prospect',
+  Curate = 'curate',
+  Promote = 'promote',
+  Measure = 'measure'
+}
+
+export default class DashboardController extends Controller<HTMLDivElement> {
   static outlets = ['modal'];
+  static values = { activeTab: { type: String, default: '' } };    
   static targets = [
     'tab', 'tabPanel', 'subPanel', 'customerWinsTab', 'customerWinsFilter', 'contributorsTab', 'contributorsFilter',
     'addCustomerWinBtn', 'addContributorBtn'
   ];
-  static values = { 
-    activeTab: { type: String, default: '' }   // prospect | curate | promote | measure
-  };    
+
+  declare readonly modalOutlet: ModalController;
+  declare activeTabValue: DashboardTab | null;
+  declare readonly tabTargets: HTMLAnchorElement[];
+  declare readonly tabPanelTargets: HTMLDivElement[];
+  declare readonly subPanelTargets: HTMLDivElement[];
+  declare readonly customerWinsTabTarget: HTMLAnchorElement;
+  declare readonly customerWinsFilterTarget: HTMLSelectElement;
+  declare readonly contributorsTabTarget: HTMLAnchorElement;
+  declare readonly contributorsFilterTarget: HTMLSelectElement;
+  declare readonly addCustomerWinBtnTarget: HTMLButtonElement;
+  declare readonly addContributorBtnTarget: HTMLButtonElement;
 
   connect() {
     // console.log('connect dashboard')
@@ -19,31 +40,48 @@ export default class extends Controller<HTMLDivElement> {
     removeEventListener('popstate', this.showActiveTabPanel);
   }
 
-  onTabClick(e) {
-    $(e.target).one('shown.bs.tab', () => setTimeout(() => this.activeTabValue = e.target.getAttribute('aria-controls')));
+  onTabClick({ target: tab }: { target: EventTarget }) {
+    if (!(tab instanceof HTMLAnchorElement)) return;
+    const tabName = tab.getAttribute('aria-controls');
+    if (tabName) {
+      if (Object.values<string>(DashboardTab).includes(tabName)) {
+        const setActiveTab = () => this.activeTabValue = tabName as DashboardTab;
+        $(tab).one('shown.bs.tab', () => setTimeout(setActiveTab));
+      } else {
+        console.error(`Unrecognized dashboard tab: ${tabName}`);
+      }
+    }
   }
 
-  activeTabValueChanged(activeTab) {
-    // console.log('activeTab', activeTab)
-    if (activeTab) this.initTabPanel(this.activeTabPanel);
+  activeTabValueChanged() {
+    this.initTabPanel(this.activeTabPanel);
   }
   
-  dataDidLoad(e) {
-    const { panel, resourceClassName } = e.detail;
+  // dataDidLoad(e: Event) {
+  //   const { panel, resourceClassName } = e.detail;
 
-    // wait for datatable to render
-    setTimeout(() => panel.classList.add(`${resourceClassName}-did-load`));
-  }
+  //   // wait for datatable to render
+  //   setTimeout(() => panel.classList.add(`${resourceClassName}-did-load`));
+  // }
 
-  addCustomerWinContributors({ currentTarget: { dataset: { customerWinId, turboFrameAttrs } } }) {
+  addCustomerWinContributors({ target: a }: { target: EventTarget }) {
+    if (!(a instanceof HTMLAnchorElement)) return;
     const showModal = () => {
-      this.modalOutlet.titleValue = 'New Contributor';
-      this.modalOutlet.turboFrameAttrsValue = JSON.parse(turboFrameAttrs);
-      this.modalOutlet.show();
+      const turboFrameAttrs: TurboFrameAttributes | null = parseDatasetObject(a, 'turboFrameAttrs', 'id', 'src');
+      if (turboFrameAttrs) {
+        this.modalOutlet.titleValue = 'New Contributor';
+        this.modalOutlet.turboFrameAttrsValue = turboFrameAttrs;
+        this.modalOutlet.show();
+      }
     };
     if (this.showingCustomerWins()) {
+      const customerWinId: string = a.dataset.customerWinId || '';
+      if (!customerWinId) {
+        console.error("Unknown CustomerWin") 
+        return;
+      }
       $(this.contributorsTabTarget).one('shown.bs.tab', showModal);
-      this.showCustomerWinContributors({ currentTarget: { dataset: { customerWinId } } });
+      this.showCustomerWinContributors(customerWinId);
     } else if (this.showingContributors()) {
       showModal();
     }
@@ -51,7 +89,7 @@ export default class extends Controller<HTMLDivElement> {
 
   // inviteCustomerWinContributors({ target: dataset})
 
-  showCustomerWinContributors({ currentTarget: { dataset: { customerWinId } } }) {
+  showCustomerWinContributors(customerWinId: string) {
     // console.log(`showCustomerWinContributors(${customerWinId})`)
     this.contributorsFilterTarget.tomselect.setValue(`success-${customerWinId}`);
     $(this.contributorsTabTarget).one('shown.bs.tab', () => scrollTo(0, 65));
@@ -63,62 +101,41 @@ export default class extends Controller<HTMLDivElement> {
   }
 
   showActiveTabPanel() {
-    const workflowMatch = location.pathname.match(/(prospect|curate|promote|measure)(\/(\w|-)+)?/);
-    const workflowStage = workflowMatch && workflowMatch[1];
-    const curateView = workflowStage === 'curate' && (workflowMatch[2] ? 'story' : 'stories');
+    const workflowMatch = location.pathname.match(/(?<workflowStage>prospect|curate|promote|measure)(\/(\w|-)+)?/);
+    const workflowStage = workflowMatch?.groups?.workflowSTage
+    // const curateView = workflowStage === 'curate' && (workflowMatch[2] ? 'story' : 'stories');
     if (workflowStage) {
       $(`.nav-workflow a[href="#${workflowStage}"]`).tab('show');
       // document.querySelector(`.nav-workflow a[href="#${workflowStage}"]`).click()
-      if (curateView) {
-        curateView === 'stories' ? $('a[href=".curate-stories"]').tab('show') : $('a[href=".edit-story"]').tab('show');
+      // if (curateView) {
+      //   curateView === 'stories' ? $('a[href=".curate-stories"]').tab('show') : $('a[href=".edit-story"]').tab('show');
         
         // don't scroll to panel
-        setTimeout(() => scrollTo(0, 0));
-        if (curateView === 'stories') {
+        // setTimeout(() => scrollTo(0, 0));
+        // if (curateView === 'stories') {
           // $('#curate-filters .curator')
           //   .val($('#curate-filters .curator').children(`[value="${CSP.current_user.id}"]`).val())
           //   .trigger('change', { auto: true });
-        }
-      }
+        // }
+      // }
     }
   }
 
-  initTabPanel(panel) {
-    if (panel.id === 'prospect') {
-      this.subPanelTargets
-        .filter(subPanel => panel.contains(subPanel))
-        .forEach(subPanel => { 
-          const hasNotConnected = !subPanel.dataset.controller;
-          // if (hasNotConnected) subPanel.setAttribute('data-controller', subPanel.id); 
-          if (hasNotConnected) subPanel.setAttribute('data-controller', 'resource'); 
-        });
+  initTabPanel(panel: HTMLDivElement | undefined) {
+    if (!panel) return;
+    switch (panel.id) {
+      case 'prospect':
+        return this.subPanelTargets
+          .filter(subPanel => panel.contains(subPanel))
+          .forEach(subPanel => { 
+            const hasNotConnected = !subPanel.dataset.controller;
+            // if (hasNotConnected) subPanel.setAttribute('data-controller', subPanel.id); 
+            if (hasNotConnected) subPanel.setAttribute('data-controller', 'resource'); 
+          });
+      case 'curate':
+      case 'promote':
+      case 'measure':
     }
-  }
-
-  // search customer wins or contributors
-  searchTable(searchResults) {
-    const subPanelCtrl = this;
-    // console.log('searching', this.identifier, '...')
-    const columnFilters = Object.entries(subPanelCtrl.checkboxFiltersValue)
-      .filter(([filterId, filter]) => !filter.checked)
-      .map(([filterId, filter]) => {
-        if (filterId === 'show-wins-with-story')
-          return { column: 'story', q: '^false$', regEx: true, smartSearch: false };
-        else if (filterId === 'show-completed')
-          return { column: 'status', q: '^((?!completed).)*$', regEx: true, smartSearch: false };
-        else if (filterId === 'show-published')
-          return { column: 'storyPublished', q: 'false', regEx: false, smartSearch: false }
-        else 
-          console.error('Unrecognized column filter');
-      });
-    subPanelCtrl.datatableTarget.setAttribute(
-      'data-datatable-search-params-value', 
-      JSON.stringify(Object.assign(
-        { curatorId: subPanelCtrl.curatorSelectTarget.value },
-        { columnFilters },
-        searchResults ? { searchResults } : { filterVal: subPanelCtrl.filterSelectTarget.value }
-      ))
-    );
   }
 
   showingCustomerWins() {
@@ -129,8 +146,10 @@ export default class extends Controller<HTMLDivElement> {
     return this.activeTabValue === 'prospect' && this.contributorsTabTarget.getAttribute('aria-expanded') === 'true';
   }
 
-  setNavCookie(e) {
-    Cookies.set(`csp-${this.activeTabValue}-tab`, e.target.closest('a').getAttribute('href'));
+  setNavCookie({ currentTarget: a }: { currentTarget: EventTarget }) {
+    if (!(a instanceof HTMLAnchorElement)) return;
+    const href = a.getAttribute('href') || ''; 
+    if (href) Cookies.set(`csp-${this.activeTabValue}-tab`, href);
   }
 
   get activeTabPanel() {
