@@ -69,7 +69,7 @@ export function search(
   );
 }
 
-export function initDisplayOptions(resourceCtrl: ResourceController, isReset = false) {
+export function initDisplayOptions(resourceCtrl: ResourceController, isReset?: boolean) {
   const btn = resourceCtrl.tableDisplayOptionsBtnTarget;
   const resourceIdentifier = resourceCtrl.resourceName === 'customerWins' ? 'customer-wins' : 'contributors';
   const groupByResourceName = resourceCtrl.resourceName === 'customerWins' ? 'Customer' : 'Customer Win';

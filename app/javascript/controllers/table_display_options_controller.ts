@@ -1,39 +1,46 @@
 import { Controller } from '@hotwired/stimulus';
+import DashboardController from './dashboard_controller';
+import ResourceController from './resource_controller';
 import { toggleRowGroups, initDisplayOptions as resetDisplayOptions } from '../tables';
 
 export default class extends Controller<HTMLDivElement> {
   static outlets = ['dashboard', 'resource'];
 
-  clickAwayHandler;
+  declare readonly dashboardOutlet: DashboardController;
+  declare readonly resourceOutlet: ResourceController;
+
+  clickAwayHandler: ((e: Event) => void) | undefined = undefined;
 
   initialize() {
   }
 
   connect() {
-    this.clickAwayHandler = this.onClickAway.bind(this);
-    document.addEventListener('click', this.clickAwayHandler);
+    document.addEventListener('click', this.onClickAway.bind(this));
   }
 
   disconnect() {
     resetDisplayOptions(this.resourceOutlet, true);
-    document.removeEventListener('click', this.clickAwayHandler);
+    document.removeEventListener('click', this.onClickAway.bind(this));
   }
   
-  onClickAway(e) {
-    if (!this.element || this.element.contains(e.target) || this.resourceOutlet.tableDisplayOptionsBtnTarget.contains(e.target))
+  onClickAway(e: Event) {
+    const target = e.target as HTMLElement;
+    if (!this.element || this.element.contains(target) || this.resourceOutlet.tableDisplayOptionsBtnTarget.contains(target))
       return false;
     
     // $(this.element).popover('hide')
     this.resourceOutlet.tableDisplayOptionsBtnTarget.click();
   }
 
-  toggleRowGroups(e) {
-    toggleRowGroups(this.resourceOutlet, e.target.checked);
+  toggleRowGroups({ target: checkbox }: { target: HTMLInputElement }) {
+    if (!(checkbox instanceof HTMLInputElement)) return;
+    toggleRowGroups(this.resourceOutlet, checkbox.checked);
   }
 
-  toggleFilter(e) {
-    const { id, checked } = e.target;
-    const label = this.resourceOutlet.checkboxFiltersValue[id].label;
+  toggleFilter({ target: checkbox }: { target: HTMLInputElement }) {
+    if (!(checkbox instanceof HTMLInputElement)) return;
+    const { id, checked } = checkbox;
+    const label = this.resourceOutlet.checkboxFiltersValue.id.label;
     this.resourceOutlet.checkboxFiltersValue = (
       {...this.resourceOutlet.checkboxFiltersValue, ...{ [`${id}`]: { checked, label } } }
     );

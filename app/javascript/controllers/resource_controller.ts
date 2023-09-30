@@ -17,7 +17,7 @@ export default class ResourceController extends Controller<HTMLDivElement> {
   declare readonly dashboardOutlet: DashboardController;
   declare readonly resourceOutlet: ResourceController;
   declare readonly dataPathValue: string;
-  declare readonly checkboxFiltersValue: object;
+  declare checkboxFiltersValue: { [inputId: string]: { checked: boolean, label: string }};
   declare readonly curatorSelectTarget: HTMLSelectElement;
   declare readonly filterSelectTarget: HTMLSelectElement;
   declare readonly filterResultsTarget: HTMLDivElement;
