@@ -17,6 +17,7 @@ export default class ResourceController extends Controller<HTMLDivElement> {
   declare readonly dashboardOutlet: DashboardController;
   declare readonly resourceOutlet: ResourceController;
   declare readonly dataPathValue: string;
+  declare readonly checkboxFiltersValue: object;
   declare readonly curatorSelectTarget: HTMLSelectElement;
   declare readonly filterSelectTarget: HTMLSelectElement;
   declare readonly filterResultsTarget: HTMLDivElement;
@@ -46,7 +47,7 @@ export default class ResourceController extends Controller<HTMLDivElement> {
     tableInitComplete(this, e.detail.dt);
   }
 
-  searchTable(e: CustomEvent = { type: '', detail: {} } as CustomEvent) {
+  searchTable(e: CustomEvent) {
     searchTable(this, e, this.resourceOutlet);
   }
 

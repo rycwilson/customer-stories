@@ -16,14 +16,17 @@ export function toggleRowGroups(resourceCtrl: ResourceController, shouldEnable: 
 }
 
 export function search(
-  resourceCtrl: ResourceController | , e: Event = { type: '', detail: {} }, syncedResourceCtrl: ResourceController | null = null
+  resourceCtrl: ResourceController, e?: CustomEvent, syncedResourceCtrl?: ResourceController
 ) {
-  if (!resourceCtrl) return false;
-  const isUserInput = e.type;
-  const isCuratorChange = isUserInput && e.type.includes('change-curator');
-  const isFilterChange = isUserInput && e.type.includes('change-filter');
-  const shouldSyncTables = isCuratorChange || isFilterChange;
-  const tsSearchResults = e.detail && e.detail.searchResults;
+  const { 
+    type: eventType, 
+    detail: { searchResults: tsSearchResults } 
+  } : {
+    type: string, 
+    detail: { searchResults?: object[] }
+  } = e || { type: '', detail: {} };
+  const isCuratorChange = eventType.includes('change-curator');
+  const isFilterChange = eventType.includes('change-filter');
   const columnFilters = Object.entries(resourceCtrl.checkboxFiltersValue)
     .filter(([filterId, filter]) => !filter.checked)
     .map(([filterId, filter]) => {
@@ -43,16 +46,17 @@ export function search(
   if (syncedResourceCtrl) {
     if (isCuratorChange) {
       syncedResourceCtrl.curatorSelectTarget.tomselect.setValue(resourceCtrl.curatorSelectTarget.value, true);
-    } else if (isFilterChange) {
+    }
+    if (isFilterChange) {
       syncedResourceCtrl.filterSelectTarget.tomselect.setValue(resourceCtrl.filterSelectTarget.value, true);
     }
-  }
-  
-  // wait for the visible table to be drawn before searching the sync'ed table
-  if (shouldSyncTables) {
-    resourceCtrl.element.addEventListener('datatable:drawn', () => {
-      setTimeout(() => search(syncedResourceCtrl));
-    }, { once: true });
+    if (isCuratorChange || isFilterChange) {
+      // wait for the visible table to be drawn before searching the sync'ed table
+      resourceCtrl.element.addEventListener('datatable:drawn', () => {
+        setTimeout(() => search(syncedResourceCtrl));
+      }, { once: true });
+
+    }
   }
 
   resourceCtrl.datatableTarget.setAttribute(
@@ -65,7 +69,7 @@ export function search(
   );
 }
 
-export function initDisplayOptions(resourceCtrl, isReset = false) {
+export function initDisplayOptions(resourceCtrl: ResourceController, isReset = false) {
   const btn = resourceCtrl.tableDisplayOptionsBtnTarget;
   const resourceIdentifier = resourceCtrl.resourceName === 'customerWins' ? 'customer-wins' : 'contributors';
   const groupByResourceName = resourceCtrl.resourceName === 'customerWins' ? 'Customer' : 'Customer Win';
@@ -97,7 +101,7 @@ export function initDisplayOptions(resourceCtrl, isReset = false) {
   });
 }
 
-function displayOptionsPopoverContent(groupByResourceName, enableRowGroups, checkboxFilters) {
+function displayOptionsPopoverContent(groupByResourceName: string, enableRowGroups: boolean, checkboxFilters: object) {
   return `
     <div class="form-horizontal">
       <div class="form-group">
