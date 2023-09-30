@@ -23,6 +23,7 @@ declare global {
 
   interface JQuery {
     tab: (action: string) => void;
+    popover: (options: object) => void;
   }
 
   interface HTMLSelectElement {
