@@ -32,12 +32,17 @@ declare global {
 
   interface TurboFrameAttributes {
     id: string;
-    src: string;
+    src?: string;
     loading?: string;
     target?: string;
     disable?: boolean;  
     dataTurboAction?: string;
     dataAutoScrollBlock?: boolean | { block?: string, behavior?: string, inline?: string };
+
+    // this applies to turbo-frame elements
+    dataset: {
+      placeholder?: string;
+    }
   }
 
   interface Customer {
