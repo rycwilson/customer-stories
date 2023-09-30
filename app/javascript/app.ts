@@ -1,11 +1,11 @@
-import './jquery';   // creates global $, jQuery
-import 'jquery-ujs/src/rails';
-import 'jquery-ui/dist/jquery-ui';
-import './bootstrap';
-
+import Rails from '@rails/ujs';
 import "@hotwired/turbo-rails";
 import './controllers';
 import * as turboCallbacks from './turbo_callbacks';
+
+import './jquery';   // creates global $, jQuery
+import 'jquery-ui/dist/jquery-ui';
+import './bootstrap';
 
 import DataTable from 'datatables.net-bs';
 window.DataTable = DataTable;
@@ -28,6 +28,7 @@ function appFactory(): CustomerStoriesApp {
     currentUser: parseDatasetObject(document.body, 'currentUser', 'id', 'full_name'),
     // screenSize: null,
     init() {
+      Rails.start();
       document.addEventListener('turbo:load', (e) => {
         console.log('turbo:load (once)')
         addAllListeners();

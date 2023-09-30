@@ -21,6 +21,8 @@
   "dependencies": {
     "@hotwired/stimulus": "^3.2.1",
     "@hotwired/turbo-rails": "^7.3.0",
+    "@rails/ujs": "^7.0.8",
+    "@types/rails__ujs": "^6.0.2",
     "animate.css": "^4.1.1",
     "blueimp-file-upload": "^10.32.0",
     "bootbox": "^6.0.0",
@@ -42,7 +44,6 @@
     "jquery-csv": "^1.0.21",
     "jquery-textfill": "^0.6.0",
     "jquery-ui": "^1.13.2",
-    "jquery-ujs": "^1.2.3",
     "jquery.flot.tooltip": "^0.9.0",
     "jquery.inputmask": "^3.2.7",
     "jquery3-bootstrap-switch": "^3.3.4",

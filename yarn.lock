@@ -328,6 +328,11 @@
   resolved "https://registry.yarnpkg.com/@rails/actioncable/-/actioncable-7.0.5.tgz#bbc11203e0d3d5084002abfcf01d621fdf5f3a9d"
   integrity sha512-SOBA2heB9lTw0VYIx8M/ed7inSf4I9sR8OIlJprhgkfQ3WJtrxPJ6DDATR1Z3RYaIR7HlT2Olj08v1lfGIGuHA==
 
+"@rails/ujs@^7.0.8":
+  version "7.0.8"
+  resolved "https://registry.yarnpkg.com/@rails/ujs/-/ujs-7.0.8.tgz#59853367d0827b3955d2c4bedfd5eba4a79d3422"
+  integrity sha512-tOQQBVH8LsUpGXqDnk+kaOGVsgZ8maHAhEiw3Git3p88q+c0Slgu47HuDnL6sVxeCfz24zbq7dOjsVYDiTpDIA==
+
 "@simple-dom/interface@^1.4.0":
   version "1.4.0"
   resolved "https://registry.yarnpkg.com/@simple-dom/interface/-/interface-1.4.0.tgz#e8feea579232017f89b0138e2726facda6fbb71f"
@@ -356,6 +361,11 @@
   version "4.0.0"
   resolved "https://registry.yarnpkg.com/@types/parse-json/-/parse-json-4.0.0.tgz#2f8bb441434d163b35fb8ffdccd7138927ffb8c0"
   integrity sha512-//oorEZjL6sbPcKUaCdIGlIUeH26mgzimjBB77G6XRgnDl/L5wOnpyBGRe/Mmf5CVW3PwEBE1NjiMZ/ssFh4wA==
+
+"@types/rails__ujs@^6.0.2":
+  version "6.0.2"
+  resolved "https://registry.yarnpkg.com/@types/rails__ujs/-/rails__ujs-6.0.2.tgz#b6e29cf13d9d34a87dfdba7b859b22c99796efba"
+  integrity sha512-ID5IXmBJE6C4ZxiwQ9QcxtcrbGcDjhhdmeq7hgM5mmTcPktA9qYiQvYfCW0UD+akgtDagREAYKohbdnYv11wpQ==
 
 "@types/sizzle@*":
   version "2.3.3"
@@ -1121,11 +1131,6 @@ jquery-ui@^1.13.2:
   integrity sha512-wBZPnqWs5GaYJmo1Jj0k/mrSkzdQzKDwhXNtHKcBdAcKVxMM3KNYFq+iJ2i1rwiG53Z8M4mTn3Qxrm17uH1D4Q==
   dependencies:
     jquery ">=1.8.0 <4.0.0"
-
-jquery-ujs@^1.2.3:
-  version "1.2.3"
-  resolved "https://registry.yarnpkg.com/jquery-ujs/-/jquery-ujs-1.2.3.tgz#dcac6026ab7268e5ee41faf9d31c997cd4ddd603"
-  integrity sha512-59wvfx5vcCTHMeQT1/OwFiAj+UffLIwjRIoXdpO7Z7BCFGepzq9T9oLVeoItjTqjoXfUrHJvV7QU6pUR+UzOoA==
 
 jquery.flot.tooltip@^0.9.0:
   version "0.9.0"
