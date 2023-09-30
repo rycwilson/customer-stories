@@ -24,6 +24,7 @@ declare global {
   interface JQuery {
     tab: (action: string) => void;
     popover: (options: object) => void;
+    modal: (action: string) => void;
   }
 
   interface HTMLSelectElement {
