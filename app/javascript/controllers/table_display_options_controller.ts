@@ -9,18 +9,18 @@ export default class extends Controller<HTMLDivElement> {
   declare readonly dashboardOutlet: DashboardController;
   declare readonly resourceOutlet: ResourceController;
 
-  clickAwayHandler: ((e: Event) => void) | undefined = undefined;
+  clickAwayHandler: (e: Event) => void = this.onClickAway.bind(this);
 
   initialize() {
   }
 
   connect() {
-    document.addEventListener('click', this.onClickAway.bind(this));
+    document.addEventListener('click', this.clickAwayHandler);
   }
 
   disconnect() {
     resetDisplayOptions(this.resourceOutlet, true);
-    document.removeEventListener('click', this.onClickAway.bind(this));
+    document.removeEventListener('click', this.clickAwayHandler);
   }
   
   onClickAway(e: Event) {

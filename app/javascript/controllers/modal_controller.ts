@@ -1,6 +1,6 @@
 import { Controller } from '@hotwired/stimulus';
 
-export default class extends Controller<HTMLDivElement> {
+export default class ModalController extends Controller<HTMLDivElement> {
   static targets = ['title', 'body', 'turboFrame', 'form', 'footer', 'dismissBtn', 'submitBtn'];
   static values = { 
     title: { type: String, default: 'title is missing' },
@@ -10,21 +10,19 @@ export default class extends Controller<HTMLDivElement> {
 
   declare titleValue: string;
   declare bodyContentValue: string;
-  declare turboFrameAttrsValue: { id: string, src: string };
+  declare turboFrameAttrsValue: TurboFrameAttributes | {};
   declare readonly titleTarget: HTMLHeadingElement;
   declare readonly bodyTarget: HTMLDivElement;
+  declare readonly turboFrameTarget: HTMLElement & TurboFrameAttributes;
   declare readonly hasTurboFrameTarget: boolean;
-  declare hiddenHandler: () => void;
-  declare ajaxSuccessHandler: (e: Event, data: object, status: string, xhr: XMLHttpRequest) => void;
+  declare readonly formTarget: HTMLFormElement;
+  declare readonly hasFormTarget: boolean;
+  declare readonly footerTarget: HTMLDivElement;
+  declare readonly dismissBtnTarget: HTMLButtonElement;
+  declare readonly submitBtnTarget: HTMLInputElement;
 
-  static hiddenHandler: () => void;
-  static ajaxSuccessHandler: (e: Event, data: object, status: string, xhr: XMLHttpRequest) => void;
-  formId;
-  
-  initialize() {
-    this.hiddenHandler = this.onHidden.bind(this);
-    this.ajaxSuccessHandler = this.onAjaxSuccess.bind(this);
-  }
+  ajaxSuccessHandler: (this: ModalController, e: Event) => void = this.onAjaxSuccess.bind(this);
+  hiddenHandler: (this: ModalController, e: any) => void = this.onHidden.bind(this);
 
   connect() {
     $(this.element).on('hidden.bs.modal', this.hiddenHandler);
@@ -34,11 +32,11 @@ export default class extends Controller<HTMLDivElement> {
     $(this.element).off('hidden.bs.modal', this.hiddenHandler);
   }
 
-  titleValueChanged(newTitle) {
+  titleValueChanged(newTitle: string) {
     this.titleTarget.textContent = newTitle;
   }
 
-  bodyContentValueChanged(newContent, oldContent) {
+  bodyContentValueChanged(newContent: string) {
     [...this.bodyTarget.children].forEach(child => { if (!child.isSameNode(this.turboFrameTarget)) child.remove(); });
     if (newContent) {
       this.turboFrameTarget.classList.add('hidden');
@@ -48,36 +46,41 @@ export default class extends Controller<HTMLDivElement> {
     }
   }
 
-  turboFrameAttrsValueChanged(attrs) {
-    if (attrs.id && attrs.src) {
-      if (/^(new|edit)/.test(attrs.id)) this.actionValue = attrs.id.match(/^(?<action>new|edit)/).groups.action;
-      this.turboFrameTarget.insertAdjacentHTML('afterbegin', this.turboFrameTarget.dataset.placeholder);
-      this.turboFrameTarget.id = attrs.id;
-      this.turboFrameTarget.src = attrs.src;
+  turboFrameAttrsValueChanged(attrs: TurboFrameAttributes | {}) {
+    const { id, src } = attrs as TurboFrameAttributes;
+    if (id && src) {
+      // if (/^(new|edit)/.test(id)) this.actionValue = id.match(/^(?<action>new|edit)/).groups.action;
+      const spinnerEl = this.turboFrameTarget.dataset.placeholder
+      if (spinnerEl) this.turboFrameTarget.insertAdjacentHTML('afterbegin', spinnerEl);
+      this.turboFrameTarget.id = id;
+      this.turboFrameTarget.src = src;
     } else {
       this.turboFrameTarget.replaceChildren();
     }
   }
 
-  onFrameRender(e) {
-    console.log('turbo:before-frame-render', e.detail.newFrame);
+  onFrameRender(e: CustomEvent) {
+    // console.log('turbo:before-frame-render', e.detail.newFrame);
     if (this.hasFormTarget) {
       this.dismissBtnTarget.textContent = 'Cancel';
-      this.submitBtnTarget.value = this.formTarget.dataset.submitBtnText;
+      this.submitBtnTarget.value = this.formTarget.dataset.submitBtnText || 'Submit';
       this.footerTarget.classList.remove('hidden');
       this.submitBtnTarget.setAttribute('form', this.formTarget.id);
-      $(this.formTarget).on('ajax:success', this.ajaxSuccessHandler);
+      this.formTarget.addEventListener('ajax:success', this.ajaxSuccessHandler);
     } else {
       this.dismissBtnTarget.textContent = 'Close';
     }
   }
   
-  onAjaxSuccess(e, data, status, xhr) {
-    if (data.status === 'ok') {
-      this.hide();
-    } else {
-      // handle errors
+  onAjaxSuccess(this: ModalController, e: Event) {
+    if (e instanceof CustomEvent) {
+      const [data, status, xhr] = e.detail;
     }
+    // if (ok) {
+    //   this.hide();
+    // } else {
+    //   // handle errors
+    // }
   }
   
   show() {
@@ -88,12 +91,12 @@ export default class extends Controller<HTMLDivElement> {
     $(this.element).modal('hide');
   }
 
-  setSubmitBtnText({ detail: btnText }) {
+  setSubmitBtnText({ detail: btnText }: { detail: string }) {
     this.submitBtnTarget.value = btnText;
   }
 
-  onHidden() {
-    if (this.hasFormTarget) $(this.formTarget).off('ajax:success', this.ajaxSuccessHandler);
+  onHidden(this: ModalController, e: any) {
+    if (this.hasFormTarget) this.formTarget.removeEventListener('ajax:success', this.ajaxSuccessHandler);
     this.turboFrameAttrsValue = {};
     this.bodyContentValue = '';
     this.dismissBtnTarget.textContent = '';

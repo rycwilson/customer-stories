@@ -55,7 +55,6 @@ export function search(
       resourceCtrl.element.addEventListener('datatable:drawn', () => {
         setTimeout(() => search(syncedResourceCtrl));
       }, { once: true });
-
     }
   }
 
