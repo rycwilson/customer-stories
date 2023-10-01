@@ -27,6 +27,11 @@ declare global {
     modal: (action: string) => void;
   }
 
+  // rails-ujs events
+  interface HTMLElementEventMap {
+    'ajax:success': Event;
+  }
+
   interface HTMLSelectElement {
     tomselect: TomSelect;
   }
