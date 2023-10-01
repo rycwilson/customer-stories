@@ -1,4 +1,17 @@
 import Rails from '@rails/ujs';
+// ajax:beforeSend: Triggered before an AJAX request is sent.
+// ajax:before: Triggered before an element is replaced with the response content during an AJAX request.
+// ajax:success: Triggered when an AJAX request is successful.
+// ajax:error: Triggered when an AJAX request encounters an error.
+// ajax:complete: Triggered when an AJAX request is complete, regardless of success or error.
+// ajax:stopped: Triggered when an AJAX request is halted before completion.
+// ajax:aborted: Triggered when an AJAX request is aborted by the user.
+// ajax:after: Triggered after an element is replaced with the response content during an AJAX request.
+// ajax:file:validate: Triggered before an AJAX file upload begins to validate the selected file.
+// ajax:file:beforeSerialize: Triggered before serializing form data for an AJAX file upload.
+// ajax:file:serialize: Triggered when serializing form data for an AJAX file upload.
+// ajax:file:beforeSubmit: Triggered before submitting a form via AJAX when a file is involved.
+
 import "@hotwired/turbo-rails";
 import './controllers';
 import * as turboCallbacks from './turbo_callbacks';
