@@ -43,7 +43,7 @@ export default class extends Controller<HTMLFormElement> {
   }
 
   get contributorsCtrl() {
-    return this.resourceOutlets.find(outlet => outlet.resourceName === 'contributors');
+    return this.resourceOutlets.find(outlet => outlet.resourceName === 'contributions');
   }
 
   onCustomerChange({ target: select }: { target: EventTarget }) {

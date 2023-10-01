@@ -23,7 +23,7 @@ export default class extends Controller<HTMLFormElement> {
   onSourceChange({ target: input }: { target: EventTarget }) {
     if (!(input instanceof HTMLInputElement)) return;
     $(input).tab('show');
-    this.dispatch('source-changed', { detail: capitalize(e.target.value) })
+    this.dispatch('source-changed', { detail: capitalize(input.value) })
     // TODO: reset validation for whichever panel was hidden
   }
 
