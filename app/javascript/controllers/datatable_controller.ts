@@ -1,25 +1,42 @@
 import { Controller } from "@hotwired/stimulus";
+import ResourceController from "./resource_controller";
 import DataTable from 'datatables.net-bs';
 import 'datatables.net-rowgroup';
+import { type Api as DataTableApi, Config as DataTableOptions } from "datatables.net-bs";
 
-export default class extends Controller<HTMLTableElement> {
-  static targets = ['row'];   // rowTargets exclude row groups
+interface SearchParams {
+  curatorId: string,
+  columnFilters: { column: string, q: string, regEx: boolean, smartSearch: boolean }[],
+  tsSearchResults?: { [column: string]: string },
+  filterVal?: string
+}
+export default class DatatableController extends Controller<HTMLTableElement> {
   static outlets = ['resource', 'stories'];
+  declare readonly resourceOutlet: ResourceController;
+  declare readonly storiesOutlet: ResourceController;
+
+  static targets = ['row'];   // rowTargets exclude row groups
+  declare readonly rowTargets: HTMLTableRowElement[];
+
   static values = { 
     ready: { type: Boolean, default: false },
     enableRowGroups: { type: Boolean, default: false },
     searchParams: Object
   };
+  declare readyValue: boolean;
+  declare enableRowGroupsValue: boolean;
+  declare searchParamsValue: SearchParams | undefined;
 
-  static baseOptions;
-  dt;
+  // class members must be declared static to be accessed in initialize()
+  declare static baseOptions: DataTableOptions;
+  declare dt: DataTableApi<any>;
+
   didInitialize = false;
-  searchDebounceTimer;
-  // parentController;
+  declare searchDebounceTimer: number;
 
   initialize() {
     const ctrl = this;
-    this.baseOptions = {
+    DatatableController.baseOptions = {
       deferRender: true,
       autoWidth: false,
       dom: 'tip',
@@ -40,13 +57,13 @@ export default class extends Controller<HTMLTableElement> {
   connect() {
   }
 
-  readyValueChanged(dataIsReady) {
+  readyValueChanged(dataIsReady: boolean) {
     // console.log('dataIsReady', dataIsReady)
     if (dataIsReady)
-      this.dt = new DataTable(this.element, { ...this.baseOptions, ...this.resourceOutlet.tableConfig() });
+      this.dt = new DataTable(this.element, { ...DatatableController.baseOptions, ...this.resourceOutlet.tableConfig() });
   }
 
-  searchParamsValueChanged(newVal, oldVal) {
+  searchParamsValueChanged(newVal: SearchParams, oldVal: SearchParams | undefined) {
     // console.log('searchParams', newVal)
     if (oldVal !== undefined) {
       clearTimeout(this.searchDebounceTimer);
@@ -54,7 +71,7 @@ export default class extends Controller<HTMLTableElement> {
     }
   }
 
-  toggleChildRow(e) {
+  toggleChildRow(e: CustomEvent) {
     const { tr, content, onFrameRendered } = e.detail;
     const row = this.dt.row(tr);
     if (row.child.isShown()) {
@@ -67,7 +84,7 @@ export default class extends Controller<HTMLTableElement> {
     }
   }
 
-  search({ curatorId, columnFilters, filterVal, tsSearchResults }) {
+  search({ curatorId, columnFilters, filterVal, tsSearchResults }: SearchParams) {
     // console.log('search')
     let dtSearch = this.dt
       .search('')
@@ -95,7 +112,7 @@ export default class extends Controller<HTMLTableElement> {
 
   // toggle table stripes when alternating between row grouping and no row grouping
   // the Datatables table-striped class does not take row groups into account, hence this approach
-  enableRowGroupsValueChanged(shouldEnable) {
+  enableRowGroupsValueChanged(shouldEnable: boolean) {
     if (this.didInitialize) {
       // this.element.classList.toggle('has-row-groups');
       this.rowTargets.forEach(tr => tr.classList.remove('even', 'odd'));
@@ -119,8 +136,9 @@ export default class extends Controller<HTMLTableElement> {
 
   cloneFilterResults() {
     const originalResults = this.element.nextElementSibling;
-    const clone = originalResults.cloneNode();
-    const formatText = () => clone.textContent = originalResults.textContent.replace(/\sentries/g, '');
+    if (!originalResults) return;
+    const clone = originalResults.cloneNode() as HTMLElement;
+    const formatText = () => clone.textContent = originalResults.textContent?.replace(/\sentries/g, '') || null;
     clone.id = `${originalResults.id}--clone`;
     formatText();
     this.resourceOutlet.filterResultsTarget.appendChild(clone);
