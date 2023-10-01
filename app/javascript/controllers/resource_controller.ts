@@ -25,7 +25,10 @@ export default class ResourceController extends Controller<HTMLDivElement> {
   declare readonly newItemBtnTarget: HTMLButtonElement;
   declare readonly tableDisplayOptionsBtnTarget: HTMLButtonElement;
 
-  dt: JQueryDataTableApi | undefined = undefined;
+  // dt is defined when the table is initialized
+  // declare dt instead of initializing it to avoid having to allow for undefined value
+  // if the table fails to initialize, errors will be handled in the datatable controller
+  declare dt: JQueryDataTableApi;
   
   connect() {
     // console.log(`connect ${this.resourceName}`)
