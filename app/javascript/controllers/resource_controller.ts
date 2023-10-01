@@ -12,19 +12,20 @@ import { type Api as DataTableApi } from "datatables.net-bs";
 
 export default class ResourceController extends Controller<HTMLDivElement> {
   static outlets = ['dashboard', 'resource'];
-  static values = { dataPath: String, checkboxFilters: { type: Object, default: {} } }
-  static targets = ['curatorSelect', 'filterSelect', 'filterResults', 'datatable', 'newItemBtn', 'tableDisplayOptionsBtn'];
-
   declare readonly dashboardOutlet: DashboardController;
   declare readonly resourceOutlet: ResourceController;
-  declare readonly dataPathValue: string;
-  declare checkboxFiltersValue: { [inputId: string]: { checked: boolean, label: string }};
+
+  static targets = ['curatorSelect', 'filterSelect', 'filterResults', 'datatable', 'newItemBtn', 'tableDisplayOptionsBtn'];
   declare readonly curatorSelectTarget: HTMLSelectElement;
   declare readonly filterSelectTarget: HTMLSelectElement;
   declare readonly filterResultsTarget: HTMLDivElement;
   declare readonly datatableTarget: HTMLDivElement;
   declare readonly newItemBtnTarget: HTMLButtonElement;
   declare readonly tableDisplayOptionsBtnTarget: HTMLButtonElement;
+  
+  static values = { dataPath: String, checkboxFilters: { type: Object, default: {} } }
+  declare readonly dataPathValue: string;
+  declare checkboxFiltersValue: { [inputId: string]: { checked: boolean, label: string }};
 
   // dt is defined when the table is initialized
   // declare dt instead of initializing it to avoid having to allow for undefined value

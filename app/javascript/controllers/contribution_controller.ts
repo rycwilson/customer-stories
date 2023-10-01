@@ -2,11 +2,11 @@ import { Controller } from "@hotwired/stimulus";
 
 export default class ContributionController extends Controller<HTMLTableRowElement> {
   static targets = ['actionsDropdown'];
-  static values = { rowData: Object, workflowStage: { type: String, default: 'prospect' } };
+  declare readonly actionsDropdownTarget: HTMLTableCellElement;
 
+  static values = { rowData: Object, workflowStage: { type: String, default: 'prospect' } };
   declare readonly rowDataValue: { [key: string]: any };
   declare readonly workflowStageValue: 'prospect' | 'curate';
-  declare readonly actionsDropdownTarget: HTMLTableCellElement;
 
   id: number | undefined = undefined;
   status: string | undefined = undefined;

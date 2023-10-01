@@ -4,19 +4,20 @@ import ModalController from './modal_controller.js';
 import { editCustomerWinPath } from '../customer_wins/customer_wins.js';
 import { childRowPlaceholderTemplate } from '../customer_wins/win_story.js';
 
-export default class CusomterWinController extends Controller<HTMLTableRowElement> {
+export default class CustomerWinController extends Controller<HTMLTableRowElement> {
   static outlets = ['resource', 'modal'];
+  declare readonly resourceOutlet: ResourceController;
+  declare readonly modalOutlet: ModalController;
+
   static targets = ['actionsDropdown'];
+  declare readonly actionsDropdownTarget: HTMLTableCellElement;
+
   static values = { 
     childRowTurboFrameAttrs: { type: Object, default: {} }, 
     rowData: Object 
   };
-
-  declare readonly resourceOutlet: ResourceController;
-  declare readonly modalOutlet: ModalController;
   declare readonly childRowTurboFrameAttrsValue: { id: string, src: string };
   declare readonly rowDataValue: { [key: string]: any };
-  declare readonly actionsDropdownTarget: HTMLTableCellElement;
 
   id: number | undefined = undefined;
   status: string | undefined = undefined;

@@ -5,7 +5,6 @@ import { toggleRowGroups, initDisplayOptions as resetDisplayOptions } from '../t
 
 export default class extends Controller<HTMLDivElement> {
   static outlets = ['dashboard', 'resource'];
-
   declare readonly dashboardOutlet: DashboardController;
   declare readonly resourceOutlet: ResourceController;
 

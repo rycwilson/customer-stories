@@ -2,15 +2,6 @@ import { Controller } from '@hotwired/stimulus';
 
 export default class ModalController extends Controller<HTMLDivElement> {
   static targets = ['title', 'body', 'turboFrame', 'form', 'footer', 'dismissBtn', 'submitBtn'];
-  static values = { 
-    title: { type: String, default: 'title is missing' },
-    turboFrameAttrs: { type: Object, default: {} },
-    bodyContent: { type: String, default: '' },
-  };
-
-  declare titleValue: string;
-  declare bodyContentValue: string;
-  declare turboFrameAttrsValue: TurboFrameAttributes | {};
   declare readonly titleTarget: HTMLHeadingElement;
   declare readonly bodyTarget: HTMLDivElement;
   declare readonly turboFrameTarget: HTMLElement & TurboFrameAttributes;
@@ -20,6 +11,15 @@ export default class ModalController extends Controller<HTMLDivElement> {
   declare readonly footerTarget: HTMLDivElement;
   declare readonly dismissBtnTarget: HTMLButtonElement;
   declare readonly submitBtnTarget: HTMLInputElement;
+
+  static values = { 
+    title: { type: String, default: 'title is missing' },
+    turboFrameAttrs: { type: Object, default: {} },
+    bodyContent: { type: String, default: '' },
+  };
+  declare titleValue: string;
+  declare bodyContentValue: string;
+  declare turboFrameAttrsValue: TurboFrameAttributes | {};
 
   ajaxSuccessHandler: (this: ModalController, e: Event) => void = this.onAjaxSuccess.bind(this);
   hiddenHandler: (this: ModalController, e: any) => void = this.onHidden.bind(this);

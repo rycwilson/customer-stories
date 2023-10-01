@@ -4,12 +4,12 @@ import type { TomselectOption, TomselectOptions } from '../tomselect';
 
 export default class extends Controller<HTMLFormElement> {
   static outlets = ['resource'];
+  declare readonly resourceOutlets: ResourceController[];
+
   static targets = [
     'customerSelect', 'customerField', 'customerId', 'customerName', 'customerWinSelect', 'successCustomerId', 
     'contributorSelect', 'referrerSelect', 'contributorFields', 'referrerFields'
   ];
-
-  declare readonly resourceOutlets: ResourceController[];
   declare readonly customerSelectTarget: HTMLSelectElement;
   declare readonly customerFieldTargets: HTMLInputElement[];
   declare readonly customerIdTarget: HTMLInputElement;

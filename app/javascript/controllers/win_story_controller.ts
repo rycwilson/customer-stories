@@ -1,4 +1,5 @@
 import { Controller } from '@hotwired/stimulus';
+import CustomerWinController from './customer_win_controller';
 import { 
   populatePlaceholders, 
   individualContributionTemplate, 
@@ -11,14 +12,25 @@ const summernoteResizebarHeight = 17; // childRow.querySelector('.note-resizebar
 export default class extends Controller<HTMLFormElement> {
   // summernote outlet is needed to pass config object with nested functions 
   // (can't JSON stringify as necessary for setting attribute)
-  static outlets = ['customer-win'];    
+  static outlets = ['customer-win'];   
+  declare readonly customerWinOutlet: CustomerWinController; 
+
   static targets = ['header', 'note', 'footer', 'copyBtn'];
+  declare readonly headerTarget: HTMLDivElement;
+  declare readonly noteTarget: HTMLDivElement;
+  declare readonly footerTarget: HTMLDivElement;
+  declare readonly copyBtnTarget: HTMLButtonElement;
+
   static values = {
     isExpanded: { type: Boolean, default: false },
     isEditable: { type: Boolean, default: false },
     contributions: { type: Array, default: [] },
     answers: { type: Array, default: [] }
   };
+  declare isExpandedValue: boolean;
+  declare isEditableValue: boolean;
+  declare contributionsValue: Contribution[];
+  declare answersValue: Answer[];
 
   editor;
   defaultHeight;

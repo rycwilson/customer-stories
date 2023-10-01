@@ -3,11 +3,11 @@ import imagesLoaded from 'imagesloaded';
 
 export default class extends Controller<HTMLDivElement> {
   static targets = ['searchAndFilters', 'filterSelect', 'gallery', 'card'];
-
   declare readonly searchAndFiltersTargets: HTMLDivElement[];
   declare readonly filterSelectTargets: HTMLSelectElement[];
   declare readonly galleryTarget: HTMLDivElement;
-
+  declare readonly cardTargets: HTMLDivElement[];
+  
   readyFilters = 0;
 
   connect() {

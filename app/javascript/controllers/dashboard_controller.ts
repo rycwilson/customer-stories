@@ -13,14 +13,12 @@ enum DashboardTab {
 
 export default class DashboardController extends Controller<HTMLDivElement> {
   static outlets = ['modal'];
-  static values = { activeTab: { type: String, default: '' } };    
+  declare readonly modalOutlet: ModalController;
+
   static targets = [
     'tab', 'tabPanel', 'subPanel', 'customerWinsTab', 'customerWinsFilter', 'contributorsTab', 'contributorsFilter',
     'addCustomerWinBtn', 'addContributorBtn'
   ];
-
-  declare readonly modalOutlet: ModalController;
-  declare activeTabValue: DashboardTab | null;
   declare readonly tabTargets: HTMLAnchorElement[];
   declare readonly tabPanelTargets: HTMLDivElement[];
   declare readonly subPanelTargets: HTMLDivElement[];
@@ -30,6 +28,9 @@ export default class DashboardController extends Controller<HTMLDivElement> {
   declare readonly contributorsFilterTarget: HTMLSelectElement;
   declare readonly addCustomerWinBtnTarget: HTMLButtonElement;
   declare readonly addContributorBtnTarget: HTMLButtonElement;
+
+  static values = { activeTab: { type: String, default: '' } };    
+  declare activeTabValue: DashboardTab | null;
 
   connect() {
     // console.log('connect dashboard')

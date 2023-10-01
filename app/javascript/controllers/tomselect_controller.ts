@@ -3,6 +3,8 @@ import { tsBaseOptions } from '../tomselect.js';
 
 export default class extends Controller<HTMLSelectElement> {
   static values = { type: String, customOptions: { type: Object, default: {} } };
+  declare readonly typeValue: 'filter' | 'search';
+  declare readonly customOptionsValue: { [key: string]: any };
 
   connect() {
     // console.log('tomselect connect')

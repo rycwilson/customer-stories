@@ -1,15 +1,15 @@
 import { Controller } from '@hotwired/stimulus';
-import ResourceController from './resource_controller';
+import ModalController from './modal_controller';
 import { capitalize } from '../util';
 
 export default class extends Controller<HTMLFormElement> {
   static outlets = ['modal'];
+  declare readonly modalOutlet: ModalController;
+
   static targets = [
     'referrerSelect', 'referrerFields', 'contributorSelect', 'contributorFields', 'successCustomerId', 
     'customerField', 'customerId', 'customerName', 'customerContactBoolField'
   ];
-
-  declare readonly modalOutlet: ResourceController;
   declare readonly referrerSelectTarget: HTMLSelectElement;
   declare readonly referrerFieldsTarget: HTMLDivElement;
   declare readonly contributorSelectTarget: HTMLSelectElement;
@@ -18,7 +18,7 @@ export default class extends Controller<HTMLFormElement> {
   declare readonly customerFieldTargets: HTMLInputElement[];
   declare readonly customerIdTarget: HTMLInputElement;
   declare readonly customerNameTarget: HTMLInputElement;
-  declare readonly customerContactBoolField: HTMLInputElement;
+  declare readonly customerContactBoolFieldTarget: HTMLInputElement;
 
   onSourceChange({ target: input }: { target: EventTarget }) {
     if (!(input instanceof HTMLInputElement)) return;
@@ -60,6 +60,6 @@ export default class extends Controller<HTMLFormElement> {
 
   onCustomerContactChange({ target: select }: { target: EventTarget }) {
     if (!(select instanceof HTMLSelectElement)) return;
-    this.customerContactBoolField.disabled = !select.value;
+    this.customerContactBoolFieldTarget.disabled = !select.value;
   }
 }

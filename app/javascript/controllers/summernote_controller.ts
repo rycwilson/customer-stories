@@ -12,12 +12,15 @@ const configFactories = {
   'default': undefined
 }
 
-export default class extends Controller<HTMLDivElement> {
+export default class SummernoteController extends Controller<HTMLDivElement> {
   static values = {
     enabled: { type: Boolean, default: false },
     configKey: { type: String, default: 'default' },
     configArgs: { type: Array, default: [this, 220] }   // height is necessary, any others will depend on the specific configuration
   }
+  declare enabledValue: boolean;
+  declare readonly configKeyValue: string;
+  declare configArgsValue: any[];
 
   configFactory;
   codable;
