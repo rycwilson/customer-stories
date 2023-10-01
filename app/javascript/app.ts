@@ -20,9 +20,9 @@ import './jquery';   // creates global $, jQuery
 import 'jquery-ui/dist/jquery-ui';
 import './bootstrap';
 
-import DataTable from 'datatables.net-bs';
-window.DataTable = DataTable;
-import 'datatables.net-rowgroup';
+// import DataTable from 'datatables.net-bs';
+// window.DataTable = DataTable;
+// import 'datatables.net-rowgroup';
 
 import 'summernote/dist/summernote';
 

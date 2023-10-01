@@ -1,4 +1,6 @@
 import { Controller } from "@hotwired/stimulus";
+import DataTable from 'datatables.net-bs';
+import 'datatables.net-rowgroup';
 
 export default class extends Controller<HTMLTableElement> {
   static targets = ['row'];   // rowTargets exclude row groups

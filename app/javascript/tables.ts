@@ -1,11 +1,12 @@
 import { kebabize } from './util';
 import ResourceController from './controllers/resource_controller';
+import { type Api as DataTableApi } from 'datatables.net-bs';
 
 export function init(resourceCtrl: ResourceController) {
   resourceCtrl.datatableTarget.setAttribute('data-datatable-ready-value', 'true');
 }
 
-export function initComplete(resourceCtrl: ResourceController, dt: JQueryDataTableApi) {
+export function initComplete(resourceCtrl: ResourceController, dt: DataTableApi<any>) {
   resourceCtrl.dt = dt;
   initDisplayOptions(resourceCtrl);
   search(resourceCtrl);

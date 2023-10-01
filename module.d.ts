@@ -8,7 +8,7 @@ declare global {
     $: JQueryStatic;
     jQuery: JQueryStatic;
     Stimulus: object;
-    DataTable: object;
+    // DataTable: object;
     TomSelect: object;
     ContributionController: typeof ContributionController;
 

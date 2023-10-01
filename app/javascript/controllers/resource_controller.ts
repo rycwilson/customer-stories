@@ -8,6 +8,7 @@ import {
 } from '../tables.js';
 import { tableConfig as customerWinsTableConfig, newCustomerWinPath } from '../customer_wins/customer_wins';
 import { tableConfig as contributorsTableConfig, newContributionPath } from '../contributions/contributions';
+import { type Api as DataTableApi } from "datatables.net-bs";
 
 export default class ResourceController extends Controller<HTMLDivElement> {
   static outlets = ['dashboard', 'resource'];
@@ -28,7 +29,7 @@ export default class ResourceController extends Controller<HTMLDivElement> {
   // dt is defined when the table is initialized
   // declare dt instead of initializing it to avoid having to allow for undefined value
   // if the table fails to initialize, errors will be handled in the datatable controller
-  declare dt: JQueryDataTableApi;
+  declare dt: DataTableApi<any>;
   
   connect() {
     // console.log(`connect ${this.resourceName}`)
