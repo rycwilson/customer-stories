@@ -35,7 +35,7 @@ export default class ContributionController extends Controller<HTMLTableRowEleme
   }
 
   editStoryPath() {
-    return this.storyExists() && `/curate/${this.customerWin?.customer.slug}/${this.customerWin.story.slug}`;
+    return this.storyExists() && `/curate/${this.customerWin?.customer.slug}/${this.customerWin?.story.slug}`;
   }
 
   actionsDropdownTemplate() {
@@ -93,7 +93,7 @@ export default class ContributionController extends Controller<HTMLTableRowEleme
         }
         <li role="separator" class="divider"></li>
         ${this.workflowStageValue === 'prospect' ? `
-            ${this.storyExists() && this.customerWin.story.published ? `
+            ${this.storyExists() && this.customerWin?.story.published ? `
                 <li>
                   <a href="${this.storyPath()}"}>
                     <i class="fa fa-search fa-fw action"></i>&nbsp;&nbsp;
