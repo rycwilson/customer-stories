@@ -2,8 +2,8 @@ import { Controller } from "@hotwired/stimulus";
 import ResourceController from "./resource_controller";
 import DataTable from 'datatables.net-bs';
 import 'datatables.net-rowgroup';
-import { type Api as DataTableApi, Config as DataTableOptions } from "datatables.net-bs";
-
+import type { Api as DataTableApi, Config as DataTableOptions } from "datatables.net-bs";
+// import type { RowGroup}
 interface SearchParams {
   curatorId: string,
   columnFilters: { column: string, q: string, regEx: boolean, smartSearch: boolean }[],
@@ -27,40 +27,41 @@ export default class DatatableController extends Controller<HTMLTableElement> {
   declare enableRowGroupsValue: boolean;
   declare searchParamsValue: SearchParams | undefined;
 
-  // class members must be declared static to be accessed in initialize()
-  declare static baseOptions: DataTableOptions;
   declare dt: DataTableApi<any>;
-
   didInitialize = false;
   declare searchDebounceTimer: number;
 
-  initialize() {
+  connect() {
+  }
+  
+  baseOptions() {
     const ctrl = this;
-    DatatableController.baseOptions = {
+    return {
       deferRender: true,
       autoWidth: false,
       dom: 'tip',
       pageLength: 75,
-      drawCallback(settings) {
+      drawCallback(settings: object) {
         // console.log('drawCallback()')
         if (ctrl.didInitialize) ctrl.redrawRowGroups();
         ctrl.dispatch('drawn');
       },
-      initComplete(settings) {
+      initComplete(settings: object) {
         ctrl.cloneFilterResults();
         ctrl.didInitialize = true;
         ctrl.dispatch('init', { detail: { dt: this.api() } });
       }
     }
-  }
-
-  connect() {
-  }
+  };
 
   readyValueChanged(dataIsReady: boolean) {
     // console.log('dataIsReady', dataIsReady)
-    if (dataIsReady)
-      this.dt = new DataTable(this.element, { ...DatatableController.baseOptions, ...this.resourceOutlet.tableConfig() });
+    if (dataIsReady) {
+      this.dt = new DataTable(
+        this.element, 
+        { ...this.baseOptions(), ...this.resourceOutlet.tableConfig() }
+      );
+    }
   }
 
   searchParamsValueChanged(newVal: SearchParams, oldVal: SearchParams | undefined) {
@@ -77,7 +78,8 @@ export default class DatatableController extends Controller<HTMLTableElement> {
     if (row.child.isShown()) {
       row.child.hide();
     } else {
-      row.child(content, 'child-row').show();
+      row.child(content, 'child-row');
+      row.child.show();
       const childRow = tr.nextElementSibling;
       if (onFrameRendered) childRow.addEventListener('turbo:frame-render', onFrameRendered, { once: true });
       childRow && childRow.scrollIntoView({ block: 'center' });
