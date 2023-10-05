@@ -1,4 +1,4 @@
-import TomSelect from 'tom-select/dist/esm/tom-select.js';
+import TomSelect from 'tom-select';
 
 // do not change the 'clear_button' name, else styles won't work
 import clearButton from 'tom-select/dist/js/plugins/clear_button';
