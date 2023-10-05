@@ -6,7 +6,13 @@ import { summernoteConfig as winStoryConfig } from '../customer_wins/win_story';
 // import { summernoteConfig as storyConfig } from '../stories/stories.js'
 // import { defaultConfig } from '../summernote.js'
 
-const configFactories = {
+interface ConfigFactory {
+  (ctrl: SummernoteController, height: number, ...args: any): Summernote.Options;
+}
+
+const configFactories: {
+  [editor: string]: ConfigFactory | undefined
+} = {
   'win-story': winStoryConfig,
   'story': undefined,
   'default': undefined
@@ -16,35 +22,35 @@ export default class SummernoteController extends Controller<HTMLDivElement> {
   static values = {
     enabled: { type: Boolean, default: false },
     configKey: { type: String, default: 'default' },
-    configArgs: { type: Array, default: [this, 220] }   // height is necessary, any others will depend on the specific configuration
+    configArgs: { type: Array, default: [220] }   // height is necessary, any others will depend on the specific configuration
   }
   declare enabledValue: boolean;
   declare readonly configKeyValue: string;
-  declare configArgsValue: any[];
+  declare configArgsValue: [number, ...any[]];
 
-  configFactory;
-  codable;
-  editable;
-  editingArea;
-  editor;
-  statusbar;
-  toolbar;
+  declare configFactory: ConfigFactory | undefined;
+  declare codable: HTMLTextAreaElement;
+  declare editable: HTMLDivElement;
+  declare editingArea: HTMLDivElement;
+  declare editor: HTMLDivElement;
+  declare statusbar: HTMLDivElement;
+  declare toolbar: HTMLDivElement;
 
   connect() {
     // console.log('connect summernote')
-    this.configFactory = this.configKeyValue in configFactories ? 
-      configFactories[this.configKeyValue] : 
-      configFactories['default'];
     if (this.enabledValue) this.init();
   }
 
   // use contenteditable instead of textarea because html can't be rendered in textarea
   init() {
-    this.element.contentEditable = 'true';
-    $(this.element).summernote( this.configFactory(this, ...this.configArgsValue) );
+    this.configFactory = configFactories[this.configKeyValue];
+    if (this.configFactory) {
+      this.element.contentEditable = 'true';
+      $(this.element).summernote( this.configFactory(this, ...this.configArgsValue) );
+    }  
   }
 
-  onInitComplete(e) {
+  onInitComplete(e: CustomEvent) {
     this.codable = e.detail.codable;
     this.editable = e.detail.editable;
     this.editingArea = e.detail.editingArea;
@@ -65,8 +71,8 @@ export default class SummernoteController extends Controller<HTMLDivElement> {
     this.element.contentEditable = 'false';
   }
 
-  enabledValueChanged(isEnabled, wasEnabled) {
-    if (wasEnabled === undefined) return false;
+  enabledValueChanged(isEnabled: boolean, wasEnabled: boolean) {
+    if (wasEnabled === undefined) return;
     isEnabled ? this.init() : this.destroy();
   }
 }
