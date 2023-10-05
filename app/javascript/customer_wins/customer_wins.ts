@@ -1,13 +1,18 @@
-export function newCustomerWinPath(params) {
+// import 'datatables.net-rowgroup-bs';
+import type { Config, Api } from 'datatables.net';
+// import 'datatables.net-bs';
+import 'datatables.net-rowgroup';
+
+export function newCustomerWinPath(params: URLSearchParams) {
   const subdomain = location.host.split('.')[0];
   return `/companies/${subdomain}/successes/new${params.size > 0 ? `?${params}` : ''}`;
 }
 
-export function editCustomerWinPath(successId) {
+export function editCustomerWinPath(successId: number) {
   return `/successes/${successId}/edit`;
 }
 
-export function tableConfig() {
+export function tableConfig(): Config {
   const colIndices = { success: 1, customer: 2, curator: 3, status: 4, story: 5, actions: 6 };
   return {
     data: CSP.customerWins,
@@ -22,18 +27,20 @@ export function tableConfig() {
     columns: [
       {
         data: null,
-        render: (data, type, row) => `
-          <button type="button" class="btn" data-action="customer-win#toggleChildRow">
-            <i class="fa fa-caret-right"></i>
-            <i class="fa fa-caret-down"></i>
-          </button>
-        `,
-        createdCell: (td) => td.classList.add('toggle-child')
+        render: (data: any, type: any, row: any) => {
+          return `
+            <button type="button" class="btn" data-action="customer-win#toggleChildRow">
+              <i class="fa fa-caret-right"></i>
+              <i class="fa fa-caret-down"></i>
+            </button>
+          `
+        },
+        createdCell: (td: Node) => $(td).addClass('toggle-child')
       },
       {
         name: 'success',
         data: {
-          _: (row, type, set, meta) => ({
+          _: (row: CustomerWin, type: any, set: any) => ({
             id: row.id,
             name: row.name,
             curatorId: row.curator.id,
@@ -47,7 +54,7 @@ export function tableConfig() {
       {
         name: 'customer',
         data: {
-          _: (row, type, set, meta) => ({ id: row.customer.id, name: row.customer.name }),
+          _: (row: CustomerWin, type: any, set: any) => ({ id: row.customer.id, name: row.customer.name }),
           display: 'customer.name',
           filter: 'customer.id',
           sort: 'customer.name'
@@ -65,12 +72,15 @@ export function tableConfig() {
         data: {
           _: 'display_status',
         },
-        createdCell: (td) => td.classList.add('status')
+        createdCell: (td: Node) => {
+          if (!(td instanceof HTMLTableCellElement)) return;
+          td.classList.add('status')
+        }
       },
       {
         name: 'story',
         data: {
-          _: (row, type, set, meta) => (
+          _: (row: any, type: any, set: any) => (
             row.story && { id: row.story.id, title: row.story.title }
           )
         },
@@ -78,13 +88,14 @@ export function tableConfig() {
       },
       {
         data: 'display_status',
-        render: (data, type, row, meta) => '',    // customer win controller will render the dropdown
-        createdCell: (td) => {
-          td.classList.add('dropdown');
-          td.setAttribute('data-controller', 'actions-dropdown');
-          td.setAttribute('data-customer-win-target', 'actionsDropdown');
+        render: (data: any, type: any, row: any) => '',    // customer win controller will render the dropdown
+        createdCell: (td: Node) => {
+          $(td)
+            .addClass('dropdown')
+            .attr('data-controller', 'actions-dropdown')
+            .attr('data-customer-win-target', 'actionsDropdown');
           ['add', 'invite', 'show'].forEach(action => (
-            td.setAttribute(`customer-win:${action}-contributors`, `dashboard#${action}CustomerWinContributors`)
+            $(td).attr(`customer-win:${action}-contributors`, `dashboard#${action}CustomerWinContributors`)
           ));
         }
       }
@@ -96,7 +107,7 @@ export function tableConfig() {
         targets: [0, colIndices.actions],
         orderable: false,
         searchable: false,
-        createdCell: (td, cellData, rowData, row, col) => (
+        createdCell: (td: Node, cellData: any, rowData: any, row: number, col: number) => (
           $(td).addClass(col === 0 ? 'toggle-child' : 'actions dropdown')
         )
       },
@@ -110,7 +121,9 @@ export function tableConfig() {
 
     rowGroup: {
       dataSrc: 'customer.name',
-      startRender(groupRows, customerName) {
+      startRender(rows: Api<any>, group: string) {
+        const groupRows = rows;
+        const customerName = group;
         const customerId = groupRows.data()[0].customer.id;
         const turboFrameAttrs = { id: `edit-customer-${customerId}`, src: `/customers/${customerId}/edit` };
         return $(`
@@ -135,17 +148,18 @@ export function tableConfig() {
       }
     },
 
-    createdRow(row, data, index) {
+    createdRow(row: Node, data: object | any[], index: number) {
       const { id, display_status: status, curator, customer, story } = data;
-      row.setAttribute('data-controller', 'customer-win');
-      row.setAttribute('data-customer-win-resource-outlet', '#contributors')
-      row.setAttribute('data-customer-win-modal-outlet', '#main-modal');
-      row.setAttribute('data-customer-win-contributions-modal-outlet', '.contributions-modal')
-      row.setAttribute('data-customer-win-row-data-value', JSON.stringify({ id, status, curator, customer, story }));
-      row.setAttribute(
-        'data-customer-win-child-row-turbo-frame-attrs-value', 
-        JSON.stringify({ id: 'edit-customer-win', src: editCustomerWinPath(id) })
-      );
+      $(row)
+        .attr('data-controller', 'customer-win')
+        .attr('data-customer-win-resource-outlet', '#contributors')
+        .attr('data-customer-win-modal-outlet', '#main-modal')
+        .attr('data-customer-win-contributions-modal-outlet', '.contributions-modal')
+        .attr('data-customer-win-row-data-value', JSON.stringify({ id, status, curator, customer, story }))
+        .attr(
+          'data-customer-win-child-row-turbo-frame-attrs-value', 
+          JSON.stringify({ id: 'edit-customer-win', src: editCustomerWinPath(id) })
+        );
       // $(row).attr('data-customer-id', data.customer.id);
       // $(row).attr('data-success-id', data.id);
       // $(row).children().eq(1).attr('data-filter', data.id);
