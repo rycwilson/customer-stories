@@ -62,8 +62,9 @@ declare global {
     name: string;
     customer_id: number; 
     curator_id: number; 
-    curator: object; 
+    curator: User; 
     customer: Customer; 
+    display_status?: string;
     story: { 
       id: number; 
       title: string; 
