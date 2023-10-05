@@ -61,6 +61,7 @@
     "@types/jquery": "^3.5.19",
     "@types/js-cookie": "^3.0.4",
     "@types/rails__ujs": "^6.0.2",
+    "@types/summernote": "^0.8.8",
     "esbuild": "0.19.3",
     "typescript": "^5.2.2"
   }

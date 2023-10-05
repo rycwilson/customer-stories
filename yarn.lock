@@ -386,6 +386,13 @@
   resolved "https://registry.yarnpkg.com/@types/sizzle/-/sizzle-2.3.3.tgz#ff5e2f1902969d305225a047c8a0fd5c915cebef"
   integrity sha512-JYM8x9EGF163bEyhdJBpR2QX1R5naCJHC8ucJylJ3w9/CVBaskdQ8WqBf8MmQrd1kRvp/a4TS8HJ+bxzR7ZJYQ==
 
+"@types/summernote@^0.8.8":
+  version "0.8.8"
+  resolved "https://registry.yarnpkg.com/@types/summernote/-/summernote-0.8.8.tgz#45f55bc1df936589953919807c0cbf4b1854993a"
+  integrity sha512-w5ipdaF5Nip1KLCCznrcxqDqxS6jeN7beTxF32M35sIyYdpL+E+X+W18D3MoZrL64qhYu8T9ctB2FzaGCkMYcg==
+  dependencies:
+    "@types/jquery" "*"
+
 "@types/unist@^2.0.0", "@types/unist@^2.0.2":
   version "2.0.6"
   resolved "https://registry.yarnpkg.com/@types/unist/-/unist-2.0.6.tgz#250a7b16c3b91f672a24552ec64678eeb1d3a08d"
