@@ -110,7 +110,7 @@ export default class CustomerWinController extends Controller<HTMLTableRowElemen
           contribution?: string,
           feedback?: string,
           submitted_at?: string,
-          answers?: Answer[],
+          answers?: ContributorAnswer[],
           invitation_template?: InvitationTemplate, 
           contributor?: User,
           customer?: Customer
