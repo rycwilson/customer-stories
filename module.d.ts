@@ -115,7 +115,7 @@ declare global {
     contributor?: User;
     referrer?: User;
     invitation_template?: InvitationTemplate;
-    answers?: Answer[];
+    answers?: ContributorAnswer[];
   }
 
   interface InvitationTemplate {
@@ -123,14 +123,15 @@ declare global {
     name: string;
   }
 
-  interface Question {
+  interface ContributorQuestion {
     id?: number;
     question?: string;
   }
 
-  interface Answer {
+  interface ContributorAnswer {
     answer: string;
+    contribution_id: number;
     contributor_question_id: number;
-    question: Question;
+    question: ContributorQuestion;
   }
 }
