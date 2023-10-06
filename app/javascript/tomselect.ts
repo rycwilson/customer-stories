@@ -24,7 +24,7 @@ export interface TomselectOptions {
 };
 
 export const tsBaseOptions = {
-  maxOptions: null,
+  maxOptions: 1000,
   closeAfterSelect: true,
   onInitialize() {
   },
