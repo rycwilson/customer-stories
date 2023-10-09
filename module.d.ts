@@ -26,6 +26,15 @@ declare global {
     popover: (options: object) => void;
     modal: (action: string) => void;
   }
+  
+  interface JQueryStatic {
+    summernote: {
+      ui: any,
+      plugins: any,
+      range: any,
+      interface: any, 
+    }
+  }
 
   // rails-ujs events
   interface HTMLElementEventMap {
