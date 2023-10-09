@@ -2,7 +2,7 @@ import { Controller } from '@hotwired/stimulus';
 import ResourceController from './resource_controller';
 import type { TomselectOption, TomselectOptions } from '../tomselect';
 
-export default class extends Controller<HTMLFormElement> {
+export default class ContributionFormController extends Controller<HTMLFormElement> {
   static outlets = ['resource'];
   declare readonly resourceOutlets: ResourceController[];
 
