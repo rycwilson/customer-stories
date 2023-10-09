@@ -1,12 +1,12 @@
 import { Controller } from '@hotwired/stimulus';
 import CustomerWinFormController from './customer_win_form_controller';
-import ContributionController from './contribution_controller';
+import ContributionFormController from './contribution_form_controller';
 
 export default class extends Controller<HTMLDivElement> {
   static outlets = ['customer-win-form', 'contribution-form'];
-  declare readonly customerWinFormOutlet: HTMLFormElement;
+  declare readonly customerWinFormOutlet: CustomerWinFormController;
   declare readonly hasCustomerWinFormOutlet: boolean;
-  declare readonly contributionFormOutlet: HTMLFormElement;
+  declare readonly contributionFormOutlet: ContributionFormController;
   declare readonly hasContributionFormOutlet: boolean;
 
   static targets = ['contactField', 'firstName'];
@@ -20,12 +20,13 @@ export default class extends Controller<HTMLDivElement> {
   declare readonly shouldEnableValue: boolean;
   declare readonly parentSelectTargetValue: string;
 
-  declare formController: CustomerWinFormController | ContributionController;
+  // declare formController: Controller 
 
   shouldEnableValueChanged(shouldEnable: boolean, wasEnabled: boolean) {
-    if (wasEnabled === undefined) return false;
+    if (wasEnabled === undefined) return;
     this.element.classList.toggle('hidden', !shouldEnable);
-    this.formCtrl[this.parentSelectTargetValue].disabled = shouldEnable;
+
+    // this.formCtrl[this.parentSelectTargetValue].disabled = shouldEnable;
     this.contactFieldTargets.forEach(input => {
       input.disabled = !shouldEnable;
       if (!shouldEnable && input.type !== 'hidden') input.value = '';
@@ -38,11 +39,11 @@ export default class extends Controller<HTMLDivElement> {
   }
 
   // parent form controller
-  get formCtrl() {
-    this.formController = this.formController || (
-      (this.hasCustomerWinFormOutlet && this.customerWinFormOutlet) ||
-      (this.hasContributionFormOutlet && this.contributionFormOutlet)
-    );
-    return this.formController;
-  }
+  // get formCtrl() {
+  //   this.formController = this.formController || (
+  //     (this.hasCustomerWinFormOutlet && this.customerWinFormOutlet) ||
+  //     (this.hasContributionFormOutlet && this.contributionFormOutlet)
+  //   );
+  //   return this.formController;
+  // }
 }

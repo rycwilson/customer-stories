@@ -37,7 +37,7 @@ export default class ModalController extends Controller<HTMLDivElement> {
   }
 
   bodyContentValueChanged(newContent: string) {
-    [...this.bodyTarget.children].forEach(child => { if (!child.isSameNode(this.turboFrameTarget)) child.remove(); });
+    Array.from(this.bodyTarget.children).forEach(child => { if (!child.isSameNode(this.turboFrameTarget)) child.remove(); });
     if (newContent) {
       this.turboFrameTarget.classList.add('hidden');
       this.bodyTarget.insertAdjacentHTML('beforeend', newContent);
