@@ -1,8 +1,11 @@
-export function newContributionPath(customerWinId, params) {
+import type { Config, Api } from 'datatables.net-bs';
+import 'datatables.net-rowgroup-bs';
+
+export function newContributionPath(customerWinId: string | number, params: URLSearchParams) {
   return `/successes/${customerWinId || '0'}/contributions/new${params.size > 0 ? `?${params}` : ''}`;
 }
 
-export function tableConfig(workflowStage = 'prospect') {
+export function tableConfig(workflowStage = 'prospect'): Config {
   const colIndices = {
     contributor: 1,
     success: 2,
@@ -28,22 +31,22 @@ export function tableConfig(workflowStage = 'prospect') {
       {
         name: 'childRow',
         data: 'success.id',
-        render: (data, type, row) => `
+        render: (data: any, type: any, row: any) => `
           <button type="button" class="btn">
             <i class="fa fa-caret-right"></i>
             <i class="fa fa-caret-down"></i>
           </button>
         `,
-        createdCell: (td) => td.classList.add('toggle-child')
+        createdCell: (td: Node) => $(td).addClass('toggle-child')
       },
       {
         name: 'contributor',
         data: {
-          _: (row, type, set, meta) => ({
-            id: row.contributor.id,
-            fullName: row.contributor.full_name,
+          _: (row: Contribution, type: any, set: any) => ({
+            id: row.contributor?.id,
+            fullName: row.contributor?.full_name,
             contributionId: row.id,
-            curatorId: row.success.curator.id
+            curatorId: row.success?.curator.id
           }),
           display: 'contributor.full_name',
           filter: 'contributor.id',
@@ -54,7 +57,7 @@ export function tableConfig(workflowStage = 'prospect') {
         name: 'success',
         defaultContent: 'Customer Win',
         data: {
-          _: (row, type, set, meta) => ({ id: row.success.id, name: row.success.name }),
+          _: (row: Contribution, type: any, set: any) => ({ id: row.success?.id, name: row.success?.name }),
           filter: 'success.id',
           sort: 'success.name'
         }
@@ -67,13 +70,13 @@ export function tableConfig(workflowStage = 'prospect') {
           display: 'invitation_template.name'
         },
         defaultContent: '<span class="placeholder">Select</span>',
-        createdCell: (td) => td.classList.add('invitation-template')
+        createdCell: (td: Node) => $(td).addClass('invitation-template')
       },
 
       {  // <td data-search="<%= contribution.success.curator.id %>"></td>
         name: 'curator',
         data: {
-          _: (row, type, set, meta) => ({ id: row.success.curator.id, fullName: row.success.curator.full_name }),
+          _: (row: Contribution, type: any, set: any) => ({ id: row.success?.curator.id, fullName: row.success?.curator.full_name }),
           filter: 'success.curator.id'
         }
       },      // curator
@@ -81,7 +84,7 @@ export function tableConfig(workflowStage = 'prospect') {
       {
         name: 'customer',
         data: {
-          _: (row, type, set, meta) => ({ id: row.success.customer.id, name: row.success.customer.name }),
+          _: (row: Contribution, type: any, set: any) => ({ id: row.success?.customer.id, name: row.success?.customer.name }),
           filter: 'success.customer.id',
           sort: 'success.customer.name'
         },
@@ -93,16 +96,17 @@ export function tableConfig(workflowStage = 'prospect') {
           _: 'status',
           display: 'display_status'
         },
-        createdCell: (td) => td.classList.add('status')
+        createdCell: (td: Node) => $(td).addClass('status')
       },
       {
         // data is status as this will determine actions available
         data: 'status',
-        render: (data, type, row, meta) => '',
-        createdCell: (td) => {
-          td.classList.add('dropdown');
-          td.setAttribute('data-controller', 'actions-dropdown');
-          td.setAttribute('data-contribution-target', 'actionsDropdown');
+        render: (data: any, type: any, row: any) => '',
+        createdCell: (td: Node) => {
+          $(td)
+            .addClass('dropdown')
+            .attr('data-controller', 'actions-dropdown')
+            .attr('data-contribution-target', 'actionsDropdown');
         }
       },
       {
@@ -132,9 +136,9 @@ export function tableConfig(workflowStage = 'prospect') {
       { targets: colIndices.actions, width: '8%' }
     ],
 
-    rowGroup: workflowStage === 'curate' ? null : { dataSrc: 'success.name', startRender: rowGroupTemplate },
+    rowGroup: workflowStage === 'curate' ? undefined : { dataSrc: 'success.name', startRender: rowGroupTemplate },
 
-    createdRow: (row, data, index) => {
+    createdRow: (row: Node, data: object | any[], index: number) => {
       // const isPreInvite = data.status === 'pre_request';
       // const didNotRespond = data.status === 'did_not_respond';
       // $(row)
@@ -152,21 +156,23 @@ export function tableConfig(workflowStage = 'prospect') {
       //     .eq(3).addClass('status').end()
       //     .eq(4).addClass('actions dropdown')
 
-      const { id, status, contributor, invitation_template: invitationTemplate, success: customerWin } = data;
-      row.setAttribute('data-controller', 'contribution');
-      row.setAttribute('data-contribution-contributors-outlet', '#contributors')
-      row.setAttribute(
-        'data-contribution-row-data-value', JSON.stringify({ id, status, contributor, invitationTemplate, customerWin })
-      );
-      row.setAttribute('data-datatable-target', 'row');
+      const { id, status, contributor, invitation_template: invitationTemplate, success: customerWin } = data as Contribution;
+      $(row)
+        .attr('data-controller', 'contribution')
+        .attr('data-contribution-contributors-outlet', '#contributors')
+        .attr(
+          'data-contribution-row-data-value', JSON.stringify({ id, status, contributor, invitationTemplate, customerWin })
+        )
+        .attr('data-datatable-target', 'row');
     }
   }
 }
 
-function rowGroupTemplate(groupRows, successName) {
+function rowGroupTemplate(rows: Api<any>, group: string) {
   // console.log(successName + ': ', groupRows);
   // customer and story (if exists) data same for all rows, so just look at [0]th row
-  const customerWin = groupRows.data()[0].success;
+  const customerWinName = group;
+  const customerWin = rows.data()[0].success;
   const story = customerWin.story;
   const storySlug = story && story.slug;
   const storyTitle = story && story.title;
@@ -177,7 +183,7 @@ function rowGroupTemplate(groupRows, successName) {
       <span class="emdash">&nbsp;&nbsp;&#8211;&nbsp;&nbsp;</span>
       ${story ? 
         `<a href="${storyPath}" id="contributors-row-group-link-story-${story.id}">${storyTitle}</a>` :
-        `<a href="javascript:;" id="contributors-row-group-link-cw-${customerWin.id}">${successName}</a>`
+        `<a href="javascript:;" id="contributors-row-group-link-cw-${customerWin.id}">${customerWinName}</a>`
       }
     </td>
   `);

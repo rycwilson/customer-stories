@@ -1,9 +1,9 @@
 import { Controller } from "@hotwired/stimulus";
 import ResourceController from "./resource_controller";
 import DataTable from 'datatables.net-bs';
-import 'datatables.net-rowgroup';
-import type { Api as DataTableApi, Config as DataTableOptions } from "datatables.net-bs";
-// import type { RowGroup}
+import 'datatables.net-rowgroup-bs';
+import type { Api, Config } from 'datatables.net-bs';
+
 interface SearchParams {
   curatorId: string,
   columnFilters: { column: string, q: string, regEx: boolean, smartSearch: boolean }[],
@@ -27,14 +27,14 @@ export default class DatatableController extends Controller<HTMLTableElement> {
   declare enableRowGroupsValue: boolean;
   declare searchParamsValue: SearchParams | undefined;
 
-  declare dt: DataTableApi<any>;
+  declare dt: Api<any>
   didInitialize = false;
   declare searchDebounceTimer: number;
 
   connect() {
   }
   
-  baseOptions() {
+  get baseOptions(): Config {
     const ctrl = this;
     return {
       deferRender: true,
@@ -46,7 +46,9 @@ export default class DatatableController extends Controller<HTMLTableElement> {
         if (ctrl.didInitialize) ctrl.redrawRowGroups();
         ctrl.dispatch('drawn');
       },
-      initComplete(settings: object) {
+
+      // TODO: what is the type of this?
+      initComplete(this: any, settings: object) {
         ctrl.cloneFilterResults();
         ctrl.didInitialize = true;
         ctrl.dispatch('init', { detail: { dt: this.api() } });
@@ -59,7 +61,7 @@ export default class DatatableController extends Controller<HTMLTableElement> {
     if (dataIsReady) {
       this.dt = new DataTable(
         this.element, 
-        { ...this.baseOptions(), ...this.resourceOutlet.tableConfig() }
+        { ...this.baseOptions, ...this.resourceOutlet.tableConfig() }
       );
     }
   }
@@ -88,10 +90,9 @@ export default class DatatableController extends Controller<HTMLTableElement> {
 
   search({ curatorId, columnFilters, filterVal, tsSearchResults }: SearchParams) {
     // console.log('search')
-    let dtSearch = this.dt
-      .search('')
-      .columns().search('')
-      .column('curator:name').search(curatorId ? `^${curatorId}$` : '', true, false);
+    let dtSearch = this.dt.search('')
+    dtSearch.columns().search('') 
+    dtSearch.column('curator:name').search(curatorId ? `^${curatorId}$` : '', true, false);
 
     columnFilters.forEach(({ column, q, regEx: isRegEx, smartSearch: useSmartSearch }) => {
       dtSearch = dtSearch.column(`${column}:name`).search(q, isRegEx, useSmartSearch);

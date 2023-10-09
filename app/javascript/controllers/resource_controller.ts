@@ -8,7 +8,8 @@ import {
 } from '../tables.js';
 import { tableConfig as customerWinsTableConfig, newCustomerWinPath } from '../customer_wins/customer_wins';
 import { tableConfig as contributorsTableConfig, newContributionPath } from '../contributions/contributions';
-import { type Api as DataTableApi } from "datatables.net-bs";
+import type { Api, Config } from "datatables.net-bs";
+import 'datatables.net-rowgroup-bs';
 
 export default class ResourceController extends Controller<HTMLDivElement> {
   static outlets = ['dashboard', 'resource'];
@@ -30,7 +31,7 @@ export default class ResourceController extends Controller<HTMLDivElement> {
   // dt is defined when the table is initialized
   // declare dt instead of initializing it to avoid having to allow for undefined value
   // if the table fails to initialize, errors will be handled in the datatable controller
-  declare dt: DataTableApi<any>;
+  declare dt: Api<any>;
   
   connect() {
     // console.log(`connect ${this.resourceName}`)
@@ -72,14 +73,14 @@ export default class ResourceController extends Controller<HTMLDivElement> {
     searchTable(this);
   }
 
-  tableConfig() {
+  tableConfig(): Config {
     switch (this.resourceName) {
       case 'customerWins':
         return customerWinsTableConfig();
       case 'contributions':
         return contributorsTableConfig();
-      default: 
-        throw new Error('Missing table configuration');
+      // default: 
+      //   throw new Error('Missing table configuration');
     } 
   }
 
@@ -87,7 +88,7 @@ export default class ResourceController extends Controller<HTMLDivElement> {
     const filterVal = this.filterSelectTarget.value;
     const type = filterVal && filterVal.slice(0, filterVal.lastIndexOf('-'));
     const id = filterVal && filterVal.slice(filterVal.lastIndexOf('-') + 1, filterVal.length);
-    const customerWinId = type === 'success' && id;
+    const customerWinId = type === 'success' ? id : '';
     const params = new URLSearchParams();
     params.set('curator_id', this.curatorSelectTarget.value);
     if (filterVal) params.set(`${type}_id`, id);

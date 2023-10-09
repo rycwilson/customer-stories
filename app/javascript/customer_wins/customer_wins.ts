@@ -1,14 +1,12 @@
-// import 'datatables.net-rowgroup-bs';
-import type { Config, Api } from 'datatables.net';
-// import 'datatables.net-bs';
-import 'datatables.net-rowgroup';
+import type { Config, Api } from 'datatables.net-bs';
+import 'datatables.net-rowgroup-bs';
 
 export function newCustomerWinPath(params: URLSearchParams) {
   const subdomain = location.host.split('.')[0];
   return `/companies/${subdomain}/successes/new${params.size > 0 ? `?${params}` : ''}`;
 }
 
-export function editCustomerWinPath(successId: number) {
+export function editCustomerWinPath(successId: string | number) {
   return `/successes/${successId}/edit`;
 }
 
