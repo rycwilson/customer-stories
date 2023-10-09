@@ -29,12 +29,12 @@ export default class SummernoteController extends Controller<HTMLDivElement> {
   declare configArgsValue: [number, ...any[]];
 
   declare configFactory: ConfigFactory | undefined;
-  declare codable: HTMLTextAreaElement;
-  declare editable: HTMLDivElement;
-  declare editingArea: HTMLDivElement;
-  declare editor: HTMLDivElement;
-  declare statusbar: HTMLDivElement;
-  declare toolbar: HTMLDivElement;
+  declare $codable: JQuery<HTMLTextAreaElement>
+  declare $editable: JQuery<HTMLDivElement>
+  declare $editingArea: JQuery<HTMLDivElement>
+  declare $editor: JQuery<HTMLDivElement>
+  declare $statusbar: JQuery<HTMLDivElement>
+  declare $toolbar: JQuery<HTMLDivElement>
 
   connect() {
     // console.log('connect summernote')
@@ -51,13 +51,13 @@ export default class SummernoteController extends Controller<HTMLDivElement> {
   }
 
   onInitComplete(e: CustomEvent) {
-    this.codable = e.detail.codable;
-    this.editable = e.detail.editable;
-    this.editingArea = e.detail.editingArea;
-    this.editor = e.detail.editor;
-    this.statusbar = e.detail.statusbar;
-    this.toolbar = e.detail.toolbar;
-    $(this.editable).on('click', (e) => $(this.element).summernote('saveRange'));
+    this.$codable = e.detail.codable;
+    this.$editable = e.detail.editable;
+    this.$editingArea = e.detail.editingArea;
+    this.$editor = e.detail.editor;
+    this.$statusbar = e.detail.statusbar;
+    this.$toolbar = e.detail.toolbar;
+    this.$editable.on('click', (e) => $(this.element).summernote('saveRange'));
     // console.log('codable', codable)
     // console.log('editable', editable)
     // console.log('editingArea', editingArea)

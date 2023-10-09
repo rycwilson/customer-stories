@@ -1,8 +1,36 @@
 import { distinctObjects } from '../util';
+import SummernoteController from '../controllers/summernote_controller';
+
+// copied from @types/summernote, so that we can add the customButton tuple
+type ToolbarDefinition = Array<
+  | ["style", Summernote.toolbarStyleGroupOptions[]]
+  | ["font", Summernote.toolbarFontGroupOptions[]]
+  | ["fontname", Summernote.toolbarFontNameOptions[]]
+  | ["fontsize", Summernote.toolbarFontsizeGroupOptions[]]
+  | ["color", Summernote.toolbarColorGroupOptions[]]
+  | ["para", Summernote.toolbarParaGroupOptions[]]
+  | ["height", Summernote.toolbarHeightGroupOptions[]]
+  | ["table", Summernote.toolbarTableGroupOptions[]]
+  | ["insert", Summernote.toolbarInsertGroupOptions[]]
+  | ["view", Summernote.toolbarViewGroupOptions[]]
+  | ["help", Summernote.toolbarHelpGroupOptions[]]
+  | ["misc", Summernote.miscGroupOptions[]]
+  | ["customButton", ['contributionsDropdown', 'placeholdersDropdown']]
+>;
+
+type CustomOptions = {
+  toolbar: ToolbarDefinition;
+  buttons: {
+    contributionsDropdown: ReturnType<typeof initDropdown>;
+    placeholdersDropdown: ReturnType<typeof initDropdown>;
+  }
+}
+
+type CustomSummernoteOptions = Summernote.Options & CustomOptions;
 
 // use a skeleton version of the child row template as a placeholder while loading
 // see views/successes/win_story_form
-export function childRowPlaceholderTemplate(curatorName) {
+export function childRowPlaceholderTemplate(curatorName?: string) {
   return `
     <div class="success-form">
       <div class="win-story">
@@ -44,7 +72,9 @@ export function childRowPlaceholderTemplate(curatorName) {
   `
 }
 
-export function summernoteConfig(summernoteCtrl, height, contributions, answers) {
+export function summernoteConfig(
+  ctrl: SummernoteController, height: number, contributions: Contribution[], answers: ContributorAnswer[]
+): CustomSummernoteOptions {
   console.log('summernote height', height)
   return {
     height,
@@ -56,21 +86,43 @@ export function summernoteConfig(summernoteCtrl, height, contributions, answers)
       ['customButton', ['contributionsDropdown', 'placeholdersDropdown']],
       // code editor is handy in development
       // ['view', <%= Rails.env.development? ? ['codeview'] : [] %>],
-    ],
+    ] as Summernote.toolbarDef,
     buttons: {
       contributionsDropdown: initDropdown.bind(null, 'contributions', contributions, answers),
       placeholdersDropdown: initDropdown.bind(null, 'placeholders', contributions, answers)
     },
     callbacks: {
       // without this, insertion of a new line doesn't trigger input; critical for inserting placeholders
-      onInit: (summernote) => {
+      onInit: (
+        { codable: $codable, editable: $editable, editingArea: $editingArea, editor: $editor, statusbar: $statusbar, toolbar: $toolbar }: 
+        { codable: JQuery<HTMLTextAreaElement>, 
+          editable: JQuery<HTMLDivElement>, 
+          editingArea: JQuery<HTMLDivElement>, 
+          editor: JQuery<HTMLDivElement>, 
+          statusbar: JQuery<HTMLDivElement>, 
+          toolbar: JQuery<HTMLDivElement> }
+      ) => {
         // console.log('summernote', summernote)
-
+        const { codable, editable, editingArea, editor, statusbar, toolbar }: {
+          codable: HTMLTextAreaElement, 
+          editable: HTMLDivElement, 
+          editingArea: HTMLDivElement, 
+          editor: HTMLDivElement, 
+          statusbar: HTMLDivElement, 
+          toolbar: HTMLDivElement
+        } = { 
+          codable: $codable[0], 
+          editable: $editable[0], 
+          editingArea: $editingArea[0], 
+          editor: $editor[0], 
+          statusbar: $statusbar[0], 
+          toolbar: $toolbar[0]
+        } 
         // convert jquery elements to native elements
-        const { codable, editable, editingArea, editor, statusbar, toolbar } = (
-          Object.fromEntries(Object.entries(summernote).map(([key, element]) => [key, element[0]]))
-        );
-        summernoteCtrl.dispatch('init', { detail: { codable, editable, editingArea, editor, statusbar, toolbar } })
+        // const { codable, editable, editingArea, editor, statusbar, toolbar } = (
+        //   Object.fromEntries(Object.entries(summernote).map(([key, element]) => [key, element[0]]))
+        // );
+        ctrl.dispatch('init', { detail: { $codable, $editable, $editingArea, $editor, $statusbar, $toolbar } });
 
         // const setMaxDropdownHeight = () => {
         //   const dropdownMenus = toolbar.querySelectorAll('.dropdown-menu.summernote-custom');
@@ -80,41 +132,62 @@ export function summernoteConfig(summernoteCtrl, height, contributions, answers)
         // observeEditor(note, editable, setMaxDropdownHeight);
 
         depopulatePlaceholders(editable);
-        initCustomToolbar(toolbar.querySelector('.note-customButton'), contributions.length);
+
+        const customButtonsEl = toolbar.querySelector<HTMLDivElement>('.note-customButton');
+        if (customButtonsEl) initCustomToolbar(customButtonsEl, contributions.length);
       },
-      onEnter: function (e) {
+      onEnter: function (e: Event) {
         // $(this).summernote('pasteHTML', '<br></br>');
         // e.preventDefault();
       },
-      onFocus: function (e) {},
+      onFocus: function (e: Event) {},
       onPaste: function () {},
-      onChange: function (content) {}
+      onChange: function (contents: string) {}
     }
   }
 }
 
-export function populatePlaceholders(html, contributions, answers) {
+export function populatePlaceholders(html: string, contributions: Contribution[], answers: ContributorAnswer[]) {
   const wrapper = document.createElement('div');
   wrapper.innerHTML = html;
-  [...wrapper.getElementsByClassName('placeholder')].forEach(placeholderEl => {
-    placeholderEl.outerHTML = placeholderEl.dataset.questionId ?
-      groupContributionTemplate(placeholderEl.dataset.questionId, contributions, answers, placeholderEl) :
-      individualContributionTemplate(placeholderEl.dataset.contributionId, contributions, answers, placeholderEl);
+  Array.from(wrapper.getElementsByClassName('placeholder')).forEach(placeholderEl => {
+    const placeholder: { el: Element, html: HTMLElement } = { el: placeholderEl, html: placeholderEl as HTMLElement };
+    const questionId = placeholder.html.dataset.questionId;
+    const contributionId = placeholder.html.dataset.contributionId;
+    if (questionId) {
+      placeholder.html.outerHTML = groupContributionTemplate(questionId, contributions, answers, placeholderEl)
+    } else if (contributionId) {
+      placeholder.html.outerHTML = individualContributionTemplate(contributionId, contributions, answers, placeholderEl)
+    } else {
+      return true;  // continue
+    }
   });
   return wrapper.innerHTML;
 }
 
-function depopulatePlaceholders(editable) {
-  [...editable.getElementsByClassName('group-contribution'), ...editable.getElementsByClassName('individual-contribution')]
+function depopulatePlaceholders(editable: HTMLDivElement) {
+  const groupContributions = Array.from(editable.getElementsByClassName('group-contribution'));
+  const individualContributions = Array.from(editable.getElementsByClassName('individual-contribution'));
+  [...groupContributions, ...individualContributions]
     .forEach(population => {
-      if (population.dataset.placeholder) population.outerHTML = population.dataset.placeholder;
+      const popHtml: HTMLElement = population as HTMLElement;
+      if (popHtml.dataset.placeholder) popHtml.outerHTML = popHtml.dataset.placeholder;
     });
 }
 
-export function individualContributionTemplate(contributionId, contributions, answers, placeholderEl) {
-  const contribution = contributions.find(c => c.id == contributionId);
-  const cAnswers = answers.filter(a => a.contribution_id == contributionId);
-  const questionAnswerTemplate = (answer) => {
+export function individualContributionTemplate(
+  contributionId: string, 
+  contributions: Contribution[], 
+  answers: ContributorAnswer[], 
+  placeholderEl?: Element
+) {
+  const contribution = contributions.find(c => c.id == +contributionId);
+  const contributor = contribution?.contributor
+  if (!contribution || !contributor) {
+    return '<li><p style="color:#d11302"><Missing Contribution data</p></li>';
+  }
+  const cAnswers = answers.filter(a => a.contribution_id == +contributionId);
+  const questionAnswerTemplate = (answer: ContributorAnswer) => {
     return !answer.answer ? 
       [] : `
       <li>
@@ -128,8 +201,8 @@ export function individualContributionTemplate(contributionId, contributions, an
       class="individual-contribution" 
       data-contribution-id="${contributionId}" 
       ${placeholderEl ? `data-placeholder="${placeholderEl.outerHTML.replace(/"/g, "'")}"` : ''}">
-      <p>${contribution.contributor.full_name}</p>
-      <p>${contribution.contributor.title}</p>
+      <p>${contributor.full_name}</p>
+      <p>${contributor.title}</p>
       ${cAnswers.length > 0 ?
         `<ul>${cAnswers.flatMap(questionAnswerTemplate).join('')}</ul>` :
         '<div style="color:#d11302">No answers from this contributor</div>'
@@ -138,23 +211,31 @@ export function individualContributionTemplate(contributionId, contributions, an
   `;
 }
 
-export function groupContributionTemplate(questionId, contributions, answers, placeholderEl) {
+export function groupContributionTemplate(
+  questionId: string, 
+  contributions: Contribution[], 
+  answers: ContributorAnswer[], 
+  placeholderEl?: Element
+) {
   let questionText;
   answers.some(answer => {
-    if (answer.question.id == questionId) {
+    if (answer.question.id == +questionId) {
       questionText = answer.question.question;
       return true;
     }
   });
-  const qAnswers = answers.filter(answer => answer.question.id == questionId);
-  const answerTemplate = (answer) => {
+  const qAnswers = answers.filter(answer => answer.question.id == +questionId);
+  const answerTemplate = (answer: ContributorAnswer) => {
     const contribution = contributions.find(c => c.id == answer.contribution_id);
-    return `
+    const contributor = contribution?.contributor;
+    return contributor ? `
       <li>
-        <p>${contribution.contributor.full_name}</p>
-        <p>${contribution.contributor.title}</p>
+        <p>${contributor.full_name}</p>
+        <p>${contributor.title}</p>
         <p><i>${answer.answer}</i></p>
       </li>
+    ` : `
+      <li><p style="color:#d11302"><Missing Contribution data</p></li>
     `;
   };
   return `
@@ -171,9 +252,10 @@ export function groupContributionTemplate(questionId, contributions, answers, pl
   `;
 }
 
-function initCustomToolbar(customToolbar, hasContributions) {
+function initCustomToolbar(customToolbar: Element, numContributions: number) {
+  const hasContributions = Boolean(numContributions)
   const successId = 'CHANGEME'
-  if (!hasContributions) customToolbar.querySelectorAll('.note-btn').forEach(btn => btn.disabled = true);
+  if (!hasContributions) customToolbar.querySelectorAll<HTMLButtonElement>('.note-btn').forEach(btn => btn.disabled = true);
   customToolbar.insertAdjacentHTML(
     'beforeend', `
       <label>Insert</label>
@@ -182,31 +264,39 @@ function initCustomToolbar(customToolbar, hasContributions) {
       </button>
     `
   );
-  $(customToolbar.querySelector('.btn-help')).popover({
-    container: 'body',
-    html: true,
-    placement: 'left',
-    animation: false,
-    template: `
-      <div class="popover inserting-contributions" role="tooltip">
-        <div class="arrow"></div>
-        <div class="custom-title">
-          <h3 class="popover-title"></h3>
-          <button id="close-popover-${successId}" class="close" type="button" aria-label="Close">&times;</button>
+  const helpBtn = customToolbar.querySelector<HTMLButtonElement>('.btn-help');
+  if (helpBtn) {
+    $(helpBtn).popover({
+      container: 'body',
+      html: true,
+      placement: 'left',
+      animation: false,
+      template: `
+        <div class="popover inserting-contributions" role="tooltip">
+          <div class="arrow"></div>
+          <div class="custom-title">
+            <h3 class="popover-title"></h3>
+            <button id="close-popover-${successId}" class="close" type="button" aria-label="Close">&times;</button>
+          </div>
+          <div class="popover-content"></div>
         </div>
-        <div class="popover-content"></div>
-      </div>
-    `,
-    content: `
-      <p>You can insert contributions in their original form or with a placeholder.</p>
-      <p>Placeholders are useful for organizing your document while in Edit mode, \
-but will preclude any changes to the underlying content.</p>
-      <p>Switch to View mode to see the inserted content.</p>
-    `,
-  });
+      `,
+      content: `
+        <p>You can insert contributions in their original form or with a placeholder.</p>
+        <p>Placeholders are useful for organizing your document while in Edit mode, \
+  but will preclude any changes to the underlying content.</p>
+        <p>Switch to View mode to see the inserted content.</p>
+      `,
+    });
+  };
 }
 
-function initDropdown(type, contributions, answers, context) {
+function initDropdown(
+  type: 'contributions' | 'placeholders', 
+  contributions: Contribution[], 
+  answers: ContributorAnswer[], 
+  context: any
+) {
   const questions = distinctObjects(answers.map(answer => answer.question), 'id');
   const ui = $.summernote.ui;
   const buttonGroup = ui.buttonGroup([
@@ -222,7 +312,7 @@ function initDropdown(type, contributions, answers, context) {
     ui.dropdown({
       className: `summernote-custom dropdown-menu-right ${type}`,
       contents: dropdownTemplate(type, contributions, questions),
-      callback: ($dropdown) => {
+      callback: ($dropdown: JQuery) => {
         $dropdown.find('a').each((i, link) => {
           link.setAttribute('data-action', 'win-story#pasteContributionOrPlaceholder')
         });
@@ -232,19 +322,27 @@ function initDropdown(type, contributions, answers, context) {
   return buttonGroup.render();   // return button as jquery object
 }
 
-function dropdownTemplate(type, contributions, questions) {
-  const individualItem = (contribution) => {
-    const link = `<a href="javascript:;">${contribution.contributor.full_name}</a>`;
+function dropdownTemplate(
+  type: 'contributions' | 'placeholders', 
+  contributions: Contribution[], 
+  questions: ContributorQuestion[]
+) {
+  const individualItem = (contribution: Contribution) => {
+    const contributor = contribution.contributor;
+    if (!contributor) {
+      return '<li><p style="color:#d11302"><Missing Contribution data</p></li>'
+    }
+    const link = `<a href="javascript:;">${contributor.full_name}</a>`;
     const placeholder = type === 'placeholders' && `
       <div class='placeholder' data-contribution-id='${contribution.id}' contenteditable='false'>
-        [Individual Contribution: ${contribution.contributor.full_name}]
+        [Individual Contribution: ${contributor.full_name}]
       </div><br>
     `;
     return type === 'contributions' ? 
       `<li data-contribution-id="${contribution.id}">${link}</li>` :
       `<li data-placeholder="${placeholder}">${link}</li>`;
   };
-  const groupItem = (question) => {
+  const groupItem = (question: ContributorQuestion) => {
     const link = `<a href="javascript:;">${question.question}</a>`;
     const placeholder = type === 'placeholders' && `
       <div class='placeholder' data-question-id='${question.id}' contenteditable='false'>

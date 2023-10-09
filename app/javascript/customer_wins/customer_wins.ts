@@ -149,7 +149,7 @@ export function tableConfig(): Config {
     },
 
     createdRow(row: Node, data: object | any[], index: number) {
-      const { id, display_status: status, curator, customer, story } = data;
+      const { id, display_status: status, curator, customer, story } = data as CustomerWin;
       $(row)
         .attr('data-controller', 'customer-win')
         .attr('data-customer-win-resource-outlet', '#contributors')
