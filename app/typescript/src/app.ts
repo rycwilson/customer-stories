@@ -13,12 +13,13 @@ import Rails from '@rails/ujs';
 // ajax:file:beforeSubmit: Triggered before submitting a form via AJAX when a file is involved.
 
 import * as Turbo from "@hotwired/turbo";
-import './controllers';
 // import * as turboCallbacks from '../turbo_callbacks';
 
 import './jquery';   // creates global $, jQuery
-import 'jquery-ui/dist/jquery-ui';
+// import 'jquery-ui/dist/jquery-ui';
 import './bootstrap';
+
+import './controllers';
 
 import { parseDatasetObject } from './utils';
 
