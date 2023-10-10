@@ -16,7 +16,7 @@ import * as Turbo from "@hotwired/turbo";
 import './controllers';
 // import * as turboCallbacks from '../turbo_callbacks';
 
-import '../jquery';   // creates global $, jQuery
+import './jquery';   // creates global $, jQuery
 import 'jquery-ui/dist/jquery-ui';
 import './bootstrap';
 
