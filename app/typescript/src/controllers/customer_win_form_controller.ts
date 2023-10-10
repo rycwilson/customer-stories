@@ -1,6 +1,6 @@
 import { Controller } from '@hotwired/stimulus';
 import ModalController from './modal_controller';
-import { capitalize } from '../util';
+import { capitalize } from '../utils';
 
 export default class CustomerWinFormController extends Controller<HTMLFormElement> {
   static outlets = ['modal'];

@@ -1,4 +1,4 @@
-import { distinctObjects } from '../util';
+import { distinctObjects } from '../utils';
 import SummernoteController from '../controllers/summernote_controller';
 
 // copied from @types/summernote, so that we can add the customButton tuple

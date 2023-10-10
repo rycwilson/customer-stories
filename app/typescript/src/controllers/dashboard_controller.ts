@@ -1,7 +1,7 @@
 import { Controller } from "@hotwired/stimulus";
 import Cookies from 'js-cookie';
 import ModalController from './modal_controller';
-import { parseDatasetObject } from '../util';
+import { parseDatasetObject } from '../utils';
 
 // excludes stories#edit, which also renders the dashboard
 enum DashboardTab {

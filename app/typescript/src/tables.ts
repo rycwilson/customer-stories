@@ -1,4 +1,4 @@
-import { kebabize } from './util';
+import { kebabize } from './utils';
 import ResourceController from './controllers/resource_controller';
 import { type Api as DataTableApi } from 'datatables.net-bs';
 

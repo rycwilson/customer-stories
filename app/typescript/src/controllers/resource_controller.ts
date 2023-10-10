@@ -1,6 +1,6 @@
 import { Controller } from "@hotwired/stimulus";
 import DashboardController from "./dashboard_controller";
-import { getJSON, kebabize } from '../util';
+import { getJSON, kebabize } from '../utils';
 import { 
   init as initTable,
   initComplete as tableInitComplete,
