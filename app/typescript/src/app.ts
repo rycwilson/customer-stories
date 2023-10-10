@@ -14,22 +14,13 @@ import Rails from '@rails/ujs';
 
 import * as Turbo from "@hotwired/turbo";
 import './controllers';
-import * as turboCallbacks from '../turbo_callbacks';
+// import * as turboCallbacks from '../turbo_callbacks';
 
 import '../jquery';   // creates global $, jQuery
 import 'jquery-ui/dist/jquery-ui';
 import './bootstrap';
 
-import 'datatables.net-bs';
-// window.DataTable = DataTable;
-// import 'datatables.net-rowgroup';
-
-// import 'summernote/dist/summernote';
-
-import TomSelect from '../tomselect';
-window.TomSelect = TomSelect;
-
-import { parseDatasetObject } from '../util';
+import { parseDatasetObject } from './utils';
 
 CSP ||= appFactory();
 CSP.init();
