@@ -1,5 +1,5 @@
 import { Controller } from "@hotwired/stimulus";
-import TomSelect, { tsBaseOptions, type TomselectOptions } from '../tomselect.js';
+import TomSelect, { tsBaseOptions, type TomselectOptions } from '../tomselect';
 import type { TomInput, TomOption } from 'tom-select/dist/types/types/core.d.ts';
 // import type { TomSettings } from 'tom-select/dist/types/types/settings.d.ts'
 
