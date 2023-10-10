@@ -1,8 +1,8 @@
 import { Controller } from "@hotwired/stimulus";
 import ResourceController from "./resource_controller";
 import DataTable from 'datatables.net-bs';
-import 'datatables.net-rowgroup-bs';
 import type { Api, Config } from 'datatables.net-bs';
+import 'datatables.net-rowgroup-bs';
 
 interface SearchParams {
   curatorId: string,

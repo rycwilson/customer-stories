@@ -1,5 +1,5 @@
 import { Controller } from "@hotwired/stimulus"
-import Turbo from "@hotwired/turbo"
+import * as Turbo from "@hotwired/turbo"
 
 type DashboardPath = '/prospect' | '/curate' | '/promote' | '/measure';
 export default class extends Controller<HTMLAnchorElement> {

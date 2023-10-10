@@ -12,24 +12,24 @@ import Rails from '@rails/ujs';
 // ajax:file:serialize: Triggered when serializing form data for an AJAX file upload.
 // ajax:file:beforeSubmit: Triggered before submitting a form via AJAX when a file is involved.
 
-import "@hotwired/turbo-rails";
+import * as Turbo from "@hotwired/turbo";
 import './controllers';
-import * as turboCallbacks from './turbo_callbacks';
+import * as turboCallbacks from '../turbo_callbacks';
 
-import './jquery';   // creates global $, jQuery
+import '../jquery';   // creates global $, jQuery
 import 'jquery-ui/dist/jquery-ui';
 import './bootstrap';
 
-// import DataTable from 'datatables.net-bs';
+import 'datatables.net-bs';
 // window.DataTable = DataTable;
 // import 'datatables.net-rowgroup';
 
-import 'summernote/dist/summernote';
+// import 'summernote/dist/summernote';
 
-import TomSelect from './tomselect';
+import TomSelect from '../tomselect';
 window.TomSelect = TomSelect;
 
-import { parseDatasetObject } from './util';
+import { parseDatasetObject } from '../util';
 
 CSP ||= appFactory();
 CSP.init();
@@ -42,6 +42,7 @@ function appFactory(): CustomerStoriesApp {
     // screenSize: null,
     init() {
       Rails.start();
+      Turbo.start();
       document.addEventListener('turbo:load', (e) => {
         console.log('turbo:load (once)')
         addAllListeners();
@@ -57,14 +58,14 @@ function addAllListeners() {
 }
 
 function addTurboListeners() {
-  document.addEventListener('turbo:load', turboCallbacks.onLoad)
-  document.addEventListener('turbo:click', turboCallbacks.onClick)
-  document.addEventListener('turbo:render', turboCallbacks.onRender)
-  document.addEventListener('turbo:before-visit', turboCallbacks.onBeforeVisit)
-  document.addEventListener('turbo:visit', turboCallbacks.onVisit)
-  document.addEventListener('turbo:before-fetch-request', turboCallbacks.onBeforeFetchRequest)
-  document.addEventListener('turbo:before-fetch-response', turboCallbacks.onBeforeFetchResponse)
-  document.addEventListener('turbo:before-cache', turboCallbacks.onBeforeCache)
+  // document.addEventListener('turbo:load', turboCallbacks.onLoad)
+  // document.addEventListener('turbo:click', turboCallbacks.onClick)
+  // document.addEventListener('turbo:render', turboCallbacks.onRender)
+  // document.addEventListener('turbo:before-visit', turboCallbacks.onBeforeVisit)
+  // document.addEventListener('turbo:visit', turboCallbacks.onVisit)
+  // document.addEventListener('turbo:before-fetch-request', turboCallbacks.onBeforeFetchRequest)
+  // document.addEventListener('turbo:before-fetch-response', turboCallbacks.onBeforeFetchResponse)
+  // document.addEventListener('turbo:before-cache', turboCallbacks.onBeforeCache)
 }
 
 // function onMenuItemClick(e) {

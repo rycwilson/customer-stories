@@ -1,3 +1,4 @@
+import DataTable from 'datatables.net-bs';
 import type { Config, Api } from 'datatables.net-bs';
 import 'datatables.net-rowgroup-bs';
 

@@ -8,6 +8,7 @@ import {
 } from '../tables.js';
 import { tableConfig as customerWinsTableConfig, newCustomerWinPath } from '../customer_wins/customer_wins';
 import { tableConfig as contributorsTableConfig, newContributionPath } from '../contributions/contributions';
+import DataTable from 'datatables.net-bs';
 import type { Api, Config } from "datatables.net-bs";
 import 'datatables.net-rowgroup-bs';
 
