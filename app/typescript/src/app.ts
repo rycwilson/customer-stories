@@ -23,8 +23,8 @@ import './controllers';
 
 import { parseDatasetObject } from './utils';
 
-CSP ||= appFactory();
-CSP.init();
+window.CSP ||= appFactory();
+window.CSP.init();
 
 function appFactory(): CustomerStoriesApp {
   return {
