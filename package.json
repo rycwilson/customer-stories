@@ -32,6 +32,7 @@
     "bootstrap-validator": "^0.11.9",
     "css-element-queries": "^1.0.2",
     "datatables.net-bs": "^1.12.1",
+    "datatables.net-plugins": "^1.13.6",
     "datatables.net-rowgroup-bs": "^1.4.0",
     "flot": "^0.8.3",
     "flot-orderbars": "^1.0.0",
