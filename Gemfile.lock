@@ -328,6 +328,8 @@ GEM
       sprockets (> 3.0)
       sprockets-rails
       tilt
+    shoulda-matchers (5.3.0)
+      activesupport (>= 5.2.0)
     slim (4.1.0)
       temple (>= 0.7.6, < 0.9)
       tilt (>= 2.0.6, < 2.1)
@@ -426,6 +428,7 @@ DEPENDENCIES
   reverse_markdown
   rspec-rails (~> 6.0)
   sassc-rails (>= 2.1.0)
+  shoulda-matchers (~> 5.0)
   slim-rails (~> 3.0)
   spring
   stimulus-rails (~> 1.2)
