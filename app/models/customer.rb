@@ -8,18 +8,20 @@ class Customer < ApplicationRecord
   has_many :contributions, through: :successes
   has_many :contributors, -> { distinct }, through: :contributions, source: :contributor
 
-  validates :name, presence: true
-  validates_uniqueness_of :name, scope: :company_id
+  validates :name, presence: true, uniqueness: { scope: :company_id }
 
   friendly_id :name, use: [:slugged, :scoped], scope: :company_id
 
-  after_update_commit do
+  after_update_commit(unless: -> { skip_callbacks }) do
     # expire_cache if (self.previous_changes.keys & ['name', 'logo_url', 'show_name_with_logo']).any?
     logo_was_updated = previous_changes.keys.include?('logo_url') && previous_changes[:logo_url].first.present?
+    puts "logo_was_updated? #{logo_was_updated}"
     if logo_was_updated
-      S3Util::delete_object(S3_BUCKET, previous_changes[:logo_url].first)
+      # S3Util::delete_object(S3_BUCKET, previous_changes[:logo_url].first)
     end
   end
+
+  attr_accessor :skip_callbacks
 
   def should_generate_new_friendly_id?
     new_record? || name_changed? || slug.blank?

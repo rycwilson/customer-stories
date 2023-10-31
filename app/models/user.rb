@@ -56,6 +56,8 @@ class User < ApplicationRecord
   attr_accessor :sign_up_code
   validates(:sign_up_code, on: [:create], presence: true, inclusion: { in: ["csp_beta"] })
 
+  attr_accessor :skip_callbacks
+
   # Include default devise modules. Others available are:
   # :lockable, :timeoutable and :omniauthable
   devise :database_authenticatable, :registerable,
@@ -68,7 +70,7 @@ class User < ApplicationRecord
   has_many :access_tokens, class_name: "Doorkeeper::AccessToken", foreign_key: :resource_owner_id, dependent: :delete_all # or :destroy if you need callbacks
 
   def full_name
-    self.first_name + " " + self.last_name
+    first_name + " " + last_name
   end
 
   def linkedin_data_present?
