@@ -2,7 +2,7 @@ require 'rails_helper'
 
 RSpec.describe Company, type: :model do
   before(:context) do
-    @reference_company = FactoryBot.create(
+    @reference_company = create(
       :company, 
       name: 'Example Inc.', 
       website: 'https://example.com', 
@@ -11,7 +11,7 @@ RSpec.describe Company, type: :model do
   end
   after(:context) { @reference_company.destroy }
 
-  subject { FactoryBot.build(:company) }
+  subject { build(:company) }
 
   it 'is valid with valid attributes' do
     expect(subject).to be_valid
