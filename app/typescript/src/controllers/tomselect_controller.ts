@@ -5,7 +5,7 @@ import type { TomInput, TomOption } from 'tom-select/dist/types/types/core.d.ts'
 
 export default class extends Controller<TomInput> {
   static values = { type: String, customOptions: { type: Object, default: {} } };
-  declare readonly typeValue: 'filter' | 'search';
+  declare readonly typeValue: 'filter' | 'curator' | 'status' | 'customer' | 'story-category' | 'product';
   declare readonly customOptionsValue: { [key: string]: any };
 
   declare ts: TomSelect;
