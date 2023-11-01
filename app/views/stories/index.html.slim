@@ -4,33 +4,18 @@
 
   = turbo_frame_tag('stories')
 
-    /- if @is_dashboard
-      div data-controller="stories" data-action="tomselect:did-initialize->stories#onInitFilter"
-        ul.nav.nav-tabs role="tablist"
-          li class="#{'active' if true}"
-            a id="stories-gallery-tab" href="#stories-gallery-panel" data-toggle="tab" Gallery
-          li
-            a id="stories-table-tab" href="#stories-table-panel" data-toggle="tab" Table
-        .tab-content
-          #stories-gallery-panel.tab-pane.fade {
-            class=('active in' if @stories_tab == '#stories-gallery-panel' || @stories_tab.blank?)
-            aria-labelledby="stories-gallery-tab"
-            role="tabpanel" }
-          #stories-table-panel.tab-pane.fade {
-            class=('active in' if @stories_tab == '#stories-table-panel')
-            aria-labelledby="stories-table-tab"
-            role="tabpanel" }
-    /- else 
-
     div data-controller="stories" data-action="tomselect:did-initialize->stories#onInitFilter"
-      = render( \
-          'stories/shared/search_and_filters_xs_sm',
-          { company: @company,
-            tags_filter: @tags_filter,
-            tags_filter_results: @tags_filter_results,
-            is_dashboard: @is_dashboard })
 
-      // if no filters, the search input will appear in the header
+      / dashboard view only supports md and up
+      - unless @is_dashboard
+        = render( \
+            'stories/shared/search_and_filters_xs_sm',
+            { company: @company,
+              tags_filter: @tags_filter,
+              tags_filter_results: @tags_filter_results,
+              is_dashboard: @is_dashboard })
+
+      / if no filters, the search input will appear in the header
       - if @is_dashboard || @company.story_categories.featured.present? || @company.products.featured.present?
         = render( \
             'stories/shared/search_and_filters_md_lg',

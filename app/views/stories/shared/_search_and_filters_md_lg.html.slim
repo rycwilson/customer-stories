@@ -10,21 +10,64 @@
         - if tags_filter_results.present?
           | Applied filters:&nbsp;&nbsp;#{tags_filter_results['combined']} #{'story'.pluralize(tags_filter_results['combined'])} found
 
+  - if is_dashboard 
+    .stories-filter.form-group 
+      = label_tag('select-curator--stories', 'Curator')
+      = select_tag( \
+          nil,
+          options_from_collection_for_select(company.curators, :id, :full_name, current_user.id),
+          { id: 'select-curator--stories',
+            include_blank: true,
+            placeholder: 'Select',
+            class: 'form-control',
+            data: { \
+              controller: 'tomselect', 
+              tomselect_type_value: 'curator', 
+              stories_target: 'filterSelect curatorSelect' } })
+    .stories-filter.form-group 
+      = label_tag('select-status--stories', 'Status')
+      = select_tag( \
+          nil,
+          options_for_select( \
+            [['Not published', '1'], ['Logo published', '2'], ['Preview published', '3'], ['Story published', '4']]),
+          { id:'select-status--stories', 
+            include_blank: true, 
+            placeholder: 'Select',
+            class: 'form-control', 
+            data: { \
+              controller: 'tomselect',
+              tomselect_type_value: 'status',
+              stories_target: 'filterSelect statusSelect' } })
+    .stories-filter.form-group
+      = label_tag('select-customer--stories', 'Customer')
+      = select_tag( \
+          nil,
+          options_for_select(company.customers.select_options),
+          { id: 'select-customer--stories',
+            include_blank: true, 
+            placeholder: 'Select',
+            class: 'form-control',
+            data: { \
+              controller: 'tomselect',
+              tomselect_type_value: 'customer',
+              stories_target: 'filterSelect customerSelect' } })
+
   - if is_dashboard || company.story_categories.featured.present?
     .stories-filter.form-group
-      label Category
+      = label_tag('select-category--stories', 'Category')
       = select_tag( \
           nil,
           options_for_select( \
             company.story_categories.select_options(true, false),
             tags_filter['category']),
-          { include_blank: true,
+          { id: 'select-category--stories',
+            include_blank: true,
             placeholder: 'Select',
             class: 'stories-filter__select stories-filter__select--category',
-            style: 'width: 100%',
             data: { \
               controller: 'tomselect',
-              stories_target: 'filterSelect' } })
+              tomselect_type_value: 'story-category',
+              stories_target: 'filterSelect categorySelect' } })
       .text-right
         span.stories-filter__results--category.help-block
           - if tags_filter['category'].present?
@@ -32,7 +75,7 @@
 
   - if is_dashboard || company.products.featured.present?
     .stories-filter.form-group
-      label Product
+      = label_tag('select-product--stories', 'Product')
       = select_tag( \
           nil,
           options_for_select( \
@@ -41,10 +84,10 @@
           { include_blank: true,
             placeholder: 'Select',
             class: 'stories-filter__select stories-filter__select--product',
-            style: 'width: 100%',
             data: { \
               controller: 'tomselect',
-              stories_target: 'filterSelect' } })
+              tomselect_type_value: 'product',
+              stories_target: 'filterSelect productSelect' } })
       .text-right
         span.stories-filter__results--product.help-block
           - if tags_filter['product'].present?
