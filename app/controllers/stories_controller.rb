@@ -35,8 +35,7 @@ class StoriesController < ApplicationController
       end
     end
 
-    render(layout: false) and return if @is_dashboard
-    render(layout: 'stories') 
+    render(layout: @is_dashboard ? false : 'stories')
   end
 
   def show
