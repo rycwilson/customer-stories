@@ -1,6 +1,4 @@
-.search-and-filters.visible-md-block.visible-lg-block {
-  class=(both_filters_present ? 'tall' : 'short')
-  data-stories-target="searchAndFilters" }
+.search-and-filters.visible-md-block.visible-lg-block data-stories-target="searchAndFilters"
 
   = render('stories/shared/search_form', { company: company })
 
@@ -24,6 +22,11 @@
               controller: 'tomselect', 
               tomselect_type_value: 'curator', 
               stories_target: 'filterSelect curatorSelect' } })
+      .text-right
+        span.stories-filter__results--curator.help-block
+          - if tags_filter['curator'].present?
+            = "#{tags_filter_results['curator']} #{'story'.pluralize(tags_filter_results['curator'])} found"
+
     .stories-filter.form-group 
       = label_tag('select-status--stories', 'Status')
       = select_tag( \
@@ -38,6 +41,11 @@
               controller: 'tomselect',
               tomselect_type_value: 'status',
               stories_target: 'filterSelect statusSelect' } })
+      .text-right
+        span.stories-filter__results--status.help-block
+          - if tags_filter['status'].present?
+            = "#{tags_filter_results['status']} #{'story'.pluralize(tags_filter_results['status'])} found"
+      
     .stories-filter.form-group
       = label_tag('select-customer--stories', 'Customer')
       = select_tag( \
@@ -51,6 +59,10 @@
               controller: 'tomselect',
               tomselect_type_value: 'customer',
               stories_target: 'filterSelect customerSelect' } })
+      .text-right
+        span.stories-filter__results--customer.help-block
+          - if tags_filter['customer'].present?
+            = "#{tags_filter_results['customer']} #{'story'.pluralize(tags_filter_results['customer'])} found"
 
   - if is_dashboard || company.story_categories.featured.present?
     .stories-filter.form-group
