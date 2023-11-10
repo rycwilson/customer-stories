@@ -137,55 +137,15 @@
     background-color: $stories-fg-color;
     padding: 20px 15px;
 
-    &.short {
-      height: 210px;
-      
-      form + .form-group {  // single filter
-        width: 252px;  // 282 - 15*2
-        margin-bottom: 0;
-      }
-    }
-
-    &.tall {
-      height: 380px;
-
-      hr {
-        margin-top: 15;
-        margin-bottom: 10px;
-      }
-
-      .form-group:not(:first-of-type) {
-        margin-bottom: 0;
-      }
+    hr {
+      margin-top: 15;
+      margin-bottom: 10px;
     }
   }
 
   @media only screen and (max-width: 767px) {
     #no-search-results {
       font-size: 16px;
-    }
-  }
-
-  @media only screen and (min-width: 768px) {
-  }
-
-  @media only screen and (min-width: 992px) {
-    &.visible-md-block.short {
-      margin: 0 -36px 0 40px;
-    }
-
-    &.visible-md-block.tall {
-      margin: 20px -36px 0 40px;
-    }
-  }
-
-  @media only screen and (min-width: 1200px) {
-    &.visible-md-block.short {
-      margin: 0 2px 0 0;
-    }
-
-    &.visible-md-block.tall {
-      margin: 20px 0 0 2px;
     }
   }
 }
