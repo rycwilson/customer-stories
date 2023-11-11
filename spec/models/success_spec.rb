@@ -11,15 +11,15 @@ RSpec.describe Success, type: :model do
     it { is_expected.to have_one(:story).optional.dependent(:destroy) }
     it { is_expected.to have_and_belong_to_many(:story_categories) }
   
-    # context 'when a story_category is removed' do
-    #   subject(:success) { build(:success_with_story_categories) }
-
-    #   it 'executes a callback' do
-    #     story_category = success.story_categories.last
-    #     expect(success).to receive(:removed_story_category).once
-    #     success.story_categories.delete(story_category)
-    #   end
-    # end
+    context 'when a story category is removed' do
+      subject(:success) { create(:success_with_story_categories) }
+      
+      it 'executes a callback' do
+        story_category = success.story_categories.last
+        expect(success).to receive(:removed_story_category).once.with(story_category)
+        success.story_categories.delete(story_category)
+      end
+    end
   end
 
   describe 'validations' do
