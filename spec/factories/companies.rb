@@ -3,7 +3,7 @@ FactoryBot.define do
   factory :company, class: 'Company' do
     name { Faker::Company.name }
     subdomain { Faker::Internet.domain_word }
-    website { 'https://acme.com' }
+    website { "https://example.com?q=#{Faker::Internet.slug}" }    # needs to be real site, but also unique
     skip_callbacks { true }
   end
 end
