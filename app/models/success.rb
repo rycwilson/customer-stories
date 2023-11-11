@@ -29,7 +29,7 @@ class Success < ApplicationRecord
     after_add: :expire_category_tags_cache, 
     after_remove: [:removed_story_category, :expire_category_tags_cache]
   )
-  
+
   has_many :contributions, inverse_of: :success, dependent: :destroy do
     def invitation_sent
       where.not(status: 'pre_request')
@@ -201,7 +201,7 @@ class Success < ApplicationRecord
   end
 
   # this is just here for test illustration
-  def removed_story_category
+  def removed_story_category story_category
   end
 
   def expire_category_tags_cache (category)
