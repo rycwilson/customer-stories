@@ -4,16 +4,18 @@ RSpec.describe Contribution, type: :model do
   subject(:contribution) { build(:contribution) }
 
   describe 'associations' do
-    it { is_expected.to belong_to(:success) }
+    it { is_expected.to belong_to(:success).inverse_of(:contributions) }
     it { is_expected.to have_one(:customer).through(:success) }
     it { is_expected.to have_one(:company).through(:success) }
     it { is_expected.to have_one(:curator).through(:success) }
     it { is_expected.to have_one(:story).through(:success) }
-    it { is_expected.to belong_to(:invitation_template).optional }
-
+    
     # TODO: not sure the contributor relationship should be optional
     it { is_expected.to belong_to(:contributor).class_name('User').with_foreign_key('contributor_id').optional }
     it { is_expected.to belong_to(:referrer).class_name('User').with_foreign_key('referrer_id').optional }
+    it { is_expected.to belong_to(:invitation_template).optional }
+
+    it { is_expected.to accept_nested_attributes_for(:invitation_template) }
   end
 
   describe 'validations' do
