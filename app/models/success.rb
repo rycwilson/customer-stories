@@ -15,17 +15,14 @@ class Success < ApplicationRecord
 
   has_one :story, dependent: :destroy
 
-  has_many :products_successes, dependent: :destroy
-  has_many(
+  has_and_belongs_to_many(
     :products, 
-    through: :products_successes,
     after_add: :expire_product_tags_cache, 
     after_remove: :expire_product_tags_cache
   )
-  has_many :story_categories_successes, dependent: :destroy
+
   has_and_belongs_to_many(
     :story_categories, 
-    through: :story_categories_successes,
     after_add: :expire_category_tags_cache, 
     after_remove: [:removed_story_category, :expire_category_tags_cache]
   )

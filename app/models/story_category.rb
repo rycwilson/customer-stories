@@ -1,11 +1,8 @@
 class StoryCategory < ApplicationRecord
-
   include FriendlyId
 
   belongs_to :company
-
-  has_many :story_categories_successes, dependent: :destroy
-  has_and_belongs_to_many :successes, through: :story_categories_successes
+  has_and_belongs_to_many :successes
   has_many :stories, through: :successes
   has_many :customers, through: :successes
 

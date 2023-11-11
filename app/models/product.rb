@@ -1,10 +1,8 @@
 class Product < ApplicationRecord
-
   include FriendlyId
 
   belongs_to :company
-  has_many :products_successes, dependent: :destroy
-  has_many :successes, through: :products_successes
+  has_and_belongs_to_many :successes
   has_many :stories, through: :successes
   has_many :customers, through: :successes
 
