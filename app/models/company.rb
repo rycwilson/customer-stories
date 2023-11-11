@@ -34,6 +34,9 @@ class Company < ApplicationRecord
   has_many :contributors, -> { distinct }, through: :customers, source: :contributors
   has_many :referrers, -> { distinct }, through: :contributions, source: :referrer
   has_many :stories, through: :successes do
+    def curated_by curator_id
+      where(successes: { curator_id: curator_id })
+    end
     def select_options
       self.published
           .map { |story| [ story.title, story.id ] }

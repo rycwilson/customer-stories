@@ -1,8 +1,8 @@
 FactoryBot.define do
   factory :story do
     title { Faker::Lorem.sentence }
-    association :success
-    association :customer
+    success
+    customer
     association :curator, factory: :user
     # skip_callbacks { true }
   end

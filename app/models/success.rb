@@ -14,6 +14,7 @@ class Success < ApplicationRecord
   belongs_to :curator, class_name: 'User', foreign_key: 'curator_id'
 
   has_one :story, dependent: :destroy
+
   has_many :products_successes, dependent: :destroy
   has_many(
     :products, 
@@ -22,8 +23,13 @@ class Success < ApplicationRecord
     after_remove: :expire_product_tags_cache
   )
   has_many :story_categories_successes, dependent: :destroy
-  has_many :story_categories, through: :story_categories_successes,
-    after_add: :expire_category_tags_cache, after_remove: :expire_category_tags_cache
+  has_and_belongs_to_many(
+    :story_categories, 
+    through: :story_categories_successes,
+    after_add: :expire_category_tags_cache, 
+    after_remove: [:removed_story_category, :expire_category_tags_cache]
+  )
+  
   has_many :contributions, inverse_of: :success, dependent: :destroy do
     def invitation_sent
       where.not(status: 'pre_request')
@@ -192,6 +198,10 @@ class Success < ApplicationRecord
                "#{self.contributions.submitted.length}&nbsp;&nbsp;Contributions submitted".html_safe
       end
     end
+  end
+
+  # this is just here for test illustration
+  def removed_story_category
   end
 
   def expire_category_tags_cache (category)

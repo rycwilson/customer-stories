@@ -5,7 +5,7 @@ class StoryCategory < ApplicationRecord
   belongs_to :company
 
   has_many :story_categories_successes, dependent: :destroy
-  has_many :successes, through: :story_categories_successes
+  has_and_belongs_to_many :successes, through: :story_categories_successes
   has_many :stories, through: :successes
   has_many :customers, through: :successes
 
