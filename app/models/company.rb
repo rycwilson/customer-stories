@@ -216,7 +216,7 @@ class Company < ApplicationRecord
   has_many :outbound_actions, dependent: :destroy
   has_many :call_to_actions, dependent: :destroy
   # alias and methods
-  has_many :ctas, class_name: 'CallToAction', foreign_key: 'company_id' do
+  has_many :ctas, class_name: 'CallToAction' do
     def primary
       where(primary: true).take
     end
