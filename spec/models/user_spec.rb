@@ -7,7 +7,7 @@ RSpec.describe User, type: :model do
     it { is_expected.to belong_to(:company).optional }
     
     context 'when user is a curator' do
-      subject(:user) { build(:user, :with_company) }
+      subject(:curator) { build(:curator) }
 
       it { is_expected.to have_many(:successes).with_foreign_key('curator_id') }
     end
@@ -32,10 +32,10 @@ RSpec.describe User, type: :model do
     it { is_expected.to be_valid }
 
     context 'when user is a curator' do
-      subject(:user) { build(:user, :with_company) }
+      subject(:curator) { build(:curator) }
 
       it 'belongs to a company' do
-        expect(user.company).to be_present
+        expect(curator.company).to be_present
       end
     end
   end

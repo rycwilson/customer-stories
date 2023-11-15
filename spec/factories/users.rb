@@ -7,7 +7,7 @@ FactoryBot.define do
     sign_up_code { "csp_beta" }
     skip_callbacks { true }
 
-    trait :with_company do
+    factory :curator do
       association :company
     end
   end
