@@ -4,7 +4,7 @@
 # request.env['warden'].user(:user)
 #
 Rails.application.routes.default_url_options = {
-  protocol: Rails.env.development? ? 'http' : 'https',
+  protocol: Rails.env.development? || Rails.env.test? ? 'http' : 'https',
   host: ENV['HOST_NAME']
 }
 
