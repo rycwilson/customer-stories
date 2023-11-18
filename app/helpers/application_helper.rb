@@ -1,5 +1,17 @@
 module ApplicationHelper
 
+  def page_title(controller, action, company: nil, story: nil)
+    if controller == 'companies' && action =~ /show|edit/
+      "Customer Stories: Account #{action == 'show' ? 'Dashboard' : 'Settings'}"
+    elsif company.present? and story.present?
+      "#{company.name} Customer Stories: #{story.title}"
+    elsif company.present?
+      "#{company.name} Customer Stories"
+    else 
+      'Customer Stories'
+    end
+  end
+
   def custom_google_fonts(company)
     return nil if company.blank? || !['stories', 'plugins', 'companies'].include?(controller_name)
     fonts = case company.subdomain

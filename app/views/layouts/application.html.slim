@@ -8,7 +8,7 @@ html lang="en-US" prefix="og: http://ogp.me/ns# fb: http://ogp.me/ns/fb#"
     = csrf_meta_tags()
     - if disallow_search_indexing?(@company)
       meta name="robots" content="noindex"
-    title = 'Customer Stories'
+    title = page_title(controller_name, action_name, company: @company)
     = yield(:head) if content_for?(:head)
     = javascript_include_tag('app', 'data-turbo-track' => 'reload', defer: true)
     
