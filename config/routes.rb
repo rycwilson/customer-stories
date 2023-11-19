@@ -76,7 +76,7 @@ Rails.application.routes.draw do
     get '/:workflow_stage', to: 'companies#show',
           constraints: lambda { |params, request|
             # params[:id] = request.env['warden'].user(:user).try(:company_id).to_s
-            params[:workflow_stage].match(/(prospect|curate|promote|measure)/)
+            params[:workflow_stage] =~ /prospect|curate|promote|measure/
             # params[:id].present?  # i.e. user signed in
           }, as: 'dashboard'
     # get '/curate/:customer_slug/:story_slug', to: 'stories#edit',

@@ -86,7 +86,7 @@ class PluginsController < ApplicationController
         is_grayscale: params[:grayscale].present? && params[:grayscale] != 'false',
         is_curator: false,
         is_plugin: true,
-        is_external: !request.referer.match(/^(?!.*plugins\/demo).*(lvh\.me|customerstories\.org|customerstories\.net).*$/),
+        is_external: !request.referer =~ /^(?!.*plugins\/demo).*(lvh\.me|customerstories\.org|customerstories\.net).*$/,
         window_width: params[:window_width],
         preselected_story_id: preselected_story&.id,
         contributors: preselected_story && set_contributors(preselected_story)

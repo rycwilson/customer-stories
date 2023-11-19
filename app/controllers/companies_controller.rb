@@ -14,7 +14,7 @@ class CompaniesController < ApplicationController
   end
 
   def show
-    redirect_to('/curate') if request.path.match(/\/companies\/\d+/)
+    redirect_to(dashboard_path('curate')) if request.path =~ /\/companies\/\d+/
     @workflow_stage = params[:workflow_stage]
     @prospect_tab = request.cookies['csp-prospect-tab'] || '#customer-wins'
     @promote_tab = request.cookies['promote-tab'] || '#promoted-stories'
@@ -26,7 +26,7 @@ class CompaniesController < ApplicationController
   end
 
   def edit
-    redirect_to(company_settings_path) if request.path.match(/\/companies\/\d+/)
+    redirect_to(company_settings_path) if request.path =~ /\/companies\/\d+/
     @tab = request.cookies['company-tab'] || '#edit-company-profile'
     @form_options = set_form_options(params, @company)
     render :company_settings

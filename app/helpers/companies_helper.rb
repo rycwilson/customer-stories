@@ -4,12 +4,12 @@ module CompaniesHelper
     type_class_name = ad_image[:type]&.split(/(?=[A-Z])/)&.reverse&.join('--')&.downcase&.sub(/\A/, 'gads-')
     if ad_image[:id].blank?
       ad_image[:default] ? 
-        "#{type_class_name} gads-default #{ad_image[:type].match(/Image/) ? 'gads-required' : ''}" :
+        "#{type_class_name} gads-default #{ad_image[:type] =~ /Image/ ? 'gads-required' : ''}" :
         "hidden ad-image-card--new gads-#{collection.singularize}"
     else
       "#{type_class_name}" \
       "#{ad_image[:default] ? ' gads-default has-image' : ''}" \
-      "#{ad_image[:default] && ad_image[:type].match(/Image/) ? ' gads-required' : ''}" \
+      "#{ad_image[:default] && ad_image[:type] =~ /Image/ ? ' gads-required' : ''}" \
       "#{ad_image[:did_save] ? ' ad-image-card--did-save' : ''}"
     end
   end
