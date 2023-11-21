@@ -2,6 +2,17 @@
 
   = render('stories/shared/search_form', { company: company })
 
+  .filter-controls style="display:flex; align-items: center; justify-content: space-between"
+    a href="javascript:;" data-action="stories#clearAllFilters" Clear all 
+    div style="display:flex; align-items:center" data-action="change->stories#onFilterMatchTypeChange"
+      | Match:&nbsp;&nbsp;&nbsp;
+      label.radio-inline for="match-any-radio"
+        input type="radio" name="filter-type" id="match-any-radio" value="any" data-stories-target="filterMatchTypeRadio"
+          | Any
+      label.radio-inline for="match-all-radio"
+        input type="radio" name="filter-type" id="match-all-radio" value="all" data-stories-target="filterMatchTypeRadio"
+          | All
+      
   - if both_filters_present
     .text-right
       span.stories-filter__results--combined.help-block

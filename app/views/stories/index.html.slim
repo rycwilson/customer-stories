@@ -4,7 +4,10 @@
 
   = turbo_frame_tag('stories')
 
-    div data-controller="stories" data-action="tomselect:did-initialize->stories#onInitFilter"
+    div {
+      data-controller="stories" 
+      data-stories-filter-match-type-value="all"
+      data-action="tomselect:did-initialize->stories#onInitFilter" }
 
       / dashboard view only supports md and up
       - unless @is_dashboard

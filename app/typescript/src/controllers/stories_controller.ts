@@ -5,6 +5,7 @@ export default class extends Controller<HTMLDivElement> {
   static targets = [
     'searchAndFilters',   // one container for xs and sm, another for md and lg
     'filterSelect', 
+    'filterMatchTypeRadio',
     'gallery', 
     'card', 
     'curatorSelect', 
@@ -15,6 +16,7 @@ export default class extends Controller<HTMLDivElement> {
   ];
   declare readonly searchAndFiltersTargets: HTMLDivElement[];
   declare readonly filterSelectTargets: HTMLSelectElement[];
+  declare readonly filterMatchTypeRadioTargets: HTMLInputElement[];
   declare readonly galleryTarget: HTMLDivElement;
   declare readonly cardTargets: HTMLDivElement[];
   declare readonly curatorSelectTarget: HTMLSelectElement;
@@ -22,6 +24,9 @@ export default class extends Controller<HTMLDivElement> {
   declare readonly customerSelectTarget: HTMLSelectElement;
   declare readonly categorySelectTarget: HTMLSelectElement;
   declare readonly productSelectTarget: HTMLSelectElement;
+
+  static values = { filterMatchType: String };
+  declare filterMatchTypeValue: string;
   
   readyFilters = 0;
 
@@ -32,12 +37,27 @@ export default class extends Controller<HTMLDivElement> {
       this.galleryTarget.classList.remove('hidden');
     })
 
-    console.log('filterSelect: ', this.filterSelectTargets)
+    this.filterMatchTypeRadioTargets.forEach(input => {
+      input.checked = input.value === this.filterMatchTypeValue;
+    })
   }
 
   onInitFilter(e: Event) {
     if (++this.readyFilters === this.filterSelectTargets.length) {
       this.searchAndFiltersTargets.forEach(container => container.setAttribute('data-init', 'true'));
     }
+  }
+
+  clearAllFilters() {
+    this.filterSelectTargets.forEach(select => select.tomselect.clear(true));
+  }
+
+  onFilterMatchTypeChange({ target: input }: { target: EventTarget }) {
+    if (!(input instanceof HTMLInputElement)) return;
+    this.filterMatchTypeValue = input.value;
+  }
+
+  filterMatchTypeValueChanged(matchType: string) {
+    console.log('matchType', matchType)
   }
 }
