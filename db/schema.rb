@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2022_07_29_171906) do
+ActiveRecord::Schema.define(version: 2023_11_27_185837) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_stat_statements"
@@ -431,6 +431,7 @@ ActiveRecord::Schema.define(version: 2022_07_29_171906) do
     t.string "og_image_alt"
     t.string "og_image_width"
     t.string "og_image_height"
+    t.integer "status_new", default: 1, null: false
     t.index ["success_id"], name: "index_stories_on_success_id"
     t.index ["title"], name: "index_stories_on_title", unique: true
   end
