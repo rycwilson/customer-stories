@@ -109,18 +109,30 @@ class Story < ApplicationRecord
     company_all(company_id)
     .where('stories.created_at >= ?', days_ago.days.ago)
   }
-
+  
   scope :featured, -> {
     joins(:customer)
     .where.not(customers: { logo_url: [nil, ''] })
     .where('logo_published IS TRUE OR preview_published IS TRUE')
   }
+  scope :curated_by, ->(curator_id) {
+    if curator_id.present? 
+      joins(:success)
+      .where(successes: { curator_id: curator_id})
+    else
+      all
+    end
+  }
   scope :tagged, ->(tags) {
-    _tags = tags.map { |tag, tag_id| ["#{tag}_tags".to_sym, tag_id] }.to_h
-    # eager load tags for counting results
-    stories = Story.includes(:category_tags, :product_tags).joins(*_tags.keys)
-    _tags.each { |tag, tag_id| stories = stories.where(tag => { id: tag_id }) }
-    where(id: stories.pluck(:id))
+    if tags.present?
+      _tags = tags.map { |tag, tag_id| ["#{tag}_tags".to_sym, tag_id] }.to_h
+      # eager load tags for counting results
+      stories = Story.includes(:category_tags, :product_tags).joins(*_tags.keys)
+      _tags.each { |tag, tag_id| stories = stories.where(tag => { id: tag_id }) }
+      where(id: stories.pluck(:id))
+    else
+      all 
+    end
   }
   scope :content_like, ->(query) {
     where('lower(title) LIKE ? OR lower(narrative) LIKE ?', "%#{query.downcase}%", "%#{query.downcase}%")
