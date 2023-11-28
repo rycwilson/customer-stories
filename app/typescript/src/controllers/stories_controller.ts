@@ -65,10 +65,9 @@ export default class extends Controller<HTMLDivElement> {
   onFilterChange(e: CustomEvent) {
     const { type, id } = e.detail;
     const turboFrame = this.element.parentElement as FrameElement;
-    console.log(type, id)
     if (turboFrame.src) {
       const newSrc = new URL(turboFrame.src);
-      newSrc.searchParams.set(type, id)
+      newSrc.searchParams.set(type, id);
       turboFrame.src = newSrc.toString();
     }
   }

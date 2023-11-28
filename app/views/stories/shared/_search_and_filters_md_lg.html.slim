@@ -13,7 +13,7 @@
         input type="radio" name="filter-type" id="match-all-radio" value="all" data-stories-target="filterMatchTypeRadio"
           | All
       
-  - if both_filters_present
+  - if show_combined_results
     .text-right
       span.stories-filter__results--combined.help-block
         - if tags_filter_results.present?
