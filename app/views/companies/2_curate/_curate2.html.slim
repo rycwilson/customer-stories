@@ -4,4 +4,4 @@
   role="tabpanel" }
 
   .container 
-    = turbo_frame_tag('stories', src: '/stories', loading: 'lazy')
+    = turbo_frame_tag('stories', src: "/stories?curator=#{@curator_id}", loading: 'lazy')

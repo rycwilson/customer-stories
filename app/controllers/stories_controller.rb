@@ -18,12 +18,13 @@ class StoriesController < ApplicationController
   before_action :set_s3_direct_post, only: :edit
 
   def index
-    @is_dashboard = request.headers['TURBO-FRAME'] == 'stories'
+    @is_dashboard = turbo_frame_request?
     
     if @is_dashboard
+      @curator_id = params[:curator]&.to_i || current_user.id
       @tags_filter = {}
       @tags_filter_results = {}
-      @stories = Story.default_order(@company.stories)
+      @stories = Story.default_order(@company.stories.curated_by(@curator_id))
     else
       set_or_redirect_to_story_preview(params[:preview], session[:preview_story_slug])
       @tags_filter = get_filters_from_query_or_plugin(@company, params)

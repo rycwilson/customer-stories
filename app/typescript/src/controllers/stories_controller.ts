@@ -1,4 +1,5 @@
 import { Controller } from '@hotwired/stimulus';
+import { type FrameElement } from '@hotwired/turbo';
 import imagesLoaded from 'imagesloaded';
 
 export default class extends Controller<HTMLDivElement> {
@@ -59,5 +60,16 @@ export default class extends Controller<HTMLDivElement> {
 
   filterMatchTypeValueChanged(matchType: string) {
     console.log('matchType', matchType)
+  }
+
+  onFilterChange(e: CustomEvent) {
+    const { type, id } = e.detail;
+    const turboFrame = this.element.parentElement as FrameElement;
+    console.log(type, id)
+    if (turboFrame.src) {
+      const newSrc = new URL(turboFrame.src);
+      newSrc.searchParams.set(type, id)
+      turboFrame.src = newSrc.toString();
+    }
   }
 }

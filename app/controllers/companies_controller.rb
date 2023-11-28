@@ -21,7 +21,7 @@ class CompaniesController < ApplicationController
     # @recent_activity = Rails.cache.fetch("#{@company.subdomain}/recent-activity") { @company.recent_activity(30) }
     @recent_activity = @company.recent_activity(30)
     @story_views_30_day_count = PageView.joins(:visitor_session).company_story_views_since(@company.id, 30).count
-    # note: app data is obtained via json (see set_gon() in application controller)
+    @curator_id = cookies['csp-curator'].present? ? cookies['csp-curator'].to_i : current_user.id
     @curate_view = 'stories'
   end
 
