@@ -3,5 +3,21 @@
   data-dashboard-target="tabPanel"
   role="tabpanel" }
 
-  .container 
-    = turbo_frame_tag('stories', src: "/stories?curator=#{@curator_id}", loading: 'lazy')
+  .container {
+    data-controller="stories" 
+    data-stories-filter-match-type-value="all"
+    data-action="tomselect:did-initialize->stories#onInitFilter" }
+
+    = render( \
+        'stories/shared/search_and_filters_md_lg',
+        { company: @company,
+          tags_filter: {},
+          tags_filter_results: {},
+          show_combined_results: true,
+          is_dashboard: true })
+
+    = turbo_frame_tag( \
+        'stories', 
+        src: "/stories?curator=#{@curator_id}", 
+        loading: 'lazy', 
+        data: { stories_target: 'turboFrame' })
