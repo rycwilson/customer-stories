@@ -19,15 +19,35 @@ class StoriesController < ApplicationController
 
   def index
     @is_dashboard = turbo_frame_request?
+
+    @stories_filter = %i(curator status customer category product).map do |type| 
+      if params[type].blank?
+        [type, nil]
+      elsif @is_dashboard
+        [type, params[type].to_i]
+      else
+        case type
+        when :category
+          [type, StoryCategory.friendly.find(params[type])&.id]
+        when :product
+          [type, Product.friendly.find(params[type])&.id]
+        else 
+          [type, nil]   # public stories don't have curator, status, or customer filters
+        end
+      end
+    end.to_h.compact
+
+    @tags_filter = @stories_filter.slice(:category, :product)
     
     if @is_dashboard
-      @curator_id = params[:curator]&.to_i || current_user.id
+      @curator_id = @stories_filter[:curator] || current_user.id
+      # @stories = Story.default_order(@company.stories.curated_by(@curator_id))
+      @stories = Story.default_order(params[:match] == 'any' ? match_any_filter() : match_all_filters())
       @tags_filter = {}
       @tags_filter_results = {}
-      @stories = Story.default_order(@company.stories.curated_by(@curator_id))
     else
       set_or_redirect_to_story_preview(params[:preview], session[:preview_story_slug])
-      @tags_filter = get_filters_from_query_or_plugin(@company, params)
+      # @tags_filter = get_filters_from_query_or_plugin(@company, params)
       @featured_stories = @company.stories.featured.order([published: :desc, preview_published: :desc, updated_at: :desc])
       if @tags_filter.present?
         @filtered_story_ids = @featured_stories.tagged(@tags_filter).pluck(:id)
@@ -283,6 +303,20 @@ class StoriesController < ApplicationController
       topic_ad_attributes: [:id, :adwords_ad_group_id, :ad_id, :status, :_destroy],
       retarget_ad_attributes: [:id, :adwords_ad_group_id, :ad_id, :status, :_destroy]
     )
+  end
+
+  def match_any_filter
+  end
+  
+  def match_all_filters
+    filtered_stories = @company.stories.curated_by(@stories_filter[:curator]).tagged(@tags_filter)
+    if @stories_filter[:status].present?
+      filtered_stories = filtered_stories.where(status: @stories_filter[:status])
+    end
+    if @stories_filter[:customer].present?
+      filtered_stories = filtered_stories.joins(:customer).where(customers: { id: @stories_filter[:customer] }) 
+    end
+    filtered_stories
   end
 
   def new_ads(story, story_params)
