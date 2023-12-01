@@ -4,16 +4,16 @@
 
   - if is_dashboard
     .filter-controls style="display:flex; align-items: center; justify-content: space-between"
-      a href="javascript:;" data-action="stories#clearAllFilters" 
-        | Clear all 
       div style="display:flex; align-items:center" data-action="change->stories#onFilterMatchTypeChange"
         | Match:&nbsp;&nbsp;&nbsp;
         label.radio-inline for="match-any-radio"
-          input type="radio" name="filter-type" id="match-any-radio" value="any" data-stories-target="filterMatchTypeRadio"
-            | Any
+          input type="radio" name="filter-type" id="match-any-radio" value="all" data-stories-target="filterMatchTypeRadio"
+            | all
         label.radio-inline for="match-all-radio"
-          input type="radio" name="filter-type" id="match-all-radio" value="all" data-stories-target="filterMatchTypeRadio"
-            | All
+          input type="radio" name="filter-type" id="match-all-radio" value="any" data-stories-target="filterMatchTypeRadio"
+            | any
+      a href="javascript:;" data-action="stories#clearFilters" 
+        | Clear all 
       
   - if show_combined_results
     .text-right
@@ -22,7 +22,7 @@
           | Applied filters:&nbsp;&nbsp;#{results['combined']} #{'story'.pluralize(results['combined'])} found
 
   .select-filters data-action="#{%w(curator status customer category product).map do |filter| \
-    "tomselect:change-#{filter}->stories#onFilterChange"; end.join(' ') }"
+    "tomselect:change-#{filter}->stories#onChangeFilter"; end.join(' ') }"
 
     - if is_dashboard 
       .stories-filter.form-group

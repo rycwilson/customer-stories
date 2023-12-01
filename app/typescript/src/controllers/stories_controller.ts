@@ -41,7 +41,7 @@ export default class extends Controller<HTMLDivElement> {
     })
 
     // document.documentElement.addEventListener('turbo:frame-render', this.onGalleryRender.bind(this));
-    this.turboFrameTarget.addEventListener('turbo:frame-render', this.onGalleryRender.bind(this));
+    this.turboFrameTarget.addEventListener('turbo:frame-render', this.onRenderGallery.bind(this));
   }
 
   disconnect() {
@@ -55,8 +55,13 @@ export default class extends Controller<HTMLDivElement> {
     }
   }
 
-  clearAllFilters() {
+  clearFilters() {
     this.filterSelectTargets.forEach(select => select.tomselect.clear(true));
+    if (this.turboFrameTarget.src) {
+      const newSrc = new URL(this.turboFrameTarget.src);
+      ['curator', 'status', 'customer', 'category', 'product'].forEach(param => newSrc.searchParams.delete(param));
+      this.fetchGallery(newSrc);
+    }
   }
 
   onFilterMatchTypeChange({ target: input }: { target: EventTarget }) {
@@ -68,16 +73,21 @@ export default class extends Controller<HTMLDivElement> {
     console.log('matchType', matchType)
   }
 
-  onFilterChange(e: CustomEvent) {
+  onChangeFilter(e: CustomEvent) {
     const { type, id } = e.detail;
+    console.log(type, id)
     if (this.turboFrameTarget.src) {
       const newSrc = new URL(this.turboFrameTarget.src);
       newSrc.searchParams.set(type, id);
-      this.turboFrameTarget.src = newSrc.toString();
+      this.fetchGallery(newSrc);
     }
   }
 
-  onGalleryRender(e: Event) {
+  fetchGallery(newSrc: URL) {
+    this.turboFrameTarget.src = newSrc.toString();
+  }
+
+  onRenderGallery(e: Event) {
     console.log(e)
     const frame = e.target as FrameElement;
 
