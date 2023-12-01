@@ -5,7 +5,7 @@
 
   .container {
     data-controller="stories" 
-    data-stories-filter-match-type-value="all"
+    data-stories-filter-match-type-value="#{@filters_match_type}"
     data-action="tomselect:did-initialize->stories#onInitFilter" }
 
     = render( \
@@ -18,6 +18,6 @@
 
     = turbo_frame_tag( \
         'stories', 
-        src: "/stories?curator=#{@curator_id}", 
+        src: "/stories?curator=#{@filters[:curator]}&match_type=#{@filters_match_type}", 
         loading: 'lazy', 
         data: { stories_target: 'turboFrame' })

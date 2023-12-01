@@ -29,7 +29,7 @@
         = label_tag('select-curator--stories', 'Curator')
         = select_tag( \
             nil,
-            options_from_collection_for_select(company.curators, :id, :curator_name_with_stories_count, @curator_id),
+            options_from_collection_for_select(company.curators, :id, :curator_name_with_stories_count, @filters[:curator]),
             { id: 'select-curator--stories',
               include_blank: true,
               placeholder: 'Select',
