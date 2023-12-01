@@ -69,8 +69,11 @@ export default class extends Controller<HTMLDivElement> {
     this.filterMatchTypeValue = input.value;
   }
 
-  filterMatchTypeValueChanged(matchType: string) {
-    console.log('matchType', matchType)
+  filterMatchTypeValueChanged(newVal: string, oldVal: string) {
+    if (!oldVal) return;
+    if (this.turboFrameTarget.src) {
+      this.fetchGallery(new URL(this.turboFrameTarget.src))
+    }
   }
 
   onChangeFilter(e: CustomEvent) {
@@ -78,12 +81,18 @@ export default class extends Controller<HTMLDivElement> {
     console.log(type, id)
     if (this.turboFrameTarget.src) {
       const newSrc = new URL(this.turboFrameTarget.src);
-      newSrc.searchParams.set(type, id);
+      if (id) {
+        newSrc.searchParams.set(type, id);
+      } else {
+        newSrc.searchParams.delete(type);
+      }
       this.fetchGallery(newSrc);
     }
   }
 
   fetchGallery(newSrc: URL) {
+    console.log('fetching', newSrc.toString())
+    newSrc.searchParams.set('match_type', this.filterMatchTypeValue);
     this.turboFrameTarget.src = newSrc.toString();
   }
 
