@@ -119,4 +119,8 @@ class User < ApplicationRecord
     self.previous_changes[:linkedin_url].try(:[], 1).blank?
   end
 
+  def curator_name_with_stories_count
+    return '' unless self.company 
+    "#{self.full_name} (#{self.stories.count})"
+  end
 end
