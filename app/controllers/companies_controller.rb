@@ -22,6 +22,7 @@ class CompaniesController < ApplicationController
     @recent_activity = @company.recent_activity(30)
     @story_views_30_day_count = PageView.joins(:visitor_session).company_story_views_since(@company.id, 30).count
     @curator_id = cookies['csp-curator'].present? ? cookies['csp-curator'].to_i : current_user.id
+    @filters = %i(status customer category product).map { |type| [type, cookies["csp-#{type}-filter"]] }.to_h
     @curate_view = 'stories'
   end
 
