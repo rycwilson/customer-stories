@@ -11,9 +11,9 @@ class Company < ApplicationRecord
   has_many :users # no dependent: :destroy users, handle more gracefully
 
   has_many :customers, dependent: :destroy do
-    def select_options
-      order(:name).map { |customer| [ customer.name, customer.id ] }
-    end
+    # def select_options(with_result_count: false)
+    #   order(:name).map { |customer| [ with_result_count ? "#{customer.name} (#{self.count})" : customer.name, customer.id ] }
+    # end
   end
   has_many :successes, -> { includes(:story) }, through: :customers do
     def select_options

@@ -2,22 +2,24 @@
 
   = render('stories/shared/search_form', { company: company })
 
-  .filter-controls style="display:flex; align-items: center; justify-content: space-between"
-    a href="javascript:;" data-action="stories#clearAllFilters" Clear all 
-    div style="display:flex; align-items:center" data-action="change->stories#onFilterMatchTypeChange"
-      | Match:&nbsp;&nbsp;&nbsp;
-      label.radio-inline for="match-any-radio"
-        input type="radio" name="filter-type" id="match-any-radio" value="any" data-stories-target="filterMatchTypeRadio"
-          | Any
-      label.radio-inline for="match-all-radio"
-        input type="radio" name="filter-type" id="match-all-radio" value="all" data-stories-target="filterMatchTypeRadio"
-          | All
+  - if is_dashboard
+    .filter-controls style="display:flex; align-items: center; justify-content: space-between"
+      a href="javascript:;" data-action="stories#clearAllFilters" 
+        | Clear all 
+      div style="display:flex; align-items:center" data-action="change->stories#onFilterMatchTypeChange"
+        | Match:&nbsp;&nbsp;&nbsp;
+        label.radio-inline for="match-any-radio"
+          input type="radio" name="filter-type" id="match-any-radio" value="any" data-stories-target="filterMatchTypeRadio"
+            | Any
+        label.radio-inline for="match-all-radio"
+          input type="radio" name="filter-type" id="match-all-radio" value="all" data-stories-target="filterMatchTypeRadio"
+            | All
       
   - if show_combined_results
     .text-right
       span.stories-filter__results--combined.help-block
-        - if tags_filter_results.present?
-          | Applied filters:&nbsp;&nbsp;#{tags_filter_results['combined']} #{'story'.pluralize(tags_filter_results['combined'])} found
+        - if results.present?
+          | Applied filters:&nbsp;&nbsp;#{results['combined']} #{'story'.pluralize(results['combined'])} found
 
   .select-filters data-action="#{%w(curator status customer category product).map do |filter| \
     "tomselect:change-#{filter}->stories#onFilterChange"; end.join(' ') }"
@@ -27,7 +29,7 @@
         = label_tag('select-curator--stories', 'Curator')
         = select_tag( \
             nil,
-            options_from_collection_for_select(company.curators, :id, :full_name, @curator_id),
+            options_from_collection_for_select(company.curators, :id, :curator_name_with_stories_count, @curator_id),
             { id: 'select-curator--stories',
               include_blank: true,
               placeholder: 'Select',
@@ -36,18 +38,16 @@
                 controller: 'tomselect', 
                 tomselect_type_value: 'curator', 
                 stories_target: 'filterSelect curatorSelect' } })
-        .text-right
-          span.stories-filter__results--curator.help-block
-            - if tags_filter['curator'].present?
-              = "#{tags_filter_results['curator']} #{'story'.pluralize(tags_filter_results['curator'])} found"
 
       .stories-filter.form-group
         = label_tag('select-status--stories', 'Status')
-        / options_for_select( \
-        /   [['Not published', '1'], ['Logo published', '2'], ['Preview published', '3'], ['Story published', '4']]),
         = select_tag( \
             nil,
-            options_for_select(Story.status_news.map { |k, v| k == 'is_published' ? ['Published', v] : [k.capitalize, v] }),
+            options_for_select( \
+              Story.status_news.map { |k, v| k == 'is_published' ? \
+                ["Published (#{company.stories.is_published.count})", v] : \
+                ["#{k.capitalize} (#{company.stories.send(k).count})", v] }, 
+              filters[:status]),
             { id:'select-status--stories', 
               include_blank: true, 
               placeholder: 'Select',
@@ -56,37 +56,27 @@
                 controller: 'tomselect',
                 tomselect_type_value: 'status',
                 stories_target: 'filterSelect statusSelect' } })
-        .text-right
-          span.stories-filter__results--status.help-block
-            - if tags_filter['status'].present?
-              = "#{tags_filter_results['status']} #{'story'.pluralize(tags_filter_results['status'])} found"
         
       .stories-filter.form-group
         = label_tag('select-customer--stories', 'Customer')
         = select_tag( \
             nil,
-            options_for_select(company.customers.select_options),
+            options_from_collection_for_select(company.customers.order(:name), :id, :name_with_stories_count, filters[:customer]),
             { id: 'select-customer--stories',
-              include_blank: true, 
+              include_blank: true,
               placeholder: 'Select',
               class: 'form-control',
               data: { \
                 controller: 'tomselect',
                 tomselect_type_value: 'customer',
                 stories_target: 'filterSelect customerSelect' } })
-        .text-right
-          span.stories-filter__results--customer.help-block
-            - if tags_filter['customer'].present?
-              = "#{tags_filter_results['customer']} #{'story'.pluralize(tags_filter_results['customer'])} found"
 
     - if is_dashboard || company.story_categories.featured.present?
       .stories-filter.form-group
         = label_tag('select-category--stories', 'Category')
         = select_tag( \
             nil,
-            options_for_select( \
-              company.story_categories.select_options(true, false),
-              tags_filter['category']),
+            options_for_select(company.story_categories.select_options(!is_dashboard), filters[:category]),
             { id: 'select-category--stories',
               include_blank: true,
               placeholder: 'Select',
@@ -95,27 +85,18 @@
                 controller: 'tomselect',
                 tomselect_type_value: 'category',
                 stories_target: 'filterSelect categorySelect' } })
-        .text-right
-          span.stories-filter__results--category.help-block
-            - if tags_filter['category'].present?
-              = "#{tags_filter_results['category']} #{'story'.pluralize(tags_filter_results['category'])} found" 
 
     - if is_dashboard || company.products.featured.present?
       .stories-filter.form-group
         = label_tag('select-product--stories', 'Product')
         = select_tag( \
             nil,
-            options_for_select( \
-              company.products.select_options(true, false),
-              tags_filter['product']),
-            { include_blank: true,
+            options_for_select(company.products.select_options(!is_dashboard), filters[:product]),
+            { id: 'select-product--stories',
+              include_blank: true,
               placeholder: 'Select',
               class: 'stories-filter__select stories-filter__select--product',
               data: { \
                 controller: 'tomselect',
                 tomselect_type_value: 'product',
                 stories_target: 'filterSelect productSelect' } })
-        .text-right
-          span.stories-filter__results--product.help-block
-            - if tags_filter['product'].present?
-              = "#{tags_filter_results['product']} #{'story'.pluralize(tags_filter_results['product'])} found"

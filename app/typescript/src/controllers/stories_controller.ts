@@ -1,21 +1,25 @@
 import { Controller } from '@hotwired/stimulus';
 import { type FrameElement } from '@hotwired/turbo';
 import imagesLoaded from 'imagesloaded';
+import { capitalize } from '../utils';
 
 export default class extends Controller<HTMLDivElement> {
   static targets = [
-    'searchAndFilters',   // one container for xs and sm, another for md and lg
-    'filterMatchTypeRadio',
-    'filterSelect', 
-    'curatorSelect', 
-    'statusSelect', 
-    'customerSelect',
-    'categorySelect',
-    'productSelect',
     'turboFrame',
     'gallery', 
     'card', 
+    'searchAndFilters',   // one container for xs and sm, another for md and lg
+    'filterMatchTypeRadio',
+    'filterSelect', 
+    'curatorSelect',
+    'statusSelect', 
+    'customerSelect',
+    'categorySelect',
+    'productSelect'
   ];
+  declare readonly turboFrameTarget: FrameElement;
+  declare readonly galleryTarget: HTMLUListElement;
+  declare readonly cardTargets: HTMLDivElement[];
   declare readonly searchAndFiltersTargets: HTMLDivElement[];
   declare readonly filterMatchTypeRadioTargets: HTMLInputElement[];
   declare readonly filterSelectTargets: HTMLSelectElement[];
@@ -24,15 +28,11 @@ export default class extends Controller<HTMLDivElement> {
   declare readonly customerSelectTarget: HTMLSelectElement;
   declare readonly categorySelectTarget: HTMLSelectElement;
   declare readonly productSelectTarget: HTMLSelectElement;
-  declare readonly turboFrameTarget: FrameElement;
-  declare readonly galleryTarget: HTMLDivElement;
-  declare readonly cardTargets: HTMLDivElement[];
 
   static values = { filterMatchType: String };
   declare filterMatchTypeValue: string;
   
   readyFilters = 0;
-
 
   connect() {
     // console.log('connect stories')
@@ -70,17 +70,17 @@ export default class extends Controller<HTMLDivElement> {
 
   onFilterChange(e: CustomEvent) {
     const { type, id } = e.detail;
-    const turboFrame = this.element.parentElement as FrameElement;
-    if (turboFrame.src) {
-      const newSrc = new URL(turboFrame.src);
+    if (this.turboFrameTarget.src) {
+      const newSrc = new URL(this.turboFrameTarget.src);
       newSrc.searchParams.set(type, id);
-      turboFrame.src = newSrc.toString();
+      this.turboFrameTarget.src = newSrc.toString();
     }
   }
 
   onGalleryRender(e: Event) {
     console.log(e)
     const frame = e.target as FrameElement;
+
     // if (frame.id !== 'stories') return;
     imagesLoaded('#stories-gallery', (instance) => {
       // console.log('images loaded', instance)
