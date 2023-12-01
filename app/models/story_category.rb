@@ -21,4 +21,8 @@ class StoryCategory < ApplicationRecord
   def should_generate_new_friendly_id?
     new_record? || name_changed? || slug.blank?
   end
+
+  def name_with_stories_count
+    "#{name} (#{stories.count})"
+  end
 end

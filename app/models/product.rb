@@ -23,4 +23,7 @@ class Product < ApplicationRecord
     new_record? || name_changed? || slug.blank?
   end
 
+  def name_with_stories_count
+    "#{name} (#{stories.count})"
+  end
 end

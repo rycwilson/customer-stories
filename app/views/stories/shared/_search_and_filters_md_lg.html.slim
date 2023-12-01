@@ -19,7 +19,7 @@
     .text-right
       span.stories-filter__results--combined.help-block
         - if results.present?
-          | Applied filters:&nbsp;&nbsp;#{results['combined']} #{'story'.pluralize(results['combined'])} found
+          | Applied filters:&nbsp;&nbsp;&nbsp;#{results['combined']} #{'story'.pluralize(results['combined'])} found
 
   .select-filters data-action="#{%w(curator status customer category product).map do |filter| \
     "tomselect:change-#{filter}->stories#onChangeFilter"; end.join(' ') }"
@@ -29,7 +29,8 @@
         = label_tag('select-curator--stories', 'Curator')
         = select_tag( \
             nil,
-            options_from_collection_for_select(company.curators, :id, :curator_name_with_stories_count, @filters[:curator]),
+            options_from_collection_for_select( \
+              company.curators, :id, :curator_name_with_stories_count, @filters[:curator]),
             { id: 'select-curator--stories',
               include_blank: true,
               placeholder: 'Select',
@@ -61,7 +62,8 @@
         = label_tag('select-customer--stories', 'Customer')
         = select_tag( \
             nil,
-            options_from_collection_for_select(company.customers.order(:name), :id, :name_with_stories_count, filters[:customer]),
+            options_from_collection_for_select( \
+              company.customers.order(:name), :id, :name_with_stories_count, filters[:customer]),
             { id: 'select-customer--stories',
               include_blank: true,
               placeholder: 'Select',
@@ -76,7 +78,8 @@
         = label_tag('select-category--stories', 'Category')
         = select_tag( \
             nil,
-            options_for_select(company.story_categories.select_options(!is_dashboard), filters[:category]),
+            options_from_collection_for_select( \
+              company.story_categories.order(:name), :id, :name_with_stories_count, filters[:category]),
             { id: 'select-category--stories',
               include_blank: true,
               placeholder: 'Select',
@@ -91,7 +94,8 @@
         = label_tag('select-product--stories', 'Product')
         = select_tag( \
             nil,
-            options_for_select(company.products.select_options(!is_dashboard), filters[:product]),
+            options_from_collection_for_select( \
+              company.products.order(:name), :id, :name_with_stories_count, filters[:product]),
             { id: 'select-product--stories',
               include_blank: true,
               placeholder: 'Select',
