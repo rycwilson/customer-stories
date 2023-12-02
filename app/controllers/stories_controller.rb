@@ -34,11 +34,12 @@ class StoriesController < ApplicationController
       end
     end.to_h.compact
 
+    # binding.pry
+
     @tags = @filters.slice(:category, :product)
 
     if @is_dashboard
       # @filters[:curator] ||= current_user.id
-      @results = {}
       @stories = Story.default_order(match_filters(params[:match_type]))
     else
       set_or_redirect_to_story_preview(params[:preview], session[:preview_story_slug])

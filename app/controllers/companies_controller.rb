@@ -22,9 +22,15 @@ class CompaniesController < ApplicationController
     @recent_activity = @company.recent_activity(30)
     @story_views_30_day_count = PageView.joins(:visitor_session).company_story_views_since(@company.id, 30).count
     @filters = %i(curator status customer category product).map do |type| 
-      cookie_val = cookies["csp-#{type}-filter"]&.to_i
-      [type, type == :curator ? (cookie_val || current_user.id) : cookie_val] 
-    end.to_h
+      # curator is the only field that will set a cookie on clear (to override the default of current_user.id)
+      cookie_val = cookies["csp-#{type}-filter"]
+      if cookie_val.blank?
+        # set curator to current_user unless the curator filter was explicitly cleared
+        [type, (type == :curator && cookie_val.nil?) ? current_user.id : nil]
+      else
+        [type, cookie_val.to_i]
+      end
+    end.to_h.compact
     @filters_match_type = cookies['csp-filters-match-type'] || 'all'
     @curate_view = 'stories'
   end

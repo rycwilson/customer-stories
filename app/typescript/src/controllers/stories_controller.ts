@@ -1,5 +1,6 @@
 import { Controller } from '@hotwired/stimulus';
 import { type FrameElement } from '@hotwired/turbo';
+import Cookies from 'js-cookie';
 import imagesLoaded from 'imagesloaded';
 import { capitalize } from '../utils';
 
@@ -59,7 +60,10 @@ export default class extends Controller<HTMLDivElement> {
     this.filterSelectTargets.forEach(select => select.tomselect.clear(true));
     if (this.turboFrameTarget.src) {
       const newSrc = new URL(this.turboFrameTarget.src);
-      ['curator', 'status', 'customer', 'category', 'product'].forEach(param => newSrc.searchParams.delete(param));
+      ['curator', 'status', 'customer', 'category', 'product'].forEach(param => {
+        newSrc.searchParams.delete(param);
+        param === 'curator' ? Cookies.set('csp-curator-filter', '') : Cookies.remove(`csp-${param}-filter`);
+      });
       this.fetchGallery(newSrc);
     }
   }
@@ -74,11 +78,11 @@ export default class extends Controller<HTMLDivElement> {
     if (this.turboFrameTarget.src) {
       this.fetchGallery(new URL(this.turboFrameTarget.src))
     }
+    Cookies.set('csp-filters-match-type', newVal);
   }
 
   onChangeFilter(e: CustomEvent) {
     const { type, id } = e.detail;
-    console.log(type, id)
     if (this.turboFrameTarget.src) {
       const newSrc = new URL(this.turboFrameTarget.src);
       if (id) {
@@ -87,6 +91,11 @@ export default class extends Controller<HTMLDivElement> {
         newSrc.searchParams.delete(type);
       }
       this.fetchGallery(newSrc);
+    }
+    if (!id && type !== 'curator') {
+      Cookies.remove(`csp-${type}-filter`);
+    } else {
+      Cookies.set(`csp-${type}-filter`, id);
     }
   }
 
