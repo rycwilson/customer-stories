@@ -1,4 +1,4 @@
-.ts-wrapper.form-control {
+select.tomselected + .ts-wrapper {
   height: 34px;
 
   .ts-control {
@@ -7,6 +7,15 @@
     [data-value="0"] {
       color: #666;
     }
+
+    // change the caret color
+    &::after {
+      border-color: #6c757d transparent transparent transparent;
+    } 
+  }
+
+  &.dropdown-active .ts-control::after {
+    border-color: transparent transparent #6c757d transparent;
   }
 }
 
@@ -35,15 +44,24 @@
   }
 
   .optgroup-header {
-    font-size: 13px;
-    background: $medium-gray;
-  }
-  
-  .optgroup-header {
     padding: 0.75rem;
+    background: $medium-gray;
+    font-size: 13px;
   }
 
   .option {
     padding: 4px 0.75rem;
+  }
+}
+
+.plugin-clear_button,   // needed for specificity in single tom-select
+.ts-wrapper {
+  .clear-button {
+    right: 2.75rem;
+    transition: opacity 0s;
+    background: transparent;
+    box-shadow: none;
+    font-size: 1.75rem;
+    color: #6c757d;
   }
 }
