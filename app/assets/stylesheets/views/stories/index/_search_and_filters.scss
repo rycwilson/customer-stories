@@ -16,6 +16,33 @@ form.search-stories > .input-group,
   }
 }
 
+.search-and-filters.visible-md-block {
+  .filter-controls {
+    @include flex-row-center-between;
+    margin-bottom: 30px;
+
+    > div {
+      @include flex-row-center;
+    }
+  }
+
+  .stories-filter__results--combined {
+    display: none;
+  }
+
+  &.has-combined-results {
+    .filter-controls {
+      margin-bottom: 15px;
+    }
+
+    .stories-filter__results--combined {
+      @include flex-row-center-between;
+      margin-bottom: 15px;
+      padding: 1em;
+    }
+  }
+}
+
 form.search-stories {
   // width: 100%;
 

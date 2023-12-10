@@ -1,27 +1,28 @@
-.search-and-filters.visible-md-block.visible-lg-block data-stories-target="searchAndFilters"
+.search-and-filters.visible-md-block.visible-lg-block {
+  class=('has-combined-results' if filters.length > 1)
+  data-stories-target="searchAndFilters" }
 
   = render('stories/shared/search_form', { company: company })
 
   - if is_dashboard
-    .filter-controls style="display:flex; align-items: center; justify-content: space-between"
-      div style="display:flex; align-items:center" data-action="change->stories#onFilterMatchTypeChange"
+    .filter-controls
+      div data-action="change->stories#onChangeFilterMatchType"
         | Match:&nbsp;&nbsp;&nbsp;
-        label.radio-inline for="match-any-radio"
-          input type="radio" name="filter-type" id="match-any-radio" value="all" data-stories-target="filterMatchTypeRadio"
+        label.radio-inline for="match-any-input"
+          input type="radio" name="match-type" id="match-any-input" value="all" data-stories-target="filterMatchTypeRadio"
             | all
-        label.radio-inline for="match-all-radio"
-          input type="radio" name="filter-type" id="match-all-radio" value="any" data-stories-target="filterMatchTypeRadio"
+        label.radio-inline for="match-all-input"
+          input type="radio" name="match-type" id="match-all-input" value="any" data-stories-target="filterMatchTypeRadio"
             | any
       a href="javascript:;" data-action="stories#clearFilters" 
         | Clear all 
       
-  - if show_combined_results
-    .text-right
-      span.stories-filter__results--combined.help-block
-        - if results.present?
-          | Applied filters:&nbsp;&nbsp;&nbsp;#{results['combined']} #{'story'.pluralize(results['combined'])} found
+  .stories-filter__results--combined.bg-info data-stories-target="filterResultsContainer"
+    span 
+      | Applied Filters:
+    span data-stories-target="filterResults"
 
-  .select-filters data-action="#{%w(curator status customer category product).map do |filter| \
+  div data-action="#{%w(curator status customer category product).map do |filter| \
     "tomselect:change-#{filter}->stories#onChangeFilter"; end.join(' ') }"
 
     - if is_dashboard 
@@ -30,7 +31,7 @@
         = select_tag( \
             nil,
             options_from_collection_for_select( \
-              company.curators, :id, :curator_name_with_stories_count, @filters[:curator]),
+              company.curators, :id, :curator_name_with_stories_count, filters[:curator]),
             { id: 'select-curator--stories',
               include_blank: true,
               placeholder: 'Select',

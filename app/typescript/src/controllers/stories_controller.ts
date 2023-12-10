@@ -11,6 +11,8 @@ export default class extends Controller<HTMLDivElement> {
     'card', 
     'searchAndFilters',   // one container for xs and sm, another for md and lg
     'filterMatchTypeRadio',
+    'filterResultsContainer',
+    'filterResults',
     'filterSelect', 
     'curatorSelect',
     'statusSelect', 
@@ -21,8 +23,10 @@ export default class extends Controller<HTMLDivElement> {
   declare readonly turboFrameTarget: FrameElement;
   declare readonly galleryTarget: HTMLUListElement;
   declare readonly cardTargets: HTMLDivElement[];
-  declare readonly searchAndFiltersTargets: HTMLDivElement[];
+  declare readonly searchAndFiltersTarget: HTMLDivElement;
   declare readonly filterMatchTypeRadioTargets: HTMLInputElement[];
+  declare readonly filterResultsContainerTarget: HTMLDivElement;
+  declare readonly filterResultsTarget: HTMLSpanElement;
   declare readonly filterSelectTargets: HTMLSelectElement[];
   declare readonly curatorSelectTarget: HTMLSelectElement;
   declare readonly statusSelectTarget: HTMLSelectElement;
@@ -52,11 +56,13 @@ export default class extends Controller<HTMLDivElement> {
 
   onInitFilter(e: Event) {
     if (++this.readyFilters === this.filterSelectTargets.length) {
-      this.searchAndFiltersTargets.forEach(container => container.setAttribute('data-init', 'true'));
+      // this.searchAndFiltersTargets.forEach(container => container.setAttribute('data-init', 'true'));
+      this.searchAndFiltersTarget.setAttribute('data-init', 'true');
     }
   }
 
   clearFilters() {
+    if (this.activeFilters.length === 0) return;
     this.filterSelectTargets.forEach(select => select.tomselect.clear(true));
     if (this.turboFrameTarget.src) {
       const newSrc = new URL(this.turboFrameTarget.src);
@@ -68,13 +74,13 @@ export default class extends Controller<HTMLDivElement> {
     }
   }
 
-  onFilterMatchTypeChange({ target: input }: { target: EventTarget }) {
+  onChangeFilterMatchType({ target: input }: { target: EventTarget }) {
     if (!(input instanceof HTMLInputElement)) return;
     this.filterMatchTypeValue = input.value;
   }
 
   filterMatchTypeValueChanged(newVal: string, oldVal: string) {
-    if (!oldVal) return;
+    if (!oldVal || this.activeFilters.length < 2) return;
     if (this.turboFrameTarget.src) {
       this.fetchGallery(new URL(this.turboFrameTarget.src))
     }
@@ -100,19 +106,24 @@ export default class extends Controller<HTMLDivElement> {
   }
 
   fetchGallery(newSrc: URL) {
-    console.log('fetching', newSrc.toString())
+    // console.log('fetching', newSrc.toString())
     newSrc.searchParams.set('match_type', this.filterMatchTypeValue);
     this.turboFrameTarget.src = newSrc.toString();
   }
 
   onRenderGallery(e: Event) {
-    console.log(e)
     const frame = e.target as FrameElement;
+    imagesLoaded('#stories-gallery', (instance) => this.galleryTarget.classList.remove('hidden'));
+    const results = this.cardTargets.length;
+    if (this.activeFilters.length > 1) {
+      this.searchAndFiltersTarget.classList.add('has-combined-results');
+      this.filterResultsTarget.textContent = `${results} ${results === 1 ? 'story' : 'stories'} found`
+    } else {
+      this.searchAndFiltersTarget.classList.remove('has-combined-results');
+    }
+  }
 
-    // if (frame.id !== 'stories') return;
-    imagesLoaded('#stories-gallery', (instance) => {
-      // console.log('images loaded', instance)
-      this.galleryTarget.classList.remove('hidden');
-    })
+  get activeFilters() {
+    return this.filterSelectTargets.filter(select => select.value);
   }
 }

@@ -1,6 +1,5 @@
 .search-and-filters.visible-xs-block {
-  class=('visible-sm-block' unless !is_dashboard && company.story_categories.featured.blank? && company.products.featured.blank?) 
-  data-stories-target="searchAndFilters" }
+  class=('visible-sm-block' unless !is_dashboard && company.story_categories.featured.blank? && company.products.featured.blank?) }
   
   = render('stories/shared/search_form', { company: company })
 
@@ -22,7 +21,7 @@
                 controller: 'tomselect',
                 stories_target: 'filterSelect' } })
       .text-right
-        span.stories-filter__results--combined.help-block
+        span.stories-filter__results--combined.help-block data-stories-target="filterResults"
           - if tags_filter_results.present?
             = "#{tags_filter_results['combined']} #{'story'.pluralize(tags_filter_results['combined'])} found"
 
