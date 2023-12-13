@@ -2,7 +2,6 @@ import { Controller } from '@hotwired/stimulus';
 import { type FrameElement } from '@hotwired/turbo';
 import Cookies from 'js-cookie';
 import imagesLoaded from 'imagesloaded';
-import { capitalize } from '../utils';
 
 export default class extends Controller<HTMLDivElement> {
   static targets = [
@@ -10,29 +9,21 @@ export default class extends Controller<HTMLDivElement> {
     'gallery', 
     'card', 
     'searchAndFilters',   // one container for xs and sm, another for md and lg
-    'filterMatchTypeRadio',
+    'searchInput',
+    'filterMatchTypeInput',
     'filterResultsContainer',
     'filterResults',
     'filterSelect', 
-    'curatorSelect',
-    'statusSelect', 
-    'customerSelect',
-    'categorySelect',
-    'productSelect'
   ];
   declare readonly turboFrameTarget: FrameElement;
   declare readonly galleryTarget: HTMLUListElement;
   declare readonly cardTargets: HTMLDivElement[];
   declare readonly searchAndFiltersTarget: HTMLDivElement;
-  declare readonly filterMatchTypeRadioTargets: HTMLInputElement[];
+  declare readonly searchInputTarget: HTMLInputElement;
+  declare readonly filterMatchTypeInputTargets: HTMLInputElement[];
   declare readonly filterResultsContainerTarget: HTMLDivElement;
   declare readonly filterResultsTarget: HTMLSpanElement;
   declare readonly filterSelectTargets: HTMLSelectElement[];
-  declare readonly curatorSelectTarget: HTMLSelectElement;
-  declare readonly statusSelectTarget: HTMLSelectElement;
-  declare readonly customerSelectTarget: HTMLSelectElement;
-  declare readonly categorySelectTarget: HTMLSelectElement;
-  declare readonly productSelectTarget: HTMLSelectElement;
 
   static values = { filterMatchType: String };
   declare filterMatchTypeValue: string;
@@ -41,17 +32,52 @@ export default class extends Controller<HTMLDivElement> {
 
   connect() {
     // console.log('connect stories')
-    this.filterMatchTypeRadioTargets.forEach(input => {
-      input.checked = input.value === this.filterMatchTypeValue;
-    })
-
+    
     // document.documentElement.addEventListener('turbo:frame-render', this.onGalleryRender.bind(this));
     this.turboFrameTarget.addEventListener('turbo:frame-render', this.onRenderGallery.bind(this));
   }
-
+  
   disconnect() {
     // no need for this since listener is attached to the frame (which will disappear along with its listeners when this disconnects)
     // document.documentElement.removeEventListener('turbo:frame-render', this.onGalleryRender.bind(this));
+  }
+  
+  get activeFilters() {
+    return this.filterSelectTargets.filter(select => select.value);
+  }
+  
+  get filterTypes() {
+    return this.filterSelectTargets.map(select => select.dataset.tomselectTypeValue);
+  }
+  
+  // TODO: before intial load, make sure all images on the page (namely the search icon) are loaded
+  fetchGallery(updateParams: ((src: URL) => void) | undefined = undefined) {
+    if (this.turboFrameTarget.src) {
+      const newSrc = new URL(this.turboFrameTarget.src);
+      if (updateParams) updateParams(newSrc);
+      console.log('fetching', newSrc.toString())
+      this.turboFrameTarget.src = newSrc.toString();
+    }
+  }
+
+  clearSearch() {
+    this.searchInputTarget.value = '';
+  }
+
+  clearFilters(e: CustomEvent | undefined = undefined) {
+    const isUserInput = Boolean(e);
+    if (this.activeFilters.length === 0) return;
+    this.filterSelectTargets.forEach(select => select.tomselect.clear(true));
+    // this.filterResultsContainerTarget.classList.add('hidden');
+    if (isUserInput) {
+      this.fetchGallery((turboFrameSrc: URL) => {
+        this.filterTypes.forEach(param => turboFrameSrc.searchParams.delete(param || ''));
+      })
+    }
+
+    // the curator should be actively "blank", not just removed
+    Cookies.set('csp-curator-filter', '') ;
+    this.filterTypes.filter(type => type !== 'curator').forEach(type => Cookies.remove(`csp-${type}-filter`));
   }
 
   onInitFilter(e: Event) {
@@ -61,56 +87,43 @@ export default class extends Controller<HTMLDivElement> {
     }
   }
 
-  clearFilters() {
-    if (this.activeFilters.length === 0) return;
-    this.filterSelectTargets.forEach(select => select.tomselect.clear(true));
-    if (this.turboFrameTarget.src) {
-      const newSrc = new URL(this.turboFrameTarget.src);
-      ['curator', 'status', 'customer', 'category', 'product'].forEach(param => {
-        newSrc.searchParams.delete(param);
-        param === 'curator' ? Cookies.set('csp-curator-filter', '') : Cookies.remove(`csp-${param}-filter`);
-      });
-      this.fetchGallery(newSrc);
-    }
-  }
-
   onChangeFilterMatchType({ target: input }: { target: EventTarget }) {
     if (!(input instanceof HTMLInputElement)) return;
-    this.filterMatchTypeValue = input.value;
+    this.fetchGallery((turboFrameSrc: URL) => {
+      turboFrameSrc.searchParams.set('match_type', input.value);
+    });
+    Cookies.set('csp-filters-match-type', input.value);
   }
 
-  filterMatchTypeValueChanged(newVal: string, oldVal: string) {
-    if (!oldVal || this.activeFilters.length < 2) return;
-    if (this.turboFrameTarget.src) {
-      this.fetchGallery(new URL(this.turboFrameTarget.src))
-    }
-    Cookies.set('csp-filters-match-type', newVal);
+  onSubmitSearch(e: Event) {
+    e.preventDefault()
+    this.clearFilters();
+    this.fetchGallery((turboFrameSrc: URL) => {
+      for (const [param, value] of turboFrameSrc.searchParams.entries()) {
+        turboFrameSrc.searchParams.delete(param);
+      }
+      turboFrameSrc.searchParams.set('q', this.searchInputTarget.value.trim());
+    });
   }
 
   onChangeFilter(e: CustomEvent) {
     const { type, id } = e.detail;
-    if (this.turboFrameTarget.src) {
-      const newSrc = new URL(this.turboFrameTarget.src);
+    this.clearSearch();
+    this.fetchGallery((turboFrameSrc: URL) => {
       if (id) {
-        newSrc.searchParams.set(type, id);
+        turboFrameSrc.searchParams.set(type, id);
+        turboFrameSrc.searchParams.delete('q');
       } else {
-        newSrc.searchParams.delete(type);
+        turboFrameSrc.searchParams.delete(type);
       }
-      this.fetchGallery(newSrc);
-    }
+    });
     if (!id && type !== 'curator') {
       Cookies.remove(`csp-${type}-filter`);
     } else {
       Cookies.set(`csp-${type}-filter`, id);
     }
   }
-
-  fetchGallery(newSrc: URL) {
-    // console.log('fetching', newSrc.toString())
-    newSrc.searchParams.set('match_type', this.filterMatchTypeValue);
-    this.turboFrameTarget.src = newSrc.toString();
-  }
-
+  
   onRenderGallery(e: Event) {
     const frame = e.target as FrameElement;
     imagesLoaded('#stories-gallery', (instance) => this.galleryTarget.classList.remove('hidden'));
@@ -121,9 +134,5 @@ export default class extends Controller<HTMLDivElement> {
     } else {
       this.searchAndFiltersTarget.classList.remove('has-combined-results');
     }
-  }
-
-  get activeFilters() {
-    return this.filterSelectTargets.filter(select => select.value);
   }
 }

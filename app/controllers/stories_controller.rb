@@ -34,18 +34,20 @@ class StoriesController < ApplicationController
       end
     end.to_h.compact
 
-    # binding.pry
-
-    @tags = @filters.slice(:category, :product)
-
     if @is_dashboard
       # @filters[:curator] ||= current_user.id
-      @stories = Story.default_order(match_filters(params[:match_type]))
+      @stories = params[:q].present? ?
+        search(@company.stories, params[:q]) : 
+        Story.default_order(match_filters(@company.stories, params[:match_type]))
     else
-      set_or_redirect_to_story_preview(params[:preview], session[:preview_story_slug])
+      # set_or_redirect_to_story_preview(params[:preview], session[:preview_story_slug])
       # @tags_filter = get_filters_from_query_or_plugin(@company, params)
       @featured_stories = @company.stories.featured.order([published: :desc, preview_published: :desc, updated_at: :desc])
-      if @tags.present?
+      if params[:q].present?
+        respond_to do |format| 
+          format.json { render(json: search(@featured_stories, params[:q]).pluck(:id).uniq) }
+        end and return
+      elsif (@tags = @filters.slice(:category, :product)).present?
         @filtered_story_ids = @featured_stories.tagged(@tags).pluck(:id)
         @results = @tags.map { |type, id| [type, @featured_stories.tagged(type => id).count] }.to_h
         @results.merge!('combined' => @filtered_story_ids.count)
@@ -251,15 +253,6 @@ class StoriesController < ApplicationController
     render(layout: false)
   end
 
-  def search
-    q = params[:query]
-    stories = @company.stories.featured
-    results = stories.content_like(q) + stories.customer_like(q) + stories.tags_like(q) + stories.results_like(q)
-    respond_to do |format| 
-      format.json { render(json: results.pluck(:id).uniq) }
-    end
-  end
-
   def share_on_linkedin
     redirect_to linkedin_auth_path(share_url: request.referer)
   end
@@ -300,9 +293,13 @@ class StoriesController < ApplicationController
       retarget_ad_attributes: [:id, :adwords_ad_group_id, :ad_id, :status, :_destroy]
     )
   end
+
+  def search stories, q
+    results = stories.content_like(q) + stories.customer_like(q) + stories.tags_like(q) + stories.results_like(q)
+    results.uniq
+  end
   
-  def match_filters match_type
-    stories = @company.stories
+  def match_filters stories, match_type
     return stories if @filters.blank?
     query = nil
     build_query = ->(filter_query) do
