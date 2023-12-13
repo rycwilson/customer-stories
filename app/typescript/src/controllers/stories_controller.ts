@@ -10,7 +10,6 @@ export default class extends Controller<HTMLDivElement> {
     'card', 
     'searchAndFilters',   // one container for xs and sm, another for md and lg
     'searchInput',
-    'filterMatchTypeInput',
     'filterResultsContainer',
     'filterResults',
     'filterSelect', 
@@ -20,7 +19,6 @@ export default class extends Controller<HTMLDivElement> {
   declare readonly cardTargets: HTMLDivElement[];
   declare readonly searchAndFiltersTarget: HTMLDivElement;
   declare readonly searchInputTarget: HTMLInputElement;
-  declare readonly filterMatchTypeInputTargets: HTMLInputElement[];
   declare readonly filterResultsContainerTarget: HTMLDivElement;
   declare readonly filterResultsTarget: HTMLSpanElement;
   declare readonly filterSelectTargets: HTMLSelectElement[];
