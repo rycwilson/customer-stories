@@ -24,9 +24,6 @@ export default class extends Controller<HTMLDivElement> {
   declare readonly filterResultsContainerTarget: HTMLDivElement;
   declare readonly filterResultsTarget: HTMLSpanElement;
   declare readonly filterSelectTargets: HTMLSelectElement[];
-
-  static values = { filterMatchType: String };
-  declare filterMatchTypeValue: string;
   
   readyFilters = 0;
 
