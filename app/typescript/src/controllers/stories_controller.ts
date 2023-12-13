@@ -68,7 +68,7 @@ export default class extends Controller<HTMLDivElement> {
     const isUserInput = Boolean(e);
     if (this.activeFilters.length === 0) return;
     this.filterSelectTargets.forEach(select => select.tomselect.clear(true));
-    // this.filterResultsContainerTarget.classList.add('hidden');
+    this.filterResultsContainerTarget.classList.add('hidden');
     if (isUserInput) {
       this.fetchGallery((turboFrameSrc: URL) => {
         this.filterTypes.forEach(param => turboFrameSrc.searchParams.delete(param || ''));
