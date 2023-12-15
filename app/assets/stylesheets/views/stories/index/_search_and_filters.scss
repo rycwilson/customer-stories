@@ -83,7 +83,8 @@ form.search-stories > .input-group,
         border-bottom-right-radius: 0.25rem;
       }
 
-      &:hover, &:focus { 
+      &:hover, 
+      &:focus { 
         background-color: #0082cc;
         border-color: #0082cc;
         outline: 0;
@@ -137,17 +138,11 @@ form.search-stories > .input-group,
   color: #6f6f6f;
   // cursor: pointer;
 
+  .search-and-filters.has-search-results .search-stories > .input-group &,
   .search-stories.was-executed > .input-group:hover &,
   .visible-xs-block .search-stories.was-executed > .input-group & {
     display: revert;
   }
-
-  // @media only screen and (max-width: 767px) {
-  //   .search-and-filters & {
-  //     margin-top: 15px;
-  //   }
-  // }
-   
 }
 
 .search-and-filters.visible-xs-block {
@@ -176,8 +171,8 @@ form.search-stories > .input-group,
     }
   }
 
-  .form-group:last-child {
-    margin-bottom: 0;
+  .form-group:last-of-type {
+    margin-bottom: 5px;
   }
 
   .stories-filter__results--combined,

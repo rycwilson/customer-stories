@@ -8,8 +8,8 @@ form.search-stories data-action="submit->stories#onSubmitSearch"
           placeholder: 'Search', 
           autocomplete: 'off',
           data: { stories_target: 'searchInput' }}) 
-    button.btn.search-stories__clear type="button"
-      |&times;
+    button.btn.search-stories__clear type="button" data-action="stories#clearSearch"
+      | &times;
     span.input-group-btn
       button.btn.btn-default type="submit"
         = image_tag('icons/bs_search.svg', alt: 'search')

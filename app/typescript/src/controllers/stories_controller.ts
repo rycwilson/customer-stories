@@ -54,13 +54,15 @@ export default class extends Controller<HTMLDivElement> {
     if (this.turboFrameTarget.src) {
       const newSrc = new URL(this.turboFrameTarget.src);
       if (updateParams) updateParams(newSrc);
-      console.log('fetching', newSrc.toString())
+      // console.log('fetching', newSrc.toString())
       this.turboFrameTarget.src = newSrc.toString();
     }
   }
 
   clearSearch() {
     this.searchInputTarget.value = '';
+    this.searchAndFiltersTarget.classList.remove('has-search-results');
+    this.fetchGallery((turboFrameSrc: URL) => turboFrameSrc.searchParams.delete('q'));
   }
 
   clearFilters(e: CustomEvent | undefined = undefined) {
@@ -133,21 +135,20 @@ export default class extends Controller<HTMLDivElement> {
     const displayResults = (target: HTMLSpanElement) => {
       const results = this.cardTargets.length;
       target.textContent = `${results} ${results === 1 ? 'story' : 'stories'}`;
-      // target.textContent = `${results} ${results === 1 ? 'result' : 'results'}`;
     }
     const turboFrameSrc = new URL(this.turboFrameTarget.src || '');
     // for (let key of searchParams.keys()) console.log(key)
     const searchString = turboFrameSrc.searchParams.get('q') || '';
     const filters = this.filterTypes.filter(type => turboFrameSrc.searchParams.has(type));
     if (searchString) {
-      this.searchAndFiltersTarget.classList.remove('has-combined-results');
-      this.searchAndFiltersTarget.classList.add('has-search-results');
       this.searchStringTarget.textContent = `"${searchString}"`;
+      this.searchAndFiltersTarget.classList.remove('has-combined-results');
       displayResults(this.searchResultsTarget);
+      this.searchAndFiltersTarget.classList.add('has-search-results');
     } else if (filters.length > 1) {
       this.searchAndFiltersTarget.classList.remove('has-search-results');
-      this.searchAndFiltersTarget.classList.add('has-combined-results');
       displayResults(this.filterResultsTarget);
+      this.searchAndFiltersTarget.classList.add('has-combined-results');
     } else {
       this.searchAndFiltersTarget.classList.remove('has-search-results', 'has-combined-results');
     }
