@@ -18,6 +18,6 @@
 
     = turbo_frame_tag( \
         'stories', 
-        src: "/stories?#{URI.encode_www_form(@filters)}&match_type=#{@filters_match_type}", 
+        src: "/stories?#{URI.encode_www_form(@filters)}#{@filters.length > 1 ? '&match_type=' + @filters_match_type : ''}", 
         loading: 'lazy', 
         data: { stories_target: 'turboFrame' })
