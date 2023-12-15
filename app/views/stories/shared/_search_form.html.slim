@@ -13,8 +13,15 @@ form.search-stories data-action="submit->stories#onSubmitSearch"
     span.input-group-btn
       button.btn.btn-default type="submit"
         = image_tag('icons/bs_search.svg', alt: 'search')
-  .text-right
-    span.search-stories__results.help-block
+  - if !is_dashboard
+    .text-right
+      span.search-stories__results.help-block
 
-- if company.story_categories.featured.present? && company.products.featured.present?
+- if is_dashboard 
+  .bg-info.search-stories__results
+    span data-stories-target="searchString"
+      /| Search:
+    span data-stories-target="searchResults"
+
+- if is_dashboard || (company.story_categories.featured.present? && company.products.featured.present?)
   hr.visible-md-block.visible-lg-block

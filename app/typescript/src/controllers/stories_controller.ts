@@ -10,8 +10,10 @@ export default class extends Controller<HTMLDivElement> {
     'card', 
     'searchAndFilters',   // one container for xs and sm, another for md and lg
     'searchInput',
-    'filterResultsContainer',
+    'searchString',
+    'searchResults',
     'filterResults',
+    'matchTypeInput',
     'filterSelect', 
   ];
   declare readonly turboFrameTarget: FrameElement;
@@ -19,8 +21,10 @@ export default class extends Controller<HTMLDivElement> {
   declare readonly cardTargets: HTMLDivElement[];
   declare readonly searchAndFiltersTarget: HTMLDivElement;
   declare readonly searchInputTarget: HTMLInputElement;
-  declare readonly filterResultsContainerTarget: HTMLDivElement;
+  declare readonly searchStringTarget: HTMLSpanElement;
+  declare readonly searchResultsTarget: HTMLSpanElement;
   declare readonly filterResultsTarget: HTMLSpanElement;
+  declare readonly matchTypeInputTargets: HTMLInputElement[];
   declare readonly filterSelectTargets: HTMLSelectElement[];
   
   readyFilters = 0;
@@ -42,7 +46,7 @@ export default class extends Controller<HTMLDivElement> {
   }
   
   get filterTypes() {
-    return this.filterSelectTargets.map(select => select.dataset.tomselectTypeValue);
+    return this.filterSelectTargets.map(select => select.dataset.tomselectTypeValue).filter(type => type) as string[]; 
   }
   
   // TODO: before intial load, make sure all images on the page (namely the search icon) are loaded
@@ -63,11 +67,12 @@ export default class extends Controller<HTMLDivElement> {
     const isUserInput = Boolean(e);
     if (this.activeFilters.length === 0) return;
     this.filterSelectTargets.forEach(select => select.tomselect.clear(true));
-    this.filterResultsContainerTarget.classList.add('hidden');
     if (isUserInput) {
       this.fetchGallery((turboFrameSrc: URL) => {
         this.filterTypes.forEach(param => turboFrameSrc.searchParams.delete(param || ''));
       })
+    } else {
+      this.searchAndFiltersTarget.classList.remove('has-combined-results');
     }
 
     // the curator should be actively "blank", not just removed
@@ -111,6 +116,9 @@ export default class extends Controller<HTMLDivElement> {
       } else {
         turboFrameSrc.searchParams.delete(type);
       }
+      if (this.activeFilters.length > 1 && !turboFrameSrc.searchParams.get('match_type')) {
+        turboFrameSrc.searchParams.set('match_type', this.matchTypeInputTargets.find(input => input.checked)!.value);
+      }
     });
     if (!id && type !== 'curator') {
       Cookies.remove(`csp-${type}-filter`);
@@ -120,14 +128,28 @@ export default class extends Controller<HTMLDivElement> {
   }
   
   onRenderGallery(e: Event) {
-    const frame = e.target as FrameElement;
+    // const frame = e.target as FrameElement;
     imagesLoaded('#stories-gallery', (instance) => this.galleryTarget.classList.remove('hidden'));
-    const results = this.cardTargets.length;
-    if (this.activeFilters.length > 1) {
-      this.searchAndFiltersTarget.classList.add('has-combined-results');
-      this.filterResultsTarget.textContent = `${results} ${results === 1 ? 'story' : 'stories'} found`
-    } else {
+    const displayResults = (target: HTMLSpanElement) => {
+      const results = this.cardTargets.length;
+      target.textContent = `${results} ${results === 1 ? 'story' : 'stories'}`;
+      // target.textContent = `${results} ${results === 1 ? 'result' : 'results'}`;
+    }
+    const turboFrameSrc = new URL(this.turboFrameTarget.src || '');
+    // for (let key of searchParams.keys()) console.log(key)
+    const searchString = turboFrameSrc.searchParams.get('q') || '';
+    const filters = this.filterTypes.filter(type => turboFrameSrc.searchParams.has(type));
+    if (searchString) {
       this.searchAndFiltersTarget.classList.remove('has-combined-results');
+      this.searchAndFiltersTarget.classList.add('has-search-results');
+      this.searchStringTarget.textContent = `"${searchString}"`;
+      displayResults(this.searchResultsTarget);
+    } else if (filters.length > 1) {
+      this.searchAndFiltersTarget.classList.remove('has-search-results');
+      this.searchAndFiltersTarget.classList.add('has-combined-results');
+      displayResults(this.filterResultsTarget);
+    } else {
+      this.searchAndFiltersTarget.classList.remove('has-search-results', 'has-combined-results');
     }
   }
 }

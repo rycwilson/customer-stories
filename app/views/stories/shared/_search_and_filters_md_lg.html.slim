@@ -2,7 +2,7 @@
   class=('has-combined-results' if filters.length > 1)
   data-stories-target="searchAndFilters" }
 
-  = render('stories/shared/search_form', { company: company })
+  = render('stories/shared/search_form', { company:, is_dashboard: })
 
   - if is_dashboard
     .filter-controls
@@ -14,7 +14,8 @@
             name="match-type" 
             id="match-all" 
             value="all" 
-            checked=('true' if filters_match_type == 'all') }
+            checked=('true' if filters_match_type == 'all')
+            data-stories-target="matchTypeInput" }
             | all
         label.radio-inline for="match-any"
           input {
@@ -22,12 +23,13 @@
             name="match-type" 
             id="match-any" 
             value="any" 
-            checked=('true' if filters_match_type == 'any') }
+            checked=('true' if filters_match_type == 'any') 
+            data-stories-target="matchTypeInput" }
             | any
       a href="javascript:;" data-action="stories#clearFilters" 
         | Clear all 
       
-  .stories-filter__results--combined.bg-info data-stories-target="filterResultsContainer"
+  .stories-filter__results--combined.bg-info
     span 
       | Applied Filters:
     span data-stories-target="filterResults"
