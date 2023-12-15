@@ -88,7 +88,7 @@ export default class extends Controller<HTMLDivElement> {
   }
 
   onChangeFilterMatchType({ target: input }: { target: EventTarget }) {
-    if (!(input instanceof HTMLInputElement)) return;
+    if (!(input instanceof HTMLInputElement) || this.activeFilters.length === 0) return;
     this.fetchGallery((turboFrameSrc: URL) => {
       turboFrameSrc.searchParams.set('match_type', input.value);
     });
