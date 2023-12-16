@@ -19,21 +19,7 @@ class StoriesController < ApplicationController
 
   def index
     @is_dashboard = turbo_frame_request?
-
-    @filters = %i(curator status customer category product).map do |type| 
-      if params[type].blank?
-        [type, nil]
-      elsif @is_dashboard
-        [type, params[type]&.to_i]
-      else
-        case type
-        when :category; [type, StoryCategory.friendly.find(params[type])&.id]
-        when :product; [type, Product.friendly.find(params[type])&.id]
-        else [type, nil]   # public stories don't have curator, status, or customer filters
-        end
-      end
-    end.to_h.compact
-
+    @filters = set_filters(params)
     if @is_dashboard
       # @filters[:curator] ||= current_user.id
       @stories = params[:q].present? ?
@@ -49,11 +35,8 @@ class StoriesController < ApplicationController
         end and return
       elsif (@tags = @filters.slice(:category, :product)).present?
         @filtered_story_ids = @featured_stories.tagged(@tags).pluck(:id)
-        @results = @tags.map { |type, id| [type, @featured_stories.tagged(type => id).count] }.to_h
-        @results.merge!('combined' => @filtered_story_ids.count)
       end
     end
-
     render(layout: @is_dashboard ? false : 'stories')
   end
 
@@ -297,6 +280,22 @@ class StoriesController < ApplicationController
   def search stories, q
     results = stories.content_like(q) + stories.customer_like(q) + stories.tags_like(q) + stories.results_like(q)
     results.uniq
+  end
+
+  def set_filters params
+    %i(curator status customer category product).map do |type| 
+      if params[type].blank?
+        [type, nil]
+      elsif @is_dashboard
+        [type, params[type]&.to_i]
+      else
+        case type
+        when :category; [type, StoryCategory.friendly.find(params[type])&.id]
+        when :product; [type, Product.friendly.find(params[type])&.id]
+        else [type, nil]   # public stories don't have curator, status, or customer filters
+        end
+      end
+    end.to_h.compact
   end
   
   def match_filters stories, match_type
