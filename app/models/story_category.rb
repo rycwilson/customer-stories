@@ -25,4 +25,8 @@ class StoryCategory < ApplicationRecord
   def name_with_stories_count
     "#{name} (#{stories.count})"
   end
+
+  def name_with_featured_stories_count
+    "#{name} (#{stories.featured.count})"
+  end
 end

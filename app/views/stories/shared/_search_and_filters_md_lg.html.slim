@@ -92,7 +92,10 @@
         = select_tag( \
             nil,
             options_from_collection_for_select( \
-              company.story_categories.order(:name), :id, :name_with_stories_count, filters[:category]),
+              is_dashboard ? company.story_categories.order(:name) : company.story_categories.featured.order(:name),
+              :id,
+              is_dashboard ? :name_with_stories_count : :name_with_featured_stories_count,
+              filters[:category]),
             { id: 'select-category--stories',
               include_blank: true,
               placeholder: 'Select',
@@ -108,7 +111,10 @@
         = select_tag( \
             nil,
             options_from_collection_for_select( \
-              company.products.order(:name), :id, :name_with_stories_count, filters[:product]),
+              is_dashboard ? company.products.order(:name) : company.products.featured.order(:name),
+              :id,
+              is_dashboard ? :name_with_stories_count : :name_with_featured_stories_count,
+              filters[:product]),
             { id: 'select-product--stories',
               include_blank: true,
               placeholder: 'Select',

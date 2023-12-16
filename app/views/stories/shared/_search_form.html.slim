@@ -20,7 +20,6 @@ form.search-stories data-action="submit->stories#onSubmitSearch"
 - if is_dashboard 
   .bg-info.search-stories__results
     span data-stories-target="searchString"
-      /| Search:
     span data-stories-target="searchResults"
 
 - if is_dashboard || (company.story_categories.featured.present? && company.products.featured.present?)
