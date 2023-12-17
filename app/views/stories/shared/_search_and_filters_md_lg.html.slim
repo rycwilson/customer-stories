@@ -91,10 +91,8 @@
         = label_tag('select-category--stories', 'Category')
         = select_tag( \
             nil,
-            options_from_collection_for_select( \
-              is_dashboard ? company.story_categories.order(:name) : company.story_categories.featured.order(:name),
-              :id,
-              is_dashboard ? :name_with_stories_count : :name_with_featured_stories_count,
+            options_for_select( \
+              company.tag_select_options('category', only_featured: !is_dashboard, with_stories_count: true),
               filters[:category]),
             { id: 'select-category--stories',
               include_blank: true,
@@ -110,10 +108,8 @@
         = label_tag('select-product--stories', 'Product')
         = select_tag( \
             nil,
-            options_from_collection_for_select( \
-              is_dashboard ? company.products.order(:name) : company.products.featured.order(:name),
-              :id,
-              is_dashboard ? :name_with_stories_count : :name_with_featured_stories_count,
+            options_for_select( \
+              company.tag_select_options('product', only_featured: !is_dashboard, with_stories_count: true),
               filters[:product]),
             { id: 'select-product--stories',
               include_blank: true,

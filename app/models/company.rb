@@ -322,6 +322,22 @@ class Company < ApplicationRecord
   attr_writer :default_ad_image_url
   attr_accessor :skip_callbacks
 
+  def tag_select_options tag_type, only_featured: false, for_multi_select: false, with_stories_count: false
+    tags = case tag_type
+    when 'category'
+      self.story_categories
+    when 'product'
+      self.products
+    end
+    (only_featured ? tags.featured : tags).map do |tag| 
+      [
+        with_stories_count ? "#{tag.name} (#{(only_featured ? tag.stories.featured : tag.stories).count})" : tag.name,
+        for_multi_select ? "#{tag_type}-#{tag.id}" : tag.id, 
+        { data: { slug: tag.slug } }
+      ]
+    end.sort
+  end
+
   def published_stories
     Story.default_order(Story.company_published(self.id)).pluck(:id)
   end
