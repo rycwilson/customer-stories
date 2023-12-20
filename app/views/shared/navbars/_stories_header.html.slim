@@ -31,8 +31,8 @@ nav {
       - elsif action_name == 'index'
         .col-sm-6
           - if company.story_categories.featured.blank? && company.products.featured.blank?
-            = render('stories/shared/search_form', { company: company })
+            = render('stories/shared/search_form', { company:, is_header_search: true })
 
       - elsif action_name == 'show'
         .col-sm-6
-          = render('stories/shared/share_buttons', { story: story, is_plugin: false })
+          = render('stories/shared/share_buttons', { story:, is_plugin: false })
