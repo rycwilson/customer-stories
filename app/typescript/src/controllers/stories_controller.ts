@@ -132,7 +132,7 @@ export default class extends Controller<HTMLDivElement> {
   onRenderGallery(e: Event) {
     // const frame = e.target as FrameElement;
     imagesLoaded('#stories-gallery', (instance) => this.galleryTarget.classList.remove('hidden'));
-    const displayResults = (target: HTMLSpanElement) => {
+    const showResults = (target: HTMLSpanElement) => {
       const results = this.cardTargets.length;
       target.textContent = `${results} ${results === 1 ? 'story' : 'stories'}`;
     }
@@ -143,11 +143,11 @@ export default class extends Controller<HTMLDivElement> {
     if (searchString) {
       this.searchStringTarget.textContent = `"${searchString}"`;
       this.searchAndFiltersTarget.classList.remove('has-combined-results');
-      displayResults(this.searchResultsTarget);
+      showResults(this.searchResultsTarget);
       this.searchAndFiltersTarget.classList.add('has-search-results');
     } else if (filters.length > 1) {
       this.searchAndFiltersTarget.classList.remove('has-search-results');
-      displayResults(this.filterResultsTarget);
+      showResults(this.filterResultsTarget);
       this.searchAndFiltersTarget.classList.add('has-combined-results');
     } else {
       this.searchAndFiltersTarget.classList.remove('has-search-results', 'has-combined-results');
