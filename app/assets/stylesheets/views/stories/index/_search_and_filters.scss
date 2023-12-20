@@ -6,14 +6,15 @@
 .search-and-filters {
   @include hide-until-init;
 
-  .input-group-addon img {
-    @include svg-fill(#555555);
-    height: 16px;
-  }
+  .input-group-addon {
+    border-top-left-radius: 0.25rem;
+    border-bottom-left-radius: 0.25rem;
 
-  // .form-group {
-    // margin-bottom: 0;
-  // }
+    img {
+      @include svg-fill(#555555);
+      height: 16px;
+    }
+  }
 
   .help-block {
     height: 18px;
@@ -27,7 +28,7 @@
   }
 }
 
-form.search-stories > .input-group,
+.search-stories > .input-group,
 .input-group.tom-select,
 .search-and-filters select {
   height: 34px;
@@ -41,8 +42,6 @@ form.search-stories > .input-group,
 }
 
 .search-stories {
-  // width: 100%;
-
   .input-group {
 
     // matches tomselect style
@@ -175,17 +174,17 @@ form.search-stories > .input-group,
     margin-bottom: 5px;
   }
 
-  .stories-filter__results--combined,
-  .search-stories__results {
+  .search-stories + .bg-info,
+  .filter-results {
     display: none;
   }
 
   &.has-search-results {
-    form.search-stories {
+    .search-stories {
       margin-bottom: 15px;
     }
     
-    .search-stories__results {
+    .search-stories + .bg-info {
       @include flex-row-center-between;
       padding: 1em;
 
@@ -205,7 +204,7 @@ form.search-stories > .input-group,
       margin-bottom: 15px;
     }
 
-    .stories-filter__results--combined {
+    .filter-results {
       @include flex-row-center-between;
       margin-bottom: 15px;
       padding: 1em;

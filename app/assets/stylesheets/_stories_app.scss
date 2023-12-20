@@ -13,16 +13,6 @@
 @import 'views/stories/shared/cookie_consent';
 @import 'views/stories/shared/gallery';
 
-.stories-filter.form-group .input-group-addon {
-  border-top-left-radius: 0.25rem;
-  border-bottom-left-radius: 0.25rem;
-  
-  img {
-    @include svg-fill(#555555);
-    height: 16px;
-  }
-}
-
 .stories-filter__select.ts-wrapper {
   // with tom-select controlInput set to null (disable search), placeholder disappears
   // => use pseudo element
