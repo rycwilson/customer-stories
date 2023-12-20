@@ -2,34 +2,37 @@
   class=('has-combined-results' if filters.length > 1)
   data-stories-target="searchAndFilters" }
 
-  = render('stories/shared/search_form', { company:, is_dashboard: })
+  = render('stories/shared/search_form', { company:, is_header_search: false })
 
-  - if is_dashboard
-    .filter-controls
-      div data-action="change->stories#onChangeFilterMatchType"
-        | Match:&nbsp;&nbsp;&nbsp;
-        label.radio-inline for="match-all"
-          input {
-            type="radio" 
-            name="match-type" 
-            id="match-all" 
-            value="all" 
-            checked=('true' if filters_match_type == 'all')
-            data-stories-target="matchTypeInput" }
-            | all
-        label.radio-inline for="match-any"
-          input {
-            type="radio" 
-            name="match-type" 
-            id="match-any" 
-            value="any" 
-            checked=('true' if filters_match_type == 'any') 
-            data-stories-target="matchTypeInput" }
-            | any
-      a href="javascript:;" data-action="stories#clearFilters" 
-        | Clear all 
+  - if is_dashboard || (company.story_categories.featured.present? && company.products.featured.present?)
+    hr.visible-md-block.visible-lg-block
+
+  /- if is_dashboard
+  .filter-controls
+    div data-action="change->stories#onChangeFilterMatchType"
+      | Match:&nbsp;&nbsp;&nbsp;
+      label.radio-inline for="match-all"
+        input {
+          type="radio" 
+          name="match-type" 
+          id="match-all" 
+          value="all" 
+          checked=('true' if filters_match_type == 'all')
+          data-stories-target="matchTypeInput" }
+          | all
+      label.radio-inline for="match-any"
+        input {
+          type="radio" 
+          name="match-type" 
+          id="match-any" 
+          value="any" 
+          checked=('true' if filters_match_type == 'any') 
+          data-stories-target="matchTypeInput" }
+          | any
+    a href="javascript:;" data-action="stories#clearFilters" 
+      | Clear all 
       
-  .stories-filter__results--combined.bg-info
+  .filter-results.bg-info
     span 
       | Applied Filters:
     span data-stories-target="filterResults"
@@ -47,7 +50,7 @@
             { id: 'select-curator--stories',
               include_blank: true,
               placeholder: 'Select',
-              class: 'form-control',
+              class: 'stories-filter__select form-control',
               data: { \
                 controller: 'tomselect', 
                 tomselect_type_value: 'curator', 
@@ -65,7 +68,7 @@
             { id:'select-status--stories', 
               include_blank: true, 
               placeholder: 'Select',
-              class: 'form-control', 
+              class: 'stories-filter__select form-control', 
               data: { \
                 controller: 'tomselect',
                 tomselect_type_value: 'status',
@@ -80,42 +83,24 @@
             { id: 'select-customer--stories',
               include_blank: true,
               placeholder: 'Select',
-              class: 'form-control',
+              class: 'stories-filter__select form-control',
               data: { \
                 controller: 'tomselect',
                 tomselect_type_value: 'customer',
                 stories_target: 'filterSelect' } })
 
     - if is_dashboard || company.story_categories.featured.present?
-      .stories-filter.form-group
-        = label_tag('select-category--stories', 'Category')
-        = select_tag( \
-            nil,
-            options_for_select( \
-              company.tag_select_options('category', only_featured: !is_dashboard, with_stories_count: true),
-              filters[:category]),
-            { id: 'select-category--stories',
-              include_blank: true,
-              placeholder: 'Select',
-              class: 'stories-filter__select stories-filter__select--category',
-              data: { \
-                controller: 'tomselect',
-                tomselect_type_value: 'category',
-                stories_target: 'filterSelect' } })
+      = render( \
+          'stories/shared/select_category', 
+          { company:, 
+            is_dashboard:,
+            select_id: SecureRandom.urlsafe_base64, 
+            preselected_id: filters[:category] })
 
     - if is_dashboard || company.products.featured.present?
-      .stories-filter.form-group
-        = label_tag('select-product--stories', 'Product')
-        = select_tag( \
-            nil,
-            options_for_select( \
-              company.tag_select_options('product', only_featured: !is_dashboard, with_stories_count: true),
-              filters[:product]),
-            { id: 'select-product--stories',
-              include_blank: true,
-              placeholder: 'Select',
-              class: 'stories-filter__select stories-filter__select--product',
-              data: { \
-                controller: 'tomselect',
-                tomselect_type_value: 'product',
-                stories_target: 'filterSelect' } })
+      = render( \
+          'stories/shared/select_product', 
+          { company:, 
+            is_dashboard:,
+            select_id: SecureRandom.urlsafe_base64, 
+            preselected_id: filters[:product] })
