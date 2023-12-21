@@ -11,12 +11,16 @@
 ;(function CSP() {
   'use strict';
 
-  let featuredStories, relatedStories, searchForms;
+  let featuredStories, relatedStories, searchAndFilters, searchForms;
 
+  
   // stories gallery
   if (location.pathname === '/') {
     featuredStories = document.querySelectorAll('.story-card');
-    searchForms = document.querySelectorAll('form.search-stories');
+    console.log('featuredStories', featuredStories)
+    searchAndFilters = document.querySelectorAll('.search-and-filters');
+    searchForms = document.querySelectorAll('.search-stories');
+
     imagesLoaded('#stories-gallery', (e) => e.elements[0].classList.remove('hidden'));
     initFilters();
     initSearchForms();
@@ -50,7 +54,7 @@
   }
   
   function loadVideo(e) {
-    if (e.target.closest('iframe')) return false;
+    if (e.target.closest('iframe')) return;
     const provider = this.dataset.provider;
     const url = this.dataset.videoUrl;
     const sharedParams = 'autoplay=1';
@@ -87,7 +91,7 @@
         })
     }
   }
-  function initMoreStories () {
+  function initMoreStories() {
     if (isMobileView() && document.querySelector('.primary-cta-xs')) return false;
     const minStories = 4;
     const delay = 5;
@@ -159,14 +163,14 @@
     const syncInputs = (e) => {
       [...searchForms]
         .filter(form => !form.isSameNode(e.currentTarget))
-        .forEach(form => form.querySelector('input[type="search"]').value = e.target.value);
+        .forEach(form => form.querySelector('.search-stories__input').value = e.target.value);
     }
     searchForms.forEach(form => {
       form.addEventListener('input', syncInputs);
-      form.addEventListener('click', (e) => { if (e.target.type === 'submit') onBeforeSearchSubmit(e) });
+      form.addEventListener('click', (e) => { if (e.target.type === 'submit') beforeSearchSubmit(e) });
       form.querySelector('.search-stories__clear').addEventListener('click', (e) => {
         clearSearch();
-        updateGallery([...featuredStories]);
+        renderGallery([...featuredStories]);
       });
     });
   }
@@ -181,6 +185,10 @@
 
   function initFilters() {
     const filters = document.querySelectorAll('.stories-filter__select:not(.ts-wrapper)');
+    const hasCombinedResults = filters.filter(select => select.value).length >= 2
+    if (hasCombinedResults) {
+      showResults({ combined: document.querySelectorAll().length });
+    }
     filters.forEach(select => {
       const otherSelects = [...filters].filter(_select => !_select.isSameNode(select));
       const tsOptions = Object.assign(
@@ -194,9 +202,7 @@
         ts.on('item_add', (value, item) => onMultiSelectItemAdd(ts, item));
       };
     });
-    setTimeout(() => (
-      document.querySelectorAll('.search-and-filters').forEach(container => container.setAttribute('data-init', 'true'))
-    ));
+    setTimeout(() => searchAndFilters.forEach(container => container.setAttribute('data-init', 'true')));
   }
 
   function initStoryCards(cards) {
@@ -262,7 +268,7 @@
     }
   }
   
-  function onFilterChange(changedSelect, otherSelects, value) {
+  function onChangeFilter(changedSelect, otherSelects, value) {
     const isMulti = Array.isArray(value);
     const tagsFilter = {};
     const urlParams = Object.fromEntries(
@@ -317,26 +323,26 @@
     history.replaceState(null, null, `${formatTagParams(tagsFilter)}`);
   }
 
-  function onBeforeSearchSubmit(e) {
+  function beforeSearchSubmit(e) {
     e.preventDefault();
     const form = e.currentTarget;
-    const query = form.querySelector('input[type="search"]').value;
+    const searchString = form.querySelector('.search-stories__input').value;
     const noResultsMesg = `Sorry, we couldn't find any stories matching \"${query}\"`
-    if (!query) {
+    if (!searchString) {
       location.reload(false);   // false => reload from cache if available; true => reload from server
     } else {
-      updateGallery([]);
-      clearFilterSelections();
-      fetch('/stories/search?' + new URLSearchParams({ query }), {
+      renderGallery([]);
+      clearFilters();
+      fetch('/stories?' + new URLSearchParams({ q: searchString }), {
         headers: {
           'Content-Type': 'application/json',
           'X-CSRF-Token': document.querySelector('[name="csrf-token" ]').content
         }
       }).then(res => res.json()).then((storyIds) => {
         const filteredStories = [...featuredStories].filter(card => storyIds.includes(parseInt(card.dataset.storyId, 10)));
-        form.classList.add('was-executed');
-        showResults({ search: filteredStories.length });
-        updateGallery(filteredStories, noResultsMesg); 
+        // form.classList.add('was-executed');
+        renderGallery(filteredStories, noResultsMesg); 
+        showResults({ search: filteredStories.length, searchString });
       })
     }
   }
@@ -357,11 +363,11 @@
     );
     const noResultsMesg = "Sorry, we couldn't find any stories matching the selected filters";
     if (Object.keys(results).length) Object.assign(results, { combined: filteredStories.length })
-    updateGallery(filteredStories, noResultsMesg);
+    renderGallery(filteredStories, noResultsMesg);
     return Promise.resolve(results);
   }
   
-  function updateGallery(filteredStories, noResultsMesg) {
+  function renderGallery(filteredStories, noResultsMesg) {
     const gallery = document.getElementById('stories-gallery');
     const createItem = (content) => {
       const li = document.createElement('li');
@@ -381,12 +387,19 @@
 
   function showResults(results) {
     // console.log('results', results)
-    const format = (count) => `${count} ${count === 1 ? 'story' : 'stories'} found`;
+    const format = (count) => `${count} ${count === 1 ? 'story' : 'stories'}`;
     if (results.search) {
-      document.querySelectorAll('.search-stories__results').forEach(result => {
-        result.textContent = format(results.search);
+      document.querySelector('.search-stories__search-string').textContent = results.searchString;
+      document.querySelectorAll('.search-stories__results').forEach(el => el.textContent = format(results.search));
+      searchAndFilters.forEach(container => {
+        container.classList.remove('has-combined-results');
+        container.classList.add('has-search-results');
       });
     } else {
+      // - keep existing results display for xs and sm, including individual filters
+
+
+
       for (const [tagType, count] of Object.entries(results)) {
         document.querySelectorAll(`.stories-filter__results--${tagType}`).forEach(result => {
           result.textContent = `${tagType === 'combined' ? 'Applied filters:\xa0\xa0' : ''}${format(count)}`;
@@ -420,7 +433,7 @@
     }
   }
 
-  function clearFilterSelections() {
+  function clearFilters() {
     document.querySelectorAll('.stories-filter__select:not(.ts-wrapper)').forEach(select => select.tomselect.clear(true));
     clearFilterResults();
   }
@@ -449,7 +462,7 @@
         const dropdownMaxHeight = document.documentElement.clientHeight - this.wrapper.getBoundingClientRect().bottom;
         this.dropdown.children[0].style.maxHeight = `${dropdownMaxHeight - 10}px`;
       },
-      onChange: onFilterChange.bind(null, select, otherSelects)
+      onChange: onChangeFilter.bind(null, select, otherSelects)
     };
   }
   
