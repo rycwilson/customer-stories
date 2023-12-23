@@ -26,7 +26,7 @@ p.lead {
 }
 
 #company-tags-form {
-  @include hide-until-init;
+  // @include hide-until-init;
 
   &.form-horizontal .control-label {
     padding-top: 11px;
@@ -56,14 +56,13 @@ p.lead {
     position: absolute;
     right: 0;
   }
+}
 
-  // don't show tabbed content until tab is selected
-  .layout-main {
-    display: none;
-  }
+// don't show until active tab is confirmed based on location hash (see company_settings_controller.ts)
+[data-controller="company-settings"] {
+  visibility: hidden;
 
-  // for creating and deleting tags, there's no need to show the options dropdown
-  #select2-category_tags_-results, #select2-product_tags_-results {
-    // display: none;
+  &.has-correct-active-tab {
+    visibility: visible;
   }
 }

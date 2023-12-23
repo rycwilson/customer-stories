@@ -7,6 +7,12 @@ import { application } from "./application.js"
 // import HelloController from "./hello_controller"
 // application.register("hello", HelloController)
 
+import CompanySettingsController from './company_settings_controller.js';
+application.register('company-settings', CompanySettingsController);
+
+import UserProfileController from "./user_profile_controller.js";
+application.register("user-profile", UserProfileController);
+
 import TomselectController from './tomselect_controller.js';
 application.register('tomselect', TomselectController);
 

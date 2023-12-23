@@ -37,7 +37,7 @@ class CompaniesController < ApplicationController
 
   def edit
     redirect_to(company_settings_path) if request.path =~ /\/companies\/\d+/
-    @tab = request.cookies['company-tab'] || '#edit-company-profile'
+    @active_tab = cookies['csp-company-settings-tab'] || '#edit-company-profile'
     @form_options = set_form_options(params, @company)
     render :company_settings
   end

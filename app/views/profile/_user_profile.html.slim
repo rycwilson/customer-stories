@@ -13,7 +13,8 @@
         url: s3_direct_post.url,
         host: URI.parse(s3_direct_post.url).host,
         asset_host: Rails.application.config.asset_host,
-        s3_data: s3_direct_post.fields }}) do |f|
+        s3_data: s3_direct_post.fields,
+        controller: 'user-profile' }}) do |f|
 
   .visible-sm-block.visible-md-block
     .form-group
