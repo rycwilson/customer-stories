@@ -2,9 +2,8 @@ import { Controller } from '@hotwired/stimulus';
 import Cookies from 'js-cookie';
 
 export default class CompanySettingsController extends Controller<HTMLDivElement> {
-  static targets = ['tab', 'tabContent'];
+  static targets = ['tab'];
   declare tabTargets: [HTMLAnchorElement];
-  // declare tabContentTarget: HTMLDivElement;
 
   get activeTab() {
     return this.tabTargets.find(tab => (

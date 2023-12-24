@@ -10,6 +10,21 @@ import { application } from "./application.js"
 import CompanySettingsController from './company_settings_controller.js';
 application.register('company-settings', CompanySettingsController);
 
+import CompanyProfileController from './company_profile_controller.js';
+application.register('company-profile', CompanyProfileController);
+
+import InvitationTemplatesController from './invitation_templates_controller.js';
+application.register('invitation-templates', InvitationTemplatesController);
+
+import PluginsController from "./plugins_controller.js";
+application.register("plugins", PluginsController);
+
+import CtasController from "./ctas_controller.js";
+application.register("ctas", CtasController)
+
+import TagssController from "./tags_controller.js";
+application.register("tags", TagssController)
+
 import UserProfileController from "./user_profile_controller.js";
 application.register("user-profile", UserProfileController);
 
