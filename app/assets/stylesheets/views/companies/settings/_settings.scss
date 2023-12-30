@@ -62,7 +62,7 @@ p.lead {
 [data-controller="company-settings"] {
   visibility: hidden;
 
-  &.has-correct-active-tab {
+  &.has-active-tab {
     visibility: visible;
   }
 }

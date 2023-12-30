@@ -13,7 +13,7 @@ export default class CompanySettingsController extends Controller<HTMLDivElement
 
   connect() {
     // console.log('connect company settings')
-    this.checkActiveTab();
+    this.initSidebar();
     this.addTabListeners();
   }
   
@@ -29,18 +29,25 @@ export default class CompanySettingsController extends Controller<HTMLDivElement
   }
   
   // check that the current active tab matches the hash fragment in the url; might be a mismatch e.g. if cookies disabled
-  checkActiveTab() {
-    const showPage = () => this.element.classList.add('has-correct-active-tab');
+  initSidebar() {
     const tabMatchesLocation = (tab: HTMLAnchorElement) => tab.hash.replace('edit-', '') === location.hash;
     if (tabMatchesLocation(this.activeTab)) {
-      showPage();
+      console.log('yes')
+      this.showPage();
     } else {
-      const correctTab = this.tabTargets.find(tab => tabMatchesLocation(tab));
-      if (correctTab) {
-        $(correctTab).one('shown.bs.tab', showPage).tab('show');
+      console.log('no')
+      const activeTab = this.tabTargets.find(tab => tabMatchesLocation(tab));
+      if (activeTab) {
+        $(activeTab).one('shown.bs.tab', this.showPage.bind(this)).tab('show');
       } else {
         // default tab
       }
     }
+  }
+
+  showPage() {
+    console.log('showPage()')
+
+    this.element.classList.add('has-active-tab');
   }
 }
