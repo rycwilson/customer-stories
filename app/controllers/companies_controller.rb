@@ -31,7 +31,7 @@ class CompaniesController < ApplicationController
         [type, cookie_val.to_i]
       end
     end.to_h.compact
-    @filters_match_type = cookies['csp-filters-match-type'] || 'all'
+    @filters_match_type = cookies['csp-dashboard-filters-match-type'] || 'all'
     @curate_view = 'stories'
   end
 
