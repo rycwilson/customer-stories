@@ -33,7 +33,7 @@ export default class extends Controller<HTMLDivElement> {
     // console.log('connect stories')
     
     // document.documentElement.addEventListener('turbo:frame-render', this.onGalleryRender.bind(this));
-    this.turboFrameTarget.addEventListener('turbo:frame-render', this.onRenderGallery.bind(this));
+    this.turboFrameTarget.addEventListener('turbo:frame-render', this.onRenderStories.bind(this));
   }
   
   disconnect() {
@@ -50,27 +50,30 @@ export default class extends Controller<HTMLDivElement> {
   }
   
   // TODO: before intial load, make sure all images on the page (namely the search icon) are loaded
-  fetchGallery(updateParams: ((src: URL) => void) | undefined = undefined) {
+  fetchStories(updateSearchParams: ((src: URL) => void) | undefined = undefined) {
     if (this.turboFrameTarget.src) {
       const newSrc = new URL(this.turboFrameTarget.src);
-      if (updateParams) updateParams(newSrc);
+      if (updateSearchParams) updateSearchParams(newSrc);
       // console.log('fetching', newSrc.toString())
       this.turboFrameTarget.src = newSrc.toString();
     }
   }
 
-  clearSearch() {
+  clearSearch(e: CustomEvent | undefined = undefined) {
+    const isUserInput = Boolean(e);
     this.searchInputTarget.value = '';
     this.searchAndFiltersTarget.classList.remove('has-search-results');
-    this.fetchGallery((turboFrameSrc: URL) => turboFrameSrc.searchParams.delete('q'));
+    if (isUserInput) {
+      this.fetchStories((turboFrameSrc: URL) => turboFrameSrc.searchParams.delete('q'));
+    }
   }
 
   clearFilters(e: CustomEvent | undefined = undefined) {
-    const isUserInput = Boolean(e);
     if (this.activeFilters.length === 0) return;
+    const isUserInput = Boolean(e);
     this.filterSelectTargets.forEach(select => select.tomselect.clear(true));
     if (isUserInput) {
-      this.fetchGallery((turboFrameSrc: URL) => {
+      this.fetchStories((turboFrameSrc: URL) => {
         this.filterTypes.forEach(param => turboFrameSrc.searchParams.delete(param || ''));
       })
     } else {
@@ -91,16 +94,14 @@ export default class extends Controller<HTMLDivElement> {
 
   onChangeFilterMatchType({ target: input }: { target: EventTarget }) {
     if (!(input instanceof HTMLInputElement) || this.activeFilters.length === 0) return;
-    this.fetchGallery((turboFrameSrc: URL) => {
-      turboFrameSrc.searchParams.set('match_type', input.value);
-    });
-    Cookies.set('csp-filters-match-type', input.value);
+    this.fetchStories((turboFrameSrc: URL) => turboFrameSrc.searchParams.set('match_type', input.value));
+    Cookies.set('csp-dashboard-filters-match-type', input.value);
   }
 
   onSubmitSearch(e: Event) {
     e.preventDefault()
     this.clearFilters();
-    this.fetchGallery((turboFrameSrc: URL) => {
+    this.fetchStories((turboFrameSrc: URL) => {
       for (const [param, value] of turboFrameSrc.searchParams.entries()) {
         turboFrameSrc.searchParams.delete(param);
       }
@@ -111,7 +112,7 @@ export default class extends Controller<HTMLDivElement> {
   onChangeFilter(e: CustomEvent) {
     const { type, id } = e.detail;
     this.clearSearch();
-    this.fetchGallery((turboFrameSrc: URL) => {
+    this.fetchStories((turboFrameSrc: URL) => {
       if (id) {
         turboFrameSrc.searchParams.set(type, id);
         turboFrameSrc.searchParams.delete('q');
@@ -129,7 +130,7 @@ export default class extends Controller<HTMLDivElement> {
     }
   }
   
-  onRenderGallery(e: Event) {
+  onRenderStories(e: Event) {
     // const frame = e.target as FrameElement;
     imagesLoaded('#stories-gallery', (instance) => this.galleryTarget.classList.remove('hidden'));
     const showResults = (target: HTMLSpanElement) => {
