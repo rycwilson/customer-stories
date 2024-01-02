@@ -32,10 +32,8 @@ export default class CompanySettingsController extends Controller<HTMLDivElement
   initSidebar() {
     const tabMatchesLocation = (tab: HTMLAnchorElement) => tab.hash.replace('edit-', '') === location.hash;
     if (tabMatchesLocation(this.activeTab)) {
-      console.log('yes')
       this.showPage();
     } else {
-      console.log('no')
       const activeTab = this.tabTargets.find(tab => tabMatchesLocation(tab));
       if (activeTab) {
         $(activeTab).one('shown.bs.tab', this.showPage.bind(this)).tab('show');
@@ -46,8 +44,6 @@ export default class CompanySettingsController extends Controller<HTMLDivElement
   }
 
   showPage() {
-    console.log('showPage()')
-
     this.element.classList.add('has-active-tab');
   }
 }
