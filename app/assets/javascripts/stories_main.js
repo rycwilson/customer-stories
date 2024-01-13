@@ -11,15 +11,31 @@
 ;(function CSP() {
   'use strict';
 
-  let featuredStories, relatedStories, searchAndFilters, searchForms;
+  // DOM elements
+  let featuredStories, relatedStories, searchAndFilters, searchForms, filters, matchTypeInputs, searchResults, filterResults;
 
   
   // stories gallery
   if (location.pathname === '/') {
     featuredStories = document.querySelectorAll('.story-card');
-    console.log('featuredStories', featuredStories)
+    // console.log('featuredStories', featuredStories)
     searchAndFilters = document.querySelectorAll('.search-and-filters');
     searchForms = document.querySelectorAll('.search-stories');
+    filters = document.querySelectorAll('.stories-filter__select:not(.ts-wrapper)');
+    searchResults = document.querySelectorAll('.search-stories__results');
+    filterResults = document.querySelectorAll('.filter-results > span:last-child');
+    matchTypeInputs = document.querySelectorAll('[name="match-type"]');
+
+    // the has-combined-results class is only present when > 1 filters are applied
+    const searchParams = new URLSearchParams(location.search);
+    const hasFilterResults = searchParams.has('category') || searchParams.has('product');
+    const hasSearchResults = [...searchAndFilters].some(container => container.classList.contains('has-search-results'));
+    const results = (hasSearchResults || hasFilterResults) ?
+      [...featuredStories].filter(card => !card.parentElement.classList.contains('hidden')).length :
+      undefined;
+    const renderResults = (el) => el.textContent = `${results} ${results === 1 ? 'story' : 'stories'}`; 
+    if (hasSearchResults) searchResults.forEach(renderResults);
+    if (hasFilterResults) filterResults.forEach(renderResults);
 
     imagesLoaded('#stories-gallery', (e) => e.elements[0].classList.remove('hidden'));
     initFilters();
@@ -46,6 +62,16 @@
     const editStoryLink = document.querySelector('.stories-header__edit');
     if (editStoryLink) editStoryLink.addEventListener('click', () => Cookies.set('csp-edit-story-tab', '#story-content'));
   }
+
+  // function hasCombinedResults() {
+  //   const searchParams = new URLSearchParams(location.search);
+  //   const tagTypes = ['category', 'product'];
+  //   let tagCount = 0;
+  //   for (const tagType of searchParams.keys()) {
+  //     if (tagTypes.includes(tagType)) tagCount++;
+  //   }
+  //   return tagCount >= 2;
+  // }
 
   function initVideo() {
     document.querySelectorAll('.video-thumb-container').forEach(container => {
@@ -91,6 +117,7 @@
         })
     }
   }
+
   function initMoreStories() {
     if (isMobileView() && document.querySelector('.primary-cta-xs')) return false;
     const minStories = 4;
@@ -170,25 +197,25 @@
       form.addEventListener('click', (e) => { if (e.target.type === 'submit') beforeSearchSubmit(e) });
       form.querySelector('.search-stories__clear').addEventListener('click', (e) => {
         clearSearch();
-        renderGallery([...featuredStories]);
+        renderStories([...featuredStories]);
       });
     });
   }
 
-  function clearSearch() {
-    searchForms.forEach(form => {
-      form.classList.remove('was-executed');
-      form.querySelector('.search-stories__input').value = '';
-      form.querySelector('.search-stories__results').textContent = '';
-    });
+  function clearSearch(e) {
+    const isUserInput = e;
+    searchAndFilters.forEach(container => container.classList.remove('has-search-results'));
+    searchForms.forEach(form => form.querySelector('.search-stories__input').value = '');
+    if (isUserInput) renderStories([...featuredStories]);
   }
 
   function initFilters() {
-    const filters = document.querySelectorAll('.stories-filter__select:not(.ts-wrapper)');
-    const hasCombinedResults = filters.filter(select => select.value).length >= 2
-    if (hasCombinedResults) {
-      showResults({ combined: document.querySelectorAll().length });
-    }
+    const hasCombinedResults = [...filters].filter(select => select.value).length >= 2
+    // if (hasCombinedResults) {
+      //   showResults({ combined: document.querySelectorAll().length });
+      // }
+    initFilterControls();
+
     filters.forEach(select => {
       const otherSelects = [...filters].filter(_select => !_select.isSameNode(select));
       const tsOptions = Object.assign(
@@ -203,6 +230,18 @@
       };
     });
     setTimeout(() => searchAndFilters.forEach(container => container.setAttribute('data-init', 'true')));
+  }
+      
+  function initFilterControls() {
+    const clearFiltersBtn = document.querySelector('[data-action="stories#clearFilters"]');
+    if (clearFiltersBtn) clearFiltersBtn.addEventListener('click', clearFilters);
+    matchTypeInputs.forEach(input => input.addEventListener('change', (e) => {
+      if (input.checked) {
+        Cookies.set('csp-filters-match-type', input.value);
+        // apply filters combinatorially or disjunctively
+        
+      }
+    }));
   }
 
   function initStoryCards(cards) {
@@ -270,19 +309,19 @@
   
   function onChangeFilter(changedSelect, otherSelects, value) {
     const isMulti = Array.isArray(value);
-    const tagsFilter = {};
-    const urlParams = Object.fromEntries(
-      [...new URLSearchParams(location.search)].filter(([tagType, tagSlug]) => /category|product/.test(tagType))
+    const searchParams = new URLSearchParams(location.search);
+    const getTagSlug = (select, value) => (
+      value ? Object.values(select.tomselect.options).find(option => option.value === value).slug : ''
     );
-    const getTagSlug = (select, selectedValue) => !selectedValue ? '' : (
-      Object.values(select.tomselect.options).find(option => option.value === selectedValue).slug
-    );
+
+    // { category: { id: 4, slug: 'some-category-slug' }, product: { id: 7, slug: 'some-product-slug' } }
+    let tags;
 
     if (isMulti) {
       const tagTypeIds = value;   // e.g. 'category-4', 'product-7'
 
       // reverse => ensures FIFO behavior
-      // reduce => build the tagsFilter object, with only one instance of a given tag type
+      // reduce => build the tags object, with only one instance of a given tag type
       // sort => category always goes first
       const newTagTypeIds = tagTypeIds
         .reverse()   
@@ -292,8 +331,8 @@
           if (isRepeatedType) {
             return acc;
           } else {
-            // build the tagsFilter object
-            tagsFilter[`${tagType}`] = { 
+            // build the tags object
+            tags[`${tagType}`] = { 
               id: parseInt(tagTypeId.slice(tagTypeId.lastIndexOf('-') + 1), 10), 
               slug: getTagSlug(changedSelect, tagTypeId) 
             };
@@ -304,70 +343,74 @@
       if (newTagTypeIds.length) changedSelect.tomselect.setValue(newTagTypeIds, true);
 
     } else {
-      const tagType = singleSelectTagType(changedSelect);
-
-      // build the tagsFilter object
-      if (value) tagsFilter[`${tagType}`] = { id: parseInt(value, 10), slug: getTagSlug(changedSelect, value) };
-      otherSelects.forEach(select => {
-        const thisTagType = singleSelectTagType(select);
-        if (!select.multiple && select.value && (thisTagType !== tagType)) {
-          tagsFilter[thisTagType] = { id: parseInt(select.value, 10), slug: getTagSlug(select, select.value) }; 
-        }
-      });
+      const tagSlug = getTagSlug(changedSelect, value);
+      if (value) {
+        searchParams.set(singleSelectTagType(changedSelect), tagSlug);
+      } else {
+        searchParams.delete(singleSelectTagType(changedSelect));
+      }
+      tags = Object.fromEntries(
+        [...searchParams]
+          .filter(([tagType, tagSlug]) => /^(category|product)$/.test(tagType))
+          .map(([tagType, tagSlug]) => [tagType, { id: parseInt(value, 10), slug: tagSlug }])
+      )
     }
-    // console.log('tagsFilter', tagsFilter)
     clearSearch();
-    clearFilterResults();
-    filterStories(tagsFilter).then(showResults);
-    syncFilters(changedSelect, otherSelects, tagsFilter, isMulti);
-    history.replaceState(null, null, `${formatTagParams(tagsFilter)}`);
+    // clearFilterResults();
+    // filterStories(tags).then(showResults);
+    renderStories(filterStories(tags), "Sorry, we couldn't find any stories matching the selected filters");
+    syncFilters(changedSelect, otherSelects, tags, isMulti);
+    history.replaceState(null, '', `${formatTagParams(tags)}`);
   }
 
   function beforeSearchSubmit(e) {
     e.preventDefault();
     const form = e.currentTarget;
     const searchString = form.querySelector('.search-stories__input').value;
-    const noResultsMesg = `Sorry, we couldn't find any stories matching \"${query}\"`
     if (!searchString) {
       location.reload(false);   // false => reload from cache if available; true => reload from server
     } else {
-      renderGallery([]);
+      renderStories([]);
       clearFilters();
       fetch('/stories?' + new URLSearchParams({ q: searchString }), {
         headers: {
           'Content-Type': 'application/json',
-          'X-CSRF-Token': document.querySelector('[name="csrf-token" ]').content
+          'X-CSRF-Token': document.querySelector('[name="csrf-token"]').content
         }
       }).then(res => res.json()).then((storyIds) => {
         const filteredStories = [...featuredStories].filter(card => storyIds.includes(parseInt(card.dataset.storyId, 10)));
         // form.classList.add('was-executed');
-        renderGallery(filteredStories, noResultsMesg); 
-        showResults({ search: filteredStories.length, searchString });
+        renderStories(filteredStories, `Sorry, we couldn't find any stories matching \"${query}\"`); 
+        // showResults({ search: filteredStories.length, searchString });
       })
     }
   }
 
-  function filterStories(tagsFilter) {
-    let filteredStories = [...featuredStories];
-    const isTagged = (card, tagType) => JSON.parse(card.dataset[tagType]).includes(tagsFilter[tagType].id);
-    for (const tagType of Object.keys(tagsFilter)) {
-      if (tagsFilter[tagType]) {
-        filteredStories = filteredStories.filter(card => isTagged(card, tagType));
-      }
-    }
-    const results = Object.fromEntries( 
-      Object.entries(tagsFilter).reduce((activeFilters, [tagType, { id: tagId, slug: tagSlug }]) => {
-        if (tagId) activeFilters.push([ tagType, [...featuredStories].filter(card => isTagged(card, tagType)).length ]);
-        return activeFilters;
-      }, [])
-    );
-    const noResultsMesg = "Sorry, we couldn't find any stories matching the selected filters";
-    if (Object.keys(results).length) Object.assign(results, { combined: filteredStories.length })
-    renderGallery(filteredStories, noResultsMesg);
-    return Promise.resolve(results);
+  function filterStories(tags) {
+    const matchType = [...matchTypeInputs].find(input => input.checked).value;
+    console.log('matchType', matchType)
+    const storyIsTagged = (card, tagType) => JSON.parse(card.dataset[tagType]).includes(tags[tagType].id);
+    return Object.keys(tags).length === 0 ?
+      [...featuredStories] :
+      [...featuredStories].filter(card => {
+        if (matchType == 'all') {
+          return Object.keys(tags).every(tagType => storyIsTagged(card, tagType));
+        } else if (matchType == 'any') {
+          return Object.keys(tags).some(tagType => storyIsTagged(card, tagType));
+        }
+      })
+
+    // const results = Object.fromEntries( 
+    //   Object.entries(tags).reduce((activeFilters, [tagType, { id: tagId, slug: tagSlug }]) => {
+    //     if (tagId) activeFilters.push([ tagType, [...featuredStories].filter(card => storyIsTagged(card, tagType)).length ]);
+    //     return activeFilters;
+    //   }, [])
+    // );
+    // if (Object.keys(results).length) Object.assign(results, { combined: filteredStories.length })
+    // return Promise.resolve(results);
   }
   
-  function renderGallery(filteredStories, noResultsMesg) {
+  function renderStories(filteredStories, noResultsMesg) {
     const gallery = document.getElementById('stories-gallery');
     const createItem = (content) => {
       const li = document.createElement('li');
@@ -408,11 +451,11 @@
     }
   }
 
-  function syncFilters(changedSelect, otherSelects, tagsFilter, multiChanged) {
+  function syncFilters(changedSelect, otherSelects, tags, multiChanged) {
     otherSelects.forEach(select => {
       if (multiChanged) {
         select.tomselect.setValue(
-          tagsFilter[singleSelectTagType(select)] ? tagsFilter[singleSelectTagType(select)].id : '', 
+          tags[singleSelectTagType(select)] ? tags[singleSelectTagType(select)].id : '', 
           true
         );
       } else {
@@ -425,7 +468,7 @@
     if (!multiChanged) {
       const multiSelect = otherSelects.find(select => select.multiple);
       if (multiSelect) {
-        const newTagTypeIds = Object.entries(tagsFilter)
+        const newTagTypeIds = Object.entries(tags)
           .flatMap(([tagType, { id: tagId }]) => tagId ? `${tagType}-${tagId}` : [])
           .sort(byTagType.bind(null, 'category'));
          multiSelect.tomselect.setValue(newTagTypeIds, true);
@@ -433,13 +476,13 @@
     }
   }
 
-  function clearFilters() {
-    document.querySelectorAll('.stories-filter__select:not(.ts-wrapper)').forEach(select => select.tomselect.clear(true));
-    clearFilterResults();
-  }
-
-  function clearFilterResults() {
-    document.querySelectorAll('[class*="stories-filter__results"]').forEach(result => result.textContent = '');
+  function clearFilters(e) {
+    if ([...filters].filter(select => select.value).length === 0) return;
+    const isUserInput = Boolean(e);
+    filters.forEach(select => select.tomselect.clear(true));
+    if (isUserInput) renderStories([...featuredStories]);
+    searchAndFilters.forEach(container => container.classList.remove('has-combined-results'));
+    history.replaceState(null, '', '/');
   }
 
   function onMultiSelectItemAdd(ts, item) {
@@ -509,17 +552,16 @@
     };
   }
 
-  function formatTagParams(tagsFilter) {
-    return Object.keys(tagsFilter).length === 0 ?
+  function formatTagParams(tags) {
+    return Object.keys(tags).length === 0 ?
       '/' :
-      Object.keys(tagsFilter).reduce((params, tagType, i) => (
-        params + `${i === 0 ? '?' : '&'}${tagType}=${tagsFilter[tagType].slug}`
+      Object.keys(tags).reduce((params, tagType, i) => (
+        params + `${i === 0 ? '?' : '&'}${tagType}=${tags[tagType].slug}`
       ), '');
   }
 
   function singleSelectTagType(select) {
-    const tagMatch = select.className.match(/select--(?<tagType>(\w|-)+)/);
-    return tagMatch ? tagMatch.groups.tagType : '';
+    return select.dataset.tomselectTypeValue;
   }
 
   function byTagType(tagType, a, b) {
@@ -540,7 +582,7 @@
     const ctaTop = scrollY + backgroundDiv.getBoundingClientRect().top;
     document.addEventListener('scroll', (e) => {
       if (scrollY > ctaTop - 95) {
-        console.log('fix', scrollY, ctaTop)
+        // console.log('fix', scrollY, ctaTop)
         cta.style.position = 'fixed';
         cta.style.top = '95px';
         cta.style.left = `${sidebar.getBoundingClientRect().left + parseFloat(getComputedStyle(sidebar).paddingLeft)}px`;
@@ -551,7 +593,7 @@
           parseFloat(getComputedStyle(sidebar).paddingRight)
         }px`;
       } else {
-        console.log('no fix')
+        // console.log('no fix')
         cta.style.position = 'static';
       }
     }, { passive: true });
