@@ -14,18 +14,16 @@
     = render( \
         'stories/shared/search_and_filters_xs_sm',
         { company: @company,
-          filters: @tags,
-          results: @results,
-          is_dashboard: false })
+          filters_match_type: @filters_match_type,
+          filters: @tags })
 
     / if no filters, the search input will appear in the header
     - if @company.story_categories.featured.present? || @company.products.featured.present?
       = render( \
           'stories/shared/search_and_filters_md_lg',
           { company: @company,
+            filters_match_type: @filters_match_type,
             filters: @tags,
-            results: results,
-            show_combined_results: @company.story_categories.featured.present? && @company.products.featured.present?,
             is_dashboard: false })
 
     = render( \

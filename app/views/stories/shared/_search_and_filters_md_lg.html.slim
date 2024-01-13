@@ -11,20 +11,20 @@
   .filter-controls
     div data-action="change->stories#onChangeFilterMatchType"
       | Match:&nbsp;&nbsp;&nbsp;
-      label.radio-inline for="match-all"
+      label.radio-inline for="match-all-md-lg"
         input {
           type="radio" 
           name="match-type" 
-          id="match-all" 
+          id="match-all-md-lg" 
           value="all" 
           checked=('true' if filters_match_type == 'all')
           data-stories-target="matchTypeInput" }
           | all
-      label.radio-inline for="match-any"
+      label.radio-inline for="match-any-md-lg"
         input {
           type="radio" 
           name="match-type" 
-          id="match-any" 
+          id="match-any-md-lg" 
           value="any" 
           checked=('true' if filters_match_type == 'any') 
           data-stories-target="matchTypeInput" }
