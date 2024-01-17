@@ -25,7 +25,6 @@ class StoriesController < ApplicationController
       # @filters[:curator] ||= current_user.id
       @stories = params[:q].present? ?
         search(@company.stories, params[:q]) : 
-        # Story.default_order(match_filters(@company.stories, params[:match_type]))
         Story.default_order(@company.stories.filtered(@filters, @filters_match_type))
     else
       # set_or_redirect_to_story_preview(params[:preview], session[:preview_story_slug])
@@ -36,9 +35,7 @@ class StoriesController < ApplicationController
           format.json { render(json: search(@featured_stories, params[:q]).pluck(:id).uniq) }
         end and return
       elsif (@tags = @filters.slice(:category, :product)).present?
-        # @filtered_story_ids = @featured_stories.tagged(@tags, @filters_match_type).pluck(:id)
         @filtered_story_ids = @featured_stories.filtered(@tags, @filters_match_type).pluck(:id)
-        # binding.pry
       end
     end
     render(layout: @is_dashboard ? false : 'stories')
