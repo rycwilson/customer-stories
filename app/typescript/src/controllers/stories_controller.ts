@@ -93,9 +93,11 @@ export default class extends Controller<HTMLDivElement> {
   }
 
   onChangeFilterMatchType({ target: input }: { target: EventTarget }) {
-    if (!(input instanceof HTMLInputElement) || this.activeFilters.length === 0) return;
-    this.fetchStories((turboFrameSrc: URL) => turboFrameSrc.searchParams.set('match_type', input.value));
+    if (!(input instanceof HTMLInputElement)) return;
     Cookies.set('csp-dashboard-filters-match-type', input.value);
+    if (this.activeFilters.length) {
+      this.fetchStories((turboFrameSrc: URL) => turboFrameSrc.searchParams.set('match_type', input.value));
+    };
   }
 
   onSubmitSearch(e: Event) {
