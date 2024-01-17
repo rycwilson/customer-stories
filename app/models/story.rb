@@ -123,16 +123,46 @@ class Story < ApplicationRecord
       all
     end
   }
-  scope :tagged, ->(tags) {
-    if tags.present?
-      _tags = tags.map { |tag, tag_id| ["#{tag}_tags".to_sym, tag_id] }.to_h
-      # eager load tags for counting results
-      stories = Story.includes(:category_tags, :product_tags).joins(*_tags.keys)
-      _tags.each { |tag, tag_id| stories = stories.where(tag => { id: tag_id }) }
-      where(id: stories.pluck(:id))
-    else
-      all 
+  scope :filtered, ->(filters, match_type='all') {
+    return all if filters.blank?
+    stories = self
+    query = nil
+    build_query = ->(filter_query) do
+      if query.nil?
+        filter_query.call(stories)
+      else
+        match_type == 'all' ? filter_query.call(query) : query.or(filter_query.call(stories))
+      end
     end
+
+    # ensure similar query structures for .or by preemptively joining tables
+    # use .includes instead of .joins because the latter will result in missing entries when associations don't exist,
+    # e.g a story with a given product tag will not be included in results if it has no category tags,
+    # which is an error in the case of a "match any" query involving both category and product tags
+    stories = stories.includes(:success) if filters[:curator].present? || filters[:customer].present?
+    stories = stories.includes(:category_tags) if filters[:category].present?
+    stories = stories.includes(:product_tags) if filters[:product].present?
+
+    filters.each do |type, id|
+      query = case type
+      when :curator
+        curator_query = ->(relation) { relation.where(successes: { curator_id: id }) }
+        build_query.call(curator_query)
+      when :status
+        status_query = ->(relation) { relation.where(status_new: id) }
+        build_query.call(status_query)
+      when :customer
+        customer_query = ->(relation) { relation.where(successes: { customer_id: id }) }
+        build_query.call(customer_query)
+      when :category
+        category_query = ->(relation) { relation.where(story_categories: { id: id }) }
+        build_query.call(category_query)
+      when :product
+        product_query = ->(relation) { relation.where(products: { id: id }) }
+        build_query.call(product_query)
+      end
+    end
+    query
   }
   scope :content_like, ->(query) {
     where('lower(title) LIKE ? OR lower(narrative) LIKE ?', "%#{query.downcase}%", "%#{query.downcase}%")

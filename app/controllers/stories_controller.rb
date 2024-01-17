@@ -25,7 +25,8 @@ class StoriesController < ApplicationController
       # @filters[:curator] ||= current_user.id
       @stories = params[:q].present? ?
         search(@company.stories, params[:q]) : 
-        Story.default_order(match_filters(@company.stories, params[:match_type]))
+        # Story.default_order(match_filters(@company.stories, params[:match_type]))
+        Story.default_order(@company.stories.filtered(@filters, @filters_match_type))
     else
       # set_or_redirect_to_story_preview(params[:preview], session[:preview_story_slug])
       # @tags_filter = get_filters_from_query_or_plugin(@company, params)
@@ -35,7 +36,9 @@ class StoriesController < ApplicationController
           format.json { render(json: search(@featured_stories, params[:q]).pluck(:id).uniq) }
         end and return
       elsif (@tags = @filters.slice(:category, :product)).present?
-        @filtered_story_ids = @featured_stories.tagged(@tags).pluck(:id)
+        # @filtered_story_ids = @featured_stories.tagged(@tags, @filters_match_type).pluck(:id)
+        @filtered_story_ids = @featured_stories.filtered(@tags, @filters_match_type).pluck(:id)
+        # binding.pry
       end
     end
     render(layout: @is_dashboard ? false : 'stories')
@@ -297,47 +300,6 @@ class StoriesController < ApplicationController
         end
       end
     end.to_h.compact
-  end
-  
-  def match_filters stories, match_type
-    return stories if @filters.blank?
-    query = nil
-    build_query = ->(filter_query) do
-      if query.nil?
-        filter_query.call(stories)
-      else
-        match_type == 'all' ? filter_query.call(query) : query.or(filter_query.call(stories))
-      end
-    end
-
-    # ensure similar query structures for .or by preemptively joining tables
-    # use .includes instead of .joins because the latter will result in missing entries when associations don't exist,
-    # e.g a story with a given product tag will not be included in results if it has no category tags,
-    # which is an error in the case of a "match any" query involving both category and product tags
-    stories = stories.includes(:success) if @filters[:curator].present? || @filters[:customer].present?
-    stories = stories.includes(:category_tags) if @filters[:category].present?
-    stories = stories.includes(:product_tags) if @filters[:product].present?
-
-    @filters.each do |type, id|
-      query = case type
-      when :curator
-        curator_query = ->(relation) { relation.where(successes: { curator_id: id }) }
-        build_query.call(curator_query)
-      when :status
-        status_query = ->(relation) { relation.where(status_new: id) }
-        build_query.call(status_query)
-      when :customer
-        customer_query = ->(relation) { relation.where(successes: { customer_id: id }) }
-        build_query.call(customer_query)
-      when :category
-        category_query = ->(relation) { relation.where(story_categories: { id: id }) }
-        build_query.call(category_query)
-      when :product
-        product_query = ->(relation) { relation.where(products: { id: id }) }
-        build_query.call(product_query)
-      end
-    end
-    query
   end
 
   def new_ads(story, story_params)
