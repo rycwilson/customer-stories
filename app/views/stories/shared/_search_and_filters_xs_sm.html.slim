@@ -5,12 +5,12 @@
 
   - if company.story_categories.featured.present? && company.products.featured.present?
     .filter-controls
-      div data-action="change->stories#onChangeFilterMatchType"
+      div data-filters-match-type="#{filters_match_type}"
         | Match:&nbsp;&nbsp;&nbsp;
         label.radio-inline for="match-all-xs-sm"
           input {
             type="radio" 
-            name="match-type" 
+            name="match-type-xs-sm" 
             id="match-all-xs-sm" 
             value="all" 
             checked=('true' if filters_match_type == 'all') }
@@ -18,7 +18,7 @@
         label.radio-inline for="match-any-xs-sm"
           input {
             type="radio" 
-            name="match-type" 
+            name="match-type-xs-sm" 
             id="match-any-xs-sm" 
             value="any" 
             checked=('true' if filters_match_type == 'any') }
