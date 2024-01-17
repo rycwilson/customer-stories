@@ -13,7 +13,9 @@
 
   // DOM elements
   let featuredStories, relatedStories, searchAndFilters, searchForms, filters, matchTypeInputs, searchResults, filterResults;
-
+  
+  const searchParams = new URLSearchParams(location.search);
+  const activeFilters = {};
   
   // stories gallery
   if (location.pathname === '/') {
@@ -24,18 +26,17 @@
     filters = document.querySelectorAll('.stories-filter__select:not(.ts-wrapper)');
     searchResults = document.querySelectorAll('.search-stories__results');
     filterResults = document.querySelectorAll('.filter-results > span:last-child');
-    matchTypeInputs = document.querySelectorAll('[name="match-type"]');
+    matchTypeInputs = document.querySelectorAll('[name*="match-type"]');
 
-    // the has-combined-results class is only present when > 1 filters are applied
-    const searchParams = new URLSearchParams(location.search);
+    // the has-combined-results class is only present when > 1 filters are applied, still need to check for single filter
     const hasFilterResults = searchParams.has('category') || searchParams.has('product');
     const hasSearchResults = [...searchAndFilters].some(container => container.classList.contains('has-search-results'));
     const results = (hasSearchResults || hasFilterResults) ?
       [...featuredStories].filter(card => !card.parentElement.classList.contains('hidden')).length :
       undefined;
-    const renderResults = (el) => el.textContent = `${results} ${results === 1 ? 'story' : 'stories'}`; 
-    if (hasSearchResults) searchResults.forEach(renderResults);
-    if (hasFilterResults) filterResults.forEach(renderResults);
+    const showResults = (target) => target.textContent = `${results} ${results === 1 ? 'story' : 'stories'}`; 
+    if (hasSearchResults) searchResults.forEach(showResults);
+    if (hasFilterResults) filterResults.forEach(showResults);
 
     imagesLoaded('#stories-gallery', (e) => e.elements[0].classList.remove('hidden'));
     initFilters();
@@ -44,7 +45,7 @@
 
   // story
   } else {
-    const socialShareRedirectURI = (new URL(location)).searchParams.get('redirect_uri');
+    const socialShareRedirectURI = searchParams.get('redirect_uri');
     if (socialShareRedirectURI) location = socialShareRedirectURI;
 
     relatedStories = document.querySelectorAll('.story-card');
@@ -72,6 +73,21 @@
   //   }
   //   return tagCount >= 2;
   // }
+
+  function setActiveFilters() {
+    Object.assign(
+      activeFilters,
+      Object.fromEntries(
+        [...searchParams]
+          .filter(([tagType, tagSlug]) => /^(category|product)$/.test(tagType))
+          .map(([tagType, tagSlug]) => {
+            const tagSelect = [...filters].find(select => tagType === singleSelectTagType(select));
+            const tagOption = tagSelect.querySelector(`option[data-slug="${tagSlug}"]`);
+            return [tagType, { id: parseInt(tagOption.value, 10), slug: tagSlug }];
+          })
+      )
+    );
+  }
 
   function initVideo() {
     document.querySelectorAll('.video-thumb-container').forEach(container => {
@@ -213,7 +229,7 @@
     const hasCombinedResults = [...filters].filter(select => select.value).length >= 2
     // if (hasCombinedResults) {
       //   showResults({ combined: document.querySelectorAll().length });
-      // }
+    setActiveFilters();
     initFilterControls();
 
     filters.forEach(select => {
@@ -233,13 +249,19 @@
   }
       
   function initFilterControls() {
-    const clearFiltersBtn = document.querySelector('[data-action="stories#clearFilters"]');
-    if (clearFiltersBtn) clearFiltersBtn.addEventListener('click', clearFilters);
+    document.querySelectorAll('.filter-controls a').forEach(btn => btn.addEventListener('click', clearFilters));
     matchTypeInputs.forEach(input => input.addEventListener('change', (e) => {
+      const { silent } = e.detail || {};
+      if (silent) return;
       if (input.checked) {
         Cookies.set('csp-filters-match-type', input.value);
-        // apply filters combinatorially or disjunctively
-        
+        const mirrorInput = [...matchTypeInputs].find(_input => _input.value === input.value && !_input.isSameNode(input));
+        mirrorInput.checked = true;
+        const silentChange = new CustomEvent('change', { bubbles: true, detail: { silent: true } });
+        mirrorInput.dispatchEvent(silentChange);
+        if (Object.keys(activeFilters).length) {
+          renderStories(filterStories(), "Sorry, we couldn't find any stories matching the selected filters");
+        }
       }
     }));
   }
@@ -309,58 +331,60 @@
   
   function onChangeFilter(changedSelect, otherSelects, value) {
     const isMulti = Array.isArray(value);
-    const searchParams = new URLSearchParams(location.search);
     const getTagSlug = (select, value) => (
       value ? Object.values(select.tomselect.options).find(option => option.value === value).slug : ''
     );
 
-    // { category: { id: 4, slug: 'some-category-slug' }, product: { id: 7, slug: 'some-product-slug' } }
-    let tags;
-
     if (isMulti) {
-      const tagTypeIds = value;   // e.g. 'category-4', 'product-7'
-
+      const tagTypeIds = value;   // e.g. ['category-1', 'category-2', 'product-3'] 
+      
       // reverse => ensures FIFO behavior
-      // reduce => build the tags object, with only one instance of a given tag type
+      // reduce => ensure only one instance of a given tag type
       // sort => category always goes first
       const newTagTypeIds = tagTypeIds
         .reverse()   
         .reduce((acc, tagTypeId) => {
-          const tagType = tagTypeId.slice(0, tagTypeId.lastIndexOf('-'));
+          const tagType = tagTypeId.split('-')[0];
           const isRepeatedType = acc.find(_tagTypeId => _tagTypeId.includes(tagType));
-          if (isRepeatedType) {
-            return acc;
-          } else {
-            // build the tags object
-            tags[`${tagType}`] = { 
-              id: parseInt(tagTypeId.slice(tagTypeId.lastIndexOf('-') + 1), 10), 
-              slug: getTagSlug(changedSelect, tagTypeId) 
-            };
-            return [...acc, tagTypeId];
-          }
+          return isRepeatedType ? acc : [...acc, tagTypeId];
         }, [])
         .sort(byTagType.bind(null, 'category'));
-      if (newTagTypeIds.length) changedSelect.tomselect.setValue(newTagTypeIds, true);
+
+      // delete search param for any tag type that is no longer selected
+      for (const [tagType, tagSlug] of searchParams) {
+        if (!newTagTypeIds.find(tagTypeId => tagTypeId.includes(tagType))) {
+          searchParams.delete(tagType);
+        }
+      }
+
+      if (newTagTypeIds.length) {
+        // overwrite multi-select value to remove duplicate tag types
+        changedSelect.tomselect.setValue(newTagTypeIds, true);
+
+        // add or overwrite search params
+        newTagTypeIds.forEach(tagTypeId => {
+          const tagType = tagTypeId.split('-')[0];
+          const tagSlug = getTagSlug(changedSelect, tagTypeId);
+          searchParams.set(tagType, tagSlug);
+        });
+      }
 
     } else {
-      const tagSlug = getTagSlug(changedSelect, value);
       if (value) {
-        searchParams.set(singleSelectTagType(changedSelect), tagSlug);
+        searchParams.set(singleSelectTagType(changedSelect), getTagSlug(changedSelect, value));
       } else {
         searchParams.delete(singleSelectTagType(changedSelect));
       }
-      tags = Object.fromEntries(
-        [...searchParams]
-          .filter(([tagType, tagSlug]) => /^(category|product)$/.test(tagType))
-          .map(([tagType, tagSlug]) => [tagType, { id: parseInt(value, 10), slug: tagSlug }])
-      )
     }
+
+    setActiveFilters();
     clearSearch();
     // clearFilterResults();
     // filterStories(tags).then(showResults);
-    renderStories(filterStories(tags), "Sorry, we couldn't find any stories matching the selected filters");
-    syncFilters(changedSelect, otherSelects, tags, isMulti);
-    history.replaceState(null, '', `${formatTagParams(tags)}`);
+    renderStories(filterStories(), "Sorry, we couldn't find any stories matching the selected filters");
+    syncFilters(changedSelect, otherSelects, isMulti);
+    console.log(`${formatTagParams()}`)
+    history.replaceState(null, '', `${formatTagParams()}`);
   }
 
   function beforeSearchSubmit(e) {
@@ -379,24 +403,25 @@
         }
       }).then(res => res.json()).then((storyIds) => {
         const filteredStories = [...featuredStories].filter(card => storyIds.includes(parseInt(card.dataset.storyId, 10)));
-        // form.classList.add('was-executed');
         renderStories(filteredStories, `Sorry, we couldn't find any stories matching \"${query}\"`); 
         // showResults({ search: filteredStories.length, searchString });
       })
     }
   }
 
-  function filterStories(tags) {
-    const matchType = [...matchTypeInputs].find(input => input.checked).value;
-    console.log('matchType', matchType)
-    const storyIsTagged = (card, tagType) => JSON.parse(card.dataset[tagType]).includes(tags[tagType].id);
-    return Object.keys(tags).length === 0 ?
+  function filterStories() {
+    console.log('activeFilters', activeFilters)
+    const [matchAll, matchAny, , ,] = [...matchTypeInputs];
+    console.log(matchAll, matchAny)
+    const storyIsTagged = (card, tagType) => JSON.parse(card.dataset[tagType]).includes(activeFilters[tagType].id);
+    return Object.keys(activeFilters).length === 0 ?
       [...featuredStories] :
       [...featuredStories].filter(card => {
-        if (matchType == 'all') {
-          return Object.keys(tags).every(tagType => storyIsTagged(card, tagType));
-        } else if (matchType == 'any') {
-          return Object.keys(tags).some(tagType => storyIsTagged(card, tagType));
+        if (matchAll.checked) {
+          return Object.keys(activeFilters).every(tagType => storyIsTagged(card, tagType));
+        } else if (matchAny.checked) {
+          console.log('any')
+          return Object.keys(activeFilters).some(tagType => storyIsTagged(card, tagType));
         }
       })
 
@@ -451,11 +476,11 @@
     }
   }
 
-  function syncFilters(changedSelect, otherSelects, tags, multiChanged) {
+  function syncFilters(changedSelect, otherSelects, multiChanged) {
     otherSelects.forEach(select => {
       if (multiChanged) {
         select.tomselect.setValue(
-          tags[singleSelectTagType(select)] ? tags[singleSelectTagType(select)].id : '', 
+          activeFilters[singleSelectTagType(select)] ? activeFilters[singleSelectTagType(select)].id : '', 
           true
         );
       } else {
@@ -468,7 +493,7 @@
     if (!multiChanged) {
       const multiSelect = otherSelects.find(select => select.multiple);
       if (multiSelect) {
-        const newTagTypeIds = Object.entries(tags)
+        const newTagTypeIds = Object.entries(activeFilters)
           .flatMap(([tagType, { id: tagId }]) => tagId ? `${tagType}-${tagId}` : [])
           .sort(byTagType.bind(null, 'category'));
          multiSelect.tomselect.setValue(newTagTypeIds, true);
@@ -552,11 +577,11 @@
     };
   }
 
-  function formatTagParams(tags) {
-    return Object.keys(tags).length === 0 ?
+  function formatTagParams() {
+    return Object.keys(activeFilters).length === 0 ?
       '/' :
-      Object.keys(tags).reduce((params, tagType, i) => (
-        params + `${i === 0 ? '?' : '&'}${tagType}=${tags[tagType].slug}`
+      Object.keys(activeFilters).reduce((params, tagType, i) => (
+        params + `${i === 0 ? '?' : '&'}${tagType}=${activeFilters[tagType].slug}`
       ), '');
   }
 
