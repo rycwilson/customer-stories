@@ -74,7 +74,7 @@ group :development, :test do
   gem 'factory_bot_rails'
   gem 'faker'
   gem 'capybara' 
-  gem 'webdrivers', '~> 5.0', require: false
+  gem 'selenium-webdriver', '~> 4.1'
   gem 'pry-byebug'
   gem 'better_errors'
   gem 'binding_of_caller'   # needed for better_errors features
