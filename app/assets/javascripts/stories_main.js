@@ -524,7 +524,7 @@
 
   function sharedSelectOptions(select, otherSelects) {
     return {
-      controlInput: null,   // disable search; note this causes placeholder to disappear (fixed with ::before content)
+      // controlInput: null,   // disable search; note this causes placeholder to disappear (fixed with ::before content)
       onInitialize() {},
       onFocus() {
         const dropdownMaxHeight = document.documentElement.clientHeight - this.wrapper.getBoundingClientRect().bottom;

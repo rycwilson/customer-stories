@@ -16,19 +16,19 @@
 .stories-filter__select.ts-wrapper {
   // with tom-select controlInput set to null (disable search), placeholder disappears
   // => use pseudo element
-  &:not(.has-items) {
-    .ts-control::before {
-      color: #6c757d;
-    }
+  // &:not(.has-items) {
+  //   .ts-control::before {
+  //     color: #6c757d;
+  //   }
 
-    &.single .ts-control::before {
-      content: 'Select';
-    }
+  //   &.single .ts-control::before {
+  //     content: 'Select';
+  //   }
     
-    &.multi .ts-control::before {
-      content: 'Select Category and/or Product'
-    }
-  }
+  //   &.multi .ts-control::before {
+  //     content: 'Select Category and/or Product'
+  //   }
+  // }
 
   &.multi {
     // add the dropdown caret to the multi-select filter
