@@ -154,6 +154,15 @@
   }
 }
 
+.filter-controls {
+  @include flex-row-center-between;
+  margin-bottom: 25px;
+
+  > div {
+    @include flex-row-center;
+  }
+}
+
 .search-and-filters.visible-md-block {
     // margin-bottom: 10px;
   width: 282px;
@@ -161,14 +170,6 @@
   background-color: $stories-fg-color;
   padding: 20px 15px;
 
-  .filter-controls {
-    @include flex-row-center-between;
-    margin-bottom: 25px;
-
-    > div {
-      @include flex-row-center;
-    }
-  }
 
   .form-group:last-of-type {
     margin-bottom: 5px;
