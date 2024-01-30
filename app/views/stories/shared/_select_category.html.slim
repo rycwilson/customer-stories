@@ -3,7 +3,7 @@
   = select_tag( \
       nil,
       options_for_select( \
-        company.tag_select_options('category', only_featured: !is_dashboard, with_stories_count: true),
+        company.tag_select_options('category', only_featured: !is_dashboard),
         preselected_id),
       { id: select_id,
         include_blank: true,

@@ -322,7 +322,7 @@ class Company < ApplicationRecord
   attr_writer :default_ad_image_url
   attr_accessor :skip_callbacks
 
-  def tag_select_options tag_type, only_featured: false, for_multi_select: false, with_stories_count: false
+  def tag_select_options tag_type, with_stories_count: true, only_featured: false, for_multi_select: false
     tags = case tag_type
     when 'category'
       self.story_categories
