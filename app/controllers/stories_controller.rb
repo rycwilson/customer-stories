@@ -30,7 +30,7 @@ class StoriesController < ApplicationController
       # set_or_redirect_to_story_preview(params[:preview], session[:preview_story_slug])
       # @tags_filter = get_filters_from_query_or_plugin(@company, params)
       @featured_stories = @company.stories.featured.order([published: :desc, preview_published: :desc, updated_at: :desc])
-      if params[:q].present?
+      if request.xhr? and params[:q].present?
         respond_to do |format| 
           format.json { render(json: search(@featured_stories, params[:q]).pluck(:id).uniq) }
         end and return
