@@ -70,7 +70,7 @@ export default class DatatableController extends Controller<HTMLTableElement> {
     // console.log('searchParams', newVal)
     if (oldVal !== undefined) {
       clearTimeout(this.searchDebounceTimer);
-      this.searchDebounceTimer = setTimeout(() => this.search(newVal), 200);
+      this.searchDebounceTimer = window.setTimeout(() => this.search(newVal), 200);
     }
   }
 
