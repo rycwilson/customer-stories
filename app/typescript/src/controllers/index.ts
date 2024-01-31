@@ -58,6 +58,9 @@ application.register('modal-trigger', ModalTriggerController);
 import StoriesController from './stories_controller.js';
 application.register('stories', StoriesController);
 
+import StoryController from './story_controller.js';
+application.register('story', StoryController);
+
 import CustomerWinController from './customer_win_controller.js';
 application.register('customer-win', CustomerWinController);
 
