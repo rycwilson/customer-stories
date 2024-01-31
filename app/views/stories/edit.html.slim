@@ -1,8 +1,53 @@
-.dashboard {
-  data-controller="dashboard" 
-  data-dashboard-modal-outlet="#main-modal" }
+.dashboard data-controller="dashboard" data-dashboard-modal-outlet="#main-modal"
 
   = render('shared/navbars/company_nav', { company: @company, workflow_stage: @workflow_stage })
 
   .container
-    = link_to('Back to dashboard', dashboard_path('curate'))
+    .row
+      .col-sm-5.col-md-4.col-lg-3.layout-sidebar
+        .edit-story
+          ul.nav
+            li
+              / a.all-stories href="javascript:;"
+              /   i.fa.fa-chevron-circle-left
+              /   | &nbsp;&nbsp;All Stories
+              = link_to(dashboard_path('curate')) do 
+                i.fa.fa-chevron-circle-left
+                | &nbsp;&nbsp;All Stories
+              end
+            li class=('active' if @active_tab == '#story-settings')
+              a href="#story-settings" data-toggle="tab"
+                i.fa.fa-gear
+                | &nbsp;&nbsp;Story Settings
+            li class=('active' if @active_tab == '#story-content')
+              a href="#story-content" data-toggle="tab"
+                i.fa.fa-edit 
+                | &nbsp;&nbsp;Story Content
+            li class=('active' if @active_tab == '#story-contributors')
+              a href="#story-contributors" data-toggle="tab"
+                i.fa.fa-users
+                | &nbsp;&nbsp;Story Contributors
+
+      .col-sm-5.col-md-4.col-lg-9.layout-main
+        #edit-story-layout {
+          data-controller="story"
+          data-story-id=@story.id
+          data-success-id=@story.success.id
+          data-success-name=@story.success.name
+          data-customer-id=@story.customer.id
+          data-customer-slug=@story.customer.slug }
+
+          = render('stories/edit/story_header', { story: @story })
+
+          .tab-content
+            #story-settings.tab-pane.fade class=('active in' if @active_tab == '#story-settings')
+              = render('stories/edit/settings/settings', { company: @company, story: @story })
+
+            #story-content.tab-pane.fade class=('active in' if @active_tab == '#story-content')
+              = render('stories/edit/content/content', { company: @company, story: @story })
+
+            #story-contributors.tab-pane.fade class=('active in' if @active_tab == '#story-contributors')
+              h3 Contributors
+              /= render( \
+                'companies/1_prospect/contributors/contributors_table',
+                { company: company, workflow_stage: 'curate' })
