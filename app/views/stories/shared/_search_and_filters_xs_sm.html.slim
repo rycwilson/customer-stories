@@ -3,6 +3,8 @@
   
   = render('stories/shared/search_form', { company:, is_header_search: false })
 
+  hr
+
   - if company.story_categories.featured.present? && company.products.featured.present?
     .filter-controls
       div data-filters-match-type="#{filters_match_type}"
@@ -31,7 +33,7 @@
         span.input-group-addon
           = image_tag('icons/bs_funnel.svg', alt: 'filter')
         = select_tag( \
-            :filter_select,
+            '',
             grouped_options_for_select( \
               { \
                 'Category' => company.tag_select_options('category', only_featured: true, for_multi_select: true), 

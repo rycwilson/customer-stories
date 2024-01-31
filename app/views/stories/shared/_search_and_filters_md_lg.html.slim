@@ -5,7 +5,7 @@
   = render('stories/shared/search_form', { company:, is_header_search: false })
 
   - if is_dashboard || (company.story_categories.featured.present? && company.products.featured.present?)
-    hr.visible-md-block.visible-lg-block
+    hr
 
   /- if is_dashboard
   .filter-controls

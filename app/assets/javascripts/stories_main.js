@@ -33,16 +33,17 @@
     imagesLoaded('#stories-gallery', (e) => e.elements[0].classList.remove('hidden'));
     initSearchForms();
     initFilters();
-    showResults();
+
+    // presently, only filters (not search) can be synchronously loaded
+    if (Object.keys(activeFilters).length) showResults();
     initStoryCards(featuredStories);
 
-    // update activeFilters on history.replaceState
+    // set activeFilters on history.replaceState
     // => history.replaceState is only called after searchParams has been updated
     const replaceStateFn = history.replaceState;
     history.replaceState = (state, title, url) => {
       replaceStateFn.call(history, state, title, url);
       setActiveFilters();
-      // console.log('activeFilters', activeFilters);
     }
 
   // story
@@ -65,16 +66,6 @@
     const editStoryLink = document.querySelector('.stories-header__edit');
     if (editStoryLink) editStoryLink.addEventListener('click', () => Cookies.set('csp-edit-story-tab', '#story-content'));
   }
-
-  // function hasCombinedResults() {
-  //   const searchParams = new URLSearchParams(location.search);
-  //   const tagTypes = ['category', 'product'];
-  //   let tagCount = 0;
-  //   for (const tagType of searchParams.keys()) {
-  //     if (tagTypes.includes(tagType)) tagCount++;
-  //   }
-  //   return tagCount >= 2;
-  // }
 
   function setActiveFilters() {
     // cleared filters
@@ -220,16 +211,20 @@
       form.addEventListener('input', syncInputs);
       form.addEventListener('click', (e) => { if (e.target.type === 'submit') beforeSubmitSearch(e) });
       form.querySelector('.search-stories__clear').addEventListener('click', (e) => {
-        clearSearch();
+        clearSearch(true);
         renderStories([...featuredStories]);
       });
     });
   }
 
-  function clearSearch(e) {
-    const isUserInput = e;
+  function clearSearch(isUserInput) {
     searchAndFilters.forEach(component => component.classList.remove('has-search-results'));
-    searchForms.forEach(form => form.querySelector('.search-stories__input').value = '');
+    searchForms.forEach(form => {
+      form.querySelector('.search-stories__input').value = '';
+      form.querySelector('.search-stories__results').textContent = '';
+      form.nextElementSibling.querySelector('.search-stories__search-string').textContent = '';
+      form.nextElementSibling.querySelector('.search-stories__results').textContent = '';
+    });
     if (isUserInput) renderStories([...featuredStories]);
   }
 
@@ -411,7 +406,7 @@
             return storyIds.includes(storyId);
           });
           renderStories(searchResults, `Sorry, we couldn't find any stories matching \"${searchString}\"`); 
-          showResults({ searchString })
+          showResults(searchString)
         })
     }
   }
@@ -425,7 +420,6 @@
         if (matchAll.checked) {
           return Object.keys(activeFilters).every(tagType => storyIsTagged(card, tagType));
         } else if (matchAny.checked) {
-          console.log('any')
           return Object.keys(activeFilters).some(tagType => storyIsTagged(card, tagType));
         }
       })
@@ -456,8 +450,11 @@
     ));
     const showCount = (target) => target.textContent = `${results.length} ${results.length === 1 ? 'story' : 'stories'}`; 
     if (hasSearchResults) {
-      document.querySelector('.search-stories__search-string').textContent = searchString;
-      document.querySelectorAll('.search-stories__results').forEach(showCount);
+      searchForms.forEach(form => {
+        showCount(form.querySelector('.search-stories__results'));
+        form.nextElementSibling.querySelector('.search-stories__search-string').textContent = `"${searchString}"`;
+        showCount(form.nextElementSibling.querySelector('.search-stories__results'));
+      })
     } else {
       filterResults.forEach(el => hasCombinedResults ? showCount(el) : el.textContent = '');
     }
