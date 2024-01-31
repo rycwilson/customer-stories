@@ -42,4 +42,4 @@
 
 /app/assets/builds/*
 !/app/assets/builds/.keep
-/app/typescript/compiled/*
+/app/typescript/emit/*
