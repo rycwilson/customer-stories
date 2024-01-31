@@ -156,10 +156,7 @@
   }
 }
 
-// #edit-story view may be loaded synchronously under stories#edit
-// or asynchronously under companies#show
-.stories.edit #edit-story, 
-.companies.show #edit-story {
+body.stories.edit {
   @import 'content';
   @import 'contributions';
   @import 'results';

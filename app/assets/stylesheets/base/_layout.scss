@@ -38,10 +38,11 @@
           align-items: center;
         }
 
-        &[href="#successes"], &[href*="contributors"] {
-          padding: 10px 10px 10px 20px;
-          justify-content: space-between;
-        }
+        // REMOVED due to no more "Add" buttons in the sidebar
+        // &[href="#successes"], &[href*="contributors"] {
+          // padding: 10px 10px 10px 20px;
+          // justify-content: space-between;
+        // }
 
         i:not([class*="fa-stack"]) {
           font-size: 1.25em;
