@@ -129,8 +129,9 @@ class StoriesController < ApplicationController
       render(layout: 'application')
     end
 
-    # since there is a stories layout, must explicitly specify applicaiton layout
-    render(layout: 'application')
+    # since a stories layout exists and will be used here by default,
+    # must explicitly specify application layout and layout: false for turbo frame requests
+    render(layout: turbo_frame_request? ? false : 'application')
   end
 
   def create
@@ -144,7 +145,16 @@ class StoriesController < ApplicationController
   def update
     # puts 'stories#update'
     # awesome_print(story_params.to_h)
-    @story = Story.find_by_id params[:id]
+    @story = Story.friendly.find(params[:id])
+    
+    # the video url in standardized format is sent in a hidden field
+    if params[:story][:video_url]
+      params[:story][:video_url] = params[:story][:formatted_video_url]
+    end
+    @story.update(story_params)
+    redirect_to edit_story_path(@story) and return
+    
+    # @story = Story.find_by_id params[:id]
     if params[:settings]
       @story.success.cta_ids = params[:ctas]
       if @story.update(story_params)

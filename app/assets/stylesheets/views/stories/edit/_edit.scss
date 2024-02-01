@@ -6,7 +6,7 @@
 
 #story-settings-form {
   @include horizontal-form;
-  @include hide-until-init;
+  // @include hide-until-init;
   @include disable-publish-preview;
 
   .hidden-link button {
