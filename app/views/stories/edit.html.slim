@@ -16,15 +16,15 @@
                 | &nbsp;&nbsp;All Stories
               end
             li class=('active' if @active_tab == '#story-settings')
-              a href="#story-settings" data-toggle="tab"
+              a href="#story-settings" data-toggle="tab" data-action="dashboard#setNavCookie"
                 i.fa.fa-gear
                 | &nbsp;&nbsp;Story Settings
             li class=('active' if @active_tab == '#story-content')
-              a href="#story-content" data-toggle="tab"
+              a href="#story-content" data-toggle="tab" data-action="dashboard#setNavCookie"
                 i.fa.fa-edit 
                 | &nbsp;&nbsp;Story Content
             li class=('active' if @active_tab == '#story-contributors')
-              a href="#story-contributors" data-toggle="tab"
+              a href="#story-contributors" data-toggle="tab" data-action="dashboard#setNavCookie"
                 i.fa.fa-users
                 | &nbsp;&nbsp;Story Contributors
 
