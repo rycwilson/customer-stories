@@ -1,26 +1,25 @@
 - content_for(:head) do
   meta name="turbo-cache-control" content="no-cache"
 
-= render( \
-    'shared/navbars/company_nav', 
-    { company: @company, workflow_stage: @workflow_stage })
+= render('shared/navbars/company_nav', { company: @company, workflow_stage: @workflow_stage })
 
 .container data-controller="company-settings"
   .row
     .col-sm-4.col-lg-3.layout-sidebar
-
+      
+      / no active tab set here; it will be set by the client based on page fragment identifier
       ul.nav.nav--company class=('nav--new-company' if action_name == 'new')
-        li class=('active' if @active_tab == '#edit-company-profile' || @active_tab.nil?)
-          a href="#edit-company-profile" data-toggle="tab" data-company-settings-target="tab"
+        li role="presentation" 
+          a href="#company-panel" data-toggle="tab" data-company-settings-target="tab"
             i.fa.fa-fw.fa-globe
             span
               | Company Profile
         
         - unless action_name == 'new'
 
-          li role="presentation" class=('active' if @active_tab == '#edit-crowdsource')
+          li role="presentation"
             a {
-              href="#edit-crowdsource" 
+              href="#crowdsource-panel" 
               class=('disabled-tab' if @company.new_record?)
               role="tab"
               data-toggle="tab"
@@ -29,19 +28,19 @@
               span
                 | Crowdsourcing Templates
 
-          li role="presentation" class=('active' if @active_tab == '#edit-plugins')
+          li role="presentation"
             a {
-              href="#edit-plugins" 
+              href="#plugin-panel" 
               class=('disabled-tab' if @company.new_record?)
               role="tab"
               data-toggle="tab"
               data-company-settings-target="tab" }
               i.fa.fa-fw.fa-plug style="font-size:15px; top:2px; margin-left:2px"
               span
-                | Customer Stories Plugin
-          li role="presentation" class=('active' if @active_tab == '#edit-ctas')
+                | Website Plugin
+          li role="presentation"
             a {
-              href="#edit-ctas" 
+              href="#call-to-action-panel" 
               class=('disabled-tab' if @company.new_record?)
               role="tab"
               data-toggle="tab"
@@ -49,9 +48,9 @@
               i.fa.fa-fw.fa-hand-pointer-o
               span
                 | Link & Form CTAs
-          li role="presentation" class=('active' if @active_tab == '#edit-tags')
+          li role="presentation"
             a {
-              href="#edit-tags" 
+              href="#story-tags-panel" 
               class=('disabled-tab' if @company.new_record?)
               role="tab"
               data-toggle="tab"
@@ -63,25 +62,23 @@
     .col-sm-8.col-lg-9.layout-main
       .tab-content
 
-        #edit-company-profile.tab-pane.fade {
-          class=('active in' if @active_tab == '#edit-company-profile' || @active_tab.nil?)
-          role="tabpanel" }
+        #company-panel.tab-pane.fade role="tabpanel"
           = render( \
               'companies/settings/company_profile', 
               { company: @company, form_options: @form_options })
 
         - unless action_name == 'new'
 
-          #edit-crowdsource.tab-pane.fade class=('active in' if @active_tab == '#edit-crowdsource') role="tabpanel"
+          #crowdsource-panel.tab-pane.fade role="tabpanel"
             = render( \
                 'companies/settings/invitation_templates',
                 { company: @company, templates_select: @templates_select })
           
-          #edit-plugins.tab-pane.fade class=('active in' if @active_tab == '#edit-plugins') role="tabpanel"
+          #plugin-panel.tab-pane.fade role="tabpanel"
             = render('plugins/config', { company: @company })
 
-          #edit-ctas.tab-pane.fade class=('active in' if @active_tab == '#edit-ctas') role="tabpanel"
+          #call-to-action-panel.tab-pane.fade role="tabpanel"
             = render('companies/settings/ctas', { company: @company })
 
-          #edit-tags.tab-pane.fade class=('active in' if @active_tab == '#edit-tags') role="tabpanel"
+          #story-tags-panel.tab-pane.fade role="tabpanel"
             = render('companies/settings/story_tags', { company: @company })

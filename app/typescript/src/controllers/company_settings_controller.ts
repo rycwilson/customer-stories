@@ -13,37 +13,41 @@ export default class CompanySettingsController extends Controller<HTMLDivElement
 
   connect() {
     // console.log('connect company settings')
-    this.initSidebar();
     this.addTabListeners();
+    this.initSidebar();
+    // window.scrollTo(0, 0);
   }
   
   addTabListeners() {
     this.tabTargets.forEach(tab => {
       $(tab).on('show.bs.tab', (e) => {
         const tabHash = e.target.hash;
-        Cookies.set('csp-company-settings-tab', tabHash);
+        // debugger;
+        window.addEventListener('scroll', (e) => { window.scrollTo(0, 0) }, { once: true });
         location.hash = tabHash.replace('edit-', '');
-        window.scrollTo(0, 0);
+        Cookies.set('csp-company-settings-tab', tabHash);
+        // window.scrollTo(0, 0);
       })
     });
   }
   
-  // check that the current active tab matches the hash fragment in the url; might be a mismatch e.g. if cookies disabled
+  // tab hashes are prepended with 'edit-' to prevent auto-scrolling on page load
   initSidebar() {
+    let activeTab: HTMLAnchorElement | undefined;
+    let navCookie: string | undefined;
     const tabMatchesLocation = (tab: HTMLAnchorElement) => tab.hash.replace('edit-', '') === location.hash;
-    if (tabMatchesLocation(this.activeTab)) {
-      this.showPage();
-    } else {
-      const activeTab = this.tabTargets.find(tab => tabMatchesLocation(tab));
-      if (activeTab) {
-        $(activeTab).one('shown.bs.tab', this.showPage.bind(this)).tab('show');
-      } else {
-        // default tab
-      }
+    const showPage = (tab: HTMLAnchorElement) => {
+      $(tab)
+        .one('shown.bs.tab', () => this.element.classList.add('has-active-tab'))
+        .tab('show');
     }
-  }
-
-  showPage() {
-    this.element.classList.add('has-active-tab');
+    if (activeTab = this.tabTargets.find(tab => tabMatchesLocation(tab))) {
+      showPage(activeTab);
+    } else if (navCookie = Cookies.get('csp-company-settings-tab')) {
+      activeTab = this.tabTargets.find(tab => tab.hash === navCookie);
+      if (activeTab) showPage(activeTab);
+    } else {  
+      showPage(this.tabTargets[0] as HTMLAnchorElement);
+    }
   }
 }

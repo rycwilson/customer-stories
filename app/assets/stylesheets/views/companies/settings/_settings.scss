@@ -58,7 +58,7 @@ p.lead {
   }
 }
 
-// don't show until active tab is confirmed based on location hash (see company_settings_controller.ts)
+// don't show until active tab is selected based on location hash
 [data-controller="company-settings"] {
   visibility: hidden;
 
