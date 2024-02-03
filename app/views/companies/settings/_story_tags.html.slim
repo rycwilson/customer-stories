@@ -1,36 +1,42 @@
-= form_tag(
-    company_path(company), 
-    { method: 'PUT', 
-      remote: true,
+= form_with( \
+    model: company,
+    local: true,
+    html: { \
       id: 'company-tags-form',
-      class: 'form-horizontal' }) do
-
-  = hidden_field_tag(:tags, true)
+      class: 'form-horizontal' }) do |f|
 
   .form-group
-    = label_tag('category_tags[]', 'Category Tags', class: 'col-sm-3 control-label')
+    = f.label(:story_category_ids, 'Category Tags', class: 'col-sm-3 control-label')
     .col-sm-9.col-md-8.col-lg-6
-      / placeholder attribute doesn't work from here, set in js...
-      = select_tag( \
-          'category_tags[]',
-          options_for_select(company.story_categories.select_options, company.story_categories.pluck(:id)),
+      = f.collection_select( \
+          :story_category_ids,
+          company.story_categories,
+          :id,
+          :name,
+          {},
           { multiple: true,
             class: 'company-tags form-control',
-            style: 'width:100%' }) 
+            style: 'width:100%',
+            data: { controller: 'tomselect', tomselect_type_value: 'tags' } })
 
   .form-group
-    = label_tag('product_tags[]', 'Product Tags', class: 'col-sm-3 control-label')
+    = f.label(:product_ids, 'Product Tags', class: 'col-sm-3 control-label')
     .col-sm-9.col-md-8.col-lg-6
-      = select_tag( \
-          'product_tags[]',
-          options_for_select(company.products.select_options,company.products.pluck(:id)),
+      = f.collection_select( \
+          :product_ids,
+          company.products,
+          :id,
+          :name,
+          {},
           { multiple: true,
             class: 'company-tags form-control',
-            style: 'width:100%' })
+            style: 'width:100%',
+            data: { controller: 'tomselect', tomselect_type_value: 'tags' } })
 
   .form-group
     .col-sm-12.col-md-offset-3.col-md-8.col-lg-6.text-right
-      button.btn-btn-success type="submit" form="company-tags-form" style="width: 114px"
+      = f.submit('Save changes', class: 'btn btn-success', style: 'width: 114px')
+      /button.btn-btn-success type="submit" form="company-tags-form" style="width: 114px"
         span Save changes
         i.fa.fa-spin.fa-circle-o-notch style="display: none"
         i.fa fa-check style="display: none"
