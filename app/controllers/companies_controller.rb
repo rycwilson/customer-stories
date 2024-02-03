@@ -37,7 +37,6 @@ class CompaniesController < ApplicationController
 
   def edit
     redirect_to(company_settings_path) if request.path =~ /\/companies\/\d+/
-    @active_tab = cookies['csp-company-settings-tab'] || '#edit-company-profile'
     @form_options = set_form_options(params, @company)
     render :company_settings
   end
@@ -180,10 +179,10 @@ class CompaniesController < ApplicationController
 
   def company_params
     params.require(:company).permit(
-      :name, :subdomain, :logo_url, :website, :gtm_id,
-      :header_color_1, :header_color_2, :header_text_color,
-      :adwords_short_headline,
-      { adwords_images_attributes: [:id, :type, :image_url, :default, :is_default_card, :_destroy] }
+      :name, :subdomain, :logo_url, :website, :gtm_id, :header_color_1, :header_color_2, :header_text_color, :adwords_short_headline,
+      story_category_ids: [], 
+      story_product_ids: [], 
+      adwords_images_attributes: [:id, :type, :image_url, :default, :is_default_card, :_destroy]
     )
   end
 
