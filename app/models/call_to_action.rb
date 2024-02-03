@@ -1,10 +1,5 @@
 class CallToAction < ApplicationRecord
-
   belongs_to :company
-  has_many :ctas_successes, dependent: :destroy
-  has_many :successes, through: :ctas_successes
+  has_and_belongs_to_many :successes, join_table: 'ctas_successes'
   has_many :stories, through: :successes
-
-  after_commit { self.company.expire_fragment_cache('edit-ctas') }
-
 end

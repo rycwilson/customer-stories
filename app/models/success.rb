@@ -72,9 +72,7 @@ class Success < ApplicationRecord
   has_many :visitors, through: :visitor_actions
 
   has_many :results, -> { order(created_at: :asc) }, dependent: :destroy
-  has_many :ctas_successes, dependent: :destroy
-  has_many :ctas, through: :ctas_successes, source: :call_to_action
-  
+  has_and_belongs_to_many :ctas, class_name: 'CallToAction', join_table: 'ctas_successes'
   # default_scope { order(name: :asc) }
 
   validates_uniqueness_of(:name, scope: :customer_id)
