@@ -2,10 +2,11 @@ import { Controller } from "@hotwired/stimulus";
 import TomSelect, { tsBaseOptions, type TomselectOptions } from '../tomselect';
 import type { TomInput, TomOption } from 'tom-select/dist/types/types/core.d.ts';
 // import type { TomSettings } from 'tom-select/dist/types/types/settings.d.ts'
+import { type CBOptions } from 'tom-select/dist/types/plugins/clear_button/types';
 
 export default class extends Controller<TomInput> {
   static values = { type: String, customOptions: { type: Object, default: {} } };
-  declare readonly typeValue: 'filter' | 'curator' | 'status' | 'customer' | 'category' | 'product';
+  declare readonly typeValue: 'filter' | 'curator' | 'status' | 'customer' | 'category' | 'product' | 'tags';
   declare readonly customOptionsValue: { [key: string]: any };
 
   declare ts: TomSelect;
@@ -13,18 +14,50 @@ export default class extends Controller<TomInput> {
 
   connect() {
     // console.log('tomselect connect')
-    const ctrl = this;
+    this.ts = new TomSelect(this.element, {...tsBaseOptions, ...this.options, ...this.customOptionsValue });
+  }
 
-    const options = {
+  isFilter() { return this.typeValue === 'filter'; }
+
+  onSearch() {
+    this.currentSearchResults = this.ts.currentResults!.items;
+    interface SearchResults { [key: string]: string };
+    const searchResults = this.ts.currentResults!.items
+      .map(item => item.id)
+      .reduce((results: SearchResults, _result) => {
+        const result = _result as string;
+        const column = result.slice(0, result.indexOf('-'));
+        const id = result.slice(result.indexOf('-') + 1, result.length);
+        if (!results[column]) results[column] = `${id}`
+        else results[column] = `${results[column]}|${id}`;
+        return results;
+      }, {});
+    this.dispatch('search', { detail: { searchResults }});
+  }
+
+  get options() {
+    const ctrl = this;  // "this" will be the TomSelect instance in the context of the options object
+    return {
       render: {
-        option(data: TomOption, escape: (str : string) => string) {
+        item(data: TomOption, escape: (str: string) => string) {
+          return ctrl.typeValue === 'tags' ? `
+              <div>
+                <div>
+                  <div>${escape(data.text)}</div>
+                </div>
+                <button type="button" class="btn clear-button" title="Clear selection">&times;</button>
+              </div>
+            ` :
+            `<div>${escape(data.text)}</div>`;
+        },
+        option(data: TomOption, escape: (str: string) => string) {
           return data.value === '0' ?
             `<div class="create-contact">
               <i class="fa fa-plus"></i><span>${escape(data.text)}</span>
             </div>` :
             `<div>${escape(data.text)}</div>`
         },
-        option_create(data: TomOption, escape: (str : string) => string) {
+        option_create(data: TomOption, escape: (str: string) => string) {
           return `
             <div class="create">
               <i class="fa fa-plus"></i><span>New ${ctrl.typeValue}:</span>&nbsp;&nbsp;<span class="user-input">${escape(data.input)}</span>
@@ -32,7 +65,16 @@ export default class extends Controller<TomInput> {
           `;
         } 
       },
-  
+      
+      plugins: ctrl.element.type === 'select-multiple' ? {} : {
+        'clear_button': {
+          title: 'Clear selection',
+          html: (config: CBOptions) => {
+            return (`<button type="button" class="btn ${config.className}" title="${config.title}">&times;</button>`)
+          }
+        }
+      },
+
       onInitialize() {
         ctrl.dispatch('did-initialize', { detail: ctrl.element })
       },
@@ -75,25 +117,5 @@ export default class extends Controller<TomInput> {
         }
       }
     }
-
-    this.ts = new TomSelect(ctrl.element, {...tsBaseOptions, ...this.customOptionsValue, ...options });
-  }
-
-  isFilter() { return this.typeValue === 'filter'; }
-
-  onSearch() {
-    this.currentSearchResults = this.ts.currentResults!.items;
-    interface SearchResults { [key: string]: string };
-    const searchResults = this.ts.currentResults!.items
-      .map(item => item.id)
-      .reduce((results: SearchResults, _result) => {
-        const result = _result as string;
-        const column = result.slice(0, result.indexOf('-'));
-        const id = result.slice(result.indexOf('-') + 1, result.length);
-        if (!results[column]) results[column] = `${id}`
-        else results[column] = `${results[column]}|${id}`;
-        return results;
-      }, {});
-    this.dispatch('search', { detail: { searchResults }});
   }
 }

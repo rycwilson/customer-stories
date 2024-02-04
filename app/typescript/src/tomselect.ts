@@ -29,12 +29,4 @@ export const tsBaseOptions = {
   closeAfterSelect: true,
   onInitialize() {
   },
-  plugins: {
-    'clear_button': {
-      title: 'Clear selection',
-      html: (config: CBOptions) => {
-        return (`<button type="button" class="btn ${config.className}" title="${config.title}">&times;</button>`)
-      }
-    }
-  }
 };
