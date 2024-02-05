@@ -1,5 +1,7 @@
 select.tomselected + .ts-wrapper {
-  height: 34px;
+  &:not(.has-items) {
+    height: 34px;
+  }
 
   .ts-control {
     height: 100%;
