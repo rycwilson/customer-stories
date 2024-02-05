@@ -31,7 +31,7 @@ export default class CompanySettingsController extends Controller<HTMLDivElement
     });
   }
   
-  // tab hashes are prepended with 'edit-' to prevent auto-scrolling on page load
+  // tab hashes are appended with '-panel' to prevent auto-scrolling on page load
   initSidebar() {
     let activeTab: HTMLAnchorElement | undefined;
     let navCookie: string | undefined;
