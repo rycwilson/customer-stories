@@ -90,3 +90,6 @@ application.register('new-contact', NewContactController);
 
 import ImageUploadController from './image_upload_controller.js';
 application.register('image-upload', ImageUploadController);
+
+import AdsController from './ads_controller.js';
+application.register('ads', AdsController);
