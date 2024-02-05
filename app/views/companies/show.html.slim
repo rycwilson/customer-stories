@@ -39,18 +39,13 @@
   = render('shared/navbars/company_nav', { company: @company, workflow_stage: @workflow_stage })
 
   .tab-content
-
     = render( \
         'companies/1_prospect/prospect',
         { company: @company, workflow_stage: @workflow_stage, tab: @prospect_tab })
 
     = render( \
         'companies/2_curate/curate2', 
-        { company: @company, 
-          workflow_stage: @workflow_stage,
-          story: @story,
-          curate_view: @curate_view,
-          edit_story_tab: @edit_story_tab })
+        { company: @company, workflow_stage: @workflow_stage, story: @story})
 
     = render( \
         'companies/3_promote/promote',
