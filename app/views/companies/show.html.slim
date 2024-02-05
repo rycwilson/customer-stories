@@ -41,7 +41,7 @@
   .tab-content
     = render( \
         'companies/1_prospect/prospect',
-        { company: @company, workflow_stage: @workflow_stage, tab: @prospect_tab })
+        { company: @company, workflow_stage: @workflow_stage, active_tab: @prospect_tab })
 
     = render( \
         'companies/2_curate/curate2', 
@@ -49,7 +49,7 @@
 
     = render( \
         'companies/3_promote/promote',
-        { company: @company, workflow_stage: @workflow_stage, tab: @promote_tab })
+        { company: @company, workflow_stage: @workflow_stage, active_tab: @promote_tab })
 
     = render( \
         'companies/4_measure/measure',

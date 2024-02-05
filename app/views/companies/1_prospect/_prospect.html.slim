@@ -13,7 +13,7 @@
     .row
       .col-sm-4.col-lg-3.layout-sidebar
         ul.nav
-          li class=('active' if tab == '#customer-wins' || tab.nil?)
+          li class=('active' if active_tab == '#customer-wins')
             a {
               id="customer-wins-tab" 
               href="#customer-wins" 
@@ -21,7 +21,7 @@
               data-dashboard-target="customerWinsTab"
               data-action="dashboard#setNavCookie"
               aria-controls="customer-wins"
-              aria-expanded="#{tab == '#customer-wins' ? 'true' : 'false'}"
+              aria-expanded="#{active_tab == '#customer-wins' ? 'true' : 'false'}"
               role="tab" }
               span
                 i.fa.fa-fw.fa-rocket
@@ -46,7 +46,7 @@
                   span.fa-stack.fa-lg                    
                     i.fa.fa-circle-o.fa-stack-2x
                     i.fa.fa-plus.fa-stack-1x
-          li class=('active' if tab == '#contributors')
+          li class=('active' if active_tab == '#contributors')
             a {
               id="contributors-tab" 
               href="#contributors" 
@@ -54,7 +54,7 @@
               data-dashboard-target="contributorsTab"
               data-action="dashboard#setNavCookie"
               aria-controls="contributors"
-              aria-expanded="#{tab == '#contributors' ? 'true' : 'false'}"
+              aria-expanded="#{active_tab == '#contributors' ? 'true' : 'false'}"
               role="tab" }
               span
                 i class="fa fa-fw fa-users"
@@ -74,7 +74,7 @@
         .tab-content
 
           #customer-wins.resource-ctrl.tab-pane.fade {
-            class=('active in' if tab == '#customer-wins' || tab.nil?) 
+            class=('active in' if active_tab == '#customer-wins') 
             data-dashboard-target="subPanel"
             data-resource-dashboard-outlet=".dashboard"
             data-resource-resource-outlet="#contributors"
@@ -87,7 +87,7 @@
             = render('companies/1_prospect/successes/successes_table', { company: company })
 
           #contributors.resource-ctrl.tab-pane.fade {
-            class=('active in' if tab == '#contributors')
+            class=('active in' if active_tab == '#contributors')
             data-dashboard-target="subPanel"
             data-resource-dashboard-outlet=".dashboard"
             data-resource-resource-outlet="#customer-wins"
@@ -100,4 +100,4 @@
             role="tabpanel" }
             = render( \
                 'companies/1_prospect/contributors/contributors_table',
-                { company: company, workflow_stage: 'prospect' })
+                { company: company, workflow_stage: })

@@ -16,8 +16,8 @@ class CompaniesController < ApplicationController
   def show
     redirect_to(dashboard_path('curate')) if request.path =~ /\/companies\/\d+/
     @workflow_stage = params[:workflow_stage]
-    @prospect_tab = request.cookies['csp-prospect-tab'] || '#customer-wins'
-    @promote_tab = request.cookies['promote-tab'] || '#promoted-stories'
+    @prospect_tab = cookies['csp-prospect-tab'] || '#customer-wins'
+    @promote_tab = cookies['csp-promote-tab'] || '#promoted-stories'
     # @recent_activity = Rails.cache.fetch("#{@company.subdomain}/recent-activity") { @company.recent_activity(30) }
     @recent_activity = @company.recent_activity(30)
     @story_views_30_day_count = PageView.joins(:visitor_session).company_story_views_since(@company.id, 30).count
