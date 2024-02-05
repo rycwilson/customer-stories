@@ -24,7 +24,7 @@ export default class CompanySettingsController extends Controller<HTMLDivElement
         const tabHash = e.target.hash;
         // debugger;
         window.addEventListener('scroll', (e) => { window.scrollTo(0, 0) }, { once: true });
-        location.hash = tabHash.replace('edit-', '');
+        location.hash = tabHash.replace('-panel', '');
         Cookies.set('csp-company-settings-tab', tabHash);
         // window.scrollTo(0, 0);
       })
@@ -35,7 +35,7 @@ export default class CompanySettingsController extends Controller<HTMLDivElement
   initSidebar() {
     let activeTab: HTMLAnchorElement | undefined;
     let navCookie: string | undefined;
-    const tabMatchesLocation = (tab: HTMLAnchorElement) => tab.hash.replace('edit-', '') === location.hash;
+    const tabMatchesLocation = (tab: HTMLAnchorElement) => tab.hash.replace('-panel', '') === location.hash;
     const showPage = (tab: HTMLAnchorElement) => {
       $(tab)
         .one('shown.bs.tab', () => this.element.classList.add('has-active-tab'))
