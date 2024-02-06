@@ -1,15 +1,42 @@
 // import { initView } from './views';
+import type { 
+  TurboLoadEvent,
+  TurboClickEvent,
+  TurboBeforeVisitEvent, 
+  TurboVisitEvent,
+  TurboBeforeRenderEvent, 
+  TurboRenderEvent,
+  TurboFrameLoadEvent,
+  TurboBeforeFrameRenderEvent, 
+  TurboFrameRenderEvent } from '@hotwired/turbo/dist/types/core';
+import type { TurboSubmitStartEvent, TurboSubmitEndEvent } from "@hotwired/turbo/dist/types/core/drive/form_submission";
 
-export function onLoad(e: CustomEvent) {
+export function onLoad(e: TurboLoadEvent) {
   console.log('turbo:load')
   // initView(document.body.dataset.controller, document.body.dataset.action);
 }
 
-export function onClick(e: CustomEvent) {
+export function onClick(e: TurboClickEvent) {
   console.log('turbo:click')
 }
 
-export function onBeforeRender(e: CustomEvent) {
+export function onBeforeVisit(e: TurboBeforeVisitEvent) {
+  console.log('turbo:before-visit')
+}
+
+export function onVisit(e: TurboVisitEvent) {
+  console.log('turbo:visit')
+}
+
+export function onSubmitStart(e: TurboSubmitStartEvent) {
+  console.log('turbo:submit-start')
+}
+
+export function onSubmitEnd(e: TurboSubmitEndEvent) {
+  console.log('turbo:submit-end')
+}
+
+export function onBeforeRender(e: TurboBeforeRenderEvent) {
   console.log('turbo:before-render')
   // e.preventDefault()   // pause render
   // e.detail.resume()   // resume render
@@ -20,28 +47,33 @@ export function onBeforeRender(e: CustomEvent) {
   // }
 }
 
-export function onRender(e: CustomEvent) {
+export function onRender(e: TurboRenderEvent) {
   console.log('turbo:render')
 }
 
-export function onBeforeVisit(e: CustomEvent) {
-  console.log('turbo:before-visit')
+export function onFrameLoad(e: TurboFrameLoadEvent) {
+  console.log('turbo:frame-load')
 }
 
-export function onVisit(e: CustomEvent) {
-  console.log('turbo:visit')
+export function onBeforeFrameRender(e: TurboBeforeFrameRenderEvent) {
+  console.log('turbo:before-frame-render')
 }
 
+export function onFrameRender(e: TurboFrameRenderEvent) {
+  console.log('turbo:frame-render')
+}
+
+// no custom event type for this
 export function onBeforeFetchRequest(e: CustomEvent) {
   console.log('turbo:before-fetch-request');
-  // e.preventDefault()
-  // e.detail.resume()
 }
 
+// no custom event type for this
 export function onBeforeFetchResponse(e: CustomEvent) {
   console.log('turbo:before-fetch-response');
 }
 
+// no custom event type for this
 export function onBeforeCache(e: CustomEvent) {
   console.log('turbo:before-cache')
 }
