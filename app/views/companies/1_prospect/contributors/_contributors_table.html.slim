@@ -1,145 +1,18 @@
-.table-controls 
-  div 
-    .curator-select data-action="tomselect:change-curator->resource#onCuratorChange"
-      label 
-        span Curator
-      = select_tag( \
-          nil,
-          options_from_collection_for_select(company.curators, :id, :full_name, current_user.id),
-          { include_blank: true,
-            placeholder: 'Select',
-            class: 'form-control',
-            data: { \
-              controller: 'tomselect', 
-              tomselect_type_value: 'curator', 
-              resource_target: 'curatorSelect' } })
+= render( \
+    'companies/shared/table_controls',
+    { company: company, 
+      curator_id: current_user.id,
+      model_name: 'Contributor',
+      modal_turbo_frame_attrs: { \
+        id: 'new-contribution', 
+        src: '/successes/0/contributions/new' },
+      search_target: 'contributorsFilter',
+      search_options: { \
+        'Customer' => company.customers.map { |customer| [customer.name, "customer-#{customer.id}"] },
+        'Customer Win' => company.successes.map { |success| [success.name, "success-#{success.id}"] },
+        'Contributor' => company.contributors.map { |user| [user.full_name, "contributor-#{user.id}"] } } })
 
-    .filter-select data-action="tomselect:change-filter->resource#onFilterChange tomselect:search->resource#searchTable"
-      label
-        i.fa.fa-filter
-      = select_tag( \
-          nil,
-          grouped_options_for_select( \
-            'Customer' => company.customers.map { |customer| [customer.name, "customer-#{customer.id}"] },
-            'Customer Win' => company.successes.map { |success| [success.name, "success-#{success.id}"] },
-            'Contributor' => company.contributors.map { |user| [user.full_name, "contributor-#{user.id}"] }),
-          { include_blank: true,
-            placeholder: 'Search / Select',
-            id: 'contributors-filter',
-            class: 'dt-filter form-control',
-            data: { \
-              controller: 'tomselect', 
-              tomselect_type_value: 'filter', 
-              resource_target: 'filterSelect',
-              dashboard_target: 'contributorsFilter' } })
-  
-  div
-    div
-      / empty label for spacing
-      /label 
-      /button.btn.btn-secondary {
-        type="button"
-        data-controller="modal-trigger"
-        data-modal-trigger-modal-outlet="#main-modal"
-        data-modal-trigger-title-value="New Contributor"
-        data-modal-trigger-turbo-frame-attrs="{\"id\":\"new-contributor\",\"src\":\"#{company_contributions_path(company)}\"}"
-        data-action="modal-trigger#showModal" }
-        i.fa.fa-fw.fa-plus-circle
-        |&nbsp;&nbsp;New Contributor
-      button.btn.btn-default {
-        type="button" 
-        data-resource-target="newItemBtn"
-        data-controller="modal-trigger"
-        data-modal-trigger-modal-outlet="#main-modal"
-        data-modal-trigger-title-value="New Contributor"
-        data-modal-trigger-turbo-frame-attrs-value={ id: 'new-contribution', src: '/successes/0/contributions/new' }.to_json
-        data-modal-trigger-submit-button-text-value="Add Contributor"
-        data-action="modal-trigger#showModal"
-        aria-label="New Contributor" }
-        i.fa.fa-fw.fa-plus
-      button.btn.btn-default {
-        type="button" 
-        aria-label="Table Display Options" 
-        data-resource-target="tableDisplayOptionsBtn" }
-        i.fa.fa-fw.fa-server
-    div 
-      .help-block.text-right data-resource-target="filterResults"
-
-
-
-  /.row.contributors-header
-    .col-sm-7
-      .form-horizontal
-        .form-group
-          label.col-sm-3.control-label Group
-          .col-sm-9
-            .checkbox
-              label for="group-by-customer-win"
-                input type="checkbox" id="group-by-customer-win" data-action="contributors#toggleRowGroups" checked=""
-                span 
-                  |&nbsp;&nbsp;by Customer Win / Story
-        .form-group
-          label.col-sm-3.control-label Show
-          .col-sm-9
-            .checkbox
-              / label.contributors.checkbox-filter for="show-completed"
-              label for="show-completed" style="margin-bottom:5px"
-                input {
-                  type="checkbox" 
-                  id="show-completed" 
-                  data-contributors-target="filterCheckbox"
-                  data-action="contributors#searchTable" 
-                  checked="" }
-                span
-                  |&nbsp;&nbsp;Contributors with a completed Contribution
-              / label.contributors.checkbox-filter for="show-published"
-              label for="show-published"
-                input {
-                  type="checkbox" 
-                  id="show-published" 
-                  data-contributors-target="filterCheckbox"
-                  data-action="contributors#searchTable" 
-                  checked="" }
-                span
-                  |&nbsp;&nbsp;Contributors to published Customer Stories
-    .col-sm-5.select-filters
-      .form-horizontal
-        .form-group
-          label.col-sm-3.control-label Curator
-          .col-sm-9 style="padding:0"
-            = select_tag( \
-                nil,
-                options_from_collection_for_select(company.curators, :id, :full_name, current_user.id),
-                { include_blank: true,
-                  placeholder: 'Search / Select',
-                  class: 'prospect contributors curator-select form-control',
-                  data: { \
-                    controller: 'tomselect', 
-                    tomselect_type_value: 'curator', 
-                    contributors_target: 'curatorSelect',
-                    sync_tables: 'true' } })
-        .form-group.search
-          label.col-sm-3.control-label Filter
-          .col-sm-9 style="padding:0;"
-            = select_tag( \
-                nil,
-                grouped_options_for_select( \
-                  'Customer' => company.customers.map { |customer| [customer.name, "customer-#{customer.id}"] },
-                  'Customer Win' => company.successes.map { |success| [success.name, "success-#{success.id}"] },
-                  'Contributor' => company.contributors.map { |user| [user.full_name, "contributor-#{user.id}"] }),
-                { include_blank: true,
-                  placeholder: 'Search / Select',
-                  id: 'contributors-filter',
-                  class: 'dt-filter form-control',
-                  data: { \
-                    controller: 'tomselect', 
-                    tomselect_type_value: 'filter', 
-                    contributors_target: 'filterSelect',
-                    dashboard_target: 'contributorsFilter',
-                    sync_tables: 'true' } })
-      .help-block.text-right data-contributors-target="filterResults"
-
-/ it's actually a contributions table, but presented to user as Contributors
+/ it's actually a contributions table, but presented to the user as Contributors
 table#contributors-table.datatable.table.table-bordered.has-row-groups {
   data-controller="datatable"
   data-resource-target="datatable"
@@ -171,4 +44,3 @@ table#contributors-table.datatable.table.table-bordered.has-row-groups {
 
       / hidden boolean
       th Story Published
-

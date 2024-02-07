@@ -1,0 +1,51 @@
+.table-controls 
+  div 
+    .curator-select data-action="tomselect:change-curator->resource#onCuratorChange"
+      label 
+        span Curator
+      = select_tag( \
+          nil,
+          options_from_collection_for_select(company.curators, :id, :full_name, curator_id),
+          { include_blank: true,
+            placeholder: 'Select',
+            class: 'form-control',
+            data: { \
+              controller: 'tomselect', 
+              tomselect_type_value: 'curator', 
+              resource_target: 'curatorSelect' } })
+
+    .filter-select data-action="tomselect:change-filter->resource#onFilterChange tomselect:search->resource#searchTable"
+      label
+        i.fa.fa-filter
+      = select_tag( \
+          nil,
+          grouped_options_for_select(search_options),
+          { include_blank: true,
+            placeholder: 'Search / Select',
+            class: 'dt-filter form-control',
+            data: { \
+              controller: 'tomselect', 
+              tomselect_type_value: 'filter', 
+              resource_target: 'filterSelect',
+              dashboard_target: search_target } })
+  
+  div
+    div
+      button.btn.btn-default {
+        type="button" 
+        data-resource-target="newItemBtn"
+        data-controller="modal-trigger"
+        data-modal-trigger-modal-outlet="#main-modal"
+        data-modal-trigger-title-value="New #{model_name}"
+        data-modal-trigger-turbo-frame-attrs-value="#{modal_turbo_frame_attrs.to_json}"
+        data-modal-trigger-submit-button-text-value="Add #{model_name}"
+        data-action="modal-trigger#showModal"
+        aria-label="New #{model_name}" }
+        i.fa.fa-fw.fa-plus
+      button.btn.btn-default {
+        type="button" 
+        aria-label="Table Display Options" 
+        data-resource-target="tableDisplayOptionsBtn" }
+        i.fa.fa-fw.fa-server
+    div 
+      .help-block.text-right data-resource-target="filterResults"
