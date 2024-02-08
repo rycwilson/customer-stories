@@ -42,11 +42,19 @@
 
       .layout-main.col-sm-8.col-lg-9
         .tab-content
-          #promoted-stories.tab-pane.fade class=('active in' if active_tab == '#promoted-stories')
-            .working.working--promote style="display:none"
+          #promoted-stories.tab-pane.fade {
+            class=('active in' if active_tab == '#promoted-stories')
+            data-dashboard-target="promotedStories"
+            data-controller="resource"
+            data-resource-data-path-value="/stories"
+            data-resource-search-params-value="promoted=true"
+            data-resource-checkbox-filters-value={}
+            data-resource-name="promotedStories" }
+            /.working.working--promote style="display:none"
               div
                 div
                   i.fa.fa-spin.fa-circle-o-notch
             = render('companies/3_promote/promoted_stories_table', { company: })
+
           #promote-settings.tab-pane.fade class=('active in' if active_tab == '#promote-settings')
             = render('companies/3_promote/gads_form', { company: })

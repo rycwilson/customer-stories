@@ -16,18 +16,23 @@ export default class DashboardController extends Controller<HTMLDivElement> {
   declare readonly modalOutlet: ModalController;
 
   static targets = [
-    'tab', 'tabPanel', 'subPanel', 'customerWinsTab', 'customerWinsFilter', 'contributorsTab', 'contributorsFilter',
-    'addCustomerWinBtn', 'addContributorBtn'
+    'tab', 'tabPanel',
+    'customerWins', 'customerWinsTab', 'addCustomerWinBtn', 'customerWinsFilter', 
+    'contributors', 'contributorsTab', 'addContributorBtn', 'contributorsFilter',
+    'promotedStories', 'promotedStoriesTab', 'promotedStoriesFilter'
   ];
   declare readonly tabTargets: HTMLAnchorElement[];
   declare readonly tabPanelTargets: HTMLDivElement[];
-  declare readonly subPanelTargets: HTMLDivElement[];
+  declare readonly customerWinsTarget: HTMLDivElement;
   declare readonly customerWinsTabTarget: HTMLAnchorElement;
-  declare readonly customerWinsFilterTarget: HTMLSelectElement;
-  declare readonly contributorsTabTarget: HTMLAnchorElement;
-  declare readonly contributorsFilterTarget: HTMLSelectElement;
   declare readonly addCustomerWinBtnTarget: HTMLButtonElement;
+  declare readonly customerWinsFilterTarget: HTMLSelectElement;
+  declare readonly contributorsTarget: HTMLDivElement;
+  declare readonly contributorsTabTarget: HTMLAnchorElement;
   declare readonly addContributorBtnTarget: HTMLButtonElement;
+  declare readonly contributorsFilterTarget: HTMLSelectElement;
+  declare readonly promotedStoriesTarget: HTMLDivElement;
+  declare readonly promotedStoriesFilterTarget: HTMLSelectElement;
 
   static values = { activeTab: { type: String, default: '' } };    
   declare activeTabValue: DashboardTab | null;
@@ -54,8 +59,8 @@ export default class DashboardController extends Controller<HTMLDivElement> {
     }
   }
 
-  activeTabValueChanged() {
-    this.initTabPanel(this.activeTabPanel);
+  activeTabValueChanged(activeTab: DashboardTab) {
+    this.initTabPanel(activeTab);
   }
   
   // dataDidLoad(e: Event) {
@@ -122,20 +127,12 @@ export default class DashboardController extends Controller<HTMLDivElement> {
     }
   }
 
-  initTabPanel(panel: HTMLDivElement | undefined) {
-    if (!panel) return;
-    switch (panel.id) {
-      case 'prospect':
-        return this.subPanelTargets
-          .filter(subPanel => panel.contains(subPanel))
-          .forEach(subPanel => { 
-            const hasNotConnected = !subPanel.dataset.controller;
-            // if (hasNotConnected) subPanel.setAttribute('data-controller', subPanel.id); 
-            if (hasNotConnected) subPanel.setAttribute('data-controller', 'resource'); 
-          });
-      case 'curate':
-      case 'promote':
-      case 'measure':
+  initTabPanel(tab: DashboardTab) {
+    if (tab === 'prospect') {
+      this.customerWinsTarget.setAttribute('data-resource-init-value', 'true');
+      this.contributorsTarget.setAttribute('data-resource-init-value', 'true');
+    } else if (tab === 'promote') {
+      this.promotedStoriesTarget.setAttribute('data-resource-init-value', 'true');
     }
   }
 

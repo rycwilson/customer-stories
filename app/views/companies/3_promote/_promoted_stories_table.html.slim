@@ -1,14 +1,26 @@
-.promoted-stories
+= render( \
+    'companies/shared/table_controls',
+    { company: company, 
+      curator_id: current_user.id,
+      row_name: '',
+      modal_turbo_frame_attrs: nil,
+      dashboard_target: 'promotedStoriesFilter',
+      search_options: { \
+        'Customer' => company.customers.map { |customer| [customer.name, "customer-#{customer.id}"] } } })
 
-  table#promoted-stories-table.table.datatable.table-bordered.table-hover {
-    width="100%"
-    style="visibility: hidden" 
-    data-promote-tr="#{company.promote_tr}" }
+table#promoted-stories-table.table.datatable.table-bordered.table-hover {
+  data-controller="datatable"
+  data-resource-target="datatable"
+  data-datatable-dashboard-outlet=".dashboard"
+  data-datatable-resource-outlet="#promoted-stories"
+  data-action="datatable:init->resource#tableInitComplete"
+  data-promote-tr="#{company.promote_tr}"
+  width="100%" }
 
-    thead
-      tr
-        th Customer
-        th Story Title
-        th Status
-        th
-          .text-center Actions
+  thead
+    tr
+      th Customer
+      th Story Title
+      th Status
+      th
+        .text-center Actions

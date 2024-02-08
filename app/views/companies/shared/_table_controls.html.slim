@@ -27,21 +27,22 @@
               controller: 'tomselect', 
               tomselect_type_value: 'filter', 
               resource_target: 'filterSelect',
-              dashboard_target: search_target } })
+              dashboard_target: } })
   
   div
     div
-      button.btn.btn-default {
-        type="button" 
-        data-resource-target="newItemBtn"
-        data-controller="modal-trigger"
-        data-modal-trigger-modal-outlet="#main-modal"
-        data-modal-trigger-title-value="New #{model_name}"
-        data-modal-trigger-turbo-frame-attrs-value="#{modal_turbo_frame_attrs.to_json}"
-        data-modal-trigger-submit-button-text-value="Add #{model_name}"
-        data-action="modal-trigger#showModal"
-        aria-label="New #{model_name}" }
-        i.fa.fa-fw.fa-plus
+      - if row_name.present?
+        button.btn.btn-default {
+          type="button"
+          data-resource-target="newItemBtn"
+          data-controller="modal-trigger"
+          data-modal-trigger-modal-outlet="#main-modal"
+          data-modal-trigger-title-value="New #{row_name}"
+          data-modal-trigger-turbo-frame-attrs-value="#{modal_turbo_frame_attrs.to_json if modal_turbo_frame_attrs.present?}"
+          data-modal-trigger-submit-button-text-value="Add #{row_name}"
+          data-action="modal-trigger#showModal"
+          aria-label="New #{row_name}" }
+          i.fa.fa-fw.fa-plus
       button.btn.btn-default {
         type="button" 
         aria-label="Table Display Options" 

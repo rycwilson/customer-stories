@@ -75,7 +75,8 @@
 
           #customer-wins.resource-ctrl.tab-pane.fade {
             class=('active in' if active_tab == '#customer-wins') 
-            data-dashboard-target="subPanel"
+            data-dashboard-target="customerWins"
+            data-controller="resource"
             data-resource-dashboard-outlet=".dashboard"
             data-resource-resource-outlet="#contributors"
             data-resource-data-path-value="/successes"
@@ -88,7 +89,8 @@
 
           #contributors.resource-ctrl.tab-pane.fade {
             class=('active in' if active_tab == '#contributors')
-            data-dashboard-target="subPanel"
+            data-dashboard-target="contributors"
+            data-controller="resource"
             data-resource-dashboard-outlet=".dashboard"
             data-resource-resource-outlet="#customer-wins"
             data-resource-data-path-value="/companies/0/contributions"

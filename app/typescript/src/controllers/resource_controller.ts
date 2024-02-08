@@ -8,6 +8,7 @@ import {
 } from '../tables.js';
 import { tableConfig as customerWinsTableConfig, newCustomerWinPath } from '../customer_wins/customer_wins';
 import { tableConfig as contributorsTableConfig, newContributionPath } from '../contributions/contributions';
+import { tableConfig as promotedStoriesTableConfig } from '../promoted_stories/promoted_stories';
 import DataTable from 'datatables.net-bs';
 import type { Api, Config } from "datatables.net-bs";
 import 'datatables.net-rowgroup-bs';
@@ -16,6 +17,7 @@ export default class ResourceController extends Controller<HTMLDivElement> {
   static outlets = ['dashboard', 'resource'];
   declare readonly dashboardOutlet: DashboardController;
   declare readonly resourceOutlet: ResourceController;
+  declare readonly hasResourceOutlet: boolean;
 
   static targets = ['curatorSelect', 'filterSelect', 'filterResults', 'datatable', 'newItemBtn', 'tableDisplayOptionsBtn'];
   declare readonly curatorSelectTarget: HTMLSelectElement;
@@ -25,8 +27,15 @@ export default class ResourceController extends Controller<HTMLDivElement> {
   declare readonly newItemBtnTarget: HTMLButtonElement;
   declare readonly tableDisplayOptionsBtnTarget: HTMLButtonElement;
   
-  static values = { dataPath: String, checkboxFilters: { type: Object, default: {} } }
+  static values = {
+    dataPath: String,
+    searchParams: { type: String, default: '' },
+    init: { type: Boolean, default: false },
+    checkboxFilters: { type: Object, default: {} }
+  }
   declare readonly dataPathValue: string;
+  declare readonly searchParamsValue: string;
+  declare readonly initValue: boolean;
   declare checkboxFiltersValue: { [inputId: string]: { checked: boolean, label: string }};
 
   // dt is defined when the table is initialized
@@ -36,18 +45,32 @@ export default class ResourceController extends Controller<HTMLDivElement> {
   
   connect() {
     // console.log(`connect ${this.resourceName}`)
-    if (CSP[this.resourceName]) {
-      initTable(this);
-    } else {
-      getJSON(this.dataPathValue).then(data => {
-        CSP[this.resourceName] = data;
-        initTable(this);
-      })
-    }
+    // if (CSP[this.resourceName]) {
+    //   initTable(this);
+    // } else {
+    //   getJSON(this.dataPathValue).then(data => {
+    //     CSP[this.resourceName] = data;
+    //     initTable(this);
+    //   })
+    // }
   }
 
   get resourceName() {
-    return this.element.dataset.resourceName as 'customerWins' | 'contributions';
+    return this.element.dataset.resourceName as 'customerWins' | 'contributions' | 'promotedStories';
+  }
+
+  initValueChanged(shouldInit: boolean) {
+    const ctrl = this;
+    if (shouldInit) {
+      if (CSP[ctrl.resourceName]) {
+        initTable(ctrl);
+      } else {
+        getJSON(this.dataPathValue, this.searchParamsValue).then(data => {
+          CSP[ctrl.resourceName] = data;
+          initTable(ctrl);
+        })
+      }
+    }
   }
 
   tableInitComplete(e: CustomEvent) {
@@ -59,14 +82,22 @@ export default class ResourceController extends Controller<HTMLDivElement> {
   }
 
   onCuratorChange(e: CustomEvent) {
-    this.updateNewItemPath();
-    searchTable(this, e, this.resourceOutlet);
+    if (/customerWins|contributors/.test(this.resourceName)) {
+      this.updateNewItemPath();
+      searchTable(this, e, this.resourceOutlet);
+    } else {
+      searchTable(this, e);
+    }
   }
 
   onFilterChange(e: CustomEvent) {
-    this.updateNewItemPath();
-    this.resourceOutlet.updateNewItemPath();
-    searchTable(this, e, this.resourceOutlet);
+    if (/customerWins|contributors/.test(this.resourceName)) {
+      this.updateNewItemPath();
+      this.resourceOutlet.updateNewItemPath();
+      searchTable(this, e, this.resourceOutlet);
+    } else {
+      searchTable(this, e)
+    }
   }
   
   checkboxFiltersValueChanged(newVal: object, oldVal: object) {
@@ -80,6 +111,8 @@ export default class ResourceController extends Controller<HTMLDivElement> {
         return customerWinsTableConfig();
       case 'contributions':
         return contributorsTableConfig();
+      case 'promotedStories':
+        return promotedStoriesTableConfig();
       // default: 
       //   throw new Error('Missing table configuration');
     } 
