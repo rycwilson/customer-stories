@@ -10,7 +10,7 @@ export function parseDatasetObject<Type>(element: HTMLElement, prop: string, ...
   return null;
 }
 
-export async function getJSON(dataPath: string) {
+export async function getJSON(dataPath: string, params: string) {
   const csrfTokenMeta = document.querySelector<HTMLMetaElement>('[name="csrf-token" ]');
   const csrfToken = csrfTokenMeta?.content;
   if (csrfToken) {
@@ -25,7 +25,7 @@ export async function getJSON(dataPath: string) {
       //   fetch('/successes', headers).then(res => res.json()), 
       //   fetch('/companies/0/contributions', headers).then(res => res.json())
       // ]);
-      return await fetch(`${dataPath}.json`, options).then(res => res.json());
+      return await fetch(`${dataPath}.json${params ? '?' + params : ''}` , options).then(res => res.json());
     } catch(err) {
       console.error(err);
     }
