@@ -16,6 +16,7 @@ declare global {
   interface CustomerStoriesApp {
     customerWins: CustomerWin[] | undefined;
     contributions: Contribution[] | undefined;
+    promotedStories: PromotedStory[] | undefined;
     currentUser: User | null;
     // screenSize: string;
     init(): void;
@@ -100,13 +101,7 @@ declare global {
     curator: User; 
     customer: Customer; 
     display_status?: string;
-    story: { 
-      id: number; 
-      title: string; 
-      published: boolean; 
-      slug: string; 
-      csp_story_path: string; 
-    }
+    story: Story;
   }
 
   interface Story {
@@ -115,6 +110,16 @@ declare global {
     published: boolean;
     slug: string;
     csp_story_path: string;
+  }
+
+  interface PromotedStory extends Omit<Story, 'published'> {
+    published: true;
+    ads_status: string;
+    ads_long_headline: string;
+    ads_images: Array<any>;
+    success: { customer: Customer };
+    topic_ad: { id: number, status: string };
+    retarget_ad: { id: number, status: string };
   }
 
   interface User {
