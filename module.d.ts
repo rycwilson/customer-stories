@@ -117,7 +117,7 @@ declare global {
     ads_status: string;
     ads_long_headline: string;
     ads_images: Array<any>;
-    success: { customer: Customer };
+    success: { customer: Customer, curator_id: number };
     topic_ad: { id: number, status: string };
     retarget_ad: { id: number, status: string };
   }

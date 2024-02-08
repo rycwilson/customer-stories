@@ -301,7 +301,7 @@ class StoriesController < ApplicationController
       methods: [:ads_status, :ads_long_headline, :ads_images, :csp_story_path],
       include: {
         success: {
-          only: [],
+          only: [:curator_id],
           include: {
             customer: { only: [:name, :slug] }
           }

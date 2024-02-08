@@ -1,7 +1,7 @@
-import type { Config, Api } from 'datatables.net-bs';
+import type { Config } from 'datatables.net-bs';
 
 export function tableConfig(): Config {
-  const colIndices = { customer: 0, title: 1, status: 2, actions: 3 };
+  const colIndices = { customer: 0, title: 1, status: 2, curator: 3, actions: 4 };
   return {
     data: CSP.promotedStories,
     autoWidth: false,
@@ -55,6 +55,10 @@ export function tableConfig(): Config {
         }
       },
       {
+        name: 'curator',
+        data: 'success.curator_id'
+      },
+      {
         data: 'id',
         render: (storyId, type, row, meta) => `
           <a href="javascript:;" class="dropdown-toggle" data-toggle="dropdown">
@@ -78,6 +82,7 @@ export function tableConfig(): Config {
     ],
 
     columnDefs: [
+      { targets: [colIndices.curator], visible: false },
       {
         targets: [colIndices.title, colIndices.actions],
         orderable: false
@@ -112,7 +117,7 @@ export function tableConfig(): Config {
           .eq(3)
             .addClass('actions dropdown')
             .end()
-          .end()
+          // .end()
         // .prepend(`
         //   <td colspan="4" class="flash">
         //     <div style="position:relative">
@@ -123,8 +128,5 @@ export function tableConfig(): Config {
         // `)
     },
 
-    initComplete: function (settings, json) {
-      $(this).parent().find('.dataTables_paginate').show();
-    }
   };
 }

@@ -16,11 +16,14 @@ table#promoted-stories-table.table.datatable.table-bordered.table-hover {
   data-action="datatable:init->resource#tableInitComplete"
   data-promote-tr="#{company.promote_tr}"
   width="100%" }
-
   thead
     tr
       th Customer
       th Story Title
       th Status
+
+      / hidden
+      th Curator
+      
       th
         .text-center Actions
