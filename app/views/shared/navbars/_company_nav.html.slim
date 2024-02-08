@@ -11,7 +11,7 @@ nav#company-nav class="#{'unregistered' unless company&.persisted?}"
           / https://stackoverflow.com/questions/556153
           ul.nav.nav-tabs.nav-workflow role="tablist" data-turbo="false"
             - ['prospect', 'curate', 'story', 'promote', 'measure'].each do |tab_name|
-              = render('shared/navbars/dashboard_tab', { tab_name: tab_name, workflow_stage: workflow_stage })          
+              = render('shared/navbars/dashboard_tab', { tab_name:, workflow_stage: })          
 
       .col-sm-5
 

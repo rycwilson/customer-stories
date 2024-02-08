@@ -5,15 +5,15 @@
     'companies/shared/table_controls',
     { company: company, 
       curator_id: current_user.id,
-      model_name: 'Customer Win',
+      row_name: 'Customer Win',
       modal_turbo_frame_attrs: { \
         id: 'new-customer-win', 
         src: new_company_success_path(company) + "?curator_id=#{current_user.id}" },
-      search_target: 'customerWinsFilter',
+      dashboard_target: 'customerWinsFilter',
       search_options: { \
         'Customer' => company.customers.map { |customer| [customer.name, "customer-#{customer.id}"] },
         'Customer Win' => company.successes.map { |success| [success.name, "success-#{success.id}"] } } })  
-        
+
 table#successes-table.table.datatable.table-bordered.has-row-groups {
   data-controller="datatable"
   data-resource-target="datatable"

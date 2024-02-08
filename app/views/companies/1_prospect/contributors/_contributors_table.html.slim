@@ -2,11 +2,11 @@
     'companies/shared/table_controls',
     { company: company, 
       curator_id: current_user.id,
-      model_name: 'Contributor',
+      row_name: 'Contributor',
       modal_turbo_frame_attrs: { \
         id: 'new-contribution', 
         src: '/successes/0/contributions/new' },
-      search_target: 'contributorsFilter',
+      dashboard_target: 'contributorsFilter',
       search_options: { \
         'Customer' => company.customers.map { |customer| [customer.name, "customer-#{customer.id}"] },
         'Customer Win' => company.successes.map { |success| [success.name, "success-#{success.id}"] },

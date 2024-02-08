@@ -56,7 +56,7 @@ class Company < ApplicationRecord
     end
     def with_ads
       self.select do |story|
-        story.publish_date && story.topic_ad.present? && story.retarget_ad.present?
+        story.published && story.topic_ad.present? && story.retarget_ad.present?
       end
       .sort_by { |story| story.publish_date }.reverse
     end
