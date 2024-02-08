@@ -78,21 +78,22 @@
             data-dashboard-target="customerWins"
             data-controller="resource"
             data-resource-dashboard-outlet=".dashboard"
-            data-resource-resource-outlet="#contributors"
+            data-resource-resource-outlet=".resource-ctrl:not(#customer-wins)"
             data-resource-data-path-value="/successes"
             data-resource-checkbox-filters-value={ \
               'show-wins-with-story': { checked: true, label: 'Customer Wins with Story started'} }.to_json
             data-resource-name="customerWins"
             aria-labelledby="customer-wins-tab"
             role="tabpanel" }
-            = render('companies/1_prospect/successes/successes_table', { company: company })
+
+            = render('companies/1_prospect/successes/successes_table', { company: })
 
           #contributors.resource-ctrl.tab-pane.fade {
             class=('active in' if active_tab == '#contributors')
             data-dashboard-target="contributors"
             data-controller="resource"
             data-resource-dashboard-outlet=".dashboard"
-            data-resource-resource-outlet="#customer-wins"
+            data-resource-resource-outlet=".resource-ctrl:not(#contributors)"
             data-resource-data-path-value="/companies/0/contributions"
             data-resource-checkbox-filters-value={ \
               'show-completed': { checked: true, label: 'Contributors with a completed Contribution' },
@@ -100,6 +101,5 @@
             data-resource-name="contributions"
             aria-labelledby="contributors-tab"
             role="tabpanel" }
-            = render( \
-                'companies/1_prospect/contributors/contributors_table',
-                { company: company, workflow_stage: })
+
+            = render('companies/1_prospect/contributors/contributors_table', { company:, workflow_stage: })

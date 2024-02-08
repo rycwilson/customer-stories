@@ -16,7 +16,7 @@ import 'datatables.net-rowgroup-bs';
 export default class ResourceController extends Controller<HTMLDivElement> {
   static outlets = ['dashboard', 'resource'];
   declare readonly dashboardOutlet: DashboardController;
-  declare readonly resourceOutlet: ResourceController;
+  declare readonly resourceOutlets: ResourceController[];
   declare readonly hasResourceOutlet: boolean;
 
   static targets = ['curatorSelect', 'filterSelect', 'filterResults', 'datatable', 'newItemBtn', 'tableDisplayOptionsBtn'];
@@ -45,14 +45,6 @@ export default class ResourceController extends Controller<HTMLDivElement> {
   
   connect() {
     // console.log(`connect ${this.resourceName}`)
-    // if (CSP[this.resourceName]) {
-    //   initTable(this);
-    // } else {
-    //   getJSON(this.dataPathValue).then(data => {
-    //     CSP[this.resourceName] = data;
-    //     initTable(this);
-    //   })
-    // }
   }
 
   get resourceName() {
@@ -78,26 +70,23 @@ export default class ResourceController extends Controller<HTMLDivElement> {
   }
 
   searchTable(e: CustomEvent) {
-    searchTable(this, e, this.resourceOutlet);
+    searchTable(this, e, this.resourceOutlets);
   }
 
   onCuratorChange(e: CustomEvent) {
-    if (/customerWins|contributors/.test(this.resourceName)) {
-      this.updateNewItemPath();
-      searchTable(this, e, this.resourceOutlet);
-    } else {
-      searchTable(this, e);
-    }
+    if (/customerWins|contributors/.test(this.resourceName)) this.updateNewItemPath();
+    searchTable(this, e, this.resourceOutlets);
   }
 
   onFilterChange(e: CustomEvent) {
     if (/customerWins|contributors/.test(this.resourceName)) {
       this.updateNewItemPath();
-      this.resourceOutlet.updateNewItemPath();
-      searchTable(this, e, this.resourceOutlet);
-    } else {
-      searchTable(this, e)
-    }
+      this.resourceOutlets.forEach(outlet => {
+        if (outlet.resourceName === 'promotedStories') return;
+        outlet.updateNewItemPath();
+      });
+    } 
+    searchTable(this, e, this.resourceOutlets);
   }
   
   checkboxFiltersValueChanged(newVal: object, oldVal: object) {

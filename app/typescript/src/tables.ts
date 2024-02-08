@@ -17,7 +17,7 @@ export function toggleRowGroups(resourceCtrl: ResourceController, shouldEnable: 
 }
 
 export function search(
-  resourceCtrl: ResourceController, e?: CustomEvent, syncedResourceCtrl?: ResourceController
+  resourceCtrl: ResourceController, e?: CustomEvent, syncedResourceCtrls?: ResourceController[]
 ) {
   const { 
     type: eventType, 
@@ -44,26 +44,32 @@ export function search(
     });
 
   // sync curator and filter selections, but not search text input
-  if (syncedResourceCtrl) {
+  if (syncedResourceCtrls) {
     if (isCuratorChange) {
-      syncedResourceCtrl.curatorSelectTarget.tomselect.setValue(resourceCtrl.curatorSelectTarget.value, true);
+      syncedResourceCtrls.forEach(ctrl => {
+        ctrl.curatorSelectTarget.tomselect.setValue(resourceCtrl.curatorSelectTarget.value, true);
+      })
     }
     if (isFilterChange) {
-      syncedResourceCtrl.filterSelectTarget.tomselect.setValue(resourceCtrl.filterSelectTarget.value, true);
+      syncedResourceCtrls.forEach(ctrl => {
+        ctrl.filterSelectTarget.tomselect.setValue(resourceCtrl.filterSelectTarget.value, true);
+      })
     }
     if (isCuratorChange || isFilterChange) {
       // wait for the visible table to be drawn before searching the sync'ed table
       resourceCtrl.element.addEventListener('datatable:drawn', () => {
-        setTimeout(() => search(syncedResourceCtrl));
+        syncedResourceCtrls.forEach(ctrl => {
+          if (ctrl['dt']) setTimeout(() => search(ctrl))    // dt exists if the table has loaded
+        });
       }, { once: true });
     }
-  }
+  } 
 
   resourceCtrl.datatableTarget.setAttribute(
     'data-datatable-search-params-value', 
     JSON.stringify({
       ...{ curatorId: resourceCtrl.curatorSelectTarget.value },
-      ...{ columnFilters },
+      // ...{ columnFilters },
       ...tsSearchResults ? { tsSearchResults } : { filterVal: resourceCtrl.filterSelectTarget.value }
     })
   );

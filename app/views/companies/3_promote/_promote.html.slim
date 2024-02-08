@@ -42,10 +42,13 @@
 
       .layout-main.col-sm-8.col-lg-9
         .tab-content
-          #promoted-stories.tab-pane.fade {
+        
+          #promoted-stories.resource-ctrl.tab-pane.fade {
             class=('active in' if active_tab == '#promoted-stories')
             data-dashboard-target="promotedStories"
             data-controller="resource"
+            data-resource-dashboard-outlet=".dashboard"
+            data-resource-resource-outlet=".resource-ctrl:not(#promoted-stories)"
             data-resource-data-path-value="/stories"
             data-resource-search-params-value="promoted=true"
             data-resource-checkbox-filters-value={}

@@ -94,9 +94,9 @@ export default class DatatableController extends Controller<HTMLTableElement> {
     dtSearch.columns().search('') 
     dtSearch.column('curator:name').search(curatorId ? `^${curatorId}$` : '', true, false);
 
-    columnFilters.forEach(({ column, q, regEx: isRegEx, smartSearch: useSmartSearch }) => {
-      dtSearch = dtSearch.column(`${column}:name`).search(q, isRegEx, useSmartSearch);
-    });
+    // columnFilters.forEach(({ column, q, regEx: isRegEx, smartSearch: useSmartSearch }) => {
+    //   dtSearch = dtSearch.column(`${column}:name`).search(q, isRegEx, useSmartSearch);
+    // });
     
     // as the user types, search the table for the found options in the select box
     // => this ensures the datatables search matches the tomselect search
