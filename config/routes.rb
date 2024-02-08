@@ -101,7 +101,6 @@ Rails.application.routes.draw do
           collection { post '/import', to: 'successes#import' }
         end
         resources :stories, only: [:edit, :create, :update, :destroy], shallow: true do
-          get '/promoted', on: :collection, to: 'stories#promoted'
           put '/create_gads', on: :member, to: 'adwords_ads#create'
           put '/update_gads', on: :member, to: 'adwords_ads#update'
         end

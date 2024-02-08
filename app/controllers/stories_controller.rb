@@ -18,11 +18,16 @@ class StoriesController < ApplicationController
   before_action :set_s3_direct_post, only: :edit
 
   def index
-    @is_dashboard = turbo_frame_request?
-    @filters = set_filters(params)
-    @filters_match_type = cookies["csp-#{'dashboard-' if @is_dashboard}filters-match-type"] || 'all'
+    @is_dashboard = turbo_frame_request? || params[:promoted].present?
+    unless params[:promoted].present?
+      @filters = set_filters(params) 
+      @filters_match_type = cookies["csp-#{'dashboard-' if @is_dashboard}filters-match-type"] || 'all'
+    end
     if @is_dashboard
       # @filters[:curator] ||= current_user.id
+      if params[:promoted].present?
+        respond_to { |format| format.json { render(json: promoted_stories_json) } } and return
+      end
       @stories = params[:q].present? ?
         search(@company.stories, params[:q]) : 
         Story.default_order(@company.stories.filtered(@filters, @filters_match_type))
@@ -216,31 +221,7 @@ class StoriesController < ApplicationController
     end
   end
 
-  def promoted
-    data = Rails.cache.fetch("#{@company.subdomain}/promoted-stories") do
-      @company.stories.with_ads.to_json({
-        only: [:id, :title, :slug],
-        methods: [:ads_status, :ads_long_headline, :ads_images, :csp_story_path],
-        include: {
-          success: {
-            only: [],
-            include: {
-              customer: { only: [:name, :slug] }
-            }
-          },
-          topic_ad: {
-            only: [:id, :status]
-          },
-          retarget_ad: {
-            only: [:id, :status]
-          }
-        }
-      })
-    end
-    respond_to do |format|
-      format.json { render({ json: data }) }
-    end
-  end
+  
 
   def destroy
     @story.destroy
@@ -312,6 +293,27 @@ class StoriesController < ApplicationController
         end
       end
     end.to_h.compact
+  end
+
+  def promoted_stories_json
+    @company.stories.with_ads.to_json({
+      only: [:id, :title, :slug],
+      methods: [:ads_status, :ads_long_headline, :ads_images, :csp_story_path],
+      include: {
+        success: {
+          only: [],
+          include: {
+            customer: { only: [:name, :slug] }
+          }
+        },
+        topic_ad: {
+          only: [:id, :status]
+        },
+        retarget_ad: {
+          only: [:id, :status]
+        }
+      }
+    })
   end
 
   def new_ads(story, story_params)
