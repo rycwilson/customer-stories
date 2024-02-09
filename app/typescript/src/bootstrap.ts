@@ -6,5 +6,4 @@ import 'bootstrap-sass-3.3.6/assets/javascripts/bootstrap/button';
 import 'bootstrap-sass-3.3.6/assets/javascripts/bootstrap/tooltip';
 import 'bootstrap-sass-3.3.6/assets/javascripts/bootstrap/modal';
 import 'bootstrap-sass-3.3.6/assets/javascripts/bootstrap/popover';
-
-import 'jquery3-bootstrap-switch/dist/js/bootstrap-switch';
+import 'bootstrap-switch/dist/js/bootstrap-switch';

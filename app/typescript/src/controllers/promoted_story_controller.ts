@@ -7,8 +7,9 @@ export default class PromotedStoryController extends Controller<HTMLTableRowElem
   declare readonly resourceOutlet: ResourceController;
   declare readonly modalOutlet: ModalController;
 
-  static targets = ['actionsDropdown'];
+  static targets = ['actionsDropdown', 'switch'];
   declare readonly actionsDropdownTarget: HTMLTableCellElement;
+  declare switchTarget: HTMLInputElement;
 
   static values = { 
     rowData: Object 
@@ -25,6 +26,13 @@ export default class PromotedStoryController extends Controller<HTMLTableRowElem
       this[field] = this.rowDataValue[key];
     });
     this.actionsDropdownTarget.insertAdjacentHTML('afterbegin', this.actionsDropdownTemplate());
+
+    $(this.switchTarget).bootstrapSwitch({
+      size: 'small',
+      disabled: false,
+      animate: false,
+      onInit: function (e: Event) {}
+    });
   }
 
   actionsDropdownTemplate() {

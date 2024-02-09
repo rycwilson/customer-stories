@@ -46,9 +46,10 @@ export function tableConfig(): Config {
               <input type="hidden" name="story[topic_ad_attributes][status]" value="PAUSED">
               <input 
                 type="checkbox"
-                 class="bs-switch promote-control form-control"
+                 class="bs-switch form-control"
                  name="story[topic_ad_attributes][status]"
                  value="ENABLED"
+                 data-promoted-story-target="switch"
                  data-on-text="<i class='fa fa-fw fa-play'></i><i class='fa fa-fw fa-spin fa-circle-o-notch' style='display:none'></i><i class='fa fa-fw fa-check' style='display:none'></i>"
                  data-off-text="<span><i class='fa fa-fw fa-pause'></i><i class='fa fa-spin fa-circle-o-notch' style='display:none;'></i><i class='fa fa-fw fa-check' style='display:none'></i>"
                  ${ads_status === 'ENABLED' ? 'checked' : null}>
@@ -94,7 +95,7 @@ export function tableConfig(): Config {
       { targets: 0, width: '2em' },
       { targets: colIndices.customer, width: 'auto' },
       { targets: colIndices.title, width: 'auto' },
-      { targets: colIndices.status, width: '6em' },
+      { targets: colIndices.status, width: '5em' },
       { targets: colIndices.actions, width: '4.5em' },
     ],
 
