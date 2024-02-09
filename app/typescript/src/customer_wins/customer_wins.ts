@@ -152,7 +152,7 @@ export function tableConfig(): Config {
         .attr('data-controller', 'customer-win')
         .attr('data-customer-win-resource-outlet', '#contributors')
         .attr('data-customer-win-modal-outlet', '#main-modal')
-        .attr('data-customer-win-contributions-modal-outlet', '.contributions-modal')
+        // .attr('data-customer-win-contributions-modal-outlet', '.contributions-modal')
         .attr('data-customer-win-row-data-value', JSON.stringify({ id, status, curator, customer, story }))
         .attr(
           'data-customer-win-child-row-turbo-frame-attrs-value', 

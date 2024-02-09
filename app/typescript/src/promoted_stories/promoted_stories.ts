@@ -72,25 +72,14 @@ export function tableConfig(): Config {
         data: 'success.curator_id'
       },
       {
-        data: 'id',
-        render: (storyId, type, row, meta) => `
-          <a href="javascript:;" class="dropdown-toggle" data-toggle="dropdown">
-            <i class="fa fa-caret-down" style="text-decoration:none;"></i>
-          </a>
-          <ul class="dropdown-menu dropdown-menu-right dropdown-actions">
-          <li>
-            <a data-toggle="modal" data-target="#ads-images-modal" role="button">
-              <i class="fa fa-fw fa-image action"></i>&nbsp;&nbsp;
-              <span>Assign Images</span>
-            </a>
-          </li>
-          <li>
-            <a href="/promote/preview/${storyId}" target="_blank">
-              <i class="fa fa-fw fa-external-link action"></i>&nbsp;&nbsp;
-              <span>Preview</span>
-            </a>
-          </li>
-        `
+        data: null,
+        render: (data: any, type: any, row: any) => '',    // promoted story controller will render the dropdown
+        createdCell: (td: Node) => {
+          $(td)
+            .addClass('dropdown')
+            .attr('data-controller', 'actions-dropdown')
+            .attr('data-promoted-story-target', 'actionsDropdown');
+        }
       }
     ],
 
@@ -112,6 +101,10 @@ export function tableConfig(): Config {
     createdRow: function (row, data, index) { 
       const { id, title } = data as PromotedStory;
       $(row)
+        .attr('data-controller', 'promoted-story')
+        .attr('data-promoted-story-resource-outlet', '#promoted-stories')
+        .attr('data-promoted-story-modal-outlet', '#main-modal')
+        .attr('data-promoted-story-row-data-value', JSON.stringify({ id, title }))
         .attr('data-story-id', id)
         .children()
           .eq(1)
@@ -127,15 +120,6 @@ export function tableConfig(): Config {
           .eq(4)
             .addClass('actions dropdown')
             .end()
-          // .end()
-        // .prepend(`
-        //   <td colspan="4" class="flash">
-        //     <div style="position:relative">
-        //       <button style="position: absolute; top: 0; right: 7px; font-size: 30px; cursor: pointer" type="button" class="close" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-        //       <span>Sorry, there was an error when updating the Promoted Story. Please contact</span>&nbsp;<a href="mailto:support@customerstories.net?subject=Error when updating a Promoted Story">support@customerstories.net</a>
-        //     </div>
-        //   </td>
-        // `)
     },
 
   };

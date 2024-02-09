@@ -79,6 +79,9 @@ application.register('contribution', ContributionController);
 import ContributionFormController from './contribution_form_controller.js';
 application.register('contribution-form', ContributionFormController);
 
+import PromotedStoryController from './promoted_story_controller.js';
+application.register('promoted-story', PromotedStoryController);
+
 import TableDisplayOptionsController from './table_display_options_controller.js';
 application.register('table-display-options', TableDisplayOptionsController);
 
