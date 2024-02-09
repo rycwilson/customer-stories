@@ -130,11 +130,11 @@ export function tableConfig(workflowStage = 'prospect'): Config {
         targets: [colIndices.actions],
         searchable: false,
       },
-      { targets: [colIndices.success, colIndices.curator, colIndices.customer, colIndices.storyPublished], width: '0%' },
-      { targets: 0, width: '5%' },
-      { targets: [colIndices.contributor, colIndices.invitationTemplate], width: '33%' },
-      { targets: colIndices.status, width: '22%' },
-      { targets: colIndices.actions, width: '8%' }
+      // { targets: [colIndices.success, colIndices.curator, colIndices.customer, colIndices.storyPublished], width: '0%' },
+      { targets: 0, width: '2em' },
+      { targets: [colIndices.contributor, colIndices.invitationTemplate], width: 'auto' },
+      { targets: colIndices.status, width: '10em' },
+      { targets: colIndices.actions, width: '4.5em' }
     ],
 
     rowGroup: workflowStage === 'curate' ? undefined : { dataSrc: 'success.name', startRender: rowGroupTemplate },

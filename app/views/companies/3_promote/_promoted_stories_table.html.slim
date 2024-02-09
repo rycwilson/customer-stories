@@ -14,10 +14,11 @@ table#promoted-stories-table.table.datatable.table-bordered {
   data-datatable-dashboard-outlet=".dashboard"
   data-datatable-resource-outlet="#promoted-stories"
   data-action="datatable:init->resource#tableInitComplete"
-  data-promote-tr="#{company.promote_tr}"
-  width="100%" }
+  data-promote-tr="#{company.promote_tr}" }
   thead
     tr
+      th
+        i.fa.fa-bullhorn style="color:#666; padding: 0 6px"
       th Customer
       th Story Title
       th Status
@@ -25,5 +26,4 @@ table#promoted-stories-table.table.datatable.table-bordered {
       / hidden
       th Curator
       
-      th
-        .text-center Actions
+      th.actions Actions

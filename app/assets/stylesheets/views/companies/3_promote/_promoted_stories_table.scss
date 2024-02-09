@@ -120,6 +120,7 @@
 
 #promoted-stories-table {
   @include row-hover-highlight;
+  table-layout: fixed;
 
   td.promoted-story-title {
     position: relative;  // needed for click blocker
@@ -270,6 +271,6 @@
 }
 
 // other tables have an info section that normally creates some space here
-#promoted-stories-table_wrapper > .dataTables_paginate {
-  margin-top: 35px;
-}
+// #promoted-stories-table_wrapper > .dataTables_paginate {
+//   margin-top: 35px;
+// }

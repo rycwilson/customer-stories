@@ -1,7 +1,7 @@
 import type { Config } from 'datatables.net-bs';
 
 export function tableConfig(): Config {
-  const colIndices = { customer: 0, title: 1, status: 2, curator: 3, actions: 4 };
+  const colIndices = { customer: 1, title: 2, status: 3, curator: 4, actions: 5 };
   return {
     data: CSP.promotedStories,
     // autoWidth: false,
@@ -13,6 +13,19 @@ export function tableConfig(): Config {
     order: [[ colIndices.status, 'asc' ]],
 
     columns: [
+      {
+        data: null,
+        render: (data: any, type: any, row: any) => {
+          return ''
+          // return `
+          //   <button type="button" class="btn" data-action="promoted-story#toggleChildRow">
+          //     <i class="fa fa-caret-right"></i>
+          //     <i class="fa fa-caret-down"></i>
+          //   </button>
+          // `
+        },
+        // createdCell: (td: Node) => $(td).addClass('toggle-child')
+      },
       {
         name: 'customer',
         data: 'success.customer.name'
@@ -83,20 +96,17 @@ export function tableConfig(): Config {
 
     columnDefs: [
       { targets: [colIndices.curator], visible: false },
-      {
-        targets: [colIndices.title, colIndices.actions],
-        orderable: false
-      },
+      { targets: [0, colIndices.title, colIndices.actions], orderable: false },
       {
         // targets: [colIndices.status, colIndices.title, colIndices.actions],
-        targets: [colIndices.status, colIndices.title],
+        targets: [0, colIndices.status, colIndices.title],
         searchable: false
       },
-      //{ width: '22%', targets: imageIndex },
-      { width: '22%', targets: colIndices.customer },
-      { width: '46%', targets: colIndices.title },
-      { width: '10%', targets: colIndices.status },
-      { width: '8%', targets: colIndices.actions },
+      { targets: 0, width: '2em' },
+      { targets: colIndices.customer, width: 'auto' },
+      { targets: colIndices.title, width: 'auto' },
+      { targets: colIndices.status, width: '6em' },
+      { targets: colIndices.actions, width: '4.5em' },
     ],
 
     createdRow: function (row, data, index) { 
@@ -104,17 +114,17 @@ export function tableConfig(): Config {
       $(row)
         .attr('data-story-id', id)
         .children()
-          .eq(0)
+          .eq(1)
             .attr('data-title', title)
             .addClass('promoted-story-customer')
             .end()
-          .eq(1)
+          .eq(2)
             .addClass('promoted-story-title form-is-clean')
             .end()
-          .eq(2)
+          .eq(3)
             .addClass('status dropdown')
             .end()
-          .eq(3)
+          .eq(4)
             .addClass('actions dropdown')
             .end()
           // .end()

@@ -111,11 +111,10 @@ export function tableConfig(): Config {
         )
       },
       { targets: [colIndices.curator, colIndices.story],  width: '0%' },  // hidden
-      { targets: 0, width: '5%' },
-      { targets: colIndices.success, width: '61%' },
-      { targets: colIndices.customer, width: '0%'},
-      { targets: colIndices.status, width: '26%' },
-      { targets: colIndices.actions, width: '8%' }
+      { targets: 0, width: '2em' },
+      { targets: colIndices.success, width: 'auto' },
+      { targets: colIndices.status, width: '12em' },
+      { targets: colIndices.actions, width: '4.5em' }
     ],
 
     rowGroup: {

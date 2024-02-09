@@ -211,6 +211,7 @@
 #successes-table,
 #contributors-table {
   @include row-hover-highlight;
+  table-layout: fixed;
   
   // datatables table-striped class does not take row groups into account, so roll our own
   &:not(.has-row-groups) > tbody > tr.even {
