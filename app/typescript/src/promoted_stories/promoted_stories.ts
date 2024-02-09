@@ -4,8 +4,8 @@ export function tableConfig(): Config {
   const colIndices = { customer: 0, title: 1, status: 2, curator: 3, actions: 4 };
   return {
     data: CSP.promotedStories,
-    autoWidth: false,
-    dom: 'tp',
+    // autoWidth: false,
+    // dom: 'tp',
     language: {
       emptyTable: 'No Promoted Stories found',
       zeroRecords: 'No Promoted Stories found'
