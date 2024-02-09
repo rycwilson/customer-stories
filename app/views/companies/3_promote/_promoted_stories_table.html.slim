@@ -8,7 +8,7 @@
       search_options: { \
         'Customer' => company.customers.map { |customer| [customer.name, "customer-#{customer.id}"] } } })
 
-table#promoted-stories-table.table.datatable.table-bordered.table-hover {
+table#promoted-stories-table.table.datatable.table-bordered {
   data-controller="datatable"
   data-resource-target="datatable"
   data-datatable-dashboard-outlet=".dashboard"

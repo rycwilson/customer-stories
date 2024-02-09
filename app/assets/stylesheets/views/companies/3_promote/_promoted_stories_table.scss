@@ -119,6 +119,8 @@
 }
 
 #promoted-stories-table {
+  @include row-hover-highlight;
+
   td.promoted-story-title {
     position: relative;  // needed for click blocker
 
