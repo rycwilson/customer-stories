@@ -26,13 +26,11 @@ Rails.application.config.assets.paths += %w(
 Rails.application.config.assets.precompile << ['*.svg', '*.eot', '*.woff', '*.woff2', '*.ttf', '*.otf']
 
 Rails.application.config.assets.precompile += %w(
-  pdf.css
   mvpready-landing.css
   google/ads_preview.js
   google/ads_preview.css
   jquery-textfill/source/jquery.textfill.js
   plugins/cs_overlays.js
-  vendor/vendor.js
   stories_main.js
   stories.css
 )
