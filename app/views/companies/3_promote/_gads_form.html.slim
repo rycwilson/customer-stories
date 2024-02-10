@@ -12,7 +12,9 @@
         url: @s3_direct_post.url,
         host: URI.parse(@s3_direct_post.url).host,
         asset_host: Rails.application.config.asset_host,
-        s3_data: @s3_direct_post.fields }}) do |f|
+        s3_data: @s3_direct_post.fields,
+        data: { \
+          ads_target: 'form' } }}) do |f|
         
   .row 
     .form-group.short-headline
@@ -25,7 +27,7 @@
               class: 'form-control',
               autocomplete: 'off',
               maxlength: RESPONSIVE_AD_SHORT_HEADLINE_MAX.to_s,
-              data: { 'required-error': 'Required' })
+              data: { 'required-error': 'Required', action: 'input->ads#validateShortHeadline' })
           button.btn.btn-success.hidden type="submit"
             span Save
             i.fa.fa-spin.fa-circle-o-notch style="display:none"
@@ -38,11 +40,11 @@
       label.col-sm-3.control-label Image Collection
       .col-sm-9.col-md-8.col-lg-6
         .btn-group
-          a.btn.btn-secondary.active href="#image-library__marketing" data-toggle="tab"
+          a.btn.btn-secondary.active href="#image-library__marketing" data-toggle="tab" data-ads-target="collectionBtn"
             i.fa.fa-fw.fa-image
             | &nbsp;&nbsp;
             | Marketing Images
-          a.btn.btn-secondary href="#image-library__logos" data-toggle="tab"
+          a.btn.btn-secondary href="#image-library__logos" data-toggle="tab" data-ads-target="collectionBtn"
             i.fa.fa-fw.fa-flag
             | &nbsp;&nbsp;
             | Logos
@@ -64,7 +66,8 @@
               data-square-min="300x300" 
               data-square-ratio="1:1"
               data-landscape-min="600x314" 
-              data-landscape-ratio="1.91:1" }
+              data-landscape-ratio="1.91:1",
+              data-ads-target="imageRequirements" }
               | Requirements
 
       .row style="margin-left:-30px;margin-right:-30px;margin-bottom:25px"
@@ -91,8 +94,9 @@
       .row style="margin-left:-30px;margin-right:-30px;margin-bottom:25px"
         label.col-sm-3.control-label All Images
         .col-sm-9.col-md-8.col-lg-6.text-center
-          button.add-image.btn.btn-secondary {
+          button.btn.btn-secondary {
             type="button"
+            data-action="ads#uploadImage"
             style="width: 50%"
             disabled=('true' if missing_default_google_images?(company, 'marketing')) }
             i.fa.fa-fw.fa-upload
@@ -125,7 +129,8 @@
                   data-square-suggest="1200x1200"
                   data-landscape-min="512x128" 
                   data-landscape-ratio="4:1" 
-                  data-landscape-suggest="1200x300" }
+                  data-landscape-suggest="1200x300",
+                  data-ads-target="imageRequirements" }
                   | Optional/Requirements
 
       .row style="margin-left:-30px;margin-right:-30px;margin-bottom:25px"
@@ -152,8 +157,9 @@
       .row style="margin-left:-30px;margin-right:-30px;margin-bottom:25px"
         label.col-sm-3.control-label All Logos
         .col-sm-9.col-md-8.col-lg-6.text-center
-          button.add-logo.btn.btn-secondary {
+          button.btn.btn-secondary {
             type="button"
+            data-action="ads#uploadLogo"
             style="width: 50%"
             disabled=('true' if missing_default_google_images?(company, 'logo')) }
             i.fa.fa-fw.fa-upload

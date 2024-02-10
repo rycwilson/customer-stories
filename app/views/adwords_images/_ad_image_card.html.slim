@@ -4,7 +4,8 @@ li.ad-image-card {
   class="#{ad_image_card_class_name(ad_image, collection)}"
   data-placeholder-url="#{asset_url(ad_image_placeholder(ad_image[:type]))}"
   data-image-id=(ad_image[:id] if ad_image)
-  data-toggle=('popover' unless image_index) }
+  data-toggle=('popover' unless image_index)
+  data-ads-target="#{ad_image.present? ? 'imageCard' : (collection == 'images' ? 'newImageCard' : 'newLogoCard')}" }
 
   - unless is_form_input
     .ad-image-card__frame
