@@ -1439,6 +1439,13 @@
   dependencies:
     "@types/jquery" "*"
 
+"@types/bootstrap-validator@^0.11.6":
+  version "0.11.6"
+  resolved "https://registry.yarnpkg.com/@types/bootstrap-validator/-/bootstrap-validator-0.11.6.tgz#441245ac09ce678cc41a768ea40570c26e65fecf"
+  integrity sha512-sAzOyKZEW8Qiiv7x/tQoYi0vbEridhm9cLKxbhUivfPL8RuAaO1Ui1HmvyIO8s2P4B5MCQGu8s9EMCKthtTdog==
+  dependencies:
+    "@types/jquery" "*"
+
 "@types/graceful-fs@^4.1.3":
   version "4.1.9"
   resolved "https://registry.yarnpkg.com/@types/graceful-fs/-/graceful-fs-4.1.9.tgz#2a06bc0f68a20ab37b3e36aa238be6abdf49e8b4"
