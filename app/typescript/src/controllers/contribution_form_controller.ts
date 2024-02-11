@@ -101,7 +101,7 @@ export default class ContributionFormController extends Controller<HTMLFormEleme
   onContactChange({ target: select }: { target: EventTarget }) {
     if (!(select instanceof HTMLSelectElement)) return;
     const isNewContact = select.value === '0';
-    const contactFields = select.isSameNode(this.contributorSelectTarget) ? 
+    const contactFields = select === this.contributorSelectTarget ? 
       this.contributorFieldsTarget : 
       this.referrerFieldsTarget;
     contactFields.setAttribute('data-new-contact-should-enable-value', isNewContact.toString());

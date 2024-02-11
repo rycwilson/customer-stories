@@ -115,7 +115,7 @@
       videoFrame.addEventListener('load', (e) => {
         const frame = e.currentTarget;
         frame.classList.remove('hidden');
-        [...frame.parentElement.children].forEach(el => { if (!el.isSameNode(frame)) el.remove(); });
+        [...frame.parentElement.children].forEach(el => { if (el !== frame) el.remove(); });
       }, { once: true });
       videoFrame.src = url + params;
 
@@ -204,7 +204,7 @@
   function initSearchForms() {
     const syncInputs = (e) => {
       [...searchForms]
-        .filter(form => !form.isSameNode(e.currentTarget))
+        .filter(form => form !== e.currentTarget)
         .forEach(form => form.querySelector('.search-stories__input').value = e.target.value);
     }
     searchForms.forEach(form => {
@@ -231,7 +231,7 @@
   function initFilters() {
     initFilterControls();
     filters.forEach(select => {
-      const otherSelects = [...filters].filter(_select => !_select.isSameNode(select));
+      const otherSelects = [...filters].filter(_select => _select !== select);
       const tsOptions = Object.assign(
         sharedSelectOptions(select, otherSelects),  
         select.multiple ? multiSelectOptions() : singleSelectOptions()
@@ -254,7 +254,7 @@
       if (silent) return;
       if (input.checked) {
         Cookies.set('csp-filters-match-type', input.value);
-        const mirrorInput = [...matchTypeInputs].find(_input => _input.value === input.value && !_input.isSameNode(input));
+        const mirrorInput = [...matchTypeInputs].find(_input => (_input.value === input.value) && (_input !== input));
         mirrorInput.checked = true;
         const silentChange = new CustomEvent('change', { bubbles: true, detail: { silent: true } });
         mirrorInput.dispatchEvent(silentChange);
@@ -289,7 +289,7 @@
     // }
     const card = link.parentElement;
     const otherCards = [...(location.pathname === '/' ? featuredStories : relatedStories)]
-      .filter(_card => !_card.isSameNode(card));
+      .filter(_card => _card !== card);
     let loadingTimer;
     const toggleOtherCards = (shouldEnable) => {
       otherCards.forEach(_card => _card.style.pointerEvents = shouldEnable ? '' : 'none');

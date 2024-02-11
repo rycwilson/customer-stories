@@ -46,7 +46,7 @@ export default class CustomerWinFormController extends Controller<HTMLFormElemen
     const isNewContact = select.value === '0';
     const isExistingContact = select.value && !isNewContact;
     const shouldDisableSelect = isNewContact || !isExistingContact;
-    const contactFields = select.isSameNode(this.contributorSelectTarget) ? 
+    const contactFields = select === this.contributorSelectTarget ? 
       this.contributorFieldsTarget : 
       this.referrerFieldsTarget;
     // select.disabled = shouldDisableSelect;
