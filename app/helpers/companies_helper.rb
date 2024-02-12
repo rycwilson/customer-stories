@@ -20,16 +20,16 @@ module CompaniesHelper
         width: RESPONSIVE_AD_SQUARE_IMAGE_MIN
       },
       'LandscapeImage': {
-        width: RESPONSIVE_AD_LANDSCAPE_IMAGE_MIN.split('x')[0],
-        height: RESPONSIVE_AD_LANDSCAPE_IMAGE_MIN.split('x')[1],
+        width: RESPONSIVE_AD_LANDSCAPE_IMAGE_MIN.split('x')[0].to_i,
+        height: RESPONSIVE_AD_LANDSCAPE_IMAGE_MIN.split('x')[1].to_i,
         aspect_ratio: RESPONSIVE_AD_LANDSCAPE_IMAGE_ASPECT_RATIO
       },
       'SquareLogo': {
         width: RESPONSIVE_AD_SQUARE_LOGO_MIN,
       },
       'LandscapeLogo': {
-        width: RESPONSIVE_AD_LANDSCAPE_LOGO_MIN.split('x')[0],
-        height: RESPONSIVE_AD_LANDSCAPE_LOGO_MIN.split('x')[1],
+        width: RESPONSIVE_AD_LANDSCAPE_LOGO_MIN.split('x')[0].to_i,
+        height: RESPONSIVE_AD_LANDSCAPE_LOGO_MIN.split('x')[1].to_i,
         aspect_ratio: RESPONSIVE_AD_LANDSCAPE_LOGO_ASPECT_RATIO
       }
     }
