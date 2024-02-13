@@ -5,5 +5,6 @@ window.$ = jquery;
 window.jQuery = jquery;
 
 import 'blueimp-file-upload/js/jquery.fileupload';
+import 'summernote/dist/summernote';
 
 // export {};
