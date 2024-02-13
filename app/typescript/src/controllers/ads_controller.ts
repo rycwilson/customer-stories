@@ -13,18 +13,18 @@ export default class AdsController extends Controller {
   declare inputObserver: MutationObserver;
   declare imageTimer: NodeJS.Timeout;
 
-  connect() {
-    // console.log('connect ads')
-    this.collectionBtnTargets.forEach(this.addCollectionBtnListener.bind(this))
-    this.imageRequirementsTargets.forEach(this.initPopover);
-
-    $('#gads-form').validator(imageValidatorOptions);
-
-    // jQuery events (jasny bootstrap, bootstrap validator, etc)
+  initialize() {
     $(document)
       .on('change.bs.fileinput', '.ad-image-card', this.onChangeFileInput)
       .on({ 'validated.bs.validator': this.onFileInputValidation }, '#gads-form')
       .on({ 'valid.bs.validator': this.onValidFileInput }, `#${this.formTarget.id}`)
+  }
+
+  connect() {
+    // console.log('connect ads')
+    this.collectionBtnTargets.forEach(this.addCollectionBtnListener.bind(this));
+    this.imageRequirementsTargets.forEach(this.initPopover);
+    $('#gads-form').validator(imageValidatorOptions);
   }
 
   uploadFile(card: HTMLLIElement) {
@@ -110,7 +110,7 @@ export default class AdsController extends Controller {
   }
 
   onFileInputValidation({ relatedTarget: input }: { relatedTarget: HTMLInputElement }) {
-    // console.log('validated.bs.validator')
+    console.log('validated.bs.validator')
     if (input.type === 'file' && !input.getAttribute('data-default-type')) {
       const card = <HTMLLIElement>input.closest('.ad-image-card--new');
       card.classList.remove('hidden');
