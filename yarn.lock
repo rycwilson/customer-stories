@@ -1479,6 +1479,13 @@
   dependencies:
     "@types/istanbul-lib-report" "*"
 
+"@types/jquery.fileupload@^9.22.6":
+  version "9.22.6"
+  resolved "https://registry.yarnpkg.com/@types/jquery.fileupload/-/jquery.fileupload-9.22.6.tgz#ead9677e46774cbd65effa7e1f97b9ac24b62287"
+  integrity sha512-Wk+XTd7jo69GamLVzcb71HkqcOnInpsPV90Z8Q8j0EMTXzZEFKg63bjWxxdzy08XzZSHRpl+5V3NI1ySh/h0hw==
+  dependencies:
+    "@types/jquery" "*"
+
 "@types/jquery@*", "@types/jquery@^3.5.19":
   version "3.5.19"
   resolved "https://registry.npmjs.org/@types/jquery/-/jquery-3.5.19.tgz"
