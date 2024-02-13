@@ -68,8 +68,18 @@ declare global {
     'turbo:before-cache': CustomEvent;
   }
 
+  interface s3DirectPost {
+    url: string;
+    host: string;
+    postData: string;
+  }
+
   interface HTMLSelectElement {
     tomselect: TomSelect;
+  }
+
+  interface JasnyFileInputContainer extends HTMLDivElement {
+    fileinput: ((options: object) => void) & ((action: string) => void)
   }
 
   interface TurboFrameAttributes {
