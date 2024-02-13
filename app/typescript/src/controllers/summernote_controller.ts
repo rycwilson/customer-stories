@@ -29,6 +29,8 @@ export default class SummernoteController extends Controller<HTMLDivElement> {
   declare configArgsValue: [number, ...any[]];
 
   declare configFactory: ConfigFactory | undefined;
+  
+  [key: string]: any; // allow computed property names
   declare $codable: JQuery<HTMLTextAreaElement>
   declare $editable: JQuery<HTMLDivElement>
   declare $editingArea: JQuery<HTMLDivElement>
@@ -51,19 +53,8 @@ export default class SummernoteController extends Controller<HTMLDivElement> {
   }
 
   onInitComplete(e: CustomEvent) {
-    this.$codable = e.detail.codable;
-    this.$editable = e.detail.editable;
-    this.$editingArea = e.detail.editingArea;
-    this.$editor = e.detail.editor;
-    this.$statusbar = e.detail.statusbar;
-    this.$toolbar = e.detail.toolbar;
+    Object.keys(e.detail).forEach(key => this[key] = e.detail[key]);
     this.$editable.on('click', (e) => $(this.element).summernote('saveRange'));
-    // console.log('codable', codable)
-    // console.log('editable', editable)
-    // console.log('editingArea', editingArea)
-    // console.log('editor', editor)
-    // console.log('statusbar', statusbar)
-    // console.log('toolbar', toolbar)
   }
 
   destroy() {
