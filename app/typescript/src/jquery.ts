@@ -4,4 +4,6 @@ import jquery from 'jquery';
 window.$ = jquery;
 window.jQuery = jquery;
 
+import 'blueimp-file-upload/js/jquery.fileupload';
+
 // export {};
