@@ -9,13 +9,14 @@
         class: 'directUpload form-horizontal',
         data: { \
           controller: 'customer-form',
-          url: @s3_direct_post.url,
-          host: URI.parse(@s3_direct_post.url).host,
-          asset_host: Rails.application.config.asset_host,
-          s3_data: @s3_direct_post.fields,
           modal_target: 'form',
+          turbo_frame: '_top',
           submit_btn_text: 'Save changes',
-          turbo_frame: '_top' } }) do |form|
+          asset_host: Rails.application.config.asset_host,
+          s3: { \
+            url: @s3_direct_post.url,
+            host: URI.parse(@s3_direct_post.url).host,
+            'postData' => @s3_direct_post.fields } }}) do |form|
 
     .form-group
       = form.label(:name, class: 'col-sm-2 control-label')

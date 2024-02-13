@@ -1,20 +1,18 @@
 
-= form_for( \
-    company,
+= form_with( \
+    model: company,
     url: update_gads_company_path(company),
-    method: 'PUT',
-    remote: 'true',
     authenticity_token: true,
     html: { \
       id: 'gads-form',
       class: "directUpload form-horizontal",
       data: { \
-        url: @s3_direct_post.url,
-        host: URI.parse(@s3_direct_post.url).host,
+        ads_target: 'form',
         asset_host: Rails.application.config.asset_host,
-        s3_data: @s3_direct_post.fields,
-        data: { \
-          ads_target: 'form' } }}) do |f|
+        s3: { \
+          url: @s3_direct_post.url,
+          host: URI.parse(@s3_direct_post.url).host,
+          'postData' => @s3_direct_post.fields } }}) do |f|
         
   .row 
     .form-group.short-headline

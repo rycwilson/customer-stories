@@ -68,10 +68,10 @@ declare global {
     'turbo:before-cache': CustomEvent;
   }
 
-  interface s3DirectPost {
+  interface S3DirectPost {
     url: string;
     host: string;
-    postData: string;
+    postData: string;   // JSON string (key, policy, x-amz-credential, x-amz-algorithm, x-amz-date, x-amz-signature)
   }
 
   interface HTMLSelectElement {

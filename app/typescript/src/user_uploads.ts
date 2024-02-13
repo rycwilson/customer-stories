@@ -36,7 +36,7 @@ export const imageValidatorOptions: ValidatorOptions = {
   }
 }
 
-function initS3FileInput($fileInput: JQuery<HTMLInputElement>, s3: s3DirectPost, assetHost?: string): void {
+function initS3FileInput($fileInput: JQuery<HTMLInputElement>, s3: S3DirectPost, assetHost?: string): void {
   const $formGroup = $fileInput.closest('.form-group') as unknown as JQuery<HTMLDivElement>;
   $fileInput.fileupload({
     fileInput: $fileInput,
