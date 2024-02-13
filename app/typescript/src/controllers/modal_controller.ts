@@ -1,4 +1,5 @@
 import { Controller } from '@hotwired/stimulus';
+import { initS3Upload } from '../user_uploads';
 
 export default class ModalController extends Controller<HTMLDivElement> {
   static targets = ['title', 'body', 'turboFrame', 'form', 'footer', 'dismissBtn', 'submitBtn'];
@@ -61,6 +62,16 @@ export default class ModalController extends Controller<HTMLDivElement> {
 
   onFrameRender(e: CustomEvent) {
     // console.log('turbo:before-frame-render', e.detail.newFrame);
+    this.setFooterContent();
+    if (this.hasFormTarget) {
+      this.formTarget.addEventListener('ajax:success', this.ajaxSuccessHandler);
+      if (this.turboFrameTarget.id.includes('edit-customer')) {
+        initS3Upload($(this.formTarget) as JQuery<HTMLFormElement>);
+      }
+    } 
+  }
+
+  setFooterContent() {
     if (this.hasFormTarget) {
       this.dismissBtnTarget.textContent = 'Cancel';
       this.submitBtnTarget.value = this.formTarget.dataset.submitBtnText || 'Submit';
