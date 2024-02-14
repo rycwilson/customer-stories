@@ -6,7 +6,7 @@
       modal_turbo_frame_attrs: nil,
       dashboard_target: 'promotedStoriesFilter',
       search_options: { \
-        'Customer' => company.customers.map { |customer| [customer.name, "customer-#{customer.id}"] } } })
+        'Customer' => company.customers.sort_by(&:name).map { |customer| [customer.name, "customer-#{customer.id}"] } }})
 
 table#promoted-stories-table.table.datatable.table-bordered {
   data-controller="datatable"

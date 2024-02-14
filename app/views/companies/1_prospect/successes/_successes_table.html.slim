@@ -11,8 +11,8 @@
         src: new_company_success_path(company) + "?curator_id=#{current_user.id}" },
       dashboard_target: 'customerWinsFilter',
       search_options: { \
-        'Customer' => company.customers.map { |customer| [customer.name, "customer-#{customer.id}"] },
-        'Customer Win' => company.successes.map { |success| [success.name, "success-#{success.id}"] } } })  
+        'Customer' => company.customers.sort_by(&:name).map { |customer| [customer.name, "customer-#{customer.id}"] },
+        'Customer Win' => company.successes.sort_by(&:updated_at).reverse.map { |success| [success.name, "success-#{success.id}"] } }})  
 
 table#successes-table.table.datatable.table-bordered.has-row-groups {
   data-controller="datatable"

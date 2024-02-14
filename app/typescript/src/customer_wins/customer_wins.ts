@@ -21,7 +21,7 @@ export function tableConfig(): Config {
       zeroRecords: 'No Customer Wins found'
     },
 
-    order: [colIndices.success, 'desc'],
+    order: [[colIndices.customer, 'asc'], [colIndices.success, 'desc']],
 
     columns: [
       {

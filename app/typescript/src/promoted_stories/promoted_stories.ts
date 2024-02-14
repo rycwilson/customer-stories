@@ -10,7 +10,8 @@ export function tableConfig(): Config {
       emptyTable: 'No Promoted Stories found',
       zeroRecords: 'No Promoted Stories found'
     },
-    order: [[ colIndices.status, 'asc' ]],
+    
+    order: [[ colIndices.status, 'asc' ], [colIndices.customer, 'asc']],
 
     columns: [
       {

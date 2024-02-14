@@ -67,7 +67,6 @@ export default class DatatableController extends Controller<HTMLTableElement> {
   }
 
   searchParamsValueChanged(newVal: SearchParams, oldVal: SearchParams | undefined) {
-    // console.log('searchParams', newVal)
     if (oldVal !== undefined) {
       clearTimeout(this.searchDebounceTimer);
       this.searchDebounceTimer = window.setTimeout(() => this.search(newVal), 200);
@@ -89,14 +88,17 @@ export default class DatatableController extends Controller<HTMLTableElement> {
   }
 
   search({ curatorId, columnFilters, filterVal, tsSearchResults }: SearchParams) {
-    // console.log('search')
+    console.log('curatorId: ', curatorId)
+    console.log('columnFilters: ', columnFilters)
+    console.log('filterVal: ', filterVal)
+    console.log('tsSearchResults: ', tsSearchResults)
     let dtSearch = this.dt.search('')
     dtSearch.columns().search('') 
     dtSearch.column('curator:name').search(curatorId ? `^${curatorId}$` : '', true, false);
 
-    // columnFilters.forEach(({ column, q, regEx: isRegEx, smartSearch: useSmartSearch }) => {
-    //   dtSearch = dtSearch.column(`${column}:name`).search(q, isRegEx, useSmartSearch);
-    // });
+    columnFilters.forEach(({ column, q, regEx: isRegEx, smartSearch: useSmartSearch }) => {
+      dtSearch = dtSearch.column(`${column}:name`).search(q, isRegEx, useSmartSearch);
+    });
     
     // as the user types, search the table for the found options in the select box
     // => this ensures the datatables search matches the tomselect search
@@ -118,9 +120,18 @@ export default class DatatableController extends Controller<HTMLTableElement> {
   enableRowGroupsValueChanged(shouldEnable: boolean) {
     if (this.didInitialize) {
       // this.element.classList.toggle('has-row-groups');
-      this.rowTargets.forEach(tr => tr.classList.remove('even', 'odd'));
-      if (!shouldEnable) this.rowTargets.forEach((tr, i) => tr.classList.add(i % 2 === 0 ? 'even' : 'odd'));
-      this.dt.draw();
+      // this.rowTargets.forEach(tr => tr.classList.remove('even', 'odd'));
+      // if (!shouldEnable) this.rowTargets.forEach((tr, i) => tr.classList.add(i % 2 === 0 ? 'even' : 'odd'));
+
+      if (this.resourceOutlet.resourceName === 'customerWins') {
+        if (shouldEnable) {
+          this.dt.order([[2, 'asc'], [1, 'desc']]).draw();
+        } else {
+          this.dt.order([1, 'desc']).draw();
+        }
+      } else {
+        this.dt.draw();
+      }
     }
   }
 

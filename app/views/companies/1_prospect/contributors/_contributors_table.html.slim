@@ -8,9 +8,9 @@
         src: '/successes/0/contributions/new' },
       dashboard_target: 'contributorsFilter',
       search_options: { \
-        'Customer' => company.customers.map { |customer| [customer.name, "customer-#{customer.id}"] },
-        'Customer Win' => company.successes.map { |success| [success.name, "success-#{success.id}"] },
-        'Contributor' => company.contributors.map { |user| [user.full_name, "contributor-#{user.id}"] } } })
+        'Customer' => company.customers.sort_by(&:name).map { |customer| [customer.name, "customer-#{customer.id}"] },
+        'Customer Win' => company.successes.sort_by(&:updated_at).map { |success| [success.name, "success-#{success.id}"] },
+        'Contributor' => company.contributors.sort_by(&:last_name).map { |user| [user.full_name, "contributor-#{user.id}"] } } })
 
 / it's actually a contributions table, but presented to the user as Contributors
 table#contributors-table.datatable.table.table-bordered.has-row-groups {

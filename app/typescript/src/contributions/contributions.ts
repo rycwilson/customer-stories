@@ -26,7 +26,7 @@ export function tableConfig(workflowStage = 'prospect'): Config {
       zeroRecords: 'No Contributors found'
     },
     
-    order: [[colIndices.customer, 'asc'], [colIndices.success, 'asc'], [colIndices.contributor, 'desc']],
+    order: [[colIndices.customer, 'asc'], [colIndices.contributor, 'asc']],
 
     columns: [
       {
@@ -51,7 +51,7 @@ export function tableConfig(workflowStage = 'prospect'): Config {
           }),
           display: 'contributor.full_name',
           filter: 'contributor.id',
-          sort: 'timestamp'  // contribution.created_at
+          sort: 'contributor.last_name'
         },
       },
       {
