@@ -69,7 +69,7 @@ export function search(
     'data-datatable-search-params-value', 
     JSON.stringify({
       ...{ curatorId: resourceCtrl.curatorSelectTarget.value },
-      // ...{ columnFilters },
+      ...{ columnFilters },
       ...tsSearchResults ? { tsSearchResults } : { filterVal: resourceCtrl.filterSelectTarget.value }
     })
   );
