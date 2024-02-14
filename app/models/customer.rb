@@ -6,7 +6,7 @@ class Customer < ApplicationRecord
   has_many :successes, dependent: :destroy
   has_many :stories, through: :successes
   has_many :contributions, through: :successes
-  has_many :contributors, -> { distinct }, through: :contributions, source: :contributor
+  has_many :contributors, -> { distinct }, through: :contributions
 
   validates :name, presence: true, uniqueness: { scope: :company_id }
 

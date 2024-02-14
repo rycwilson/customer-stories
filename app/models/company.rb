@@ -31,7 +31,7 @@ class Company < ApplicationRecord
     end
   end
   has_many :contributions, -> { includes(:contributor, :referrer, success: { customer: {} }) }, through: :successes
-  has_many :contributors, -> { distinct }, through: :customers, source: :contributors
+  has_many :contributors, -> { distinct }, through: :customers
   has_many :referrers, -> { distinct }, through: :contributions, source: :referrer
   has_many :stories, through: :successes do
     def select_options
@@ -325,9 +325,9 @@ class Company < ApplicationRecord
   def tag_select_options tag_type, with_stories_count: true, only_featured: false, for_multi_select: false
     tags = case tag_type
     when 'category'
-      self.story_categories
+      story_categories
     when 'product'
-      self.products
+      products
     end
     (only_featured ? tags.featured : tags).map do |tag| 
       [
@@ -335,7 +335,11 @@ class Company < ApplicationRecord
         for_multi_select ? "#{tag_type}-#{tag.id}" : tag.id, 
         { data: { slug: tag.slug } }
       ]
-    end.sort
+    end.sort_by do |option| 
+      option_text = option[0]
+      with_stories_count ? option_text.match(/\((?<count>\d+)\)/)[:count].to_i : option_text
+    end
+    .send(with_stories_count ? :reverse : :itself)
   end
 
   def published_stories
