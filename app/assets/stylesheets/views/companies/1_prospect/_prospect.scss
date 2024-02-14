@@ -214,9 +214,9 @@
   table-layout: fixed;
   
   // datatables table-striped class does not take row groups into account, so roll our own
-  &:not(.has-row-groups) > tbody > tr.even {
-    background-color: #f9f9f9;
-  }
+  // &:not(.has-row-groups) > tbody > tr.even {
+  //   background-color: #f9f9f9;
+  // }
 }
 
 #new-success-modal, 
