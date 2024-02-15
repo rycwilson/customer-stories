@@ -19,7 +19,7 @@ export default class extends Controller<TomInput> {
 
   isFilter() { return this.typeValue === 'filter'; }
 
-  onSearch() {
+  dispatchSearchResults() {
     this.currentSearchResults = this.ts.currentResults!.items;
     interface SearchResults { [key: string]: string };
     const searchResults = this.ts.currentResults!.items
@@ -84,7 +84,7 @@ export default class extends Controller<TomInput> {
       },
   
       onType(userInput: string) { 
-        if (ctrl.isFilter()) ctrl.onSearch(); 
+        if (ctrl.isFilter()) ctrl.dispatchSearchResults(); 
       },
   
       onFocus(this: TomSelect) {
