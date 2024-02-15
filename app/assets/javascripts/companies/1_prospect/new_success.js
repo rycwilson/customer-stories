@@ -319,20 +319,6 @@ function newSuccessListeners () {
 
   $(document)
 
-    .on('show.bs.modal', '#new-success-modal', function () {
-      var curatorId = $('#successes-table').closest('[id*="table_wrapper"]').find('.curator-select').val();
-      if ($('#successes-filter').val().match(/customer/)) {
-        $('select.new-success.customer')
-          .val($('#successes-filter').val().match(/customer-(\d+)/)[1])
-          .trigger('change.select2');
-      }
-      if (curatorId !== '') {
-        $('select.new-success.curator')
-          .val($('.prospect.curator-select').val())
-          .trigger('change');
-      }
-    })
-
     .on('change', '#new-success-form [name="source"]', function () {
       $('.form-group.csv-file, #new-success-form .form-group:not(.source)').toggle();
       if ($(this).val() === 'import') {
