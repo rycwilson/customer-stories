@@ -1,6 +1,5 @@
-require 'successes_and_contributions'
 class ContributionsController < ApplicationController
-  include SuccessesAndContributions
+  include SchemaConformable
 
   before_action :set_contribution, except: [:index, :new, :create]
   # before_action :check_opt_out_list, only: [:confirm_request]

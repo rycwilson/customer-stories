@@ -1,6 +1,5 @@
-require 'successes_and_contributions'
 class SuccessesController < ApplicationController
-  include SuccessesAndContributions
+  include SchemaConformable
 
   respond_to(:html, :js, :json)
 

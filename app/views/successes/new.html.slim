@@ -3,16 +3,17 @@
   = form_with( \
       model: [@company, @success],
       format: :js,
-      local: false,
-      id: 'new-success-form',
-      class: 'form-horizontal',
-      data: { \
-        controller: 'customer-win-form',
-        action: 'ajax:before->customer-win-form#beforeAjax',
-        modal_target: 'form',
-        customer_win_form_modal_outlet: '#main-modal',
-        submit_btn_text: 'Create' },
-      html: { autocomplete: 'off', novalidate: true }) do |form|
+      html: { \
+        id: 'new-success-form',
+        class: 'form-horizontal',
+        autocomplete: 'off',
+        novalidate: true,
+        data: { \
+          controller: 'customer-win-form',
+          action: 'ajax:before->customer-win-form#beforeAjax',
+          modal_target: 'form',
+          customer_win_form_modal_outlet: '#main-modal',
+          submit_btn_text: 'Create' } }) do |form|
 
     = form.hidden_field(:customer_id, data: { customer_win_form_target: 'successCustomerId'})
 
@@ -24,7 +25,7 @@
     .form-group.source
       label.col-sm-3.control-label Source
       .col-sm-9
-        .btn-group data-action="change->customer-win-form#onSourceChange" role="tablist"
+        .btn-group data-action="change->customer-win-form#onChangeSource" role="tablist"
           = label_tag('source_create', class: 'radio-inline') do
             = radio_button_tag( \
                 'source', 
@@ -65,7 +66,7 @@
           .col-sm-9
             = form.collection_select( \
                 :customer_id,
-                @company.customers.sort_by { |customer| customer.name.downcase },
+                @company.customers.sort_by(&:name),
                 :id,
                 :name,
                 { include_blank: true,
@@ -78,7 +79,7 @@
                     controller: 'tomselect',
                     tomselect_type_value: Customer.name,
                     tomselect_custom_options_value: { create: true, persist: false },
-                    action: 'customer-win-form#onCustomerChange' } })
+                    action: 'customer-win-form#onChangeCustomer' } })
             span.help-block Required
 
         .form-group.required-input 
@@ -135,7 +136,7 @@
                       controller: 'tomselect',
                       tomselect_type_value: 'Referrer',
                       customer_win_form_target: 'referrerSelect',
-                      action: 'customer-win-form#onContactChange',
+                      action: 'customer-win-form#onChangeContact',
                       field_name: "#{contribution_fields.object_name}[referrer_id]" } })
 
           = render( \
@@ -163,7 +164,7 @@
                       controller: 'tomselect',
                       tomselect_type_value: 'Contributor',
                       customer_win_form_target: 'contributorSelect',
-                      action: 'customer-win-form#onContactChange',
+                      action: 'customer-win-form#onChangeContact',
                       field_name: "#{contribution_fields.object_name}[contributor_id]" } })
 
           = render( \

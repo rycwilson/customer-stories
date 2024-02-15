@@ -20,14 +20,14 @@ export default class CustomerWinFormController extends Controller<HTMLFormElemen
   declare readonly customerNameTarget: HTMLInputElement;
   declare readonly customerContactBoolFieldTarget: HTMLInputElement;
 
-  onSourceChange({ target: input }: { target: EventTarget }) {
+  onChangeSource({ target: input }: { target: EventTarget }) {
     if (!(input instanceof HTMLInputElement)) return;
     $(input).tab('show');
     this.dispatch('source-changed', { detail: capitalize(input.value) })
     // TODO: reset validation for whichever panel was hidden
   }
 
-  onCustomerChange({ target: select }: { target: EventTarget }) {
+  onChangeCustomer({ target: select }: { target: EventTarget }) {
     if (!(select instanceof HTMLSelectElement)) return;
     const customerVal = select.value;
     const customerId = isNaN(+customerVal) ? null : customerVal;
@@ -41,7 +41,7 @@ export default class CustomerWinFormController extends Controller<HTMLFormElemen
     }
   }
 
-  onContactChange({ target: select }: { target: EventTarget }) {
+  onChangeContact({ target: select }: { target: EventTarget }) {
     if (!(select instanceof HTMLSelectElement)) return;
     const isNewContact = select.value === '0';
     const isExistingContact = select.value && !isNewContact;
@@ -58,7 +58,7 @@ export default class CustomerWinFormController extends Controller<HTMLFormElemen
     contactFields.setAttribute('data-new-contact-should-enable-value', isNewContact.toString());
   }
 
-  onCustomerContactChange({ target: select }: { target: EventTarget }) {
+  onChangeCustomerContact({ target: select }: { target: EventTarget }) {
     if (!(select instanceof HTMLSelectElement)) return;
     this.customerContactBoolFieldTarget.disabled = !select.value;
   }

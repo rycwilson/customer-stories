@@ -1,4 +1,4 @@
-module SuccessesAndContributions
+module SchemaConformable
 
   # zaps may have a full name in the first_name field;
   # for multiple words, treat the last one as last name and all others as first name

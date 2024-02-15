@@ -44,7 +44,7 @@
                   controller: 'tomselect',
                   tomselect_type_value: Customer.name,
                   tomselect_custom_options_value: { create: true, persist: false },
-                  action: 'contribution-form#onCustomerChange',
+                  action: 'contribution-form#onChangeCustomer',
                   contribution_form_target: 'customerSelect' } })
           span.help-block Required
 
@@ -66,7 +66,7 @@
                   tomselect_type_value: 'Customer Win',
                   tomselect_custom_options_value: { create: true, persist: false },
                   contribution_form_target: 'customerWinSelect',
-                  action: 'contribution-form#onCustomerWinChange' } })
+                  action: 'contribution-form#onChangeCustomerWin' } })
           span.help-block Required
 
       .form-group.contributor.required-input
@@ -90,7 +90,7 @@
                   controller: 'tomselect',
                   tomselect_type_value: 'Contributor',
                   contribution_form_target: 'contributorSelect',
-                  action: 'contribution-form#onContactChange' } })
+                  action: 'contribution-form#onChangeContact' } })
           span.help-block Required
 
       = render( \
@@ -131,7 +131,7 @@
                   controller: 'tomselect',
                   tomselect_type_value: 'Referrer',
                   contribution_form_target: 'referrerSelect',
-                  action: 'contribution-form#onContactChange' } })
+                  action: 'contribution-form#onChangeContact' } })
 
       = render( \
           'companies/shared/create_contact',

@@ -46,7 +46,7 @@ export default class ContributionFormController extends Controller<HTMLFormEleme
     return this.resourceOutlets.find(outlet => outlet.resourceName === 'contributions');
   }
 
-  onCustomerChange({ target: select }: { target: EventTarget }) {
+  onChangeCustomer({ target: select }: { target: EventTarget }) {
     if (!(select instanceof HTMLSelectElement)) return;
     const customerVal = select.value;
     const customerId = isNaN(+customerVal) ? null : customerVal;
@@ -65,7 +65,7 @@ export default class ContributionFormController extends Controller<HTMLFormEleme
     }
   }
 
-  onCustomerWinChange(e: Event) {
+  onChangeCustomerWin(e: Event) {
     if (
       !(this.customerWinsCtrl instanceof ResourceController) ||
       !(this.contributorsCtrl instanceof ResourceController) ||
@@ -98,7 +98,7 @@ export default class ContributionFormController extends Controller<HTMLFormEleme
     }
   }
 
-  onContactChange({ target: select }: { target: EventTarget }) {
+  onChangeContact({ target: select }: { target: EventTarget }) {
     if (!(select instanceof HTMLSelectElement)) return;
     const isNewContact = select.value === '0';
     const contactFields = select === this.contributorSelectTarget ? 
