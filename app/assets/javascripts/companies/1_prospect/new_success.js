@@ -349,25 +349,6 @@ function newSuccessListeners () {
       }
     })
 
-    .on('change', 'select.new-success.customer', (e) => {
-      const $form = $('#new-success-form');
-      const customerVal = $(e.target).val();
-      const customerId = isNaN(customerVal) ? null : customerVal;
-      $form.find('#success_customer_id').val(customerId);
-      if (customerId) {
-        // disable customer attributes
-        $form
-          .find('input[id*="customer_attributes"]')
-          .each(function disableCustomerAttrs() { $(this).prop('disabled', true) });
-      } else {
-        // update and enable customer attributes
-        $form
-          .find('input[id*="customer_attributes_id"]').val('').end()
-          .find('input[id*="customer_attributes_name"]').val(customerVal).end()
-          .find('input[id*="customer_attributes"]').prop('disabled', false);
-      }
-    })
-
     .on('change', 'select.new-success.referrer, select.new-success.contributor', function () {
       var $form = $('#new-success-form'),
           contactType = $(this).hasClass('referrer') ? 'referrer' : 'contributor';
