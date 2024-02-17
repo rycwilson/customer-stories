@@ -88,7 +88,7 @@ export default class extends Controller<TomInput> {
   
       onType(this: TomSelect, userInput: string) { 
         if (ctrl.isFilter()) ctrl.dispatchSearchResults(); 
-        if (this.settings.create) {
+        if (this.settings.create && userInput) {
           const optionExists = Object.values(this.options).find(option => option.text === userInput);
           (this.dropdown_content.querySelector(':scope > .create') as HTMLDivElement)
             .style.display = optionExists ? 'none' : '';
