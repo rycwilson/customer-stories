@@ -135,16 +135,19 @@
                       customer_win_form_target: 'referrerSelect',
                       action: 'customer-win-form#onChangeContact',
                       field_name: "#{contribution_fields.object_name}[referrer_id]" } })
-
           = render( \
               'companies/shared/create_contact',
               { form: 'new-success', 
                 parent_fields: contribution_fields, 
                 contact_type: 'referrer',
                 input_data_attrs: { customer_win_form_target: "referrerField" } })
-            
-        = form.fields_for(:contributions, form.object.contributions.build) do |contribution_fields|
 
+        = form.fields_for(:contributions, form.object.contributions.build) do |contribution_fields|
+          = contribution_fields.check_box( \
+              :success_contact,
+              { checked: true, hidden: true, disabled: true, data: { customer_win_form_target: 'contributorField' } },
+              true,
+              false)
           .form-group.contributor
             = contribution_fields.label(:contributor_id, 'Customer Contact', class: 'col-sm-3 control-label')
             .col-sm-9
@@ -165,7 +168,6 @@
                       customer_win_form_target: 'contributorSelect',
                       action: 'customer-win-form#onChangeContact',
                       field_name: "#{contribution_fields.object_name}[contributor_id]" } })
-
           = render( \
               'companies/shared/create_contact', 
               { form: 'new-success', 

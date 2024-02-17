@@ -18,7 +18,6 @@ export default class CustomerWinFormController extends Controller<HTMLFormElemen
     'contributorSelect', 
     'contributorFields',
     'contributorField',
-    'customerContactBoolField'
   ];
   declare readonly successCustomerIdTarget: HTMLInputElement;
   declare readonly customerFieldTargets: HTMLInputElement[];
@@ -29,7 +28,6 @@ export default class CustomerWinFormController extends Controller<HTMLFormElemen
   declare readonly contributorSelectTarget: HTMLSelectElement;
   declare readonly contributorFieldsTarget: HTMLDivElement;
   declare readonly contributorFieldTargets: HTMLInputElement[];
-  declare readonly customerContactBoolFieldTarget: HTMLInputElement;
 
   onChangeSource({ target: input }: { target: EventTarget }) {
     if (!(input instanceof HTMLInputElement)) return;
@@ -51,12 +49,13 @@ export default class CustomerWinFormController extends Controller<HTMLFormElemen
     if (!(select instanceof HTMLSelectElement)) return;
     const contactType = select.dataset.tomselectTypeValue as 'referrer' | 'contributor';
     const isNewContact = select.value === '0';
+    const isExistingContact = select.value && !isNewContact;
 
     // enable/disable submission via the [name] attribute => precludes ui changes
     select.name = select.value && !isNewContact ? select.dataset.fieldName as string : '';
     this[`${contactType}FieldTargets`].forEach(input => {
-      input.value = '';
-      input.disabled = !isNewContact;
+      if (!input.name.includes('success_contact')) input.value = '';
+      input.disabled = input.name.includes('success_contact') ? (!isExistingContact && !isNewContact) : !isNewContact;
       input.required = isNewContact && input.type !== 'hidden';
     });
     if (isNewContact) {
