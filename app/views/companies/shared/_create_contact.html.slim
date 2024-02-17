@@ -1,60 +1,59 @@
 .new-contact.hidden { 
-  data-controller="new-contact"
-  data-new-contact-customer-win-form-outlet=('#new-success-form' if form == 'new-success')
-  data-new-contact-contribution-form-outlet=('#new-contribution-form' if form == 'new-contributor')
-  data-new-contact-parent-select-target-value="#{contact_type}SelectTarget"
   data-customer-win-form-target=("#{contact_type}Fields" if form == 'new-success')
   data-contribution-form-target=("#{contact_type}Fields" if form == 'new-contributor')
   class="#{form} create-#{contact_type}" }
 
-  = contribution_form.fields_for( \
-      contact_type,
+  = parent_fields.fields_for( \
+      contact_type.to_sym,
       contact_type == 'referrer' ? \
-        contribution_form.object.build_referrer : \
-        contribution_form.object.build_contributor) do |contact_fields|
+        parent_fields.object.build_referrer : \
+        parent_fields.object.build_contributor) do |user_fields|
 
-    = contact_fields.hidden_field( \
+    = user_fields.hidden_field( \
         :id,
         value: '',
         disabled: true,
-        data: { new_contact_target: 'contactField' })
+        data: input_data_attrs)
 
-    = contact_fields.hidden_field( \
+    = user_fields.hidden_field( \
         :sign_up_code,
         value: 'csp_beta',
         disabled: true,
-        data: { new_contact_target: 'contactField' })
+        data: input_data_attrs)
 
-    = contact_fields.hidden_field(:password, disabled: true, data: { new_contact_target: 'contactField' })
+    = user_fields.hidden_field( \
+        :password,
+        disabled: true,
+        data: input_data_attrs)
 
     .form-group.contact-first-name.required-input
-      = contact_fields.label(:first_name, 'First Name', class: 'col-sm-3 control-label')
+      = user_fields.label(:first_name, 'First Name', class: 'col-sm-3 control-label')
       .col-sm-9
         / tabindex: '-1' allows manual focus
-        = contact_fields.text_field( \
+        = user_fields.text_field( \
             :first_name,
             class: 'form-control',
             disabled: true,
             tabindex: '-1',
-            data: { new_contact_target: 'contactField firstName' })
+            data: input_data_attrs)
         span.help-block Required
 
     .form-group.contact-last-name.required-input
-      = contact_fields.label(:last_name, 'Last Name', class: 'col-sm-3 control-label')
+      = user_fields.label(:last_name, 'Last Name', class: 'col-sm-3 control-label')
       .col-sm-9
-        = contact_fields.text_field( \
+        = user_fields.text_field( \
             :last_name,
             class: 'form-control',
             disabled: true,
-            data: { new_contact_target: 'contactField' })
+            data: input_data_attrs)
         span.help-block Required
 
     .form-group.contact-email.required-input
-      = contact_fields.label(:email, 'Email', class: 'col-sm-3 control-label')
+      = user_fields.label(:email, 'Email', class: 'col-sm-3 control-label')
       .col-sm-9
-        = contact_fields.email_field( \
+        = user_fields.email_field( \
             :email,
             class: 'form-control',
             disabled: true,
-            data: { new_contact_target: 'contactField' })
+            data: input_data_attrs)
         span.help-block

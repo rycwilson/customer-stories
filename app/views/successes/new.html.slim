@@ -14,10 +14,8 @@
           customer_win_form_modal_outlet: '#main-modal',
           submit_btn_text: 'Create' } }) do |form|
 
-    = form.hidden_field(:customer_id, data: { customer_win_form_target: 'successCustomerId'})
-
     = form.fields_for(:customer, form.object.customer || form.object.build_customer) do |customer_fields|
-      = customer_fields.hidden_field(:id, data: { customer_win_form_target: 'customerId customerField' })
+      = customer_fields.hidden_field(:id, data: { customer_win_form_target: 'customerField' })
       = customer_fields.hidden_field(:name, data: { customer_win_form_target: 'customerName customerField' })
       = customer_fields.hidden_field(:company_id, value: @company.id, data: { customer_win_form_target: 'customerField' })
 
@@ -76,6 +74,7 @@
                   required: true,
                   data: { \
                     controller: 'tomselect',
+                    customer_win_form_target: 'successCustomerId',
                     tomselect_type_value: 'customer',
                     tomselect_custom_options_value: { create: true, persist: false },
                     action: 'customer-win-form#onChangeCustomer' } })
@@ -130,7 +129,6 @@
                   { name: '',
                     class: 'new-success referrer form-control',
                     placeholder: 'Select or Create',
-                    style: 'width:100%',
                     data: { \
                       controller: 'tomselect',
                       tomselect_type_value: 'referrer',
@@ -141,9 +139,12 @@
           = render( \
               'companies/shared/create_contact',
               { form: 'new-success', 
-                contribution_form: contribution_fields, 
-                contact_type: 'referrer' })
+                parent_fields: contribution_fields, 
+                contact_type: 'referrer',
+                input_data_attrs: { customer_win_form_target: "referrerField" } })
             
+        = form.fields_for(:contributions, form.object.contributions.build) do |contribution_fields|
+
           .form-group.contributor
             = contribution_fields.label(:contributor_id, 'Customer Contact', class: 'col-sm-3 control-label')
             .col-sm-9
@@ -158,7 +159,6 @@
                   { name: '',
                     class: 'new-success contributor form-control',
                     placeholder: 'Select or Create',
-                    style: 'width:100%',
                     data: { \
                       controller: 'tomselect',
                       tomselect_type_value: 'contributor',
@@ -167,10 +167,11 @@
                       field_name: "#{contribution_fields.object_name}[contributor_id]" } })
 
           = render( \
-              'companies/shared/create_contact',
+              'companies/shared/create_contact', 
               { form: 'new-success', 
-                contribution_form: contribution_fields, 
-                contact_type: 'contributor' })
+                parent_fields: contribution_fields, 
+                contact_type: 'contributor',
+                input_data_attrs: { customer_win_form_target: "contributorField" } })
 
         .form-group.win-story
           = form.label(:win_story_html, 'Description', class: 'col-sm-3 control-label')

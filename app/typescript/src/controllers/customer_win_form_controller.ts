@@ -3,21 +3,32 @@ import ModalController from './modal_controller';
 import { capitalize } from '../utils';
 
 export default class CustomerWinFormController extends Controller<HTMLFormElement> {
+  [key: string]: any;
+
   static outlets = ['modal'];
   declare readonly modalOutlet: ModalController;
 
   static targets = [
-    'referrerSelect', 'referrerFields', 'contributorSelect', 'contributorFields', 'successCustomerId', 
-    'customerField', 'customerId', 'customerName', 'customerContactBoolField'
+    'successCustomerId',
+    'customerField',
+    'customerName',
+    'referrerSelect', 
+    'referrerFields',
+    'referrerField',
+    'contributorSelect', 
+    'contributorFields',
+    'contributorField',
+    'customerContactBoolField'
   ];
-  declare readonly referrerSelectTarget: HTMLSelectElement;
-  declare readonly referrerFieldsTarget: HTMLDivElement;
-  declare readonly contributorSelectTarget: HTMLSelectElement;
-  declare readonly contributorFieldsTarget: HTMLDivElement;
   declare readonly successCustomerIdTarget: HTMLInputElement;
   declare readonly customerFieldTargets: HTMLInputElement[];
-  declare readonly customerIdTarget: HTMLInputElement;
   declare readonly customerNameTarget: HTMLInputElement;
+  declare readonly referrerSelectTarget: HTMLSelectElement;
+  declare readonly referrerFieldsTarget: HTMLDivElement;
+  declare readonly referrerFieldTargets: HTMLInputElement[];
+  declare readonly contributorSelectTarget: HTMLSelectElement;
+  declare readonly contributorFieldsTarget: HTMLDivElement;
+  declare readonly contributorFieldTargets: HTMLInputElement[];
   declare readonly customerContactBoolFieldTarget: HTMLInputElement;
 
   onChangeSource({ target: input }: { target: EventTarget }) {
@@ -31,31 +42,29 @@ export default class CustomerWinFormController extends Controller<HTMLFormElemen
     if (!(select instanceof HTMLSelectElement)) return;
     const customerVal = select.value;
     const customerId = isNaN(+customerVal) ? null : customerVal;
-    this.successCustomerIdTarget.value = customerId || '';
-    this.customerFieldTargets.forEach(field => field.disabled = Boolean(customerId));
-    if (customerId) {
-      // ...
-    } else {
-      this.customerIdTarget.value = '';
-      this.customerNameTarget.value = customerVal;
-    }
+    this.successCustomerIdTarget.disabled = !customerId
+    this.customerFieldTargets.forEach(field => field.disabled = !!customerId);
+    if (!customerId) this.customerNameTarget.value = customerVal;
   }
 
   onChangeContact({ target: select }: { target: EventTarget }) {
     if (!(select instanceof HTMLSelectElement)) return;
+    const contactType = select.dataset.tomselectTypeValue as 'referrer' | 'contributor';
     const isNewContact = select.value === '0';
-    const isExistingContact = select.value && !isNewContact;
-    const shouldDisableSelect = isNewContact || !isExistingContact;
-    const contactFields = select === this.contributorSelectTarget ? 
-      this.contributorFieldsTarget : 
-      this.referrerFieldsTarget;
-    // select.disabled = shouldDisableSelect;
 
-    // the field is initially disabled via an empty name attribute
-    // thereafter, the select can be disabled without affecting tomselect,
-    // however better to be consistent and stick with enabling/disabling via name attribute
-    select.name = shouldDisableSelect ? '' : select.dataset.fieldName || '';
-    contactFields.setAttribute('data-new-contact-should-enable-value', isNewContact.toString());
+    // enable/disable submission via the [name] attribute => precludes ui changes
+    select.name = select.value && !isNewContact ? select.dataset.fieldName as string : '';
+    this[`${contactType}FieldTargets`].forEach(input => {
+      input.value = '';
+      input.disabled = !isNewContact;
+      input.required = isNewContact && input.type !== 'hidden';
+    });
+    if (isNewContact) {
+      this[`${contactType}FieldsTarget`].classList.remove('hidden');
+      (this[`${contactType}FieldTargets`].find(input => input.name.includes('first')) as HTMLInputElement).focus();
+    } else {
+      this[`${contactType}FieldsTarget`].classList.add('hidden');
+    }
   }
 
   onChangeCustomerContact({ target: select }: { target: EventTarget }) {
