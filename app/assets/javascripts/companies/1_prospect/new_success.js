@@ -11,58 +11,7 @@ function newSuccessListeners () {
         });
         return formIsValid;
       },
-      disableContributionAttrs = function (disabled, contactType) {
-        var index = (contactType === 'referrer') ? '0' : '1';
-        [contactType + '_id', 'invitation_template_id', 'success_contact']
-          .forEach(function (attribute) {
-            // don't disable referrer_id or contributor_id since they're visible, instead blank the [name]
-            if (attribute === 'referrer_id' || attribute === 'contributor_id') {
-              if (disabled) {
-                $('#new-success-form #success_contributions_attributes_' + index + '_' + attribute)
-                  .attr('name', '');
-              } else {
-                $('#new-success-form #success_contributions_attributes_' + index + '_' + attribute)
-                  .attr('name', 'success[contributions_attributes][' + index + '][' + attribute + ']');
-              }
-
-            // success contact field only applies to the contributor
-            } else if (contactType == 'contributor' && attribute == 'success_contact') {
-              $('#new-success-form #success_contributions_attributes_1_success_contact').prop('disabled', disabled);
-
-            // all others disabled (or enabled)
-            } else {
-              $('#new-success-form #success_contributions_attributes_' + index + '_' + attribute).prop('disabled', disabled);
-            }
-          });
-      },
-      disableContactAttrs = function (disabled, contactType) {
-        var $form = $('#new-success-form'), index = (contactType === 'referrer') ? '0' : '1';
-        if (disabled) {
-          $form.find('.create-' + contactType).addClass('hidden');
-
-          // don't validate contact fields
-          $form.find('.create-' + contactType + ' input:not([type="hidden"])').each(function () {
-            $(this).prop('required', false);
-          });
-        } else {
-          $form.find('.create-' + contactType).removeClass('hidden');
-
-          // validate contact fields
-          $form.find('.create-' + contactType + ' input:not([type="hidden"])').each(function () {
-            $(this).prop('required', true);
-          });
-        }
-        ['first_name', 'last_name', 'email', 'sign_up_code', 'password']
-          .forEach(function (attribute) {
-            $('#success_contributions_attributes_' + index + '_' + contactType + '_attributes_' + attribute)
-              .prop('disabled', disabled);
-        });
-        if (!disabled) {
-          setTimeout(function () {
-            $form.find('.create-' + contactType + ' input[id*="first_name"]')[0].focus();
-          }, 0);
-        }
-      },
+     
       isAPIAvailable = function () {
         // Check for the various File API support.
         if (window.File && window.FileReader && window.FileList && window.Blob) {
@@ -349,46 +298,6 @@ function newSuccessListeners () {
       }
     })
 
-    .on('change', 'select.new-success.referrer, select.new-success.contributor', function () {
-      var $form = $('#new-success-form'),
-          contactType = $(this).hasClass('referrer') ? 'referrer' : 'contributor';
-
-      // if no contact provided, disable all contribution and referrer/contributor attributes
-      // TODO: allow selection of NO referrer after one is selected
-      if ($(this).val() === '') {
-        disableContributionAttrs(true, contactType);
-        disableContactAttrs(true, contactType);
-
-      // if creating a new contact with this success, enable contribution and referrer/contributor attributes
-      } else if ($(this).val() === '0') {
-        disableContributionAttrs(false, contactType);
-        disableContactAttrs(false, contactType);
-
-      // if existing contact, disable referrer/contributor attributes
-      } else {
-        disableContributionAttrs(false, contactType);
-        disableContactAttrs(true, contactType);
-        // the referrer will be both contributor and referrer for this contribution
-        $form.find('[id*="' + contactType + '_id"]').val($(this).val());
-      }
-    })
-
-    // select2 hack for search placeholder
-    .on("select2:open", "select.new-success", function() {
-      var placeholder;
-      if ($(this).hasClass('customer')) {
-        placeholder = "Search or enter the name of a New Customer";
-      } else if ($(this).hasClass('curator')) {
-        placeholder = 'Search';
-      } else if ($(this).hasClass('referrer') || $(this).hasClass('contributor')) {
-        placeholder = 'Search or Create New Contact';
-      }
-      $(".select2-search--dropdown .select2-search__field").attr("placeholder", placeholder);
-    })
-    .on("select2:close","select.new-success", function() {
-      $(".select2-search--dropdown .select2-search__field").attr("placeholder", null);
-    })
-
     .on('change', '#new-success-form input[id*="email"]', function () {
       $(this).closest('.create-contact').find('input[id*="password"]').val( $(this).val() );
     })
@@ -405,10 +314,6 @@ function newSuccessListeners () {
       $('#new-success-form').show();
       $(this).find('.new-records').hide();
       $(this).find('form')[0].reset();
-      disableContributionAttrs(true, 'referrer');
-      disableContactAttrs(true, 'referrer');
-      disableContributionAttrs(true, 'contributor');
-      disableContactAttrs(true, 'contributor');
       $(this).find('.create-contact').addClass('hidden');
       $(this).find('select').val(null).trigger('change');
       $(this).find('.form-group').removeClass('has-error');
@@ -440,10 +345,6 @@ function newSuccessListeners () {
         });
 
       } else if (!$form.data('submitted') && validateForm()) {
-
-        // if a referrer wasn't selected, hide the contribution attributes so a contribution isn't created
-        if ($('select.new-success.referrer').val() === '') disableContributionAttrs(true, 'referrer');
-        if ($('select.new-success.contributor').val() === '') disableContributionAttrs(true, 'contributor');
         toggleFormWorking($form);
         $form.submit();
       } else {
