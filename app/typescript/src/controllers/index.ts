@@ -88,9 +88,6 @@ application.register('table-display-options', TableDisplayOptionsController);
 import ActionsDropdownController from './actions_dropdown_controller.js';
 application.register('actions-dropdown', ActionsDropdownController);
 
-import NewContactController from './new_contact_controller.js';
-application.register('new-contact', NewContactController);
-
 import ImageUploadController from './image_upload_controller.js';
 application.register('image-upload', ImageUploadController);
 
