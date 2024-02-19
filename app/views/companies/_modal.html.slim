@@ -8,10 +8,10 @@
     .modal-content
 
       .modal-header
+        h4.modal-title data-modal-target="title"
         button.close type="button" data-dismiss="modal" aria-label="Close"
           span aria-hidden="true"
             | &times;
-        h4.modal-title data-modal-target="title"
 
       .modal-body data-modal-target="body" data-action="customer-win-form:source-changed->modal#setSubmitBtnText"
         = turbo_frame_tag('', src: '', data: { modal_target: 'turboFrame', placeholder: '<div>Loading...</div>' })
