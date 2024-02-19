@@ -3,6 +3,10 @@ select.tomselected + .ts-wrapper {
     height: 34px;
   }
 
+  form.was-validated &.invalid.focus .ts-control {
+    box-shadow: 0 0 0 0.2rem rgba(209, 19, 2, 0.3);
+  }
+
   .ts-control {
     height: 100%;
 
