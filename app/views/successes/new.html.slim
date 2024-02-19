@@ -9,8 +9,9 @@
         autocomplete: 'off',
         novalidate: true,
         data: { \
-          controller: 'customer-win-form',
+          controller: 'form customer-win-form',
           modal_target: 'form',
+          action: 'ajax:beforeSend->form#beforeSendXHR',
           customer_win_form_modal_outlet: '#main-modal',
           submit_btn_text: 'Create' } }) do |form|
 
@@ -19,7 +20,138 @@
       = customer_fields.hidden_field(:name, data: { customer_win_form_target: 'customerName customerField' })
       = customer_fields.hidden_field(:company_id, value: @company.id, data: { customer_win_form_target: 'customerField' })
 
-    .form-group.source
+    .form-group.required
+      = form.label(:curator_id, 'Curator', class: 'col-sm-3 control-label')
+      .col-sm-9
+        = form.collection_select( \
+            :curator_id,
+            @company.curators.sort_by { |curator| curator.last_name },
+            :id,
+            :full_name,
+            { include_blank: true,
+              selected: @curator_id || [] },
+            { class: 'new-success curator form-control',
+              placeholder: 'Select',
+              style: 'width: 100%',
+              required: true,
+              data: { \
+                controller: 'tomselect',
+                tomselect_type_value: 'curator',
+                form_target: 'requiredField' } })
+        span.help-block 
+          | Required
+
+    .form-group.required
+      = form.label(:customer_id, 'Customer', class: 'col-sm-3 control-label') 
+      .col-sm-9
+        = form.collection_select( \
+            :customer_id,
+            @company.customers.sort_by(&:name),
+            :id,
+            :name,
+            { include_blank: true,
+              selected: @customer_id || [] },
+            { class: 'new-success customer form-control',
+              placeholder: 'Select or Create',
+              required: true,
+              data: { \
+                controller: 'tomselect',
+                customer_win_form_target: 'successCustomerId',
+                form_target: 'requiredField',
+                tomselect_type_value: 'customer',
+                tomselect_custom_options_value: { create: true, persist: false },
+                action: 'customer-win-form#onChangeCustomer' } })
+        span.help-block 
+          | Required
+
+    .form-group.required
+      = form.label(:name, class: 'col-sm-3 control-label') 
+      .col-sm-9
+        = form.text_field( \
+            :name,
+            class: 'form-control',
+            required: true,
+            placeholder: 'Name of Project / Deal / Opportunity from CRM',
+            data: { form_target: 'requiredField' })
+        span.help-block 
+          | Required 
+
+    .form-group.win-story
+      = form.label(:win_story_html, 'Description', class: 'col-sm-3 control-label')
+      .col-sm-9
+        = form.text_area( \
+            :win_story_html,
+            rows: 4,
+            class: 'form-control',
+            placeholder: 'Description of Project / Deal / Opportunity from CRM')
+
+    = form.fields_for(:contributions, form.object.contributions.build) do |contribution_fields|
+      / TODO: this should change based on presence/absence of referrer/contributor, also needs db default
+      /= contribution_fields.hidden_field( \
+          :invitation_template_id, \
+          value: company.invitation_templates.customer_success.id)
+
+      .form-group
+        = contribution_fields.label(:referrer_id, 'Referred by', class: 'col-sm-3 control-label')
+        .col-sm-9
+          = contribution_fields.collection_select( \
+              :referrer_id,
+              @company.referrers \
+                .sort_by { |referrer| referrer.last_name } \
+                .unshift(User.new(id: 0, first_name: 'New', last_name: 'Contact')),
+              :id,
+              :full_name,
+              { include_blank: true },
+              { name: '',
+                class: 'new-success referrer form-control',
+                placeholder: 'Select or Create',
+                data: { \
+                  controller: 'tomselect',
+                  tomselect_type_value: 'referrer',
+                  customer_win_form_target: 'referrerSelect',
+                  action: 'customer-win-form#onChangeContact',
+                  field_name: "#{contribution_fields.object_name}[referrer_id]" } })
+      = render( \
+          'companies/shared/create_contact',
+          { form: 'new-success', 
+            parent_fields: contribution_fields, 
+            contact_type: 'referrer',
+            input_data_attrs: { customer_win_form_target: "referrerField" } })
+
+    = form.fields_for(:contributions, form.object.contributions.build) do |contribution_fields|
+      = contribution_fields.check_box( \
+          :success_contact,
+          { checked: true, hidden: true, disabled: true, data: { customer_win_form_target: 'contributorField' } },
+          true,
+          false)
+      .form-group
+        = contribution_fields.label(:contributor_id, 'Customer Contact', class: 'col-sm-3 control-label')
+        .col-sm-9
+          = contribution_fields.collection_select( \
+              :contributor_id,
+              (@company.contributors + @company.referrers).uniq \
+                .sort_by { |contact| contact.last_name } \
+                .unshift(User.new(id: 0, first_name: 'New', last_name: 'Contact')),
+              :id,
+              :full_name,
+              { include_blank: true },
+              { name: '',
+                class: 'new-success contributor form-control',
+                placeholder: 'Select or Create',
+                data: { \
+                  controller: 'tomselect',
+                  tomselect_type_value: 'contributor',
+                  customer_win_form_target: 'contributorSelect',
+                  action: 'customer-win-form#onChangeContact',
+                  field_name: "#{contribution_fields.object_name}[contributor_id]" } })
+      = render( \
+          'companies/shared/create_contact', 
+          { form: 'new-success', 
+            parent_fields: contribution_fields, 
+            contact_type: 'contributor',
+            input_data_attrs: { customer_win_form_target: "contributorField" } })
+
+    /.form-group.source
       label.col-sm-3.control-label Source
       .col-sm-9
         .btn-group data-action="change->customer-win-form#onChangeSource" role="tablist"
@@ -39,9 +171,7 @@
                 aria_controls: 'csv-file-upload',
                 data: { target: '#csv-file-upload' })
             | Import CSV
-
-    .tab-content
-    
+    /.tab-content
       .tab-pane id="csv-file-upload" role="tabpanel"
         .form-group.csv-file.required-input
           label.col-sm-3.control-label File
@@ -56,130 +186,5 @@
                   input type="file" id="csv-file-input" style="display:none"
             span.help-block
 
-      .tab-pane.active id="customer-win-fields" role="tabpanel"
+/      .tab-pane.active role="tabpanel"
 
-        .form-group.customer.required-input
-          = form.label(:customer_id, 'Customer', class: 'col-sm-3 control-label') 
-          .col-sm-9
-            = form.collection_select( \
-                :customer_id,
-                @company.customers.sort_by(&:name),
-                :id,
-                :name,
-                { include_blank: true,
-                  selected: @customer_id || [] },
-                { class: 'new-success customer form-control',
-                  placeholder: 'Select or Create',
-                  style: 'width:100%',
-                  required: true,
-                  data: { \
-                    controller: 'tomselect',
-                    customer_win_form_target: 'successCustomerId',
-                    tomselect_type_value: 'customer',
-                    tomselect_custom_options_value: { create: true, persist: false },
-                    action: 'customer-win-form#onChangeCustomer' } })
-            span.help-block Required
-
-        .form-group.required-input 
-          = form.label(:name, class: 'col-sm-3 control-label') 
-          .col-sm-9
-            = form.text_field( \
-                :name,
-                class: 'form-control',
-                required: true,
-                placeholder: 'Name of Project / Deal / Opportunity from CRM')
-            span.help-block Required 
-
-        .form-group.curator.required-input
-          = form.label(:curator_id, 'Curator', class: 'col-sm-3 control-label')
-          .col-sm-9
-            = form.collection_select( \
-                :curator_id,
-                @company.curators.sort_by { |curator| curator.last_name },
-                :id,
-                :full_name,
-                { include_blank: true,
-                  selected: @curator_id || [] },
-                { class: 'new-success curator form-control',
-                  placeholder: 'Select',
-                  style: 'width: 100%',
-                  required: true,
-                  data: { \
-                    controller: 'tomselect',
-                    tomselect_type_value: 'curator' } })
-            span.help-block Required
-
-        = form.fields_for(:contributions, form.object.contributions.build) do |contribution_fields|
-          / TODO: this should change based on presence/absence of referrer/contributor, also needs db default
-          /= contribution_fields.hidden_field( \
-              :invitation_template_id, \
-              value: company.invitation_templates.customer_success.id)
-
-          .form-group.referrer
-            = contribution_fields.label(:referrer_id, 'Referred by', class: 'col-sm-3 control-label')
-            .col-sm-9
-              = contribution_fields.collection_select( \
-                  :referrer_id,
-                  @company.referrers \
-                    .sort_by { |referrer| referrer.last_name } \
-                    .unshift(User.new(id: 0, first_name: 'New', last_name: 'Contact')),
-                  :id,
-                  :full_name,
-                  { include_blank: true },
-                  { name: '',
-                    class: 'new-success referrer form-control',
-                    placeholder: 'Select or Create',
-                    data: { \
-                      controller: 'tomselect',
-                      tomselect_type_value: 'referrer',
-                      customer_win_form_target: 'referrerSelect',
-                      action: 'customer-win-form#onChangeContact',
-                      field_name: "#{contribution_fields.object_name}[referrer_id]" } })
-          = render( \
-              'companies/shared/create_contact',
-              { form: 'new-success', 
-                parent_fields: contribution_fields, 
-                contact_type: 'referrer',
-                input_data_attrs: { customer_win_form_target: "referrerField" } })
-
-        = form.fields_for(:contributions, form.object.contributions.build) do |contribution_fields|
-          = contribution_fields.check_box( \
-              :success_contact,
-              { checked: true, hidden: true, disabled: true, data: { customer_win_form_target: 'contributorField' } },
-              true,
-              false)
-          .form-group.contributor
-            = contribution_fields.label(:contributor_id, 'Customer Contact', class: 'col-sm-3 control-label')
-            .col-sm-9
-              = contribution_fields.collection_select( \
-                  :contributor_id,
-                  (@company.contributors + @company.referrers).uniq \
-                    .sort_by { |contact| contact.last_name } \
-                    .unshift(User.new(id: 0, first_name: 'New', last_name: 'Contact')),
-                  :id,
-                  :full_name,
-                  { include_blank: true },
-                  { name: '',
-                    class: 'new-success contributor form-control',
-                    placeholder: 'Select or Create',
-                    data: { \
-                      controller: 'tomselect',
-                      tomselect_type_value: 'contributor',
-                      customer_win_form_target: 'contributorSelect',
-                      action: 'customer-win-form#onChangeContact',
-                      field_name: "#{contribution_fields.object_name}[contributor_id]" } })
-          = render( \
-              'companies/shared/create_contact', 
-              { form: 'new-success', 
-                parent_fields: contribution_fields, 
-                contact_type: 'contributor',
-                input_data_attrs: { customer_win_form_target: "contributorField" } })
-
-        .form-group.win-story
-          = form.label(:win_story_html, 'Description', class: 'col-sm-3 control-label')
-          .col-sm-9
-            = form.text_area( \
-                :win_story_html,
-                rows: 4,
-                class: 'form-control',
-                placeholder: 'Description of Project / Deal / Opportunity from CRM')

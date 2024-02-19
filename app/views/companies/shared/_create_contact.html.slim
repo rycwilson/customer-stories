@@ -26,34 +26,40 @@
         disabled: true,
         data: input_data_attrs)
 
-    .form-group.contact-first-name.required-input
+    .form-group.required
       = user_fields.label(:first_name, 'First Name', class: 'col-sm-3 control-label')
       .col-sm-9
         / tabindex: '-1' allows manual focus
         = user_fields.text_field( \
             :first_name,
             class: 'form-control',
+            required: true,
             disabled: true,
             tabindex: '-1',
-            data: input_data_attrs)
-        span.help-block Required
+            data: input_data_attrs.merge({ form_target: 'requiredField' }))
+        span.help-block 
+          | Required
 
-    .form-group.contact-last-name.required-input
+    .form-group.required
       = user_fields.label(:last_name, 'Last Name', class: 'col-sm-3 control-label')
       .col-sm-9
         = user_fields.text_field( \
             :last_name,
             class: 'form-control',
+            required: true,
             disabled: true,
-            data: input_data_attrs)
-        span.help-block Required
+            data: input_data_attrs.merge({ form_target: 'requiredField' }))
+        span.help-block 
+          | Required
 
-    .form-group.contact-email.required-input
+    .form-group.required
       = user_fields.label(:email, 'Email', class: 'col-sm-3 control-label')
       .col-sm-9
         = user_fields.email_field( \
             :email,
             class: 'form-control',
+            required: true,
             disabled: true,
-            data: input_data_attrs)
+            data: input_data_attrs.merge({ form_target: 'requiredField' }))
         span.help-block
+          | Required
