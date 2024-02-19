@@ -503,9 +503,8 @@
   /* border-color: #80bdff; CSP remove */
   outline: 0;
   
+  /* see CSP overrides in tomselect.scss
   /* box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25); */
-  /* CSP - change to $nav-blue */
-  box-shadow: 0 0 0 0.2rem rgba(3, 155, 229, 0.6);
 }
 
 .is-invalid .ts-control,

@@ -3,10 +3,6 @@ select.tomselected + .ts-wrapper {
     height: 34px;
   }
 
-  form.was-validated &.invalid.focus .ts-control {
-    box-shadow: 0 0 0 0.2rem rgba(209, 19, 2, 0.3);
-  }
-
   .ts-control {
     height: 100%;
 
@@ -18,6 +14,16 @@ select.tomselected + .ts-wrapper {
     &::after {
       border-color: #6c757d transparent transparent transparent;
     } 
+  }
+
+  &.focus .ts-control {
+    box-shadow: 0 0 0 0.2rem rgba(3, 155, 229, 0.25);
+    border-color: $brand-primary;
+  }
+
+  form.was-validated &.invalid.focus .ts-control {
+    box-shadow: 0 0 0 0.2rem rgba(169, 68, 66, 0.25);  // matches $state-danger-text
+    border-color: $state-danger-text;
   }
 
   &.dropdown-active .ts-control::after {
