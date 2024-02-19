@@ -250,20 +250,7 @@
     label:not(.radio-inline) {
       padding-right: 5px;
     }
-
-    .form-group {
-      span.help-block {
-        display: none;
-      }
-    }
-
-    .form-group.has-error, .form-group.has-warning {
-      margin-bottom: 0;
-
-      span.help-block {
-        display: block;
-      }
-    }
+    
     .form-group.has-success {
       .input-group-addon:hover {
         color: #3c763d;
@@ -379,12 +366,6 @@
     .fileinput {
       padding-bottom: 0;
     }
-  }
-
-  .form-group.contact-email,
-  .form-group.win-story, 
-  .form-group.csv-file {
-    margin-bottom: 0;
   }
 }
 

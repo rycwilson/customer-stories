@@ -48,10 +48,24 @@
 
   .form-group {
     margin-bottom: 2em;
+
+    &.required {
+      .help-block {
+        display: none;
+      }
+
+      &.has-error {
+        margin-bottom: 0.5em;
+  
+        .help-block {
+          display: block
+        }
+      }
+    }
   }
 
-  .help-block {
-    display: none;
+  textarea {
+    resize: vertical;
   }
 
   // // TODO: break this out into forms.scss

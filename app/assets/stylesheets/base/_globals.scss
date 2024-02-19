@@ -3,8 +3,8 @@
 @import 'story_card';
 
 // @import '../../../../../vendor/assets/bower_components/select2.sortable/select2.sortable';
-@import '../../../../vendor/assets/jquery-ui-1.12.1.custom/jquery-ui';
-@import '../../../../vendor/assets/jquery-ui-1.12.1.custom/jquery-ui.structure';
+// @import '../../../../vendor/assets/jquery-ui-1.12.1.custom/jquery-ui';
+// @import '../../../../vendor/assets/jquery-ui-1.12.1.custom/jquery-ui.structure';
 
 body {
   font-family: $csp-body-font;
@@ -50,10 +50,12 @@ hr {
   border-top: 1px solid #dfdfdf;
 }
 
-.required-input label:not(.radio-inline):not(.checkbox-inline):not([for="csv-file-input"]):after {
-  color: #a94442;  // #D9534F;
-  content: " *";
-}
+// .form-group.required {
+//   label:not(.radio-inline):not(.checkbox-inline):not([for="csv-file-input"]):after {
+//     color: $state-danger-text;
+//     content: "\A0\A0*";
+//   }
+// }
 
 #flash {
   display: flex;
