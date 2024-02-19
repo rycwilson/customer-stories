@@ -24,6 +24,7 @@
   --ts-pr-clear-button:	0;
   --ts-pr-caret:	0;
   --ts-pr-min:	.75rem;
+  --bs-danger-text: #a94442;
 }
 
 .ts-wrapper.single .ts-control, .ts-wrapper.single .ts-control input {
@@ -509,7 +510,7 @@
 
 .is-invalid .ts-control,
 .was-validated .invalid .ts-control {
-  border-color: #dc3545;
+  border-color: var(--bs-danger-text);  /* #dc3545; */
 }
 .focus .is-invalid .ts-control,
 .focus .was-validated .invalid .ts-control {
