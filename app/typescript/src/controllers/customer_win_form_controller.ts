@@ -1,8 +1,8 @@
-import { Controller } from '@hotwired/stimulus';
+import FormController from './form_controller';
 import ModalController from './modal_controller';
 import { capitalize } from '../utils';
 
-export default class CustomerWinFormController extends Controller<HTMLFormElement> {
+export default class CustomerWinFormController extends FormController {
   [key: string]: any;
 
   static outlets = ['modal'];
@@ -28,6 +28,9 @@ export default class CustomerWinFormController extends Controller<HTMLFormElemen
   declare readonly contributorSelectTarget: HTMLSelectElement;
   declare readonly contributorFieldsTarget: HTMLDivElement;
   declare readonly contributorFieldTargets: HTMLInputElement[];
+
+  connect() {
+  }
 
   onChangeSource({ target: input }: { target: EventTarget }) {
     if (!(input instanceof HTMLInputElement)) return;
