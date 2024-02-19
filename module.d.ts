@@ -39,18 +39,14 @@ declare global {
   
   interface HTMLElementEventMap {
     // rails-ujs events
-    'ajax:before': CustomEvent,                 // Triggered before an element is replaced with the response content during an AJAX request.
-    'ajax:success': CustomEvent,                // Triggered when an AJAX request is successful.
-    'ajax:error': CustomEvent,                  // Triggered when an AJAX request encounters an error.
-    'ajax:complete': CustomEvent,               // Triggered when an AJAX request is complete, regardless of success or error.
-    'ajax:stopped': CustomEvent,                // Triggered when an AJAX request is halted before completion.
-    'ajax:aborted': CustomEvent,                // Triggered when an AJAX request is aborted by the user.
-    'ajax:after': CustomEvent,                  // Triggered after an element is replaced with the response content during an AJAX request.
-    'ajax:file:validate': CustomEvent,          // Triggered before an AJAX file upload begins to validate the selected file.
-    'ajax:file:beforeSerialize': CustomEvent,   // Triggered before serializing form data for an AJAX file upload.
-    'ajax:file:serialize': CustomEvent,         // Triggered when serializing form data for an AJAX file upload.
-    'ajax:file:beforeSubmit': CustomEvent,      // Triggered before submitting a form via AJAX when a file is involved.
-
+    'ajax:before': CustomEvent,                 
+    'ajax:beforeSend': CustomEvent,    
+    'ajax:send': CustomEvent,         
+    'ajax:stopped': CustomEvent,               
+    'ajax:success': CustomEvent,                
+    'ajax:error': CustomEvent,                 
+    'ajax:complete': CustomEvent,          
+         
     // turbo events
     'turbo:load': TurboLoadEvent;
     'turbo:click': TurboClickEvent;
