@@ -7,71 +7,17 @@ import { application } from "./application.js"
 // import HelloController from "./hello_controller"
 // application.register("hello", HelloController)
 
+import AdsController from './ads_controller.js';
+application.register('ads', AdsController);
+
+import ActionsDropdownController from './actions_dropdown_controller.js';
+application.register('actions-dropdown', ActionsDropdownController);
+
 import CompanySettingsController from './company_settings_controller.js';
 application.register('company-settings', CompanySettingsController);
 
 import CompanyProfileController from './company_profile_controller.js';
 application.register('company-profile', CompanyProfileController);
-
-import InvitationTemplatesController from './invitation_templates_controller.js';
-application.register('invitation-templates', InvitationTemplatesController);
-
-import PluginsController from "./plugins_controller.js";
-application.register("plugins", PluginsController);
-
-import CtasController from "./ctas_controller.js";
-application.register("ctas", CtasController)
-
-import TagssController from "./tags_controller.js";
-application.register("tags", TagssController)
-
-import UserProfileController from "./user_profile_controller.js";
-application.register("user-profile", UserProfileController);
-
-import TomselectController from './tomselect_controller.js';
-application.register('tomselect', TomselectController);
-
-import DatatableController from './datatable_controller.js';
-application.register('datatable', DatatableController);
-
-import SummernoteController from './summernote_controller.js';
-application.register('summernote', SummernoteController);
-
-import DashboardController from './dashboard_controller.js';
-application.register('dashboard', DashboardController);
-
-import DashboardTabController from './dashboard_tab_controller.js';
-application.register('dashboard-tab', DashboardTabController);
-
-// import DashboardTabPanelController from './dashboard_tab_panel_controller.js';
-// application.register('dashboardTabPanel', DashboardTabPanelController);
-
-import ResourceController from './resource_controller.js';
-application.register('resource', ResourceController);
-
-import ModalController from './modal_controller.js';
-application.register('modal', ModalController);
-
-import ModalTriggerController from './modal_trigger_controller.js';
-application.register('modal-trigger', ModalTriggerController);
-
-import StoriesController from './stories_controller.js';
-application.register('stories', StoriesController);
-
-import StoryController from './story_controller.js';
-application.register('story', StoryController);
-
-import CustomerWinController from './customer_win_controller.js';
-application.register('customer-win', CustomerWinController);
-
-import WinStoryController from './win_story_controller.js';
-application.register('win-story', WinStoryController);
-
-import CustomerWinFormController from './customer_win_form_controller.js';
-application.register('customer-win-form', CustomerWinFormController);
-
-import CustomerFormController from './customer_form_controller.js';
-application.register('customer-form', CustomerFormController);
 
 import ContributionController from './contribution_controller.js';
 application.register('contribution', ContributionController);
@@ -79,17 +25,71 @@ application.register('contribution', ContributionController);
 import ContributionFormController from './contribution_form_controller.js';
 application.register('contribution-form', ContributionFormController);
 
+import CtasController from "./ctas_controller.js";
+application.register("ctas", CtasController);
+
+import CustomerFormController from './customer_form_controller.js';
+application.register('customer-form', CustomerFormController);
+
+import CustomerWinController from './customer_win_controller.js';
+application.register('customer-win', CustomerWinController);
+
+import CustomerWinFormController from './customer_win_form_controller.js';
+application.register('customer-win-form', CustomerWinFormController);
+
+import DashboardController from './dashboard_controller.js';
+application.register('dashboard', DashboardController);
+
+import DashboardTabController from './dashboard_tab_controller.js';
+application.register('dashboard-tab', DashboardTabController);
+
+import DatatableController from './datatable_controller.js';
+application.register('datatable', DatatableController);
+
+import FormController from './form_controller.js';
+application.register('form', FormController);
+
+import InvitationTemplatesController from './invitation_templates_controller.js';
+application.register('invitation-templates', InvitationTemplatesController);
+
+import ModalController from './modal_controller.js';
+application.register('modal', ModalController);
+
+import ModalTriggerController from './modal_trigger_controller.js';
+application.register('modal-trigger', ModalTriggerController);
+
+import PluginsController from "./plugins_controller.js";
+application.register("plugins", PluginsController);
+
 import PromotedStoryController from './promoted_story_controller.js';
 application.register('promoted-story', PromotedStoryController);
+
+import ResourceController from './resource_controller.js';
+application.register('resource', ResourceController);
+
+import StoriesController from './stories_controller.js';
+application.register('stories', StoriesController);
+
+import StoryController from './story_controller.js';
+application.register('story', StoryController);
+
+import SummernoteController from './summernote_controller.js';
+application.register('summernote', SummernoteController);
 
 import TableDisplayOptionsController from './table_display_options_controller.js';
 application.register('table-display-options', TableDisplayOptionsController);
 
-import ActionsDropdownController from './actions_dropdown_controller.js';
-application.register('actions-dropdown', ActionsDropdownController);
+import TagssController from "./tags_controller.js";
+application.register("tags", TagssController);
+
+import TomselectController from './tomselect_controller.js';
+application.register('tomselect', TomselectController);
+
+import UserProfileController from "./user_profile_controller.js";
+application.register("user-profile", UserProfileController);
+
+import WinStoryController from './win_story_controller.js';
+application.register('win-story', WinStoryController);
 
 import ImageUploadController from './image_upload_controller.js';
 application.register('image-upload', ImageUploadController);
-
-import AdsController from './ads_controller.js';
-application.register('ads', AdsController);
