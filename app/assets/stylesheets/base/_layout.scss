@@ -1,7 +1,7 @@
 @media (min-width: 1200px) {
-  .container {
+  // .container {
     // width: 1200px;
-  }  
+  // }  
 }
 
 .layout-main {
@@ -12,50 +12,6 @@
   .companies.new &,
   .profile.edit & {
     padding-top: 15px;
-  }
-
-  #prospect &,
-  #promote & {
-    position: relative;
-
-    > .loading,
-    > .tab-content {
-      position: absolute;
-      top: 0;
-      right: 0;
-      left: 0;
-    }
-    
-    > .loading {
-      margin-top: 1rem;
-      display: flex;
-      justify-content: center;
-      visibility: visible;
-      opacity: 1;
-    }
-  
-    > .tab-content {
-      visibility: hidden;
-      opacity: 0;
-    }
-  }
-
-  #prospect.ready &,
-  #promote.ready & {
-    > .loading,
-    > .tab-content {
-      transition: opacity 0.25s ease-in-out;
-    }
-
-    > .loading {
-      visibility: hidden;
-      opacity: 0;
-    }
-
-    > .tab-content {
-      visibility: visible;
-      opacity: 1;
-    }
   }
 }
 
@@ -100,6 +56,7 @@
           color: #222;
         }
       }
+      
       &.active {
         // margin-right: 0;
         > a, 
@@ -119,27 +76,6 @@
   .disabled-tab { 
     color: #ccc; 
   }
-
-  
-
-  // New customer wins, New contributors
-  .btn-add {
-    @include fa-button($medium-gray);
-
-    // wait until both tables are loaded to show (see csp_datatables.js); 
-    // don't use transition on initial load
-    &:not(.btn-add--new-story) {
-      display: none;  
-      opacity: 1; 
-      transition: opacity 0.15s linear;  // matches bootstrap tab .fade transition
-
-      &:not(.shown) {
-        visibility: hidden;
-        opacity: 0;
-      }
-    }
-  }
-
 }
 
 .admin-sidebar {
