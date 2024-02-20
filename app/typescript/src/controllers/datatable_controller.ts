@@ -89,10 +89,10 @@ export default class DatatableController extends Controller<HTMLTableElement> {
   }
 
   search({ curatorId, columnFilters, filterVal, tsSearchResults }: SearchParams) {
-    console.log('curatorId: ', curatorId)
-    console.log('columnFilters: ', columnFilters)
-    console.log('filterVal: ', filterVal)
-    console.log('tsSearchResults: ', tsSearchResults)
+    // console.log('curatorId: ', curatorId)
+    // console.log('columnFilters: ', columnFilters)
+    // console.log('filterVal: ', filterVal)
+    // console.log('tsSearchResults: ', tsSearchResults)
     let dtSearch = this.dt.search('')
     dtSearch.columns().search('') 
     dtSearch.column('curator:name').search(curatorId ? `^${curatorId}$` : '', true, false);
