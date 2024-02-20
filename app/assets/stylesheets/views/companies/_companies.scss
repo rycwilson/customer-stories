@@ -44,9 +44,9 @@ td[data-controller="actions-dropdown"] .dropdown-menu {
 
   > .spinner {
     @include lds-ring;
+    margin-top: 1rem;
     display: flex;
     justify-content: center;
-    margin-top: 1rem;
   }
 
   &.loading > .spinner,
@@ -59,12 +59,13 @@ td[data-controller="actions-dropdown"] .dropdown-menu {
     transition: opacity 0.25s ease-out;
   }
 
-  &.ready > .spinner {
-    visibility: hidden;
-    opacity: 0;
-    transition: opacity 0.25s ease-in;
+  &.ready {
+    > .spinner {
+      visibility: hidden;
+      opacity: 0;
+      transition: opacity 0.25s ease-in;
+    }
     
-    > .spinner,
     > .container {
       transition: opacity 0.25s ease-out;
     }

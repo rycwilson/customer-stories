@@ -1,7 +1,7 @@
 #promote.tab-pane.fade  {
   class=('active in' if workflow_stage == 'promote')
   data-dashboard-target="tabPanel"
-  data-action="resource:ready->dashboard#onResourceReady"
+  data-action="resource:loading->dashboard#onResourceLoading resource:ready->dashboard#onResourceReady"
   role="tabpanel" }
 
   .spinner
@@ -13,7 +13,7 @@
 
   .container
     .row
-    
+
       .layout-sidebar.col-sm-4.col-lg-3
         ul.nav
           li class=('active' if active_tab == '#promoted-stories')

@@ -1,6 +1,6 @@
 .table-controls 
   div 
-    .curator-select data-action="tomselect:change-curator->resource#onCuratorChange"
+    .curator-select data-action="tomselect:change-curator->resource#onChangeCurator"
       label 
         span Curator
       = select_tag( \
@@ -14,7 +14,7 @@
               tomselect_type_value: 'curator', 
               resource_target: 'curatorSelect' } })
 
-    .filter-select data-action="tomselect:change-filter->resource#onFilterChange tomselect:search->resource#searchTable"
+    .filter-select data-action="tomselect:change-filter->resource#onChangeFilter tomselect:search->resource#searchTable"
       label
         i.fa.fa-search
       = select_tag( \

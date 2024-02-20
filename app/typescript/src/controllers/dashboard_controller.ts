@@ -69,16 +69,20 @@ export default class DashboardController extends Controller<HTMLDivElement> {
     removeEventListener('popstate', this.showActiveTabPanel);
   }
 
-  onResourceReady(e: CustomEvent) {
-    const { currentTarget: tabPanel } = e;
-    const { resourceName } = e.detail; 
+  onResourceLoading({ currentTarget: tabPanel }: { currentTarget: HTMLDivElement }) {
+    window.setTimeout(() => tabPanel.classList.add('loading'), 1000);
+  }
+
+  onResourceReady(
+    { detail: { resourceName } }: { detail: { resourceName: ResourceName }}
+  ) {
     this.readyState[resourceName] = true;
   }
 
   onReadyStateChange(
     this: DashboardController,
     resources: { customerWins: boolean, contributions: boolean, promotedStories: boolean }, 
-    resourceName: 'customerWins' | 'contributions' | 'promotedStories', 
+    resourceName: ResourceName, 
     isReady: boolean
   ) {
     const setPanelReady = (panelId: DashboardTab.Prospect | DashboardTab.Promote) => {

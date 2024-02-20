@@ -9,7 +9,6 @@ import {
 import { tableConfig as customerWinsTableConfig, newCustomerWinPath } from '../customer_wins/customer_wins';
 import { tableConfig as contributorsTableConfig, newContributionPath } from '../contributions/contributions';
 import { tableConfig as promotedStoriesTableConfig } from '../promoted_stories/promoted_stories';
-import DataTable from 'datatables.net-bs';
 import type { Api, Config } from "datatables.net-bs";
 import 'datatables.net-rowgroup-bs';
 
@@ -48,18 +47,18 @@ export default class ResourceController extends Controller<HTMLDivElement> {
   }
 
   get resourceName() {
-    return this.element.dataset.resourceName as 'customerWins' | 'contributions' | 'promotedStories';
+    return this.element.dataset.resourceName as ResourceName;
   }
 
   initValueChanged(shouldInit: boolean) {
-    const ctrl = this;
     if (shouldInit) {
-      if (CSP[ctrl.resourceName]) {
-        initTable(ctrl);
+      if (CSP[this.resourceName]) {
+        initTable(this);
       } else {
+        this.dispatch('loading');
         getJSON(this.dataPathValue, this.searchParamsValue).then(data => {
-          CSP[ctrl.resourceName] = data;
-          initTable(ctrl);
+          CSP[this.resourceName] = data;
+          initTable(this);
         })
       }
     }
@@ -73,12 +72,12 @@ export default class ResourceController extends Controller<HTMLDivElement> {
     searchTable(this, e, this.resourceOutlets);
   }
 
-  onCuratorChange(e: CustomEvent) {
+  onChangeCurator(e: CustomEvent) {
     if (/customerWins|contributors/.test(this.resourceName)) this.updateNewItemPath();
     searchTable(this, e, this.resourceOutlets);
   }
 
-  onFilterChange(e: CustomEvent) {
+  onChangeFilter(e: CustomEvent) {
     if (/customerWins|contributors/.test(this.resourceName)) {
       this.updateNewItemPath();
       this.resourceOutlets.forEach(outlet => {

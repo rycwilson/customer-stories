@@ -4,6 +4,8 @@ declare global {
   // https://stackoverflow.com/questions/38906359/create-a-global-variable-in-typescript#answer-56984941
   var CSP: CustomerStoriesApp;
 
+  type ResourceName = 'customerWins' | 'contributions' | 'promotedStories';
+
   interface Window {
     $: JQueryStatic;
     jQuery: JQueryStatic;
