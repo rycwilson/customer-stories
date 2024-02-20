@@ -46,6 +46,11 @@ export default class DashboardController extends Controller<HTMLDivElement> {
     removeEventListener('popstate', this.showActiveTabPanel);
   }
 
+  onTabPanelReady({ currentTarget: tabPanel }: { currentTarget: HTMLDivElement }) {
+    window.setTimeout(() => tabPanel.classList.add('ready'));
+    delete tabPanel.dataset.action;   // one-time action
+  }
+
   onTabClick({ target: tab }: { target: EventTarget }) {
     if (!(tab instanceof HTMLAnchorElement)) return;
     const tabName = tab.getAttribute('aria-controls');
@@ -62,13 +67,6 @@ export default class DashboardController extends Controller<HTMLDivElement> {
   activeTabValueChanged(activeTab: DashboardTab) {
     this.initTabPanel(activeTab);
   }
-  
-  // dataDidLoad(e: Event) {
-  //   const { panel, resourceClassName } = e.detail;
-
-  //   // wait for datatable to render
-  //   setTimeout(() => panel.classList.add(`${resourceClassName}-did-load`));
-  // }
 
   addCustomerWinContributors({ target: a }: { target: EventTarget }) {
     if (!(a instanceof HTMLAnchorElement)) return;

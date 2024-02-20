@@ -1,6 +1,7 @@
 #promote.tab-pane.fade  {
   class=('active in' if workflow_stage == 'promote')
   data-dashboard-target="tabPanel"
+  data-action="resource:ready->dashboard#onTabPanelReady"
   role="tabpanel" }
 
   .container
@@ -41,6 +42,14 @@
                 ul#gads-results
 
       .layout-main.col-sm-8.col-lg-9
+
+        .loading
+          .lds-ring
+            div
+            div
+            div
+            div
+
         .tab-content
         
           #promoted-stories.resource-ctrl.tab-pane.fade {

@@ -9,7 +9,10 @@ export function init(resourceCtrl: ResourceController) {
 export function initComplete(resourceCtrl: ResourceController, dt: DataTableApi<any>) {
   resourceCtrl.dt = dt;
   initDisplayOptions(resourceCtrl);
-  search(resourceCtrl);
+  window.setTimeout(() => {
+    resourceCtrl.dt.one('draw', () => resourceCtrl.dispatch('ready'));
+    search(resourceCtrl);
+  })
 }
 
 export function toggleRowGroups(resourceCtrl: ResourceController, shouldEnable: boolean) {

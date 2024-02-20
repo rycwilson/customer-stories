@@ -49,6 +49,7 @@ export default class DatatableController extends Controller<HTMLTableElement> {
 
       // TODO: what is the type of this?
       initComplete(this: any, settings: object) {
+        // console.log('initComplete()')
         ctrl.cloneFilterResults();
         ctrl.didInitialize = true;
         ctrl.dispatch('init', { detail: { dt: this.api() } });
