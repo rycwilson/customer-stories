@@ -11,15 +11,31 @@ enum DashboardTab {
   Measure = 'measure'
 }
 
+interface ReadyState {
+  [key: string]: boolean;
+  customerWins: boolean;
+  contributions: boolean;
+  promotedStories: boolean;
+};
+
 export default class DashboardController extends Controller<HTMLDivElement> {
   static outlets = ['modal'];
   declare readonly modalOutlet: ModalController;
 
   static targets = [
-    'tab', 'tabPanel',
-    'customerWins', 'customerWinsTab', 'addCustomerWinBtn', 'customerWinsFilter', 
-    'contributors', 'contributorsTab', 'addContributorBtn', 'contributorsFilter',
-    'promotedStories', 'promotedStoriesTab', 'promotedStoriesFilter'
+    'tab', 
+    'tabPanel',
+    'customerWins', 
+    'customerWinsTab', 
+    'addCustomerWinBtn', 
+    'customerWinsFilter', 
+    'contributors', 
+    'contributorsTab', 
+    'addContributorBtn', 
+    'contributorsFilter',
+    'promotedStories', 
+    'promotedStoriesTab', 
+    'promotedStoriesFilter'
   ];
   declare readonly tabTargets: HTMLAnchorElement[];
   declare readonly tabPanelTargets: HTMLDivElement[];
@@ -37,6 +53,13 @@ export default class DashboardController extends Controller<HTMLDivElement> {
   static values = { activeTab: { type: String, default: '' } };    
   declare activeTabValue: DashboardTab | null;
 
+  panelTimers: Record<DashboardTab.Prospect | DashboardTab.Promote, number> = { prospect: 0, promote: 0 };
+
+  readyState: ReadyState = new Proxy(
+    { customerWins: false, contributions: false, promotedStories: false },
+    { set: this.onReadyStateChange.bind(this) }
+  )
+  
   connect() {
     // console.log('connect dashboard')
     addEventListener('popstate', this.showActiveTabPanel);
@@ -46,9 +69,33 @@ export default class DashboardController extends Controller<HTMLDivElement> {
     removeEventListener('popstate', this.showActiveTabPanel);
   }
 
-  onTabPanelReady({ currentTarget: tabPanel }: { currentTarget: HTMLDivElement }) {
-    window.setTimeout(() => tabPanel.classList.add('ready'));
-    delete tabPanel.dataset.action;   // one-time action
+  onResourceReady(e: CustomEvent) {
+    const { currentTarget: tabPanel } = e;
+    const { resourceName } = e.detail; 
+    this.readyState[resourceName] = true;
+  }
+
+  onReadyStateChange(
+    this: DashboardController,
+    resources: { customerWins: boolean, contributions: boolean, promotedStories: boolean }, 
+    resourceName: 'customerWins' | 'contributions' | 'promotedStories', 
+    isReady: boolean
+  ) {
+    const setPanelReady = (panelId: DashboardTab.Prospect | DashboardTab.Promote) => {
+      const panel = this.getTabPanel(panelId);
+      // console.log(`${panel.id} is ready`)
+      window.clearTimeout(this.panelTimers[panelId]);
+      panel.classList.remove('loading');
+      panel.classList.add('ready');
+    };
+    if (resources[resourceName] === isReady) return false;  // no change => ignore
+    resources[resourceName] = isReady;
+    if (/customerWins|contributions/.test(resourceName) && resources.customerWins && resources.contributions) {
+      setPanelReady(DashboardTab.Prospect);
+    } else if (resources.promotedStories) {
+      setPanelReady(DashboardTab.Promote);
+    }
+    return true;
   }
 
   onTabClick({ target: tab }: { target: EventTarget }) {
@@ -126,12 +173,22 @@ export default class DashboardController extends Controller<HTMLDivElement> {
   }
 
   initTabPanel(tab: DashboardTab) {
-    if (tab === 'prospect') {
+    if (/prospect|promote/.test(tab)) {
+      this.panelTimers[tab as DashboardTab.Prospect | DashboardTab.Promote] = window.setTimeout(() => {
+        // console.log(`${tab} is loading`)
+        this.getTabPanel(tab).classList.add('loading');
+      }, 1000);
+    }
+    if (tab === DashboardTab.Prospect) {
       this.customerWinsTarget.setAttribute('data-resource-init-value', 'true');
       this.contributorsTarget.setAttribute('data-resource-init-value', 'true');
-    } else if (tab === 'promote') {
+    } else if (tab === DashboardTab.Promote) {
       this.promotedStoriesTarget.setAttribute('data-resource-init-value', 'true');
     }
+  }
+
+  getTabPanel(panelId: DashboardTab) {
+    return this.tabPanelTargets.find(panel => panel.id === panelId) as HTMLDivElement;
   }
 
   showingCustomerWins() {

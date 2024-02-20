@@ -4,48 +4,12 @@
 @import '3_promote/promote';
 @import '4_measure/measure';
 @import 'settings/settings';
-@import './shared/contributions_modal';
-
-.working {
-  position: fixed;
-  top: 0;
-  right: 0;
-  bottom: 0;
-  left: 0;
-  z-index: 1000;
-  background-color: transparent;
-  > div {
-    height: 100%;
-    width: 100%;
-    background-color: #444;
-    opacity: 0;
-    > div {
-      position: absolute;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-      i {
-        color: #fff;
-        font-size: 36px;
-      }
-    }
-  }
-  &--still {
-    > div {
-      opacity: 0.5;
-      transition: opacity 1s step-end;
-    }
-  }
-  &.successes-loaded.contributors-loaded,
-  &.promoted-stories-loaded {
-    display: none;
-  }
-}
 
 .companies.new {
   .disabled-tab {
     pointer-events: none;
   }
+
   .content {
     margin-top: 40px;
     overflow: hidden;
@@ -64,7 +28,48 @@ td[data-controller="actions-dropdown"] .dropdown-menu {
   }
 }
 
+#prospect,
+#promote {
+  position: relative;
 
+  > .spinner,
+  > .container {
+    position: absolute;
+    top: 0;
+    right: 0;
+    left: 0;
+    visibility: hidden;
+    opacity: 0;
+  }
+
+  > .spinner {
+    @include lds-ring;
+    display: flex;
+    justify-content: center;
+    margin-top: 1rem;
+  }
+
+  &.loading > .spinner,
+  &.ready > .container {
+    visibility: visible;
+    opacity: 1;
+  }
+
+  &.loading > .spinner {
+    transition: opacity 0.25s ease-out;
+  }
+
+  &.ready > .spinner {
+    visibility: hidden;
+    opacity: 0;
+    transition: opacity 0.25s ease-in;
+    
+    > .spinner,
+    > .container {
+      transition: opacity 0.25s ease-out;
+    }
+  } 
+}
 
 
 

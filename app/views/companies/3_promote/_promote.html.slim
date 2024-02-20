@@ -1,12 +1,19 @@
 #promote.tab-pane.fade  {
   class=('active in' if workflow_stage == 'promote')
   data-dashboard-target="tabPanel"
-  data-action="resource:ready->dashboard#onTabPanelReady"
+  data-action="resource:ready->dashboard#onResourceReady"
   role="tabpanel" }
+
+  .spinner
+    .lds-ring
+      div
+      div
+      div
+      div
 
   .container
     .row
-
+    
       .layout-sidebar.col-sm-4.col-lg-3
         ul.nav
           li class=('active' if active_tab == '#promoted-stories')
@@ -42,14 +49,6 @@
                 ul#gads-results
 
       .layout-main.col-sm-8.col-lg-9
-
-        .loading
-          .lds-ring
-            div
-            div
-            div
-            div
-
         .tab-content
         
           #promoted-stories.resource-ctrl.tab-pane.fade {
@@ -62,10 +61,7 @@
             data-resource-search-params-value="promoted=true"
             data-resource-checkbox-filters-value={}
             data-resource-name="promotedStories" }
-            /.working.working--promote style="display:none"
-              div
-                div
-                  i.fa.fa-spin.fa-circle-o-notch
+
             = render('companies/3_promote/promoted_stories_table', { company: })
 
           #promote-settings.tab-pane.fade {

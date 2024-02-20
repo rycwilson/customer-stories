@@ -10,9 +10,12 @@ export function initComplete(resourceCtrl: ResourceController, dt: DataTableApi<
   resourceCtrl.dt = dt;
   initDisplayOptions(resourceCtrl);
   window.setTimeout(() => {
-    resourceCtrl.dt.one('draw', () => resourceCtrl.dispatch('ready'));
+    resourceCtrl.dt.one(
+      'draw', 
+      () => resourceCtrl.dispatch('ready', { detail: { resourceName: resourceCtrl.resourceName } })
+    );
     search(resourceCtrl);
-  })
+  });
 }
 
 export function toggleRowGroups(resourceCtrl: ResourceController, shouldEnable: boolean) {
