@@ -20,24 +20,24 @@ export default class FormController extends Controller<HTMLFormElement> {
     let isValid = true;
     this.requiredFieldTargets.filter(field => !field.disabled).forEach(field => {
       const formGroup = field.closest('.form-group') as HTMLDivElement;
-      if (!field.value) {
+      if (!field.value.trim()) {
         formGroup.classList.add('has-error');
         isValid = false;
       }
     });
-    this.element.classList.add('was-validated');
+    if (!this.element.classList.contains('was-validated')) this.element.classList.add('was-validated');
     return isValid;
   }
 
   removeErrorsOnValidInput() {
-    const unflagError = (e: Event) => {
+    const removeError = (e: Event) => {
       const field = e.target as HTMLSelectElement | HTMLInputElement;
-      if (field.value) {
+      if (field.value.trim()) {
         (field.closest('.form-group') as HTMLDivElement).classList.remove('has-error');
       }
     }
     this.requiredFieldTargets.forEach(field => {
-      field.addEventListener(field instanceof HTMLSelectElement ? 'change' : 'input', unflagError);
+      field.addEventListener(field instanceof HTMLSelectElement ? 'change' : 'input', removeError);
     })
   }
 }
