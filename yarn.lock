@@ -1399,6 +1399,11 @@
   dependencies:
     "@sinonjs/commons" "^3.0.0"
 
+"@stimulus/test@^2.0.0":
+  version "2.0.0"
+  resolved "https://registry.yarnpkg.com/@stimulus/test/-/test-2.0.0.tgz#eed53eb04710ce8c3773c9bb8e4a1e2f5e740393"
+  integrity sha512-n8X6H5l6FAznX8Gziyeyp7RCiCR7Sxo2zErebFwuWrBz4ZCq7AYQfhZ6gLgq9878XhJZx58d63AmXvuYRkRGAw==
+
 "@types/babel__core@^7.1.14":
   version "7.20.5"
   resolved "https://registry.yarnpkg.com/@types/babel__core/-/babel__core-7.20.5.tgz#3df15f27ba85319caa07ba08d0721889bb39c017"

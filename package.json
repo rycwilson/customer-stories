@@ -60,6 +60,7 @@
     "@babel/preset-env": "^7.23.7",
     "@babel/preset-typescript": "^7.23.3",
     "@jest/globals": "^29.7.0",
+    "@stimulus/test": "^2.0.0",
     "@types/bootstrap-switch": "^0.0.36",
     "@types/bootstrap-validator": "^0.11.6",
     "@types/imagesloaded": "^4.1.3",
