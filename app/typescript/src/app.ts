@@ -1,11 +1,8 @@
 import Rails from '@rails/ujs';
 import * as Turbo from "@hotwired/turbo";
 import * as turboCallbacks from './turbo_callbacks';
-
-import './jquery';   // creates global $, jQuery
-// import 'jquery-ui/dist/jquery-ui';
+import './jquery';
 import './bootstrap';
-
 import './controllers';
 
 import { parseDatasetObject } from './utils';

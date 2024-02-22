@@ -1,4 +1,3 @@
-// import { initView } from './views';
 import type { 
   TurboLoadEvent,
   TurboClickEvent,
@@ -8,8 +7,9 @@ import type {
   TurboRenderEvent,
   TurboFrameLoadEvent,
   TurboBeforeFrameRenderEvent, 
-  TurboFrameRenderEvent } from '@hotwired/turbo/dist/types/core';
-import type { TurboSubmitStartEvent, TurboSubmitEndEvent } from "@hotwired/turbo/dist/types/core/drive/form_submission";
+  TurboFrameRenderEvent,
+  TurboSubmitStartEvent,
+  TurboSubmitEndEvent } from '@hotwired/turbo';
 
 export function onLoad(e: TurboLoadEvent) {
   console.log('turbo:load')

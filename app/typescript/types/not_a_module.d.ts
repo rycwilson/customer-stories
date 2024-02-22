@@ -1,1 +1,0 @@
-declare module 'tom-select/dist/js/plugins/clear_button'

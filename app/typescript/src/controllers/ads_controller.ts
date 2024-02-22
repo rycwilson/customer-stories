@@ -131,7 +131,7 @@ export default class AdsController extends Controller {
   }
 
   addCollectionBtnListener(btn: HTMLAnchorElement) {
-    $(btn).on('show.bs.tab', (e) => {
+    $(btn).on('show.bs.tab', (e: JQuery.TriggeredEvent) => {
       this.collectionBtnTargets.forEach(_btn => _btn.classList.toggle('active'));
     });
   }

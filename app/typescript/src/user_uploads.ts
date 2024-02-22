@@ -1,24 +1,34 @@
+interface S3DirectPost {
+  url: string;
+  host: string;
+  postData: string;   // JSON string (key, policy, x-amz-credential, x-amz-algorithm, x-amz-date, x-amz-signature)
+}
+
+interface JasnyFileInputContainer extends HTMLDivElement {
+  fileinput: ((options: object) => void) & ((action: string) => void)
+}
+
 type AdImageType = 'SquareImage' | 'LandscapeImage' | 'SquareLogo' | 'LandscapeLogo';
 
 // need to validate input file name
 // http://stackoverflow.com/questions/22387874/jquery-validate-plugin-bootstrap-jasny-bootstrap-file-input-regex-validation
-export function initS3Upload($form?: JQuery<HTMLFormElement>, $input?: JQuery<HTMLInputElement>) {
+export function initS3Upload($form?: JQuery<HTMLFormElement, any>, $input?: JQuery<HTMLInputElement, any>) {
   // console.log('initS3Upload()...', $form, $input)
   if ($form && $input) {
     initS3FileInput($input, $form.data('s3'), $form.data('assetHost'));
   } else if ($form) {
-    $form.find('input:file').each((i, input) => {
-      initS3FileInput($(input) as JQuery<HTMLInputElement>, $form.data('s3'), $form.data('assetHost'))
+    $form.find('input:file').each((i: number, input: HTMLInputElement) => {
+      initS3FileInput($(input), $form.data('s3'), $form.data('assetHost'))
     });
   } else {
-    $('form.directUpload:not(#gads-form)').each((i, form) => {
-      $(form).find('input:file').each((j, input) => {
+    $('form.directUpload:not(#gads-form)').each((i: number, form: HTMLFormElement) => {
+      $(form).find('input:file').each((j: number, input: HTMLInputElement) => {
         /**
          *  summernote's native file input seems to be ignored when selecting a file, so a buffer
          *  is used instead. When drag-dropping, the file gets uploaded multiple times - see note below
          */
         if ($(input).is('.note-image-input')) return false;
-        initS3FileInput($(input) as JQuery<HTMLInputElement>, $(form).data('s3'), $(form).data('assetHost'))
+        initS3FileInput($(input), $(form).data('s3'), $(form).data('assetHost'))
       });
     });
   }
@@ -30,14 +40,14 @@ export const imageValidatorOptions: ValidatorOptions = {
   custom: {
     'max-file-size': validateFileSize,
     'min-dimensions': validateImageDimensions,
-    'required-image': function ($fileInput: JQuery<HTMLInputElement>) {
+    'required-image': function ($fileInput: JQuery<HTMLInputElement, any>) {
       // console.log('checking for required image (skipping)...', $fileInput)
     }
   }
 }
 
-function initS3FileInput($fileInput: JQuery<HTMLInputElement>, s3: S3DirectPost, assetHost?: string): void {
-  const $formGroup = $fileInput.closest('.form-group') as unknown as JQuery<HTMLDivElement>;
+function initS3FileInput($fileInput: JQuery<HTMLInputElement, any>, s3: S3DirectPost, assetHost?: string): void {
+  const $formGroup = $fileInput.closest('.form-group') as unknown as JQuery<HTMLDivElement, any>;
   $fileInput.fileupload({
     fileInput: $fileInput,
     type: 'POST',
@@ -145,7 +155,7 @@ function imageDidPersist(img: HTMLImageElement): boolean {
   return Boolean(src && src.includes('http'));
 }
 
-function setCardClassName($imageCard: JQuery<HTMLLIElement>, imageType: AdImageType | '') {
+function setCardClassName($imageCard: JQuery<HTMLLIElement, any>, imageType: AdImageType | '') {
   // console.log(`setCardClassName(${type})`, $imageCard.prop('class'))
   const typeMatch = imageType ? imageType.match(/Square|Landscape/) : null;
   const typeClassName = typeMatch ? `$&--${typeMatch[0].toLowerCase()}` : '';
@@ -159,7 +169,7 @@ function setCardClassName($imageCard: JQuery<HTMLLIElement>, imageType: AdImageT
 };
 
 // http://stackoverflow.com/questions/39488774
-function validateFileSize($fileInput: JQuery<HTMLInputElement>): string | undefined {
+function validateFileSize($fileInput: JQuery<HTMLInputElement, any>): string | undefined {
   console.log('validating file size...')
   if ($fileInput.prop('files')[0].size > $fileInput.data('maxFileSize')) {
     return 'Image file size is too big';
@@ -167,13 +177,13 @@ function validateFileSize($fileInput: JQuery<HTMLInputElement>): string | undefi
 }
 
 // only want to validate new images => a url indicates an existing image
-function validateImageDimensions($fileInput: JQuery<HTMLInputElement>): string | undefined {
+function validateImageDimensions($fileInput: JQuery<HTMLInputElement, any>): string | undefined {
   // console.log('validating image dimensions...')
 
   const img = $fileInput.closest('.form-group').find('img')[0];
   if (imageDidPersist(img)) return;
 
-  const $imageCard = ($fileInput.closest('.ad-image-card') as unknown) as JQuery<HTMLLIElement>;
+  const $imageCard = ($fileInput.closest('.ad-image-card') as unknown) as JQuery<HTMLLIElement, any>;
   const collection: 'images' | 'logos' = $fileInput.data('collection');
   const width = img.naturalWidth;
   const height = img.naturalHeight;

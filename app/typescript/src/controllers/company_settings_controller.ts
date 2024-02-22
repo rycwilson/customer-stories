@@ -20,7 +20,7 @@ export default class CompanySettingsController extends Controller<HTMLDivElement
   
   addTabListeners() {
     this.tabTargets.forEach(tab => {
-      $(tab).on('show.bs.tab', (e) => {
+      $(tab).on('show.bs.tab', (e: JQuery.TriggeredEvent) => {
         const tabHash = e.target.hash;
         // debugger;
         window.addEventListener('scroll', (e) => { window.scrollTo(0, 0) }, { once: true });

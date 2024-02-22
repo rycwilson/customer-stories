@@ -31,12 +31,12 @@ export default class SummernoteController extends Controller<HTMLDivElement> {
   declare configFactory: ConfigFactory | undefined;
   
   [key: string]: any; // allow computed property names
-  declare $codable: JQuery<HTMLTextAreaElement>
-  declare $editable: JQuery<HTMLDivElement>
-  declare $editingArea: JQuery<HTMLDivElement>
-  declare $editor: JQuery<HTMLDivElement>
-  declare $statusbar: JQuery<HTMLDivElement>
-  declare $toolbar: JQuery<HTMLDivElement>
+  declare $codable: JQuery<HTMLTextAreaElement, any>
+  declare $editable: JQuery<HTMLDivElement, any>
+  declare $editingArea: JQuery<HTMLDivElement, any>
+  declare $editor: JQuery<HTMLDivElement, any>
+  declare $statusbar: JQuery<HTMLDivElement, any>
+  declare $toolbar: JQuery<HTMLDivElement, any>
 
   connect() {
     // console.log('connect summernote')

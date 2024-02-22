@@ -95,12 +95,12 @@ export function summernoteConfig(
       // without this, insertion of a new line doesn't trigger input; critical for inserting placeholders
       onInit: (
         { codable: $codable, editable: $editable, editingArea: $editingArea, editor: $editor, statusbar: $statusbar, toolbar: $toolbar }: 
-        { codable: JQuery<HTMLTextAreaElement>, 
-          editable: JQuery<HTMLDivElement>, 
-          editingArea: JQuery<HTMLDivElement>, 
-          editor: JQuery<HTMLDivElement>, 
-          statusbar: JQuery<HTMLDivElement>, 
-          toolbar: JQuery<HTMLDivElement> }
+        { codable: JQuery<HTMLTextAreaElement, any>, 
+          editable: JQuery<HTMLDivElement, any>, 
+          editingArea: JQuery<HTMLDivElement, any>, 
+          editor: JQuery<HTMLDivElement, any>, 
+          statusbar: JQuery<HTMLDivElement, any>, 
+          toolbar: JQuery<HTMLDivElement, any> }
       ) => {
         // console.log('summernote', summernote)
         const { codable, editable, editingArea, editor, statusbar, toolbar }: {
@@ -312,8 +312,8 @@ function initDropdown(
     ui.dropdown({
       className: `summernote-custom dropdown-menu-right ${type}`,
       contents: dropdownTemplate(type, contributions, questions),
-      callback: ($dropdown: JQuery) => {
-        $dropdown.find('a').each((i, link) => {
+      callback: ($dropdown: JQuery<HTMLUListElement, any>) => {
+        $dropdown.find('a').each((i: number, link: HTMLAnchorElement) => {
           link.setAttribute('data-action', 'win-story#pasteContributionOrPlaceholder')
         });
       }

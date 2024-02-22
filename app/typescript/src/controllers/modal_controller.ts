@@ -1,11 +1,12 @@
 import { Controller } from '@hotwired/stimulus';
 import { initS3Upload } from '../user_uploads';
+import type { FrameElement } from '@hotwired/turbo'
 
 export default class ModalController extends Controller<HTMLDivElement> {
   static targets = ['title', 'body', 'turboFrame', 'form', 'footer', 'dismissBtn', 'submitBtn'];
   declare readonly titleTarget: HTMLHeadingElement;
   declare readonly bodyTarget: HTMLDivElement;
-  declare readonly turboFrameTarget: HTMLElement & TurboFrameAttributes;
+  declare readonly turboFrameTarget: FrameElement;
   declare readonly hasTurboFrameTarget: boolean;
   declare readonly formTarget: HTMLFormElement;
   declare readonly hasFormTarget: boolean;
@@ -66,7 +67,7 @@ export default class ModalController extends Controller<HTMLDivElement> {
     if (this.hasFormTarget) {
       this.formTarget.addEventListener('ajax:success', this.ajaxSuccessHandler);
       if (this.turboFrameTarget.id.includes('edit-customer')) {
-        initS3Upload($(this.formTarget) as JQuery<HTMLFormElement>);
+        initS3Upload($(this.formTarget));
       }
     } 
   }
