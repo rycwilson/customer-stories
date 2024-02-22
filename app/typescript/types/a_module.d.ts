@@ -7,12 +7,9 @@ declare global {
   type ResourceName = 'customerWins' | 'contributions' | 'promotedStories';
 
   interface Window {
-    $: JQueryStatic;
-    jQuery: JQueryStatic;
+    $: object;
+    jQuery: object;
     Stimulus: object;
-    // DataTable: object;
-    TomSelect: object;
-    ContributionController: typeof ContributionController;
   }
   
   interface CustomerStoriesApp {
@@ -70,10 +67,6 @@ declare global {
     url: string;
     host: string;
     postData: string;   // JSON string (key, policy, x-amz-credential, x-amz-algorithm, x-amz-date, x-amz-signature)
-  }
-
-  interface HTMLSelectElement {
-    tomselect: TomSelect;
   }
 
   interface JasnyFileInputContainer extends HTMLDivElement {
