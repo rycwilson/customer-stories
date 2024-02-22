@@ -1,6 +1,6 @@
 import FormController from './form_controller';
 import ResourceController from './resource_controller';
-import type { TomselectOption, TomselectOptions } from '../tomselect';
+import { type TomInput, TomOption } from 'tom-select/dist/types/types';
 
 export default class ContributionFormController extends FormController {
   static outlets = ['resource'];
@@ -10,14 +10,14 @@ export default class ContributionFormController extends FormController {
     'customerSelect', 'customerField', 'customerId', 'customerName', 'customerWinSelect', 'successCustomerId', 
     'contributorSelect', 'referrerSelect', 'contributorFields', 'referrerFields'
   ];
-  declare readonly customerSelectTarget: HTMLSelectElement;
+  declare readonly customerSelectTarget: TomInput;
   declare readonly customerFieldTargets: HTMLInputElement[];
   declare readonly customerIdTarget: HTMLInputElement;
   declare readonly customerNameTarget: HTMLInputElement;
-  declare readonly customerWinSelectTarget: HTMLSelectElement;
+  declare readonly customerWinSelectTarget: TomInput;
   declare readonly successCustomerIdTarget: HTMLInputElement;
-  declare readonly contributorSelectTarget: HTMLSelectElement;
-  declare readonly referrerSelectTarget: HTMLSelectElement;
+  declare readonly contributorSelectTarget: TomInput;
+  declare readonly referrerSelectTarget: TomInput;
   declare readonly contributorFieldsTarget: HTMLDivElement;
   declare readonly referrerFieldsTarget: HTMLDivElement;
 
@@ -46,8 +46,7 @@ export default class ContributionFormController extends FormController {
     return this.resourceOutlets.find(outlet => outlet.resourceName === 'contributions');
   }
 
-  onChangeCustomer({ target: select }: { target: EventTarget }) {
-    if (!(select instanceof HTMLSelectElement)) return;
+  onChangeCustomer({ target: select }: { target: TomInput }) {
     const customerVal = select.value;
     const customerId = isNaN(+customerVal) ? null : customerVal;
     const customerWinWasSelected = (
@@ -57,49 +56,46 @@ export default class ContributionFormController extends FormController {
     this.customerFieldTargets.forEach(field => field.disabled = Boolean(customerId));
     if (customerId) {
       this.setCustomerCustomerWinIds(customerId);
-      this.customerWinSelectTarget.tomselect.clear();
+      this.customerWinSelectTarget.tomselect!.clear();
     } else {
       this.customerIdTarget.value = '';
       this.customerNameTarget.value = customerVal;
-      if (customerWinWasSelected) this.customerWinSelectTarget.tomselect.clear();
+      if (customerWinWasSelected) this.customerWinSelectTarget.tomselect!.clear();
     }
   }
 
-  onChangeCustomerWin(e: Event) {
+  onChangeCustomerWin({ target: select }: { target: TomInput }) {
     if (
       !(this.customerWinsCtrl instanceof ResourceController) ||
-      !(this.contributorsCtrl instanceof ResourceController) ||
-      !(e.target instanceof HTMLSelectElement)
+      !(this.contributorsCtrl instanceof ResourceController)
     ) return;
-    const select = e.target;
     const customerWinId = +select.value;
     const customerWin = this.customerWinsCtrl.dt.column('success:name').data().toArray()
       .find((customerWin: CustomerWin) => customerWin.id === customerWinId);
     const customerWinContributorIds: number[] = customerWin && this.contributorsCtrl.dt.data().toArray()
       .filter((contribution: Contribution) => contribution.success?.id === customerWin.id)
       .map((contribution: Contribution) => contribution.contributor?.id);
-    const tsOptions: TomselectOptions = this.contributorSelectTarget.tomselect.options;
+    const tsOptions = this.contributorSelectTarget.tomselect!.options;
     if (customerWin) {
-      this.customerSelectTarget.tomselect.setValue(customerWin.customerId, true);
+      this.customerSelectTarget.tomselect!.setValue(customerWin.customerId, true);
       this.setCustomerCustomerWinIds(customerWin.customerId);
 
       // disable contributor option for any contributors that already have a contribution for the customer win
       customerWinContributorIds.forEach(contributorId => {
-        this.contributorSelectTarget.tomselect.updateOption(
-          contributorId, { value: contributorId, text: tsOptions[contributorId].text, disabled: true  }
+        this.contributorSelectTarget.tomselect!.updateOption(
+          contributorId.toString(), { value: contributorId, text: tsOptions[contributorId].text, disabled: true  }
         );
       });
     } else {
-      Object.entries(tsOptions).forEach(([value, option]: [string, TomselectOption]) => {
+      Object.entries(tsOptions).forEach(([value, option]) => {
         if (option.disabled) {
-          this.contributorSelectTarget.tomselect.updateOption(value, { value, text: option.text, disabled: false });
+          this.contributorSelectTarget.tomselect!.updateOption(value, { value, text: option.text, disabled: false });
         }
       });
     }
   }
 
-  onChangeContact({ target: select }: { target: EventTarget }) {
-    if (!(select instanceof HTMLSelectElement)) return;
+  onChangeContact({ target: select }: { target: TomInput }) {
     const isNewContact = select.value === '0';
     const contactFields = select === this.contributorSelectTarget ? 
       this.contributorFieldsTarget : 
@@ -113,8 +109,8 @@ export default class ContributionFormController extends FormController {
 
   filterCustomerWins(e: Event) {
     if (this.customerWinsWereFiltered) return false;
-    Object.keys(this.customerWinSelectTarget.tomselect.options).forEach(customerWinId => {
-      const tsOption = this.customerWinSelectTarget.tomselect.getOption(customerWinId);
+    Object.keys(this.customerWinSelectTarget.tomselect!.options).forEach(customerWinId => {
+      const tsOption = this.customerWinSelectTarget.tomselect!.getOption(customerWinId) as TomOption;
       const shouldHide = this.customerCustomerWinIds.length && !this.customerCustomerWinIds.includes(+customerWinId);
       tsOption.classList.toggle('hidden', shouldHide);
     });

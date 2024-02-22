@@ -9,6 +9,7 @@ import {
 import { tableConfig as customerWinsTableConfig, newCustomerWinPath } from '../customer_wins/customer_wins';
 import { tableConfig as contributorsTableConfig, newContributionPath } from '../contributions/contributions';
 import { tableConfig as promotedStoriesTableConfig } from '../promoted_stories/promoted_stories';
+import { type TomInput } from 'tom-select/dist/types/types';
 import type { Api, Config } from "datatables.net-bs";
 import 'datatables.net-rowgroup-bs';
 
@@ -19,8 +20,8 @@ export default class ResourceController extends Controller<HTMLDivElement> {
   declare readonly hasResourceOutlet: boolean;
 
   static targets = ['curatorSelect', 'filterSelect', 'filterResults', 'datatable', 'newItemBtn', 'tableDisplayOptionsBtn'];
-  declare readonly curatorSelectTarget: HTMLSelectElement;
-  declare readonly filterSelectTarget: HTMLSelectElement;
+  declare readonly curatorSelectTarget: TomInput;
+  declare readonly filterSelectTarget: TomInput;
   declare readonly filterResultsTarget: HTMLDivElement;
   declare readonly datatableTarget: HTMLDivElement;
   declare readonly newItemBtnTarget: HTMLButtonElement;

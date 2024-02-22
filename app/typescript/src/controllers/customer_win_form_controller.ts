@@ -1,6 +1,7 @@
 import FormController from './form_controller';
 import ModalController from './modal_controller';
 import { capitalize } from '../utils';
+import { type TomInput } from 'tom-select/dist/types/types';
 
 export default class CustomerWinFormController extends FormController {
   [key: string]: any;
@@ -22,10 +23,10 @@ export default class CustomerWinFormController extends FormController {
   declare readonly successCustomerIdTarget: HTMLInputElement;
   declare readonly customerFieldTargets: HTMLInputElement[];
   declare readonly customerNameTarget: HTMLInputElement;
-  declare readonly referrerSelectTarget: HTMLSelectElement;
+  declare readonly referrerSelectTarget: TomInput;
   declare readonly referrerFieldsTarget: HTMLDivElement;
   declare readonly referrerFieldTargets: HTMLInputElement[];
-  declare readonly contributorSelectTarget: HTMLSelectElement;
+  declare readonly contributorSelectTarget: TomInput;
   declare readonly contributorFieldsTarget: HTMLDivElement;
   declare readonly contributorFieldTargets: HTMLInputElement[];
 
@@ -39,8 +40,7 @@ export default class CustomerWinFormController extends FormController {
     // TODO: reset validation for whichever panel was hidden
   }
 
-  onChangeCustomer({ target: select }: { target: EventTarget }) {
-    if (!(select instanceof HTMLSelectElement)) return;
+  onChangeCustomer({ target: select }: { target: TomInput }) {
     const customerVal = select.value;
     const customerId = isNaN(+customerVal) ? null : customerVal;
     this.successCustomerIdTarget.disabled = !customerId
@@ -48,14 +48,13 @@ export default class CustomerWinFormController extends FormController {
     if (!customerId) this.customerNameTarget.value = customerVal;
   }
 
-  onChangeContact({ target: select }: { target: EventTarget }) {
-    if (!(select instanceof HTMLSelectElement)) return;
+  onChangeContact({ target: select }: { target: TomInput }) {
     const contactType = select.dataset.tomselectTypeValue as 'referrer' | 'contributor';
     const isNewContact = select.value === '0';
     const isExistingContact = select.value && !isNewContact;
 
     // enable/disable submission via the [name] attribute => precludes ui changes
-    select.name = select.value && !isNewContact ? select.dataset.fieldName as string : '';
+    select.setAttribute('name', select.value && !isNewContact ? select.dataset.fieldName as string : '');
     this[`${contactType}FieldTargets`].forEach(input => {
       if (!input.name.includes('success_contact')) input.value = '';
       input.disabled = input.name.includes('success_contact') ? (!isExistingContact && !isNewContact) : !isNewContact;
@@ -69,8 +68,7 @@ export default class CustomerWinFormController extends FormController {
     }
   }
 
-  onChangeCustomerContact({ target: select }: { target: EventTarget }) {
-    if (!(select instanceof HTMLSelectElement)) return;
+  onChangeCustomerContact({ target: select }: { target: TomInput }) {
     this.customerContactBoolFieldTarget.disabled = !select.value;
   }
 }

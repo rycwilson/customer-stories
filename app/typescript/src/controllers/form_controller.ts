@@ -1,8 +1,9 @@
 import { Controller } from '@hotwired/stimulus';
+import { type TomInput } from 'tom-select/dist/types/types';
 
 export default class FormController extends Controller<HTMLFormElement> {
   static targets = ['requiredField'];
-  declare readonly requiredFieldTargets: [HTMLSelectElement | HTMLInputElement];
+  declare readonly requiredFieldTargets: [TomInput | HTMLInputElement];
 
   connect() {
     // console.log('connect form')
@@ -31,7 +32,7 @@ export default class FormController extends Controller<HTMLFormElement> {
 
   removeErrorsOnValidInput() {
     const removeError = (e: Event) => {
-      const field = e.target as HTMLSelectElement | HTMLInputElement;
+      const field = e.target as TomInput | HTMLInputElement;
       if (field.value.trim()) {
         (field.closest('.form-group') as HTMLDivElement).classList.remove('has-error');
       }

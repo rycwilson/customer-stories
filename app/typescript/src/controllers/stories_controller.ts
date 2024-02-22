@@ -2,6 +2,7 @@ import { Controller } from '@hotwired/stimulus';
 import { type FrameElement } from '@hotwired/turbo';
 import Cookies from 'js-cookie';
 import imagesLoaded from 'imagesloaded';
+import { type TomInput } from 'tom-select/dist/types/types';
 
 export default class extends Controller<HTMLDivElement> {
   static targets = [
@@ -25,7 +26,7 @@ export default class extends Controller<HTMLDivElement> {
   declare readonly searchResultsTarget: HTMLSpanElement;
   declare readonly filterResultsTarget: HTMLSpanElement;
   declare readonly matchTypeInputTargets: HTMLInputElement[];
-  declare readonly filterSelectTargets: HTMLSelectElement[];
+  declare readonly filterSelectTargets: TomInput[];
   
   readyFilters = 0;
 
@@ -71,7 +72,7 @@ export default class extends Controller<HTMLDivElement> {
   clearFilters(e: CustomEvent | undefined = undefined) {
     if (this.activeFilters.length === 0) return;
     const isUserInput = Boolean(e);
-    this.filterSelectTargets.forEach(select => select.tomselect.clear(true));
+    this.filterSelectTargets.forEach(select => select.tomselect!.clear(true));
     if (isUserInput) {
       this.fetchStories((turboFrameSrc: URL) => {
         this.filterTypes.forEach(param => turboFrameSrc.searchParams.delete(param || ''));

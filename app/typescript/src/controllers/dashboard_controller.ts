@@ -2,6 +2,7 @@ import { Controller } from "@hotwired/stimulus";
 import Cookies from 'js-cookie';
 import ModalController from './modal_controller';
 import { parseDatasetObject } from '../utils';
+import { type TomInput } from 'tom-select/dist/types/types';
 
 // excludes stories#edit, which also renders the dashboard
 enum DashboardTab {
@@ -42,13 +43,13 @@ export default class DashboardController extends Controller<HTMLDivElement> {
   declare readonly customerWinsTarget: HTMLDivElement;
   declare readonly customerWinsTabTarget: HTMLAnchorElement;
   declare readonly addCustomerWinBtnTarget: HTMLButtonElement;
-  declare readonly customerWinsFilterTarget: HTMLSelectElement;
+  declare readonly customerWinsFilterTarget: TomInput;
   declare readonly contributorsTarget: HTMLDivElement;
   declare readonly contributorsTabTarget: HTMLAnchorElement;
   declare readonly addContributorBtnTarget: HTMLButtonElement;
-  declare readonly contributorsFilterTarget: HTMLSelectElement;
+  declare readonly contributorsFilterTarget: TomInput;
   declare readonly promotedStoriesTarget: HTMLDivElement;
-  declare readonly promotedStoriesFilterTarget: HTMLSelectElement;
+  declare readonly promotedStoriesFilterTarget: TomInput;
 
   static values = { activeTab: { type: String, default: '' } };    
   declare activeTabValue: DashboardTab | null;
@@ -146,7 +147,7 @@ export default class DashboardController extends Controller<HTMLDivElement> {
 
   showCustomerWinContributors(customerWinId: string) {
     // console.log(`showCustomerWinContributors(${customerWinId})`)
-    this.contributorsFilterTarget.tomselect.setValue(`success-${customerWinId}`);
+    this.contributorsFilterTarget.tomselect!.setValue(`success-${customerWinId}`);
     $(this.contributorsTabTarget).one('shown.bs.tab', () => scrollTo(0, 65));
     $(this.contributorsTabTarget).tab('show');
       
