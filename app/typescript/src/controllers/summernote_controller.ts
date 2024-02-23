@@ -10,9 +10,7 @@ interface ConfigFactory {
   (ctrl: SummernoteController, height: number, ...args: any): Summernote.Options;
 }
 
-const configFactories: {
-  [editor: string]: ConfigFactory | undefined
-} = {
+const configFactories: { [editor: string]: ConfigFactory | undefined } = {
   'win-story': winStoryConfig,
   'story': undefined,
   'default': undefined
