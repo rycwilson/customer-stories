@@ -56,35 +56,18 @@ td[data-controller="actions-dropdown"] .dropdown-menu {
   }
 
   &.loading > .spinner {
-    transition: opacity 0.25s ease-out;
+    transition: opacity 0.15s ease-out;   // matches bootstrap .fade transition
   }
 
   &.ready {
     > .spinner {
       visibility: hidden;
       opacity: 0;
-      transition: opacity 0.25s ease-in;
+      transition: opacity 0.15s ease-in;
     }
     
     > .container {
-      transition: opacity 0.25s ease-out;
+      transition: opacity 0.15s ease-out;
     }
   } 
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
