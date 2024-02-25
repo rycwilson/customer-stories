@@ -1,8 +1,0 @@
-{
-  "extends": "./tsconfig.json",
-  "compilerOptions": {
-    "rootDir": "app/typescript/test",
-    "noEmit": true
-  },
-  "include": ["app/typescript/test"]
-}
