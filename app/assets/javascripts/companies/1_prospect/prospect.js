@@ -1,5 +1,4 @@
 
-//= require ./filters
 //= require ./new_success
 //= require ./new_contributor
 //= require ./success_child_row
