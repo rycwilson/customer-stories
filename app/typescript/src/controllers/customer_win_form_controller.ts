@@ -31,6 +31,7 @@ export default class CustomerWinFormController extends FormController {
   declare readonly contributorFieldTargets: HTMLInputElement[];
 
   connect() {
+    this.autofillNewContactPasswords();
   }
 
   onChangeSource({ target: input }: { target: EventTarget }) {
@@ -56,7 +57,7 @@ export default class CustomerWinFormController extends FormController {
     // enable/disable submission via the [name] attribute => precludes ui changes
     select.setAttribute('name', select.value && !isNewContact ? select.dataset.fieldName as string : '');
     this[`${contactType}FieldTargets`].forEach(input => {
-      if (!input.name.includes('success_contact')) input.value = '';
+      input.value = /success_contact|sign_up_code/.test(input.name) ? input.value : '';
       input.disabled = input.name.includes('success_contact') ? (!isExistingContact && !isNewContact) : !isNewContact;
       input.required = isNewContact && input.type !== 'hidden';
     });
@@ -70,5 +71,19 @@ export default class CustomerWinFormController extends FormController {
 
   onChangeCustomerContact({ target: select }: { target: TomInput }) {
     this.customerContactBoolFieldTarget.disabled = !select.value;
+  }
+
+  // for newly created contacts, autofill the password with the email
+  autofillNewContactPasswords() {
+    const referrerEmail = <HTMLInputElement>this.referrerFieldTargets.find(input => input.name.includes('email'));
+    const referrerPassword = <HTMLInputElement>this.referrerFieldTargets.find(input => input.name.includes('password'));
+    const contributorEmail = <HTMLInputElement>this.contributorFieldTargets.find(input => input.name.includes('email'));
+    const contributorPassword = <HTMLInputElement>this.contributorFieldTargets.find(input => input.name.includes('password'));
+    [[referrerEmail, referrerPassword], [contributorEmail, contributorPassword]].forEach(([emailInput, passwordInput]) => {
+      emailInput.addEventListener('input', (e) => {
+        const email = (e.currentTarget as HTMLInputElement).value;
+        passwordInput.value = email;
+      });
+    });
   }
 }
