@@ -1,5 +1,5 @@
 import Rails from '@rails/ujs';
-import * as Turbo from "@hotwired/turbo";
+import { start as turboStart } from "@hotwired/turbo";
 import * as turboCallbacks from './turbo_callbacks';
 import './jquery';
 import './bootstrap';
@@ -19,7 +19,7 @@ function appFactory(): CustomerStoriesApp {
     // screenSize: null,
     init() {
       Rails.start();
-      Turbo.start();
+      turboStart();
       document.documentElement.addEventListener('turbo:load', (e) => {
         console.log('turbo:load (once)')
         addAllListeners();

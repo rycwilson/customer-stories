@@ -204,10 +204,9 @@ export default class DashboardController extends Controller<HTMLDivElement> {
     return this.activeTabValue === 'prospect' && this.contributorsTabTarget.getAttribute('aria-expanded') === 'true';
   }
 
-  setNavCookie({ currentTarget: a }: { currentTarget: EventTarget }) {
-    if (!(a instanceof HTMLAnchorElement)) return;
-    const href = a.getAttribute('href') || ''; 
-    if (href) Cookies.set(`csp-${this.activeTabValue || 'story'}-tab`, href);
+  setNavCookie({ currentTarget: link }: { currentTarget: HTMLAnchorElement }) {
+    const href = link.getAttribute('href') as string; 
+    Cookies.set(`csp-${this.activeTabValue || 'story'}-tab`, href);
   }
 
   get activeTabPanel() {
