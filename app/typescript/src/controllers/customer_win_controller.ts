@@ -1,8 +1,10 @@
 import { Controller } from '@hotwired/stimulus';
 import ResourceController from './resource_controller.js';
 import ModalController from './modal_controller.js';
+import { visit as turboVisit } from '@hotwired/turbo';
 import { editCustomerWinPath } from '../customer_wins/customer_wins.js';
 import { childRowPlaceholderTemplate } from '../customer_wins/win_story.js';
+import Cookies from 'js-cookie';
 
 export default class CustomerWinController extends Controller<HTMLTableRowElement> {
   static outlets = ['resource', 'modal'];
@@ -19,17 +21,18 @@ export default class CustomerWinController extends Controller<HTMLTableRowElemen
   declare readonly childRowTurboFrameAttrsValue: { id: string, src: string };
   declare readonly rowDataValue: { [key: string]: any };
 
-  id: number | undefined = undefined;
-  status: string | undefined = undefined;
-  curator: User | undefined = undefined;
-  customer: Customer | undefined = undefined;
-  story: Story | undefined = undefined;      
-  contributionsHtml: string | undefined = undefined;          
-  winStoryFormEl: HTMLFormElement | undefined = undefined;
+  declare id: number;
+  declare status: string;
+  declare curator: User;
+  declare customer: Customer;
+  declare story: Story | undefined;      
+
+  declare contributionsHtml: string | undefined;          
+  declare winStoryFormEl: HTMLFormElement | undefined;
 
   connect() {
     // console.log('connect customer win')
-    Object.keys(this.rowDataValue).forEach((key): void => {
+    Object.keys(this.rowDataValue).forEach(key => {
       const field: keyof this['rowDataValue'] = key;
       this[field] = this.rowDataValue[key];
     });
@@ -49,12 +52,18 @@ export default class CustomerWinController extends Controller<HTMLTableRowElemen
     return this.childRowTurboFrameAttrsValue.id && this.childRowTurboFrameAttrsValue.src;
   }
 
-  storyExists() {
+  get storyExists() {
     return Boolean(this.story);
   }
 
-  editStoryPath() {
-    return this.storyExists() && `/curate/${this.customer?.slug}/${this.story?.slug}`;
+  get editStoryPath() {
+    return this.story?.slug ? `/stories/${this.story.slug}/edit` : undefined;
+  }
+
+  editStory({ currentTarget: link }: { currentTarget: HTMLAnchorElement }) {
+    if (!this.editStoryPath) return false;
+    Cookies.set(`csp-story-tab`, `#${link.dataset.storyTab}`);
+    turboVisit(this.editStoryPath);
   }
 
   toggleChildRow() {
@@ -184,16 +193,16 @@ export default class CustomerWinController extends Controller<HTMLTableRowElemen
           ` : 
           ''
         }
-        ${this.storyExists() ? 
+        ${this.storyExists ? 
             [['story-settings', 'fa-gear'], ['story-content', 'fa-edit'], ['story-contributors', 'fa-users']]
-              .map(([className, icon]) => {
+              .map(([tab, icon]) => {
                 const section = (
-                  className[className.indexOf('-') + 1].toUpperCase() + 
-                  className.slice(className.indexOf('-') + 2, className.length)
+                  tab[tab.indexOf('-') + 1].toUpperCase() + 
+                  tab.slice(tab.indexOf('-') + 2, tab.length)
                 )
                 return `
-                  <li class="${className}">
-                    <a href="${this.editStoryPath}">
+                  <li class="${tab}">
+                    <a href="javascript:;" data-action="customer-win#editStory" data-story-tab="${tab}">
                       <i class="fa ${icon} fa-fw action"></i>&nbsp;&nbsp;
                       <span>Customer Story ${section}</span>
                     </a>
@@ -202,7 +211,7 @@ export default class CustomerWinController extends Controller<HTMLTableRowElemen
               }).join('') : `
             <li>
               <a href="javascript:;" 
-                data-action="click->dashboard#${action.toLowerCase() || 'show'}CustomerWinContributors" 
+                data-action="dashboard#${action.toLowerCase() || 'show'}CustomerWinContributors" 
                 data-customer-win-id="${this.id}"
                 data-turbo-frame-attrs=${JSON.stringify(turboFrameAttrs) || ''}>
                 <i class="fa fa-users fa-fw action"></i>&nbsp;&nbsp;
