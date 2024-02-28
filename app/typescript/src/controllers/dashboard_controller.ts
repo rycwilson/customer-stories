@@ -103,8 +103,7 @@ export default class DashboardController extends Controller<HTMLDivElement> {
     return true;
   }
 
-  onTabClick({ target: tab }: { target: EventTarget }) {
-    if (!(tab instanceof HTMLAnchorElement)) return;
+  onTabClick({ currentTarget: tab }: { currentTarget: HTMLAnchorElement }) {
     const tabName = tab.getAttribute('aria-controls');
     if (tabName) {
       if (Object.values<string>(DashboardTab).includes(tabName)) {
@@ -120,30 +119,28 @@ export default class DashboardController extends Controller<HTMLDivElement> {
     this.initTabPanel(activeTab);
   }
 
-  addCustomerWinContributors({ target: a }: { target: EventTarget }) {
-    if (!(a instanceof HTMLAnchorElement)) return;
+  addCustomerWinContributors({ currentTarget: link }: { currentTarget: HTMLAnchorElement }) {
     const showModal = () => {
-      const turboFrameAttrs: TurboFrameAttributes | null = parseDatasetObject(a, 'turboFrameAttrs', 'id', 'src');
+      const turboFrameAttrs: TurboFrameAttributes | null = parseDatasetObject(link, 'turboFrameAttrs', 'id', 'src');
       if (turboFrameAttrs) {
         this.modalOutlet.titleValue = 'New Contributor';
         this.modalOutlet.turboFrameAttrsValue = turboFrameAttrs;
         this.modalOutlet.show();
       }
     };
-    if (this.showingCustomerWins()) {
-      const customerWinId: string = a.dataset.customerWinId || '';
-      if (!customerWinId) {
-        console.error("Unknown CustomerWin") 
-        return;
-      }
+    if (this.showingCustomerWins) {
+      const customerWinId = link.dataset.customerWinId || '';
       $(this.contributorsTabTarget).one('shown.bs.tab', showModal);
       this.showCustomerWinContributors(customerWinId);
-    } else if (this.showingContributors()) {
+    } else if (this.showingContributors) {
       showModal();
     }
   }
 
-  // inviteCustomerWinContributors({ target: dataset})
+  inviteCustomerWinContributors({ currentTarget: link }: { currentTarget: HTMLAnchorElement }) {
+    const customerWinId = link.dataset.customerWinId || '';
+    this.showCustomerWinContributors(customerWinId);
+  }
 
   showCustomerWinContributors(customerWinId: string) {
     // console.log(`showCustomerWinContributors(${customerWinId})`)
@@ -196,12 +193,18 @@ export default class DashboardController extends Controller<HTMLDivElement> {
     return this.tabPanelTargets.find(panel => panel.id === panelId) as HTMLDivElement;
   }
 
-  showingCustomerWins() {
-    return this.activeTabValue === 'prospect' && this.customerWinsTabTarget.getAttribute('aria-expanded') === 'true';
+  get showingCustomerWins() {
+    return (
+      this.activeTabValue === DashboardTab.Prospect && 
+      this.customerWinsTabTarget.getAttribute('aria-expanded') === 'true'
+    );
   }
 
-  showingContributors() {
-    return this.activeTabValue === 'prospect' && this.contributorsTabTarget.getAttribute('aria-expanded') === 'true';
+  get showingContributors() {
+    return (
+      this.activeTabValue === DashboardTab.Prospect && 
+      this.contributorsTabTarget.getAttribute('aria-expanded') === 'true'
+    );
   }
 
   setNavCookie({ currentTarget: link }: { currentTarget: HTMLAnchorElement }) {

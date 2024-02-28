@@ -1,13 +1,13 @@
 .new-contact.hidden { 
   data-customer-win-form-target=("#{contact_type}Fields" if form == 'new-success')
-  data-contribution-form-target=("#{contact_type}Fields" if form == 'new-contributor')
+  data-contribution-form-target=("#{contact_type}Fields" if form == 'new-contribution')
   class="#{form} create-#{contact_type}" }
 
-  = parent_fields.fields_for( \
+  = parent_form_or_fields.fields_for( \
       contact_type.to_sym,
       contact_type == 'referrer' ? \
-        parent_fields.object.build_referrer : \
-        parent_fields.object.build_contributor) do |user_fields|
+        parent_form_or_fields.object.build_referrer : \
+        parent_form_or_fields.object.build_contributor) do |user_fields|
 
     = user_fields.hidden_field( \
         :id,

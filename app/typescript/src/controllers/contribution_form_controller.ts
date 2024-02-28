@@ -120,7 +120,7 @@ export default class ContributionFormController extends FormController {
   setCustomerCustomerWinIds(customerId = this.customerSelectTarget.value) {
     if (customerId) {
       if (!(this.customerWinsCtrl instanceof ResourceController)) return;
-      this.customerCustomerWinIds = this.customerWinsCtrl.dt.column('success:name').data().toArray()
+      this.customerCustomerWinIds = this.customerWinsCtrl.dt.rows().data().toArray()
         .filter((customerWin: CustomerWin) => customerWin.customer.id === +customerId)
         .map((customerWin: CustomerWin) => customerWin.id)
     }

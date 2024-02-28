@@ -27,7 +27,7 @@
         = customer_fields.hidden_field(:name, data: { contribution_form_target: 'customerName customerField' })
         = customer_fields.hidden_field(:company_id, value: @company.id, data: { contribution_form_target: 'customerField' })
 
-      .form-group.customer.required-input
+      .form-group.required
         = success_fields.label(:customer_id, 'Customer', class: 'col-sm-3 control-label')
         .col-sm-9
           = success_fields.collection_select( \
@@ -48,18 +48,17 @@
                   contribution_form_target: 'customerSelect' } })
           span.help-block Required
 
-      .form-group.success.required-input data-action="tomselect:dropdown-did-open->contribution-form#filterCustomerWins"
+      .form-group.required data-action="tomselect:dropdown-did-open->contribution-form#filterCustomerWins"
         = form.label(:success_id, 'Customer Win', class: 'col-sm-3 control-label')
         .col-sm-9
           = form.collection_select( \
               :success_id,
-              @company.successes.sort_by { |s| s.name },
+              @company.successes.sort_by { |success| success.name },
               :id,
               :name,
               { include_blank: true },
               { class: 'new-contributor success form-control',
                 placeholder: 'Select or Create',
-                style: 'width:100%',
                 required: true,
                 data: { \
                   controller: 'tomselect',
@@ -69,7 +68,7 @@
                   action: 'contribution-form#onChangeCustomerWin' } })
           span.help-block Required
 
-      .form-group.contributor.required-input
+      .form-group.required
         = form.label(:contributor_id, 'Contributor', class: 'col-sm-3 control-label')
         .col-sm-9
           = form.collection_select( \
@@ -84,20 +83,23 @@
                 disabled: @success ? @success.contributors.map { |contributor| contributor.id } : [] },
               { class: 'new-contributor contributor form-control',
                 placeholder: 'Select or Create',
-                style: 'width:100%',
                 required: true,
                 data: { \
                   controller: 'tomselect',
                   tomselect_type_value: 'Contributor',
                   contribution_form_target: 'contributorSelect',
                   action: 'contribution-form#onChangeContact' } })
-          span.help-block Required
+          span.help-block 
+            | Required
 
       = render( \
-        'companies/shared/create_contact', 
-        { form: 'new-contributor', contribution_form: form, contact_type: 'contributor' })
+          'companies/shared/create_contact', 
+          { form: 'new-contribution', 
+            parent_form_or_fields: form, 
+            contact_type: 'contributor',
+            input_data_attrs: { contribution_form_target: "contributorField" } })
 
-      .form-group.invitation-template
+      .form-group
         = form.label(:invitation_template_id, 'Invitation Template', class: 'col-sm-3 control-label')
         .col-sm-9
           = form.collection_select( \
@@ -108,12 +110,11 @@
               { include_blank: true },
               { class: 'new-contributor invitation-template form-control',
                 placeholder: 'Select',
-                style: 'width:100%',
                 data: { \
                   controller: 'tomselect',
                   tomselect_type_value: InvitationTemplate.name } })
 
-      .form-group.referrer
+      .form-group
         = form.label(:referrer_id, 'Referred by', class: 'col-sm-3 control-label')
         .col-sm-9
           = form.collection_select( \
@@ -126,7 +127,6 @@
               { include_blank: true },
               { class: 'new-contributor referrer form-control',
                 placeholder: 'Select or Create',
-                style: 'width:100%',
                 data: { \
                   controller: 'tomselect',
                   tomselect_type_value: 'Referrer',
@@ -135,4 +135,7 @@
 
       = render( \
           'companies/shared/create_contact',
-          { form: 'new-contributor', contribution_form: form, contact_type: 'referrer' })
+          { form: 'new-contribution', 
+            parent_form_or_fields: form, 
+            contact_type: 'referrer',
+            input_data_attrs: { contribution_form_target: "referrerField" } })

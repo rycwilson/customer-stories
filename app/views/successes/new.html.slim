@@ -111,10 +111,11 @@
                   customer_win_form_target: 'referrerSelect',
                   action: 'customer-win-form#onChangeContact',
                   field_name: "#{contribution_fields.object_name}[referrer_id]" } })
+                  
       = render( \
           'companies/shared/create_contact',
           { form: 'new-success', 
-            parent_fields: contribution_fields, 
+            parent_form_or_fields: contribution_fields, 
             contact_type: 'referrer',
             input_data_attrs: { customer_win_form_target: "referrerField" } })
 
@@ -144,10 +145,11 @@
                   customer_win_form_target: 'contributorSelect',
                   action: 'customer-win-form#onChangeContact',
                   field_name: "#{contribution_fields.object_name}[contributor_id]" } })
+
       = render( \
           'companies/shared/create_contact', 
           { form: 'new-success', 
-            parent_fields: contribution_fields, 
+            parent_form_or_fields: contribution_fields, 
             contact_type: 'contributor',
             input_data_attrs: { customer_win_form_target: "contributorField" } })
 
