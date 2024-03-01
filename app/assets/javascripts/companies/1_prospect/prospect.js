@@ -66,37 +66,6 @@ function prospectListeners () {
 
   $(document)
 
-    // when linking to correspoding success or story, don't sort by row group
-    .on('click', '#prospect-contributors-table a.success', function (e) {
-      e.stopPropagation();
-      var successId = $(this).closest('tr').next().data('success-id');
-      $('a[href="#successes"]').tab('show');
-      $('#successes-filter').val('success-' + successId).trigger('change');
-    })
-    .on('click', '#prospect-contributors-table tr.group a.story', function (e) {
-      e.stopPropagation();
-      Cookies.set('csp-edit-story-tab', '#story-contributors');
-    })
-
-    .on('click', '#prospect .layout-sidebar a', function () {
-      Cookies.set('prospect-tab', $(this).attr('href'));
-    })
-
-    // transition the Add button with the respective tab pane
-    .on(
-      'hide.bs.tab', 
-      'a[href="#successes"], a[href="#prospect-contributors"], a[href="#story-contributors"]', 
-      function () { 
-        $(this).find('.btn-add').removeClass('shown');
-      })
-    .on(
-      'shown.bs.tab', 
-      'a[href="#successes"], a[href="#prospect-contributors"], a[href="#story-contributors"]', 
-      function () {
-        $(this).find('.btn-add').addClass('shown');
-      }
-    )
-
     // the close event happens shortly after blur; to ensure smooth transition...
     .on('blur', 'td.invitation-template', function () {
       var $td = $(this), editor;
@@ -108,11 +77,6 @@ function prospectListeners () {
       editor.one('close', function () {
         $td.removeClass('editor-is-open');
       });
-    })
-
-    .on('click', 'a[href="#prospect-contributors"], a[href="#successes"]', function () {
-      $('#successes-table, #prospect-contributors-table')
-        .find('tr.shown').find('td[class*="-details"]').trigger('click');
     })
 
     .on('click', 'td.invitation-template', function (e) {
@@ -128,19 +92,6 @@ function prospectListeners () {
         openContributorsEditor(curateContributorsEditor, $row);
       }
     })
-
-    
-
-    // no striping for grouped rows, yes striping for ungrouped
-    // manipulate via jquery; insufficient to just change even/odd classes
-    .on('change', '#toggle-group-by-customer, #toggle-group-by-success',
-      function () {
-        if ($(this).is('#toggle-group-by-success')) {
-          toggleStriped($('#prospect-contributors-table'));
-        } else {
-          toggleStriped($('#successes-table'));
-        }
-      })
 
     // successes - order by customer grouping, secondarily by timestamp
     .on('click', '#successes-table tr.group', function () {
@@ -335,41 +286,5 @@ function updateSelectOptions (company, successes) {
     });
   } else {
     // should not get here, only a new success/contributor/story form submission will trigger updateSelectOptions()
-  }
-}
-
-// manipulate table stripes when alternating between row grouping and no row grouping
-function toggleStriped ($table) {
-
-  $table.find('tr.group').toggle();
-  $table.toggleClass('table-striped');
-
-  if ( $table.hasClass('table-striped') ) {
-    $table.find('tr:not(.group)')
-      .each(function (index) {
-        $(this).removeClass('even odd');
-        $(this).addClass(index % 2 === 0 ? 'even' : 'odd');
-        // reset the hover behavior, lest the new background color override bootstrap
-        $(this).hover(
-          function () { $(this).css('background-color', '#f5f5f5'); },
-          function () {
-            $(this).css('background-color', index % 2 === 0 ? '#fff' : '#f9f9f9');
-          }
-        );
-      });
-    $table.find('tr.even:not(.group)').css('background-color', '#fff');
-    $table.find('tr.odd:not(.group)').css('background-color', '#f9f9f9');
-
-  } else {
-    $table.find('tr:not(.group)').css('background-color', '#fff');
-    $table.find('tr:not(.group)')
-      .each(function () {
-        $(this).removeClass('even odd');
-        // reset the hover behavior, lest the new background color override bootstrap
-        $(this).hover(
-          function () { $(this).css('background-color', '#f5f5f5'); },
-          function () { $(this).css('background-color', '#fff'); }
-        );
-      });
   }
 }
