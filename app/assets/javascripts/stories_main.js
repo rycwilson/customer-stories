@@ -14,8 +14,8 @@
   // DOM elements
   let gallery, featuredStories, relatedStories, searchAndFilters, searchForms, filters, matchTypeInputs, searchResults, filterResults;
   
+  const searchParams = new URLSearchParams(location.search);
   const isStoriesGallery = location.pathname === '/';
-  const searchParams = isStoriesGallery ? new URLSearchParams(location.search) : undefined;
   const activeFilters = isStoriesGallery ? {} : undefined;
   
   if (isStoriesGallery) {
