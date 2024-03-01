@@ -3,12 +3,6 @@
 function contributorActionsListeners () {
   $(document)
     .on('click', '[id*="contributors-table"] .view-contribution', showContribution)
-    .on('click', '.contributor-actions .view-success', showSuccess)
-    .on('click', '.contributor-actions [class^="story-"]', (e) => {
-      e.preventDefault();
-      Cookies.set('csp-edit-story-tab', `#${e.currentTarget.classList[0]}`);
-      window.location = e.currentTarget.querySelector('a').href;
-    })
     .on('click', '.contributor-actions .completed', markAsCompleted)
     .on('click', '.contributor-actions .remove', confirmDelete);
 
@@ -29,24 +23,6 @@ function contributorActionsListeners () {
         // setTimeout(() => $(modal).modal('show'));
         $(modal).modal('show')
       })
-  }
-
-  function showSuccess(e) {
-    const successId = e.target.closest('tr').dataset.successId;
-    const $successesFilter = $('#successes-filter')
-    $successesFilter.val(`success-${successId}`).trigger('change');
-      
-    // Why doesn't this work? (Uncaught TypeError: instance[options] is not a function)
-    // $('#successes-filter').select2('focus');
-    $successesFilter.next('.select2').addClass('select2-container--focus');
-    $(document)
-      .one('click', () => $('#successes-filter').next().removeClass('select2-container--focus'))
-      .one('shown.bs.tab', 'a[href="#successes"]', () => {
-        scrollTo(0,0);
-        console.log($('#successes-table').find(`tr[data-success-id="${successId}"]`))
-        $('#successes-table').find(`tr[data-success-id="${successId}"] .toggle-child button`).trigger('click');
-      });
-    $('a[href="#successes"]').tab('show');
   }
 
   function markAsCompleted(e) {
