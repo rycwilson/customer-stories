@@ -2,7 +2,6 @@ import { Controller } from '@hotwired/stimulus';
 import ResourceController from './resource_controller.js';
 import ModalController from './modal_controller.js';
 import { visit as turboVisit } from '@hotwired/turbo';
-import { editCustomerWinPath } from '../customer_wins/customer_wins.js';
 import { childRowPlaceholderTemplate } from '../customer_wins/win_story.js';
 import Cookies from 'js-cookie';
 

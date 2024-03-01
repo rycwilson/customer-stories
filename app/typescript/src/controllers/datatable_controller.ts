@@ -15,8 +15,8 @@ export default class DatatableController extends Controller<HTMLTableElement> {
   declare readonly resourceOutlet: ResourceController;
   declare readonly storiesOutlet: ResourceController;
 
-  static targets = ['row'];   // rowTargets exclude row groups
-  declare readonly rowTargets: HTMLTableRowElement[];
+  // static targets = ['row'];   // rowTargets exclude row groups
+  // declare readonly rowTargets: HTMLTableRowElement[];
 
   static values = { 
     ready: { type: Boolean, default: false },
