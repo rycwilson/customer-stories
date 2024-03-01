@@ -1,6 +1,14 @@
 import { Controller } from "@hotwired/stimulus";
+import ResourceController from './resource_controller';
+import ModalController from './modal_controller';
+import { visit as turboVisit } from '@hotwired/turbo';
+import Cookies from 'js-cookie';
 
 export default class ContributionController extends Controller<HTMLTableRowElement> {
+  static outlets = ['resource', 'modal'];
+  declare readonly resourceOutlet: ResourceController;
+  declare readonly modalOutlet: ModalController;
+
   static targets = ['actionsDropdown'];
   declare readonly actionsDropdownTarget: HTMLTableCellElement;
 
@@ -8,11 +16,11 @@ export default class ContributionController extends Controller<HTMLTableRowEleme
   declare readonly rowDataValue: { [key: string]: any };
   declare readonly workflowStageValue: 'prospect' | 'curate';
 
-  id: number | undefined = undefined;
-  status: string | undefined = undefined;
-  contributor: object | undefined = undefined;
-  invitationTemplate: string | undefined = undefined;
-  customerWin: CustomerWin | undefined = undefined;
+  declare id: number;
+  declare status: string;
+  declare contributor: object;
+  declare invitationTemplate: string;
+  declare customerWin: CustomerWin;
   // contribution;
 
   initialize() {}
@@ -26,37 +34,57 @@ export default class ContributionController extends Controller<HTMLTableRowEleme
     this.actionsDropdownTarget.insertAdjacentHTML('afterbegin', this.actionsDropdownTemplate());
   }
 
-  storyExists() {
+  get storyExists() {
     return Boolean(this.customerWin?.story);
   }
 
-  storyPath() {
-    return this.storyExists() && this.customerWin?.story.csp_story_path;
+  get editStoryPath() {
+    return this.storyExists ? `/stories/${this.customerWin.story.slug}/edit` : undefined;
   }
 
-  editStoryPath() {
-    return this.storyExists() && `/curate/${this.customerWin?.customer.slug}/${this.customerWin?.story.slug}`;
+  get viewStoryDropdownItem() {
+    if (!this.storyExists) return '';
+    return `
+      <li>
+        <a href="${this.customerWin.story.csp_story_path}" data-turbo="false" target="_blank" rel="noopener">
+          <i class="fa fa-search fa-fw action"></i>&nbsp;&nbsp;
+          <span>View Story</span>
+        </a>
+      </li>
+    `;
+  }
+
+  get editStoryDropdownItems() {
+    return [['story-settings', 'fa-gear'], ['story-content', 'fa-edit'], ['story-contributors', 'fa-users']]
+      .map(([tab, icon]) => {
+        const section = tab[tab.indexOf('-') + 1].toUpperCase() + tab.slice(tab.indexOf('-') + 2, tab.length);
+        return `
+          <li class="${tab}">
+            <a href="javascript:;" data-action="dashboard#editStory" data-story-path="${this.editStoryPath}" data-story-tab="${tab}">
+              <i class="fa ${icon} fa-fw action"></i>&nbsp;&nbsp;
+              <span>Customer Story ${section}</span>
+            </a>
+          </li>
+        `;
+      })
+      .join('');
+  }
+
+  get viewCustomerWinDropdownItem() {
+    return `
+      <li class="view-success">
+        <a href="javascript:;"}>
+          <i class="fa fa-rocket fa-fw action"></i>&nbsp;&nbsp;
+          <span>View Customer Win</span>
+        </a>
+      </li>
+    `;
   }
 
   actionsDropdownTemplate() {
     const isPreInvite = this.status === 'pre_request';
     const didNotRespond = this.status === 'did_not_respond';
     const wasSubmitted = this.status && this.status.includes('submitted');
-    const storyActions = [['story-settings', 'fa-gear'], ['story-content', 'fa-edit'], ['story-contributors', 'fa-users']]
-      .map(([className, icon]) => {
-        const section = (
-          className[className.indexOf('-') + 1].toUpperCase() + 
-          className.slice(className.indexOf('-') + 2, className.length)
-        )
-        return `
-          <li class="${className}">
-            <a href="${this.editStoryPath()}">
-              <i class="fa ${icon} fa-fw action"></i>&nbsp;&nbsp;
-              <span>Customer Story ${section}</span>
-            </a>
-          </li>
-        `;
-      }).join('');
     return `
       <a id="contributors-action-dropdown-${this.id}" 
         href="#" 
@@ -93,25 +121,11 @@ export default class ContributionController extends Controller<HTMLTableRowEleme
         }
         <li role="separator" class="divider"></li>
         ${this.workflowStageValue === 'prospect' ? `
-            ${this.storyExists() && this.customerWin?.story.published ? `
-                <li>
-                  <a href="${this.storyPath()}"}>
-                    <i class="fa fa-search fa-fw action"></i>&nbsp;&nbsp;
-                    <span>View Story</span>
-                  </a>
-                </li>
-                <li role="separator" class="divider"></li>
-              ` : ''
+            ${this.customerWin.story?.published ? 
+                this.viewStoryDropdownItem + '<li role="separator" class="divider"></li>' : 
+                ''
             }
-            ${this.storyExists() ? storyActions : `
-                <li class="view-success">
-                  <a href="javascript:;"}>
-                    <i class="fa fa-rocket fa-fw action"></i>&nbsp;&nbsp;
-                    <span>View Customer Win</span>
-                  </a>
-                </li>
-              `
-            }
+            ${this.storyExists ? this.editStoryDropdownItems : this.viewCustomerWinDropdownItem}
             <li role="separator" class="divider"></li>
           ` : 
           ''

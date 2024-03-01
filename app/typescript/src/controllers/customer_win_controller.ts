@@ -56,13 +56,7 @@ export default class CustomerWinController extends Controller<HTMLTableRowElemen
   }
 
   get editStoryPath() {
-    return this.story?.slug ? `/stories/${this.story.slug}/edit` : undefined;
-  }
-
-  editStory({ currentTarget: link }: { currentTarget: HTMLAnchorElement }) {
-    if (!this.editStoryPath) return false;
-    Cookies.set(`csp-story-tab`, `#${link.dataset.storyTab}`);
-    turboVisit(this.editStoryPath);
+    return this.storyExists ? `/stories/${this.story?.slug}/edit` : undefined;
   }
 
   toggleChildRow() {
@@ -100,6 +94,22 @@ export default class CustomerWinController extends Controller<HTMLTableRowElemen
           showInModal();
         });
     }
+  }
+
+  get editStoryDropdownItems() {
+    return [['story-settings', 'fa-gear'], ['story-content', 'fa-edit'], ['story-contributors', 'fa-users']]
+      .map(([tab, icon]) => {
+        const section = tab[tab.indexOf('-') + 1].toUpperCase() + tab.slice(tab.indexOf('-') + 2, tab.length);
+        return `
+          <li class="${tab}">
+            <a href="javascript:;" data-action="dashboard#editStory" data-story-path="${this.editStoryPath}" data-story-tab="${tab}">
+              <i class="fa ${icon} fa-fw action"></i>&nbsp;&nbsp;
+              <span>Customer Story ${section}</span>
+            </a>
+          </li>
+        `;
+      })
+      .join('');
   }
   
   // see also contributionTemplate in contributor_actions.js
@@ -193,21 +203,7 @@ export default class CustomerWinController extends Controller<HTMLTableRowElemen
           ''
         }
         ${this.storyExists ? 
-            [['story-settings', 'fa-gear'], ['story-content', 'fa-edit'], ['story-contributors', 'fa-users']]
-              .map(([tab, icon]) => {
-                const section = (
-                  tab[tab.indexOf('-') + 1].toUpperCase() + 
-                  tab.slice(tab.indexOf('-') + 2, tab.length)
-                )
-                return `
-                  <li class="${tab}">
-                    <a href="javascript:;" data-action="customer-win#editStory" data-story-tab="${tab}">
-                      <i class="fa ${icon} fa-fw action"></i>&nbsp;&nbsp;
-                      <span>Customer Story ${section}</span>
-                    </a>
-                  </li>
-                `;
-              }).join('') : `
+            this.editStoryDropdownItems : `
             <li>
               <a href="javascript:;" 
                 data-action="dashboard#${action.toLowerCase() || 'show'}CustomerWinContributors" 

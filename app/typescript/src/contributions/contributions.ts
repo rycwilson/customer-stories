@@ -160,11 +160,16 @@ export function tableConfig(workflowStage = 'prospect'): Config {
       const { id, status, contributor, invitation_template: invitationTemplate, success: customerWin } = data as Contribution;
       $(row)
         .attr('data-controller', 'contribution')
-        .attr('data-contribution-contributors-outlet', '#contributors')
+        .attr('data-contribution-resource-outlet', '#customer-wins')
+        .attr('data-customer-win-modal-outlet', '#main-modal')
         .attr(
           'data-contribution-row-data-value', JSON.stringify({ id, status, contributor, invitationTemplate, customerWin })
         )
-        .attr('data-datatable-target', 'row');
+        // .attr('data-datatable-target', 'row')
+        // .attr(
+        //   'data-contribution-child-row-turbo-frame-attrs-value', 
+        //   JSON.stringify({ id: 'edit-contribution', src: editContributionPath(id) })
+        // );
     }
   }
 }
@@ -175,16 +180,16 @@ function rowGroupTemplate(rows: Api<any>, group: string) {
   const customerWinName = group;
   const customerWin = rows.data()[0].success;
   const story = customerWin.story;
-  const storySlug = story && story.slug;
-  const storyTitle = story && story.title;
-  const storyPath = story && (story.published ? story.csp_story_path : `/curate/${customerWin.customer.slug}/${storySlug}`);
+  const storySlug = story?.slug;
+  const storyTitle = story?.title;
+  const storyPath = `/stories/${storySlug}/edit`;
   return $('<tr/>').append(`
     <td colspan="5">
       <span>${customerWin.customer.name}</span>
       <span class="emdash">&nbsp;&nbsp;&#8211;&nbsp;&nbsp;</span>
       ${story ? 
-        `<a href="${storyPath}" id="contributors-row-group-link-story-${story.id}">${storyTitle}</a>` :
-        `<a href="javascript:;" id="contributors-row-group-link-cw-${customerWin.id}">${customerWinName}</a>`
+        `<a href="${storyPath}">${storyTitle}</a>` :
+        `<a href="javascript:;" data-action="dashboard#showContributionCustomerWin" data-customer-win-id="${customerWin.id}">${customerWinName}</a>`
       }
     </td>
   `);

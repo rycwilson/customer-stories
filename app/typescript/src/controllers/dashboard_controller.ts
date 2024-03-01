@@ -3,6 +3,7 @@ import Cookies from 'js-cookie';
 import ModalController from './modal_controller';
 import { parseDatasetObject } from '../utils';
 import { type TomInput } from 'tom-select/dist/types/types';
+import { visit as turboVisit } from '@hotwired/turbo';
 
 // excludes stories#edit, which also renders the dashboard
 enum DashboardTab {
@@ -145,12 +146,22 @@ export default class DashboardController extends Controller<HTMLDivElement> {
   showCustomerWinContributors(customerWinId: string) {
     // console.log(`showCustomerWinContributors(${customerWinId})`)
     this.contributorsFilterTarget.tomselect!.setValue(`success-${customerWinId}`);
-    $(this.contributorsTabTarget).one('shown.bs.tab', () => scrollTo(0, 65));
-    $(this.contributorsTabTarget).tab('show');
+    $(this.contributorsTabTarget)
+      .one('shown.bs.tab', () => scrollTo(0, 65))
+      .tab('show');
       
     // TODO: change filters IF necessary to find customer win
     // all filters enabled (nothing hidden)
     // $('.contributors .checkbox-filter').prop('checked', true).trigger('change');
+  }
+
+  showContributionCustomerWin({ currentTarget: link }: { currentTarget: HTMLAnchorElement }) {
+    if (!link.dataset.customerWinId) return false;
+    this.customerWinsFilterTarget.tomselect!.setValue(`success-${link.dataset.customerWinId}`);
+    $(this.customerWinsTabTarget)
+      .one('shown.bs.tab', () => scrollTo(0, 65))
+      .tab('show');
+    // TODO: open the customer win child row
   }
 
   showActiveTabPanel() {
@@ -171,6 +182,13 @@ export default class DashboardController extends Controller<HTMLDivElement> {
           //   .trigger('change', { auto: true });
         // }
       // }
+    }
+  }
+
+  editStory({ currentTarget: link }: { currentTarget: HTMLAnchorElement }) {
+    if (link.dataset.storyPath && link.dataset.storyTab) {
+      Cookies.set(`csp-story-tab`, `#${link.dataset.storyTab}`);
+      turboVisit(link.dataset.storyPath);
     }
   }
 
