@@ -21,12 +21,12 @@
     > tr:not(.dtrg-group),
     > tr:not(.dtrg-group).even {
       > td {
-        transition: background-color 0.2s ease-in-out;
+        transition: background-color 0.15s ease-in-out;
       }
     
       &:hover > td:not(.child-row) {
         background-color: $light-blue;
-        transition: background-color 0.2s ease-in-out;
+        transition: background-color 0.15s ease-in-out;
       }
     }
   }
