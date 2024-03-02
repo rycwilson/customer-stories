@@ -142,7 +142,7 @@ class StoriesController < ApplicationController
   def create
     @story = Story.new(story_params)
     if @story.save
-      @redirect_path = curate_story_path(@story.customer.slug, @story.slug)
+      @redirect_path = edit_story_path(story)
     end
     respond_to { |format| format.js }
   end
