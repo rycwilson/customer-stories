@@ -2,49 +2,98 @@
 
   = render('shared/navbars/company_nav', { company: @company, workflow_stage: @workflow_stage })
 
-  .container
-    .row
-      .col-sm-5.col-md-4.col-lg-3.layout-sidebar
-        .edit-story
-          ul.nav
-            li
-              = link_to(dashboard_path('curate')) do 
-                i.fa.fa-chevron-circle-left
-                | &nbsp;&nbsp;All Stories
-              end
-            li class=('active' if @active_tab == '#story-settings')
-              a href="#story-settings" data-toggle="tab" data-action="dashboard#setNavCookie"
-                i.fa.fa-gear
-                | &nbsp;&nbsp;Story Settings
-            li class=('active' if @active_tab == '#story-content')
-              a href="#story-content" data-toggle="tab" data-action="dashboard#setNavCookie"
-                i.fa.fa-edit 
-                | &nbsp;&nbsp;Story Content
-            li class=('active' if @active_tab == '#story-contributors')
-              a href="#story-contributors" data-toggle="tab" data-action="dashboard#setNavCookie"
-                i.fa.fa-users
-                | &nbsp;&nbsp;Story Contributors
+  #story {
+    data-controller="story"
+    data-dashboard-target="story"
+    data-action="resource:loading->dashboard#onResourceLoading resource:ready->dashboard#onResourceReady" }
 
-      .col-sm-5.col-md-4.col-lg-9.layout-main
-        #edit-story-layout {
-          data-controller="story"
-          data-story-id=@story.id
-          data-success-id=@story.success.id
-          data-success-name=@story.success.name
-          data-customer-id=@story.customer.id
-          data-customer-slug=@story.customer.slug }
+    .spinner
+      .lds-ring
+        div
+        div
+        div
+        div
 
-          = render('stories/edit/story_header', { story: @story })
+    .container
+      .row
+        .col-sm-5.col-md-4.col-lg-3.layout-sidebar
+          .edit-story
+            ul.nav
+              li
+                = link_to(dashboard_path('curate')) do 
+                  i.fa.fa-chevron-circle-left
+                  | &nbsp;&nbsp;All Stories
+                end
+              li class=('active' if @active_tab == '#story-settings')
+                a {
+                  id="story-settings-tab"
+                  href="#story-settings" 
+                  data-toggle="tab" 
+                  data-action="dashboard#setNavCookie"
+                  aria-controls="story-settings"
+                  aria-expanded="#{@active_tab == '#story-settings' ? 'true' : 'false'}"
+                  role="tab" }
 
-          .tab-content
-            #story-settings.tab-pane.fade class=('active in' if @active_tab == '#story-settings')
-              = render('stories/edit/settings/settings', { company: @company, story: @story })
+                  i.fa.fa-gear
+                  | &nbsp;&nbsp;Settings
+              li class=('active' if @active_tab == '#story-content')
+                a {
+                  id="story-content-tab"
+                  href="#story-content" 
+                  data-toggle="tab" 
+                  data-action="dashboard#setNavCookie"
+                  aria-controls="story-content"
+                  aria-expanded="#{@active_tab == '#story-content' ? 'true' : 'false'}"
+                  role="tab" }
+                  i.fa.fa-edit 
+                  | &nbsp;&nbsp;Content
+              li class=('active' if @active_tab == '#story-contributors')
+                a {
+                  id="story-contributors-tab"
+                  href="#story-contributors" 
+                  data-toggle="tab" 
+                  data-action="dashboard#setNavCookie"
+                  aria-controls="story-contributors"
+                  aria-expanded="#{@active_tab == '#story-contributors' ? 'true' : 'false'}"
+                  role="tab" }
+                  i.fa.fa-users
+                  | &nbsp;&nbsp;Contributors
 
-            #story-content.tab-pane.fade class=('active in' if @active_tab == '#story-content')
-              = render('stories/edit/content/content', { company: @company, story: @story })
+        .col-sm-5.col-md-4.col-lg-9.layout-main
+          #edit-story-layout
 
-            #story-contributors.tab-pane.fade class=('active in' if @active_tab == '#story-contributors')
-              h3 Contributors
-              /= render( \
-                'companies/1_prospect/contributors/contributors_table',
-                { company: company, workflow_stage: 'curate' })
+            = render('stories/edit/story_header', { story: @story })
+
+            .tab-content
+              #story-settings.tab-pane.fade {
+                class=('active in' if @active_tab == '#story-settings')
+                aria-labelledby="story-settings-tab"
+                role="tabpanel" }
+                
+                = render('stories/edit/settings/settings', { company: @company, story: @story })
+
+              #story-content.tab-pane.fade {
+                class=('active in' if @active_tab == '#story-content')
+                aria-labelledby="story-content-tab"
+                role="tabpanel" }
+                
+                = render('stories/edit/content/content', { company: @company, story: @story })
+
+              #story-contributors.resource-ctrl.tab-pane.fade {
+                class=('active in' if @active_tab == '#story-contributors') 
+                data-controller="resource"
+                data-story-target="contributors"
+                data-resource-dashboard-outlet=".dashboard"
+                data-resource-resource-outlet=".resource-ctrl:not(#story-contributors)"
+                data-resource-data-path-value=success_contributions_path(@story.success)
+                data-resource-checkbox-filters-value={ \
+                  'show-completed': { checked: true, label: 'Contributors with a completed Contribution' },
+                  'show-published': { checked: true, label: 'Contributors to published Customer Stories' } }.to_json
+                data-resource-name="storyContributions"
+                data-story-id=@story.id
+                aria-labelledby="story-contributors-tab"
+                role="tabpanel" }
+                
+                = render( \
+                  'companies/1_prospect/contributors/contributors_table',
+                  { company: @company, is_story_contributors: true })

@@ -1,5 +1,7 @@
+- hide_filters ||= false
+
 .table-controls 
-  div 
+  div class=('hidden' if hide_filters)
     .curator-select data-action="tomselect:change-curator->resource#onChangeCurator"
       label 
         span Curator
@@ -45,8 +47,9 @@
           i.fa.fa-fw.fa-plus
       button.btn.btn-default {
         type="button" 
+        class=('hidden' if hide_filters)
         aria-label="Table Display Options" 
         data-resource-target="tableDisplayOptionsBtn" }
         i.fa.fa-fw.fa-server
-    div 
+    div class=('hidden' if hide_filters)
       .help-block.text-right data-resource-target="filterResults"

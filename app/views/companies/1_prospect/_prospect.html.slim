@@ -104,7 +104,7 @@
             data-controller="resource"
             data-resource-dashboard-outlet=".dashboard"
             data-resource-resource-outlet=".resource-ctrl:not(#contributors)"
-            data-resource-data-path-value="/companies/0/contributions"
+            data-resource-data-path-value=company_contributions_path(company)
             data-resource-checkbox-filters-value={ \
               'show-completed': { checked: true, label: 'Contributors with a completed Contribution' },
               'show-published': { checked: true, label: 'Contributors to published Customer Stories' } }.to_json
@@ -112,4 +112,4 @@
             aria-labelledby="contributors-tab"
             role="tabpanel" }
 
-            = render('companies/1_prospect/contributors/contributors_table', { company:, workflow_stage: })
+            = render('companies/1_prospect/contributors/contributors_table', { company: })

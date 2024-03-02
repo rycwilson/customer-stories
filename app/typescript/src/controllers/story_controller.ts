@@ -1,15 +1,23 @@
 import { Controller } from '@hotwired/stimulus';
 
 export default class StoryController extends Controller<HTMLDivElement> {
-  static targets = ['storySettingsForm', 'storyContentForm', 'hiddenLinkInput', 'hiddenLinkCopyBtn'];
+  static targets = [
+    'storySettingsForm', 
+    'storyContentForm', 
+    'hiddenLinkInput', 
+    'hiddenLinkCopyBtn',
+    'contributors'
+  ];
   declare readonly storySettingsFormTarget: HTMLFormElement;
   declare readonly storyContentFormTarget: HTMLFormElement;
   declare readonly hiddenLinkInputTarget: HTMLInputElement;
   declare readonly hiddenLinkCopyBtnTarget: HTMLButtonElement;
+  declare readonly contributorsTarget: HTMLDivElement;
 
   connect() {
     console.log('connect story')
     this.storySettingsFormTarget.setAttribute('data-init', 'true');
+    this.contributorsTarget.setAttribute('data-resource-init-value', 'true');
   }
 
   refreshHiddenLink() {

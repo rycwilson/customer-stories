@@ -1,8 +1,11 @@
+- is_story_contributors ||= false
+
 = render( \
     'companies/shared/table_controls',
     { company: company, 
       curator_id: current_user.id,
       row_name: 'Contributor',
+      hide_filters: is_story_contributors,
       modal_turbo_frame_attrs: { \
         id: 'new-contribution', 
         src: '/successes/0/contributions/new' },
@@ -13,12 +16,14 @@
         'Contributor' => company.contributors.sort_by(&:last_name).map { |user| [user.full_name, "contributor-#{user.id}"] } } })
 
 / it's actually a contributions table, but presented to the user as Contributors
-table#contributors-table.datatable.table.table-bordered.has-row-groups {
+table.datatable.table.table-bordered {
+  id="#{is_story_contributors ? 'story-contributors-table' : 'contributors-table'}"
+  class=('has-row-groups' unless is_story_contributors)
   data-controller="datatable"
   data-resource-target="datatable"
   data-datatable-dashboard-outlet=".dashboard"
-  data-datatable-resource-outlet="#contributors"
-  data-datatable-enable-row-groups-value="true"
+  data-datatable-enable-row-groups-value="#{is_story_contributors ? 'false' : 'true'}"
+  data-datatable-resource-outlet="#{is_story_contributors ? '#story-contributors' : '#contributors'}"
   data-action="datatable:init->resource#tableInitComplete"
   cellspacing="0" }
 

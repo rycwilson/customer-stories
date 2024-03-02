@@ -1,4 +1,5 @@
-#contributors-table, #curate-contributors-table {
+#contributors-table, 
+#story-contributors-table {
   
   // hide sorting icon for contributors; doesn't presently work in light of row grouping
   th[aria-label*="Contributor"] {

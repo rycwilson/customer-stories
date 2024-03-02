@@ -19,7 +19,14 @@ export default class ResourceController extends Controller<HTMLDivElement> {
   declare readonly resourceOutlets: ResourceController[];
   declare readonly hasResourceOutlet: boolean;
 
-  static targets = ['curatorSelect', 'filterSelect', 'filterResults', 'datatable', 'newItemBtn', 'tableDisplayOptionsBtn'];
+  static targets = [
+    'curatorSelect', 
+    'filterSelect', 
+    'filterResults',
+    'newItemBtn', 
+    'tableDisplayOptionsBtn',
+    'datatable'
+  ];
   declare readonly curatorSelectTarget: TomInput;
   declare readonly filterSelectTarget: TomInput;
   declare readonly filterResultsTarget: HTMLDivElement;
@@ -51,14 +58,24 @@ export default class ResourceController extends Controller<HTMLDivElement> {
     return this.element.dataset.resourceName as ResourceName;
   }
 
+  get dataExists() {
+    return this.resourceName === 'storyContributions' ?
+      CSP[this.resourceName][+(this.element.dataset.storyId as string)] :
+      CSP[this.resourceName];
+  }
+
   initValueChanged(shouldInit: boolean) {
     if (shouldInit) {
-      if (CSP[this.resourceName]) {
+      if (this.dataExists) {
         initTable(this);
       } else {
         this.dispatch('loading');
         getJSON(this.dataPathValue, this.searchParamsValue).then(data => {
-          CSP[this.resourceName] = data;
+          if (this.resourceName === 'storyContributions') {
+            CSP[this.resourceName][+(this.element.dataset.storyId as string)] = data;
+          } else {
+            CSP[this.resourceName] = data;
+          }
           initTable(this);
         })
       }
@@ -74,12 +91,14 @@ export default class ResourceController extends Controller<HTMLDivElement> {
   }
 
   onChangeCurator(e: CustomEvent) {
-    if (/customerWins|contributors/.test(this.resourceName)) this.updateNewItemPath();
+    if (this.resourceName && /customerWins|contributions/.test(this.resourceName)) {
+      this.updateNewItemPath();
+    }
     searchTable(this, e, this.resourceOutlets);
   }
 
   onChangeFilter(e: CustomEvent) {
-    if (/customerWins|contributors/.test(this.resourceName)) {
+    if (this.resourceName && /customerWins|contributions/.test(this.resourceName)) {
       this.updateNewItemPath();
       this.resourceOutlets.forEach(outlet => {
         if (outlet.resourceName === 'promotedStories') return;
@@ -100,6 +119,8 @@ export default class ResourceController extends Controller<HTMLDivElement> {
         return customerWinsTableConfig();
       case 'contributions':
         return contributorsTableConfig();
+      case 'storyContributions':
+        return contributorsTableConfig(+(this.element.dataset.storyId as string));
       case 'promotedStories':
         return promotedStoriesTableConfig();
       // default: 

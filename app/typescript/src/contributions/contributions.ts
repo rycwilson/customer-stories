@@ -6,7 +6,7 @@ export function newContributionPath(customerWinId: string | number, params: URLS
   return `/successes/${customerWinId || '0'}/contributions/new${params.size > 0 ? `?${params}` : ''}`;
 }
 
-export function tableConfig(workflowStage = 'prospect'): Config {
+export function tableConfig(storyId?: number): Config {
   const colIndices = {
     contributor: 1,
     success: 2,
@@ -18,7 +18,7 @@ export function tableConfig(workflowStage = 'prospect'): Config {
     storyPublished: 8
   };
   return {
-    data: CSP.contributions,
+    data: storyId ? CSP['storyContributions'][storyId] : CSP.contributions,
     // select: true,  // https://datatables.net/extensions/select/
     
     language: {
@@ -137,7 +137,7 @@ export function tableConfig(workflowStage = 'prospect'): Config {
       { targets: colIndices.actions, width: '4.5em' }
     ],
 
-    rowGroup: workflowStage === 'curate' ? undefined : { dataSrc: 'success.name', startRender: rowGroupTemplate },
+    rowGroup: storyId ? undefined : { dataSrc: 'success.name', startRender: rowGroupTemplate },
 
     createdRow: (row: Node, data: object | any[], index: number) => {
       // const isPreInvite = data.status === 'pre_request';

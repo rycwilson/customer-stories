@@ -7,15 +7,17 @@ export function init(resourceCtrl: ResourceController) {
 }
 
 export function initComplete(resourceCtrl: ResourceController, dt: DataTableApi<any>) {
+  const dispatchReadyEvent = () => resourceCtrl.dispatch('ready', { detail: { resourceName: resourceCtrl.resourceName } });
   resourceCtrl.dt = dt;
-  initDisplayOptions(resourceCtrl);
-  window.setTimeout(() => {
-    resourceCtrl.dt.one(
-      'draw', 
-      () => resourceCtrl.dispatch('ready', { detail: { resourceName: resourceCtrl.resourceName } })
-    );
-    search(resourceCtrl);
-  });
+  if (resourceCtrl.resourceName === 'storyContributions') {
+    dispatchReadyEvent();
+  } else {
+    initDisplayOptions(resourceCtrl);
+    window.setTimeout(() => {
+      resourceCtrl.dt.one('draw', dispatchReadyEvent);
+      search(resourceCtrl);
+    });
+  }
 }
 
 export function toggleRowGroups(resourceCtrl: ResourceController, shouldEnable: boolean) {

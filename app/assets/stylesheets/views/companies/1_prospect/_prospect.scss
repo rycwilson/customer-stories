@@ -128,7 +128,7 @@
 
 #successes-table, 
 #contributors-table, 
-#curate-contributors-table {
+#story-contributors-table {
   th.toggle-child, 
   td.toggle-child, 
   th.toggle-contributor-child, 
@@ -209,7 +209,8 @@
 }
 
 #successes-table,
-#contributors-table {
+#contributors-table,
+#story-contributors-table {
   @include row-hover-highlight;
   table-layout: fixed;
   
