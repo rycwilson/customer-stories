@@ -11,13 +11,14 @@ interface Window {
 interface CustomerStoriesApp {
   customerWins: CustomerWin[] | undefined;
   contributions: Contribution[] | undefined;
+  storyContributions: { [key: number]: Contribution[] };
   promotedStories: PromotedStory[] | undefined;
   currentUser: User | null;
   // screenSize: string;
   init(): void;
 }
 
-type ResourceName = 'customerWins' | 'contributions' | 'promotedStories';
+type ResourceName = 'customerWins' | 'contributions' | 'storyContributions' | 'promotedStories';
 
 interface JQuery<HTMLElement>{
   tab: (action: string) => void;

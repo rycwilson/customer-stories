@@ -14,6 +14,7 @@ function appFactory(): CustomerStoriesApp {
   return {
     customerWins: undefined,
     contributions: undefined,
+    storyContributions: {},
     promotedStories: undefined,
     currentUser: parseDatasetObject(document.body, 'currentUser', 'id', 'full_name'),
     // screenSize: null,
