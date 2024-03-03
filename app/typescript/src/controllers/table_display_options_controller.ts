@@ -37,7 +37,6 @@ export default class extends Controller<HTMLDivElement> {
   }
 
   toggleFilter({ target: checkbox }: { target: HTMLInputElement }) {
-    if (!(checkbox instanceof HTMLInputElement)) return;
     const { id, checked } = checkbox;
     const label = this.resourceOutlet.checkboxFiltersValue.id.label;
     this.resourceOutlet.checkboxFiltersValue = (
