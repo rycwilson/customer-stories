@@ -20,6 +20,8 @@ interface CustomerStoriesApp {
 
 type ResourceName = 'customerWins' | 'contributions' | 'storyContributions' | 'promotedStories';
 
+type SelectInputType = 'curator' | 'status' | 'customer' | 'category' | 'product' | 'tags' | 'contributor' | 'referrer'; 
+
 interface JQuery<HTMLElement>{
   tab: (action: string) => void;
   popover: (options: object) => void;
