@@ -23,6 +23,8 @@ export default class ModalController extends Controller<HTMLDivElement> {
   declare bodyContentValue: string;
   declare turboFrameAttrsValue: TurboFrameAttributes | {};
 
+  declare spinnerTimer: number;
+
   ajaxSuccessHandler: (this: ModalController, e: Event) => void = this.onAjaxSuccess.bind(this);
   hiddenHandler: (this: ModalController, e: any) => void = this.onHidden.bind(this);
 
@@ -52,11 +54,10 @@ export default class ModalController extends Controller<HTMLDivElement> {
     const { id, src } = attrs as TurboFrameAttributes;
     if (id && src) {
       // if (/^(new|edit)/.test(id)) this.actionValue = id.match(/^(?<action>new|edit)/).groups.action;
-      if (this.turboFrameTarget.dataset.spinner) {
-        this.turboFrameTarget.insertAdjacentHTML('afterbegin', this.turboFrameTarget.dataset.spinner);
-        window.setTimeout(() => {
+      if (this.turboFrameTarget.dataset.spinnerHtml) {
+        this.turboFrameTarget.insertAdjacentHTML('afterbegin', this.turboFrameTarget.dataset.spinnerHtml);
+        this.spinnerTimer = window.setTimeout(() => {
           const spinner = <HTMLDivElement>this.turboFrameTarget.querySelector(':scope > .spinner');
-          console.log(spinner)
           spinner.classList.add('spinner--opaque');
         }, 750)
       }
@@ -69,6 +70,7 @@ export default class ModalController extends Controller<HTMLDivElement> {
 
   onFrameRender(e: CustomEvent) {
     // console.log('turbo:before-frame-render', e.detail.newFrame);
+    window.clearTimeout(this.spinnerTimer);
     this.setFooterContent();
     if (this.hasFormTarget) {
       this.formTarget.addEventListener('ajax:success', this.ajaxSuccessHandler);
