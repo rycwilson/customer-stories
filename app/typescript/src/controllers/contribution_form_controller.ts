@@ -1,14 +1,22 @@
 import FormController from './form_controller';
+import ModalController from './modal_controller';
 import ResourceController from './resource_controller';
 import { type TomInput, TomOption } from 'tom-select/dist/types/types';
 
 export default class ContributionFormController extends FormController {
-  static outlets = ['resource'];
+  static outlets = ['resource', 'modal'];
   declare readonly resourceOutlets: ResourceController[];
+  declare readonly modalOutlet: ModalController;
 
   static targets = [
-    'customerSelect', 'customerField', 'customerId', 'customerName', 'customerWinSelect', 'successCustomerId', 
-    'contributorSelect', 'referrerSelect', 'contributorFields', 'referrerFields'
+    'customerSelect', 
+    'customerField', 
+    'customerId', 
+    'customerName', 
+    'customerWinSelect', 
+    'successCustomerId', 
+    'contributorSelect', 
+    'referrerSelect', 
   ];
   declare readonly customerSelectTarget: TomInput;
   declare readonly customerFieldTargets: HTMLInputElement[];
@@ -18,8 +26,6 @@ export default class ContributionFormController extends FormController {
   declare readonly successCustomerIdTarget: HTMLInputElement;
   declare readonly contributorSelectTarget: TomInput;
   declare readonly referrerSelectTarget: TomInput;
-  declare readonly contributorFieldsTarget: HTMLDivElement;
-  declare readonly referrerFieldsTarget: HTMLDivElement;
 
   customerCustomerWinIds: number[] = [];
   customerWinsWereFiltered: boolean = false;
@@ -70,11 +76,12 @@ export default class ContributionFormController extends FormController {
       !(this.contributorsCtrl instanceof ResourceController)
     ) return;
     const customerWinId = +select.value;
-    const customerWin = this.customerWinsCtrl.dt.column('success:name').data().toArray()
-      .find((customerWin: CustomerWin) => customerWin.id === customerWinId);
+    const customerWin = this.customerWinsCtrl.dt
+      .column('success:name').data().toArray()
+      .find(customerWin => customerWin.id === customerWinId);
     const customerWinContributorIds: number[] = customerWin && this.contributorsCtrl.dt.data().toArray()
-      .filter((contribution: Contribution) => contribution.success?.id === customerWin.id)
-      .map((contribution: Contribution) => contribution.contributor?.id);
+      .filter(contribution => contribution.success.id === customerWin.id)
+      .map(contribution => contribution.contributor.id);
     const tsOptions = this.contributorSelectTarget.tomselect!.options;
     if (customerWin) {
       this.customerSelectTarget.tomselect!.setValue(customerWin.customerId, true);
@@ -82,30 +89,17 @@ export default class ContributionFormController extends FormController {
 
       // disable contributor option for any contributors that already have a contribution for the customer win
       customerWinContributorIds.forEach(contributorId => {
-        this.contributorSelectTarget.tomselect!.updateOption(
-          contributorId.toString(), { value: contributorId, text: tsOptions[contributorId].text, disabled: true  }
-        );
+        const newOptionSettings = { value: contributorId, text: tsOptions[contributorId].text, disabled: true  };
+        this.contributorSelectTarget.tomselect!.updateOption(contributorId.toString(), newOptionSettings);
       });
     } else {
       Object.entries(tsOptions).forEach(([value, option]) => {
         if (option.disabled) {
           this.contributorSelectTarget.tomselect!.updateOption(value, { value, text: option.text, disabled: false });
         }
-      });
+      }); 
     }
   }
-
-  onChangeContact({ target: select }: { target: TomInput }) {
-    const isNewContact = select.value === '0';
-    const contactFields = select === this.contributorSelectTarget ? 
-      this.contributorFieldsTarget : 
-      this.referrerFieldsTarget;
-    contactFields.setAttribute('data-new-contact-should-enable-value', isNewContact.toString());
-  }
-
-  // beforeAjax(e: Event, xhr: XMLHttpRequest, settings: object) {
-  //   // a.preventDefault()
-  // }
 
   filterCustomerWins(e: Event) {
     if (this.customerWinsWereFiltered) return false;

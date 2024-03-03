@@ -11,9 +11,9 @@
         data: { \
           controller: 'form customer-win-form',
           modal_target: 'form',
-          action: 'ajax:beforeSend->form#beforeSendXHR',
           customer_win_form_modal_outlet: '#main-modal',
-          submit_btn_text: 'Create' } }) do |form|
+          action: 'ajax:beforeSend->form#beforeSendXHR',
+          submit_btn_text: 'Add Customer Win' } }) do |form|
 
     = form.fields_for(:customer, form.object.customer || form.object.build_customer) do |customer_fields|
       = customer_fields.hidden_field(:id, data: { customer_win_form_target: 'customerField' })
@@ -32,7 +32,6 @@
               selected: @curator_id || [] },
             { class: 'new-success curator form-control',
               placeholder: 'Select',
-              style: 'width: 100%',
               required: true,
               data: { \
                 controller: 'tomselect',
@@ -103,26 +102,21 @@
               :full_name,
               { include_blank: true },
               { name: '',
-                class: 'new-success referrer form-control',
+                class: 'form-control',
                 placeholder: 'Select or Create',
                 data: { \
                   controller: 'tomselect',
                   tomselect_type_value: 'referrer',
                   customer_win_form_target: 'referrerSelect',
-                  action: 'customer-win-form#onChangeContact',
+                  action: 'form#onChangeContact',
                   field_name: "#{contribution_fields.object_name}[referrer_id]" } })
                   
-      = render( \
-          'companies/shared/create_contact',
-          { form: 'new-success', 
-            parent_form_or_fields: contribution_fields, 
-            contact_type: 'referrer',
-            input_data_attrs: { customer_win_form_target: "referrerField" } })
+      = render('companies/shared/new_contact', { parent_form_or_fields: contribution_fields, contact_type: 'referrer' })
 
     = form.fields_for(:contributions, form.object.contributions.build) do |contribution_fields|
       = contribution_fields.check_box( \
           :success_contact,
-          { checked: true, hidden: true, disabled: true, data: { customer_win_form_target: 'contributorField' } },
+          { checked: true, hidden: true, disabled: true, data: { form_target: 'contributorField' } },
           true,
           false)
       .form-group
@@ -137,21 +131,16 @@
               :full_name,
               { include_blank: true },
               { name: '',
-                class: 'new-success contributor form-control',
+                class: 'form-control',
                 placeholder: 'Select or Create',
                 data: { \
                   controller: 'tomselect',
                   tomselect_type_value: 'contributor',
                   customer_win_form_target: 'contributorSelect',
-                  action: 'customer-win-form#onChangeContact',
+                  action: 'form#onChangeContact',
                   field_name: "#{contribution_fields.object_name}[contributor_id]" } })
 
-      = render( \
-          'companies/shared/create_contact', 
-          { form: 'new-success', 
-            parent_form_or_fields: contribution_fields, 
-            contact_type: 'contributor',
-            input_data_attrs: { customer_win_form_target: "contributorField" } })
+      = render('companies/shared/new_contact', { parent_form_or_fields: contribution_fields, contact_type: 'contributor' })
 
     /.form-group.source
       label.col-sm-3.control-label Source

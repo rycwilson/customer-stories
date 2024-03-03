@@ -3,16 +3,18 @@
   = form_with( \
       model: @success&.contributions&.build || Contribution.new,
       url: company_contributions_path(@company),
-      local: false,
-      class: 'form-horizontal',
+      format: :js,
       html: { \
         id: 'new-contribution-form',
+        class: 'form-horizontal',
         autocomplete: 'off',
+        novalidate: true,
         data: { \
-          controller: 'contribution-form',
+          controller: 'form contribution-form',
           contribution_form_resource_outlet: '.resource-ctrl',
-          action: 'ajax:before->contribution-form#beforeAjax',
+          contribution_form_modal_outlet: '#main-modal',
           modal_target: 'form',
+          action: 'ajax:beforeSend->form#beforeSendXHR',
           submit_btn_text: 'Add Contributor' } }) do |form|
 
     /= form.hidden_field(:success_id)
@@ -28,7 +30,11 @@
         = customer_fields.hidden_field(:company_id, value: @company.id, data: { contribution_form_target: 'customerField' })
 
       .form-group.required
-        = success_fields.label(:customer_id, 'Customer', class: 'col-sm-3 control-label')
+        = success_fields.label( \
+            :customer_id,
+            'Customer',
+            class: 'col-sm-3 control-label',
+            style: "#{@story ? 'pointer-events:none' : ''}")
         .col-sm-9
           = success_fields.collection_select( \
               :customer_id,
@@ -36,37 +42,55 @@
               :id,
               :name,
               { include_blank: true }.merge(@customer_id ? { selected: @customer_id } : {}),
-              { class: "new-contributor customer form-control #{@for_story ? 'readonly' : ''}",
+              { class: "form-control #{@story ? 'readonly' : ''}",
                 placeholder: 'Select or Create',
-                style: 'width:100%',
                 required: true,
                 data: { \
                   controller: 'tomselect',
                   tomselect_type_value: Customer.name,
                   tomselect_custom_options_value: { create: true, persist: false },
+                  tomselect_prevent_focus_value: @story ? true : false,
                   action: 'contribution-form#onChangeCustomer',
                   contribution_form_target: 'customerSelect' } })
           span.help-block Required
 
-      .form-group.required data-action="tomselect:dropdown-did-open->contribution-form#filterCustomerWins"
-        = form.label(:success_id, 'Customer Win', class: 'col-sm-3 control-label')
-        .col-sm-9
-          = form.collection_select( \
-              :success_id,
-              @company.successes.sort_by { |success| success.name },
-              :id,
-              :name,
-              { include_blank: true },
-              { class: "new-contributor success form-control #{@for_story ? 'readonly' : ''}",
-                placeholder: 'Select or Create',
-                required: true,
-                data: { \
-                  controller: 'tomselect',
-                  tomselect_type_value: 'Customer Win',
-                  tomselect_custom_options_value: { create: true, persist: false },
-                  contribution_form_target: 'customerWinSelect',
-                  action: 'contribution-form#onChangeCustomerWin' } })
-          span.help-block Required
+      - if @story.present?
+        .form-group
+          = label_tag( \
+              "story-#{@story.id}-title",
+              'Customer Story',
+              class: 'col-sm-3 control-label',
+              style: 'pointer-events:none')
+          .col-sm-9
+            = select_tag( \
+                nil,
+                options_for_select([[@story.title, "1"]], selected: 1),
+                { id: "story-#{@story.id}-title", 
+                  class: 'form-control readonly', 
+                  data: { \
+                    controller: 'tomselect',
+                    tomselect_prevent_focus_value: true } })
+
+      - else
+        .form-group.required data-action="tomselect:dropdown-did-open->contribution-form#filterCustomerWins"
+          = form.label(:success_id, 'Customer Win', class: 'col-sm-3 control-label')
+          .col-sm-9
+            = form.collection_select( \
+                :success_id,
+                @company.successes.sort_by { |success| success.name },
+                :id,
+                :name,
+                { include_blank: true },
+                { class: 'form-control',
+                  placeholder: 'Select or Create',
+                  required: true,
+                  data: { \
+                    controller: 'tomselect',
+                    tomselect_type_value: 'Customer Win',
+                    tomselect_custom_options_value: { create: true, persist: false },
+                    contribution_form_target: 'customerWinSelect',
+                    action: 'contribution-form#onChangeCustomerWin' } })
+            span.help-block Required
 
       .form-group.required
         = form.label(:contributor_id, 'Contributor', class: 'col-sm-3 control-label')
@@ -81,23 +105,20 @@
               { include_blank: true,
                 selected: @contributor_id || [],
                 disabled: @success ? @success.contributors.map { |contributor| contributor.id } : [] },
-              { class: 'new-contributor contributor form-control',
+              { name: '',
+                class: 'form-control',
                 placeholder: 'Select or Create',
                 required: true,
                 data: { \
                   controller: 'tomselect',
                   tomselect_type_value: 'Contributor',
                   contribution_form_target: 'contributorSelect',
-                  action: 'contribution-form#onChangeContact' } })
+                  action: 'form#onChangeContact',
+                  field_name: "#{form.object_name}[contributor_id]" } })
           span.help-block 
             | Required
 
-      = render( \
-          'companies/shared/create_contact', 
-          { form: 'new-contribution', 
-            parent_form_or_fields: form, 
-            contact_type: 'contributor',
-            input_data_attrs: { contribution_form_target: "contributorField" } })
+      = render('companies/shared/new_contact', { parent_form_or_fields: form, contact_type: 'contributor' })
 
       .form-group
         = form.label(:invitation_template_id, 'Invitation Template', class: 'col-sm-3 control-label')
@@ -108,7 +129,7 @@
               :id,
               :name,
               { include_blank: true },
-              { class: 'new-contributor invitation-template form-control',
+              { class: 'form-control',
                 placeholder: 'Select',
                 data: { \
                   controller: 'tomselect',
@@ -125,17 +146,14 @@
               :id,
               :full_name,
               { include_blank: true },
-              { class: 'new-contributor referrer form-control',
+              { name: '',
+                class: 'form-control',
                 placeholder: 'Select or Create',
                 data: { \
                   controller: 'tomselect',
                   tomselect_type_value: 'Referrer',
                   contribution_form_target: 'referrerSelect',
-                  action: 'contribution-form#onChangeContact' } })
+                  action: 'form#onChangeContact',
+                  field_name: "#{form.object_name}[referrer_id]" } })
 
-      = render( \
-          'companies/shared/create_contact',
-          { form: 'new-contribution', 
-            parent_form_or_fields: form, 
-            contact_type: 'referrer',
-            input_data_attrs: { contribution_form_target: "referrerField" } })
+      = render('companies/shared/new_contact', { parent_form_or_fields: form, contact_type: 'referrer' })
