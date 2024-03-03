@@ -6,11 +6,16 @@ import { type CBOptions } from 'tom-select/dist/types/plugins/clear_button/types
 import { capitalize } from "../utils";
 
 export default class extends Controller<TomInput> {
-  static values = { type: String, customOptions: { type: Object, default: {} } };
+  static values = { 
+    type: String, 
+    customOptions: { type: Object, default: {} },
+    preventFocus: { type: Boolean, default: false }
+  };
   declare readonly typeValue: (
     'filter' | 'curator' | 'status' | 'customer' | 'category' | 'product' | 'tags' | 'contributor' | 'referrer'
   );
   declare readonly customOptionsValue: { [key: string]: any };
+  declare readonly preventFocusValue: boolean;
 
   declare ts: TomSelect;
   declare currentSearchResults: any[];
@@ -18,6 +23,9 @@ export default class extends Controller<TomInput> {
   connect() {
     // console.log('tomselect connect')
     this.ts = new TomSelect(this.element, {...tsBaseOptions, ...this.options, ...this.customOptionsValue });
+    if (this.preventFocusValue) {
+      this.ts.control_input.setAttribute('tabindex', '-1');
+    }
   }
 
   isFilter() { return this.typeValue === 'filter'; }
