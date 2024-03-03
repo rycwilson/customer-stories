@@ -21,18 +21,6 @@
                   i.fa.fa-chevron-circle-left
                   | &nbsp;&nbsp;All Stories
                 end
-              li class=('active' if @active_tab == '#story-settings')
-                a {
-                  id="story-settings-tab"
-                  href="#story-settings" 
-                  data-toggle="tab" 
-                  data-action="dashboard#setNavCookie"
-                  aria-controls="story-settings"
-                  aria-expanded="#{@active_tab == '#story-settings' ? 'true' : 'false'}"
-                  role="tab" }
-
-                  i.fa.fa-gear
-                  | &nbsp;&nbsp;Settings
               li class=('active' if @active_tab == '#story-content')
                 a {
                   id="story-content-tab"
@@ -55,6 +43,18 @@
                   role="tab" }
                   i.fa.fa-users
                   | &nbsp;&nbsp;Contributors
+              li class=('active' if @active_tab == '#story-settings')
+                a {
+                  id="story-settings-tab"
+                  href="#story-settings" 
+                  data-toggle="tab" 
+                  data-action="dashboard#setNavCookie"
+                  aria-controls="story-settings"
+                  aria-expanded="#{@active_tab == '#story-settings' ? 'true' : 'false'}"
+                  role="tab" }
+
+                  i.fa.fa-gear
+                  | &nbsp;&nbsp;Settings
 
         .col-sm-5.col-md-4.col-lg-9.layout-main
           #edit-story-layout
@@ -62,20 +62,13 @@
             = render('stories/edit/story_header', { story: @story })
 
             .tab-content
-              #story-settings.tab-pane.fade {
-                class=('active in' if @active_tab == '#story-settings')
-                aria-labelledby="story-settings-tab"
-                role="tabpanel" }
-                
-                = render('stories/edit/settings/settings', { company: @company, story: @story })
-
               #story-content.tab-pane.fade {
                 class=('active in' if @active_tab == '#story-content')
                 aria-labelledby="story-content-tab"
                 role="tabpanel" }
                 
                 = render('stories/edit/content/content', { company: @company, story: @story })
-
+                
               #story-contributors.resource-ctrl.tab-pane.fade {
                 class=('active in' if @active_tab == '#story-contributors') 
                 data-controller="resource"
@@ -94,3 +87,11 @@
                 = render( \
                   'companies/1_prospect/contributors/contributors_table',
                   { company: @company, story: @story })
+
+              #story-settings.tab-pane.fade {
+                class=('active in' if @active_tab == '#story-settings')
+                aria-labelledby="story-settings-tab"
+                role="tabpanel" }
+                
+                = render('stories/edit/settings/settings', { company: @company, story: @story })
+
