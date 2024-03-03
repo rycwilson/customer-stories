@@ -14,7 +14,14 @@
             | &times;
 
       .modal-body data-modal-target="body" data-action="customer-win-form:source-changed->modal#setSubmitBtnText"
-        = turbo_frame_tag('', src: '', data: { modal_target: 'turboFrame', placeholder: '<div>Loading...</div>' })
+        / nesting placeholder content won't work correctly when dynamically setting the id ansd src attributes,
+        / so have modal_controller.js handle the placeholder content
+        = turbo_frame_tag( \
+            '', 
+            src: '', 
+            data: { \
+              modal_target: 'turboFrame', 
+              spinner: ActionController::Base.new.render_to_string(partial: 'shared/loading_spinner') })
           
       .modal-footer.hidden data-modal-target="footer"
         button.btn.btn-default type="button" data-dismiss="modal" data-modal-target="dismissBtn"
