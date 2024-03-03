@@ -29,6 +29,18 @@ select.tomselected + .ts-wrapper {
   &.dropdown-active .ts-control::after {
     border-color: transparent transparent #6c757d transparent;
   }
+
+  &.single.readonly {
+    cursor: not-allowed;
+
+    button {
+      display: none;
+    }
+
+    .ts-control {
+      pointer-events: none;
+    }
+  }
 }
 
 .ts-dropdown {

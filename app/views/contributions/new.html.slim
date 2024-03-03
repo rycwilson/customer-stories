@@ -36,7 +36,7 @@
               :id,
               :name,
               { include_blank: true }.merge(@customer_id ? { selected: @customer_id } : {}),
-              { class: 'new-contributor customer form-control',
+              { class: "new-contributor customer form-control #{@for_story ? 'readonly' : ''}",
                 placeholder: 'Select or Create',
                 style: 'width:100%',
                 required: true,
@@ -57,7 +57,7 @@
               :id,
               :name,
               { include_blank: true },
-              { class: 'new-contributor success form-control',
+              { class: "new-contributor success form-control #{@for_story ? 'readonly' : ''}",
                 placeholder: 'Select or Create',
                 required: true,
                 data: { \
