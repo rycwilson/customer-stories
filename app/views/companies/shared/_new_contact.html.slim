@@ -1,7 +1,4 @@
-.new-contact.hidden { 
-  data-customer-win-form-target=("#{contact_type}Fields" if form == 'new-success')
-  data-contribution-form-target=("#{contact_type}Fields" if form == 'new-contribution')
-  class="#{form} create-#{contact_type}" }
+.new-contact.hidden data-form-target="#{contact_type}Fields" 
 
   = parent_form_or_fields.fields_for( \
       contact_type.to_sym,
@@ -13,18 +10,18 @@
         :id,
         value: '',
         disabled: true,
-        data: input_data_attrs)
+        data: { form_target: "#{contact_type}Field" })
 
     = user_fields.hidden_field( \
         :sign_up_code,
         value: 'csp_beta',
         disabled: true,
-        data: input_data_attrs)
+        data: { form_target: "#{contact_type}Field" })
 
     = user_fields.hidden_field( \
         :password,
         disabled: true,
-        data: input_data_attrs)
+        data: { form_target: "#{contact_type}Field" })
 
     .form-group.required
       = user_fields.label(:first_name, 'First Name', class: 'col-sm-3 control-label')
@@ -36,7 +33,7 @@
             required: true,
             disabled: true,
             tabindex: '-1',
-            data: input_data_attrs.merge({ form_target: 'requiredField' }))
+            data: { form_target: "#{contact_type}Field requiredField" })
         span.help-block 
           | Required
 
@@ -48,7 +45,7 @@
             class: 'form-control',
             required: true,
             disabled: true,
-            data: input_data_attrs.merge({ form_target: 'requiredField' }))
+            data: { form_target: "#{contact_type}Field requiredField" })
         span.help-block 
           | Required
 
@@ -60,6 +57,6 @@
             class: 'form-control',
             required: true,
             disabled: true,
-            data: input_data_attrs.merge({ form_target: 'requiredField' }))
+            data: { form_target: "#{contact_type}Field requiredField" })
         span.help-block
           | Required
