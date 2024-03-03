@@ -1,3 +1,5 @@
+= render('shared/modal')
+
 .dashboard data-controller="dashboard" data-dashboard-modal-outlet="#main-modal"
 
   = render('shared/navbars/company_nav', { company: @company, workflow_stage: @workflow_stage })
@@ -7,12 +9,7 @@
     data-dashboard-target="story"
     data-action="resource:loading->dashboard#onResourceLoading resource:ready->dashboard#onResourceReady" }
 
-    .spinner
-      .lds-ring
-        div
-        div
-        div
-        div
+    = render('shared/loading_spinner')
 
     .container
       .row
@@ -96,4 +93,4 @@
                 
                 = render( \
                   'companies/1_prospect/contributors/contributors_table',
-                  { company: @company, is_story_contributors: true })
+                  { company: @company, story: @story })

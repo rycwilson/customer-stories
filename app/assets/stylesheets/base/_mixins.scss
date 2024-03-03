@@ -377,22 +377,40 @@
   }
 }
 
+@mixin spinner($size) {
+  > .spinner {
+    display: flex;
+    justify-content: center;
+  }
+  
+  @if $size == 'sm' {
+    @include lds-ring(30px);
+  } @else if $size == 'md' {
+    @include lds-ring(40px);
+  } @else if $size == 'lg' {
+    @include lds-ring(50px);
+  }
+}
+
 // https://loading.io/css/
-@mixin lds-ring {
+@mixin lds-ring($size) {
+  $margin: round($size * .5);
+  $thickness: round($size * .1);
+
   .lds-ring {
     display: inline-block;
     position: relative;
-    width: 5.75rem;
-    height: 5.75rem;
+    width: $size + ($margin * 2);
+    height: $size + ($margin * 2);
   
     div {
       box-sizing: border-box;
       display: block;
       position: absolute;
-      width: 4.75rem;
-      height: 4.75rem;
-      margin: 0.5rem;
-      border: 0.5rem solid #777;
+      width: $size;
+      height: $size;
+      margin: $margin;
+      border: $thickness solid #777;
       border-radius: 50%;
       animation: lds-ring 1.2s cubic-bezier(0.5, 0, 0.5, 1) infinite;
       border-color: #777 transparent transparent transparent;

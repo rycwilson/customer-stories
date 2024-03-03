@@ -52,8 +52,14 @@ export default class ModalController extends Controller<HTMLDivElement> {
     const { id, src } = attrs as TurboFrameAttributes;
     if (id && src) {
       // if (/^(new|edit)/.test(id)) this.actionValue = id.match(/^(?<action>new|edit)/).groups.action;
-      const spinnerEl = this.turboFrameTarget.dataset.placeholder
-      if (spinnerEl) this.turboFrameTarget.insertAdjacentHTML('afterbegin', spinnerEl);
+      if (this.turboFrameTarget.dataset.spinner) {
+        this.turboFrameTarget.insertAdjacentHTML('afterbegin', this.turboFrameTarget.dataset.spinner);
+        window.setTimeout(() => {
+          const spinner = <HTMLDivElement>this.turboFrameTarget.querySelector(':scope > .spinner');
+          console.log(spinner)
+          spinner.classList.add('spinner--opaque');
+        }, 750)
+      }
       this.turboFrameTarget.id = id;
       this.turboFrameTarget.src = src;
     } else {

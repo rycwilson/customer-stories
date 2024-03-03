@@ -28,9 +28,24 @@ td[data-controller="actions-dropdown"] .dropdown-menu {
   }
 }
 
+
+turbo-frame[data-modal-target="turboFrame"] {
+  @include spinner('md');
+
+  > .spinner {
+    opacity: 0;
+
+    &--opaque {
+      opacity: 1;
+      transition: opacity .15s ease-out;
+    }
+  }
+}
+
 #prospect,
 #story,
 #promote {
+  @include spinner('lg');
   position: relative;
 
   > .spinner,
@@ -41,13 +56,6 @@ td[data-controller="actions-dropdown"] .dropdown-menu {
     left: 0;
     visibility: hidden;
     opacity: 0;
-  }
-
-  > .spinner {
-    @include lds-ring;
-    margin-top: 1rem;
-    display: flex;
-    justify-content: center;
   }
 
   &.loading > .spinner,

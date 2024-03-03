@@ -4,12 +4,7 @@
   data-action="resource:loading->dashboard#onResourceLoading resource:ready->dashboard#onResourceReady"
   role="tabpanel" }
 
-  .spinner
-    .lds-ring
-      div
-      div
-      div
-      div
+  = render('shared/loading_spinner')
 
   .container
     .row
@@ -73,16 +68,8 @@
                     i.fa.fa-plus.fa-stack-1x
 
       .col-sm-8.col-lg-9.layout-main
-        
-        .spinner
-          .lds-ring
-            div
-            div
-            div
-            div
-
         .tab-content
-
+        
           #customer-wins.resource-ctrl.tab-pane.fade {
             class=('active in' if active_tab == '#customer-wins') 
             data-dashboard-target="customerWins"
