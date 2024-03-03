@@ -12,7 +12,7 @@ export default class ContributionController extends Controller<HTMLTableRowEleme
   static targets = ['actionsDropdown'];
   declare readonly actionsDropdownTarget: HTMLTableCellElement;
 
-  static values = { rowData: Object, workflowStage: { type: String, default: 'prospect' } };
+  static values = { rowData: Object };
   declare readonly rowDataValue: { [key: string]: any };
   declare readonly workflowStageValue: 'prospect' | 'curate';
 
@@ -82,6 +82,7 @@ export default class ContributionController extends Controller<HTMLTableRowEleme
   }
 
   actionsDropdownTemplate() {
+    const shouldShowStoryLinks = window.location.pathname === '/prospect';
     const isPreInvite = this.status === 'pre_request';
     const didNotRespond = this.status === 'did_not_respond';
     const wasSubmitted = this.status && this.status.includes('submitted');
@@ -120,7 +121,7 @@ export default class ContributionController extends Controller<HTMLTableRowEleme
           ` : ''
         }
         <li role="separator" class="divider"></li>
-        ${this.workflowStageValue === 'prospect' ? `
+        ${shouldShowStoryLinks ? `
             ${this.customerWin.story?.published ? 
                 this.viewStoryDropdownItem + '<li role="separator" class="divider"></li>' : 
                 ''
