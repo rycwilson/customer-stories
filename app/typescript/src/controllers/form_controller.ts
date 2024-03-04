@@ -83,6 +83,7 @@ export default class FormController extends Controller<HTMLFormElement> {
     const referrerPassword = <HTMLInputElement>this.referrerFieldTargets.find(input => input.name.includes('password'));
     const contributorEmail = <HTMLInputElement>this.contributorFieldTargets.find(input => input.name.includes('email'));
     const contributorPassword = <HTMLInputElement>this.contributorFieldTargets.find(input => input.name.includes('password'));
+    if (!referrerEmail || !referrerPassword || !contributorEmail || !contributorPassword) return;
     [[referrerEmail, referrerPassword], [contributorEmail, contributorPassword]].forEach(([emailInput, passwordInput]) => {
       emailInput.addEventListener('input', (e) => {
         const email = (e.currentTarget as HTMLInputElement).value;
