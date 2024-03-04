@@ -2,7 +2,7 @@
 
   = form_with( \
       model: @success&.contributions&.build || Contribution.new,
-      url: company_contributions_path(@company),
+      url: "#{company_contributions_path(@company)}.js",
       format: :js,
       html: { \
         id: 'new-contribution-form',
@@ -10,9 +10,9 @@
         autocomplete: 'off',
         novalidate: true,
         data: { \
-          controller: 'form contribution-form',
-          contribution_form_resource_outlet: '.resource-ctrl',
-          contribution_form_modal_outlet: '#main-modal',
+          controller: 'form new-contribution',
+          new_contribution_resource_outlet: '.resource-ctrl',
+          new_contribution_modal_outlet: '#main-modal',
           modal_target: 'form',
           action: 'ajax:beforeSend->form#beforeSendXHR',
           submit_btn_text: 'Add Contributor' } }) do |form|
@@ -22,12 +22,12 @@
     = form.fields_for(:success, @success || form.object.build_success) do |success_fields|
       / = success_fields.hidden_field(:id)
       = success_fields.hidden_field(:name)
-      = success_fields.hidden_field(:customer_id, data: { contribution_form_target: 'successCustomerId' })
+      = success_fields.hidden_field(:customer_id, data: { new_contribution_target: 'successCustomerId' })
       = success_fields.hidden_field(:curator_id, value: success_fields.object.curator_id || current_user.id)
       = success_fields.fields_for(:customer, success_fields.object.customer || success_fields.object.build_customer) do |customer_fields|
-        = customer_fields.hidden_field(:id, data: { contribution_form_target: 'customerId customerField'})
-        = customer_fields.hidden_field(:name, data: { contribution_form_target: 'customerName customerField' })
-        = customer_fields.hidden_field(:company_id, value: @company.id, data: { contribution_form_target: 'customerField' })
+        = customer_fields.hidden_field(:id, data: { new_contribution_target: 'customerId customerField'})
+        = customer_fields.hidden_field(:name, data: { new_contribution_target: 'customerName customerField' })
+        = customer_fields.hidden_field(:company_id, value: @company.id, data: { new_contribution_target: 'customerField' })
 
       .form-group.required
         = success_fields.label( \
@@ -50,9 +50,11 @@
                   tomselect_type_value: Customer.name,
                   tomselect_custom_options_value: { create: true, persist: false },
                   tomselect_prevent_focus_value: @story ? true : false,
-                  action: 'contribution-form#onChangeCustomer',
-                  contribution_form_target: 'customerSelect' } })
-          span.help-block Required
+                  action: 'new-contribution#onChangeCustomer',
+                  form_target: 'requiredField',
+                  new_contribution_target: 'customerSelect' } })
+          span.help-block 
+            | Required
 
       - if @story.present?
         .form-group
@@ -72,7 +74,7 @@
                     tomselect_prevent_focus_value: true } })
 
       - else
-        .form-group.required data-action="tomselect:dropdown-did-open->contribution-form#filterCustomerWins"
+        .form-group.required data-action="tomselect:dropdown-did-open->new-contribution#filterCustomerWins"
           = form.label(:success_id, 'Customer Win', class: 'col-sm-3 control-label')
           .col-sm-9
             = form.collection_select( \
@@ -88,9 +90,11 @@
                     controller: 'tomselect',
                     tomselect_type_value: 'Customer Win',
                     tomselect_custom_options_value: { create: true, persist: false },
-                    contribution_form_target: 'customerWinSelect',
-                    action: 'contribution-form#onChangeCustomerWin' } })
-            span.help-block Required
+                    form_target: 'requiredField',
+                    new_contribution_target: 'customerWinSelect',
+                    action: 'new-contribution#onChangeCustomerWin' } })
+            span.help-block 
+              | Required
 
       .form-group.required
         = form.label(:contributor_id, 'Contributor', class: 'col-sm-3 control-label')
@@ -112,7 +116,8 @@
                 data: { \
                   controller: 'tomselect',
                   tomselect_type_value: 'Contributor',
-                  contribution_form_target: 'contributorSelect',
+                  form_target: 'requiredField',
+                  new_contribution_target: 'contributorSelect',
                   action: 'form#onChangeContact',
                   field_name: "#{form.object_name}[contributor_id]" } })
           span.help-block 
@@ -152,7 +157,7 @@
                 data: { \
                   controller: 'tomselect',
                   tomselect_type_value: 'Referrer',
-                  contribution_form_target: 'referrerSelect',
+                  new_contribution_target: 'referrerSelect',
                   action: 'form#onChangeContact',
                   field_name: "#{form.object_name}[referrer_id]" } })
 

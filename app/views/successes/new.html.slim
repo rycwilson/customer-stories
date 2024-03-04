@@ -9,16 +9,16 @@
         autocomplete: 'off',
         novalidate: true,
         data: { \
-          controller: 'form customer-win-form',
+          controller: 'form new-customer-win',
           modal_target: 'form',
-          customer_win_form_modal_outlet: '#main-modal',
+          new_customer_win_modal_outlet: '#main-modal',
           action: 'ajax:beforeSend->form#beforeSendXHR',
           submit_btn_text: 'Add Customer Win' } }) do |form|
 
     = form.fields_for(:customer, form.object.customer || form.object.build_customer) do |customer_fields|
-      = customer_fields.hidden_field(:id, data: { customer_win_form_target: 'customerField' })
-      = customer_fields.hidden_field(:name, data: { customer_win_form_target: 'customerName customerField' })
-      = customer_fields.hidden_field(:company_id, value: @company.id, data: { customer_win_form_target: 'customerField' })
+      = customer_fields.hidden_field(:id, data: { new_customer_win_target: 'customerField' })
+      = customer_fields.hidden_field(:name, data: { new_customer_win_target: 'customerName customerField' })
+      = customer_fields.hidden_field(:company_id, value: @company.id, data: { new_customer_win_target: 'customerField' })
 
     .form-group.required
       = form.label(:curator_id, 'Curator', class: 'col-sm-3 control-label')
@@ -30,7 +30,7 @@
             :full_name,
             { include_blank: true,
               selected: @curator_id || [] },
-            { class: 'new-success curator form-control',
+            { class: 'form-control',
               placeholder: 'Select',
               required: true,
               data: { \
@@ -50,16 +50,16 @@
             :name,
             { include_blank: true,
               selected: @customer_id || [] },
-            { class: 'new-success customer form-control',
+            { class: 'form-control',
               placeholder: 'Select or Create',
               required: true,
               data: { \
                 controller: 'tomselect',
-                customer_win_form_target: 'successCustomerId',
+                new_customer_win_target: 'successCustomerId',
                 form_target: 'requiredField',
                 tomselect_type_value: 'customer',
                 tomselect_custom_options_value: { create: true, persist: false },
-                action: 'customer-win-form#onChangeCustomer' } })
+                action: 'new-customer-win#onChangeCustomer' } })
         span.help-block 
           | Required
 
@@ -107,7 +107,7 @@
                 data: { \
                   controller: 'tomselect',
                   tomselect_type_value: 'referrer',
-                  customer_win_form_target: 'referrerSelect',
+                  new_customer_win_target: 'referrerSelect',
                   action: 'form#onChangeContact',
                   field_name: "#{contribution_fields.object_name}[referrer_id]" } })
                   
@@ -136,7 +136,7 @@
                 data: { \
                   controller: 'tomselect',
                   tomselect_type_value: 'contributor',
-                  customer_win_form_target: 'contributorSelect',
+                  new_customer_win_target: 'contributorSelect',
                   action: 'form#onChangeContact',
                   field_name: "#{contribution_fields.object_name}[contributor_id]" } })
 
@@ -145,7 +145,7 @@
     /.form-group.source
       label.col-sm-3.control-label Source
       .col-sm-9
-        .btn-group data-action="change->customer-win-form#onChangeSource" role="tablist"
+        .btn-group data-action="change->new-customer-win#onChangeSource" role="tablist"
           = label_tag('source_create', class: 'radio-inline') do
             = radio_button_tag( \
                 'source', 

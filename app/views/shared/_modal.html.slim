@@ -13,7 +13,7 @@
           span aria-hidden="true"
             | &times;
 
-      .modal-body data-modal-target="body" data-action="customer-win-form:source-changed->modal#setSubmitBtnText"
+      .modal-body data-modal-target="body" data-action="new-customer-win:source-changed->modal#setSubmitBtnText"
         / nesting placeholder content won't work correctly when dynamically setting the id ansd src attributes,
         / so have modal_controller.js handle the placeholder content
         = turbo_frame_tag( \
