@@ -13,6 +13,7 @@ export default class extends Controller<HTMLButtonElement> {
   declare readonly turboFrameAttrsValue: { id: string, src: string };
 
   connect() {
+    this.element.addEventListener('click', this.showModal.bind(this));
   }
 
   showModal() {
