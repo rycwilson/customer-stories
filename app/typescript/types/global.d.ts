@@ -20,7 +20,7 @@ interface CustomerStoriesApp {
 
 type ResourceName = 'customerWins' | 'contributions' | 'storyContributions' | 'promotedStories';
 
-type SelectInputType = 'curator' | 'status' | 'customer' | 'category' | 'product' | 'tags' | 'contributor' | 'referrer'; 
+type SelectInputType = 'filter' | 'curator' | 'status' | 'customer' | 'category' | 'product' | 'tags' | 'contributor' | 'referrer'; 
 
 interface JQuery<HTMLElement>{
   tab: (action: string) => void;
@@ -61,11 +61,15 @@ interface User {
 interface CustomerWin {
   id: number;
   name: string;
-  customer_id: number; 
-  curator_id: number; 
+  customer_id?: number; 
+  curator_id?: number; 
+  display_status?: string;
+  referrer?: User | null;
+  contact?: User | null;
+  timestamp?: number;
+  new_story_path?: string;
   curator: User; 
   customer: Customer; 
-  display_status?: string;
   story: Story;
 }
 
