@@ -1,7 +1,6 @@
 import { Controller } from "@hotwired/stimulus";
 import TomSelect, { tsBaseOptions } from '../tomselect';
 import type { TomInput, TomOption } from 'tom-select/dist/types/types/core.d.ts';
-// import type { TomSettings } from 'tom-select/dist/types/types/settings.d.ts'
 import { type CBOptions } from 'tom-select/dist/types/plugins/clear_button/types';
 import { capitalize } from "../utils";
 
@@ -11,9 +10,7 @@ export default class extends Controller<TomInput> {
     customOptions: { type: Object, default: {} },
     preventFocus: { type: Boolean, default: false }
   };
-  declare readonly typeValue: (
-    'filter' | 'curator' | 'status' | 'customer' | 'category' | 'product' | 'tags' | 'contributor' | 'referrer'
-  );
+  declare readonly typeValue: SelectInputType | undefined;
   declare readonly customOptionsValue: { [key: string]: any };
   declare readonly preventFocusValue: boolean;
 
@@ -23,9 +20,7 @@ export default class extends Controller<TomInput> {
   connect() {
     // console.log('tomselect connect')
     this.ts = new TomSelect(this.element, {...tsBaseOptions, ...this.options, ...this.customOptionsValue });
-    if (this.preventFocusValue) {
-      this.ts.control_input.setAttribute('tabindex', '-1');
-    }
+    if (this.preventFocusValue) this.ts.control_input.setAttribute('tabindex', '-1');
   }
 
   isFilter() { return this.typeValue === 'filter'; }
@@ -71,7 +66,7 @@ export default class extends Controller<TomInput> {
         option_create(data: TomOption, escape: (str: string) => string) {
           return `
             <div class="create">
-              <i class="fa fa-plus"></i><span>New ${capitalize(ctrl.typeValue)}:</span>&nbsp;&nbsp;<span class="user-input">${escape(data.input)}</span>
+              <i class="fa fa-plus"></i><span>New ${capitalize(ctrl.typeValue || 'unknown')}:</span>&nbsp;&nbsp;<span class="user-input">${escape(data.input)}</span>
             </div>
           `;
         } 
