@@ -3,7 +3,7 @@ import ModalController from './modal_controller';
 import { capitalize } from '../utils';
 import { type TomInput } from 'tom-select/dist/types/types';
 
-export default class CustomerWinFormController extends FormController {
+export default class NewCustomerWinController extends FormController {
   static outlets = ['modal'];
   declare readonly modalOutlet: ModalController;
 

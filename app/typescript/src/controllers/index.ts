@@ -22,8 +22,6 @@ application.register('company-profile', CompanyProfileController);
 import ContributionController from './contribution_controller.js';
 application.register('contribution', ContributionController);
 
-import ContributionFormController from './contribution_form_controller.js';
-application.register('contribution-form', ContributionFormController);
 
 import CtasController from "./ctas_controller.js";
 application.register("ctas", CtasController);
@@ -34,8 +32,6 @@ application.register('customer-form', CustomerFormController);
 import CustomerWinController from './customer_win_controller.js';
 application.register('customer-win', CustomerWinController);
 
-import CustomerWinFormController from './customer_win_form_controller.js';
-application.register('customer-win-form', CustomerWinFormController);
 
 import DashboardController from './dashboard_controller.js';
 application.register('dashboard', DashboardController);
@@ -57,6 +53,15 @@ application.register('modal', ModalController);
 
 import ModalTriggerController from './modal_trigger_controller.js';
 application.register('modal-trigger', ModalTriggerController);
+
+import NewCustomerWinController from './new_customer_win_controller.js';
+application.register('new-customer-win', NewCustomerWinController);
+
+import NewContributionController from './new_contribution_controller.js';
+application.register('new-contribution', NewContributionController);
+
+import NewStoryController from './new_story_controller.js';
+application.register('new-story', NewStoryController);
 
 import PluginsController from "./plugins_controller.js";
 application.register("plugins", PluginsController);

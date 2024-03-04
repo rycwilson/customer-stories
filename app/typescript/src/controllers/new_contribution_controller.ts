@@ -3,7 +3,7 @@ import ModalController from './modal_controller';
 import ResourceController from './resource_controller';
 import { type TomInput, TomOption } from 'tom-select/dist/types/types';
 
-export default class ContributionFormController extends FormController {
+export default class NewContributionController extends FormController {
   static outlets = ['resource', 'modal'];
   declare readonly resourceOutlets: ResourceController[];
   declare readonly modalOutlet: ModalController;
