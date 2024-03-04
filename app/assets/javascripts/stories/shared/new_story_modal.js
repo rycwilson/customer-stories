@@ -22,16 +22,6 @@ function newStoryListeners () {
 
     })
 
-    // new story modal (accessed from both Prospect and Curate)
-    .on('show.bs.modal', '#new-story-modal', function () {
-      if ( $('a[href="#curate"]').parent().hasClass('active') ) {
-        $('.form-group.success').addClass('hidden');
-      }
-    })
-    .on('shown.bs.modal', '#new-story-modal', function () {
-      $('#new-story-form #story_title')[0].focus();
-    })
-
      // if Curate view, success name mirrors story title
     .on('change', '#new-story-form #story_title', function () {
       if ( $('a[href="#curate"]').parent().hasClass('active') ) {

@@ -25,24 +25,6 @@
                 span 
                   | Customer Wins
               
-              /button.btn-add {
-                type="button"
-                data-controller="modal-trigger"
-                data-modal-trigger-modal-outlet="#main-modal"
-                data-modal-trigger-title-value="New Customer Win"
-                data-modal-trigger-turbo-frame-attrs="{\"id\":\"new-contribution\",\"src\":\"#{new_company_success_path(company)}\"}"
-                data-action="modal-trigger#showModal" }
-                i.fa.fa-fw.fa-plus-circle
-
-              /span
-                button.btn-add {
-                  type="button"
-                  class=('shown' if tab == '#customer-wins' || tab.nil?)
-                  data-toggle="modal" 
-                  data-target="#new-success-modal" }
-                  span.fa-stack.fa-lg                    
-                    i.fa.fa-circle-o.fa-stack-2x
-                    i.fa.fa-plus.fa-stack-1x
           li class=('active' if active_tab == '#contributors')
             a {
               id="contributors-tab" 
@@ -57,15 +39,6 @@
                 i class="fa fa-fw fa-users"
                 span 
                   | Contributors
-              /span
-                button.btn-add {
-                  type="button"
-                  class=('shown' if tab == '#contributors')
-                  data-toggle="modal" 
-                  data-target="#new-contributor-modal" }
-                  span.fa-stack.fa-lg
-                    i.fa.fa-circle-o.fa-stack-2x
-                    i.fa.fa-plus.fa-stack-1x
 
       .col-sm-8.col-lg-9.layout-main
         .tab-content

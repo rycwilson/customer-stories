@@ -1,13 +1,3 @@
-
-#curate .layout-main
-#new-story-modal {
-  .modal-header {
-    .close {
-      font-size: 26px;
-    }
-  }
-}
-
 #curate .layout-sidebar .curate-stories {
   @include hide-until-init;
   background-color: $medium-gray;
