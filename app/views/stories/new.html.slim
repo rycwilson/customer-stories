@@ -1,0 +1,80 @@
+= turbo_frame_tag('new-story')
+
+  = form_with( \
+      model: [@company, Story.new],
+      html: { \
+        id: 'new-story-form',
+        class: 'form-horizontal',
+        autocomplete: 'off',
+        novalidate: true,
+        data: { \
+          controller: 'form new-story',
+          modal_target: 'form',
+          action: 'ajax:beforeSend->form#beforeSendXHR',
+          submit_btn_text: 'Add Story' } }) do |form|
+
+    = form.fields_for(:success, @success || form.object.build_success) do |success_fields|
+      / = success_fields.hidden_field(:id)
+      = success_fields.hidden_field(:name)
+      = success_fields.hidden_field(:customer_id, data: { story_target: 'successCustomerId' })
+      = success_fields.hidden_field(:curator_id, value: success_fields.object.curator_id || current_user.id)
+      = success_fields.fields_for(:customer, success_fields.object.customer || success_fields.object.build_customer) do |customer_fields|
+        = customer_fields.hidden_field(:id, data: { story_target: 'customerId customerField'})
+        = customer_fields.hidden_field(:name, data: { story_target: 'customerName customerField' })
+        = customer_fields.hidden_field(:company_id, value: @company.id, data: { story_target: 'customerField' })
+    
+      .form-group.required
+        = success_fields.label( \
+            :customer_id,
+            'Customer',
+            class: 'col-sm-3 control-label',
+            style: "#{false ? 'pointer-events:none' : ''}")
+        .col-sm-9
+          = success_fields.collection_select( \
+              :customer_id,
+              @company.customers.sort_by { |customer| customer.name.downcase },
+              :id,
+              :name,
+              { include_blank: true }.merge(@customer_id ? { selected: @customer_id } : {}),
+              { class: "form-control #{false ? 'readonly' : ''}",
+                placeholder: 'Select or Create',
+                required: true,
+                data: { \
+                  controller: 'tomselect',
+                  tomselect_type_value: Customer.name,
+                  tomselect_custom_options_value: { create: true, persist: false },
+                  tomselect_prevent_focus_value: @story ? true : false,
+                  action: 'new-story#onChangeCustomer',
+                  form_target: 'requiredField',
+                  story_target: 'customerSelect' } })
+          span.help-block 
+            | Required
+
+    .form-group.required data-action="tomselect:dropdown-did-open->new-story#filterCustomerWins"
+      = form.label(:success_id, 'Customer Win', class: 'col-sm-3 control-label')
+      .col-sm-9
+        = form.collection_select( \
+            :success_id,
+            @company.successes.sort_by { |success| success.name },
+            :id,
+            :name,
+            { include_blank: true },
+            { class: 'form-control',
+              placeholder: 'Select or Create',
+              required: true,
+              data: { \
+                controller: 'tomselect',
+                tomselect_type_value: 'Customer Win',
+                tomselect_custom_options_value: { create: true, persist: false },
+                form_target: 'requiredField',
+                new_story_target: 'customerWinSelect',
+                action: 'new-story#onChangeCustomerWin' } })
+        span.help-block 
+          | Required
+
+    .form-group.required 
+      = form.label(:title, 'Story Title', class: 'col-sm-3 control-label')
+      .col-sm-9
+        = form.text_field(:title, class: 'form-control')
+        span.help-block 
+          | Required

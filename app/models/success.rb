@@ -270,5 +270,9 @@ class Success < ApplicationRecord
     (c_attrs[:email].blank? || c_attrs[:first_name].blank? || c_attrs[:last_name].blank?))
   end
 
+  def new_story_path
+    Rails.application.routes.url_helpers.new_success_story_path(self)
+  end
+
 end
 

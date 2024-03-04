@@ -22,6 +22,7 @@ export default class CustomerWinController extends Controller<HTMLTableRowElemen
 
   declare id: number;
   declare status: string;
+  declare newStoryPath: string;
   declare curator: User;
   declare customer: Customer;
   declare story: Story | undefined;      
@@ -214,8 +215,15 @@ export default class CustomerWinController extends Controller<HTMLTableRowElemen
               </a>
             </li>
             <li role="separator" class="divider"></li>
-            <li class="start-curation">
-              <a href="javascript:;">
+            <li>
+              <a 
+                href="javascript:;"
+                data-controller="modal-trigger"
+                data-modal-trigger-modal-outlet="#main-modal"
+                data-modal-trigger-title-value="New Customer Story"
+                data-modal-trigger-turbo-frame-attrs-value=${JSON.stringify({ id: 'new-story', src: this.newStoryPath })}
+                data-modal-trigger-submit-button-text-value="Add Story"
+                aria-label="New Customer Story">
                 <i class="fa fa-play fa-fw action"></i>&nbsp;&nbsp;
                 <span>Start Customer Story</span>
               </a>

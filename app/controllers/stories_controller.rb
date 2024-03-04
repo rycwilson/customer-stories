@@ -46,6 +46,10 @@ class StoriesController < ApplicationController
     render(layout: @is_dashboard ? false : 'stories')
   end
 
+  def new
+    # success_id may or may not be present
+  end
+
   def show
     sleep 3 if params[:sleep]
     # response.set_header('Cache-Control', 'max-age=0, no-cache, no-store, must-revalidate, private')

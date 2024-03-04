@@ -38,6 +38,7 @@ export function tableConfig(): Config {
       },
       {
         name: 'success',
+        // TODO interface CustomerWin
         data: {
           _: (row: CustomerWin, type: any, set: any) => ({
             id: row.id,
@@ -52,6 +53,7 @@ export function tableConfig(): Config {
       },
       {
         name: 'customer',
+        // TODO interface CustomerWin
         data: {
           _: (row: CustomerWin, type: any, set: any) => ({ id: row.customer.id, name: row.customer.name }),
           display: 'customer.name',
@@ -136,8 +138,7 @@ export function tableConfig(): Config {
                 data-controller="modal-trigger"
                 data-modal-trigger-modal-outlet="#main-modal"
                 data-modal-trigger-title-value="Edit Customer"
-                data-modal-trigger-turbo-frame-attrs-value=${JSON.stringify(turboFrameAttrs)}
-                data-action="modal-trigger#showModal">
+                data-modal-trigger-turbo-frame-attrs-value=${JSON.stringify(turboFrameAttrs)}>
                 <i class="glyphicon glyphicon-pencil"></i>
                 <!-- <div><i class="fa fa-circle-o-notch"></i></div> -->
               </button>
@@ -147,13 +148,14 @@ export function tableConfig(): Config {
     },
 
     createdRow(row: Node, data: object | any[], index: number) {
-      const { id, display_status: status, curator, customer, story } = data as CustomerWin;
+      // TODO interface CustomerWin
+      const { id, display_status: status, new_story_path: newStoryPath, curator, customer, story } = data as CustomerWin;
       $(row)
         .attr('data-controller', 'customer-win')
         .attr('data-customer-win-resource-outlet', '#contributors')
         .attr('data-customer-win-modal-outlet', '#main-modal')
         // .attr('data-customer-win-contributions-modal-outlet', '.contributions-modal')
-        .attr('data-customer-win-row-data-value', JSON.stringify({ id, status, curator, customer, story }))
+        .attr('data-customer-win-row-data-value', JSON.stringify({ id, status, newStoryPath, curator, customer, story }))
         .attr(
           'data-customer-win-child-row-turbo-frame-attrs-value', 
           JSON.stringify({ id: 'edit-customer-win', src: editCustomerWinPath(id) })

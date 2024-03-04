@@ -96,11 +96,12 @@ Rails.application.routes.draw do
       resources :companies, only: [:show, :edit, :update] do
         resources :customers, only: [:edit, :create, :update, :destroy], shallow: true
         resources :successes, except: [:index], shallow: true do
-          resources :contributions, only: [:index, :new]
+          resource :story, only: [:new]
+          resources :contributions, only: [:index, :new, :create]
           resources :results, only: [:create, :destroy]
           collection { post '/import', to: 'successes#import' }
         end
-        resources :stories, only: [:edit, :create, :update, :destroy], shallow: true do
+        resources :stories, only: [:new, :edit, :create, :update, :destroy], shallow: true do
           put '/create_gads', on: :member, to: 'adwords_ads#create'
           put '/update_gads', on: :member, to: 'adwords_ads#update'
         end
