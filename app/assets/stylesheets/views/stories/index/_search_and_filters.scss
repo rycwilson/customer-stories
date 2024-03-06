@@ -28,6 +28,25 @@
     }
   }
 
+  &__dashboard-header {
+    @include flex-row-center-between;
+    margin: -5px 0;
+
+    a {
+      font-size: 16px;    // match dashboard tabs
+    }
+
+    button {
+      margin-right: $padding-base-horizontal * -1;
+    }
+
+    img {
+      display: flex;    // this normalizes the height of the image
+      width: 2.5rem;
+      height: 2.5rem;
+    }
+  }
+
   @media (max-width: 767px) {
     #no-search-results {
       font-size: 16px;
