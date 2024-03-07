@@ -1,6 +1,6 @@
 import { Controller } from "@hotwired/stimulus";
 import TomSelect, { tsBaseOptions } from '../tomselect';
-import type { TomInput, TomOption } from 'tom-select/dist/types/types/core.d.ts';
+import type { TomInput, TomOption, TomItem } from 'tom-select/dist/types/types/core.d.ts';
 import { type CBOptions } from 'tom-select/dist/types/plugins/clear_button/types';
 import { capitalize } from "../utils";
 
@@ -21,6 +21,12 @@ export default class extends Controller<TomInput> {
     // console.log('tomselect connect')
     this.ts = new TomSelect(this.element, {...tsBaseOptions, ...this.options, ...this.customOptionsValue });
     if (this.preventFocusValue) this.ts.control_input.setAttribute('tabindex', '-1');
+
+    if (this.isMultiSelect) {
+      // add clearing behavior
+      this.ts.wrapper.querySelectorAll('.item').forEach(item => this.onMultiSelectItemAdd(item as TomItem));
+      this.ts.on('item_add', (value: string, item: TomItem) => this.onMultiSelectItemAdd(item));
+    }
   }
 
   isFilter() { return this.typeValue === 'filter'; }
@@ -41,12 +47,22 @@ export default class extends Controller<TomInput> {
     this.dispatch('search', { detail: { searchResults }});
   }
 
+  get isMultiSelect() { return this.element.type === 'select-multiple'; }
+
+  onMultiSelectItemAdd(item: TomItem) {
+    (<HTMLButtonElement>item.querySelector('.clear-button')).addEventListener('click', (e) => {
+      e.stopPropagation();    // don't highlight active or open dropdown
+      this.ts.removeItem(item.dataset.value);
+      this.ts.blur();
+    });
+  }
+
   get options() {
     const ctrl = this;  // "this" will be the TomSelect instance in the context of the options object
     return {
       render: {
         item(data: TomOption, escape: (str: string) => string) {
-          return ctrl.typeValue === 'tags' ? `
+          return ctrl.isMultiSelect ? `
               <div>
                 <div>
                   <div>${escape(data.text)}</div>
@@ -72,7 +88,7 @@ export default class extends Controller<TomInput> {
         } 
       },
       
-      plugins: ctrl.element.type === 'select-multiple' ? {} : {
+      plugins: ctrl.isMultiSelect ? {} : {
         'clear_button': {
           title: 'Clear selection',
           html: (config: CBOptions) => {

@@ -41,6 +41,23 @@ select.tomselected + .ts-wrapper {
       pointer-events: none;
     }
   }
+
+  &.multi.has-items {
+    .ts-control {
+      padding: 8px;
+    }
+    
+    .item {
+      display: flex;
+      align-items: center;
+      padding: 2px 0 2px 10px;
+    }
+
+    .clear-button {
+      font-size: 20px;
+      padding: 0 10px;
+    }
+  }
 }
 
 .ts-dropdown {
