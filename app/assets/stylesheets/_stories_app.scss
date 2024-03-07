@@ -31,8 +31,6 @@
   
   &.has-items {
     .ts-control {
-      padding: 8px;
-      
       // wrap items
       display: flex;
       flex-direction: column;
@@ -40,11 +38,8 @@
     }
     
     .item {
-      display: flex;
-      align-items: center;
-      padding: 2px 0 2px 10px;
       margin-right: 36px;
-      
+
       &:not(:last-of-type) {
         margin-bottom: 8px;
       }
@@ -57,11 +52,6 @@
     .tag-name {
       color: #555;
       font-weight: bold;
-    }
-    
-    .clear-button {
-      font-size: 20px;
-      padding: 0 10px;
     }
   }
   
