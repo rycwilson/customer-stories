@@ -1,5 +1,8 @@
 import { Controller } from '@hotwired/stimulus';
-import type { TomInput } from 'tom-select/dist/types/types';
+import type NewCustomerWinController from './new_customer_win_controller';
+import type NewContributionController from './new_contribution_controller';
+import type NewStoryController from './new_story_controller';
+import type { TomInput, TomOption } from 'tom-select/dist/types/types';
 
 export default class FormController extends Controller<HTMLFormElement> {
   [key: string]: any;
@@ -85,9 +88,10 @@ export default class FormController extends Controller<HTMLFormElement> {
     }
   }
 
-  setCustomerFields(customerSelectValue: string) {
-    const isSubclassCall = /new-(customer-win|contribution|story)/.test(this.identifier);
-    if (!isSubclassCall) throw('Method can only be called from a subclass of FormController'); 
+  setCustomerFields(
+    this: NewCustomerWinController | NewContributionController | NewStoryController, 
+    customerSelectValue: string
+  ) {
     const customerId = isNaN(+customerSelectValue) ? null : +customerSelectValue;
     this.customerSelectTarget.disabled = !customerId;
     this.customerFieldTargets.forEach((field: HTMLInputElement) => field.disabled = !!customerId);
@@ -95,9 +99,7 @@ export default class FormController extends Controller<HTMLFormElement> {
     return customerId;
   }
 
-  setCustomerWinFields(customerId: number | null) {
-    const isSubclassCall = /new-(contribution|story)/.test(this.identifier);
-    if (!isSubclassCall) throw('Method can only be called from a subclass of FormController');
+  setCustomerWinFields(this: NewContributionController | NewStoryController, customerId: number | null) {
     this.successCustomerIdTarget.value = customerId?.toString() || '';
     this.successCustomerIdTarget.disabled = !!customerId;
     this.customerWinSelectTarget.tomselect!.clear(true);
@@ -108,9 +110,7 @@ export default class FormController extends Controller<HTMLFormElement> {
     }
   }
 
-  setCustomerWinOptions() {
-    const isSubclassCall = /new-(contribution|story)/.test(this.identifier);
-    if (!isSubclassCall) throw('Method can only be called from a subclass of FormController');
+  setCustomerWinOptions(this: NewContributionController | NewStoryController) {
     if (!this.hasExistingCustomer) return;
     const customerId = +this.customerSelectTarget.value;
     
@@ -120,25 +120,22 @@ export default class FormController extends Controller<HTMLFormElement> {
         .filter((customerWin: CustomerWin) => customerWin.customer.id === customerId)
         .map((customerWin: CustomerWin) => customerWin.id);
     } catch {
-      this.customerCustomerWinIds = Object.entries(this.customerWinSelectTarget.tomselect.options)
+      this.customerCustomerWinIds = Object.entries(this.customerWinSelectTarget.tomselect!.options)
         .filter(([id, option]: [string, any]) => +(option as { customerId: string }).customerId === customerId)
         .map(([id, option]: [string, any]) => +id);
     }
     this.customerWinsWereFiltered = false;
   }
 
-  filterCustomerWins(e: Event) {
-    const isSubclassCall = /new-(contribution|story)/.test(this.identifier);
-    if (!isSubclassCall) throw('Method can only be called from a subclass of FormController');
-    if (this.customerWinsWereFiltered) return false;
-    Object.keys(this.customerWinSelectTarget.tomselect!.options).forEach(customerWinId => {
-      const tsOption = this.customerWinSelectTarget.tomselect!.getOption(customerWinId);
+  filterCustomerWins(this: NewContributionController | NewStoryController) {
+    if (this.customerWinsWereFiltered) return;
+    Object.entries(this.customerWinSelectTarget.tomselect!.options).forEach(([id, option]: [string, TomOption]) => {
       const shouldHide = (
         this.hasNewCustomer || 
-        (this.hasExistingCustomer && !this.customerCustomerWinIds.includes(+customerWinId))
+        (this.hasExistingCustomer && !this.customerCustomerWinIds.includes(+option.value))
       );
-      tsOption.classList.toggle('hidden', shouldHide);
-    });
+      option.$div.classList.toggle('hidden', shouldHide);
+    })
     this.customerWinsWereFiltered = true;
   }
 
