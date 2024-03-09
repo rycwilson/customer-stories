@@ -34,13 +34,11 @@ export default class NewContributionController extends FormController {
   }
 
   connect() {
-    if (this.hasExistingCustomer) this.setCustomerWinOptions();
+    if (this.shouldFilterCustomerWinOptionsOnConnect()) {
+      // wait for tomselect inputs to initialize
+      window.setTimeout(this.filterCustomerWinOptions.bind(this));
+    }
   }
-
-  // resourceOutletConnected(outlet) {
-  //   if (outlet.resourceName === 'customerWins') this.customerWinsCtrl = outlet;
-  //   if (outlet.resourceName === 'contributors') this.contributorsCtrl = outlet;
-  // }
 
   get customerWinsCtrl() {
     return this.resourceOutlets.find(outlet => outlet.resourceName === 'customerWins');
@@ -56,10 +54,9 @@ export default class NewContributionController extends FormController {
   }
 
   onChangeCustomerWin({ target: select }: { target: TomInput }) {
-    if (
-      !(this.customerWinsCtrl instanceof ResourceController) ||
-      !(this.contributorsCtrl instanceof ResourceController)
-    ) return;
+    if (!(this.customerWinsCtrl instanceof ResourceController) || !(this.contributorsCtrl instanceof ResourceController)) {
+      throw('Missing resource controller outlets');
+    }
     const customerWinId = +select.value;
     const customerWin = this.customerWinsCtrl.dt
       .column('success:name').data().toArray()
@@ -70,7 +67,7 @@ export default class NewContributionController extends FormController {
     const tsOptions = this.contributorSelectTarget.tomselect!.options;
     if (customerWin) {
       this.customerSelectTarget.tomselect!.setValue(customerWin.customerId, true);
-      // this.setCustomerWinOptions(customerWin.customerId);
+      // this.filterCustomerWinOptions(customerWin.customerId);
 
       // disable contributor option for any contributors that already have a contribution for the customer win
       customerWinContributorIds.forEach(contributorId => {

@@ -104,14 +104,14 @@ export default class FormController extends Controller<HTMLFormElement> {
     this.successCustomerIdTarget.disabled = !!customerId;
     this.customerWinSelectTarget.tomselect!.clear(true);
     if (customerId) {
-      this.setCustomerWinOptions();
+      this.filterCustomerWinOptions();
     } else {
       this.customerWinsWereFiltered = false;
     }
   }
 
-  setCustomerWinOptions(this: NewContributionController | NewStoryController) {
-    if (!this.hasExistingCustomer) return;
+  filterCustomerWinOptions(this: NewContributionController | NewStoryController) {
+    if (!this.hasExistingCustomer || !this.hasCustomerWinSelectTarget) return;
     const customerId = +this.customerSelectTarget.value;
     
     // the New Story form won't have access to the customer wins table (customerWinsCtrl)
@@ -127,14 +127,21 @@ export default class FormController extends Controller<HTMLFormElement> {
     this.customerWinsWereFiltered = false;
   }
 
+  shouldFilterCustomerWinOptionsOnConnect(this: NewContributionController | NewStoryController) {
+    return (
+      this.hasExistingCustomer && 
+      this.hasCustomerWinSelectTarget && 
+      !this.customerWinSelectTarget.classList.contains('readonly')
+    );
+  }
+
   filterCustomerWins(this: NewContributionController | NewStoryController) {
     if (this.customerWinsWereFiltered) return;
     Object.entries(this.customerWinSelectTarget.tomselect!.options).forEach(([id, option]: [string, TomOption]) => {
-      const shouldHide = (
-        this.hasNewCustomer || 
-        (this.hasExistingCustomer && !this.customerCustomerWinIds.includes(+option.value))
+      option.$div.classList.toggle(
+        'hidden', 
+        this.hasNewCustomer || (this.hasExistingCustomer && !this.customerCustomerWinIds.includes(+option.value))
       );
-      option.$div.classList.toggle('hidden', shouldHide);
     })
     this.customerWinsWereFiltered = true;
   }
