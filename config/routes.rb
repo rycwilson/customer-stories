@@ -96,7 +96,7 @@ Rails.application.routes.draw do
       resources :companies, only: [:show, :edit, :update] do
         resources :customers, only: [:edit, :create, :update, :destroy], shallow: true
         resources :successes, except: [:index], shallow: true do
-          resource :story, only: [:new]
+          resource :story, only: [:new, :create]
           resources :contributions, only: [:index, :new, :create]
           resources :results, only: [:create, :destroy]
           collection { post '/import', to: 'successes#import' }
