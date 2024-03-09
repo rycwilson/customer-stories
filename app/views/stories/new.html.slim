@@ -93,7 +93,7 @@
             :success_id,
             options_for_select( \
               @company.successes \
-                .sort(&:name) \
+                .sort_by(&:name) \
                 .map { |success| [success.name, success.id, { 'data-customer-id' => success.customer.id }] },
               selected: @success&.id),
             { include_blank: true },
