@@ -7,7 +7,18 @@ export default class NewCustomerWinController extends FormController {
   static outlets = ['modal'];
   declare readonly modalOutlet: ModalController;
 
-  static targets = [];
+  static targets = [
+    'customerSelect',
+    'customerField',
+    'customerName',
+    'contributorSelect', 
+    'referrerSelect', 
+  ];
+  declare readonly customerSelectTarget: TomInput;
+  declare readonly customerFieldTargets: HTMLInputElement[];
+  declare readonly customerNameTarget: HTMLInputElement;
+  declare readonly contributorSelectTarget: TomInput;
+  declare readonly referrerSelectTarget: TomInput;
 
   connect() {
   }
@@ -20,7 +31,7 @@ export default class NewCustomerWinController extends FormController {
   }
 
   onChangeCustomer({ target: select }: { target: TomInput }) {
-    super.setCustomerFields(select.value);
+    this.setCustomerFields(select.value);
   }
 
   onChangeCustomerContact({ target: select }: { target: TomInput }) {

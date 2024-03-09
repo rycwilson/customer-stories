@@ -1,5 +1,5 @@
 import { Controller } from '@hotwired/stimulus';
-import type { TomInput, TomOption } from 'tom-select/dist/types/types';
+import type { TomInput } from 'tom-select/dist/types/types';
 
 export default class FormController extends Controller<HTMLFormElement> {
   [key: string]: any;
@@ -86,55 +86,60 @@ export default class FormController extends Controller<HTMLFormElement> {
   }
 
   setCustomerFields(customerSelectValue: string) {
-    try {
-      const customerId = isNaN(+customerSelectValue) ? null : +customerSelectValue;
-      this.customerSelectTarget.disabled = !customerId;
-      this.customerFieldTargets.forEach((field: HTMLInputElement) => field.disabled = !!customerId);
-      this.customerNameTarget.value = !customerId ? customerSelectValue : '';
-      return customerId;
-    } catch {
-      throw("Method can only be called from subclasses of FormController");
-    }
+    const isSubclassCall = /new-(customer-win|contribution|story)/.test(this.identifier);
+    if (!isSubclassCall) throw('Method can only be called from a subclass of FormController'); 
+    const customerId = isNaN(+customerSelectValue) ? null : +customerSelectValue;
+    this.customerSelectTarget.disabled = !customerId;
+    this.customerFieldTargets.forEach((field: HTMLInputElement) => field.disabled = !!customerId);
+    this.customerNameTarget.value = !customerId ? customerSelectValue : '';
+    return customerId;
   }
 
   setCustomerWinFields(customerId: number | null) {
-    try {
-      this.successCustomerIdTarget.value = customerId?.toString() || '';
-      this.successCustomerIdTarget.disabled = !!customerId;
-      this.customerWinSelectTarget.tomselect!.clear(true);
-    } catch {
-      throw("Method can only be called from subclasses of FormController");
+    const isSubclassCall = /new-(contribution|story)/.test(this.identifier);
+    if (!isSubclassCall) throw('Method can only be called from a subclass of FormController');
+    this.successCustomerIdTarget.value = customerId?.toString() || '';
+    this.successCustomerIdTarget.disabled = !!customerId;
+    this.customerWinSelectTarget.tomselect!.clear(true);
+    if (customerId) {
+      this.setCustomerWinOptions();
+    } else {
+      this.customerWinsWereFiltered = false;
     }
   }
 
   setCustomerWinOptions() {
+    const isSubclassCall = /new-(contribution|story)/.test(this.identifier);
+    if (!isSubclassCall) throw('Method can only be called from a subclass of FormController');
+    if (!this.hasExistingCustomer) return;
+    const customerId = +this.customerSelectTarget.value;
+    
+    // the New Story form won't have access to the customer wins table (customerWinsCtrl)
     try {
-      if (!this.hasExistingCustomer) return;
-      const customerId = +this.customerSelectTarget.value;
       this.customerCustomerWinIds = this.customerWinsCtrl.dt.data().toArray()
         .filter((customerWin: CustomerWin) => customerWin.customer.id === customerId)
         .map((customerWin: CustomerWin) => customerWin.id);
-      this.customerWinsWereFiltered = false;
     } catch {
-      throw("Method can only be called from subclasses of FormController");
+      this.customerCustomerWinIds = Object.entries(this.customerWinSelectTarget.tomselect.options)
+        .filter(([id, option]: [string, any]) => +(option as { customerId: string }).customerId === customerId)
+        .map(([id, option]: [string, any]) => +id);
     }
+    this.customerWinsWereFiltered = false;
   }
 
   filterCustomerWins(e: Event) {
-    try {
-      if (this.customerWinsWereFiltered) return false;
-      Object.keys(this.customerWinSelectTarget.tomselect!.options).forEach(customerWinId => {
-        const tsOption = this.customerWinSelectTarget.tomselect!.getOption(customerWinId) as TomOption;
-        const shouldHide = (
-          this.hasNewCustomer || 
-          (this.hasExistingCustomer && !this.customerCustomerWinIds.includes(+customerWinId))
-        );
-        tsOption.classList.toggle('hidden', shouldHide);
-      });
-      this.customerWinsWereFiltered = true;
-    } catch {
-      throw("Method can only be called from subclasses of FormController");
-    }
+    const isSubclassCall = /new-(contribution|story)/.test(this.identifier);
+    if (!isSubclassCall) throw('Method can only be called from a subclass of FormController');
+    if (this.customerWinsWereFiltered) return false;
+    Object.keys(this.customerWinSelectTarget.tomselect!.options).forEach(customerWinId => {
+      const tsOption = this.customerWinSelectTarget.tomselect!.getOption(customerWinId);
+      const shouldHide = (
+        this.hasNewCustomer || 
+        (this.hasExistingCustomer && !this.customerCustomerWinIds.includes(+customerWinId))
+      );
+      tsOption.classList.toggle('hidden', shouldHide);
+    });
+    this.customerWinsWereFiltered = true;
   }
 
   // for newly created contacts, autofill the password with the email

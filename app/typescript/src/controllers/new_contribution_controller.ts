@@ -14,7 +14,6 @@ export default class NewContributionController extends FormController {
     'customerField',
     'customerName',
     'customerWinSelect',
-
     'contributorSelect', 
     'referrerSelect', 
   ];
@@ -54,12 +53,6 @@ export default class NewContributionController extends FormController {
   onChangeCustomer({ target: select }: { target: TomInput }) {
     const customerId = this.setCustomerFields(select.value);
     this.setCustomerWinFields(customerId);
-    if (customerId) {
-      this.setCustomerWinOptions();
-    } else {
-      // this.customerCustomerWinIds = [];
-      this.customerWinsWereFiltered = false;
-    }
   }
 
   onChangeCustomerWin({ target: select }: { target: TomInput }) {

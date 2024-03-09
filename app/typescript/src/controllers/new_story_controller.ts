@@ -24,15 +24,8 @@ export default class NewStoryController extends FormController {
   }
 
   onChangeCustomer({ target: select }: { target: TomInput }) {
-    debugger;
     const customerId = this.setCustomerFields(select.value);
     this.setCustomerWinFields(customerId);
-    if (customerId) {
-      this.setCustomerWinOptions();
-    } else {
-      // this.customerCustomerWinIds = [];
-      this.customerWinsWereFiltered = false;
-    }
   }
 
   onChangeCustomerWin() {

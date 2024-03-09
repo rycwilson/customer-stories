@@ -70,11 +70,15 @@
           class: 'col-sm-3 control-label',
           style: @success ? 'pointer-events:none' : '')
       .col-sm-9
-        = form.collection_select( \
+        / can't use collection_select here because we need to add data-customer-id to the options 
+        / (the Curate page may not have access to the successes table)
+        = form.select( \
             :success_id,
-            @company.successes.sort_by { |success| success.name },
-            :id,
-            :name,
+            options_for_select( \
+              @company.successes \
+                .sort_by { |success| success.name } \
+                .map { |success| [success.name, success.id, { 'data-customer-id' => success.customer.id }] },
+              selected: @success&.id),
             { include_blank: true },
             { class: "form-control #{@success ? 'readonly' : ''}",
               placeholder: 'Select or Create',

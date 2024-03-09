@@ -16,9 +16,9 @@
           submit_btn_text: 'Add Customer Win' } }) do |form|
 
     = form.fields_for(:customer, form.object.customer || form.object.build_customer) do |customer_fields|
-      = customer_fields.hidden_field(:id, value: '', data: { form_target: 'customerField' })
-      = customer_fields.hidden_field(:name, data: { form_target: 'customerName customerField' })
-      = customer_fields.hidden_field(:company_id, value: @company.id, data: { form_target: 'customerField' })
+      = customer_fields.hidden_field(:id, value: '', data: { new_customer_win_target: 'customerField' })
+      = customer_fields.hidden_field(:name, data: { new_customer_win_target: 'customerName customerField' })
+      = customer_fields.hidden_field(:company_id, value: @company.id, data: { new_customer_win_target: 'customerField' })
 
     .form-group.required
       = form.label(:curator_id, 'Curator', class: 'col-sm-3 control-label')
@@ -55,7 +55,8 @@
               required: true,
               data: { \
                 controller: 'tomselect',
-                form_target: 'customerSelect requiredField',
+                new_customer_win_target: 'customerSelect',
+                form_target: 'requiredField',
                 tomselect_type_value: 'customer',
                 tomselect_custom_options_value: { create: true, persist: false },
                 action: 'new-customer-win#onChangeCustomer' } })
@@ -115,7 +116,7 @@
     = form.fields_for(:contributions, form.object.contributions.build) do |contribution_fields|
       = contribution_fields.check_box( \
           :success_contact,
-          { checked: true, hidden: true, disabled: true, data: { form_target: 'contributorField' } },
+          { checked: true, hidden: true, disabled: true, data: { new_customer_win_target: 'contributorField' } },
           true,
           false)
       .form-group
