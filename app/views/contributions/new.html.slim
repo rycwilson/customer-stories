@@ -77,7 +77,7 @@
                     tomselect_prevent_focus_value: true } })
 
       - else
-        .form-group.required data-action="tomselect:dropdown-did-open->new-contribution#filterCustomerWins"
+        .form-group.required data-action="tomselect:dropdown-did-open->new-contribution#filterCustomerWinOptions"
           = form.label(:success_id, 'Customer Win', class: 'col-sm-3 control-label')
           .col-sm-9
             = form.collection_select( \
