@@ -1,15 +1,15 @@
 import { Controller } from '@hotwired/stimulus';
-import { type TomInput } from 'tom-select/dist/types/types';
+import type { TomInput, TomOption } from 'tom-select/dist/types/types';
 
 export default class FormController extends Controller<HTMLFormElement> {
   [key: string]: any;
 
-  static targets = [
+  static targets = [    
     'referrerFields',
     'referrerField',
     'contributorFields',
     'contributorField',
-    'requiredField'
+    'requiredField',
   ];
   declare readonly referrerFieldsTarget: HTMLDivElement;
   declare readonly referrerFieldTargets: HTMLInputElement[];
@@ -18,15 +18,23 @@ export default class FormController extends Controller<HTMLFormElement> {
   declare readonly requiredFieldTargets: [TomInput | HTMLInputElement];
 
   connect() {
-    console.log('connect form', this.element.id)
+    // console.log('connect form', this.element.id)
     this.removeErrorsOnValidInput();
     this.autofillNewContactPasswords();
   }
 
+  get hasNewCustomer() {
+    if (!this.hasCustomerSelectTarget) return;    // method is inherited by child controllers
+    return isNaN(+this.customerSelectTarget.value);
+  }
+
+  get hasExistingCustomer() {
+    if (!this.hasCustomerSelectTarget) return;
+    return this.customerSelectTarget.value && !this.hasNewCustomer; 
+  }
+
   beforeSendXHR(e: CustomEvent) {
-    console.log(e)
     if (!this.isValid()) {
-      console.log('not valid')
       e.preventDefault();
     }
   }
@@ -74,6 +82,58 @@ export default class FormController extends Controller<HTMLFormElement> {
       firstName?.focus();
     } else {
       this[`${contactType}FieldsTarget`].classList.add('hidden');
+    }
+  }
+
+  setCustomerFields(customerSelectValue: string) {
+    try {
+      const customerId = isNaN(+customerSelectValue) ? null : +customerSelectValue;
+      this.customerSelectTarget.disabled = !customerId;
+      this.customerFieldTargets.forEach((field: HTMLInputElement) => field.disabled = !!customerId);
+      this.customerNameTarget.value = !customerId ? customerSelectValue : '';
+      return customerId;
+    } catch {
+      throw("Method can only be called from subclasses of FormController");
+    }
+  }
+
+  setCustomerWinFields(customerId: number | null) {
+    try {
+      this.successCustomerIdTarget.value = customerId?.toString() || '';
+      this.successCustomerIdTarget.disabled = !!customerId;
+      this.customerWinSelectTarget.tomselect!.clear(true);
+    } catch {
+      throw("Method can only be called from subclasses of FormController");
+    }
+  }
+
+  setCustomerWinOptions() {
+    try {
+      if (!this.hasExistingCustomer) return;
+      const customerId = +this.customerSelectTarget.value;
+      this.customerCustomerWinIds = this.customerWinsCtrl.dt.data().toArray()
+        .filter((customerWin: CustomerWin) => customerWin.customer.id === customerId)
+        .map((customerWin: CustomerWin) => customerWin.id);
+      this.customerWinsWereFiltered = false;
+    } catch {
+      throw("Method can only be called from subclasses of FormController");
+    }
+  }
+
+  filterCustomerWins(e: Event) {
+    try {
+      if (this.customerWinsWereFiltered) return false;
+      Object.keys(this.customerWinSelectTarget.tomselect!.options).forEach(customerWinId => {
+        const tsOption = this.customerWinSelectTarget.tomselect!.getOption(customerWinId) as TomOption;
+        const shouldHide = (
+          this.hasNewCustomer || 
+          (this.hasExistingCustomer && !this.customerCustomerWinIds.includes(+customerWinId))
+        );
+        tsOption.classList.toggle('hidden', shouldHide);
+      });
+      this.customerWinsWereFiltered = true;
+    } catch {
+      throw("Method can only be called from subclasses of FormController");
     }
   }
 

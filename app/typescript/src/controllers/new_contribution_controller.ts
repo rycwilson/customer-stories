@@ -9,34 +9,33 @@ export default class NewContributionController extends FormController {
   declare readonly modalOutlet: ModalController;
 
   static targets = [
-    'customerSelect', 
-    'customerField', 
-    'customerId', 
-    'customerName', 
-    'customerWinSelect', 
     'successCustomerId', 
+    'customerSelect',
+    'customerField',
+    'customerName',
+    'customerWinSelect',
+
     'contributorSelect', 
     'referrerSelect', 
   ];
+  declare readonly successCustomerIdTarget: HTMLInputElement;
   declare readonly customerSelectTarget: TomInput;
   declare readonly customerFieldTargets: HTMLInputElement[];
-  declare readonly customerIdTarget: HTMLInputElement;
   declare readonly customerNameTarget: HTMLInputElement;
+
   declare readonly customerWinSelectTarget: TomInput;
-  declare readonly successCustomerIdTarget: HTMLInputElement;
   declare readonly contributorSelectTarget: TomInput;
   declare readonly referrerSelectTarget: TomInput;
 
-  customerCustomerWinIds: number[] = [];
+  declare customerCustomerWinIds: number[];
   customerWinsWereFiltered: boolean = false;
-  // beforeAjaxHandler: () => void = 
 
   initialize() {
     // this.beforeAjaxHandler = this.beforeAjax.bind(this);
   }
 
   connect() {
-    this.setCustomerCustomerWinIds();
+    if (this.hasExistingCustomer) this.setCustomerWinOptions();
   }
 
   // resourceOutletConnected(outlet) {
@@ -53,20 +52,13 @@ export default class NewContributionController extends FormController {
   }
 
   onChangeCustomer({ target: select }: { target: TomInput }) {
-    const customerVal = select.value;
-    const customerId = isNaN(+customerVal) ? null : customerVal;
-    const customerWinWasSelected = (
-      this.customerWinSelectTarget.value && typeof +this.customerWinSelectTarget.value === 'number'
-    );
-    this.successCustomerIdTarget.value = customerId || '';
-    this.customerFieldTargets.forEach(field => field.disabled = Boolean(customerId));
+    const customerId = this.setCustomerFields(select.value);
+    this.setCustomerWinFields(customerId);
     if (customerId) {
-      this.setCustomerCustomerWinIds(customerId);
-      this.customerWinSelectTarget.tomselect!.clear();
+      this.setCustomerWinOptions();
     } else {
-      this.customerIdTarget.value = '';
-      this.customerNameTarget.value = customerVal;
-      if (customerWinWasSelected) this.customerWinSelectTarget.tomselect!.clear();
+      // this.customerCustomerWinIds = [];
+      this.customerWinsWereFiltered = false;
     }
   }
 
@@ -85,7 +77,7 @@ export default class NewContributionController extends FormController {
     const tsOptions = this.contributorSelectTarget.tomselect!.options;
     if (customerWin) {
       this.customerSelectTarget.tomselect!.setValue(customerWin.customerId, true);
-      this.setCustomerCustomerWinIds(customerWin.customerId);
+      // this.setCustomerWinOptions(customerWin.customerId);
 
       // disable contributor option for any contributors that already have a contribution for the customer win
       customerWinContributorIds.forEach(contributorId => {
@@ -99,25 +91,5 @@ export default class NewContributionController extends FormController {
         }
       }); 
     }
-  }
-
-  filterCustomerWins(e: Event) {
-    if (this.customerWinsWereFiltered) return false;
-    Object.keys(this.customerWinSelectTarget.tomselect!.options).forEach(customerWinId => {
-      const tsOption = this.customerWinSelectTarget.tomselect!.getOption(customerWinId) as TomOption;
-      const shouldHide = this.customerCustomerWinIds.length && !this.customerCustomerWinIds.includes(+customerWinId);
-      tsOption.classList.toggle('hidden', shouldHide);
-    });
-    this.customerWinsWereFiltered = true;
-  }
-
-  setCustomerCustomerWinIds(customerId = this.customerSelectTarget.value) {
-    if (customerId) {
-      if (!(this.customerWinsCtrl instanceof ResourceController)) return;
-      this.customerCustomerWinIds = this.customerWinsCtrl.dt.rows().data().toArray()
-        .filter((customerWin: CustomerWin) => customerWin.customer.id === +customerId)
-        .map((customerWin: CustomerWin) => customerWin.id)
-    }
-    this.customerWinsWereFiltered = false;
   }
 }

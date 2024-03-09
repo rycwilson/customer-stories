@@ -16,9 +16,9 @@
           submit_btn_text: 'Add Customer Win' } }) do |form|
 
     = form.fields_for(:customer, form.object.customer || form.object.build_customer) do |customer_fields|
-      = customer_fields.hidden_field(:id, data: { new_customer_win_target: 'customerField' })
-      = customer_fields.hidden_field(:name, data: { new_customer_win_target: 'customerName customerField' })
-      = customer_fields.hidden_field(:company_id, value: @company.id, data: { new_customer_win_target: 'customerField' })
+      = customer_fields.hidden_field(:id, value: '', data: { form_target: 'customerField' })
+      = customer_fields.hidden_field(:name, data: { form_target: 'customerName customerField' })
+      = customer_fields.hidden_field(:company_id, value: @company.id, data: { form_target: 'customerField' })
 
     .form-group.required
       = form.label(:curator_id, 'Curator', class: 'col-sm-3 control-label')
@@ -55,8 +55,7 @@
               required: true,
               data: { \
                 controller: 'tomselect',
-                new_customer_win_target: 'successCustomerId',
-                form_target: 'requiredField',
+                form_target: 'customerSelect requiredField',
                 tomselect_type_value: 'customer',
                 tomselect_custom_options_value: { create: true, persist: false },
                 action: 'new-customer-win#onChangeCustomer' } })
