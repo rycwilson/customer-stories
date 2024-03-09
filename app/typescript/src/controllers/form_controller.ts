@@ -2,7 +2,7 @@ import { Controller } from '@hotwired/stimulus';
 import type NewCustomerWinController from './new_customer_win_controller';
 import type NewContributionController from './new_contribution_controller';
 import type NewStoryController from './new_story_controller';
-import type { TomInput, TomOption } from 'tom-select/dist/types/types';
+import type { TomOptions } from 'tom-select/dist/types/types';
 
 export default class FormController extends Controller<HTMLFormElement> {
   [key: string]: any;
@@ -18,7 +18,7 @@ export default class FormController extends Controller<HTMLFormElement> {
   declare readonly referrerFieldTargets: HTMLInputElement[];
   declare readonly contributorFieldsTarget: HTMLDivElement;
   declare readonly contributorFieldTargets: HTMLInputElement[];
-  declare readonly requiredFieldTargets: [TomInput | HTMLInputElement];
+  declare readonly requiredFieldTargets: (TomSelectInput | HTMLInputElement)[];
 
   connect() {
     // console.log('connect form', this.element.id)
@@ -61,7 +61,7 @@ export default class FormController extends Controller<HTMLFormElement> {
 
   removeErrorsOnValidInput() {
     const removeError = (e: Event) => {
-      const field = e.target as TomInput | HTMLInputElement;
+      const field = e.target as TomSelectInput | HTMLInputElement;
       if (field.value.trim()) {
         (field.closest('.form-group') as HTMLDivElement).classList.remove('has-error');
       }
@@ -71,7 +71,7 @@ export default class FormController extends Controller<HTMLFormElement> {
     })
   }
 
-  onChangeContact({ target: select }: { target: TomInput }) {
+  onChangeContact({ target: select }: { target: TomSelectInput }) {
     const contactType = select.dataset.tomselectTypeValue as Extract<SelectInputType, 'contributor' | 'referrer'>;
     const isNewContact = select.value === '0';
     const isExistingContact = select.value && !isNewContact;
@@ -112,7 +112,7 @@ export default class FormController extends Controller<HTMLFormElement> {
     }
   }
 
-  setCustomerWinOptions(this: NewContributionController | NewStoryController) {
+  setCustomerWinIds(this: NewContributionController | NewStoryController) {
     if (!this.hasExistingCustomer || !this.hasCustomerWinSelectTarget) return;
     const customerId = +this.customerSelectTarget.value;
     
@@ -137,14 +137,14 @@ export default class FormController extends Controller<HTMLFormElement> {
     );
   }
 
-  filterCustomerWins(this: NewContributionController | NewStoryController) {
+  filterCustomerWinOptions(this: NewContributionController | NewStoryController) {
     if (this.customerWinsWereFiltered) return;
-    Object.entries(this.customerWinSelectTarget.tomselect!.options).forEach(([id, option]: [string, TomOption]) => {
+    for (const [id, option] of Object.entries(this.customerWinSelectTarget.tomselect!.options as TomOptions)) {
       option.$div.classList.toggle(
         'hidden', 
         this.hasNewCustomer || (this.hasExistingCustomer && !this.customerCustomerWinIds.includes(+option.value))
       );
-    })
+    }
     this.customerWinsWereFiltered = true;
   }
 

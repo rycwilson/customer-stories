@@ -1,10 +1,10 @@
 import { Controller } from "@hotwired/stimulus";
 import TomSelect, { tsBaseOptions } from '../tomselect';
-import type { TomInput, TomOption, TomItem } from 'tom-select/dist/types/types/core.d.ts';
+import type { TomOption, TomItem } from 'tom-select/dist/types/types/core.d.ts';
 import { type CBOptions } from 'tom-select/dist/types/plugins/clear_button/types';
 import { capitalize } from "../utils";
 
-export default class extends Controller<TomInput> {
+export default class extends Controller<TomSelectInput> {
   static values = { 
     type: String, 
     customOptions: { type: Object, default: {} },

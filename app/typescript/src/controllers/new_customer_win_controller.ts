@@ -1,7 +1,6 @@
 import FormController from './form_controller';
 import type ModalController from './modal_controller';
 import { capitalize } from '../utils';
-import { type TomInput } from 'tom-select/dist/types/types';
 
 export default class NewCustomerWinController extends FormController {
   static outlets = ['modal'];
@@ -14,11 +13,11 @@ export default class NewCustomerWinController extends FormController {
     'contributorSelect', 
     'referrerSelect', 
   ];
-  declare readonly customerSelectTarget: TomInput;
+  declare readonly customerSelectTarget: TomSelectInput;
   declare readonly customerFieldTargets: HTMLInputElement[];
   declare readonly customerNameTarget: HTMLInputElement;
-  declare readonly contributorSelectTarget: TomInput;
-  declare readonly referrerSelectTarget: TomInput;
+  declare readonly contributorSelectTarget: TomSelectInput;
+  declare readonly referrerSelectTarget: TomSelectInput;
 
   connect() {
   }
@@ -34,7 +33,7 @@ export default class NewCustomerWinController extends FormController {
     this.handleCustomerChange();
   }
 
-  onChangeCustomerContact({ target: select }: { target: HTMLSelectElement & TomInput }) {
+  onChangeCustomerContact({ target: select }: { target: TomSelectInput }) {
     this.customerContactBoolFieldTarget.disabled = !select.value;
   }
 }

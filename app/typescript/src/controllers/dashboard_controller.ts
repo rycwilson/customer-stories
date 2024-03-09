@@ -2,7 +2,6 @@ import { Controller } from "@hotwired/stimulus";
 import Cookies from 'js-cookie';
 import type ModalController from './modal_controller';
 import { parseDatasetObject } from '../utils';
-import { type TomInput } from 'tom-select/dist/types/types';
 import { visit as turboVisit } from '@hotwired/turbo';
 
 // excludes stories#edit, which also renders the dashboard
@@ -45,14 +44,14 @@ export default class DashboardController extends Controller<HTMLDivElement> {
   declare readonly customerWinsTarget: HTMLDivElement;
   declare readonly customerWinsTabTarget: HTMLAnchorElement;
   declare readonly addCustomerWinBtnTarget: HTMLButtonElement;
-  declare readonly customerWinsFilterTarget: TomInput;
+  declare readonly customerWinsFilterTarget: TomSelectInput;
   declare readonly contributorsTarget: HTMLDivElement;
   declare readonly contributorsTabTarget: HTMLAnchorElement;
   declare readonly addContributorBtnTarget: HTMLButtonElement;
-  declare readonly contributorsFilterTarget: TomInput;
+  declare readonly contributorsFilterTarget: TomSelectInput;
   declare readonly storyTarget: HTMLDivElement;
   declare readonly promotedStoriesTarget: HTMLDivElement;
-  declare readonly promotedStoriesFilterTarget: TomInput;
+  declare readonly promotedStoriesFilterTarget: TomSelectInput;
   declare readonly promotedStoriesTabTarget: HTMLAnchorElement;
 
   static values = { activeTab: { type: String, default: '' } };    

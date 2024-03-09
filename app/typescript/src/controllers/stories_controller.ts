@@ -2,7 +2,6 @@ import { Controller } from '@hotwired/stimulus';
 import { type FrameElement } from '@hotwired/turbo';
 import Cookies from 'js-cookie';
 import imagesLoaded from 'imagesloaded';
-import { type TomInput } from 'tom-select/dist/types/types';
 
 export default class extends Controller<HTMLDivElement> {
   static targets = [
@@ -26,7 +25,7 @@ export default class extends Controller<HTMLDivElement> {
   declare readonly searchResultsTarget: HTMLSpanElement;
   declare readonly filterResultsTarget: HTMLSpanElement;
   declare readonly matchTypeInputTargets: HTMLInputElement[];
-  declare readonly filterSelectTargets: TomInput[];
+  declare readonly filterSelectTargets: TomSelectInput[];
   
   readyFilters = 0;
 

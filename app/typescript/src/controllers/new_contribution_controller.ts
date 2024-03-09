@@ -1,7 +1,7 @@
 import FormController from './form_controller';
 import type ModalController from './modal_controller';
 import ResourceController from './resource_controller';
-import { type TomInput, TomOption } from 'tom-select/dist/types/types';
+import { type TomOptions } from 'tom-select/dist/types/types';
 
 export default class NewContributionController extends FormController {
   static outlets = ['resource', 'modal'];
@@ -18,13 +18,13 @@ export default class NewContributionController extends FormController {
     'referrerSelect', 
   ];
   declare readonly successCustomerIdTarget: HTMLInputElement;
-  declare readonly customerSelectTarget: TomInput;
+  declare readonly customerSelectTarget: TomSelectInput;
   declare readonly customerFieldTargets: HTMLInputElement[];
   declare readonly customerNameTarget: HTMLInputElement;
 
-  declare readonly customerWinSelectTarget: TomInput;
-  declare readonly contributorSelectTarget: TomInput;
-  declare readonly referrerSelectTarget: TomInput;
+  declare readonly customerWinSelectTarget: TomSelectInput;
+  declare readonly contributorSelectTarget: TomSelectInput;
+  declare readonly referrerSelectTarget: TomSelectInput;
 
   declare customerCustomerWinIds: number[];
   customerWinsWereFiltered: boolean = false;
@@ -52,7 +52,7 @@ export default class NewContributionController extends FormController {
     this.handleCustomerChange();
   }
 
-  onChangeCustomerWin({ target: select }: { target: HTMLSelectElement & TomInput }) {
+  onChangeCustomerWin({ target: select }: { target: TomSelectInput }) {
     if (!(this.customerWinsCtrl instanceof ResourceController) || !(this.contributorsCtrl instanceof ResourceController)) {
       throw('Missing resource controller outlets');
     }
@@ -63,7 +63,7 @@ export default class NewContributionController extends FormController {
     const customerWinContributorIds: number[] = customerWin && this.contributorsCtrl.dt.data().toArray()
       .filter(contribution => contribution.success.id === customerWin.id)
       .map(contribution => contribution.contributor.id);
-    const tsOptions = this.contributorSelectTarget.tomselect!.options;
+    const tsOptions = this.contributorSelectTarget.tomselect!.options as TomOptions;
     if (customerWin) {
       this.customerSelectTarget.tomselect!.setValue(customerWin.customerId, true);
       // this.setCustomerWinIds(customerWin.customerId);

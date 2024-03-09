@@ -1,7 +1,6 @@
 import { Controller } from "@hotwired/stimulus";
 import FormController from "./form_controller";
 import type ModalController from "./modal_controller";
-import { type TomInput } from 'tom-select/dist/types/types';
 
 export default class NewStoryController extends FormController {
   static outlets = ['modal'];
@@ -16,10 +15,10 @@ export default class NewStoryController extends FormController {
     'storyTitle'
   ];
   declare readonly successCustomerIdTarget: HTMLInputElement;
-  declare readonly customerSelectTarget: TomInput;
+  declare readonly customerSelectTarget: TomSelectInput;
   declare readonly customerFieldTargets: HTMLInputElement[];
   declare readonly customerNameTarget: HTMLInputElement;
-  declare readonly customerWinSelectTarget: TomInput;
+  declare readonly customerWinSelectTarget: TomSelectInput;
   declare readonly storyTitleTarget: HTMLInputElement;
 
   declare customerCustomerWinIds: number[];
@@ -37,7 +36,7 @@ export default class NewStoryController extends FormController {
     this.handleCustomerChange();
   }
 
-  onChangeCustomerWin(this: NewStoryController, { target: select }: { target: HTMLSelectElement & TomInput }) {
+  onChangeCustomerWin(this: NewStoryController, { target: select }: { target: TomSelectInput }) {
     // const customerWinId = isNaN(+select.value) ? null : +select.value;
     // this.customerWinSelectTarget.disabled = !customerWinId;
     // this.customerWinFieldTargets.forEach((field: HTMLInputElement) => field.disabled = !!customerWinId);
