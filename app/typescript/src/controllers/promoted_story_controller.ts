@@ -1,6 +1,6 @@
 import { Controller } from '@hotwired/stimulus';
-import ResourceController from './resource_controller.js';
-import ModalController from './modal_controller.js';
+import type ResourceController from './resource_controller.js';
+import type ModalController from './modal_controller.js';
 
 export default class PromotedStoryController extends Controller<HTMLTableRowElement> {
   static outlets = ['resource', 'modal'];

@@ -1,5 +1,5 @@
 import { Controller } from "@hotwired/stimulus";
-import ResourceController from "./resource_controller";
+import type ResourceController from "./resource_controller";
 import DataTable from 'datatables.net-bs';
 import type { Api, Config } from 'datatables.net-bs';
 import 'datatables.net-rowgroup-bs';

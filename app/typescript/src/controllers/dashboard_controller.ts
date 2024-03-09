@@ -1,6 +1,6 @@
 import { Controller } from "@hotwired/stimulus";
 import Cookies from 'js-cookie';
-import ModalController from './modal_controller';
+import type ModalController from './modal_controller';
 import { parseDatasetObject } from '../utils';
 import { type TomInput } from 'tom-select/dist/types/types';
 import { visit as turboVisit } from '@hotwired/turbo';

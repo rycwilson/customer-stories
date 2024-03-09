@@ -1,5 +1,5 @@
 import { Controller } from '@hotwired/stimulus';
-import CustomerWinController from './customer_win_controller';
+import type CustomerWinController from './customer_win_controller';
 import { 
   populatePlaceholders, 
   individualContributionTemplate, 

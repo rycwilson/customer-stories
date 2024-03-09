@@ -1,5 +1,5 @@
 import { Controller } from '@hotwired/stimulus';
-import ModalController from './modal_controller.js';
+import type ModalController from './modal_controller.js';
 
 export default class extends Controller<HTMLButtonElement> {
   static outlets = ['modal'];

@@ -1,6 +1,6 @@
 import { Controller } from '@hotwired/stimulus';
-import DashboardController from './dashboard_controller';
-import ResourceController from './resource_controller';
+import type DashboardController from './dashboard_controller';
+import type ResourceController from './resource_controller';
 import { toggleRowGroups, initDisplayOptions as resetDisplayOptions } from '../tables';
 
 export default class extends Controller<HTMLDivElement> {

@@ -1,6 +1,6 @@
 import { Controller } from "@hotwired/stimulus";
-import ResourceController from './resource_controller';
-import ModalController from './modal_controller';
+import type ResourceController from './resource_controller';
+import type ModalController from './modal_controller';
 import { visit as turboVisit } from '@hotwired/turbo';
 import Cookies from 'js-cookie';
 
