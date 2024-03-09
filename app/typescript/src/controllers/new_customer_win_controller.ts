@@ -1,5 +1,5 @@
 import FormController from './form_controller';
-import ModalController from './modal_controller';
+import type ModalController from './modal_controller';
 import { capitalize } from '../utils';
 import { type TomInput } from 'tom-select/dist/types/types';
 
@@ -30,11 +30,11 @@ export default class NewCustomerWinController extends FormController {
     // TODO: reset validation for whichever panel was hidden
   }
 
-  onChangeCustomer({ target: select }: { target: TomInput }) {
-    this.setCustomerFields(select.value);
+  onChangeCustomer() {
+    this.handleCustomerChange();
   }
 
-  onChangeCustomerContact({ target: select }: { target: TomInput }) {
+  onChangeCustomerContact({ target: select }: { target: HTMLSelectElement & TomInput }) {
     this.customerContactBoolFieldTarget.disabled = !select.value;
   }
 }

@@ -17,17 +17,19 @@
           action: 'ajax:beforeSend->form#beforeSendXHR',
           submit_btn_text: 'Add Contributor' } }) do |form|
 
-    /= form.hidden_field(:success_id)
-
     = form.fields_for(:success, @success || form.object.build_success) do |success_fields|
-      / = success_fields.hidden_field(:id)
-      = success_fields.hidden_field(:name)
-      = success_fields.hidden_field(:customer_id, data: { new_contribution_target: 'successCustomerId' })
-      = success_fields.hidden_field(:curator_id, value: success_fields.object.curator_id || current_user.id)
+      = success_fields.hidden_field(:id, value: '', disabled: true, data: { new_contribution_target: 'successField' })
+      = success_fields.hidden_field(:name, disabled: true, data: { new_contribution_target: 'successName successField' })
+      = success_fields.hidden_field( \
+          :curator_id,
+          value: success_fields.object.curator_id || current_user.id,
+          disabled: true,
+          data: { new_contribution_target: 'successField' })
+      /= success_fields.hidden_field(:customer_id, data: { new_contribution_target: 'successCustomerId' })
       = success_fields.fields_for(:customer, success_fields.object.customer || success_fields.object.build_customer) do |customer_fields|
-        = customer_fields.hidden_field(:id, value: '', data: { new_contribution_target: 'customerField'})
-        = customer_fields.hidden_field(:name, data: { new_contribution_target: 'customerName customerField' })
-        = customer_fields.hidden_field(:company_id, value: @company.id, data: { new_contribution_target: 'customerField' })
+        = customer_fields.hidden_field(:id, value: '', disabled: true, data: { new_contribution_target: 'customerField'})
+        = customer_fields.hidden_field(:name, disabled: true, data: { new_contribution_target: 'customerName customerField' })
+        = customer_fields.hidden_field(:company_id, value: @company.id, disabled: true, data: { new_contribution_target: 'customerField' })
 
       .form-group.required
         = success_fields.label( \
@@ -47,11 +49,13 @@
                 required: true,
                 data: { \
                   controller: 'tomselect',
-                  new_contribution_target: 'customerSelect requiredField',
+                  new_contribution_target: 'customerSelect',
+                  form_target: 'requiredField',
                   tomselect_type_value: Customer.name,
                   tomselect_custom_options_value: { create: true, persist: false },
                   tomselect_prevent_focus_value: @story ? true : false,
-                  action: 'new-contribution#onChangeCustomer' } })
+                  action: 'new-contribution#onChangeCustomer',
+                  field_name: "#{success_fields.object_name}[customer_id]" } })
           span.help-block 
             | Required
 
@@ -89,8 +93,8 @@
                     controller: 'tomselect',
                     tomselect_type_value: 'Customer Win',
                     tomselect_custom_options_value: { create: true, persist: false },
-                    form_target: 'requiredField',
                     new_contribution_target: 'customerWinSelect',
+                    form_target: 'requiredField',
                     action: 'new-contribution#onChangeCustomerWin' } })
             span.help-block 
               | Required
@@ -115,8 +119,8 @@
                 data: { \
                   controller: 'tomselect',
                   tomselect_type_value: 'Contributor',
-                  form_target: 'requiredField',
                   new_contribution_target: 'contributorSelect',
+                  form_target: 'requiredField',
                   action: 'form#onChangeContact',
                   field_name: "#{form.object_name}[contributor_id]" } })
           span.help-block 

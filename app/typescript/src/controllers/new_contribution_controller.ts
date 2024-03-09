@@ -1,5 +1,5 @@
 import FormController from './form_controller';
-import ModalController from './modal_controller';
+import type ModalController from './modal_controller';
 import ResourceController from './resource_controller';
 import { type TomInput, TomOption } from 'tom-select/dist/types/types';
 
@@ -36,7 +36,7 @@ export default class NewContributionController extends FormController {
   connect() {
     if (this.shouldFilterCustomerWinOptionsOnConnect()) {
       // wait for tomselect inputs to initialize
-      window.setTimeout(this.filterCustomerWinOptions.bind(this));
+      window.setTimeout(this.setCustomerWinIds.bind(this));
     }
   }
 
@@ -48,12 +48,11 @@ export default class NewContributionController extends FormController {
     return this.resourceOutlets.find(outlet => outlet.resourceName === 'contributions');
   }
 
-  onChangeCustomer({ target: select }: { target: TomInput }) {
-    const customerId = this.setCustomerFields(select.value);
-    this.setCustomerWinFields(customerId);
+  onChangeCustomer() {
+    this.handleCustomerChange();
   }
 
-  onChangeCustomerWin({ target: select }: { target: TomInput }) {
+  onChangeCustomerWin({ target: select }: { target: HTMLSelectElement & TomInput }) {
     if (!(this.customerWinsCtrl instanceof ResourceController) || !(this.contributorsCtrl instanceof ResourceController)) {
       throw('Missing resource controller outlets');
     }
@@ -67,7 +66,7 @@ export default class NewContributionController extends FormController {
     const tsOptions = this.contributorSelectTarget.tomselect!.options;
     if (customerWin) {
       this.customerSelectTarget.tomselect!.setValue(customerWin.customerId, true);
-      // this.filterCustomerWinOptions(customerWin.customerId);
+      // this.setCustomerWinIds(customerWin.customerId);
 
       // disable contributor option for any contributors that already have a contribution for the customer win
       customerWinContributorIds.forEach(contributorId => {

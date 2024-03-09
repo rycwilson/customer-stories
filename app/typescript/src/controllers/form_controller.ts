@@ -44,13 +44,17 @@ export default class FormController extends Controller<HTMLFormElement> {
   
   isValid() {
     let isValid = true;
-    this.requiredFieldTargets.filter(field => !field.disabled).forEach(field => {
-      const formGroup = field.closest('.form-group') as HTMLDivElement;
-      if (!field.value.trim()) {
-        formGroup.classList.add('has-error');
-        isValid = false;
-      }
-    });
+    // the hidden text fields are enabled/disabled via the disabled property,
+    // whereas the select inputs are enabled/disabled by toggling the [name] attribute (precludes ui changes)
+    this.requiredFieldTargets
+      .filter(field => !(field.disabled || (field as HTMLSelectElement).name === ''))
+      .forEach(field => {
+        const formGroup = field.closest('.form-group') as HTMLDivElement;
+        if (!field.value.trim()) {
+          formGroup.classList.add('has-error');
+          isValid = false;
+        }
+      });
     if (!this.element.classList.contains('was-validated')) this.element.classList.add('was-validated');
     return isValid;
   }
@@ -88,29 +92,27 @@ export default class FormController extends Controller<HTMLFormElement> {
     }
   }
 
-  setCustomerFields(
-    this: NewCustomerWinController | NewContributionController | NewStoryController, 
-    customerSelectValue: string
-  ) {
-    const customerId = isNaN(+customerSelectValue) ? null : +customerSelectValue;
-    this.customerSelectTarget.disabled = !customerId;
-    this.customerFieldTargets.forEach((field: HTMLInputElement) => field.disabled = !!customerId);
-    this.customerNameTarget.value = !customerId ? customerSelectValue : '';
-    return customerId;
-  }
+  handleCustomerChange(this: NewCustomerWinController | NewContributionController | NewStoryController) {
+    const select = this.customerSelectTarget;
+    const isNewCustomer = isNaN(+select.value);
+    const customerId = +select.value || null;
 
-  setCustomerWinFields(this: NewContributionController | NewStoryController, customerId: number | null) {
-    this.successCustomerIdTarget.value = customerId?.toString() || '';
-    this.successCustomerIdTarget.disabled = !!customerId;
-    this.customerWinSelectTarget.tomselect!.clear(true);
-    if (customerId) {
-      this.filterCustomerWinOptions();
-    } else {
-      this.customerWinsWereFiltered = false;
+    // enable/disable submission via the [name] attribute => precludes ui changes
+    if (!select.dataset.fieldName) throw('Missing data-field-name attribute');
+    select.setAttribute('name', isNewCustomer ? '' : select.dataset.fieldName);
+    this.customerFieldTargets.forEach((field: HTMLInputElement) => field.disabled = !isNewCustomer);
+    this.customerNameTarget.value = isNewCustomer ? select.value.trim() : '';
+    if (this.hasCustomerWinSelectTarget) {
+      this.customerWinSelectTarget.tomselect!.clear(true);
+      if (customerId) {
+        (this as NewContributionController | NewStoryController).setCustomerWinIds();
+      } else {
+        this.customerWinsWereFiltered = false;
+      }
     }
   }
 
-  filterCustomerWinOptions(this: NewContributionController | NewStoryController) {
+  setCustomerWinOptions(this: NewContributionController | NewStoryController) {
     if (!this.hasExistingCustomer || !this.hasCustomerWinSelectTarget) return;
     const customerId = +this.customerSelectTarget.value;
     

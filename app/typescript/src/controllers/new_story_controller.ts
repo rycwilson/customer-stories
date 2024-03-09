@@ -1,6 +1,6 @@
 import { Controller } from "@hotwired/stimulus";
 import FormController from "./form_controller";
-import ModalController from "./modal_controller";
+import type ModalController from "./modal_controller";
 import { type TomInput } from 'tom-select/dist/types/types';
 
 export default class NewStoryController extends FormController {
@@ -29,15 +29,18 @@ export default class NewStoryController extends FormController {
     $(this.modalOutlet.element).on('shown.bs.modal', () => this.storyTitleTarget.focus());
     if (this.shouldFilterCustomerWinOptionsOnConnect()) {
       // wait for tomselect inputs to initialize
-      window.setTimeout(this.filterCustomerWinOptions.bind(this));
+      window.setTimeout(this.setCustomerWinIds.bind(this));
     }
   }
 
-  onChangeCustomer({ target: select }: { target: TomInput }) {
-    const customerId = this.setCustomerFields(select.value);
-    this.setCustomerWinFields(customerId);
+  onChangeCustomer() {
+    this.handleCustomerChange();
   }
 
-  onChangeCustomerWin() {
+  onChangeCustomerWin(this: NewStoryController, { target: select }: { target: HTMLSelectElement & TomInput }) {
+    // const customerWinId = isNaN(+select.value) ? null : +select.value;
+    // this.customerWinSelectTarget.disabled = !customerWinId;
+    // this.customerWinFieldTargets.forEach((field: HTMLInputElement) => field.disabled = !!customerWinId);
+    // this.customerNameTarget.value = !customerId ? customerSelectValue : '';
   }
 }

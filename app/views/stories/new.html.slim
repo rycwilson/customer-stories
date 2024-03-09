@@ -9,15 +9,37 @@
         novalidate: true,
         data: { \
           controller: 'form new-story',
+          new_story_modal_outlet: '#main-modal',
           modal_target: 'form',
           action: 'ajax:beforeSend->form#beforeSendXHR',
           submit_btn_text: 'Add Story' } }) do |form|
 
+    .form-group.required 
+      = form.label(:title, 'Story Title', class: 'col-sm-3 control-label')
+      .col-sm-9
+        / tabindex: '-1' allows manual focus
+        / TODO but it prevents the field from being focused when cycling with tab
+        = form.text_field( \
+            :title,
+            class: 'form-control',
+            tabindex: '-1',
+            data: { new_story_target: 'storyTitle', form_target: 'requiredField' })
+        span.help-block 
+          | Required
+
     = form.fields_for(:success, @success || form.object.build_success) do |success_fields|
       / = success_fields.hidden_field(:id)
-      = success_fields.hidden_field(:name)
-      = success_fields.hidden_field(:customer_id, data: { new_story_target: 'successCustomerId' })
-      = success_fields.hidden_field(:curator_id, value: success_fields.object.curator_id || current_user.id)
+      = success_fields.hidden_field(:id, value: '', disabled: true, data: { new_story_target: 'successField' })
+      = success_fields.hidden_field(:name, disabled: true, data: { new_story_target: 'successName successField' })
+      = success_fields.hidden_field( \
+          :customer_id,
+          disabled: true,
+          data: { new_story_target: 'successCustomerId successField' })
+      = success_fields.hidden_field( \
+          :curator_id,
+          disabled: true,
+          value: success_fields.object.curator_id || current_user.id,
+          data: { new_story_target: 'successField' })
       = success_fields.fields_for(:customer, success_fields.object.customer || success_fields.object.build_customer) do |customer_fields|
         = customer_fields.hidden_field(:id, value: '', data: { new_story_target: 'customerField'})
         = customer_fields.hidden_field(:name, data: { new_story_target: 'customerName customerField' })
@@ -41,22 +63,17 @@
                 required: true,
                 data: { \
                   controller: 'tomselect',
-                  new_story_target: 'customerSelect requiredField',
+                  new_story_target: 'customerSelect',
+                  form_target: 'requiredField',
                   tomselect_type_value: Customer.name,
                   tomselect_custom_options_value: { create: true, persist: false },
                   tomselect_prevent_focus_value: @success ? true : false,
-                  action: 'new-story#onChangeCustomer' } })
+                  action: 'new-story#onChangeCustomer',
+                  field_name: "#{success_fields.object_name}[customer_id]" } })
           span.help-block 
             | Required
 
-    /.form-group.required 
-      = form.label(:title, 'Story Title', class: 'col-sm-3 control-label')
-      .col-sm-9
-        = form.text_field(:title, class: 'form-control')
-        span.help-block 
-          | Required
-
-    .form-group style="margin-top:3em; margin-bottom:1.5em"
+    /.form-group style="margin-top:3em; margin-bottom:1.5em"
       .col-sm-3.text-right style="padding-right:0"
         span.help-block style="margin:0"
           | Optional
@@ -76,7 +93,7 @@
             :success_id,
             options_for_select( \
               @company.successes \
-                .sort_by { |success| success.name } \
+                .sort(&:name) \
                 .map { |success| [success.name, success.id, { 'data-customer-id' => success.customer.id }] },
               selected: @success&.id),
             { include_blank: true },
@@ -87,9 +104,10 @@
                 tomselect_type_value: 'Customer Win',
                 tomselect_custom_options_value: { create: true, persist: false },
                 tomselect_prevent_focus_value: @success ? true : false,
-                form_target: 'requiredField',
                 new_story_target: 'customerWinSelect',
-                action: 'new-story#onChangeCustomerWin' } })
+                form_target: 'requiredField',
+                action: 'new-story#onChangeCustomerWin',
+                field_name: "#{form.object_name}[success_id]" } })
         /span.help-block 
           | Optional
 
