@@ -1,15 +1,5 @@
 #contributors-table, 
 #story-contributors-table {
-  
-  // hide sorting icon for contributors; doesn't presently work in light of row grouping
-  th[aria-label*="Contributor"] {
-    pointer-events: none;
-  }
-
-  th[aria-label*="Contributor"]:after {
-    content: "" !important;
-  }
-
   tr.active {
     td.invitation-template .placeholder {
       color: #fff !important;

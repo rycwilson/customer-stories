@@ -4,15 +4,6 @@
 }
 
 #successes-table {
-  // hide sorting icon for successes; doesn't presently work in light of row grouping
-  th[aria-label*="Customer Win"] {
-    pointer-events: none;
-
-    &:after {
-      content: "" !important;
-    }
-  }
-
   td.status {
     line-height: 1.6;
   }
