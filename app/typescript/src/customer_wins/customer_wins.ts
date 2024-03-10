@@ -19,34 +19,28 @@ export function tableConfig(): Config {
       zeroRecords: 'No Customer Wins found'
     },
 
-    orderFixed: [colIndices.customer, 'asc'],
+    orderFixed: [colIndices.customer, 'asc'], // the row grouping column (all sorting will happen secondarily to this)
     order: [[colIndices.success, 'desc']],
 
     columns: [
       {
-        data: null,
-        render: (data: any, type: any, row: any) => {
-          return `
-            <button type="button" class="btn" data-action="customer-win#toggleChildRow">
-              <i class="fa fa-caret-right"></i>
-              <i class="fa fa-caret-down"></i>
-            </button>
-          `
+        name: 'success',  // this should match the value of the table's search/select options, e.g. value="success-1"
+        data: 'id',
+        render: (customerWinId: number, type: string, row: CustomerWin) => {
+          return type === 'display' ? `
+              <button type="button" class="btn" data-action="customer-win#toggleChildRow">
+                <i class="fa fa-caret-right"></i>
+                <i class="fa fa-caret-down"></i>
+              </button>
+            ` :
+            customerWinId;
         },
         createdCell: (td) => $(td).addClass('toggle-child')
       },
       {
-        // name: 'name',
+        name: 'name',
         data: {
-          _: (row: CustomerWin, type: string, set: any) => row.name,
-          // _: (row: CustomerWin, type: string, set: any) => ({
-          //   id: row.id,
-          //   name: row.name,
-          //   curatorId: row.curator.id,
-          //   customerId: row.customer.id
-          // }),
-          display: 'name',
-          filter: 'id',
+          _: 'name',
           sort: 'timestamp' // success.created_at
         }
       },
@@ -108,7 +102,7 @@ export function tableConfig(): Config {
         orderable: false 
       },
       {
-        targets: [0, colIndices.story, colIndices.actions],
+        targets: [colIndices.story, colIndices.actions],
         searchable: false,
       },
       { targets: [colIndices.curator, colIndices.story],  width: '0%' },  // hidden

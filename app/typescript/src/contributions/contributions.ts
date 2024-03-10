@@ -29,13 +29,17 @@ export function tableConfig(storyId?: number): Config {
 
     columns: [
       {
-        data: null,
-        render: (data: any, type: any, row: any) => `
-          <button type="button" class="btn">
-            <i class="fa fa-caret-right"></i>
-            <i class="fa fa-caret-down"></i>
-          </button>
-        `,
+        name: 'contribution',
+        data: 'id',
+        render: (contributionId: number, type: string, row: Contribution) => {
+          return type === 'display' ? `
+              <button type="button" class="btn">
+                <i class="fa fa-caret-right"></i>
+                <i class="fa fa-caret-down"></i>
+              </button>
+            ` : 
+            contributionId
+        },
         createdCell: (td) => $(td).addClass('toggle-child')
       },
       {
@@ -175,10 +179,6 @@ export function tableConfig(storyId?: number): Config {
 
 function rowGroupTemplate(rows: Api<any>, group: string) {
   // customer and story (if exists) data same for all rows, so just look at [0]th row
-  if (group === 'BarCo Win 1') {
-    console.log('group:', group)
-    console.log(rows.data().toArray())
-  }
   const customerWinName = group;
   const customerWin = rows.data()[0].success;
   const story = customerWin.story;
