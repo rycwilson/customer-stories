@@ -110,7 +110,7 @@ export default class AdsController extends Controller {
   }
 
   onFileInputValidation({ relatedTarget: input }: { relatedTarget: HTMLInputElement }) {
-    console.log('validated.bs.validator')
+    // console.log('validated.bs.validator')
     if (input.type === 'file' && !input.getAttribute('data-default-type')) {
       const card = <HTMLLIElement>input.closest('.ad-image-card--new');
       card.classList.remove('hidden');
@@ -120,7 +120,7 @@ export default class AdsController extends Controller {
   onValidFileInput({ relatedTarget: input }: { relatedTarget: HTMLInputElement }) {
     const isNewImage = input.type === 'file' && input.value;
     if (isNewImage) {
-      console.log('valid.bs.validator')
+      // console.log('valid.bs.validator')
       // initS3Upload($(e.currentTarget), $input);
 
       // Change event on the input will trigger the s3 upload

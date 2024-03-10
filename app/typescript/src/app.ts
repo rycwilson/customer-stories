@@ -22,7 +22,6 @@ function appFactory(): CustomerStoriesApp {
       Rails.start();
       turboStart();
       document.documentElement.addEventListener('turbo:load', (e) => {
-        console.log('turbo:load (once)')
         addAllListeners();
         // initView(controller, action);
       }, { once: true });
