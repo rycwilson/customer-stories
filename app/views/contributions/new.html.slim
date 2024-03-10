@@ -85,7 +85,7 @@
                 @company.successes.sort_by { |success| success.name },
                 :id,
                 :name,
-                { include_blank: true },
+                { include_blank: true, selected: @success&.id || [] },
                 { class: 'form-control',
                   placeholder: 'Select or Create',
                   required: true,
