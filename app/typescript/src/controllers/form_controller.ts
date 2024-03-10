@@ -47,7 +47,7 @@ export default class FormController extends Controller<HTMLFormElement> {
     // the hidden text fields are enabled/disabled via the disabled property,
     // whereas the select inputs are enabled/disabled by toggling the [name] attribute (precludes ui changes)
     this.requiredFieldTargets
-      .filter(field => !(field.disabled || (field as HTMLSelectElement).name === ''))
+      .filter(field => field.name && !field.disabled)
       .forEach(field => {
         const formGroup = field.closest('.form-group') as HTMLDivElement;
         if (!field.value.trim()) {

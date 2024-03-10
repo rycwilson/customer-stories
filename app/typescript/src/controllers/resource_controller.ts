@@ -10,7 +10,6 @@ import { tableConfig as customerWinsTableConfig, newCustomerWinPath } from '../c
 import { tableConfig as contributorsTableConfig, newContributionPath } from '../contributions/contributions';
 import { tableConfig as promotedStoriesTableConfig } from '../promoted_stories/promoted_stories';
 import type { Api, Config } from "datatables.net-bs";
-import 'datatables.net-rowgroup-bs';
 
 export default class ResourceController extends Controller<HTMLDivElement> {
   static outlets = ['dashboard', 'resource'];
@@ -100,7 +99,7 @@ export default class ResourceController extends Controller<HTMLDivElement> {
     if (this.resourceName && /customerWins|contributions/.test(this.resourceName)) {
       this.updateNewItemPath();
       this.resourceOutlets.forEach(outlet => {
-        if (outlet.resourceName === 'promotedStories') return;
+        if (/storyContributions|promotedStories/.test(outlet.resourceName)) return;
         outlet.updateNewItemPath();
       });
     } 

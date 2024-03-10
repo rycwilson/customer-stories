@@ -1,6 +1,4 @@
-import DataTable from 'datatables.net-bs';
 import type { Config, Api } from 'datatables.net-bs';
-import 'datatables.net-rowgroup-bs';
 
 export function newContributionPath(customerWinId: string | number, params: URLSearchParams) {
   return `/successes/${customerWinId || '0'}/contributions/new${params.size > 0 ? `?${params}` : ''}`;
@@ -175,7 +173,6 @@ export function tableConfig(storyId?: number): Config {
 }
 
 function rowGroupTemplate(rows: Api<any>, group: string) {
-  // console.log(successName + ': ', groupRows);
   // customer and story (if exists) data same for all rows, so just look at [0]th row
   const customerWinName = group;
   const customerWin = rows.data()[0].success;

@@ -1,6 +1,4 @@
-import DataTable from 'datatables.net-bs';
 import type { Config, Api } from 'datatables.net-bs';
-import 'datatables.net-rowgroup-bs';
 
 export function newCustomerWinPath(params: URLSearchParams) {
   const subdomain = location.host.split('.')[0];
