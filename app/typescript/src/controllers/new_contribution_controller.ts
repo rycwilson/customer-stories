@@ -57,6 +57,7 @@ export default class NewContributionController extends FormController {
       throw('Missing resource controller outlets');
     }
     const customerWinId = +select.value;
+    // TODO: the "success:name" column is not available in the contributors table
     const customerWin = this.customerWinsCtrl.dt
       .column('success:name').data().toArray()
       .find(customerWin => customerWin.id === customerWinId);

@@ -124,11 +124,11 @@ function displayOptionsPopoverContent(groupByResourceName: string, enableRowGrou
           <div class="checkbox">
             <label for="group-by-${kebabize(groupByResourceName)}">
               <input 
-                type="checkbox" 
-                disabled="${groupByResourceName === 'Customer Win' ? 'true' : 'false'}"
                 id="group-by-${kebabize(groupByResourceName)}" 
+                type="checkbox" 
                 data-action="table-display-options#toggleRowGroups"
-                ${enableRowGroups ? 'checked' : ''}>
+                ${enableRowGroups ? 'checked' : ''}
+                ${groupByResourceName === 'Customer Win' ? 'disabled' : ''}>
               <span>&nbsp;&nbsp;by ${groupByResourceName}</span>
             </label>
           </div>

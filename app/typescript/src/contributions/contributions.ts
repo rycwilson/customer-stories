@@ -24,24 +24,24 @@ export function tableConfig(storyId?: number): Config {
       zeroRecords: 'No Contributors found'
     },
     
-    order: [[colIndices.customer, 'asc'], [colIndices.contributor, 'asc']],
+    orderFixed: [colIndices.success, 'asc'],  // the row grouping column (all sorting will happen secondarily to this)
+    order: [[colIndices.status, 'asc']],
 
     columns: [
       {
-        name: 'childRow',
-        data: 'success.id',
+        data: null,
         render: (data: any, type: any, row: any) => `
           <button type="button" class="btn">
             <i class="fa fa-caret-right"></i>
             <i class="fa fa-caret-down"></i>
           </button>
         `,
-        createdCell: (td: Node) => $(td).addClass('toggle-child')
+        createdCell: (td) => $(td).addClass('toggle-child')
       },
       {
         name: 'contributor',
         data: {
-          _: (row: Contribution, type: any, set: any) => ({
+          _: (row, type, set) => ({
             id: row.contributor?.id,
             fullName: row.contributor?.full_name,
             contributionId: row.id,
@@ -54,11 +54,10 @@ export function tableConfig(storyId?: number): Config {
       },
       {
         name: 'success',
-        defaultContent: 'Customer Win',
         data: {
-          _: (row: Contribution, type: any, set: any) => ({ id: row.success?.id, name: row.success?.name }),
+          _: (row, type, set) => ({ id: row.success?.id, name: row.success?.name }),
           filter: 'success.id',
-          sort: 'success.name'
+          sort: 'success.name',
         }
       },
       // <td data-search="t<%#= contribution.invitation_template_id  %>" class='invitation-template'>
@@ -66,7 +65,8 @@ export function tableConfig(storyId?: number): Config {
         name: 'invitation_template',
         data: {
           _: 'invitation_template.id',
-          display: 'invitation_template.name'
+          display: 'invitation_template.name',
+          sort: 'invitation_template.name'
         },
         defaultContent: '<span class="placeholder">Select</span>',
         createdCell: (td: Node) => $(td).addClass('invitation-template')
@@ -99,6 +99,7 @@ export function tableConfig(storyId?: number): Config {
       },
       {
         // data is status as this will determine actions available
+        name: 'actions',
         data: 'status',
         render: (data: any, type: any, row: any) => '',
         createdCell: (td: Node) => {
@@ -121,11 +122,11 @@ export function tableConfig(storyId?: number): Config {
         visible: false
       },
       {
-        targets: [0, colIndices.actions],
+        targets: [0, colIndices.success, colIndices.curator, colIndices.customer, colIndices.actions, colIndices.storyPublished],
         orderable: false,
       },
       {
-        targets: [colIndices.actions],
+        targets: [0, colIndices.invitationTemplate, colIndices.status, colIndices.actions],
         searchable: false,
       },
       // { targets: [colIndices.success, colIndices.curator, colIndices.customer, colIndices.storyPublished], width: '0%' },
@@ -174,6 +175,10 @@ export function tableConfig(storyId?: number): Config {
 
 function rowGroupTemplate(rows: Api<any>, group: string) {
   // customer and story (if exists) data same for all rows, so just look at [0]th row
+  if (group === 'BarCo Win 1') {
+    console.log('group:', group)
+    console.log(rows.data().toArray())
+  }
   const customerWinName = group;
   const customerWin = rows.data()[0].success;
   const story = customerWin.story;

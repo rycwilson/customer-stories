@@ -19,7 +19,8 @@ export function tableConfig(): Config {
       zeroRecords: 'No Customer Wins found'
     },
 
-    order: [[colIndices.customer, 'asc'], [colIndices.success, 'desc']],
+    orderFixed: [colIndices.customer, 'asc'],
+    order: [[colIndices.success, 'desc']],
 
     columns: [
       {
@@ -32,18 +33,18 @@ export function tableConfig(): Config {
             </button>
           `
         },
-        createdCell: (td: Node) => $(td).addClass('toggle-child')
+        createdCell: (td) => $(td).addClass('toggle-child')
       },
       {
-        name: 'success',
-        // TODO interface CustomerWin
+        // name: 'name',
         data: {
-          _: (row: CustomerWin, type: any, set: any) => ({
-            id: row.id,
-            name: row.name,
-            curatorId: row.curator.id,
-            customerId: row.customer.id
-          }),
+          _: (row: CustomerWin, type: string, set: any) => row.name,
+          // _: (row: CustomerWin, type: string, set: any) => ({
+          //   id: row.id,
+          //   name: row.name,
+          //   curatorId: row.curator.id,
+          //   customerId: row.customer.id
+          // }),
           display: 'name',
           filter: 'id',
           sort: 'timestamp' // success.created_at
@@ -51,12 +52,9 @@ export function tableConfig(): Config {
       },
       {
         name: 'customer',
-        // TODO interface CustomerWin
         data: {
-          _: (row: CustomerWin, type: any, set: any) => ({ id: row.customer.id, name: row.customer.name }),
-          display: 'customer.name',
+          _: 'customer.name',
           filter: 'customer.id',
-          sort: 'customer.name'
         }
       },
       {
@@ -79,7 +77,7 @@ export function tableConfig(): Config {
       {
         name: 'story',
         data: {
-          _: (row: any, type: any, set: any) => (
+          _: (row: CustomerWin, type: string, set: any) => (
             row.story && { id: row.story.id, title: row.story.title }
           )
         },
@@ -87,7 +85,7 @@ export function tableConfig(): Config {
       },
       {
         data: 'display_status',
-        render: (data: any, type: any, row: any) => '',    // customer win controller will render the dropdown
+        render: (data: any, type: string, row: any) => '',    // customer win controller will render the dropdown
         createdCell: (td: Node) => {
           $(td)
             .addClass('dropdown')
@@ -101,14 +99,17 @@ export function tableConfig(): Config {
     ],
 
     columnDefs: [
-      { targets: [colIndices.customer, colIndices.curator, colIndices.story], visible: false },
+      { 
+        targets: [colIndices.customer, colIndices.curator, colIndices.story], 
+        visible: false 
+      },
+      { 
+        targets: [0, colIndices.customer, colIndices.story, colIndices.actions], 
+        orderable: false 
+      },
       {
-        targets: [0, colIndices.actions],
-        orderable: false,
+        targets: [0, colIndices.story, colIndices.actions],
         searchable: false,
-        createdCell: (td: Node, cellData: any, rowData: any, row: number, col: number) => (
-          $(td).addClass(col === 0 ? 'toggle-child' : 'actions dropdown')
-        )
       },
       { targets: [colIndices.curator, colIndices.story],  width: '0%' },  // hidden
       { targets: 0, width: '2em' },
