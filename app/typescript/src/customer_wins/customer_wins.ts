@@ -27,12 +27,13 @@ export function tableConfig(): Config {
         name: 'success',  // this should match the value of the table's search/select options, e.g. value="success-1"
         data: 'id',
         render: (customerWinId: number, type: string, row: CustomerWin) => {
-          return type === 'display' ? `
+          const html = `
             <button type="button" class="btn" data-action="customer-win#toggleChildRow">
               <i class="fa fa-caret-right"></i>
               <i class="fa fa-caret-down"></i>
-            </button>` :
-            customerWinId;
+            </button>
+          `;
+          return type === 'display' ? html : customerWinId;
         },
         createdCell: (td) => $(td).addClass('toggle-child')
       },

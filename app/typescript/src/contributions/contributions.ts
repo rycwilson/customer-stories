@@ -32,13 +32,13 @@ export function tableConfig(storyId?: number): Config {
         name: 'contribution',
         data: 'id',
         render: (contributionId: number, type: string, row: Contribution) => {
-          return type === 'display' ? `
-              <button type="button" class="btn">
-                <i class="fa fa-caret-right"></i>
-                <i class="fa fa-caret-down"></i>
-              </button>
-            ` : 
-            contributionId
+          const html = `
+            <button type="button" class="btn">
+              <i class="fa fa-caret-right"></i>
+              <i class="fa fa-caret-down"></i>
+            </button>
+          `;
+          return type === 'display' ? html : contributionId
         },
         createdCell: (td) => $(td).addClass('toggle-child')
       },
