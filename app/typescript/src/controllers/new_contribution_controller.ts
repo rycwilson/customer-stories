@@ -1,23 +1,13 @@
 import FormController from './form_controller';
 import type ModalController from './modal_controller';
-import ResourceController from './resource_controller';
-import { type TomOptions } from 'tom-select/dist/types/types';
+import type ResourceController from './resource_controller';
 
-export default class NewContributionController extends FormController {
-  static outlets = ['resource', 'modal'];
+export default class NewContributionController extends FormController<NewContributionController> {
+  // outlets
   declare readonly resourceOutlets: ResourceController[];
   declare readonly modalOutlet: ModalController;
 
-  static targets = [
-    'customerSelect',
-    'customerField',
-    'customerName',
-    'customerWinSelect',
-    'successField',
-    'successName', 
-    'contributorSelect', 
-    'referrerSelect', 
-  ];
+  // targets
   declare readonly customerSelectTarget: TomSelectInput;
   declare readonly customerFieldTargets: HTMLInputElement[];
   declare readonly customerNameTarget: HTMLInputElement;
@@ -25,18 +15,21 @@ export default class NewContributionController extends FormController {
   declare readonly successFieldTargets: HTMLInputElement[];
   declare readonly successNameTarget: HTMLInputElement;
   declare readonly contributorSelectTarget: TomSelectInput;
+  declare readonly contributorFieldsTarget: HTMLDivElement;
+  declare readonly contributorFieldTargets: HTMLInputElement[];
   declare readonly referrerSelectTarget: TomSelectInput;
+  declare readonly referrerFieldsTarget: HTMLDivElement;
+  declare readonly referrerFieldTargets: HTMLInputElement[];
+  declare readonly requiredFieldTargets: (TomSelectInput | HTMLInputElement)[];
 
   declare customerCustomerWinIds: number[];
   customerWinsWereFiltered: boolean = false;
 
-  initialize() {
-    // this.beforeAjaxHandler = this.beforeAjax.bind(this);
-  }
-
   connect() {
-    if (this.shouldFilterCustomerWinOptionsOnConnect()) {
-      // wait for tomselect inputs to initialize
+    this.removeErrorsOnValidInput();
+    this.autofillNewContactPasswords();
+    const hasExistingCustomer = +this.customerSelectTarget.value;
+    if (hasExistingCustomer && !this.customerWinSelectTarget.classList.contains('readonly')) {
       window.setTimeout(this.setCustomerWinIds.bind(this));
     }
   }
@@ -49,11 +42,19 @@ export default class NewContributionController extends FormController {
     return this.resourceOutlets.find(outlet => outlet.resourceName === 'contributions');
   }
 
+  beforeSendXHR(e: CustomEvent) {
+    this.validate(e);
+  }
+
   onChangeCustomer() {
     this.handleCustomerChange();
   }
 
   onChangeCustomerWin() {
     this.handleCustomerWinChange();
+  }
+
+  onChangeContact() {
+    this.handleContactChange();
   }
 }

@@ -1,20 +1,14 @@
 import { Controller } from "@hotwired/stimulus";
 import FormController from "./form_controller";
+import type ResourceController from "./resource_controller";
 import type ModalController from "./modal_controller";
 
-export default class NewStoryController extends FormController {
-  static outlets = ['modal'];
+export default class NewStoryController extends FormController<NewStoryController>{
+  // outlets
+  declare readonly resourceOutlets: ResourceController[];
   declare readonly modalOutlet: ModalController;
 
-  static targets = [
-    'storyTitle',
-    'customerSelect',
-    'customerField',
-    'customerName',
-    'customerWinSelect',
-    'successField',
-    'successName',
-  ];
+  // targets
   declare readonly storyTitleTarget: HTMLInputElement;
   declare readonly customerSelectTarget: TomSelectInput;
   declare readonly customerFieldTargets: HTMLInputElement[];
@@ -22,16 +16,27 @@ export default class NewStoryController extends FormController {
   declare readonly customerWinSelectTarget: TomSelectInput;
   declare readonly successFieldTargets: HTMLInputElement[];
   declare readonly successNameTarget: HTMLInputElement;
+  declare readonly requiredFieldTargets: (TomSelectInput | HTMLInputElement)[];
 
   declare customerCustomerWinIds: number[];
   customerWinsWereFiltered: boolean = false;
 
   connect() {
+    this.removeErrorsOnValidInput();
+    // this.autofillNewContactPasswords();
     $(this.modalOutlet.element).on('shown.bs.modal', () => this.storyTitleTarget.focus());
-    if (this.shouldFilterCustomerWinOptionsOnConnect()) {
-      // wait for tomselect inputs to initialize
-      window.setTimeout(this.setCustomerWinIds.bind(this));
-    }
+  }
+
+  beforeSendXHR(e: CustomEvent) {
+    this.validate(e);
+  }
+
+  get customerWinsCtrl() {
+    return this.resourceOutlets.find(outlet => outlet.resourceName === 'customerWins');
+  }
+
+  get contributorsCtrl() {
+    return this.resourceOutlets.find(outlet => outlet.resourceName === 'contributions');
   }
 
   onChangeCustomer() {
@@ -40,5 +45,9 @@ export default class NewStoryController extends FormController {
 
   onChangeCustomerWin() {
     this.handleCustomerWinChange();
+  }
+
+  onChangeContact() {
+    this.handleContactChange();
   }
 }
