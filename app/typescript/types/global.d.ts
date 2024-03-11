@@ -22,6 +22,9 @@ type ResourceName = 'customerWins' | 'contributions' | 'storyContributions' | 'p
 type TomSelectInput = HTMLSelectElement & TomInput;
 type SelectInputType = 'filter' | 'curator' | 'status' | 'customer' | 'category' | 'product' | 'tags' | 'contributor' | 'referrer'; 
 
+interface StringIndexable {
+  [key: string]: any;
+}
 interface JQuery<HTMLElement>{
   tab: (action: string) => void;
   popover: (options: object) => void;

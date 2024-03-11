@@ -1,10 +1,11 @@
 import { Controller } from '@hotwired/stimulus';
+// import DatatableRowController from './datatable_row_controller.js';
 import type ResourceController from './resource_controller.js';
 import type ModalController from './modal_controller.js';
-import { visit as turboVisit } from '@hotwired/turbo';
+import type { FrameElement } from '@hotwired/turbo';
 import { childRowPlaceholderTemplate } from '../customer_wins/win_story.js';
-import Cookies from 'js-cookie';
 
+// export default class CustomerWinController extends DatatableRowController<CustomerWin> {
 export default class CustomerWinController extends Controller<HTMLTableRowElement> {
   static outlets = ['resource', 'modal'];
   declare readonly resourceOutlet: ResourceController;
@@ -25,13 +26,14 @@ export default class CustomerWinController extends Controller<HTMLTableRowElemen
   declare newStoryPath: string;
   declare curator: User;
   declare customer: Customer;
-  declare story: Story | undefined;      
+  declare story?: Story;      
 
-  declare contributionsHtml: string | undefined;          
-  declare winStoryFormEl: HTMLFormElement | undefined;
+  declare contributionsHtml: string;          
+  declare winStoryFormEl: HTMLFormElement;
 
   connect() {
     // console.log('connect customer win')
+    // this.assignMembers()
     Object.keys(this.rowDataValue).forEach(key => {
       const field: keyof this['rowDataValue'] = key;
       this[field] = this.rowDataValue[key];
@@ -62,8 +64,8 @@ export default class CustomerWinController extends Controller<HTMLTableRowElemen
 
   toggleChildRow() {
     if (!this.hasChildRowContent) return false;
-    const onFrameRendered = (e: Event) => (
-      this.winStoryFormEl ??= (e.target as HTMLElement).firstElementChild as HTMLFormElement
+    const onFrameRendered = ({ target: turboFrame }: {target: FrameElement}) => (
+      this.winStoryFormEl ??= <HTMLFormElement>turboFrame.firstElementChild
     );
     const content = this.childRowShown ? null : (this.winStoryFormEl || `
       <turbo-frame id="${this.childRowTurboFrameAttrsValue.id}" src="${this.childRowTurboFrameAttrsValue.src}">

@@ -32,7 +32,6 @@ application.register('customer-form', CustomerFormController);
 import CustomerWinController from './customer_win_controller.js';
 application.register('customer-win', CustomerWinController);
 
-
 import DashboardController from './dashboard_controller.js';
 application.register('dashboard', DashboardController);
 
@@ -41,6 +40,9 @@ application.register('dashboard-tab', DashboardTabController);
 
 import DatatableController from './datatable_controller.js';
 application.register('datatable', DatatableController);
+
+import DatatableRowController from './datatable_row_controller.js';
+application.register('datatable-row', DatatableRowController);
 
 import FormController from './form_controller.js';
 application.register('form', FormController);
