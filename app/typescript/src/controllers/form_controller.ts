@@ -100,8 +100,11 @@ export default class FormController extends Controller<HTMLFormElement> {
     // enable/disable submission via the [name] attribute => precludes ui changes
     if (!select.dataset.fieldName) throw('Missing data-field-name attribute');
     select.setAttribute('name', isNewCustomer ? '' : select.dataset.fieldName);
+
+    // enable/disable hidden customer fields
     this.customerFieldTargets.forEach((field: HTMLInputElement) => field.disabled = !isNewCustomer);
     this.customerNameTarget.value = isNewCustomer ? select.value.trim() : '';
+    
     if (this.hasCustomerWinSelectTarget) {
       this.customerWinSelectTarget.tomselect!.clear(true);
       if (customerId) {
@@ -112,6 +115,58 @@ export default class FormController extends Controller<HTMLFormElement> {
     }
   }
 
+  handleCustomerWinChange(this: NewContributionController | NewStoryController) {
+    const select = this.customerWinSelectTarget; 
+    const isNewCustomerWin = isNaN(+select.value);
+    const winId = +select.value || null;
+
+    // enable/disable submission via the [name] attribute => precludes ui changes
+    if (!select.dataset.fieldName) throw('Missing data-field-name attribute');
+    select.setAttribute('name', isNewCustomerWin ? '' : select.dataset.fieldName);
+
+    // enable/disable hidden customer win fields
+    this.successFieldTargets.forEach((field: HTMLInputElement) => field.disabled = !isNewCustomerWin);
+    this.successNameTarget.value = isNewCustomerWin ? select.value.trim() : '';
+
+    const contributorOptions = this.hasContributorSelectTarget ? 
+      this.contributorSelectTarget.tomselect!.options as TomOptions :
+      null
+    const resetContributorOptions = () => {
+      if (!contributorOptions) return;
+      Object.entries(contributorOptions).forEach(([value, option]) => {
+        if (option.disabled) {
+          this.contributorSelectTarget.tomselect!.updateOption(value, { value, text: option.text, disabled: false });
+        }
+      });
+    };
+
+    if (winId) {
+      // set the customer select to the customer associated with the selected customer win
+      let customerId;
+      if (this.customerWinsCtrl) {
+        const win = this.customerWinsCtrl.dt.data().toArray().find((win: CustomerWin) => win.id === winId);
+        customerId = win.customer.id;
+      } else {
+        const option = select.tomselect!.options[winId];
+        customerId = +(option as { customerId: string }).customerId;
+      }
+      this.customerSelectTarget.tomselect!.setValue(customerId, true);
+
+      // disable contributor option for any contributors that already have a contribution for this customer win
+      if (contributorOptions) {
+        const winContributorIds: number[] = this.contributorsCtrl.dt.data().toArray()
+          .filter((contribution: Contribution) => contribution.success?.id === winId)
+          .map((contribution: Contribution) => contribution.contributor?.id);
+        winContributorIds.forEach(contributorId => {
+          const newOptionSettings = { value: contributorId, text: contributorOptions[contributorId].text, disabled: true  };
+          this.contributorSelectTarget.tomselect!.updateOption(contributorId.toString(), newOptionSettings);
+        });
+      }
+    } else if (contributorOptions) {
+      resetContributorOptions();
+    }
+  }
+
   setCustomerWinIds(this: NewContributionController | NewStoryController) {
     if (!this.hasExistingCustomer || !this.hasCustomerWinSelectTarget) return;
     const customerId = +this.customerSelectTarget.value;
@@ -119,8 +174,8 @@ export default class FormController extends Controller<HTMLFormElement> {
     // the New Story form won't have access to the customer wins table (customerWinsCtrl)
     try {
       this.customerCustomerWinIds = this.customerWinsCtrl.dt.data().toArray()
-        .filter((customerWin: CustomerWin) => customerWin.customer.id === customerId)
-        .map((customerWin: CustomerWin) => customerWin.id);
+        .filter((win: CustomerWin) => win.customer.id === customerId)
+        .map((win: CustomerWin) => win.id);
     } catch {
       this.customerCustomerWinIds = Object.entries(this.customerWinSelectTarget.tomselect!.options)
         .filter(([id, option]: [string, any]) => +(option as { customerId: string }).customerId === customerId)

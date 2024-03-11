@@ -9,20 +9,21 @@ export default class NewContributionController extends FormController {
   declare readonly modalOutlet: ModalController;
 
   static targets = [
-    'successCustomerId', 
     'customerSelect',
     'customerField',
     'customerName',
     'customerWinSelect',
+    'successField',
+    'successName', 
     'contributorSelect', 
     'referrerSelect', 
   ];
-  declare readonly successCustomerIdTarget: HTMLInputElement;
   declare readonly customerSelectTarget: TomSelectInput;
   declare readonly customerFieldTargets: HTMLInputElement[];
   declare readonly customerNameTarget: HTMLInputElement;
-
   declare readonly customerWinSelectTarget: TomSelectInput;
+  declare readonly successFieldTargets: HTMLInputElement[];
+  declare readonly successNameTarget: HTMLInputElement;
   declare readonly contributorSelectTarget: TomSelectInput;
   declare readonly referrerSelectTarget: TomSelectInput;
 
@@ -52,34 +53,7 @@ export default class NewContributionController extends FormController {
     this.handleCustomerChange();
   }
 
-  onChangeCustomerWin({ target: select }: { target: TomSelectInput }) {
-    if (!(this.customerWinsCtrl instanceof ResourceController) || !(this.contributorsCtrl instanceof ResourceController)) {
-      throw('Missing resource controller outlets');
-    }
-    const customerWinId = +select.value;
-    // TODO: the "success:name" column is not available in the contributors table
-    const customerWin = this.customerWinsCtrl.dt
-      .column('success:name').data().toArray()
-      .find(customerWin => customerWin.id === customerWinId);
-    const customerWinContributorIds: number[] = customerWin && this.contributorsCtrl.dt.data().toArray()
-      .filter(contribution => contribution.success.id === customerWin.id)
-      .map(contribution => contribution.contributor.id);
-    const tsOptions = this.contributorSelectTarget.tomselect!.options as TomOptions;
-    if (customerWin) {
-      this.customerSelectTarget.tomselect!.setValue(customerWin.customerId, true);
-      // this.setCustomerWinIds(customerWin.customerId);
-
-      // disable contributor option for any contributors that already have a contribution for the customer win
-      customerWinContributorIds.forEach(contributorId => {
-        const newOptionSettings = { value: contributorId, text: tsOptions[contributorId].text, disabled: true  };
-        this.contributorSelectTarget.tomselect!.updateOption(contributorId.toString(), newOptionSettings);
-      });
-    } else {
-      Object.entries(tsOptions).forEach(([value, option]) => {
-        if (option.disabled) {
-          this.contributorSelectTarget.tomselect!.updateOption(value, { value, text: option.text, disabled: false });
-        }
-      }); 
-    }
+  onChangeCustomerWin() {
+    this.handleCustomerWinChange();
   }
 }

@@ -7,19 +7,21 @@ export default class NewStoryController extends FormController {
   declare readonly modalOutlet: ModalController;
 
   static targets = [
-    'successCustomerId', 
+    'storyTitle',
     'customerSelect',
     'customerField',
     'customerName',
     'customerWinSelect',
-    'storyTitle'
+    'successField',
+    'successName',
   ];
-  declare readonly successCustomerIdTarget: HTMLInputElement;
+  declare readonly storyTitleTarget: HTMLInputElement;
   declare readonly customerSelectTarget: TomSelectInput;
   declare readonly customerFieldTargets: HTMLInputElement[];
   declare readonly customerNameTarget: HTMLInputElement;
   declare readonly customerWinSelectTarget: TomSelectInput;
-  declare readonly storyTitleTarget: HTMLInputElement;
+  declare readonly successFieldTargets: HTMLInputElement[];
+  declare readonly successNameTarget: HTMLInputElement;
 
   declare customerCustomerWinIds: number[];
   customerWinsWereFiltered: boolean = false;
@@ -36,10 +38,7 @@ export default class NewStoryController extends FormController {
     this.handleCustomerChange();
   }
 
-  onChangeCustomerWin(this: NewStoryController, { target: select }: { target: TomSelectInput }) {
-    // const customerWinId = isNaN(+select.value) ? null : +select.value;
-    // this.customerWinSelectTarget.disabled = !customerWinId;
-    // this.customerWinFieldTargets.forEach((field: HTMLInputElement) => field.disabled = !!customerWinId);
-    // this.customerNameTarget.value = !customerId ? customerSelectValue : '';
+  onChangeCustomerWin() {
+    this.handleCustomerWinChange();
   }
 }
