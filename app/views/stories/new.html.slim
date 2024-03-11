@@ -9,9 +9,10 @@
         novalidate: true,
         data: { \
           controller: 'form new-story',
+          new_contribution_resource_outlet: '.resource-ctrl',
           new_story_modal_outlet: '#main-modal',
           modal_target: 'form',
-          action: 'ajax:beforeSend->form#beforeSendXHR',
+          action: 'ajax:beforeSend->new-story#beforeSendXHR',
           submit_btn_text: 'Add Story' } }) do |form|
 
     .form-group.required 
@@ -23,7 +24,7 @@
             :title,
             class: 'form-control',
             tabindex: '-1',
-            data: { new_story_target: 'storyTitle', form_target: 'requiredField' })
+            data: { new_story_target: 'storyTitle requiredField' })
         span.help-block 
           | Required
 
@@ -63,8 +64,7 @@
                 required: true,
                 data: { \
                   controller: 'tomselect',
-                  new_story_target: 'customerSelect',
-                  form_target: 'requiredField',
+                  new_story_target: 'customerSelect requiredField',
                   tomselect_type_value: Customer.name,
                   tomselect_custom_options_value: { create: true, persist: false },
                   tomselect_prevent_focus_value: @success ? true : false,
@@ -105,7 +105,6 @@
                 tomselect_custom_options_value: { create: true, persist: false },
                 tomselect_prevent_focus_value: @success ? true : false,
                 new_story_target: 'customerWinSelect',
-                form_target: 'requiredField',
                 action: 'new-story#onChangeCustomerWin',
                 field_name: "#{form.object_name}[success_id]" } })
         /span.help-block 

@@ -69,12 +69,14 @@
                 
                 = render('stories/edit/content/content', { company: @company, story: @story })
                 
-              #story-contributors.resource-ctrl.tab-pane.fade {
+              / Note this resource controller is NOT tagged with .resource-ctrl,
+              / as it is only a subset of contributions
+              #story-contributors.tab-pane.fade {
                 class=('active in' if @active_tab == '#story-contributors') 
                 data-controller="resource"
                 data-story-target="contributors"
                 data-resource-dashboard-outlet=".dashboard"
-                data-resource-resource-outlet=".resource-ctrl:not(#story-contributors)"
+                data-resource-resource-outlet=".resource-ctrl"
                 data-resource-data-path-value=success_contributions_path(@story.success)
                 data-resource-checkbox-filters-value={ \
                   'show-completed': { checked: true, label: 'Contributors with a completed Contribution' },

@@ -12,7 +12,7 @@
           controller: 'form new-customer-win',
           modal_target: 'form',
           new_customer_win_modal_outlet: '#main-modal',
-          action: 'ajax:beforeSend->form#beforeSendXHR',
+          action: 'ajax:beforeSend->new-customer-win#beforeSendXHR',
           submit_btn_text: 'Add Customer Win' } }) do |form|
 
     = form.fields_for(:customer, form.object.customer || form.object.build_customer) do |customer_fields|
@@ -40,7 +40,7 @@
               data: { \
                 controller: 'tomselect',
                 tomselect_type_value: 'curator',
-                form_target: 'requiredField' } })
+                new_customer_win_target: 'requiredField' } })
         span.help-block 
           | Required
 
@@ -59,8 +59,7 @@
               required: true,
               data: { \
                 controller: 'tomselect',
-                new_customer_win_target: 'customerSelect',
-                form_target: 'requiredField',
+                new_customer_win_target: 'customerSelect requiredField',
                 tomselect_type_value: 'customer',
                 tomselect_custom_options_value: { create: true, persist: false },
                 action: 'new-customer-win#onChangeCustomer',
@@ -76,7 +75,7 @@
             class: 'form-control',
             required: true,
             placeholder: 'Name of Project / Deal / Opportunity from CRM',
-            data: { form_target: 'requiredField' })
+            data: { new_customer_win_target: 'requiredField' })
         span.help-block 
           | Required 
 
