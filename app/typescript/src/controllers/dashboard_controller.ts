@@ -151,7 +151,7 @@ export default class DashboardController extends Controller<HTMLDivElement> {
 
   showCustomerWinContributors(customerWinId: string) {
     // console.log(`showCustomerWinContributors(${customerWinId})`)
-    this.contributorsFilterTarget.tomselect!.setValue(`success-${customerWinId}`);
+    this.contributorsFilterTarget.tomselect.setValue(`success-${customerWinId}`);
     $(this.contributorsTabTarget)
       .one('shown.bs.tab', () => scrollTo(0, 65))
       .tab('show');
@@ -163,7 +163,7 @@ export default class DashboardController extends Controller<HTMLDivElement> {
 
   showContributionCustomerWin({ currentTarget: link }: { currentTarget: HTMLAnchorElement }) {
     if (!link.dataset.customerWinId) return false;
-    this.customerWinsFilterTarget.tomselect!.setValue(`success-${link.dataset.customerWinId}`);
+    this.customerWinsFilterTarget.tomselect.setValue(`success-${link.dataset.customerWinId}`);
     $(this.customerWinsTabTarget)
       .one('shown.bs.tab', () => scrollTo(0, 65))
       .tab('show');

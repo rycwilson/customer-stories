@@ -55,12 +55,12 @@ export function search(
   if (syncedResourceCtrls) {
     if (isCuratorChange) {
       syncedResourceCtrls.forEach(ctrl => {
-        ctrl.curatorSelectTarget.tomselect!.setValue(resourceCtrl.curatorSelectTarget.value, true);
+        ctrl.curatorSelectTarget.tomselect.setValue(resourceCtrl.curatorSelectTarget.value, true);
       })
     }
     if (isFilterChange) {
       syncedResourceCtrls.forEach(ctrl => {
-        ctrl.filterSelectTarget.tomselect!.setValue(resourceCtrl.filterSelectTarget.value, true);
+        ctrl.filterSelectTarget.tomselect.setValue(resourceCtrl.filterSelectTarget.value, true);
       })
     }
     if (isCuratorChange || isFilterChange) {
