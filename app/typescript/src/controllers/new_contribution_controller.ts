@@ -20,7 +20,7 @@ export default class NewContributionController extends FormController<NewContrib
   declare readonly referrerSelectTarget: TomSelectInput;
   declare readonly referrerFieldsTarget: HTMLDivElement;
   declare readonly referrerFieldTargets: HTMLInputElement[];
-  declare readonly requiredFieldTargets: (TomSelectInput | HTMLInputElement)[];
+  // declare readonly requiredFieldTargets: (TomSelectInput | HTMLInputElement)[];
 
   declare customerCustomerWinIds: number[];
   customerWinsWereFiltered: boolean = false;
@@ -40,10 +40,6 @@ export default class NewContributionController extends FormController<NewContrib
 
   get contributorsCtrl() {
     return this.resourceOutlets.find(outlet => outlet.resourceName === 'contributions');
-  }
-
-  beforeSendXHR(e: CustomEvent) {
-    this.validate(e);
   }
 
   onChangeCustomer() {

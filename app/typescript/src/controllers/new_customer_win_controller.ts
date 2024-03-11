@@ -15,16 +15,12 @@ export default class NewCustomerWinController extends FormController<NewCustomer
   declare readonly referrerSelectTarget: TomSelectInput;
   declare readonly referrerFieldsTarget: HTMLDivElement;
   declare readonly referrerFieldTargets: HTMLInputElement[];
-  declare readonly requiredFieldTargets: (TomSelectInput | HTMLInputElement)[];
+  // declare readonly requiredFieldTargets: (TomSelectInput | HTMLInputElement)[];
   declare readonly customerContactBoolFieldTarget: HTMLInputElement;
 
   connect() {
     this.removeErrorsOnValidInput();
     this.autofillNewContactPasswords();
-  }
-
-  beforeSendXHR(e: CustomEvent) {
-    this.validate(e);
   }
 
   onChangeSource({ target: input }: { target: EventTarget }) {

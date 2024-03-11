@@ -2,6 +2,7 @@
 
   = form_with( \
       model: @story,
+      format: :js,
       html: { \
         id: 'new-story-form',
         class: 'form-horizontal',
@@ -12,7 +13,7 @@
           new_contribution_resource_outlet: '.resource-ctrl',
           new_story_modal_outlet: '#main-modal',
           modal_target: 'form',
-          action: 'ajax:beforeSend->new-story#beforeSendXHR',
+          action: 'ajax:beforeSend->form#validate',
           submit_btn_text: 'Add Story' } }) do |form|
 
     .form-group.required 
@@ -23,8 +24,9 @@
         = form.text_field( \
             :title,
             class: 'form-control',
+            required: true,
             tabindex: '-1',
-            data: { new_story_target: 'storyTitle requiredField' })
+            data: { new_story_target: 'storyTitle', form_target: 'requiredField' })
         span.help-block 
           | Required
 
@@ -64,7 +66,8 @@
                 required: true,
                 data: { \
                   controller: 'tomselect',
-                  new_story_target: 'customerSelect requiredField',
+                  new_story_target: 'customerSelect',
+                  form_target: 'requiredField',
                   tomselect_type_value: Customer.name,
                   tomselect_custom_options_value: { create: true, persist: false },
                   tomselect_prevent_focus_value: @success ? true : false,

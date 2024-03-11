@@ -26,13 +26,15 @@ export default class FormController<Ctrl extends ConcreteFormController> extends
     'customerContactBoolField'
   ];
 
+  declare readonly requiredFieldTargets: (TomSelectInput | HTMLInputElement)[];
   declare readonly hasCustomerWinSelectTarget: boolean;
   declare readonly hasContributorSelectTarget: boolean;
 
   connect() {
   }
 
-  validate(this: Ctrl, e: CustomEvent) {
+  // validate(this: Ctrl, e: CustomEvent) {
+  validate(e: CustomEvent) {
     let isValid = true;
 
     // the hidden text fields are enabled/disabled via the disabled property,
@@ -40,9 +42,8 @@ export default class FormController<Ctrl extends ConcreteFormController> extends
     this.requiredFieldTargets
       .filter(field => field.name && !field.disabled)
       .forEach(field => {
-        const formGroup = field.closest('.form-group') as HTMLDivElement;
-        if (!field.value.trim()) {
-          formGroup.classList.add('has-error');
+        if (!field.checkValidity()) {
+          field.closest('.form-group').classList.add('has-error');
           isValid = false;
         }
       });

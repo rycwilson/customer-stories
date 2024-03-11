@@ -14,7 +14,7 @@
           new_contribution_resource_outlet: '.resource-ctrl',
           new_contribution_modal_outlet: '#main-modal',
           modal_target: 'form',
-          action: 'ajax:beforeSend->new-contribution#beforeSendXHR',
+          action: 'ajax:beforeSend->form#validate',
           submit_btn_text: 'Add Contributor' } }) do |form|
 
     = form.fields_for(:success, @success || form.object.build_success) do |success_fields|
@@ -49,7 +49,8 @@
                 required: true,
                 data: { \
                   controller: 'tomselect',
-                  new_contribution_target: 'customerSelect requiredField',
+                  new_contribution_target: 'customerSelect',
+                  form_target: 'requiredField',
                   tomselect_type_value: Customer.name,
                   tomselect_custom_options_value: { create: true, persist: false },
                   tomselect_prevent_focus_value: @story ? true : false,
@@ -92,7 +93,8 @@
                     controller: 'tomselect',
                     tomselect_type_value: 'Customer Win',
                     tomselect_custom_options_value: { create: true, persist: false },
-                    new_contribution_target: 'customerWinSelect requiredField',
+                    new_contribution_target: 'customerWinSelect',
+                    form_target: 'requiredField',
                     action: 'new-contribution#onChangeCustomerWin',
                     field_name: "#{form.object_name}[success_id]" } })
             span.help-block 
@@ -118,13 +120,14 @@
                 data: { \
                   controller: 'tomselect',
                   tomselect_type_value: 'Contributor',
-                  new_contribution_target: 'contributorSelect requiredField',
+                  new_contribution_target: 'contributorSelect',
+                  form_target: 'requiredField',
                   action: 'form#onChangeContact',
                   field_name: "#{form.object_name}[contributor_id]" } })
           span.help-block 
             | Required
 
-      = render('companies/shared/new_contact', { parent_form_or_fields: form, contact_type: 'contributor' })
+      /= render('companies/shared/new_contact', { parent_form_or_fields: form, contact_type: 'contributor' })
 
       .form-group
         = form.label(:invitation_template_id, 'Invitation Template', class: 'col-sm-3 control-label')
@@ -162,4 +165,4 @@
                   action: 'form#onChangeContact',
                   field_name: "#{form.object_name}[referrer_id]" } })
 
-      = render('companies/shared/new_contact', { parent_form_or_fields: form, contact_type: 'referrer' })
+      /= render('companies/shared/new_contact', { parent_form_or_fields: form, contact_type: 'referrer' })

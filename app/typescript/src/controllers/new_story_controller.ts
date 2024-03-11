@@ -16,7 +16,7 @@ export default class NewStoryController extends FormController<NewStoryControlle
   declare readonly customerWinSelectTarget: TomSelectInput;
   declare readonly successFieldTargets: HTMLInputElement[];
   declare readonly successNameTarget: HTMLInputElement;
-  declare readonly requiredFieldTargets: (TomSelectInput | HTMLInputElement)[];
+  // declare readonly requiredFieldTargets: (TomSelectInput | HTMLInputElement)[];
 
   declare customerCustomerWinIds: number[];
   customerWinsWereFiltered: boolean = false;
@@ -25,10 +25,6 @@ export default class NewStoryController extends FormController<NewStoryControlle
     this.removeErrorsOnValidInput();
     // this.autofillNewContactPasswords();
     $(this.modalOutlet.element).on('shown.bs.modal', () => this.storyTitleTarget.focus());
-  }
-
-  beforeSendXHR(e: CustomEvent) {
-    this.validate(e);
   }
 
   get customerWinsCtrl() {
