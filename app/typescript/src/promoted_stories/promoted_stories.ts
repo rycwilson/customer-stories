@@ -18,13 +18,13 @@ export function tableConfig(): Config {
         name: 'story',
         data: 'id',
         render: (storyId: number, type: string, row: PromotedStory) => {
-          const html = `
+          const toggleBtn = `
             <button type="button" class="btn" data-action="promoted-story#toggleChildRow">
               <i class="fa fa-caret-right"></i>
               <i class="fa fa-caret-down"></i>
             </button>
           `;
-          return type === 'display' ? html : storyId;
+          return type === 'display' ? toggleBtn : storyId;
         },
         createdCell: (td: Node) => $(td).addClass('toggle-child')
       },
