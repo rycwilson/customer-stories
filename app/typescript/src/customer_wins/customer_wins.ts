@@ -28,7 +28,7 @@ export function tableConfig(): Config {
         data: 'id',
         render: (customerWinId: number, type: string, row: CustomerWin) => {
           const toggleBtn = `
-            <button type="button" class="btn" data-action="customerWin#toggleChildRow">
+            <button type="button" class="btn" data-action="customer-win#toggleChildRow">
               <i class="fa fa-caret-right"></i>
               <i class="fa fa-caret-down"></i>
             </button>
