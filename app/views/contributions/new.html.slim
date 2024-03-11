@@ -95,7 +95,8 @@
                     tomselect_custom_options_value: { create: true, persist: false },
                     new_contribution_target: 'customerWinSelect',
                     form_target: 'requiredField',
-                    action: 'new-contribution#onChangeCustomerWin' } })
+                    action: 'new-contribution#onChangeCustomerWin',
+                    field_name: "#{form.object_name}[success_id]" } })
             span.help-block 
               | Required
 

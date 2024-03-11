@@ -31,7 +31,7 @@
       / = success_fields.hidden_field(:id)
       = success_fields.hidden_field(:id, value: '', disabled: true, data: { new_story_target: 'successField' })
       = success_fields.hidden_field(:name, disabled: true, data: { new_story_target: 'successName successField' })
-      = success_fields.hidden_field( \
+      /= success_fields.hidden_field( \
           :customer_id,
           disabled: true,
           data: { new_story_target: 'successCustomerId successField' })
