@@ -45,26 +45,18 @@ export function tableConfig(storyId?: number): Config {
       {
         name: 'contributor',
         data: {
-          _: (row, type, set) => ({
-            id: row.contributor?.id,
-            fullName: row.contributor?.full_name,
-            contributionId: row.id,
-            curatorId: row.success?.curator.id
-          }),
+          _: (row: Contribution, type: string, set: any) => 'contributor.id',
           display: 'contributor.full_name',
-          filter: 'contributor.id',
           sort: 'contributor.last_name'
         },
       },
       {
         name: 'success',
         data: {
-          _: (row, type, set) => ({ id: row.success?.id, name: row.success?.name }),
+          _: 'success.name',
           filter: 'success.id',
-          sort: 'success.name',
         }
       },
-      // <td data-search="t<%#= contribution.invitation_template_id  %>" class='invitation-template'>
       {
         name: 'invitation_template',
         data: {
@@ -76,22 +68,16 @@ export function tableConfig(storyId?: number): Config {
         createdCell: (td: Node) => $(td).addClass('invitation-template')
       },
 
-      {  // <td data-search="<%= contribution.success.curator.id %>"></td>
+      { 
         name: 'curator',
-        data: {
-          _: (row: Contribution, type: any, set: any) => ({ id: row.success?.curator.id, fullName: row.success?.curator.full_name }),
-          filter: 'success.curator.id'
-        }
-      },      // curator
-       // <td data-search="c<%= contribution.customer.id %>"><%= contribution.customer.name %></td>
+        data: 'success.curator.id'
+      },
       {
         name: 'customer',
         data: {
-          _: (row: Contribution, type: any, set: any) => ({ id: row.success?.customer.id, name: row.success?.customer.name }),
-          filter: 'success.customer.id',
+          _: (row: Contribution, type: string, set: any) => 'success.customer.id',
           sort: 'success.customer.name'
         },
-        // orderData: [[colIndices.customer, 'asc'], [colIndices.success, 'asc'], [colIndices.contributor, 'desc']]
       },
       {
         name: 'status',

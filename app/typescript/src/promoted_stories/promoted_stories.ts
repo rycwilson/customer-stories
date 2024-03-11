@@ -15,17 +15,18 @@ export function tableConfig(): Config {
 
     columns: [
       {
-        data: null,
-        render: (data: any, type: any, row: any) => {
-          return ''
-          // return `
-          //   <button type="button" class="btn" data-action="promoted-story#toggleChildRow">
-          //     <i class="fa fa-caret-right"></i>
-          //     <i class="fa fa-caret-down"></i>
-          //   </button>
-          // `
+        name: 'story',
+        data: 'id',
+        render: (storyId: number, type: string, row: PromotedStory) => {
+          return type === 'display' ? `
+              <button type="button" class="btn" data-action="promoted-story#toggleChildRow">
+                <i class="fa fa-caret-right"></i>
+                <i class="fa fa-caret-down"></i>
+              </button>
+            ` : 
+            storyId
         },
-        // createdCell: (td: Node) => $(td).addClass('toggle-child')
+        createdCell: (td: Node) => $(td).addClass('toggle-child')
       },
       {
         name: 'customer',

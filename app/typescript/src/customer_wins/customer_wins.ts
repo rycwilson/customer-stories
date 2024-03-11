@@ -28,11 +28,10 @@ export function tableConfig(): Config {
         data: 'id',
         render: (customerWinId: number, type: string, row: CustomerWin) => {
           return type === 'display' ? `
-              <button type="button" class="btn" data-action="customer-win#toggleChildRow">
-                <i class="fa fa-caret-right"></i>
-                <i class="fa fa-caret-down"></i>
-              </button>
-            ` :
+            <button type="button" class="btn" data-action="customer-win#toggleChildRow">
+              <i class="fa fa-caret-right"></i>
+              <i class="fa fa-caret-down"></i>
+            </button>` :
             customerWinId;
         },
         createdCell: (td) => $(td).addClass('toggle-child')
