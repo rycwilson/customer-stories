@@ -105,7 +105,7 @@ export default class FormController<Ctrl extends ConcreteFormController> extends
     };
 
     // enable/disable submission via the [name] attribute => precludes ui changes
-    if (!select.dataset.fieldName) throw('Missing data-field-name attribute');
+    if (!select.dataset.fieldName) throw new Error('Missing data-field-name attribute');
     select.setAttribute('name', isNewCustomer ? '' : select.dataset.fieldName);
 
     // enable/disable hidden customer fields
@@ -123,7 +123,7 @@ export default class FormController<Ctrl extends ConcreteFormController> extends
     const winId = +select.value || null;
 
     // enable/disable submission via the [name] attribute => precludes ui changes
-    if (!select.dataset.fieldName) throw('Missing data-field-name attribute');
+    if (!select.dataset.fieldName) throw new Error('Missing data-field-name attribute');
     select.setAttribute('name', isNewCustomerWin ? '' : select.dataset.fieldName);
 
     // enable/disable hidden customer win fields
@@ -134,7 +134,7 @@ export default class FormController<Ctrl extends ConcreteFormController> extends
     // => note that the function must be bound to the surrounding functions `this` when called (see below)
     const updateContributorOptions: (winId: number) => void = function (this: NewContributionController) {
       const tsOptions = this.contributorSelectTarget.tomselect.options as TomOptions;
-      if (!this.contributorsCtrl) throw('Missing contributors resource controller');
+      if (!this.contributorsCtrl) throw new Error('Missing contributors resource controller');
       const winContributorIds: number[] = this.contributorsCtrl.dt.data().toArray()
         .filter((contribution: Contribution) => contribution.success!.id === winId)
         .map((contribution: Contribution) => contribution.contributor!.id);
