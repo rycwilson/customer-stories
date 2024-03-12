@@ -116,7 +116,7 @@
                   action: 'form#onChangeContact',
                   field_name: "#{contribution_fields.object_name}[referrer_id]" } })
                   
-      /= render('companies/shared/new_contact', { parent_form_or_fields: contribution_fields, contact_type: 'referrer' })
+      = render('companies/shared/new_contact', { parent_form_or_fields: contribution_fields, contact_type: 'referrer' })
 
     = form.fields_for(:contributions, form.object.contributions.build) do |contribution_fields|
       = contribution_fields.check_box( \
@@ -145,7 +145,7 @@
                   action: 'form#onChangeContact',
                   field_name: "#{contribution_fields.object_name}[contributor_id]" } })
 
-      /= render('companies/shared/new_contact', { parent_form_or_fields: contribution_fields, contact_type: 'contributor' })
+      = render('companies/shared/new_contact', { parent_form_or_fields: contribution_fields, contact_type: 'contributor' })
 
     /.form-group.source
       label.col-sm-3.control-label Source

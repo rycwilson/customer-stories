@@ -16,14 +16,11 @@ export default class NewStoryController extends FormController<NewStoryControlle
   declare readonly customerWinSelectTarget: TomSelectInput;
   declare readonly successFieldTargets: HTMLInputElement[];
   declare readonly successNameTarget: HTMLInputElement;
-  // declare readonly requiredFieldTargets: (TomSelectInput | HTMLInputElement)[];
 
   declare customerCustomerWinIds: number[];
   customerWinsWereFiltered: boolean = false;
 
   connect() {
-    this.removeErrorsOnValidInput();
-    // this.autofillNewContactPasswords();
     $(this.modalOutlet.element).on('shown.bs.modal', () => this.storyTitleTarget.focus());
   }
 
@@ -41,9 +38,5 @@ export default class NewStoryController extends FormController<NewStoryControlle
 
   onChangeCustomerWin() {
     this.handleCustomerWinChange();
-  }
-
-  onChangeContact() {
-    this.handleContactChange();
   }
 }

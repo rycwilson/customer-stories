@@ -15,19 +15,12 @@ export default class NewContributionController extends FormController<NewContrib
   declare readonly successFieldTargets: HTMLInputElement[];
   declare readonly successNameTarget: HTMLInputElement;
   declare readonly contributorSelectTarget: TomSelectInput;
-  declare readonly contributorFieldsTarget: HTMLDivElement;
-  declare readonly contributorFieldTargets: HTMLInputElement[];
   declare readonly referrerSelectTarget: TomSelectInput;
-  declare readonly referrerFieldsTarget: HTMLDivElement;
-  declare readonly referrerFieldTargets: HTMLInputElement[];
-  // declare readonly requiredFieldTargets: (TomSelectInput | HTMLInputElement)[];
 
   declare customerCustomerWinIds: number[];
   customerWinsWereFiltered: boolean = false;
 
   connect() {
-    this.removeErrorsOnValidInput();
-    this.autofillNewContactPasswords();
     const hasExistingCustomer = +this.customerSelectTarget.value;
     if (hasExistingCustomer && !this.customerWinSelectTarget.classList.contains('readonly')) {
       window.setTimeout(this.setCustomerWinIds.bind(this));
@@ -48,9 +41,5 @@ export default class NewContributionController extends FormController<NewContrib
 
   onChangeCustomerWin() {
     this.handleCustomerWinChange();
-  }
-
-  onChangeContact() {
-    this.handleContactChange();
   }
 }

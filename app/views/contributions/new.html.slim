@@ -119,7 +119,7 @@
                 required: true,
                 data: { \
                   controller: 'tomselect',
-                  tomselect_type_value: 'Contributor',
+                  tomselect_type_value: 'contributor',
                   new_contribution_target: 'contributorSelect',
                   form_target: 'requiredField',
                   action: 'form#onChangeContact',
@@ -127,7 +127,7 @@
           span.help-block 
             | Required
 
-      /= render('companies/shared/new_contact', { parent_form_or_fields: form, contact_type: 'contributor' })
+      = render('companies/shared/new_contact', { parent_form_or_fields: form, contact_type: 'contributor' })
 
       .form-group
         = form.label(:invitation_template_id, 'Invitation Template', class: 'col-sm-3 control-label')
@@ -160,9 +160,9 @@
                 placeholder: 'Select or Create',
                 data: { \
                   controller: 'tomselect',
-                  tomselect_type_value: 'Referrer',
+                  tomselect_type_value: 'referrer',
                   new_contribution_target: 'referrerSelect',
                   action: 'form#onChangeContact',
                   field_name: "#{form.object_name}[referrer_id]" } })
 
-      /= render('companies/shared/new_contact', { parent_form_or_fields: form, contact_type: 'referrer' })
+      = render('companies/shared/new_contact', { parent_form_or_fields: form, contact_type: 'referrer' })
