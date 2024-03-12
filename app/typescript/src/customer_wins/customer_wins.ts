@@ -82,7 +82,6 @@ export function tableConfig(): Config {
         render: (data: any, type: string, row: any) => '',    // customer win controller will render the dropdown
         createdCell: (td: Node) => {
           $(td)
-            .addClass('dropdown')
             .attr('data-controller', 'actions-dropdown')
             .attr('data-customer-win-target', 'actionsDropdown');
           ['add', 'invite', 'show'].forEach(action => (
@@ -140,8 +139,8 @@ export function tableConfig(): Config {
       }
     },
 
-    createdRow(tr: Node, win: object | any[], index: number) {
-      const { id, display_status: status, new_story_path: newStoryPath, curator, customer, story } = win as CustomerWin;
+    createdRow(tr: Node, data: object | any[], index: number) {
+      const { id, display_status: status, new_story_path: newStoryPath, curator, customer, story } = data as CustomerWin;
       $(tr)
         .attr('data-controller', 'customer-win')
         .attr('data-customer-win-datatable-outlet', '#successes-table')
