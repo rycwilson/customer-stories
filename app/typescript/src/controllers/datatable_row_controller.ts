@@ -2,9 +2,10 @@ import { Controller } from '@hotwired/stimulus';
 import type DatatableController from './datatable_controller';
 import type CustomerWinController from './customer_win_controller';
 import type ContributionController from './contribution_controller';
+import type PromotedStoryController from './promoted_story_controller';
 
-type RowController = CustomerWinController;
-type RowData = CustomerWinRowData;
+type RowController = CustomerWinController | ContributionController | PromotedStoryController;
+type RowData = (CustomerWinRowData | ContributionRowData | PromotedStoryRowData) & StringIndexable;
 export default class DatatableRowController<Ctrl extends RowController, Data extends RowData> extends Controller<HTMLTableRowElement> {
   static outlets = ['datatable', 'modal'];
   declare readonly datatableOutlet: DatatableController;
@@ -13,16 +14,18 @@ export default class DatatableRowController<Ctrl extends RowController, Data ext
   declare readonly actionsDropdownTarget: HTMLTableCellElement;
 
   static values = { 
-    childRowTurboFrameAttrs: { type: Object, default: {} }, 
-    rowData: Object 
+    rowData: Object,
+    childRowTurboFrameAttrs: { type: Object, default: {} }
   };
-  declare readonly childRowTurboFrameAttrsValue: { id: string, src: string };
   declare readonly rowDataValue: Data;
+  declare readonly childRowTurboFrameAttrsValue: { id: string, src: string };
 
   connect() {
-    console.log('connect datatable row')
+    // console.log('connect datatable row')
     Object.keys(this.rowDataValue).forEach(key => {
-      // when accessing a property from outside the class, typescript unaware of string index signature => use `as any`
+      // when accessing a property from outside the class (here we are accessing the subclass from the superclass), 
+      // typescript is unaware of string index signature 
+      // => use `as any`
       (this as any)[key] = this.rowDataValue[key];
     });
     this.actionsDropdownTarget.insertAdjacentHTML('afterbegin', this.actionsDropdownTemplate);
@@ -38,7 +41,8 @@ export default class DatatableRowController<Ctrl extends RowController, Data ext
   }
 
   get hasChildRowContent() {
-    return this.childRowTurboFrameAttrsValue.id && this.childRowTurboFrameAttrsValue.src;
+    return true;
+    // return this.childRowTurboFrameAttrsValue.id && this.childRowTurboFrameAttrsValue.src;
   }
 
   toggleChildRow(this: Ctrl) {
@@ -52,7 +56,7 @@ export default class DatatableRowController<Ctrl extends RowController, Data ext
       row.child(this.childRowContent, 'child-row');
       row.child.show();
       const childRow = tr.nextElementSibling as HTMLTableRowElement;
-      // if (this.onFrameRendered) childRow.addEventListener('turbo:frame-render', onFrameRendered, { once: true });
+      // if (this.onFrameRendered) childRow.addEventListener('turbo:frame-render', this.onFrameRendered.bind(this), { once: true });
       childRow.addEventListener('turbo:frame-render', this.onFrameRendered.bind(this), { once: true })
       childRow && childRow.scrollIntoView({ block: 'center' });
     }

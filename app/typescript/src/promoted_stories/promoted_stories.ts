@@ -19,7 +19,7 @@ export function tableConfig(): Config {
         data: 'id',
         render: (storyId: number, type: string, row: PromotedStory) => {
           const toggleBtn = `
-            <button type="button" class="btn" data-action="promoted-story#toggleChildRow">
+            <button type="button" class="btn" data-action="promoted-story#onClickChildRowBtn">
               <i class="fa fa-caret-right"></i>
               <i class="fa fa-caret-down"></i>
             </button>
@@ -79,7 +79,6 @@ export function tableConfig(): Config {
         render: (data: any, type: any, row: any) => '',    // promoted story controller will render the dropdown
         createdCell: (td: Node) => {
           $(td)
-            .addClass('dropdown')
             .attr('data-controller', 'actions-dropdown')
             .attr('data-promoted-story-target', 'actionsDropdown');
         }
@@ -101,12 +100,11 @@ export function tableConfig(): Config {
       { targets: colIndices.actions, width: '4.5em' },
     ],
 
-    createdRow: function (row, data, index) { 
+    createdRow: function (tr: Node, data: object | any[], index: number) { 
       const { id, title } = data as PromotedStory;
-      $(row)
+      $(tr)
         .attr('data-controller', 'promoted-story')
-        .attr('data-promoted-story-resource-outlet', '#promoted-stories')
-        .attr('data-promoted-story-modal-outlet', '#main-modal')
+        .attr('data-promoted-story-datatable-outlet', '#promoted-stories-table')
         .attr('data-promoted-story-row-data-value', JSON.stringify({ id, title }))
         .attr('data-story-id', id)
         .children()
@@ -120,10 +118,6 @@ export function tableConfig(): Config {
           .eq(3)
             .addClass('status dropdown')
             .end()
-          .eq(4)
-            .addClass('actions dropdown')
-            .end()
-    },
-
+    }
   };
 }

@@ -1,41 +1,37 @@
-import { Controller } from "@hotwired/stimulus";
-import type ResourceController from './resource_controller';
+import DatatableRowController from "./datatable_row_controller";
 import type ModalController from './modal_controller';
-import { visit as turboVisit } from '@hotwired/turbo';
-import Cookies from 'js-cookie';
+import type { FrameElement } from '@hotwired/turbo';
 
-export default class ContributionController extends Controller<HTMLTableRowElement> {
-  static outlets = ['resource', 'modal'];
-  declare readonly resourceOutlet: ResourceController;
+export default class ContributionController extends DatatableRowController<ContributionController, ContributionRowData> {
   declare readonly modalOutlet: ModalController;
-
-  static targets = ['actionsDropdown'];
-  declare readonly actionsDropdownTarget: HTMLTableCellElement;
-
-  static values = { rowData: Object };
-  declare readonly rowDataValue: { [key: string]: any };
-  declare readonly workflowStageValue: 'prospect' | 'curate';
 
   declare id: number;
   declare status: string;
   declare contributor: object;
   declare invitationTemplate: string;
   declare customerWin: CustomerWin;
-  // contribution;
 
-  initialize() {}
+  declare contributionHtml: HTMLElement;
+
+  // connect() {
+  //   super.connect();
+  // }
+
   
-  connect() {
-    // console.log('connect contribution')
-    Object.keys(this.rowDataValue).forEach((key: string): void => {
-      const field: keyof this['rowDataValue'] = key;
-      this[field] = this.rowDataValue[key];
-    });
-    this.actionsDropdownTarget.insertAdjacentHTML('afterbegin', this.actionsDropdownTemplate());
+  onClickChildRowBtn() {
+    this.toggleChildRow();
+  }
+  
+  onFrameRendered({ target: turboFrame }: {target: FrameElement}) {
+    this.contributionHtml ??= <HTMLElement>turboFrame.firstElementChild;
+  }
+  
+  get childRowContent() {
+    return this.contributionHtml || '<h3>Contribution</h3>';
   }
 
   get storyExists() {
-    return Boolean(this.customerWin?.story);
+    return Boolean(this.customerWin.story);
   }
 
   get editStoryPath() {
@@ -81,7 +77,7 @@ export default class ContributionController extends Controller<HTMLTableRowEleme
     `;
   }
 
-  actionsDropdownTemplate() {
+  get actionsDropdownTemplate() {
     const shouldShowStoryLinks = window.location.pathname === '/prospect';
     const isPreInvite = this.status === 'pre_request';
     const didNotRespond = this.status === 'did_not_respond';

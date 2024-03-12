@@ -33,7 +33,7 @@ export function tableConfig(storyId?: number): Config {
         data: 'id',
         render: (contributionId: number, type: string, row: Contribution) => {
           const toggleBtn = `
-            <button type="button" class="btn">
+            <button type="button" class="btn" data-action="contribution#onClickChildRowBtn">
               <i class="fa fa-caret-right"></i>
               <i class="fa fa-caret-down"></i>
             </button>
@@ -94,7 +94,6 @@ export function tableConfig(storyId?: number): Config {
         render: (data: any, type: any, row: any) => '',
         createdCell: (td: Node) => {
           $(td)
-            .addClass('dropdown')
             .attr('data-controller', 'actions-dropdown')
             .attr('data-contribution-target', 'actionsDropdown');
         }
@@ -128,7 +127,7 @@ export function tableConfig(storyId?: number): Config {
 
     rowGroup: storyId ? undefined : { dataSrc: 'success.name', startRender: rowGroupTemplate },
 
-    createdRow: (row: Node, data: object | any[], index: number) => {
+    createdRow: (tr: Node, data: object | any[], index: number) => {
       // const isPreInvite = data.status === 'pre_request';
       // const didNotRespond = data.status === 'did_not_respond';
       // $(row)
@@ -147,8 +146,9 @@ export function tableConfig(storyId?: number): Config {
       //     .eq(4).addClass('actions dropdown')
 
       const { id, status, contributor, invitation_template: invitationTemplate, success: customerWin } = data as Contribution;
-      $(row)
+      $(tr)
         .attr('data-controller', 'contribution')
+        .attr('data-contribution-datatable-outlet', storyId ? '#story-contributors-table' : '#contributors-table')
         .attr('data-contribution-resource-outlet', '#customer-wins')
         .attr('data-customer-win-modal-outlet', '#main-modal')
         .attr(

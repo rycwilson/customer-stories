@@ -1,32 +1,16 @@
-import { Controller } from '@hotwired/stimulus';
-import type ResourceController from './resource_controller.js';
-import type ModalController from './modal_controller.js';
+import DatatableRowController from './datatable_row_controller';
+import type { FrameElement } from '@hotwired/turbo';
 
-export default class PromotedStoryController extends Controller<HTMLTableRowElement> {
-  static outlets = ['resource', 'modal'];
-  declare readonly resourceOutlet: ResourceController;
-  declare readonly modalOutlet: ModalController;
-
-  static targets = ['actionsDropdown', 'switch'];
-  declare readonly actionsDropdownTarget: HTMLTableCellElement;
+export default class PromotedStoryController extends DatatableRowController<PromotedStoryController, PromotedStoryRowData> {
+  static targets = ['switch'];
   declare switchTarget: HTMLInputElement;
 
-  static values = { 
-    rowData: Object 
-  };
-  declare readonly rowDataValue: { [key: string]: any };
-
-  id: number | undefined = undefined;
-  title: string | undefined = undefined;
+  declare id: number;
+  declare title: string;
+  declare promotedStoryHtml: HTMLElement;
 
   connect() {
-    // console.log('connect promoted story')
-    Object.keys(this.rowDataValue).forEach((key): void => {
-      const field: keyof this['rowDataValue'] = key;
-      this[field] = this.rowDataValue[key];
-    });
-    this.actionsDropdownTarget.insertAdjacentHTML('afterbegin', this.actionsDropdownTemplate());
-
+    super.connect();
     $(this.switchTarget).bootstrapSwitch({
       size: 'small',
       disabled: false,
@@ -35,7 +19,19 @@ export default class PromotedStoryController extends Controller<HTMLTableRowElem
     });
   }
 
-  actionsDropdownTemplate() {
+  onClickChildRowBtn() {
+    this.toggleChildRow();
+  }
+
+  onFrameRendered({ target: turboFrame }: {target: FrameElement}) {
+    this.promotedStoryHtml ??= <HTMLElement>turboFrame.firstElementChild;
+  }
+
+  get childRowContent() {
+    return this.promotedStoryHtml || '<h3>Promoted Story</h3>';
+  }
+
+  get actionsDropdownTemplate() {
     return `
       <a id="promoted-story-actions-dropdown-${this.id}" 
         href="#" 

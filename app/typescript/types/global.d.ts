@@ -111,6 +111,11 @@ interface PromotedStory extends Omit<Story, 'published'> {
   retarget_ad: { id: number, status: string };
 }
 
+interface PromotedStoryRowData {
+  id: number;
+  title: string;
+}
+
 interface Contribution {
   // attributes
   id: number;
@@ -135,6 +140,14 @@ interface Contribution {
   referrer?: User;
   invitation_template?: InvitationTemplate;
   answers?: ContributorAnswer[];
+}
+
+interface ContributionRowData {
+  id: number;
+  status: string;
+  contributor: object;
+  invitationTemplate: string;
+  customerWin: CustomerWin;
 }
 
 interface InvitationTemplate {

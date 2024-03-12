@@ -128,7 +128,8 @@
 
 #successes-table, 
 #contributors-table, 
-#story-contributors-table {
+#story-contributors-table,
+#promoted-stories-table {
   th.toggle-child, 
   td.toggle-child, 
   th.toggle-contributor-child, 
@@ -201,7 +202,7 @@
     }
   }
 
-  td.status {
+  &:not(#promoted-stories-table) td.status {
     // this ensures newlines will be respected
     // ref: https://stackoverflow.com/questions/10937218
     white-space: pre;
