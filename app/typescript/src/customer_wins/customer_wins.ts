@@ -28,7 +28,7 @@ export function tableConfig(): Config {
         data: 'id',
         render: (customerWinId: number, type: string, row: CustomerWin) => {
           const toggleBtn = `
-            <button type="button" class="btn" data-action="customer-win#toggleChildRow">
+            <button type="button" class="btn" data-action="customer-win#onClickChildRowBtn">
               <i class="fa fa-caret-right"></i>
               <i class="fa fa-caret-down"></i>
             </button>
@@ -140,22 +140,17 @@ export function tableConfig(): Config {
       }
     },
 
-    createdRow(row: Node, data: object | any[], index: number) {
-      // TODO interface CustomerWin
-      const { id, display_status: status, new_story_path: newStoryPath, curator, customer, story } = data as CustomerWin;
-      $(row)
+    createdRow(tr: Node, win: object | any[], index: number) {
+      const { id, display_status: status, new_story_path: newStoryPath, curator, customer, story } = win as CustomerWin;
+      $(tr)
         .attr('data-controller', 'customer-win')
-        .attr('data-customer-win-resource-outlet', '#contributors')
+        .attr('data-customer-win-datatable-outlet', '#successes-table')
         .attr('data-customer-win-modal-outlet', '#main-modal')
-        // .attr('data-customer-win-contributions-modal-outlet', '.contributions-modal')
         .attr('data-customer-win-row-data-value', JSON.stringify({ id, status, newStoryPath, curator, customer, story }))
         .attr(
           'data-customer-win-child-row-turbo-frame-attrs-value', 
           JSON.stringify({ id: 'edit-customer-win', src: editCustomerWinPath(id) })
-        );
-      // $(row).attr('data-customer-id', data.customer.id);
-      // $(row).attr('data-success-id', data.id);
-      // $(row).children().eq(1).attr('data-filter', data.id);
+        )
     }
   }
 }

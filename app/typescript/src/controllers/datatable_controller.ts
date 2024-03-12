@@ -10,6 +10,7 @@ interface SearchParams {
   tsSearchResults?: { [column: string]: string },
   filterVal?: string
 }
+
 export default class DatatableController extends Controller<HTMLTableElement> {
   static outlets = ['resource', 'stories'];
   declare readonly resourceOutlet: ResourceController;
@@ -71,20 +72,6 @@ export default class DatatableController extends Controller<HTMLTableElement> {
     if (oldVal !== undefined) {
       clearTimeout(this.searchDebounceTimer);
       this.searchDebounceTimer = window.setTimeout(() => this.search(newVal), 200);
-    }
-  }
-
-  toggleChildRow(e: CustomEvent) {
-    const { tr, content, onFrameRendered } = e.detail;
-    const row = this.dt.row(tr);
-    if (row.child.isShown()) {
-      row.child.hide();
-    } else {
-      row.child(content, 'child-row');
-      row.child.show();
-      const childRow = tr.nextElementSibling;
-      if (onFrameRendered) childRow.addEventListener('turbo:frame-render', onFrameRendered, { once: true });
-      childRow && childRow.scrollIntoView({ block: 'center' });
     }
   }
 

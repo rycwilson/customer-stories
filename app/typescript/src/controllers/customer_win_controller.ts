@@ -1,25 +1,10 @@
-import { Controller } from '@hotwired/stimulus';
-// import DatatableRowController from './datatable_row_controller.js';
-import type ResourceController from './resource_controller.js';
+import DatatableRowController from './datatable_row_controller.js';
 import type ModalController from './modal_controller.js';
 import type { FrameElement } from '@hotwired/turbo';
 import { childRowPlaceholderTemplate } from '../customer_wins/win_story.js';
 
-// export default class CustomerWinController extends DatatableRowController<CustomerWin> {
-export default class CustomerWinController extends Controller<HTMLTableRowElement> {
-  static outlets = ['resource', 'modal'];
-  declare readonly resourceOutlet: ResourceController;
+export default class CustomerWinController extends DatatableRowController<CustomerWinController, CustomerWinRowData> {
   declare readonly modalOutlet: ModalController;
-
-  static targets = ['actionsDropdown'];
-  declare readonly actionsDropdownTarget: HTMLTableCellElement;
-
-  static values = { 
-    childRowTurboFrameAttrs: { type: Object, default: {} }, 
-    rowData: Object 
-  };
-  declare readonly childRowTurboFrameAttrsValue: { id: string, src: string };
-  declare readonly rowDataValue: { [key: string]: any };
 
   declare id: number;
   declare status: string;
@@ -31,48 +16,28 @@ export default class CustomerWinController extends Controller<HTMLTableRowElemen
   declare contributionsHtml: string;          
   declare winStoryFormEl: HTMLFormElement;
 
-  connect() {
-    // console.log('connect customer win')
-    // this.assignMembers()
-    Object.keys(this.rowDataValue).forEach(key => {
-      const field: keyof this['rowDataValue'] = key;
-      this[field] = this.rowDataValue[key];
-    });
-    this.actionsDropdownTarget.insertAdjacentHTML('afterbegin', this.actionsDropdownTemplate());
-    this.element.id = `customer-win-${this.id}`;  // will be needed for win story outlet
-  }
-
-  get contributorsCtrl() {
-    return this.resourceOutlet;
-  }
-
-  get childRowShown() {
-    return this.element.classList.contains('dt-hasChild');
-  }
-
-  get hasChildRowContent() {
-    return this.childRowTurboFrameAttrsValue.id && this.childRowTurboFrameAttrsValue.src;
-  }
-
-  get storyExists() {
-    return Boolean(this.story);
-  }
+  // connect() {
+  //   super.connect();
+  // }
 
   get editStoryPath() {
-    return this.storyExists ? `/stories/${this.story?.slug}/edit` : undefined;
+    return this.story ? `/stories/${this.story?.slug}/edit` : undefined;
   }
 
-  toggleChildRow() {
-    if (!this.hasChildRowContent) return false;
-    const onFrameRendered = ({ target: turboFrame }: {target: FrameElement}) => (
-      this.winStoryFormEl ??= <HTMLFormElement>turboFrame.firstElementChild
-    );
-    const content = this.childRowShown ? null : (this.winStoryFormEl || `
+  get childRowContent() {
+    return this.winStoryFormEl || `
       <turbo-frame id="${this.childRowTurboFrameAttrsValue.id}" src="${this.childRowTurboFrameAttrsValue.src}">
         ${childRowPlaceholderTemplate(this.curator?.full_name)}
       </turbo-frame>
-    `);
-    this.dispatch('toggle-child-row', { detail: { tr: this.element, content, onFrameRendered } });
+    `;
+  }
+
+  onFrameRendered({ target: turboFrame }: {target: FrameElement}) {
+    this.winStoryFormEl ??= <HTMLFormElement>turboFrame.firstElementChild;
+  }
+
+  onClickChildRowBtn() {
+    this.toggleChildRow();
   }
 
   // TODO: move template to the server
@@ -85,7 +50,8 @@ export default class CustomerWinController extends Controller<HTMLTableRowElemen
     };
     if (this.contributionsHtml) showInModal();
     else {
-      const contributionIds = this.contributorsCtrl.dt.data().toArray()
+      // const contributionIds = this.contributorsCtrl.dt.data().toArray()
+      const contributionIds = (CSP['contributions'] as Contribution[])
         .filter((contribution: Contribution) => (
           (contribution.success?.id == this.id) && contribution.status && /(contribution|feedback)/.test(contribution.status)
         ))
@@ -173,7 +139,7 @@ export default class CustomerWinController extends Controller<HTMLTableRowElemen
     }`;
   }
 
-  actionsDropdownTemplate() {
+  get actionsDropdownTemplate() {
     const status = this.status as string;
     const noContributorsAdded = /0.+Contributors\sadded/.test(status);
     const noContributorsInvited = /0.+Contributors\sinvited/.test(status);
@@ -205,7 +171,7 @@ export default class CustomerWinController extends Controller<HTMLTableRowElemen
           ` : 
           ''
         }
-        ${this.storyExists ? 
+        ${this.story ? 
             this.editStoryDropdownItems : `
             <li>
               <a href="javascript:;" 
