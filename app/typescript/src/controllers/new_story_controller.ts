@@ -1,4 +1,3 @@
-import { Controller } from "@hotwired/stimulus";
 import FormController from "./form_controller";
 import type ResourceController from "./resource_controller";
 import type ModalController from "./modal_controller";

@@ -7,16 +7,6 @@ import type { TomOptions } from 'tom-select/dist/types/types';
 type ConcreteFormController = NewCustomerWinController | NewContributionController | NewStoryController;
 type FormWithCustomerWinSelect = NewContributionController | NewStoryController;
 
-// ACTUALLY it looks like this isn't necessary:
-// declare these interfaces so that they can be accessed as computed properties in FormController (which implements these interfaces)
-// interface NewContactContainer {
-//   contributorFieldsTarget: HTMLDivElement
-//   referrerFieldsTarget: HTMLDivElement
-// }
-// interface NewContactFields {
-//   referrerFieldTargets: HTMLInputElement[];
-//   contributorFieldTargets: HTMLInputElement[]
-// }
 export default class FormController<Ctrl extends ConcreteFormController> extends Controller<HTMLFormElement> {
   static outlets = ['resource', 'modal'];
 
@@ -51,7 +41,6 @@ export default class FormController<Ctrl extends ConcreteFormController> extends
     this.autofillNewContactPasswords();
   }
 
-  // validate(this: Ctrl, e: CustomEvent) {
   validate(e: CustomEvent) {
     let isValid = true;
 
