@@ -76,6 +76,17 @@ interface CustomerWin {
   story: Story;
 }
 
+// CustomerWin data from server is transformed to CustomerWinRowData for datatables
+interface CustomerWinRowData {
+  [key: string]: any;
+  id: number;
+  status: string;
+  newStoryPath: string;
+  curator: User;
+  customer: Customer;
+  story?: Story;
+}
+
 interface Customer {
   id?: number;
   name?: string;
@@ -143,29 +154,29 @@ interface ContributorAnswer {
   question: ContributorQuestion;
 }
 
-//   interface HTMLElementEventMap {
-//     // rails-ujs events
-//     'ajax:before': CustomEvent,                 
-//     'ajax:beforeSend': CustomEvent,    
-//     'ajax:send': CustomEvent,         
-//     'ajax:stopped': CustomEvent,               
-//     'ajax:success': CustomEvent,                
-//     'ajax:error': CustomEvent,                 
-//     'ajax:complete': CustomEvent,          
+  interface HTMLElementEventMap {
+    // rails-ujs events
+    // 'ajax:before': CustomEvent,                 
+    // 'ajax:beforeSend': CustomEvent,    
+    // 'ajax:send': CustomEvent,         
+    // 'ajax:stopped': CustomEvent,               
+    // 'ajax:success': CustomEvent,                
+    // 'ajax:error': CustomEvent,                 
+    // 'ajax:complete': CustomEvent,          
          
-//     // turbo events
-//     'turbo:load': TurboLoadEvent;
-//     'turbo:click': TurboClickEvent;
-//     'turbo:before-visit': TurboBeforeVisitEvent;
-//     'turbo:visit': TurboVisitEvent;
-//     'turbo:submit-start': TurboSubmitStartEvent;
-//     'turbo:submit-end': TurboSubmitEndEvent;
-//     'turbo:before-render': TurboBeforeRenderEvent;
-//     'turbo:render': TurboRenderEvent;
-//     'turbo:frame-load': TurboFrameLoadEvent;
-//     'turbo:before-frame-render': TurboBeforeFrameRenderEvent;
-//     'turbo:frame-render': TurboFrameRenderEvent;
-//     'turbo:before-fetch-request': CustomEvent;
-//     'turbo:before-fetch-response': CustomEvent;
-//     'turbo:before-cache': CustomEvent;
-//   }
+    // turbo events
+    'turbo:load': TurboLoadEvent;
+    'turbo:click': TurboClickEvent;
+    'turbo:before-visit': TurboBeforeVisitEvent;
+    'turbo:visit': TurboVisitEvent;
+    'turbo:submit-start': TurboSubmitStartEvent;
+    'turbo:submit-end': TurboSubmitEndEvent;
+    'turbo:before-render': TurboBeforeRenderEvent;
+    'turbo:render': TurboRenderEvent;
+    'turbo:frame-load': TurboFrameLoadEvent;
+    'turbo:before-frame-render': TurboBeforeFrameRenderEvent;
+    'turbo:frame-render': TurboFrameRenderEvent;
+    'turbo:before-fetch-request': CustomEvent;
+    'turbo:before-fetch-response': CustomEvent;
+    'turbo:before-cache': CustomEvent;
+  }
