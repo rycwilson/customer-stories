@@ -9,10 +9,10 @@
         autocomplete: 'off',
         novalidate: true,
         data: { \
-          controller: 'form new-customer-win',
+          controller: 'new-customer-win',
           modal_target: 'form',
           new_customer_win_modal_outlet: '#main-modal',
-          action: 'ajax:beforeSend->form#validate',
+          action: 'ajax:beforeSend->new-customer-win#validate',
           submit_btn_text: 'Add Customer Win' } }) do |form|
 
     = form.fields_for(:customer, form.object.customer || form.object.build_customer) do |customer_fields|
@@ -40,7 +40,7 @@
               data: { \
                 controller: 'tomselect',
                 tomselect_type_value: 'curator',
-                form_target: 'requiredField' } })
+                new_customer_win_target: 'requiredField' } })
         span.help-block 
           | Required
 
@@ -59,8 +59,7 @@
               required: true,
               data: { \
                 controller: 'tomselect',
-                new_customer_win_target: 'customerSelect',
-                form_target: 'requiredField',
+                new_customer_win_target: 'customerSelect requiredField',
                 tomselect_type_value: 'customer',
                 tomselect_custom_options_value: { create: true, persist: false },
                 action: 'new-customer-win#onChangeCustomer',
@@ -76,7 +75,7 @@
             class: 'form-control',
             required: true,
             placeholder: 'Name of Project / Deal / Opportunity from CRM',
-            data: { form_target: 'requiredField' })
+            data: { new_customer_win_target: 'requiredField' })
         span.help-block 
           | Required 
 
@@ -113,15 +112,20 @@
                   controller: 'tomselect',
                   tomselect_type_value: 'referrer',
                   new_customer_win_target: 'referrerSelect',
-                  action: 'form#onChangeContact',
+                  action: 'new-customer-win#onChangeContact',
                   field_name: "#{contribution_fields.object_name}[referrer_id]" } })
                   
-      = render('companies/shared/new_contact', { parent_form_or_fields: contribution_fields, contact_type: 'referrer' })
+      = render( \
+          'companies/shared/new_contact', 
+          { parent_form_or_fields: contribution_fields, controller_id: 'new-customer-win', contact_type: 'referrer' })
 
     = form.fields_for(:contributions, form.object.contributions.build) do |contribution_fields|
       = contribution_fields.check_box( \
           :success_contact,
-          { checked: true, hidden: true, disabled: true, data: { new_customer_win_target: 'contributorField' } },
+          { checked: true,
+            hidden: true,
+            disabled: true,
+            data: { new_customer_win_target: 'customerContactBoolField contributorField' } },
           true,
           false)
       .form-group
@@ -142,10 +146,12 @@
                   controller: 'tomselect',
                   tomselect_type_value: 'contributor',
                   new_customer_win_target: 'contributorSelect',
-                  action: 'form#onChangeContact',
+                  action: 'new-customer-win#onChangeContact new-customer-win#onChangeCustomerContact',
                   field_name: "#{contribution_fields.object_name}[contributor_id]" } })
 
-      = render('companies/shared/new_contact', { parent_form_or_fields: contribution_fields, contact_type: 'contributor' })
+      = render( \
+          'companies/shared/new_contact', 
+          { parent_form_or_fields: contribution_fields, controller_id: 'new-customer-win', contact_type: 'contributor' })
 
     /.form-group.source
       label.col-sm-3.control-label Source
