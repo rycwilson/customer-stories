@@ -11,7 +11,7 @@ export default class AdsController extends Controller {
   declare readonly newLogoCardTarget: HTMLLIElement;
 
   declare inputObserver: MutationObserver;
-  declare imageTimer: NodeJS.Timeout;
+  declare imageTimer: number;
 
   initialize() {
     $(document)
@@ -82,7 +82,7 @@ export default class AdsController extends Controller {
     });
     this.inputObserver.observe(urlInput, { attributes: true });
     if (!this.imageDidLoad(card, img)) {
-      this.imageTimer = setInterval(this.imageDidLoad, 100, card, img);
+      this.imageTimer = window.setInterval(this.imageDidLoad, 100, card, img);
     }
   }
 
