@@ -19,7 +19,7 @@ export function tableConfig(): Config {
         data: 'id',
         render: (storyId: number, type: string, row: PromotedStory) => {
           const toggleBtn = `
-            <button type="button" class="btn" data-action="promoted-story#onClickChildRowBtn">
+            <button type="button" class="btn" data-action="promoted-story#toggleChildRow">
               <i class="fa fa-caret-right"></i>
               <i class="fa fa-caret-down"></i>
             </button>

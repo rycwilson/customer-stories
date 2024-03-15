@@ -28,7 +28,7 @@ export function tableConfig(): Config {
         data: 'id',
         render: (customerWinId: number, type: string, row: CustomerWin) => {
           const toggleBtn = `
-            <button type="button" class="btn" data-action="customer-win#onClickChildRowBtn">
+            <button type="button" class="btn" data-action="customer-win#toggleChildRow">
               <i class="fa fa-caret-right"></i>
               <i class="fa fa-caret-down"></i>
             </button>
@@ -120,7 +120,7 @@ export function tableConfig(): Config {
         const turboFrameAttrs = { id: `edit-customer-${customerId}`, src: `/customers/${customerId}/edit` };
         return $(`
           <tr />`).append(`
-            <td colspan="3">
+            <td colspan="3"> 
               <span style="font-weight:600">${customerName}</span>
             </td>
             <td colspan="1">

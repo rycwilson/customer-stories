@@ -33,7 +33,7 @@ export function tableConfig(storyId?: number): Config {
         data: 'id',
         render: (contributionId: number, type: string, row: Contribution) => {
           const toggleBtn = `
-            <button type="button" class="btn" data-action="contribution#onClickChildRowBtn">
+            <button type="button" class="btn" data-action="contribution#toggleChildRow">
               <i class="fa fa-caret-right"></i>
               <i class="fa fa-caret-down"></i>
             </button>

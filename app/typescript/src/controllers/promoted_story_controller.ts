@@ -9,18 +9,14 @@ export default class PromotedStoryController extends DatatableRowController<Prom
   declare title: string;
   declare promotedStoryHtml: HTMLElement;
 
-  connect() {
-    super.connect();
+  initialize() {
+    super.initialize();
     $(this.switchTarget).bootstrapSwitch({
       size: 'small',
       disabled: false,
       animate: false,
       onInit: function (e: Event) {}
     });
-  }
-
-  onClickChildRowBtn() {
-    this.toggleChildRow();
   }
 
   onFrameRendered({ target: turboFrame }: {target: FrameElement}) {

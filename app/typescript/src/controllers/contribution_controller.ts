@@ -16,11 +16,6 @@ export default class ContributionController extends DatatableRowController<Contr
   // connect() {
   //   super.connect();
   // }
-
-  
-  onClickChildRowBtn() {
-    this.toggleChildRow();
-  }
   
   onFrameRendered({ target: turboFrame }: {target: FrameElement}) {
     this.contributionHtml ??= <HTMLElement>turboFrame.firstElementChild;

@@ -20,8 +20,7 @@ export default class DatatableRowController<Ctrl extends RowController, Data ext
   declare readonly rowDataValue: Data;
   declare readonly childRowTurboFrameAttrsValue: { id: string, src: string };
 
-  connect() {
-    // console.log('connect datatable row')
+  initialize() {
     Object.keys(this.rowDataValue).forEach(key => {
       // when accessing a property from outside the class (here we are accessing the subclass from the superclass), 
       // typescript is unaware of string index signature 
@@ -30,6 +29,10 @@ export default class DatatableRowController<Ctrl extends RowController, Data ext
     });
     this.actionsDropdownTarget.insertAdjacentHTML('afterbegin', this.actionsDropdownTemplate);
     this.element.id = `${this.identifier}-${this.rowDataValue.id}`;
+  }
+
+  connect() {
+    // console.log('connect datatable row', this.identifier)
   }
 
   get dt() {
@@ -41,8 +44,9 @@ export default class DatatableRowController<Ctrl extends RowController, Data ext
   }
 
   get hasChildRowContent() {
+    // const { id, src } = this.childRowTurboFrameAttrsValue;
+    // return id && src;
     return true;
-    // return this.childRowTurboFrameAttrsValue.id && this.childRowTurboFrameAttrsValue.src;
   }
 
   toggleChildRow(this: Ctrl) {
@@ -56,8 +60,9 @@ export default class DatatableRowController<Ctrl extends RowController, Data ext
       row.child(this.childRowContent, 'child-row');
       row.child.show();
       const childRow = tr.nextElementSibling as HTMLTableRowElement;
-      // if (this.onFrameRendered) childRow.addEventListener('turbo:frame-render', this.onFrameRendered.bind(this), { once: true });
-      childRow.addEventListener('turbo:frame-render', this.onFrameRendered.bind(this), { once: true })
+      if (this.onFrameRendered) {
+        childRow.addEventListener('turbo:frame-render', this.onFrameRendered.bind(this), { once: true });
+      }
       childRow && childRow.scrollIntoView({ block: 'center' });
     }
   }

@@ -3,7 +3,8 @@ import type ModalController from './modal_controller.js';
 import type { FrameElement } from '@hotwired/turbo';
 import { childRowPlaceholderTemplate } from '../customer_wins/win_story.js';
 
-export default class CustomerWinController extends DatatableRowController<CustomerWinController, CustomerWinRowData> {
+export default class CustomerWinController 
+extends DatatableRowController<CustomerWinController, CustomerWinRowData> {
   declare readonly modalOutlet: ModalController;
 
   declare id: number;
@@ -34,10 +35,6 @@ export default class CustomerWinController extends DatatableRowController<Custom
 
   onFrameRendered({ target: turboFrame }: {target: FrameElement}) {
     this.winStoryFormEl ??= <HTMLFormElement>turboFrame.firstElementChild;
-  }
-
-  onClickChildRowBtn() {
-    this.toggleChildRow();
   }
 
   // TODO: move template to the server
