@@ -37,7 +37,11 @@ export default class DashboardController extends Controller<HTMLDivElement> {
     'promotedStories', 
     'promotedStoriesTab', 
     'promotedStoriesFilter',
-    'story'
+    'story',
+    'storyVisitors',
+    'storyVisitorsTab',
+    'recentActivity',
+    'recentActivityTab'
   ];
   declare readonly tabTargets: HTMLAnchorElement[];
   declare readonly tabPanelTargets: HTMLDivElement[];

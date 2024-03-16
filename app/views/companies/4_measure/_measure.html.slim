@@ -1,0 +1,75 @@
+#measure.tab-pane.fade {
+  class=('active in' if workflow_stage == 'measure')
+  data-dashboard-target="tabPanel"
+  data-action="resource:loading->dashboard#onResourceLoading resource:ready->dashboard#onResourceReady"
+  role="tabpanel" }
+
+  = render('shared/loading_spinner')
+
+  .container
+    .row
+      .col-sm-4.col-lg-3.layout-sidebar
+        ul.nav
+          li class=('active' if active_tab == '#story-visitors')
+            a {
+              id="story-visitors-tab" 
+              href="#story-visitors" 
+              data-toggle="tab"
+              data-dashboard-target="storyVisitorsTab"
+              data-action="dashboard#setNavCookie"
+              aria-controls="story-visitors"
+              aria-expanded="#{active_tab == '#story-visitors' ? 'true' : 'false'}"
+              role="tab" }
+              span
+                i.fa.fa-fw.fa-bar-chart
+                span 
+                  | Story Visitors
+              
+          li class=('active' if active_tab == '#recent-activity')
+            a {
+              id="recent-activity-tab" 
+              href="#recent-activity" 
+              data-toggle="tab"
+              data-dashboard-target="recentActivityTab"
+              data-action="dashboard#setNavCookie"
+              aria-controls="recent-activity"
+              aria-expanded="#{active_tab == '#contributors' ? 'true' : 'false'}"
+              role="tab" }
+              span
+                i class="fa fa-fw fa-line-chart"
+                span 
+                  | Recent Activity
+
+      .col-sm-8.col-lg-9.layout-main
+        .tab-content
+
+          / data-controller="resource"
+          / data-resource-dashboard-outlet=".dashboard"
+          / data-resource-resource-outlet=".resource-ctrl:not(#story-visitors)"
+          / data-resource-data-path-value="/successes"
+          / data-resource-name="storyVisitors"
+          #story-visitors.tab-pane.fade {
+            class=('active in' if active_tab == '#story-visitors') 
+            data-dashboard-target="storyVisitors"
+            data-resource-checkbox-filters-value={ \
+              'show-wins-with-story': { checked: true, label: 'Customer Wins with Story started'} }.to_json
+            aria-labelledby="story-visitors-tab"
+            role="tabpanel" }
+
+            = render('companies/4_measure/story_visitors')
+
+          / data-controller="resource"
+          / data-resource-dashboard-outlet=".dashboard"
+          / data-resource-resource-outlet=".resource-ctrl:not(#contributors)"
+          / data-resource-data-path-value=company_contributions_path(company)
+          / data-resource-checkbox-filters-value={ \
+          /   'show-completed': { checked: true, label: 'Contributors with a completed Contribution' },
+          /   'show-published': { checked: true, label: 'Contributors to published Customer Stories' } }.to_json
+          / data-resource-name="contributions"
+          #recent-activity.tab-pane.fade {
+            class=('active in' if active_tab == '#recent-activity')
+            data-dashboard-target="recentActivity"
+            aria-labelledby="recent-activity"
+            role="tabpanel" }
+
+            = render('companies/4_measure/recent_activity')
