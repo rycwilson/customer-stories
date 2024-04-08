@@ -1,6 +1,8 @@
 
 (function () {
 
+  console.log('ok');
+/*
   var company = <%= raw @company.to_json({
                       only: [],
                       include: {
@@ -40,15 +42,19 @@
   // update the app object
   CSP.company.customers = company.customers
   CSP.company.invitation_templates = company.invitation_templates
+*/
 
   /**
    * the datatable filter state persists through a reload,
    */
+
+   /*
   $('#successes-table').DataTable().ajax.reload(function (successes) {
     $('#prospect-contributors-table').DataTable().ajax.reload(function (contributions) {
       updateSelectOptions(company, successes);
       toggleFormDone($('#new-success-form'), false, cbDone(newSuccess));
     });
   });
+  */
 
 }());
