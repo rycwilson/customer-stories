@@ -47,7 +47,8 @@ class StoriesController < ApplicationController
   end
 
   def new
-    # success_id may or may not be present
+    @success = @company.successes.find_by(id: params[:success_id])  # success_id may or may not be present
+    @story = @success.present? ? @success.build_story : Story.new
   end
 
   def show
