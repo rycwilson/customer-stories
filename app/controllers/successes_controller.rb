@@ -29,18 +29,16 @@ class SuccessesController < ApplicationController
 
   def index
     company = Company.find_by(subdomain: request.subdomain) || current_user.company
-    data = Rails.cache.fetch("#{company.subdomain}/successes-json") do 
-      company.successes.to_json({
-        only: [:id, :name],
-        methods: [:display_status, :referrer, :contact, :timestamp],
-        include: {
-          curator: { only: [:id], methods: [:full_name] },
-          customer: { only: [:id, :name, :slug] },
-          story: { only: [:id, :title, :slug] }
-        }
-      })
-    end
-    respond_to { |format| format.json { render({ json: data }) } }
+    successes = company.successes.to_json(
+      only: [:id, :name],
+      methods: [:display_status, :referrer, :contact, :timestamp, :new_story_path],
+      include: {
+        curator: { only: [:id], methods: [:full_name] },
+        customer: { only: [:id, :name, :slug] },
+        story: { only: [:id, :title, :slug] }
+      }
+    )
+    respond_to { |format| format.json { render({ json: successes }) } }
   end
 
   def new 
@@ -78,59 +76,62 @@ class SuccessesController < ApplicationController
   def create
     @company = Company.find_by(subdomain: request.subdomain) || current_user.company
 
-    if params[:success].dig(:customer_attributes).present?
-      params[:success][:customer_attributes] = find_dup_customer(
-        success_params.to_h.dig(:customer_attributes),
-        params[:zapier_create].present?,
-        current_user
-      )
-    end
+    puts JSON.pretty_generate(success_params.to_h)
 
-    if params[:success].dig(:contributions_attributes, '0', :referrer_attributes).present?
-      params[:success][:contributions_attributes]['0'][:referrer_attributes] = find_dup_user_and_split_full_name(
-          success_params.to_h.dig(:contributions_attributes, '0', :referrer_attributes),
-          params[:zapier_create].present?
-        )
-      params[:success][:contributions_attributes].except!('0') if params[:success][:contributions_attributes]['0'][:referrer_attributes].blank?
-    end
-
-    if params[:success].dig(:contributions_attributes, '1', :contributor_attributes).present?
-      params[:success][:contributions_attributes]['1'][:contributor_attributes] = find_dup_user_and_split_full_name(
-          success_params.to_h.dig(:contributions_attributes, '1', :contributor_attributes),
-          params[:zapier_create].present?
-        )
-      params[:success][:contributions_attributes].except!('1') if params[:success][:contributions_attributes]['1'][:contributor_attributes].blank?
-    end
-
-    if params[:zapier_create].present? && (@success = Success.find_by_id(find_dup_success(success_params.to_h)))
-      # a new success entails two contributions, one for the contact and one for the referrer;
-      # a duplicate success means a new contributor, i.e. one contribution only;
-      # referrers only get a contribution when they refer the original customer contact
-      @success = consolidate_contributions(@success)
-      zap_status = 'success' if @success.update(success_params)
-    else
-      @success = Success.new(success_params)
-      if @success.save
-      else
-        pp @success.errors.full_messages
-      end
-    end
+    # if params[:success].dig(:customer_attributes).present?
+    #   params[:success][:customer_attributes] = find_dup_customer(
+    #     success_params.to_h.dig(:customer_attributes),
+    #     params[:zapier_create].present?,
+    #     current_user
+    #   )
     # end
-    if params[:zapier_create].present?
-      puts "Zapier -> CSP, create success (after processing)"
-      puts success_params.to_h
-      respond_to do |format|
-        format.any do
-          render({
-            json: {
-              status: (@success && @success.persisted?) || zap_status == 'success' ? 'success' : 'error'
-            }
-          })
-        end
-      end
-    else
-      respond_to { |format| format.js {} }
-    end
+
+    # if params[:success].dig(:contributions_attributes, '0', :referrer_attributes).present?
+    #   params[:success][:contributions_attributes]['0'][:referrer_attributes] = find_dup_user_and_split_full_name(
+    #       success_params.to_h.dig(:contributions_attributes, '0', :referrer_attributes),
+    #       params[:zapier_create].present?
+    #     )
+    #   params[:success][:contributions_attributes].except!('0') if params[:success][:contributions_attributes]['0'][:referrer_attributes].blank?
+    # end
+
+    # if params[:success].dig(:contributions_attributes, '1', :contributor_attributes).present?
+    #   params[:success][:contributions_attributes]['1'][:contributor_attributes] = find_dup_user_and_split_full_name(
+    #       success_params.to_h.dig(:contributions_attributes, '1', :contributor_attributes),
+    #       params[:zapier_create].present?
+    #     )
+    #   params[:success][:contributions_attributes].except!('1') if params[:success][:contributions_attributes]['1'][:contributor_attributes].blank?
+    # end
+
+    # if params[:zapier_create].present? && (@success = Success.find_by_id(find_dup_success(success_params.to_h)))
+    #   # a new success entails two contributions, one for the contact and one for the referrer;
+    #   # a duplicate success means a new contributor, i.e. one contribution only;
+    #   # referrers only get a contribution when they refer the original customer contact
+    #   @success = consolidate_contributions(@success)
+    #   zap_status = 'success' if @success.update(success_params)
+    # else
+    #   @success = Success.new(success_params)
+    #   if @success.save
+    #   else
+    #     pp @success.errors.full_messages
+    #   end
+    # end
+    # # end
+    # if params[:zapier_create].present?
+    #   puts "Zapier -> CSP, create success (after processing)"
+    #   puts success_params.to_h
+    #   respond_to do |format|
+    #     format.any do
+    #       render({
+    #         json: {
+    #           status: (@success && @success.persisted?) || zap_status == 'success' ? 'success' : 'error'
+    #         }
+    #       })
+    #     end
+    #   end
+    # else
+    #   respond_to { |format| format.js {} }
+    # end
+    respond_to { |format| format.js {} }
   end
 
   def import

@@ -24,26 +24,30 @@ class ContributionsController < ApplicationController
     #   }.to_json
 
     # else  # datatables source data (contributors)
-    contributions = (success.present? ? success.contributions : company.contributions).to_json(
-      only: [:id, :status, :publish_contributor, :contributor_unpublished],
-      methods: [:display_status, :timestamp],
-      include: {
-        success: {
-          only: [:id, :customer_id, :curator_id, :name],
-          include: {
-            curator: { only: [:id], methods: [:full_name] },
-            customer: { only: [:id, :name, :slug] },
-            story: { 
-              only: [:id, :title, :published, :slug],
-              methods: [:csp_story_path] 
+    contributions = (success.present? ? success.contributions : company.contributions)
+      # .sort_by do |contribution| 
+      #   [contribution.success.name, contribution.contributor.last_name]
+      # end
+      .to_json(
+        only: [:id, :status, :publish_contributor, :contributor_unpublished],
+        methods: [:display_status, :timestamp],
+        include: {
+          success: {
+            only: [:id, :customer_id, :curator_id, :name],
+            include: {
+              curator: { only: [:id], methods: [:full_name] },
+              customer: { only: [:id, :name, :slug] },
+              story: { 
+                only: [:id, :title, :published, :slug],
+                methods: [:csp_story_path] 
+              }
             }
-          }
-        },
-        contributor: { only: [:id, :email, :first_name, :last_name, :phone, :title, :linkedin_url], methods: [:full_name] },
-        referrer: { only: [:id, :email, :first_name, :last_name, :title], methods: [:full_name] },
-        invitation_template: { only: [:id, :name] },
-      }
-    )
+          },
+          contributor: { only: [:id, :email, :first_name, :last_name, :phone, :title, :linkedin_url], methods: [:full_name] },
+          referrer: { only: [:id, :email, :first_name, :last_name, :title], methods: [:full_name] },
+          invitation_template: { only: [:id, :name] },
+        }
+      )
     # end
     # pp(JSON.parse(data))
     respond_to { |format| format.json { render({ json: contributions }) } }
@@ -51,11 +55,12 @@ class ContributionsController < ApplicationController
 
   def new
     @company = Company.find_by(subdomain: request.subdomain)
-    @customer_id = params[:customer_id]
-    @contributor_id = params[:contributor_id]
 
     # success_id will be 0 if customer win isn't specified in the client
     @success = Success.find_by(id: params[:success_id])
+    @customer_id = @success&.customer_id || params[:customer_id]
+    @contributor_id = params[:contributor_id]
+    @story = @success.story if request.referrer.include?('/stories')
   end
 
   def show
@@ -96,62 +101,63 @@ class ContributionsController < ApplicationController
   def create
     @company = Company.find_by(subdomain: request.subdomain) || current_user.company
 
-    if contribution_params[:success_attributes].to_h.has_key?(:customer_attributes)
-      params[:contribution][:success_attributes][:customer_attributes] = find_dup_customer(
-        contribution_params.to_h[:success_attributes],
-        params[:zapier_create].present?,
-        current_user
-      )
-    end
+    # if contribution_params[:success_attributes].to_h.has_key?(:customer_attributes)
+    #   params[:contribution][:success_attributes][:customer_attributes] = find_dup_customer(
+    #     contribution_params.to_h[:success_attributes],
+    #     params[:zapier_create].present?,
+    #     current_user
+    #   )
+    # end
 
-    # find an existing sucess
-    if params[:zapier_create] && (success = Success.where(name: contribution_params.to_h[:success_attributes][:name]).take)
-      params[:contribution][:success_id] = success.id
-      params[:contribution].delete(:success_attributes)
-    end
+    # # find an existing sucess
+    # if params[:zapier_create] && (success = Success.where(name: contribution_params.to_h[:success_attributes][:name]).take)
+    #   params[:contribution][:success_id] = success.id
+    #   params[:contribution].delete(:success_attributes)
+    # end
 
-    if referrer_included?(contribution_params.to_h)
-      params[:contribution][:referrer_attributes] = find_dup_user_and_split_full_name(
-        contribution_params.to_h[:referrer_attributes],
-        params[:zap].present?
-      )
-    else
-      # remove empty data else validations will fail
-      params[:contribution].delete(:referrer_attributes)
-    end
+    # if referrer_included?(contribution_params.to_h)
+    #   params[:contribution][:referrer_attributes] = find_dup_user_and_split_full_name(
+    #     contribution_params.to_h[:referrer_attributes],
+    #     params[:zap].present?
+    #   )
+    # else
+    #   # remove empty data else validations will fail
+    #   params[:contribution].delete(:referrer_attributes)
+    # end
 
-    if contribution_params.to_h.has_key?(:contributor_attributes)
-      params[:contribution][:contributor_attributes] = find_dup_user_and_split_full_name(
-        contribution_params.to_h[:contributor_attributes],
-        params[:zapier_create].present?
-      )
-    end
+    # if contribution_params.to_h.has_key?(:contributor_attributes)
+    #   params[:contribution][:contributor_attributes] = find_dup_user_and_split_full_name(
+    #     contribution_params.to_h[:contributor_attributes],
+    #     params[:zapier_create].present?
+    #   )
+    # end
 
-    @contribution = Contribution.new(contribution_params)
-    if @contribution.save
-    else
-      # this should not be necessary with addition of .find_dup_user
-      # if @contribution.contributor.errors.full_messages[0] == "Email has already been taken"
-      #   @contribution.contributor.id = User.find_by(email: @contribution.contributor.email).id
-      #   @contribution.contributor.reload
-      #   @contribution.save
-      # end
-    end
-    if params[:zapier_create].present?
-      puts "Zapier -> CSP, create contributor (after processing)"
-      puts contribution_params.to_h
-      respond_to do |format|
-        format.any do
-          render({
-            json: {
-              status: @contribution.persisted? ? 'success' : @contribution.errors.full_messages
-            }
-          })
-        end
-      end
-    else
-      respond_to { |format| format.js {} }
-    end
+    # @contribution = Contribution.new(contribution_params)
+    # if @contribution.save
+    # else
+    #   # this should not be necessary with addition of .find_dup_user
+    #   # if @contribution.contributor.errors.full_messages[0] == "Email has already been taken"
+    #   #   @contribution.contributor.id = User.find_by(email: @contribution.contributor.email).id
+    #   #   @contribution.contributor.reload
+    #   #   @contribution.save
+    #   # end
+    # end
+    # if params[:zapier_create].present?
+    #   puts "Zapier -> CSP, create contributor (after processing)"
+    #   puts contribution_params.to_h
+    #   respond_to do |format|
+    #     format.any do
+    #       render({
+    #         json: {
+    #           status: @contribution.persisted? ? 'success' : @contribution.errors.full_messages
+    #         }
+    #       })
+    #     end
+    #   end
+    # else
+    #   respond_to { |format| format.js {} }
+    # end
+    respond_to { |format| format.js {} }
   end
 
   def update
