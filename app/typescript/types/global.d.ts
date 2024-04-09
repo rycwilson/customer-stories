@@ -1,5 +1,17 @@
 declare module 'tom-select/dist/js/plugins/clear_button';
 
+declare namespace ImagesLoaded {
+  // extend to include properties that aren't included in @types/imagesloaded
+  interface ImagesLoaded {
+    elements: HTMLElement[];
+    hasAnyBroken: boolean;
+    images: ImagesLoaded.LoadingImage[];
+    progressedCount: number;
+    isComplete: boolean;
+    options: ImagesLoaded.ImagesLoadedOptions;
+  }
+}
+
 declare var CSP: CustomerStoriesApp;
 
 interface Window {

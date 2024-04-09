@@ -91,9 +91,9 @@ export default class extends Controller<TomSelectInput> {
       plugins: ctrl.isMultiSelect ? {} : {
         'clear_button': {
           title: 'Clear selection',
-          html: (config: CBOptions) => {
-            return (`<button type="button" class="btn ${config.className}" title="${config.title}">&times;</button>`)
-          }
+          html: (config: CBOptions) => (
+            `<button type="button" class="btn ${config.className}" title="${config.title}">&times;</button>`
+          )
         }
       },
 
@@ -112,12 +112,6 @@ export default class extends Controller<TomSelectInput> {
           (this.dropdown_content.querySelector(':scope > .create') as HTMLDivElement)
             .style.display = optionExists ? 'none' : '';
         } 
-      },
-  
-      onFocus(this: TomSelect) {
-        const listbox = this.dropdown.firstElementChild as HTMLDivElement;
-        const dropdownMaxHeight = document.documentElement.clientHeight - this.wrapper.getBoundingClientRect().bottom;
-        listbox.style.maxHeight = `${dropdownMaxHeight - 15}px`;
       },
   
       onDropdownOpen(this: TomSelect, dropdown: HTMLDivElement) {

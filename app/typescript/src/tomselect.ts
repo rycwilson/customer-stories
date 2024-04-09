@@ -13,4 +13,9 @@ export const tsBaseOptions = {
   closeAfterSelect: true,
   onInitialize() {
   },
+  onFocus(this: TomSelect) {
+    const listbox = <HTMLElement>this.dropdown.firstElementChild;
+    const dropdownMaxHeight = document.documentElement.clientHeight - this.wrapper.getBoundingClientRect().bottom;
+    listbox.style.maxHeight = `${dropdownMaxHeight - 15}px`;
+  },
 };
