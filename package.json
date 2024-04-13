@@ -5,7 +5,7 @@
   "main": "index.js",
   "type": "module",
   "scripts": {
-    "test": "jest",
+    "test": "NODE_PATH=/Users/wilson/.rbenv/versions/3.1.2/lib/ruby/gems/3.1.0/gems:$NODE_PATH jest",
     "build": "NODE_PATH=/Users/wilson/.rbenv/versions/3.1.2/lib/ruby/gems/3.1.0/gems:$NODE_PATH esbuild app/typescript/emit/app.js app/typescript/emit/stories.js --bundle --sourcemap --outdir=app/assets/builds"
   },
   "repository": {
@@ -64,6 +64,7 @@
     "@types/summernote": "^0.8.8",
     "esbuild": "0.19.3",
     "jest": "^29.7.0",
+    "jest-environment-jsdom": "^29.7.0",
     "ts-jest": "^29.1.2",
     "typescript": "^5.2.2"
   }
