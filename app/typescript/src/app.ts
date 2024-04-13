@@ -29,6 +29,10 @@ function appFactory(): CustomerStoriesApp {
   }
 }
 
+function foo() {
+  console.log('foo');
+}
+
 function addAllListeners() {
   addTurboListeners();
   // [companies, profile].forEach(controller => controller.addListeners());
@@ -66,3 +70,4 @@ function addTurboListeners() {
 //     otherDropdown.classList.remove('active');
 //   }
 // }
+
