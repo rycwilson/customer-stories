@@ -2,10 +2,7 @@
  * For a detailed explanation regarding each configuration property, visit:
  * https://jestjs.io/docs/configuration
  */
-
-import type {Config} from 'jest';
-
-const config: Config = {
+const config = {
   // All imported modules in your tests should be mocked automatically
   // automock: false,
 
@@ -69,7 +66,7 @@ const config: Config = {
   // A set of global variables that need to be available in all test environments
   globals: {
     "ts-jest": {
-      tsconfig: "tsconfig.test.json"
+      // tsconfig: "tsconfig.json"
     }
   },
 
@@ -151,6 +148,7 @@ const config: Config = {
 
   // The test environment that will be used for testing
   // testEnvironment: "jest-environment-node",
+  testEnvironment: "jsdom",
 
   // Options that will be passed to the testEnvironment
   // testEnvironmentOptions: {},
