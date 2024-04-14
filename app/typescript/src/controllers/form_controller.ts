@@ -3,9 +3,15 @@ import type ModalController from './modal_controller';
 import type NewCustomerWinController from './new_customer_win_controller';
 import type NewContributionController from './new_contribution_controller';
 import type NewStoryController from './new_story_controller';
+import type CompanyProfileController from './company_profile_controller';
 import type { TomOptions } from 'tom-select/dist/types/types';
 
-type SubclassController = NewCustomerWinController | NewContributionController | NewStoryController;
+type SubclassController = (
+  NewCustomerWinController | 
+  NewContributionController | 
+  NewStoryController | 
+  CompanyProfileController
+);
 
 export default class FormController<Ctrl extends SubclassController> extends Controller<HTMLFormElement> {
   static outlets = ['modal'];
@@ -60,6 +66,15 @@ export default class FormController<Ctrl extends SubclassController> extends Con
       });
     if (!this.element.classList.contains('was-validated')) this.element.classList.add('was-validated');
     if (!isValid) e.preventDefault();
+  }
+
+  onAjaxComplete(this: Ctrl, { detail: [xhr, status] }: { detail: [xhr: XMLHttpRequest, status: string] }) {
+    const { company, s3_direct_post: { fields: { key } } } = JSON.parse(xhr.response);
+    if (status === 'OK') {
+      console.log('company:', company);
+      console.log('new upload key:', key);
+    } else {
+    }
   }
 
   removeErrorsOnValidInput() {
