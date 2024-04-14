@@ -68,14 +68,8 @@ export default class FormController<Ctrl extends SubclassController> extends Con
     if (!isValid) e.preventDefault();
   }
 
-  onAjaxComplete(this: Ctrl, { detail: [xhr, status] }: { detail: [xhr: XMLHttpRequest, status: string] }) {
-    const { company, s3_direct_post: { fields: { key } } } = JSON.parse(xhr.response);
-    if (status === 'OK') {
-      console.log('company:', company);
-      console.log('new upload key:', key);
-    } else {
-    }
-  }
+  // onAjaxComplete(this: Ctrl, { detail: [xhr, status] }: { detail: [xhr: XMLHttpRequest, status: string] }) {
+  // }
 
   removeErrorsOnValidInput() {
     const removeError = (e: Event) => {

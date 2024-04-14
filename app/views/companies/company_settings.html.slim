@@ -65,7 +65,7 @@
         #company-panel.tab-pane.fade role="tabpanel"
           = render( \
               'companies/settings/company_profile', 
-              { company: @company, form_options: @form_options })
+              { company: @company, s3_direct_post: @s3_direct_post })
 
         - unless action_name == 'new'
 

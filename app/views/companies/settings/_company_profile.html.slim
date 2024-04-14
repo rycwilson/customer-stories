@@ -1,22 +1,39 @@
-= form_for(company, form_options.merge(data: { controller: 'company-profile' })) do |f|
+/ form_options.merge(data: { controller: 'company-profile' })
+
+= form_with( \
+    model: company,
+    format: :json,
+    html: { \
+      id: 'company-profile-form',
+      class: 'directUpload form-horizontal',
+      autocomplete: 'off',
+      novalidate: true,
+      data: { \
+        controller: 'company-profile',
+        action: 'ajax:beforeSend->company-profile#validate ajax:complete->company-profile#onAjaxComplete',
+        asset_host: Rails.application.config.asset_host,
+        s3: { \
+          url: s3_direct_post.url,
+          host: URI.parse(s3_direct_post.url).host,
+          'postData' => s3_direct_post.fields } }}) do |form|
   
-  .form-group.required-input
-    = f.label(:name, class: 'col-sm-3 control-label')
+  .form-group.required
+    = form.label(:name, class: 'col-sm-3 control-label')
     .col-sm-9.col-md-8.col-lg-6
-      = f.text_field(:name, class: 'form-control')
+      = form.text_field(:name, class: 'form-control')
   
-  .form-group.required-input
-    = f.label(:subdomain, class: 'col-sm-3 control-label')
+  .form-group.required
+    = form.label(:subdomain, class: 'col-sm-3 control-label')
     .col-sm-9.col-md-8.col-lg-6
       - if company.persisted?
-        = f.text_field(:subdomain, class: 'form-control', disabled: true)
+        = form.text_field(:subdomain, class: 'form-control', disabled: true)
       - else
-        = f.text_field(:subdomain, class: 'form-control')
+        = form.text_field(:subdomain, class: 'form-control')
 
-  .form-group.required-input
-    = f.label(:website, class: 'col-sm-3 control-label')
+  .form-group.required
+    = form.label(:website, class: 'col-sm-3 control-label')
     .col-sm-9.col-md-8.col-lg-6
-      = f.text_field(:website, class: 'form-control')
+      = form.text_field(:website, class: 'form-control')
 
   .form-group
     label.col-sm-3.control-label Header Logo
@@ -37,33 +54,33 @@
             data-trigger="fileinput" }
             = image_tag(company.logo_url || LOGO_PLACEHOLDER, alt: 'company logo')
           .btn-file
-            = f.file_field(:logo_url)
+            = form.file_field(:logo_url)
         .company-logo-upload__stories-header {
           class="company-logo-upload__stories-header--#{background_color_contrast(company.header_color_2)}"
           style="#{stories_header_custom_colors(company)}" }
           h3 Customer Stories
 
   .form-group.headers-color-picker
-    = f.label(nil, 'Header Colors', class: 'col-sm-3 control-label')
+    = form.label(nil, 'Header Colors', class: 'col-sm-3 control-label')
     .col-sm-9.col-md-8.col-lg-6
       div
-        = f.label(:header_color_1, 'Upper', class: 'control-label')
-        = f.text_field(:header_color_1, class: 'form-control mini-colors upper')
+        = form.label(:header_color_1, 'Upper', class: 'control-label')
+        = form.text_field(:header_color_1, class: 'form-control mini-colors upper')
       div
-        = f.label(:header_color_2, 'Lower', class: 'control-label')
-        = f.text_field(:header_color_2, class: 'form-control mini-colors lower')
+        = form.label(:header_color_2, 'Lower', class: 'control-label')
+        = form.text_field(:header_color_2, class: 'form-control mini-colors lower')
       div
-        = f.label(:header_text_color, 'Text', class: 'control-label')
-        = f.text_field(:header_text_color, class: 'form-control mini-colors text')
+        = form.label(:header_text_color, 'Text', class: 'control-label')
+        = form.text_field(:header_text_color, class: 'form-control mini-colors text')
 
   .form-group
-    = f.label(:gtm_id, 'Google Tag Manager ID', class: 'col-sm-3 control-label')
+    = form.label(:gtm_id, 'Google Tag Manager ID', class: 'col-sm-3 control-label')
     .col-sm-9.col-md-8.col-lg-6
-      = f.text_field(:gtm_id, class: 'form-control')
+      = form.text_field(:gtm_id, class: 'form-control')
 
   .form-group
     .col-sm-12.col-md-offset-3.col-md-8.col-lg-6.text-right
-      button.btn.btn-success type="submit" form="company-profile-form" style="width: 114px"
+      button.btn.btn-success type="submit" form="company-profile-form"
         span
           = company.new_record? ? 'Register' : 'Save changes'
         i.fa.fa-spin.fa-circle-o-notch style="display: none"
