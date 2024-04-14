@@ -5,7 +5,7 @@ class CompaniesController < ApplicationController
   # before_action :user_authorized?, only: [:edit, :show]
   before_action :set_company, except: [:new, :create, :promote, :get_curators, :get_invitation_templates]
   # before_action(only: [:show, :edit]) { set_gon(@company) }
-  before_action :set_s3_direct_post, only: [:new, :edit, :show, :create]
+  before_action :set_s3_direct_post, only: [:new, :edit, :show, :create, :update]
 
   def new
     @company = Company.new
@@ -61,21 +61,31 @@ class CompaniesController < ApplicationController
   end
 
   def update
-    if params[:tags]
-      @company.update_tags(params[:category_tags] || [], params[:product_tags] || [])
-      @flash = {}
-    else
-      @company.update(company_params) ?
-        @flash = {} :
-        @flash = { mesg: @company.errors.full_messages.join(', '), status: 'danger' }
-      if @company.previous_changes[:logo_url]
-        @s3_direct_post_fields = set_s3_direct_post().fields
+    # if params[:tags]
+    #   @company.update_tags(params[:category_tags] || [], params[:product_tags] || [])
+    #   @flash = {}
+    # else
+    @company.update(company_params)
+    respond_to do |format|
+      format.json do
+        render(
+          json: { 
+            company: @company.as_json(only: [], methods: [:previous_changes]), 
+            s3_direct_post: { fields: { key: @s3_direct_post.fields['key'] } }
+          }
+        )
       end
     end
-    respond_to do |format| 
-      # @background_color_contrast = helpers.background_color_contrast(@company.header_color_2)
-      format.js {}
-    end
+      # @flash = {} :
+      # @flash = { mesg: @company.errors.full_messages.join(', '), status: 'danger' }
+    # if @company.previous_changes[:logo_url]
+    #   @s3_direct_post_fields = set_s3_direct_post().fields
+    # end
+    # end
+    # respond_to do |format| 
+    #   # @background_color_contrast = helpers.background_color_contrast(@company.header_color_2)
+    #   format.js {}
+    # end
   end
 
   def update_gads
