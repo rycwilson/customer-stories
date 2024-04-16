@@ -71,7 +71,7 @@ class CompaniesController < ApplicationController
         render(
           json: { 
             company: @company.as_json(only: [], methods: [:previous_changes]), 
-            s3_direct_post: { fields: { key: @s3_direct_post.fields['key'] } }
+            s3_direct_post: { fields: @s3_direct_post.fields }
           }
         )
       end
