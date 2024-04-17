@@ -92,7 +92,7 @@ module ApplicationHelper
     end
     rgb = { r: hex_color[1..2].hex, g: hex_color[3..4].hex, b: hex_color[5..6].hex }
     o = (((rgb[:r] * 299) + (rgb[:g] * 587) + (rgb[:b] * 114)) / 1000).round
-    return (o > 125) ? 'light-background' : 'dark-background';
+    return (o > 125) ? 'bg-light' : 'bg-dark';
   end
 
 end

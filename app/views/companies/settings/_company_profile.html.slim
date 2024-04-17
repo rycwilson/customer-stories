@@ -44,28 +44,41 @@
             data-trigger="fileinput" }
             i.fa.fa-fw.fa-upload
             |&nbsp;Upload a logo
-        .company-logo-upload__company-header.fileinput style="background-color: #{company.header_color_1}"
+        .company-logo-upload__company-header.fileinput {
+          data-company-profile-target="companyHeaderDemo"
+          style="background-color: #{company.header_color_1}" }
           .fileinput-preview.thumbnail.company-logo-upload__logo
             = image_tag(company.logo_url || LOGO_PLACEHOLDER, alt: 'company logo')
           .btn-file
             = form.file_field(:logo_url)
         .company-logo-upload__stories-header {
           class="company-logo-upload__stories-header--#{background_color_contrast(company.header_color_2)}"
+          data-company-profile-target="storiesHeaderDemo"
           style="#{stories_header_custom_colors(company)}" }
-          h3 Customer Stories
+          h3 data-company-profile-target="storiesHeadingDemo"
+            | Customer Stories
 
   .form-group.headers-color-picker
-    = form.label(nil, 'Header Colors', class: 'col-sm-3 control-label')
+    label.col-sm-3.control-label
+      | Header Colors
     .col-sm-9.col-md-8.col-lg-6
-      div
-        = form.label(:header_color_1, 'Upper', class: 'control-label')
-        = form.text_field(:header_color_1, class: 'form-control mini-colors upper')
-      div
-        = form.label(:header_color_2, 'Lower', class: 'control-label')
-        = form.text_field(:header_color_2, class: 'form-control mini-colors lower')
-      div
-        = form.label(:header_text_color, 'Text', class: 'control-label')
-        = form.text_field(:header_text_color, class: 'form-control mini-colors text')
+      .headers-color-picker__color
+        = form.label(:header_color_1, 'Upper')
+        = form.color_field( \
+            :header_color_1,
+            class: 'form-control',
+            data: { company_profile_target: 'companyHeaderColor' })
+      .headers-color-picker__color
+        = form.label(:header_color_2, 'Lower')
+        = form.color_field( \
+            :header_color_2,
+            class: 'form-control',
+            data: { company_profile_target: 'storiesHeaderColor'})
+      .headers-color-picker__color
+        = form.label(:header_text_color, 'Heading Text')
+        = form.color_field(:header_text_color,
+            class: 'form-control',
+            data: { company_profile_target: 'storiesHeadingColor' })
 
   .form-group
     = form.label(:gtm_id, 'Google Tag Manager ID', class: 'col-sm-3 control-label')

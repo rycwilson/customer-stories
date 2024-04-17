@@ -74,3 +74,11 @@ export function hexToRgb(hex: string) {
     { r: parseInt(result[1], 16), g: parseInt(result[2], 16), b: parseInt(result[3], 16) } : 
     null;
 };
+
+// ref: https://stackoverflow.com/questions/11867545/
+export function colorContrast(bgRgb: { r: number, g: number, b: number }) {
+  // http://www.w3.org/TR/AERT#color-contrast
+  return Math.round(((bgRgb.r * 299) + (bgRgb.g * 587) + (bgRgb.b * 114)) / 1000) > 125 ? 
+    'bg-light' : 
+    'bg-dark';
+}
