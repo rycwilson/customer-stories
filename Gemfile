@@ -26,7 +26,6 @@ gem 'html_to_plain_text'
 gem 'jbuilder', '~> 2.7'
 gem 'jquery-rails'
 gem 'jquery-ui-rails'
-gem 'jquery-minicolors-rails'
 gem 'jsbundling-rails'
 
 gem 'local_time'
