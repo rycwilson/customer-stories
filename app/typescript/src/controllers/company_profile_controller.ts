@@ -54,8 +54,6 @@ export default class CompanyProfileController extends FormController<CompanyProf
       const hexColor = this.storiesHeaderColorTarget.value;
       const rgbColor = hexToRgb(hexColor) as { r: number, b: number, g: number };
       const bgClassModifier = colorContrast(rgbColor);
-      console.log('hexColor:', hexColor);
-      console.log('contrast:', bgClassModifier);
       const contrastSwitched = !this.storiesHeaderDemoTarget.className.match(new RegExp(`--${bgClassModifier}`));   
       this.storiesHeaderDemoTarget.style.backgroundColor = hexColor;
       if (contrastSwitched) {
