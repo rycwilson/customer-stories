@@ -46,6 +46,10 @@ input[type="checkbox"] {
   accent-color: $nav-blue;
 }
 
+input[type="color"] {
+  cursor: pointer;
+}
+
 hr {
   border-top: 1px solid #dfdfdf;
 }
