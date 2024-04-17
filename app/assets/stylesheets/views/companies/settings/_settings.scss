@@ -9,15 +9,23 @@ p.lead {
 }
 
 .headers-color-picker {
-  > div {
-    display: flex; 
-    justify-content: space-around
+  > label.control-label {
+    padding-top: 0;
   }
 
-  label:not([class*="col-"]) {
-    padding: 0;
+  > div {
+    display: flex; 
+    justify-content: space-between;
+  }
+}
+
+.headers-color-picker__color {
+  label {
     font-weight: normal;
-    margin-bottom: 5px;
+  }
+
+  input {
+    width: 10em;
   }
 }
 

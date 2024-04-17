@@ -54,6 +54,11 @@
   justify-content: flex-start;
 }
 
+@mixin flex-row-center-center {
+  @include flex-row-center;
+  justify-content: center;
+}
+
 @mixin flex-row-center-end {
   @include flex-row-center;
   justify-content: flex-end;
