@@ -8,15 +8,9 @@ p.lead {
   margin-bottom: 25px;
 }
 
-.headers-color-picker {
-  > label.control-label {
-    padding-top: 0;
-  }
-
-  > div {
-    display: flex; 
-    justify-content: space-between;
-  }
+.headers-color-picker > div {
+  display: flex; 
+  justify-content: space-between;
 }
 
 .headers-color-picker__color {
