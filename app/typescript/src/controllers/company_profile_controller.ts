@@ -1,7 +1,6 @@
 import FormController from './form_controller';
 import { initS3Upload } from '../user_uploads';
 import { hexToRgb, colorContrast } from '../utils';
-import '@claviska/jquery-minicolors';
 
 export default class CompanyProfileController extends FormController<CompanyProfileController> {
   static targets = [
