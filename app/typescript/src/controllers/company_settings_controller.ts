@@ -1,4 +1,5 @@
 import { Controller } from '@hotwired/stimulus';
+import { visit as turboVisit } from '@hotwired/turbo';
 import Cookies from 'js-cookie';
 
 export default class CompanySettingsController extends Controller<HTMLDivElement> {
@@ -11,6 +12,10 @@ export default class CompanySettingsController extends Controller<HTMLDivElement
     )) as HTMLAnchorElement;
   }
 
+  get validTabNames() {
+    return this.tabTargets.map(tab => tab.hash.replace('-panel', ''));
+  }
+
   connect() {
     // console.log('connect company settings')
     this.addTabListeners();
@@ -20,14 +25,18 @@ export default class CompanySettingsController extends Controller<HTMLDivElement
   
   addTabListeners() {
     this.tabTargets.forEach(tab => {
-      $(tab).on('show.bs.tab', (e: JQuery.TriggeredEvent) => {
-        const tabHash = e.target.hash;
-        // debugger;
-        window.addEventListener('scroll', (e) => { window.scrollTo(0, 0) }, { once: true });
-        location.hash = tabHash.replace('-panel', '');
-        Cookies.set('csp-company-settings-tab', tabHash);
-        // window.scrollTo(0, 0);
-      })
+      $(tab)
+        .on('click', (e: JQuery.TriggeredEvent) => {
+          const tabHash = e.currentTarget.hash;
+          const locationHash = tabHash.replace('-panel', '');
+          turboVisit(location.href.replace(/#.+$/, locationHash), { action: 'replace' })
+        })
+        .on('show.bs.tab', (e: JQuery.TriggeredEvent) => {
+          const tabHash = e.target.hash;
+          // window.scrollTo(0, 0);
+          window.addEventListener('scroll', (e) => { window.scrollTo(0, 0) }, { once: true });
+          Cookies.set('csp-company-settings-tab', tabHash);
+        });
     });
   }
   
@@ -35,6 +44,8 @@ export default class CompanySettingsController extends Controller<HTMLDivElement
   initSidebar() {
     let activeTab: HTMLAnchorElement | undefined;
     let navCookie: string | undefined;
+    const defaultTab = <HTMLAnchorElement>this.tabTargets[0];
+    
     const tabMatchesLocation = (tab: HTMLAnchorElement) => tab.hash.replace('-panel', '') === location.hash;
     const showPage = (tab: HTMLAnchorElement) => {
       $(tab)
@@ -45,9 +56,13 @@ export default class CompanySettingsController extends Controller<HTMLDivElement
       showPage(activeTab);
     } else if (navCookie = Cookies.get('csp-company-settings-tab')) {
       activeTab = this.tabTargets.find(tab => tab.hash === navCookie);
-      if (activeTab) showPage(activeTab);
+      if (activeTab) {
+        showPage(activeTab)
+      } else {
+        showPage(defaultTab);
+      }
     } else {  
-      showPage(this.tabTargets[0] as HTMLAnchorElement);
+      showPage(defaultTab);
     }
   }
 }
