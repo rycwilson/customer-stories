@@ -1,5 +1,5 @@
 import { Controller } from "@hotwired/stimulus"
-import * as Turbo from "@hotwired/turbo"
+import { visit as turboVisit, navigator as turboNavigator } from "@hotwired/turbo"
 
 type DashboardPath = '/prospect' | '/curate' | '/promote' | '/measure';
 export default class extends Controller<HTMLAnchorElement> {
@@ -10,16 +10,17 @@ export default class extends Controller<HTMLAnchorElement> {
     const currentlyOnDashboard = this.element.dataset.dashboardTarget === 'tab';
     if (currentlyOnDashboard) {
       // replacing state ensures turbo:false for the first tab state
-      history.replaceState({ turbo: false }, '', location.pathname);
+      // history.replaceState({ turbo: false }, '', location.pathname);
       history.pushState(
-        { turbo: { restorationIdentifier: Turbo.navigator.history.restorationIdentifier } }, 
+        { turbo: { restorationIdentifier: turboNavigator.history.restorationIdentifier } }, 
         '', 
         newDashboardPath
       );
+      window.dispatchEvent(new CustomEvent('turbo:location-changed', { detail: { newURL: newDashboardPath } }));
     } else if (newDashboardPath) {
       // const dropdowns = document.querySelectorAll('#company-nav .nav-settings > li.dropdown');
       // dropdowns.forEach(dropdown => dropdown.classList.remove('active'));
-      Turbo.visit(newDashboardPath);
+      turboVisit(newDashboardPath);
     }
   }
 }
