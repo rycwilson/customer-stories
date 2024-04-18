@@ -10,7 +10,7 @@
       / no active tab set here; it will be set by the client based on page fragment identifier
       ul.nav.nav--company class=('nav--new-company' if action_name == 'new')
         li role="presentation" 
-          a href="#company-panel" data-toggle="tab" data-company-settings-target="tab"
+          a href="#company-profile-panel" data-toggle="tab" data-company-settings-target="tab"
             i.fa.fa-fw.fa-globe
             span
               | Company Profile
@@ -19,35 +19,46 @@
 
           li role="presentation"
             a {
-              href="#crowdsource-panel" 
+              href="#contributor-invitations-panel" 
               class=('disabled-tab' if @company.new_record?)
               role="tab"
               data-toggle="tab"
               data-company-settings-target="tab" }
-              i.fa.fa-fw.fa-users
+              i.fa.fa-fw.fa-envelope-o
               span
-                | Crowdsourcing Templates
+                | Contributor Invitations
+          
+          li role="presentation"
+            a {
+              href="#survey-questions-panel" 
+              class=('disabled-tab' if @company.new_record?)
+              role="tab"
+              data-toggle="tab"
+              data-company-settings-target="tab" }
+              i.fa.fa-fw.fa-list-ul
+              span
+                | Survey Questions
 
           li role="presentation"
             a {
-              href="#plugin-panel" 
+              href="#website-plugin-panel" 
               class=('disabled-tab' if @company.new_record?)
               role="tab"
               data-toggle="tab"
               data-company-settings-target="tab" }
-              i.fa.fa-fw.fa-plug style="font-size:15px; top:2px; margin-left:2px"
+              i.fa.fa-fw.fa-plug
               span
                 | Website Plugin
           li role="presentation"
             a {
-              href="#call-to-action-panel" 
+              href="#call-to-action-components-panel" 
               class=('disabled-tab' if @company.new_record?)
               role="tab"
               data-toggle="tab"
               data-company-settings-target="tab" }
               i.fa.fa-fw.fa-hand-pointer-o
               span
-                | Link & Form CTAs
+                | Call to Action Components
           li role="presentation"
             a {
               href="#story-tags-panel" 
@@ -62,22 +73,25 @@
     .col-sm-8.col-lg-9.layout-main
       .tab-content
 
-        #company-panel.tab-pane.fade role="tabpanel"
+        #company-profile-panel.tab-pane.fade role="tabpanel"
           = render( \
               'companies/settings/company_profile', 
               { company: @company, s3_direct_post: @s3_direct_post })
 
         - unless action_name == 'new'
 
-          #crowdsource-panel.tab-pane.fade role="tabpanel"
+          #contributor-invitations-panel.tab-pane.fade role="tabpanel"
             = render( \
                 'companies/settings/invitation_templates',
                 { company: @company, templates_select: @templates_select })
+
+          #survey-questions-panel.tab-pane.fade role="tabpanel"
+            = render('companies/settings/contributor_questions', { company: @company })
           
-          #plugin-panel.tab-pane.fade role="tabpanel"
+          #website-plugin-panel.tab-pane.fade role="tabpanel"
             = render('plugins/config', { company: @company })
 
-          #call-to-action-panel.tab-pane.fade role="tabpanel"
+          #call-to-action-components-panel.tab-pane.fade role="tabpanel"
             = render('companies/settings/ctas', { company: @company })
 
           #story-tags-panel.tab-pane.fade role="tabpanel"
