@@ -14,13 +14,15 @@ p.lead {
 }
 
 .headers-color-picker__color {
+  width: 30%;
+  
   label {
     font-weight: normal;
   }
 
-  input {
-    width: 10em;
-  }
+  // input {
+  //   width: 10em;
+  // }
 }
 
 #company-profile-form, #company-tags-form  {
