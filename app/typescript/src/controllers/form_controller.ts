@@ -4,13 +4,15 @@ import type NewCustomerWinController from './new_customer_win_controller';
 import type NewContributionController from './new_contribution_controller';
 import type NewStoryController from './new_story_controller';
 import type CompanyProfileController from './company_profile_controller';
+import type InvitationTemplateController from './invitation_template_controller';
 import type { TomOptions } from 'tom-select/dist/types/types';
 
 type SubclassController = (
   NewCustomerWinController | 
   NewContributionController | 
   NewStoryController | 
-  CompanyProfileController
+  CompanyProfileController |
+  InvitationTemplateController
 );
 
 export default class FormController<Ctrl extends SubclassController> extends Controller<HTMLFormElement> {
