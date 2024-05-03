@@ -66,7 +66,7 @@
                 data: { \
                   controller: 'tomselect',
                   new_story_target: 'customerSelect requiredField',
-                  tomselect_type_value: Customer.name,
+                  tomselect_kind_value: 'customer',
                   tomselect_custom_options_value: { create: true, persist: false },
                   tomselect_prevent_focus_value: @success ? true : false,
                   action: 'new-story#onChangeCustomer',
@@ -102,7 +102,7 @@
               placeholder: 'Select or Create',
               data: { \
                 controller: 'tomselect',
-                tomselect_type_value: 'Customer Win',
+                tomselect_kind_value: 'customerWin',
                 tomselect_custom_options_value: { create: true, persist: false },
                 tomselect_prevent_focus_value: @success ? true : false,
                 new_story_target: 'customerWinSelect',
@@ -125,7 +125,7 @@
                 multiple: true,
                 data: { \
                   controller: 'tomselect',
-                  tomselect_type_value: 'tags' } })
+                  tomselect_kind_value: 'storyTag' } })
           /span.help-block 
             | Optional
 
@@ -142,6 +142,6 @@
                 multiple: true,
                 data: { \
                   controller: 'tomselect',
-                  tomselect_type_value: 'tags' } })
+                  tomselect_kind_value: 'storyTag' } })
           /span.help-block 
             | Optional

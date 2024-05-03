@@ -68,7 +68,7 @@
               class: 'stories-filter__select form-control',
               data: { \
                 controller: 'tomselect', 
-                tomselect_type_value: 'curator', 
+                tomselect_kind_value: 'curator', 
                 stories_target: 'filterSelect' } })
 
       .stories-filter.form-group
@@ -86,7 +86,7 @@
               class: 'stories-filter__select form-control', 
               data: { \
                 controller: 'tomselect',
-                tomselect_type_value: 'status',
+                tomselect_kind_value: 'status',
                 stories_target: 'filterSelect' } })
         
       .stories-filter.form-group
@@ -101,7 +101,7 @@
               class: 'stories-filter__select form-control',
               data: { \
                 controller: 'tomselect',
-                tomselect_type_value: 'customer',
+                tomselect_kind_value: 'customer',
                 stories_target: 'filterSelect' } })
 
     - if is_dashboard || company.story_categories.featured.present?

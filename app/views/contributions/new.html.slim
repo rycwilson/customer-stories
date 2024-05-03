@@ -49,7 +49,7 @@
                 data: { \
                   controller: 'tomselect',
                   new_contribution_target: 'customerSelect requiredField',
-                  tomselect_type_value: Customer.name,
+                  tomselect_kind_value: 'customer',
                   tomselect_custom_options_value: { create: true, persist: false },
                   tomselect_prevent_focus_value: @story ? true : false,
                   action: 'new-contribution#onChangeCustomer',
@@ -89,7 +89,7 @@
                   required: true,
                   data: { \
                     controller: 'tomselect',
-                    tomselect_type_value: 'Customer Win',
+                    tomselect_kind_value: 'customerWin',
                     tomselect_custom_options_value: { create: true, persist: false },
                     new_contribution_target: 'customerWinSelect requiredField',
                     action: 'new-contribution#onChangeCustomerWin',
@@ -116,7 +116,7 @@
                 required: true,
                 data: { \
                   controller: 'tomselect',
-                  tomselect_type_value: 'contributor',
+                  tomselect_kind_value: 'contributor',
                   new_contribution_target: 'contributorSelect requiredField',
                   action: 'new-contribution#onChangeContact',
                   field_name: "#{form.object_name}[contributor_id]" } })
@@ -140,7 +140,7 @@
                 placeholder: 'Select',
                 data: { \
                   controller: 'tomselect',
-                  tomselect_type_value: InvitationTemplate.name } })
+                  tomselect_kind_value: 'invitationTemplate' } })
 
       .form-group
         = form.label(:referrer_id, 'Referred by', class: 'col-sm-3 control-label')
@@ -158,7 +158,7 @@
                 placeholder: 'Select or Create',
                 data: { \
                   controller: 'tomselect',
-                  tomselect_type_value: 'referrer',
+                  tomselect_kind_value: 'referrer',
                   new_contribution_target: 'referrerSelect',
                   action: 'new-contribution#onChangeContact',
                   field_name: "#{form.object_name}[referrer_id]" } })

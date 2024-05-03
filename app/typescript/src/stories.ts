@@ -602,7 +602,7 @@ function clearFilters(e?: Event) {
 }
 
 function singleSelectTagType(select: HTMLSelectElement) {
-  return select.dataset.tomselectTypeValue as string;
+  return select.dataset.tomselectKindValue as string;
 }
 
 function byTagType(tagType: string, a: string, b: string) {

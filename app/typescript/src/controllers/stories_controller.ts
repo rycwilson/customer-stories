@@ -46,7 +46,7 @@ export default class extends Controller<HTMLDivElement> {
   }
   
   get filterTypes() {
-    return this.filterSelectTargets.map(select => select.dataset.tomselectTypeValue).filter(type => type) as string[]; 
+    return this.filterSelectTargets.map(select => select.dataset.tomselectKindValue).filter(type => type) as string[]; 
   }
   
   // TODO: before intial load, make sure all images on the page (namely the search icon) are loaded

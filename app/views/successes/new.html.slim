@@ -39,7 +39,7 @@
               required: true,
               data: { \
                 controller: 'tomselect',
-                tomselect_type_value: 'curator',
+                tomselect_kind_value: 'curator',
                 new_customer_win_target: 'requiredField' } })
         span.help-block 
           | Required
@@ -60,7 +60,7 @@
               data: { \
                 controller: 'tomselect',
                 new_customer_win_target: 'customerSelect requiredField',
-                tomselect_type_value: 'customer',
+                tomselect_kind_value: 'customer',
                 tomselect_custom_options_value: { create: true, persist: false },
                 action: 'new-customer-win#onChangeCustomer',
                 field_name: "#{form.object_name}[customer_id]" } })
@@ -110,7 +110,7 @@
                 placeholder: 'Select or Create',
                 data: { \
                   controller: 'tomselect',
-                  tomselect_type_value: 'referrer',
+                  tomselect_kind_value: 'referrer',
                   new_customer_win_target: 'referrerSelect',
                   action: 'new-customer-win#onChangeContact',
                   field_name: "#{contribution_fields.object_name}[referrer_id]" } })
@@ -144,7 +144,7 @@
                 placeholder: 'Select or Create',
                 data: { \
                   controller: 'tomselect',
-                  tomselect_type_value: 'contributor',
+                  tomselect_kind_value: 'contributor',
                   new_customer_win_target: 'contributorSelect',
                   action: 'new-customer-win#onChangeContact new-customer-win#onChangeCustomerContact',
                   field_name: "#{contribution_fields.object_name}[contributor_id]" } })

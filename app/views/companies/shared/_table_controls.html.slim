@@ -13,7 +13,7 @@
             class: 'form-control',
             data: { \
               controller: 'tomselect', 
-              tomselect_type_value: 'curator', 
+              tomselect_kind_value: 'curator', 
               resource_target: 'curatorSelect' } })
 
     .filter-select data-action="tomselect:change-filter->resource#onChangeFilter tomselect:search->resource#searchTable"
@@ -27,7 +27,7 @@
             class: 'form-control',
             data: { \
               controller: 'tomselect', 
-              tomselect_type_value: 'filter', 
+              tomselect_kind_value: 'filter', 
               resource_target: 'filterSelect',
               dashboard_target: } })
   

@@ -6,11 +6,11 @@ import { capitalize } from "../utils";
 
 export default class extends Controller<TomSelectInput> {
   static values = { 
-    type: String, 
+    kind: String, 
     customOptions: { type: Object, default: {} },
     preventFocus: { type: Boolean, default: false }
   };
-  declare readonly typeValue: SelectInputType | undefined;
+  declare readonly kindValue: SelectInputKind | undefined;
   declare readonly customOptionsValue: { [key: string]: any };
   declare readonly preventFocusValue: boolean;
 
@@ -29,7 +29,11 @@ export default class extends Controller<TomSelectInput> {
     }
   }
 
-  isFilter() { return this.typeValue === 'filter'; }
+  isFilter() { return this.kindValue === 'filter'; }
+
+  get readableKind() {
+    return !this.kindValue ? '' : this.kindValue.split(/(?=[A-Z])/).map(word => capitalize(word)).join(' ');
+  }
 
   dispatchSearchResults() {
     this.currentSearchResults = this.ts.currentResults!.items;
@@ -82,7 +86,7 @@ export default class extends Controller<TomSelectInput> {
         option_create(data: TomOption, escape: (str: string) => string) {
           return `
             <div class="create">
-              <i class="fa fa-plus"></i><span>New ${capitalize(ctrl.typeValue || 'unknown')}:</span>&nbsp;&nbsp;<span class="user-input">${escape(data.input)}</span>
+              <i class="fa fa-plus"></i><span>New ${ctrl.readableKind}:</span>&nbsp;&nbsp;<span class="user-input">${escape(data.input)}</span>
             </div>
           `;
         } 
@@ -102,7 +106,11 @@ export default class extends Controller<TomSelectInput> {
       },
   
       onChange(newVal: string | number) {
-        ctrl.dispatch(`change-${ctrl.typeValue}`, { detail: { type: ctrl.typeValue, id: newVal } });
+        // ctrl.ts.control_input.blur();
+        // if (ctrl.kindValue === 'invitationTemplate') {
+        //   ctrl.ts.control_input.setAttribute('readonly', 'true')
+        // }
+        ctrl.dispatch(`change-${ctrl.kindValue}`, { detail: { type: ctrl.kindValue, id: newVal } });
       },
   
       onType(this: TomSelect, userInput: string) { 
@@ -127,6 +135,7 @@ export default class extends Controller<TomSelectInput> {
       },
   
       onDropdownClose(this: TomSelect, dropdown: HTMLDivElement) {
+        this.element
         if (ctrl.isFilter()) {
           // default behavior is that text input is cleared when the dropdown closes, 
           // but we want to keep it since the search results are reflected in the table

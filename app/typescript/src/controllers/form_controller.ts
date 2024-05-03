@@ -89,7 +89,7 @@ export default class FormController<Ctrl extends SubclassController> extends Con
     this: NewCustomerWinController | NewContributionController, 
     { target: select }: { target: TomSelectInput }
   ) {
-    const contactType = select.dataset.tomselectTypeValue as Extract<SelectInputType, 'contributor' | 'referrer'>;
+    const contactType = select.dataset.tomselectKindValue as Extract<SelectInputKind, 'contributor' | 'referrer'>;
     const isNewContact = select.value === '0';
     const isExistingContact = select.value && !isNewContact;
 

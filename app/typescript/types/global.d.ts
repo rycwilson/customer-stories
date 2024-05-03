@@ -32,7 +32,7 @@ interface CustomerStoriesApp {
 
 type ResourceName = 'customerWins' | 'contributions' | 'storyContributions' | 'promotedStories';
 type TomSelectInput = HTMLSelectElement & TomInput;
-type SelectInputType = 'filter' | 'curator' | 'status' | 'customer' | 'category' | 'product' | 'tags' | 'contributor' | 'referrer'; 
+type SelectInputKind = 'filter' | 'curator' | 'status' | 'customer' | 'category' | 'product' | 'storyTag' | 'contributor' | 'referrer' | 'invitationTemplate';
 
 interface StringIndexable {
   [key: string]: any;
