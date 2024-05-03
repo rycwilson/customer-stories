@@ -1,10 +1,24 @@
+import { application } from './application'
 import { Controller } from '@hotwired/stimulus';
+import FormController from './form_controller';
+import InvitationTemplateController from './invitation_template_controller';
 import { visit as turboVisit } from '@hotwired/turbo';
+import type { FrameElement } from '@hotwired/turbo';
 import Cookies from 'js-cookie';
 
 export default class CompanySettingsController extends Controller<HTMLDivElement> {
-  static targets = ['tab'];
+  static targets = [
+    'tab', 
+    'invitationTemplateSelect',
+    'invitationTemplateToolbar', 
+    'invitationTemplateTurboFrame',
+    'invitationTemplateForm'
+  ];
   declare tabTargets: [HTMLAnchorElement];
+  declare invitationTemplateSelectTarget: TomSelectInput;
+  declare invitationTemplateToolbarTarget: HTMLElement;
+  declare invitationTemplateTurboFrameTarget: FrameElement;
+  declare invitationTemplateFormTarget: HTMLFormElement;
 
   get activeTab() {
     return this.tabTargets.find(tab => (
@@ -64,5 +78,26 @@ export default class CompanySettingsController extends Controller<HTMLDivElement
     } else {  
       showPage(defaultTab);
     }
+  }
+
+  onChangeInvitationTemplate({ target: select }: { target: TomSelectInput }) {
+    // console.log('change template', select)
+    const templateId = +select.value || null;
+    const isNewTemplate = isNaN(+select.value);
+    const action = isNewTemplate ? 'new' : (templateId ? 'edit' : null);
+    const turboFrame = this.invitationTemplateTurboFrameTarget;
+    let path = action ? <string>turboFrame.dataset[`${action}TemplatePath`] : null;
+    this.invitationTemplateToolbarTarget.classList.toggle('hidden', !templateId);
+    select.tomselect.control_input.blur();
+    if (isNewTemplate) {
+      path += `?template_name=${encodeURIComponent(select.value)}`;
+      select.tomselect.control_input.previousElementSibling.textContent = 'New Template';
+    } else if (templateId) {
+      path = (path as string).replace(':id', templateId.toString());
+    } else {
+      turboFrame.innerHTML = '';
+    }
+    turboFrame.setAttribute('id', action ? `${action}-invitation-template` : '');
+    turboFrame.setAttribute('src', path || ''); 
   }
 }
