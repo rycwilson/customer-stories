@@ -17,20 +17,20 @@ class InvitationTemplatesController < ApplicationController
   end
 
   def new
-    if params[:source_template_id].present?
-      source_template = InvitationTemplate.find(params[:source_template_id])
-      @template = source_template.dup
-      @template.name = 'Copy: ' + source_template.name
-      source_template.contributor_questions.each { |q| @template.contributor_questions << q }
-    else
-      @template = InvitationTemplate.new({ company_id: @company.id })
-    end
-    render({
-      partial: 'companies/settings/invitation_template_form',
-      locals: { company: @company, template: @template, method: 'post',
-                template_is_new: false, template_is_copy: params[:source_template_id].present?,
-                url: company_invitation_templates_path(@company) }
-    })
+    # if params[:source_template_id].present?
+    #   source_template = InvitationTemplate.find(params[:source_template_id])
+    #   @template = source_template.dup
+    #   @template.name = 'Copy: ' + source_template.name
+    #   source_template.contributor_questions.each { |q| @template.contributor_questions << q }
+    # else
+    #   @template = InvitationTemplate.new({ company_id: @company.id })
+    # end
+    # render({
+    #   partial: 'companies/settings/invitation_template_form',
+    #   locals: { company: @company, template: @template, method: 'post',
+    #             template_is_new: false, template_is_copy: params[:source_template_id].present?,
+    #             url: company_invitation_templates_path(@company) }
+    # })
   end
 
   def show

@@ -1,37 +1,37 @@
-= form_with( \
-    model: company,
-    format: :json,
-    html: { \
-      id: 'invitation-template-form',
-      class: 'form-horizontal',
-      autocomplete: 'off',
-      novalidate: true,
-      data: { \
-        controller: 'invitation-template',
-        action: 'ajax:beforeSend->invitation-template#validate ajax:complete->invitation-template#onAjaxComplete' } }) do |form|
+.invitation-template.form-horizontal
 
-  .form-group.required
-    = form.label(:invitation_template_id, class: 'col-sm-3 control-label')
+  .form-group
+    label.col-sm-3.control-label for="template-select"
+      | Invitation Template
     .col-sm-9.col-md-8.col-lg-6
-      = form.select( \
-          :invitation_template_id,
-          grouped_options_for_select( \
-            'Custom' => company.invitation_templates.custom.map { |t| [t.name, t.id] },
-            'Default' => company.invitation_templates.default.map { |t| [t.name, t.id] }),
-          { include_blank: true },
-          { class: 'form-control',
-            placeholder: 'Select or Create',
-            data: { \
-              controller: 'tomselect',
-              tomselect_type_value: 'Invitation Template',
-              tomselect_custom_options_value: { create: true, persist: false },
-              invitation_template_target: 'templateSelect',
-              action: 'invitation-template#onChangeTemplate' } })
+      .invitation-template__toolbar style="display:flex; justify-content:space-between"
+        = select_tag( \
+            nil,
+            grouped_options_for_select( \
+              'Custom' => company.invitation_templates.custom.map { |t| [t.name, t.id] },
+              'Default' => company.invitation_templates.default.map { |t| [t.name, t.id] }),
+            { include_blank: true,
+              id: 'template-select',
+              class: 'form-control',
+              placeholder: 'Select or enter the name of a new template',
+              data: { \
+                controller: 'tomselect',
+                tomselect_kind_value: 'invitationTemplate',
+                tomselect_custom_options_value: { plugins: {}, create: true, persist: false },
+                company_settings_target: 'invitationTemplateSelect',
+                action: 'change->company-settings#onChangeInvitationTemplate keydown->company-settings#onKeydownInvitationTemplate' } })
+        .btn-group.hidden data-company-settings-target="invitationTemplateToolbar"
+          button.btn.btn-default type="button"
+            i.fa.fa-fw.fa-copy
+          button.btn.btn-default type="button"
+            i.fa.fa-fw.fa-repeat
+          button.btn.btn-default type="button"
+            i.fa.fa-fw.fa-remove
 
   = turbo_frame_tag( \
       '', 
       src: '', 
       data: { \
-        invitation_template_target: 'turboFrame',
+        company_settings_target: 'invitationTemplateTurboFrame',
         'new-template-path': new_company_invitation_template_path(company), 
         'edit-template-path': edit_company_invitation_template_path(company, ':id') }) 
