@@ -47,8 +47,8 @@ application.register('datatable-row', DatatableRowController);
 import FormController from './form_controller.js';
 application.register('form', FormController);
 
-import InvitationTemplatesController from './invitation_templates_controller.js';
-application.register('invitation-templates', InvitationTemplatesController);
+import InvitationTemplateController from './invitation_template_controller.js';
+application.register('invitation-template', InvitationTemplateController);
 
 import ModalController from './modal_controller.js';
 application.register('modal', ModalController);
