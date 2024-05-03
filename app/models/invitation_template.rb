@@ -1,5 +1,4 @@
 class InvitationTemplate < ApplicationRecord
-
   default_scope { order(name: :asc) }
 
   belongs_to :company
@@ -21,6 +20,9 @@ class InvitationTemplate < ApplicationRecord
   # after_commit(on: :create) do
   #   self.contributor_questions << self.company.contributor_questions.default
   # end
+
+  scope :default, -> { where("name IN ('Customer', 'Customer Success', 'Sales')") }
+  scope :custom, -> { where("name NOT IN ('Customer', 'Customer Success', 'Sales')") }
 
   validates_uniqueness_of(:name, scope: :company_id)
 
