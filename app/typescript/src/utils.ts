@@ -82,3 +82,13 @@ export function colorContrast(bgRgb: { r: number, g: number, b: number }) {
     'bg-light' : 
     'bg-dark';
 }
+
+export function serializeForm(form: HTMLFormElement) {
+  const formData = new FormData(form);
+  return Array
+    .from(formData.entries())
+    .map(([field, value]) => (
+      encodeURIComponent(field) + '=' + encodeURIComponent(value as string | number | boolean)
+    ))
+    .join('&');
+}

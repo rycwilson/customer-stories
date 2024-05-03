@@ -6,6 +6,7 @@ import type NewStoryController from './new_story_controller';
 import type CompanyProfileController from './company_profile_controller';
 import type InvitationTemplateController from './invitation_template_controller';
 import type { TomOptions } from 'tom-select/dist/types/types';
+import { serializeForm } from '../utils';
 
 type SubclassController = (
   NewCustomerWinController | 
@@ -49,8 +50,13 @@ export default class FormController<Ctrl extends SubclassController> extends Con
   declare readonly hasContributorSelectTarget: boolean;
   declare readonly hasReferrerSelectTarget: boolean;
 
+  declare initialState: string;
+
   connect(this: Ctrl) {
     this.removeErrorsOnValidInput();
+    console.log(this)
+    // debugger;
+    this.initialState = serializeForm(this.element);
   }
 
   validate(e: CustomEvent) {
@@ -68,6 +74,10 @@ export default class FormController<Ctrl extends SubclassController> extends Con
       });
     if (!this.element.classList.contains('was-validated')) this.element.classList.add('was-validated');
     if (!isValid) e.preventDefault();
+  }
+
+  get isDirty() {
+    return serializeForm(this.element) !== this.initialState;
   }
 
   // onAjaxComplete(this: Ctrl, { detail: [xhr, status] }: { detail: [xhr: XMLHttpRequest, status: string] }) {
