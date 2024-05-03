@@ -2,7 +2,7 @@ import { Controller } from "@hotwired/stimulus";
 import TomSelect, { tsBaseOptions } from '../tomselect';
 import type { TomOption, TomItem } from 'tom-select/dist/types/types/core.d.ts';
 import { type CBOptions } from 'tom-select/dist/types/plugins/clear_button/types';
-import { capitalize } from "../utils";
+import { kebabize, capitalize } from "../utils";
 
 export default class extends Controller<TomSelectInput> {
   static values = { 
@@ -33,6 +33,10 @@ export default class extends Controller<TomSelectInput> {
 
   get readableKind() {
     return !this.kindValue ? '' : this.kindValue.split(/(?=[A-Z])/).map(word => capitalize(word)).join(' ');
+  }
+
+  get kebabKind() { 
+    return !this.kindValue ? '' : kebabize(this.kindValue as string); 
   }
 
   dispatchSearchResults() {
@@ -101,16 +105,29 @@ export default class extends Controller<TomSelectInput> {
         }
       },
 
-      onInitialize() {
-        ctrl.dispatch('did-initialize', { detail: ctrl.element })
+      createFilter(input: string) {
+        // don't add the new template name to the list
+        window.setTimeout(() => delete ctrl.ts.options[`${input}`]);
+        return true;
+      },
+
+      onInitialize(this: TomSelect) {
+        ctrl.dispatch('did-initialize', { detail: ctrl.element });
+        if (ctrl.kindValue === 'invitationTemplate') {
+          const originalDeleteSelection = this.deleteSelection;
+          this.deleteSelection = (e) => {
+            if (window.confirm('Close this template? Unsaved changes will be lost.')) {
+              originalDeleteSelection.call(this, e);
+              return true;
+            } else {
+              return false;
+            }
+          }
+        }
       },
   
       onChange(newVal: string | number) {
-        // ctrl.ts.control_input.blur();
-        // if (ctrl.kindValue === 'invitationTemplate') {
-        //   ctrl.ts.control_input.setAttribute('readonly', 'true')
-        // }
-        ctrl.dispatch(`change-${ctrl.kindValue}`, { detail: { type: ctrl.kindValue, id: newVal } });
+        ctrl.dispatch(`change-${ctrl.kebabKind || 'unknown'}`, { detail: { kind: ctrl.kindValue, id: newVal } });
       },
   
       onType(this: TomSelect, userInput: string) { 
