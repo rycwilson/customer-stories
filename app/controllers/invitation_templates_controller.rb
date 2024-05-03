@@ -37,13 +37,14 @@ class InvitationTemplatesController < ApplicationController
   end
 
   def edit
-    @template.format_for_editor(current_user)
-    render({
-      partial: 'companies/settings/invitation_template_form',
-      locals: { company: @company, template: @template, method: 'put',
-                template_is_new: params[:new_template].present?, template_is_copy: false,
-                url: company_invitation_template_path(@company, @template) }
-    })
+    # @template.format_for_editor(current_user)
+    # render({
+    #   partial: 'companies/settings/invitation_template_form',
+    #   locals: { company: @company, template: @template, method: 'put',
+    #             template_is_new: params[:new_template].present?, template_is_copy: false,
+    #             url: company_invitation_template_path(@company, @template) }
+    # })
+    @template = InvitationTemplate.find(params[:id])
   end
 
   def create
