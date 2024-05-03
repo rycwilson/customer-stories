@@ -113,6 +113,8 @@ export default class extends Controller<TomSelectInput> {
 
       onInitialize(this: TomSelect) {
         ctrl.dispatch('did-initialize', { detail: ctrl.element });
+
+        // prevent the user from closing a template without confirmation
         if (ctrl.kindValue === 'invitationTemplate') {
           const originalDeleteSelection = this.deleteSelection;
           this.deleteSelection = (e) => {
