@@ -25,7 +25,10 @@ p.lead {
   // }
 }
 
-#company-profile-form, #company-tags-form  {
+#company-profile-form, 
+.invitation-template,  // the template select exists outside the form
+#invitation-template-form,
+#company-tags-form  {
   @include horizontal-form; 
 }
 

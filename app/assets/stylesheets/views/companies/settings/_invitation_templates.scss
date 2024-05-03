@@ -1,3 +1,15 @@
+.invitation-template__toolbar {
+  @include flex-row-center-between;
+
+  .ts-wrapper {
+    width: auto;
+    flex-grow: 1;
+  }
+
+  > :last-child {
+    margin-left: 1rem;
+  }
+}
 
 .bootbox.modal.confirm-restore {
   .modal-content {
