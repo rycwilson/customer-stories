@@ -1,32 +1,6 @@
 import { distinctObjects } from '../utils';
 import SummernoteController from '../controllers/summernote_controller';
-
-// copied from @types/summernote, so that we can add the customButton tuple
-type ToolbarDefinition = Array<
-  | ["style", Summernote.toolbarStyleGroupOptions[]]
-  | ["font", Summernote.toolbarFontGroupOptions[]]
-  | ["fontname", Summernote.toolbarFontNameOptions[]]
-  | ["fontsize", Summernote.toolbarFontsizeGroupOptions[]]
-  | ["color", Summernote.toolbarColorGroupOptions[]]
-  | ["para", Summernote.toolbarParaGroupOptions[]]
-  | ["height", Summernote.toolbarHeightGroupOptions[]]
-  | ["table", Summernote.toolbarTableGroupOptions[]]
-  | ["insert", Summernote.toolbarInsertGroupOptions[]]
-  | ["view", Summernote.toolbarViewGroupOptions[]]
-  | ["help", Summernote.toolbarHelpGroupOptions[]]
-  | ["misc", Summernote.miscGroupOptions[]]
-  | ["customButton", ['contributionsDropdown', 'placeholdersDropdown']]
->;
-
-type CustomOptions = {
-  toolbar: ToolbarDefinition;
-  buttons: {
-    contributionsDropdown: ReturnType<typeof initDropdown>;
-    placeholdersDropdown: ReturnType<typeof initDropdown>;
-  }
-}
-
-type CustomSummernoteOptions = Summernote.Options & CustomOptions;
+import type { CustomSummernoteOptions } from '../summernote';
 
 // use a skeleton version of the child row template as a placeholder while loading
 // see views/successes/win_story_form
@@ -75,7 +49,6 @@ export function childRowPlaceholderTemplate(curatorName?: string) {
 export function summernoteConfig(
   ctrl: SummernoteController, height: number, contributions: Contribution[], answers: ContributorAnswer[]
 ): CustomSummernoteOptions {
-  console.log('summernote height', height)
   return {
     height,
     // dialogsInBody: true,
@@ -296,7 +269,7 @@ function initDropdown(
   contributions: Contribution[], 
   answers: ContributorAnswer[], 
   context: any
-) {
+): JQuery<HTMLDivElement, any> {
   const questions = distinctObjects(answers.map(answer => answer.question), 'id');
   const ui = $.summernote.ui;
   const buttonGroup = ui.buttonGroup([
