@@ -1,0 +1,49 @@
+= turbo_frame_tag("#{action_name}-invitation-template")
+  
+  = form_with( \
+      model: [@company, @template],
+      format: :json,
+      html: { \
+        id: 'invitation-template-form',
+        class: 'form-horizontal',
+        autocomplete: 'off',
+        novalidate: true,
+        data: { \
+          controller: 'invitation-template',
+          company_settings_target: 'invitationTemplateForm',
+          action: 'ajax:beforeSend->invitation-template#validate ajax:complete->invitation-template#onAjaxComplete' }}) do |form|
+
+    .form-group.required
+      = form.label(:name, class: 'col-sm-3 control-label')
+      .col-sm-9.col-md-8.col-lg-6
+        = form.text_field(:name, class: 'form-control')
+
+    .form-group 
+      = form.label(:request_subject, 'Email Subject', class: 'col-sm-3 control-label')
+      .col-sm-9.col-md-8.col-lg-6
+        .input-group
+          = form.text_field(:request_subject, class: 'form-control')
+          .input-group-btn
+            button.btn.btn-default.dropdown-toggle type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"
+              | Insert&nbsp;&nbsp;
+              span.caret
+            ul.dropdown-menu.dropdown-menu-right.data-placeholders
+              li data-placeholder='[customer_name]'
+                a href="javascript:;" Customer name
+              li data-placeholder='[contributor_first_name]'
+                a href="javascript:;" Contributor first name
+              li data-placeholder='[contributor_full_name]'
+                a href="javascript:;" Contributor full name
+
+    .form-group
+      = form.label(:request_body, 'Email Body', class: 'col-sm-3 control-label')
+      .col-sm-9.col-md-8.col-lg-6
+        .invitation-template__summernote {
+          contenteditable="false"
+          data-controller="summernote"
+          data-summernote-enabled-value="true"
+          data-summernote-config-key-value="invitationTemplate"
+          data-summernote-config-args-value=[nil, asset_path('placeholders/user-photo-missing.png')].to_json
+          data-invitation-template-target="note"
+          data-action="summernote:init->summernote#onInitComplete" }
+          = @template.request_body&.html_safe
