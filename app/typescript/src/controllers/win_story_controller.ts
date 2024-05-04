@@ -53,6 +53,7 @@ export default class extends Controller<HTMLFormElement> {
 
   view() {
     this.isEditableValue = false;
+
     const newHeight = this.isExpandedValue ? getComputedStyle(this.editor).height : `${this.defaultHeight}px`;
     const populatedHtml = populatePlaceholders( 
       $(this.noteTarget).summernote('code'), this.contributionsValue, this.answersValue 
@@ -78,7 +79,7 @@ export default class extends Controller<HTMLFormElement> {
   }
 
   onSummernoteInit(e: CustomEvent) {
-    this.editor = e.detail.editor;    // other summernote elements are in this payload => assign as needed
+    this.editor = e.detail.$editor[0];    // other summernote elements are in this payload => assign as needed
     this.copyBtnTarget.disabled = true;
   }
 
