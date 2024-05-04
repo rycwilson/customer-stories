@@ -31,6 +31,8 @@ class InvitationTemplatesController < ApplicationController
     #             template_is_new: false, template_is_copy: params[:source_template_id].present?,
     #             url: company_invitation_templates_path(@company) }
     # })
+    @template = @company.invitation_templates.new(name: params[:template_name])
+    render('invitation_templates/template_form')
   end
 
   def show
@@ -44,7 +46,8 @@ class InvitationTemplatesController < ApplicationController
     #             template_is_new: params[:new_template].present?, template_is_copy: false,
     #             url: company_invitation_template_path(@company, @template) }
     # })
-    @template = InvitationTemplate.find(params[:id])
+    @template = @company.invitation_templates.find(params[:id])
+    render('invitation_templates/template_form')
   end
 
   def create
