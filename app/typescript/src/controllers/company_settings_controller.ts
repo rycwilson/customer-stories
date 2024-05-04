@@ -1,7 +1,4 @@
-import { application } from './application'
 import { Controller } from '@hotwired/stimulus';
-import FormController from './form_controller';
-import InvitationTemplateController from './invitation_template_controller';
 import { visit as turboVisit } from '@hotwired/turbo';
 import type { FrameElement } from '@hotwired/turbo';
 import Cookies from 'js-cookie';
