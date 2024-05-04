@@ -91,7 +91,7 @@ export default class CompanySettingsController extends Controller<HTMLDivElement
     select.tomselect.control_input.blur();
     if (isNewTemplate) {
       path += `?template_name=${encodeURIComponent(select.value)}`;
-      select.tomselect.control_input.previousElementSibling.textContent = 'New Template';
+      select.tomselect.control_input.previousElementSibling.textContent = '- New Template -';
     } else if (templateId) {
       path = (path as string).replace(':id', templateId.toString());
     } else {
