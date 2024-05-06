@@ -60,22 +60,14 @@ export default class CompanySettingsController extends Controller<HTMLDivElement
     let activeTab: HTMLAnchorElement | undefined;
     let navCookie: string | undefined;
     const defaultTab = <HTMLAnchorElement>this.tabTargets[0];
-    
-    const tabMatchesLocation = (tab: HTMLAnchorElement) => tab.hash.replace('-panel', '') === location.hash;
     const showPage = (tab: HTMLAnchorElement) => {
-      $(tab)
-        .one('shown.bs.tab', () => this.element.classList.add('has-active-tab'))
-        .tab('show');
+      $(tab).one('shown.bs.tab', () => this.element.classList.add('has-active-tab')).tab('show');
     }
-    if (activeTab = this.tabTargets.find(tab => tabMatchesLocation(tab))) {
+    if (activeTab = this.tabTargets.find(tab => tab.hash.replace('-panel', '') === location.hash)) {
       showPage(activeTab);
     } else if (navCookie = Cookies.get('csp-company-settings-tab')) {
       activeTab = this.tabTargets.find(tab => tab.hash === navCookie);
-      if (activeTab) {
-        showPage(activeTab)
-      } else {
-        showPage(defaultTab);
-      }
+      showPage(activeTab ? activeTab : defaultTab);
     } else {  
       showPage(defaultTab);
     }
