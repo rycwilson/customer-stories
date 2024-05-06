@@ -1,7 +1,8 @@
+- is_dashboard = workflow_stage.present?
+
 nav#company-nav class="#{'unregistered' unless company&.persisted?}"
   .container.company-nav-container
     .row
-      
       .col-sm-7
         - if controller_name == 'profile' && !current_user.company_registered?
           span Are you a Customer Reference Program Manager?
@@ -9,18 +10,35 @@ nav#company-nav class="#{'unregistered' unless company&.persisted?}"
           = link_to('Register your Company', register_company_path)
         - else
           / https://stackoverflow.com/questions/556153
-          ul.nav.nav-tabs.nav-workflow role="tablist" data-turbo="false"
+          ul.nav.nav-tabs.nav-workflow role="tablist" data-turbo=('false' if is_dashboard)
             - ['prospect', 'curate', 'story', 'promote', 'measure'].each do |tab_name|
-              = render('shared/navbars/dashboard_tab', { tab_name:, workflow_stage: })          
+              li {
+                class=('active' if workflow_stage == tab_name)
+                class=('hidden' if (tab_name == 'story' && @story.nil?) || (tab_name != 'story' && @story.present?))
+                role="presentation" }
+                / 
+                a {
+                  href="#{is_dashboard ? '#' : '/'}#{tab_name == 'story' ? 'curate' : tab_name}" 
+                  data-toggle=('tab' if is_dashboard) 
+                  data-action=('dashboard#onTabClick' if is_dashboard)
+                  data-dashboard-target=('tab' if is_dashboard)
+                  aria-controls=((tab_name == 'story' ? 'curate' : tab_name) if is_dashboard)
+                  aria-expanded=((workflow_stage == tab_name ? 'true' : 'false') if is_dashboard)
+                  role=('tab' if is_dashboard) }
+                  = tab_name.capitalize
+                - if workflow_stage == 'story'
+                  i.fa.fa-chevron-right
+                  span = @story.customer.name
+                  i.fa.fa-chevron-right
+                  span = @story.title
 
       .col-sm-5
-
         ul.nav.nav-tabs.nav-settings.pull-right role="tablist"
-
           li.dropdown.user-profile class="#{'active' if controller_name == 'profile'}"
             a.dropdown-toggle data-toggle="dropdown" href="javascript:;"
               i.fa.fa-fw.fa-user-circle-o style="margin-right: 0.2em"
               i.fa.fa-caret-down
+
             ul.dropdown-menu.dropdown-menu-right role="menu"
               - if curator?(company)
                 li

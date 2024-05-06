@@ -35,9 +35,6 @@ application.register('customer-win', CustomerWinController);
 import DashboardController from './dashboard_controller.js';
 application.register('dashboard', DashboardController);
 
-import DashboardTabController from './dashboard_tab_controller.js';
-application.register('dashboard-tab', DashboardTabController);
-
 import DatatableController from './datatable_controller.js';
 application.register('datatable', DatatableController);
 
