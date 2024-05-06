@@ -34,25 +34,25 @@ function foo() {
 }
 
 function addAllListeners() {
-  addTurboListeners();
+  // addTurboListeners();
   // [companies, profile].forEach(controller => controller.addListeners());
 }
 
 function addTurboListeners() {
-  // document.documentElement.addEventListener('turbo:load', turboCallbacks.onLoad)
-  // document.documentElement.addEventListener('turbo:click', turboCallbacks.onClick)
-  // document.documentElement.addEventListener('turbo:before-visit', turboCallbacks.onBeforeVisit)
-  // document.documentElement.addEventListener('turbo:visit', turboCallbacks.onVisit)
-  // document.documentElement.addEventListener('turbo:submit-start', turboCallbacks.onSubmitStart)
-  // document.documentElement.addEventListener('turbo:submit-end', turboCallbacks.onSubmitEnd)
-  // document.documentElement.addEventListener('turbo:before-render', turboCallbacks.onBeforeRender)
-  // document.documentElement.addEventListener('turbo:render', turboCallbacks.onRender)
-  // document.documentElement.addEventListener('turbo:frame-load', turboCallbacks.onFrameLoad)
-  // document.documentElement.addEventListener('turbo:before-frame-render', turboCallbacks.onBeforeFrameRender)
-  // document.documentElement.addEventListener('turbo:frame-render', turboCallbacks.onFrameRender)
-  // document.documentElement.addEventListener('turbo:before-fetch-request', turboCallbacks.onBeforeFetchRequest)
-  // document.documentElement.addEventListener('turbo:before-fetch-response', turboCallbacks.onBeforeFetchResponse)
-  // document.documentElement.addEventListener('turbo:before-cache', turboCallbacks.onBeforeCache)
+  document.documentElement.addEventListener('turbo:load', turboCallbacks.onLoad)
+  document.documentElement.addEventListener('turbo:click', turboCallbacks.onClick)
+  document.documentElement.addEventListener('turbo:before-visit', turboCallbacks.onBeforeVisit)
+  document.documentElement.addEventListener('turbo:visit', turboCallbacks.onVisit)
+  document.documentElement.addEventListener('turbo:submit-start', turboCallbacks.onSubmitStart)
+  document.documentElement.addEventListener('turbo:submit-end', turboCallbacks.onSubmitEnd)
+  document.documentElement.addEventListener('turbo:before-render', turboCallbacks.onBeforeRender)
+  document.documentElement.addEventListener('turbo:render', turboCallbacks.onRender)
+  document.documentElement.addEventListener('turbo:frame-load', turboCallbacks.onFrameLoad)
+  document.documentElement.addEventListener('turbo:before-frame-render', turboCallbacks.onBeforeFrameRender)
+  document.documentElement.addEventListener('turbo:frame-render', turboCallbacks.onFrameRender)
+  document.documentElement.addEventListener('turbo:before-fetch-request', turboCallbacks.onBeforeFetchRequest)
+  document.documentElement.addEventListener('turbo:before-fetch-response', turboCallbacks.onBeforeFetchResponse)
+  document.documentElement.addEventListener('turbo:before-cache', turboCallbacks.onBeforeCache)
 }
 
 // function onMenuItemClick(e) {
