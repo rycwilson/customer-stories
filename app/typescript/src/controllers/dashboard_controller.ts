@@ -186,8 +186,8 @@ export default class DashboardController extends Controller<HTMLDivElement> {
   }
 
   onTabRestoration(e: TurboVisitEvent | PopStateEvent) {
-    const path = location.pathname.slice(1);
-    const isTabTarget = Object.values(DashboardTab).includes(path as DashboardTab);
+    const tab = location.pathname.slice(1);
+    const isTabTarget = Object.values(DashboardTab).includes(tab as DashboardTab);
     if (isTabTarget) {
       if (e.type === 'turbo:visit') {
         console.log('turbo visit', e)
@@ -197,7 +197,7 @@ export default class DashboardController extends Controller<HTMLDivElement> {
           this.tabContentTarget.classList.add('hidden');
         }
       } else {
-        jQuery(`.nav-workflow a[href="#${path}"]`).tab('show');
+        jQuery(`.nav-workflow a[href="#${tab}"]`).tab('show');
       }
     }
   }

@@ -8,7 +8,7 @@ import { summernoteConfig as invitationTemplateConfig } from '../invitation_temp
 // import { summernoteConfig as storyConfig } from '../stories/stories.js'
 // import { defaultConfig } from '../summernote.js'
 
-interface EditorConfig{
+interface EditorConfig {
   (ctrl: SummernoteController, height: number, ...args: any): Summernote.Options;
 }
 
@@ -20,7 +20,7 @@ const config: { [key in SummernoteEditorKind]: EditorConfig | undefined } = {
   'default': undefined
 }
 
-export default class SummernoteController extends Controller<HTMLElement> {
+export default class SummernoteController extends Controller<HTMLDivElement> {
   static values = {
     enabled: { type: Boolean, default: false },
     configKey: { type: String, default: 'default' },
@@ -28,7 +28,7 @@ export default class SummernoteController extends Controller<HTMLElement> {
   }
   declare enabledValue: boolean;
   declare readonly configKeyValue: SummernoteEditorKind;
-  declare configArgsValue: [number, ...any[]];
+  declare readonly configArgsValue: [number, ...any[]];
 
   declare config: EditorConfig | undefined;
   

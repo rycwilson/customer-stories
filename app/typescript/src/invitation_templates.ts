@@ -7,7 +7,7 @@ export function summernoteConfig (
   curatorPhotoPlaceholderPath: string
 ): CustomSummernoteOptions {
   return {
-    // height,
+    height,
     toolbar: [
       // ['style', ['style']],
       ['font', ['bold', 'italic', 'underline']], //, 'clear']],
