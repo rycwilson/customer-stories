@@ -2,7 +2,8 @@ import { Controller } from "@hotwired/stimulus";
 import Cookies from 'js-cookie';
 import type ModalController from './modal_controller';
 import { parseDatasetObject } from '../utils';
-import { visit as turboVisit } from '@hotwired/turbo';
+import { visit as turboVisit, navigator as turboNavigator } from '@hotwired/turbo';
+import { type TurboVisitEvent } from "@hotwired/turbo";
 
 // excludes stories#edit, which also renders the dashboard
 enum DashboardTab {
@@ -25,6 +26,7 @@ export default class DashboardController extends Controller<HTMLDivElement> {
 
   static targets = [
     'tab', 
+    'tabContent',
     'tabPanel',
     'customerWins', 
     'customerWinsTab', 
@@ -44,6 +46,7 @@ export default class DashboardController extends Controller<HTMLDivElement> {
     'recentActivityTab'
   ];
   declare readonly tabTargets: HTMLAnchorElement[];
+  declare readonly tabContentTarget: HTMLDivElement;
   declare readonly tabPanelTargets: HTMLDivElement[];
   declare readonly customerWinsTarget: HTMLDivElement;
   declare readonly customerWinsTabTarget: HTMLAnchorElement;
@@ -60,25 +63,31 @@ export default class DashboardController extends Controller<HTMLDivElement> {
 
   static values = { activeTab: { type: String, default: '' } };    
   declare activeTabValue: DashboardTab | null;
-
+  
+  tabRestorationListener = this.onTabRestoration.bind(this);
   spinnerTimers: Record<DashboardTab.Prospect | 'story' | DashboardTab.Promote, number> = { 
     prospect: 0, 
     story: 0, 
     promote: 0 
   };
-
   readyState: ReadyState = new Proxy(
     { customerWins: false, contributions: false, storyContributions: false, promotedStories: false },
     { set: this.onReadyStateChange.bind(this) }
   )
+
+  initialize() {
+    console.log('init dashbaord')
+  }
   
   connect() {
-    // console.log('connect dashboard')
-    addEventListener('popstate', this.showActiveTabPanel);
+    console.log('connect dashboard')
+    addEventListener('popstate', this.tabRestorationListener);
+    document.documentElement.addEventListener('turbo:visit', this.tabRestorationListener)
   }
 
   disconnect() {
-    removeEventListener('popstate', this.showActiveTabPanel);
+    removeEventListener('popstate', this.tabRestorationListener);
+    document.documentElement.removeEventListener('turbo:visit', this.tabRestorationListener)
   }
 
   onResourceLoading({ currentTarget: tabPanel }: { currentTarget: HTMLDivElement }) {
@@ -115,19 +124,21 @@ export default class DashboardController extends Controller<HTMLDivElement> {
   }
 
   onTabClick({ currentTarget: tab }: { currentTarget: HTMLAnchorElement }) {
-    const tabName = tab.getAttribute('aria-controls');
-    if (tabName) {
-      if (Object.values<string>(DashboardTab).includes(tabName)) {
-        const setActiveTab = () => this.activeTabValue = tabName as DashboardTab;
-        $(tab).one('shown.bs.tab', () => setTimeout(setActiveTab));
-      } else {
-        console.error(`Unrecognized dashboard tab: ${tabName}`);
-      }
-    }
+    const tabName = tab.getAttribute('aria-controls') as DashboardTab;
+    $(tab).one('shown.bs.tab', () => setTimeout(() => this.activeTabValue = tabName as DashboardTab));
+    history.pushState(
+      { turbo: { restorationIdentifier: turboNavigator.history.restorationIdentifier } }, 
+      '', 
+      `/${tabName}`
+    );
   }
 
   activeTabValueChanged(activeTab: DashboardTab) {
-    this.initTabPanel(activeTab);
+    console.log('activeTab:', activeTab || typeof activeTab)
+    if (activeTab) {
+      this.tabContentTarget.classList.remove('hidden');
+      this.initTabPanel(activeTab);
+    }
   }
 
   addCustomerWinContributors({ currentTarget: link }: { currentTarget: HTMLAnchorElement }) {
@@ -174,24 +185,20 @@ export default class DashboardController extends Controller<HTMLDivElement> {
     // TODO: open the customer win child row
   }
 
-  showActiveTabPanel() {
-    const workflowMatch = location.pathname.match(/(?<workflowStage>prospect|curate|promote|measure)(\/(\w|-)+)?/);
-    const workflowStage = workflowMatch?.groups?.workflowSTage
-    // const curateView = workflowStage === 'curate' && (workflowMatch[2] ? 'story' : 'stories');
-    if (workflowStage) {
-      $(`.nav-workflow a[href="#${workflowStage}"]`).tab('show');
-      // document.querySelector(`.nav-workflow a[href="#${workflowStage}"]`).click()
-      // if (curateView) {
-      //   curateView === 'stories' ? $('a[href=".curate-stories"]').tab('show') : $('a[href=".edit-story"]').tab('show');
-        
-        // don't scroll to panel
-        // setTimeout(() => scrollTo(0, 0));
-        // if (curateView === 'stories') {
-          // $('#curate-filters .curator')
-          //   .val($('#curate-filters .curator').children(`[value="${CSP.current_user.id}"]`).val())
-          //   .trigger('change', { auto: true });
-        // }
-      // }
+  onTabRestoration(e: TurboVisitEvent | PopStateEvent) {
+    const path = location.pathname.slice(1);
+    const isTabTarget = Object.values(DashboardTab).includes(path as DashboardTab);
+    if (isTabTarget) {
+      if (e.type === 'turbo:visit') {
+        console.log('turbo visit', e)
+        const { action } = (e as TurboVisitEvent).detail;
+        if (action === 'restore') {
+          console.log('hide')
+          this.tabContentTarget.classList.add('hidden');
+        }
+      } else {
+        jQuery(`.nav-workflow a[href="#${path}"]`).tab('show');
+      }
     }
   }
 

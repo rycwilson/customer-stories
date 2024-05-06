@@ -1,5 +1,5 @@
 import { Controller } from '@hotwired/stimulus';
-import { visit as turboVisit } from '@hotwired/turbo';
+import { navigator as turboNavigator } from '@hotwired/turbo';
 import type { FrameElement } from '@hotwired/turbo';
 import Cookies from 'js-cookie';
 
@@ -40,12 +40,16 @@ export default class CompanySettingsController extends Controller<HTMLDivElement
         .on('click', (e: JQuery.TriggeredEvent) => {
           const tabHash = e.currentTarget.hash;
           const locationHash = tabHash.replace('-panel', '');
-          turboVisit(location.href.replace(/#.+$/, locationHash), { action: 'replace' })
+          history.replaceState(
+            { turbo: { restorationIdentifier: turboNavigator.history.restorationIdentifier } }, 
+            '', 
+            locationHash
+          );
         })
-        .on('show.bs.tab', (e: JQuery.TriggeredEvent) => {
+        .on('shown.bs.tab', (e: JQuery.TriggeredEvent) => {
           const tabHash = e.target.hash;
-          // window.scrollTo(0, 0);
-          window.addEventListener('scroll', (e) => { window.scrollTo(0, 0) }, { once: true });
+          window.scrollTo(0, 0);
+          // window.addEventListener('scroll', (e) => { window.scrollTo(0, 0) }, { once: true });
           Cookies.set('csp-company-settings-tab', tabHash);
         });
     });

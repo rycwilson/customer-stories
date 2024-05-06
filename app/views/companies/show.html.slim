@@ -38,7 +38,7 @@
 
   = render('shared/navbars/company_nav', { company: @company, workflow_stage: @workflow_stage })
 
-  .tab-content
+  .tab-content data-dashboard-target="tabContent"
     = render( \
         'companies/1_prospect/prospect',
         { company: @company, workflow_stage: @workflow_stage, active_tab: @prospect_tab })
