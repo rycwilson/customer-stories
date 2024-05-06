@@ -189,13 +189,11 @@ export default class DashboardController extends Controller<HTMLDivElement> {
     const tab = location.pathname.slice(1);
     const isTabTarget = Object.values(DashboardTab).includes(tab as DashboardTab);
     if (isTabTarget) {
+      // 'turbo:visit' event means the page could not be restored from cache and is being fetched anew;
+      // if the action is restore (i.e. stay on the dashboard) then current content should be hidden to avoid flicker
       if (e.type === 'turbo:visit') {
-        console.log('turbo visit', e)
         const { action } = (e as TurboVisitEvent).detail;
-        if (action === 'restore') {
-          console.log('hide')
-          this.tabContentTarget.classList.add('hidden');
-        }
+        if (action === 'restore') this.tabContentTarget.classList.add('hidden');
       } else {
         jQuery(`.nav-workflow a[href="#${tab}"]`).tab('show');
       }
