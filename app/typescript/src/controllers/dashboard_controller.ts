@@ -86,6 +86,7 @@ export default class DashboardController extends Controller<HTMLDivElement> {
   }
 
   disconnect() {
+    console.log('disconnect dashboard')
     removeEventListener('popstate', this.tabRestorationListener);
     document.documentElement.removeEventListener('turbo:visit', this.tabRestorationListener)
   }
@@ -134,7 +135,7 @@ export default class DashboardController extends Controller<HTMLDivElement> {
   }
 
   activeTabValueChanged(activeTab: DashboardTab) {
-    console.log('activeTab:', activeTab || typeof activeTab)
+    console.log('dashboard.activeTab:', activeTab || typeof activeTab)
     if (activeTab) {
       this.tabContentTarget.classList.remove('hidden');
       this.initTabPanel(activeTab);
@@ -189,7 +190,8 @@ export default class DashboardController extends Controller<HTMLDivElement> {
     const tab = location.pathname.slice(1);
     const isTabTarget = Object.values(DashboardTab).includes(tab as DashboardTab);
     if (isTabTarget) {
-      // 'turbo:visit' event means the page could not be restored from cache and is being fetched anew;
+      // 'turbo:visit' event means the page could not be restored from cache and is being fetched;
+      // Note 'cache' here implies browser cache, as caching was disabled for the companies#show page;
       // if the action is restore (i.e. stay on the dashboard) then current content should be hidden to avoid flicker
       if (e.type === 'turbo:visit') {
         const { action } = (e as TurboVisitEvent).detail;

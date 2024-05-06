@@ -9,23 +9,24 @@ import type {
   TurboBeforeFrameRenderEvent, 
   TurboFrameRenderEvent,
   TurboSubmitStartEvent,
-  TurboSubmitEndEvent } from '@hotwired/turbo';
+  TurboSubmitEndEvent,
+  TurboBeforeCacheEvent } from '@hotwired/turbo';
 
 export function onLoad(e: TurboLoadEvent) {
-  console.log('turbo:load', e)
+  console.log(...logCommon(e), e)
   // initView(document.body.dataset.controller, document.body.dataset.action);
 }
 
 export function onClick(e: TurboClickEvent) {
-  console.log('turbo:click', e)
+  // console.log('turbo:click', e)
 }
 
-export function onBeforeVisit(e: TurboBeforeVisitEvent) {
-  console.log('turbo:before-visit', e)
+export function beforeVisit(e: TurboBeforeVisitEvent) {
+  // console.log('turbo:before-visit\n', `${location.pathname}\n`, e)
 }
 
 export function onVisit(e: TurboVisitEvent) {
-  console.log('turbo:visit', e)
+  console.log(...logCommon(e), `${e.detail.action} ${e.detail.url}\n`, e)
 }
 
 export function onSubmitStart(e: TurboSubmitStartEvent) {
@@ -36,8 +37,8 @@ export function onSubmitEnd(e: TurboSubmitEndEvent) {
   console.log('turbo:submit-end', e)
 }
 
-export function onBeforeRender(e: TurboBeforeRenderEvent) {
-  console.log('turbo:before-render', e)
+export function beforeRender(e: TurboBeforeRenderEvent) {
+  // console.log('turbo:before-render\n', `${location.pathname}\n`, e)
   // e.preventDefault()   // pause render
   // e.detail.resume()   // resume render
 
@@ -48,32 +49,58 @@ export function onBeforeRender(e: TurboBeforeRenderEvent) {
 }
 
 export function onRender(e: TurboRenderEvent) {
-  console.log('turbo:render', e)
+  console.log(...logCommon(e), e);
 }
 
 export function onFrameLoad(e: TurboFrameLoadEvent) {
-  console.log('turbo:frame-load', e)
+  console.log(...logCommon(e), e);
 }
 
-export function onBeforeFrameRender(e: TurboBeforeFrameRenderEvent) {
-  console.log('turbo:before-frame-render', e)
+export function beforeFrameRender(e: TurboBeforeFrameRenderEvent) {
+  // logCommon(e)
+  // console.log(e)
 }
 
 export function onFrameRender(e: TurboFrameRenderEvent) {
-  console.log('turbo:frame-render', e)
+  console.log(...logCommon(e), e);
 }
 
 // no custom event type for this
-export function onBeforeFetchRequest(e: CustomEvent) {
-  console.log('turbo:before-fetch-request', e);
+export function beforeFetchRequest(e: CustomEvent) {
+  console.log( 
+    ...logCommon(e),
+    `${e.detail.fetchOptions.method} ${e.detail.url.href}\n`,
+    `referrer: ${e.detail.fetchOptions.referrer}\n`,
+    e
+  );
 }
 
 // no custom event type for this
-export function onBeforeFetchResponse(e: CustomEvent) {
-  console.log('turbo:before-fetch-response', e);
+export function beforeFetchResponse(e: CustomEvent) {
+  const { response } = e.detail.fetchResponse;
+  console.log(
+    ...logCommon(e),
+    `${response.status} ${response.statusText} ${response.url}\n`,
+    e
+  )
 }
 
 // no custom event type for this
-export function onBeforeCache(e: CustomEvent) {
-  console.log('turbo:before-cache', e)
+export function beforeCache(e: TurboBeforeCacheEvent) {
+  console.log(...logCommon(e), e)
+}
+
+function logCommon(e: CustomEvent) {
+  const body = (e.target as HTMLHtmlElement).querySelector(':scope > body') as HTMLBodyElement;
+  let target;
+  if (body) {
+    target = body.classList.contains('show') ? 
+      'dashboard' : 
+      (body.classList.contains('edit') ? 'settings' : 'profile');
+  }
+  return [
+    `${location.pathname}\n`,
+    `${e.type}\n`, 
+    `target: ${target || 'unknown'}\n`
+  ];
 }

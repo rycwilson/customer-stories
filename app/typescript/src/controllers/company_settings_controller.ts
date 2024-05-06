@@ -2,6 +2,7 @@ import { Controller } from '@hotwired/stimulus';
 import { navigator as turboNavigator } from '@hotwired/turbo';
 import type { FrameElement } from '@hotwired/turbo';
 import Cookies from 'js-cookie';
+import { type TurboBeforeCacheEvent } from '@hotwired/turbo';
 
 export default class CompanySettingsController extends Controller<HTMLDivElement> {
   static targets = [
@@ -17,6 +18,8 @@ export default class CompanySettingsController extends Controller<HTMLDivElement
   declare invitationTemplateTurboFrameTarget: FrameElement;
   declare invitationTemplateFormTarget: HTMLFormElement;
 
+  cacheListener = this.beforeCache.bind(this);
+
   get activeTab() {
     return this.tabTargets.find(tab => (
       (tab.parentElement as HTMLLIElement).classList.contains('active')
@@ -28,10 +31,21 @@ export default class CompanySettingsController extends Controller<HTMLDivElement
   }
 
   connect() {
-    // console.log('connect company settings')
+    console.log('connect company settings')
     this.addTabListeners();
     this.initSidebar();
     // window.scrollTo(0, 0);
+
+    document.documentElement.addEventListener('turbo:before-cache', this.cacheListener);
+  }
+
+  disconnect() {
+    console.log('disconnect company settings')
+    document.documentElement.removeEventListener('turbo:before-cache', this.cacheListener);
+  }
+
+  beforeCache(e: TurboBeforeCacheEvent) {
+    // console.log('turbo:before-cache\n', `${location.pathname}\n`, e)
   }
   
   addTabListeners() {
