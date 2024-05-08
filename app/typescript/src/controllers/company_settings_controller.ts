@@ -3,7 +3,7 @@ import Cookies from 'js-cookie';
 import { 
   navigator as turboNavigator, 
   type FrameElement, 
-  type TurboBeforeCacheEvent } from '@hotwired/turbo';
+  type TurboFrameLoadEvent } from '@hotwired/turbo';
 
 export default class CompanySettingsController extends Controller<HTMLDivElement> {
   static targets = [
@@ -23,7 +23,7 @@ export default class CompanySettingsController extends Controller<HTMLDivElement
   declare invitationTemplateTurboFrameTarget: FrameElement;
   declare invitationTemplateFormTarget: HTMLFormElement;
 
-  cacheListener = this.beforeCache.bind(this);
+  invitationTemplateFrameLoadListener = this.onInvitationTemplateFrameLoad.bind(this);
 
   get activeTab() {
     return this.tabTargets.find(tab => (
@@ -40,18 +40,13 @@ export default class CompanySettingsController extends Controller<HTMLDivElement
     this.initSidebar();
     // window.scrollTo(0, 0);
 
-    document.documentElement.addEventListener('turbo:before-cache', this.cacheListener);
+    this.invitationTemplateTurboFrameTarget.addEventListener('turbo:frame-load', this.invitationTemplateFrameLoadListener);
   }
 
   disconnect() {
     console.log('disconnect company settings')
-    document.documentElement.removeEventListener('turbo:before-cache', this.cacheListener);
-  }
-
-  beforeCache(e: TurboBeforeCacheEvent) {
-    // console.log('turbo:before-cache\n', `${location.pathname}\n`, e)
-  }
-  
+    this.invitationTemplateTurboFrameTarget.removeEventListener('turbo:frame-load', this.invitationTemplateFrameLoadListener);
+  }  
   
   // tab hashes are appended with '-panel' to prevent auto-scrolling on page load
   initSidebar() {
@@ -103,20 +98,10 @@ export default class CompanySettingsController extends Controller<HTMLDivElement
     select.tomselect.control_input.blur();
     if (isNewTemplate) {
       path += `?template_name=${encodeURIComponent(select.value)}`;
-      this.whenInvitationTemplateFrameLoads(this.headlineNewInvitationTemplate);
     } else if (templateId) {
       path = (path as string).replace(':id', templateId.toString());
     } else {
       turboFrame.innerHTML = '';
-    }
-    if (action) {
-      const showButtons = () => {
-        const isDefaultTemplate = !!this.invitationTemplateFormTarget.querySelector('input[name*="[name]"][readonly]');
-        this.invitationTemplateRestoreBtnTarget.classList.toggle('hidden', !(isNewTemplate || isDefaultTemplate));
-        this.invitationTemplateDeleteBtnTarget.classList.toggle('hidden', !isNewTemplate && !isDefaultTemplate);
-        this.invitationTemplateToolbarTarget.classList.toggle('hidden', isNewTemplate);
-      };
-      this.whenInvitationTemplateFrameLoads(showButtons);
     }
     turboFrame.setAttribute('id', action ? `${action}-invitation-template` : '');
     turboFrame.setAttribute('src', path || ''); 
@@ -127,7 +112,6 @@ export default class CompanySettingsController extends Controller<HTMLDivElement
     const turboFrame = this.invitationTemplateTurboFrameTarget as FrameElement;
     const templateId = this.invitationTemplateFormTarget.getAttribute('action')?.split('/').pop() as string;
     if (typeof +templateId === 'number') {
-      this.whenInvitationTemplateFrameLoads(this.headlineNewInvitationTemplate);
       turboFrame.setAttribute('id', 'new-invitation-template');
       turboFrame.setAttribute('src', turboFrame.dataset.newTemplatePath + `?source_template_id=${templateId}`);
     }
@@ -139,16 +123,16 @@ export default class CompanySettingsController extends Controller<HTMLDivElement
   deleteInvitationTemplate() {
   }
 
-  whenInvitationTemplateFrameLoads(callback: () => void) {
-    this.invitationTemplateTurboFrameTarget.addEventListener('turbo:frame-load', callback.bind(this), { once: true })
-  }
-
-  headlineNewInvitationTemplate() {
-    this.invitationTemplateSelectTarget.tomselect.control_input.previousElementSibling.textContent = '\u2013 New Template \u2013';
-    const templateNameField = <HTMLInputElement>this.invitationTemplateFormTarget.querySelector('input[name*="[name]"]');
-    if (templateNameField) {
-      templateNameField.focus();
-      templateNameField.setSelectionRange(templateNameField.value.length, templateNameField.value.length);
+  onInvitationTemplateFrameLoad(e: TurboFrameLoadEvent) {
+    const isNewTemplate = /new/.test(this.invitationTemplateTurboFrameTarget.id);
+    const isDefaultTemplate = !!this.invitationTemplateFormTarget.querySelector('input[name*="[name]"][readonly]');
+    if (isNewTemplate) {
+      this.invitationTemplateSelectTarget.tomselect.control_input.previousElementSibling.textContent = (
+        '\u2013 New Template \u2013'
+      );
     }
+    this.invitationTemplateRestoreBtnTarget.classList.toggle('hidden', !isDefaultTemplate);
+    this.invitationTemplateDeleteBtnTarget.classList.toggle('hidden', isDefaultTemplate);
+    this.invitationTemplateToolbarTarget.classList.toggle('hidden', isNewTemplate);
   }
 }
