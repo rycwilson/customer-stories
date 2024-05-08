@@ -21,11 +21,20 @@
                 company_settings_target: 'invitationTemplateSelect',
                 action: 'change->company-settings#onChangeInvitationTemplate' }})
         .btn-group.hidden data-company-settings-target="invitationTemplateToolbar"
-          button.btn.btn-default type="button"
+          button.btn.btn-default {
+            type="button"
+            data-company-settings-target="invitationTemplateCopyBtn"
+            data-action="company-settings#copyInvitationTemplate" }
             i.fa.fa-fw.fa-copy
-          button.btn.btn-default type="button" data-company-settings-target="invitationTemplateRestoreBtn"
+          button.btn.btn-default {
+            type="button" 
+            data-company-settings-target="invitationTemplateRestoreBtn"
+            data-action="company-settings#restoreInvitationTemplate" }
             i.fa.fa-fw.fa-repeat
-          button.btn.btn-default type="button" data-company-settings-target="invitationTemplateDeleteBtn"
+          button.btn.btn-default {
+            type="button" 
+            data-company-settings-target="invitationTemplateDeleteBtn"
+            data-action="company-settings#deleteInvitationTemplate" }
             i.fa.fa-fw.fa-remove
 
   = turbo_frame_tag( \
