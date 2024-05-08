@@ -1,8 +1,9 @@
 import { Controller } from '@hotwired/stimulus';
-import { navigator as turboNavigator } from '@hotwired/turbo';
-import type { FrameElement } from '@hotwired/turbo';
 import Cookies from 'js-cookie';
-import { type TurboBeforeCacheEvent } from '@hotwired/turbo';
+import { 
+  navigator as turboNavigator, 
+  type FrameElement, 
+  type TurboBeforeCacheEvent } from '@hotwired/turbo';
 
 export default class CompanySettingsController extends Controller<HTMLDivElement> {
   static targets = [
