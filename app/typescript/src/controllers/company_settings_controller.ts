@@ -9,12 +9,16 @@ export default class CompanySettingsController extends Controller<HTMLDivElement
     'tab', 
     'invitationTemplateSelect',
     'invitationTemplateToolbar', 
+    'invitationTemplateRestoreBtn',
+    'invitationTemplateDeleteBtn',
     'invitationTemplateTurboFrame',
     'invitationTemplateForm'
   ];
   declare tabTargets: [HTMLAnchorElement];
   declare invitationTemplateSelectTarget: TomSelectInput;
   declare invitationTemplateToolbarTarget: HTMLElement;
+  declare invitationTemplateRestoreBtnTarget: HTMLButtonElement;
+  declare invitationTemplateDeleteBtnTarget: HTMLButtonElement;
   declare invitationTemplateTurboFrameTarget: FrameElement;
   declare invitationTemplateFormTarget: HTMLFormElement;
 
@@ -94,7 +98,6 @@ export default class CompanySettingsController extends Controller<HTMLDivElement
     const action = isNewTemplate ? 'new' : (templateId ? 'edit' : null);
     const turboFrame = this.invitationTemplateTurboFrameTarget;
     let path = action ? <string>turboFrame.dataset[`${action}TemplatePath`] : null;
-    this.invitationTemplateToolbarTarget.classList.toggle('hidden', !templateId);
     select.tomselect.control_input.blur();
     if (isNewTemplate) {
       path += `?template_name=${encodeURIComponent(select.value)}`;
@@ -103,6 +106,18 @@ export default class CompanySettingsController extends Controller<HTMLDivElement
       path = (path as string).replace(':id', templateId.toString());
     } else {
       turboFrame.innerHTML = '';
+    }
+    if (action) {
+      this.invitationTemplateTurboFrameTarget.addEventListener(
+        'turbo:frame-load', 
+        () => {
+          const isDefault = !!this.invitationTemplateFormTarget.querySelector('input[name*="[name]"][readonly]');
+          this.invitationTemplateRestoreBtnTarget.classList.toggle('hidden', !(isNewTemplate || isDefault));
+          this.invitationTemplateDeleteBtnTarget.classList.toggle('hidden', !(isNewTemplate || !isDefault));
+          this.invitationTemplateToolbarTarget.classList.toggle('hidden', isNewTemplate);
+        }, 
+        { once: true }
+      );
     }
     turboFrame.setAttribute('id', action ? `${action}-invitation-template` : '');
     turboFrame.setAttribute('src', path || ''); 
