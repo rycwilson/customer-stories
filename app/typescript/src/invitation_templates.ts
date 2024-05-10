@@ -4,7 +4,8 @@ import type { CustomSummernoteOptions } from './summernote';
 export function summernoteConfig (
   ctrl: SummernoteController, 
   height: number, 
-  curatorPhotoPlaceholderPath: string
+  curatorPhotoUrl: string,
+  curatorPhotoPlaceholderUrl: string
 ): CustomSummernoteOptions {
   return {
     height,
@@ -22,75 +23,67 @@ export function summernoteConfig (
       // ['help', ['help']]
       ['customButton', ['placeholdersDropdown']]
     ] as Summernote.toolbarDef,
-    buttons: { placeholdersDropdown: placeholdersDropdown.bind(null, curatorPhotoPlaceholderPath) },
+    buttons: { placeholdersDropdown: placeholdersDropdown.bind(null, curatorPhotoUrl, curatorPhotoPlaceholderUrl) },
     callbacks: {
       onInit() {}
     }
   }
 }
 
-function placeholdersDropdown(curatorPhotoPlaceholderPath: string, context: any): JQuery<HTMLDivElement, any> {
-  const ui = $.summernote.ui;
-  const curatorSignaturePlaceholderHtml = `
-    <p id=&quot;curator-signature&quot;>
-      <img id=&quot;curator-img&quot; src=&quot;${curatorPhotoPlaceholderPath}&quot; style=&quot;width:80px; margin-bottom:4px;&quot; onerror=&quot;this.style.display=\'none\'>&quot;><br>
-      <span style=&quot;line-height:1.4&quot;>[curator_full_name]</span><br>
-      <span style=&quot;line-height:1.4&quot;>[curator_title]</span><br>
-      <span style=&quot;line-height:1.4&quot;>[company_name]</span><br>
-      <span style=&quot;line-height:1.4&quot;>[curator_phone]</span>
-    </p>
-  `;
-  const button = ui.buttonGroup([
-    ui.button({
-      className: 'btn btn-default dropdown-toggle',
-      data: {
-        toggle: 'dropdown',
-        placement: 'top'
-      },
-      contents: 'Insert\xa0\xa0<span class="caret"></span>',
-      // tooltip: 'Insert a data placeholder'
-    }),
-    ui.dropdown({
-      className: 'summernote-custom',
-      contents: `
-        <li data-placeholder="<span contenteditable=&quot;false&quot;>[company_name]</span>">
-          <a href="javascript:;">Company name</a>
+function placeholdersDropdown(
+  curatorPhotoUrl: string, 
+  curatorPhotoPlaceholderUrl: string, 
+  context: any
+): JQuery<HTMLDivElement, any> {
+  const insertItems: { [key: string]: string } = {
+    'Company name': "<span contenteditable='false'>[company_name]</span>",
+    'Customer name': "<span contenteditable='false'>[customer_name]</span>",
+    'Referrer name': "<span contenteditable='false'>[referrer_full_name]</span>",
+    'Contributor first name': "<span contenteditable='false'>[contributor_first_name]</span>",
+    'Contributor full name': "<span contenteditable='false'>[contributor_full_name]</span>",
+    'CTA button': "<span class='cta-wrapper submit-link'>[contribution_submission_button={text:&quot;Button text goes here&quot;,color:&quot;#4d8664&quot;}]</span>",
+    'CTA link': "<span class='submit-link'>[contribution_submission_link=&quot;Link text goes here&quot;]</span>",
+    'Curator signature': `
+      <p id='curator-signature'>
+        <img 
+          id='curator-img' 
+          src='${curatorPhotoUrl || curatorPhotoPlaceholderUrl}' 
+          style='width:80px; margin-bottom:4px;' onerror='this.style.display=&quot;none&quot;'>
+        <br>
+        <span style='line-height:1.4'>[curator_full_name]</span>
+        <br>
+        <span style='line-height:1.4'>[curator_title]</span>
+        <br>
+        <span style='line-height:1.4'>[company_name]</span>
+        <br>
+        <span style='line-height:1.4'>[curator_phone]</span>
+      </p>
+    `
+  }
+  const button = $.summernote.ui.button({
+    className: 'btn btn-default dropdown-toggle',
+    data: { toggle: 'dropdown', placement: 'top' },
+    contents: 'Insert\xa0\xa0<span class="caret"></span>',
+    // tooltip: 'Insert a data placeholder'
+  });
+  const dropdown = $.summernote.ui.dropdown({
+    className: 'dropdown-menu',
+    contents: Object.keys(insertItems).map(linkText => {
+      return `
+        <li data-placeholder="${insertItems[linkText]}">
+          <a href="javascript:;">${linkText}</a>
         </li>
-        <li data-placeholder="<span contenteditable=&quot;false&quot;>[customer_name]</span>">
-          <a href="javascript:;">Customer name</a>
-        </li>
-        <li data-placeholder="<span contenteditable=&quot;false&quot;>[referrer_full_name]</span>">
-          <a href="javascript:;">Referrer name</a>
-        </li>
-        <li data-placeholder="<span contenteditable=&quot;false&quot;>[contributor_first_name]</span>">
-          <a href="javascript:;">Contributor first name</a>
-        </li>
-        <li data-placeholder="<span contenteditable=&quot;false&quot;>[contributor_full_name]</span>">
-          <a href="javascript:;">Contributor full name</a>
-        </li>
-        <li data-placeholder="<span class=&quot;cta-wrapper submit-link&quot;>[contribution_submission_button={text:&quot;Button text goes here&quot;,color:&quot;#4d8664&quot;}]</span>">
-          <a href="javascript:;">Contribution submission button</a>
-        </li>
-        <li data-placeholder="<span class=&quot;submit-link&quot;>[contribution_submission_link=&quot;Link text goes here&quot;]</span>">
-          <a href="javascript:;">Contribution submission link</a>
-        </li>
-        <li data-placeholder="<span class=&quot;submit-link&quot;>[feedback_submission_link=&quot;Link text goes here&quot;]</span>">
-          <a href="javascript:;">Feedback submission link</a>
-        </li>
-        <li data-placeholder="${curatorSignaturePlaceholderHtml}">
-          <a href="javascript:;">Curator signature</a>
-        </li>
-      `,  
-      callback: ($dropdown: JQuery<HTMLUListElement, any>) => {
-        $dropdown.find('li').each((i: number, li: HTMLLIElement) => {
-          $(li).on('click', function () {
-            context.invoke('editor.saveRange');
-            context.invoke('editor.pasteHTML', $(li).data('placeholder'));
-            context.invoke('editor.restoreRange');
-          });
+      `;
+    }).join(''),
+    callback: ($dropdown: JQuery<HTMLUListElement, any>) => {
+      $dropdown.find('li').each((i: number, li: HTMLLIElement) => {
+        $(li).on('click', function () {
+          context.invoke('editor.saveRange');
+          context.invoke('editor.pasteHTML', $(li).data('placeholder'));
+          context.invoke('editor.restoreRange');
         });
-      }
-    })
-  ]);
-  return button.render();   // return button as jquery object
+      });
+    }
+  });
+  return $.summernote.ui.buttonGroup([button, dropdown]).render();
 }

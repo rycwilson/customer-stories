@@ -47,7 +47,7 @@
           data-controller="summernote"
           data-summernote-enabled-value="true"
           data-summernote-config-key-value="invitationTemplate"
-          data-summernote-config-args-value=[nil, asset_path('placeholders/user-photo-missing.png')].to_json
+          data-summernote-config-args-value=[nil, current_user.photo_url, asset_path('placeholders/user-photo-missing.png')].to_json
           data-invitation-template-target="note"
           data-action="summernote:init->summernote#onInitComplete" }
           = @template.request_body&.html_safe
