@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2023_11_27_185837) do
+ActiveRecord::Schema.define(version: 2024_05_10_181827) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_stat_statements"
@@ -253,16 +253,6 @@ ActiveRecord::Schema.define(version: 2023_11_27_185837) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["contribution_id"], name: "index_email_contribution_requests_on_contribution_id"
-  end
-
-  create_table "email_templates", id: :serial, force: :cascade do |t|
-    t.string "name"
-    t.string "subject"
-    t.text "body"
-    t.integer "company_id"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.index ["company_id"], name: "index_email_templates_on_company_id"
   end
 
   create_table "friendly_id_slugs", id: :serial, force: :cascade do |t|
@@ -568,7 +558,6 @@ ActiveRecord::Schema.define(version: 2023_11_27_185837) do
   add_foreign_key "ctas_successes", "successes"
   add_foreign_key "customers", "companies"
   add_foreign_key "email_contribution_requests", "contributions"
-  add_foreign_key "email_templates", "companies"
   add_foreign_key "invitation_templates", "companies"
   add_foreign_key "oauth_access_grants", "oauth_applications", column: "application_id"
   add_foreign_key "oauth_access_tokens", "oauth_applications", column: "application_id"
