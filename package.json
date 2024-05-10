@@ -5,7 +5,7 @@
   "main": "index.js",
   "type": "module",
   "scripts": {
-    "test": "NODE_PATH=/Users/wilson/.rbenv/versions/3.1.2/lib/ruby/gems/3.1.0/gems:$NODE_PATH jest",
+    "test": "NODE_PATH=/Users/wilson/.rbenv/versions/3.1.2/lib/ruby/gems/3.1.0/gems:$NODE_PATH jest --no-cache",
     "build": "NODE_PATH=/Users/wilson/.rbenv/versions/3.1.2/lib/ruby/gems/3.1.0/gems:$NODE_PATH esbuild app/typescript/emit/app.js app/typescript/emit/stories.js --bundle --sourcemap --outdir=app/assets/builds"
   },
   "repository": {
