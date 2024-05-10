@@ -90,7 +90,6 @@ class Company < ApplicationRecord
   end
   # alias
   has_many :product_tags, class_name: 'Product'
-  has_many :email_templates, dependent: :destroy
   has_many :contributor_questions, dependent: :destroy do
     def customer
       where(role: 'customer')
@@ -538,14 +537,6 @@ class Company < ApplicationRecord
         # do nothing
       end
     end
-  end
-
-  def templates_select
-    self.email_templates.map do |template|
-      [template.name, template.id]
-    end
-    .sort
-    .unshift( [""] )
   end
 
   # when destroying a tag, expire affected filter select fragments

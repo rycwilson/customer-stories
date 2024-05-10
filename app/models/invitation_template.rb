@@ -31,11 +31,6 @@ class InvitationTemplate < ApplicationRecord
   end
   before_update() { self.format_for_storage() }
 
-  after_commit do 
-    self.company.expire_fragment_cache('crowdsource') 
-    self.company.expire_ll_cache('contributions-json') if self.previous_changes.key?('name')
-  end
-
   def button_style_settings
     'display: inline-block;' +
     'font-size: 1.1em;' +
@@ -49,32 +44,33 @@ class InvitationTemplate < ApplicationRecord
     'cursor: pointer'
   end
 
-  def format_for_editor (curator)
+  def format_for_editor(curator)
     if curator.photo_url.present?
-      self.request_body.sub!("[curator_img_url]", curator.photo_url)
+      request_body.sub!("[curator_img_url]", curator.photo_url)
     else
-      self.request_body.sub!("[curator_img_url]", ActionController::Base.helpers.asset_path("placeholders/user-photo-missing.png"))
+      request_body.sub!("[curator_img_url]", ActionController::Base.helpers.asset_path("placeholders/user-photo-missing.png"))
     end
     # give anchor links a format that allows for editing text of the link
     # don't want to include actual links, as they'll be broken (placeholders instead of actual urls)
     # binding.remote_pry
-    self.request_body.gsub!(/<a\shref=('|\")\[(\w+)_url\]('|\")\starget=('|\")_blank('|\")>(.+?)<\/a>/, '[\2_link="\4"]')
-    self.request_body.gsub!(/<a\shref=('\[(\w+)_url\]')\starget='_blank'\sclass='csp-cta'\sstyle='background-color:(#\w{6}+);border-color:#\w{6};color:#\w{6};#{Regexp.quote(button_style_settings)}'>(.+)<\/a>/) do |match|
+    request_body.gsub!(/<a\shref=('|\")\[(\w+)_url\]('|\")\starget=('|\")_blank('|\")>(.+?)<\/a>/, '[\2_link="\4"]')
+    request_body.gsub!(/<a\shref=('\[(\w+)_url\]')\starget='_blank'\sclass='csp-cta'\sstyle='background-color:(#\w{6}+);border-color:#\w{6};color:#\w{6};#{Regexp.quote(button_style_settings)}'>(.+)<\/a>/) do |match|
       "[#{$2}_button={text:\"#{$4}\",color:\"#{$3}\"}]"
     end
+    self
   end
 
   def format_for_storage
     # re-construct curator photo placeholder
     # outside single quote necessary for capture reference to work correctly
-    self.request_body.sub!( /(id=('|")curator-img('|") src=)('|")(https:\S+|\/assets\S+)('|")/, '\1"[curator_img_url]"' )
+    request_body.sub!( /(id=('|")curator-img('|") src=)('|")(https:\S+|\/assets\S+)('|")/, '\1"[curator_img_url]"' )
     # re-construct anchor links
-    self.request_body.gsub!( /\[(\w+)_link=('|")(.+?)('|")\]/, '<a href="[\1_url]" target="_blank">\3</a>')
+    request_body.gsub!( /\[(\w+)_link=('|")(.+?)('|")\]/, '<a href="[\1_url]" target="_blank">\3</a>')
     # re-construct buttons
-    self.request_body.gsub!(/\[(\w+)_button={text:('|")(.+?)('|"),color:('|")(.+?)('|")}\]/) do |match|
+    request_body.gsub!(/\[(\w+)_button={text:('|")(.+?)('|"),color:('|")(.+?)('|")}\]/) do |match|
       "<a href='[#{$1}_url]' target='_blank' class='csp-cta' style='background-color:#{$6};border-color:#{$6};color:#{InvitationTemplate.background_color_contrast($6) == "light-background" ? "#333333" : "ffffff"};#{button_style_settings}'>#{$3.truncate(25)}<\/a>"
     end
-    self.request_body.sub!(/^<p>/, '<p style="margin-top:0">')
+    request_body.sub!(/^<p>/, '<p style="margin-top:0">')
   end
 
   def default?
