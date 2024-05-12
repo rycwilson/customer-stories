@@ -36,12 +36,14 @@ export default class ResourceController extends Controller<HTMLDivElement> {
     dataPath: String,
     searchParams: { type: String, default: '' },
     init: { type: Boolean, default: false },
-    checkboxFilters: { type: Object, default: {} }
+    checkboxFilters: { type: Object, default: {} },
+    invitationTemplateSelectHtml: { type: String, default: '' }
   }
   declare readonly dataPathValue: string;
   declare readonly searchParamsValue: string;
   declare readonly initValue: boolean;
   declare checkboxFiltersValue: { [inputId: string]: { checked: boolean, label: string }};
+  declare readonly invitationTemplateSelectHtmlValue: string;
 
   // dt is defined when the table is initialized
   // declare dt instead of initializing it to avoid having to allow for undefined value
@@ -118,9 +120,9 @@ export default class ResourceController extends Controller<HTMLDivElement> {
       case 'customerWins':
         return customerWinsTableConfig();
       case 'contributions':
-        return contributorsTableConfig();
+        return contributorsTableConfig(this.invitationTemplateSelectHtmlValue);
       case 'storyContributions':
-        return contributorsTableConfig(+(this.element.dataset.storyId as string));
+        return contributorsTableConfig(this.invitationTemplateSelectHtmlValue, +(this.element.dataset.storyId as string));
       case 'promotedStories':
         return promotedStoriesTableConfig();
       // default: 

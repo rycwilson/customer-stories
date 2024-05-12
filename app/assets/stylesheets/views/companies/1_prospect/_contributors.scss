@@ -1,54 +1,7 @@
 #contributors-table, 
 #story-contributors-table {
-  tr.active {
-    td.invitation-template .placeholder {
-      color: #fff !important;
-    }
-  }
-
-  td.invitation-template:not(.disabled) {
-    cursor: pointer;
-    position: relative;
-    padding-right: 40px;
-
-    i.fa-caret-down, i.fa-check {
-      position: absolute;
-      right: 20px;
-      top: 50%;
-      transform: translate(0, -50%);
-    }
-  }
-
-  td.invitation-template.editor-is-open {
-    padding-right: 8px;
-
-    .DTE_Form_Buttons {
-      .btn {
-        float: right;
-      }
-
-      .btn:first-of-type {
-        margin-left: 8px;  // matches td padding
-      }
-    }
-
-    .DTE_Form_Buttons :first-child {
-      width: 48px;
-    }
-  }
-
   td.invitation-template {
-    span.select2 {
-      margin-bottom: 8px;
-    }
-
-    .btn-success {
-      float: right;
-    }
-    
-    .placeholder {
-      color: #999;
-    }
+    padding: 0;
   }
 
   td.status {
@@ -67,14 +20,6 @@
 
   .contributor-child-row {
     @include LI-profile-badge(#fff);
-
-    .LI-badge-container {
-      // margin-bottom: 0;  // override the mixin
-    }
-
-    .form-group.LI-profile {
-      // margin-bottom: 0;
-    }
 
     .LI-profile__error {
       display: none;

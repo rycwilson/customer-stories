@@ -67,7 +67,9 @@
             data-resource-data-path-value=company_contributions_path(company)
             data-resource-checkbox-filters-value={ \
               'show-completed': { checked: true, label: 'Contributors with a completed Contribution' },
-              'show-published': { checked: true, label: 'Contributors to published Customer Stories' } }.to_json
+              'show-published': { checked: true, label: 'Contributors to published Customer Stories' }}.to_json
+            data-resource-invitation-template-select-html-value="
+              #{escape_once(render('invitation_templates/template_select', { company: }))}"
             data-resource-name="contributions"
             aria-labelledby="contributors-tab"
             role="tabpanel" }

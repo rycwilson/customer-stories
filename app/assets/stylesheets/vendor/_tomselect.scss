@@ -1,4 +1,12 @@
 select.tomselected + .ts-wrapper {
+  td & {
+    height: 100%;
+    
+    .ts-control {
+      border-color: transparent;
+    }
+  }
+
   &:not(.has-items) {
     height: 34px;
   }

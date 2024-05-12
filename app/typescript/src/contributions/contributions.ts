@@ -4,7 +4,7 @@ export function newContributionPath(customerWinId: string | number, params: URLS
   return `/successes/${customerWinId || '0'}/contributions/new${params.size > 0 ? `?${params}` : ''}`;
 }
 
-export function tableConfig(storyId?: number): Config {
+export function tableConfig(invitationTemplateSelectHtml: string, storyId?: number): Config {
   const colIndices = {
     contributor: 1,
     success: 2,
@@ -154,6 +154,11 @@ export function tableConfig(storyId?: number): Config {
         .attr(
           'data-contribution-row-data-value', JSON.stringify({ id, status, contributor, invitationTemplate, customerWin })
         )
+        .find('td.invitation-template')
+          .css('height', '0')     // has no effect beyond allowing for 100% height of the td's child element
+          .html(invitationTemplateSelectHtml)
+          .find('select')
+            .attr('data-tomselect-custom-options-value', JSON.stringify({ plugins: {} }))
         // .attr('data-datatable-target', 'row')
         // .attr(
         //   'data-contribution-child-row-turbo-frame-attrs-value', 
