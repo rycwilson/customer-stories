@@ -18,7 +18,7 @@ export default class extends Controller<TomSelectInput> {
   declare currentSearchResults: any[];
 
   connect() {
-    // console.log('tomselect connect')
+    if (this.ts) return;    // invitation templates from contributors table
     this.ts = new TomSelect(this.element, {...tsBaseOptions, ...this.options, ...this.customOptionsValue });
     if (this.preventFocusValue) this.ts.control_input.setAttribute('tabindex', '-1');
 

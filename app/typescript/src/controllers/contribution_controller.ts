@@ -5,20 +5,39 @@ import type { FrameElement } from '@hotwired/turbo';
 export default class ContributionController extends DatatableRowController<ContributionController, ContributionRowData> {
   declare readonly modalOutlet: ModalController;
 
+  static targets = [...DatatableRowController.targets, 'invitationTemplateSelect'];
+  declare readonly invitationTemplateSelectTarget: TomSelectInput;
+
   declare id: number;
   declare status: string;
-  declare contributor: object;
-  declare invitationTemplate: string;
+  declare contributor: User;
+  declare invitationTemplate: InvitationTemplate;
   declare customerWin: CustomerWin;
 
   declare contributionHtml: HTMLElement;
 
-  // connect() {
-  //   super.connect();
-  // }
+  connect() {
+    super.connect();
+    // console.log('connect contribution', this.id)
+    if (this.invitationTemplate) {
+      this.invitationTemplateSelectTarget.value = this.invitationTemplate.id;
+      // this.initInvitationTemplateSelect();
+    }
+  }
   
   onFrameRendered({ target: turboFrame }: {target: FrameElement}) {
     this.contributionHtml ??= <HTMLElement>turboFrame.firstElementChild;
+  }
+  
+  initInvitationTemplateSelect() {  
+    // new MutationObserver(mutations => {
+    //   // mutation is the addition of the tom-select wrapper => the select has been initialized
+    //   this.invitationTemplateSelectTarget.tomselect.setValue(this.invitationTemplate.id, true);
+    //   this.disconnect();
+    // }).observe(
+    //   <HTMLTableCellElement>this.element.querySelector(':scope > td.invitation-template'), 
+    //   { childList: true }
+    // );
   }
   
   get childRowContent() {

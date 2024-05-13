@@ -4,7 +4,10 @@
       'Custom' => company.invitation_templates.custom.map { |t| [t.name, t.id] },
       'Default' => company.invitation_templates.default.map { |t| [t.name, t.id] } ),
     { include_blank: true,
-      class: 'form-control',
+      class: 'form-control invitation-template-inline-select',
       style: 'width: 100%',
       placeholder: 'Select',
-      data: { controller: 'tomselect', tomselect_kind_value: 'invitationTemplate' }})
+      data: { \
+        controller: 'tomselect', 
+        tomselect_kind_value: 'invitationTemplate',
+        contribution_target: 'invitationTemplateSelect' }})
