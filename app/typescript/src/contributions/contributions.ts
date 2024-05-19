@@ -71,7 +71,7 @@ export function tableConfig(invitationTemplateSelectHtml: string, storyId?: numb
             .css('height', '0')   // does not change height, but allows for 100% height of the td's child element
             .html(invitationTemplateSelectHtml)
             .children('select')
-              .attr('data-tomselect-custom-options-value', JSON.stringify({ plugins: {} }))
+              .attr('data-tomselect-custom-options-value', JSON.stringify({ controlInput: null, plugins: {} }))
           // this.one({ 'draw.dt': () => {
           //   console.log('draw.dt', rowData.id)
           // }})
