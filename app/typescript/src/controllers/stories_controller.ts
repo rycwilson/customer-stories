@@ -112,23 +112,23 @@ export default class extends Controller<HTMLDivElement> {
   }
 
   onChangeFilter(e: CustomEvent) {
-    const { type, id } = e.detail;
+    const { kind, id } = e.detail;
     this.clearSearch();
     this.fetchStories((turboFrameSrc: URL) => {
       if (id) {
-        turboFrameSrc.searchParams.set(type, id);
+        turboFrameSrc.searchParams.set(kind, id);
         turboFrameSrc.searchParams.delete('q');
       } else {
-        turboFrameSrc.searchParams.delete(type);
+        turboFrameSrc.searchParams.delete(kind);
       }
       if (this.activeFilters.length > 1 && !turboFrameSrc.searchParams.get('match_type')) {
         turboFrameSrc.searchParams.set('match_type', this.matchTypeInputTargets.find(input => input.checked)!.value);
       }
     });
-    if (!id && type !== 'curator') {
-      Cookies.remove(`csp-${type}-filter`);
+    if (!id && kind !== 'curator') {
+      Cookies.remove(`csp-${kind}-filter`);
     } else {
-      Cookies.set(`csp-${type}-filter`, id);
+      Cookies.set(`csp-${kind}-filter`, id);
     }
   }
   
