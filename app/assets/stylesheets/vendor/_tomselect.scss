@@ -1,17 +1,22 @@
 select.tomselected + .ts-wrapper {
-  td &.invitation-template-inline-select {
+  &:not(.has-items):not(.invitation-template-inline-select) {
+    height: 34px;
+  }
+
+  &.invitation-template-inline-select {
     height: 100%;
     
-    .ts-control {
+    &:not(.focus) > .ts-control {
       border-color: transparent;
     }
   }
 
-  &:not(.has-items) {
-    height: 34px;
+  &.focus > .ts-control {
+    box-shadow: 0 0 0 0.2rem rgba(3, 155, 229, 0.25);
+    border-color: $brand-primary;
   }
 
-  .ts-control {
+  > .ts-control {
     height: 100%;
 
     [data-value="0"] {
@@ -22,11 +27,6 @@ select.tomselected + .ts-wrapper {
     &::after {
       border-color: #6c757d transparent transparent transparent;
     } 
-  }
-
-  &.focus .ts-control {
-    box-shadow: 0 0 0 0.2rem rgba(3, 155, 229, 0.25);
-    border-color: $brand-primary;
   }
 
   form.was-validated &.invalid.focus .ts-control {

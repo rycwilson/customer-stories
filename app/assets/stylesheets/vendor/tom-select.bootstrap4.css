@@ -501,7 +501,7 @@
 }
 .focus .ts-control {
   /* border-color: #80bdff; CSP remove */
-  outline: 0;
+  outline: none !important;
   
   /* see CSP overrides in tomselect.scss
   /* box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25); */
