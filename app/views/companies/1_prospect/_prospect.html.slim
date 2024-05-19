@@ -69,7 +69,7 @@
               'show-completed': { checked: true, label: 'Contributors with a completed Contribution' },
               'show-published': { checked: true, label: 'Contributors to published Customer Stories' }}.to_json
             data-resource-invitation-template-select-html-value="
-              #{escape_once(render('invitation_templates/template_select', { company: }))}"
+              #{escape_once(render('invitation_templates/inline_select', { company: }))}"
             data-resource-name="contributions"
             aria-labelledby="contributors-tab"
             role="tabpanel" }
