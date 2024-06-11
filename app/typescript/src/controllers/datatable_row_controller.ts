@@ -10,9 +10,6 @@ export default class DatatableRowController<Ctrl extends RowController, Data ext
   static outlets = ['datatable', 'modal'];
   declare readonly datatableOutlet: DatatableController;
 
-  static targets = ['actionsDropdown'];
-  declare readonly actionsDropdownTarget: HTMLTableCellElement;
-
   static values = { 
     rowData: Object,
     childRowTurboFrameAttrs: { type: Object, default: {} }
@@ -27,20 +24,15 @@ export default class DatatableRowController<Ctrl extends RowController, Data ext
       // => use `as any`
       (this as any)[key] = this.rowDataValue[key];
     });
-    this.actionsDropdownTarget.insertAdjacentHTML('afterbegin', this.actionsDropdownTemplate);
     this.element.id = `${this.identifier}-${this.rowDataValue.id}`;
   }
 
   connect() {
-    // console.log('connect datatable row', this.identifier)
+    
   }
 
-  get dt() {
-    return this.datatableOutlet.dt;
-  }
-
-  get actionsDropdownTemplate(): string {
-    throw new Error('actionsDropdownTemplate must be implemented in subclass');
+  get row() {
+    return this.datatableOutlet.dt.row(this.element); 
   }
 
   get hasChildRowContent() {
@@ -52,14 +44,12 @@ export default class DatatableRowController<Ctrl extends RowController, Data ext
   toggleChildRow(this: Ctrl) {
     if (!this.hasChildRowContent) return false;
     // const { content, onFrameRendered } = e.detail;
-    const tr = this.element;
-    const row = this.dt.row(tr);
-    if (row.child.isShown()) {
-      row.child.hide();
+    if (this.row.child.isShown()) {
+      this.row.child.hide();
     } else {
-      row.child(this.childRowContent, 'child-row');
-      row.child.show();
-      const childRow = tr.nextElementSibling as HTMLTableRowElement;
+      this.row.child(this.childRowContent, 'child-row');
+      this.row.child.show();
+      const childRow = this.element.nextElementSibling as HTMLTableRowElement;
       if (this.onFrameRendered) {
         childRow.addEventListener('turbo:frame-render', this.onFrameRendered.bind(this), { once: true });
       }
@@ -67,6 +57,22 @@ export default class DatatableRowController<Ctrl extends RowController, Data ext
     }
   }
 
+  updateRow(data: object) {
+    this.row.data({ ...this.row.data(), ...data });
+  }
+
   deleteRow() {
+  }
+
+  onShownDropdown(e: CustomEvent) {
+    console.log('onShownDropdown')
+    this.element.classList.add('active');
+  }
+
+  onHiddenDropdown(e: CustomEvent) {
+    console.log('onHiddenDropdown')
+    if (!this.row.child.isShown()) {
+      this.element.classList.remove('active');
+    }
   }
 }
