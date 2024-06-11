@@ -62,18 +62,24 @@ export function tableConfig(invitationTemplateSelectHtml: string, storyId?: numb
         data: {
           _: (row: Contribution, type: string, set: any) => row.invitation_template?.id || '',
           // display: 'invitation_template.name' || '',
+          display: (row: Contribution) => {
+            return row.invitation_template ? 
+              invitationTemplateSelectHtml.replace(
+                `<option value="${row.invitation_template.id}">`, 
+                `<option value="${row.invitation_template.id}" selected>`
+              ) :
+              invitationTemplateSelectHtml;
+          },
           sort: (row: Contribution, type: string, set: any) => row.invitation_template?.name || ''
         },
         // defaultContent: '<span class="placeholder">Select</span>',
         createdCell: function (this: JQuery<HTMLTableElement, any>, td: Node) {
+          // console.log('')
           $(td)
             .addClass('invitation-template')
             .css('height', '0')   // does not change height, but allows for 100% height of the td's child element
-            .html(invitationTemplateSelectHtml)
-            .children('select')
-              .attr('data-tomselect-custom-options-value', JSON.stringify({ controlInput: null, plugins: {} }))
           // this.one({ 'draw.dt': () => {
-          //   console.log('draw.dt', rowData.id)
+          //   console.log('draw.dt', td)
           // }})
         }
       },
@@ -100,13 +106,11 @@ export function tableConfig(invitationTemplateSelectHtml: string, storyId?: numb
       {
         // data is status as this will determine actions available
         name: 'actions',
-        data: 'status',
-        render: (data: any, type: any, row: any) => '',
-        createdCell: (td: Node) => {
-          $(td)
-            .attr('data-controller', 'actions-dropdown')
-            .attr('data-contribution-target', 'actionsDropdown');
-        }
+        data: {
+          _: 'status',
+          display: actionsDropdownTemplate
+        },
+        createdCell: (td: Node) => $(td).attr('data-controller', 'dropdown')
       },
       {
         name: 'storyPublished',
@@ -137,17 +141,26 @@ export function tableConfig(invitationTemplateSelectHtml: string, storyId?: numb
 
     rowGroup: storyId ? undefined : { dataSrc: 'success.name', startRender: rowGroupTemplate },
 
+    rowCallback(tr: Node, data: object) {
+      const { id } = data as Contribution;
+      console.log('rowCallback ', id)
+    },
+
     createdRow: (tr: Node, data: object | any[], index: number) => {
       const { id, status, contributor, invitation_template: invitationTemplate, success: customerWin } = data as Contribution;
+      console.log('createdRow ', id)
       $(tr)
-        .attr('data-controller', 'contribution')
+      // .attr('data-datatable-target', 'row')
         .attr('data-contribution-datatable-outlet', storyId ? '#story-contributors-table' : '#contributors-table')
         .attr('data-contribution-resource-outlet', '#customer-wins')
         .attr(
           'data-contribution-row-data-value', JSON.stringify({ id, status, contributor, invitationTemplate, customerWin })
         )
-        .attr('data-contribution-invitation-template-select-html-value', invitationTemplateSelectHtml)
-        // .attr('data-datatable-target', 'row')
+        .attr(
+          'data-action', 
+          'dropdown:dropdown-is-shown->contribution#onShownDropdown dropdown:dropdown-is-hidden->contribution#onHiddenDropdown'
+        )
+        .attr('data-controller', 'contribution')
         // .attr(
         //   'data-contribution-child-row-turbo-frame-attrs-value', 
         //   JSON.stringify({ id: 'edit-contribution', src: editContributionPath(id) })
@@ -174,4 +187,99 @@ function rowGroupTemplate(rows: Api<any>, group: string) {
       }
     </td>
   `);
+}
+
+function actionsDropdownTemplate(row: Contribution, type: string, set: any) {
+  const { id, status, invitation_template: invitationTemplate, success: customerWin } = row;
+  const shouldShowStoryLinks = window.location.pathname === '/prospect';
+  const storyExists = Boolean(customerWin?.story);
+  const editStoryPath = storyExists ? `/stories/${customerWin?.story.slug}/edit` : undefined;
+  const isPreInvite = status === 'pre_request';
+  const didNotRespond = status === 'did_not_respond';
+  const wasSubmitted = status && status.includes('submitted');
+  const viewStoryDropdownItem = !storyExists ? '' : `
+      <li>
+        <a href="${customerWin?.story.csp_story_path}" data-turbo="false" target="_blank" rel="noopener">
+          <i class="fa fa-search fa-fw action"></i>&nbsp;&nbsp;
+          <span>View Story</span>
+        </a>
+      </li>
+    `;
+  const editStoryDropdownItems = [['story-settings', 'fa-gear'], ['story-content', 'fa-edit'], ['story-contributors', 'fa-users']]
+    .map(([tab, icon]) => {
+      const section = tab[tab.indexOf('-') + 1].toUpperCase() + tab.slice(tab.indexOf('-') + 2, tab.length);
+      return `
+        <li class="${tab}">
+          <a href="javascript:;" data-action="dashboard#editStory" data-story-path="${editStoryPath}" data-story-tab="${tab}">
+            <i class="fa ${icon} fa-fw action"></i>&nbsp;&nbsp;
+            <span>Customer Story ${section}</span>
+          </a>
+        </li>
+      `;
+    })
+    .join('');
+  const viewCustomerWinDropdownItem = `
+    <li class="view-success">
+      <a href="javascript:;"}>
+        <i class="fa fa-rocket fa-fw action"></i>&nbsp;&nbsp;
+        <span>View Customer Win</span>
+      </a>
+    </li>
+  `;
+  return `
+    <a id="contributors-action-dropdown-${id}" 
+      href="#" 
+      class="dropdown-toggle" 
+      data-toggle="dropdown"
+      aria-haspopup="true" 
+      aria-expanded="false">
+      <i class="fa fa-caret-down"></i>
+    </a>
+    <ul 
+      class="contributor-actions dropdown-menu dropdown-menu-right" 
+      data-dropdown-target="dropdownMenu"
+      aria-labelledby="contributors-action-dropdown-${id}">
+      <li class="${isPreInvite ? `compose-invitation ${invitationTemplate ? '' : 'disabled'}` : 'view-request'}">
+        <a href="javascript:;">
+          <i class="fa fa-${isPreInvite ? 'envelope' : 'search'} fa-fw action"></i>&nbsp;&nbsp;
+          <span>${isPreInvite ? 'Compose Invitation' : 'View Sent Invitation'}</span>
+        </a>
+      </li>
+      ${didNotRespond ? `
+          <li class="resend-invitation">
+            <a href="javascript:;">
+              <i class="fa fa-envelope fa-fw action"></i>&nbsp;&nbsp;
+              <span>Re-send Invitation</span>
+            </a>
+          </li>
+        ` : ''
+      }
+      ${wasSubmitted ? `
+          <li class="completed">
+            <a href="javascript:;">
+              <i class="fa fa-check fa-fw action"></i>&nbsp;&nbsp;
+              <span>Mark as completed</span>
+            </a>
+          </li>
+        ` : ''
+      }
+      <li role="separator" class="divider"></li>
+      ${shouldShowStoryLinks ? `
+          ${customerWin?.story?.published ? 
+              viewStoryDropdownItem + '<li role="separator" class="divider"></li>' : 
+              ''
+          }
+          ${storyExists ? editStoryDropdownItems : viewCustomerWinDropdownItem}
+          <li role="separator" class="divider"></li>
+        ` : 
+        ''
+      }
+      <li class="remove">
+        <a href="javascript:;">
+          <i class="fa fa-remove fa-fw action"></i>&nbsp;&nbsp;
+          <span>Remove</span>
+        </a>
+      </li>
+    </ul>
+  `;
 }

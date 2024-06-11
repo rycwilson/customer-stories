@@ -78,15 +78,18 @@ export function tableConfig(): Config {
         defaultContent: 'false'
       },
       {
-        data: 'display_status',
-        render: (data: any, type: string, row: any) => '',    // customer win controller will render the dropdown
+        name: 'actions',
+        data: {
+          _: 'display_status',
+          display: actionsDropdownTemplate
+        },
         createdCell: (td: Node) => {
           $(td)
-            .attr('data-controller', 'actions-dropdown')
-            .attr('data-customer-win-target', 'actionsDropdown');
-          ['add', 'invite', 'show'].forEach(action => (
-            $(td).attr(`customer-win:${action}-contributors`, `dashboard#${action}CustomerWinContributors`)
-          ));
+            .attr('data-controller', 'dropdown');
+
+          // ['add', 'invite', 'show'].forEach(action => (
+          //   $(td).attr(`customer-win:${action}-contributors`, `dashboard#${action}CustomerWinContributors`)
+          // ));
         }
       }
     ],
@@ -142,7 +145,6 @@ export function tableConfig(): Config {
     createdRow(tr: Node, data: object | any[], index: number) {
       const { id, display_status: status, new_story_path: newStoryPath, curator, customer, story } = data as CustomerWin;
       $(tr)
-        .attr('data-controller', 'customer-win')
         .attr('data-customer-win-datatable-outlet', '#successes-table')
         .attr('data-customer-win-modal-outlet', '#main-modal')
         .attr('data-customer-win-row-data-value', JSON.stringify({ id, status, newStoryPath, curator, customer, story }))
@@ -150,6 +152,98 @@ export function tableConfig(): Config {
           'data-customer-win-child-row-turbo-frame-attrs-value', 
           JSON.stringify({ id: 'edit-customer-win', src: editCustomerWinPath(id) })
         )
+        .attr(
+          'data-action', 
+          'dropdown:dropdown-is-shown->customer-win#onShownDropdown dropdown:dropdown-is-hidden->customer-win#onHiddenDropdown'
+        )
+        .attr('data-controller', 'customer-win')
     }
   }
+}
+
+function actionsDropdownTemplate(row: CustomerWin, type: string, set: any) {
+  const { id, display_status: status, new_story_path: newStoryPath, curator, customer, story } = row;
+  const noContributorsAdded = status && /0.+Contributors\sadded/.test(status);
+  const noContributorsInvited = status && /0.+Contributors\sinvited/.test(status);
+  const contributionsExist = status && /[^0]&nbsp;&nbsp;Contributions\ssubmitted/.test(status);
+  const action = noContributorsAdded ? 'Add' : (noContributorsInvited ? 'Invite' : '');
+  // TODO: add the new invitation path
+  const turboFrameAttrs = /Add|Invite/.test(action) && {
+    id: `new-${action === 'Add' ? 'contribution' : 'invitation'}`,
+    src: action === 'Add' ? `/successes/${id}/contributions/new` : '' 
+  };
+  const editStoryPath = story ? `/stories/${story.slug}/edit` : undefined;
+  const editStoryDropdownItems = [['story-settings', 'fa-gear'], ['story-content', 'fa-edit'], ['story-contributors', 'fa-users']]
+    .map(([tab, icon]) => {
+      const section = tab[tab.indexOf('-') + 1].toUpperCase() + tab.slice(tab.indexOf('-') + 2, tab.length);
+      return `
+        <li class="${tab}">
+          <a href="javascript:;" data-action="dashboard#editStory" data-story-path="${editStoryPath}" data-story-tab="${tab}">
+            <i class="fa ${icon} fa-fw action"></i>&nbsp;&nbsp;
+            <span>Customer Story ${section}</span>
+          </a>
+        </li>
+      `;
+    })
+    .join('');
+  return `
+    <a id="customer-win-actions-dropdown-${id}" 
+      href="#" 
+      class="dropdown-toggle" 
+      data-toggle="dropdown"
+      aria-haspopup="true" 
+      aria-expanded="false">
+      <i class="fa fa-caret-down"></i>
+    </a>
+    <ul 
+      class="dropdown-menu dropdown-menu-right" 
+      data-dropdown-target="dropdownMenu"
+      aria-labelledby="customer-win-actions-dropdown-${id}">
+      ${contributionsExist ? `
+          <li>
+            <a href="javascript:;" data-action="customer-win#showContributions">
+              <i class="fa fa-comments fa-fw action"></i>&nbsp;&nbsp;
+              <span>Contributions</span>
+            </a>
+          </li>
+          <li class="divider" role="separator"></li>
+        ` : 
+        ''
+      }
+      ${story ? 
+          editStoryDropdownItems : `
+          <li>
+            <a href="javascript:;" 
+              data-action="dashboard#${action.toLowerCase() || 'show'}CustomerWinContributors" 
+              data-customer-win-id="${id}"
+              data-turbo-frame-attrs=${JSON.stringify(turboFrameAttrs) || ''}>
+              <i class="fa fa-users fa-fw action"></i>&nbsp;&nbsp;
+              <span>${action} Contributors</span>
+            </a>
+          </li>
+          <li role="separator" class="divider"></li>
+          <li>
+            <a 
+              href="javascript:;"
+              data-controller="modal-trigger"
+              data-modal-trigger-modal-outlet="#main-modal"
+              data-modal-trigger-title-value="New Customer Story"
+              data-modal-trigger-turbo-frame-attrs-value=${JSON.stringify({ id: 'new-story', src: newStoryPath })}
+              data-modal-trigger-submit-button-text-value="Add Story"
+              aria-label="New Customer Story">
+              <i class="fa fa-play fa-fw action"></i>&nbsp;&nbsp;
+              <span>Start Customer Story</span>
+            </a>
+          </li>
+        `
+      }
+      <li role="separator" class="divider"></li>
+      <li class="delete-row">
+        <a href="javascript:;">
+          <i class="fa fa-remove fa-fw action"></i>&nbsp;&nbsp;
+          <span>Remove</span>
+        </a>
+      </li>
+    </ul>
+  `;
 }
