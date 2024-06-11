@@ -9,6 +9,18 @@ select.tomselected + .ts-wrapper {
     &:not(.focus) > .ts-control {
       border-color: transparent;
     }
+
+    &,
+    &.full {
+      &:not(.dropdown-active) > .ts-control {
+        background: transparent;
+      }
+    }
+
+    &:not(.has-items) > .ts-control::before {
+      content: 'Select';
+      color: #343a40;
+    }
   }
 
   &.focus > .ts-control {
