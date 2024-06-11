@@ -21,7 +21,7 @@ export default class extends Controller<TomSelectInput> {
     
     // invitation templates from contributors table
     if (this.ts) {
-      console.log('already initialized', this.ts)
+      // console.log('ts already initialized ', this.element.closest('tr').id)
       return;    
     }
 
