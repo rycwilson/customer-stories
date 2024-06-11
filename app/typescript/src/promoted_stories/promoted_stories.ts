@@ -79,8 +79,7 @@ export function tableConfig(): Config {
         render: (data: any, type: any, row: any) => '',    // promoted story controller will render the dropdown
         createdCell: (td: Node) => {
           $(td)
-            .attr('data-controller', 'actions-dropdown')
-            .attr('data-promoted-story-target', 'actionsDropdown');
+            .attr('data-controller', 'dropdown')
         }
       }
     ],

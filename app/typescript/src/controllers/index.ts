@@ -10,8 +10,8 @@ import { application } from "./application.js"
 import AdsController from './ads_controller.js';
 application.register('ads', AdsController);
 
-import ActionsDropdownController from './actions_dropdown_controller.js';
-application.register('actions-dropdown', ActionsDropdownController);
+import DropdownController from './dropdown_controller.js';
+application.register('dropdown', DropdownController);
 
 import CompanySettingsController from './company_settings_controller.js';
 application.register('company-settings', CompanySettingsController);

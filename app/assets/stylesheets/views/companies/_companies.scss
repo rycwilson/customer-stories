@@ -17,7 +17,7 @@
 }
 
 // dropdowns will initially be hidden so they can be flipped (dropup) if necessary
-td[data-controller="actions-dropdown"] .dropdown-menu {
+td[data-controller="dropdown"] .dropdown-menu {
   &:not(.shown) {
     visibility: hidden;
   }

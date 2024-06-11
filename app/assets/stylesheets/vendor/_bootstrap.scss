@@ -34,7 +34,7 @@ ul.dropdown-menu {
   bottom: 90%;
 }
 
-[data-controller="actions-dropdown"] ul.dropdown-menu li:not(.disabled) a {
+[data-controller="dropdown"] ul.dropdown-menu li:not(.disabled) a {
   color: #444;
   
   i {
