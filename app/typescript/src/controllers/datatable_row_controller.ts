@@ -65,12 +65,10 @@ export default class DatatableRowController<Ctrl extends RowController, Data ext
   }
 
   onShownDropdown(e: CustomEvent) {
-    console.log('onShownDropdown')
     this.element.classList.add('active');
   }
 
   onHiddenDropdown(e: CustomEvent) {
-    console.log('onHiddenDropdown')
     if (!this.row.child.isShown()) {
       this.element.classList.remove('active');
     }
