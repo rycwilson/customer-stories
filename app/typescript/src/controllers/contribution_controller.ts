@@ -61,7 +61,25 @@ export default class ContributionController extends DatatableRowController<Contr
       .then((template) => {
         this.invitationTemplate = template;
         super.updateRow({ invitation_template: template });
-      })
+      });
+  }
+
+  markAsCompleted() {
+    const newStatus = `${this.status.includes('contribution') ? 'contribution' : 'feedback'}_completed`;
+    fetch(`/contributions/${this.id}`, { 
+      method: 'PATCH',
+      headers: {
+        'Content-Type': 'application/json',
+        'X-CSRF-Token': (<HTMLMetaElement>document.querySelector('[name="csrf-token"]')).content
+      },
+      body: JSON.stringify({ contribution: { status: newStatus } }) 
+    }).then(res => res.json())
+      .then(contribution => {
+        this.status = contribution.status;
+        super.updateRow({ status: contribution.status, display_status: contribution.display_status });
+
+        // TODO Per display options for the table, hide this row if completed contributions are to be hidden
+      });
   }
   
   get childRowContent() {

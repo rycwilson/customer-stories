@@ -45,7 +45,7 @@ class ContributionsController < ApplicationController
           },
           contributor: { only: [:id, :email, :first_name, :last_name, :phone, :title, :linkedin_url], methods: [:full_name] },
           referrer: { only: [:id, :email, :first_name, :last_name, :title], methods: [:full_name] },
-          invitation_template: { only: [:id, :name] },
+          invitation_template: { only: [:id, :name], methods: [:edit_path] },
         }
       )
     # end
@@ -243,14 +243,13 @@ class ContributionsController < ApplicationController
       end
       render :confirm_opt_out_remove
 
-    elsif params[:completed]
-      @contribution.update(contribution_params)
-      # TODO: respond_with sends an empty response - why?
-      # https://github.com/heartcombo/responders/issues/154
-      respond_to do |format|
-        format.json do
-          render(json: @contribution.to_json(only: [:id, :status], methods: [:display_status]))
+    elsif contribution_params.to_h.size == 1 and contribution_params.key?(:status)
+      if @contribution.update contribution_params
+        respond_to do |format|
+          format.json { render json: @contribution.to_json(only: [:id, :status], methods: [:display_status]) }
         end
+      else
+        # TODO handle errors
       end
 
     elsif contribution_params.to_h.size == 1 and contribution_params.key?(:invitation_template_id)
@@ -259,7 +258,7 @@ class ContributionsController < ApplicationController
           format.json { render json: @contribution.invitation_template.as_json(only: [:id, :name]) }
         end
       else
-        # TODO: error
+        # TODO handle errors
       end
 
     # contribution update from either profile (:publish_contributor, :contributor_unpublished)

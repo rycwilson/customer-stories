@@ -240,7 +240,13 @@ function actionsDropdownTemplate(row: Contribution, type: string, set: any) {
       data-dropdown-target="dropdownMenu"
       aria-labelledby="contributors-action-dropdown-${id}">
       <li class="${isPreInvite ? `compose-invitation ${invitationTemplate ? '' : 'disabled'}` : 'view-request'}">
-        <a href="javascript:;">
+        <a 
+          href="javascript:;" 
+          data-controller="modal-trigger" 
+          data-modal-trigger-modal-outlet="#main-modal"
+          data-modal-trigger-submit-button-text-value="Send Invitation"
+          data-modal-trigger-title-value="Contributor Invitation"
+          data-modal-trigger-turbo-frame-attrs-value=${JSON.stringify({ id: 'edit-invitation-template', src: invitationTemplate?.edit_path })}>
           <i class="fa fa-${isPreInvite ? 'envelope' : 'search'} fa-fw action"></i>&nbsp;&nbsp;
           <span>${isPreInvite ? 'Compose Invitation' : 'View Sent Invitation'}</span>
         </a>
@@ -255,8 +261,8 @@ function actionsDropdownTemplate(row: Contribution, type: string, set: any) {
         ` : ''
       }
       ${wasSubmitted ? `
-          <li class="completed">
-            <a href="javascript:;">
+          <li>
+            <a href="javascript:;" data-action="contribution#markAsCompleted">
               <i class="fa fa-check fa-fw action"></i>&nbsp;&nbsp;
               <span>Mark as completed</span>
             </a>
