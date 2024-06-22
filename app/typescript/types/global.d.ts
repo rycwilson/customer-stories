@@ -165,6 +165,7 @@ interface ContributionRowData {
 interface InvitationTemplate {
   id: number;
   name: string;
+  edit_path?: string;
 }
 
 interface ContributorQuestion {

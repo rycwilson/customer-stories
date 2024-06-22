@@ -45,7 +45,7 @@ class ContributionsController < ApplicationController
           },
           contributor: { only: [:id, :email, :first_name, :last_name, :phone, :title, :linkedin_url], methods: [:full_name] },
           referrer: { only: [:id, :email, :first_name, :last_name, :title], methods: [:full_name] },
-          invitation_template: { only: [:id, :name], methods: [:edit_path] },
+          invitation_template: { only: [:id, :name], method: [:edit_path] },
         }
       )
     # end
