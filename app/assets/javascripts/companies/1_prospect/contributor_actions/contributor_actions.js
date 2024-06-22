@@ -3,7 +3,6 @@
 function contributorActionsListeners () {
   $(document)
     .on('click', '[id*="contributors-table"] .view-contribution', showContribution)
-    .on('click', '.contributor-actions .completed', markAsCompleted)
     .on('click', '.contributor-actions .remove', confirmDelete);
 
 
@@ -22,44 +21,6 @@ function contributorActionsListeners () {
         modalBody.insertAdjacentHTML('afterbegin', contributionTemplate(contribution));
         // setTimeout(() => $(modal).modal('show'));
         $(modal).modal('show')
-      })
-  }
-
-  function markAsCompleted(e) {
-    const table = e.target.closest('table');
-    const otherTable = document.getElementById(
-      `${table.id.includes('prospect') ? 'curate' : 'prospect'}-contributors-table`
-    );
-    const dt = $(table).DataTable();
-    const dtOther = otherTable ? $(otherTable).DataTable() : null;
-    const row = e.target.closest('tr');
-    const rowData = dt.row(row).data();
-    // const $tdStatus = $row.find('td.status');
-    const newStatus = `${rowData.status.includes('contribution') ? 'contribution' : 'feedback'}_completed`;
-    const csrfToken = document.querySelector('[name="csrf-token"]').content;
-    fetch(`/contributions/${rowData.id}?completed=true`, { 
-      method: 'PATCH',
-      headers: {
-        'Content-Type': 'application/json',
-        'X-CSRF-Token': csrfToken
-      },
-      body: JSON.stringify({ contribution: { status: newStatus } }) 
-    })
-      .then(res => res.json())
-      .then(contribution => {
-        for (const _dt of [dt, dtOther]) {
-          if (_dt) _dt.row(`[data-contribution-id="${contribution.id}"]`).data(Object.assign({}, rowData, contribution));
-        };
-        //     $tdStatus.find('i').toggle();
-        //     setTimeout(function () {
-        //       $tdStatus.find('i').toggle();
-        //     }, 2000);
-        //     setTimeout(function () {
-        //       if ( $('#show-completed').length &&
-        //            $('#show-completed').prop('checked') === false ) {
-        //         $('#show-completed').trigger('change');
-        //       }
-        //     }, 2200);
       })
   }
 
