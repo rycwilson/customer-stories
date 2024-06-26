@@ -37,7 +37,7 @@ class Contribution < ApplicationRecord
   has_one :company, through: :success
   has_one :curator, through: :success
   has_one :story, through: :success
-  has_one :email_contribution_request, dependent: :destroy
+  has_one :contributor_invitation, dependent: :destroy
   belongs_to :invitation_template, optional: true
   has_many :contributor_questions, through: :invitation_template
   alias_attribute :questions, :contributor_questions
@@ -197,26 +197,6 @@ class Contribution < ApplicationRecord
     self.story && self.story.expire_published_contributor_cache(self.contributor.id)
   end
 
-  def copy_invitation_template
-    self.request_subject = self.invitation_template.request_subject
-      .sub('[customer_name]', self.customer.name)
-      .sub('[company_name]', self.company.name)
-      .sub('[contributor_first_name]', self.contributor.first_name)
-      .sub('[contributor_full_name]', self.contributor.full_name)
-    self.request_body = self.invitation_template.request_body
-      .gsub('[customer_name]', self.customer.name)
-      .gsub('[company_name]', self.company.name)
-      .gsub('[contributor_first_name]', self.contributor.first_name)
-      .gsub('[contributor_last_name]', self.contributor.last_name)
-      .gsub('[referrer_full_name]', self.referrer.try(:full_name) || '<span style="color:#D9534F">Unknown Referrer</span>')
-      .gsub('[curator_full_name]', "<span style='font-weight:bold'>#{self.curator.full_name}</span>")
-      .gsub('[curator_phone]', self.curator.phone || '')
-      .gsub('[curator_title]', self.curator.title || '')
-      .gsub('[curator_img_url]', self.curator.photo_url || '')
-      .gsub('[contribution_submission_url]', invitation_link('contribution'))
-      .gsub('[feedback_submission_url]', invitation_link('feedback'))
-      .html_safe
-  end
 
   def timestamp
     self.created_at.to_i
@@ -246,6 +226,10 @@ class Contribution < ApplicationRecord
       action: ['contribution', 'feedback'].include?(type) ? 'edit' : 'update',
       token: self.access_token, type: type
     })
+  end
+
+  def path
+    Rails.application.routes.url_helpers.contribution_path(self)
   end
 
   protected
