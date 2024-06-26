@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2024_05_10_181827) do
+ActiveRecord::Schema.define(version: 2024_06_25_222050) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_stat_statements"
@@ -198,6 +198,17 @@ ActiveRecord::Schema.define(version: 2024_05_10_181827) do
     t.datetime "updated_at", null: false
     t.index ["contribution_id"], name: "index_contributor_answers_on_contribution_id"
     t.index ["contributor_question_id"], name: "index_contributor_answers_on_contributor_question_id"
+  end
+
+  create_table "contributor_invitations", force: :cascade do |t|
+    t.text "email_subject"
+    t.text "email_body"
+    t.integer "status", default: 0
+    t.datetime "sent_at"
+    t.bigint "contribution_id"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["contribution_id"], name: "index_contributor_invitations_on_contribution_id"
   end
 
   create_table "contributor_questions", id: :serial, force: :cascade do |t|
@@ -553,6 +564,7 @@ ActiveRecord::Schema.define(version: 2024_05_10_181827) do
   add_foreign_key "contributions", "users", column: "contributor_id"
   add_foreign_key "contributor_answers", "contributions"
   add_foreign_key "contributor_answers", "contributor_questions"
+  add_foreign_key "contributor_invitations", "contributions"
   add_foreign_key "contributor_questions", "companies"
   add_foreign_key "ctas_successes", "call_to_actions"
   add_foreign_key "ctas_successes", "successes"
