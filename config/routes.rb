@@ -114,6 +114,7 @@ Rails.application.routes.draw do
             put :update, constraints: { id: /\d+/ }
             patch :update, constraints: { id: /\d+/ }
           end
+          resource :invitation, except: [:index, :destroy]
         end
         resources :ctas, only: [:show, :create, :update, :destroy], shallow: true
         resources :invitation_templates
