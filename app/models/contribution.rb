@@ -38,6 +38,7 @@ class Contribution < ApplicationRecord
   has_one :curator, through: :success
   has_one :story, through: :success
   has_one :contributor_invitation, dependent: :destroy
+  alias_attribute :invitation, :contributor_invitation
   belongs_to :invitation_template, optional: true
   has_many :contributor_questions, through: :invitation_template
   alias_attribute :questions, :contributor_questions
