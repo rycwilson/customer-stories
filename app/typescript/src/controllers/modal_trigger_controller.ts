@@ -7,13 +7,17 @@ export default class extends Controller<HTMLButtonElement> {
 
   static values = { 
     title: { type: String, default: 'Title is missing' },
-    turboFrameAttrs: { type: Object, default: {} }
+    turboFrameAttrs: { type: Object, default: {} },
+    enabled: { type: Boolean, default: true }
   };
   declare readonly titleValue: string;
   declare readonly turboFrameAttrsValue: { id: string, src: string };
+  declare readonly enabledValue: boolean;
 
   connect() {
-    this.element.addEventListener('click', this.showModal.bind(this));
+    if (this.enabledValue) {
+      this.element.addEventListener('click', this.showModal.bind(this));
+    }
   }
 
   showModal() {
