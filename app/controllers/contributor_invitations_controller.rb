@@ -13,7 +13,8 @@ class ContributorInvitationsController < ApplicationController
   end
 
   def edit
-    render(:compose, { invitation: @contribution.invitation })
+    @invitation = @contribution.invitation
+    render(:compose)
   end
 
   def create

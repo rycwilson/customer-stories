@@ -1,32 +1,40 @@
 = turbo_frame_tag("#{action_name}-contributor-invitation")
 
-  = form_with( \ 
-      model: [@contribution, @invitation], 
-      # method: action_name === 'new' ? :post : :put,
-      format: :json, 
-      html: { \ 
-        id: 'contributor-invitation-form', 
-        class: 'form-horizontal',
-        autocomplete: 'off', 
-        novalidate: true, 
-        data: { \ 
-          controller: 'contributor-invitation', 
-          action: 'ajax:beforeSend->contributor-invitation#validate ajax:complete->contributor-invitation#onAjaxComplete' }}) do |form|
+    = form_with( \ 
+        model: [@contribution, @invitation], 
+        url: contribution_contributor_invitation_path(@contribution),
+        format: :json, 
+        html: { \ 
+          id: 'contributor-invitation-form', 
+          autocomplete: 'off', 
+          novalidate: true, 
+          data: { \ 
+            controller: 'contributor-invitation', 
+            action: 'ajax:beforeSend->contributor-invitation#validate ajax:complete->contributor-invitation#onAjaxComplete' }}) do |form|
 
-    .form-group.required
-      label.control-label for="recipient-email" To
-      input type="email" id="recipient-email" class="form-control" value="#{@invitation.recipient.email}"
+      .form-group.required
+        .input-group 
+          .input-group-addon 
+            span style="font-weight:600"
+              | To
+          input {
+            type="email" 
+            id="recipient-email" 
+            class="form-control"
+            value="#{@invitation.recipient.email}"
+            required="true"
+            data-contributor-invitation-target="recipient" }
 
-    .form-group.required
-      = form.label(:email_subject, 'Subject', class: 'control-label')
-      = form.email_field(:email_subject, class: 'form-control')
+      .form-group.required
+        /= form.label(:email_subject, 'Subject', class: 'control-label')
+        = form.text_field(:email_subject, class: 'form-control', placeholder: 'Subject', required: true)
 
-    .contributor-invitation__summernote { 
-      contenteditable="false" 
-      data-controller="summernote" 
-      data-summernote-enabled-value="true" 
-      data-summernote-config-key-value="contributor-invitation" 
-      data-summernote-config-args-value=[nil].to_json 
-      data-contributor-invitation-target="note" 
-      data-action="summernote:init->summernote#onInitComplete" }
-      = @invitation.email_body&.html_safe or @invitation.populate_template
+      .contributor-invitation__summernote { 
+        contenteditable="false" 
+        data-controller="summernote" 
+        data-summernote-enabled-value="true" 
+        data-summernote-config-key-value="contributorInvitation" 
+        data-summernote-config-args-value=[nil].to_json
+        data-contributor-invitation-target="note" 
+        data-action="summernote:init->summernote#onInitComplete" }
+        = @invitation.email_body.html_safe
