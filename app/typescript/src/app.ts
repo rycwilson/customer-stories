@@ -34,7 +34,7 @@ function foo() {
 }
 
 function addAllListeners() {
-  addTurboListeners();
+  // addTurboListeners();
   // [companies, profile].forEach(controller => controller.addListeners());
 }
 
