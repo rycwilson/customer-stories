@@ -22,6 +22,8 @@ application.register('company-profile', CompanyProfileController);
 import ContributionController from './contribution_controller.js';
 application.register('contribution', ContributionController);
 
+import ContributorInvitationController from './contributor_invitation_controller.js';
+application.register('contributor-invitation', ContributorInvitationController);
 
 import CtasController from "./ctas_controller.js";
 application.register("ctas", CtasController);
