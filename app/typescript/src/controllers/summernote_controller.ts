@@ -5,6 +5,7 @@ import { SummernoteEditorKind } from '../summernote';
 // => import all necessary config factory functions here, then call them with arguments passed in from the parent
 import { summernoteConfig as winStoryConfig } from '../customer_wins/win_story';
 import { summernoteConfig as invitationTemplateConfig } from '../invitation_templates';
+import { summernoteConfig as contributorInvitationConfig } from '../contributor_invitations';
 // import { summernoteConfig as storyConfig } from '../stories/stories.js'
 // import { defaultConfig } from '../summernote.js'
 
@@ -16,6 +17,7 @@ const config: { [key in SummernoteEditorKind]: EditorConfig | undefined } = {
   'winStory': winStoryConfig,
   'invitationTemplate': invitationTemplateConfig,
   // 'invitationTemplate': undefined,
+  'contributorInvitation' : contributorInvitationConfig,
   'story': undefined,
   'default': undefined
 }
