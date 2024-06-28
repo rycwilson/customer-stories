@@ -23,6 +23,6 @@ type CustomOptions = {
   buttons: Partial<{ [key in CustomButton]: (context: any) => JQuery<HTMLDivElement, any> }>
 }
 
-export type SummernoteEditorKind = 'winStory' | 'story' | 'invitationTemplate' | 'default';
+export type SummernoteEditorKind = 'winStory' | 'story' | 'invitationTemplate' | 'contributorInvitation' | 'default';
 
 export type CustomSummernoteOptions = Summernote.Options & CustomOptions;
