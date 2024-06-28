@@ -1,5 +1,7 @@
 class ContributorInvitation < ApplicationRecord
   belongs_to :contribution
+  has_one :sender, through: :contribution, source: :curator
+  has_one :recipient, through: :contribution, source: :contributor
 
   enum status: { pending: 0, sent: 1 }
 
