@@ -10,7 +10,9 @@
           novalidate: true, 
           data: { \ 
             controller: 'contributor-invitation', 
-            action: 'ajax:beforeSend->contributor-invitation#validate ajax:complete->contributor-invitation#onAjaxComplete' }}) do |form|
+            modal_target: 'form',
+            action: 'ajax:beforeSend->contributor-invitation#validate ajax:complete->contributor-invitation#onAjaxComplete',
+            submit_btn_text: 'Send Invitation' }}) do |form|
 
       .form-group.required
         .input-group 
