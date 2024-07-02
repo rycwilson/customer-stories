@@ -61,7 +61,19 @@ export default class DatatableRowController<Ctrl extends RowController, Data ext
     this.row.data({ ...this.row.data(), ...data });
   }
 
-  deleteRow() {
+  deleteRow(this: Ctrl) {
+    return fetch(this.path, { 
+      method: 'DELETE',
+      headers: {
+        'X-CSRF-Token': (<HTMLMetaElement>document.querySelector('[name="csrf-token"]')).content
+      },
+
+    // read the response (even though it's empty) lest the fetch method interpret the empty response as failure
+    }).then(res => res.text())
+      .then((body) => {
+        // body is empty
+        this.row.remove().draw();
+      });
   }
 
   onShownDropdown(e: CustomEvent) {
