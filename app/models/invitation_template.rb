@@ -81,8 +81,8 @@ class InvitationTemplate < ApplicationRecord
     ApplicationController.helpers.background_color_contrast(hex_color)
   end
 
-  def edit_path
-    Rails.application.routes.url_helpers.edit_company_invitation_template_path(self.company, self)
+  def path
+    Rails.application.routes.url_helpers.company_invitation_template_path(self.company, self)
   end
 
 end

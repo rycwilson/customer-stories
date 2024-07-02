@@ -31,7 +31,7 @@ class SuccessesController < ApplicationController
     company = Company.find_by(subdomain: request.subdomain) || current_user.company
     successes = company.successes.to_json(
       only: [:id, :name],
-      methods: [:display_status, :referrer, :contact, :timestamp, :new_story_path],
+      methods: [:display_status, :referrer, :contact, :timestamp, :new_story_path, :path],
       include: {
         curator: { only: [:id], methods: [:full_name] },
         customer: { only: [:id, :name, :slug] },

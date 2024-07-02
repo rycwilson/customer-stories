@@ -86,6 +86,7 @@ interface CustomerWin {
   curator: User; 
   customer: Customer; 
   story: Story;
+  path?: string;
 }
 
 // CustomerWin data from server is transformed to CustomerWinRowData for datatables
@@ -97,6 +98,7 @@ interface CustomerWinRowData {
   curator: User;
   customer: Customer;
   story?: Story;
+  path: string;
 }
 
 interface Customer {
@@ -121,11 +123,13 @@ interface PromotedStory extends Omit<Story, 'published'> {
   success: { customer: Customer, curator_id: number };
   topic_ad: { id: number, status: string };
   retarget_ad: { id: number, status: string };
+  path?: string;
 }
 
 interface PromotedStoryRowData {
   id: number;
   title: string;
+  path: string;
 }
 
 interface Contribution {
@@ -144,6 +148,7 @@ interface Contribution {
   // methods
   display_status?: string;
   timestamp?: number;
+  path?: string;
 
   // associations
   customer?: Customer
@@ -151,21 +156,28 @@ interface Contribution {
   contributor?: User;
   referrer?: User;
   invitation_template?: InvitationTemplate;
+  invitation?: { id: number }
   answers?: ContributorAnswer[];
 }
 
 interface ContributionRowData {
   id: number;
   status: string;
-  contributor: object;
-  invitationTemplate: string;
+  contributor: User;
+  invitationTemplate: InvitationTemplate;
+  invitation: ContributorInvitaiton;
   customerWin: CustomerWin;
+  path: string;
 }
 
 interface InvitationTemplate {
   id: number;
   name: string;
-  edit_path?: string;
+  path?: string;
+}
+
+interface ContributorInvitation {
+  id: number;
 }
 
 interface ContributorQuestion {

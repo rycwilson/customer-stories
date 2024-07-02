@@ -7,6 +7,7 @@ export default class PromotedStoryController extends DatatableRowController<Prom
 
   declare id: number;
   declare title: string;
+  declare path: string;
   declare promotedStoryHtml: HTMLElement;
 
   initialize() {

@@ -12,6 +12,7 @@ export default class CustomerWinController extends DatatableRowController<Custom
   declare curator: User;
   declare customer: Customer;
   declare story?: Story;      
+  declare path: string;
 
   declare contributionsHtml: string;          
   declare winStoryFormEl: HTMLFormElement;

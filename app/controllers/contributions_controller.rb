@@ -30,7 +30,7 @@ class ContributionsController < ApplicationController
       # end
       .to_json(
         only: [:id, :status, :publish_contributor, :contributor_unpublished],
-        methods: [:display_status, :timestamp],
+        methods: [:display_status, :timestamp].push(success.present? ? nil : :path).compact,
         include: {
           success: {
             only: [:id, :customer_id, :curator_id, :name],
@@ -45,7 +45,8 @@ class ContributionsController < ApplicationController
           },
           contributor: { only: [:id, :email, :first_name, :last_name, :phone, :title, :linkedin_url], methods: [:full_name] },
           referrer: { only: [:id, :email, :first_name, :last_name, :title], methods: [:full_name] },
-          invitation_template: { only: [:id, :name], method: [:edit_path] },
+          invitation_template: { only: [:id, :name], method: [:path] },
+          contributor_invitation: { only: [:id] }
         }
       )
     # end
@@ -64,14 +65,7 @@ class ContributionsController < ApplicationController
   end
 
   def show
-    if params[:get_invitation]
-      @contribution.copy_invitation_template if params[:send]
-      respond_with(
-        @contribution,
-        only: [:id, :request_subject, :request_body, :request_sent_at],
-        include: { contributor: { only: [:email], methods: [:full_name] } }
-      )
-    elsif params[:get_submission]
+    if params[:get_submission]
       respond_with(
         @contribution, only: [:id, :status, :contribution, :feedback, :submitted_at],
         include: {
@@ -276,7 +270,7 @@ class ContributionsController < ApplicationController
 
   def destroy
     @contribution.destroy
-    head(:ok)
+    head(:no_content)
   end
 
   def confirm

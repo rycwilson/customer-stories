@@ -147,14 +147,22 @@ export function tableConfig(invitationTemplateSelectHtml: string, storyId?: numb
     },
 
     createdRow: (tr: Node, data: object | any[], index: number) => {
-      const { id, status, contributor, invitation_template: invitationTemplate, success: customerWin } = data as Contribution;
+      const { 
+        id, 
+        status, 
+        contributor, 
+        invitation_template: invitationTemplate, 
+        invitation,
+        success: customerWin, 
+        path } = data as Contribution;
       console.log('createdRow ', id)
       $(tr)
       // .attr('data-datatable-target', 'row')
         .attr('data-contribution-datatable-outlet', storyId ? '#story-contributors-table' : '#contributors-table')
         .attr('data-contribution-resource-outlet', '#customer-wins')
         .attr(
-          'data-contribution-row-data-value', JSON.stringify({ id, status, contributor, invitationTemplate, customerWin })
+          'data-contribution-row-data-value', 
+          JSON.stringify({ id, status, contributor, invitationTemplate, invitation, customerWin, path })
         )
         .attr(
           'data-action', 
@@ -190,7 +198,7 @@ function rowGroupTemplate(rows: Api<any>, group: string) {
 }
 
 function actionsDropdownTemplate(row: Contribution, type: string, set: any) {
-  const { id, status, invitation_template: invitationTemplate, success: customerWin } = row;
+  const { id, status, invitation_template: invitationTemplate, invitation, success: customerWin, path } = row;
   const shouldShowStoryLinks = window.location.pathname === '/prospect';
   const storyExists = Boolean(customerWin?.story);
   const editStoryPath = storyExists ? `/stories/${customerWin?.story.slug}/edit` : undefined;
@@ -201,7 +209,7 @@ function actionsDropdownTemplate(row: Contribution, type: string, set: any) {
       <li>
         <a href="${customerWin?.story.csp_story_path}" data-turbo="false" target="_blank" rel="noopener">
           <i class="fa fa-search fa-fw action"></i>&nbsp;&nbsp;
-          <span>View Story</span>
+          View Story
         </a>
       </li>
     `;
@@ -212,7 +220,7 @@ function actionsDropdownTemplate(row: Contribution, type: string, set: any) {
         <li class="${tab}">
           <a href="javascript:;" data-action="dashboard#editStory" data-story-path="${editStoryPath}" data-story-tab="${tab}">
             <i class="fa ${icon} fa-fw action"></i>&nbsp;&nbsp;
-            <span>Customer Story ${section}</span>
+            Customer Story ${section}
           </a>
         </li>
       `;
@@ -222,7 +230,7 @@ function actionsDropdownTemplate(row: Contribution, type: string, set: any) {
     <li class="view-success">
       <a href="javascript:;"}>
         <i class="fa fa-rocket fa-fw action"></i>&nbsp;&nbsp;
-        <span>View Customer Win</span>
+        View Customer Win
       </a>
     </li>
   `;
@@ -239,23 +247,30 @@ function actionsDropdownTemplate(row: Contribution, type: string, set: any) {
       class="contributor-actions dropdown-menu dropdown-menu-right" 
       data-dropdown-target="dropdownMenu"
       aria-labelledby="contributors-action-dropdown-${id}">
-      <li class="${isPreInvite ? `compose-invitation ${invitationTemplate ? '' : 'disabled'}` : 'view-request'}">
+      <li class="${isPreInvite && !invitationTemplate ? 'disabled' : ''}">
         <a 
           href="javascript:;" 
           data-controller="modal-trigger" 
           data-modal-trigger-modal-outlet="#main-modal"
-          data-modal-trigger-submit-button-text-value="Send Invitation"
           data-modal-trigger-title-value="Contributor Invitation"
-          data-modal-trigger-turbo-frame-attrs-value=${JSON.stringify({ id: 'edit-invitation-template', src: invitationTemplate?.edit_path })}>
-          <i class="fa fa-${isPreInvite ? 'envelope' : 'search'} fa-fw action"></i>&nbsp;&nbsp;
-          <span>${isPreInvite ? 'Compose Invitation' : 'View Sent Invitation'}</span>
+          data-modal-trigger-enabled-value="${invitation || invitationTemplate ? 'true' : 'false'}"
+          data-modal-trigger-turbo-frame-attrs-value=${
+            invitation || invitationTemplate ? 
+              JSON.stringify({
+                id: `${invitation ? 'edit' : 'new'}-contributor-invitation`, 
+                src: `${path}/contributor_invitation/${invitation ? 'edit' : 'new'}` 
+              }) :
+              {}
+          }>
+          <i class="fa fa-${isPreInvite ? 'envelope-o' : 'search'} fa-fw action"></i>&nbsp;&nbsp;
+          ${isPreInvite ? 'Compose Invitation' : 'View Sent Invitation'}
         </a>
       </li>
       ${didNotRespond ? `
           <li class="resend-invitation">
             <a href="javascript:;">
               <i class="fa fa-envelope fa-fw action"></i>&nbsp;&nbsp;
-              <span>Re-send Invitation</span>
+              Re-send Invitation
             </a>
           </li>
         ` : ''
@@ -264,7 +279,7 @@ function actionsDropdownTemplate(row: Contribution, type: string, set: any) {
           <li>
             <a href="javascript:;" data-action="contribution#markAsCompleted">
               <i class="fa fa-check fa-fw action"></i>&nbsp;&nbsp;
-              <span>Mark as completed</span>
+              Mark as completed
             </a>
           </li>
         ` : ''
@@ -280,10 +295,10 @@ function actionsDropdownTemplate(row: Contribution, type: string, set: any) {
         ` : 
         ''
       }
-      <li class="remove">
-        <a href="javascript:;">
+      <li>
+        <a href="javascript:;" data-action="contribution#deleteRow">
           <i class="fa fa-remove fa-fw action"></i>&nbsp;&nbsp;
-          <span>Remove</span>
+          Delete
         </a>
       </li>
     </ul>

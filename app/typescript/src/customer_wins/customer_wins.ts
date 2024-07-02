@@ -143,11 +143,11 @@ export function tableConfig(): Config {
     },
 
     createdRow(tr: Node, data: object | any[], index: number) {
-      const { id, display_status: status, new_story_path: newStoryPath, curator, customer, story } = data as CustomerWin;
+      const { id, display_status: status, new_story_path: newStoryPath, curator, customer, story, path } = data as CustomerWin;
       $(tr)
         .attr('data-customer-win-datatable-outlet', '#successes-table')
         .attr('data-customer-win-modal-outlet', '#main-modal')
-        .attr('data-customer-win-row-data-value', JSON.stringify({ id, status, newStoryPath, curator, customer, story }))
+        .attr('data-customer-win-row-data-value', JSON.stringify({ id, status, newStoryPath, curator, customer, story, path }))
         .attr(
           'data-customer-win-child-row-turbo-frame-attrs-value', 
           JSON.stringify({ id: 'edit-customer-win', src: editCustomerWinPath(id) })
@@ -180,7 +180,7 @@ function actionsDropdownTemplate(row: CustomerWin, type: string, set: any) {
         <li class="${tab}">
           <a href="javascript:;" data-action="dashboard#editStory" data-story-path="${editStoryPath}" data-story-tab="${tab}">
             <i class="fa ${icon} fa-fw action"></i>&nbsp;&nbsp;
-            <span>Customer Story ${section}</span>
+            Customer Story ${section}
           </a>
         </li>
       `;
@@ -203,7 +203,7 @@ function actionsDropdownTemplate(row: CustomerWin, type: string, set: any) {
           <li>
             <a href="javascript:;" data-action="customer-win#showContributions">
               <i class="fa fa-comments fa-fw action"></i>&nbsp;&nbsp;
-              <span>Contributions</span>
+              Contributions<
             </a>
           </li>
           <li class="divider" role="separator"></li>
@@ -218,7 +218,7 @@ function actionsDropdownTemplate(row: CustomerWin, type: string, set: any) {
               data-customer-win-id="${id}"
               data-turbo-frame-attrs=${JSON.stringify(turboFrameAttrs) || ''}>
               <i class="fa fa-users fa-fw action"></i>&nbsp;&nbsp;
-              <span>${action} Contributors</span>
+              ${action} Contributors
             </a>
           </li>
           <li role="separator" class="divider"></li>
@@ -232,16 +232,16 @@ function actionsDropdownTemplate(row: CustomerWin, type: string, set: any) {
               data-modal-trigger-submit-button-text-value="Add Story"
               aria-label="New Customer Story">
               <i class="fa fa-play fa-fw action"></i>&nbsp;&nbsp;
-              <span>Start Customer Story</span>
+              Start Customer Story
             </a>
           </li>
         `
       }
       <li role="separator" class="divider"></li>
-      <li class="delete-row">
-        <a href="javascript:;">
+      <li>
+        <a href="javascript:;" data-action="customer-win#deleteRow">
           <i class="fa fa-remove fa-fw action"></i>&nbsp;&nbsp;
-          <span>Remove</span>
+          Delete
         </a>
       </li>
     </ul>

@@ -274,5 +274,9 @@ class Success < ApplicationRecord
     Rails.application.routes.url_helpers.new_success_story_path(self)
   end
 
+  def path 
+    Rails.application.routes.url_helpers.success_path(self)
+  end
+
 end
 
