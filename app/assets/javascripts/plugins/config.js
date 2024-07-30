@@ -6,7 +6,6 @@ function pluginConfigListeners () {
   // let debounceTimer;
 
   $(document)
-    .on('change', '[name="plugin[type]"]', toggleType)
     .on(
       'change', 
       `[name="plugin[gallery][max_rows]"], 
@@ -21,43 +20,9 @@ function pluginConfigListeners () {
     .on('change', '[name="plugin[type]"], [name="plugin[content]"]', toggleRadioInput)
     .on('change', '[name="plugin[stories][]"]', updateStories)    
     .on('change', '[name="plugin[category]"], [name="plugin[product]"]', updateFilter)
-    .on('change', '[name="plugin[logos_only]"], [name="plugin[grayscale]"]', updateAppearance)
     .on('click', '.plugin-config__code-actions a:not([disabled])', openDemo)
     .on('click', '.plugin-config button.copy', copyPluginCode)
     .on('keypress', '.plugin-config .spinner input', () => false);
-
-  function toggleType(e) {
-    const code = document.querySelector('.plugin-config__code textarea');
-    const type = e.target.value;
-    const logosOnly = document.querySelector('[name="plugin[logos_only]"]');
-    logosOnly.checked = false;
-    logosOnly.disabled = type !== 'gallery';
-    code.value = code.value 
-      .replace(/id="(cs-gallery|cs-carousel|cs-tabbed-carousel)"/, `id="cs-${type.replace('_', '-')}"`)
-      .replace(/\/plugins\/(gallery|carousel|tabbed_carousel)/, `/plugins/${type}`)
-      // gallery settings
-      .replace(/\sdata-max-rows="\d+"/, '')
-      .replace(/><\/script>/, () => {
-        const maxRows = document.querySelector('[name="plugin[gallery][max_rows]"]').value;
-        return (type === 'gallery' && maxRows) ? `\xa0data-max-rows="${maxRows}"></script>` : '></script>';
-      })
-      // carousel settings
-      .replace(/\sdata-background="(light|dark)"/, '')
-      .replace(/><\/script>/, () => {
-        const bg = document.querySelector('[name="plugin[carousel][background]"]:checked').value;
-        return type === 'carousel' ? `\xa0data-background="${bg}"></script>` : '></script>';
-      })
-      // tabbed carousel settings
-      .replace(/\sdata-tab-color="#\w+"\sdata-text-color="#\w+"\sdata-delay="\d+"/, '')
-      .replace(/><\/script>/, () => {
-        const tabColor = document.querySelector('[name="plugin[tabbed_carousel][tab_color]"]').value;
-        const textColor = document.querySelector('[name="plugin[tabbed_carousel][text_color]"]').value;
-        const delay = document.querySelector('[name="plugin[tabbed_carousel][delay]"]').value;
-        return type === 'tabbed_carousel' ?
-          `\xa0data-tab-color="${tabColor}"\xa0data-text-color="${textColor}"\xa0data-delay="${delay}"></script>` :
-          '></script>';
-      });
-  }
 
   function toggleRadioInput(e) {
     const selection = e.target.value.replace('_', '-');
@@ -155,15 +120,6 @@ function pluginConfigListeners () {
       );
     $(`[name="plugin[stories][]"]`).val([]).trigger('change.select2');
     $(`[name="plugin[${otherFilter}]"]`).val('').trigger('change.select2');
-  }
-
-  function updateAppearance(e) {
-    const code = document.querySelector('.plugin-config__code textarea');
-    const appearance = e.target.name.match(/logos_only|grayscale/)[0].replace('_', '-');
-    code.value = code.value.replace(
-      e.target.checked ? /><\/script>/ : new RegExp(`\\sdata-${appearance}="true"`),
-      e.target.checked ? `\xa0data-${appearance}="true"></script>` : ''
-    );
   }
 
   function openDemo(e) {
