@@ -1,15 +1,15 @@
 
-.row
+/.row
   .col-sm-12.col-lg-10.col-lg-offset-1
     p.lead style="color: #666"
       | Configure a <strong>Customer Stories Plugin</strong> for your website
 
-form.plugin-config.form-horizontal name="pluginConfig"
+form.plugin-config.form-horizontal name="pluginConfig" data-controller="plugins"
 
   .plugin-config__type.form-group
     label.col-sm-3.control-label Type
     .col-sm-9.col-md-8.col-lg-6
-      .btn-group
+      .btn-group data-action="change->plugins#onChangeType"
         = label_tag('plugin_type_gallery', class: 'radio-inline') do
           = radio_button_tag('plugin[type]', 'gallery', true)
           | Gallery
@@ -28,7 +28,13 @@ form.plugin-config.form-horizontal name="pluginConfig"
             = label_tag('gallery_max_rows', 'Max Rows')
             .spinner.input-group
               / text instead of number field as we want to override the native spinner
-              = text_field_tag('plugin[gallery][max_rows]', '4', min: '1', max: '10', class: 'form-control')
+              = text_field_tag( \
+                  'plugin[gallery][max_rows]', 
+                  '4', 
+                  min: '1', 
+                  max: '10', 
+                  class: 'form-control',
+                  data: { plugins_target: 'maxRowsInput' })
               .spinner__buttons
                 button.btn.btn-default.btn--inc type="button"
                   i.fa.fa-caret-up
@@ -36,7 +42,7 @@ form.plugin-config.form-horizontal name="pluginConfig"
                   i.fa.fa-caret-down
           .form-group
             = label_tag('plugin_gallery_no_max_rows', class: 'checkbox-inline')
-              = check_box_tag('plugin[gallery][no_max_rows]', true, false)
+              = check_box_tag('plugin[gallery][no_max_rows]', true, false, data: { plugins_target: 'maxRowsInput' })
               | No Max
         .help-block
           | As device size decreases, limit the number of items displayed. This allows you to maintain a consistent vertical space for your gallery.
@@ -46,10 +52,10 @@ form.plugin-config.form-horizontal name="pluginConfig"
             label.control-label Page Background
             .btn-group
               = label_tag('plugin_carousel_background_light', class: 'radio-inline') do
-                = radio_button_tag('plugin[carousel][background]', 'light', true)
+                = radio_button_tag('plugin[carousel][background]', 'light', true, data: { plugins_target: 'carouselBackgroundRadio' })
                 | Light
               = label_tag('plugin_carousel_background_dark', class: 'radio-inline') do
-                = radio_button_tag('plugin[carousel][background]', 'dark', false)
+                = radio_button_tag('plugin[carousel][background]', 'dark', false,  data: { plugins_target: 'carouselBackgroundRadio' })
                 | Dark
             p.help-block
               | The carousel has a transparent background in order to match the page it lives on. Selecting 'Light' background will result in dark scroll buttons, and vice versa.
@@ -110,12 +116,12 @@ form.plugin-config.form-horizontal name="pluginConfig"
   .plugin-config__appearance.form-group
     label.col-sm-3.control-label Appearance
     .col-sm-9.col-md-8.col-lg-6
-      .btn-group
+      .btn-group data-action="change->plugins#updateAppearance"
         = label_tag('plugin_logos_only', class: 'checkbox-inline') do
-          = check_box_tag('plugin[logos_only]', true, false)
+          = check_box_tag('plugin[logos_only]', true, false, data: { plugins_target: 'logosOnlyCheckbox' })
           | Logos Only
         = label_tag('plugin_grayscale', class: 'checkbox-inline') do
-          = check_box_tag('plugin[grayscale]', true, false)
+          = check_box_tag('plugin[grayscale]', true, false, data: { plugins_target: 'appearanceCheckbox' })
           | Grayscale
 
   .plugin-config__code-actions.form-group
@@ -132,7 +138,7 @@ form.plugin-config.form-horizontal name="pluginConfig"
   .plugin-config__code.form-group
     div.col-sm-3
     div.col-sm-9.col-md-8.col-lg-6
-      textarea.form-control style="width:100%;" rows="6" readonly=""
+      textarea.form-control style="width:100%;" rows="6" readonly="" data-plugins-target="codeTextArea"
         = "<div id=\"cs-gallery\" class=\"cs-plugin\"></div>\
             \n<script src=\"#{Rails.env.development? ? 'http' : 'https'}://\
             #{company.subdomain}.#{ENV['HOST_NAME']}\/plugins/gallery/cs.js\" \
