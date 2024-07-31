@@ -23,10 +23,13 @@ form.plugin-config.form-horizontal name="pluginConfig" data-controller="plugins"
   .form-group
     .col-sm-offset-3.col-sm-9.col-md-8.col-lg-6
       .plugin-config__gallery
-        .form-inline
+        .form-inline data-action="change->plugins#onChangeMaxGalleryRows"
           .form-group
             = label_tag('gallery_max_rows', 'Max Rows')
-            .spinner.input-group
+            .spinner.input-group {
+              data-controller="input-spinner" 
+              data-input-spinner-initial-value="4"  # any changes should also be reflected in the input field below
+              data-plugins-target="maxGalleryRowsSpinner" }
               / text instead of number field as we want to override the native spinner
               = text_field_tag( \
                   'plugin[gallery][max_rows]', 
@@ -34,11 +37,17 @@ form.plugin-config.form-horizontal name="pluginConfig" data-controller="plugins"
                   min: '1', 
                   max: '10', 
                   class: 'form-control',
-                  data: { plugins_target: 'maxRowsInput' })
+                  data: { plugins_target: 'maxGalleryRowsInput', input_spinner_target: 'input' })
               .spinner__buttons
-                button.btn.btn-default.btn--inc type="button"
+                button.btn.btn-default {
+                  type="button" 
+                  data-input-spinner-target="incrementBtn" 
+                  data-action="input-spinner#increment" }
                   i.fa.fa-caret-up
-                button.btn.btn-default.btn--dec type="button"
+                button.btn.btn-default {
+                  type="button" 
+                  data-input-spinner-target="decrementBtn"
+                  data-action="input-spinner#decrement" }
                   i.fa.fa-caret-down
           .form-group
             = label_tag('plugin_gallery_no_max_rows', class: 'checkbox-inline')
@@ -74,9 +83,9 @@ form.plugin-config.form-horizontal name="pluginConfig" data-controller="plugins"
             .spinner.input-group
               = text_field_tag('plugin[tabbed_carousel][delay]', '5', min: '0', max: '10', class: 'form-control')
               .spinner__buttons
-                button.btn.btn-default.btn--inc type="button"
+                button.btn.btn-default.btn--inc type="button" data-plugins-target="tabbedCarouselDelaySpinnerBtn"
                   i.fa.fa-caret-up
-                button.btn.btn-default.btn--dec type="button"
+                button.btn.btn-default.btn--dec type="button" data-plugins-target="tabbedCarouselDelaySpinnerBtn"
                   i.fa.fa-caret-down
             .help-block
               | seconds from page load to appearance of the carousel tab

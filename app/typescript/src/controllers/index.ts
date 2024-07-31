@@ -46,6 +46,9 @@ application.register('datatable-row', DatatableRowController);
 import FormController from './form_controller.js';
 application.register('form', FormController);
 
+import InputSpinner from './input_spinner_controller.js';
+application.register('input-spinner', InputSpinner);
+
 import InvitationTemplateController from './invitation_template_controller.js';
 application.register('invitation-template', InvitationTemplateController);
 

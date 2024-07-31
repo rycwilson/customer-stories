@@ -191,9 +191,11 @@
 
 @mixin fa-spinner($width) {
   width: $width;
+
   input {
     text-align: right;
   }
+
   .spinner__buttons {
     position: relative;
     white-space: nowrap;
@@ -201,6 +203,7 @@
     vertical-align: middle;
     display: table-cell;
   }
+
   .btn {
     display: block;
     float: none;
@@ -210,19 +213,23 @@
     margin-left: -1px;
     position: relative;
     border-radius: 0;
-    &--inc {
+
+    &[data-input-spinner-target="incrementBtn"] {
       border-top-right-radius: 4px;
     }
-    &--dec {
+
+    &[data-input-spinner-target="decrementBtn"] {
       margin-top: -2px;
       border-bottom-right-radius: 4px;
     }
   }
+
   i {
     position: absolute;
     top: 0;
     left: 4px;
   }
+
   &[disabled] {
     opacity: 0.5;
     pointer-events: none;
