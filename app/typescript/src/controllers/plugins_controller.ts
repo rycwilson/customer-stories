@@ -1,14 +1,21 @@
 import { Controller } from '@hotwired/stimulus';
 
 export default class PluginsController extends Controller<HTMLDivElement> {
-  static targets = ['logosOnlyCheckbox', 'codeTextArea', 'maxRowsInput', 'carouselBackgroundRadio'];
+  static targets = [
+    'logosOnlyCheckbox', 
+    'codeTextArea', 
+    'maxGalleryRowsSpinner',
+    'maxGalleryRowsInput', 
+    'carouselBackgroundRadio',
+  ];
   declare logosOnlyCheckboxTarget: HTMLInputElement;
   declare codeTextAreaTarget: HTMLTextAreaElement;
-  declare maxRowsInputTarget: HTMLInputElement;
+  declare maxGalleryRowsSpinnerTarget: HTMLDivElement;
+  declare maxGalleryRowsInputTarget: HTMLInputElement;
   declare carouselBackgroundRadioTargets: HTMLInputElement[];
 
   connect() {
-    console.log('connect plugins')
+    // console.log('connect plugins')
   }
 
   onChangeType({ target: input }: { target: HTMLInputElement }) {
@@ -21,7 +28,7 @@ export default class PluginsController extends Controller<HTMLDivElement> {
       // gallery settings
       .replace(/\sdata-max-rows="\d+"/, '')
       .replace(/><\/script>/, () => {
-        const maxRows = this.maxRowsInputTarget.value;
+        const maxRows = this.maxGalleryRowsInputTarget.value;
         return (type === 'gallery' && maxRows) ? `\xa0data-max-rows="${maxRows}"></script>` : '></script>';
       })
       // carousel settings
@@ -40,6 +47,25 @@ export default class PluginsController extends Controller<HTMLDivElement> {
       //     `\xa0data-tab-color="${tabColor}"\xa0data-text-color="${textColor}"\xa0data-delay="${delay}"></script>` :
       //     '></script>';
       // });
+  }
+
+  onChangeMaxGalleryRows({ target: input }: { target: HTMLInputElement }) {
+    const noMaxDidToggle = input.type === 'checkbox';
+    const maxRowsEnabled = noMaxDidToggle ? !input.checked : true;
+    if (noMaxDidToggle) {
+      this.maxGalleryRowsSpinnerTarget.setAttribute('data-input-spinner-enabled-value', maxRowsEnabled.toString());
+      this.codeTextAreaTarget.value = this.codeTextAreaTarget.value.replace(
+        maxRowsEnabled ? /><\/script>/ : /\sdata-max-rows="\d+"/,
+        maxRowsEnabled ? 
+          `\xa0data-max-rows="${this.maxGalleryRowsSpinnerTarget.dataset.inputSpinnerInitialValue!.toString()}"></script>` : 
+          ''
+      );
+    } else {
+      this.codeTextAreaTarget.value = this.codeTextAreaTarget.value.replace(
+        /\sdata-max-rows="\d+"/,
+        `\xa0data-max-rows="${this.maxGalleryRowsInputTarget.value.toString()}"`
+      );
+    }
   }
 
   updateAppearance({ target: checkbox }: { target: HTMLInputElement }) {
