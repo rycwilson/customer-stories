@@ -1,6 +1,5 @@
 import { Controller } from '@hotwired/stimulus';
 
-// https://codepen.io/Thomas-Lebeau/pen/nRqWvp
 export default class InputSpinnerController extends Controller<HTMLDivElement> {
   static targets = ['input', 'incrementBtn', 'decrementBtn'];
   declare inputTarget: HTMLInputElement;
@@ -15,6 +14,10 @@ export default class InputSpinnerController extends Controller<HTMLDivElement> {
   declare enabledValue: boolean;
   declare initialValue: number;
   declare stepValue: number;
+
+  connect() {
+    // console.log('connect input spinner')
+  }
 
   increment() {
     const newVal = +this.inputTarget.value + this.stepValue;
@@ -32,7 +35,12 @@ export default class InputSpinnerController extends Controller<HTMLDivElement> {
     this.inputTarget.dispatchEvent(new Event('change', { bubbles: true }));
   }
 
-  enabledValueChanged() {
+  enabledValueChanged(enabled: boolean) {
     this.inputTarget.value = this.enabledValue ? this.initialValue.toString() : '';
+    this.inputTarget.readOnly = this.incrementBtnTarget.disabled = this.decrementBtnTarget.disabled = !enabled;
+  }
+
+  onKeypress(e: Event) {
+    e.preventDefault();
   }
 }

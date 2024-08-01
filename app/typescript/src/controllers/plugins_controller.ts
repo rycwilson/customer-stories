@@ -18,8 +18,14 @@ export default class PluginsController extends Controller<HTMLDivElement> {
     // console.log('connect plugins')
   }
 
-  onChangeType({ target: input }: { target: HTMLInputElement }) {
+  toggleSettingsDisplay({ target: input }: { target: HTMLInputElement }) {
+    const panel = <HTMLDivElement>this.element.querySelector(`.plugin-config__${input.value.replace('_', '-')}`);
+    [...panel.parentElement!.children].forEach(_panel => _panel.classList.toggle('hidden', _panel !== panel));
+  }
+
+  onChangePluginType({ target: input }: { target: HTMLInputElement }) {
     const type = input.value;
+    const panel = document.querySelector(`.plugin-config__${type.replace('_', '-')}`);
     this.logosOnlyCheckboxTarget.checked = false;
     this.logosOnlyCheckboxTarget.disabled = type !== 'gallery';
     this.codeTextAreaTarget.value = this.codeTextAreaTarget.value
@@ -50,9 +56,9 @@ export default class PluginsController extends Controller<HTMLDivElement> {
   }
 
   onChangeMaxGalleryRows({ target: input }: { target: HTMLInputElement }) {
-    const noMaxDidToggle = input.type === 'checkbox';
-    const maxRowsEnabled = noMaxDidToggle ? !input.checked : true;
-    if (noMaxDidToggle) {
+    const enabledDidToggle = input.type === 'checkbox';
+    const maxRowsEnabled = enabledDidToggle ? !input.checked : true;
+    if (enabledDidToggle) {
       this.maxGalleryRowsSpinnerTarget.setAttribute('data-input-spinner-enabled-value', maxRowsEnabled.toString());
       this.codeTextAreaTarget.value = this.codeTextAreaTarget.value.replace(
         maxRowsEnabled ? /><\/script>/ : /\sdata-max-rows="\d+"/,
