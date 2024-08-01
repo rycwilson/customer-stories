@@ -58,9 +58,9 @@
   [name*="tab_color"] {
     margin-right: 1.5rem;
   }
-  
-  .minicolors {
-    display: inline-block;
+
+  input[type="color"] {
+    width: 12rem;
   }
 }
 
