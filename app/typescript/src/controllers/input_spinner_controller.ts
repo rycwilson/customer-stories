@@ -20,18 +20,17 @@ export default class InputSpinnerController extends Controller<HTMLDivElement> {
   }
 
   increment() {
-    const newVal = +this.inputTarget.value + this.stepValue;
-    this.inputTarget.value = newVal.toString();
-    this.incrementBtnTarget.disabled = newVal === +this.inputTarget.max;
-    this.decrementBtnTarget.disabled = false;
-    this.inputTarget.dispatchEvent(new Event('change', { bubbles: true }));
+    this.render(+this.inputTarget.value + this.stepValue);
   }
 
   decrement() {
-    const newVal = +this.inputTarget.value - this.stepValue;
+    this.render(+this.inputTarget.value - this.stepValue);
+  }
+
+  render(newVal: number) {
     this.inputTarget.value = newVal.toString();
+    this.incrementBtnTarget.disabled = newVal === +this.inputTarget.max;
     this.decrementBtnTarget.disabled = newVal === +this.inputTarget.min;
-    this.incrementBtnTarget.disabled = false;
     this.inputTarget.dispatchEvent(new Event('change', { bubbles: true }));
   }
 
