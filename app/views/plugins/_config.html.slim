@@ -6,10 +6,10 @@
 
 form.plugin-config.form-horizontal name="pluginConfig" data-controller="plugins"
 
-  .plugin-config__type.form-group
+  .plugin-config__type.form-group data-action="change->plugins#onChangePluginType change->plugins#toggleSettingsDisplay"
     label.col-sm-3.control-label Type
     .col-sm-9.col-md-8.col-lg-6
-      .btn-group data-action="change->plugins#onChangeType"
+      .btn-group 
         = label_tag('plugin_type_gallery', class: 'radio-inline') do
           = radio_button_tag('plugin[type]', 'gallery', true)
           | Gallery
@@ -22,6 +22,7 @@ form.plugin-config.form-horizontal name="pluginConfig" data-controller="plugins"
 
   .form-group
     .col-sm-offset-3.col-sm-9.col-md-8.col-lg-6
+      
       .plugin-config__gallery
         .form-inline data-action="change->plugins#onChangeMaxGalleryRows"
           .form-group
@@ -37,24 +38,18 @@ form.plugin-config.form-horizontal name="pluginConfig" data-controller="plugins"
                   min: '1', 
                   max: '10', 
                   class: 'form-control',
-                  data: { plugins_target: 'maxGalleryRowsInput', input_spinner_target: 'input' })
-              .spinner__buttons
-                button.btn.btn-default {
-                  type="button" 
-                  data-input-spinner-target="incrementBtn" 
-                  data-action="input-spinner#increment" }
-                  i.fa.fa-caret-up
-                button.btn.btn-default {
-                  type="button" 
-                  data-input-spinner-target="decrementBtn"
-                  data-action="input-spinner#decrement" }
-                  i.fa.fa-caret-down
+                  data: { \
+                    plugins_target: 'maxGalleryRowsInput', 
+                    input_spinner_target: 'input', 
+                    action: 'keypress->input-spinner#onKeypress' })
+              = render('shared/input_spinner_buttons')
           .form-group
             = label_tag('plugin_gallery_no_max_rows', class: 'checkbox-inline')
               = check_box_tag('plugin[gallery][no_max_rows]', true, false, data: { plugins_target: 'maxRowsInput' })
               | No Max
         .help-block
           | As device size decreases, limit the number of items displayed. This allows you to maintain a consistent vertical space for your gallery.
+
       .plugin-config__carousel.hidden
         .form-inline
           .form-group
@@ -68,29 +63,34 @@ form.plugin-config.form-horizontal name="pluginConfig" data-controller="plugins"
                 | Dark
             p.help-block
               | The carousel has a transparent background in order to match the page it lives on. Selecting 'Light' background will result in dark scroll buttons, and vice versa.
+      
       .plugin-config__tabbed-carousel.hidden
         .form-inline
           .form-group
             = label_tag('plugin_tabbed_carousel_tab_color', 'Tab Color')
-            = text_field_tag('plugin[tabbed_carousel][tab_color]', '#333333', class: 'form-control mini-colors')
+            = color_field_tag('plugin[tabbed_carousel][tab_color]', '#333333', class: 'form-control')
           .form-group
             = label_tag('plugin_tabbed_carousel_text_color', 'Text Color')
-            = text_field_tag('plugin[tabbed_carousel][text_color]', '#ffffff', class: 'form-control mini-colors')
+            = color_field_tag('plugin[tabbed_carousel][text_color]', '#ffffff', class: 'form-control')
           .help-block.color-contrast Text color will auto-adjust to ensure sufficient contrast 
         .form-inline
           .form-group.delay
             = label_tag('plugin_tabbed_carousel_delay', 'Delay')
-            .spinner.input-group
-              = text_field_tag('plugin[tabbed_carousel][delay]', '5', min: '0', max: '10', class: 'form-control')
-              .spinner__buttons
-                button.btn.btn-default.btn--inc type="button" data-plugins-target="tabbedCarouselDelaySpinnerBtn"
-                  i.fa.fa-caret-up
-                button.btn.btn-default.btn--dec type="button" data-plugins-target="tabbedCarouselDelaySpinnerBtn"
-                  i.fa.fa-caret-down
+            .spinner.input-group data-controller="input-spinner" data-input-spinner-initial-value="5"
+              = text_field_tag( \
+                  'plugin[tabbed_carousel][delay]', 
+                  '5', 
+                  min: '0', 
+                  max: '10', 
+                  class: 'form-control',
+                  data: { \
+                    input_spinner_target: 'input',
+                    action: 'keypress->input-spinner#onKeypress' }) 
+              = render('shared/input_spinner_buttons')
             .help-block
               | seconds from page load to appearance of the carousel tab
 
-  .plugin-config__content.form-group
+  .plugin-config__content.form-group data-action="change->plugins#toggleSettingsDisplay"
     label.col-sm-3.control-label Content
     .col-sm-9.col-md-8.col-lg-6
       .btn-group
