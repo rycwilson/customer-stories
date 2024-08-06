@@ -294,8 +294,8 @@ function initFilters() {
         }
       }
     },
-    plugins: {
-      'clear_button': select.multiple ? {} : {
+    plugins: select.multiple ? {} : {
+      'clear_button': {
         title: 'Clear selection',
         html: (config: CBOptions) => (
           `<button type="button" class="btn ${config.className}" title="${config.title}">&times;</button>`
