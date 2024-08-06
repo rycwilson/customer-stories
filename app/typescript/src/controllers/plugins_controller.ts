@@ -1,4 +1,5 @@
 import { Controller } from '@hotwired/stimulus';
+import { tsBaseOptions } from '../tomselect';
 
 export default class PluginsController extends Controller<HTMLDivElement> {
   static targets = [
@@ -7,15 +8,26 @@ export default class PluginsController extends Controller<HTMLDivElement> {
     'maxGalleryRowsSpinner',
     'maxGalleryRowsInput', 
     'carouselBackgroundRadio',
+    'tabbedCarouselTabColorInput',
+    'tabbedCarouselTextColorInput',
+    'tabbedCarouselDelayInput',
   ];
   declare logosOnlyCheckboxTarget: HTMLInputElement;
   declare codeTextAreaTarget: HTMLTextAreaElement;
   declare maxGalleryRowsSpinnerTarget: HTMLDivElement;
   declare maxGalleryRowsInputTarget: HTMLInputElement;
   declare carouselBackgroundRadioTargets: HTMLInputElement[];
+  declare tabbedCarouselTabColorInputTarget: HTMLInputElement;
+  declare tabbedCarouselTextColorInputTarget: HTMLInputElement;
+  declare tabbedCarouselDelayInputTarget: HTMLInputElement;
 
   connect() {
     // console.log('connect plugins')
+    this.initContentFilters();
+  }
+
+  initContentFilters() {
+
   }
 
   toggleSettingsDisplay({ target: input }: { target: HTMLInputElement }) {
@@ -25,34 +37,36 @@ export default class PluginsController extends Controller<HTMLDivElement> {
 
   onChangePluginType({ target: input }: { target: HTMLInputElement }) {
     const type = input.value;
-    const panel = document.querySelector(`.plugin-config__${type.replace('_', '-')}`);
     this.logosOnlyCheckboxTarget.checked = false;
     this.logosOnlyCheckboxTarget.disabled = type !== 'gallery';
     this.codeTextAreaTarget.value = this.codeTextAreaTarget.value
       .replace(/id="(cs-gallery|cs-carousel|cs-tabbed-carousel)"/, `id="cs-${type.replace('_', '-')}"`)
       .replace(/\/plugins\/(gallery|carousel|tabbed_carousel)/, `/plugins/${type}`)
+
       // gallery settings
       .replace(/\sdata-max-rows="\d+"/, '')
       .replace(/><\/script>/, () => {
         const maxRows = this.maxGalleryRowsInputTarget.value;
         return (type === 'gallery' && maxRows) ? `\xa0data-max-rows="${maxRows}"></script>` : '></script>';
       })
+      
       // carousel settings
       .replace(/\sdata-background="(light|dark)"/, '')
       .replace(/><\/script>/, () => {
         const bg = this.carouselBackgroundRadioTargets.find((input: HTMLInputElement) => input.checked)!.value;
         return type === 'carousel' ? `\xa0data-background="${bg}"></script>` : '></script>';
       })
+
       // tabbed carousel settings
-      // .replace(/\sdata-tab-color="#\w+"\sdata-text-color="#\w+"\sdata-delay="\d+"/, '')
-      // .replace(/><\/script>/, () => {
-      //   const tabColor = document.querySelector('[name="plugin[tabbed_carousel][tab_color]"]').value;
-      //   const textColor = document.querySelector('[name="plugin[tabbed_carousel][text_color]"]').value;
-      //   const delay = document.querySelector('[name="plugin[tabbed_carousel][delay]"]').value;
-      //   return type === 'tabbed_carousel' ?
-      //     `\xa0data-tab-color="${tabColor}"\xa0data-text-color="${textColor}"\xa0data-delay="${delay}"></script>` :
-      //     '></script>';
-      // });
+      .replace(/\sdata-tab-color="#\w+"\sdata-text-color="#\w+"\sdata-delay="\d+"/, '')
+      .replace(/><\/script>/, () => {
+        const tabColor = this.tabbedCarouselTabColorInputTarget.value;
+        const textColor = this.tabbedCarouselTextColorInputTarget.value;
+        const delay = this.tabbedCarouselDelayInputTarget.value;
+        return type === 'tabbed_carousel' ?
+          `\xa0data-tab-color="${tabColor}"\xa0data-text-color="${textColor}"\xa0data-delay="${delay}"></script>` :
+          '></script>';
+      });
   }
 
   onChangeMaxGalleryRows({ target: input }: { target: HTMLInputElement }) {

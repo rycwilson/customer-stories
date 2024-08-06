@@ -39,7 +39,7 @@ form.plugin-config.form-horizontal name="pluginConfig" data-controller="plugins"
                   max: '10', 
                   class: 'form-control',
                   data: { \
-                    plugins_target: 'maxGalleryRowsInput', 
+                    plugins_target: 'maxGalleryRowsInput',
                     input_spinner_target: 'input', 
                     action: 'keypress->input-spinner#onKeypress' })
               = render('shared/input_spinner_buttons')
@@ -68,10 +68,18 @@ form.plugin-config.form-horizontal name="pluginConfig" data-controller="plugins"
         .form-inline
           .form-group
             = label_tag('plugin_tabbed_carousel_tab_color', 'Tab Color')
-            = color_field_tag('plugin[tabbed_carousel][tab_color]', '#333333', class: 'form-control')
+            = color_field_tag( \
+                'plugin[tabbed_carousel][tab_color]', 
+                '#333333', 
+                class: 'form-control',
+                data: { plugins_target: 'tabbedCarouselTabColorInput' })
           .form-group
             = label_tag('plugin_tabbed_carousel_text_color', 'Text Color')
-            = color_field_tag('plugin[tabbed_carousel][text_color]', '#ffffff', class: 'form-control')
+            = color_field_tag( \
+                'plugin[tabbed_carousel][text_color]', 
+                '#ffffff', 
+                class: 'form-control',
+                data: { plugins_target: 'tabbedCarouselTextColorInput' })
           .help-block.color-contrast Text color will auto-adjust to ensure sufficient contrast 
         .form-inline
           .form-group.delay
@@ -85,6 +93,7 @@ form.plugin-config.form-horizontal name="pluginConfig" data-controller="plugins"
                   class: 'form-control',
                   data: { \
                     input_spinner_target: 'input',
+                    plugins_target: 'tabbedCarouselDelayInput',
                     action: 'keypress->input-spinner#onKeypress' }) 
               = render('shared/input_spinner_buttons')
             .help-block
@@ -107,6 +116,21 @@ form.plugin-config.form-horizontal name="pluginConfig" data-controller="plugins"
   .form-group
     .col-sm-offset-3.col-sm-9.col-md-8.col-lg-6
       .plugin-config__stories
+        = select_tag( \
+            'plugin[stories][]',
+            grouped_options_for_select( \
+              'Custom' => company.invitation_templates.custom.map { |t| [t.name, t.id] },
+              'Default' => company.invitation_templates.default.map { |t| [t.name, t.id] }),
+            { include_blank: true,
+              id: 'template-select',
+              class: 'form-control',
+              placeholder: 'Select or enter the name of a new template',
+              data: { \
+                controller: 'tomselect',
+                tomselect_kind_value: 'invitationTemplate',
+                tomselect_custom_options_value: { plugins: {}, create: true, persist: false },
+                company_settings_target: 'invitationTemplateSelect',
+                action: 'change->company-settings#onChangeInvitationTemplate' }})
         = select_tag( \
             'plugin[stories][]',
             grouped_options_for_select(company.stories.plugin_select_options, []),
