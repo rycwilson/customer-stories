@@ -13,61 +13,38 @@
 @import 'views/stories/shared/cookie_consent';
 @import 'views/stories/shared/gallery';
 
-.stories-filter__select.ts-wrapper.multi {
+// .stories-filter__select.ts-wrapper.multi {
   // add the dropdown caret
-  .ts-control:after {
-    content: " ";
-    display: block;
-    position: absolute;
-    top: 50%;
-    right: calc(0.75rem + 5px);
-    margin-top: -3px;
-    width: 0;
-    height: 0;
-    border-style: solid;
-    border-width: 5px 5px 0 5px;
-    border-color: #6c757d transparent transparent transparent;
-  }
+  // .ts-control:after {
+  //   content: " ";
+  //   display: block;
+  //   position: absolute;
+  //   top: 50%;
+  //   right: calc(0.75rem + 5px);
+  //   margin-top: -3px;
+  //   width: 0;
+  //   height: 0;
+  //   border-style: solid;
+  //   border-width: 5px 5px 0 5px;
+  //   border-color: #6c757d transparent transparent transparent;
+  // }
   
-  &.has-items {
-    .ts-control {
-      // wrap items
-      display: flex;
-      flex-direction: column;
-      align-items: flex-start;
-    }
-    
-    .item {
-      margin-right: 36px;
+  // &.has-items {
+    // .item {
+      // margin-right: 36px;
 
-      &:not(:last-of-type) {
-        margin-bottom: 8px;
-      }
-    }
+      // &:not(:last-of-type) {
+      //   margin-bottom: 8px;
+      // }
+    // }
     
-    .tag-type {
-      color: #6c757d;
-    }
+    // .tag-type {
+    //   color: #6c757d;
+    // }
     
-    .tag-name {
-      color: #555;
-      font-weight: bold;
-    }
-  }
-  
-  // don't show the placeholer once an item is selected
-  // => use pseudo element instead of dynanmically chaning placeholder attribute
-  &:not(.has-items) {
-    .ts-control::before {
-      color: #6c757d;
-    }
-    
-    &.single .ts-control::before {
-      content: 'Select';
-    }
-    
-    &.multi .ts-control::before {
-      content: 'Select Category and/or Product'
-    }
-  }
-}
+    // .tag-name {
+      // color: #555;
+      // font-weight: bold;
+    // }
+  // }
+// }
