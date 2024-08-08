@@ -11,6 +11,7 @@ export default class PluginsController extends Controller<HTMLDivElement> {
     'tabbedCarouselTabColorInput',
     'tabbedCarouselTextColorInput',
     'tabbedCarouselDelayInput',
+    'storiesSelect'
   ];
   declare logosOnlyCheckboxTarget: HTMLInputElement;
   declare codeTextAreaTarget: HTMLTextAreaElement;
@@ -20,6 +21,7 @@ export default class PluginsController extends Controller<HTMLDivElement> {
   declare tabbedCarouselTabColorInputTarget: HTMLInputElement;
   declare tabbedCarouselTextColorInputTarget: HTMLInputElement;
   declare tabbedCarouselDelayInputTarget: HTMLInputElement;
+  declare storiesSelectTarget: TomSelectInput
 
   connect() {
     // console.log('connect plugins')
@@ -44,8 +46,7 @@ export default class PluginsController extends Controller<HTMLDivElement> {
       .replace(/\/plugins\/(gallery|carousel|tabbed_carousel)/, `/plugins/${type}`)
 
       // gallery settings
-      .replace(/\sdata-max-rows="\d+"/, '')
-      .replace(/><\/script>/, () => {
+      .replace(/\sdata-max-rows="\d+"/ || /><\/script>/, () => {
         const maxRows = this.maxGalleryRowsInputTarget.value;
         return (type === 'gallery' && maxRows) ? `\xa0data-max-rows="${maxRows}"></script>` : '></script>';
       })
