@@ -132,15 +132,21 @@ form.plugin-config.form-horizontal name="pluginConfig" data-controller="plugins"
                 plugins_target: 'storiesSelect',
                 action: '' }})
       .plugin-config__category.hidden
-        = select_tag( \
-            'plugin[category]',
-            options_for_select(company.story_categories.select_options),
-            { include_blank: true, style: 'width: 100%' })
+        = render( \
+            'stories/shared/select_category', 
+            { company:, 
+              name: 'plugin[category]',
+              select_id: nil,   # not needed since label tag isn't displayed 
+              preselected_id: nil,
+              is_dashboard: false })
       .plugin-config__product.hidden
-        = select_tag( \
-            'plugin[product]',
-            options_for_select(company.products.select_options),
-            { include_blank: true, style: 'width: 100%' })
+        = render( \
+            'stories/shared/select_product', 
+            { company:, 
+              name: 'plugin[product]',
+              select_id: nil,   # not needed since label tag isn't displayed 
+              preselected_id: nil,
+              is_dashboard: false })
 
   .plugin-config__appearance.form-group
     label.col-sm-3.control-label Appearance

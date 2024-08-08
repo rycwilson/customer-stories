@@ -1,7 +1,7 @@
 .stories-filter.form-group
   = label_tag(select_id, 'Product')
   = select_tag( \
-      nil,
+      name,
       options_for_select( \
         company.tag_select_options('product', only_featured: !is_dashboard),
         preselected_id),

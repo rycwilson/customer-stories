@@ -54,14 +54,16 @@
     = render( \
         'stories/shared/select_category', 
         { company:, 
-          is_dashboard: false,
+          name: nil,
           select_id: SecureRandom.urlsafe_base64, 
-          preselected_id: filters[:category] })
+          preselected_id: filters[:category],
+          is_dashboard: false })
 
   - elsif company.products.featured.present?
     = render( \
         'stories/shared/select_product', 
         { company:, 
-          is_dashboard: false,
+          name: nil,
           select_id: SecureRandom.urlsafe_base64, 
-          preselected_id: filters[:product] })
+          preselected_id: filters[:product],
+          is_dashboard: false })
