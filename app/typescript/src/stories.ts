@@ -1,6 +1,6 @@
 import Cookies from 'js-cookie';
 import imagesLoaded from 'imagesloaded';
-import TomSelect, { tsBaseOptions } from './tomselect';
+import TomSelect, { tsBaseOptions, addMultiSelectPlaceholder } from './tomselect';
 import type { TomOption, TomItem } from 'tom-select/dist/types/types';
 import { type CBOptions } from 'tom-select/dist/types/plugins/clear_button/types';
 
@@ -263,6 +263,9 @@ function clearSearch(isUserInput: boolean = false) {
 function initFilters() {
   initFilterControls();
   const tsOptions = (select: TomSelectInput, otherSelects: TomSelectInput[]) => ({
+    onInitialize(this: TomSelect) {
+      if (select.multiple) addMultiSelectPlaceholder(this);
+    },
     onChange: onChangeFilter.bind(null, select, otherSelects),
     onItemAdd(value: string, item: TomItem) {
       if (select.multiple) {
@@ -274,27 +277,19 @@ function initFilters() {
       }
     },
     render: {
-      item(data: TomOption, escape: (str: string) => string) {
-        if (select.multiple) {
-          const tagType = (
-            data.value[0].toUpperCase() + (data.value.slice(1, data.value.lastIndexOf('-')).split('-').join(' '))
-          );
-
-          // tom-select will add .item class to this template
-          return `
-            <div>
-              <div>
-                <span class="tag-type">${tagType}:</span>&nbsp;<span class="tag-name">${escape(data.text)}</span>
-              </div>
-              <button type="button" class="btn clear-button" title="Clear selection">&times;</button>
-            </div>
-          `
-        } else {
-          return `<div>${escape(data.text)}</div>`;
-        }
-      }
+      // item(data: TomOption, escape: (str: string) => string) {
+        // if (select.multiple) {
+          // const tagType = (
+          //   data.value[0].toUpperCase() + (data.value.slice(1, data.value.lastIndexOf('-')).split('-').join(' '))
+          // );
+          // return `<div><div><span class="tag-type">${tagType}:</span>&nbsp;<span class="tag-name">${escape(data.text)}</span></div></div>`
+      // }
     },
-    plugins: select.multiple ? {} : {
+    plugins: select.multiple ? {
+      'remove_button': {
+        title: 'Clear selection'
+      }
+    } : {
       'clear_button': {
         title: 'Clear selection',
         html: (config: CBOptions) => (
@@ -316,15 +311,14 @@ function initFilters() {
 }
 
 function onAddMultiSelectItem(ts: TomSelect, item: TomItem) {
-  const clearBtn = item.querySelector('.clear-button');
+  const clearBtn = item.querySelector('.remove');
   if (clearBtn) {
     clearBtn.addEventListener('click', (e) => {
       e.stopPropagation();    // don't highlight active or open dropdown
       const tagType = item.dataset.value.split('-')[0];
       searchParams.delete(tagType);
       history.replaceState(null, '', searchParams.size === 0 ? '/' : `?${searchParams.toString()}`);
-      ts.removeItem(item.dataset.value);
-      ts.blur();
+      // ts.blur();
     });
   }
 }

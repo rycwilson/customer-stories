@@ -119,22 +119,18 @@ form.plugin-config.form-horizontal name="pluginConfig" data-controller="plugins"
         = select_tag( \
             'plugin[stories][]',
             grouped_options_for_select( \
-              'Custom' => company.invitation_templates.custom.map { |t| [t.name, t.id] },
-              'Default' => company.invitation_templates.default.map { |t| [t.name, t.id] }),
-            { include_blank: true,
-              id: 'template-select',
+              company \
+                .customers \
+                .map { |customer| [customer.name, customer.stories.featured.map { |story| [story.title, story.id] }] } \
+                .keep_if { |(_, featured_stories)| featured_stories.present? }.to_h),
+            { multiple: true,
               class: 'form-control',
-              placeholder: 'Select or enter the name of a new template',
               data: { \
                 controller: 'tomselect',
-                tomselect_kind_value: 'invitationTemplate',
-                tomselect_custom_options_value: { plugins: {}, create: true, persist: false },
-                company_settings_target: 'invitationTemplateSelect',
-                action: 'change->company-settings#onChangeInvitationTemplate' }})
-        = select_tag( \
-            'plugin[stories][]',
-            grouped_options_for_select(company.stories.plugin_select_options, []),
-            { include_blank: true, multiple: true, style: 'width: 100%' })
+                tomselect_kind_value: 'story',
+                dynamic_placeholder: 'Select Stories',
+                plugins_target: 'storiesSelect',
+                action: '' }})
       .plugin-config__category.hidden
         = select_tag( \
             'plugin[category]',

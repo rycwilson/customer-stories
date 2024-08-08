@@ -1,4 +1,5 @@
 declare module 'tom-select/dist/js/plugins/clear_button';
+declare module 'tom-select/dist/js/plugins/remove_button';
 
 declare namespace ImagesLoaded {
   // extend to include properties that aren't included in @types/imagesloaded
@@ -32,7 +33,7 @@ interface CustomerStoriesApp {
 
 type ResourceName = 'customerWins' | 'contributions' | 'storyContributions' | 'promotedStories';
 type TomSelectInput = HTMLSelectElement & TomInput;
-type SelectInputKind = 'filter' | 'curator' | 'status' | 'customer' | 'category' | 'product' | 'storyTag' | 'contributor' | 'referrer' | 'invitationTemplate';
+type SelectInputKind = 'filter' | 'curator' | 'status' | 'customer' | 'category' | 'product' | 'storyTag' | 'contributor' | 'referrer' | 'invitationTemplate' | 'story';
 
 interface StringIndexable {
   [key: string]: any;

@@ -1,17 +1,24 @@
 import TomSelect from 'tom-select';
-
 import clearButton from 'tom-select/dist/js/plugins/clear_button';
-import { type CBOptions } from 'tom-select/dist/types/plugins/clear_button/types';
+import removeButton from 'tom-select/dist/js/plugins/remove_button';
 
 // do not change the 'clear_button' name, else styles won't work
 TomSelect.define('clear_button', clearButton);
+TomSelect.define('remove_button', removeButton);
 
 export default TomSelect;
+
+export const addMultiSelectPlaceholder = (ts: TomSelect) => {
+  if (ts.input.type === 'select-multiple' && ts.input.dataset.dynamicPlaceholder) {
+    // set placeholder via css => allows for removing when selections are present
+    ts.control.setAttribute('data-placeholder', ts.input.dataset.dynamicPlaceholder);
+  }
+}
 
 export const tsBaseOptions = {
   maxOptions: 1000,
   closeAfterSelect: true,
-  onInitialize() {
+  onInitialize(this: TomSelect) {
   },
   onFocus(this: TomSelect) {
     const listbox = <HTMLElement>this.dropdown.firstElementChild;
