@@ -64,7 +64,7 @@
               company.curators, :id, :curator_name_with_stories_count, filters[:curator]),
             { id: 'select-curator--stories',
               include_blank: true,
-              placeholder: 'Select',
+              placeholder: 'Select curator',
               class: 'stories-filter__select form-control',
               data: { \
                 controller: 'tomselect', 
@@ -82,7 +82,7 @@
               filters[:status]),
             { id:'select-status--stories', 
               include_blank: true, 
-              placeholder: 'Select',
+              placeholder: 'Select status',
               class: 'stories-filter__select form-control', 
               data: { \
                 controller: 'tomselect',
@@ -97,7 +97,7 @@
               company.customers.order(:name), :id, :name_with_stories_count, filters[:customer]),
             { id: 'select-customer--stories',
               include_blank: true,
-              placeholder: 'Select',
+              placeholder: 'Select customer',
               class: 'stories-filter__select form-control',
               data: { \
                 controller: 'tomselect',
@@ -106,8 +106,9 @@
 
     - if is_dashboard || company.story_categories.featured.present?
       = render( \
-          'stories/shared/select_category', 
+          'stories/shared/select_story_tag', 
           { company:, 
+            tag: :category,
             name: nil,
             select_id: SecureRandom.urlsafe_base64, 
             preselected_id: filters[:category],
@@ -115,8 +116,9 @@
 
     - if is_dashboard || company.products.featured.present?
       = render( \
-          'stories/shared/select_product', 
+          'stories/shared/select_story_tag', 
           { company:, 
+            tag: :product,
             name: nil,
             select_id: SecureRandom.urlsafe_base64, 
             preselected_id: filters[:product],

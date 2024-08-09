@@ -24,7 +24,7 @@ form.plugin-config.form-horizontal name="pluginConfig" data-controller="plugins"
     .col-sm-offset-3.col-sm-9.col-md-8.col-lg-6
       
       .plugin-config__gallery
-        .form-inline data-action="change->plugins#onChangeMaxGalleryRows"
+        .form-inline
           .form-group
             = label_tag('gallery_max_rows', 'Max Rows')
             .spinner.input-group {
@@ -41,11 +41,17 @@ form.plugin-config.form-horizontal name="pluginConfig" data-controller="plugins"
                   data: { \
                     plugins_target: 'maxGalleryRowsInput',
                     input_spinner_target: 'input', 
-                    action: 'keypress->input-spinner#onKeypress' })
+                    action: 'keypress->input-spinner#onKeypress change->plugins#updateSetting' })
               = render('shared/input_spinner_buttons')
           .form-group
             = label_tag('plugin_gallery_no_max_rows', class: 'checkbox-inline')
-              = check_box_tag('plugin[gallery][no_max_rows]', true, false, data: { plugins_target: 'maxRowsInput' })
+              = check_box_tag( \
+                  'plugin[gallery][no_max_rows]', 
+                  true, 
+                  false, 
+                  data: { \
+                    plugins_target: 'maxRowsInput',
+                    action: 'plugins#toggleMaxGalleryRows' })
               | No Max
         .help-block
           | As device size decreases, limit the number of items displayed. This allows you to maintain a consistent vertical space for your gallery.
@@ -56,10 +62,22 @@ form.plugin-config.form-horizontal name="pluginConfig" data-controller="plugins"
             label.control-label Page Background
             .btn-group
               = label_tag('plugin_carousel_background_light', class: 'radio-inline') do
-                = radio_button_tag('plugin[carousel][background]', 'light', true, data: { plugins_target: 'carouselBackgroundRadio' })
+                = radio_button_tag( \
+                    'plugin[carousel][background]', 
+                    'light', 
+                    true, 
+                    data: { \
+                      plugins_target: 'carouselBackgroundRadio',
+                      action: 'plugins#updateSetting' })
                 | Light
               = label_tag('plugin_carousel_background_dark', class: 'radio-inline') do
-                = radio_button_tag('plugin[carousel][background]', 'dark', false,  data: { plugins_target: 'carouselBackgroundRadio' })
+                = radio_button_tag( \
+                    'plugin[carousel][background]', 
+                    'dark', 
+                    false,  
+                    data: { \
+                      plugins_target: 'carouselBackgroundRadio',
+                      action: 'plugins#updateSetting' })
                 | Dark
             p.help-block
               | The carousel has a transparent background in order to match the page it lives on. Selecting 'Light' background will result in dark scroll buttons, and vice versa.
@@ -72,14 +90,18 @@ form.plugin-config.form-horizontal name="pluginConfig" data-controller="plugins"
                 'plugin[tabbed_carousel][tab_color]', 
                 '#333333', 
                 class: 'form-control',
-                data: { plugins_target: 'tabbedCarouselTabColorInput' })
+                data: { \
+                  plugins_target: 'tabbedCarouselTabColorInput', 
+                  action: 'change->plugins#updateSetting input->plugins#checkTabContrast' })
           .form-group
             = label_tag('plugin_tabbed_carousel_text_color', 'Text Color')
             = color_field_tag( \
                 'plugin[tabbed_carousel][text_color]', 
                 '#ffffff', 
                 class: 'form-control',
-                data: { plugins_target: 'tabbedCarouselTextColorInput' })
+                data: { \
+                  plugins_target: 'tabbedCarouselTextColorInput', 
+                  action: 'change->plugins#updateSetting' })
           .help-block.color-contrast Text color will auto-adjust to ensure sufficient contrast 
         .form-inline
           .form-group.delay
@@ -94,7 +116,7 @@ form.plugin-config.form-horizontal name="pluginConfig" data-controller="plugins"
                   data: { \
                     input_spinner_target: 'input',
                     plugins_target: 'tabbedCarouselDelayInput',
-                    action: 'keypress->input-spinner#onKeypress' }) 
+                    action: 'keypress->input-spinner#onKeypress change->plugins#updateSetting' }) 
               = render('shared/input_spinner_buttons')
             .help-block
               | seconds from page load to appearance of the carousel tab
@@ -128,23 +150,25 @@ form.plugin-config.form-horizontal name="pluginConfig" data-controller="plugins"
               data: { \
                 controller: 'tomselect',
                 tomselect_kind_value: 'story',
-                dynamic_placeholder: 'Select Stories',
+                dynamic_placeholder: 'Select stories',
                 plugins_target: 'storiesSelect',
                 action: '' }})
       .plugin-config__category.hidden
         = render( \
-            'stories/shared/select_category', 
+            'stories/shared/select_story_tag', 
             { company:, 
+              tag: :category,
               name: 'plugin[category]',
-              select_id: nil,   # not needed since label tag isn't displayed 
+              select_id: nil,
               preselected_id: nil,
               is_dashboard: false })
       .plugin-config__product.hidden
         = render( \
-            'stories/shared/select_product', 
+            'stories/shared/select_story_tag', 
             { company:, 
+              tag: :product,
               name: 'plugin[product]',
-              select_id: nil,   # not needed since label tag isn't displayed 
+              select_id: nil, 
               preselected_id: nil,
               is_dashboard: false })
 

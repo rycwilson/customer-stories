@@ -323,9 +323,9 @@ class Company < ApplicationRecord
 
   def tag_select_options tag_type, with_stories_count: true, only_featured: false, for_multi_select: false
     tags = case tag_type
-    when 'category'
+    when :category
       story_categories
-    when 'product'
+    when :product
       products
     end
     (only_featured ? tags.featured : tags).map do |tag| 

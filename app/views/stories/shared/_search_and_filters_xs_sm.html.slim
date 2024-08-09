@@ -36,8 +36,8 @@
             '',
             grouped_options_for_select( \
               { \
-                'Category' => company.tag_select_options('category', only_featured: true, for_multi_select: true), 
-                'Product' => company.tag_select_options('product', only_featured: true, for_multi_select: true) \
+                'Category' => company.tag_select_options(:category, only_featured: true, for_multi_select: true), 
+                'Product' => company.tag_select_options(:product, only_featured: true, for_multi_select: true) \
               }.delete_if { |tag_type, options| options.blank? },
               filters.map { |tag_type, tag_id| "#{tag_type}-#{tag_id}" }),
             { class: 'stories-filter__select stories-filter__select--grouped',
@@ -52,8 +52,9 @@
 
   - elsif company.story_categories.featured.present?
     = render( \
-        'stories/shared/select_category', 
+        'stories/shared/select_story_tag', 
         { company:, 
+          tag: :category,
           name: nil,
           select_id: SecureRandom.urlsafe_base64, 
           preselected_id: filters[:category],
@@ -61,8 +62,9 @@
 
   - elsif company.products.featured.present?
     = render( \
-        'stories/shared/select_product', 
-        { company:, 
+        'stories/shared/select_story_tag', 
+        { company:,
+          tag: :product,
           name: nil,
           select_id: SecureRandom.urlsafe_base64, 
           preselected_id: filters[:product],

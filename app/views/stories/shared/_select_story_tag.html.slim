@@ -1,0 +1,15 @@
+.stories-filter.form-group
+  = label_tag(select_id, tag.to_s.capitalize)
+  = select_tag( \
+      name,
+      options_for_select( \
+        company.tag_select_options(tag, only_featured: !is_dashboard),
+        preselected_id),
+      { id: select_id,
+        include_blank: true,
+        placeholder: "Select #{tag}",
+        class: "stories-filter__select stories-filter__select--#{tag}",
+        data: { \
+          controller: 'tomselect',
+          tomselect_kind_value: tag,
+          stories_target: 'filterSelect' } })
