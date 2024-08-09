@@ -1,5 +1,5 @@
 import { Controller } from '@hotwired/stimulus';
-import { tsBaseOptions } from '../tomselect';
+import { hexToRgb, colorContrast } from '../utils';
 
 export default class PluginsController extends Controller<HTMLDivElement> {
   static targets = [
@@ -46,7 +46,8 @@ export default class PluginsController extends Controller<HTMLDivElement> {
       .replace(/\/plugins\/(gallery|carousel|tabbed_carousel)/, `/plugins/${type}`)
 
       // gallery settings
-      .replace(/\sdata-max-rows="\d+"/ || /><\/script>/, () => {
+      .replace(/\sdata-max-rows="\d+"/, '')
+      .replace(/><\/script>/, () => {
         const maxRows = this.maxGalleryRowsInputTarget.value;
         return (type === 'gallery' && maxRows) ? `\xa0data-max-rows="${maxRows}"></script>` : '></script>';
       })
@@ -70,23 +71,40 @@ export default class PluginsController extends Controller<HTMLDivElement> {
       });
   }
 
-  onChangeMaxGalleryRows({ target: input }: { target: HTMLInputElement }) {
-    const enabledDidToggle = input.type === 'checkbox';
-    const maxRowsEnabled = enabledDidToggle ? !input.checked : true;
-    if (enabledDidToggle) {
-      this.maxGalleryRowsSpinnerTarget.setAttribute('data-input-spinner-enabled-value', maxRowsEnabled.toString());
-      this.codeTextAreaTarget.value = this.codeTextAreaTarget.value.replace(
-        maxRowsEnabled ? /><\/script>/ : /\sdata-max-rows="\d+"/,
-        maxRowsEnabled ? 
-          `\xa0data-max-rows="${this.maxGalleryRowsSpinnerTarget.dataset.inputSpinnerInitialValue!.toString()}"></script>` : 
-          ''
-      );
+  toggleMaxGalleryRows({ target: input }: { target: HTMLInputElement }) {
+    const maxRowsEnabled = !input.checked;
+    this.maxGalleryRowsSpinnerTarget.setAttribute('data-input-spinner-enabled-value', maxRowsEnabled.toString());
+    this.codeTextAreaTarget.value = this.codeTextAreaTarget.value.replace(
+      maxRowsEnabled ? /><\/script>/ : /\sdata-max-rows="\d+"/,
+      maxRowsEnabled ? 
+        `\xa0data-max-rows="${this.maxGalleryRowsSpinnerTarget.dataset.inputSpinnerInitialValue}"></script>` : 
+        ''
+    );
+  }
+
+  updateSetting({ target: input }: { target: HTMLInputElement }) {
+    const setting = input.name.match(/max_rows|background|tab_color|text_color|delay/)![0].replace('_', '-');
+    this.codeTextAreaTarget.value = this.codeTextAreaTarget.value
+      .replace(new RegExp(`data-${setting}="#?\\w+"`), `data-${setting}="${input.value}"`);
+  }
+
+  checkTabContrast({ target: input }: { target: HTMLInputElement }) {
+    const tabColor = hexToRgb(input.value) as { r: number, b: number, g: number };
+    const textColorInput = this.tabbedCarouselTextColorInputTarget;
+    const lightTextColor = '#ffffff';
+    const darkTextColor = '#333333';
+    if (colorContrast(tabColor) === 'bg-light' && textColorInput.value !== darkTextColor) {
+      textColorInput.value = darkTextColor;
+    } else if (colorContrast(tabColor) === 'bg-dark' && textColorInput.value !== lightTextColor) {
+      textColorInput.value = lightTextColor;
     } else {
-      this.codeTextAreaTarget.value = this.codeTextAreaTarget.value.replace(
-        /\sdata-max-rows="\d+"/,
-        `\xa0data-max-rows="${this.maxGalleryRowsInputTarget.value.toString()}"`
-      );
+      return;
     }
+    input.addEventListener(
+      'focusout', 
+      () => textColorInput.dispatchEvent(new Event('change')),
+      { once: true }
+    );
   }
 
   updateAppearance({ target: checkbox }: { target: HTMLInputElement }) {
