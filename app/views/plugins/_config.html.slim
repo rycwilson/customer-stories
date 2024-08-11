@@ -152,7 +152,7 @@ form.plugin-config.form-horizontal name="pluginConfig" data-controller="plugins"
                 tomselect_kind_value: 'story',
                 dynamic_placeholder: 'Select stories',
                 plugins_target: 'storiesSelect',
-                action: '' }})
+                action: 'plugins#updateStories' } })
       .plugin-config__category.hidden
         = render( \
             'stories/shared/select_story_tag', 

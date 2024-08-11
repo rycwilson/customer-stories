@@ -88,6 +88,20 @@ export default class PluginsController extends Controller<HTMLDivElement> {
       .replace(new RegExp(`data-${setting}="#?\\w+"`), `data-${setting}="${input.value}"`);
   }
 
+  updateStories({ target: select }: { target: TomSelectInput }) {
+    const isFirstSelection = !this.codeTextAreaTarget.value.match(/data-stories/);
+    const stories = [...select.options].filter(option => option.selected).map(option => +option.value);
+    this.codeTextAreaTarget.value = this.codeTextAreaTarget.value
+      .replace(/\sdata-(category|product)="(\w|-)*"/, '')
+      .replace(
+        isFirstSelection ? /><\/script>/ : /\sdata-stories="\[((\d+(,)?)+)?\]"/,
+        stories.length ? 
+          `\xa0data-stories="${JSON.stringify(stories)}"` + (isFirstSelection ? '></script>' : '') :
+          ''
+      );
+    // $(`[name="plugin[category]"], [name="plugin[product]"]`).val('').trigger('change.select2');
+  }
+
   checkTabContrast({ target: input }: { target: HTMLInputElement }) {
     const tabColor = hexToRgb(input.value) as { r: number, b: number, g: number };
     const textColorInput = this.tabbedCarouselTextColorInputTarget;
