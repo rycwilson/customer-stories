@@ -41,7 +41,7 @@
     "imagesloaded": "4.1",
     "jquery-csv": "^1.0.21",
     "jquery-textfill": "^0.6.0",
-    "jquery-ui": "^1.13.2",
+    "jquery-ui": "^1.14.0",
     "jquery.flot.tooltip": "^0.9.0",
     "jquery.inputmask": "^3.2.7",
     "js-cookie": "^3.0.1",
@@ -49,7 +49,7 @@
     "parsleyjs": "^2.0.7",
     "responsive-toolkit": "^2.6.3",
     "summernote": "^0.8.20",
-    "tom-select": "^2.2.2"
+    "tom-select": "^2.3.1"
   },
   "devDependencies": {
     "@jest/globals": "^29.7.0",
