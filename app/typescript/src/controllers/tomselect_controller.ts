@@ -8,11 +8,13 @@ export default class extends Controller<TomSelectInput> {
   static values = { 
     kind: String, 
     customOptions: { type: Object, default: {} },
-    preventFocus: { type: Boolean, default: false }
+    preventFocus: { type: Boolean, default: false },
+    sortable: { type: Boolean, default: false }
   };
   declare readonly kindValue: SelectInputKind | undefined;
   declare readonly customOptionsValue: { [key: string]: any };
   declare readonly preventFocusValue: boolean;
+  declare readonly sortableValue: boolean;
 
   declare ts: TomSelect;
   declare currentSearchResults: any[];
@@ -105,18 +107,21 @@ export default class extends Controller<TomSelectInput> {
         } 
       },
       
-      plugins: ctrl.isMultiSelect ? {
-        'remove_button': {
-          title: 'Clear selection'
+      plugins: (() => {
+        const _plugins: { [key: string]: object } = {};
+        if (ctrl.isMultiSelect) {
+          _plugins['remove_button'] = { title: 'Clear selection' }
+        } else {
+          _plugins['clear_button'] = {
+            title: 'Clear selection',
+            html: (config: CBOptions) => (
+              `<button type="button" class="btn ${config.className}" title="${config.title}">&times;</button>`
+            ) 
+          }
         }
-      } : {
-        'clear_button': {
-          title: 'Clear selection',
-          html: (config: CBOptions) => (
-            `<button type="button" class="btn ${config.className}" title="${config.title}">&times;</button>`
-          )
-        }
-      },
+        if (ctrl.sortableValue) _plugins['drag_drop'] = {};        
+        return _plugins;
+      })(),
 
       createFilter(input: string) {
         // don't add the new template name to the list
@@ -127,6 +132,7 @@ export default class extends Controller<TomSelectInput> {
       onInitialize(this: TomSelect) {
         ctrl.dispatch('did-initialize', { detail: ctrl.element });
         if (ctrl.isMultiSelect) addMultiSelectPlaceholder(this);
+        // if (ctrl.sortableValue) $(this.control).sortable();
 
         // prevent the user from closing a template without confirmation
         if (ctrl.kindValue === 'invitationTemplate') {

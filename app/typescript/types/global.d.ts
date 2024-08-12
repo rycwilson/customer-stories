@@ -1,5 +1,6 @@
 declare module 'tom-select/dist/js/plugins/clear_button';
 declare module 'tom-select/dist/js/plugins/remove_button';
+declare module 'tom-select/dist/js/plugins/drag_drop';
 
 declare namespace ImagesLoaded {
   // extend to include properties that aren't included in @types/imagesloaded
