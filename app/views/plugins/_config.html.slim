@@ -102,7 +102,8 @@ form.plugin-config.form-horizontal name="pluginConfig" data-controller="plugins"
                 data: { \
                   plugins_target: 'tabbedCarouselTextColorInput', 
                   action: 'change->plugins#updateSetting' })
-          .help-block.color-contrast Text color will auto-adjust to ensure sufficient contrast 
+          .help-block.color-contrast 
+            | Text color will auto-adjust to ensure sufficient contrast 
         .form-inline
           .form-group.delay
             = label_tag('plugin_tabbed_carousel_delay', 'Delay')
@@ -137,6 +138,7 @@ form.plugin-config.form-horizontal name="pluginConfig" data-controller="plugins"
 
   .form-group
     .col-sm-offset-3.col-sm-9.col-md-8.col-lg-6
+
       .plugin-config__stories
         = select_tag( \
             'plugin[stories][]',
@@ -154,7 +156,8 @@ form.plugin-config.form-horizontal name="pluginConfig" data-controller="plugins"
                 dynamic_placeholder: 'Select stories',
                 plugins_target: 'storiesSelect',
                 action: 'plugins#updateStories' } })
-      .plugin-config__category.hidden
+
+      .plugin-config__category.hidden data-action="change->plugins#updateFilter"
         = render( \
             'stories/shared/select_story_tag', 
             { company:, 
@@ -163,7 +166,8 @@ form.plugin-config.form-horizontal name="pluginConfig" data-controller="plugins"
               select_id: nil,
               preselected_id: nil,
               is_dashboard: false })
-      .plugin-config__product.hidden
+
+      .plugin-config__product.hidden data-action="change->plugins#updateFilter"
         = render( \
             'stories/shared/select_story_tag', 
             { company:, 
@@ -176,12 +180,22 @@ form.plugin-config.form-horizontal name="pluginConfig" data-controller="plugins"
   .plugin-config__appearance.form-group
     label.col-sm-3.control-label Appearance
     .col-sm-9.col-md-8.col-lg-6
-      .btn-group data-action="change->plugins#updateAppearance"
+      .btn-group
         = label_tag('plugin_logos_only', class: 'checkbox-inline') do
-          = check_box_tag('plugin[logos_only]', true, false, data: { plugins_target: 'logosOnlyCheckbox' })
+          = check_box_tag( \
+              'plugin[logos_only]', 
+              true, 
+              false, 
+              data: { \
+                plugins_target: 'logosOnlyCheckbox',
+                action: 'plugins#updateSetting' })
           | Logos Only
         = label_tag('plugin_grayscale', class: 'checkbox-inline') do
-          = check_box_tag('plugin[grayscale]', true, false, data: { plugins_target: 'appearanceCheckbox' })
+          = check_box_tag( \
+              'plugin[grayscale]', 
+              true, 
+              false, 
+              data: { action: 'plugins#updateSetting' })
           | Grayscale
 
   .plugin-config__code-actions.form-group

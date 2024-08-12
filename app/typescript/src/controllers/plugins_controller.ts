@@ -21,7 +21,7 @@ export default class PluginsController extends Controller<HTMLDivElement> {
   declare tabbedCarouselTabColorInputTarget: HTMLInputElement;
   declare tabbedCarouselTextColorInputTarget: HTMLInputElement;
   declare tabbedCarouselDelayInputTarget: HTMLInputElement;
-  declare storiesSelectTarget: TomSelectInput
+  declare storiesSelectTarget: TomSelectInput;
 
   connect() {
     // console.log('connect plugins')
@@ -34,29 +34,34 @@ export default class PluginsController extends Controller<HTMLDivElement> {
 
   toggleSettingsDisplay({ target: input }: { target: HTMLInputElement }) {
     const panel = <HTMLDivElement>this.element.querySelector(`.plugin-config__${input.value.replace('_', '-')}`);
-    [...panel.parentElement!.children].forEach(_panel => _panel.classList.toggle('hidden', _panel !== panel));
+    [...panel.parentElement!.children].forEach(_panel => {
+      _panel.classList.toggle('hidden', _panel !== panel);
+      [..._panel.querySelectorAll('select.tomselected')]
+        .filter((select: TomSelectInput) => select.value)
+        .forEach((select: TomSelectInput) => select.tomselect.clear());
+    });
   }
 
   onChangePluginType({ target: input }: { target: HTMLInputElement }) {
-    const type = input.value;
+    const pluginType = input.value;
     this.logosOnlyCheckboxTarget.checked = false;
-    this.logosOnlyCheckboxTarget.disabled = type !== 'gallery';
+    this.logosOnlyCheckboxTarget.disabled = pluginType !== 'gallery';
     this.codeTextAreaTarget.value = this.codeTextAreaTarget.value
-      .replace(/id="(cs-gallery|cs-carousel|cs-tabbed-carousel)"/, `id="cs-${type.replace('_', '-')}"`)
-      .replace(/\/plugins\/(gallery|carousel|tabbed_carousel)/, `/plugins/${type}`)
+      .replace(/id="(cs-gallery|cs-carousel|cs-tabbed-carousel)"/, `id="cs-${pluginType.replace('_', '-')}"`)
+      .replace(/\/plugins\/(gallery|carousel|tabbed_carousel)/, `/plugins/${pluginType}`)
 
       // gallery settings
       .replace(/\sdata-max-rows="\d+"/, '')
       .replace(/><\/script>/, () => {
         const maxRows = this.maxGalleryRowsInputTarget.value;
-        return (type === 'gallery' && maxRows) ? `\xa0data-max-rows="${maxRows}"></script>` : '></script>';
+        return (pluginType === 'gallery' && maxRows) ? `\xa0data-max-rows="${maxRows}"></script>` : '></script>';
       })
       
       // carousel settings
       .replace(/\sdata-background="(light|dark)"/, '')
       .replace(/><\/script>/, () => {
         const bg = this.carouselBackgroundRadioTargets.find((input: HTMLInputElement) => input.checked)!.value;
-        return type === 'carousel' ? `\xa0data-background="${bg}"></script>` : '></script>';
+        return pluginType === 'carousel' ? `\xa0data-background="${bg}"></script>` : '></script>';
       })
 
       // tabbed carousel settings
@@ -65,10 +70,13 @@ export default class PluginsController extends Controller<HTMLDivElement> {
         const tabColor = this.tabbedCarouselTabColorInputTarget.value;
         const textColor = this.tabbedCarouselTextColorInputTarget.value;
         const delay = this.tabbedCarouselDelayInputTarget.value;
-        return type === 'tabbed_carousel' ?
+        return pluginType === 'tabbed_carousel' ?
           `\xa0data-tab-color="${tabColor}"\xa0data-text-color="${textColor}"\xa0data-delay="${delay}"></script>` :
           '></script>';
-      });
+      })
+
+      // appearance settings
+      .replace(/\sdata-logos-only="true"/, '')
   }
 
   toggleMaxGalleryRows({ target: input }: { target: HTMLInputElement }) {
@@ -83,9 +91,29 @@ export default class PluginsController extends Controller<HTMLDivElement> {
   }
 
   updateSetting({ target: input }: { target: HTMLInputElement }) {
-    const setting = input.name.match(/max_rows|background|tab_color|text_color|delay/)![0].replace('_', '-');
+    const setting = input.name.match(/max_rows|background|tab_color|text_color|delay|logos_only|grayscale/)![0].replace('_', '-');
+    if (/logos-only|grayscale/.test(setting)) {
+      this.codeTextAreaTarget.value = this.codeTextAreaTarget.value.replace(
+        input.checked ? /><\/script>/ : new RegExp(`\\sdata-${setting}="true"`),
+        input.checked ? `\xa0data-${setting}="true"></script>` : ''
+      );
+    } else {
+      this.codeTextAreaTarget.value = this.codeTextAreaTarget.value
+        .replace(new RegExp(`data-${setting}="#?\\w+"`), `data-${setting}="${input.value}"`);
+    }
+  }
+
+  updateFilter({ target: select }: { target: TomSelectInput }) {
+    const filter: 'category' | 'product' = select.dataset.tomselectKindValue;
+    const filterRegExp = new RegExp(`\\sdata-${filter}="(\\w|-)*"`);
+    const isFirstSelection = select.value && !this.codeTextAreaTarget.value.match(filterRegExp);
+    const [selectedOption] = [...select.options].filter(option => option.selected);
     this.codeTextAreaTarget.value = this.codeTextAreaTarget.value
-      .replace(new RegExp(`data-${setting}="#?\\w+"`), `data-${setting}="${input.value}"`);
+      .replace(
+        isFirstSelection ? /><\/script>/ : filterRegExp,
+        select.value ? `\xa0data-${filter}="${selectedOption.dataset.slug}"` + (isFirstSelection ? '></script>' : '') : ''
+      );
+    // .replace(/\xa0data-stories="\[((\d+(,)?)+)?\]"/, '')
   }
 
   updateStories({ target: select }: { target: TomSelectInput }) {
@@ -118,14 +146,6 @@ export default class PluginsController extends Controller<HTMLDivElement> {
       'focusout', 
       () => textColorInput.dispatchEvent(new Event('change')),
       { once: true }
-    );
-  }
-
-  updateAppearance({ target: checkbox }: { target: HTMLInputElement }) {
-    const param = checkbox.name.match(/plugin\[(\w+)\]/)![1].replace('_', '-');   // logos_only, grayscale, etc
-    this.codeTextAreaTarget.value = this.codeTextAreaTarget.value.replace(
-      checkbox.checked ? /><\/script>/ : new RegExp(`\\sdata-${param}="true"`),
-      checkbox.checked ? `\xa0data-${param}="true"></script>` : ''
     );
   }
 }
