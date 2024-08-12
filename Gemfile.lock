@@ -423,8 +423,6 @@ DEPENDENCIES
   googlecharts
   html_to_plain_text
   jbuilder (~> 2.7)
-  jquery-rails
-  jquery-ui-rails
   jsbundling-rails
   listen (~> 3.3)
   local_time
