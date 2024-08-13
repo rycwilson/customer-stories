@@ -11,7 +11,6 @@ export default class PluginsController extends Controller<HTMLFormElement> {
     'tabbedCarouselTabColorInput',
     'tabbedCarouselTextColorInput',
     'tabbedCarouselDelayInput',
-    'storiesSelect'
   ];
   declare logosOnlyCheckboxTarget: HTMLInputElement;
   declare codeTextAreaTarget: HTMLTextAreaElement;
@@ -21,15 +20,9 @@ export default class PluginsController extends Controller<HTMLFormElement> {
   declare tabbedCarouselTabColorInputTarget: HTMLInputElement;
   declare tabbedCarouselTextColorInputTarget: HTMLInputElement;
   declare tabbedCarouselDelayInputTarget: HTMLInputElement;
-  declare storiesSelectTarget: TomSelectInput;
 
   connect() {
     // console.log('connect plugins')
-    this.initContentFilters();
-  }
-
-  initContentFilters() {
-
   }
 
   toggleSettingsDisplay({ target: input }: { target: HTMLInputElement }) {
@@ -101,7 +94,7 @@ export default class PluginsController extends Controller<HTMLFormElement> {
     }
   }
 
-  updateFilter({ target: select }: { target: TomSelectInput }) {
+  onChangeFilter({ target: select }: { target: TomSelectInput }) {
     const filter: 'category' | 'product' = select.dataset.tomselectKindValue;
     const filterRegExp = new RegExp(`\\sdata-${filter}="(\\w|-)*"`);
     const isFirstSelection = select.value && !this.codeTextAreaTarget.value.match(filterRegExp);
@@ -109,12 +102,14 @@ export default class PluginsController extends Controller<HTMLFormElement> {
     this.codeTextAreaTarget.value = this.codeTextAreaTarget.value
       .replace(
         isFirstSelection ? /><\/script>/ : filterRegExp,
-        select.value ? `\xa0data-${filter}="${selectedOption.dataset.slug}"` + (isFirstSelection ? '></script>' : '') : ''
+        select.value ? 
+          `\xa0data-${filter}="${selectedOption.dataset.slug}"` + (isFirstSelection ? '></script>' : '') : 
+          ''
       );
     // .replace(/\xa0data-stories="\[((\d+(,)?)+)?\]"/, '')
   }
 
-  updateStories({ target: select }: { target: TomSelectInput }) {
+  onChangeStories({ target: select }: { target: TomSelectInput }) {
     const isFirstSelection = !this.codeTextAreaTarget.value.match(/data-stories/);
     const stories = [...select.options].filter(option => option.selected).map(option => +option.value);
     this.codeTextAreaTarget.value = this.codeTextAreaTarget.value
@@ -125,7 +120,6 @@ export default class PluginsController extends Controller<HTMLFormElement> {
           `\xa0data-stories="${JSON.stringify(stories)}"` + (isFirstSelection ? '></script>' : '') :
           ''
       );
-    // $(`[name="plugin[category]"], [name="plugin[product]"]`).val('').trigger('change.select2');
   }
 
   checkTabContrast({ target: input }: { target: HTMLInputElement }) {

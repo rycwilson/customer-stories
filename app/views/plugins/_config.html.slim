@@ -154,10 +154,9 @@ form.plugin-config.form-horizontal name="pluginConfig" data-controller="plugins"
                 tomselect_kind_value: 'story',
                 tomselect_sortable_value: true,
                 dynamic_placeholder: 'Select stories',
-                plugins_target: 'storiesSelect',
-                action: 'plugins#updateStories' } })
+                action: 'plugins#onChangeStories' } })
 
-      .plugin-config__category.hidden data-action="change->plugins#updateFilter"
+      .plugin-config__category.hidden data-action="change->plugins#onChangeFilter"
         = render( \
             'stories/shared/select_story_tag', 
             { company:, 
@@ -167,7 +166,7 @@ form.plugin-config.form-horizontal name="pluginConfig" data-controller="plugins"
               preselected_id: nil,
               is_dashboard: false })
 
-      .plugin-config__product.hidden data-action="change->plugins#updateFilter"
+      .plugin-config__product.hidden data-action="change->plugins#onChangeFilter"
         = render( \
             'stories/shared/select_story_tag', 
             { company:, 
