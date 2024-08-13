@@ -43,34 +43,33 @@ export default class PluginsController extends Controller<HTMLFormElement> {
   }
 
   onChangePluginType({ target: input }: { target: HTMLInputElement }) {
-    const pluginType = input.value;
+    const pluginType = input.value.replace('_', '-');
     this.logosOnlyCheckboxTarget.checked = false;
     this.logosOnlyCheckboxTarget.disabled = pluginType !== 'gallery';
     this.codeTextAreaTarget.value = this.codeTextAreaTarget.value
-      .replace(/id="(cs-gallery|cs-carousel|cs-tabbed-carousel)"/, `id="cs-${pluginType.replace('_', '-')}"`)
-      .replace(/\/plugins\/(gallery|carousel|tabbed_carousel)/, `/plugins/${pluginType}`)
+      .replace(/gallery|carousel|tabbed-carousel/g, pluginType)
 
       // gallery settings
       .replace(/\sdata-max-rows="\d+"/, '')
-      .replace(/><\/script>/, () => {
+      .replace('></script>', () => {
         const maxRows = this.maxGalleryRowsInputTarget.value;
         return (pluginType === 'gallery' && maxRows) ? `\xa0data-max-rows="${maxRows}"></script>` : '></script>';
       })
       
       // carousel settings
       .replace(/\sdata-background="(light|dark)"/, '')
-      .replace(/><\/script>/, () => {
-        const bg = this.carouselBackgroundRadioTargets.find((input: HTMLInputElement) => input.checked)!.value;
-        return pluginType === 'carousel' ? `\xa0data-background="${bg}"></script>` : '></script>';
+      .replace('></script>', () => {
+        const checkedInput = <HTMLInputElement>this.carouselBackgroundRadioTargets.find((input: HTMLInputElement) => input.checked);
+        return pluginType === 'carousel' ? `\xa0data-background="${checkedInput.value}"></script>` : '></script>';
       })
 
       // tabbed carousel settings
       .replace(/\sdata-tab-color="#\w+"\sdata-text-color="#\w+"\sdata-delay="\d+"/, '')
-      .replace(/><\/script>/, () => {
+      .replace('></script>', () => {
         const tabColor = this.tabbedCarouselTabColorInputTarget.value;
         const textColor = this.tabbedCarouselTextColorInputTarget.value;
         const delay = this.tabbedCarouselDelayInputTarget.value;
-        return pluginType === 'tabbed_carousel' ?
+        return pluginType === 'tabbed-carousel' ?
           `\xa0data-tab-color="${tabColor}"\xa0data-text-color="${textColor}"\xa0data-delay="${delay}"></script>` :
           '></script>';
       })
@@ -79,14 +78,13 @@ export default class PluginsController extends Controller<HTMLFormElement> {
       .replace(/\sdata-logos-only="true"/, '')
   }
 
-  toggleMaxGalleryRows({ target: input }: { target: HTMLInputElement }) {
-    const maxRowsEnabled = !input.checked;
+  toggleMaxGalleryRows({ target: checkbox }: { target: HTMLInputElement }) {
+    const maxRowsEnabled = !checkbox.checked;
+    const initialValue = this.maxGalleryRowsSpinnerTarget.dataset.inputSpinnerInitialValue;
     this.maxGalleryRowsSpinnerTarget.setAttribute('data-input-spinner-enabled-value', maxRowsEnabled.toString());
     this.codeTextAreaTarget.value = this.codeTextAreaTarget.value.replace(
-      maxRowsEnabled ? /><\/script>/ : /\sdata-max-rows="\d+"/,
-      maxRowsEnabled ? 
-        `\xa0data-max-rows="${this.maxGalleryRowsSpinnerTarget.dataset.inputSpinnerInitialValue}"></script>` : 
-        ''
+      maxRowsEnabled ? '></script>' : /\sdata-max-rows="\d+"/,
+      maxRowsEnabled ? `\xa0data-max-rows="${initialValue}"></script>` : ''
     );
   }
 
@@ -147,6 +145,22 @@ export default class PluginsController extends Controller<HTMLFormElement> {
       () => textColorInput.dispatchEvent(new Event('change')),
       { once: true }
     );
+  }
+
+  openDemo({ currentTarget: link }: { currentTarget: HTMLAnchorElement }) {
+    const params = new FormData(this.element);
+    console.log(params)
+    // const inactiveParams = [];
+    // for (const [param, value] of params) {
+    //   const isOtherContent = param.match(/stories|category|product/) && !param.includes(params.get('plugin[content]'));
+    //   const isOtherType = param.match(/gallery|carousel|tabbed_carousel/) && !param.includes(params.get('plugin[type]'));
+    //   if (isOtherContent || isOtherType) inactiveParams.push(param);
+    // }
+    // inactiveParams.forEach(param => params.delete(param));
+    // params.delete('plugin[content]');
+    // $(link)
+    //   .attr('href', `/plugins/demo?${new URLSearchParams(params).toString()}`)
+    //   .popupWindow(e, window.innerWidth * 0.85, window.innerHeight * 0.85);
   }
 
   copyCode({ currentTarget: btn }: { currentTarget: HTMLButtonElement }) {
