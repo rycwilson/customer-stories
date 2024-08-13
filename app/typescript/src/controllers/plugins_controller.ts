@@ -148,4 +148,20 @@ export default class PluginsController extends Controller<HTMLDivElement> {
       { once: true }
     );
   }
+
+  copyCode({ currentTarget: btn }: { currentTarget: HTMLButtonElement }) {
+    const temp = <HTMLTextAreaElement>document.createElement('textarea');
+    const toggleBtn = (didCopy: boolean) => {
+      [...btn.children].forEach(child => child.classList.toggle('hidden'));
+      btn.disabled = didCopy;
+      btn.style.cursor = didCopy ? 'default' : 'pointer';
+    };
+    temp.innerText = this.codeTextAreaTarget.textContent!;
+    document.body.appendChild(temp);
+    temp.select();
+    document.execCommand('copy');
+    temp.remove();
+    toggleBtn(true);
+    setTimeout(() => toggleBtn(false), 1500); 
+  }
 }

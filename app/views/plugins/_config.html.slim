@@ -201,10 +201,10 @@ form.plugin-config.form-horizontal name="pluginConfig" data-controller="plugins"
   .plugin-config__code-actions.form-group
     label.col-sm-3.control-label Code
     .col-sm-9.col-md-8.col-lg-6
-      a.btn.btn-secondary href="/plugins/demo" disabled=('true' if company.stories.blank?)
+      a.btn.btn-secondary href="/plugins/demo" disabled=('true' if company.stories.featured.blank?)
         i.fa.fa-fw.fa-external-link
         span = ' Demo'
-      button.copy.btn.btn-secondary type="button"
+      button.copy.btn.btn-secondary type="button" data-action="plugins#copyCode"
         i.fa.fa-fw.fa-clipboard
         span = ' Copy'
         i.fa.fa-fw.fa-check.hidden
