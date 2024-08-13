@@ -120,7 +120,7 @@ form.plugin-config.form-horizontal name="pluginConfig" data-controller="plugins"
                     action: 'keypress->input-spinner#onKeypress change->plugins#updateSetting' }) 
               = render('shared/input_spinner_buttons')
             .help-block
-              | seconds from page load to appearance of the carousel tab
+              | Seconds from page load to appearance of the carousel tab
 
   .plugin-config__content.form-group data-action="change->plugins#toggleSettingsDisplay"
     label.col-sm-3.control-label Content
@@ -200,7 +200,8 @@ form.plugin-config.form-horizontal name="pluginConfig" data-controller="plugins"
   .plugin-config__code-actions.form-group
     label.col-sm-3.control-label Code
     .col-sm-9.col-md-8.col-lg-6
-      a.btn.btn-secondary href="/plugins/demo" disabled=('true' if company.stories.featured.blank?)
+      / a.btn.btn-secondary href="/plugins/demo" disabled=('true' if company.stories.featured.blank?)
+      a.btn.btn-secondary href="" data-action="plugins#openDemo"
         i.fa.fa-fw.fa-external-link
         span = ' Demo'
       button.copy.btn.btn-secondary type="button" data-action="plugins#copyCode"

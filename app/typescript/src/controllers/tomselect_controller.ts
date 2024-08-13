@@ -20,23 +20,13 @@ export default class extends Controller<TomSelectInput> {
   declare currentSearchResults: any[];
 
   connect() {
-    
     // invitation templates from contributors table
     if (this.ts) {
       // console.log('ts already initialized ', this.element.closest('tr').id)
       return;    
     }
-
     this.ts = new TomSelect(this.element, {...tsBaseOptions, ...this.options, ...this.customOptionsValue });
     if (this.preventFocusValue) this.ts.control_input.setAttribute('tabindex', '-1');
-
-
-
-    // if (this.isMultiSelect) {
-      // add clearing behavior
-      // this.ts.wrapper.querySelectorAll('.item').forEach(item => this.onMultiSelectItemAdd(item as TomItem));
-      // this.ts.on('item_add', (value: string, item: TomItem) => this.onMultiSelectItemAdd(item));
-    // }
   }
 
   isFilter() { return this.kindValue === 'filter'; }
@@ -66,14 +56,6 @@ export default class extends Controller<TomSelectInput> {
   }
 
   get isMultiSelect() { return this.element.type === 'select-multiple'; }
-
-  // onMultiSelectItemAdd(item: TomItem) {
-    // (<HTMLButtonElement>item.querySelector('.clear-button')).addEventListener('click', (e) => {
-      // e.stopPropagation();    // don't highlight active or open dropdown
-      // this.ts.removeItem(item.dataset.value);
-      // this.ts.blur();
-    // });
-  // }
 
   get options() {
     const ctrl = this;  // "this" will be the TomSelect instance in the context of the options object

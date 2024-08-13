@@ -141,20 +141,32 @@ export default class PluginsController extends Controller<HTMLFormElement> {
     );
   }
 
-  openDemo({ currentTarget: link }: { currentTarget: HTMLAnchorElement }) {
-    const params = new FormData(this.element);
-    console.log(params)
-    // const inactiveParams = [];
-    // for (const [param, value] of params) {
-    //   const isOtherContent = param.match(/stories|category|product/) && !param.includes(params.get('plugin[content]'));
-    //   const isOtherType = param.match(/gallery|carousel|tabbed_carousel/) && !param.includes(params.get('plugin[type]'));
-    //   if (isOtherContent || isOtherType) inactiveParams.push(param);
-    // }
-    // inactiveParams.forEach(param => params.delete(param));
-    // params.delete('plugin[content]');
-    // $(link)
-    //   .attr('href', `/plugins/demo?${new URLSearchParams(params).toString()}`)
-    //   .popupWindow(e, window.innerWidth * 0.85, window.innerHeight * 0.85);
+  openDemo(e: Event) {
+    e.preventDefault();
+    const formParams = new FormData(this.element);
+    const searchParams = new URLSearchParams();
+    const width = window.innerWidth * 0.85;
+    const height = window.innerHeight * 0.85;
+    const top = ((window.innerHeight / 2) - (height / 2)) + window.screenTop;
+    const left = ((window.innerWidth / 2) - (width / 2)) + window.screenLeft;
+    for (const [param, value] of formParams) {
+      const isOtherContent = (
+        param.match(/stories|category|product/) && !param.includes(<string>formParams.get('plugin[content]'))
+      );
+      const isOtherType = (
+        param.match(/gallery|carousel|tabbed_carousel/) && !param.includes(<string>formParams.get('plugin[type]'))
+      );
+      if (isOtherContent || isOtherType || param === 'plugin[content]') {
+        continue;
+      } else {
+        searchParams.append(param, value as string);
+      }
+    }
+    window.open(
+      `/plugins/demo?${searchParams.toString()}`, 
+      'pluginDemoWindow', 
+      `width=${width},height=${height},top=${top},left=${left},noopener,noreferrer`
+    );
   }
 
   copyCode({ currentTarget: btn }: { currentTarget: HTMLButtonElement }) {
