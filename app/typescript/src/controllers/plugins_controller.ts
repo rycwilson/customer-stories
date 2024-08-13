@@ -1,7 +1,7 @@
 import { Controller } from '@hotwired/stimulus';
 import { hexToRgb, colorContrast } from '../utils';
 
-export default class PluginsController extends Controller<HTMLDivElement> {
+export default class PluginsController extends Controller<HTMLFormElement> {
   static targets = [
     'logosOnlyCheckbox', 
     'codeTextArea', 
