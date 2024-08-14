@@ -203,7 +203,7 @@ function actionsDropdownTemplate(row: CustomerWin, type: string, set: any) {
           <li>
             <a href="javascript:;" data-action="customer-win#showContributions">
               <i class="fa fa-comments fa-fw action"></i>&nbsp;&nbsp;
-              Contributions<
+              Contributions
             </a>
           </li>
           <li class="divider" role="separator"></li>
