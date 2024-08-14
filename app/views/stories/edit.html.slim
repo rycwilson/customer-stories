@@ -18,8 +18,8 @@
             ul.nav
               li
                 = link_to(dashboard_path('curate')) do 
-                  i.fa.fa-chevron-circle-left
-                  | &nbsp;&nbsp;All Stories
+                  i.fa.fa-fw.fa-chevron-left
+                  |&nbsp;All Stories
                 end
               li class=('active' if @active_tab == '#story-content')
                 a {
@@ -30,8 +30,8 @@
                   aria-controls="story-content"
                   aria-expanded="#{@active_tab == '#story-content' ? 'true' : 'false'}"
                   role="tab" }
-                  i.fa.fa-edit 
-                  | &nbsp;&nbsp;Content
+                  i.fa.fa-fw.fa-edit 
+                  |&nbsp;Content
               li class=('active' if @active_tab == '#story-contributors')
                 a {
                   id="story-contributors-tab"
@@ -41,8 +41,8 @@
                   aria-controls="story-contributors"
                   aria-expanded="#{@active_tab == '#story-contributors' ? 'true' : 'false'}"
                   role="tab" }
-                  i.fa.fa-users
-                  | &nbsp;&nbsp;Contributors
+                  i.fa.fa-fw.fa-users
+                  |&nbsp;Contributors
               li class=('active' if @active_tab == '#story-settings')
                 a {
                   id="story-settings-tab"
@@ -52,9 +52,8 @@
                   aria-controls="story-settings"
                   aria-expanded="#{@active_tab == '#story-settings' ? 'true' : 'false'}"
                   role="tab" }
-
-                  i.fa.fa-gear
-                  | &nbsp;&nbsp;Settings
+                  i.fa.fa-fw.fa-gear
+                  |&nbsp;Settings
 
         .col-sm-5.col-md-4.col-lg-9.layout-main
           #edit-story-layout

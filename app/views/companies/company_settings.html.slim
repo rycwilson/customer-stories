@@ -9,12 +9,6 @@
       
       / no active tab set here; it will be set by the client based on page fragment identifier
       ul.nav.nav--company class=('nav--new-company' if action_name == 'new')
-        li role="presentation" 
-          a href="#company-profile-panel" data-toggle="tab" data-company-settings-target="tab"
-            i.fa.fa-fw.fa-globe
-            span
-              | Company Profile
-        
         - unless action_name == 'new'
 
           li role="presentation"
@@ -25,19 +19,17 @@
               data-toggle="tab"
               data-company-settings-target="tab" }
               i.fa.fa-fw.fa-envelope-o
-              span
-                | Contributor Invitations
+              |&nbsp;Contributor Invitations
           
           li role="presentation"
             a {
-              href="#survey-questions-panel" 
+              href="#contributor-prompts-panel" 
               class=('disabled-tab' if @company.new_record?)
               role="tab"
               data-toggle="tab"
               data-company-settings-target="tab" }
-              i.fa.fa-fw.fa-list-ul
-              span
-                | Prompts and Questions
+              i.fa.fa-fw.fa-lightbulb-o
+              |&nbsp;Contributor Prompts
 
           li role="presentation"
             a {
@@ -47,8 +39,7 @@
               data-toggle="tab"
               data-company-settings-target="tab" }
               i.fa.fa-fw.fa-plug
-              span
-                | Website Plugin
+              |&nbsp;Website Plugin
                 
           li role="presentation"
             a {
@@ -58,8 +49,7 @@
               data-toggle="tab"
               data-company-settings-target="tab" }
               i.fa.fa-fw.fa-hand-pointer-o
-              span
-                | Call to Action Components
+              |&nbsp;Call to Action Components
 
           li role="presentation"
             a {
@@ -69,13 +59,17 @@
               data-toggle="tab"
               data-company-settings-target="tab" }
               i.fa.fa-fw.fa-tags
-              span
-                | Story Tags
+              |&nbsp;Story Tags
+        
+        li role="presentation" 
+          a href="#account-panel" data-toggle="tab" data-company-settings-target="tab"
+            i.fa.fa-fw.fa-gear
+            |&nbsp;Account Settings
 
     .col-sm-8.col-lg-9.layout-main
       .tab-content
 
-        #company-profile-panel.tab-pane.fade role="tabpanel"
+        #account-panel.tab-pane.fade role="tabpanel"
           = render( \
               'companies/settings/company_profile', 
               { company: @company, s3_direct_post: @s3_direct_post })
@@ -87,7 +81,7 @@
                 'companies/settings/invitation_templates',
                 { company: @company, templates_select: @templates_select })
 
-          #survey-questions-panel.tab-pane.fade role="tabpanel"
+          #contributor-prompts-panel.tab-pane.fade role="tabpanel"
             = render('companies/settings/contributor_questions', { company: @company })
           
           #website-plugin-panel.tab-pane.fade role="tabpanel"

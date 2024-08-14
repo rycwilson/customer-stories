@@ -20,10 +20,8 @@
               aria-controls="customer-wins"
               aria-expanded="#{active_tab == '#customer-wins' ? 'true' : 'false'}"
               role="tab" }
-              span
-                i.fa.fa-fw.fa-rocket
-                span 
-                  | Customer Wins
+              i.fa.fa-fw.fa-rocket
+              |&nbsp;Customer Wins
               
           li class=('active' if active_tab == '#contributors')
             a {
@@ -35,10 +33,8 @@
               aria-controls="contributors"
               aria-expanded="#{active_tab == '#contributors' ? 'true' : 'false'}"
               role="tab" }
-              span
-                i class="fa fa-fw fa-users"
-                span 
-                  | Contributors
+              i.fa.fa-fw.fa-users
+              |&nbsp;Contributors
 
       .col-sm-8.col-lg-9.layout-main
         .tab-content

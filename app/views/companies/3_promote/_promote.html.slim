@@ -13,12 +13,12 @@
         ul.nav
           li class=('active' if active_tab == '#promoted-stories')
             a href="#promoted-stories" data-toggle="tab" data-action="dashboard#setNavCookie"
-              i.fa.fa-bullhorn
-              | &nbsp;&nbsp;Promoted Stories
+              i.fa.fa-fw.fa-bullhorn
+              |&nbsp;Promoted Stories
           li class=('active' if active_tab == '#promote-settings')
             a href="#promote-settings" data-toggle="tab" data-action="dashboard#setNavCookie"
-              i.fa.fa-gear
-              | &nbsp;&nbsp;Settings
+              i.fa.fa-fw.fa-gear
+              |&nbsp;Settings
         - if current_user.admin?
           .admin-sidebar
             h4 Admin

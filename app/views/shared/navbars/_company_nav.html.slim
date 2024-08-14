@@ -64,19 +64,15 @@ nav#company-nav class="#{'unregistered' unless company&.persisted?}"
               i.fa.fa-fw.fa-gear style="margin-right: 0.2em"
               i.fa.fa-caret-down
             ul.dropdown-menu.dropdown-menu-right role="menu"
-              li
-                a href="/settings#company-profile"
-                  i.fa.fa-fw.fa-globe
-                  |&nbsp;&nbsp;&nbsp;Company Profile
               / <li role="separator" class="divider"></li>
               li
                 a href="/settings#contributor-invitations"
                   i.fa.fa-fw.fa-envelope-o
                   |&nbsp;&nbsp;&nbsp;Contributor Invitations
               li
-                a href="/settings#survey-questions"
-                  i.fa.fa-fw.fa-list-ul
-                  |&nbsp;&nbsp;&nbsp;Prompts & Questions
+                a href="/settings#contributor-prompts"
+                  i.fa.fa-fw.fa-lightbulb-o
+                  |&nbsp;&nbsp;&nbsp;Contributor Prompts
               li
                 a href="/settings#website-plugin"
                   i.fa.fa-fw.fa-plug
@@ -89,4 +85,8 @@ nav#company-nav class="#{'unregistered' unless company&.persisted?}"
                 a href="/settings#story-tags"
                   i.fa.fa-fw.fa-tags
                   |&nbsp;&nbsp;&nbsp;Story Tags
+              li
+                a href="/settings#account"
+                  i.fa.fa-fw.fa-gear
+                  |&nbsp;&nbsp;&nbsp;Account Settings
             div

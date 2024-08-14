@@ -33,26 +33,21 @@
         color: #666;
         padding: 10px 20px;
 
-        > span {
-          display: flex;
-          align-items: center;
-        }
-
-        // REMOVED due to no more "Add" buttons in the sidebar
-        // &[href="#successes"], &[href*="contributors"] {
-          // padding: 10px 10px 10px 20px;
-          // justify-content: space-between;
+        // > span {
+        //   display: flex;
+        //   align-items: center;
         // }
 
-        i:not([class*="fa-stack"]) {
+        i {
           font-size: 1.25em;
           margin-right: 13px;
         }
 
-        &:hover, &:focus {
-          background-color: #e5e5e5;
+        &:hover, 
+        &:focus {
+          background-color: $dark-gray;
           // border-left: 2px solid #e5e5e5;
-          border-left: 2px solid #e5e5e5;
+          border-left: 2px solid $dark-gray;
           color: #222;
         }
       }
