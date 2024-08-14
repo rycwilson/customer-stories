@@ -68,8 +68,8 @@ select.tomselected + .ts-wrapper {
     }
     
     .item {
-      padding: 4px 0 4px 8px;
-      margin-bottom: 8px;
+      margin: 0 0.5em 0.5em 0;
+      padding: 0.4em 0 0.4em 0.6em;
 
       &.story {
         width: calc(100% - 8px);  // accounts for padding-right in the .ts-control
@@ -86,6 +86,12 @@ select.tomselected + .ts-wrapper {
       color: #6c757d;
       content: attr(data-placeholder);
     }     
+  }
+
+  &.plugin-remove_button:not(.rtl) .item .remove {
+    border-left-color: transparent;
+    margin: -0.5em 0 -0.5em 0.25em;
+    padding: 0.5em;
   }
 }
 
