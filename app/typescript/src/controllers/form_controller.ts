@@ -58,8 +58,6 @@ export default class FormController<Ctrl extends SubclassController> extends Con
 
   connect(this: Ctrl) {
     this.removeErrorsOnValidInput();
-    console.log(this)
-    // debugger;
     this.initialState = serializeForm(this.element);
   }
 

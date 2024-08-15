@@ -63,15 +63,6 @@ export default class extends Controller<TomSelectInput> {
       render: {
         item(data: TomOption, escape: (str: string) => string) {
           return `<div class="${ctrl.isMultiSelect ? ctrl.kebabKind : ''}">${escape(data.text)}</div>`;
-          // return ctrl.isMultiSelect ? `
-          //     <div>
-          //       <div>
-          //         <div>${escape(data.text)}</div>
-          //       </div>
-          //       <button type="button" class="btn clear-button" title="Clear selection">&times;</button>
-          //     </div>
-          //   ` :
-          //   `<div>${escape(data.text)}</div>`;
         },
         option(data: TomOption, escape: (str: string) => string) {
           return data.value === '0' ?
