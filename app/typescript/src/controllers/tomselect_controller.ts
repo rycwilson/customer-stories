@@ -55,7 +55,7 @@ export default class extends Controller<TomSelectInput> {
     this.dispatch('search', { detail: { searchResults }});
   }
 
-  get isMultiSelect() { return this.element.type === 'select-multiple'; }
+  get isMultiSelect() { return this.element.multiple || this.element.tagName === 'INPUT'; }
 
   get options() {
     const ctrl = this;  // "this" will be the TomSelect instance in the context of the options object

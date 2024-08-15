@@ -11,7 +11,7 @@ TomSelect.define('drag_drop', dragDrop);
 export default TomSelect;
 
 export const addMultiSelectPlaceholder = (ts: TomSelect) => {
-  if (ts.input.type === 'select-multiple' && ts.input.dataset.dynamicPlaceholder) {
+  if (ts.input.dataset.dynamicPlaceholder) {
     // set placeholder via css => allows for removing when selections are present
     ts.control.setAttribute('data-placeholder', ts.input.dataset.dynamicPlaceholder);
   }
