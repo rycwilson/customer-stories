@@ -1,42 +1,32 @@
 = form_with( \
     model: company,
-    local: true,
+    format: :json,
     html: { \
-      id: 'company-tags-form',
-      class: 'form-horizontal' }) do |f|
+      id: 'company-story-tags-form',
+      class: 'form-horizontal',
+      data: { \
+        controller: 'company-story-tags',
+        action: 'ajax:complete->company-story-tags#onAjaxComplete' } }) do |form|
 
-  .form-group
-    = f.label(:story_category_ids, 'Category Tags', class: 'col-sm-3 control-label')
-    .col-sm-9.col-md-8.col-lg-6
-      = f.collection_select( \
-          :story_category_ids,
-          company.story_categories,
-          :id,
-          :name,
-          {},
-          { multiple: true,
-            class: 'company-tags form-control',
-            style: 'width:100%',
-            data: { controller: 'tomselect', tomselect_kind_value: 'storyTag' } })
+  - [{ name: 'Category', assoc: :story_categories }, { name: 'Product', assoc: :products }].each do |tags|
+    = form.fields_for(tags[:assoc]) do |tag_fields|
+      = tag_fields.hidden_field(:id)
+      = tag_fields.hidden_field(:name)
+      = tag_fields.check_box(:_destroy, { checked: false, hidden: true }, true, false)
 
-  .form-group
-    = f.label(:product_ids, 'Product Tags', class: 'col-sm-3 control-label')
-    .col-sm-9.col-md-8.col-lg-6
-      = f.collection_select( \
-          :product_ids,
-          company.products,
-          :id,
-          :name,
-          {},
-          { multiple: true,
-            class: 'company-tags form-control',
-            style: 'width:100%',
-            data: { controller: 'tomselect', tomselect_kind_value: 'storyTag' } })
+    .form-group
+      label.col-sm-3.control-label for="company-#{tags[:name]}-tags"
+        = tags[:name]
+      .col-sm-9.col-md-8.col-lg-6
+        input.form-control {
+          id="company-#{tags[:name]}-tags"
+          value=company.send(tags[:assoc]).map(&:name).join(',')
+          autocomplete="off"
+          data-controller="tomselect"
+          data-tomselect-kind-value="storyTag"
+          data-tomselect-custom-options-value={ create: true, createOnBlur: true, persist: false }.to_json
+          data-dynamic-placeholder="Add tags" }
 
   .form-group
     .col-sm-12.col-md-offset-3.col-md-8.col-lg-6.text-right
-      = f.submit('Save changes', class: 'btn btn-success', style: 'width: 114px')
-      /button.btn-btn-success type="submit" form="company-tags-form" style="width: 114px"
-        span Save changes
-        i.fa.fa-spin.fa-circle-o-notch style="display: none"
-        i.fa fa-check style="display: none"
+      = form.submit('Save changes', class: 'btn btn-success')
