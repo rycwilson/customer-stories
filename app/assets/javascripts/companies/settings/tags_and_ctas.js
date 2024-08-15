@@ -1,8 +1,3 @@
-
-function storyTagsListeners () {
-
-}
-
 function storyCTAsListeners () {
 
   var makeNewCtaPrimary = false;
