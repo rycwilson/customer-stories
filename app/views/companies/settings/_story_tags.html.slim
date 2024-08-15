@@ -6,25 +6,26 @@
       class: 'form-horizontal',
       data: { \
         controller: 'company-story-tags',
-        action: 'ajax:complete->company-story-tags#onAjaxComplete' } }) do |form|
+        action: 'ajax:complete->company-story-tags#onAjaxComplete change->company-story-tags#onChangeTags' } }) do |form|
 
-  - [{ name: 'Category', assoc: :story_categories }, { name: 'Product', assoc: :products }].each do |tags|
+  - [{ name: 'category', assoc: :story_categories }, { name: 'product', assoc: :products }].each do |tags|
     = form.fields_for(tags[:assoc]) do |tag_fields|
       = tag_fields.hidden_field(:id)
-      = tag_fields.hidden_field(:name)
+      = tag_fields.hidden_field(:name, data: { company_story_tags_target: "#{tags[:name]}TagNameInput" })
       = tag_fields.check_box(:_destroy, { checked: false, hidden: true }, true, false)
 
     .form-group
       label.col-sm-3.control-label for="company-#{tags[:name]}-tags"
-        = tags[:name]
+        = tags[:name].capitalize
       .col-sm-9.col-md-8.col-lg-6
         input.form-control {
           id="company-#{tags[:name]}-tags"
           value=company.send(tags[:assoc]).map(&:name).join(',')
           autocomplete="off"
           data-controller="tomselect"
-          data-tomselect-kind-value="storyTag"
+          data-tomselect-kind-value="#{tags[:name]}"
           data-tomselect-custom-options-value={ create: true, createOnBlur: true, persist: false }.to_json
+          data-company-story-tags-target="#{tags[:name]}TagsInput"
           data-dynamic-placeholder="Add tags" }
 
   .form-group
