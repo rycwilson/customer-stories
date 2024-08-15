@@ -8,6 +8,7 @@ import type InvitationTemplateController from './invitation_template_controller'
 import type ContributorInvitationController from './contributor_invitation_controller';
 import type { TomOptions } from 'tom-select/dist/types/types';
 import { serializeForm } from '../utils';
+import CompanyStoryTagsController from './company_story_tags_controller';
 
 type SubclassController = (
   NewCustomerWinController | 
@@ -15,7 +16,8 @@ type SubclassController = (
   NewStoryController | 
   CompanyProfileController |
   InvitationTemplateController |
-  ContributorInvitationController
+  ContributorInvitationController |
+  CompanyStoryTagsController
 );
 
 export default class FormController<Ctrl extends SubclassController> extends Controller<HTMLFormElement> {
@@ -82,8 +84,9 @@ export default class FormController<Ctrl extends SubclassController> extends Con
     return serializeForm(this.element) !== this.initialState;
   }
 
-  // onAjaxComplete(this: Ctrl, { detail: [xhr, status] }: { detail: [xhr: XMLHttpRequest, status: string] }) {
-  // }
+  onAjaxComplete(this: Ctrl, { detail: [xhr, status] }: { detail: [xhr: XMLHttpRequest, status: string] }) {
+    console.log(this.element)
+  }
 
   removeErrorsOnValidInput() {
     const removeError = (e: Event) => {

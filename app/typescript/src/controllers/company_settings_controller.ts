@@ -36,7 +36,6 @@ export default class CompanySettingsController extends Controller<HTMLDivElement
   }
 
   connect() {
-    console.log('connect company settings')
     this.initSidebar();
     // window.scrollTo(0, 0);
 
