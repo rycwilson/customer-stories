@@ -66,16 +66,21 @@ class CompaniesController < ApplicationController
     #   @flash = {}
     # else
     @company.update(company_params)
-    respond_to do |format|
-      format.json do
-        render(
-          json: { 
-            company: @company.as_json(only: [], methods: [:previous_changes]), 
-            s3_direct_post: { fields: @s3_direct_post.fields }
-          }
-        )
+    if tags_update?
+      head(:no_content)
+    else
+      respond_to do |format|
+        format.json do
+          render(
+            json: { 
+              company: @company.as_json(only: [], methods: [:previous_changes]), 
+              s3_direct_post: { fields: @s3_direct_post.fields }
+            }
+          )
+        end
       end
     end
+
       # @flash = {} :
       # @flash = { mesg: @company.errors.full_messages.join(', '), status: 'danger' }
     # if @company.previous_changes[:logo_url]
@@ -190,9 +195,18 @@ class CompaniesController < ApplicationController
 
   def company_params
     params.require(:company).permit(
-      :name, :subdomain, :logo_url, :website, :gtm_id, :header_color_1, :header_color_2, :header_text_color, :adwords_short_headline,
+      :name, 
+      :subdomain, 
+      :logo_url, 
+      :website, 
+      :gtm_id, 
+      :header_color_1, 
+      :header_color_2, 
+      :header_text_color, 
+      :adwords_short_headline,
       story_category_ids: [], 
-      story_product_ids: [], 
+      # product_ids: [], 
+      products_attributes: [:id, :name, :_destroy],
       adwords_images_attributes: [:id, :type, :image_url, :default, :is_default_card, :_destroy]
     )
   end
@@ -213,6 +227,10 @@ class CompaniesController < ApplicationController
       render file: 'public/403', status: 403, layout: false
       false
     end
+  end
+
+  def tags_update?
+    company_params[:story_categories_attributes].present? or company_params[:products_attributes].present?
   end
 
   def set_form_options(params, company=nil)
