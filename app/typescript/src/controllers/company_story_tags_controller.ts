@@ -9,9 +9,9 @@ export default class CompanyStoryTagsController extends FormController<CompanySt
     'productTagsInput', 
     'productTagNameInput',
   ];  
-  declare categoryTagsInputTarget: HTMLInputElement;
+  declare readonly categoryTagsInputTarget: HTMLInputElement;
   declare categoryTagNameInputTargets: HTMLInputElement[];
-  declare productTagsInputTarget: HTMLInputElement;
+  declare readonly productTagsInputTarget: HTMLInputElement;
   declare productTagNameInputTargets: HTMLInputElement[];
 
   connect() {
