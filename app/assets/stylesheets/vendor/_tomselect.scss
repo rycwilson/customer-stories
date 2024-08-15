@@ -1,8 +1,25 @@
-select.tomselected + .ts-wrapper {
+select.tomselected + .ts-wrapper,
+input.tomselected + .ts-wrapper {
   &:not(.has-items):not(.invitation-template-inline-select) {
     height: 34px;
   }
 
+  > .ts-control {
+    height: 100%;
+  
+    [data-value="0"] {
+      color: #666;
+    }
+  }
+}
+
+input.tomselected + .ts-wrapper {
+  .no-results {
+    display: none;
+  }
+}
+
+select.tomselected + .ts-wrapper {
   &.invitation-template-inline-select {
     height: 100%;
     
@@ -29,12 +46,6 @@ select.tomselected + .ts-wrapper {
   }
 
   > .ts-control {
-    height: 100%;
-
-    [data-value="0"] {
-      color: #666;
-    }
-
     // change the caret color
     &::after {
       border-color: #6c757d transparent transparent transparent;
@@ -61,8 +72,11 @@ select.tomselected + .ts-wrapper {
       pointer-events: none;
     }
   }
+}
 
-  &.multi.has-items {
+select.tomselected + .ts-wrapper.multi,
+input.tomselected + .ts-wrapper.multi {
+  &.has-items {
     .ts-control {
       padding: 8px;   // note an !important setting for padding-right in tom-select.bootstrap4.css
     }
@@ -81,7 +95,7 @@ select.tomselected + .ts-wrapper {
 
   // don't show the placeholder once an item is selected
   // => use pseudo element instead of dynanmically changing placeholder attribute
-  &.multi:not(.has-items) {
+  &:not(.has-items):not(.focus) {
     .ts-control::before {
       color: #6c757d;
       content: attr(data-placeholder);
@@ -89,9 +103,9 @@ select.tomselected + .ts-wrapper {
   }
 
   &.plugin-remove_button:not(.rtl) .item .remove {
-    border-left-color: transparent;
-    margin: -0.5em 0 -0.5em 0.25em;
-    padding: 0.5em;
+    border: none;
+    margin: -0.4em 0 -0.4em 0.25em;
+    padding: 0.4em 0.6em;
   }
 }
 
