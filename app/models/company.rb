@@ -494,64 +494,6 @@ class Company < ApplicationRecord
     current_user.company_id == self.id
   end
 
-  def update_tags (new_category_tags, new_product_tags)
-    # remove deleted category tags ...
-    self.story_categories.each do |category|
-      unless new_category_tags.include?(category.id.to_s)
-        tag_instances = StoryCategoriesSuccess.where(story_category_id: category.id)
-        # expire filter select fragment cache
-        self.expire_filter_select_fragments_on_tag_destroy('category', tag_instances)
-        # untag stories
-        tag_instances.destroy_all
-        category.destroy
-      end
-    end
-    # add new category tags ...
-    new_category_tags.each do |category_id|
-      if category_id.to_i == 0   # new (custom or default) tag
-        self.story_categories.create(name: category_id)
-        # expire filter select fragment cache
-        self.increment_category_select_fragments_memcache_iterator
-      else
-        # do nothing
-      end
-    end
-    # remove deleted product tags ...
-    self.products.each do |product|
-      unless new_product_tags.include?(product.id.to_s)
-        tag_instances = ProductsSuccess.where(product_id: product.id)
-        # expire filter select fragment cache
-        self.expire_filter_select_fragments_on_tag_destroy('product', tag_instances)
-        # untag stories
-        tag_instances.destroy_all
-        product.destroy
-      end
-    end
-    # add new product tags ...
-    new_product_tags.each do |product_id|
-      if product_id.to_i == 0 # new tag
-        self.products.create(name: product_id)
-        # expire filter select fragment cache
-        self.increment_product_select_fragments_memcache_iterator
-      else
-        # do nothing
-      end
-    end
-  end
-
-  # when destroying a tag, expire affected filter select fragments
-  def expire_filter_select_fragments_on_tag_destroy (tag, tag_instances)
-    tag_instances.each do |tag_instance|
-      if tag_instance.success.story&.logo_published?
-        if tag == 'category'
-          self.increment_category_select_fragments_memcache_iterator
-        elsif tag == 'product'
-          self.increment_product_select_fragments_memcache_iterator
-        end
-      end
-    end
-  end
-
   # this is used for validating the company's website address
   # see lib/website_validator.rb
   def smart_add_url_protocol

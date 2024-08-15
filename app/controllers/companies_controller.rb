@@ -61,10 +61,6 @@ class CompaniesController < ApplicationController
   end
 
   def update
-    # if params[:tags]
-    #   @company.update_tags(params[:category_tags] || [], params[:product_tags] || [])
-    #   @flash = {}
-    # else
     @company.update(company_params)
     if tags_update?
       head(:no_content)
@@ -204,8 +200,7 @@ class CompaniesController < ApplicationController
       :header_color_2, 
       :header_text_color, 
       :adwords_short_headline,
-      story_category_ids: [], 
-      # product_ids: [], 
+      story_categories_attributes: [:id, :name, :_destroy],
       products_attributes: [:id, :name, :_destroy],
       adwords_images_attributes: [:id, :type, :image_url, :default, :is_default_card, :_destroy]
     )
