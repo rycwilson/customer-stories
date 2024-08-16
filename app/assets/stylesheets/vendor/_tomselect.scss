@@ -76,6 +76,10 @@ select.tomselected + .ts-wrapper {
 
 select.tomselected + .ts-wrapper.multi,
 input.tomselected + .ts-wrapper.multi {
+  .ts-control > div.active {
+    background: $brand-primary;
+  }
+
   &.has-items {
     .ts-control {
       padding: 8px;   // note an !important setting for padding-right in tom-select.bootstrap4.css
