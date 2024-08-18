@@ -321,24 +321,18 @@ class Company < ApplicationRecord
   attr_accessor :skip_callbacks
 
   def tag_select_options tag_type, with_stories_count: true, only_featured: false, for_multi_select: false
-    tags = case tag_type
-    when :category
-      story_categories
-    else
-      binding.pry
-      send[tag_type]
-    end
+    tags = send(tag_type.to_s.pluralize) if [:category, :product].include?(tag_type)
+    return [] if tags.blank?
     (only_featured ? tags.featured : tags).map do |tag| 
       [
         with_stories_count ? "#{tag.name} (#{(only_featured ? tag.stories.featured : tag.stories).count})" : tag.name,
         for_multi_select ? "#{tag_type}-#{tag.id}" : tag.id, 
         { data: { slug: tag.slug } }
       ]
-    end.sort_by do |option| 
-      option_text = option[0]
-      with_stories_count ? option_text.match(/\((?<count>\d+)\)/)[:count].to_i : option_text
+    end.sort_by do |(text, id)| 
+      with_stories_count ? text.match(/\((?<count>\d+)\)/)[:count].to_i : text
     end
-    .send(with_stories_count ? :reverse : :itself)
+    .send(with_stories_count ? :reverse : :itself)      
   end
 
   def published_stories
