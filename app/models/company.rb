@@ -80,7 +80,7 @@ class Company < ApplicationRecord
     end
   end
   accepts_nested_attributes_for :story_categories, allow_destroy: true
-  has_many :category_tags, class_name: 'StoryCategory'  # alias
+  has_many :categories, class_name: 'StoryCategory'  # alias
   has_many :products, dependent: :destroy do
     def select_options(only_featured=false, for_multi_select=false)
       (only_featured ? self.featured : self).map do |product| 
@@ -89,7 +89,6 @@ class Company < ApplicationRecord
     end
   end
   accepts_nested_attributes_for :products, allow_destroy: true
-  has_many :product_tags, class_name: 'Product'   # alias
   has_many :contributor_questions, dependent: :destroy do
     def customer
       where(role: 'customer')
@@ -325,8 +324,9 @@ class Company < ApplicationRecord
     tags = case tag_type
     when :category
       story_categories
-    when :product
-      products
+    else
+      binding.pry
+      send[tag_type]
     end
     (only_featured ? tags.featured : tags).map do |tag| 
       [
