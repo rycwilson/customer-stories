@@ -95,16 +95,6 @@ class Story < ApplicationRecord
     joins(success: { customer: {} })
     .where(customers: { company_id: company_id })
   }
-  scope :company_all_filter_category, ->(company_id, category_id) {
-    joins(success: { customer: {}, story_categories: {} })
-    .where(customers: { company_id: company_id },
-           story_categories: { id: category_id } )
-  }
-  scope :company_all_filter_product, ->(company_id, product_id) {
-    joins(success: { customer: {}, products: {} })
-    .where(customers: { company_id: company_id },
-           products: { id: product_id } )
-  }
   scope :company_all_created_since, ->(company_id, days_ago) {
     company_all(company_id)
     .where('stories.created_at >= ?', days_ago.days.ago)
@@ -115,14 +105,7 @@ class Story < ApplicationRecord
     .where.not(customers: { logo_url: [nil, ''] })
     .where('logo_published IS TRUE OR preview_published IS TRUE')
   }
-  scope :curated_by, ->(curator_id) {
-    if curator_id.present? 
-      joins(:success)
-      .where(successes: { curator_id: curator_id})
-    else
-      all
-    end
-  }
+
   scope :filtered, ->(filters, match_type='all') {
     return all if filters.blank?
     stories = self
