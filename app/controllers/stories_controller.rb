@@ -12,7 +12,6 @@ class StoriesController < ApplicationController
     @is_social_share_redirect = true if params[:redirect_uri].present?
     @is_curator = @company.curator?(current_user)
   end
-  # before_action(only: [:index, :show, :edit]) { set_gon(@company) }
   before_action(only: [:show]) { set_public_story_or_redirect(@company) }
   before_action(only: [:show, :approval]) { set_contributors(@story) }
   before_action :set_s3_direct_post, only: :edit

@@ -154,11 +154,6 @@ GEM
       activerecord (>= 4.0.0)
     globalid (1.0.0)
       activesupport (>= 5.0)
-    gon (6.4.0)
-      actionpack (>= 3.0.20)
-      i18n (>= 0.7)
-      multi_json
-      request_store (>= 1.0)
     googlecharts (1.6.12)
     haml (5.2.2)
       temple (>= 0.8.0)
@@ -302,8 +297,6 @@ GEM
       ffi (~> 1.0)
     regexp_parser (2.8.0)
     remotipart (1.4.4)
-    request_store (1.5.1)
-      rack (>= 1.4)
     responders (3.0.1)
       actionpack (>= 5.0)
       railties (>= 5.0)
@@ -419,7 +412,6 @@ DEPENDENCIES
   figaro
   font-awesome-rails
   friendly_id
-  gon
   googlecharts
   html_to_plain_text
   jbuilder (~> 2.7)

@@ -43,7 +43,6 @@ html lang="en-US" prefix="og: http://ogp.me/ns# fb: http://ogp.me/ns/fb#"
     - if @is_social_share_redirect
       = yield 
     - else
-      = include_gon() if include_gon?(controller_name, action_name)
       - if admin_navbar?(controller_name)
         = render('shared/navbars/company_header', { company: @company })
       - elsif @zap_auth_initial_req

@@ -43,13 +43,6 @@ module ApplicationHelper
     (action == 'index' || action == 'show')
   end
 
-  def include_gon? controller, action
-    # controller == 'site' && ['index', 'landing'].include?(action) ||
-    controller == 'stories' && ['index', 'show', 'edit'].include?(action) ||
-    controller == 'companies' && ['show', 'edit'].include?(action) ||
-    controller == 'profile' && action == 'edit'
-  end
-
   def production?
     ENV['HOST_NAME'] == 'customerstories.net'
   end

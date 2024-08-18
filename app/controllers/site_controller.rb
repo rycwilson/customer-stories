@@ -1,7 +1,6 @@
 class SiteController < ApplicationController
 
   skip_before_action :verify_authenticity_token, only: :esp_notifications
-  # before_action(only: [:index, :landing]) { set_gon }
 
   def index
     render(action: 'home', layout: 'landing')

@@ -459,26 +459,6 @@ class Company < ApplicationRecord
       self.product_select_fragments_memcache_iterator + 1)
   end
 
-  # stories_json returns data included in the client via the gon object
-  def stories_json
-    Rails.cache.fetch("#{self.subdomain}/stories-json") do
-      JSON.parse(
-        Story.default_order(Story.company_all(self.id))
-        .to_json({
-          only: [:id, :title, :summary, :quote, :quote_attr_name, :quote_attr_title, :published, :logo_published, :preview_published, :publish_date, :updated_at],
-          methods: [:csp_story_path, :published_contributors, :preview_contributor],
-          include: {
-            success: {
-              only: [:curator_id],
-              include: {
-                customer: { only: [:id, :name, :logo_url] },
-                story_categories: { only: [:id, :name, :slug] },
-                products: { only: [:id, :name, :slug] } }}}
-        })
-      )
-    end
-  end
-
   def expire_ll_cache(*keys)
     keys.each { |key| Rails.cache.delete("#{self.subdomain}/#{key}") }
   end

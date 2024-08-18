@@ -4,7 +4,6 @@ class CompaniesController < ApplicationController
   # application#check_subdomain takes care of this...
   # before_action :user_authorized?, only: [:edit, :show]
   before_action :set_company, except: [:new, :create, :promote, :get_curators, :get_invitation_templates]
-  # before_action(only: [:show, :edit]) { set_gon(@company) }
   before_action :set_s3_direct_post, only: [:new, :edit, :show, :create, :update]
 
   def new

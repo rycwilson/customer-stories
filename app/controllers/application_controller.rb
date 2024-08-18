@@ -137,28 +137,6 @@ class ApplicationController < ActionController::Base
 
   protected
 
-  def set_gon (company=nil)
-    is_curator = (user_signed_in? && (current_user.company_id == company.try(:id)))
-    gon.push({
-      company: company.present? ? JSON.parse(company.to_json({
-        methods: [:curators, :customers, :invitation_templates, :plugin],
-      })) : nil,
-      current_user: user_signed_in? ? {
-        id: current_user.id,
-        first_name: current_user.first_name,
-        last_name: current_user.last_name,
-        name: current_user.full_name,
-        title: current_user.title,
-        email: current_user.email,
-        phone: current_user.phone,
-        photo: current_user.photo_url,
-        is_curator: is_curator
-      } : nil,
-      stories: company.present? ? company.stories_json : nil,
-      env: csp_environment
-    })
-  end
-
   def csp_environment
     if ENV['HOST_NAME'] == 'customerstories.net'
       return 'production'
