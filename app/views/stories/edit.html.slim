@@ -21,17 +21,28 @@
                   i.fa.fa-fw.fa-chevron-left
                   |&nbsp;All Stories
                 end
-              li class=('active' if @active_tab == '#story-content')
+              li class=('active' if @active_tab == '#story-narrative')
                 a {
                   id="story-content-tab"
-                  href="#story-content" 
+                  href="#story-narrative" 
                   data-toggle="tab" 
                   data-action="dashboard#setNavCookie"
                   aria-controls="story-content"
-                  aria-expanded="#{@active_tab == '#story-content' ? 'true' : 'false'}"
+                  aria-expanded="#{@active_tab == '#story-narrative' ? 'true' : 'false'}"
                   role="tab" }
                   i.fa.fa-fw.fa-edit 
-                  |&nbsp;Content
+                  |&nbsp;Narrative
+              li class=('active' if @active_tab == '#supporting-content')
+                a {
+                  id="supporting-content-tab"
+                  href="#supporting-content" 
+                  data-toggle="tab" 
+                  data-action="dashboard#setNavCookie"
+                  aria-controls="supporting-content"
+                  aria-expanded="#{@active_tab == '#supporting-content' ? 'true' : 'false'}"
+                  role="tab" }
+                  i.fa.fa-fw.fa-info-circle
+                  |&nbsp;Supporting Content
               li class=('active' if @active_tab == '#story-contributors')
                 a {
                   id="story-contributors-tab"
@@ -58,15 +69,22 @@
         .col-sm-5.col-md-4.col-lg-9.layout-main
           #edit-story-layout
 
-            = render('stories/edit/story_header', { story: @story })
+            /= render('stories/edit/story_header', { story: @story })
 
             .tab-content
-              #story-content.tab-pane.fade {
-                class=('active in' if @active_tab == '#story-content')
-                aria-labelledby="story-content-tab"
+              #story-narrative.tab-pane.fade {
+                class=('active in' if @active_tab == '#story-narrative')
+                aria-labelledby="story-narrative-tab"
                 role="tabpanel" }
                 
                 = render('stories/edit/content/content', { company: @company, story: @story })
+
+              #supporting-content.tab-pane.fade {
+                class=('active in' if @active_tab == '#supporting-content')
+                aria-labelledby="supporting-content-tab"
+                role="tabpanel" }
+                
+                h3 Supporting Content
                 
               / Note this resource controller is NOT tagged with .resource-ctrl,
               / as it is only a subset of contributions

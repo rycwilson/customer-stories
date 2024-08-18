@@ -77,7 +77,7 @@ if (location.pathname === '/') {
   initShareButtons();
   
   const editStoryLink = document.querySelector('.stories-header__edit');
-  if (editStoryLink) editStoryLink.addEventListener('click', () => Cookies.set('csp-edit-story-tab', '#story-content'));
+  if (editStoryLink) editStoryLink.addEventListener('click', () => Cookies.set('csp-edit-story-tab', '#story-narrative'));
 }
 
 function setActiveFilters() {
@@ -473,6 +473,10 @@ function beforeSubmitSearch(e: Event) {
   } else {
     renderStories([]);
     clearFilters();
+
+    // setting X-Requested-With allows the js request without an InvalidCrossOriginRequest error  
+    // https://api.rubyonrails.org/classes/ActionController/RequestForgeryProtection.html
+    // see bottom answer: https://stackoverflow.com/questions/29310187/rails-invalidcrossoriginrequest
     fetch('/stories?' + new URLSearchParams({ q: searchString }), {
       headers: {
         'Content-Type': 'application/json',
