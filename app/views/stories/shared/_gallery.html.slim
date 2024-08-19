@@ -16,7 +16,7 @@ ul#stories-gallery.grid.list-unstyled.text-center.hidden {
       = render( \
           'stories/shared/story_card',
           { story: story,
-            card_class: story_card_class(story, **{ is_dashboard: true }),
-            is_dashboard: true,
+            card_class: story_card_class(story, is_dashboard:),
+            is_dashboard:,
             is_plugin: false,
             is_external: false })

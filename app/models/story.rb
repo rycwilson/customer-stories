@@ -418,7 +418,7 @@ class Story < ApplicationRecord
     end
   end
 
-  def csp_story_link (is_curator, is_plugin, is_external, plugin_type)
+  def csp_story_link(is_curator, is_plugin, is_external, plugin_type)
     if is_curator
       Rails.application.routes.url_helpers.edit_story_path(self.id)
     elsif self.published?

@@ -7,7 +7,8 @@
         { company: @company,
           stories: @stories,
           filtered_story_ids: [],
-          no_filters_present: false })
+          no_filters_present: false,
+          is_dashboard: true })
         
 - else
   .container
@@ -31,6 +32,7 @@
         { company: @company,
           stories: @featured_stories,
           filtered_story_ids: @filtered_story_ids,
-          no_filters_present: @company.story_categories.featured.blank? && @company.products.featured.blank? })
+          no_filters_present: @company.story_categories.featured.blank? && @company.products.featured.blank?,
+          is_dashboard: false })
 
   = render('stories/shared/sign_in_footer')
