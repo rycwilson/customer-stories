@@ -1,0 +1,42 @@
+= form_with( \
+    model: story,
+    format: :json,
+    html: { \
+      id: 'story-supporting-content-form' }) do |story_form|
+
+  .row
+    .col-lg-6
+      .form-group
+        = story_form.label(:quote, 'Customer Quote')
+        = story_form.text_area( \
+            :quote,
+            { rows: 6, class: 'form-control', placeholder: 'Add a quote from a happy customer' })
+      .form-group
+        = story_form.label(:quote_attr_name, 'Customer Name')
+        = story_form.text_field(:quote_attr_name, class: 'form-control', autocomplete: 'off')
+      .form-group
+        = story_form.label(:quote_attr_title, 'Customer Job Title')
+        = story_form.text_field(:quote_attr_title, class: 'form-control', autocomplete: 'off')
+    .col-lg-6
+      = render('stories/edit/content/video', { story: story, story_form: story_form })
+
+  .row
+    .col-sm-6.form-group.summary.has-feedback
+      = story_form.label(:summary, 'Summary')
+      = story_form.text_area( \
+          :summary,
+          { class: 'form-control',
+            rows: 8,
+            placeholder: 'Provide a brief story summary that will appear in a preview window along with the Customer Quote',
+            data: { 'summary-range': '50-150' } })
+
+      // bootstrap validator
+      .help-block.with-errors style='height:20px'
+        | Minimum 50 words, Maximum 150 words
+    .col-sm-6.success-results
+      = render('stories/edit/content/results', { story: story, story_form: story_form })
+
+  // - if story.contributions.submissions.present?
+    = render('stories/edit/content/contributions', { contributions: story.contributions })
+
+= render('shared/submission_footer', { modifier: 'story', story: story })

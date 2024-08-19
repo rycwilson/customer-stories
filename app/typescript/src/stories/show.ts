@@ -23,7 +23,7 @@ initVideo();
 initShareButtons();
 
 const editStoryLink = document.querySelector('.stories-header__edit');
-if (editStoryLink) editStoryLink.addEventListener('click', () => Cookies.set('csp-edit-story-tab', '#story-narrative'));
+if (editStoryLink) editStoryLink.addEventListener('click', () => Cookies.set('csp-edit-story-tab', '#story-narrative-content'));
 
 function initMoreStories() {
   if (isMobileView() && document.querySelector('.primary-cta-xs')) return false;

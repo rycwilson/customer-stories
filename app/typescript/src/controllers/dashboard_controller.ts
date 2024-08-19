@@ -204,7 +204,7 @@ export default class DashboardController extends Controller<HTMLDivElement> {
 
   editStory({ currentTarget: link }: { currentTarget: HTMLAnchorElement }) {
     if (link.dataset.storyPath && link.dataset.storyTab) {
-      Cookies.set(`csp-story-tab`, `#${link.dataset.storyTab}`);
+      Cookies.set(`csp-edit-story-tab`, `#${link.dataset.storyTab}`);
       turboVisit(link.dataset.storyPath);
     }
   }

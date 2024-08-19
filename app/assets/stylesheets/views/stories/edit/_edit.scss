@@ -4,8 +4,12 @@
   min-height: 100vh;
 }
 
+#story-narrative-content-form,
+#story-settings-form  {
+  @include horizontal-form; 
+}
+
 #story-settings-form {
-  @include horizontal-form;
   // @include hide-until-init;
   @include disable-publish-preview;
 
