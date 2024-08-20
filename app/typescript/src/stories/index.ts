@@ -3,7 +3,7 @@ import imagesLoaded from 'imagesloaded';
 import TomSelect, { tsBaseOptions, addMultiSelectPlaceholder } from '../tomselect';
 import type { TomOption, TomItem } from 'tom-select/dist/types/types';
 import { type CBOptions } from 'tom-select/dist/types/plugins/clear_button/types';
-import { initStoryCard } from './story_card';
+import { init as initStoryCard } from './story_card';
 
 export const testExports = { foo }
 

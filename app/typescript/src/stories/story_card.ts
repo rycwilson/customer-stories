@@ -1,4 +1,4 @@
-export function initStoryCard(card: HTMLElement) {
+export function init(card: HTMLElement) {
   const link = card.children[0];
   if (link.classList.contains('published')) {
     link.addEventListener('click', visitStory);
@@ -18,7 +18,7 @@ function visitStory(e: Event) {
   //   return false;
   // }
   const card = <HTMLElement>link.parentElement;
-  const otherCards = [...<NodeListOf<HTMLDivElement>>document.querySelectorAll('.story-card')]
+  const otherCards = [...<NodeListOf<HTMLElement>>document.querySelectorAll('.story-card')]
     .filter(_card => _card !== card);
   let loadingTimer: number;
   const toggleOtherCards = (shouldEnable: boolean) => {

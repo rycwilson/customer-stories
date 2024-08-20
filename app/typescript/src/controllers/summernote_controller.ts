@@ -16,7 +16,6 @@ interface EditorConfig {
 const config: { [key in SummernoteEditorKind]: EditorConfig | undefined } = {
   'winStory': winStoryConfig,
   'invitationTemplate': invitationTemplateConfig,
-  // 'invitationTemplate': undefined,
   'contributorInvitation' : contributorInvitationConfig,
   'story': storyConfig,
   'default': undefined
