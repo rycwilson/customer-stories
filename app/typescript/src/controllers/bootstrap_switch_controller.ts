@@ -16,9 +16,10 @@ export default class BootstrapSwitchController extends Controller {
   connect() {
     $(this.switchTarget).bootstrapSwitch({
       size: this.sizeValue,
+      inverse: true,
       disabled: this.disabledValue,
       animate: this.animateValue,
-      onInit: function (e: Event) {}
+      onInit: function (e: Event) {},
     });
   }
 
