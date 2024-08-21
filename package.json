@@ -24,12 +24,11 @@
     "@rails/ujs": "^7.0.8",
     "animate.css": "^4.1.1",
     "blueimp-file-upload": "^10.32.0",
-    "bootbox": "^6.0.0",
     "bootstrap-datepicker": "^1.9.0",
     "bootstrap-daterangepicker": "^3.1.0",
     "bootstrap-horizon": "^1.0.1",
     "bootstrap-jasny": "^3.2.0",
-    "bootstrap-switch": "^3.4.0",
+    "bootstrap-switch": "3.3.4",
     "bootstrap-validator": "^0.11.9",
     "css-element-queries": "^1.0.2",
     "datatables.net-bs": "^1.12.1",
@@ -67,5 +66,8 @@
     "jest-environment-jsdom": "^29.7.0",
     "ts-jest": "^29.1.2",
     "typescript": "^5.2.2"
+  },
+  "notes": {
+    "bootstrap-switch": "3.3.4 is the last version that works with bootstrap 3: https://github.com/Bttstrp/bootstrap-switch/issues/717"
   }
 }
