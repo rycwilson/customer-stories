@@ -22,7 +22,7 @@
           :cta_ids,
           'CTAs',
           class: 'control-label col-sm-3 visible-md-inline-block visible-lg-inline-block')
-      .col-sm-9.col-md-8.col-lg-6.visible-md-block.visible-lg-block
+      .col-sm-9.col-md-8.col-lg-7.visible-md-block.visible-lg-block
         = render('stories/edit/select_cta_ids', { company:, form: success_form })
         
     .form-group
@@ -35,7 +35,7 @@
           :story_category_ids,
           'Category Tags',
           class: 'control-label col-sm-3 visible-md-inline-block visible-lg-inline-block')
-      .col-sm-9.col-md-8.col-lg-6.visible-md-block.visible-lg-block
+      .col-sm-9.col-md-8.col-lg-7.visible-md-block.visible-lg-block
         = render( \
             'stories/shared/select_story_tags', 
             { company:, success_form:, tag_ids: :story_category_ids, company_tags: company.story_categories })
@@ -50,7 +50,7 @@
           :product_ids,
           'Product Tags',
           class: 'control-label col-sm-3 visible-md-inline-block visible-lg-inline-block')
-      .col-sm-9.col-md-8.col-lg-6.visible-md-block.visible-lg-block
+      .col-sm-9.col-md-8.col-lg-7.visible-md-block.visible-lg-block
         = render( \
             'stories/shared/select_story_tags', 
             { company:, success_form:, tag_ids: :product_ids, company_tags: company.products })
@@ -60,7 +60,7 @@
       label Open Graph Tags
       = render('stories/edit/og_meta_tags', { story:, story_form: })
     label.col-sm-3.control-label.visible-md-inline-block.visible-lg-inline-block Open Graph Tags
-    .col-sm-9.col-md-8.col-lg-6.visible-md-block.visible-lg-block
+    .col-sm-9.col-md-8.col-lg-7.visible-md-block.visible-lg-block
       = render('stories/edit/og_meta_tags', { story:, story_form: })
 
   .form-group.hidden-link
@@ -71,28 +71,24 @@
         :hidden_link,
         'Hidden Link',
         class: 'control-label col-sm-3 visible-md-inline-block visible-lg-inline-block')
-    .col-sm-9.col-md-8.col-lg-6.visible-md-block.visible-lg-block
+    .col-sm-9.col-md-8.col-lg-7.visible-md-block.visible-lg-block
       = render('stories/edit/hidden_link', { story:, form: story_form })
 
   .form-group.story-settings__publish
-    /.visible-sm-block.col-sm-12
+    .visible-sm-block.col-sm-12
       label Publish 
       div 
         - [:logo_published, :preview_published, :published].each do |status|
           = render('stories/edit/publish_switch', { story_form:, status: })
-
     label.col-sm-3.control-label.visible-md-inline-block.visible-lg-inline-block Publish 
-    .col-sm-9.col-md-8.col-lg-6.visible-md-block.visible-lg-block
+    .col-sm-9.col-md-8.col-lg-7.visible-md-block.visible-lg-block
       div
         - [:logo_published, :preview_published, :published].each do |status|
           = render('stories/edit/publish_switch', { story_form:, status: })
 
-  /.form-group
-    .col-sm-12.col-md-offset-3.col-md-8.col-lg-6.text-right
-      button.btn.btn-success.text-center type="submit" style="width:114px"
-        span Save changes
-        i.fa.fa-spin.fa-circle-o-notch style="display: none"
-        i.fa.fa-check style="display: none"
+  .form-group.hidden-xs
+    .col-sm-12.col-md-offset-3.col-md-8.col-lg-7.text-right
+      = story_form.submit('Save changes', class: 'btn btn-success')
 
 / #story-settings__ads-inputs
     topic
