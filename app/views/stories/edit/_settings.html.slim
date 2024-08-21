@@ -55,7 +55,7 @@
             'stories/shared/select_story_tags', 
             { company:, success_form:, tag_ids: :product_ids, company_tags: company.products })
 
-  .form-group.og-tags
+  .og-tags.row
     .visible-sm-block.col-sm-12
       label Open Graph Tags
       = render('stories/edit/og_meta_tags', { story:, story_form: })
@@ -63,7 +63,7 @@
     .col-sm-9.col-md-8.col-lg-7.visible-md-block.visible-lg-block
       = render('stories/edit/og_meta_tags', { story:, story_form: })
 
-  .form-group.hidden-link
+  .hidden-link.form-group
     .visible-sm-block.col-sm-12
       = story_form.label(:hidden_link, 'Hidden Link')
       = render('stories/edit/hidden_link', { story:, form: story_form })
@@ -74,7 +74,7 @@
     .col-sm-9.col-md-8.col-lg-7.visible-md-block.visible-lg-block
       = render('stories/edit/hidden_link', { story:, form: story_form })
 
-  .form-group.story-settings__publish
+  .story-settings__publish.form-group
     .visible-sm-block.col-sm-12
       label Publish 
       div 
