@@ -1,0 +1,11 @@
+= success_form.collection_select( \
+    tag_ids,
+    company_tags,
+    :id,
+    :name,
+    {},
+    { multiple: true,
+      class: 'form-control',
+      data: { \
+        controller: 'tomselect',
+        tomselect_kind_value: 'category' }}) 

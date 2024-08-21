@@ -1,0 +1,52 @@
+.og-tags__background
+  
+  .form-group
+    .col-sm-12
+      = story_form.label(:og_title, 'Title')
+      = story_form.text_field(:og_title, class: 'form-control', placeholder: 'og:title')
+
+  .form-group
+    .col-sm-12
+      = story_form.label(:og_description, 'Description')
+      = story_form.text_area(:og_description, class: 'form-control', rows: 3, placeholder: 'og:description')
+
+  .form-group.og-image.fileinput.fileinput-exists data-provides="fileinput"
+    = story_form.hidden_field(:og_image_width)
+    = story_form.hidden_field(:og_image_height)
+    .col-sm-12
+      .og-image__header
+        label Image
+        button.btn.og-image__button type="button" data-trigger="fileinput"
+          i.fa.fa-upload
+          |&nbsp;&nbsp;
+          |Upload
+      .og-image__frame
+        / .uploading-spinner
+        /   i.fa.fa-spin.fa-circle-o-notch
+        .og-image__errors
+          i.fa.fa-warning
+          .help-block.with-errors
+        .fileinput-preview.thumbnail
+          = image_tag( \
+              story.og_image_url.present? ? story.og_image_url : RESPONSIVE_AD_LANDSCAPE_IMAGE_PLACEHOLDER, 
+              alt: 'og:image' )
+        .btn-file
+          input {
+            type="file"
+            accept="image/*"
+            name="story[og_image_url]"
+            data-validate="false"
+            data-min-dimensions="600x314"
+            data-max-file-size="5242880" }
+          /= story_form.file_field( \
+              :og_image_url,
+              { accept: 'image/*', 
+                data: { \
+                  'min-dimensions' => '600x314', 
+                  'max-file-size' => '5242880' }})
+                  'aspect-ratio-tolerance': =RESPONSIVE_AD_ASPECT_RATIO_TOLERANCE
+
+  .form-group
+    .col-sm-12
+      = story_form.label(:og_image_alt, 'Image Description')
+      = story_form.text_area(:og_image_alt, class: 'form-control', rows: 3, placeholder: 'og:image:alt')

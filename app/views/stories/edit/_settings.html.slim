@@ -1,192 +1,141 @@
-= turbo_frame_tag('story-settings-frame')
+= form_with( \
+    model: story,
+    format: :json,
+    html: { \
+      id: 'story-settings-form',
+      class: 'form-horizontal directUpload', 
+      autocomplete: 'off',
+      data: { \
+        story_target: 'storySettingsForm',
+        url: @s3_direct_post.url,
+        host: URI.parse(@s3_direct_post.url).host,
+        asset_host: Rails.application.config.asset_host,
+        s3_data: @s3_direct_post.fields }}) do |story_form|
 
-  = form_with( \
-      model: story,
-      local: true,
-      html: { \
-        id: 'story-settings-form',
-        class: 'form-horizontal directUpload', 
-        autocomplete: 'off',
-        data: { \
-          story_target: 'storySettingsForm',
-          url: @s3_direct_post.url,
-          host: URI.parse(@s3_direct_post.url).host,
-          asset_host: Rails.application.config.asset_host,
-          s3_data: @s3_direct_post.fields }}) do |story_form|
-
-    .form-group.required-input
-      = story_form.label(:title, class: 'control-label col-sm-3')
-      .col-sm-9.col-md-8.col-lg-6
-        = story_form.text_field(:title, class: 'form-control')
-
-    = story_form.fields_for(:success) do |success_form|
-
-      .form-group
-        = success_form.label(:cta_ids, 'CTAs', class: 'control-label col-sm-3')
-        .col-sm-9.col-md-8.col-lg-6
-          = success_form.grouped_collection_select( \
-              :cta_ids,
-              company.call_to_actions.group_by(&:type).map { |type, ctas| [type == 'CTALink' ? 'Links' : 'Web Forms', ctas] },
-              :second,
-              :first,
-              :id,
-              :display_text,
-              {},
-              { multiple: true,
-                class: 'form-control',
-                data: { \
-                  controller: 'tomselect',
-                  tomselect_kind_value: 'storyTag'  }})
-
-      .form-group
-        = success_form.label(:story_category_ids, 'Category Tags', class: 'control-label col-sm-3')
-        .col-sm-9.col-md-8.col-lg-6
-          = success_form.collection_select( \
-              :story_category_ids,
-              company.story_categories,
-              :id,
-              :name,
-              {},
-              { multiple: true,
-                class: 'story-settings story-tags form-control',
-                data: { \
-                  controller: 'tomselect',
-                  tomselect_kind_value: 'storyTag' }})
-
-      .form-group
-        = success_form.label(:product_ids, 'Product Tags', class: 'control-label col-sm-3')
-        .col-sm-9.col-md-8.col-lg-6
-          = success_form.collection_select( \
-              :product_ids,
-              company.products,
-              :id,
-              :name,
-              {},
-              { multiple: true,
-                class: 'story-settings story-tags form-control',
-                data: { \
-                  controller: 'tomselect',
-                  tomselect_kind_value: 'storyTag'  }})
-
-    = render('stories/edit/settings/og_meta_tags', { story: story, story_form: story_form })
-
-    .form-group.hidden-link
-      = story_form.label(:hidden_link, 'Hidden Link', class: 'control-label col-sm-3')
-      .col-sm-9.col-md-8.col-lg-6
-        .input-group
-          = story_form.text_field( \
-              :hidden_link,
-              { class: 'form-control',
-                placeholder: 'Click the Refresh button to generate a link',
-                readonly: true,
-                data: { story_target: 'hiddenLinkInput' }})
-          span.input-group-btn
-            button.hidden-link__refresh.btn.btn-default {
-              type="button"
-              style="border-radius: 0; border-left: 0"
-              data-toggle="tooltip"
-              data-container="body"
-              data-placement="top"
-              data-action="story#refreshHiddenLink"
-              title="Refresh" }
-              i.fa.fa-refresh
-          span.input-group-btn
-            button.hidden-link__copy.btn.btn-default {
-              type="button"
-              class=('disabled' if story.hidden_link.blank?)
-              data-toggle="tooltip"
-              data-container="body"
-              data-placement="top"
-              data-story-target="hiddenLinkCopyBtn"
-              title=('Copy' if story.hidden_link.blank?) }
-              i.fa.fa-clipboard
-        span.help-block style="margin-bottom: 0"
-          | Allows for early access without regard to publication status.
-        |&#xA;
-        span.help-block style="margin-bottom: 0; margin-top: 2px;"
-          | Refreshing the link will automatically expire any previous links. 
-
-    .story-settings__publish.form-group
-      label.col-sm-3.control-label Publish 
-      .col-sm-9.col-md-8.col-lg-6
-
-        .publish-control
-          = story_form.label(:logo_published, 'Logo')
-          = story_form.check_box( \
-              :logo_published,
-              class: 'bs-switch publish-control form-control',
-              data: { \
-                'on-text': '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;',
-                'off-text': '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;' })
-
-        .publish-control.disabled data-toggle="tooltip" title="Contact Customer Stories"
-          = story_form.label(:preview_published, 'Preview')
-          = story_form.check_box( \
-              :preview_published,
-              class: 'bs-switch publish-control form-control',
-              disabled: true,
-              data: { \
-                'on-text': '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;',
-                'off-text': '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;' })
-
-        .publish-control
-          = story_form.label(:published, 'Story')
-          = story_form.check_box( \
-              :published,
-              class: "bs-switch publish-control form-control",
-              data: { \
-                'on-text': '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;',
-                'off-text': '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;' })
+  = story_form.fields_for(:success) do |success_form|
 
     .form-group
-      .col-sm-12.col-md-offset-3.col-md-8.col-lg-6.text-right
-        button.btn.btn-success.text-center type="submit" style="width:114px"
-          span Save changes
-          i.fa.fa-spin.fa-circle-o-notch style="display: none"
-          i.fa.fa-check style="display: none"
+      .visible-sm-block.col-sm-12
+        = success_form.label(:cta_ids, 'CTAs')
+        = render('stories/edit/select_cta_ids', { company:, form: success_form })
+      = success_form.label( \
+          :cta_ids,
+          'CTAs',
+          class: 'control-label col-sm-3 visible-md-inline-block visible-lg-inline-block')
+      .col-sm-9.col-md-8.col-lg-6.visible-md-block.visible-lg-block
+        = render('stories/edit/select_cta_ids', { company:, form: success_form })
+        
+    .form-group
+      .visible-sm-block.col-sm-12
+        = success_form.label(:story_category_ids, 'Category Tags')
+        = render( \
+            'stories/shared/select_story_tags', 
+            { company:, success_form:, tag_ids: :story_category_ids, company_tags: company.story_categories })
+      = success_form.label( \
+          :story_category_ids,
+          'Category Tags',
+          class: 'control-label col-sm-3 visible-md-inline-block visible-lg-inline-block')
+      .col-sm-9.col-md-8.col-lg-6.visible-md-block.visible-lg-block
+        = render( \
+            'stories/shared/select_story_tags', 
+            { company:, success_form:, tag_ids: :story_category_ids, company_tags: company.story_categories })
 
-  / #story-settings__ads-inputs
-      topic
-      <input type="hidden"
-              name="story[topic_ad_attributes][id]"
-              value="<%= story.topic_ad.try(:id) %>" disabled>
-      <input type="hidden"
-              name="story[topic_ad_attributes][_destroy]"
-              value="false" disabled>
-      <input type="checkbox" class="hidden"
-              name="story[topic_ad_attributes][_destroy]"
-              value="true" disabled>
-      <input type="hidden"
-              name="story[topic_ad_attributes][adwords_ad_group_id]"
-              value="<%= story.company.topic_campaign.ad_group.id %>" disabled>
-      <input type="hidden"
-              name="story[topic_ad_attributes][ad_id]"
-              value="<%= story.topic_ad.try(:ad_id) %>" disabled>
-      retarget
-      <input type="hidden"
-              name="story[retarget_ad_attributes][id]"
-              value="<%= story.retarget_ad.try(:id) %>" disabled>
-      <input type="hidden"
-              name="story[retarget_ad_attributes][_destroy]"
-              value="false" disabled>
-      <input type="checkbox" class="hidden"
-              name="story[retarget_ad_attributes][_destroy]"
-              value="true" disabled>
-      <input type="hidden"
-              name="story[retarget_ad_attributes][adwords_ad_group_id]"
-              value="<%= story.company.retarget_campaign.ad_group.id %>" disabled>
-      <input type="hidden"
-              name="story[retarget_ad_attributes][ad_id]"
-              value="<%= story.retarget_ad.try(:ad_id) %>" disabled>
+    .form-group
+      .visible-sm-block.col-sm-12
+        = success_form.label(:product_ids, 'Product Tags')
+        = render( \
+            'stories/shared/select_story_tags', 
+            { company:, success_form:, tag_ids: :product_ids, company_tags: company.products })
+      = success_form.label( \
+          :product_ids,
+          'Product Tags',
+          class: 'control-label col-sm-3 visible-md-inline-block visible-lg-inline-block')
+      .col-sm-9.col-md-8.col-lg-6.visible-md-block.visible-lg-block
+        = render( \
+            'stories/shared/select_story_tags', 
+            { company:, success_form:, tag_ids: :product_ids, company_tags: company.products })
 
-    // new stories start in ENABLED state
-    //<% if story.company.promote_tr? %>
-      <input type="hidden"
-              name="story[topic_ad_attributes][status]"
-              value="ENABLED" disabled>
-      <input type="hidden"
-              name="story[retarget_ad_attributes][status]"
-              value="ENABLED" disabled>
-      <% end %>
+  .form-group.og-tags
+    .visible-sm-block.col-sm-12
+      label Open Graph Tags
+      = render('stories/edit/og_meta_tags', { story:, story_form: })
+    label.col-sm-3.control-label.visible-md-inline-block.visible-lg-inline-block Open Graph Tags
+    .col-sm-9.col-md-8.col-lg-6.visible-md-block.visible-lg-block
+      = render('stories/edit/og_meta_tags', { story:, story_form: })
 
-  /= hidden_field_tag('settings', true)
+  .form-group.hidden-link
+    .visible-sm-block.col-sm-12
+      = story_form.label(:hidden_link, 'Hidden Link')
+      = render('stories/edit/hidden_link', { story:, form: story_form })
+    = story_form.label( \
+        :hidden_link,
+        'Hidden Link',
+        class: 'control-label col-sm-3 visible-md-inline-block visible-lg-inline-block')
+    .col-sm-9.col-md-8.col-lg-6.visible-md-block.visible-lg-block
+      = render('stories/edit/hidden_link', { story:, form: story_form })
+
+  .form-group.story-settings__publish
+    /.visible-sm-block.col-sm-12
+      label Publish 
+      div 
+        - [:logo_published, :preview_published, :published].each do |status|
+          = render('stories/edit/publish_switch', { story_form:, status: })
+
+    label.col-sm-3.control-label.visible-md-inline-block.visible-lg-inline-block Publish 
+    .col-sm-9.col-md-8.col-lg-6.visible-md-block.visible-lg-block
+      div
+        - [:logo_published, :preview_published, :published].each do |status|
+          = render('stories/edit/publish_switch', { story_form:, status: })
+
+  /.form-group
+    .col-sm-12.col-md-offset-3.col-md-8.col-lg-6.text-right
+      button.btn.btn-success.text-center type="submit" style="width:114px"
+        span Save changes
+        i.fa.fa-spin.fa-circle-o-notch style="display: none"
+        i.fa.fa-check style="display: none"
+
+/ #story-settings__ads-inputs
+    topic
+    <input type="hidden"
+            name="story[topic_ad_attributes][id]"
+            value="<%= story.topic_ad.try(:id) %>" disabled>
+    <input type="hidden"
+            name="story[topic_ad_attributes][_destroy]"
+            value="false" disabled>
+    <input type="checkbox" class="hidden"
+            name="story[topic_ad_attributes][_destroy]"
+            value="true" disabled>
+    <input type="hidden"
+            name="story[topic_ad_attributes][adwords_ad_group_id]"
+            value="<%= story.company.topic_campaign.ad_group.id %>" disabled>
+    <input type="hidden"
+            name="story[topic_ad_attributes][ad_id]"
+            value="<%= story.topic_ad.try(:ad_id) %>" disabled>
+    retarget
+    <input type="hidden"
+            name="story[retarget_ad_attributes][id]"
+            value="<%= story.retarget_ad.try(:id) %>" disabled>
+    <input type="hidden"
+            name="story[retarget_ad_attributes][_destroy]"
+            value="false" disabled>
+    <input type="checkbox" class="hidden"
+            name="story[retarget_ad_attributes][_destroy]"
+            value="true" disabled>
+    <input type="hidden"
+            name="story[retarget_ad_attributes][adwords_ad_group_id]"
+            value="<%= story.company.retarget_campaign.ad_group.id %>" disabled>
+    <input type="hidden"
+            name="story[retarget_ad_attributes][ad_id]"
+            value="<%= story.retarget_ad.try(:ad_id) %>" disabled>
+
+  // new stories start in ENABLED state
+  //<% if story.company.promote_tr? %>
+    <input type="hidden"
+            name="story[topic_ad_attributes][status]"
+            value="ENABLED" disabled>
+    <input type="hidden"
+            name="story[retarget_ad_attributes][status]"
+            value="ENABLED" disabled>
+    <% end %>
+
+/= hidden_field_tag('settings', true)

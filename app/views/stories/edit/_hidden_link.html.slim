@@ -1,0 +1,32 @@
+.input-group
+  = form.text_field( \
+      :hidden_link,
+      { class: 'form-control',
+        placeholder: 'Click the Refresh button to generate a link',
+        readonly: true,
+        data: { story_target: 'hiddenLinkInput' }})
+  span.input-group-btn
+    button.hidden-link__refresh.btn.btn-default {
+      type="button"
+      style="border-radius: 0; border-left: 0"
+      data-toggle="tooltip"
+      data-container="body"
+      data-placement="top"
+      data-action="story#refreshHiddenLink"
+      title="Refresh" }
+      i.fa.fa-refresh
+  span.input-group-btn
+    button.hidden-link__copy.btn.btn-default {
+      type="button"
+      class=('disabled' if story.hidden_link.blank?)
+      data-toggle="tooltip"
+      data-container="body"
+      data-placement="top"
+      data-story-target="hiddenLinkCopyBtn"
+      title="Copy" }
+      i.fa.fa-clipboard
+span.help-block style="margin-bottom: 0"
+  | Allows for early access without regard to publication status.
+|&#xA;
+span.help-block style="margin-bottom: 0; margin-top: 2px;"
+  | Refreshing the link will automatically expire any previous links.

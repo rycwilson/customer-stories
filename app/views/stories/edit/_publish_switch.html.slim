@@ -1,0 +1,15 @@
+- type = status == :logo_published ? 'Logo' : (status == :preview_published ? 'Preview' : 'Story')
+
+.publish-switch {
+  class=('disabled' if status == :preview_published) 
+  data-toggle=('tooltip' if status == :preview_published) 
+  title=('Contact Customer Stories' if status == :preview_published) }
+  = story_form.label(status, type)
+  = story_form.check_box( \
+      status,
+      class: 'bs-switch form-control',
+      disabled: status == :preview_published,
+      data: { \
+        story_target: 'publishSwitch',
+        on_text: '&nbsp;&nbsp;&nbsp;',
+        off_text: '&nbsp;&nbsp;&nbsp;' })

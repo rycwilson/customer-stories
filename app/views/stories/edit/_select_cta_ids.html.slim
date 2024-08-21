@@ -1,0 +1,13 @@
+= form.grouped_collection_select( \
+    :cta_ids,
+    company.call_to_actions.group_by(&:type).map { |type, ctas| [type == 'CTALink' ? 'Links' : 'Web Forms', ctas] },
+    :second,
+    :first,
+    :id,
+    :display_text,
+    {},
+    { multiple: true,
+      class: 'form-control',
+      data: { \
+        controller: 'tomselect',
+        tomselect_kind_value: 'cta' }})
