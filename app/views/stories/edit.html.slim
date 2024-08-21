@@ -40,6 +40,7 @@
                 aria-controls="story-supporting-content"
                 aria-expanded="#{@active_tab == '#story-supporting-content' ? 'true' : 'false'}"
                 role="tab" }
+                /i.fa.fa-fw.fa-check-square-o
                 i.fa.fa-fw.fa-info-circle
                 |&nbsp;Supporting Content
             li class=('active' if @active_tab == '#story-contributors')
@@ -63,7 +64,7 @@
                 aria-expanded="#{@active_tab == '#story-settings' ? 'true' : 'false'}"
                 role="tab" }
                 i.fa.fa-fw.fa-cloud-upload
-                |&nbsp;Publish
+                |&nbsp;Publish Settings
 
         .col-sm-8.col-md-9.layout-main
           /= render('stories/edit/story_header', { story: @story })
