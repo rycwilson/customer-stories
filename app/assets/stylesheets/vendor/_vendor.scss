@@ -12,7 +12,7 @@
 // @import 'RowGroup-1.0.0/css/rowGroup.bootstrap';
 
 @import 'bootstrap-switch/dist/css/bootstrap3/bootstrap-switch';
-@import 'bootstrap-daterangepicker/daterangepicker';
+// @import 'bootstrap-daterangepicker/daterangepicker';
 @import 'summernote';
 
 // csp overrides
@@ -21,3 +21,18 @@
 @import 'summernote_csp';
 @import 'datatables';
 @import 'tomselect';
+
+// custom styles
+.bootstrap-switch {
+  .bootstrap-switch-handle-on.bootstrap-switch-primary {
+    background: $status-on-color;
+  }
+  
+  &.bootstrap-switch-disabled {
+    cursor: not-allowed !important;
+
+    .bootstrap-switch-container {
+      pointer-events: none;
+    }
+  }
+}

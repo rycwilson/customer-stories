@@ -11,13 +11,6 @@
 
 #story-settings-form {
   // @include hide-until-init;
-  .publish-switch.disabled {
-    cursor: not-allowed;
-  }
-
-  .bootstrap-switch-disabled {
-    pointer-events: none;
-  }
 
   .hidden-link button {
     color: #666;
@@ -155,15 +148,14 @@
     > div {
       display: flex;
       justify-content: space-around;
-  
-      label {
-        vertical-align: middle;
-        font-weight: normal;
-        margin: 0 10px 0 0;
-      }
-  
-      .bootstrap-switch .bootstrap-switch-handle-on {
-        background: $status-on-color;  // #26b859; // #5fba7d; // #449d44; //#36a829;
+
+      [data-controller="bootstrap-switch"] {
+        @include flex-row-center;
+
+        label {
+          margin: 0 10px 0 0;
+          font-weight: normal;
+        }
       }
     }
   }
