@@ -143,7 +143,7 @@ export function tableConfig(invitationTemplateSelectHtml: string, storyId?: numb
 
     rowCallback(tr: Node, data: object) {
       const { id } = data as Contribution;
-      console.log('rowCallback ', id)
+      // console.log('rowCallback ', id)
     },
 
     createdRow: (tr: Node, data: object | any[], index: number) => {
@@ -155,7 +155,7 @@ export function tableConfig(invitationTemplateSelectHtml: string, storyId?: numb
         invitation,
         success: customerWin, 
         path } = data as Contribution;
-      console.log('createdRow ', id)
+      // console.log('createdRow ', id)
       $(tr)
       // .attr('data-datatable-target', 'row')
         .attr('data-contribution-datatable-outlet', storyId ? '#story-contributors-table' : '#contributors-table')

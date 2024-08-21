@@ -26,12 +26,12 @@ export default class ContributionController extends DatatableRowController<Contr
     ContributionController.connectCount[this.element.id] = ContributionController.connectCount[this.element.id] ?
       ++ContributionController.connectCount[this.element.id] : 
       1;
-    console.log(
-      ContributionController.connectCount[this.element.id], 
-      'connect', 
-      this.element.id, 
-      Object.keys(ContributionController.connectCount).length
-    )
+    // console.log(
+    //   ContributionController.connectCount[this.element.id], 
+    //   'connect', 
+    //   this.element.id, 
+    //   Object.keys(ContributionController.connectCount).length
+    // )
   }
   
   onFrameRendered({ target: turboFrame }: {target: FrameElement}) {

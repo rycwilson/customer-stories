@@ -76,17 +76,17 @@ export default class DashboardController extends Controller<HTMLDivElement> {
   )
 
   initialize() {
-    console.log('init dashbaord')
+    // console.log('init dashbaord')
   }
   
   connect() {
-    console.log('connect dashboard')
+    // console.log('connect dashboard')
     addEventListener('popstate', this.tabRestorationListener);
     document.documentElement.addEventListener('turbo:visit', this.tabRestorationListener)
   }
 
   disconnect() {
-    console.log('disconnect dashboard')
+    // console.log('disconnect dashboard')
     removeEventListener('popstate', this.tabRestorationListener);
     document.documentElement.removeEventListener('turbo:visit', this.tabRestorationListener)
   }
@@ -135,7 +135,7 @@ export default class DashboardController extends Controller<HTMLDivElement> {
   }
 
   activeTabValueChanged(activeTab: DashboardTab) {
-    console.log('dashboard.activeTab:', activeTab || typeof activeTab)
+    // console.log('dashboard.activeTab:', activeTab || typeof activeTab)
     if (activeTab) {
       this.tabContentTarget.classList.remove('hidden');
       this.initTabPanel(activeTab);
