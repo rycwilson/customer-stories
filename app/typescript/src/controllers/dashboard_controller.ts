@@ -244,7 +244,7 @@ export default class DashboardController extends Controller<HTMLDivElement> {
 
   setNavCookie({ currentTarget: link }: { currentTarget: HTMLAnchorElement }) {
     const href = link.getAttribute('href') as string; 
-    Cookies.set(`csp-${this.activeTabValue || 'story'}-tab`, href);
+    Cookies.set(`csp-${this.activeTabValue || 'edit-story'}-tab`, href);
   }
 
   get activeTabPanel() {
