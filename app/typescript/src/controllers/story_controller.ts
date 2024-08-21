@@ -21,7 +21,6 @@ export default class StoryController extends Controller<HTMLDivElement> {
     this.contributorsTarget.setAttribute('data-resource-init-value', 'true');
     this.publishSwitchTargets.forEach(checkbox => {
       $(checkbox).bootstrapSwitch({
-        size: 'small',
         disabled: checkbox!.name.includes('preview'),
         animate: false,
         onInit: function (e: Event) {}
