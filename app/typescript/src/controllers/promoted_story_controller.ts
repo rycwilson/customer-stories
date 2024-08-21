@@ -2,23 +2,10 @@ import DatatableRowController from './datatable_row_controller';
 import type { FrameElement } from '@hotwired/turbo';
 
 export default class PromotedStoryController extends DatatableRowController<PromotedStoryController, PromotedStoryRowData> {
-  static targets = ['switch'];
-  declare switchTarget: HTMLInputElement;
-
   declare id: number;
   declare title: string;
   declare path: string;
   declare promotedStoryHtml: HTMLElement;
-
-  initialize() {
-    super.initialize();
-    $(this.switchTarget).bootstrapSwitch({
-      size: 'small',
-      disabled: false,
-      animate: false,
-      onInit: function (e: Event) {}
-    });
-  }
 
   onFrameRendered({ target: turboFrame }: {target: FrameElement}) {
     this.promotedStoryHtml ??= <HTMLElement>turboFrame.firstElementChild;

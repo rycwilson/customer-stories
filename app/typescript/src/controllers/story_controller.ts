@@ -7,25 +7,16 @@ export default class StoryController extends Controller<HTMLDivElement> {
     'hiddenLinkInput', 
     'hiddenLinkCopyBtn',
     'contributors',
-    'publishSwitch',
   ];
   declare readonly storySettingsFormTarget: HTMLFormElement;
   declare readonly storyContentFormTarget: HTMLFormElement;
   declare readonly hiddenLinkInputTarget: HTMLInputElement;
   declare readonly hiddenLinkCopyBtnTarget: HTMLButtonElement;
   declare readonly contributorsTarget: HTMLDivElement;
-  declare readonly publishSwitchTargets: HTMLInputElement[];
  
   connect() {
     // this.storySettingsFormTarget.setAttribute('data-init', 'true');
     this.contributorsTarget.setAttribute('data-resource-init-value', 'true');
-    this.publishSwitchTargets.forEach(checkbox => {
-      $(checkbox).bootstrapSwitch({
-        disabled: checkbox!.name.includes('preview'),
-        animate: false,
-        onInit: function (e: Event) {}
-      });
-    });
   }
 
   refreshHiddenLink() {
