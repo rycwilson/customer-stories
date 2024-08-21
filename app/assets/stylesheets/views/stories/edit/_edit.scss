@@ -4,14 +4,20 @@
   min-height: 100vh;
 }
 
-#story-narrative-content-form,
-#story-settings-form  {
-  @include horizontal-form; 
-}
+// #story-narrative-content-form,
+// #story-settings-form  {
+  // @include horizontal-form; 
+// }
 
 #story-settings-form {
   // @include hide-until-init;
-  @include disable-publish-preview;
+  .publish-switch.disabled {
+    cursor: not-allowed;
+  }
+
+  .bootstrap-switch-disabled {
+    pointer-events: none;
+  }
 
   .hidden-link button {
     color: #666;
@@ -27,28 +33,6 @@
     &:focus.disabled,
     &:active.disabled {
       outline: none;
-    }
-  }
-
-  .ts-wrapper.multi.has-items {
-    .ts-control {
-      padding: 8px;
-    }
-    
-    .item {
-      display: flex;
-      align-items: center;
-      padding: 2px 0 2px 10px;
-      // margin-right: 36px;
-      
-      // &:not(:last-of-type) {
-        // margin-bottom: 8px;
-      // }
-    }
-    
-    .clear-button {
-      font-size: 20px;
-      padding: 0 10px;
     }
   }
 }
@@ -166,18 +150,21 @@
 }
 
 .story-settings__publish {
-  > div {
-    display: flex;
-    justify-content: space-around;
-
-    label {
-      vertical-align: middle;
-      font-weight: normal;
-      margin: 0 5px 0 0;
-    }
-
-    .bootstrap-switch .bootstrap-switch-handle-on {
-      background: $status-on-color;  // #26b859; // #5fba7d; // #449d44; //#36a829;
+  .visible-sm-block,
+  .visible-md-block {
+    > div {
+      display: flex;
+      justify-content: space-around;
+  
+      label {
+        vertical-align: middle;
+        font-weight: normal;
+        margin: 0 5px 0 0;
+      }
+  
+      .bootstrap-switch .bootstrap-switch-handle-on {
+        background: $status-on-color;  // #26b859; // #5fba7d; // #449d44; //#36a829;
+      }
     }
   }
 }
