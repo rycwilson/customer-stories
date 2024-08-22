@@ -42,22 +42,25 @@ export default class SummernoteController extends Controller<HTMLDivElement> {
   declare $toolbar: JQuery<HTMLDivElement, any>
 
   connect() {
-    // console.log('connect summernote')
     if (this.enabledValue) this.init();
   }
-
-  // use contenteditable instead of textarea because html can't be rendered in textarea
-  init() {
-    this.config = config[this.configKeyValue];
-    if (this.config) {
-      this.element.contentEditable = 'true';
-      $(this.element).summernote(this.config(this, ...this.configArgsValue));
-    }  
+  
+  disconnect() {
+    if ('summernote' in $(this.element).data()) this.destroy();
   }
-
+  
   onInitComplete(e: CustomEvent) {
     Object.keys(e.detail).forEach(key => this[key] = e.detail[key]);
     this.$editable.on('click', (e) => $(this.element).summernote('saveRange'));
+  }
+  
+  init() {
+    this.config = config[this.configKeyValue];
+    if (this.config) {
+      // use contenteditable instead of textarea because html can't be rendered in textarea
+      this.element.contentEditable = 'true';
+      $(this.element).summernote(this.config(this, ...this.configArgsValue));
+    }  
   }
 
   destroy() {
