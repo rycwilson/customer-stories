@@ -40,9 +40,10 @@
                 aria-controls="story-supporting-content"
                 aria-expanded="#{@active_tab == '#story-supporting-content' ? 'true' : 'false'}"
                 role="tab" }
-                /i.fa.fa-fw.fa-check-square-o
-                i.fa.fa-fw.fa-info-circle
-                |&nbsp;Supporting Content
+                i.fa.fa-fw.fa-quote-left
+                / i.fa.fa-fw.fa-info-circle
+                / |&nbsp;Supporting Content
+                |&nbsp;Testimonials & Results
             li class=('active' if @active_tab == '#story-contributors')
               a {
                 id="story-contributors-tab"
@@ -64,7 +65,7 @@
                 aria-expanded="#{@active_tab == '#story-settings' ? 'true' : 'false'}"
                 role="tab" }
                 i.fa.fa-fw.fa-cloud-upload
-                |&nbsp;Publish Settings
+                |&nbsp;Publication Settings
 
         .col-sm-8.col-md-9.layout-main
           /= render('stories/edit/story_header', { story: @story })

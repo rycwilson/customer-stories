@@ -43,13 +43,13 @@
                 
           li role="presentation"
             a {
-              href="#call-to-action-components-panel" 
+              href="#cta-links-forms-panel" 
               class=('disabled-tab' if @company.new_record?)
               role="tab"
               data-toggle="tab"
               data-company-settings-target="tab" }
               i.fa.fa-fw.fa-hand-pointer-o
-              |&nbsp;Call to Action Components
+              |&nbsp;CTA Links & Forms
 
           li role="presentation"
             a {
@@ -87,7 +87,7 @@
           #website-plugin-panel.tab-pane.fade role="tabpanel"
             = render('plugins/config', { company: @company })
 
-          #call-to-action-components-panel.tab-pane.fade role="tabpanel"
+          #cta-links-forms-panel.tab-pane.fade role="tabpanel"
             = render('companies/settings/ctas', { company: @company })
 
           #story-tags-panel.tab-pane.fade role="tabpanel"

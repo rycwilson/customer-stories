@@ -1,16 +1,16 @@
-- type = status == :logo_published ? 'Logo' : (status == :preview_published ? 'Preview' : 'Story')
+- kind = field == :logo_published ? 'Logo' : (field == :preview_published ? 'Preview' : 'Story')
 
 div {
   data-controller="bootstrap-switch"
-  data-bootstrap-switch-disabled-value=('true' if status == :preview_published)
+  data-bootstrap-switch-disabled-value=('true' if field == :preview_published)
   data-bootstrap-switch-size-value="large"
-  data-toggle=('tooltip' if status == :preview_published) 
-  title=('Contact Customer Stories' if status == :preview_published) }
-  = story_form.label(status, type)
+  data-toggle=('tooltip' if field == :preview_published) 
+  title=('Contact Customer Stories' if field == :preview_published) }
+  = story_form.label(field, kind)
   = story_form.check_box( \
-      status,
+      field,
       class: 'form-control',
-      disabled: status == :preview_published,
+      disabled: field == :preview_published,
       data: { \
         bootstrap_switch_target: 'switch',
         on_text: '&nbsp;&nbsp;&nbsp;',

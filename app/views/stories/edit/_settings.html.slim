@@ -78,13 +78,13 @@
     .visible-sm-block.col-sm-12
       label Publish 
       div 
-        - [:logo_published, :preview_published, :published].each do |status|
-          = render('stories/edit/publish_switch', { story_form:, status: })
+        - [:logo_published, :preview_published, :published].each do |field|
+          = render('stories/edit/publish_switch', { story_form:, field: })
     label.col-sm-3.control-label.visible-md-inline-block.visible-lg-inline-block Publish 
     .col-sm-9.col-md-8.col-lg-7.visible-md-block.visible-lg-block
       div
-        - [:logo_published, :preview_published, :published].each do |status|
-          = render('stories/edit/publish_switch', { story_form:, status: })
+        - [:logo_published, :preview_published, :published].each do |field|
+          = render('stories/edit/publish_switch', { story_form:, field: })
 
   .form-group.hidden-xs
     .col-sm-12.col-md-offset-3.col-md-8.col-lg-7.text-right
