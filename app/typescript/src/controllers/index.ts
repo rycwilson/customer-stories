@@ -100,6 +100,9 @@ application.register("tags", TagssController);
 import TomselectController from './tomselect_controller.js';
 application.register('tomselect', TomselectController);
 
+import TooltipController from './tooltip_controller.js';
+application.register('tooltip', TooltipController);
+
 import UserProfileController from "./user_profile_controller.js";
 application.register("user-profile", UserProfileController);
 

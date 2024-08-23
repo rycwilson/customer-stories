@@ -9,21 +9,17 @@
     button.hidden-link__refresh.btn.btn-default {
       type="button"
       style="border-radius: 0; border-left: 0"
-      data-toggle="tooltip"
-      data-container="body"
-      data-placement="top"
-      data-action="story#refreshHiddenLink"
-      title="Refresh" }
+      data-controller="tooltip"
+      data-tooltip-options-value={ title: 'Refresh', container: 'body', placement: 'top' }.to_json
+      data-action="story#refreshHiddenLink" }
       i.fa.fa-refresh
   span.input-group-btn
     button.hidden-link__copy.btn.btn-default {
       type="button"
       class=('disabled' if story.hidden_link.blank?)
-      data-toggle="tooltip"
-      data-container="body"
-      data-placement="top"
-      data-story-target="hiddenLinkCopyBtn"
-      title="Copy" }
+      data-controller="tooltip"
+      data-tooltip-options-value={ title: 'Copy', container: 'body', placement: 'top' }.to_json
+      data-story-target="hiddenLinkCopyBtn" }
       i.fa.fa-clipboard
 span.help-block style="margin-bottom: 0"
   | Allows for early access without regard to publication status.
