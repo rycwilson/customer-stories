@@ -1,0 +1,5 @@
+= turbo_frame_tag("#{action_name}-invitation-template-sm")
+  = render('invitation_templates/template_form', { company: @company, template: @template })
+
+= turbo_frame_tag("#{action_name}-invitation-template-md-lg")
+  = render('invitation_templates/template_form', { company: @company, template: @template })

@@ -1,46 +1,31 @@
-.invitation-template.form-horizontal
+.invitation-template
 
-  .form-group
-    label.col-sm-3.control-label for="template-select"
-      | Invitation Template
-    .col-sm-9.col-md-8.col-lg-6
-      .invitation-template__toolbar style="display:flex; justify-content:space-between"
-        = select_tag( \
-            nil,
-            grouped_options_for_select( \
-              'Custom' => company.invitation_templates.custom.map { |t| [t.name, t.id] },
-              'Default' => company.invitation_templates.default.map { |t| [t.name, t.id] }),
-            { include_blank: true,
-              id: 'template-select',
-              class: 'form-control',
-              placeholder: 'Select or enter the name of a new template',
-              data: { \
-                controller: 'tomselect',
-                tomselect_kind_value: 'invitationTemplate',
-                tomselect_custom_options_value: { plugins: {}, create: true, persist: false },
-                company_settings_target: 'invitationTemplateSelect',
-                action: 'change->company-settings#onChangeInvitationTemplate' }})
-        .btn-group.hidden data-company-settings-target="invitationTemplateToolbar"
-          button.btn.btn-default {
-            type="button"
-            data-company-settings-target="invitationTemplateCopyBtn"
-            data-action="company-settings#copyInvitationTemplate" }
-            i.fa.fa-fw.fa-copy
-          button.btn.btn-default {
-            type="button" 
-            data-company-settings-target="invitationTemplateRestoreBtn"
-            data-action="company-settings#restoreInvitationTemplate" }
-            i.fa.fa-fw.fa-repeat
-          button.btn.btn-default {
-            type="button" 
-            data-company-settings-target="invitationTemplateDeleteBtn"
-            data-action="company-settings#deleteInvitationTemplate" }
-            i.fa.fa-fw.fa-remove
+  .form-horizontal
+    .form-group
+      .visible-sm-block.col-sm-12 
+        label for="template-select-sm" Email Template
+        = render('companies/settings/invitation_template_toolbar', { company:, id: 'template-select-sm' })
+      label.control-label.col-md-2.col-lg-offset-1.visible-md-inline-block.visible-lg-inline-block for="template-select-md-lg"
+        | Email Template
+      .col-md-10.col-lg-8.visible-md-block.visible-lg-block
+        = render('companies/settings/invitation_template_toolbar', { company:, id: 'template-select-md-lg' })
 
-  = turbo_frame_tag( \
-      '', 
-      src: '', 
-      data: { \
-        company_settings_target: 'invitationTemplateTurboFrame',
-        'new-template-path': new_company_invitation_template_path(company), 
-        'edit-template-path': edit_company_invitation_template_path(company, ':id') }) 
+  .visible-sm-block
+    = turbo_frame_tag( \
+        '',
+        src: '', 
+        class: 'sm',
+        data: { \
+          company_settings_target: 'invitationTemplateTurboFrame',
+          'new-template-path': new_company_invitation_template_path(company), 
+          'edit-template-path': edit_company_invitation_template_path(company, ':id') }) 
+
+  .visible-md-block.visible-lg-block 
+    = turbo_frame_tag( \
+        '',
+        src: '', 
+        class: 'md-lg',
+        data: { \
+          company_settings_target: 'invitationTemplateTurboFrame',
+          'new-template-path': new_company_invitation_template_path(company), 
+          'edit-template-path': edit_company_invitation_template_path(company, ':id') }) 
