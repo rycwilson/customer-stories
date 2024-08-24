@@ -104,7 +104,6 @@ export default class CompanySettingsController extends Controller<HTMLDivElement
     } else {
       turboFrame.innerHTML = '';
     }
-    console.log('frame id', `${action}-invitation-template-${screen}`)
     turboFrame.setAttribute('id', action ? `${action}-invitation-template-${screen}` : '');
     turboFrame.setAttribute('src', path || ''); 
   }
@@ -126,10 +125,9 @@ export default class CompanySettingsController extends Controller<HTMLDivElement
   }
 
   onInvitationTemplateFrameLoad({ target: turboFrame }: { target: FrameElement }) {
-    console.log('frame load');
     const isNewTemplate = /new/.test(turboFrame.id);
     const isDefaultTemplate = !!turboFrame.querySelector('input[name*="[name]"][readonly]');
-    const screen = turboFrame.className?.match(/(?<screen>(sm|md-lg)$)/)?.groups?.screen;
+    const screen = turboFrame.id.match(/(?<screen>(sm|md-lg)$)/)?.groups?.screen;
     const select = this.invitationTemplateSelectTargets.find(select => select.id.includes(screen));
     const toolbar = select.parentElement;
     if (isNewTemplate) {
@@ -137,7 +135,7 @@ export default class CompanySettingsController extends Controller<HTMLDivElement
     }
     toolbar.querySelector('.invitation-template__restore')!.classList.toggle('hidden', !isDefaultTemplate);
     toolbar.querySelector('.invitation-template__delete')!.classList.toggle('hidden', isDefaultTemplate);
-    toolbar.classList.toggle('hidden', isNewTemplate);
+    toolbar.querySelector('.btn-group').classList.toggle('hidden', isNewTemplate);
   }
 
   get visibleInvitationTemplateSelect() {
