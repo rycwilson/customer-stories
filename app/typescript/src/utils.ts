@@ -34,19 +34,19 @@ export async function getJSON(dataPath: string, params: string) {
   }
 }
 
-export function debounce(func: Function, wait: number, immediate?: boolean) {
+export function debounce(callback: Function, wait: number, immediate: boolean = false) {
   let timeout: number | null;
-  return function(this: Window) {
-    const context = this;
-    const args = arguments;
-    const later = function() {
+  return () => {
+    const later = () => {
       timeout = null;
-      if (!immediate) func.apply(context, args);
+      if (!immediate) callback.call(null);
     };
-    const callNow = immediate && !timeout;
-    clearTimeout(timeout as number);
-    timeout = setTimeout(later, wait) as any as number;
-    if (callNow) func.apply(context, args);
+    if (immediate && !timeout) {
+      callback.call(null);
+    } else {
+      clearTimeout(<number>timeout);
+      timeout = setTimeout(later, wait) as any as number;
+    }
   };
 }
 
