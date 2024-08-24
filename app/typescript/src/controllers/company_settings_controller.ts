@@ -15,7 +15,7 @@ export default class CompanySettingsController extends Controller<HTMLDivElement
   declare invitationTemplateTurboFrameTargets: FrameElement[];
   declare invitationTemplateFormTargets: HTMLFormElement[];
 
-  resizeHandler = debounce(this.onResize.bind(this, 'foo', 'bar'), 200);
+  resizeHandler = debounce(this.onResize.bind(this), 200);
   invitationTemplateFrameLoadHandler = this.onInvitationTemplateFrameLoad.bind(this);
   currentScreen: 'sm' | 'md-lg' | undefined = undefined;
 
@@ -142,8 +142,8 @@ export default class CompanySettingsController extends Controller<HTMLDivElement
     return this.invitationTemplateSelectTargets.find(select => select.checkVisibility());
   }
 
-  onResize(foo: string, bar: string) {
-    console.log('onResize', foo, bar);
+  onResize() {
+    console.log('onResize');
     const newSelect = this.visibleInvitationTemplateSelect;
     const oldSelect = this.invitationTemplateSelectTargets.find(select => select !== newSelect);
     const shouldSyncView = !newSelect.id.includes(this.currentScreen) && oldSelect.value;
