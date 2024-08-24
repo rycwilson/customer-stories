@@ -1,5 +1,5 @@
 = form_with( \
-    model: [@company, @template],
+    model: [company, template],
     format: :json,
     html: { \
       id: 'invitation-template-form',
@@ -11,20 +11,25 @@
         company_settings_target: 'invitationTemplateForm',
         action: 'ajax:beforeSend->invitation-template#validate ajax:complete->invitation-template#onAjaxComplete' }}) do |form|
 
+  .visible-md-block.visible-lg-block 
+    .row
+      .col-md-offset-2.col-md-10.col-lg-offset-2.col-lg-8 
+        hr
+
   .form-group.required
     .visible-sm-block.col-sm-12
       = form.label(:name)
       = form.text_field( \
           :name,
           class: 'form-control sm',
-          readonly: @company.invitation_templates.default.include?(@template),
+          readonly: company.invitation_templates.default.include?(template),
           data: { invitation_template_target: 'nameField'})
-    = form.label(:name, class: 'col-md-2 col-lg-offset-1 control-label visible-md-inline-block visible-lg-inline-block')
+    = form.label(:name, 'Template Name', class: 'col-md-2 control-label visible-md-inline-block visible-lg-inline-block')
     .col-md-10.col-lg-8.visible-md-block.visible-lg-block
       = form.text_field( \
           :name,
           class: 'form-control md-lg',
-          readonly: @company.invitation_templates.default.include?(@template),
+          readonly: company.invitation_templates.default.include?(template),
           data: { invitation_template_target: 'nameField'})
 
   .form-group 
@@ -43,7 +48,7 @@
               a href="javascript:;" Contributor first name
             li data-placeholder='[contributor_full_name]'
               a href="javascript:;" Contributor full name
-    = form.label(:request_subject, 'Subject', class: 'col-md-2 col-lg-offset-1 control-label visible-md-block visible-lg-block')
+    = form.label(:request_subject, 'Subject', class: 'col-md-2 control-label visible-md-block visible-lg-block')
     .col-md-10.col-lg-8.visible-md-block.visible-lg-block
       .input-group
         = form.text_field(:request_subject, class: 'form-control md-lg')
@@ -70,8 +75,8 @@
         data-summernote-config-args-value=[nil, current_user.photo_url, asset_path('placeholders/user-photo-missing.png')].to_json
         data-invitation-template-target="note"
         data-action="summernote:init->summernote#onInitComplete" }
-        = @template.request_body&.html_safe
-    = form.label(:request_body, 'Body', class: 'col-md-2 col-lg-offset-1 control-label visible-md-block visible-lg-block')
+        = template.request_body&.html_safe
+    = form.label(:request_body, 'Body', class: 'col-md-2 control-label visible-md-block visible-lg-block')
     .col-md-10.col-lg-8.visible-md-block.visible-lg-block
       .invitation-template__summernote--md-lg {
         contenteditable="false"
@@ -81,4 +86,4 @@
         data-summernote-config-args-value=[nil, current_user.photo_url, asset_path('placeholders/user-photo-missing.png')].to_json
         data-invitation-template-target="note"
         data-action="summernote:init->summernote#onInitComplete" }
-        = @template.request_body&.html_safe
+        = template.request_body&.html_safe
