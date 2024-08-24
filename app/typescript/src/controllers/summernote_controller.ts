@@ -4,9 +4,9 @@ import { type SummernoteEditorKind } from '../summernote';
 // passing the config object via data attributes is problematic due to nested functions (tedious to represent in JSON)
 // => import all necessary config factory functions here, then call them with arguments passed in from the parent
 import { summernoteConfig as winStoryConfig } from '../customer_wins/win_story';
+import { summernoteConfig as storyConfig } from '../stories/summernote_config';
 import { summernoteConfig as invitationTemplateConfig } from '../invitation_templates';
 import { summernoteConfig as contributorInvitationConfig } from '../contributor_invitations';
-import { summernoteConfig as storyConfig } from '../stories/summernote_config';
 // import { defaultConfig } from '../summernote.js'
 
 interface EditorConfig {
@@ -15,9 +15,9 @@ interface EditorConfig {
 
 const config: { [key in SummernoteEditorKind]: EditorConfig | undefined } = {
   'winStory': winStoryConfig,
+  'story': storyConfig,
   'invitationTemplate': invitationTemplateConfig,
   'contributorInvitation' : contributorInvitationConfig,
-  'story': storyConfig,
   'default': undefined
 }
 
@@ -33,7 +33,7 @@ export default class SummernoteController extends Controller<HTMLDivElement> {
 
   declare config: EditorConfig | undefined;
   
-  [key: string]: any; // allow computed property names
+  declare $note: JQuery<HTMLDivElement, any>
   declare $codable: JQuery<HTMLTextAreaElement, any>
   declare $editable: JQuery<HTMLDivElement, any>
   declare $editingArea: JQuery<HTMLDivElement, any>
@@ -50,7 +50,20 @@ export default class SummernoteController extends Controller<HTMLDivElement> {
   }
   
   onInitComplete(e: CustomEvent) {
-    Object.keys(e.detail).forEach(key => this[key] = e.detail[key]);
+    Object.keys(e.detail).forEach(key => {
+      // make the key explicit to avoid type errors when assigning with computed property syntax
+      switch (key) {
+        case 'note':
+        case 'codable':
+        case 'editable':
+        case 'editingArea':
+        case 'editor':
+        case 'statusbar':
+        case 'toolbar':
+          this[`$${key}`] = e.detail[key];
+      }
+    });
+    console.log(this.$note, this.$codable, this.$editable, this.$editingArea, this.$editor, this.$statusbar, this.$toolbar)
     this.$editable.on('click', (e) => $(this.element).summernote('saveRange'));
   }
   

@@ -1,6 +1,6 @@
 import { distinctObjects } from '../utils';
-import SummernoteController from '../controllers/summernote_controller';
-import type { CustomSummernoteOptions } from '../summernote';
+import type SummernoteController from '../controllers/summernote_controller';
+import { type CustomSummernoteOptions, onInit as baseInit } from '../summernote';
 
 // use a skeleton version of the child row template as a placeholder while loading
 // see views/successes/win_story_form
@@ -66,49 +66,17 @@ export function summernoteConfig(
     },
     callbacks: {
       // without this, insertion of a new line doesn't trigger input; critical for inserting placeholders
-      onInit: (
-        { codable: $codable, editable: $editable, editingArea: $editingArea, editor: $editor, statusbar: $statusbar, toolbar: $toolbar }: 
-        { codable: JQuery<HTMLTextAreaElement, any>, 
-          editable: JQuery<HTMLDivElement, any>, 
-          editingArea: JQuery<HTMLDivElement, any>, 
-          editor: JQuery<HTMLDivElement, any>, 
-          statusbar: JQuery<HTMLDivElement, any>, 
-          toolbar: JQuery<HTMLDivElement, any> }
-      ) => {
-        // console.log('summernote', summernote)
-        const { codable, editable, editingArea, editor, statusbar, toolbar }: {
-          codable: HTMLTextAreaElement, 
-          editable: HTMLDivElement, 
-          editingArea: HTMLDivElement, 
-          editor: HTMLDivElement, 
-          statusbar: HTMLDivElement, 
-          toolbar: HTMLDivElement
-        } = { 
-          codable: $codable[0], 
-          editable: $editable[0], 
-          editingArea: $editingArea[0], 
-          editor: $editor[0], 
-          statusbar: $statusbar[0], 
-          toolbar: $toolbar[0]
-        } 
-        // convert jquery elements to native elements
-        // const { codable, editable, editingArea, editor, statusbar, toolbar } = (
-        //   Object.fromEntries(Object.entries(summernote).map(([key, element]) => [key, element[0]]))
-        // );
-        ctrl.dispatch('init', { detail: { $codable, $editable, $editingArea, $editor, $statusbar, $toolbar } });
-
+      onInit: baseInit(ctrl, (_ctrl: SummernoteController) => {
         // const setMaxDropdownHeight = () => {
         //   const dropdownMenus = toolbar.querySelectorAll('.dropdown-menu.summernote-custom');
         //   for (ul of dropdownMenus) ul.style.maxHeight = `${0.95 * editable.clientHeight}px`;
         // }
         // setMaxDropdownHeight();
         // observeEditor(note, editable, setMaxDropdownHeight);
-
-        depopulatePlaceholders(editable);
-
-        const customButtonsEl = toolbar.querySelector<HTMLDivElement>('.note-customButton');
+        depopulatePlaceholders(_ctrl.$editable[0]);
+        const customButtonsEl = _ctrl.$toolbar[0].querySelector<HTMLDivElement>('.note-customButton');
         if (customButtonsEl) initCustomToolbar(customButtonsEl, contributions.length);
-      },
+      }),
       onEnter: function (e: Event) {
         // $(this).summernote('pasteHTML', '<br></br>');
         // e.preventDefault();

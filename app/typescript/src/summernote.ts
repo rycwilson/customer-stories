@@ -1,3 +1,5 @@
+import type SummernoteController from './controllers/summernote_controller';
+
 // list of all possible custom buttons
 type CustomButton = 'placeholdersDropdown' | 'contributionsDropdown';
 
@@ -26,3 +28,10 @@ type CustomOptions = {
 export type SummernoteEditorKind = 'winStory' | 'story' | 'invitationTemplate' | 'contributorInvitation' | 'default';
 
 export type CustomSummernoteOptions = Summernote.Options & CustomOptions;
+
+export function onInit(ctrl: SummernoteController, customInit?: Function) {
+  return (instance: object) => {
+    ctrl.dispatch('init', { detail: instance });
+    if (customInit) customInit(ctrl);   // pass ctrl to allow access to controller properties
+  }
+}

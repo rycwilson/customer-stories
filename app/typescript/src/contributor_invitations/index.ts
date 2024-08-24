@@ -1,4 +1,5 @@
-import SummernoteController from '../controllers/summernote_controller';
+import type SummernoteController from '../controllers/summernote_controller';
+import { onInit as baseInit } from '../summernote';
 
 export function summernoteConfig (ctrl: SummernoteController, height: number): Summernote.Options {
   return {
@@ -17,7 +18,8 @@ export function summernoteConfig (ctrl: SummernoteController, height: number): S
       // ['help', ['help']]
     ],
     callbacks: {
-      onInit() {}
+      onInit: baseInit(ctrl, (_ctrl: SummernoteController) => {
+      })
     }
   }
 }
