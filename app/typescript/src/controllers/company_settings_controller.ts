@@ -15,7 +15,7 @@ export default class CompanySettingsController extends Controller<HTMLDivElement
   declare invitationTemplateTurboFrameTargets: FrameElement[];
   declare invitationTemplateFormTargets: HTMLFormElement[];
 
-  resizeHandler = debounce(this.onResize.bind(this), 200);
+  resizeHandler = debounce(this.onResize.bind(this, 'foo', 'bar'), 200);
   invitationTemplateFrameLoadHandler = this.onInvitationTemplateFrameLoad.bind(this);
   currentScreen: 'sm' | 'md-lg' | undefined = undefined;
 
@@ -142,12 +142,12 @@ export default class CompanySettingsController extends Controller<HTMLDivElement
     return this.invitationTemplateSelectTargets.find(select => select.checkVisibility());
   }
 
-  onResize() {
-    const isNewlyVisible = (select: TomSelectInput) => select.checkVisibility() && !select.id.includes(this.currentScreen);
-    const shouldSyncView = this.invitationTemplateSelectTargets.some(isNewlyVisible);
+  onResize(foo: string, bar: string) {
+    console.log('onResize', foo, bar);
+    const newSelect = this.visibleInvitationTemplateSelect;
+    const oldSelect = this.invitationTemplateSelectTargets.find(select => select !== newSelect);
+    const shouldSyncView = !newSelect.id.includes(this.currentScreen) && oldSelect.value;
     if (shouldSyncView) {
-      const newSelect = this.visibleInvitationTemplateSelect;
-      const oldSelect = this.invitationTemplateSelectTargets.find(select => select !== newSelect);
       const newScreen = newSelect.id.match(/(?<screen>(sm|md-lg)$)/)?.groups?.screen;
       const oldScreen = newScreen === 'sm' ? 'md-lg' : 'sm';
       const newFrame = <FrameElement>this.invitationTemplateTurboFrameTargets.find(frame => frame.classList.contains(newScreen));
