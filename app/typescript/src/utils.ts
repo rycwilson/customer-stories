@@ -34,6 +34,22 @@ export async function getJSON(dataPath: string, params: string) {
   }
 }
 
+export function debounce(func: Function, wait: number, immediate?: boolean) {
+  let timeout: number | null;
+  return function(this: Window) {
+    const context = this;
+    const args = arguments;
+    const later = function() {
+      timeout = null;
+      if (!immediate) func.apply(context, args);
+    };
+    const callNow = immediate && !timeout;
+    clearTimeout(timeout as number);
+    timeout = setTimeout(later, wait) as any as number;
+    if (callNow) func.apply(context, args);
+  };
+}
+
 export function capitalize(word: string) {
   return word.charAt(0).toUpperCase() + word.slice(1);
 }
