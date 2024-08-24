@@ -17,7 +17,7 @@ export default class CompanySettingsController extends Controller<HTMLDivElement
 
   resizeHandler = debounce(this.onResize.bind(this), 200);
   invitationTemplateFrameLoadHandler = this.onInvitationTemplateFrameLoad.bind(this);
-  currentScreen: 'sm' | 'md-lg' | undefined = undefined;
+  currentScreen: ScreenSize | undefined = undefined;
 
   get activeTab() {
     return this.tabTargets.find(tab => (
@@ -143,13 +143,12 @@ export default class CompanySettingsController extends Controller<HTMLDivElement
   }
 
   onResize() {
-    console.log('onResize');
     const newSelect = this.visibleInvitationTemplateSelect;
+    const newScreen = newSelect.id.match(/(?<screen>(sm|md-lg)$)/)?.groups?.screen;
     const oldSelect = this.invitationTemplateSelectTargets.find(select => select !== newSelect);
-    const shouldSyncView = !newSelect.id.includes(this.currentScreen) && oldSelect.value;
+    const shouldSyncView = newScreen !== this.currentScreen && oldSelect.value;
     if (shouldSyncView) {
-      const newScreen = newSelect.id.match(/(?<screen>(sm|md-lg)$)/)?.groups?.screen;
-      const oldScreen = newScreen === 'sm' ? 'md-lg' : 'sm';
+      const oldScreen = this.currentScreen;
       const newFrame = <FrameElement>this.invitationTemplateTurboFrameTargets.find(frame => frame.classList.contains(newScreen));
       const oldFrame = <FrameElement>this.invitationTemplateTurboFrameTargets.find(frame => frame !== newFrame);
       const copyFields = () => {
