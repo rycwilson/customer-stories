@@ -49,7 +49,7 @@
       data-controller="summernote"
       data-summernote-config-key-value="winStory"
       data-win-story-target="note"
-      data-action="summernote:init->summernote#onInitComplete summernote:init->win-story#onInitWinStoryEditor" }
+      data-action="summernote:init->win-story#onInitWinStoryEditor" }
       = success.win_story_html&.html_safe
     .win-story__footer data-win-story-target="footer"
       - ['Mark as Completed', 'Save changes'].each do |button_content|

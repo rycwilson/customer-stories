@@ -18,7 +18,7 @@ export function summernoteConfig (ctrl: SummernoteController, height: number): S
       // ['help', ['help']]
     ],
     callbacks: {
-      onInit: baseInit(ctrl, (_ctrl: SummernoteController) => {
+      onInit: baseInit(ctrl, () => {
       })
     }
   }

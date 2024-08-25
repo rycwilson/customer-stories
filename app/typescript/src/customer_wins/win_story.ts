@@ -66,15 +66,16 @@ export function summernoteConfig(
     },
     callbacks: {
       // without this, insertion of a new line doesn't trigger input; critical for inserting placeholders
-      onInit: baseInit(ctrl, (_ctrl: SummernoteController) => {
+      onInit: baseInit(ctrl, () => {
+        // console.log('win story editor init', ctrl.$note, ctrl.$codable, ctrl.$editable, ctrl.$editingArea, ctrl.$editor, ctrl.$statusbar, ctrl.$toolbar)
         // const setMaxDropdownHeight = () => {
         //   const dropdownMenus = toolbar.querySelectorAll('.dropdown-menu.summernote-custom');
         //   for (ul of dropdownMenus) ul.style.maxHeight = `${0.95 * editable.clientHeight}px`;
         // }
         // setMaxDropdownHeight();
         // observeEditor(note, editable, setMaxDropdownHeight);
-        depopulatePlaceholders(_ctrl.$editable[0]);
-        const customButtonsEl = _ctrl.$toolbar[0].querySelector<HTMLDivElement>('.note-customButton');
+        depopulatePlaceholders(ctrl.$editable[0]);
+        const customButtonsEl = ctrl.$toolbar[0].querySelector<HTMLElement>('.note-customButton');
         if (customButtonsEl) initCustomToolbar(customButtonsEl, contributions.length);
       }),
       onEnter: function (e: Event) {
@@ -106,7 +107,7 @@ export function populatePlaceholders(html: string, contributions: Contribution[]
   return wrapper.innerHTML;
 }
 
-function depopulatePlaceholders(editable: HTMLDivElement) {
+function depopulatePlaceholders(editable: HTMLElement) {
   const groupContributions = Array.from(editable.getElementsByClassName('group-contribution'));
   const individualContributions = Array.from(editable.getElementsByClassName('individual-contribution'));
   [...groupContributions, ...individualContributions]
@@ -237,7 +238,7 @@ function initDropdown(
   contributions: Contribution[], 
   answers: ContributorAnswer[], 
   context: any
-): JQuery<HTMLDivElement, any> {
+): JQuery<HTMLElement, any> {
   const questions = distinctObjects(answers.map(answer => answer.question), 'id');
   const ui = $.summernote.ui;
   const buttonGroup = ui.buttonGroup([

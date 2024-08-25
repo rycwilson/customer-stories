@@ -1,5 +1,5 @@
 import { Controller } from '@hotwired/stimulus';
-import { type SummernoteEditorKind } from '../summernote';
+import { type SummernoteKind } from '../summernote';
 
 // passing the config object via data attributes is problematic due to nested functions (tedious to represent in JSON)
 // => import all necessary config factory functions here, then call them with arguments passed in from the parent
@@ -13,7 +13,7 @@ interface EditorConfig {
   (ctrl: SummernoteController, height: number, ...args: any): Summernote.Options;
 }
 
-const config: { [key in SummernoteEditorKind]: EditorConfig | undefined } = {
+const config: { [key in SummernoteKind]: EditorConfig | undefined } = {
   'winStory': winStoryConfig,
   'story': storyConfig,
   'invitationTemplate': invitationTemplateConfig,
@@ -28,18 +28,18 @@ export default class SummernoteController extends Controller<HTMLDivElement> {
     configArgs: { type: Array, default: [220] }   // height is necessary, any others will depend on the specific configuration
   }
   declare enabledValue: boolean;
-  declare readonly configKeyValue: SummernoteEditorKind;
+  declare readonly configKeyValue: SummernoteKind;
   declare readonly configArgsValue: [number, ...any[]];
 
   declare config: EditorConfig | undefined;
   
-  declare $note: JQuery<HTMLDivElement, any>
-  declare $codable: JQuery<HTMLTextAreaElement, any>
-  declare $editable: JQuery<HTMLDivElement, any>
-  declare $editingArea: JQuery<HTMLDivElement, any>
-  declare $editor: JQuery<HTMLDivElement, any>
-  declare $statusbar: JQuery<HTMLDivElement, any>
-  declare $toolbar: JQuery<HTMLDivElement, any>
+  declare $note: JQuery<HTMLElement, any>
+  declare $codable: JQuery<HTMLElement, any>
+  declare $editable: JQuery<HTMLElement, any>
+  declare $editingArea: JQuery<HTMLElement, any>
+  declare $editor: JQuery<HTMLElement, any>
+  declare $statusbar: JQuery<HTMLElement, any>
+  declare $toolbar: JQuery<HTMLElement, any>
 
   connect() {
     if (this.enabledValue) this.init();
@@ -47,24 +47,6 @@ export default class SummernoteController extends Controller<HTMLDivElement> {
   
   disconnect() {
     if ('summernote' in $(this.element).data()) this.destroy();
-  }
-  
-  onInitComplete(e: CustomEvent) {
-    Object.keys(e.detail).forEach(key => {
-      // make the key explicit to avoid type errors when assigning with computed property syntax
-      switch (key) {
-        case 'note':
-        case 'codable':
-        case 'editable':
-        case 'editingArea':
-        case 'editor':
-        case 'statusbar':
-        case 'toolbar':
-          this[`$${key}`] = e.detail[key];
-      }
-    });
-    console.log(this.$note, this.$codable, this.$editable, this.$editingArea, this.$editor, this.$statusbar, this.$toolbar)
-    this.$editable.on('click', (e) => $(this.element).summernote('saveRange'));
   }
   
   init() {

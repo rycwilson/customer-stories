@@ -38,7 +38,7 @@
             summernote_config_key_value: 'story',
             summernote_config_args_value: [nil].to_json,
             story_target: 'narrativeTextarea',
-            action: 'summernote:init->summernote#onInitComplete summernote:init->story#onInitNarrativeEditor' })
+            action: 'summernote:init->story#onInitNarrativeEditor' })
     = form.label( \
         :narrative,
         'Body',
@@ -55,7 +55,7 @@
             summernote_config_key_value: 'story',
             summernote_config_args_value: [nil].to_json,
             story_target: 'narrativeTextarea',
-            action: 'summernote:init->summernote#onInitComplete summernote:init->story#onInitNarrativeEditor' })
+            action: 'summernote:init->story#onInitNarrativeEditor' })
 
   .form-group
     .col-sm-12.col-md-offset-2.col-md-9.col-lg-8.text-right

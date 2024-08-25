@@ -19,8 +19,7 @@ export function summernoteConfig(ctrl: SummernoteController, height: number): Su
       ['customButton', ['showContributions']]
     ] as Summernote.toolbarDef,
     callbacks: {
-      onInit: baseInit(ctrl, (_ctrl: SummernoteController) => {
-        console.log('story editor init')
+      onInit: baseInit(ctrl, () => {
       })
     }
   }

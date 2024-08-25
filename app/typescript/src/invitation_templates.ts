@@ -25,7 +25,7 @@ export function summernoteConfig (
     ] as Summernote.toolbarDef,
     buttons: { placeholdersDropdown: placeholdersDropdown.bind(null, curatorPhotoUrl, curatorPhotoPlaceholderUrl) },
     callbacks: {
-      onInit: baseInit(ctrl, (_ctrl: SummernoteController) => {
+      onInit: baseInit(ctrl, () => {
         // custom inititialization
       })
     }

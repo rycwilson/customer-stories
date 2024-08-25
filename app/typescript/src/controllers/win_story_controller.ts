@@ -1,5 +1,6 @@
 import { Controller } from '@hotwired/stimulus';
 import type CustomerWinController from './customer_win_controller';
+import { type SummernoteInstance } from '../summernote';
 import { 
   populatePlaceholders, 
   individualContributionTemplate, 
@@ -32,7 +33,7 @@ export default class extends Controller<HTMLFormElement> {
   declare contributionsValue: Contribution[];
   declare answersValue: ContributorAnswer[];
 
-  declare editor: HTMLDivElement;
+  declare editor: HTMLElement;
   declare defaultHeight: number;
 
   initialize() {
@@ -78,8 +79,8 @@ export default class extends Controller<HTMLFormElement> {
     this.scrollToWinStory();
   }
 
-  onInitWinStoryEditor(e: CustomEvent) {
-    this.editor = e.detail.editor[0];    // other summernote elements are in this payload => assign as needed
+  onInitWinStoryEditor({ detail: instance }: { detail: SummernoteInstance }) {
+    this.editor = instance.editor[0];    // other summernote elements are in this payload => assign as needed
     this.copyBtnTarget.disabled = true;
   }
 

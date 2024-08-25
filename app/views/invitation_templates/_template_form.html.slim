@@ -73,8 +73,7 @@
         data-summernote-enabled-value="true"
         data-summernote-config-key-value="invitationTemplate"
         data-summernote-config-args-value=[nil, current_user.photo_url, asset_path('placeholders/user-photo-missing.png')].to_json
-        data-invitation-template-target="note"
-        data-action="summernote:init->summernote#onInitComplete" }
+        data-invitation-template-target="note" }
         = template.request_body&.html_safe
     = form.label(:request_body, 'Body', class: 'col-md-2 control-label visible-md-block visible-lg-block')
     .col-md-10.col-lg-8.visible-md-block.visible-lg-block
@@ -84,6 +83,5 @@
         data-summernote-enabled-value="true"
         data-summernote-config-key-value="invitationTemplate"
         data-summernote-config-args-value=[nil, current_user.photo_url, asset_path('placeholders/user-photo-missing.png')].to_json
-        data-invitation-template-target="note"
-        data-action="summernote:init->summernote#onInitComplete" }
+        data-invitation-template-target="note" }
         = template.request_body&.html_safe
