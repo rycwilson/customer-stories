@@ -33,7 +33,7 @@ export type SummernoteInstance = { [key in SummernoteComponent]: JQuery<HTMLElem
 
 export type CustomSummernoteOptions = Summernote.Options & CustomOptions;
 
-export function onInit(ctrl: SummernoteController, customInit?: Function) {
+export function onInit(ctrl: SummernoteController, customInit?: VoidFunction) {
   return (instance: SummernoteInstance) => {
     for (const [key, component] of Object.entries(instance) as [SummernoteComponent, JQuery<HTMLElement, any>][]) {
       ctrl[`$${key}`] = component;

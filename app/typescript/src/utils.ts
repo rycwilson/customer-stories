@@ -34,7 +34,7 @@ export async function getJSON(dataPath: string, params: string) {
   }
 }
 
-export function debounce(callback: Function, wait: number, immediate = false) {
+export function debounce(callback: VoidFunction, wait: number, immediate = false) {
   let timeout: number | null;
   return () => {
     const later = () => {
