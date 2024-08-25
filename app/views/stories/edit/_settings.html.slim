@@ -6,7 +6,6 @@
       class: 'form-horizontal directUpload', 
       autocomplete: 'off',
       data: { \
-        story_target: 'storySettingsForm',
         url: @s3_direct_post.url,
         host: URI.parse(@s3_direct_post.url).host,
         asset_host: Rails.application.config.asset_host,
