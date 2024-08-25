@@ -32,7 +32,7 @@ interface CustomerStoriesApp {
   init(): void;
 }
 
-type ScreenSize = 'sm' | 'md-lg';
+type ScreenSize = 'xs' | 'sm' | 'md-lg';
 type ResourceName = 'customerWins' | 'contributions' | 'storyContributions' | 'promotedStories';
 type TomSelectInput = HTMLSelectElement & TomInput;
 type SelectInputKind = 'filter' | 'curator' | 'status' | 'customer' | 'category' | 'product' | 'storyTag' | 'contributor' | 'referrer' | 'invitationTemplate' | 'story';

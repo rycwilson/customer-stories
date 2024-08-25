@@ -15,8 +15,8 @@ export default class StoryController extends Controller<HTMLDivElement> {
   declare readonly hiddenLinkCopyBtnTarget: HTMLButtonElement;
   declare readonly contributorsTarget: HTMLDivElement;
 
+  declare currentScreen: ScreenSize;
   resizeHandler = debounce(this.onResize.bind(this), 200);
-  currentScreen: ScreenSize | undefined = undefined;
  
   connect() {
     this.contributorsTarget.setAttribute('data-resource-init-value', 'true');
@@ -50,18 +50,17 @@ export default class StoryController extends Controller<HTMLDivElement> {
   }
 
   onResize() {
-    if (this.visibleNarrativeTextarea) {
-      const newTextarea = this.visibleNarrativeTextarea;
-      const newScreen = <ScreenSize>newTextarea.id.match(/(?<screen>(sm|md-lg)$)/)?.groups?.screen
-      const shouldSyncView = newScreen !== this.currentScreen;
-      if (shouldSyncView) {
-        const oldTextarea = this.narrativeTextareaTargets.find(textarea => textarea !== newTextarea);
-        const newTitle = <HTMLInputElement>this.titleInputTargets.find(input => input.id.includes(newScreen));
-        const oldTitle = <HTMLInputElement>this.titleInputTargets.find(input => input !== newTitle);
-        $(newTextarea).summernote('code', $(oldTextarea).summernote('code'));
-        newTitle.value = oldTitle.value;
-        this.currentScreen = newScreen;
-      }
+    const newNote = this.visibleNarrativeTextarea;
+    const newScreen = <ScreenSize>newNote?.id.match(/(?<screen>(sm|md-lg)$)/)?.groups?.screen || 'xs';
+    if (newScreen === this.currentScreen || newScreen === 'xs' || this.currentScreen === 'xs') {
+      this.currentScreen = newScreen;
+      return;
     }
+    const oldNote = this.narrativeTextareaTargets.find(textarea => textarea !== newNote);
+    const newTitle = <HTMLInputElement>this.titleInputTargets.find(input => input.id.includes(newScreen));
+    const oldTitle = <HTMLInputElement>this.titleInputTargets.find(input => input !== newTitle);
+    $(newNote).summernote('code', $(oldNote).summernote('code'));
+    newTitle.value = oldTitle.value;
+    this.currentScreen = newScreen;
   }
 }
