@@ -166,11 +166,13 @@ export default class CompanySettingsController extends Controller {
       $(newNote).summernote('code', $(oldNote).summernote('code'));
     };
     const copyForm = () => { copyFields(); copyCode(); };
-    if (newSelect.value !== oldSelect.value) {
-      newFrame.addEventListener('turbo:frame-load', copyForm, { once: true });
-      newSelect.tomselect.setValue(oldSelect.value);
-    } else {
-      copyForm();
+    if (oldSelect.value) {
+      if (newSelect.value !== oldSelect.value) {
+        newFrame.addEventListener('turbo:frame-load', copyForm, { once: true });
+        newSelect.tomselect.setValue(oldSelect.value);
+      } else {
+        copyForm();
+      }
     }
     this.currentScreen = newScreen;
   } 
