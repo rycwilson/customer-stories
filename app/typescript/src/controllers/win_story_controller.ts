@@ -78,8 +78,8 @@ export default class extends Controller<HTMLFormElement> {
     this.scrollToWinStory();
   }
 
-  onSummernoteInit(e: CustomEvent) {
-    this.editor = e.detail.editor;    // other summernote elements are in this payload => assign as needed
+  onInitWinStoryEditor(e: CustomEvent) {
+    this.editor = e.detail.editor[0];    // other summernote elements are in this payload => assign as needed
     this.copyBtnTarget.disabled = true;
   }
 
