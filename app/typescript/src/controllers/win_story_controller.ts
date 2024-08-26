@@ -1,6 +1,6 @@
 import { Controller } from '@hotwired/stimulus';
 import type CustomerWinController from './customer_win_controller';
-import { type SummernoteInstance } from '../summernote';
+import { type SummernoteComponents } from '../summernote';
 import { 
   populatePlaceholders, 
   individualContributionTemplate, 
@@ -79,7 +79,7 @@ export default class extends Controller<HTMLFormElement> {
     this.scrollToWinStory();
   }
 
-  onInitWinStoryEditor({ detail: instance }: { detail: SummernoteInstance }) {
+  onInitWinStoryEditor({ detail: instance }: { detail: SummernoteComponents }) {
     this.editor = instance.editor[0];    // other summernote elements are in this payload => assign as needed
     this.copyBtnTarget.disabled = true;
   }

@@ -33,8 +33,8 @@ export default class SummernoteController extends Controller<HTMLDivElement> {
 
   declare config: EditorConfig | undefined;
   
-  declare $note: JQuery<HTMLElement, any>
-  declare $codable: JQuery<HTMLElement, any>
+  declare $note: JQuery<HTMLTextAreaElement | HTMLDivElement, any>
+  declare $codable: JQuery<HTMLTextAreaElement, any>
   declare $editable: JQuery<HTMLElement, any>
   declare $editingArea: JQuery<HTMLElement, any>
   declare $editor: JQuery<HTMLElement, any>
