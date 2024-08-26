@@ -12,7 +12,7 @@
         s3_data: @s3_direct_post.fields }}) do |form|
 
   // a buffer input for uploading story images to AWS; see the summernote onImageUpload callback
-  /input type="file" id="narrative__img-upload" style="display: none"
+  input#narrative__img-upload.hidden type="file"
 
   .form-group
     .visible-sm-block.col-sm-12

@@ -4,7 +4,7 @@ import { type SummernoteKind } from '../summernote';
 // passing the config object via data attributes is problematic due to nested functions (tedious to represent in JSON)
 // => import all necessary config factory functions here, then call them with arguments passed in from the parent
 import { summernoteConfig as winStoryConfig } from '../customer_wins/win_story';
-import { summernoteConfig as storyConfig } from '../stories/summernote_config';
+import { summernoteConfig as storyConfig } from '../stories/narrative_editor';
 import { summernoteConfig as invitationTemplateConfig } from '../invitation_templates';
 import { summernoteConfig as contributorInvitationConfig } from '../contributor_invitations';
 // import { defaultConfig } from '../summernote.js'
