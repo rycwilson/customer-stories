@@ -1,3 +1,60 @@
+[id*="story-narrative"] + .note-editor {
+  // .modal.link-dialog {
+  // }
+
+  // note that the .image-dialog class must be assigned on summernote init
+  .modal.image-dialog {
+    .modal-body {
+      padding-top: 25px;
+    }
+
+    .form-group.note-group-select-from-files {
+      label {
+        padding: 6px 12px;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+        cursor: pointer;
+        &:hover {
+          background-color: #efefef;
+        }
+      }
+    }
+    
+    .or {
+      text-align: center;
+
+      h5 {
+        position: relative;
+        width: 40%;
+        margin: 20px auto;
+        color: #555;
+        
+        &::before {
+          position: absolute;
+          top: 50%;
+          display: block;
+          z-index: 1;
+          height: 1px;
+          width: 100%;
+          border-top: solid 1px #ccc;
+          content: "";
+        }
+        
+        span {
+          background: #fff;
+          padding: 0 20px;
+          position: relative;
+          z-index: 5;
+        }
+      }
+    }
+
+    .note-image-btn {
+      padding: 6px 24px;
+    }
+  }
+}
+
 #story-settings {
   // this prevents content shifting when toggling the customer logo/name
   // TODO this (or something like it) needs to be implemented more broadly
