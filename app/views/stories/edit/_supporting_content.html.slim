@@ -11,13 +11,13 @@
       = form.label(:quote, 'Customer Quote')
       = form.text_area( \
           :quote,
-          { rows: 3, class: 'form-control', placeholder: 'Add a quote from a happy customer' })
+          { rows: 3, class: 'form-control', placeholder: 'Select a Contributor to autofill their Contribution here' })
     = form.label(:quote, 'Customer Quote', class: 'control-label col-md-3 visible-md-inline-block visible-lg-inline-block')
     .col-md-8.col-lg-7.visible-md-block.visible-lg-block
       = collection_select( \
-          nil,
-          nil,
-          (company.contributors - company.referrers - company.curators).uniq \
+          story,
+          :featured_contributor_id,
+          story.customer.contributors \
             .sort_by { |contact| contact.last_name } \
             .unshift(User.new(id: 0, first_name: 'New', last_name: 'Contact')),
           :id,
@@ -31,7 +31,7 @@
               tomselect_kind_value: 'contributor' } })
       = form.text_area( \
           :quote,
-          { rows: 4, class: 'form-control', placeholder: 'Add a quote from a happy customer' })
+          { rows: 4, class: 'form-control', placeholder: 'Select a Contributor to autofill their Contribution here' })
 
   / .form-group
   /   = story_form.label(:quote_attr_name, 'Customer Name')

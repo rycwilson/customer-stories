@@ -357,6 +357,11 @@ class Story < ApplicationRecord
     end
   end
 
+  def featured_cotributor_id
+    # TODO story has one featured contributor from whose contribution the quote is taken
+    nil
+  end
+
   # method returns a friendly id path that either contains or omits a product
   def csp_story_path
     Rails.cache.fetch("#{self.company.subdomain}/csp-story-#{self.id}-path") do
