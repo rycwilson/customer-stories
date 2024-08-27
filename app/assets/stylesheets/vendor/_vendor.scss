@@ -1,6 +1,3 @@
-// @import 'select2/dist/css/select2';
-// @import 'select2-bootstrap-theme/dist/select2-bootstrap';
-
 // the datatables bootstrap stylesheet requires a fix as outlined here:
 // https://stackoverflow.com/questions/71805735/error-function-rgb-is-missing-argument-green-in-sass#answer-74262232
 // @import 'datatables.net-bs/css/dataTables.bootstrap';
@@ -17,12 +14,19 @@
 
 // csp overrides
 @import 'bootstrap';
-// @import 'select2';
-@import 'summernote_csp';
 @import 'datatables';
 @import 'tomselect';
 
-// custom styles
+.note-editor {
+  &.note-frame {
+    border: 1px solid $input-border;
+  }
+
+  &.panel-default > .panel-heading {
+    background-color: $medium-gray;
+  }
+}
+
 .bootstrap-switch {
   .bootstrap-switch-handle-on.bootstrap-switch-primary {
     background: $status-on-color;
