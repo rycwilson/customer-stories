@@ -5,6 +5,7 @@ import * as turboCallbacks from './turbo_callbacks';
 import './jquery';
 import 'blueimp-file-upload';
 import 'summernote';
+import 'jquery-ui/ui/data';
 import 'jquery-ui/ui/widgets/mouse';
 import 'jquery-ui/ui/widgets/sortable';
 
