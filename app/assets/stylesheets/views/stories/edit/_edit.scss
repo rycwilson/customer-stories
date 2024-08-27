@@ -1,56 +1,117 @@
-[id*="story-narrative"] + .note-editor {
-  // .modal.link-dialog {
-  // }
+// @import 'contributions';
+// @import 'results';
 
-  // note that the .image-dialog class must be assigned on summernote init
-  .modal.image-dialog {
-    .modal-body {
-      padding-top: 25px;
-    }
+#story-narrative-content {
+  [id*="story-narrative"] + .note-editor {
+    // .modal.link-dialog {
+    // }
 
-    .form-group.note-group-select-from-files {
-      label {
-        padding: 6px 12px;
-        border: 1px solid #ccc;
-        border-radius: 4px;
-        cursor: pointer;
-        &:hover {
-          background-color: #efefef;
+    // note that the .image-dialog class must be assigned on summernote init
+    .modal.image-dialog {
+      .modal-body {
+        padding-top: 25px;
+      }
+
+      .form-group.note-group-select-from-files {
+        label {
+          padding: 6px 12px;
+          border: 1px solid #ccc;
+          border-radius: 4px;
+          cursor: pointer;
+
+          &:hover {
+            background-color: #efefef;
+          }
         }
       }
-    }
-    
-    .or {
-      text-align: center;
+      
+      .or {
+        text-align: center;
 
-      h5 {
-        position: relative;
-        width: 40%;
-        margin: 20px auto;
-        color: #555;
-        
-        &::before {
-          position: absolute;
-          top: 50%;
-          display: block;
-          z-index: 1;
-          height: 1px;
-          width: 100%;
-          border-top: solid 1px #ccc;
-          content: "";
-        }
-        
-        span {
-          background: #fff;
-          padding: 0 20px;
+        h5 {
           position: relative;
-          z-index: 5;
+          width: 40%;
+          margin: 20px auto;
+          color: #555;
+          
+          &::before {
+            position: absolute;
+            top: 50%;
+            display: block;
+            z-index: 1;
+            height: 1px;
+            width: 100%;
+            border-top: solid 1px #ccc;
+            content: "";
+          }
+          
+          span {
+            background: #fff;
+            padding: 0 20px;
+            position: relative;
+            z-index: 5;
+          }
+        }
+      }
+
+      .note-image-btn {
+        padding: 6px 24px;
+      }
+    }
+  }
+}
+
+#show-contributions {
+  background-color: $medium-gray;
+
+  strong {
+    font-weight: 600;
+  }
+
+  > div {    // need an inner div to allow for padding (which will screw up the div.collapse)
+    padding: 15px;
+
+    .btn-group {
+      margin-bottom: 15px;
+
+      label:first-child {
+        margin-right: 25px;
+
+        &:not(:first-of-type) {
+          margin-bottom: 3px;
         }
       }
     }
 
-    .note-image-btn {
-      padding: 6px 24px;
+    .questions,
+    .contributors {
+      overflow-y: scroll;
+      padding: 6px;
+      background-color: $light-gray;
+      max-height: 200px;
+
+      figcaption,
+      p {
+        margin-bottom: 5px;
+      }
+    }
+  }
+}
+
+#story-supporting-content {
+  #story_quote {
+    font-style: italic;
+  }
+
+  #story_quote::-webkit-input-placeholder {
+    font-style: normal;
+  }
+
+  #video-container {
+    min-height: 234px;
+
+    img#video-placeholder {
+      width: 100%;
     }
   }
 }
@@ -218,109 +279,3 @@
   }
 }
 
-body.stories.edit {
-  @import 'content';
-  @import 'contributions';
-  @import 'results';
-
-  .story-header__wrapper {
-    position: relative;
-    height: 100px;
-    margin-bottom: 30px;
-  }
-
-  .story-header__spacekeeper {
-    position: absolute;
-    top: 0;
-    left: 0;
-    height: 100%;
-    width: 100%;
-    background-color: transparent;
-  }
-
-  .story-header {
-    height: 100px;
-    position: relative;
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-    background: $medium-gray;
-    padding: 15px 25px;
-    z-index: 100;  // needed for fixed positioning (see stories/edit.js)
-
-    > div:not(.story-header__flash) {
-      display: flex;
-      align-items: center;
-
-      &:first-child {
-        margin-bottom: 5px;
-      }
-
-      label {
-        margin: 0;
-      }
-
-      > span:nth-of-type(1) {
-        width: 10%;
-      }
-
-      > span:nth-of-type(2) {
-        font-size: 16px;
-        color: #555;
-        width: 75%;
-        overflow: hidden;
-        white-space: nowrap;
-        text-overflow: ellipsis;
-        padding-right: 15px;
-      }
-
-      > span:nth-of-type(3) {
-        width: 15%;
-      }
-    }
-  }
-
-  .story-header__flash {
-    position: absolute;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    z-index: 100;
-    top: 0;
-    left: 0;
-    height: 100%;
-    width: 100%;
-    visibility: hidden;
-    opacity: 0;
-    transition: visibility 0s, opacity 0.25s ease;
-    font-size: 14px;
-
-    &.alert {
-      visibility: visible;
-      opacity: 1;
-      margin: 0;
-
-      .fa-ul {
-        margin: 0;
-
-        p {
-          display: inline-block;
-          margin: 0;
-        }
-      }
-    }
-
-    &.alert.promote-enabled {
-      .fa-ul li:first-child p {
-        margin-bottom: 10px;
-      }
-    }
-
-    &.alert:not(.promote-enabled) {
-      .fa-ul li:nth-of-type(2) {
-        display: none;
-      }
-    }
-  }
-}
