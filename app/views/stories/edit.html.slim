@@ -68,7 +68,6 @@
                 |&nbsp;Publication Settings
 
         .col-sm-8.col-md-9.layout-main
-          /= render('stories/edit/story_header', { story: @story })
           .tab-content
 
             #story-narrative-content.tab-pane.fade {
@@ -109,5 +108,5 @@
               aria-labelledby="story-settings-tab"
               role="tabpanel" }
               
-              = render('stories/edit/settings', { company: @company, story: @story })
+              = render('stories/edit/publication_settings', { company: @company, story: @story })
 

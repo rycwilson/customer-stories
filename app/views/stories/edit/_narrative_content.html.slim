@@ -24,7 +24,19 @@
         class: 'control-label col-md-2 visible-md-inline-block visible-lg-inline-block')
     .col-md-10.col-lg-9.visible-md-block.visible-lg-block
       = form.text_field(:title, id: 'story-title-md-lg', class: 'form-control', data: { story_target: 'titleInput' })
-    
+  
+  /.form-group
+    = form.label(:summary, 'Summary')
+    = form.text_area( \
+        :summary,
+        { class: 'form-control',
+          rows: 8,
+          placeholder: 'Provide a brief story summary that will appear in a preview window along with the Customer Quote',
+          data: { 'summary-range': '50-150' } })
+    // bootstrap validator
+      .help-block.with-errors style='height:20px'
+        | Minimum 50 words, Maximum 150 words
+
   .form-group 
     .visible-sm-block.col-sm-12 
       = form.label(:narrative, 'Body', for: 'story-editor-sm')

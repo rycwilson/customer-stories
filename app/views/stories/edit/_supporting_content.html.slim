@@ -2,41 +2,82 @@
     model: story,
     format: :json,
     html: { \
-      id: 'story-supporting-content-form' }) do |story_form|
+      id: 'story-supporting-content-form',
+      class: 'form-horizontal',
+      autocomplete: 'off' }) do |form|
 
-  .row
-    .col-lg-6
-      .form-group
-        = story_form.label(:quote, 'Customer Quote')
-        = story_form.text_area( \
-            :quote,
-            { rows: 6, class: 'form-control', placeholder: 'Add a quote from a happy customer' })
-      .form-group
-        = story_form.label(:quote_attr_name, 'Customer Name')
-        = story_form.text_field(:quote_attr_name, class: 'form-control', autocomplete: 'off')
-      .form-group
-        = story_form.label(:quote_attr_title, 'Customer Job Title')
-        = story_form.text_field(:quote_attr_title, class: 'form-control', autocomplete: 'off')
-    .col-lg-6
-      = render('stories/edit/content/video', { story: story, story_form: story_form })
-
-  .row
-    .col-sm-6.form-group.summary.has-feedback
-      = story_form.label(:summary, 'Summary')
-      = story_form.text_area( \
-          :summary,
+  .form-group 
+    .visible-sm-block.col-sm-12 
+      = form.label(:quote, 'Customer Quote')
+      = form.text_area( \
+          :quote,
+          { rows: 3, class: 'form-control', placeholder: 'Add a quote from a happy customer' })
+    = form.label(:quote, 'Customer Quote', class: 'control-label col-md-3 visible-md-inline-block visible-lg-inline-block')
+    .col-md-8.col-lg-7.visible-md-block.visible-lg-block
+      = collection_select( \
+          nil,
+          nil,
+          (company.contributors - company.referrers - company.curators).uniq \
+            .sort_by { |contact| contact.last_name } \
+            .unshift(User.new(id: 0, first_name: 'New', last_name: 'Contact')),
+          :id,
+          :full_name,
+          { include_blank: true },
           { class: 'form-control',
-            rows: 8,
-            placeholder: 'Provide a brief story summary that will appear in a preview window along with the Customer Quote',
-            data: { 'summary-range': '50-150' } })
+            placeholder: 'Select or Create a Contributor',
+            required: true,
+            data: { \
+              controller: 'tomselect',
+              tomselect_kind_value: 'contributor' } })
+      = form.text_area( \
+          :quote,
+          { rows: 4, class: 'form-control', placeholder: 'Add a quote from a happy customer' })
 
-      // bootstrap validator
-      .help-block.with-errors style='height:20px'
-        | Minimum 50 words, Maximum 150 words
-    .col-sm-6.success-results
-      = render('stories/edit/content/results', { story: story, story_form: story_form })
+  / .form-group
+  /   = story_form.label(:quote_attr_name, 'Customer Name')
+  /   = story_form.text_field(:quote_attr_name, class: 'form-control', autocomplete: 'off')
+  / .form-group
+  /   = story_form.label(:quote_attr_title, 'Customer Job Title')
+  /   = story_form.text_field(:quote_attr_title, class: 'form-control', autocomplete: 'off')
 
-  // - if story.contributions.submissions.present?
-    = render('stories/edit/content/contributions', { contributions: story.contributions })
+  .form-group 
+    = hidden_field_tag('story[formatted_video_url]', story.video_url)
+    .visible-sm-block.col-sm-12
+      = form.label(:video_url, 'Video URL')
+      = form.text_field(:video_url, class: 'form-control', placeholder: 'YouTube, Vimeo, or Wistia', autocomplete: 'off')
+    = form.label(:video_url, 'Video URL', class: 'control-label col-md-3 visible-md-inline-block visible-lg-inline-block')
+    .col-md-8.col-lg-7.visible-md-block.visible-lg-block
+      = form.text_field(:video_url, class: 'form-control', placeholder: 'YouTube, Vimeo, or Wistia', autocomplete: 'off')
+      #video-container.text-center
+        - if story.video_info[:provider] == 'wistia'
+          script async="" src="//fast.wistia.com/embed/medias/#{story.video_info[:id]}.jsonp"
+          script async="" src="//fast.wistia.com/assets/external/E-v1.js"
+          .wistia_responsive_padding style="padding:56.25% 0 0 0; position:relative;"
+            .wistia_responsive_wrapper style="height:100%;left:0;position:absolute;top:0;width:100%;"
+              .wistia_embed {
+                class="wistia_async_#{story.video_info[:id]} popover=true popoverAnimateThumbnail=true\ 
+                  videoFoam=true"
+                style="display:inline-block; width:100%; height:100%" }
+                |&nbsp;
+        - elsif story.video_url.present?
+          .video-thumb-container.embed-responsive.embed-responsive-16by9 {
+            data-toggle="modal"
+            data-target="#video-modal"
+            data-provider=story.video_info[:provider]
+            data-video-id=story.video_info[:id]
+            data-video-url=story.video_url }
+        - else
+          = image_tag('placeholders/video-placeholder.jpg', id: 'video-placeholder', alt: 'video thumbnail')
 
-= render('shared/submission_footer', { modifier: 'story', story: story })
+  /section.story-results
+    .section-title.text-center
+      h4#results-heading Results
+    div
+      ul.list-unstyled aria-labelledby="results-heading"
+        - story.results.each do |result|
+          li
+            .result
+              = image_tag('icons/bs_check.svg', alt: 'check')
+              p = result.description
+
+/= render('shared/submission_footer', { modifier: 'story', story: story })
