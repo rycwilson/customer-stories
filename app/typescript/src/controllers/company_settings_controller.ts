@@ -31,7 +31,6 @@ export default class CompanySettingsController extends Controller {
 
   connect() {
     this.initSidebar();
-    this.currentScreen = this.visibleInvitationTemplateSelect.id.match(/(?<screen>(sm|md-lg)$)/).groups.screen;
     // window.scrollTo(0, 0);
 
     this.invitationTemplateTurboFrameTargets.forEach(frame => {
@@ -53,7 +52,22 @@ export default class CompanySettingsController extends Controller {
     let navCookie: string | undefined;
     const defaultTab = <HTMLAnchorElement>this.tabTargets[0];
     const showPage = (tab: HTMLAnchorElement) => {
-      $(tab).one('shown.bs.tab', () => this.element.classList.add('has-active-tab')).tab('show');
+      $(tab).one('shown.bs.tab', () => {
+        this.element.classList.add('has-active-tab');
+
+        // only the contributor invitations panel is concerned with screen size
+        const setCurrentScreen = () => {
+          this.currentScreen = this.visibleInvitationTemplateSelect.id.match(/(?<screen>(sm|md-lg)$)/).groups.screen;
+        }
+        if (tab.href == '#contributor-invitations-panel') {
+          setCurrentScreen();
+        } else {
+          const [contributorInvitationsTab] = (
+            this.tabTargets.filter(tab => tab.getAttribute('href') == '#contributor-invitations-panel')
+          )
+          contributorInvitationsTab.addEventListener('shown.bs.tab', setCurrentScreen, { once: true });
+        }
+      }).tab('show');
     }
     this.addTabListeners();
     if (activeTab = this.tabTargets.find(tab => tab.hash.replace('-panel', '') === location.hash)) {
@@ -64,6 +78,8 @@ export default class CompanySettingsController extends Controller {
     } else {  
       showPage(defaultTab);
     }
+
+    
   }
   
   addTabListeners() {
