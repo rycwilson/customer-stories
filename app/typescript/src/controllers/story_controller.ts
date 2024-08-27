@@ -8,12 +8,14 @@ export default class StoryController extends Controller<HTMLDivElement> {
     'hiddenLinkInput', 
     'hiddenLinkCopyBtn',
     'contributors',
+    'resultsList'
   ];
   declare readonly titleInputTargets: HTMLInputElement[];
   declare readonly narrativeTextareaTargets: HTMLTextAreaElement[];
   declare readonly hiddenLinkInputTarget: HTMLInputElement;
   declare readonly hiddenLinkCopyBtnTarget: HTMLButtonElement;
   declare readonly contributorsTarget: HTMLDivElement;
+  declare readonly resultsListTarget: HTMLUListElement;
 
   declare currentScreen: ScreenSize;
   resizeHandler = debounce(this.onResize.bind(this), 200);
@@ -21,6 +23,9 @@ export default class StoryController extends Controller<HTMLDivElement> {
   connect() {
     this.contributorsTarget.setAttribute('data-resource-init-value', 'true');
     window.addEventListener('resize', this.resizeHandler);
+
+    // TODO There are issues with drag-drop behavior, possible due to nested elements
+    // $(this.resultsListTarget).sortable();
   }
 
   refreshHiddenLink() {

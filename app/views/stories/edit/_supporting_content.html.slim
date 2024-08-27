@@ -69,6 +69,25 @@
         - else
           = image_tag('placeholders/video-placeholder.jpg', id: 'video-placeholder', alt: 'video thumbnail')
 
+  .form-group 
+    .visible-sm-block.col-sm-12 
+      / = form.label(:results, 'Results')
+    = form.label(:results, class: 'control-label col-md-3 visible-md-inline-block visible-lg-inline-block')
+    .col-md-8.col-lg-7.visible-md-block.visible-lg-block
+      ul.list-group data-story-target="resultsList"
+        = form.fields_for(:success) do |success_form|
+          = success_form.fields_for(:results) do |results_form|
+            a.list-group-item href="javascript:;"
+              = results_form.text_field(:description, class: 'hidden form-control', placeholder: 'Result Description')
+              = results_form.check_box(:_destroy, { class: 'hidden' }, 'true', 'false')
+              div style="display:flex; align-items:center; justify-content:space-between"
+                = results_form.object.description
+                div 
+                  button.btn type="button"
+                    i.fa.fa-fw.fa-pencil 
+                  button.btn type="button"
+                    i.fa.fa-fw.fa-remove
+
   /section.story-results
     .section-title.text-center
       h4#results-heading Results
