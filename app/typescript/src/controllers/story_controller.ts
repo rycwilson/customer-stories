@@ -23,9 +23,6 @@ export default class StoryController extends Controller<HTMLDivElement> {
   connect() {
     this.contributorsTarget.setAttribute('data-resource-init-value', 'true');
     window.addEventListener('resize', this.resizeHandler);
-
-    // TODO There are issues with drag-drop behavior, possible due to nested elements
-    // $(this.resultsListTarget).sortable();
   }
 
   refreshHiddenLink() {
