@@ -88,6 +88,9 @@ application.register('stories', StoriesController);
 import StoryController from './story_controller.js';
 application.register('story', StoryController);
 
+import ListGroupController from './list_group_controller.js';
+application.register('list-group', ListGroupController);
+
 import SummernoteController from './summernote_controller.js';
 application.register('summernote', SummernoteController);
 
