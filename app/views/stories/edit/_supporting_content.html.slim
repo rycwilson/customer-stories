@@ -66,6 +66,9 @@
             data-provider=story.video_info[:provider]
             data-video-id=story.video_info[:id]
             data-video-url=story.video_url }
+            img src=story.video_info[:thumbnail_url]
+              .play-button
+                = image_tag('icons/bs_play.svg', alt: 'play')
         - else
           = image_tag('placeholders/video-placeholder.jpg', id: 'video-placeholder', alt: 'video thumbnail')
 
