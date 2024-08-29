@@ -1,99 +1,75 @@
-
-// these settings mirror invitation templates / contributor questions
-.success-results {
+.list-group-item {
+  $btn-sides: 2.5em;
+  $icon-font-size: 1.25em;
+  
   position: relative;
-  .row {
-    margin: 0;
-    background: #efefef;
+  display: flex;
+  align-items: center;
+  min-height: 49px;   // height when hovered
+  padding-top: 0.5em;
+  padding-bottom: 0.5em;
+  
+  i.fa-arrows-v,
+  input,
+  button {
+    display: none;
+  }
+  
+  i.fa-arrows-v,
+  button {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+  }
+  
+  i {
+    font-size: $icon-font-size;
+    
+    &.fa-arrows-v {
+      left: 0.75rem;
+    }
+  }
+  
+  button {
+    right: 0.5rem;
+    width: $btn-sides;
+    height: $btn-sides;
+    background: transparent;
+    padding: 0;
   }
 
-  label {
-    // margin-left: -15px;
+  &:hover:not(.will-be-removed) {
+    padding-left: 2.75em;
   }
-  label + span {
-    position: absolute;
-    top: -18px;
-    right: 15px;
-    color: #666;  // #6685a4;
-    i:first-child {
-      font-size: 30px;
-      top: 6px;
-    }
-    i:last-child {
-      font-size: 15px;
-      top: 5px;
-    }
-  }
-  label + span:hover {
-    color: #222; //#516c87;
-    cursor: pointer;
-  }
-  li.success-result {
-    div[class*='col-']:first-child {
-      padding: 0 10px;
-    }
-    div[class*='col-']:last-child:not(.save-or-cancel) {
-      padding: 0;
-    }
-    .row:hover {
-      background: #e5e5e5;
-    }
-    p, textarea {
-      margin: 10px 0;
-    }
-    i.fa-remove {
-      margin-top: 10px;
-      font-size: 20px;
-      color: #666;
-    }
-    i.fa-remove:hover {
-      color: #222;
-      cursor: pointer;
-    }
-  }
-  li.success-result.to-be-removed {
-    .row {
-      background-color: #f2dede;
-    }
-    .row:first-of-type {
-      border-top: 1px solid #ebccd1;
-    }
-    .row:last-of-type {
-      border-bottom: 1px solid #ebccd1;
-    }
-    .save-or-cancel {
-      color: #a94442;
-      margin-bottom: 10px;
-    }
-  }
-  li.success-result.new-result {
-    .row {
-      background-color: #dff0d8;
-      border-color: #d6e9c6;
-      div[class*='col-'] {
-        padding-left: 15px;
-        padding-right: 15px;
+  
+  &:hover,
+  &.will-be-updated,
+  &.will-be-removed {
+    padding-right: 3.5em; 
+
+    &:not(.will-be-removed) {
+      input {
+        display: revert;
+      }
+      
+      p {
+        display: none;
       }
     }
-    .row:first-of-type {
-      border-top: 1px solid #d6e9c6;
-    }
-    .row:last-of-type {
-      border-bottom: 1px solid #d6e9c6;;
-    }
-    .save-or-cancel {
-      color: #3c763d;
-      margin-bottom: 10px;
-    }
   }
-  // prevent double borders on adjacent questions
-  li.success-result.to-be-removed + input + li.success-result.to-be-removed,
-  li.success-result.new-question + li.success-result.new-question {
-    .row:first-of-type {
-      border-top: 0;
+
+  &:hover:not(.will-be-updated):not(.will-be-removed) button:has(i.fa-remove),
+  &:hover:not(.will-be-removed) .fa-arrows-v,
+  &.will-be-updated button:has(.fa-undo),
+  &.will-be-removed button:has(.fa-undo) {
+    display: inline-block;
+  } 
+
+  &.will-be-removed {
+    padding-left: 15px;
+    
+    i.fa-arrows-v {
+      display: none;
     }
-  }
-  .cancel {
-    cursor: pointer;
   }
 }
