@@ -21,4 +21,10 @@ export default class TooltipController extends Controller {
   disconnect() {
     $(this.element).tooltip('destroy');
   }
+
+  optionsValueChanged(newOptions: TooltipOptions) {
+    console.log(newOptions)
+    $(this.element).tooltip('destroy');
+    $(this.element).tooltip({ ...baseOptions, ...newOptions });
+  }
 }

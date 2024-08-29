@@ -5,10 +5,11 @@ export default class ListGroupController extends Controller<HTMLUListElement> {
     collapsible: { type: Boolean, default: false }
   }
 
-  static targets = ['item', 'itemText', 'itemInput'];
+  static targets = ['item', 'itemText', 'itemInput', 'undoButton'];
   declare readonly itemTargets: HTMLAnchorElement[];
   declare itemTextTargets: HTMLParagraphElement[];
   declare readonly itemInputTargets: HTMLInputElement[];
+  declare undoButtonTargets: HTMLButtonElement[];
 
   connect() {
     if (this.itemTargets.length >= 2) {
@@ -28,14 +29,18 @@ export default class ListGroupController extends Controller<HTMLUListElement> {
   
   onItemInput({ target: input }: { target: HTMLInputElement }) {
     const item = <HTMLAnchorElement>this.itemTargets.find(item => item.contains(input));
-    item.classList.toggle('will-be-updated', input.value !== input.dataset.initialValue);  
+    const undoButton = <HTMLButtonElement>this.undoButtonTargets.find(button => item.contains(button));
+    item.classList.toggle('will-be-updated', input.value !== input.dataset.initialValue);
+    undoButton.setAttribute('data-tooltip-options-value', JSON.stringify({ title: 'Undo Changes' }));
   }
 
   remove({ currentTarget: button }: { currentTarget: HTMLButtonElement }) {
     const item = <HTMLAnchorElement>this.itemTargets.find(item => item.contains(button));
     const itemText = <HTMLParagraphElement>this.itemTextTargets.find(p => item.contains(p));
+    const undoButton = <HTMLButtonElement>this.undoButtonTargets.find(button => item.contains(button));
     item.classList.add('will-be-removed');
     itemText.innerHTML = `<s>${itemText.textContent}</s>`;
+    undoButton.setAttribute('data-tooltip-options-value', JSON.stringify({ title: 'Undo Delete' }));
     $(this.element).sortable('destroy')
     $(this.element).sortable({ items: '.list-group-item:not(.will-be-removed)' });
   }

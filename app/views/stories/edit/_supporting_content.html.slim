@@ -89,9 +89,17 @@
               = results_form.check_box(:_destroy, { class: 'hidden' }, 'true', 'false')
               p.list-group-item-text data-list-group-target="itemText"
                 = results_form.object.description
-              button.btn type="button" data-action="list-group#remove"
+              button.btn {
+                type="button" 
+                data-action="list-group#remove"
+                data-controller="tooltip"
+                data-tooltip-options-value={ title: "Delete" }.to_json }
                 i.fa.fa-fw.fa-remove
-              button.btn type="button" data-action="list-group#undo"
+              button.btn {
+                type="button" 
+                data-action="list-group#undo"
+                data-list-group-target="undoButton"
+                data-controller="tooltip" }
                 i.fa.fa-fw.fa-undo
 
 /= render('shared/submission_footer', { modifier: 'story', story: story })
