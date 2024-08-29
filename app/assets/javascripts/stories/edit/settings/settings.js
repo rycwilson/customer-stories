@@ -1,10 +1,3 @@
-
-function storiesEditSettings () {
-
-  initStoriesEditSettings();
-
-}
-
 function storiesEditSettingsListeners () {
 
   $(document)
@@ -139,45 +132,4 @@ function storiesEditSettingsListeners () {
             .tooltip('fixTitle');
         });
     });
-}
-
-// the select2 boxes initialize synchronously, i.e. subsequent code doesn't
-// execute until initilization is complete.
-// pass the cbShowTab callback to the bs-switch onInit property
-function initStoriesEditSettings(shownTabHandler) {
-  var initSelectInputs = function () {
-        $('.story-settings.story-tags, #story-ctas-select')
-          .select2({
-            theme: 'bootstrap',
-            placeholder: 'Select'
-          })
-          .next('.select2')
-            .find('.select2-selection__choice')
-              .attr('title', '')
-              .end()
-            .end()
-          .on('select2:select, select2:unselect, change.select2', function () {
-            $(this).next('.select2')
-                    .find('.select2-selection__choice__remove')
-                      .html('<i class="fa fa-fw fa-remove"></i>');
-          })
-          .trigger('change.select2');  // manipulate the remove button
-      };
-  var initSwitchInputs = function () {
-        $('.bs-switch.publish-control').bootstrapSwitch({
-          size: 'small',
-          animate: false,
-          onInit: function (e) {}
-        });
-      };
-  $.when(initSelectInputs, initSwitchInputs).done(function () {
-    if (shownTabHandler) {
-      window.scrollTo(0, 0);
-      shownTabHandler();
-    }
-    $('#story-settings-form').attr('data-init', true);
-  })    
-  initS3Upload();
-  initSelectInputs();
-  initSwitchInputs();
 }

@@ -4,12 +4,7 @@
 //= require ./contributors
 
 function storiesEdit() {
-  
-  $('.curate-filters__curator')
-    .val(CSP.current_user.id)
-    .trigger('change', { auto: true });
-
-  storiesEditSettings();
+  initS3Upload();
   initStorySettingsValidator();
   storiesEditContent();
   storiesEditContributors();
@@ -17,7 +12,7 @@ function storiesEdit() {
 
 // this is used for asynchronous loads of stories/edit/_edit
 function initStoriesEdit (shownTabHandler) {
-  initStoriesEditSettings(shownTabHandler);
+  initS3Upload();
   initStorySettingsValidator();
   initStoriesEditContent();
   initContributorsTable('curate');
