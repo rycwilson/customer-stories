@@ -1,5 +1,4 @@
 //= require ./video
-//= require ./results
 //= require ./form_validator
 
 function storiesEditContent () {
@@ -9,7 +8,6 @@ function storiesEditContent () {
 
 function storiesEditContentListeners () {
   storiesEditVideoListeners();
-  storiesEditResultsListeners();
 
   var openFormControls = function () {
     $('.submission-footer--story').addClass('show');
