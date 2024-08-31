@@ -88,7 +88,7 @@
             = render('plugins/config', { company: @company })
 
           #cta-links-forms-panel.tab-pane.fade role="tabpanel"
-            = render('companies/settings/ctas', { company: @company })
+            = render('ctas', company: @company)
 
           #story-tags-panel.tab-pane.fade role="tabpanel"
             = render('companies/settings/story_tags', { company: @company })

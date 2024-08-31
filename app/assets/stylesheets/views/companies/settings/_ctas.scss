@@ -1,3 +1,80 @@
+#cta-links-forms-panel {
+  .list-group-item {
+    $btn-sides: 2.5em;
+    $icon-font-size: 1.25em;
+    
+    position: relative;
+    display: flex;
+    align-items: center;
+    min-height: 49px;   // height when hovered
+    padding-top: 0.5em;
+    padding-bottom: 0.5em;
+    
+    i.fa-arrows-v,
+    input,
+    button {
+      display: none;
+    }
+    
+    i.fa-arrows-v,
+    button {
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+    }
+    
+    i {
+      font-size: $icon-font-size;
+      
+      &.fa-arrows-v {
+        left: 0.75rem;
+      }
+    }
+    
+    button {
+      right: 0.5rem;
+      width: $btn-sides;
+      height: $btn-sides;
+      background: transparent;
+      padding: 0;
+    }
+
+    &:hover:not(.will-be-removed) {
+      padding-left: 2.75em;
+    }
+    
+    &:hover,
+    &.will-be-updated,
+    &.will-be-removed {
+      padding-right: 3.5em; 
+
+      &:not(.will-be-removed) {
+        input {
+          display: revert;
+        }
+        
+        p {
+          display: none;
+        }
+      }
+    }
+
+    &:hover:not(.will-be-updated):not(.will-be-removed) button:has(i.fa-remove),
+    &:hover:not(.will-be-removed) .fa-arrows-v,
+    &.will-be-updated button:has(.fa-undo),
+    &.will-be-removed button:has(.fa-undo) {
+      display: inline-block;
+    } 
+
+    &.will-be-removed {
+      padding-left: 15px;
+      
+      i.fa-arrows-v {
+        display: none;
+      }
+    }
+  }
+}
 
 .companies.edit {
 
