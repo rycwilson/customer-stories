@@ -9,3 +9,5 @@ import 'bootstrap-sass-3.3.6/assets/javascripts/bootstrap/popover';
 import 'bootstrap-switch';
 import 'bootstrap-jasny/js/fileinput';
 import 'bootstrap-validator';
+
+$.fn.collapse.Constructor.TRANSITION_DURATION = 0;

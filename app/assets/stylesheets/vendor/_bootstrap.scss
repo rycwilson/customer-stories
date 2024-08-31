@@ -59,3 +59,9 @@ ul.dropdown-menu {
     cursor: pointer;
   }
 }
+
+.collapsing {
+  -webkit-transition: none;
+  transition: none;
+  display: none;
+}
