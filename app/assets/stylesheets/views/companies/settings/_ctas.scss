@@ -1,4 +1,5 @@
 #cta-links-forms-panel {
+  
   .list-group-item {
     $btn-sides: 2.5em;
     $icon-font-size: 1.25em;
@@ -9,15 +10,11 @@
     min-height: 49px;   // height when hovered
     padding-top: 0.5em;
     padding-bottom: 0.5em;
+    transition: background-color 0.15s ease-in-out;
     
     i.fa-arrows-v,
-    input,
     button {
       display: none;
-    }
-    
-    i.fa-arrows-v,
-    button {
       position: absolute;
       top: 50%;
       transform: translateY(-50%);
@@ -39,24 +36,16 @@
       padding: 0;
     }
 
-    &:hover:not(.will-be-removed) {
+    &:hover:not(:only-of-type):not(.will-be-removed) {
       padding-left: 2.75em;
     }
     
     &:hover,
+    &[aria-expanded="true"],
     &.will-be-updated,
     &.will-be-removed {
+      background: $light-blue;
       padding-right: 3.5em; 
-
-      &:not(.will-be-removed) {
-        input {
-          display: revert;
-        }
-        
-        p {
-          display: none;
-        }
-      }
     }
 
     &:hover:not(.will-be-updated):not(.will-be-removed) button:has(i.fa-remove),

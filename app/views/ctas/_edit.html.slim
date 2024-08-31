@@ -1,0 +1,55 @@
+= form_tag( \
+    cta_path(cta),
+    method: :patch,
+    format: :json,
+    html: { \
+      id: "cta-#{cta.id}-form",
+      data: { \
+        controller: 'form' }}) do |form|
+
+  - if cta.primary?
+    div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:15px"
+      div style="display:flex; align-items:center; flex-grow:0.45"
+        = label_tag("cta_#{cta.id}[company_attributes][primary_cta_background_color]", 'Button', style: 'margin-right:0.75em')
+        = color_field_tag( \
+            "cta_#{cta.id}[company_attributes][primary_cta_background_color]",
+            cta.company.primary_cta_background_color,
+            class: 'form-control')
+      div style="display:flex; align-items:center; flex-grow:0.45"
+        = label_tag("cta_#{cta.id}[company_attributes][primary_cta_text_color]", 'Text', style: 'margin-right:0.75em')
+        = color_field_tag( \
+            "cta_#{cta.id}[company_attributes][primary_cta_text_color]",
+            cta.company.primary_cta_text_color,
+            class: 'form-control')
+
+  div
+    = label_tag("cta_#{cta.id}[description]", 'Description')
+    = text_field_tag("cta_#{cta.id}[description]", cta.description, placeholder: 'Description', class: 'form-control')
+
+  div
+    = label_tag("cta_#{cta.id}[display_text]", 'Display text')
+    = text_field_tag("cta_#{cta.id}[display_text]", cta.display_text, placeholder: 'Display text', class: 'form-control')
+
+  - if cta.type == 'CTALink'
+    div
+      = label_tag("cta_#{cta.id}[link_url]", 'Website URL')
+      = text_field_tag("cta_#{cta.id}[link_url]", cta.link_url, placeholder: 'Website URL', class: 'form-control')
+
+  - elsif cta.type == 'CTAForm'
+    div
+      = label_tag("cta_#{cta.id}[form_html]", 'HTML')
+        = text_area_tag( \
+            "cta_#{cta.id}[form_html]",
+            cta.form_html,
+            placeholder: 'html, e.g. <script> and <form> tags',
+            rows: 3,
+            class: 'form-control')
+
+  .text-right 
+    .checkbox
+      = label_tag("cta_#{cta.id}[primary]") do
+        = check_box_tag("cta_#{cta.id}[primary]", cta.primary? ? false : true, false)
+        = "#{cta.primary? ? 'Remove' : 'Make'} primary"
+    
+  .text-right 
+    = submit_tag('Save changes', class: 'btn btn-sm btn-success')
