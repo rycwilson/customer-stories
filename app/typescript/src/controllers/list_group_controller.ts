@@ -1,21 +1,29 @@
 import { Controller } from '@hotwired/stimulus';
 
 export default class ListGroupController extends Controller<HTMLUListElement> {
+  static values = {
+    collapsible: { type: Boolean, default: false }
+  }
+
   static targets = ['item', 'itemText', 'itemInput'];
   declare readonly itemTargets: HTMLAnchorElement[];
   declare itemTextTargets: HTMLParagraphElement[];
   declare readonly itemInputTargets: HTMLInputElement[];
 
   connect() {
-    $(this.element).sortable({
-      stop: (event: any, ui: any) => {
-        console.log(event, ui)
-      }
-    });
+    if (this.itemTargets.length >= 2) {
+      $(this.element).sortable({
+        stop: (event: any, ui: any) => {
+          console.log(event, ui)
+        }
+      });
+    } 
   }
 
   disconnect() {
-    $(this.element).sortable('destroy');
+    if ($(this.element).data('uiSortable')) {
+      $(this.element).sortable('destroy');
+    }
   }
   
   onItemInput({ target: input }: { target: HTMLInputElement }) {
