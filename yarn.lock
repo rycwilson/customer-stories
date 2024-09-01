@@ -817,6 +817,13 @@
   dependencies:
     "@types/sizzle" "*"
 
+"@types/jqueryui@^1.12.23":
+  version "1.12.23"
+  resolved "https://registry.yarnpkg.com/@types/jqueryui/-/jqueryui-1.12.23.tgz#06882d3fd91834f87c40320a0897b2d3fe17de35"
+  integrity sha512-pm1yVNVI29B9IGw41anCEzA5eR2r1pYc7flqD471ZT7B0yUXIY7YNe/zq7LGpihIGXNzWyG+Q4YQSzv2AF3fNA==
+  dependencies:
+    "@types/jquery" "*"
+
 "@types/js-cookie@^3.0.4":
   version "3.0.4"
   resolved "https://registry.npmjs.org/@types/js-cookie/-/js-cookie-3.0.4.tgz"
