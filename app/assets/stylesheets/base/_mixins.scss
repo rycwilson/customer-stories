@@ -134,22 +134,22 @@
   @media screen and (min-width: 992px) {
   }
   @media screen and (min-width: 1200px) {
-    .col-sm-3 {
-      width: 23%;
-      // background-color: #ecc9c7;
-    }
+    // .col-sm-3 {
+    //   width: 23%;
+    //   // background-color: #ecc9c7;
+    // }
 
-    // applies to user profile only
-    .col-lg-3 {
-      width: 27%;
-    }
-    .col-lg-6 {
-      // background-color: #d9e3da;
-      width: 56%;
-    }
-    .col-sm-offset-3, .col-lg-6.col-md-offset-3 {
-      margin-left: 23%;
-    }
+    // // applies to user profile only
+    // .col-lg-3 {
+    //   width: 27%;
+    // }
+    // .col-lg-6 {
+    //   // background-color: #d9e3da;
+    //   width: 56%;
+    // }
+    // .col-sm-offset-3, .col-lg-6.col-md-offset-3 {
+    //   margin-left: 23%;
+    // }
   }
 }
 
