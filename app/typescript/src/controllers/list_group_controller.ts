@@ -26,18 +26,28 @@ export default class ListGroupController extends Controller<HTMLUListElement> {
     }
   }
 
+  get isSortable() {
+    return $(this.element).data('uiSortable');
+  }
+
   initCollapsible() {
     this.allCollapsed = true;
     this.collapseTargets.forEach(collapsible => {
       $(collapsible).on('shown.bs.collapse hidden.bs.collapse', (e: Event) => {
+        if (e.type === 'shown') collapsible.scrollIntoView({ block: 'center' });
+        if (e.type === 'hidden') (<HTMLAnchorElement>collapsible.previousElementSibling).blur();
         this.allCollapsed = this.itemTargets.filter(item => item.getAttribute('aria-expanded') === 'true').length === 0;
-        if (!this.allCollapsed) {
+        if (this.isSortable && !this.allCollapsed) {
           $(this.element).sortable('destroy');
-        } else if (!$(this.element).data('uiSortable')) {
+        } else if (this.allCollapsed && !this.isSortable) {
           this.initSortable();
         }
       });
     });
+  }
+
+  onAjaxComplete() {
+    
   }
 
   initSortable() {
