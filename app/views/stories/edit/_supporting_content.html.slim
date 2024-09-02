@@ -77,7 +77,7 @@
       / = form.label(:results, 'Results')
     = form.label(:results, class: 'control-label col-md-3 visible-md-inline-block visible-lg-inline-block')
     .col-md-8.col-lg-7.visible-md-block.visible-lg-block
-      ul.list-group data-story-target="resultsList" data-controller="list-group"
+      .list-group data-story-target="resultsList" data-controller="list-group"
         = form.fields_for(:success) do |success_form|
           = success_form.fields_for(:results) do |results_form|
             a.list-group-item href="javascript:;" data-list-group-target="item"
