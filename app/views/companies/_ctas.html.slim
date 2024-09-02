@@ -40,8 +40,9 @@
               i.fa.fa-fw.fa-chevron-down
             button.btn type="button"
               i.fa.fa-fw.fa-chevron-up
-            /button.btn type="button" data-action="list-group#undo"
-              i.fa.fa-fw.fa-undo
           .collapse id="edit-cta-#{cta.id}" data-list-group-target="collapse"
             = render('ctas/edit', company:, cta:)
+      button.btn.btn-secondary type="button"
+        i.fa.fa-plus
+        |&nbsp;&nbsp;New
 
