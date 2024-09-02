@@ -1,11 +1,10 @@
 = form_tag( \
-    cta_path(cta),
+    send("company_cta_#{cta.type.match(/(?<type>Link|Form)/)[:type].downcase}_path", company, cta, format: :json),
     method: :patch,
-    format: :json,
-    html: { \
-      id: "cta-#{cta.id}-form",
-      data: { \
-        controller: 'form' }}) do |form|
+    remote: true,
+    id: "cta-#{cta.id}-form",
+    data: { \
+      controller: 'form' }) do |form|
 
   - if cta.primary?
     div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:15px"

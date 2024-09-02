@@ -4,27 +4,61 @@ export default class ListGroupController extends Controller<HTMLUListElement> {
   static values = {
     collapsible: { type: Boolean, default: false }
   }
+  declare readonly collapsibleValue: boolean;
 
-  static targets = ['item', 'itemText', 'itemInput', 'undoButton'];
+  static targets = ['item', 'itemText', 'itemInput', 'undoButton', 'collapse'];
   declare readonly itemTargets: HTMLAnchorElement[];
   declare itemTextTargets: HTMLParagraphElement[];
   declare readonly itemInputTargets: HTMLInputElement[];
   declare undoButtonTargets: HTMLButtonElement[];
+  declare collapseTargets: HTMLDivElement[];
+
+  allCollapsed: boolean | undefined = undefined;
 
   connect() {
-    if (this.itemTargets.length >= 2) {
-      $(this.element).sortable({
-        stop: (event: any, ui: any) => {
-          console.log(event, ui)
-        }
-      });
-    } 
+    this.initSortable();
+    if (this.collapsibleValue) this.initCollapsible();
   }
 
   disconnect() {
     if ($(this.element).data('uiSortable')) {
       $(this.element).sortable('destroy');
     }
+  }
+
+  initCollapsible() {
+    this.allCollapsed = true;
+    this.collapseTargets.forEach(collapsible => {
+      $(collapsible).on('shown.bs.collapse hidden.bs.collapse', (e: Event) => {
+        this.allCollapsed = this.itemTargets.filter(item => item.getAttribute('aria-expanded') === 'true').length === 0;
+        if (!this.allCollapsed) {
+          $(this.element).sortable('destroy');
+        } else if (!$(this.element).data('uiSortable')) {
+          this.initSortable();
+        }
+      });
+    });
+  }
+
+  initSortable() {
+    if (this.itemTargets.length < 2) return; 
+    const ctrl = this;
+    $(this.element).sortable({
+      items: '.list-group-item',
+      helper: (e: Event, item: JQuery<HTMLAnchorElement, any>) => (
+        item.clone().css('width', item.css('width')).find('button').remove().end()
+      ),
+      start(e: Event, ui: any) {
+        // console.log('start', e)
+      },
+      stop: (e: Event, ui: any) => {
+        // console.log('stop', e)
+        ctrl.itemTargets.forEach(item => {
+          const collapsible = ctrl.collapseTargets.find(_collapsible => item.href.includes(`#${_collapsible.id}`));
+          $(item).after(collapsible);
+        });
+      }
+    });
   }
   
   onItemInput({ target: input }: { target: HTMLInputElement }) {

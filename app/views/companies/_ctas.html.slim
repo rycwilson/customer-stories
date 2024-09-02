@@ -9,21 +9,20 @@
       .list-group data-controller="list-group" data-list-group-collapsible-value="true"
         a.list-group-item {
           data-toggle="collapse"
-          href="#edit-cta-#{company.ctas.primary.id}"
           data-list-group-target="item"
+          href="#edit-cta-#{company.ctas.primary.id}"
           aria-expanded="false" 
           aria-labelledby="primary-cta-label-md-lg" }
           - if company.ctas.primary.present?
             p = "#{company.ctas.primary.type == 'CTALink' ? '[LINK]' : '[WEB FORM]'} #{company.ctas.primary.description}"
-            /button.btn type="button" data-action="list-group#undo"
-              i.fa.fa-fw.fa-undo
-            button.btn type="button" data-action="list-group#remove"
-              i.fa.fa-fw.fa-remove
+            button.btn type="button"
+              i.fa.fa-fw.fa-chevron-down
+            button.btn type="button"
+              i.fa.fa-fw.fa-chevron-up
           - else 
             em Add a Primary CTA
-        .collapse id="edit-cta-#{company.ctas.primary.id}" 
-          .well 
-            = render('ctas/edit', company:, cta: company.ctas.primary)
+        .collapse id="edit-cta-#{company.ctas.primary.id}" data-list-group-target="collapse"
+          = render('ctas/edit', company:, cta: company.ctas.primary)
 
   .row
     .visible-sm-block.col-sm-12
@@ -31,17 +30,18 @@
     label#additional-ctas-label-md-lg.control-label.col-md-3.visible-md-inline-block.visible-lg-inline-block
       | Additional
     .col-md-9.col-lg-6.visible-md-block.visible-lg-block
-      .list-group aria-labelledby="additional-ctas-label-md-lg"
+      .list-group data-controller="list-group" data-list-group-collapsible-value="true" aria-labelledby="additional-ctas-label-md-lg"
         - company.ctas.secondary.each do |cta|
-          a.list-group-item data-toggle="collapse" href="#edit-cta-#{cta.id}" aria-expanded="false"
+          a.list-group-item data-toggle="collapse" data-list-group-target="item" href="#edit-cta-#{cta.id}" aria-expanded="false"
             - if company.ctas.secondary.count > 1
               i.fa.fa-fw.fa-arrows-v
-            p = cta.description
-            button.btn type="button" data-action="list-group#remove"
-              i.fa.fa-fw.fa-remove
+            p = "#{company.ctas.primary.type == 'CTALink' ? '[LINK]' : '[WEB FORM]'} #{cta.description}"
+            button.btn type="button"
+              i.fa.fa-fw.fa-chevron-down
+            button.btn type="button"
+              i.fa.fa-fw.fa-chevron-up
             /button.btn type="button" data-action="list-group#undo"
               i.fa.fa-fw.fa-undo
-          .collapse id="edit-cta-#{cta.id}" 
-            .well 
-              = render('ctas/edit', company:, cta:)
+          .collapse id="edit-cta-#{cta.id}" data-list-group-target="collapse"
+            = render('ctas/edit', company:, cta:)
 
