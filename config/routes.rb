@@ -116,7 +116,8 @@ Rails.application.routes.draw do
           end
           resource :contributor_invitation, except: [:destroy]
         end
-        resources :ctas, only: [:show, :create, :update, :destroy], shallow: true
+        resources :cta_links, controller: 'ctas', only: [:new, :create, :update, :destroy]
+        resources :cta_forms, controller: 'ctas', only: [:new, :show, :create, :update, :destroy]
         resources :invitation_templates
         member { put :update_gads }
         member { get :set_reset_gads }
