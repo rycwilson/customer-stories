@@ -27,6 +27,10 @@
         left: 0.75rem;
       }
     }
+
+    p {
+      margin-bottom: 0;
+    }
     
     button {
       right: 0.5rem;
@@ -36,31 +40,32 @@
       padding: 0;
     }
 
-    &:hover:not(:only-of-type):not(.will-be-removed) {
+    
+    &.ui-sortable-handle:hover {
       padding-left: 2.75em;
     }
     
     &:hover,
-    &[aria-expanded="true"],
-    &.will-be-updated,
-    &.will-be-removed {
+    &[aria-expanded="true"] {
       background: $light-blue;
       padding-right: 3.5em; 
     }
 
-    &:hover:not(.will-be-updated):not(.will-be-removed) button:has(i.fa-remove),
-    &:hover:not(.will-be-removed) .fa-arrows-v,
-    &.will-be-updated button:has(.fa-undo),
-    &.will-be-removed button:has(.fa-undo) {
+    &:hover:not([aria-expanded="true"]) button:has(i.fa-chevron-down),
+    &[aria-expanded="true"] button:has(i.fa-chevron-up),
+    &:hover.ui-sortable-handle .fa-arrows-v {
       display: inline-block;
     } 
+  }
+  
+  .collapse form {
+    border-right: 1px solid $list-group-border;
+    border-left: 1px solid $list-group-border;
+    background: $medium-gray;
+    padding: 1.5rem;
 
-    &.will-be-removed {
-      padding-left: 15px;
-      
-      i.fa-arrows-v {
-        display: none;
-      }
+    > div:not(:last-child) {
+      margin-bottom: 1.25rem;
     }
   }
 }
