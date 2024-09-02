@@ -42,18 +42,18 @@ export default class PluginsController extends Controller<HTMLFormElement> {
     this.codeTextAreaTarget.value = this.codeTextAreaTarget.value
       .replace(/gallery|carousel|tabbed-carousel/g, pluginType)
 
-      // gallery settings
+      // gallery settings<div id="cs-gallery" class="cs-plugin"></div><script src="http://acme-test.lvh.me:3000/plugins/gallery/cs.js" data-max-rows="4"></script>
       .replace(/\sdata-max-rows="\d+"/, '')
       .replace('></script>', () => {
         const maxRows = this.maxGalleryRowsInputTarget.value;
-        return (pluginType === 'gallery' && maxRows) ? `\xa0data-max-rows="${maxRows}"></script>` : '></script>';
+        return (pluginType === 'gallery' && maxRows) ? `\u00A0data-max-rows="${maxRows}"></script>` : '></script>';
       })
       
       // carousel settings
       .replace(/\sdata-background="(light|dark)"/, '')
       .replace('></script>', () => {
         const checkedInput = <HTMLInputElement>this.carouselBackgroundRadioTargets.find((input: HTMLInputElement) => input.checked);
-        return pluginType === 'carousel' ? `\xa0data-background="${checkedInput.value}"></script>` : '></script>';
+        return pluginType === 'carousel' ? `\u00A0data-background="${checkedInput.value}"></script>` : '></script>';
       })
 
       // tabbed carousel settings
@@ -63,7 +63,7 @@ export default class PluginsController extends Controller<HTMLFormElement> {
         const textColor = this.tabbedCarouselTextColorInputTarget.value;
         const delay = this.tabbedCarouselDelayInputTarget.value;
         return pluginType === 'tabbed-carousel' ?
-          `\xa0data-tab-color="${tabColor}"\xa0data-text-color="${textColor}"\xa0data-delay="${delay}"></script>` :
+          `\u00A0data-tab-color="${tabColor}"\u00A0data-text-color="${textColor}"\u00A0data-delay="${delay}"></script>` :
           '></script>';
       })
 
@@ -77,7 +77,7 @@ export default class PluginsController extends Controller<HTMLFormElement> {
     this.maxGalleryRowsSpinnerTarget.setAttribute('data-input-spinner-enabled-value', maxRowsEnabled.toString());
     this.codeTextAreaTarget.value = this.codeTextAreaTarget.value.replace(
       maxRowsEnabled ? '></script>' : /\sdata-max-rows="\d+"/,
-      maxRowsEnabled ? `\xa0data-max-rows="${initialValue}"></script>` : ''
+      maxRowsEnabled ? `\u00A0data-max-rows="${initialValue}"></script>` : ''
     );
   }
 
@@ -86,7 +86,7 @@ export default class PluginsController extends Controller<HTMLFormElement> {
     if (/logos-only|grayscale/.test(setting)) {
       this.codeTextAreaTarget.value = this.codeTextAreaTarget.value.replace(
         input.checked ? /><\/script>/ : new RegExp(`\\sdata-${setting}="true"`),
-        input.checked ? `\xa0data-${setting}="true"></script>` : ''
+        input.checked ? `\u00A0data-${setting}="true"></script>` : ''
       );
     } else {
       this.codeTextAreaTarget.value = this.codeTextAreaTarget.value
@@ -103,10 +103,10 @@ export default class PluginsController extends Controller<HTMLFormElement> {
       .replace(
         isFirstSelection ? /><\/script>/ : filterRegExp,
         select.value ? 
-          `\xa0data-${filter}="${selectedOption.dataset.slug}"` + (isFirstSelection ? '></script>' : '') : 
+          `\u00A0data-${filter}="${selectedOption.dataset.slug}"` + (isFirstSelection ? '></script>' : '') : 
           ''
       );
-    // .replace(/\xa0data-stories="\[((\d+(,)?)+)?\]"/, '')
+    // .replace(/\u00A0data-stories="\[((\d+(,)?)+)?\]"/, '')
   }
 
   onChangeStories({ target: select }: { target: TomSelectInput }) {
@@ -117,7 +117,7 @@ export default class PluginsController extends Controller<HTMLFormElement> {
       .replace(
         isFirstSelection ? /><\/script>/ : /\sdata-stories="\[((\d+(,)?)+)?\]"/,
         stories.length ? 
-          `\xa0data-stories="${JSON.stringify(stories)}"` + (isFirstSelection ? '></script>' : '') :
+          `\u00A0data-stories="${JSON.stringify(stories)}"` + (isFirstSelection ? '></script>' : '') :
           ''
       );
   }

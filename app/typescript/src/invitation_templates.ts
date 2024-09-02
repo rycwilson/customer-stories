@@ -65,7 +65,7 @@ function placeholdersDropdown(
   const button = $.summernote.ui.button({
     className: 'btn btn-default dropdown-toggle',
     data: { toggle: 'dropdown', placement: 'top' },
-    contents: 'Insert\xa0\xa0<span class="caret"></span>',
+    contents: 'Insert\u00A0\u00A0<span class="caret"></span>',
     // tooltip: 'Insert a data placeholder'
   });
   const dropdown = $.summernote.ui.dropdown({
