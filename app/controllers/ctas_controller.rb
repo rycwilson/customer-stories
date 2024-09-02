@@ -62,13 +62,8 @@ class CtasController < ApplicationController
   end
 
   def destroy
-    cta = CallToAction.find(params[:id])
-    cta.destroy
-    respond_to do |format|
-      format.json do
-        render json: { id: cta.id, isPrimary: cta.primary? }
-      end
-    end
+    CallToAction.find(params[:id])&.destroy
+    head(:ok)
   end
 
 end
