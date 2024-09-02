@@ -1,5 +1,15 @@
+- path_helper = "company_cta_#{cta.type.match(/(?<type>Link|Form)/)[:type].downcase}_path"
+
+// absolutely positioned at bottom to avoid nested form
+= button_to( \
+    'Delete', 
+    send(path_helper, company, cta), 
+    method: :delete, 
+    remote: true, 
+    class: 'btn btn-sm btn-danger')
+
 = form_tag( \
-    send("company_cta_#{cta.type.match(/(?<type>Link|Form)/)[:type].downcase}_path", company, cta, format: :json),
+    send(path_helper, company, cta, format: :json),
     method: :patch,
     remote: true,
     id: "cta-#{cta.id}-form",
@@ -50,5 +60,5 @@
         = check_box_tag("cta_#{cta.id}[primary]", cta.primary? ? false : true, false)
         = "#{cta.primary? ? 'Remove' : 'Make'} primary"
     
-  .text-right 
+  .text-right
     = submit_tag('Save changes', class: 'btn btn-sm btn-success')

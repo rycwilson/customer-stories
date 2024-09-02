@@ -40,7 +40,6 @@
       padding: 0;
     }
 
-    
     &.ui-sortable-handle:hover {
       padding-left: 2.75em;
     }
@@ -58,14 +57,24 @@
     } 
   }
   
-  .collapse form {
-    border-right: 1px solid $list-group-border;
-    border-left: 1px solid $list-group-border;
-    background: $medium-gray;
-    padding: 1.5rem;
+  .collapse {
+    position: relative;
 
-    > div:not(:last-child) {
-      margin-bottom: 1.25rem;
+    form:not(.button_to) {
+      border-right: 1px solid $list-group-border;
+      border-left: 1px solid $list-group-border;
+      background: $medium-gray;
+      padding: 1.5rem;
+  
+      > div:not(:last-child) {
+        margin-bottom: 1.25rem;
+      }
+    }
+
+    form.button_to input[type="submit"]{
+      position: absolute;
+      left: 1.5rem;
+      bottom: 1.5rem;
     }
   }
 }
