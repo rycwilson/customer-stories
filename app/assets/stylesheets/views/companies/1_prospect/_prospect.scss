@@ -18,15 +18,6 @@
   }
 
   button:not(.clear-button) {
-    // background: transparent;
-    padding: 0.1em 0.2em;
-    font-size: 1.5em;
-    color: #666;
-
-    &:hover {
-      color: #222;
-    }
-
     &:first-of-type {
       margin-right: 0.75em;
     }

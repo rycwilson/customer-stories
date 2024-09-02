@@ -201,13 +201,13 @@ form.plugin-config.form-horizontal name="pluginConfig" data-controller="plugins"
     label.col-sm-3.control-label Code
     .col-sm-9.col-md-8.col-lg-6
       / a.btn.btn-secondary href="/plugins/demo" disabled=('true' if company.stories.featured.blank?)
-      a.btn.btn-secondary href="" data-action="plugins#openDemo"
-        i.fa.fa-fw.fa-external-link
-        span = ' Demo'
-      button.copy.btn.btn-secondary type="button" data-action="plugins#copyCode"
-        i.fa.fa-fw.fa-clipboard
-        span = ' Copy'
-        i.fa.fa-fw.fa-check.hidden
+      a.btn.btn-default href="" data-action="plugins#openDemo"
+        i.fa.fa-external-link
+        |&nbsp;&nbsp;Demo
+      button.copy.btn.btn-default type="button" data-action="plugins#copyCode"
+        i.fa.fa-clipboard
+        span = "\u00A0\u00A0Copy"
+        i.fa.fa-check.hidden
 
   .plugin-config__code.form-group
     div.col-sm-3

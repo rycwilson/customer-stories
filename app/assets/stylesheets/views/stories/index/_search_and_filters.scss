@@ -30,21 +30,21 @@
 
   &__dashboard-header {
     @include flex-row-center-between;
-    margin: -5px 0;
+    // margin: -5px 0;
 
     a {
       font-size: 16px;    // match dashboard tabs
     }
 
-    button {
-      margin-right: $padding-base-horizontal * -1;
-    }
+    // button {
+    //   margin-right: $padding-base-horizontal * -1;
+    // }
 
-    img {
-      display: flex;    // this normalizes the height of the image
-      width: 2.25rem;
-      height: 2.25rem;
-    }
+    // img {
+    //   display: flex;    // this normalizes the height of the image
+    //   width: 2.25rem;
+    //   height: 2.25rem;
+    // }
   }
 
   @media (max-width: 767px) {

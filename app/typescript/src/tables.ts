@@ -96,7 +96,7 @@ export function initDisplayOptions(resourceCtrl: ResourceController, isReset?: b
     html: true,
     animation: false,
     container: 'body',
-    title: 'Display Options',
+    title: 'Display Settings',
     placement: 'auto right',
     template: `
       <div 

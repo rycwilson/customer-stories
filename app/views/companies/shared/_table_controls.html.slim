@@ -34,7 +34,7 @@
   div
     div
       - if row_name.present?
-        button.btn.btn-default {
+        button.btn.btn-secondary {
           type="button"
           data-resource-target="newItemBtn"
           data-controller="modal-trigger"
@@ -43,12 +43,14 @@
           data-modal-trigger-turbo-frame-attrs-value="#{modal_turbo_frame_attrs.to_json if modal_turbo_frame_attrs.present?}"
           data-modal-trigger-submit-button-text-value="Add #{row_name}"
           aria-label="New #{row_name}" }
-          i.fa.fa-fw.fa-plus
+          i.fa.fa-plus
+          |&nbsp;&nbsp;New
       button.btn.btn-default {
         type="button" 
         class=('hidden' if hide_filters)
-        aria-label="Table Display Options" 
+        aria-label="Table Display Settings" 
         data-resource-target="tableDisplayOptionsBtn" }
-        i.fa.fa-fw.fa-server
+        i.fa.fa-cog
+        |&nbsp;&nbsp;Display Settings
     div class=('hidden' if hide_filters)
       .help-block.text-right data-resource-target="filterResults"

@@ -6,7 +6,7 @@
     .search-and-filters__dashboard-header
       a href="/" data-turbo="false"
         | Customer Stories
-      button.btn {
+      button.btn.btn-secondary {
         type="button" 
         data-controller="modal-trigger"
         data-modal-trigger-modal-outlet="#main-modal"
@@ -14,7 +14,9 @@
         data-modal-trigger-turbo-frame-attrs-value={ id: 'new-story', src: new_company_story_path(company) }.to_json
         data-modal-trigger-submit-button-text-value="Add Customer Story"
         aria-label="New Customer Story" }
-        = image_tag('icons/bs_plus_circle.svg', alt: 'caret-right')
+        /= image_tag('icons/bs_plus_circle.svg', alt: 'caret-right')
+        i.fa.fa-plus
+        |&nbsp;&nbsp;New
     hr
 
   = render('stories/shared/search_form', { company:, is_header_search: false })
