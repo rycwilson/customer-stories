@@ -1,6 +1,6 @@
 = form.grouped_collection_select( \
     :cta_ids,
-    company.call_to_actions.group_by(&:type).map { |type, ctas| [type == 'CTALink' ? 'Links' : 'Web Forms', ctas] },
+    company.ctas.group_by(&:type).map { |type, ctas| [type == 'CTALink' ? 'Links' : 'Web Forms', ctas] },
     :second,
     :first,
     :id,
