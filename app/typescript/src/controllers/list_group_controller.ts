@@ -34,8 +34,12 @@ export default class ListGroupController extends Controller<HTMLUListElement> {
     this.allCollapsed = true;
     this.collapseTargets.forEach(collapsible => {
       $(collapsible).on('shown.bs.collapse hidden.bs.collapse', (e: Event) => {
-        if (e.type === 'shown') collapsible.scrollIntoView({ block: 'center' });
-        if (e.type === 'hidden') (<HTMLAnchorElement>collapsible.previousElementSibling).blur();
+        if (e.type === 'shown') {
+          collapsible.scrollIntoView({ block: 'center' });
+          (<HTMLInputElement>collapsible.querySelector('[name*="description"]')).focus();
+        } else {
+          (<HTMLAnchorElement>collapsible.previousElementSibling).blur();
+        }
         this.allCollapsed = this.itemTargets.filter(item => item.getAttribute('aria-expanded') === 'true').length === 0;
         if (this.isSortable && !this.allCollapsed) {
           $(this.element).sortable('destroy');

@@ -78,8 +78,10 @@ export default class CompanySettingsController extends Controller {
     } else {  
       showPage(defaultTab);
     }
+  }
 
-    
+  onCtasFrameLoad() {
+    window.scrollTo(0, 0);
   }
   
   addTabListeners() {

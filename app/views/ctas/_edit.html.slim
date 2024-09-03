@@ -1,6 +1,6 @@
 - path_helper = "company_cta_#{cta.type.match(/(?<type>Link|Form)/)[:type].downcase}_path"
 
-// absolutely positioned at bottom to avoid nested form
+// absolutely positioned at bottom to avoid nested form tags
 = button_to( \
     'Delete', 
     send(path_helper, company, cta), 
@@ -8,28 +8,14 @@
     remote: true, 
     class: 'btn btn-sm btn-danger')
 
+/ since distinct id/name attributes are required, use form_tag instead of form_with (which auto-generates id/name attributes)
 = form_tag( \
-    send(path_helper, company, cta, format: :json),
+    # send(path_helper, company, cta, format: :json),
+    send(path_helper, company, cta),
     method: :patch,
     remote: true,
     id: "cta-#{cta.id}-form",
-    data: { \
-      controller: 'form' }) do |form|
-
-  - if cta.primary?
-    div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:15px"
-      div style="display:flex; align-items:center; flex-grow:0.45"
-        = label_tag("cta_#{cta.id}[company_attributes][primary_cta_background_color]", 'Button', style: 'margin-right:0.75em')
-        = color_field_tag( \
-            "cta_#{cta.id}[company_attributes][primary_cta_background_color]",
-            cta.company.primary_cta_background_color,
-            class: 'form-control')
-      div style="display:flex; align-items:center; flex-grow:0.45"
-        = label_tag("cta_#{cta.id}[company_attributes][primary_cta_text_color]", 'Text', style: 'margin-right:0.75em')
-        = color_field_tag( \
-            "cta_#{cta.id}[company_attributes][primary_cta_text_color]",
-            cta.company.primary_cta_text_color,
-            class: 'form-control')
+    data: { controller: 'cta' }) do |form|
 
   div
     = label_tag("cta_#{cta.id}[description]", 'Description')
@@ -54,11 +40,28 @@
             rows: 3,
             class: 'form-control')
 
-  .text-right 
-    .checkbox
-      = label_tag("cta_#{cta.id}[primary]") do
-        = check_box_tag("cta_#{cta.id}[primary]", cta.primary? ? false : true, false)
-        = "#{cta.primary? ? 'Remove' : 'Make'} primary"
-    
+  .checkbox
+    = label_tag("cta_#{cta.id}[primary]") do
+      = check_box_tag("cta_#{cta.id}[primary]", cta.primary? ? false : true, false, data: { action: 'cta#togglePrimary' })
+      = "#{cta.primary? ? 'Remove' : 'Make'} primary"
+
+  .cta__primary-btn class=('hidden' if !cta.primary?) data-cta-target="primaryCta"
+    div
+      = label_tag("cta_#{cta.id}[company_attributes][primary_cta_background_color]", 'Button', style: 'margin-right:0.75em')
+      = color_field_tag( \
+          "cta_#{cta.id}[company_attributes][primary_cta_background_color]",
+          cta.company.primary_cta_background_color,
+          class: 'form-control',
+          data: { cta_target: 'primaryCtaBackgroundColor' })
+    div
+      = label_tag("cta_#{cta.id}[company_attributes][primary_cta_text_color]", 'Text', style: 'margin-right:0.75em')
+      = color_field_tag( \
+          "cta_#{cta.id}[company_attributes][primary_cta_text_color]",
+          cta.company.primary_cta_text_color,
+          class: 'form-control',
+          data: { cta_target: 'primaryCtaTextColor' })
+
+  hr
+
   .text-right
     = submit_tag('Save changes', class: 'btn btn-sm btn-success')
