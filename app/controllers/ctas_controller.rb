@@ -1,5 +1,10 @@
 class CtasController < ApplicationController
 
+  def new
+    @company = Company.find(params[:company_id])
+    # @cta = @company.ctas.new(type: 'CTALink')
+  end
+
   # return html for cta forms
   def show
     @form = CTAForm.find(params[:id])
@@ -36,34 +41,41 @@ class CtasController < ApplicationController
   end
 
   def update
+    @company = Company.find(params[:company_id])
     @cta = CallToAction.find(params[:id])
-    cta_params = params["cta_#{@cta.id}"]
-    @company = @cta.company
-    @make_primary = cta_params['make_primary'].present?
-    @remove_primary = cta_params['remove_primary'].present?
-    if @make_primary || @remove_primary
-      @old_primary_cta = @cta.company.ctas.primary
-      @old_primary_cta.try(:update, { primary: false })
+    if cta_params(@cta)[:primary] and @company.ctas.primary.present?
+      # swap primary ctas in a single transaction to ensure there is always only one primary cta
+      @company.update({
+        primary_cta_background_color: cta_params(@cta)[:company_attributes][:primary_cta_background_color],
+        primary_cta_text_color: cta_params(@cta)[:company_attributes][:primary_cta_text_color],
+        ctas_attributes: [
+          cta_params(@cta).keep_if { |k, v| k != 'company_attributes' }.merge(id: @cta.id), 
+          @company.ctas.primary.take.attributes.merge('primary' => false)
+        ]
+      })
+    else @cta.update(cta_params(@cta.id))
     end
-    if @cta.reload.primary?
-      @cta.company.update(
-        primary_cta_background_color: params['primary_cta']['background_color'],
-        primary_cta_text_color: params['primary_cta']['text_color']
-      )
-    end
-    @cta.update(
-      description: cta_params['description'],
-      display_text: cta_params['display_text'],
-      link_url: params.dig("cta_#{@cta.id}", 'link_url'),
-      form_html: params.dig("cta_#{@cta.id}", 'form_html'),
-      primary: @remove_primary ? false : (@make_primary ? true : @cta.primary?)
-    )
-    respond_to { |format| format.js }
+    render(partial: 'companies/ctas', locals: { company: @company })
   end
 
   def destroy
     CallToAction.find(params[:id])&.destroy
     head(:ok)
+  end
+
+  private
+
+  def cta_params(cta)
+    params
+      .require("cta_#{cta.id}")
+      .permit(
+        :description, 
+        :display_text, 
+        :link_url, 
+        :form_html, 
+        :primary, 
+        company_attributes: [:primary_cta_background_color, :primary_cta_text_color]
+      )
   end
 
 end
