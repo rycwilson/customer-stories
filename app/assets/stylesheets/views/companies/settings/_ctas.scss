@@ -1,4 +1,18 @@
+
 #cta-links-forms-panel {
+  .cta__primary-btn {
+    @include flex-row-center-between; 
+    margin-bottom: 15px;
+
+    label {
+      margin-right: 0.75em;
+    }
+
+    > div {
+      @include flex-row-center;
+      flex-grow: 0.45;
+    }
+  }
   
   .list-group-item {
     $btn-sides: 2.5em;

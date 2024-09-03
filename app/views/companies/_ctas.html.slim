@@ -1,48 +1,57 @@
-.form-horizontal
+= turbo_frame_tag('edit-company-ctas', data: { action: 'turbo:frame-load->company-settings#onCtasFrameLoad' })
 
-  .row
-    .visible-sm-block.col-sm-12 
-      label#primary-cta-label-sm Primary
-    label#primary-cta-label-md-lg.control-label.col-md-3.visible-md-inline-block.visible-lg-inline-block
-      | Primary
-    .col-md-9.col-lg-6.visible-md-block.visible-lg-block
-      .list-group data-controller="list-group" data-list-group-collapsible-value="true"
-        a.list-group-item {
-          data-toggle="collapse"
-          data-list-group-target="item"
-          href="#edit-cta-#{company.ctas.primary.id}"
-          aria-expanded="false" 
-          aria-labelledby="primary-cta-label-md-lg" }
-          - if company.ctas.primary.present?
-            p = "#{company.ctas.primary.type == 'CTALink' ? '[LINK]' : '[WEB FORM]'} #{company.ctas.primary.description}"
-            button.btn type="button"
-              i.fa.fa-fw.fa-chevron-down
-            button.btn type="button"
-              i.fa.fa-fw.fa-chevron-up
-          - else 
-            em Add a Primary CTA
-        .collapse id="edit-cta-#{company.ctas.primary.id}" data-list-group-target="collapse"
-          = render('ctas/edit', company:, cta: company.ctas.primary)
+  .form-horizontal
 
-  .row
-    .visible-sm-block.col-sm-12
-      label#additional-ctas-label-sm Additional 
-    label#additional-ctas-label-md-lg.control-label.col-md-3.visible-md-inline-block.visible-lg-inline-block
-      | Additional
-    .col-md-9.col-lg-6.visible-md-block.visible-lg-block
-      .list-group data-controller="list-group" data-list-group-collapsible-value="true" aria-labelledby="additional-ctas-label-md-lg"
-        - company.ctas.secondary.each do |cta|
-          a.list-group-item data-toggle="collapse" data-list-group-target="item" href="#edit-cta-#{cta.id}" aria-expanded="false"
-            - if company.ctas.secondary.count > 1
-              i.fa.fa-fw.fa-arrows-v
-            p = "#{company.ctas.primary.type == 'CTALink' ? '[LINK]' : '[WEB FORM]'} #{cta.description}"
-            button.btn type="button"
-              i.fa.fa-fw.fa-chevron-down
-            button.btn type="button"
-              i.fa.fa-fw.fa-chevron-up
-          .collapse id="edit-cta-#{cta.id}" data-list-group-target="collapse"
-            = render('ctas/edit', company:, cta:)
-      button.btn.btn-secondary type="button"
-        i.fa.fa-plus
-        |&nbsp;&nbsp;New
+    .row
+      .visible-sm-block.col-sm-12 
+        label#primary-cta-label-sm Primary
+      label#primary-cta-label-md-lg.control-label.col-md-3.visible-md-inline-block.visible-lg-inline-block
+        | Primary
+      .col-md-9.col-lg-6.visible-md-block.visible-lg-block
+        - if primary_cta = company.ctas.primary.take
+          .list-group data-controller="list-group" data-list-group-collapsible-value="true"
+            a.list-group-item {
+              data-toggle="collapse"
+              data-list-group-target="item"
+              href="#edit-cta-#{primary_cta.id}"
+              aria-expanded="false" 
+              aria-labelledby="primary-cta-label-md-lg" }
+              p = "#{primary_cta.type == 'CTALink' ? '[LINK]' : '[FORM]'} #{primary_cta.description}"
+              button.btn type="button"
+                i.fa.fa-fw.fa-chevron-down
+              button.btn type="button"
+                i.fa.fa-fw.fa-chevron-up
+            .collapse id="edit-cta-#{primary_cta.id}" data-list-group-target="collapse"
+              = render('ctas/edit', company:, cta: primary_cta)
+        - else 
+          div None
+
+    .row
+      .visible-sm-block.col-sm-12
+        label#additional-ctas-label-sm Additional 
+      label#additional-ctas-label-md-lg.control-label.col-md-3.visible-md-inline-block.visible-lg-inline-block
+        | Additional
+      .col-md-9.col-lg-6.visible-md-block.visible-lg-block
+        .list-group data-controller="list-group" data-list-group-collapsible-value="true" aria-labelledby="additional-ctas-label-md-lg"
+          - company.ctas.secondary.each do |cta|
+            a.list-group-item data-toggle="collapse" data-list-group-target="item" href="#edit-cta-#{cta.id}" aria-expanded="false"
+              - if company.ctas.secondary.count > 1
+                i.fa.fa-fw.fa-arrows-v
+              p = "#{cta.type == 'CTALink' ? '[LINK]' : '[FORM]'} #{cta.description}"
+              button.btn type="button"
+                i.fa.fa-fw.fa-chevron-down
+              button.btn type="button"
+                i.fa.fa-fw.fa-chevron-up
+            .collapse id="edit-cta-#{cta.id}" data-list-group-target="collapse"
+              = render('ctas/edit', company:, cta:)
+        button.btn.btn-secondary {
+          type="button"
+          data-controller="modal-trigger"
+          data-modal-trigger-modal-outlet="#main-modal"
+          data-modal-trigger-title-value="New Call-To-Action"
+          data-modal-trigger-turbo-frame-attrs-value={ id: 'new-company-cta', src: new_company_cta_link_path(company) }.to_json
+          data-modal-trigger-submit-button-text-value="Add CTA"
+          aria-label="New Call-To-Action" }
+          i.fa.fa-plus
+          |&nbsp;&nbsp;New
 
