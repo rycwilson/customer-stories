@@ -209,39 +209,9 @@ class Company < ApplicationRecord
   end
   alias_attribute :templates, :invitation_templates
   has_many :outbound_actions, dependent: :destroy
-  has_many :call_to_actions, dependent: :destroy
-  # alias and methods
-  has_many :ctas, class_name: 'CallToAction' do
-    def primary
-      where(primary: true).take
-    end
-    def secondary
-      where(primary: false)
-    end
-    def select_options
-      grouped_options =
-        [ [ 'Links', ['none available'] ], [ 'Web Forms', ['none available'] ] ]
-      self.secondary.each do |cta|
-        case cta.type
-        when 'CTALink'
-          if grouped_options[0][1][0] == 'none available'
-            grouped_options[0][1][0] = [ cta.description, cta.id ]
-          else
-            grouped_options[0][1] << [ cta.description, cta.id ]
-          end
-        when 'CTAForm'
-          if grouped_options[1][1][0] == 'none available'
-            grouped_options[1][1][0] = [ cta.description, cta.id ]
-          else
-            grouped_options[1][1] << [ cta.description, cta.id ]
-          end
-        end
-      end
-      grouped_options
-    end
-  end
+  has_many :ctas, class_name: 'CallToAction', dependent: :destroy
+  accepts_nested_attributes_for :ctas
   has_one :plugin, dependent: :destroy
-
   has_many :adwords_campaigns, dependent: :destroy
   alias_attribute :campaigns, :adwords_campaigns
   has_one :topic_campaign, dependent: :destroy
