@@ -1,5 +1,5 @@
 import { Controller } from '@hotwired/stimulus';
-import { hexToRgb, colorContrast } from '../utils';
+import { hexToRgb, backgroundShade } from '../utils';
 
 export default class PluginsController extends Controller<HTMLFormElement> {
   static targets = [
@@ -127,9 +127,9 @@ export default class PluginsController extends Controller<HTMLFormElement> {
     const textColorInput = this.tabbedCarouselTextColorInputTarget;
     const lightTextColor = '#ffffff';
     const darkTextColor = '#333333';
-    if (colorContrast(tabColor) === 'bg-light' && textColorInput.value !== darkTextColor) {
+    if (backgroundShade(tabColor) === 'light' && textColorInput.value !== darkTextColor) {
       textColorInput.value = darkTextColor;
-    } else if (colorContrast(tabColor) === 'bg-dark' && textColorInput.value !== lightTextColor) {
+    } else if (backgroundShade(tabColor) === 'dark' && textColorInput.value !== lightTextColor) {
       textColorInput.value = lightTextColor;
     } else {
       return;
