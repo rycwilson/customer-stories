@@ -89,7 +89,7 @@
                     list_group_target: 'itemInput',
                     action: 'input->list-group#onItemInput',
                     initial_value: results_form.object.description })
-              = results_form.check_box(:_destroy, { class: 'hidden' }, 'true', 'false')
+              = results_form.check_box(:_destroy, { class: 'hidden' }, true, false)
               p.list-group-item-text data-list-group-target="itemText"
                 = results_form.object.description
               button.btn {
