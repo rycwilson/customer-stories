@@ -75,6 +75,7 @@ module ApplicationHelper
     end
   end
 
+  # http://www.w3.org/TR/AERT#color-contrast
   def color_shade(hex_color)
     # make sure it's a six-character hex value (not counting #)
     if hex_color.length < 7

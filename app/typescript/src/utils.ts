@@ -81,22 +81,6 @@ export function distinctObjects(objects: { [i: string]: any }[], attr: string) {
   return objects.filter((obj, i, _objects) => i === _objects.findIndex(_obj => _obj[attr] === obj[attr]));
 }
 
-export function hexToRgb(hex: string) {
-  // Expand shorthand form (e.g. "03F") to full form (e.g. "0033FF")
-  const shorthandRegex = /^#?([a-f\d])([a-f\d])([a-f\d])$/i;
-  hex = hex.replace(shorthandRegex, (_, r, g, b) => r + r + g + g + b + b);
-  const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
-  return result ? 
-    { r: parseInt(result[1], 16), g: parseInt(result[2], 16), b: parseInt(result[3], 16) } : 
-    null;
-};
-
-// ref: https://stackoverflow.com/questions/11867545/
-export function backgroundShade(bgRgb: { r: number, g: number, b: number }) {
-  // http://www.w3.org/TR/AERT#color-contrast
-  return Math.round(((bgRgb.r * 299) + (bgRgb.g * 587) + (bgRgb.b * 114)) / 1000) > 125 ? 'light' : 'dark';
-}
-
 export function serializeForm(form: HTMLFormElement) {
   const formData = new FormData(form);
   return Array

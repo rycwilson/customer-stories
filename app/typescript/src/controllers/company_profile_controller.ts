@@ -39,12 +39,10 @@ export default class CompanyProfileController extends FormController<CompanyProf
 
   onInputStoriesHeaderBackgroundColor({ target: input }: { target: HTMLInputElement }) {
     const backgroundShade = tinycolor(input.value).isDark() ? 'dark' : 'light';
-    console.log('backgroundShade', backgroundShade)
     const classModifier = `--bg-${backgroundShade}`;
     const backgroundShadeChanged = !this.storiesHeaderDemoTarget.className.includes(classModifier);
     this.storiesHeaderDemoTarget.style.backgroundColor = input.value;
     if (backgroundShadeChanged) {
-      console.log('shade changed')
       const newStoriesHeadingColor = backgroundShade === 'light' ? '#333333' : '#ffffff';
       this.storiesHeaderDemoTarget.className = this.storiesHeaderDemoTarget.className
         .replace(/--bg-(light|dark)/, `--bg-${backgroundShade}`);
