@@ -1,6 +1,6 @@
 import FormController from './form_controller';
 import { initS3Upload } from '../user_uploads';
-import { hexToRgb, colorContrast } from '../utils';
+import { hexToRgb, backgroundShade } from '../utils';
 
 export default class CompanyProfileController extends FormController<CompanyProfileController> {
   static targets = [
@@ -52,11 +52,11 @@ export default class CompanyProfileController extends FormController<CompanyProf
     this.storiesHeaderColorTarget.addEventListener('input', () => {
       const hexColor = this.storiesHeaderColorTarget.value;
       const rgbColor = hexToRgb(hexColor) as { r: number, b: number, g: number };
-      const bgClassModifier = colorContrast(rgbColor);
+      const bgClassModifier = backgroundShade(rgbColor);
       const contrastSwitched = !this.storiesHeaderDemoTarget.className.match(new RegExp(`--${bgClassModifier}`));   
       this.storiesHeaderDemoTarget.style.backgroundColor = hexColor;
       if (contrastSwitched) {
-        const newStoriesHeadingColor = bgClassModifier === 'bg-light' ? '#333333' : '#ffffff';
+        const newStoriesHeadingColor = bgClassModifier === 'light' ? '#333333' : '#ffffff';
         this.storiesHeaderDemoTarget.classList.remove(
           `${storiesHeaderDemoClassName}--bg-light`, 
           `${storiesHeaderDemoClassName}--bg-dark`
