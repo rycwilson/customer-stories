@@ -1,19 +1,24 @@
+.cta__custom-button {
+  > div:first-child {
+    @include flex-row-center-between;
 
-#cta-links-forms-panel {
-  .cta__primary-btn {
-    @include flex-row-center-between; 
-    margin-bottom: 15px;
-
-    label {
+    > label {
       margin-right: 0.75em;
     }
 
     > div {
       @include flex-row-center;
-      flex-grow: 0.45;
+      flex-grow: 1;
     }
   }
   
+  > div:last-child {
+    height: $company-header-height;
+    @include flex-row-center-center;
+  }
+}
+
+#cta-links-forms-panel {
   .list-group-item {
     $btn-sides: 2.5em;
     $icon-font-size: 1.25em;
@@ -79,9 +84,14 @@
       border-left: 1px solid $list-group-border;
       background: $medium-gray;
       padding: 1.5rem;
+
+      hr {
+        margin: 0;
+      }
   
-      > div:not(:last-child) {
-        margin-bottom: 1.25rem;
+      > div:not(.cta__custom-button):not(:last-child),
+      > hr {
+        margin-bottom: 1em;
       }
     }
 

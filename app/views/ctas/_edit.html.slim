@@ -15,7 +15,10 @@
     method: :patch,
     remote: true,
     id: "cta-#{cta.id}-form",
-    data: { controller: 'cta' }) do |form|
+    data: { \
+      controller: 'cta',
+      cta_primary_cta_background_color_value: company.primary_cta_background_color,
+      cta_primary_cta_text_color_value: company.primary_cta_text_color }) do |form|
 
   div
     = label_tag("cta_#{cta.id}[description]", 'Description')
@@ -45,21 +48,25 @@
       = check_box_tag("cta_#{cta.id}[primary]", cta.primary? ? false : true, false, data: { action: 'cta#togglePrimary' })
       = "#{cta.primary? ? 'Remove' : 'Make'} primary"
 
-  .cta__primary-btn class=('hidden' if !cta.primary?) data-cta-target="primaryCta"
+  .cta__custom-button class=('hidden' if !cta.primary?) data-cta-target="primaryCta" 
     div
-      = label_tag("cta_#{cta.id}[company_attributes][primary_cta_background_color]", 'Button', style: 'margin-right:0.75em')
-      = color_field_tag( \
-          "cta_#{cta.id}[company_attributes][primary_cta_background_color]",
-          cta.company.primary_cta_background_color,
-          class: 'form-control',
-          data: { cta_target: 'primaryCtaBackgroundColor' })
-    div
-      = label_tag("cta_#{cta.id}[company_attributes][primary_cta_text_color]", 'Text', style: 'margin-right:0.75em')
-      = color_field_tag( \
-          "cta_#{cta.id}[company_attributes][primary_cta_text_color]",
-          cta.company.primary_cta_text_color,
-          class: 'form-control',
-          data: { cta_target: 'primaryCtaTextColor' })
+      = label_tag("cta_#{cta.id}[company_attributes][primary_cta_background_color]", 'Button')
+      div
+        = color_field_tag( \
+            "cta_#{cta.id}[company_attributes][primary_cta_background_color]",
+            cta.company.primary_cta_background_color,
+            class: 'form-control',
+            style: 'margin: 0 1em',
+            data: { cta_target: 'primaryCtaBackgroundColorInput' })
+        = label_tag("cta_#{cta.id}[company_attributes][primary_cta_text_color]", 'Button Text', class: 'sr-only')
+        = color_field_tag( \
+            "cta_#{cta.id}[company_attributes][primary_cta_text_color]",
+            cta.company.primary_cta_text_color,
+            class: 'form-control',
+            data: { cta_target: 'primaryCtaTextColorInput' })
+    div style="background-color:#{cta.company.header_color_1}"
+      button.btn.btn-lg.btn-custom type="button" data-cta-target="primaryCtaButton"
+        = cta.display_text
 
   hr
 
