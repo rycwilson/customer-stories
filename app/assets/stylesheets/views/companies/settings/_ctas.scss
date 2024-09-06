@@ -1,20 +1,45 @@
-.cta__custom-button {
-  > div:first-child {
-    @include flex-row-center-between;
+@mixin demo-button {
+  @include flex-row-center-center;
+  height: $company-header-height;
 
-    > label {
-      margin-right: 0.75em;
+  button {
+    min-width: 96px;
+    min-height: ($font-size-large * $line-height-large) + (2 * $padding-large-vertical) + 2px; // 2px for border
+  }
+}
+
+.cta__custom-button {
+  &--new {
+    > div > div:first-child {
+      @include flex-row-center-between;
     }
 
-    > div {
-      @include flex-row-center;
-      flex-grow: 1;
+    > div > div:last-child {
+      @include demo-button;
+    }
+
+    input {
+      max-width: 47%;
     }
   }
+
+  &--edit {
+    > div:first-child {
+      @include flex-row-center-between;
   
-  > div:last-child {
-    height: $company-header-height;
-    @include flex-row-center-center;
+      > label {
+        margin-right: 0.75em;
+      }
+  
+      > div {
+        @include flex-row-center;
+        flex-grow: 1;
+      }
+    }
+    
+    > div:last-child {
+      @include demo-button
+    }
   }
 }
 
@@ -101,112 +126,4 @@
       bottom: 1.5rem;
     }
   }
-}
-
-.companies.edit {
-
-  #call-to-action-panel {
-
-    #new-cta-modal {
-      .modal-body {
-        padding: 20px 15px 0 15px;
-      }
-    }
-
-    #new-cta-form {
-      label {
-        padding-right: 5px;
-      }
-      .form-group {
-        .radio-inline {
-          margin-right: 15px;
-        }
-        .col-sm-3 {
-          width: 18%;
-        }
-        .col-sm-9 {
-          width: 82%;
-        }
-        .col-sm-offset-3.col-sm-9 {
-          margin-left: 18%;
-        }
-        &.cta-form {
-          display: none;
-        }
-        .checkbox {
-          padding-top: 0;
-        }
-      }
-    }
-    // [data-target="#new-cta-modal"] {
-    //   cursor: pointer;
-    //   color: #666;
-    //   i {
-    //     // TODO: Font Awesome 5 has font variants that allow different weights
-    //     -webkit-text-stroke: 1px #efefef;
-    //   }
-    //   &:hover {
-    //     color: #222;
-    //   }
-    // }
-    .form-horizontal.cta-list {
-      #new-cta-button {
-        margin: 0 0 20px 0;
-      }
-      > .control-label {
-        padding-top: 15px;
-      }
-      #primary-cta, #secondary-ctas {
-        // width: 500px;
-        &#primary-cta {
-          #primary-cta-colors {
-            div.col-sm-4:first-of-type {
-              padding-right: 0;
-            }
-            div.col-sm-4:last-of-type {
-              padding-left: 0;
-            }
-          }
-        }
-      }
-      .list-group-item {
-        background: #efefef;
-        padding: 15px;  // overrides bootstrap 10px 15px
-        .cta-description {
-          cursor: pointer;
-          position: relative;
-          // padding-right: 30px;
-          margin: -15px -15px -15px -15px;  // expand clickable area for .collapse
-          padding: 15px 45px 15px 15px;
-          span {
-            padding: 0 6px;
-            line-height: 1.6;
-          }
-          a.remove {
-            position: absolute;
-            top: 5px;  // -10 + 15  (account for negative margins above)
-            right: 5px;  // -10 + 15
-            font-size: 16px;
-            color: #666;
-            padding: 8px;
-            &:hover {
-              color: #222;
-            }
-          }
-        }
-        .collapse.edit-cta {
-          // note the inline styles that are necessary for preventing jerky collapse
-          cursor: auto;
-        }
-        &:hover, &.open {
-          background-color: #e5e5e5;
-        }
-        .checkbox {
-          margin-bottom: 10px;
-        }
-      }
-    }
-
-  }
-
 }

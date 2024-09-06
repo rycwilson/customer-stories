@@ -46,6 +46,29 @@ export default class CtaController extends FormController<CtaController> {
     this.primaryCtaTarget.classList.toggle('hidden');
   }
 
+  onInputPrimaryCtaBackgroundColor({ target: input }: { target: HTMLInputElement }) {
+    const bgColor = input.value
+    const textColorInput = this.primaryCtaTextColorInputTarget;
+    const lightTextColor = '#ffffff';
+    const darkTextColor = '#333333';
+    if (tinycolor(bgColor).isLight() && textColorInput.value !== darkTextColor) {
+      textColorInput.value = darkTextColor;
+    } else if (tinycolor(bgColor).isDark() && textColorInput.value !== lightTextColor) {
+      textColorInput.value = lightTextColor;
+    } else {
+      return;
+    }
+    input.addEventListener(
+      'focusout', 
+      () => textColorInput.dispatchEvent(new Event('input')),
+      { once: true }
+    );
+  }
+
+  updateButtonText({ target: input }: { target: HTMLInputElement }) {
+    this.primaryCtaButtonTarget.innerText = input.value;
+  }
+
   setCustomButtonProps(prop: 'background' | 'color', isControllerConnect = false) {
     const btn = this.primaryCtaButtonTarget;
     if (prop === 'background') {
