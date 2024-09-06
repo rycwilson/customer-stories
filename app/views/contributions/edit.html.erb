@@ -3,13 +3,13 @@
 
   <% if @submission_type == 'contribution' %>
 
-    <span class="<%= background_color_contrast(@company.header_color_2) %>">
+    <span class="<%= color_shade(@company.header_color_2) %>">
       <%= @contribution.invitation_template&.contribution_page_title %>
     </span>
 
   <% else %>
 
-    <span class="<%= background_color_contrast(@company.header_color_2) %>">
+    <span class="<%= color_shade(@company.header_color_2) %>">
       <%= @contribution.invitation_template&.feedback_page_title %>
     </span>
 

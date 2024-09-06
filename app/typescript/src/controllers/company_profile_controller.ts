@@ -1,33 +1,27 @@
 import FormController from './form_controller';
 import { initS3Upload } from '../user_uploads';
-import { hexToRgb, backgroundShade } from '../utils';
+import tinycolor from 'tinycolor2';
 
 export default class CompanyProfileController extends FormController<CompanyProfileController> {
   static targets = [
     'companyHeaderDemo', 
     'storiesHeaderDemo', 
     'storiesHeadingDemo', 
-    'companyHeaderColor', 
-    'storiesHeaderColor', 
-    'storiesHeadingColor'
+    'storiesHeadingColorInput'
   ];
   declare readonly companyHeaderDemoTarget: HTMLDivElement;
   declare readonly storiesHeaderDemoTarget: HTMLDivElement;
   declare readonly storiesHeadingDemoTarget: HTMLHeadingElement;
-  declare readonly companyHeaderColorTarget: HTMLInputElement;
-  declare readonly storiesHeaderColorTarget: HTMLInputElement;
-  declare readonly storiesHeadingColorTarget: HTMLInputElement;
+  declare readonly storiesHeadingColorInputTarget: HTMLInputElement;
 
   connect() {
     // console.log('connect company profile')
     initS3Upload($(this.element));
-    this.initColorPickers();
   }
 
   onAjaxComplete({ detail: [xhr, status] }: { detail: [xhr: XMLHttpRequest, status: string] }) {
     const { company } = JSON.parse(xhr.response);
     if (status === 'OK') {
-      // console.log('company:', company);
       if (company.previous_changes.logo_url) {
         const s3Data = JSON.parse(this.element.dataset.s3 as string);
         const { s3_direct_post: { fields: postData } } = JSON.parse(xhr.response);
@@ -39,38 +33,26 @@ export default class CompanyProfileController extends FormController<CompanyProf
     }
   }
 
-  initColorPickers() {
-    const storiesHeaderDemoClassName = 'company-logo-upload__stories-header';
-
-    // company header color
-    this.companyHeaderColorTarget.addEventListener('input', () => {
-      const hexColor = this.companyHeaderColorTarget.value;
-      this.companyHeaderDemoTarget.style.backgroundColor = hexColor;
-    });
-
-    // stories header color
-    this.storiesHeaderColorTarget.addEventListener('input', () => {
-      const hexColor = this.storiesHeaderColorTarget.value;
-      const rgbColor = hexToRgb(hexColor) as { r: number, b: number, g: number };
-      const bgClassModifier = backgroundShade(rgbColor);
-      const contrastSwitched = !this.storiesHeaderDemoTarget.className.match(new RegExp(`--${bgClassModifier}`));   
-      this.storiesHeaderDemoTarget.style.backgroundColor = hexColor;
-      if (contrastSwitched) {
-        const newStoriesHeadingColor = bgClassModifier === 'light' ? '#333333' : '#ffffff';
-        this.storiesHeaderDemoTarget.classList.remove(
-          `${storiesHeaderDemoClassName}--bg-light`, 
-          `${storiesHeaderDemoClassName}--bg-dark`
-        );
-        this.storiesHeaderDemoTarget.classList.add(`${storiesHeaderDemoClassName}--${bgClassModifier}`);
-        this.storiesHeadingDemoTarget.style.color = newStoriesHeadingColor;
-        this.storiesHeadingColorTarget.value = newStoriesHeadingColor;
-      }
-    });
-
-    // stories heading color
-    this.storiesHeadingColorTarget.addEventListener('input', () => {
-      const hexColor = this.storiesHeadingColorTarget.value;
-      this.storiesHeadingDemoTarget.style.color = hexColor;
-    });
+  onInputCompanyHeaderBackgroundColor({ target: input }: { target: HTMLInputElement }) {
+    this.companyHeaderDemoTarget.style.backgroundColor = input.value;
   }
+
+  onInputStoriesHeaderBackgroundColor({ target: input }: { target: HTMLInputElement }) {
+    const backgroundShade = tinycolor(input.value).isDark() ? 'dark' : 'light';
+    console.log('backgroundShade', backgroundShade)
+    const classModifier = `--bg-${backgroundShade}`;
+    const backgroundShadeChanged = !this.storiesHeaderDemoTarget.className.includes(classModifier);
+    this.storiesHeaderDemoTarget.style.backgroundColor = input.value;
+    if (backgroundShadeChanged) {
+      console.log('shade changed')
+      const newStoriesHeadingColor = backgroundShade === 'light' ? '#333333' : '#ffffff';
+      this.storiesHeaderDemoTarget.className = this.storiesHeaderDemoTarget.className
+        .replace(/--bg-(light|dark)/, `--bg-${backgroundShade}`);
+      this.storiesHeadingDemoTarget.style.color = this.storiesHeadingColorInputTarget.value = newStoriesHeadingColor;
+    }
+  }
+
+  onInputStoriesHeadingColor({ target: input }: { target: HTMLInputElement }) {
+    this.storiesHeadingDemoTarget.style.color = input.value;
+  } 
 }

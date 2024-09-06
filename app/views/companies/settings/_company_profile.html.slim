@@ -52,8 +52,8 @@
             = image_tag(company.logo_url || LOGO_PLACEHOLDER, alt: 'company logo')
           .btn-file
             = form.file_field(:logo_url)
-        .company-logo-upload__stories-header {
-          class="company-logo-upload__stories-header--#{background_color_contrast(company.header_color_2)}"
+        div {
+          class="company-logo-upload__stories-header--bg-#{color_shade(company.header_color_2)}"
           data-company-profile-target="storiesHeaderDemo"
           style="#{stories_header_custom_colors(company)}" }
           h3 data-company-profile-target="storiesHeadingDemo"
@@ -68,18 +68,18 @@
         = form.color_field( \
             :header_color_1,
             class: 'form-control',
-            data: { company_profile_target: 'companyHeaderColor' })
+            data: { action: 'company-profile#onInputCompanyHeaderBackgroundColor' })
       .headers-color-picker__color
         = form.label(:header_color_2, 'Lower')
         = form.color_field( \
             :header_color_2,
             class: 'form-control',
-            data: { company_profile_target: 'storiesHeaderColor'})
+            data: { action: 'company-profile#onInputStoriesHeaderBackgroundColor' })
       .headers-color-picker__color
         = form.label(:header_text_color, 'Heading Text')
         = form.color_field(:header_text_color,
             class: 'form-control',
-            data: { company_profile_target: 'storiesHeadingColor' })
+            data: { company_profile_target: 'storiesHeadingColorInput', action: 'company-profile#onInputStoriesHeadingColor' })
 
   .form-group
     = form.label(:gtm_id, 'Google Tag Manager ID', class: 'col-sm-3 control-label')

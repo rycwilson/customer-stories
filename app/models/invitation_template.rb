@@ -68,7 +68,7 @@ class InvitationTemplate < ApplicationRecord
     request_body.gsub!( /\[(\w+)_link=('|")(.+?)('|")\]/, '<a href="[\1_url]" target="_blank">\3</a>')
     # re-construct buttons
     request_body.gsub!(/\[(\w+)_button={text:('|")(.+?)('|"),color:('|")(.+?)('|")}\]/) do |match|
-      "<a href='[#{$1}_url]' target='_blank' class='csp-cta' style='background-color:#{$6};border-color:#{$6};color:#{InvitationTemplate.background_color_contrast($6) == "light-background" ? "#333333" : "ffffff"};#{button_style_settings}'>#{$3.truncate(25)}<\/a>"
+      "<a href='[#{$1}_url]' target='_blank' class='csp-cta' style='background-color:#{$6};border-color:#{$6};color:#{InvitationTemplate.color_shade($6) == 'light' ? "#333333" : "ffffff"};#{button_style_settings}'>#{$3.truncate(25)}<\/a>"
     end
     request_body.sub!(/^<p>/, '<p style="margin-top:0">')
   end
@@ -77,8 +77,8 @@ class InvitationTemplate < ApplicationRecord
     ['Customer', 'Customer Success', 'Sales'].include?(self.name)
   end
 
-  def self.background_color_contrast(hex_color)
-    ApplicationController.helpers.background_color_contrast(hex_color)
+  def self.color_shade(hex_color)
+    ApplicationController.helpers.color_shade(hex_color)
   end
 
   def path

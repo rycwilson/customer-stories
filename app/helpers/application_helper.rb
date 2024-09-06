@@ -75,7 +75,7 @@ module ApplicationHelper
     end
   end
 
-  def background_color_contrast(hex_color)
+  def color_shade(hex_color)
     # make sure it's a six-character hex value (not counting #)
     if hex_color.length < 7
       loop do
@@ -85,7 +85,7 @@ module ApplicationHelper
     end
     rgb = { r: hex_color[1..2].hex, g: hex_color[3..4].hex, b: hex_color[5..6].hex }
     o = (((rgb[:r] * 299) + (rgb[:g] * 587) + (rgb[:b] * 114)) / 1000).round
-    return (o > 125) ? 'bg-light' : 'bg-dark';
+    return (o > 125) ? 'light' : 'dark';
   end
 
 end

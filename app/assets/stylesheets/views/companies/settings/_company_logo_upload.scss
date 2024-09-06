@@ -57,10 +57,12 @@
   align-items: center;
 
   &--bg-light {
+    @extend .company-logo-upload__stories-header;
     color: rgba(51, 51, 51, 0.9)
   }
-
+  
   &--bg-dark {
+    @extend .company-logo-upload__stories-header;
     color: rgba(255, 255, 255, 0.9);
   }
 

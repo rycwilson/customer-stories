@@ -107,7 +107,7 @@ module StoriesHelper
   end
 
   def stories_header_class(company)
-    "stories-header stories-header--#{company.subdomain} stories-header--#{background_color_contrast(company.header_color_2)}"
+    "stories-header stories-header--#{company.subdomain} stories-header--bg-#{color_shade(company.header_color_2)}"
   end
 
   def stories_header_custom_colors(company)

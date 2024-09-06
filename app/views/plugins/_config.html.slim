@@ -85,7 +85,7 @@ form.plugin-config.form-horizontal name="pluginConfig" data-controller="plugins"
       .plugin-config__tabbed-carousel.hidden
         .form-inline
           .form-group
-            = label_tag('plugin_tabbed_carousel_tab_color', 'Tab Color')
+            = label_tag('plugin_tabbed_carousel_tab_color', 'Tab')
             = color_field_tag( \
                 'plugin[tabbed_carousel][tab_color]', 
                 '#333333', 
@@ -94,7 +94,7 @@ form.plugin-config.form-horizontal name="pluginConfig" data-controller="plugins"
                   plugins_target: 'tabbedCarouselTabColorInput', 
                   action: 'change->plugins#updateSetting input->plugins#checkTabContrast' })
           .form-group
-            = label_tag('plugin_tabbed_carousel_text_color', 'Text Color')
+            = label_tag('plugin_tabbed_carousel_text_color', 'Text')
             = color_field_tag( \
                 'plugin[tabbed_carousel][text_color]', 
                 '#ffffff', 

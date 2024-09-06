@@ -1,5 +1,5 @@
 import { Controller } from '@hotwired/stimulus';
-import { hexToRgb, backgroundShade } from '../utils';
+import tinycolor from 'tinycolor2';
 
 export default class PluginsController extends Controller<HTMLFormElement> {
   static targets = [
@@ -123,13 +123,13 @@ export default class PluginsController extends Controller<HTMLFormElement> {
   }
 
   checkTabContrast({ target: input }: { target: HTMLInputElement }) {
-    const tabColor = hexToRgb(input.value) as { r: number, b: number, g: number };
+    const tabColor = input.value
     const textColorInput = this.tabbedCarouselTextColorInputTarget;
     const lightTextColor = '#ffffff';
     const darkTextColor = '#333333';
-    if (backgroundShade(tabColor) === 'light' && textColorInput.value !== darkTextColor) {
+    if (tinycolor(tabColor).isLight() && textColorInput.value !== darkTextColor) {
       textColorInput.value = darkTextColor;
-    } else if (backgroundShade(tabColor) === 'dark' && textColorInput.value !== lightTextColor) {
+    } else if (tinycolor(tabColor).isDark() && textColorInput.value !== lightTextColor) {
       textColorInput.value = lightTextColor;
     } else {
       return;
