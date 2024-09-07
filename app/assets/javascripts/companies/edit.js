@@ -39,7 +39,6 @@ function companiesEditListeners () {
 
   companyProfileListeners();
   invitationTemplatesListeners();
-  storyCTAsListeners();
   pluginConfigListeners();
 
 }
