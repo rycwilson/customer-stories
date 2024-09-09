@@ -26,6 +26,7 @@ export default class extends Controller<HTMLButtonElement> {
     if (turboFrameId && turboFrameSrc && this.modalOutlet.hasTurboFrameTarget) {
       this.modalOutlet.turboFrameAttrsValue = { ...this.turboFrameAttrsValue };
     }
-    this.modalOutlet.show();
+    // alllow style changes to render before showing modal
+    setTimeout(() => this.modalOutlet.show());
   }
 }
