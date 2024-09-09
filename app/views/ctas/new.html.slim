@@ -48,7 +48,7 @@
       .col-sm-offset-3.col-sm-9
         .checkbox
           = form.label(:primary) do
-            = form.check_box(:primary, data: { action: 'cta#togglePrimary' })
+            = form.check_box(:primary, { data: { action: 'cta#togglePrimary' } }, true, false)
             | Make this the Banner CTA
 
     .cta__custom-button--new.hidden data-cta-target="customButton"
