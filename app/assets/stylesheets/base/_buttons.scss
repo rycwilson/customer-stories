@@ -47,7 +47,8 @@
 }
 
 .btn-default {
-  @include button-variant($btn-default-color, $light-gray, $btn-default-border);
+  // 2% is the different between the default background (#fff) and $light-gray
+  @include button-variant(darken($btn-default-color, 2%), $light-gray, darken($btn-default-border, 2%));
 }
 
 .btn-custom {
@@ -79,4 +80,21 @@
       color: darken($brand-primary, 25%);
     }
   }
+}
+
+// only change to bootstrap is to make the border the same color as the background
+.btn-success {
+  @include button-variant($btn-success-color, $btn-success-bg, $btn-success-bg);
+}
+
+.btn-info {
+  @include button-variant($btn-info-color, $btn-info-bg, $btn-info-bg);
+}
+
+.btn-warning {
+  @include button-variant($btn-warning-color, $btn-warning-bg, $btn-warning-bg);
+}
+
+.btn-danger {
+  @include button-variant($btn-danger-color, $btn-danger-bg, $btn-danger-bg);
 }

@@ -1,4 +1,14 @@
-@mixin demo-button {
+@media (min-width: 768px) {
+  .modal-dialog:has(turbo-frame#new-company-cta) {
+    width: 510px;
+
+    .modal-body {
+      padding-right: 32px;
+    }
+  }
+}
+
+@mixin custom-button-demo {
   @include flex-row-center-center;
   height: $company-header-height;
 
@@ -9,41 +19,66 @@
 }
 
 .cta__custom-button {
+  .help-block {
+    margin-bottom: 0;
+  }
+
   &--new {
-    > div > div:first-child {
-      @include flex-row-center-between;
-    }
+    @extend .cta__custom-button;
 
-    > div > div:last-child {
-      @include demo-button;
-    }
-
-    input {
-      max-width: 47%;
+    > .row {
+      > div > div:first-child {
+        @include flex-row-center-between;
+        margin-bottom: $form-group-margin-bottom;
+      }
+  
+      > div > div:last-child {
+        @include custom-button-demo;
+      }
+  
+      input {
+        max-width: 42%;
+      }
     }
   }
 
   &--edit {
-    > div:first-child {
-      @include flex-row-center-between;
-  
-      > label {
-        margin-right: 0.75em;
-      }
-  
-      > div {
-        @include flex-row-center;
-        flex-grow: 1;
-      }
-    }
+    @extend .cta__custom-button;
+
+    > div {
+      > div:first-child {
+        @include flex-row-center-between;
+        margin-bottom: $form-group-margin-bottom;
     
-    > div:last-child {
-      @include demo-button
+        label {
+          &[for*="background"] {
+            margin-right: 0.75em;
+          }
+  
+          &[for*="text"] {
+            margin: 0 1em;
+          }
+        }
+    
+        > div {
+          @include flex-row-center;
+          flex-grow: 1;
+        }
+      }
+      
+      > div:last-child {
+        @include custom-button-demo
+      }
     }
   }
 }
 
 #cta-links-forms-panel {
+  .list-group {
+    position: relative;
+    top: ($padding-base-vertical + 1) * -1; // this matches the padding-top on the control label (see _forms.scss)
+  }
+
   .list-group-item {
     $btn-sides: 2.5em;
     $icon-font-size: 1.25em;
@@ -99,25 +134,42 @@
     &:hover.ui-sortable-handle .fa-arrows-v {
       display: inline-block;
     } 
+
+    &--empty {
+      @extend .list-group-item;
+
+      background: transparent;
+      border: none;
+      pointer-events: none;
+    }
+
+    &:nth-last-child(2) {
+      border-bottom-right-radius: $border-radius-base;
+      border-bottom-left-radius: $border-radius-base;
+    }
   }
   
   .collapse {
     position: relative;
 
-    form:not(.button_to) {
-      border-right: 1px solid $list-group-border;
-      border-left: 1px solid $list-group-border;
-      background: $medium-gray;
+    form:not(.button_to){
+      margin-bottom: 1.5rem;
       padding: 1.5rem;
+      background: $medium-gray;
+      border: 1px solid $list-group-border;
+      border-top: none;
+      
+      border-bottom-right-radius: $border-radius-base;
+      border-bottom-left-radius: $border-radius-base;
 
       hr {
-        margin: 0;
+        margin: 1.5rem 0;
       }
-  
-      > div:not(.cta__custom-button):not(:last-child),
-      > hr {
-        margin-bottom: 1em;
-      }
+    }
+
+    &.in + .list-group-item {
+      border-top-right-radius: $border-radius-base;
+      border-top-left-radius: $border-radius-base;
     }
 
     form.button_to input[type="submit"]{
