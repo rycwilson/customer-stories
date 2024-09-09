@@ -1,11 +1,12 @@
 // absolutely positioned at bottom to avoid nested form tags
-= button_to( \
-    'Delete', 
-    company_cta_path(company, cta),
-    method: :delete, 
-    remote: true, 
-    class: 'btn btn-sm btn-danger',
-    form: { data: { turbo: false, action: 'ajax:complete->company-ctas#onDestroy' } })
+- unless cta.primary?
+  = button_to( \
+      'Delete', 
+      company_cta_path(company, cta),
+      method: :delete, 
+      remote: true, 
+      class: 'btn btn-sm btn-danger',
+      form: { data: { turbo: false, action: 'ajax:complete->company-ctas#onDestroy' } })
 
 / since distinct id/name attributes are required, use form_tag instead of form_with (which auto-generates id/name attributes)
 = form_tag( \
