@@ -122,13 +122,14 @@
 
 @mixin horizontal-form {
   .form-group {
-    margin-bottom: 2.5rem;
+    margin-bottom: 2.25rem;
   }
   
   // some extra space between last item and Save button
-  .form-group button[type="submit"] {
-    margin-top: 10px;
+  [type="submit"] {
+    margin-top: 1rem;
   } 
+
   @media screen and (min-width: 768px) {
   }
   @media screen and (min-width: 992px) {

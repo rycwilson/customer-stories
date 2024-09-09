@@ -16,6 +16,14 @@
           'postData' => s3_direct_post.fields } }}) do |form|
   
   .form-group.required
+    = form.label(:subdomain, class: 'col-sm-3 control-label')
+    .col-sm-9.col-md-8.col-lg-6
+      - if company.persisted?
+        = form.text_field(:subdomain, class: 'form-control', disabled: true)
+      - else
+        = form.text_field(:subdomain, class: 'form-control')
+
+  .form-group.required
     = form.label(:name, 'Company Name', class: 'col-sm-3 control-label')
     .col-sm-9.col-md-8.col-lg-6
       = form.text_field(:name, class: 'form-control')
@@ -25,18 +33,29 @@
     .col-sm-9.col-md-8.col-lg-6
       = form.text_field(:website, class: 'form-control')
       
-  .form-group.required
-    = form.label(:subdomain, class: 'col-sm-3 control-label')
-    .col-sm-9.col-md-8.col-lg-6
-      - if company.persisted?
-        = form.text_field(:subdomain, class: 'form-control', disabled: true)
-      - else
-        = form.text_field(:subdomain, class: 'form-control')
-
+  .row.custom-header-colors
+    label.col-sm-3.control-label Page Header
+    .col-sm-9.col-md-8.col-lg-6 style="padding-top:2px; margin-bottom:1.5rem"
+      div
+        = form.label(:header_color_1, 'Upper')
+        = form.color_field( \
+            :header_color_1,
+            class: 'form-control',
+            data: { action: 'company-profile#onInputCompanyHeaderBackgroundColor' })
+      div
+        = form.label(:header_color_2, 'Lower')
+        = form.color_field( \
+            :header_color_2,
+            class: 'form-control',
+            data: { action: 'company-profile#onInputStoriesHeaderBackgroundColor' })
+      div
+        = form.label(:header_text_color, 'Heading')
+        = form.color_field(:header_text_color,
+            class: 'form-control',
+            data: { company_profile_target: 'storiesHeadingColorInput', action: 'company-profile#onInputStoriesHeadingColor' })
 
   .form-group
-    label.col-sm-3.control-label Header Logo
-    .col-sm-9.col-md-8.col-lg-6
+    .col-sm-offset-3.col-sm-9.col-md-8.col-lg-6
       .company-logo-upload data-provides="fileinput"
         div
           button.company-logo-upload__button.btn {
@@ -59,37 +78,11 @@
           h3 data-company-profile-target="storiesHeadingDemo"
             | Customer Stories
 
-  .form-group.headers-color-picker
-    label.col-sm-3.control-label
-      | Header Colors
-    .col-sm-9.col-md-8.col-lg-6
-      .headers-color-picker__color
-        = form.label(:header_color_1, 'Upper')
-        = form.color_field( \
-            :header_color_1,
-            class: 'form-control',
-            data: { action: 'company-profile#onInputCompanyHeaderBackgroundColor' })
-      .headers-color-picker__color
-        = form.label(:header_color_2, 'Lower')
-        = form.color_field( \
-            :header_color_2,
-            class: 'form-control',
-            data: { action: 'company-profile#onInputStoriesHeaderBackgroundColor' })
-      .headers-color-picker__color
-        = form.label(:header_text_color, 'Heading Text')
-        = form.color_field(:header_text_color,
-            class: 'form-control',
-            data: { company_profile_target: 'storiesHeadingColorInput', action: 'company-profile#onInputStoriesHeadingColor' })
-
-  .form-group
+  /.form-group
     = form.label(:gtm_id, 'Google Tag Manager ID', class: 'col-sm-3 control-label')
     .col-sm-9.col-md-8.col-lg-6
       = form.text_field(:gtm_id, class: 'form-control')
 
-  .form-group
-    .col-sm-12.col-md-offset-3.col-md-8.col-lg-6.text-right
-      button.btn.btn-success type="submit" form="company-profile-form"
-        span
-          = company.new_record? ? 'Register' : 'Save changes'
-        i.fa.fa-spin.fa-circle-o-notch style="display: none"
-        i.fa.fa-check style="display: none"
+  .row
+    .col-sm-offset-3.col-sm-9.col-md-8-col-lg-6
+      = form.submit(company.new_record? ? 'Register' : 'Save changes', class: 'btn btn-success')

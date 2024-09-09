@@ -23,9 +23,7 @@ export default class CompanySettingsController extends Controller {
   resizeHandler = debounce(this.onResize.bind(this), 200);
 
   get activeTab() {
-    return this.tabTargets.find(tab => (
-      (tab.parentElement as HTMLLIElement).classList.contains('active')
-    )) as HTMLAnchorElement;
+    return <HTMLAnchorElement>this.tabTargets.find(tab => (<HTMLLIElement>tab.parentElement).classList.contains('active'));
   }
 
   get validTabNames() {

@@ -4,9 +4,9 @@
 
     .row
       .visible-sm-block.col-sm-12 
-        label#primary-cta-label-sm Primary
+        label#primary-cta-label-sm Banner
       label#primary-cta-label-md-lg.control-label.col-md-3.visible-md-inline-block.visible-lg-inline-block
-        | Primary
+        | Banner
       .col-md-9.col-lg-6.visible-md-block.visible-lg-block
         - if primary_cta = company.ctas.primary.take
           .list-group data-controller="list-group" data-list-group-collapsible-value="true"
@@ -30,9 +30,9 @@
 
     .row
       .visible-sm-block.col-sm-12
-        label#additional-ctas-label-sm Additional 
+        label#additional-ctas-label-sm Sidebar
       label#additional-ctas-label-md-lg.control-label.col-md-3.visible-md-inline-block.visible-lg-inline-block
-        | Additional
+        | Sidebar
       .col-md-9.col-lg-6.visible-md-block.visible-lg-block
         .list-group data-controller="list-group" data-list-group-collapsible-value="true" aria-labelledby="additional-ctas-label-md-lg"
           - company.ctas.secondary.each do |cta|

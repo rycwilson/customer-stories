@@ -8,21 +8,21 @@ p.lead {
   margin-bottom: 25px;
 }
 
-.headers-color-picker > div {
-  display: flex; 
-  justify-content: space-between;
-}
+.custom-header-colors {
+  > div {
+    display: flex; 
+    justify-content: space-between;
 
-.headers-color-picker__color {
-  width: 30%;
-  
-  label {
-    font-weight: normal;
+    > div {
+      @include flex-row-center;
+      flex-grow: 0.25;
+      
+      label {
+        margin-right: 0.75em;
+        font-weight: normal;
+      }
+    }
   }
-
-  // input {
-  //   width: 10em;
-  // }
 }
 
 #company-profile-form, 
