@@ -1,72 +1,86 @@
-- path_helper = "company_cta_#{cta.type.match(/(?<type>Link|Form)/)[:type].downcase}_path"
-
 // absolutely positioned at bottom to avoid nested form tags
 = button_to( \
     'Delete', 
-    send(path_helper, company, cta), 
+    company_cta_path(company, cta),
     method: :delete, 
     remote: true, 
-    class: 'btn btn-sm btn-danger')
+    class: 'btn btn-sm btn-danger',
+    form: { data: { turbo: false, action: 'ajax:complete->company-ctas#onDestroy' } })
 
 / since distinct id/name attributes are required, use form_tag instead of form_with (which auto-generates id/name attributes)
 = form_tag( \
-    # send(path_helper, company, cta, format: :json),
-    send(path_helper, company, cta),
+    # company_cta_path(company, cta, format: :json),
+    company_cta_path(company, cta),
     method: :patch,
     remote: true,
     id: "cta-#{cta.id}-form",
     data: { \
       controller: 'cta',
-      cta_primary_cta_background_color_value: company.primary_cta_background_color,
-      cta_primary_cta_text_color_value: company.primary_cta_text_color }) do |form|
+      cta_custom_button_background_color_value: company.primary_cta_background_color,
+      cta_custom_button_text_color_value: company.primary_cta_text_color }) do |form|
+  
+  = hidden_field_tag("cta_#{cta.id}[company_id]", cta.company_id)
 
-  div
-    = label_tag("cta_#{cta.id}[description]", 'Description')
-    = text_field_tag("cta_#{cta.id}[description]", cta.description, placeholder: 'Description', class: 'form-control')
+  .form-group 
+    .col-sm-12
+      = label_tag("cta_#{cta.id}[description]", 'Description')
+      = text_field_tag("cta_#{cta.id}[description]", cta.description, placeholder: 'Description', class: 'form-control')
 
-  div
-    = label_tag("cta_#{cta.id}[display_text]", 'Display text')
-    = text_field_tag("cta_#{cta.id}[display_text]", cta.display_text, placeholder: 'Display text', class: 'form-control')
+  .form-group 
+    .col-sm-12
+      = label_tag("cta_#{cta.id}[display_text]", 'Display text')
+      = text_field_tag( \
+          "cta_#{cta.id}[display_text]", 
+          cta.display_text, 
+          placeholder: 'Display text', 
+          class: 'form-control',
+          data: { action: 'cta#updateCustomButtonText' })
 
-  - if cta.type == 'CTALink'
+  .form-group 
+    .col-sm-12
+      - if cta.type == 'CTALink'
+        = label_tag("cta_#{cta.id}[link_url]", 'Website URL')
+        = text_field_tag("cta_#{cta.id}[link_url]", cta.link_url, placeholder: 'Website URL', class: 'form-control')
+
+      - elsif cta.type == 'CTAForm'
+        = label_tag("cta_#{cta.id}[form_html]", 'HTML')
+          = text_area_tag( \
+              "cta_#{cta.id}[form_html]",
+              cta.form_html,
+              placeholder: 'html, e.g. <script> and <form> tags',
+              rows: 3,
+              class: 'form-control')
+
+  .form-group 
+    .col-sm-12
+      .checkbox
+        = label_tag("cta_#{cta.id}[primary]") do
+          = check_box_tag("cta_#{cta.id}[primary]", cta.primary? ? false : true, false, data: { action: 'cta#togglePrimary' })
+          = "#{cta.primary? ? 'Remove' : 'Make'} primary"
+
+  .cta__custom-button--edit class=('hidden' if !cta.primary?) data-cta-target="customButton" 
     div
-      = label_tag("cta_#{cta.id}[link_url]", 'Website URL')
-      = text_field_tag("cta_#{cta.id}[link_url]", cta.link_url, placeholder: 'Website URL', class: 'form-control')
-
-  - elsif cta.type == 'CTAForm'
-    div
-      = label_tag("cta_#{cta.id}[form_html]", 'HTML')
-        = text_area_tag( \
-            "cta_#{cta.id}[form_html]",
-            cta.form_html,
-            placeholder: 'html, e.g. <script> and <form> tags',
-            rows: 3,
-            class: 'form-control')
-
-  .checkbox
-    = label_tag("cta_#{cta.id}[primary]") do
-      = check_box_tag("cta_#{cta.id}[primary]", cta.primary? ? false : true, false, data: { action: 'cta#togglePrimary' })
-      = "#{cta.primary? ? 'Remove' : 'Make'} primary"
-
-  .cta__custom-button--edit class=('hidden' if !cta.primary?) data-cta-target="primaryCta" 
-    div
-      = label_tag("cta_#{cta.id}[company_attributes][primary_cta_background_color]", 'Button')
       div
-        = color_field_tag( \
-            "cta_#{cta.id}[company_attributes][primary_cta_background_color]",
-            cta.company.primary_cta_background_color,
-            class: 'form-control',
-            style: 'margin: 0 1em',
-            data: { cta_target: 'primaryCtaBackgroundColorInput', action: 'cta#onInputPrimaryCtaBackgroundColor' })
-        = label_tag("cta_#{cta.id}[company_attributes][primary_cta_text_color]", 'Button Text', class: 'sr-only')
-        = color_field_tag( \
-            "cta_#{cta.id}[company_attributes][primary_cta_text_color]",
-            cta.company.primary_cta_text_color,
-            class: 'form-control',
-            data: { cta_target: 'primaryCtaTextColorInput', action: 'cta#onInputPrimaryCtaTextColor' })
-    div style="background-color:#{cta.company.header_color_1}"
-      button.btn.btn-lg.btn-custom type="button" data-cta-target="primaryCtaButton"
-        = cta.display_text
+        = label_tag("cta_#{cta.id}[company_attributes][primary_cta_background_color]", 'Button')
+        div
+          = color_field_tag( \
+              "cta_#{cta.id}[company_attributes][primary_cta_background_color]",
+              cta.company.primary_cta_background_color,
+              class: 'form-control',
+              disabled: !cta.primary?,
+              data: { cta_target: 'customButtonBackgroundColorInput companyField' })
+          = label_tag("cta_#{cta.id}[company_attributes][primary_cta_text_color]", 'Text')
+          = color_field_tag( \
+              "cta_#{cta.id}[company_attributes][primary_cta_text_color]",
+              cta.company.primary_cta_text_color,
+              class: 'form-control',
+              disabled: !cta.primary?,
+              data: { cta_target: 'customButtonTextColorInput companyField' })
+      div style="background-color:#{cta.company.header_color_1}"
+        button.btn.btn-lg.btn-custom type="button" data-cta-target="customButtonDemo"
+          = cta.display_text
+    div
+      span.help-block Primary CTA button will appear in the header as shown
 
   hr
 

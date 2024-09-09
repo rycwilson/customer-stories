@@ -1,8 +1,6 @@
 class CtasController < ApplicationController
-
   def new
     @company = Company.find(params[:company_id])
-    # @cta = @company.ctas.new(type: 'CTALink')
   end
 
   # return html for cta forms
@@ -13,47 +11,25 @@ class CtasController < ApplicationController
 
   def create
     @company = Company.find(params[:company_id])
-    if params[:new_cta][:make_primary].present?
-      @old_primary_cta = @company.ctas.primary
-      @old_primary_cta.try(:update, { primary: false })
+    update_company(@company, cta_params)
+    respond_to do |format|
+      format.turbo_stream do 
+        render(
+          turbo_stream: turbo_stream.replace('company-ctas', partial: 'companies/ctas', locals: { company: @company })
+        )
+      end
     end
-    case params[:new_cta][:type]
-    when 'link'
-      @cta = CTALink.create(
-        description: params[:new_cta][:link_description],
-        display_text: params[:new_cta][:link_display_text],
-        link_url: params[:new_cta][:link_url],
-        company_id: @company.id,
-        primary: params[:new_cta][:make_primary].present?
-      )
-    when 'form'
-      @cta = CTAForm.create(
-        description: params[:new_cta][:form_description],
-        display_text: params[:new_cta][:form_display_text],
-        form_html: params[:new_cta][:form_html],
-        company_id: @company.id,
-        primary: params[:new_cta][:make_primary].present?
-      )
-    else
-      # error
-    end
-    respond_to { |format| format.js }
   end
 
   def update
     @company = Company.find(params[:company_id])
-    @cta = CallToAction.find(params[:id])
-    if cta_params(@cta)[:primary] and @company.ctas.primary.present?
-      # swap primary ctas in a single transaction to ensure there is always only one primary cta
-      @company.update({
-        primary_cta_background_color: cta_params(@cta)[:company_attributes][:primary_cta_background_color],
-        primary_cta_text_color: cta_params(@cta)[:company_attributes][:primary_cta_text_color],
-        ctas_attributes: [
-          cta_params(@cta).keep_if { |k, v| k != 'company_attributes' }.merge(id: @cta.id), 
-          @company.ctas.primary.take.attributes.merge('primary' => false)
-        ]
-      })
-    else @cta.update(cta_params(@cta.id))
+    cta = CallToAction.find(params[:id])
+    _cta_params = cta_params(cta)
+    if primary_replacement?(@company, _cta_params)
+      update_company(@company, _cta_params.merge(id: cta.id))
+    else 
+      cta.update(_cta_params)
+      @company.reload if _cta_params[:company_attributes].present?
     end
     render(partial: 'companies/ctas', locals: { company: @company })
   end
@@ -65,17 +41,34 @@ class CtasController < ApplicationController
 
   private
 
-  def cta_params(cta)
+  def cta_params(cta = nil)
     params
-      .require("cta_#{cta.id}")
+      .require(cta ? "cta_#{cta.id}" : :cta)
       .permit(
+        :type,
         :description, 
         :display_text, 
         :link_url, 
         :form_html, 
         :primary, 
+        :company_id,
         company_attributes: [:primary_cta_background_color, :primary_cta_text_color]
       )
+  end
+
+  # swap primary ctas in a single transaction to ensure there is always only one primary cta
+  def update_company(company, _cta_params)
+    prev_primary_cta = primary_replacement?(company, _cta_params) ? 
+      company.ctas.primary.take.attributes.merge('primary' => false) : 
+      nil 
+    company_params = { 
+      ctas_attributes: [_cta_params.reject { |k, v| k == 'company_attributes' }, prev_primary_cta].compact 
+    }
+    company.update(company_params.merge(_cta_params[:company_attributes] || {}))
+  end
+
+  def primary_replacement?(company, _cta_params)
+    _cta_params[:primary] == 'true' && company.ctas.primary.present?
   end
 
 end
