@@ -51,8 +51,7 @@ class CtasController < ApplicationController
         :link_url, 
         :form_html, 
         :primary, 
-        :company_id,
-        company_attributes: [:primary_cta_background_color, :primary_cta_text_color]
+        company_attributes: [:id, :primary_cta_background_color, :primary_cta_text_color]
       )
   end
 

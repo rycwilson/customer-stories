@@ -40,7 +40,6 @@ export default class CtaController extends FormController<CtaController> {
   }
 
   toggleType() {
-    this.typeFieldTargets.forEach(input => input.disabled = !input.disabled);
     this.typeSpecificFieldTargets.forEach(field => field.classList.toggle('hidden'));
   }
 
