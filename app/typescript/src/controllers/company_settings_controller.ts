@@ -1,9 +1,13 @@
 import { Controller } from '@hotwired/stimulus';
+import type ModalController from './modal_controller';
 import Cookies from 'js-cookie';
-import { navigator as turboNavigator, type FrameElement, type TurboFrameLoadEvent } from '@hotwired/turbo';
+import { navigator as turboNavigator, type FrameElement } from '@hotwired/turbo';
 import { debounce } from '../utils';
 
 export default class CompanySettingsController extends Controller {
+  static outlets = ['modal'];
+  declare modalOutlet: ModalController;
+
   static targets = [
     'tab', 
     'invitationTemplateSelect',
@@ -17,7 +21,6 @@ export default class CompanySettingsController extends Controller {
 
   declare currentScreen: ScreenSize;
   resizeHandler = debounce(this.onResize.bind(this), 200);
-  invitationTemplateFrameLoadHandler = this.onInvitationTemplateFrameLoad.bind(this);
 
   get activeTab() {
     return this.tabTargets.find(tab => (
@@ -31,18 +34,10 @@ export default class CompanySettingsController extends Controller {
 
   connect() {
     this.initSidebar();
-    // window.scrollTo(0, 0);
-
-    this.invitationTemplateTurboFrameTargets.forEach(frame => {
-      frame.addEventListener('turbo:frame-load', this.invitationTemplateFrameLoadHandler);
-    });
     window.addEventListener('resize', this.resizeHandler);
   }
 
   disconnect() {
-    this.invitationTemplateTurboFrameTargets.forEach(frame => {
-      frame.removeEventListener('turbo:frame-load', this.invitationTemplateFrameLoadHandler);
-    });
     window.removeEventListener('resize', this.resizeHandler);
   }  
   
@@ -80,8 +75,9 @@ export default class CompanySettingsController extends Controller {
     }
   }
 
-  onCtasFrameLoad() {
+  onCtasFrameLoad(e: Event) {
     window.scrollTo(0, 0);
+    if (this.modalOutlet.element.classList.contains('in')) this.modalOutlet.hide();
   }
   
   addTabListeners() {

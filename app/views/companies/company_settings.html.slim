@@ -5,7 +5,10 @@
 
 = render('shared/navbars/company_nav', { company: @company, workflow_stage: @workflow_stage })
 
-.container data-controller="company-settings"
+.container {
+  data-controller="company-settings" 
+  data-company-settings-modal-outlet="#main-modal" 
+  data-action="company-ctas:did-render->company-settings#onCtasFrameLoad" }
   .row
     .col-sm-4.col-lg-3.layout-sidebar
       
