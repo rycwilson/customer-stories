@@ -1,6 +1,6 @@
-= turbo_frame_tag('edit-company-ctas', data: { action: 'turbo:frame-load->company-settings#onCtasFrameLoad' })
+= turbo_frame_tag('company-ctas')
 
-  .form-horizontal
+  .form-horizontal data-controller="company-ctas"
 
     .row
       .visible-sm-block.col-sm-12 
@@ -24,7 +24,9 @@
             .collapse id="edit-cta-#{primary_cta.id}" data-list-group-target="collapse"
               = render('ctas/edit', company:, cta: primary_cta)
         - else 
-          div None
+          .list-group style="margin-bottom:10px"
+            a.list-group-item--empty href="" aria-labelled-by="primary-cta-label-md-lg"
+              p None
 
     .row
       .visible-sm-block.col-sm-12
@@ -49,8 +51,7 @@
           data-controller="modal-trigger"
           data-modal-trigger-modal-outlet="#main-modal"
           data-modal-trigger-title-value="New Call-To-Action"
-          data-modal-trigger-turbo-frame-attrs-value={ id: 'new-company-cta', src: new_company_cta_link_path(company) }.to_json
-          data-modal-trigger-submit-button-text-value="Add CTA"
+          data-modal-trigger-turbo-frame-attrs-value={ id: 'new-company-cta', src: new_company_cta_path(company) }.to_json
           aria-label="New Call-To-Action" }
           i.fa.fa-plus
           |&nbsp;&nbsp;New

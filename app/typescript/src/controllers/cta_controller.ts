@@ -3,52 +3,60 @@ import { debounce } from '../utils';
 import tinycolor from 'tinycolor2';
 
 export default class CtaController extends FormController<CtaController> {
-  static values = { primaryCtaBackgroundColor: String, primaryCtaTextColor: String }
-  declare readonly primaryCtaBackgroundColorValue: string;
-  declare readonly primaryCtaTextColorValue: string;
+  static values = { customButtonBackgroundColor: String, customButtonTextColor: String }
+  declare readonly customButtonBackgroundColorValue: string;
+  declare readonly customButtonTextColorValue: string;
 
   static targets = [
-    'primaryCta', 
-    'primaryCtaBackgroundColorInput', 
-    'primaryCtaTextColorInput', 
-    'primaryCtaButton', 
-    'typeSpecificField'
+    'customButton', 
+    'customButtonBackgroundColorInput', 
+    'customButtonTextColorInput', 
+    'customButtonDemo', 
+    'typeField',
+    'typeSpecificField',
+    'companyField'
   ]
-  declare readonly primaryCtaTarget: HTMLDivElement;
-  declare readonly primaryCtaBackgroundColorInputTarget: HTMLInputElement;
-  declare readonly primaryCtaTextColorInputTarget: HTMLInputElement;
-  declare readonly primaryCtaButtonTarget: HTMLButtonElement;
+  declare readonly customButtonTarget: HTMLDivElement;
+  declare readonly customButtonBackgroundColorInputTarget: HTMLInputElement;
+  declare readonly customButtonTextColorInputTarget: HTMLInputElement;
+  declare readonly customButtonDemoTarget: HTMLButtonElement;
+  declare readonly typeFieldTargets: HTMLInputElement[];
   declare readonly typeSpecificFieldTargets: HTMLDivElement[];
+  declare readonly companyFieldTargets: HTMLInputElement[];
 
-  bgColorInputHandler = debounce(this.setCustomButtonProps.bind(this, 'background'), 200);
+  bgColorInputHandler = debounce(this.onInputCustomButtonBackgroundColor.bind(this), 200);
   textColorInputHandler = debounce(this.setCustomButtonProps.bind(this, 'color'), 200);
 
   connect() {
-    // console.log('connect ctas')
-
-    this.primaryCtaBackgroundColorInputTarget.addEventListener('input', this.bgColorInputHandler);
-    this.primaryCtaTextColorInputTarget.addEventListener('input', this.textColorInputHandler);
-    if (this.primaryCtaBackgroundColorValue) this.setCustomButtonProps('background', true);
-    if (this.primaryCtaTextColorValue) this.setCustomButtonProps('color', true);
+    this.customButtonBackgroundColorInputTarget.addEventListener('input', this.bgColorInputHandler);
+    this.customButtonTextColorInputTarget.addEventListener('input', this.textColorInputHandler);
+    if (this.customButtonBackgroundColorValue) this.setCustomButtonProps('background', true);
+    if (this.customButtonTextColorValue) this.setCustomButtonProps('color', true);
   }
 
   disconnect() {
-    this.primaryCtaBackgroundColorInputTarget.removeEventListener('input', this.bgColorInputHandler);
-    this.primaryCtaTextColorInputTarget.removeEventListener('input', this.textColorInputHandler);
+    this.customButtonBackgroundColorInputTarget.removeEventListener('input', this.bgColorInputHandler);
+    this.customButtonTextColorInputTarget.removeEventListener('input', this.textColorInputHandler);
   }
 
   toggleType() {
+    this.typeFieldTargets.forEach(input => input.disabled = !input.disabled);
     this.typeSpecificFieldTargets.forEach(field => field.classList.toggle('hidden'));
   }
 
   togglePrimary({ target: checkbox }: { target: HTMLInputElement }) {
-    // const makingPrimary = checkbox.value === 'true';
-    this.primaryCtaTarget.classList.toggle('hidden');
+    this.customButtonTarget.classList.toggle('hidden');
+    this.companyFieldTargets.forEach(field => field.disabled = !field.disabled);
   }
 
-  onInputPrimaryCtaBackgroundColor({ target: input }: { target: HTMLInputElement }) {
-    const bgColor = input.value
-    const textColorInput = this.primaryCtaTextColorInputTarget;
+  onInputCustomButtonBackgroundColor() {
+    this.checkHeadingContrast();
+    this.setCustomButtonProps('background');
+  }
+
+  checkHeadingContrast() {
+    const bgColor = this.customButtonBackgroundColorInputTarget.value;
+    const textColorInput = this.customButtonTextColorInputTarget;
     const lightTextColor = '#ffffff';
     const darkTextColor = '#333333';
     if (tinycolor(bgColor).isLight() && textColorInput.value !== darkTextColor) {
@@ -58,23 +66,22 @@ export default class CtaController extends FormController<CtaController> {
     } else {
       return;
     }
-    input.addEventListener(
-      'focusout', 
-      () => textColorInput.dispatchEvent(new Event('input')),
-      { once: true }
-    );
+    textColorInput.dispatchEvent(new Event('input'));
   }
 
-  updateButtonText({ target: input }: { target: HTMLInputElement }) {
-    this.primaryCtaButtonTarget.innerText = input.value;
+  updateCustomButtonText({ target: input }: { target: HTMLInputElement }) {
+    this.customButtonDemoTarget.innerText = input.value;
   }
 
+  // Using css variables to capture style allows for use of the custom-button-variant mixin,
+  // which itself is just a copy of bootstrap's button-variant mixin that has been modified to use css variables.
+  // Thus standard bootstrap styling is conserved while allowing for dynamic custom button colors.
   setCustomButtonProps(prop: 'background' | 'color', isControllerConnect = false) {
-    const btn = this.primaryCtaButtonTarget;
+    const btn = this.customButtonDemoTarget;
     if (prop === 'background') {
       const bgColor = isControllerConnect ? 
-        this.primaryCtaBackgroundColorValue : 
-        this.primaryCtaBackgroundColorInputTarget.value;
+        this.customButtonBackgroundColorValue : 
+        this.customButtonBackgroundColorInputTarget.value;
       btn.style.setProperty('--btn-custom-bg', bgColor);
       btn.style.setProperty('--btn-custom-bg-darken-10', tinycolor(bgColor).darken(10).toString());
       btn.style.setProperty('--btn-custom-bg-darken-17', tinycolor(bgColor).darken(17).toString());
@@ -82,8 +89,7 @@ export default class CtaController extends FormController<CtaController> {
       btn.style.setProperty('--btn-custom-border-darken-17', tinycolor(bgColor).darken(17).toString());
       btn.style.setProperty('--btn-custom-border-darken-25', tinycolor(bgColor).darken(25).toString());
     } else {
-      console.log(this.primaryCtaTextColorValue)
-      const color = isControllerConnect ? this.primaryCtaTextColorValue : this.primaryCtaTextColorInputTarget.value;
+      const color = isControllerConnect ? this.customButtonTextColorValue : this.customButtonTextColorInputTarget.value;
       btn.style.setProperty('--btn-custom-color', color);
     }
   }

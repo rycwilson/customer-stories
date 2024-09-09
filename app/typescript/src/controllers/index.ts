@@ -16,6 +16,9 @@ application.register('bootstrap-switch', BootstrapSwitch);
 import DropdownController from './dropdown_controller.js';
 application.register('dropdown', DropdownController);
 
+import CompanyCtasController from './company_ctas_controller.js';
+application.register('company-ctas', CompanyCtasController);
+
 import CompanySettingsController from './company_settings_controller.js';
 application.register('company-settings', CompanySettingsController);
 
