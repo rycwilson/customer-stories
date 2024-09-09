@@ -11,6 +11,8 @@
 @mixin custom-button-demo {
   @include flex-row-center-center;
   height: $company-header-height;
+  border-top: 1px solid #ddd;
+  border-bottom: 1px solid #ddd;
 
   button {
     min-width: 96px;
