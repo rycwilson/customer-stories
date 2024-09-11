@@ -62,7 +62,6 @@ gem 'turbo-rails', '~> 1.3'
 gem 'stimulus-rails', '~> 1.2'
 
 gem 'typhoeus'
-gem 'uglifier'
 # gem 'wicked_pdf', '~> 2.0'
 # gem 'wkhtmltopdf-binary'
 
