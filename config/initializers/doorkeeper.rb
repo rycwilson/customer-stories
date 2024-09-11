@@ -81,7 +81,9 @@ Doorkeeper.configure do
   # The value can be any string. Use nil to disable this feature. When disabled, clients must provide a valid URL
   # (Similar behaviour: https://developers.google.com/accounts/docs/OAuth2InstalledApp#choosingredirecturi)
   #
-  native_redirect_uri 'urn:ietf:wg:oauth:2.0:oob'
+
+  # deprecated
+  # native_redirect_uri 'urn:ietf:wg:oauth:2.0:oob'
 
   # Forces the usage of the HTTPS protocol in non-native redirect uris (enabled
   # by default in non-development environments). OAuth2 delegates security in
