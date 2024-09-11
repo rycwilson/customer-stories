@@ -1,0 +1,36 @@
+$company-logo-max-height: 40px;
+
+@import '../../views/stories/main';
+
+.company-header--compas {
+  @extend .company-header;
+  opacity: 0.9;
+
+  .navbar-container {
+    .row {
+      .primary-cta a  {
+        // background-color: #f64b42;
+        // border-color: #e41516 !important;
+        // color: #fff;
+        font-size: 13px;
+        // text-transform: upppercase;
+        border-radius: 20px;
+        line-height: 38px;
+        padding: 0 26px;
+        text-align: center;
+        font-weight: 600;
+        transition: background .25s ease;
+        
+        &:hover, &:focus {
+          // background: #dd443b;
+          box-shadow: 0 2px 4px 0 rgba(246,75,66,.6);
+        }
+      }
+    }
+  }
+}
+
+.stories-header--compas {
+  @extend .stories-header;
+  box-shadow: none;
+}

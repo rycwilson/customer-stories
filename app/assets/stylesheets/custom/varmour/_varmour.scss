@@ -1,92 +1,35 @@
+// ref: https://gist.github.com/anotheruiguy/7379570
+@font-face {
+  font-family: 'Metropolis Light';
+  src: font-url("metropolis.light.otf") format('opentype');
+}
+@font-face {
+  font-family: 'Metropolis Regular';
+  src: font-url("metropolis.regular.otf") format('opentype');
+}
+@font-face {
+  font-family: 'Metropolis Medium';
+  src: font-url("Metropolis-Medium.otf") format('opentype');
+}
 
-@import 'variables';
-@import 'gallery';
-@import 'show';
+$metropolis-light: 'Metropolis Light', Arial, Helvetica, sans-serif;
+$metropolis-regular: 'Metropolis Regular', Arial, Helvetica, sans-serif;
+$metropolis-medium: 'Metropolis Medium', Arial, Helvetica, sans-serif;
 
-@mixin stories-header-title {
+$varmour-gray: #f5f6f7;
+$varmour-blue: #2fb9ff;
+$story-hover-color: #edf5f8;
+
+$company-logo-max-height: 40px;
+
+$company-body-font: $metropolis-regular;
+$company-title-font: $metropolis-regular;
+
+.stories-header--varmour,
+.company-logo-upload__stories-header {
   h3 {
     text-transform: uppercase;
     padding-top: 2px;
     font-weight: 400;
   }
 }
-
-body.varmour {
-  .company-logo-upload__stories-header {
-    @include stories-header-title;
-  }
-  &.index {
-    background-color: #fafcfd;
-  }
-}
-
-.company-header.company-header--varmour {
-  a.primary-cta {
-    font-size: 12px;
-    background-color: #fc6621 !important;
-    border-radius: 0;
-    text-transform: uppercase;
-    // padding: 11px 32px 9px 32px;  // adjust for the font family - only needed for larger font size eg 14
-    border: 2px solid #fc6621;
-    box-shadow: 0 0;
-    span {
-      color: #fff !important;
-    }
-    &:hover {
-      background-color: transparent !important;
-      span {
-        color: #fc6621 !important;
-      }
-    }
-  }
-}
-
-.stories-header.stories-header--varmour {
-  @include stories-header-title;
-  box-shadow: 0 9px 22px -6px rgba(0, 0, 0, 0.07);
-  // background-color: #21597a;
-  // background: asset-url('companies/varmour/header-background.png');
-  // => extracted colors: #c4d9e0, #0b1114, #21597a, #4794b5, #7aaebf
-
-  .search-stories {
-    .input-group {
-      input {
-        text-transform: uppercase;
-        box-shadow: none;
-        background-color: $varmour-gray;
-        color: #a2a1a1;
-        border-radius: 0;
-        text-align: center;
-        padding: 8px 12px 6px 12px;
-        border: transparent;
-      }
-      .input-group-btn button {
-        background-color: #4794b5; // $varmour-blue;
-        color: #fff;
-        // padding: 4px 6px;  // overrides bootstrap 6px 12px
-        border: transparent;
-        border-top-right-radius: 0;
-        border-bottom-right-radius: 0;
-        &:hover, &:focus { 
-          background-color: #4794b5; // $varmour-blue;
-          border-color: #4794b5; // $varmour-blue;
-          color: #fff; 
-        }
-      }
-    }
-  }
-
-  .search-stories__clear {
-    color: #999;
-    display: none;
-    &:hover {
-      color: #666;
-    }
-  }
-
-}
-
-
-
-
-

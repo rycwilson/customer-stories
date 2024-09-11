@@ -4,5 +4,5 @@
  *  => NOTE this file was modified to change min/max functions to Min/Max, as per: https://github.com/sass/sass/issues/2849#issuecomment-820538086
  *= require vendor/tom-select.bootstrap4.css
  *
- *= require ./app/main
+ *= require ./stories
  */

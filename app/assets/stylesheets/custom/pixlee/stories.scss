@@ -1,0 +1,20 @@
+@import 'pixlee';
+@import '../../views/stories/main';
+@import 'story';
+
+.company-header--pixlee {
+  @extend .company-header;
+  border-bottom: 1px solid $border-color;
+}
+
+.stories-header--pixlee {
+  @extend .stories-header;
+  @include stories-header-title;
+
+  box-shadow: 0 0;
+  border-bottom: 1px solid $border-color;
+
+  &.show:after {
+    background-image: linear-gradient(to bottom, $stories-bg-color 0%, #ffffff 100%);
+  }
+}

@@ -1,0 +1,22 @@
+@import '../../views/stories/main';
+
+.company-header--centerforcustomerengagement {
+  @extend .company-header;
+
+  a.primary-cta {
+    border-radius: 2px;
+    text-transform: uppercase;
+    opacity: 1;
+    padding: 11px 24px 13px 24px;  // adjust for font
+
+    &:hover {
+      background-color: #003464 !important;
+    }
+    
+    span {
+      font-size: 13px;
+      font-weight: 600;
+      letter-spacing: 1px;
+    }
+  }
+}

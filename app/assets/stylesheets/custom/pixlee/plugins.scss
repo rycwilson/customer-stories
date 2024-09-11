@@ -1,0 +1,179 @@
+
+// .single .post-entry .has-content-area div,
+// .single .post-entry img,
+// .single .wrap_content .post-entry p,
+// .single .post-entry .has-content-area ul,
+// .single .post-entry .has-content-area ul li,
+// .post-entry ul,
+// .post-entry li {
+//   all: initial;
+// }
+
+
+@import 'pixlee';
+@import '../../views/plugins/main';
+@import 'story';
+
+.cs-plugin {
+  .story-card.story-card--pixlee {
+    @include pixlee-story-card;
+  }
+}
+
+// pixlee blog: https://www.pixlee.com/blog/?p=2120&preview=1&_ppp=d2649d30d0
+.single .wrap_content .post-entry .cs-plugin {
+  blockquote p:before {
+    width: initial;
+    height: initial;
+    background: initial;
+  }
+  p:nth-child(1)::first-letter {
+    all: unset;
+  }
+}
+
+// pixlee blog
+body[class*="postid-"] #cs-gallery {
+  .fa {
+    display: inline-block !important;
+  }
+  .fa-2x {
+    font-size: 2em !important; 
+  }
+  .fa-stack-2x {
+    font-size: 2em !important;  // pixlee blog override
+  }
+  &,
+  div:not(.cs-story-wrapper):not(.cs-container):not(.cs-row):not(.story-card):not(.customer-logo):not(.cs-customer-logo):not(.customer-name), 
+  li {
+    margin: 0 !important;
+  }
+  li {
+    list-style: none !important;
+    width: 100% !important;
+  }
+  .cs-container {
+    margin: 0 auto !important;
+  }
+  .cs-container > .cs-row,
+  .customer-logo-quote.hidden-xs {
+    margin: 0px -15px !important;
+  }
+  li > .cs-row {
+    margin: 0px -15px 10px !important;
+  }
+  .cs-story-wrapper {
+    margin: 4% 3% 0 3% !important;
+    @media only screen and (max-width: 767px) {
+      margin: 0 !important;
+    }
+  }
+  blockquote p {
+    padding: 0 !important;
+  }
+  .cs-testimonial {
+    .customer-name {
+      margin: 25px 0 0 0 !important;
+    }
+    blockquote {
+      margin: 0 0 0 25px !important;
+      @media only screen and (max-width: 767px) {
+        margin: 0 !important;
+      }
+    }
+  } 
+  .narrative blockquote {
+    padding: 10px 20px !important;
+    margin: 0 0 20px !important;
+    p {
+      // font-style: normal !important;
+    }
+  }
+  .customer-logo,
+  .narrative,
+  .pixlee-cta {
+    img {
+      width: auto;
+      margin: 0 auto !important;
+    }
+  }
+  .story-card__logo img {
+    width: auto;
+    margin: 0 !important; 
+  }
+  .cs-customer-logo img {
+    width: auto;
+  }
+  ul {
+    margin: 0 0 10px 0 !important;
+    &.fa-ul {
+      margin: 0 0 0 2.14285714em !important;
+      li {
+        margin-bottom: 10px !important;
+      }
+    }
+  }
+  @media only screen and (min-width: 768px) {
+    .customer-logo {
+      margin: 0 !important;
+    }
+  }
+  @media only screen and (min-width: 1200px) {
+  }
+  
+}
+
+.cs-overlay-container {
+  padding: 0; 
+}
+
+.cs-carousel__prev, .cs-carousel__next {
+  .cs-carousel--light-background & {
+    color: $carousel-story-card-text-color;
+    &--bookend {
+      color: #e0e7ef;
+    }
+    &:hover, &:active {
+      color: $pixlee-blue;
+    }
+  }
+}
+
+// these are band-aids to compensate for some inconsistent padding on pixlee's site;
+// here *their* style settings are adjusted instead of our own (specificity to override their own settings),
+// because changing our settings can have the unforunate affect of changing how the overlay
+// lines up with the story card as it expands/contracts
+#brands_holder {
+  @media only screen and (min-width: 768px) {
+    padding: 20px 0;
+  }
+}
+.resources_css .container #main_container #case_studies_container .content_container {
+  @media only screen and (max-width: 767px) {
+    padding-top: 30px;
+  }
+}
+
+#brands_holder, #case_studies_container {
+  .narrative p {
+    line-height: 26px;  // host page conflicts with itself and negate this value => restore it
+  }
+}
+.cs-carousel {
+  .story-card__link {
+    width: $carousel-story-card-width;
+    height: $carousel-story-card-height;
+  }
+  .story-card__title p {
+    font-size: $carousel-story-card-title-size !important;
+    color: $carousel-story-card-text-color !important;
+  }
+  .story-card__caption {
+    span {
+      font-size: $carousel-story-card-caption-size !important;
+    }
+    .story-card__customer {
+      color: $carousel-story-card-text-color !important;
+    }
+  }
+}

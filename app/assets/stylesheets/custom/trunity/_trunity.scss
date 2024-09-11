@@ -1,80 +1,17 @@
+$trunity-orange: #FEBE57;
 
-.trunity.stories.show, .cs-overlay-container {
+#cs-tabbed-carousel,
+.cs-tabbed-carousel {
+  .cs-header {
+    background-color: $trunity-orange;
+    color: white;
 
-  #cs-tabbed-carousel {
-    .cs-header {
-      background-color: #febe57;
-    }
-    .cs-drawer-content {
-      border-top-color: #febe57;
+    img {
+      @include svg-fill(white);
     }
   }
 
+  .cs-drawer-content {
+    border-top-color: $trunity-orange; 
+  }
 }
-
-body.trunity:not(.companies):not(.profile):not(.edit) {
-
-  @media only screen and (max-width: 767px) {
-    #stories-gallery, #curate-gallery {
-      li {
-        a.thumbnail {
-          .thumbnail-view {
-            .thumbnail-view-hover p {
-            }
-            img {
-            }
-          }
-          .caption {
-          }
-        }
-      }
-    }
-  }
-
-  @media only screen and (min-width: 768px) and (max-width: 991px) {
-    #stories-gallery, #curate-gallery {
-      li {
-        a.thumbnail {
-          .thumbnail-view {
-            .thumbnail-view-hover {
-              p {
-              }
-            }
-          }
-          .caption {
-          }
-        }
-      }
-    }
-  }
-
-  @media only screen and (min-width: 992px) and (max-width: 1199px) {
-    .related-stories {
-      li {
-        a.thumbnail {
-          .thumbnail-view {
-            .thumbnail-view-hover {
-              p {
-              }
-            }
-          }
-          .caption {
-          }
-        }
-      }
-    }
-  }
-
-  @media only screen and (min-width: 1200px) {
-    &.stories.index {
-      .search-and-filters.visible-md-block.short {
-        // margin: 10px 2px 0 0;
-      }
-      .search-and-filters.visible-md-block.tall {
-      }
-    }
-  }
-
-}
-
-

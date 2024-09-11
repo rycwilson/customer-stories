@@ -1,0 +1,197 @@
+@import 'varmour';
+@import '../../views/stories/main';
+@import 'story';
+
+body.index {
+  background-color: #fafcfd;
+}
+
+.company-header--varmour {
+  @extend .company-header;
+
+  a.primary-cta {
+    font-size: 12px;
+    background-color: #fc6621 !important;
+    border-radius: 0;
+    text-transform: uppercase;
+    // padding: 11px 32px 9px 32px;  // adjust for the font family - only needed for larger font size eg 14
+    border: 2px solid #fc6621;
+    box-shadow: 0 0;
+
+    span {
+      color: #fff !important;
+    }
+
+    &:hover {
+      background-color: transparent !important;
+
+      span {
+        color: #fc6621 !important;
+      }
+    }
+  }
+}
+
+.stories-header--varmour {
+  @extend .stories-header;
+
+  box-shadow: 0 9px 22px -6px rgba(0, 0, 0, 0.07);
+  // background-color: #21597a;
+  // background: asset-url('companies/varmour/header-background.png');
+  // => extracted colors: #c4d9e0, #0b1114, #21597a, #4794b5, #7aaebf
+
+  .search-stories {
+    .input-group {
+      input {
+        text-transform: uppercase;
+        box-shadow: none;
+        background-color: $varmour-gray;
+        color: #a2a1a1;
+        border-radius: 0;
+        text-align: center;
+        padding: 8px 12px 6px 12px;
+        border: transparent;
+      }
+
+      .input-group-btn button {
+        background-color: #4794b5; // $varmour-blue;
+        color: #fff;
+        // padding: 4px 6px;  // overrides bootstrap 6px 12px
+        border: transparent;
+        border-top-right-radius: 0;
+        border-bottom-right-radius: 0;
+
+        &:hover, 
+        &:focus { 
+          background-color: #4794b5; // $varmour-blue;
+          border-color: #4794b5; // $varmour-blue;
+          color: #fff; 
+        }
+      }
+    }
+  }
+
+  .search-stories__clear {
+    color: #999;
+    display: none;
+
+    &:hover {
+      color: #666;
+    }
+  }
+}
+
+#stories-gallery, 
+.related-stories {
+  li {
+    &.loading {
+      a {
+        background-color: $story-hover-color;
+      }
+    }
+
+    a.thumbnail {
+      transition: background-color 0s;
+      border: 1px solid #999;
+      box-shadow: 0 0;
+
+      .thumbnail-view {
+        .thumbnail-view-hover {
+          padding: 10px;
+          border-radius: 0;
+
+          p {
+            color: #000;
+
+            font: {
+              family: $metropolis-medium;
+              size: 14px;
+              weight: normal;
+            }
+          }
+        }
+
+        img {
+          mix-blend-mode: multiply;
+        }
+      }
+
+      .caption {
+        text-transform: uppercase;
+        color: #000;
+        
+        .click-action:after { text-decoration: none; }
+
+        font: {
+          family: $metropolis-light;
+          size: 10px;
+          weight: 300;
+        }
+      }
+
+      &:hover, 
+      &:active {
+        background-color: $story-hover-color;
+        transition: background-color 0.5s;
+        border-color: #999;  // override bootstrap .thumbnail
+        box-shadow: 0 0;
+      }
+
+      // &:hover {
+      //   .thumbnail-view-hover {
+      //   }
+      //   img {
+      //   }
+      // }
+    }
+  }
+}
+
+// @media only screen and (max-width: 767px) {
+// }
+// @media only screen and (min-width: 768px) {
+// }
+@media only screen and (min-width: 768px) and (max-width: 991px) {
+  #stories-gallery {
+    li {
+      a.thumbnail {
+        .caption {
+          height: 30%;
+        }
+
+        .thumbnail-view {
+          .thumbnail-view-hover {
+            p {
+              font-size: 13px;
+              line-height: 20px
+            }
+          }
+        }
+      }
+    }
+  }
+}
+
+@media only screen and (min-width: 992px) and (max-width: 1199px) {
+  .related-stories {
+    li {
+      a.thumbnail {
+        .caption {
+          height: 30%;
+        }
+
+        .thumbnail-view {
+          .thumbnail-view-hover {
+            p {
+              font-size: 13px;
+              line-height: 20px
+            }
+          }
+        }
+      }
+    }
+  }
+}
+
+// @media only screen and (min-width: 1200px) {
+// }
