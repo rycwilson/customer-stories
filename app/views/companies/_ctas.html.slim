@@ -8,21 +8,21 @@
       label#primary-cta-label-md-lg.control-label.col-md-3.visible-md-inline-block.visible-lg-inline-block
         | Banner
       .col-md-9.col-lg-6.visible-md-block.visible-lg-block
-        - if primary_cta = company.ctas.primary.take
+        - if company.ctas.primary.present?
           .list-group data-controller="list-group" data-list-group-collapsible-value="true"
             a.list-group-item {
               data-toggle="collapse"
               data-list-group-target="item"
-              href="#edit-cta-#{primary_cta.id}"
+              href="#edit-cta-#{company.ctas.primary.id}"
               aria-expanded="false" 
               aria-labelledby="primary-cta-label-md-lg" }
-              p = "#{primary_cta.type == 'CTALink' ? '[LINK]' : '[FORM]'} #{primary_cta.description}"
+              p = "#{company.ctas.primary.type == 'CTALink' ? '[LINK]' : '[FORM]'} #{company.ctas.primary.description}"
               button.btn type="button"
                 i.fa.fa-fw.fa-chevron-down
               button.btn type="button"
                 i.fa.fa-fw.fa-chevron-up
-            .collapse id="edit-cta-#{primary_cta.id}" data-list-group-target="collapse"
-              = render('ctas/edit', company:, cta: primary_cta)
+            .collapse id="edit-cta-#{company.ctas.primary.id}" data-list-group-target="collapse"
+              = render('ctas/edit', company:, cta: company.ctas.primary)
         - else 
           .list-group style="margin-bottom:10px"
             a.list-group-item--empty href="" aria-labelled-by="primary-cta-label-md-lg"

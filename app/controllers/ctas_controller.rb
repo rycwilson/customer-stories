@@ -58,7 +58,7 @@ class CtasController < ApplicationController
   # swap primary ctas in a single transaction to ensure there is always only one primary cta
   def update_company(company, _cta_params)
     prev_primary_cta = primary_replacement?(company, _cta_params) ? 
-      company.ctas.primary.take.attributes.merge('primary' => false) : 
+      company.ctas.primary.attributes.merge('primary' => false) : 
       nil 
     company_params = { 
       ctas_attributes: [_cta_params.reject { |k, v| k == 'company_attributes' }, prev_primary_cta].compact 
@@ -67,7 +67,7 @@ class CtasController < ApplicationController
   end
 
   def primary_replacement?(company, _cta_params)
-    _cta_params[:primary] == 'true' && company.ctas.primary.present?
+    company.ctas.primary.present? && _cta_params[:primary] == 'true'
   end
 
 end

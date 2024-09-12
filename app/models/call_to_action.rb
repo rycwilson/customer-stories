@@ -6,6 +6,5 @@ class CallToAction < ApplicationRecord
     :company, 
     reject_if: -> (attrs) { !attrs.keys.all? { |attr| attr.match(/(\Aid\z)|primary_cta/) } }
   )
-  scope :primary, -> { where(primary: true) }
   scope :secondary, -> { where(primary: false) }
 end

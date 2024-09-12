@@ -209,7 +209,11 @@ class Company < ApplicationRecord
   end
   alias_attribute :templates, :invitation_templates
   has_many :outbound_actions, dependent: :destroy
-  has_many :ctas, class_name: 'CallToAction', dependent: :destroy
+  has_many(:ctas, class_name: 'CallToAction', dependent: :destroy) do
+    def primary
+      where(primary: true).take
+    end
+  end
   accepts_nested_attributes_for :ctas
   has_one :plugin, dependent: :destroy
   has_many :adwords_campaigns, dependent: :destroy
