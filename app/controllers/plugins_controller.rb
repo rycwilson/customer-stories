@@ -10,7 +10,10 @@ class PluginsController < ApplicationController
     @uid = params[:uid]
 
     # set the stylesheet url here, as it's impossible to use the asset path helper in cs.js in a company-specific way
-    @stylesheet_url = helpers.asset_url("custom/plugin_wrappers/#{@company.subdomain}_plugins.css").to_s
+    @stylesheet_url = helpers.custom_stylesheet?(@company, 'plugins') ?
+      helpers.asset_url("custom/#{@company.subdomain}/plugins.css").to_s :
+      helpers.asset_url('plugins.css').to_s
+      
     respond_to do |format|
       format.js { render action: 'cs' }
     end

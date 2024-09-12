@@ -23,9 +23,9 @@ html lang="en-US" prefix="og: http://ogp.me/ns# fb: http://ogp.me/ns/fb#"
     /link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Slabo+27px:400&amp;lang=en" 
     = custom_google_fonts(@company)
     = stylesheet_link_tag( \
-        custom_stylesheet?(@company) ? "custom/wrappers/#{@company.subdomain}" : 'application',
+        custom_stylesheet?(@company, 'application') ? "custom/#{@company.subdomain}/app" : 'application',
         'data-turbo-track' => 'reload')
-    - unless ['companies', 'stories', 'profile', 'contributions'].include?(controller_name)
+    /- unless ['companies', 'stories', 'profile', 'contributions'].include?(controller_name)
       = stylesheet_link_tag('mvpready-landing', media: 'all', 'data-turbo-track' => 'reload')
     = favicon_link_tag('favicon.ico')
 
@@ -35,7 +35,7 @@ html lang="en-US" prefix="og: http://ogp.me/ns# fb: http://ogp.me/ns/fb#"
 
   / TODO: fixed navbar - leave padding as below (false is temp. blocker)
   body {
-    class="#{controller_name} #{action_name} #{@company&.subdomain}"
+    class="#{@company.subdomain} #{controller_name} #{action_name}"
     style="#{@is_social_share_redirect ? 'visibility:hidden;' : ''} \
       #{admin_navbar?(controller_name) && false ? 'padding-top:65px;' : ''}"
     data-current-user="#{current_user.to_json(only: [:id], methods: [:full_name])}" }

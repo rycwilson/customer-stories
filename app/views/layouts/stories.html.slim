@@ -22,7 +22,7 @@ html lang="en-US" prefix="og: http://ogp.me/ns# fb: http://ogp.me/ns/fb#"
     link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700"
     = custom_google_fonts(@company)
     = stylesheet_link_tag( \
-        custom_stylesheet?(@company) ? "custom/stories_wrappers/#{@company.subdomain}" : 'stories')
+        custom_stylesheet?(@company, 'stories') ? "custom/#{@company.subdomain}/stories" : 'stories')
     = favicon_link_tag('favicon.ico')
 
   body class="#{@company.subdomain} stories #{action_name}" style=('visibility:hidden' if @is_social_share_redirect)
