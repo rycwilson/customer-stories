@@ -1,0 +1,21 @@
+@import 'summernote/src/styles/bs3/summernote-bs3';
+
+@font-face {
+  font-family: 'summernote';
+  font-style: normal;
+  font-weight: 400;
+  font-display: auto;
+  src: asset-url('summernote/dist/font/summernote.woff2') format('woff2'), 
+       asset-url('summernote/dist/font/summernote.woff') format('woff'), 
+       asset-url('summernote/dist/font/summernote.ttf') format('truetype');
+}
+
+.note-editor {
+  &.note-frame {
+    border: 1px solid $input-border;
+  }
+
+  &.panel-default > .panel-heading {
+    background-color: $medium-gray;
+  }
+}

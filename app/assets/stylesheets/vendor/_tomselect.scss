@@ -1,3 +1,5 @@
+@import 'tom-select.bootstrap4.css';
+
 select.tomselected + .ts-wrapper,
 input.tomselected + .ts-wrapper {
   &:not(.has-items):not(.invitation-template-inline-select) {

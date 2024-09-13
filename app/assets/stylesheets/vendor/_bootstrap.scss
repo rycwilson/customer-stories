@@ -1,3 +1,20 @@
+@import 'bootstrap-switch/dist/css/bootstrap3/bootstrap-switch';
+// @import 'bootstrap-daterangepicker/daterangepicker';
+
+.bootstrap-switch {
+  .bootstrap-switch-handle-on.bootstrap-switch-primary {
+    background: $status-on-color;
+  }
+  
+  &.bootstrap-switch-disabled {
+    cursor: not-allowed !important;
+
+    .bootstrap-switch-container {
+      pointer-events: none;
+    }
+  }
+}
+
 table {
   background-color: #fff;
 }

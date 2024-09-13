@@ -1,15 +1,18 @@
 @import 'base/variables';
+
 @import 'bootstrap-sprockets';
 @import 'bootstrap';
 @import 'bootstrap-jasny/scss/jasny-bootstrap';
 @import 'font-awesome';
+
 @import 'base/mixins';
 @import 'base/globals';
 @import 'base/layout';
-@import 'vendor/vendor';
 
-// TODO why do we need this?
-@import 'base/mvp_holdovers';
+@import 'vendor/bootstrap';
+@import 'vendor/datatables';
+@import 'vendor/tomselect';
+@import 'vendor/summernote';
 
 @import 'views/site';
 @import 'views/navbars/navbars';

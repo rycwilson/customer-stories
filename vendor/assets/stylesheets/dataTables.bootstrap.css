@@ -1,3 +1,7 @@
+/* 
+ * This file is a copy of node_modules/datatables.net-bs/css/dataTables.bootstrap.css with changes to allow for sass compilation
+ * https://stackoverflow.com/questions/71805735/error-function-rgb-is-missing-argument-green-in-sass#answer-74262232 
+ */
 @charset "UTF-8";
 :root {
   --dt-row-selected: 0, 136, 204;

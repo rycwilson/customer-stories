@@ -25,11 +25,11 @@ body.plugin-demo {
   // => https://github.com/sass/sass/issues/1251
   //@import './font_awesome';
 
-  @import 'bootstrap-plugins'; 
+  @import './bootstrap'; 
   @import 'bootstrap-horizon/src/bootstrap-horizon';
-  @import '../../base/globals';
+  @import 'base/globals';
   @import 'overlays/main';
-  @import '../stories/show/show';
+  @import 'views/stories/show/show';
 
   // these are copied from bootstrap source: _grid.scss
   .cs-container, .cs-container-fluid {

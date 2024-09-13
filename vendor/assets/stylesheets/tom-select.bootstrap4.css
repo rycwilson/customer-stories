@@ -1,12 +1,11 @@
-/**
- * This file was copied from /node_modules/tom-select/dist/css/
- * with changes per: https://github.com/sass/sass/issues/2849#issuecomment-820538086
+/*
+ * This file was copied from node_modules/tom-select/dist/css/tom-select.bootstrap4.css
+ * Changed min/max functions to Min/Max per https://github.com/sass/sass/issues/2849#issuecomment-820538086
  */  
 
-/**
+/*
  * Tom Select bootstrap 4
- */
-/**
+ *
  * tom-select.css (v2.2.2)
  * Copyright (c) contributors
  *
@@ -20,7 +19,7 @@
  * governing permissions and limitations under the License.
  *
  */
- :root {
+:root {
   --ts-pr-clear-button:	0;
   --ts-pr-caret:	0;
   --ts-pr-min:	.75rem;

@@ -1,3 +1,16 @@
+// The datatables stylesheet has some modern css that throws sass for a loop
+// (https://stackoverflow.com/questions/71805735/error-function-rgb-is-missing-argument-green-in-sass#answer-74262232),
+// so need to import the file without processing (i.e. include .css extension).
+// (https://stackoverflow.com/questions/7111610/import-regular-css-file-in-scss-file)
+// BUT this doesn't work because ruby sass doesn't support @import'ing with the .css extension.
+// @import 'datatables.net-bs/css/dataTables.bootstrap.css';
+// This works, but the file is still processed by sass
+// @import url(asset-url('datatables.net-bs/css/dataTables.bootstrap.css'));
+// ...so import a copy of the file with necessary changes for sass processing: 
+@import 'dataTables.bootstrap';   // see vendor/assets/stylesheets
+
+// @import 'RowGroup-1.0.0/css/rowGroup.bootstrap';
+
 table thead tr th,  
 table tfoot tr th {
   font-weight: 400;
