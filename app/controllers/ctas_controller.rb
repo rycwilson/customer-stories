@@ -11,6 +11,8 @@ class CtasController < ApplicationController
 
   def create
     @company = Company.find(params[:company_id])
+
+    # update_company allows for an atomic update of a company's primary cta, can be re-used here
     update_company(@company, cta_params)
     respond_to do |format|
       format.turbo_stream do 
