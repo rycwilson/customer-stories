@@ -1,9 +1,8 @@
 $company-logo-max-height: 40px;
 
-@import '../../views/stories/main';
+@import 'views/stories/main';
 
-.company-header--compas {
-  @extend .company-header;
+.company-header.company-header--compas {
   opacity: 0.9;
 
   .navbar-container {
@@ -30,7 +29,6 @@ $company-logo-max-height: 40px;
   }
 }
 
-.stories-header--compas {
-  @extend .stories-header;
+.stories-header.stories-header--compas {
   box-shadow: none;
 }

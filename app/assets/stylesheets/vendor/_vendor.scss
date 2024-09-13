@@ -10,7 +10,17 @@
 
 @import 'bootstrap-switch/dist/css/bootstrap3/bootstrap-switch';
 // @import 'bootstrap-daterangepicker/daterangepicker';
-@import 'summernote';
+
+@import 'summernote/src/styles/bs3/summernote-bs3';
+@font-face {
+  font-family: "summernote";
+  font-style: normal;
+  font-weight: 400;
+  font-display: auto;
+  src: asset-url('summernote/dist/font/summernote.woff2') format('woff2'), 
+       asset-url('summernote/dist/font/summernote.woff') format('woff'), 
+       asset-url('summernote/dist/font/summernote.ttf') format('truetype');
+}
 
 // csp overrides
 @import 'bootstrap';

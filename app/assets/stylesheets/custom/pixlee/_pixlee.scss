@@ -90,7 +90,6 @@ body.pixlee {
 }
 
 // specify .cs-plugin for specificity
-.story-card--pixlee {
-  @extend .story-card;
+.story-card.story-card--pixlee {
   @include pixlee-story-card;
 }

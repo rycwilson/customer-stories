@@ -56,7 +56,6 @@ gem 'sassc-rails', '>= 2.1.0'
 
 gem 'slim-rails', '~> 3.0'
 # gem 'sprockets', '~> 4.0'
-gem 'summernote-rails'
 # gem 'turbolinks'
 gem 'turbo-rails', '~> 1.3'
 gem 'stimulus-rails', '~> 1.2'

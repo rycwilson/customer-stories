@@ -1,14 +1,12 @@
 @import 'pixlee';
-@import '../../views/stories/main';
+@import 'views/stories/main';
 @import 'story';
 
-.company-header--pixlee {
-  @extend .company-header;
+.company-header.company-header--pixlee {
   border-bottom: 1px solid $border-color;
 }
 
-.stories-header--pixlee {
-  @extend .stories-header;
+.stories-header.stories-header--pixlee {
   @include stories-header-title;
 
   box-shadow: 0 0;

@@ -1,3 +1,18 @@
-
-@import '../../views/plugins/main';
 @import 'trunity';
+@import 'views/plugins/main';
+
+#cs-tabbed-carousel,
+.cs-tabbed-carousel {
+  .cs-header {
+    background-color: $trunity-orange;
+    color: white;
+
+    img {
+      @include svg-fill(white);
+    }
+  }
+
+  .cs-drawer-content {
+    border-top-color: $trunity-orange; 
+  }
+}

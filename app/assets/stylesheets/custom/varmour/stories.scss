@@ -1,14 +1,12 @@
 @import 'varmour';
-@import '../../views/stories/main';
+@import 'views/stories/main';
 @import 'story';
 
 body.index {
   background-color: #fafcfd;
 }
 
-.company-header--varmour {
-  @extend .company-header;
-
+.company-header.company-header--varmour {
   a.primary-cta {
     font-size: 12px;
     background-color: #fc6621 !important;
@@ -32,9 +30,7 @@ body.index {
   }
 }
 
-.stories-header--varmour {
-  @extend .stories-header;
-
+.stories-header.stories-header--varmour {
   box-shadow: 0 9px 22px -6px rgba(0, 0, 0, 0.07);
   // background-color: #21597a;
   // background: asset-url('companies/varmour/header-background.png');

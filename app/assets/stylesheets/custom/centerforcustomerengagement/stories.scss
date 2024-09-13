@@ -1,8 +1,6 @@
-@import '../../views/stories/main';
+@import 'views/stories/main';
 
-.company-header--centerforcustomerengagement {
-  @extend .company-header;
-
+.company-header.company-header--centerforcustomerengagement {
   a.primary-cta {
     border-radius: 2px;
     text-transform: uppercase;
