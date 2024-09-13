@@ -25,6 +25,6 @@ Rails.application.config.assets.precompile += %w(
 
 # custom stylesheets
 Dir.glob("#{Rails.root.join('app', 'assets', 'stylesheets', 'custom')}/**/*.css") do |file_path|
-  company_subdomain = file_path.match(/custom\/(?<company>[a-z0-9-]+)\//)['company']
+  company_subdomain = file_path.match(/custom\/(?<subd>[a-z0-9-]+)\//)['subd']
   Rails.application.config.assets.precompile << "custom/#{company_subdomain}/#{File.basename(file_path)}"
 end
