@@ -1,8 +1,4 @@
 /*
- *  Since the app does not have bootstrap4 installed, can't @import the tom-select bootstrap4.scss due to missing variables
- *  => import the css here instead
- *  => NOTE this file was modified to change min/max functions to Min/Max, as per: https://github.com/sass/sass/issues/2849#issuecomment-820538086
  *= require vendor/tom-select.bootstrap4.css
- *
- *= require ./stories
+ *= require ./stories_main
  */

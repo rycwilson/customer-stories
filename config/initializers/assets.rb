@@ -22,3 +22,9 @@ Rails.application.config.assets.precompile += %w(
   jquery-textfill/source/jquery.textfill.js
   plugins/cs_overlays.js
 )
+
+# custom stylesheets
+Dir.glob("#{Rails.root.join('app', 'assets', 'stylesheets', 'custom')}/**/*.css") do |file_path|
+  company_subdomain = file_path.match(/custom\/(?<company>[a-z0-9-]+)\//)['company']
+  Rails.application.config.assets.precompile << "custom/#{company_subdomain}/#{File.basename(file_path)}"
+end

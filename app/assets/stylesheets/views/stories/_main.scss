@@ -1,4 +1,4 @@
-@import '../../base/variables';
+@import 'base/variables';
 @import 'bootstrap-sprockets';
 
 // Pick and choose bootstrap components by overriding [path to bootstrap-sass]/assets/stylesheets/_bootstrap.scss ...
@@ -55,8 +55,8 @@
 
 // Customer Stories styles
 // @import 'font-awesome';
-@import '../../base/mixins';
-@import '../../base/globals';
+@import 'base/mixins';
+@import 'base/globals';
 
 @import 'vendor/tomselect';
 
