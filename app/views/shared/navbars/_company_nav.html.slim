@@ -64,7 +64,9 @@ nav#company-nav class="#{'unregistered' unless company&.persisted?}"
               i.fa.fa-fw.fa-gear style="margin-right: 0.2em"
               i.fa.fa-caret-down
             ul.dropdown-menu.dropdown-menu-right role="menu"
-              / <li role="separator" class="divider"></li>
+              li.dropdown-header 
+                = company.name
+              li.divider role="separator"
               li
                 a href="/settings#contributor-invitations"
                   i.fa.fa-fw.fa-envelope-o
