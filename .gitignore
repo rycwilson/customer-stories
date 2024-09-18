@@ -38,6 +38,8 @@
 # compiled assets are served from aws cloudfront/s3, so only need to track the manifest
 /public/assets/**
 !/public/assets/.sprockets-manifest-*
+/dev-assets/**
+!/dev-assets/.sprockets-manifest-*
 
 
 /app/assets/builds/*
