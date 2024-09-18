@@ -111,15 +111,15 @@
 
       &:hover, 
       &:focus { 
-        background-color: #0082cc;
-        border-color: #0082cc;
+        background-color: $nav-blue-hover;
+        border-color: $nav-blue-hover;
       }
 
       &:focus {
         transition: none;
         outline-style: solid;
         outline-width: medium;
-        outline-color: #0082cc;
+        outline-color: $nav-blue-hover;
       }
 
       img {

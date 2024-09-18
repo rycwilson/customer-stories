@@ -3,6 +3,7 @@
 @import 'bootstrap-sprockets';
 @import 'bootstrap';
 @import 'bootstrap-jasny/scss/jasny-bootstrap';
+
 @import 'font-awesome';
 
 @import 'base/mixins';
@@ -18,11 +19,9 @@
 @import 'views/navbars/navbars';
 @import 'views/modals/modals';
 @import 'views/companies/companies';
-
 @import 'views/stories/index/search_and_filters';
 @import 'views/stories/shared/gallery';
 @import 'views/stories/edit/edit';
-
 @import 'views/contributions/contributions';
 @import 'views/profile/profile';
 

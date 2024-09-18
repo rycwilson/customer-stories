@@ -1,18 +1,39 @@
 @import 'pixlee';
+$stories-fg-color: #f8f9fd;
+
 @import 'views/stories/main';
 @import 'story';
 
-.company-header.company-header--pixlee {
+.company-header.company-header--pixlee,
+.stories-header.stories-header--pixlee {
   border-bottom: 1px solid $border-color;
 }
 
 .stories-header.stories-header--pixlee {
-  @include stories-header-title;
-
+  @include stories-heading;
   box-shadow: 0 0;
-  border-bottom: 1px solid $border-color;
 
   &.show:after {
     background-image: linear-gradient(to bottom, $stories-bg-color 0%, #ffffff 100%);
   }
+}
+
+.search-and-filters.visible-md-block {
+  border: 1px solid $border-color;
+  background: $stories-fg-color;
+}
+
+.search-stories .input-group .input-group-btn button {
+  background-color: $pixlee-blue;
+  border-color: $pixlee-blue;
+
+  &:hover, 
+  &:focus {
+    background-color: $pixlee-blue-darkened;
+    border-color: $pixlee-blue;
+  }
+}
+
+.story-card.story-card--pixlee {
+  @include pixlee-story-card;
 }

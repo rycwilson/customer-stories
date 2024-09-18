@@ -1,11 +1,9 @@
-// @import 'vars_and_mixins';
 $pixlee-blue: #56ccf2;
 $pixlee-blue-darkened: #3db3d9;  // darkened 10%;
 $border-color: #f2f2f2;
 
 $stories-header-color: #f8f9fd;
-$stories-bg-color: #ffffff; // #f9f9f9;
-$stories-fg-color: #f8f9fd;  // #e4e4e4;
+$stories-bg-color: #ffffff;
 
 //@import url(https://fonts.googleapis.com/css?family=Muli);
 
@@ -27,7 +25,7 @@ $carousel-nav-size: 13px;
 
 $ts-active-option-background: $pixlee-blue;
 
-@mixin stories-header-title {
+@mixin stories-heading {
   h3 {
     font-weight: 600;
   }
@@ -39,6 +37,7 @@ $ts-active-option-background: $pixlee-blue;
       background-color: $stories-fg-color;
       filter: brightness(97%);
     }
+
     a:active {
       background-color: $stories-fg-color;
       filter: brightness(94%);
@@ -64,32 +63,6 @@ $ts-active-option-background: $pixlee-blue;
   }
 }
 
-body.pixlee {
-  // TODO in addition to this, change the input focus color?
-  .search-stories .input-group .input-group-btn button {
-    background-color: $pixlee-blue;
-    border-color: $pixlee-blue;
-
-    &:hover, &:focus {
-      background-color: $pixlee-blue-darkened;
-      border-color: $pixlee-blue;
-    }
-  }
-
-  .search-and-filters.visible-md-block {
-    border: 1px solid $border-color;
-  }
-
-  .company-logo-upload__stories-header {
-    @include stories-header-title;
-  }
-
-  .share-buttons {
-    display: none;
-  }
-}
-
-// specify .cs-plugin for specificity
-.story-card.story-card--pixlee {
-  @include pixlee-story-card;
+.share-buttons {
+  display: none;
 }

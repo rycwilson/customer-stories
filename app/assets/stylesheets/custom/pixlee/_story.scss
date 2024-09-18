@@ -1,6 +1,7 @@
 @import 'pixlee';
-
-body.pixlee.stories.show, 
+$stories-fg-color: #f8f9fd;
+  
+.pixlee.stories.show, 
 .cs-plugin .cs-overlay-container {
   
   &.cs-overlay-container {
@@ -47,12 +48,14 @@ body.pixlee.stories.show,
     height: 200px;
     background: asset-url('companies/pixlee/webinar-hero.webp') center / cover no-repeat;
   }
+
   .cta__wrapper {
     height: 200px;
     position: relative;
     background: linear-gradient(135deg, #81429f 25%, #3586c6 100%);
     overflow: hidden;
     margin-bottom: 25px;
+    
     .cta__text {
       position: absolute;
       top: 0;
@@ -60,6 +63,7 @@ body.pixlee.stories.show,
       height: 115px;
       width: 100%;
       z-index: 100;
+
       > div {
         position: absolute;
         width: 80%;
@@ -68,9 +72,11 @@ body.pixlee.stories.show,
         transform: translate(-50%, -50%);
         display: flex;
         align-items: center;
+
         img {
           height: 45px;
         }
+
         span {
           color: #fff !important;
           padding-left: 15px;
@@ -80,6 +86,7 @@ body.pixlee.stories.show,
         }
       }
     }
+
     .cta__button {
       position: absolute;
       background: transparent;
@@ -87,15 +94,18 @@ body.pixlee.stories.show,
       bottom: 0;
       height: 125px;
       width: 100%;
+
       > div {
         position: absolute;
         top: 50%;
         left: 50%;
         transform: translate(-50%, -50%);
+        
         .primary-cta {
           position: relative;
           display: inline-block;
           cursor: pointer;
+
           a {
             background-color: $pixlee-blue;
             text-decoration: none;
@@ -104,12 +114,14 @@ body.pixlee.stories.show,
             border-radius: 0;
             transition: filter 0.25s ease;
             // box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.15), 0 1px 1px rgba(0, 0, 0, 0.075);  // copied from mvp
+
             // display text is rendered (but not shown thanks to opacity) in this span
             // in order to establish button dimensions
             span {
               opacity: 0;
             }
           }
+
           > div:last-child {
             pointer-events: none;
             padding-bottom: 2px;
@@ -118,6 +130,7 @@ body.pixlee.stories.show,
             left: 50%;
             transform: translate(-50%, -50%);
             white-space: nowrap;  // ensure button expands with text
+
             span {
               color: #fff !important;
               font-weight: 700 !important;
@@ -130,6 +143,7 @@ body.pixlee.stories.show,
             a {
               transition: filter 0.25s ease;
               filter: brightness(90%);
+
               &:active {
                 outline: none;  // get rid of the box shadow on click
                 box-shadow: 0 0;
@@ -142,6 +156,7 @@ body.pixlee.stories.show,
 
       }
     }
+
     .cta__topography {
       background: asset-url('companies/pixlee/topography.webp') center / cover repeat transparent;
       display: block;
@@ -152,36 +167,46 @@ body.pixlee.stories.show,
     }
   }
 
-  .story-content, .cs-story-content {
+  .story-content, 
+  .cs-story-content {
     background-color: $stories-bg-color;
-    .section-title h4 {
-    }
+    // .section-title h4 {
+    // }
+    
     section {
       border: none;
     }
+    
     section:not(.narrative) {
       background-color: $stories-fg-color;
       // border: 1px solid $border-color;
+
       @media only screen and (max-width: 767px) {
         background-color: #fff;
       }
     }
+    
     .narrative {
       padding: 5px 20px 0 0;
       border: none;
+
       @media only screen and (max-width: 767px) {
         padding: 0
       }
     }
+    
     .related-stories ul {
       background-color: $stories-fg-color;
       border: none;
+
       @media only screen and (max-width: 767px) {
         background-color: #fff;
       }
     }
-    .story-contributors {
-    }
+    
+    // .story-contributors {
+    // }
+    
     &.story-content {
       .narrative {
         .story-title h3 {
@@ -214,37 +239,37 @@ body.pixlee.stories.show,
     }
   }
 
-  @media only screen and (min-width: 768px) {
-    .testimonial .hidden-xs {
-      .customer-logo {
-      }
-      .customer-quote {
-      }
-    }
-    .story-content {
-    }
-  }
+  // @media only screen and (min-width: 768px) {
+  //   .testimonial .hidden-xs {
+  //     .customer-logo {
+  //     }
+  //     .customer-quote {
+  //     }
+  //   }
+  //   .story-content {
+  //   }
+  // }
 
-  @media only screen and (min-width: 992px) {
-    .testimonial .hidden-xs {
-      .customer-logo {
-      }
-      .customer-quote {
-      }
-    }
-    .story-content {
-    }
-  }
+  // @media only screen and (min-width: 992px) {
+  //   .testimonial .hidden-xs {
+  //     .customer-logo {
+  //     }
+  //     .customer-quote {
+  //     }
+  //   }
+  //   .story-content {
+  //   }
+  // }
 
-  @media only screen and (min-width: 1200px) {
-    .testimonial .hidden-xs {
-      .customer-logo {
-      }
-      .customer-quote {
-      }
-    }
-    .story-content {
-    }
-  }
+  // @media only screen and (min-width: 1200px) {
+  //   .testimonial .hidden-xs {
+  //     .customer-logo {
+  //     }
+  //     .customer-quote {
+  //     }
+  //   }
+  //   .story-content {
+  //   }
+  // }
 
 }
