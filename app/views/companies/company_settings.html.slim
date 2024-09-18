@@ -18,6 +18,16 @@
 
           li role="presentation"
             a {
+              href="#customers-panel"
+              class=('disabled-tab' if @company.new_record?)
+              role="tab"
+              data-toggle="tab"
+              data-company-settings-target="tab" }
+              i.fa.fa-fw.fa-handshake-o
+              |&nbsp;Customers
+
+          li role="presentation"
+            a {
               href="#contributor-invitations-panel" 
               class=('disabled-tab' if @company.new_record?)
               role="tab"
@@ -74,6 +84,7 @@
     .col-sm-8.col-lg-9.layout-main
       .tab-content
 
+
         #account-panel.tab-pane.fade role="tabpanel"
           = render( \
               'companies/settings/company_profile', 
@@ -81,6 +92,9 @@
 
         - unless action_name == 'new'
 
+          #customers-panel.tab-pane.fade role="tabpanel"
+            = render('customers', company: @company)
+            
           #contributor-invitations-panel.tab-pane.fade role="tabpanel"
             = render( \
                 'companies/settings/invitation_templates',
