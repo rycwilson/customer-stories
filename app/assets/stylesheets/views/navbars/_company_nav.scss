@@ -1,15 +1,37 @@
-// $workflow-tab-width: 98;
-$dropdowns-tab-width: 64;
-
-@mixin nav-tab-border {
-  border: {
-    width: 2px 0 2px 0;
-    style: solid;
-    color: transparent;
-  }
-}
-
 #company-nav {
+  @mixin nav-tab-border {
+    > a, 
+    > a:hover, 
+    > a:focus {
+      border: {
+        width: 2px 0 2px 0;
+        style: solid;
+        color: transparent;
+      }
+    }
+  }
+  
+  @mixin nav-tab-color {
+    > a {
+      color: #666;
+    }
+    
+    > a:hover, 
+    > a:focus,
+    &.open:not(.active) > a {
+      color: #222;
+    }
+  }
+  
+  @mixin active-tab {
+    > a, 
+    > a:hover, 
+    > a:focus {
+      color: $nav-blue; 
+      border-bottom-color: $nav-blue;
+    }
+  }
+  
   margin-bottom: 40px;
   background-color: #fff;
   border-bottom: 1px solid #dfdfdf;
@@ -18,6 +40,18 @@ $dropdowns-tab-width: 64;
     .nav-workflow {
       pointer-events: none;
       opacity: 0.5;
+    }
+  }
+
+  .nav-tabs > li {
+    &,
+    &.dropdown {
+      @include nav-tab-border;
+      @include nav-tab-color;
+    }
+
+    &.active {
+      @include active-tab;
     }
   }
 }
@@ -41,88 +75,51 @@ $dropdowns-tab-width: 64;
   }
 
   > li {
-    // @include tab-arrows($workflow-tab-width);
     margin-bottom: 0;
 
     > a {
-      @include nav-tab-border;
       display: inline-block;
-      background-color: #fff;
       font-family: 'Lato';
-      color: #666;
       font-weight: 400;
-
-      &:hover, 
-      &:focus {
-        @include nav-tab-border;
-        background-color: #fff;
-        color: #222;
-      }
-
-      ~ i {
-        font-size: 0.85em;
-        color: $nav-blue;
-      }
-
-      ~ span {
-        font-size: $font-size-base;
-      }
-
-      ~ i,
-      ~ span {
-        margin-right: 1em
-      }
     }
 
     &.active {
-      > a, 
-      > a:hover, 
-      > a:focus {
-        @include nav-tab-border;
-        border-bottom-color: $nav-blue; // #0095ff; //#d74b4b;  // #4885ed;
-        font-weight: bold;
-        color: $nav-blue; // #0095ff; // #d74b4b;  // #4885ed;
-      }
+      font-weight: bold;
     }
   }
 }
 
 .nav-tabs.nav-settings {
+  @mixin tab-arrows($width) {
+    > div {
+      visibility: hidden;
+      position: absolute; 
+      bottom: -6px; 
+      width: 0;
+      height: 0;
+      border-top: 6px solid $nav-blue;
+      border-left: ($width / 2 + 0px) solid transparent; 
+      border-right: ($width / 2 + 0px) solid transparent; 
+    }
+    &.active > div {
+      // visibility: visible;  // temporarily hidden
+    }
+  }
+  
   border: 0;
 
   li.dropdown {
-    @include tab-arrows($dropdowns-tab-width);  
+    @include tab-arrows(64);  
 
     > a {
-      @include nav-tab-border;
       font-size: 16px;
+    }
 
-      &:hover, 
-      &:focus {
-        @include nav-tab-border;
-        color: #222;
-        background-color: transparent;
-      }
-    }
-    &.active {
-      > a, 
-      > a:hover, 
-      > a:focus {
-        @include nav-tab-border;
-        color: $nav-blue; 
-        border-bottom-color: $nav-blue;
-      }
-    }
-    &.open:not(.active) {
-      > a {
-        background-color: #fff;  // this prevents background color flicker when closing the dropdown
-        color: #222;
-      }
+    // &.open:not(.active) {
       // remove the caret from dropdown
       // .dropdown-menu::after, .dropdown-menu::before {
       //   display:none;
       // }
-    }
+    // }
   }
-} 
-
+}
