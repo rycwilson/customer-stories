@@ -10,13 +10,13 @@
   .row
     .col-sm-4.col-lg-3.layout-sidebar
 
-      ul.nav
+      ul.nav data-controller="nav-list" role="tablist"
         li.active
-          a href="#profile-tab" data-toggle="tab"
+          a href="#profile-tab" data-toggle="tab" data-nav-list-target="tab"
             i.fa.fa-fw.fa-user
             | &nbsp;&nbsp;Profile
         li
-          a href="#password-tab" data-toggle="tab"
+          a href="#password-tab" data-toggle="tab" data-nav-list-target="tab"
             i.fa.fa-fw.fa-lock
             | &nbsp;&nbsp;Change Password
 
@@ -41,7 +41,7 @@
                       
     .col-sm-8.col-lg-9.layout-main
       .tab-content
-        #profile-tab.tab-pane.fade.in.active
+        #profile-tab.tab-pane.in.active
           = render('profile/user_profile', { user: @user, s3_direct_post: @s3_direct_post })
-        #password-tab.tab-pane.fade
+        #password-tab.tab-pane
           = render('profile/change_password', { user: @user })

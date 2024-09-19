@@ -1,4 +1,4 @@
-#prospect.tab-pane.fade {
+#prospect.tab-pane {
   class=('active in' if workflow_stage == 'prospect')
   data-dashboard-target="tabPanel"
   data-action="resource:loading->dashboard#onResourceLoading resource:ready->dashboard#onResourceReady"
@@ -41,7 +41,7 @@
       .col-sm-8.col-lg-9.layout-main
         .tab-content
         
-          #customer-wins.resource-ctrl.tab-pane.fade {
+          #customer-wins.resource-ctrl.tab-pane {
             class=('active in' if active_tab == '#customer-wins') 
             data-dashboard-target="customerWins"
             data-controller="resource"
@@ -56,7 +56,7 @@
 
             = render('companies/1_prospect/successes/successes_table', { company: })
 
-          #contributors.resource-ctrl.tab-pane.fade {
+          #contributors.resource-ctrl.tab-pane {
             class=('active in' if active_tab == '#contributors')
             data-dashboard-target="contributors"
             data-controller="resource"

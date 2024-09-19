@@ -70,13 +70,13 @@
         .col-sm-8.col-md-9.layout-main
           .tab-content
 
-            #story-narrative-content.tab-pane.fade {
+            #story-narrative-content.tab-pane {
               class=('active in' if @active_tab == '#story-narrative-content')
               aria-labelledby="story-narrative-content-tab"
               role="tabpanel" }
               = render('/stories/edit/narrative_content', { company: @company, story: @story })
               
-            #story-supporting-content.tab-pane.fade {
+            #story-supporting-content.tab-pane {
               class=('active in' if @active_tab == '#story-supporting-content')
               aria-labelledby="story-supporting-content-tab"
               role="tabpanel" }
@@ -84,7 +84,7 @@
               
             / Note this resource controller is NOT tagged with .resource-ctrl,
             / as it is only a subset of contributions
-            #story-contributors.tab-pane.fade {
+            #story-contributors.tab-pane {
               class=('active in' if @active_tab == '#story-contributors') 
               data-controller="resource"
               data-story-target="contributors"
@@ -103,7 +103,7 @@
                 'companies/1_prospect/contributors/contributors_table',
                 { company: @company, story: @story })
 
-            #story-settings.tab-pane.fade {
+            #story-settings.tab-pane {
               class=('active in' if @active_tab == '#story-settings')
               aria-labelledby="story-settings-tab"
               role="tabpanel" }

@@ -1,4 +1,4 @@
-#promote.tab-pane.fade  {
+#promote.tab-pane {
   class=('active in' if workflow_stage == 'promote')
   data-dashboard-target="tabPanel"
   data-action="resource:loading->dashboard#onResourceLoading resource:ready->dashboard#onResourceReady"
@@ -46,7 +46,7 @@
       .layout-main.col-sm-8.col-lg-9
         .tab-content
         
-          #promoted-stories.resource-ctrl.tab-pane.fade {
+          #promoted-stories.resource-ctrl.tab-pane {
             class=('active in' if active_tab == '#promoted-stories')
             data-dashboard-target="promotedStories"
             data-controller="resource"
@@ -59,7 +59,7 @@
 
             = render('companies/3_promote/promoted_stories_table', { company: })
 
-          #promote-settings.tab-pane.fade {
+          #promote-settings.tab-pane {
             class=('active in' if active_tab == '#promote-settings')
             data-controller="ads" }
             = render('companies/3_promote/gads_form', { company: })

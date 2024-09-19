@@ -1,4 +1,4 @@
-#measure.tab-pane.fade {
+#measure.tab-pane {
   class=('active in' if workflow_stage == 'measure')
   data-dashboard-target="tabPanel"
   data-action="resource:loading->dashboard#onResourceLoading resource:ready->dashboard#onResourceReady"
@@ -46,7 +46,7 @@
           / data-resource-resource-outlet=".resource-ctrl:not(#story-visitors)"
           / data-resource-data-path-value="/successes"
           / data-resource-name="storyVisitors"
-          #story-visitors.tab-pane.fade {
+          #story-visitors.tab-pane {
             class=('active in' if active_tab == '#story-visitors') 
             data-dashboard-target="storyVisitors"
             data-resource-checkbox-filters-value={ \
@@ -64,7 +64,7 @@
           /   'show-completed': { checked: true, label: 'Contributors with a completed Contribution' },
           /   'show-published': { checked: true, label: 'Contributors to published Customer Stories' } }.to_json
           / data-resource-name="contributions"
-          #recent-activity.tab-pane.fade {
+          #recent-activity.tab-pane {
             class=('active in' if active_tab == '#recent-activity')
             data-dashboard-target="recentActivity"
             aria-labelledby="recent-activity"

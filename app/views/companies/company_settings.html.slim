@@ -94,29 +94,29 @@
       .tab-content
 
 
-        #account-panel.tab-pane.fade role="tabpanel"
+        #account-panel.tab-pane role="tabpanel"
           = render( \
               'companies/settings/company_profile', 
               { company: @company, s3_direct_post: @s3_direct_post })
 
         - unless action_name == 'new'
 
-          #customers-panel.tab-pane.fade role="tabpanel"
+          #customers-panel.tab-pane role="tabpanel"
             = render('customers', company: @company)
             
-          #contributor-invitations-panel.tab-pane.fade role="tabpanel"
+          #contributor-invitations-panel.tab-pane role="tabpanel"
             = render( \
                 'companies/settings/invitation_templates',
                 { company: @company, templates_select: @templates_select })
 
-          #contributor-prompts-panel.tab-pane.fade role="tabpanel"
+          #contributor-prompts-panel.tab-pane role="tabpanel"
             = render('companies/settings/contributor_questions', { company: @company })
           
-          #website-plugin-panel.tab-pane.fade role="tabpanel"
+          #website-plugin-panel.tab-pane role="tabpanel"
             = render('plugins/config', { company: @company })
 
-          #cta-links-forms-panel.tab-pane.fade role="tabpanel"
+          #cta-links-forms-panel.tab-pane role="tabpanel"
             = render('ctas', company: @company)
 
-          #story-tags-panel.tab-pane.fade role="tabpanel"
+          #story-tags-panel.tab-pane role="tabpanel"
             = render('companies/settings/story_tags', { company: @company })
