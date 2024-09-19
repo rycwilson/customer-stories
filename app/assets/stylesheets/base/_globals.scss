@@ -29,12 +29,9 @@ body {
   position: relative;
 }
 
-a {
-  color: #07c;  // #3367d6;
-  &:hover, &:active {
-    color: #3af;
-    text-decoration: none;
-  }
+// see nav_list_controller.ts
+.nav > li > a.transition {
+  transition: color .15s ease-in-out, background-color .15s ease-in-out;
 }
 
 label {

@@ -10,13 +10,13 @@
     .row
 
       .layout-sidebar.col-sm-4.col-lg-3
-        ul.nav
+        ul.nav data-controller="nav-list"
           li class=('active' if active_tab == '#promoted-stories')
-            a href="#promoted-stories" data-toggle="tab" data-action="dashboard#setNavCookie"
+            a href="#promoted-stories" data-toggle="tab" data-action="dashboard#setNavCookie" data-nav-list-target="tab"
               i.fa.fa-fw.fa-bullhorn
               |&nbsp;Promoted Stories
           li class=('active' if active_tab == '#promote-settings')
-            a href="#promote-settings" data-toggle="tab" data-action="dashboard#setNavCookie"
+            a href="#promote-settings" data-toggle="tab" data-action="dashboard#setNavCookie" data-nav-list-target="tab"
               i.fa.fa-fw.fa-gear
               |&nbsp;Settings
         - if current_user.admin?

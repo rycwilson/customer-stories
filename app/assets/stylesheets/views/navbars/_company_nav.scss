@@ -47,7 +47,10 @@
     &,
     &.dropdown {
       @include nav-tab-border;
-      @include nav-tab-color;
+
+      &:not(.active) {
+        @include nav-tab-color;
+      }
     }
 
     &.active {
@@ -105,7 +108,7 @@
       // visibility: visible;  // temporarily hidden
     }
   }
-  
+
   border: 0;
 
   li.dropdown {

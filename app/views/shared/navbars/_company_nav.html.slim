@@ -10,7 +10,7 @@ nav#company-nav.hidden-xs class="#{'unregistered' unless company&.persisted?}"
           = link_to('Register your Company', register_company_path)
         - else
           / https://stackoverflow.com/questions/556153
-          ul.nav.nav-tabs.nav-workflow role="tablist" data-turbo=('false' if is_dashboard)
+          ul.nav.nav-tabs.nav-workflow data-controller="nav-list" role="tablist" data-turbo=('false' if is_dashboard)
             - ['prospect', 'curate', 'story', 'promote', 'measure'].each do |tab_name|
               li {
                 class=('active' if workflow_stage == tab_name)
@@ -22,6 +22,7 @@ nav#company-nav.hidden-xs class="#{'unregistered' unless company&.persisted?}"
                   data-toggle=('tab' if is_dashboard) 
                   data-action=('dashboard#onTabClick' if is_dashboard)
                   data-dashboard-target=('tab' if is_dashboard)
+                  data-nav-list-target="tab"
                   aria-controls=((tab_name == 'story' ? 'curate' : tab_name) if is_dashboard)
                   aria-expanded=((workflow_stage == tab_name ? 'true' : 'false') if is_dashboard)
                   role=('tab' if is_dashboard) }
@@ -35,7 +36,10 @@ nav#company-nav.hidden-xs class="#{'unregistered' unless company&.persisted?}"
       .col-sm-4.col-md-3
         ul.nav.nav-tabs.nav-settings.pull-right role="tablist"
           li.dropdown.user-profile class="#{'active' if controller_name == 'profile'}"
-            a.dropdown-toggle data-toggle="dropdown" href="javascript:;"
+            a.dropdown-toggle {
+              data-toggle="dropdown" 
+              href="javascript:;" 
+              class=('transition' unless controller_name == 'profile') }
               i.fa.fa-fw.fa-user-circle-o style="margin-right: 0.2em"
               i.fa.fa-caret-down
 
@@ -60,7 +64,10 @@ nav#company-nav.hidden-xs class="#{'unregistered' unless company&.persisted?}"
             div
             
           li.dropdown.company-settings class="#{'active' if current_page?(controller: 'companies', action: 'edit')}"
-            a.dropdown-toggle data-toggle="dropdown" href="javascript:;"
+            a.dropdown-toggle {
+              data-toggle="dropdown" 
+              href="javascript:;" 
+              class=('transition' unless controller_name == 'companies') }
               i.fa.fa-fw.fa-gear style="margin-right: 0.2em"
               i.fa.fa-caret-down
             ul.dropdown-menu.dropdown-menu-right role="menu"

@@ -67,6 +67,9 @@ application.register('modal', ModalController);
 import ModalTriggerController from './modal_trigger_controller.js';
 application.register('modal-trigger', ModalTriggerController);
 
+import NavListController from './nav_list_controller.js';
+application.register('nav-list', NavListController);
+
 import NewCustomerWinController from './new_customer_win_controller.js';
 application.register('new-customer-win', NewCustomerWinController);
 

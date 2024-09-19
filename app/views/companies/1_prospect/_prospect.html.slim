@@ -9,13 +9,14 @@
   .container
     .row
       .col-sm-4.col-lg-3.layout-sidebar
-        ul.nav
+        ul.nav data-controller="nav-list" role="tablist"
           li class=('active' if active_tab == '#customer-wins')
             a {
               id="customer-wins-tab" 
               href="#customer-wins" 
               data-toggle="tab"
               data-dashboard-target="customerWinsTab"
+              data-nav-list-target="tab"
               data-action="dashboard#setNavCookie"
               aria-controls="customer-wins"
               aria-expanded="#{active_tab == '#customer-wins' ? 'true' : 'false'}"
@@ -29,6 +30,7 @@
               href="#contributors" 
               data-toggle="tab"
               data-dashboard-target="contributorsTab"
+              data-nav-list-target="tab"
               data-action="dashboard#setNavCookie"
               aria-controls="contributors"
               aria-expanded="#{active_tab == '#contributors' ? 'true' : 'false'}"

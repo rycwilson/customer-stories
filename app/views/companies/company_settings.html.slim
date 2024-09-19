@@ -13,7 +13,10 @@
     .col-sm-4.col-lg-3.layout-sidebar
       
       / no active tab set here; it will be set by the client based on page fragment identifier
-      ul.nav.nav--company class=('nav--new-company' if action_name == 'new')
+      ul.nav.nav--company {
+        class=('nav--new-company' if action_name == 'new')
+        data-controller="nav-list"
+        role="tablist" }
         - unless action_name == 'new'
 
           li role="presentation"
@@ -22,7 +25,8 @@
               class=('disabled-tab' if @company.new_record?)
               role="tab"
               data-toggle="tab"
-              data-company-settings-target="tab" }
+              data-company-settings-target="tab"
+              data-nav-list-target="tab" }
               i.fa.fa-fw.fa-handshake-o
               |&nbsp;Customers
 
@@ -32,7 +36,8 @@
               class=('disabled-tab' if @company.new_record?)
               role="tab"
               data-toggle="tab"
-              data-company-settings-target="tab" }
+              data-company-settings-target="tab"
+              data-nav-list-target="tab" }
               i.fa.fa-fw.fa-envelope-o
               |&nbsp;Contributor Invitations
           
@@ -42,7 +47,8 @@
               class=('disabled-tab' if @company.new_record?)
               role="tab"
               data-toggle="tab"
-              data-company-settings-target="tab" }
+              data-company-settings-target="tab"
+              data-nav-list-target="tab" }
               i.fa.fa-fw.fa-lightbulb-o
               |&nbsp;Contributor Prompts
 
@@ -52,7 +58,8 @@
               class=('disabled-tab' if @company.new_record?)
               role="tab"
               data-toggle="tab"
-              data-company-settings-target="tab" }
+              data-company-settings-target="tab"
+              data-nav-list-target="tab" }
               i.fa.fa-fw.fa-plug
               |&nbsp;Website Plugin
                 
@@ -62,7 +69,8 @@
               class=('disabled-tab' if @company.new_record?)
               role="tab"
               data-toggle="tab"
-              data-company-settings-target="tab" }
+              data-company-settings-target="tab"
+              data-nav-list-target="tab" }
               i.fa.fa-fw.fa-hand-pointer-o
               |&nbsp;CTA Links & Forms
 
@@ -72,7 +80,8 @@
               class=('disabled-tab' if @company.new_record?)
               role="tab"
               data-toggle="tab"
-              data-company-settings-target="tab" }
+              data-company-settings-target="tab"
+              data-nav-list-target="tab" }
               i.fa.fa-fw.fa-tags
               |&nbsp;Story Tags
         
