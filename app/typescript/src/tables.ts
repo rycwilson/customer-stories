@@ -15,7 +15,7 @@ export function initComplete(resourceCtrl: ResourceController, dt: DataTableApi<
     initDisplayOptions(resourceCtrl);
     window.setTimeout(() => {
       resourceCtrl.dt.one('draw', dispatchReadyEvent);
-      console.log('searching table', resourceCtrl.resourceName)
+      // console.log('searching table', resourceCtrl.resourceName)
       search(resourceCtrl);
     });
   }

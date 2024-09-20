@@ -67,7 +67,7 @@ export default class ResourceController extends Controller<HTMLDivElement> {
   initValueChanged(shouldInit: boolean) {
     if (shouldInit) {
       if (this.dataExists) {
-        console.log('init table (data exists): ', this.resourceName)
+        // console.log('init table (data exists): ', this.resourceName)
         initTable(this);
       } else {
         this.dispatch('loading');
@@ -77,7 +77,7 @@ export default class ResourceController extends Controller<HTMLDivElement> {
           } else {
             CSP[this.resourceName] = data;
           }
-          console.log('init table (data was fetched): ', this.resourceName)
+          // console.log('init table (data was fetched): ', this.resourceName)
           initTable(this);
         })
       }
