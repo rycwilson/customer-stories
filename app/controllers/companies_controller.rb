@@ -4,7 +4,7 @@ class CompaniesController < ApplicationController
   # application#check_subdomain takes care of this...
   # before_action :user_authorized?, only: [:edit, :show]
   before_action :set_company, except: [:new, :create, :promote, :get_curators, :get_invitation_templates]
-  before_action :set_s3_direct_post, only: [:new, :edit, :show, :create, :update]
+  before_action :set_s3_direct_post, only: [:new, :show, :create, :update]
 
   def new
     @company = Company.new
@@ -37,7 +37,6 @@ class CompaniesController < ApplicationController
 
   def edit
     redirect_to(company_settings_path) if request.path =~ /\/companies\/\d+/
-    @form_options = set_form_options(params, @company)
     render :company_settings
   end
 

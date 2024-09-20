@@ -20,18 +20,14 @@ RESPONSIVE_AD_MAX_MARKETING_IMAGES = 15
 RESPONSIVE_AD_MAX_LOGOS = 5
 RESPONSIVE_AD_ASPECT_RATIO_TOLERANCE = 0.01
 RESPONSIVE_AD_SQUARE_IMAGE_MIN = 300
-# RESPONSIVE_AD_SQUARE_IMAGE_PLACEHOLDER = 'https://s3-us-west-1.amazonaws.com/csp-production-assets/placeholders/300x300.png'
 RESPONSIVE_AD_SQUARE_IMAGE_PLACEHOLDER = 'placeholders/300x300.png'
 RESPONSIVE_AD_LANDSCAPE_IMAGE_ASPECT_RATIO = 1.91
 RESPONSIVE_AD_LANDSCAPE_IMAGE_MIN = '600x314'
-# RESPONSIVE_AD_LANDSCAPE_IMAGE_PLACEHOLDER = 'https://s3-us-west-1.amazonaws.com/csp-production-assets/placeholders/600x314.png'
 RESPONSIVE_AD_LANDSCAPE_IMAGE_PLACEHOLDER = 'placeholders/600x314.png'
 RESPONSIVE_AD_SQUARE_LOGO_MIN = 128
-# RESPONSIVE_AD_SQUARE_LOGO_PLACEHOLDER = 'https://s3-us-west-1.amazonaws.com/csp-production-assets/placeholders/128x128.png'
 RESPONSIVE_AD_SQUARE_LOGO_PLACEHOLDER = 'placeholders/128x128.png'
 RESPONSIVE_AD_LANDSCAPE_LOGO_ASPECT_RATIO = 4
 RESPONSIVE_AD_LANDSCAPE_LOGO_MIN = '512x128'
-# RESPONSIVE_AD_LANDSCAPE_LOGO_PLACEHOLDER = 'https://s3-us-west-1.amazonaws.com/csp-production-assets/placeholders/512x128.png'
 RESPONSIVE_AD_LANDSCAPE_LOGO_PLACEHOLDER = 'placeholders/512x128.png'
 
 # the parameters can be hard-coded here because this will be used in a simple re-direct
