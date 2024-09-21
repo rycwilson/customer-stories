@@ -59,32 +59,24 @@ class CompaniesController < ApplicationController
   end
 
   def update
-    @company.update(company_params)
-    if tags_update?
-      head(:no_content)
-    else
-      respond_to do |format|
-        format.json do
-          render(
-            json: { 
-              company: @company.as_json(only: [], methods: [:previous_changes]), 
-              s3_direct_post: { fields: @s3_direct_post.fields }
-            }
-          )
+    if @company.update(company_params)
+      if tags_update?
+        head(:ok)
+      else
+        respond_to do |format|
+          format.json do
+            render(
+              json: { 
+                company: @company.as_json(only: [], methods: [:previous_changes]), 
+                s3_direct_post: { fields: @s3_direct_post.fields }
+              }
+            )
+          end
         end
       end
-    end
-
-      # @flash = {} :
+    else
       # @flash = { mesg: @company.errors.full_messages.join(', '), status: 'danger' }
-    # if @company.previous_changes[:logo_url]
-    #   @s3_direct_post_fields = set_s3_direct_post().fields
-    # end
-    # end
-    # respond_to do |format| 
-    #   # @background_color_contrast = helpers.background_color_contrast(@company.header_color_2)
-    #   format.js {}
-    # end
+    end
   end
 
   def update_gads
