@@ -46,6 +46,11 @@ export default class CompanyStoryTagsController extends FormController<CompanySt
     }
   }
 
+  onAjaxComplete({ detail: [xhr, status] }: { detail: [xhr: XMLHttpRequest, status: string] }) {
+    // super.onAjaxComplete({ detail: [xhr, status] });
+    // console.log('subclass', xhr, status);
+  }
+
   newTagHiddenInputsTemplate(kind: string, tagName: string) {
     const key = kind === 'category' ? 'story_categories_attributes' : 'products_attributes';
     const index = this[`${kind}TagNameInputTargets`].length;

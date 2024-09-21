@@ -92,7 +92,7 @@ export default class FormController<Ctrl extends SubclassController> extends Con
   }
 
   onAjaxComplete(this: Ctrl, { detail: [xhr, status] }: { detail: [xhr: XMLHttpRequest, status: string] }) {
-    console.log(xhr, status)
+    // console.log('superclass', xhr, status)
   }
 
   removeErrorsOnValidInput() {
