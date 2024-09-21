@@ -32,7 +32,7 @@ function appFactory(): CustomerStoriesApp {
       Rails.start();
       turboStart();
       document.documentElement.addEventListener('turbo:load', (e) => {
-        addAllListeners();
+        addTurboListeners();
         // initView(controller, action);
       }, { once: true });
     }
@@ -41,11 +41,6 @@ function appFactory(): CustomerStoriesApp {
 
 function foo() {
   console.log('foo');
-}
-
-function addAllListeners() {
-  // addTurboListeners();
-  // [companies, profile].forEach(controller => controller.addListeners());
 }
 
 function addTurboListeners() {
