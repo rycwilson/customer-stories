@@ -44,7 +44,7 @@ ul:is([class*="image-library"], .ad-image-selections, .ad-logo-selections) {
 // specificity needed?
 .ad-image-card {
   display: inline-block;
-  background-color: #fff;
+  background-color: $light-gray;
   margin: 0 4px 4px;
   // box-shadow: 0 2px 2px 0 rgba(0,0,0,0.16), 0 0 0 0 rgba(0,0,0,0.08);
 
