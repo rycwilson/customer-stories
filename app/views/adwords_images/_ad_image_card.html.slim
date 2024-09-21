@@ -1,11 +1,16 @@
 - is_form_input = image_index.present?
 
+/ TODO if !ad_image.present? (i.e. new image) need to set the image-card-kind-value (maybe?)
+/ TODO consolidate class names
 li.ad-image-card {
-  class="#{ad_image_card_class_name(ad_image, collection)}"
-  data-placeholder-url="#{asset_url(ad_image_placeholder(ad_image[:type]))}"
-  data-image-id=(ad_image[:id] if ad_image)
-  data-toggle=('popover' unless is_form_input)
-  data-ads-target="#{ad_image.present? ? 'imageCard' : (collection == 'images' ? 'newImageCard' : 'newLogoCard')}" }
+  class=ad_image_card_class_name(ad_image, collection)
+  class=("image-card--#{ad_image[:type]}" if ad_image.present?)
+  data-controller="image-card"
+  data-image-card-kind-value=(ad_image[:type] if ad_image.present?)
+  data-ads-target="#{ad_image.present? ? 'imageCard' : (collection == 'images' ? 'newImageCard' : 'newLogoCard')}"
+  data-placeholder-url=asset_url(ad_image_placeholder(ad_image[:type]))
+  data-image-id=(ad_image[:id] if ad_image.present?)
+  data-toggle=('popover' unless is_form_input) }
 
   - unless is_form_input
     .ad-image-card__frame
@@ -25,15 +30,15 @@ li.ad-image-card {
         "company[adwords_images_attributes][#{image_index}][default]", 
         ad_image[:default] ? false : true, 
         false, 
-        { type: 'hidden', data: { ads_target: 'defaultImageCheckbox' }})
+        { type: 'hidden', data: { image_card_target: 'defaultCheckbox' }})
     - unless ad_image[:default]
       = check_box_tag( \
           "company[adwords_images_attributes][#{image_index}][_destroy]", 
           true, 
           false, 
-          { type: 'hidden', data: { ads_target: 'destroyImageCheckbox' } })
+          { type: 'hidden', data: { image_card_target: '_destroyCheckbox' } })
 
-    .form-group.fileinput.fileinput-exists.has-feedback data-provides="fileinput"
+    .form-group.fileinput.fileinput-exists.has-feedback data-provides="fileinput" data-image-card-target="formGroup"
 
       .ad-image-card__header
         - if ad_image
@@ -42,10 +47,10 @@ li.ad-image-card {
             button.btn-upload type="button" data-trigger="fileinput"
               i.fa.fa-fw.fa-upload
           - else
-            button.set-as-default type="button" data-action="ads#setAsDefaultImage"
+            button.set-as-default type="button" data-action="image-card#makeDefault"
               i.fa.fa-fw.fa-refresh
         |&nbsp;
-        button.btn-remove type="button" data-action="ads#deleteImage"
+        button.btn-remove type="button" data-action="image-card#deleteImage"
           i.fa.fa-fw.fa-remove
         button.did-save type="button"
           i.fa.fa-fw.fa-check
@@ -76,7 +81,7 @@ li.ad-image-card {
             data-required-image=('true' if ad_image[:default] && ad_image[:type]&.match(/Image/)) }
 
       .ad-image-card__footer
-        button.btn.btn-sm.btn-default.btn-cancel type="button" data-action="cancelChange" Cancel
+        button.btn.btn-sm.btn-default.btn-cancel type="button" data-action="image-card#cancelAction" Cancel
         button.btn.btn-sm.btn-danger type="submit" form="gads-form" Delete
         button.btn.btn-sm.btn-success type="submit" form="gads-form"
           div Set as default

@@ -55,6 +55,9 @@ application.register('datatable-row', DatatableRowController);
 import FormController from './form_controller.js';
 application.register('form', FormController);
 
+import ImageCardController from './image_card_controller.js';
+application.register('image-card', ImageCardController);
+
 import InputSpinner from './input_spinner_controller.js';
 application.register('input-spinner', InputSpinner);
 
