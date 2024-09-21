@@ -1,5 +1,6 @@
 import FormController from './form_controller';
 import { imageValidatorOptions } from '../user_uploads';
+import { capitalize } from '../utils';
 
 export default class AdsController extends FormController<AdsController> {
   static targets = [
@@ -8,16 +9,12 @@ export default class AdsController extends FormController<AdsController> {
     'imageCard', 
     'newImageCard', 
     'newLogoCard', 
-    'defaultImageCheckbox',
-    'destroyImageCheckbox'
   ];
   declare readonly collectionBtnTargets: HTMLAnchorElement[];
   declare readonly imageRequirementsTargets: HTMLAnchorElement[];
   declare readonly imageCardTargets: HTMLLIElement[];
   declare readonly newImageCardTarget: HTMLLIElement;
   declare readonly newLogoCardTarget: HTMLLIElement;
-  declare readonly defaultImageCheckboxTargets: HTMLInputElement[];
-  declare readonly destroyImageCheckboxTargets: HTMLInputElement[];
 
   declare inputObserver: MutationObserver;
   declare imageTimer: number;
@@ -160,23 +157,17 @@ export default class AdsController extends FormController<AdsController> {
     this.collectionBtnTargets.forEach(btn => btn.classList.toggle('active'));
   }
 
-  setAsDefaultImage({ currentTarget: btn }: { currentTarget: HTMLButtonElement }) {
-    const card = <HTMLLIElement>this.imageCardTargets.find(card => card.contains(btn));
-    this.defaultImageCheckboxTargets.forEach(checkbox => {
-      const isCurrentDefault = checkbox.value === 'false';
-      if (card.contains(checkbox)) {
-        card.querySelector('.form-group')?.classList.add('to-be-default');
-      } else {
-        checkbox.checked = isCurrentDefault ? true : false;   
-      }
-    });
-  }
-
-  deleteImage({ currentTarget: btn }: { currentTarget: HTMLButtonElement }) {
-    const card = <HTMLLIElement>this.imageCardTargets.find(card => card.contains(btn));
-    const checkbox = <HTMLInputElement>this.destroyImageCheckboxTargets.find(checkbox => card.contains(checkbox));
-    card.querySelector('.form-group')?.classList.add('to-be-removed');
-    checkbox.checked = true;
+  setNewDefault(
+    { detail: { card, kind, toggleDefault } }: { detail: { card: HTMLLIElement, kind: AdImageKind, toggleDefault: boolean } }
+  ) {
+    const sameKind = (_card: HTMLLIElement) => (new RegExp(`--${kind}`)).test(_card.className);
+    this.imageCardTargets
+      .filter(_card => sameKind(_card) && _card !== card)
+      .forEach(_card => {
+        _card.setAttribute(
+          'data-image-card-toggle-default-value', 
+          _card.classList.contains('gads-default') ? `${toggleDefault}` : 'false');
+      });
   }
 
   validateShortHeadline({ target: input }: { target: HTMLInputElement }) {
