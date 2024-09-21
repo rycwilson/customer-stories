@@ -27,6 +27,7 @@ export default class AdsController extends FormController<AdsController> {
   
   connect() {
     super.connect();
+    // jquery event listeners necessary for hooking into jquery plugin events
     $(this.element)
       .on('show.bs.tab', this.showCollectionHandler)
       .on('change.bs.fileinput', '.ad-image-card', this.changeFileInputHandler)
@@ -39,6 +40,7 @@ export default class AdsController extends FormController<AdsController> {
   }
 
   disconnect() {
+    super.disconnect();
     $(this.element)
       .off('show.bs.tab', this.showCollectionHandler)
       .off('change.bs.fileinput', '.ad-image-card', this.changeFileInputHandler)
@@ -46,6 +48,26 @@ export default class AdsController extends FormController<AdsController> {
       .off('valid.bs.validator', this.validFileInputHandler)
       .off('invalid.bs.validator', this.invalidFileInputHandler)
       .validator('destroy');
+  }
+
+  submitForm(e: CustomEvent) {
+    const { card, imageId, action } = e.detail;
+    if (action === 'makeDefault') {
+      this.element.action = this.element.action.replace(/\.json$/, '');
+    } else if (action === 'delete') {
+      if (!this.element.action.endsWith('.json')) this.element.action += '.json';
+      this.element.action += `?image_id=${imageId}`;
+    }
+    card.classList.add('ad-image-card--saving');
+    this.element.requestSubmit();
+  }
+
+  onDeletedImage({ detail: [res, status, xhr] }: { detail: [res: { id: string }, status: string, xhr: XMLHttpRequest] }) {
+    const card = this.imageCardTargets.find(card => {
+      const imageId = card.getAttribute('data-image-card-image-id-value');
+      return imageId === res.id;
+    });
+    card?.remove();
   }
 
   uploadFile(card: HTMLLIElement) {

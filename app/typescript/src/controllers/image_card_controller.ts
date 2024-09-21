@@ -4,9 +4,11 @@ export default class ImageCardController extends Controller<HTMLLIElement> {
   static values = {
     toggleDefault: { type: Boolean, default: false },   // whether the defaultCheckbox should be checked
     kind: String,
+    imageId: Number,
   }
   declare toggleDefaultValue: boolean;
   declare readonly kindValue: string;
+  declare readonly imageIdValue: number
 
   static targets = ['formGroup', 'defaultCheckbox', '_destroyCheckbox'];
   declare readonly formGroupTarget: HTMLDivElement;
@@ -19,7 +21,7 @@ export default class ImageCardController extends Controller<HTMLLIElement> {
   }
   
   toggleDefaultValueChanged(newVal: boolean, oldVal: boolean) {
-    console.log(`toggleDefaultValueChanged(${newVal}, ${oldVal})`);
+    // console.log(`toggleDefaultValueChanged(${newVal}, ${oldVal})`);˝˝
     if (oldVal === undefined) return;
     this.defaultCheckboxTarget.checked = newVal;
     if (!this.isDefault) this.formGroupTarget.classList.toggle('to-be-default', newVal);
@@ -45,6 +47,12 @@ export default class ImageCardController extends Controller<HTMLLIElement> {
       'make-default', 
       { detail: { card: this.element, kind: this.kindValue, toggleDefault: this.toggleDefaultValue } }
     );
+  }
+
+  submitForm({ currentTarget: btn }: { currentTarget: HTMLButtonElement }) {
+    this.dispatch(
+      'submit-form', 
+      { detail: { card: this.element, imageId: this.imageIdValue, action: btn.dataset.submitAction } });
   }
 
   get isDefault() {

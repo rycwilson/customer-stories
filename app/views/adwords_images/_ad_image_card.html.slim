@@ -7,9 +7,9 @@ li.ad-image-card {
   class=("image-card--#{ad_image[:type]}" if ad_image.present?)
   data-controller="image-card"
   data-image-card-kind-value=(ad_image[:type] if ad_image.present?)
+  data-image-card-image-id-value=(ad_image[:id] if ad_image.present?)
   data-ads-target="#{ad_image.present? ? 'imageCard' : (collection == 'images' ? 'newImageCard' : 'newLogoCard')}"
   data-placeholder-url=asset_url(ad_image_placeholder(ad_image[:type]))
-  data-image-id=(ad_image[:id] if ad_image.present?)
   data-toggle=('popover' unless is_form_input) }
 
   - unless is_form_input
@@ -30,13 +30,13 @@ li.ad-image-card {
         "company[adwords_images_attributes][#{image_index}][default]", 
         ad_image[:default] ? false : true, 
         false, 
-        { type: 'hidden', data: { image_card_target: 'defaultCheckbox' }})
+        { class: 'hidden', data: { image_card_target: 'defaultCheckbox' }})
     - unless ad_image[:default]
       = check_box_tag( \
           "company[adwords_images_attributes][#{image_index}][_destroy]", 
           true, 
           false, 
-          { type: 'hidden', data: { image_card_target: '_destroyCheckbox' } })
+          { class: 'hidden', data: { image_card_target: '_destroyCheckbox' } })
 
     .form-group.fileinput.fileinput-exists.has-feedback data-provides="fileinput" data-image-card-target="formGroup"
 
@@ -82,8 +82,15 @@ li.ad-image-card {
 
       .ad-image-card__footer
         button.btn.btn-sm.btn-default.btn-cancel type="button" data-action="image-card#cancelAction" Cancel
-        button.btn.btn-sm.btn-danger type="submit" form="gads-form" Delete
-        button.btn.btn-sm.btn-success type="submit" form="gads-form"
+        button.btn.btn-sm.btn-danger {
+          type="button" 
+          data-submit-action="delete" 
+          data-action="image-card#submitForm" }
+          | Delete
+        button.btn.btn-sm.btn-success {
+          type="button" 
+          data-submit-action="makeDefault" 
+          data-action="image-card#submitForm" }
           div Set as default
           div.spinner
             span 
