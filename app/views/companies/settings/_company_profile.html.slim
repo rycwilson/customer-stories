@@ -3,17 +3,13 @@
     format: :json,
     html: { \
       id: 'company-profile-form',
-      class: 'directUpload form-horizontal',
+      class: 'form-horizontal',
       autocomplete: 'off',
       novalidate: true,
       data: { \
         controller: 'company-profile',
         action: 'ajax:beforeSend->company-profile#validate ajax:complete->company-profile#onAjaxComplete',
-        asset_host: Rails.application.config.asset_host,
-        s3: { \
-          url: s3_direct_post.url,
-          host: URI.parse(s3_direct_post.url).host,
-          'postData' => s3_direct_post.fields } }}) do |form|
+        asset_host: Rails.application.config.asset_host }}) do |form|
   
   .form-group.required
     = form.label(:subdomain, class: 'col-sm-3 control-label')
@@ -70,7 +66,7 @@
           .fileinput-preview.thumbnail.company-logo-upload__logo
             = image_tag(company.logo_url || LOGO_PLACEHOLDER, alt: 'company logo')
           .btn-file
-            = form.file_field(:logo_url)
+            = form.file_field(:logo_url, data: { s3: s3_direct_post, company_profile_target: 's3FileInput' })
         div {
           class="company-logo-upload__stories-header--bg-#{color_shade(company.header_color_2)}"
           data-company-profile-target="storiesHeaderDemo"

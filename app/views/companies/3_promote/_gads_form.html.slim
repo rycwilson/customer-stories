@@ -1,4 +1,3 @@
-
 = form_with( \
     model: company,
     url: update_gads_company_path(company),
@@ -7,19 +6,15 @@
       id: 'gads-form',
       class: "directUpload form-horizontal",
       data: { \
-        ads_target: 'form',
-        asset_host: Rails.application.config.asset_host,
-        s3: { \
-          url: @s3_direct_post.url,
-          host: URI.parse(@s3_direct_post.url).host,
-          'postData' => @s3_direct_post.fields } }}) do |f|
+        controller: 'ads',
+        asset_host: Rails.application.config.asset_host }}) do |form|
         
   .row 
     .form-group.short-headline
-      = f.label(:adwords_short_headline, "Headline", class: 'col-sm-3 control-label')
+      = form.label(:adwords_short_headline, "Headline", class: 'col-sm-3 control-label')
       .col-sm-9.col-md-8.col-lg-6
         div
-          = f.text_field( \
+          = form.text_field( \
               :adwords_short_headline,
               required: true,
               class: 'form-control',
@@ -98,8 +93,7 @@
             style="width: 50%"
             disabled=('true' if missing_default_google_images?(company, 'marketing')) }
             i.fa.fa-fw.fa-upload
-            | &nbsp;&nbsp;
-            | Upload an image
+            |&nbsp;&nbsp;Upload an image
 
       ul.image-library__all-images
         = render('adwords_images/ad_image_card', { image_index: '2', collection: 'images', ad_image: {} })
@@ -161,8 +155,7 @@
             style="width: 50%"
             disabled=('true' if missing_default_google_images?(company, 'logo')) }
             i.fa.fa-fw.fa-upload
-            | &nbsp;&nbsp;
-            | Upload a logo
+            |&nbsp;&nbsp;Upload a logo
 
       ul.image-library__all-logos
         = render( \

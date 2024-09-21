@@ -56,10 +56,7 @@
             data-resource-search-params-value="promoted=true"
             data-resource-checkbox-filters-value={}
             data-resource-name="promotedStories" }
+            = render('companies/3_promote/promoted_stories_table', company:)
 
-            = render('companies/3_promote/promoted_stories_table', { company: })
-
-          #promote-settings.tab-pane {
-            class=('active in' if active_tab == '#promote-settings')
-            data-controller="ads" }
-            = render('companies/3_promote/gads_form', { company: })
+          #promote-settings.tab-pane class=('active' if active_tab == '#promote-settings')
+            = render('companies/3_promote/gads_form', company:)

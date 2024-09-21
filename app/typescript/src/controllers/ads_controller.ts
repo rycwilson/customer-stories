@@ -1,35 +1,58 @@
-import { Controller } from '@hotwired/stimulus';
+import FormController from './form_controller';
 import { imageValidatorOptions } from '../user_uploads';
 
-export default class AdsController extends Controller {
-  static targets = ['form', 'collectionBtn', 'imageRequirements', 'imageCard', 'newImageCard', 'newLogoCard'];
-  declare readonly formTarget: HTMLFormElement;
+export default class AdsController extends FormController<AdsController> {
+  static targets = [
+    'collectionBtn', 
+    'imageRequirements', 
+    'imageCard', 
+    'newImageCard', 
+    'newLogoCard', 
+    'defaultImageCheckbox',
+    'destroyImageCheckbox'
+  ];
   declare readonly collectionBtnTargets: HTMLAnchorElement[];
   declare readonly imageRequirementsTargets: HTMLAnchorElement[];
   declare readonly imageCardTargets: HTMLLIElement[];
   declare readonly newImageCardTarget: HTMLLIElement;
   declare readonly newLogoCardTarget: HTMLLIElement;
+  declare readonly defaultImageCheckboxTargets: HTMLInputElement[];
+  declare readonly destroyImageCheckboxTargets: HTMLInputElement[];
 
   declare inputObserver: MutationObserver;
   declare imageTimer: number;
 
-  initialize() {
-    $(document)
-      .on('change.bs.fileinput', '.ad-image-card', this.onChangeFileInput)
-      .on({ 'validated.bs.validator': this.onFileInputValidation }, '#gads-form')
-      .on({ 'valid.bs.validator': this.onValidFileInput }, `#${this.formTarget.id}`)
+  showCollectionHandler = this.onShowCollection.bind(this);
+  changeFileInputHandler = this.onChangeFileInput.bind(this);
+  validatedFileInputHandler = this.onValidatedFileInput.bind(this);
+  validFileInputHandler = this.onValidFileInput.bind(this);
+  invalidFileInputHandler = this.onInvalidFileInput.bind(this);
+  
+  connect() {
+    super.connect();
+    $(this.element)
+      .on('show.bs.tab', this.showCollectionHandler)
+      .on('change.bs.fileinput', '.ad-image-card', this.changeFileInputHandler)
+      .on('validated.bs.validator', this.validatedFileInputHandler)
+      .on('valid.bs.validator', this.validFileInputHandler)
+      .on('invalid.bs.validator', this.invalidFileInputHandler)
+      .validator(imageValidatorOptions);
+
+    this.imageRequirementsTargets.forEach(this.initPopover);
   }
 
-  connect() {
-    // console.log('connect ads')
-    this.collectionBtnTargets.forEach(this.addCollectionBtnListener.bind(this));
-    this.imageRequirementsTargets.forEach(this.initPopover);
-    $('#gads-form').validator(imageValidatorOptions);
+  disconnect() {
+    $(this.element)
+      .off('show.bs.tab', this.showCollectionHandler)
+      .off('change.bs.fileinput', '.ad-image-card', this.changeFileInputHandler)
+      .off('validated.bs.validator', this.validatedFileInputHandler)
+      .off('valid.bs.validator', this.validFileInputHandler)
+      .off('invalid.bs.validator', this.invalidFileInputHandler)
+      .validator('destroy');
   }
 
   uploadFile(card: HTMLLIElement) {
-    if (!(card instanceof HTMLLIElement)) return;
-    (card.querySelector('input[type="file"]') as HTMLInputElement).click();
+    (<HTMLInputElement>card.querySelector('input[type="file"]')).click();
   }
 
   uploadImage() {
@@ -40,28 +63,24 @@ export default class AdsController extends Controller {
     this.uploadFile(this.newLogoCardTarget);
   }
 
-  onChangeFileInput(e: JQuery.TriggeredEvent) {
-    if (e.target.classList.contains('fileinput')) this.handleS3Upload(e.currentTarget);
+  onChangeFileInput({ target: formGroup, currentTarget: card }: { target: HTMLDivElement, currentTarget: HTMLLIElement }) {
+    if (formGroup.classList.contains('fileinput')) this.handleS3Upload(formGroup, card);
   }
 
-  handleS3Upload(card: HTMLLIElement) {
-    // console.log('handleS3Upload()')
+  handleS3Upload(formGroup: HTMLDivElement, card: HTMLLIElement) {
     const img = <HTMLImageElement>card.querySelector('img');
-    const formGroup = <HTMLDivElement>card.querySelector('.form-group');
     const urlInput = <HTMLInputElement>card.querySelector(':scope > input[name*="[image_url]"]');
-    const isSuccessfulUpload = (
-      formGroup: HTMLDivElement, urlInput: HTMLInputElement, mutation: MutationRecord
-    ): boolean => (
-      mutation.target === urlInput &&
-      mutation.type === 'attributes' &&
-      mutation.attributeName === 'value' &&
-      !formGroup.classList.contains('.has-error')
-    )
-    this.inputObserver = new MutationObserver((mutations) => {
+    const isSuccessfulUpload = (mutation: MutationRecord): boolean => {
+      const { target, type, attributeName } = mutation;
+      return formGroup.classList.contains('has-error') ?
+        false :
+        target === urlInput && type === 'attributes' && attributeName === 'value';
+    };
+    this.inputObserver = new MutationObserver(mutations => {
       for (const m of mutations) {
-        if (isSuccessfulUpload(formGroup, urlInput, m)) {
+        if (isSuccessfulUpload(m)) {
           this.inputObserver.disconnect();
-          // console.log('isSuccessfulUpload', urlInput.value)
+          console.log('isSuccessfulUpload', urlInput.value)
 
           if (card.classList.contains('gads-default.has-image')) {
             const idInput = <HTMLInputElement>card.querySelector(':scope > input[name*="[id]"]');
@@ -71,47 +90,48 @@ export default class AdsController extends Controller {
           }
 
           // pre-load the image so it will be in browser cache when response arrives (no flicker)
-          // <HTMLImageElement>formGroup.querySelector('img').addEventListener(
-          //   'load', 
-          //   () => formGroup.querySelector('.btn-success').dispatchEvent(new Event('click')),
-          //   { once: true })
-            // .attr('src', $urlInput.val());
+          img.addEventListener(
+            'load', 
+            () => (<HTMLButtonElement>formGroup.querySelector('.btn-success')).dispatchEvent(new Event('click')),
+            { once: true }
+          )
+          img.setAttribute('src', urlInput.value);
           break;
         }
       };
     });
     this.inputObserver.observe(urlInput, { attributes: true });
     if (!this.imageDidLoad(card, img)) {
-      this.imageTimer = window.setInterval(this.imageDidLoad, 100, card, img);
+      this.imageTimer = window.setInterval(this.imageDidLoad.bind(this, card, img), 100);
     }
   }
 
   imageDidLoad(card: HTMLLIElement, img: HTMLImageElement) {
     if (img.complete) {
-      clearInterval(this.imageTimer);
-      // console.log('image did load')
+      window.clearInterval(this.imageTimer);
+      console.log('image did load')
 
       // the data-validate attribute is to prevent premature validation (per bootstrap-validator)
       if (card.classList.contains('gads-default')) card.classList.add('ad-image-card--new');
       const fileInput = <HTMLInputElement>card.querySelector('input[type="file"]')
       fileInput.setAttribute('data-validate', 'true');
-      $('#gads-form').validator('update').validator('validate');
+      $(this.element).validator('update').validator('validate');
       return true;
     }
   }
 
   keepPreviousDefault(id: string) {
     const i = this.imageCardTargets.length;
-    this.formTarget.insertAdjacentHTML('beforeend', `
+    this.element.insertAdjacentHTML('beforeend', `
       <input type="hidden" name="company[adwords_images_attributes][${i}][id]" value="${id}">
       <input type="hidden" name="company[adwords_images_attributes][${i}][default]" value="false">
       <input class="hidden" type="checkbox" name="company[adwords_images_attributes][${i}][default]" value="true">
     `);
   }
 
-  onFileInputValidation({ relatedTarget: input }: { relatedTarget: HTMLInputElement }) {
-    // console.log('validated.bs.validator')
+  onValidatedFileInput({ relatedTarget: input }: { relatedTarget: HTMLInputElement }) {
     if (input.type === 'file' && !input.getAttribute('data-default-type')) {
+      console.log('validated.bs.validator', input)
       const card = <HTMLLIElement>input.closest('.ad-image-card--new');
       card.classList.remove('hidden');
     }
@@ -120,8 +140,10 @@ export default class AdsController extends Controller {
   onValidFileInput({ relatedTarget: input }: { relatedTarget: HTMLInputElement }) {
     const isNewImage = input.type === 'file' && input.value;
     if (isNewImage) {
-      // console.log('valid.bs.validator')
+      console.log('valid.bs.validator', input)
       // initS3Upload($(e.currentTarget), $input);
+      // initS3FileInput(input);
+      $(input).fileupload('send', { files: input.files });
 
       // Change event on the input will trigger the s3 upload
       // => stop the event propagation so that the upload handler does not re-execute
@@ -130,19 +152,36 @@ export default class AdsController extends Controller {
     }
   }
 
-  addCollectionBtnListener(btn: HTMLAnchorElement) {
-    $(btn).on('show.bs.tab', (e: JQuery.TriggeredEvent) => {
-      this.collectionBtnTargets.forEach(_btn => _btn.classList.toggle('active'));
+  onInvalidFileInput() {
+    this.inputObserver.disconnect();
+  }
+
+  onShowCollection(e: JQuery.TriggeredEvent) {
+    this.collectionBtnTargets.forEach(btn => btn.classList.toggle('active'));
+  }
+
+  setAsDefaultImage({ currentTarget: btn }: { currentTarget: HTMLButtonElement }) {
+    const card = <HTMLLIElement>this.imageCardTargets.find(card => card.contains(btn));
+    this.defaultImageCheckboxTargets.forEach(checkbox => {
+      const isCurrentDefault = checkbox.value === 'false';
+      if (card.contains(checkbox)) {
+        card.querySelector('.form-group')?.classList.add('to-be-default');
+      } else {
+        checkbox.checked = isCurrentDefault ? true : false;   
+      }
     });
+  }
+
+  deleteImage({ currentTarget: btn }: { currentTarget: HTMLButtonElement }) {
+    const card = <HTMLLIElement>this.imageCardTargets.find(card => card.contains(btn));
+    const checkbox = <HTMLInputElement>this.destroyImageCheckboxTargets.find(checkbox => card.contains(checkbox));
+    card.querySelector('.form-group')?.classList.add('to-be-removed');
+    checkbox.checked = true;
   }
 
   validateShortHeadline({ target: input }: { target: HTMLInputElement }) {
     const btn = input.nextElementSibling as HTMLButtonElement;
-    if (input.checkValidity()) {
-      btn.classList.remove('hidden');
-    } else {
-      btn.classList.add('hidden');
-    }
+    btn.classList.toggle('hidden', !input.checkValidity());
   }
 
   initPopover(link: HTMLAnchorElement) {

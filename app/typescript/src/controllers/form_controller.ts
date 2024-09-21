@@ -8,8 +8,10 @@ import type InvitationTemplateController from './invitation_template_controller'
 import type ContributorInvitationController from './contributor_invitation_controller';
 import type CompanyStoryTagsController from './company_story_tags_controller';
 import type CtaController from './cta_controller';
+import type AdsController from './ads_controller';
 import type { TomOptions } from 'tom-select/dist/types/types';
 import { serializeForm } from '../utils';
+import { initS3FileInput } from '../user_uploads';
 
 type SubclassController = (
   NewCustomerWinController | 
@@ -19,7 +21,8 @@ type SubclassController = (
   InvitationTemplateController |
   ContributorInvitationController |
   CompanyStoryTagsController |
-  CtaController
+  CtaController |
+  AdsController
 );
 
 export default class FormController<Ctrl extends SubclassController> extends Controller<HTMLFormElement> {
@@ -41,7 +44,8 @@ export default class FormController<Ctrl extends SubclassController> extends Con
     'referrerFields',
     'referrerField',
     'requiredField',
-    'customerContactBoolField'
+    'customerContactBoolField',
+    's3FileInput'
   ];
 
   // all forms share these fields
@@ -56,11 +60,14 @@ export default class FormController<Ctrl extends SubclassController> extends Con
   declare readonly hasContributorSelectTarget: boolean;
   declare readonly hasReferrerSelectTarget: boolean;
 
+  declare readonly s3FileInputTargets: HTMLInputElement[];
+
   declare initialState: string;
 
   connect(this: Ctrl) {
     this.removeErrorsOnValidInput();
     this.initialState = serializeForm(this.element);
+    this.s3FileInputTargets.forEach(initS3FileInput);
   }
 
   validate(e: CustomEvent) {

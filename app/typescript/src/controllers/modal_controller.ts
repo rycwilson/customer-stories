@@ -1,5 +1,5 @@
 import { Controller } from '@hotwired/stimulus';
-import { initS3Upload } from '../user_uploads';
+// import { initS3Upload } from '../user_uploads';
 import type { FrameElement } from '@hotwired/turbo'
 
 export default class ModalController extends Controller<HTMLDivElement> {
@@ -75,7 +75,7 @@ export default class ModalController extends Controller<HTMLDivElement> {
     if (this.hasFormTarget) {
       this.formTarget.addEventListener('ajax:success', this.ajaxSuccessHandler);
       if (this.turboFrameTarget.id.includes('edit-customer')) {
-        initS3Upload($(this.formTarget));
+        // initS3Upload($(this.formTarget));
       }
     } 
   }

@@ -93,11 +93,8 @@
     .col-sm-8.col-lg-9.layout-main
       .tab-content
 
-
         #account-panel.tab-pane role="tabpanel"
-          = render( \
-              'companies/settings/company_profile', 
-              { company: @company, s3_direct_post: @s3_direct_post })
+          = render('companies/settings/company_profile', company: @company)
 
         - unless action_name == 'new'
 
@@ -110,13 +107,13 @@
                 { company: @company, templates_select: @templates_select })
 
           #contributor-prompts-panel.tab-pane role="tabpanel"
-            = render('companies/settings/contributor_questions', { company: @company })
+            = render('companies/settings/contributor_questions', company: @company)
           
           #website-plugin-panel.tab-pane role="tabpanel"
-            = render('plugins/config', { company: @company })
+            = render('plugins/config', company: @company)
 
           #cta-links-forms-panel.tab-pane role="tabpanel"
             = render('ctas', company: @company)
 
           #story-tags-panel.tab-pane role="tabpanel"
-            = render('companies/settings/story_tags', { company: @company })
+            = render('companies/settings/story_tags', company: @company)

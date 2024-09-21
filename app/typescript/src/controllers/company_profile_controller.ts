@@ -1,5 +1,5 @@
 import FormController from './form_controller';
-import { initS3Upload } from '../user_uploads';
+import { initS3FileInput } from '../user_uploads';
 import tinycolor from 'tinycolor2';
 
 export default class CompanyProfileController extends FormController<CompanyProfileController> {
@@ -16,7 +16,6 @@ export default class CompanyProfileController extends FormController<CompanyProf
 
   connect() {
     // console.log('connect company profile')
-    initS3Upload($(this.element));
   }
 
   onAjaxComplete({ detail: [xhr, status] }: { detail: [xhr: XMLHttpRequest, status: string] }) {
@@ -26,7 +25,7 @@ export default class CompanyProfileController extends FormController<CompanyProf
         const s3Data = JSON.parse(this.element.dataset.s3 as string);
         const { s3_direct_post: { fields: postData } } = JSON.parse(xhr.response);
         this.element.dataset.s3 = JSON.stringify({ ...s3Data, postData });
-        initS3Upload($(this.element));
+        // initS3Upload($(this.element));
       }
     } else {
       // let FormController handle errors

@@ -12,27 +12,27 @@ type AdImageType = 'SquareImage' | 'LandscapeImage' | 'SquareLogo' | 'LandscapeL
 
 // need to validate input file name
 // http://stackoverflow.com/questions/22387874/jquery-validate-plugin-bootstrap-jasny-bootstrap-file-input-regex-validation
-export function initS3Upload($form?: JQuery<HTMLFormElement, any>, $input?: JQuery<HTMLInputElement, any>) {
-  // console.log('initS3Upload()...', $form, $input)
-  if ($form && $input) {
-    initS3FileInput($input, $form.data('s3'), $form.data('assetHost'));
-  } else if ($form) {
-    $form.find('input:file').each((i: number, input: HTMLInputElement) => {
-      initS3FileInput($(input), $form.data('s3'), $form.data('assetHost'))
-    });
-  } else {
-    $('form.directUpload:not(#gads-form)').each((i: number, form: HTMLFormElement) => {
-      $(form).find('input:file').each((j: number, input: HTMLInputElement) => {
-        /**
-         *  summernote's native file input seems to be ignored when selecting a file, so a buffer
-         *  is used instead. When drag-dropping, the file gets uploaded multiple times - see note below
-         */
-        if ($(input).is('.note-image-input')) return false;
-        initS3FileInput($(input), $(form).data('s3'), $(form).data('assetHost'))
-      });
-    });
-  }
-}
+// export function initS3Upload($form?: JQuery<HTMLFormElement, any>, $input?: JQuery<HTMLInputElement, any>) {
+//   // console.log('initS3Upload()...', $form, $input)
+//   if ($form && $input) {
+//     initS3FileInput($input, $form.data('s3'), $form.data('assetHost'));
+//   } else if ($form) {
+//     $form.find('input:file').each((i: number, input: HTMLInputElement) => {
+//       initS3FileInput($(input), $form.data('s3'), $form.data('assetHost'))
+//     });
+//   } else {
+//     $('form.directUpload:not(#gads-form)').each((i: number, form: HTMLFormElement) => {
+//       $(form).find('input:file').each((j: number, input: HTMLInputElement) => {
+//         /**
+//          *  summernote's native file input seems to be ignored when selecting a file, so a buffer
+//          *  is used instead. When drag-dropping, the file gets uploaded multiple times - see note below
+//          */
+//         if ($(input).is('.note-image-input')) return false;
+//         initS3FileInput($(input), $(form).data('s3'), $(form).data('assetHost'))
+//       });
+//     });
+//   }
+// }
 
 export const imageValidatorOptions: ValidatorOptions = {
   focus: false,
@@ -46,18 +46,22 @@ export const imageValidatorOptions: ValidatorOptions = {
   }
 }
 
-function initS3FileInput($fileInput: JQuery<HTMLInputElement, any>, s3: S3DirectPost, assetHost?: string): void {
+// export function initS3FileInput($fileInput: JQuery<HTMLInputElement, any>, s3: S3DirectPost, assetHost?: string): void {
+export function initS3FileInput(input: HTMLInputElement): void {
+  const $fileInput = $(input);
+  const s3 = JSON.parse(<string>input.dataset.s3);
+  const assetHost: string | undefined = input.form!.dataset.assetHost;  // undefined in development environment
   const $formGroup = $fileInput.closest('.form-group') as unknown as JQuery<HTMLDivElement, any>;
   $fileInput.fileupload({
     fileInput: $fileInput,
     type: 'POST',
     url: s3.url,
-    autoUpload: true,
+    autoUpload: false,
     formData: s3.postData,
     paramName: 'file',  // S3 does not like nested name fields i.e. name="user[avatar_url]"
     dataType: 'XML',    // S3 returns XML if success_action_status is set to 201
     replaceFileInput: false,
-    progressall: (e, data) => {
+    progressall: (e: Event, data: any) => {
       // const progress = parseInt(data.loaded / data.total * 100, 10);
     },
     submit: ({ target }: { target: EventTarget }, data: object) => {
@@ -96,10 +100,10 @@ function initS3FileInput($fileInput: JQuery<HTMLInputElement, any>, s3: S3Direct
         return false;
       }
     },
-    start: (e) => {
+    start: (e: Event) => {
       console.log('s3 start...')
     },
-    done: (e, data) => {
+    done: (e: Event, data: any) => {
       console.log('s3 done...')
       const key = $(<Document>data.jqXHR.responseXML).find('Key').text();
       const url = assetHost ? `${assetHost}/${key}` : `https://${s3.host}/${key}`;
@@ -143,7 +147,7 @@ function initS3FileInput($fileInput: JQuery<HTMLInputElement, any>, s3: S3Direct
       // if the input buffer's value isn't set to blank, it will force a request with data-type=html
       $fileInput.val('');
     },
-    fail: (e, data) => {
+    fail: (e: Event, data: any) => {
       // possible to get a 403 Forbidden error
       // console.log('s3 fail')
     }
