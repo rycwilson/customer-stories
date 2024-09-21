@@ -1,5 +1,10 @@
 module ApplicationHelper
 
+  def s3_direct_post
+    post = S3_BUCKET.presigned_post(key: "uploads/#{SecureRandom.uuid}/${filename}", success_action_status: '201')
+    { url: post.url, host: URI.parse(post.url).host, 'postData' => post.fields }
+  end
+
   def page_title(controller, action, company: nil, story: nil)
     if controller == 'companies' && action =~ /show|edit/
       "Customer Stories: Account #{action == 'show' ? 'Dashboard' : 'Settings'}"
