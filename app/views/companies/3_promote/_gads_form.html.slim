@@ -1,175 +1,178 @@
-= form_with( \
-    model: company,
-    url: update_gads_company_path(company),
-    authenticity_token: true,
-    html: { \
-      id: 'gads-form',
-      class: "directUpload form-horizontal",
-      data: { \
-        controller: 'ads',
-        action: 'image-card:make-default->ads#setNewDefault',
-        asset_host: Rails.application.config.asset_host }}) do |form|
-        
-  .row 
-    .form-group.short-headline
-      = form.label(:adwords_short_headline, "Headline", class: 'col-sm-3 control-label')
-      .col-sm-9.col-md-8.col-lg-6
-        div
-          = form.text_field( \
-              :adwords_short_headline,
-              required: true,
-              class: 'form-control',
-              autocomplete: 'off',
-              maxlength: RESPONSIVE_AD_SHORT_HEADLINE_MAX.to_s,
-              data: { 'required-error': 'Required', action: 'input->ads#validateShortHeadline' })
-          button.btn.btn-success.hidden type="submit"
-            span Save
-            i.fa.fa-spin.fa-circle-o-notch style="display:none"
-            i.fa.fa-check style="display:none"
-        span.help-block.with-errors
-          | Max 30 characters
+= turbo_frame_tag('google-ads-form') do
 
-  .row style="margin-left:-30px;margin-right:-30px"
-    .image-library__collection
-      label.col-sm-3.control-label Image Collection
-      .col-sm-9.col-md-8.col-lg-6
-        .btn-group
-          a.btn.btn-secondary.active href="#image-library__marketing" data-toggle="tab" data-ads-target="collectionBtn"
-            i.fa.fa-fw.fa-image
-            | &nbsp;&nbsp;
-            | Marketing Images
-          a.btn.btn-secondary href="#image-library__logos" data-toggle="tab" data-ads-target="collectionBtn"
-            i.fa.fa-fw.fa-flag
-            | &nbsp;&nbsp;
-            | Logos
-
-  .image-library.tab-content
-
-    #image-library__marketing.tab-pane.in.active
-
-      .row style="margin-left:-30px;margin-right:-30px;margin-bottom:15px"
-        .col-sm-offset-3.col-sm-9.col-md-8.col-lg-6
-          span.help-block 
-            a.image-requirements.marketing {
-              href="javascript:;"
-              type="button" 
-              role="button"
-              data-toggle="popover" 
-              data-placement="right" 
-              data-trigger="focus"
-              data-square-min="300x300" 
-              data-square-ratio="1:1"
-              data-landscape-min="600x314" 
-              data-landscape-ratio="1.91:1",
-              data-ads-target="imageRequirements" }
-              | Requirements
-
-      .row style="margin-left:-30px;margin-right:-30px;margin-bottom:25px"
-        label.col-sm-3.control-label Default Images
+  / url: update_gads_company_path(company),
+  / authenticity_token: true,
+  = form_with( \
+      model: company,
+      html: { \
+        id: 'gads-form',
+        class: "directUpload form-horizontal",
+        data: { \
+          controller: 'ads',
+          action: \
+            'image-card:make-default->ads#setNewDefault image-card:submit-form->ads#submitForm ajax:success->ads#onDeletedImage',
+          asset_host: Rails.application.config.asset_host }}) do |form|
+          
+    .row 
+      .form-group.short-headline
+        = form.label(:adwords_short_headline, "Headline", class: 'col-sm-3 control-label')
         .col-sm-9.col-md-8.col-lg-6
-          ul.image-library__default-images
-            = render( \
-                'adwords_images/ad_image_card',
-                { image_index: '0',
-                  collection: 'images',
-                  ad_image: company.ad_images.square_images.default.take || { \
-                    id: '',
-                    type: 'SquareImage',
-                    default: true }})
-            = render( \
-                'adwords_images/ad_image_card',
-                { image_index: '1',
-                  collection: 'images',
-                  ad_image: company.ad_images.landscape_images.default.take || { \
-                    id: '',
-                    type: 'LandscapeImage',
-                    default: true }})
+          div
+            = form.text_field( \
+                :adwords_short_headline,
+                required: true,
+                class: 'form-control',
+                autocomplete: 'off',
+                maxlength: RESPONSIVE_AD_SHORT_HEADLINE_MAX.to_s,
+                data: { 'required-error': 'Required', action: 'input->ads#validateShortHeadline' })
+            button.btn.btn-success.hidden type="submit"
+              span Save
+              i.fa.fa-spin.fa-circle-o-notch style="display:none"
+              i.fa.fa-check style="display:none"
+          span.help-block.with-errors
+            | Max 30 characters
 
-      .row style="margin-left:-30px;margin-right:-30px;margin-bottom:25px"
-        / label.col-sm-3.control-label All Images
-        .col-sm-offset-3.col-sm-9.col-md-8.col-lg-6.text-center
-          button.btn.btn-secondary {
-            type="button"
-            data-action="ads#uploadImage"
-            style="width: 50%"
-            disabled=('true' if missing_default_google_images?(company, 'marketing')) }
-            i.fa.fa-fw.fa-upload
-            |&nbsp;&nbsp;Upload an image
+    .row style="margin-left:-30px;margin-right:-30px"
+      .image-library__collection
+        label.col-sm-3.control-label Image Collection
+        .col-sm-9.col-md-8.col-lg-6
+          .btn-group
+            a.btn.btn-secondary.active href="#image-library__marketing" data-toggle="tab" data-ads-target="collectionBtn"
+              i.fa.fa-fw.fa-image
+              | &nbsp;&nbsp;
+              | Marketing Images
+            a.btn.btn-secondary href="#image-library__logos" data-toggle="tab" data-ads-target="collectionBtn"
+              i.fa.fa-fw.fa-flag
+              | &nbsp;&nbsp;
+              | Logos
 
-      ul.image-library__all-images
-        = render('adwords_images/ad_image_card', { image_index: '2', collection: 'images', ad_image: {} })
-        - company.ad_images.marketing \
-            .select { |image| !image.default? } \
-            .sort_by { |image| image.updated_at }.reverse \
-            .each_with_index do |image, i|
-          = render('adwords_images/ad_image_card', { image_index: (3 + i).to_s, collection: 'images', ad_image: image })
+    .image-library.tab-content
 
-    #image-library__logos.tab-pane
+      #image-library__marketing.tab-pane.in.active
 
-      .row
-        .form-group
+        .row style="margin-left:-30px;margin-right:-30px;margin-bottom:15px"
           .col-sm-offset-3.col-sm-9.col-md-8.col-lg-6
-            div style="display:inline-block;width:50%"
-            div style="display:inline-block;width:50%"
-              span.help-block
-                a.image-requirements.logos {
-                  href="javascript:;" 
-                  data-toggle="popover" 
-                  data-placement="right" 
-                  data-trigger="focus"
-                  data-square-min="128x128" 
-                  data-square-ratio="1:1" 
-                  data-square-suggest="1200x1200"
-                  data-landscape-min="512x128" 
-                  data-landscape-ratio="4:1" 
-                  data-landscape-suggest="1200x300",
-                  data-ads-target="imageRequirements" }
-                  | Optional/Requirements
+            span.help-block 
+              a.image-requirements.marketing {
+                href="javascript:;"
+                type="button" 
+                role="button"
+                data-toggle="popover" 
+                data-placement="right" 
+                data-trigger="focus"
+                data-square-min="300x300" 
+                data-square-ratio="1:1"
+                data-landscape-min="600x314" 
+                data-landscape-ratio="1.91:1",
+                data-ads-target="imageRequirements" }
+                | Requirements
 
-      .row style="margin-left:-30px;margin-right:-30px;margin-bottom:25px"
-        label.col-sm-3.control-label Default Logos
-        .col-sm-9.col-md-8.col-lg-6
-          ul.image-library__default-logos
-            = render( \
-                'adwords_images/ad_image_card',
-                { image_index: (3 + company.ad_images.marketing.where.not(default: true).count).to_s,
-                  collection: 'logos',
-                  ad_image: company.ad_images.square_logos.default.take || { \
-                    id: '',
-                    type: 'SquareLogo',
-                    default: true }})
-            = render( \
-                'adwords_images/ad_image_card',
-                { image_index: (4 + company.ad_images.marketing.where.not(default: true).count).to_s,
-                  collection: 'logos',
-                  ad_image: company.ad_images.landscape_logos.default.take || { \
-                    id: '',
-                    type: 'LandscapeLogo',
-                    default: true }})
+        .row style="margin-left:-30px;margin-right:-30px;margin-bottom:25px"
+          label.col-sm-3.control-label Default Images
+          .col-sm-9.col-md-8.col-lg-6
+            ul.image-library__default-images
+              = render( \
+                  'adwords_images/ad_image_card',
+                  { image_index: '0',
+                    collection: 'images',
+                    ad_image: company.ad_images.square_images.default.take || { \
+                      id: '',
+                      type: 'SquareImage',
+                      default: true }})
+              = render( \
+                  'adwords_images/ad_image_card',
+                  { image_index: '1',
+                    collection: 'images',
+                    ad_image: company.ad_images.landscape_images.default.take || { \
+                      id: '',
+                      type: 'LandscapeImage',
+                      default: true }})
 
-      .row style="margin-left:-30px;margin-right:-30px;margin-bottom:25px"
-        / label.col-sm-3.control-label All Logos
-        .col-sm-offset-3.col-sm-9.col-md-8.col-lg-6.text-center
-          button.btn.btn-secondary {
-            type="button"
-            data-action="ads#uploadLogo"
-            style="width: 50%"
-            disabled=('true' if missing_default_google_images?(company, 'logo')) }
-            i.fa.fa-fw.fa-upload
-            |&nbsp;&nbsp;Upload a logo
+        .row style="margin-left:-30px;margin-right:-30px;margin-bottom:25px"
+          / label.col-sm-3.control-label All Images
+          .col-sm-offset-3.col-sm-9.col-md-8.col-lg-6.text-center
+            button.btn.btn-secondary {
+              type="button"
+              data-action="ads#uploadImage"
+              style="width: 50%"
+              disabled=('true' if missing_default_google_images?(company, 'marketing')) }
+              i.fa.fa-fw.fa-upload
+              |&nbsp;&nbsp;Upload an image
 
-      ul.image-library__all-logos
-        = render( \
-            'adwords_images/ad_image_card',
-            { image_index: (5 + company.ad_images.marketing.where.not(default: true).count).to_s,
-              collection: 'logos',
-              ad_image: {} })
-        - company.ad_images.logos \
-            .select { |logo| !logo.default? } \
-            .sort_by { |img| img.updated_at }.reverse \
-            .each_with_index do |ad_image, i|
+        ul.image-library__all-images
+          = render('adwords_images/ad_image_card', { image_index: '2', collection: 'images', ad_image: {} })
+          - company.ad_images.marketing \
+              .select { |image| !image.default? } \
+              .sort_by { |image| image.updated_at }.reverse \
+              .each_with_index do |image, i|
+            = render('adwords_images/ad_image_card', { image_index: (3 + i).to_s, collection: 'images', ad_image: image })
+
+      #image-library__logos.tab-pane
+
+        .row
+          .form-group
+            .col-sm-offset-3.col-sm-9.col-md-8.col-lg-6
+              div style="display:inline-block;width:50%"
+              div style="display:inline-block;width:50%"
+                span.help-block
+                  a.image-requirements.logos {
+                    href="javascript:;" 
+                    data-toggle="popover" 
+                    data-placement="right" 
+                    data-trigger="focus"
+                    data-square-min="128x128" 
+                    data-square-ratio="1:1" 
+                    data-square-suggest="1200x1200"
+                    data-landscape-min="512x128" 
+                    data-landscape-ratio="4:1" 
+                    data-landscape-suggest="1200x300",
+                    data-ads-target="imageRequirements" }
+                    | Optional/Requirements
+
+        .row style="margin-left:-30px;margin-right:-30px;margin-bottom:25px"
+          label.col-sm-3.control-label Default Logos
+          .col-sm-9.col-md-8.col-lg-6
+            ul.image-library__default-logos
+              = render( \
+                  'adwords_images/ad_image_card',
+                  { image_index: (3 + company.ad_images.marketing.where.not(default: true).count).to_s,
+                    collection: 'logos',
+                    ad_image: company.ad_images.square_logos.default.take || { \
+                      id: '',
+                      type: 'SquareLogo',
+                      default: true }})
+              = render( \
+                  'adwords_images/ad_image_card',
+                  { image_index: (4 + company.ad_images.marketing.where.not(default: true).count).to_s,
+                    collection: 'logos',
+                    ad_image: company.ad_images.landscape_logos.default.take || { \
+                      id: '',
+                      type: 'LandscapeLogo',
+                      default: true }})
+
+        .row style="margin-left:-30px;margin-right:-30px;margin-bottom:25px"
+          / label.col-sm-3.control-label All Logos
+          .col-sm-offset-3.col-sm-9.col-md-8.col-lg-6.text-center
+            button.btn.btn-secondary {
+              type="button"
+              data-action="ads#uploadLogo"
+              style="width: 50%"
+              disabled=('true' if missing_default_google_images?(company, 'logo')) }
+              i.fa.fa-fw.fa-upload
+              |&nbsp;&nbsp;Upload a logo
+
+        ul.image-library__all-logos
           = render( \
               'adwords_images/ad_image_card',
-              { image_index: ((6 + i) + company.ad_images.marketing.where.not(default: true).count).to_s,
+              { image_index: (5 + company.ad_images.marketing.where.not(default: true).count).to_s,
                 collection: 'logos',
-                ad_image: ad_image })
+                ad_image: {} })
+          - company.ad_images.logos \
+              .select { |logo| !logo.default? } \
+              .sort_by { |img| img.updated_at }.reverse \
+              .each_with_index do |ad_image, i|
+            = render( \
+                'adwords_images/ad_image_card',
+                { image_index: ((6 + i) + company.ad_images.marketing.where.not(default: true).count).to_s,
+                  collection: 'logos',
+                  ad_image: ad_image })

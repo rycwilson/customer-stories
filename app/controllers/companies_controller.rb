@@ -62,6 +62,11 @@ class CompaniesController < ApplicationController
     if @company.update(company_params)
       if tags_update?
         head(:ok)
+      elsif ad_images_update?
+        respond_to do |format|
+          format.html { render(partial: 'companies/3_promote/gads_form', locals: { company: @company }) }
+          format.json { render(json: { id: params[:image_id] }) }
+        end
       else
         respond_to do |format|
           format.json do
@@ -216,6 +221,10 @@ class CompaniesController < ApplicationController
 
   def tags_update?
     company_params[:story_categories_attributes].present? or company_params[:products_attributes].present?
+  end
+
+  def ad_images_update?
+    company_params[:adwords_images_attributes].present?
   end
 
   def set_form_options(params, company=nil)
