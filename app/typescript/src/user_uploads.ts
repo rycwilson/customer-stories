@@ -1,14 +1,12 @@
-interface S3DirectPost {
-  url: string;
-  host: string;
-  postData: string;   // JSON string (key, policy, x-amz-credential, x-amz-algorithm, x-amz-date, x-amz-signature)
-}
+// interface S3DirectPost {
+//   url: string;
+//   host: string;
+//   postData: string;   // JSON string (key, policy, x-amz-credential, x-amz-algorithm, x-amz-date, x-amz-signature)
+// }
 
 interface JasnyFileInputContainer extends HTMLDivElement {
   fileinput: ((options: object) => void) & ((action: string) => void)
 }
-
-type AdImageType = 'SquareImage' | 'LandscapeImage' | 'SquareLogo' | 'LandscapeLogo';
 
 // need to validate input file name
 // http://stackoverflow.com/questions/22387874/jquery-validate-plugin-bootstrap-jasny-bootstrap-file-input-regex-validation
@@ -159,9 +157,9 @@ function imageDidPersist(img: HTMLImageElement): boolean {
   return Boolean(src && src.includes('http'));
 }
 
-function setCardClassName($imageCard: JQuery<HTMLLIElement, any>, imageType: AdImageType | '') {
+function setCardClassName($imageCard: JQuery<HTMLLIElement, any>, imageKind: AdImageKind | '') {
   // console.log(`setCardClassName(${type})`, $imageCard.prop('class'))
-  const typeMatch = imageType ? imageType.match(/Square|Landscape/) : null;
+  const typeMatch = imageKind ? imageKind.match(/Square|Landscape/) : null;
   const typeClassName = typeMatch ? `$&--${typeMatch[0].toLowerCase()}` : '';
   $imageCard.attr(
     'class',
@@ -235,14 +233,14 @@ function validateImageDimensions($fileInput: JQuery<HTMLInputElement, any>): str
         (collection === 'logos' && (isSquareLogo || isLandscapeLogo))
       );
   })();
-  const imageType: AdImageType | '' = isValid ? 
+  const imageKind: AdImageKind | '' = isValid ? 
     (collection[0].toUpperCase() + collection.slice(1))
       .replace(/^/, isSquareImage || isSquareLogo ? 'Square' : 'Landscape')
-      .replace(/s$/, '') as AdImageType : 
+      .replace(/s$/, '') as AdImageKind : 
     '';
-  if (!$fileInput.data('default-type')) setCardClassName($imageCard, imageType);
+  if (!$fileInput.data('default-type')) setCardClassName($imageCard, imageKind);
   if (isValid) {
-    $imageCard.children('input[name*="[type]"]').val(imageType);
+    $imageCard.children('input[name*="[type]"]').val(imageKind);
   } else {
     return 'Image is wrong size';
   }
