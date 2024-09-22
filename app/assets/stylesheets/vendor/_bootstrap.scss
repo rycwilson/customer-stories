@@ -22,7 +22,6 @@ table {
 ul.dropdown-menu {
   top: 90%;
   margin-bottom: 0;
-  border-color: #ccc;
   padding: 12px 0 9px;
 
   i {
@@ -31,6 +30,7 @@ ul.dropdown-menu {
   }
 
   a {
+    @include flex-row-center;
     font-family: $company-title-font;
     border-radius: 0; 
     padding: 0.85em 2em 0.85em 1.4em;
