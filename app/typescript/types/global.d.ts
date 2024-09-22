@@ -127,6 +127,7 @@ interface PromotedStory extends Omit<Story, 'published'> {
   success: { customer: Customer, curator_id: number };
   topic_ad: { id: number, status: string };
   retarget_ad: { id: number, status: string };
+  edit_ad_images_path: string;
   path?: string;
 }
 
