@@ -208,7 +208,7 @@ function actionsDropdownTemplate(row: Contribution, type: string, set: any) {
   const viewStoryDropdownItem = !storyExists ? '' : `
       <li>
         <a href="${customerWin?.story.csp_story_path}" data-turbo="false" target="_blank" rel="noopener">
-          <i class="fa fa-search fa-fw action"></i>&nbsp;&nbsp;
+          <i class="fa fa-search fa-fw action"></i>
           View Story
         </a>
       </li>
@@ -219,7 +219,7 @@ function actionsDropdownTemplate(row: Contribution, type: string, set: any) {
       return `
         <li class="${tab}">
           <a href="javascript:;" data-action="dashboard#editStory" data-story-path="${editStoryPath}" data-story-tab="${tab}">
-            <i class="fa ${icon} fa-fw action"></i>&nbsp;&nbsp;
+            <i class="fa ${icon} fa-fw action"></i>
             Customer Story ${section}
           </a>
         </li>
@@ -229,7 +229,7 @@ function actionsDropdownTemplate(row: Contribution, type: string, set: any) {
   const viewCustomerWinDropdownItem = `
     <li class="view-success">
       <a href="javascript:;"}>
-        <i class="fa fa-rocket fa-fw action"></i>&nbsp;&nbsp;
+        <i class="fa fa-rocket fa-fw action"></i>
         View Customer Win
       </a>
     </li>
@@ -262,14 +262,14 @@ function actionsDropdownTemplate(row: Contribution, type: string, set: any) {
               }) :
               {}
           }>
-          <i class="fa fa-${isPreInvite ? 'envelope-o' : 'search'} fa-fw action"></i>&nbsp;&nbsp;
+          <i class="fa fa-${isPreInvite ? 'envelope-o' : 'search'} fa-fw action"></i>
           ${isPreInvite ? 'Compose Invitation' : 'View Sent Invitation'}
         </a>
       </li>
       ${didNotRespond ? `
           <li class="resend-invitation">
             <a href="javascript:;">
-              <i class="fa fa-envelope fa-fw action"></i>&nbsp;&nbsp;
+              <i class="fa fa-envelope fa-fw action"></i>
               Re-send Invitation
             </a>
           </li>
@@ -278,7 +278,7 @@ function actionsDropdownTemplate(row: Contribution, type: string, set: any) {
       ${wasSubmitted ? `
           <li>
             <a href="javascript:;" data-action="contribution#markAsCompleted">
-              <i class="fa fa-check fa-fw action"></i>&nbsp;&nbsp;
+              <i class="fa fa-check fa-fw action"></i>
               Mark as completed
             </a>
           </li>
@@ -297,7 +297,7 @@ function actionsDropdownTemplate(row: Contribution, type: string, set: any) {
       }
       <li>
         <a href="javascript:;" data-action="contribution#deleteRow">
-          <i class="fa fa-remove fa-fw action"></i>&nbsp;&nbsp;
+          <i class="fa fa-remove fa-fw action"></i>
           Delete
         </a>
       </li>

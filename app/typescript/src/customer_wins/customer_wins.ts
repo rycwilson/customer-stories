@@ -202,7 +202,7 @@ function actionsDropdownTemplate(row: CustomerWin, type: string, set: any) {
       ${contributionsExist ? `
           <li>
             <a href="javascript:;" data-action="customer-win#showContributions">
-              <i class="fa fa-comments fa-fw action"></i>&nbsp;&nbsp;
+              <i class="fa fa-comments fa-fw action"></i>
               Contributions
             </a>
           </li>
@@ -217,7 +217,7 @@ function actionsDropdownTemplate(row: CustomerWin, type: string, set: any) {
               data-action="dashboard#${action.toLowerCase() || 'show'}CustomerWinContributors" 
               data-customer-win-id="${id}"
               data-turbo-frame-attrs=${JSON.stringify(turboFrameAttrs) || ''}>
-              <i class="fa fa-users fa-fw action"></i>&nbsp;&nbsp;
+              <i class="fa fa-users fa-fw action"></i>
               ${action} Contributors
             </a>
           </li>
@@ -231,7 +231,7 @@ function actionsDropdownTemplate(row: CustomerWin, type: string, set: any) {
               data-modal-trigger-turbo-frame-attrs-value=${JSON.stringify({ id: 'new-story', src: newStoryPath })}
               data-modal-trigger-submit-button-text-value="Add Story"
               aria-label="New Customer Story">
-              <i class="fa fa-play fa-fw action"></i>&nbsp;&nbsp;
+              <i class="fa fa-play fa-fw action"></i>
               Start Customer Story
             </a>
           </li>
@@ -240,7 +240,7 @@ function actionsDropdownTemplate(row: CustomerWin, type: string, set: any) {
       <li role="separator" class="divider"></li>
       <li>
         <a href="javascript:;" data-action="customer-win#deleteRow">
-          <i class="fa fa-remove fa-fw action"></i>&nbsp;&nbsp;
+          <i class="fa fa-remove fa-fw action"></i>
           Delete
         </a>
       </li>
