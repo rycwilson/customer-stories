@@ -104,6 +104,7 @@ Rails.application.routes.draw do
         resources :stories, only: [:new, :edit, :create, :update, :destroy], shallow: true do
           put '/create_gads', on: :member, to: 'adwords_ads#create'
           put '/update_gads', on: :member, to: 'adwords_ads#update'
+          resources :adwords_ads, only: [:edit, :update], shallow: false
         end
         # resources :stories, only: [:create]
         resources :contributions, except: [:new, :edit, :update], shallow: true do
