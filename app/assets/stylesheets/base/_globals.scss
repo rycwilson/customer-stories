@@ -26,10 +26,10 @@ body {
 }
 
 // https://chriscoyier.net/2023/04/05/prevent-transitions-as-a-page-is-loading/
-.preload * { 
-  transition: none !important;
-  animation-duration: 0.001s !important; 
-}
+// .preload * { 
+//   transition: none !important;
+//   animation-duration: 0.001s !important; 
+// }
 
 .container {
   position: relative;

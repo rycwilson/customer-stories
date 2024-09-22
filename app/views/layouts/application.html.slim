@@ -10,7 +10,6 @@ html lang="en-US" prefix="og: http://ogp.me/ns# fb: http://ogp.me/ns/fb#"
       meta name="robots" content="noindex"
     title = page_title(controller_name, action_name, company: @company)
     = yield(:head) if content_for?(:head)
-    = javascript_include_tag('app', 'data-turbo-track' => 'reload', defer: true)
     
     / Google Fonts - https://developers.google.com/fonts/docs/getting_started
     / https://www.cdnplanet.com/blog/faster-google-webfonts-preconnect/
@@ -25,8 +24,7 @@ html lang="en-US" prefix="og: http://ogp.me/ns# fb: http://ogp.me/ns/fb#"
     = stylesheet_link_tag( \
         custom_stylesheet?(@company, 'application') ? "custom/#{@company.subdomain}/app" : 'application',
         'data-turbo-track' => 'reload')
-    /- unless ['companies', 'stories', 'profile', 'contributions'].include?(controller_name)
-      = stylesheet_link_tag('mvpready-landing', media: 'all', 'data-turbo-track' => 'reload')
+    = javascript_include_tag('app', 'data-turbo-track' => 'reload', defer: true)
     = favicon_link_tag('favicon.ico')
 
     / TODO: this is a temporary hack to avoid compiling assets, overcomes a Firefox-specific style snafu

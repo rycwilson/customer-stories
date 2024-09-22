@@ -1,41 +1,12 @@
 #company-nav {
-  @mixin nav-tab-border {
-    > a, 
-    > a:hover, 
-    > a:focus {
-      border: {
-        width: 2px 0 2px 0;
-        style: solid;
-        color: transparent;
-      }
-    }
-  }
-  
-  @mixin nav-tab-color {
-    > a {
-      color: #666;
-    }
-    
-    > a:hover, 
-    > a:focus,
-    &.open:not(.active) > a {
-      color: #222;
-    }
-  }
-  
-  @mixin active-tab {
-    > a, 
-    > a:hover, 
-    > a:focus {
-      color: $nav-blue; 
-      border-bottom-color: $nav-blue;
-      font-weight: bold;
-    }
-  }
-  
   margin-bottom: 40px;
   background-color: #fff;
   border-bottom: 1px solid #dfdfdf;
+  // padding-top: 7px;
+
+  .row {
+    @include flex-row-center;
+  }
 
   &.unregistered {
     .nav-workflow {
@@ -45,26 +16,57 @@
   }
 
   .nav-tabs > li {
+    > a {
+      padding: 0.65em 0.9em;
+      font-size: 1.35em;
+
+      &.dropdown-toggle {
+        > :first-child {
+          margin-right: 0.35em;
+        }
+      }
+    }
+
     &,
     &.dropdown {
-      @include nav-tab-border;
+      > a, 
+      > a:hover, 
+      > a:focus {
+        border: {
+          width: 0.15em 0;
+          style: solid;
+          color: transparent;
+        }
+      }
 
       &:not(.active) {
-        @include nav-tab-color;
+        > a {
+          color: #666;
+        }
+        
+        > a:hover, 
+        > a:focus,
+        &.open:not(.active) > a {
+          color: #222;
+        }
       }
     }
 
     &.active {
-      @include active-tab;
+      > a, 
+      > a:hover, 
+      > a:focus {
+        color: $nav-blue; 
+        border-bottom-color: $nav-blue;
+        font-weight: bold;
+      }
     }
   }
 }
 
 .nav-tabs.nav-workflow {
-  display: flex;
-  width: 24em;
-  justify-content: space-between;
-  font-size: 16px;
+  @include flex-row-center-between;
+  width: 32em;
   border-bottom: 0;
 
   // this removes space from left and right edge
@@ -101,7 +103,6 @@
       }
     }
   }
-
 }
 
 .nav-tabs.nav-settings {
@@ -125,10 +126,6 @@
 
   li.dropdown {
     @include tab-arrows(64);  
-
-    > a {
-      font-size: 16px;
-    }
 
     // &.open:not(.active) {
       // remove the caret from dropdown

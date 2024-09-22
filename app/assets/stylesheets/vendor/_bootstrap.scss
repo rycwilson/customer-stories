@@ -20,23 +20,26 @@ table {
 }
 
 ul.dropdown-menu {
-  border-color: #ccc;
-  padding: 12px 0 9px;
   top: 90%;
   margin-bottom: 0;
+  border-color: #ccc;
+  padding: 12px 0 9px;
 
-  li {
-    a {
-      font-size: 13px;
-      padding: 12px 20px 12px 14px;
-      border-radius: 0; 
-      color: #555;
+  i {
+    margin-right: 1em;
+    font-size: 1.25em;
+  }
 
-      &:hover, 
-      &:focus {
-        color: #222; 
-        background-color: #efefef;
-      }
+  a {
+    font-family: $company-title-font;
+    border-radius: 0; 
+    padding: 1em 2em 1em 1.4em;
+    color: #555;
+
+    &:hover, 
+    &:focus {
+      background-color: $medium-gray;
+      color: #222; 
     }
   }
 

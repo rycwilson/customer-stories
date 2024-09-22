@@ -40,7 +40,7 @@ nav#company-nav.hidden-xs class="#{'unregistered' unless company&.persisted?}"
               data-toggle="dropdown" 
               href="javascript:;" 
               class=('transition' unless controller_name == 'profile') }
-              i.fa.fa-fw.fa-user-circle-o style="margin-right: 0.2em"
+              i.fa.fa-fw.fa-user-circle-o
               i.fa.fa-caret-down
 
             ul.dropdown-menu.dropdown-menu-right role="menu"
@@ -48,27 +48,25 @@ nav#company-nav.hidden-xs class="#{'unregistered' unless company&.persisted?}"
                 li
                   a href="/user-profile"
                     i.fa.fa-fw.fa-user-circle-o
-                    |&nbsp;&nbsp;&nbsp;
                     = current_user.full_name
               - else
                 li
                   = link_to(edit_profile_no_company_path) do
                     i.fa.fa-fw.fa-user-circle-o
-                    |&nbsp;&nbsp;&nbsp;
                     = current_user.full_name
               / <li role="separator" class="divider"></li>
               li
                 = link_to(destroy_user_session_path, method: :delete) do
                   i.fa.fa-fw.fa-sign-out
-                  |&nbsp;&nbsp;&nbsp;Sign out
+                  | Sign out
             div
             
           li.dropdown.company-settings class="#{'active' if current_page?(controller: 'companies', action: 'edit')}"
             a.dropdown-toggle {
               data-toggle="dropdown" 
               href="javascript:;" 
-              class=('transition' unless controller_name == 'companies') }
-              i.fa.fa-fw.fa-gear style="margin-right: 0.2em"
+              class=('transition' unless current_page?(controller: 'companies', action: 'edit')) }
+              i.fa.fa-fw.fa-gear
               i.fa.fa-caret-down
             ul.dropdown-menu.dropdown-menu-right role="menu"
               li.dropdown-header 
@@ -77,29 +75,29 @@ nav#company-nav.hidden-xs class="#{'unregistered' unless company&.persisted?}"
               li 
                 a href="/settings#customers"
                   i.fa.fa-fw.fa-handshake-o 
-                  |&nbsp;&nbsp;&nbsp;Customers
+                  | Customers
               li
                 a href="/settings#contributor-invitations"
                   i.fa.fa-fw.fa-envelope-o
-                  |&nbsp;&nbsp;&nbsp;Contributor Invitations
+                  | Contributor Invitations
               li
                 a href="/settings#contributor-prompts"
                   i.fa.fa-fw.fa-lightbulb-o
-                  |&nbsp;&nbsp;&nbsp;Contributor Prompts
+                  | Contributor Prompts
               li
                 a href="/settings#website-plugin"
                   i.fa.fa-fw.fa-plug
-                  |&nbsp;&nbsp;&nbsp;Website Plugin
+                  | Website Plugin
               li
                 a href="/settings#cta-links-forms"
                   i.fa.fa-fw.fa-hand-pointer-o
-                  |&nbsp;&nbsp;&nbsp;CTA Links & Forms
+                  | CTA Links & Forms
               li
                 a href="/settings#story-tags"
                   i.fa.fa-fw.fa-tags
-                  |&nbsp;&nbsp;&nbsp;Story Tags
+                  | Story Tags
               li
                 a href="/settings#account"
                   i.fa.fa-fw.fa-gear
-                  |&nbsp;&nbsp;&nbsp;Account Settings
+                  | Account Settings
             div
