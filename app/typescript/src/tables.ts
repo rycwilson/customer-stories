@@ -1,5 +1,5 @@
 import { kebabize } from './utils';
-import ResourceController from './controllers/resource_controller';
+import type ResourceController from './controllers/resource_controller';
 import { type Api as DataTableApi } from 'datatables.net-bs';
 
 export function init(resourceCtrl: ResourceController) {
@@ -73,6 +73,12 @@ export function search(
       }, { once: true });
     }
   } 
+
+  // console.log('searching...', JSON.stringify({
+  //   ...{ curatorId: resourceCtrl.curatorSelectTarget.value },
+  //   ...{ columnFilters },
+  //   ...tsSearchResults ? { tsSearchResults } : { filterVal: resourceCtrl.filterSelectTarget.value }
+  // }))
 
   resourceCtrl.datatableTarget.setAttribute(
     'data-datatable-search-params-value', 
