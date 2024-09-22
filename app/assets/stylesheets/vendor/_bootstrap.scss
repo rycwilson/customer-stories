@@ -26,14 +26,14 @@ ul.dropdown-menu {
   padding: 12px 0 9px;
 
   i {
-    margin-right: 1em;
+    margin-right: 0.75em;
     font-size: 1.25em;
   }
 
   a {
     font-family: $company-title-font;
     border-radius: 0; 
-    padding: 1em 2em 1em 1.4em;
+    padding: 0.85em 2em 0.85em 1.4em;
     color: #555;
 
     &:hover, 

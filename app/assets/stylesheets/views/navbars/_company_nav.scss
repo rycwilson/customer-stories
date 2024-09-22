@@ -18,7 +18,7 @@
   .nav-tabs > li {
     > a {
       padding: 0.65em 0.9em;
-      font-size: 1.35em;
+      font-size: 1.25em;
 
       &.dropdown-toggle {
         > :first-child {
@@ -66,7 +66,7 @@
 
 .nav-tabs.nav-workflow {
   @include flex-row-center-between;
-  width: 32em;
+  width: 30em;
   border-bottom: 0;
 
   // this removes space from left and right edge
