@@ -1,12 +1,12 @@
 //= link_tree ../images
 
+//= link landing.js
 //= link_tree ../builds
 
 //= link_directory ../stylesheets .css
 
 /*
 This is the same thing that is specified in assets.rb
-Note that the link directive requires a path relative to the app/assets directory
 Note that link_directory does not distinguish between css and scss files
 link custom/centerforcustomerengagement/stories.css
 link custom/compas/stories.css
