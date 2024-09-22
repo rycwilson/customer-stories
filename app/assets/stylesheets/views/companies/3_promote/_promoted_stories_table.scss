@@ -3,31 +3,31 @@
   max-width: 175px;
 }
 
-#ads-images-modal {
-  .modal-header {
-    button.close {
-      font-size: 3rem;
-    }
+#edit-story-ad-images-form {
+  // .modal-header {
+  //   button.close {
+  //     font-size: 3rem;
+  //   }
     
-    > div {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-    }
+  //   > div {
+  //     display: flex;
+  //     align-items: center;
+  //     justify-content: space-between;
+  //   }
     
-    .story-title {
-      @include max-lines(1);
-      margin-bottom: 0; 
-      color: #888;
-    }
-  }
+  //   .story-title {
+  //     @include max-lines(1);
+  //     margin-bottom: 0; 
+  //     color: #888;
+  //   }
+  // }
 
-  .modal-body {
-    background-color: #fff;
-    min-height: 400px;
-    // overflow-y: scroll;
-    padding: 20px 15px 15px 15px;
-  }
+  // .modal-body {
+  //   background-color: #fff;
+  //   min-height: 400px;
+  //   // overflow-y: scroll;
+  //   padding: 20px 15px 15px 15px;
+  // }
   
   .btn-group {
     @include image-collection-btn-group;
@@ -81,7 +81,7 @@
       bottom: -10px;
       right: -10px;
       align-items: center;
-      color: #0095ff;  // #449d44; // mac blue: #5E9ED6;
+      color: $brand-primary;
       font-size: 12px;
       padding: 4px;
 
@@ -110,12 +110,6 @@
       }
     }
   }
-}
-
-#select2-ads-preview-select-results li {
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
 }
 
 #promoted-stories-table {
@@ -262,4 +256,10 @@
 // other tables have an info section that normally creates some space here
 // #promoted-stories-table_wrapper > .dataTables_paginate {
 //   margin-top: 35px;
+// }
+
+// #select2-ads-preview-select-results li {
+//   white-space: nowrap;
+//   overflow: hidden;
+//   text-overflow: ellipsis;
 // }

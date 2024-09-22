@@ -34,7 +34,8 @@ export function tableConfig(): Config {
       },
       {
         name: 'long_headline',
-        data: 'ads_long_headline'
+        data: 'ads_long_headline',
+        createdCell: (td: Node) => $(td).addClass('promoted-story-title form-is-clean')
       },
       {
         name: 'status',
@@ -102,29 +103,17 @@ export function tableConfig(): Config {
     ],
 
     createdRow: function (tr: Node, data: object | any[], index: number) { 
-      const { id, title } = data as PromotedStory;
+      const { id, title, edit_ad_images_path: editAdImagesPath } = data as PromotedStory;
       $(tr)
         .attr('data-controller', 'promoted-story')
         .attr('data-promoted-story-datatable-outlet', '#promoted-stories-table')
-        .attr('data-promoted-story-row-data-value', JSON.stringify({ id, title }))
-        .attr('data-story-id', id)
-        .children()
-          .eq(1)
-            .attr('data-title', title)
-            .addClass('promoted-story-customer')
-            .end()
-          .eq(2)
-            .addClass('promoted-story-title form-is-clean')
-            .end()
-          .eq(3)
-            .addClass('status dropdown')
-            .end()
+        .attr('data-promoted-story-row-data-value', JSON.stringify({ id, title, editAdImagesPath }))
     }
   };
 }
 
 function actionsDropdownTemplate(row: PromotedStory, type: string, set: any) {
-  const { id } = row;
+  const { id, edit_ad_images_path: editAdImagesPath } = row;
   return `
     <a id="promoted-story-actions-dropdown-${id}" 
       href="#" 
@@ -139,14 +128,20 @@ function actionsDropdownTemplate(row: PromotedStory, type: string, set: any) {
       aria-labelledby="promoted-story-actions-dropdown-${id}""
       data-dropdown-target="dropdownMenu">
     <li>
-      <a role="button">
-        <i class="fa fa-fw fa-image action"></i>
+      <a 
+        href="javascript:;"
+        role="button"
+        data-controller="modal-trigger" 
+        data-modal-trigger-modal-outlet="#main-modal"
+        data-modal-trigger-title-value="Promoted Story Images"
+        data-modal-trigger-turbo-frame-attrs-value=${JSON.stringify({ id: 'edit-story-ad-images', src: editAdImagesPath })}>
+        <i class="fa fa-fw fa-image"></i>
         Assign Images
       </a>
     </li>
     <li>
       <a href="/promote/preview/${id}" target="_blank">
-        <i class="fa fa-fw fa-external-link action"></i>
+        <i class="fa fa-fw fa-external-link"></i>
         Preview
       </a>
     </li>

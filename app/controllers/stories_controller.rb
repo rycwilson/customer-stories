@@ -302,7 +302,7 @@ class StoriesController < ApplicationController
   def promoted_stories_json
     @company.stories.with_ads.to_json({
       only: [:id, :title, :slug],
-      methods: [:ads_status, :ads_long_headline, :ads_images, :csp_story_path],
+      methods: [:ads_status, :ads_long_headline, :ads_images, :csp_story_path, :edit_ad_images_path],
       include: {
         success: {
           only: [:curator_id],

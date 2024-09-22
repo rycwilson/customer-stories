@@ -570,6 +570,11 @@ class Story < ApplicationRecord
                               end
   end
 
+  def edit_ad_images_path
+    return '' if self.topic_ad.nil?
+    Rails.application.routes.url_helpers.edit_story_adwords_ad_path(self, self.topic_ad)
+  end
+
   def about_jsonld
     customer = self.success.customer
     [{ "@type" => "Corporation",
