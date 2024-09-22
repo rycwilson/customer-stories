@@ -45,10 +45,6 @@ module ApplicationHelper
     end
   end
 
-  def admin_navbar? controller
-    ['companies', 'stories', 'profile'].include?(controller)
-  end
-
   def fixed_navbar? (company, controller, action)
     company.present? &&
     ['compas', 'pixlee'].include?(company.subdomain) &&

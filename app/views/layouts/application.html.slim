@@ -27,35 +27,14 @@ html lang="en-US" prefix="og: http://ogp.me/ns# fb: http://ogp.me/ns/fb#"
     = favicon_link_tag('favicon.ico')
     = javascript_include_tag('app', 'data-turbo-track' => 'reload', defer: true)
 
-    / TODO: this is a temporary hack to avoid compiling assets, overcomes a Firefox-specific style snafu
-    scss:
-      #successes-table .toggle-child > button { width: 100% }
-
-  / TODO: fixed navbar - leave padding as below (false is temp. blocker)
   body {
     class="#{@company.subdomain} #{controller_name} #{action_name}"
-    style="#{@is_social_share_redirect ? 'visibility:hidden;' : ''} \
-      #{admin_navbar?(controller_name) && false ? 'padding-top:65px;' : ''}"
     data-current-user="#{current_user.to_json(only: [:id], methods: [:full_name])}" }
 
-    - if @is_social_share_redirect
-      = yield 
+    - if @zap_auth_initial_req
+      / nothing
+    - elsif controller_name == 'contributions' || @zap_auth_retry
+      / nothing (just flash)
+      = render('shared/flash') if flash.any?
     - else
-      - if admin_navbar?(controller_name)
-        = render('shared/navbars/company_header', { company: @company })
-      - elsif @zap_auth_initial_req
-        / nothing
-      - elsif controller_name == 'contributions' || @zap_auth_retry
-        / nothing (just flash)
-        = render('shared/flash') if flash.any?
-      - else
-        / more logic within the navbar to handle signed in users...
-        = render('shared/navbars/landing_navbar')
-
       = yield
-
-      = yield(:underscore_templates)
-
-      /- if production? && !user_signed_in? && ['site', 'stories'].include?(controller_name)
-        = render('analytics/analytics', { company: @company })
-      
