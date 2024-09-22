@@ -1,5 +1,10 @@
 class AdwordsAdsController < ApplicationController
 
+  def edit 
+    story = Story.friendly.find(params[:story_id])
+    render(partial: 'adwords_ads/edit_ad_images', locals: { story: })
+  end
+
   def create
     story = Story.find params[:id]
     new_gads = {}
