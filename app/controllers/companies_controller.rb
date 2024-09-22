@@ -59,10 +59,11 @@ class CompaniesController < ApplicationController
   end
 
   def update
-    if @company.update(company_params)
+    if true # @company.update(company_params)
       if tags_update?
         head(:ok)
       elsif ad_images_update?
+        sleep 3
         respond_to do |format|
           format.html { render(partial: 'companies/3_promote/gads_form', locals: { company: @company }) }
           format.json { render(json: { id: params[:image_id] }) }
