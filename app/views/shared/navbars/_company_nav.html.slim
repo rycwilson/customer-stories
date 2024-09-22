@@ -36,10 +36,7 @@ nav#company-nav.hidden-xs class="#{'unregistered' unless company&.persisted?}"
       .col-sm-4.col-md-3
         ul.nav.nav-tabs.nav-settings.pull-right role="tablist"
           li.dropdown.user-profile class="#{'active' if controller_name == 'profile'}"
-            a.dropdown-toggle {
-              data-toggle="dropdown" 
-              href="javascript:;" 
-              class=('transition' unless controller_name == 'profile') }
+            a.dropdown-toggle data-toggle="dropdown" href="javascript:;"
               i.fa.fa-fw.fa-user-circle-o
               i.fa.fa-caret-down
 
@@ -62,14 +59,11 @@ nav#company-nav.hidden-xs class="#{'unregistered' unless company&.persisted?}"
             div
             
           li.dropdown.company-settings class="#{'active' if current_page?(controller: 'companies', action: 'edit')}"
-            a.dropdown-toggle {
-              data-toggle="dropdown" 
-              href="javascript:;" 
-              class=('transition' unless current_page?(controller: 'companies', action: 'edit')) }
+            a.dropdown-toggle data-toggle="dropdown" href="javascript:;" 
               i.fa.fa-fw.fa-gear
               i.fa.fa-caret-down
             ul.dropdown-menu.dropdown-menu-right role="menu"
-              li.dropdown-header 
+              li.dropdown-header
                 = company.name
               li.divider role="separator"
               li 

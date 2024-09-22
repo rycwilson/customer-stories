@@ -1,10 +1,5 @@
-
 @import 'buttons';
 @import 'story_card';
-
-// @import '../../../../../vendor/assets/bower_components/select2.sortable/select2.sortable';
-// @import '../../../../vendor/assets/jquery-ui-1.12.1.custom/jquery-ui';
-// @import '../../../../vendor/assets/jquery-ui-1.12.1.custom/jquery-ui.structure';
 
 body {
   font-family: $csp-body-font;
@@ -25,20 +20,21 @@ body {
   }
 }
 
-// https://chriscoyier.net/2023/04/05/prevent-transitions-as-a-page-is-loading/
-// .preload * { 
-//   transition: none !important;
-//   animation-duration: 0.001s !important; 
-// }
 
 .container {
   position: relative;
 }
 
 // see nav_list_controller.ts
-.nav > li > a.transition {
-  transition: color .15s ease-in-out, background-color .15s ease-in-out;
-}
+// .nav > li > a.transition {
+//   transition: color .15s ease-in-out, background-color .15s ease-in-out;
+// }
+
+// https://chriscoyier.net/2023/04/05/prevent-transitions-as-a-page-is-loading/
+// .preload * { 
+//   transition: none !important;
+//   animation-duration: 0.001s !important; 
+// }
 
 label {
   font-weight: 600;

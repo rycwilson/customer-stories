@@ -15,6 +15,11 @@
 @import 'vendor/tomselect';
 @import 'vendor/summernote';
 
+// TODO: Not sure why custom jquery-ui was necessary. Seems to work fine with latest integration (see app.ts).
+// @import '../../../../../vendor/assets/bower_components/select2.sortable/select2.sortable';
+// @import '../../../../vendor/assets/jquery-ui-1.12.1.custom/jquery-ui';
+// @import '../../../../vendor/assets/jquery-ui-1.12.1.custom/jquery-ui.structure';
+
 @import 'views/site';
 @import 'views/navbars/navbars';
 @import 'views/modals/modals';
