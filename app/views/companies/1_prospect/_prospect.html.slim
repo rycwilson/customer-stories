@@ -50,6 +50,7 @@
             data-resource-data-path-value="/successes"
             data-resource-checkbox-filters-value={ \
               'show-wins-with-story': { checked: true, label: 'Customer Wins with Story started'} }.to_json
+            data-action="datatable:init->resource#onTableInitComplete"
             data-resource-name="customerWins"
             aria-labelledby="customer-wins-tab"
             role="tabpanel" }
@@ -68,6 +69,7 @@
               'show-published': { checked: true, label: 'Contributors to published Customer Stories' }}.to_json
             data-resource-invitation-template-select-html-value="
               #{escape_once(render('invitation_templates/inline_select', { company: }))}"
+            data-action="datatable:init->resource#onTableInitComplete"
             data-resource-name="contributions"
             aria-labelledby="contributors-tab"
             role="tabpanel" }

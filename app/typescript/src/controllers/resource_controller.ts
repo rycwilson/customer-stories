@@ -84,11 +84,11 @@ export default class ResourceController extends Controller<HTMLDivElement> {
     }
   }
 
-  tableInitComplete(e: CustomEvent) {
+  onTableInitComplete(e: CustomEvent) {
     tableInitComplete(this, e.detail.dt);
   }
 
-  searchTable(e: CustomEvent) {
+  onTomselectSearch(e: CustomEvent) {
     searchTable(this, e, this.resourceOutlets);
   }
 

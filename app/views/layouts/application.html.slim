@@ -24,8 +24,8 @@ html lang="en-US" prefix="og: http://ogp.me/ns# fb: http://ogp.me/ns/fb#"
     = stylesheet_link_tag( \
         custom_stylesheet?(@company, 'application') ? "custom/#{@company.subdomain}/app" : 'application',
         'data-turbo-track' => 'reload')
-    = favicon_link_tag('favicon.ico')
     = javascript_include_tag('app', 'data-turbo-track' => 'reload', defer: true)
+    = favicon_link_tag('favicon.ico')
 
   body {
     class="#{@company.subdomain} #{controller_name} #{action_name}"

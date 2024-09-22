@@ -55,8 +55,9 @@
             data-resource-data-path-value="/stories"
             data-resource-search-params-value="promoted=true"
             data-resource-checkbox-filters-value={}
+            data-action="datatable:init->resource#onTableInitComplete"
             data-resource-name="promotedStories" }
-            = render('companies/3_promote/promoted_stories_table', company:)
+            = render('companies/3_promote/promoted_stories_table', { company: })
 
           #promote-settings.tab-pane class=('active' if active_tab == '#promote-settings')
-            = render('companies/3_promote/gads_form', company:)
+            = render('companies/3_promote/gads_form', { company: })

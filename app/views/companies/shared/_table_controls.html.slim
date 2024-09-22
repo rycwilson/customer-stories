@@ -16,7 +16,7 @@
               tomselect_kind_value: 'curator', 
               resource_target: 'curatorSelect' } })
 
-    .filter-select data-action="tomselect:change-filter->resource#onChangeFilter tomselect:search->resource#searchTable"
+    .filter-select data-action="tomselect:change-filter->resource#onChangeFilter tomselect:search->resource#onTomselectSearch"
       label
         i.fa.fa-search
       = select_tag( \

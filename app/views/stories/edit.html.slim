@@ -94,6 +94,7 @@
               data-resource-checkbox-filters-value={ \
                 'show-completed': { checked: true, label: 'Contributors with a completed Contribution' },
                 'show-published': { checked: true, label: 'Contributors to published Customer Stories' } }.to_json
+              data-action="datatable:init->resource#onTableInitComplete"
               data-resource-name="storyContributions"
               data-story-id=@story.id
               aria-labelledby="story-contributors-tab"
