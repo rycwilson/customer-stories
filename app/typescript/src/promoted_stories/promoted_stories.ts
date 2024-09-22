@@ -77,12 +77,12 @@ export function tableConfig(): Config {
         data: 'success.curator_id'
       },
       {
-        data: null,
-        render: (data: any, type: any, row: any) => '',    // promoted story controller will render the dropdown
-        createdCell: (td: Node) => {
-          $(td)
-            .attr('data-controller', 'dropdown')
-        }
+        name: 'actions',
+        data: {
+          _: 'ads_status',
+          display: actionsDropdownTemplate
+        },
+        createdCell: (td: Node) => $(td).attr('data-controller', 'dropdown')
       }
     ],
 
@@ -121,4 +121,34 @@ export function tableConfig(): Config {
             .end()
     }
   };
+}
+
+function actionsDropdownTemplate(row: PromotedStory, type: string, set: any) {
+  const { id } = row;
+  return `
+    <a id="promoted-story-actions-dropdown-${id}" 
+      href="#" 
+      class="dropdown-toggle" 
+      data-toggle="dropdown"
+      aria-haspopup="true" 
+      aria-expanded="false">
+      <i class="fa fa-caret-down"></i>
+    </a>
+    <ul 
+      class="dropdown-menu dropdown-menu-right" 
+      aria-labelledby="promoted-story-actions-dropdown-${id}""
+      data-dropdown-target="dropdownMenu">
+    <li>
+      <a role="button">
+        <i class="fa fa-fw fa-image action"></i>
+        Assign Images
+      </a>
+    </li>
+    <li>
+      <a href="/promote/preview/${id}" target="_blank">
+        <i class="fa fa-fw fa-external-link action"></i>
+        Preview
+      </a>
+    </li>
+  `
 }
