@@ -17,6 +17,8 @@ import './controllers';
 
 import { parseDatasetObject } from './utils';
 
+window.addEventListener('load', () => document.body.classList.remove('preload'));
+
 window.CSP ||= appFactory();
 window.CSP.init();
 
