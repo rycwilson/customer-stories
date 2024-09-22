@@ -1,0 +1,36 @@
+= turbo_frame_tag('edit-story-ad-images') do
+
+  = form_with( \
+      model: story,
+      format: :json,
+      html: { \
+        id: 'edit-story-ad-images-form',
+        data: { \
+          controller: 'promoted-story-images',
+          modal_target: 'form',
+          action: 'ajax:success->promoted-story-images#onAjaxSuccess' }}) do |form|
+
+    .image-selections__collection.text-center
+      .btn-group
+        a.btn.btn-secondary.active href="#image-selections__marketing" data-toggle="tab"
+          i.fa.fa-fw.fa-image
+          | &nbsp;&nbsp;
+          | Marketing Images
+        a.btn.btn-secondary href="#image-selections__logos" data-toggle="tab"
+          i.fa.fa-fw.fa-flag
+          | &nbsp;&nbsp;
+          | Logos
+
+    .tab-content
+      #image-selections__marketing.tab-pane.fade.active.in
+        ul.ad-image-selections data-max="15"
+          - story.company.ad_images.marketing.sort_by { |ad_image| ad_image.default ? 0 : 1 }.each do |ad_image|
+            = render( \
+              'adwords_images/ad_image_card', 
+              { image_index: nil, ad_image: ad_image, collection: 'images' })
+      #image-selections__logos.tab-pane.fade
+        ul.ad-logo-selections data-max="5"
+          - story.company.ad_images.logos.each do |ad_image|
+            = render( \
+              'adwords_images/ad_image_card', 
+              { image_index: nil, ad_image: ad_image, collection: 'logos' })
