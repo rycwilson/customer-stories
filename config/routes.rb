@@ -104,7 +104,6 @@ Rails.application.routes.draw do
         resources :stories, only: [:new, :edit, :create, :update, :destroy], shallow: true do
           put '/create_gads', on: :member, to: 'adwords_ads#create'
           put '/update_gads', on: :member, to: 'adwords_ads#update'
-          resources :adwords_ads, only: [:edit, :update], shallow: false
         end
         # resources :stories, only: [:create]
         resources :contributions, except: [:new, :edit, :update], shallow: true do
@@ -125,9 +124,9 @@ Rails.application.routes.draw do
         member { put :widget }
         # need :get for the sync. response (redirect_to)
         # and :put for the async. response (see companies/promote.js.erb)
-        member { get '/adwords', to: 'adwords#update_company' }
-        member { put '/adwords', to: 'adwords#update_company' }
         member { put '/adwords/reset', to: 'adwords#sync_company', as: 'adwords_sync' }
+        
+        resources :adwords_ads, only: [:index, :edit, :update], shallow: true
       end
 
       get '/successes', to: 'successes#index'
