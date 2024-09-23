@@ -36,12 +36,20 @@
       .image-library__collection
         label.col-sm-3.control-label Image Collection
         .col-sm-9.col-md-8.col-lg-6
-          .btn-group
-            a.btn.btn-secondary.active href="#image-library__marketing" data-toggle="tab" data-ads-target="collectionBtn"
+          .btn-group data-controller="btn-group"
+            a.btn.btn-secondary.active {
+              href="#image-library__marketing" 
+              data-toggle="tab" 
+              data-btn-group-target="btn" 
+              role="tab" }
               i.fa.fa-fw.fa-image
               | &nbsp;&nbsp;
               | Marketing Images
-            a.btn.btn-secondary href="#image-library__logos" data-toggle="tab" data-ads-target="collectionBtn"
+            a.btn.btn-secondary {
+              href="#image-library__logos" 
+              data-toggle="tab" 
+              data-btn-group-target="btn"
+              role="tab" }
               i.fa.fa-fw.fa-flag
               | &nbsp;&nbsp;
               | Logos

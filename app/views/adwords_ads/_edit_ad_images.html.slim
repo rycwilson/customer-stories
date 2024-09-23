@@ -11,24 +11,32 @@
           action: 'ajax:success->promoted-story-images#onAjaxSuccess' }}) do |form|
 
     .image-selections__collection.text-center
-      .btn-group
-        a.btn.btn-secondary.active href="#image-selections__marketing" data-toggle="tab"
+      .btn-group data-controller="btn-group"
+        a.btn.btn-secondary.active {
+          href="#image-selections__marketing" 
+          data-toggle="tab"
+          data-btn-group-target="btn"
+          role="tab" }
           i.fa.fa-fw.fa-image
           | &nbsp;&nbsp;
           | Marketing Images
-        a.btn.btn-secondary href="#image-selections__logos" data-toggle="tab"
+        a.btn.btn-secondary {
+          href="#image-selections__logos" 
+          data-toggle="tab"
+          data-btn-group-target="btn"
+          role="tab" }
           i.fa.fa-fw.fa-flag
           | &nbsp;&nbsp;
           | Logos
 
     .tab-content
-      #image-selections__marketing.tab-pane.fade.active.in
+      #image-selections__marketing.tab-pane.active
         ul.ad-image-selections data-max="15"
           - story.company.ad_images.marketing.sort_by { |ad_image| ad_image.default ? 0 : 1 }.each do |ad_image|
             = render( \
               'adwords_images/ad_image_card', 
               { image_index: nil, ad_image: ad_image, collection: 'images' })
-      #image-selections__logos.tab-pane.fade
+      #image-selections__logos.tab-pane
         ul.ad-logo-selections data-max="5"
           - story.company.ad_images.logos.each do |ad_image|
             = render( \

@@ -13,6 +13,9 @@ application.register('ads', AdsController);
 import BootstrapSwitch from './bootstrap_switch_controller.js';
 application.register('bootstrap-switch', BootstrapSwitch);
 
+import BtnGroupController from './btn_group_controller.js';
+application.register('btn-group', BtnGroupController);
+
 import DropdownController from './dropdown_controller.js';
 application.register('dropdown', DropdownController);
 

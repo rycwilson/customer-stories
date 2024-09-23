@@ -4,13 +4,11 @@ import { capitalize } from '../utils';
 
 export default class AdsController extends FormController<AdsController> {
   static targets = [
-    'collectionBtn', 
     'imageRequirements', 
     'imageCard', 
     'newImageCard', 
     'newLogoCard', 
   ];
-  declare readonly collectionBtnTargets: HTMLAnchorElement[];
   declare readonly imageRequirementsTargets: HTMLAnchorElement[];
   declare readonly imageCardTargets: HTMLLIElement[];
   declare readonly newImageCardTarget: HTMLLIElement;
@@ -19,7 +17,6 @@ export default class AdsController extends FormController<AdsController> {
   declare inputObserver: MutationObserver;
   declare imageTimer: number;
 
-  showCollectionHandler = this.onShowCollection.bind(this);
   changeFileInputHandler = this.onChangeFileInput.bind(this);
   validatedFileInputHandler = this.onValidatedFileInput.bind(this);
   validFileInputHandler = this.onValidFileInput.bind(this);
@@ -29,7 +26,6 @@ export default class AdsController extends FormController<AdsController> {
     super.connect();
     // jquery event listeners necessary for hooking into jquery plugin events
     $(this.element)
-      .on('show.bs.tab', this.showCollectionHandler)
       .on('change.bs.fileinput', '.ad-image-card', this.changeFileInputHandler)
       .on('validated.bs.validator', this.validatedFileInputHandler)
       .on('valid.bs.validator', this.validFileInputHandler)
@@ -42,7 +38,6 @@ export default class AdsController extends FormController<AdsController> {
   disconnect() {
     super.disconnect();
     $(this.element)
-      .off('show.bs.tab', this.showCollectionHandler)
       .off('change.bs.fileinput', '.ad-image-card', this.changeFileInputHandler)
       .off('validated.bs.validator', this.validatedFileInputHandler)
       .off('valid.bs.validator', this.validFileInputHandler)
@@ -173,10 +168,6 @@ export default class AdsController extends FormController<AdsController> {
 
   onInvalidFileInput() {
     this.inputObserver.disconnect();
-  }
-
-  onShowCollection(e: JQuery.TriggeredEvent) {
-    this.collectionBtnTargets.forEach(btn => btn.classList.toggle('active'));
   }
 
   setNewDefault(
