@@ -93,6 +93,7 @@ Rails.application.configure do
 
   # https://github.com/rails/jsbundling-rails/issues/40#issuecomment-1006503192
   config.assets.debug = false
+  config.assets.digest = false
 
   # Suppress logger output for asset requests.
   config.assets.quiet = true
