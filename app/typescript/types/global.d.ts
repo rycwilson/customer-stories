@@ -119,21 +119,22 @@ interface Story {
   csp_story_path: string;
 }
 
-interface PromotedStory extends Omit<Story, 'published'> {
-  published: true;
-  ads_status: string;
-  ads_long_headline: string;
-  ads_images: Array<any>;
-  success: { customer: Customer, curator_id: number };
-  topic_ad: { id: number, status: string };
-  retarget_ad: { id: number, status: string };
-  edit_ad_images_path: string;
-  path?: string;
+interface AdwordsAd {
+  id: number;
+  status: string;
+  approvalStatus: string;
+  longHeadline: string;
+  mainColor: string;
+  accentcolor: string;
+  storyId: number;
+  customer: { id: number, name: string };
+  story: { id: number, title: string };
+  curator: { id: number, name: string };
+  path: string;
+  editPath: string;
 }
 
-interface PromotedStoryRowData {
-  id: number;
-  title: string;
+interface AdwordsAdRowData {
   path: string;
 }
 

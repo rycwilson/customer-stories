@@ -6,6 +6,8 @@ class AdwordsAd < ApplicationRecord
   has_one :adwords_campaign, through: :adwords_ad_group
   alias_attribute :campaign, :adwords_campaign
   has_one :company, through: :adwords_campaign
+  has_one :curator, through: :story
+  has_one :customer, through: :story
   has_many :adwords_ads_images, dependent: :destroy
   has_many(
     :adwords_images,
@@ -66,6 +68,9 @@ class AdwordsAd < ApplicationRecord
   #
   # => throw an exception for this case
   #
+
+  scope(:topic, -> { joins(:adwords_campaign).where(adwords_campaign: { type: 'TopicCampaign' }) })
+  scope(:retarget, -> { joins(:adwords_campaign).where(adwords_campaign: { type: 'RetargetCampaign' }) })
 
   before_create :assign_defaults
   before_create :create_gad, if: :promote_enabled?

@@ -16,8 +16,11 @@ export function tableConfig(): Config {
     columns: [
       {
         name: 'story',
-        data: 'id',
-        render: (storyId: number, type: string, row: PromotedStory) => {
+        data: {
+          _: 'storyId',
+          display: 'story.title'  
+        },
+        render: (storyId: number, type: string, row: AdwordsAd) => {
           const toggleBtn = `
             <button type="button" class="btn" data-action="promoted-story#toggleChildRow">
               <i class="fa fa-caret-right"></i>
@@ -30,22 +33,26 @@ export function tableConfig(): Config {
       },
       {
         name: 'customer',
-        data: 'success.customer.name'
+        data: {
+          _: 'customer.id',
+          display: 'customer.name'
+        }
       },
       {
-        name: 'long_headline',
-        data: 'ads_long_headline',
+        name: 'longHeadline',
+        data: 'longHeadline',
         createdCell: (td: Node) => $(td).addClass('promoted-story-title form-is-clean')
       },
       {
         name: 'status',
-        data: 'ads_status',
-        render: (ads_status, type, row, meta) => {
+        data: 'status',
+        render: (status, type, row: AdwordsAd) => {
+          const { id, path } = row;
           return type !== 'display' ?
-            ads_status : `
-            <form action="/stories/${row.id}/update_gads" class="ads-status" method="put" data-remote="true" data-type="script" data-submitted="">
+            status : `
+            <form action="${path}" class="ads-status" method="put" data-remote="true" data-type="script" data-submitted="">
               <!-- topic -->
-              <input type="hidden" name="story[topic_ad_attributes][id]" value="${row.topic_ad.id}">
+              <input type="hidden" name="story[topic_ad_attributes][id]" value="${id}">
               <input type="hidden" name="story[topic_ad_attributes][status]" value="PAUSED">
               <div data-controller="bootstrap-switch" data-bootstrap-switch-disabled-value="true" data-bootstrap-switch-size-value="small">
                 <input 
@@ -56,31 +63,34 @@ export function tableConfig(): Config {
                   data-bootstrap-switch-target="switch"
                   data-on-text="<i class='fa fa-fw fa-play'></i>"
                   data-off-text="<i class='fa fa-fw fa-pause'></i>"
-                  ${ads_status === 'ENABLED' ? 'checked' : null}>
+                  ${status === 'ENABLED' ? 'checked' : null}>
               </div>
               <div style="height: 14px;">
-                <span class="help-block" style="font-size: 10px; margin: 0">${ads_status}</span>
+                <span class="help-block" style="font-size: 10px; margin: 0">${status}</span>
               </div>
-              <!-- retarget -->
-              <input type="hidden" name="story[retarget_ad_attributes][id]" value="${row.retarget_ad.id}">
-              <input type="hidden" name="story[retarget_ad_attributes][status]" value="PAUSED">
-              <input 
-                type="checkbox" 
-                class="hidden" 
-                name="story[retarget_ad_attributes][status]" 
-                value="ENABLED"
-                ${ads_status === 'ENABLED' ? 'checked' : null}>
-            </form>`
+              </form>`;
         }
+            // <!-- retarget -->
+            // <input type="hidden" name="story[retarget_ad_attributes][id]" value="${row.retarget_ad.id}">
+            // <input type="hidden" name="story[retarget_ad_attributes][status]" value="PAUSED">
+            // <input 
+            //   type="checkbox" 
+            //   class="hidden" 
+            //   name="story[retarget_ad_attributes][status]" 
+            //   value="ENABLED"
+            //   ${status === 'ENABLED' ? 'checked' : null}>
       },
       {
         name: 'curator',
-        data: 'success.curator_id'
+        data: {
+          _: 'curator.id',
+          display: 'curator.name'
+        }
       },
       {
         name: 'actions',
         data: {
-          _: 'ads_status',
+          _: 'status',
           display: actionsDropdownTemplate
         },
         createdCell: (td: Node) => $(td).attr('data-controller', 'dropdown')
@@ -88,13 +98,9 @@ export function tableConfig(): Config {
     ],
 
     columnDefs: [
-      { targets: [colIndices.curator], visible: false },
-      { targets: [0, colIndices.title, colIndices.actions], orderable: false },
-      {
-        // targets: [colIndices.status, colIndices.title, colIndices.actions],
-        targets: [0, colIndices.status, colIndices.title],
-        searchable: false
-      },
+      { visible: false , targets: [colIndices.curator], },
+      { orderable: false, targets: [0, colIndices.actions] },
+      { searchable: false, targets: [0, colIndices.status, colIndices.title] },
       { targets: 0, width: '2em' },
       { targets: colIndices.customer, width: 'auto' },
       { targets: colIndices.title, width: 'auto' },
@@ -103,17 +109,18 @@ export function tableConfig(): Config {
     ],
 
     createdRow: function (tr: Node, data: object | any[], index: number) { 
-      const { id, title, edit_ad_images_path: editAdImagesPath } = data as PromotedStory;
+      // datatable_row_controller expects this property
+      const { path } = data as AdwordsAd;
       $(tr)
         .attr('data-controller', 'promoted-story')
         .attr('data-promoted-story-datatable-outlet', '#promoted-stories-table')
-        .attr('data-promoted-story-row-data-value', JSON.stringify({ id, title, editAdImagesPath }))
+        .attr('data-promoted-story-row-data-value', JSON.stringify({ path }))
     }
   };
 }
 
-function actionsDropdownTemplate(row: PromotedStory, type: string, set: any) {
-  const { id, edit_ad_images_path: editAdImagesPath } = row;
+function actionsDropdownTemplate(row: AdwordsAd, type: string, set: any) {
+  const { id, editPath } = row;
   return `
     <a id="promoted-story-actions-dropdown-${id}" 
       href="#" 
@@ -130,11 +137,11 @@ function actionsDropdownTemplate(row: PromotedStory, type: string, set: any) {
     <li>
       <a 
         href="javascript:;"
-        role="button"
         data-controller="modal-trigger" 
         data-modal-trigger-modal-outlet="#main-modal"
         data-modal-trigger-title-value="Promoted Story Images"
-        data-modal-trigger-turbo-frame-attrs-value=${JSON.stringify({ id: 'edit-story-ad-images', src: editAdImagesPath })}>
+        data-modal-trigger-turbo-frame-attrs-value=${JSON.stringify({ id: 'edit-adwords-ad-images', src: editPath })}
+        role="button">
         <i class="fa fa-fw fa-image"></i>
         Assign Images
       </a>

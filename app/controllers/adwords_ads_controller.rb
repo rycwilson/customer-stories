@@ -1,8 +1,14 @@
 class AdwordsAdsController < ApplicationController
 
+  def index
+    company = Company.find params[:company_id]
+    @ads = company.adwords_ads.topic
+    respond_to { |format| format.json }
+  end
+
   def edit 
-    story = Story.friendly.find(params[:story_id])
-    render(partial: 'adwords_ads/edit_ad_images', locals: { story: })
+    @ad = AdwordsAd.find params[:id]
+    render(partial: 'adwords_ads/edit_ad_images', locals: { ad: @ad })
   end
 
   def create
@@ -182,8 +188,8 @@ class AdwordsAdsController < ApplicationController
 
   def story_params
     params.require(:story).permit(
-      topic_ad_attributes: [ :id, :status, :long_headline, adwords_image_ids: [] ],
-      retarget_ad_attributes: [ :id, :status, :long_headline, adwords_image_ids: [] ]
+      topic_ad_attributes: [:id, :status, :long_headline, adwords_image_ids: []],
+      retarget_ad_attributes: [:id, :status, :long_headline, adwords_image_ids: []]
     )
   end
 
