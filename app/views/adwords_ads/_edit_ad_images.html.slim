@@ -1,10 +1,10 @@
-= turbo_frame_tag('edit-story-ad-images') do
+= turbo_frame_tag('edit-adwords-ad-images') do
 
   = form_with( \
-      model: story,
+      model: ad,
       format: :json,
       html: { \
-        id: 'edit-story-ad-images-form',
+        id: 'edit-adwords-ad-images-form',
         data: { \
           controller: 'promoted-story-images',
           modal_target: 'form',
@@ -32,13 +32,13 @@
     .tab-content
       #image-selections__marketing.tab-pane.active
         ul.ad-image-selections data-max="15"
-          - story.company.ad_images.marketing.sort_by { |ad_image| ad_image.default ? 0 : 1 }.each do |ad_image|
+          - ad.company.ad_images.marketing.sort_by { |ad_image| ad_image.default ? 0 : 1 }.each do |ad_image|
             = render( \
               'adwords_images/ad_image_card', 
               { image_index: nil, ad_image: ad_image, collection: 'images' })
       #image-selections__logos.tab-pane
         ul.ad-logo-selections data-max="5"
-          - story.company.ad_images.logos.each do |ad_image|
+          - ad.company.ad_images.logos.each do |ad_image|
             = render( \
               'adwords_images/ad_image_card', 
               { image_index: nil, ad_image: ad_image, collection: 'logos' })
