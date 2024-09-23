@@ -10,7 +10,6 @@ export default class BtnGroupController extends Controller<HTMLDivElement> {
   showTabHandler = this.onShowTab.bind(this);
 
   connect() {
-    console.log('connect')
     if (this.enableTabsValue) $(this.element).on('show.bs.tab', this.showTabHandler);
   }
 
@@ -19,7 +18,6 @@ export default class BtnGroupController extends Controller<HTMLDivElement> {
   }
 
   onShowTab({ target: btn }: { target: HTMLAnchorElement }) {
-    console.log('hello')
     this.btnTargets.forEach(_btn => _btn.classList.toggle('active', _btn === btn));
   }
 }
