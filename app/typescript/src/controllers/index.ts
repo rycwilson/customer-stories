@@ -10,6 +10,9 @@ import { application } from "./application.js"
 import AdsController from './ads_controller.js';
 application.register('ads', AdsController);
 
+import AdwordsAdImagesController from './adwords_ad_images_controller.js';
+application.register('edit-adwords-ad-images', AdwordsAdImagesController);
+
 import BootstrapSwitch from './bootstrap_switch_controller.js';
 application.register('bootstrap-switch', BootstrapSwitch);
 
