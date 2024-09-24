@@ -3,10 +3,15 @@ class AdwordsImage < ApplicationRecord
   attr_accessor :is_default_card  # for distinguishing default (static) image cards from dynamic
 
   belongs_to :company
-  has_many :adwords_ads_images, dependent: :destroy
-  has_many :adwords_ads, through: :adwords_ads_images
+  has_and_belongs_to_many :adwords_ads
   alias_attribute :ads, :adwords_ads
   has_many :stories, through: :adwords_ads
+
+  scope :default, -> { where(default: true) }
+  scope :marketing, -> { where(type: ['SquareImage', 'LandscapeImage']) }
+  scope :logo, -> { where(type: ['SquareLogo', 'LandscapeLogo']) }
+  scope :square, -> { where(type: ['SquareImage', 'SquareLogo']) }
+  scope :landscape, -> { where(type: ['LandscapeImage', 'LandscapeLogo']) }
 
   validates_presence_of :company  # https://launchacademy.com/blog/validating-associations-in-rails
   # validates_presence_of :type, # SquareLogo, LandscapeLogo, SquareImage, LandscapeImage
@@ -17,9 +22,9 @@ class AdwordsImage < ApplicationRecord
   # before_validation :upload_to_google, on: :create
 
   # https://medium.com/appaloosa-store-engineering/caution-when-using-before-destroy-with-model-association-71600b8bfed2
-  before_destroy :update_ads, prepend: true, if: :promote_enabled?
+  # before_destroy :update_ads, prepend: true, if: :promote_enabled?
 
-  after_destroy_commit { S3Util::delete_object(S3_BUCKET, self.image_url) }
+  after_destroy_commit { S3Util::delete_object(S3_BUCKET, image_url) }
 
   private
 
@@ -35,13 +40,13 @@ class AdwordsImage < ApplicationRecord
     # only required images need to be replaced => SquareImage or LandscapeImage
     # don't just refer to self.ads here, or ads will be assigned by reference and will
     # empty once images have been disassociated
-    ads = AdwordsAd.find(self.ads.map { |ad| ad.id })
-    self.ads.each do |ad|
+    ads.each do |ad|
       ad.images.delete(self)
-      if ad.square_images.blank?
-        ad.images << ad.company.adwords_images.square_images.default.take
-      elsif ad.landscape_images.blank?
-        ad.images << ad.company.adwords_images.landscape_images.default.take
+      if ad.images.marketing.square.blank?
+        ad.images << company.ad_images.default.marketing.square.take
+      end
+      if ad.images.marketing.landscape.blank?
+        ad.images << company.ad_images.default.marketing.landscape.take
       end
     end
     # GoogleAds::update_ads(ads)

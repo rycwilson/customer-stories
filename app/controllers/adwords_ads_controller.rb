@@ -166,18 +166,18 @@ class AdwordsAdsController < ApplicationController
 
     # same for the logo
     @image_url = (
-      @story.ads.first&.landscape_images&.take&.image_url || 
-      @company.ad_images.default.landscape_images.take&.image_url ||
+      @story.ads.first&.images&.marketing&.landscape&.take&.image_url || 
+      @company.ad_images.default.marketing.landscape.take&.image_url ||
       helpers.asset_url(RESPONSIVE_AD_LANDSCAPE_IMAGE_PLACEHOLDER)
     )
     @square_image_url = (
-      @story.ads.first&.square_images&.take&.image_url || 
-      @company.ad_images.default.square_images.take&.image_url ||
+      @story.ads.first&.images&.marketing&.square&.take&.image_url || 
+      @company.ad_images.default.marketing.square.take&.image_url ||
       helpers.asset_url(RESPONSIVE_AD_SQUARE_IMAGE_PLACEHOLDER)
     )
     @logo_url = (
-      @story.ads.first&.square_logos&.take&.image_url || 
-      @company.ad_images.default.square_logos.take&.image_url ||
+      @story.ads.first&.images&.logo&.square&.take&.image_url || 
+      @company.ad_images.default.logo.square.take&.image_url ||
       helpers.asset_url(RESPONSIVE_AD_SQUARE_LOGO_PLACEHOLDER)
     )
     set_ad_parameters(@long_headline)
@@ -194,12 +194,12 @@ class AdwordsAdsController < ApplicationController
   end
 
   def add_missing_default_images(story)
-    default_images = story.company.adwords_images.default
+    default_images = story.company.ad_images.default
     story.ads.each do |ad|
-      ad.square_images << default_images.square_images unless ad.square_images.present?
-      ad.landscape_images << default_images.landscape_images unless ad.landscape_images.present?
-      ad.square_logos << default_images.square_logos unless ad.square_logos.present?
-      ad.landscape_logos << default_images.landscape_logos unless ad.landscape_logos.present?
+      ad.images << default_images.marketing.square unless ad.images.marketing.square.present?
+      ad.images << default_images.marketing.landscape unless ad.images.marketing.landscape.present?
+      ad.images << default_images.logo.square unless ad.images.logo.square.present?
+      ad.images << default_images.logo.landscape unless ad.images.logo.landscape.present?
       ad.save
     end
   end

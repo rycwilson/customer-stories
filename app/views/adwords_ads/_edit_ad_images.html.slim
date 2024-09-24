@@ -33,12 +33,8 @@
       #image-selections__marketing.tab-pane.active
         ul.ad-image-selections data-max="15"
           - ad.company.ad_images.marketing.sort_by { |ad_image| ad_image.default ? 0 : 1 }.each do |ad_image|
-            = render( \
-              'adwords_images/ad_image_card', 
-              { image_index: nil, ad_image: ad_image, collection: 'images' })
+            = render('adwords_images/ad_image_card', { ad_image:, image_index: nil, collection: 'images' })
       #image-selections__logos.tab-pane
         ul.ad-logo-selections data-max="5"
-          - ad.company.ad_images.logos.each do |ad_image|
-            = render( \
-              'adwords_images/ad_image_card', 
-              { image_index: nil, ad_image: ad_image, collection: 'logos' })
+          - ad.company.ad_images.logo.each.sort_by { |ad_image| ad_image.default ? 0 : 1 }.each do |ad_image|
+            = render('adwords_images/ad_image_card', { ad_image:, image_index: nil, collection: 'logos' })

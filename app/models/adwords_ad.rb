@@ -8,50 +8,8 @@ class AdwordsAd < ApplicationRecord
   has_one :company, through: :adwords_campaign
   has_one :curator, through: :story
   has_one :customer, through: :story
-  has_many :adwords_ads_images, dependent: :destroy
-  has_many(
-    :adwords_images,
-    through: :adwords_ads_images,
-    after_add: :clear_promoted_stories_cache,
-    after_remove: :clear_promoted_stories_cache
-  ) { def default; where(default: true); end }
+  has_and_belongs_to_many :adwords_images
   alias_attribute :images, :adwords_images
-  has_many(
-    :marketing_images,
-    -> { where(type: ['SquareImage', 'LandscapeImage']) },
-    through: :adwords_ads_images,
-    source: :adwords_image
-  )
-  has_many(
-    :logos,
-    -> { where(type: ['SquareLogo', 'LandscapeLogo']) },
-    through: :adwords_ads_images,
-    source: :adwords_image
-  )
-  has_many(
-    :square_images,
-    -> { where(type: 'SquareImage') },
-    through: :adwords_ads_images,
-    source: :adwords_image
-  ) { def default; where(default: true); end }
-  has_many(
-    :landscape_images,
-    -> { where(type: 'LandscapeImage') },
-    through: :adwords_ads_images,
-    source: :adwords_image
-  ) { def default; where(default: true); end }
-  has_many(
-    :square_logos,
-    -> { where(type: 'SquareLogo') },
-    through: :adwords_ads_images,
-    source: :adwords_image
-  ) { def default; where(default: true); end }
-  has_many(
-    :landscape_logos,
-    -> { where(type: 'LandscapeLogo') },
-    through: :adwords_ads_images,
-    source: :adwords_image
-  ) { def default; where(default: true); end }
 
   validates_presence_of :story
   validates_presence_of :ad_group
@@ -79,12 +37,11 @@ class AdwordsAd < ApplicationRecord
   # after_commit :clear_promoted_stories_cache, on: [:create, :update, :destroy]
 
   def google_ad
-    campaign_type = self.ad_group.campaign.type.match('Topic') ? 'topic' : 'retarget'
-    default_images = self.story.company.adwords_images.default
-    square_images = (self.new_record? ? default_images.square_images : self.square_images).to_a
-    landscape_images = (self.new_record? ? default_images.landscape_images : self.landscape_images).to_a
-    square_logos = (self.new_record? ? default_images.square_logos : self.square_logos).to_a
-    landscape_logos = (self.new_record? ? default_images.landscape_logos : self.landscape_logos).to_a
+    campaign_type = ad_group.campaign.type.match(/(?<type>Topic|Retarget)/)[:type].downcase
+    square_images = (new_record? ? company.ad_images.default.marketing.square : images.marketing.square).to_a
+    landscape_images = (new_record? ? company.ad_images.default.marketing.landscape : images.marketing.landscape).to_a
+    square_logos = (new_record? ? company.ad_images.default.logo.square : images.logo.square).to_a
+    landscape_logos = (new_record? ? company.ad_images.default.logo.landscape : images.logo.landscape).to_a
     [square_images, landscape_images, square_logos, landscape_logos].each do |images|
       images.map! do |image|
         {
@@ -101,7 +58,7 @@ class AdwordsAd < ApplicationRecord
         {
           asset: {
             xsi_type: 'TextAsset',
-            asset_text: self.story.company.adwords_short_headline  # get company via story in case ad is new record
+            asset_text: company.adwords_short_headline  # get company via story in case ad is new record
           }
         }
       ],
@@ -109,15 +66,15 @@ class AdwordsAd < ApplicationRecord
         {
           asset: {
             xsi_type: 'TextAsset',
-            asset_text: self.long_headline
+            asset_text: long_headline
           }
         },
       ],
-      business_name: self.story.company.name,
+      business_name: company.name,
       long_headline: {
         asset: {
           xsi_type: 'TextAsset',
-          asset_text: self.long_headline
+          asset_text: long_headline
         }
       },
       # the association methods (e.g. ad.landscape_images) don't work here
@@ -125,7 +82,7 @@ class AdwordsAd < ApplicationRecord
       marketing_images: landscape_images,
       square_marketing_images: square_images,
       final_urls: [
-        self.story.csp_story_url + "?utm_campaign=promote&utm_content=#{ campaign_type }"
+        story.csp_story_url + "?utm_campaign=promote&utm_content=#{campaign_type}"
       ],
       call_to_action_text: 'See More',
       # main_color: self.main_color,
