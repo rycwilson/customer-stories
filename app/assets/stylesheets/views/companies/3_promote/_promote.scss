@@ -1,4 +1,3 @@
-
 @import 'promoted_stories_table';
 @import 'gads_form';
 
@@ -10,7 +9,8 @@
   }
 }
 
-#gads-checklist, #gads-results {
+#gads-checklist, 
+#gads-results {
   padding-left: 20px;
   font-size: 12px;
   margin-bottom: 15px;
@@ -19,11 +19,13 @@
     margin-bottom: 5px;
   }
 
-  li.checked, li.success {
+  li.checked, 
+  li.success {
     color: #3c763d;
   }
 
-  li.unchecked, li.errors {
+  li.unchecked, 
+  li.errors {
       color: #a94442;
   }
 

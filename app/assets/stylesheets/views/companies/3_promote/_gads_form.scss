@@ -1,5 +1,4 @@
 .image-library__collection {
-  @include image-collection-btn-group;
   margin-bottom: 0;
 
   .btn-group {
@@ -27,7 +26,9 @@
   }
 }
 
-ul:is([class*="image-library"], .ad-image-selections, .ad-logo-selections) {
+ul:is([class*="image-library"], 
+.ad-image-selections, 
+.ad-logo-selections) {
   display: flex;
   flex-wrap: wrap;
   align-items: center;

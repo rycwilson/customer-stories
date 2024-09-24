@@ -4,33 +4,7 @@
 }
 
 #edit-adwords-ad-images-form {
-  // .modal-header {
-  //   button.close {
-  //     font-size: 3rem;
-  //   }
-    
-  //   > div {
-  //     display: flex;
-  //     align-items: center;
-  //     justify-content: space-between;
-  //   }
-    
-  //   .story-title {
-  //     @include max-lines(1);
-  //     margin-bottom: 0; 
-  //     color: #888;
-  //   }
-  // }
-
-  // .modal-body {
-  //   background-color: #fff;
-  //   min-height: 400px;
-  //   // overflow-y: scroll;
-  //   padding: 20px 15px 15px 15px;
-  // }
-  
   .btn-group {
-    @include image-collection-btn-group;
     width: 75%;
   }
 

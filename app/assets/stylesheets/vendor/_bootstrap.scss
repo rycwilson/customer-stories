@@ -84,3 +84,38 @@ ul.dropdown-menu {
   transition: none;
   display: none;
 }
+
+.btn-group {
+  a.btn-secondary {
+    width: 50%;
+    padding: 8px 16px;
+    border-color: #ccc;
+    color: #666;
+    transition: border-color 0s;
+    
+    &:hover {
+      color: #222;
+
+      &:not(.active) {
+        border-color: #ccc;
+      }
+    }
+
+    &:hover, 
+    &:active {
+      background-color: #e5e5e5;
+    }
+
+    &:active, 
+    &.active {
+      box-shadow: none; 
+    }
+
+    &.active {
+      pointer-events: none;
+      background-color: $medium-gray;
+      border-color: $nav-blue;
+      color: $nav-blue;
+    }
+  }
+}
