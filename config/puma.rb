@@ -21,7 +21,8 @@ environment ENV.fetch("RAILS_ENV") { "development" }
 # Workers do not work on JRuby or Windows (both of which do not support
 # processes).
 #
-workers ENV.fetch("WEB_CONCURRENCY") { ENV.fetch("RAILS_ENV") == 'development' ? 1 : 2 }
+workers_count = ENV.fetch("WEB_CONCURRENCY") { ENV.fetch("RAILS_ENV") == 'development' ? 0 : 2 }
+workers(workers_count) if workers_count > 0
 
 # Use the `preload_app!` method when specifying a `workers` number.
 # This directive tells Puma to first boot the application and load code
@@ -30,7 +31,7 @@ workers ENV.fetch("WEB_CONCURRENCY") { ENV.fetch("RAILS_ENV") == 'development' ?
 # you need to make sure to reconnect any threads in the `on_worker_boot`
 # block.
 #
-preload_app!
+preload_app! if workers_count > 0
 
 # The code in the `on_worker_boot` will be called if you are using
 # clustered mode by specifying a number of `workers`. After each worker
