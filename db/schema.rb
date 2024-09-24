@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2024_06_25_222050) do
+ActiveRecord::Schema.define(version: 2024_09_24_154935) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_stat_statements"
@@ -87,13 +87,10 @@ ActiveRecord::Schema.define(version: 2024_06_25_222050) do
     t.index ["story_id"], name: "index_adwords_ads_on_story_id"
   end
 
-  create_table "adwords_ads_images", id: :serial, force: :cascade do |t|
-    t.bigint "adwords_ad_id"
-    t.bigint "adwords_image_id"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.index ["adwords_ad_id"], name: "index_adwords_ads_images_on_adwords_ad_id"
-    t.index ["adwords_image_id"], name: "index_adwords_ads_images_on_adwords_image_id"
+  create_table "adwords_ads_images", id: false, force: :cascade do |t|
+    t.bigint "adwords_ad_id", null: false
+    t.bigint "adwords_image_id", null: false
+    t.index ["adwords_ad_id", "adwords_image_id"], name: "index_adwords_ads_images_on_adwords_ad_id_and_adwords_image_id"
   end
 
   create_table "adwords_campaigns", id: :serial, force: :cascade do |t|
@@ -555,8 +552,6 @@ ActiveRecord::Schema.define(version: 2024_06_25_222050) do
   add_foreign_key "adwords_ad_groups", "adwords_campaigns"
   add_foreign_key "adwords_ads", "adwords_ad_groups"
   add_foreign_key "adwords_ads", "stories"
-  add_foreign_key "adwords_ads_images", "adwords_ads"
-  add_foreign_key "adwords_ads_images", "adwords_images"
   add_foreign_key "adwords_campaigns", "companies"
   add_foreign_key "adwords_images", "companies"
   add_foreign_key "call_to_actions", "companies"
