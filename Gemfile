@@ -80,6 +80,7 @@ end
 group :development do
   gem 'web-console', '>= 4.1.0'
   gem 'spring'
+  gem 'solargraph'
 
   # Can be configured to work on production as well, see: 
   # https://github.com/MiniProfiler/rack-mini-profiler/blob/master/README.md
