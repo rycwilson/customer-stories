@@ -1105,8 +1105,7 @@ class Company < ApplicationRecord
   end
 
   def missing_default_ad_images? image_type
-    company.ad_images.default.send(image_type).square.blank? && 
-    company.ad_images.default.send(image_type).landscape.blank?
+    ad_images.default.send(image_type).square.blank? and ad_images.default.send(image_type).landscape.blank?
   end
 
   private
