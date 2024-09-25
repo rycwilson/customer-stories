@@ -36,17 +36,6 @@ module CompaniesHelper
     type ? min_dimensions[type.to_sym] : min_dimensions
   end
 
-  def missing_default_google_images?(company, image_type)
-    false
-    # if image_type == 'marketing'
-    #   company.adwords_images.square_images.default.blank? ||
-    #   company.adwords_images.landscape_images.default.blank?
-    # else
-    #   company.adwords_images.square_logos.default.blank? ||
-    #   company.adwords_images.landscape_logos.default.blank?
-    # end
-  end
-
   def ad_image_placeholder(type)
     case type
     when 'SquareImage'

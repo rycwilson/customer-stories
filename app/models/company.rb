@@ -1104,6 +1104,11 @@ class Company < ApplicationRecord
     return (o > 125) ? 'dark' : 'light';
   end
 
+  def missing_default_ad_images? image_type
+    company.ad_images.default.send(image_type).square.blank? && 
+    company.ad_images.default.send(image_type).landscape.blank?
+  end
+
   private
 
 
