@@ -2,7 +2,7 @@ import { Controller } from '@hotwired/stimulus';
 
 export default class ImageCardController extends Controller<HTMLLIElement> {
   static values = {
-    toggleDefault: { type: Boolean, default: false },   // whether the defaultCheckbox should be checked
+    toggleDefault: { type: Boolean, default: false },   // whether the defaultImageCheckbox should be checked
     kind: String,
     imageId: Number,
   }
@@ -10,10 +10,11 @@ export default class ImageCardController extends Controller<HTMLLIElement> {
   declare readonly kindValue: string;
   declare readonly imageIdValue: number
 
-  static targets = ['formGroup', 'defaultCheckbox', '_destroyCheckbox'];
+  static targets = ['formGroup', 'adImageCheckbox', 'defaultImageCheckbox', '_destroyImageCheckbox'];
   declare readonly formGroupTarget: HTMLDivElement;
-  declare readonly defaultCheckboxTarget: HTMLInputElement;
-  declare readonly _destroyCheckboxTarget: HTMLInputElement;
+  declare readonly adImageCheckboxTarget: HTMLInputElement;
+  declare readonly defaultImageCheckboxTarget: HTMLInputElement;
+  declare readonly _destroyImageCheckboxTarget: HTMLInputElement;
 
   makeDefault() {
     this.toggleDefaultValue = true;
@@ -23,12 +24,12 @@ export default class ImageCardController extends Controller<HTMLLIElement> {
   toggleDefaultValueChanged(newVal: boolean, oldVal: boolean) {
     // console.log(`toggleDefaultValueChanged(${newVal}, ${oldVal})`);˝˝
     if (oldVal === undefined) return;
-    this.defaultCheckboxTarget.checked = newVal;
+    this.defaultImageCheckboxTarget.checked = newVal;
     if (!this.isDefault) this.formGroupTarget.classList.toggle('to-be-default', newVal);
   }
 
   deleteImage() {
-    this._destroyCheckboxTarget.checked = true;
+    this._destroyImageCheckboxTarget.checked = true;
     this.formGroupTarget.classList.add('to-be-removed');
   }
 
@@ -37,7 +38,7 @@ export default class ImageCardController extends Controller<HTMLLIElement> {
       this.toggleDefaultValue = false;
       this.dispatchMakeDefaultEvent();
     } else {
-      this._destroyCheckboxTarget.checked = false;
+      this._destroyImageCheckboxTarget.checked = false;
     }
     this.formGroupTarget.classList.remove('to-be-default', 'to-be-removed');
   }
@@ -52,7 +53,13 @@ export default class ImageCardController extends Controller<HTMLLIElement> {
   submitForm({ currentTarget: btn }: { currentTarget: HTMLButtonElement }) {
     this.dispatch(
       'submit-form', 
-      { detail: { card: this.element, imageId: this.imageIdValue, action: btn.dataset.submitAction } });
+      { detail: { card: this.element, imageId: this.imageIdValue, action: btn.dataset.submitAction } }
+    );
+  }
+
+  toggleSelected({ currentTarget: card }: { currentTarget: HTMLLIElement }) {
+    card.classList.toggle('selected');
+    this.adImageCheckboxTarget.checked = !this.adImageCheckboxTarget.checked;
   }
 
   get isDefault() {
