@@ -233,29 +233,7 @@ class Company < ApplicationRecord
   end
   alias_attribute :ads, :adwords_ads
 
-  has_many :adwords_images, dependent: :destroy do
-    def marketing
-      where(type: ['SquareImage', 'LandscapeImage'])
-    end
-    def logos
-      where(type: ['SquareLogo', 'LandscapeLogo'])
-    end
-    def square_images
-      where(type: 'SquareImage')
-    end
-    def landscape_images
-      where(type: 'LandscapeImage')
-    end
-    def square_logos
-      where(type: 'SquareLogo')
-    end
-    def landscape_logos
-      where(type: 'LandscapeLogo')
-    end
-    def default
-      where(default: true)
-    end
-  end
+  has_many :adwords_images, dependent: :destroy
   alias_attribute :ad_images, :adwords_images
   accepts_nested_attributes_for :adwords_images, allow_destroy: true
 
