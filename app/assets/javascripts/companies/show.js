@@ -5,7 +5,6 @@ function companiesShow () {
   
   prospect();
   curate();
-  promote();
   
   // to control delay via css (opacity transition), need to synchronously add the working--still class
   // => won't work without the timeout
