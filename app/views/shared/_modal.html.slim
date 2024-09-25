@@ -1,6 +1,6 @@
 #main-modal.modal.fade {
   data-controller="modal"
-  data-action="turbo:frame-render->modal#onFrameRender" 
+  data-action="turbo:frame-render->modal#onFrameRender ajax:success->modal#onAjaxSuccess" 
   tabindex="-1" 
   role="dialog" }
 
@@ -25,4 +25,4 @@
           
       .modal-footer.hidden data-modal-target="footer"
         button.btn.btn-default type="button" data-dismiss="modal" data-modal-target="dismissBtn"
-        = submit_tag('', class: 'btn btn-success', data: { modal_target: 'submitBtn' })
+        = submit_tag('Save changes', class: 'btn btn-success', data: { modal_target: 'submitBtn' })

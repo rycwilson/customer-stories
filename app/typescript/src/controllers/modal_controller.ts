@@ -25,7 +25,6 @@ export default class ModalController extends Controller<HTMLDivElement> {
 
   declare spinnerTimer: number;
 
-  ajaxSuccessHandler: (this: ModalController, e: Event) => void = this.onAjaxSuccess.bind(this);
   hiddenHandler: (this: ModalController, e: any) => void = this.onHidden.bind(this);
 
   connect() {
@@ -73,7 +72,7 @@ export default class ModalController extends Controller<HTMLDivElement> {
     window.clearTimeout(this.spinnerTimer);
     this.setFooterContent();
     if (this.hasFormTarget) {
-      this.formTarget.addEventListener('ajax:success', this.ajaxSuccessHandler);
+      // this.formTarget.addEventListener('ajax:success', this.ajaxSuccessHandler);
       if (this.turboFrameTarget.id.includes('edit-customer')) {
         // initS3Upload($(this.formTarget));
       }
@@ -83,24 +82,16 @@ export default class ModalController extends Controller<HTMLDivElement> {
   setFooterContent() {
     if (this.hasFormTarget) {
       this.dismissBtnTarget.textContent = 'Cancel';
-      this.submitBtnTarget.value = this.formTarget.dataset.submitBtnText || 'Submit';
+      // this.submitBtnTarget.value = this.formTarget.dataset.submitBtnText || 'Save changes';
       this.footerTarget.classList.remove('hidden');
       this.submitBtnTarget.setAttribute('form', this.formTarget.id);
-      this.formTarget.addEventListener('ajax:success', this.ajaxSuccessHandler);
     } else {
       this.dismissBtnTarget.textContent = 'Close';
     }
   }
   
-  onAjaxSuccess(this: ModalController, e: Event) {
-    if (e instanceof CustomEvent) {
-      const [data, status, xhr] = e.detail;
-    }
-    // if (ok) {
-    //   this.hide();
-    // } else {
-    //   // handle errors
-    // }
+  onAjaxSuccess({ detail: [data, status, xhr] }: { detail: [data: any, status: string, xhr: XMLHttpRequest] }) {
+    this.hide();
   }
   
   show() {
@@ -116,11 +107,10 @@ export default class ModalController extends Controller<HTMLDivElement> {
   }
 
   onHidden(this: ModalController, e: any) {
-    if (this.hasFormTarget) this.formTarget.removeEventListener('ajax:success', this.ajaxSuccessHandler);
     this.turboFrameAttrsValue = {};
     this.bodyContentValue = '';
     this.dismissBtnTarget.textContent = '';
-    this.submitBtnTarget.value = '';
+    // this.submitBtnTarget.value = '';
     this.footerTarget.classList.add('hidden');
   }
 }
