@@ -7,6 +7,7 @@ class AdwordsImage < ApplicationRecord
   alias_attribute :ads, :adwords_ads
   has_many :stories, through: :adwords_ads
 
+  default_scope { order(updated_at: :desc) }
   scope :default, -> { where(default: true) }
   scope :marketing, -> { where(type: ['SquareImage', 'LandscapeImage']) }
   scope :logo, -> { where(type: ['SquareLogo', 'LandscapeLogo']) }
