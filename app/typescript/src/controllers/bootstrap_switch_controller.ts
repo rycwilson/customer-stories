@@ -14,16 +14,24 @@ export default class BootstrapSwitchController extends Controller {
   declare switchTarget: HTMLInputElement;
 
   connect() {
+    const ctrl = this;
     $(this.switchTarget).bootstrapSwitch({
       size: this.sizeValue,
       inverse: true,
       disabled: this.disabledValue,
       animate: this.animateValue,
       onInit: function (e: Event) {},
-    });
+      onSwitchChange: function (e: Event, state: boolean) {
+        ctrl.dispatch('switch', { detail: { state } });
+      }
+    })
   }
 
   disconnect() {
     $(this.switchTarget).bootstrapSwitch('destroy');
+  }
+
+  get state() {
+    return $(this.element).bootstrapSwitch('state');
   }
 }
