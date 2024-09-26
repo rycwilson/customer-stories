@@ -5,11 +5,7 @@
       format: :json,
       html: { \
         id: 'edit-ad-images-form',
-        data: { \
-          controller: 'promoted-story-images',
-          modal_target: 'form',
-          ad_images_target: 'form',
-          action: 'ajax:success->promoted-story-images#onAjaxSuccess' }}) do |form|
+        data: { modal_target: 'form' } }) do |form|
 
     .text-center
       .btn-group data-controller="btn-group"
