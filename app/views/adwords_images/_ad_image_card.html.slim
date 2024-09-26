@@ -1,18 +1,26 @@
-- is_form_input = image_index.present?
+- ad = form_object if form_object.class.name == 'AdwordsAd'
+- is_company_image = form_object.class.name == 'Company'
 
-/ TODO if !ad_image.present? (i.e. new image) need to set the image-card-kind-value (maybe?)
 / TODO consolidate class names
 li.ad-image-card {
   class=ad_image_card_class_name(ad_image, collection)
-  class=("image-card--#{ad_image[:type]}" if ad_image.present?)
+  class=("image-card--#{ad_image[:type]}" if ad_image[:type])
+  class=('selected' if ad.present? && ad.images.include?(ad_image))
   data-controller="image-card"
-  data-image-card-kind-value=(ad_image[:type] if ad_image.present?)
-  data-image-card-image-id-value=(ad_image[:id] if ad_image.present?)
-  data-ads-target="#{ad_image.present? ? 'imageCard' : (collection == 'images' ? 'newImageCard' : 'newLogoCard')}"
-  data-placeholder-url=asset_url(ad_image_placeholder(ad_image[:type]))
-  data-toggle=('popover' unless is_form_input) }
+  data-image-card-kind-value=ad_image[:type]
+  data-image-card-image-id-value=ad_image[:id]
+  data-ads-target=((ad_image[:id] ? 'imageCard' : (collection == 'images' ? 'newImageCard' : 'newLogoCard')) if is_company_image)
+  data-adwords-ad-images-target=('imageCard' if ad.present?)
+  data-action=('click->image-card#toggleSelected' if ad.present?)
+  data-placeholder-url=(asset_url(ad_image_placeholder(ad_image[:type])) if is_company_image)
+  data-toggle=('popover' if ad.present?) }
 
-  - unless is_form_input
+  - if ad.present?
+    = check_box_tag( \
+        'adwords_ad[adwords_image_ids][]',
+        ad_image[:id],
+        ad.images.include?(ad_image),
+        { class: 'hidden', data: { image_card_target: 'adImageCheckbox' }})
     .ad-image-card__frame
       .thumbnail
         img src=ad_image[:image_url] alt="#{ad_image[:type].split(/(?=[A-Z])/)&.join(' ')}"
@@ -23,25 +31,33 @@ li.ad-image-card {
               i.fa.fa-circle-o.fa-stack-2x
               i.fa.fa-check.fa-stack-1x
 
-  - else
-    - %i(id type image_url).each do |attr|
-      input type="hidden" name="company[adwords_images_attributes][#{image_index}][#{attr}]" value=ad_image[attr]
-    = check_box_tag( \
-        "company[adwords_images_attributes][#{image_index}][default]", 
-        ad_image[:default] ? false : true, 
-        false, 
-        { class: 'hidden', data: { image_card_target: 'defaultCheckbox' }})
-    - unless ad_image[:default]
+  - elsif is_company_image
+    // new image
+    - if ad_image[:id].nil?
+      = hidden_field_tag("#{field_name_prefix}[type]", value: '')
+      = hidden_field_tag("#{field_name_prefix}[image_url]", value: '')
+      
+    // existing image
+    - else 
+      = hidden_field_tag("#{field_name_prefix}[id]", value: ad_image[:id])
+      = hidden_field_tag("#{field_name_prefix}[type]", value: ad_image[:type])
+      = hidden_field_tag("#{field_name_prefix}[image_url]", value: ad_image[:image_url])
       = check_box_tag( \
-          "company[adwords_images_attributes][#{image_index}][_destroy]", 
-          true, 
-          false, 
-          { class: 'hidden', data: { image_card_target: '_destroyCheckbox' } })
+          "#{field_name_prefix}[default]",
+          true,
+          ad_image[:default],
+          { class: 'hidden', data: { image_card_target: 'defaultImageCheckbox' } })
+      - unless ad_image[:default]
+        = check_box_tag( \
+            "#{field_name_prefix}[_destroy]",
+            true,
+            false,
+            { class: 'hidden', data: { image_card_target: '_destroyImageCheckbox' } })
 
     .form-group.fileinput.fileinput-exists.has-feedback data-provides="fileinput" data-image-card-target="formGroup"
 
       .ad-image-card__header
-        - if ad_image
+        - if ad_image[:id]
           - if ad_image[:default]
             // attaching data-trigger attribute to .file-input-preview does not work
             button.btn-upload type="button" data-trigger="fileinput"
@@ -66,32 +82,26 @@ li.ad-image-card {
               ad_image[:image_url] || ad_image_placeholder(ad_image[:type]),
               alt: ad_image[:type]&.split(/(?=[A-Z])/)&.join(' '))
         .btn-file
+          / name="company[adwords_images_attributes][#{image_index}][image_url]"
           input {
             type="file"
             accept="image/jpeg,image/png"
-            name="company[adwords_images_attributes][#{image_index}][image_url]"
-            data-ads-target=('s3FileInput' if ad_image[:default] || ad_image.blank?)
-            data-s3=(s3_direct_post.to_json if ad_image[:default] || ad_image.blank?)
+            data-ads-target=('s3FileInput' if ad_image[:default] || ad_image[:id].nil?)
+            data-s3=(s3_direct_post.to_json if ad_image[:default] || ad_image[:id].nil?)
             data-validate="false"
             data-collection="#{collection}"
             data-default-type=(ad_image[:type] if ad_image[:default])
             data-max-file-size="5242880" 
             data-min-dimensions=ad_image_min_dimensions.to_json
             data-aspect-ratio-tolerance=RESPONSIVE_AD_ASPECT_RATIO_TOLERANCE
-            data-required-image=('true' if ad_image[:default] && ad_image[:type]&.match(/Image/)) }
+            data-required-image=('true' if ad_image[:default] && ad_image[:type].include?('Image')) }
 
-      .ad-image-card__footer
-        button.btn.btn-sm.btn-default.btn-cancel type="button" data-action="image-card#cancelAction" Cancel
-        button.btn.btn-sm.btn-danger {
-          type="button" 
-          data-submit-action="delete" 
-          data-action="image-card#submitForm" }
-          | Delete
-        button.btn.btn-sm.btn-success {
-          type="button" 
-          data-submit-action="makeDefault" 
-          data-action="image-card#submitForm" }
-          div Set as default
-          div.spinner
-            span 
-              i.fa.fa-spin.fa-circle-o-notch
+      - if ad_image[:id]
+        .ad-image-card__footer
+          button.btn.btn-sm.btn-default type="button" data-action="image-card#cancelAction"
+            | Cancel
+          button.btn.btn-sm.btn-danger type="button" data-submit-action="delete" data-action="image-card#submitForm"
+            | Delete
+          button.btn.btn-sm.btn-success type="button" data-submit-action="makeDefault" data-action="image-card#submitForm"
+            | Set as default
+  

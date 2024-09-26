@@ -9,7 +9,7 @@ import type ContributorInvitationController from './contributor_invitation_contr
 import type CompanyStoryTagsController from './company_story_tags_controller';
 import type CtaController from './cta_controller';
 import type AdsController from './ads_controller';
-import type AdwordsAdImagesController from './adwords_ad_images_controller';
+import type AdImagesController from './ad_images_controller';
 import type { TomOptions } from 'tom-select/dist/types/types';
 import { serializeForm } from '../utils';
 import { initS3FileInput } from '../user_uploads';
@@ -24,7 +24,7 @@ type SubclassController = (
   CompanyStoryTagsController |
   CtaController |
   AdsController |
-  AdwordsAdImagesController
+  AdImagesController
 );
 
 export default class FormController<Ctrl extends SubclassController> extends Controller<HTMLFormElement> {

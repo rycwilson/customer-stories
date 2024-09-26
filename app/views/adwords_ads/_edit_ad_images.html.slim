@@ -1,19 +1,20 @@
-= turbo_frame_tag('edit-adwords-ad-images') do
+= turbo_frame_tag('edit-ad-images') do
 
   = form_with( \
       model: ad,
       format: :json,
       html: { \
-        id: 'edit-adwords-ad-images-form',
+        id: 'edit-ad-images-form',
         data: { \
           controller: 'promoted-story-images',
           modal_target: 'form',
+          ad_images_target: 'form',
           action: 'ajax:success->promoted-story-images#onAjaxSuccess' }}) do |form|
 
-    .image-selections__collection.text-center
+    .text-center
       .btn-group data-controller="btn-group"
         a.btn.btn-secondary.active {
-          href="#image-selections__marketing" 
+          href="#ad-images__marketing" 
           data-toggle="tab"
           data-btn-group-target="btn"
           role="tab" }
@@ -21,7 +22,7 @@
           | &nbsp;&nbsp;
           | Marketing Images
         a.btn.btn-secondary {
-          href="#image-selections__logos" 
+          href="#ad-images__logos" 
           data-toggle="tab"
           data-btn-group-target="btn"
           role="tab" }
@@ -30,11 +31,21 @@
           | Logos
 
     .tab-content
-      #image-selections__marketing.tab-pane.active
-        ul.ad-image-selections data-max="15"
-          - ad.company.ad_images.marketing.sort_by { |ad_image| ad_image.default ? 0 : 1 }.each do |ad_image|
-            = render('adwords_images/ad_image_card', { ad_image:, image_index: nil, collection: 'images' })
-      #image-selections__logos.tab-pane
-        ul.ad-logo-selections data-max="5"
-          - ad.company.ad_images.logo.each.sort_by { |ad_image| ad_image.default ? 0 : 1 }.each do |ad_image|
-            = render('adwords_images/ad_image_card', { ad_image:, image_index: nil, collection: 'logos' })
+      #ad-images__marketing.tab-pane.active
+        ul data-max="15"
+          - ad.company.ad_images.marketing.sort_by { |image| sort_ad_images(ad, image) }.each.with_index do |ad_image, i|
+            = render( \
+                'adwords_images/ad_image_card',
+                { form_object: ad,
+                  ad_image:,
+                  field_name_prefix: "adwords_ad[adwords_images_attributes][#{i}]",
+                  collection: 'images' })
+      #ad-images__logos.tab-pane
+        ul data-max="5"
+          - ad.company.ad_images.logo.sort_by { |image| sort_ad_images(ad, image) }.each.with_index do |ad_image, i|
+            = render( \
+                'adwords_images/ad_image_card',
+                { form_object: ad,
+                  ad_image:,
+                  field_name_prefix: "adwords_ad[adwords_images_attributes][#{ i + ad.company.ad_images.marketing.count }]",
+                  collection: 'logos' })
