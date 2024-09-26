@@ -336,15 +336,27 @@
   > .spinner {
     display: flex;
     justify-content: center;
+
+    @if $size == 'sm' {
+      @include lds-ring(30px);
+    } @else if $size == 'md' {
+      @include lds-ring(40px);
+    } @else if $size == 'lg' {
+      @include lds-ring(50px);
+    }
   }
-  
-  @if $size == 'sm' {
-    @include lds-ring(30px);
-  } @else if $size == 'md' {
-    @include lds-ring(40px);
-  } @else if $size == 'lg' {
-    @include lds-ring(50px);
+}
+
+@mixin has-spinner() {
+  position: relative;
+
+  > .spinner {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
   }
+
 }
 
 // https://loading.io/css/
@@ -352,7 +364,7 @@
   $margin: round($size * .5);
   $thickness: round($size * .1);
 
-  .lds-ring {
+  > .lds-ring {
     display: inline-block;
     position: relative;
     width: $size + ($margin * 2);
