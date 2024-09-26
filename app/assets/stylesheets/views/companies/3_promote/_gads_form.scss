@@ -26,8 +26,8 @@
   }
 }
 
-ul[class*="image-library"], 
-ul[id*="ad-images"] {
+ul:is([class*="image-library"]), 
+ul:is([id*="ad-images"]) {
   display: flex;
   flex-wrap: wrap;
   align-items: center;

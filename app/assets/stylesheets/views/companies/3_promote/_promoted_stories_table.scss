@@ -3,12 +3,9 @@
   max-width: 175px;
 }
 
-#edit-adwords-ad-images-form {
+#edit-ad-images-form {
   .btn-group {
     width: 75%;
-  }
-
-  .image-selections__collection {
     margin-bottom: 20px;
   }
 
@@ -150,14 +147,14 @@
   }
 
   td.status {
-    position: relative;
-    padding: 8px;
+    text-align: center;
 
-    form.ads-status {
+    form {
       margin-bottom: -4px;
-      &[data-submitted="true"] {
-        pointer-events: none;
-        // cursor: not-allowed;
+
+      .help-block {
+        margin: 0;
+        font-size: 10px;
       }
     }
 
