@@ -65,15 +65,19 @@ class AdwordsAdsController < ApplicationController
     end
   end
 
-  # update the story with topic_ad_attributes and retarget_ad_attributes
   def update
-    # awesome_print(story_params.to_h)
-    story = Story.find(params[:id])
-
+    topic_ad = AdwordsAd.find(params[:id])
+    if topic_ad.update(ad_params) and topic_ad.story.retarget_ad.update(ad_params)
+      respond_to do |format|  
+        format.json { render(json: { changes: topic_ad.previous_changes }) } 
+      end
+    end
+    # OLD: update the story with topic_ad_attributes and retarget_ad_attributes
+    # story = Story.find(params[:id])
     # in case there's an error and we need to revert association changes
     # existing_ads_image_ids = story.ads.first.adwords_image_ids
-    if story.update(story_params)
-      updated_gads = {}
+    # if story.update(story_params)
+    #   updated_gads = {}
       # [story.topic_ad, story.retarget_ad].each_with_index do |ad, index|
 
         # for non-promoted-enabled companies, changing status will be blocked,
@@ -95,59 +99,59 @@ class AdwordsAdsController < ApplicationController
         # end
         # updated_gads[index == 0 ? :topic : :retarget] = updated_gads
       # end
-    else
+    # else
       # error
-    end
+    # end
 
     # datatables updated row data (mirrors stories#promoted)
-    dt_data = [
-      JSON.parse(
-        story.to_json({
-          only: [:id, :title, :slug],
-          methods: [:ads_status, :ads_long_headline, :ads_images, :csp_story_path],
-          include: {
-            success: {
-              only: [],
-              include: {
-                customer: { only: [:name, :slug] }
-              }
-            },
-            topic_ad: {
-              only: [:id, :status]
-            },
-            retarget_ad: {
-              only: [:id, :status]
-            }
-          }
-        })
-      )
-    ]
+    # dt_data = [
+    #   JSON.parse(
+    #     story.to_json({
+    #       only: [:id, :title, :slug],
+    #       methods: [:ads_status, :ads_long_headline, :ads_images, :csp_story_path],
+    #       include: {
+    #         success: {
+    #           only: [],
+    #           include: {
+    #             customer: { only: [:name, :slug] }
+    #           }
+    #         },
+    #         topic_ad: {
+    #           only: [:id, :status]
+    #         },
+    #         retarget_ad: {
+    #           only: [:id, :status]
+    #         }
+    #       }
+    #     })
+    #   )
+    # ]
 
-    respond_to do |format|
-      format.json do
-        render({
-          json: {
-            data: dt_data,
-            error: '',  # datatables will look here for it's own flash message system
-            errors: updated_gads.any? { |type, ad| ad.try(:[], :errors) }
-          }.to_json
-        })
-      end
+    # respond_to do |format|
+    #   format.json do
+    #     render({
+    #       json: {
+    #         data: dt_data,
+    #         error: '',  # datatables will look here for it's own flash message system
+    #         errors: updated_gads.any? { |type, ad| ad.try(:[], :errors) }
+    #       }.to_json
+    #     })
+    #   end
 
-      # in most case it's sufficient to get data from a single ad (e.g. topic)),
-      # since topic and retarget are supposed to be sync'ed
-      format.js do
-        @res_data = {}
-        @res_data[:promotedStory] = dt_data[0]
-        @res_data[:promoteIsDisabled] = !story.company.promote_tr?
+    #   # in most case it's sufficient to get data from a single ad (e.g. topic)),
+    #   # since topic and retarget are supposed to be sync'ed
+    #   format.js do
+    #     @res_data = {}
+    #     @res_data[:promotedStory] = dt_data[0]
+    #     @res_data[:promoteIsDisabled] = !story.company.promote_tr?
         
-        # presently only one attribute will change at a time
-        @res_data[:previousChanges] = story.topic_ad.previous_changes.first
-        @res_data[:isStatusUpdate] = story.topic_ad.previous_changes.first.try(:first) == :status
-        @res_data[:isImagesUpdate] = story_params.to_h[:topic_ad_attributes][:adwords_image_ids].present?
-        @res_data[:gadsErrors] = updated_gads.any? { |type, ad| ad.try(:[], :errors) }
-      end
-    end
+    #     # presently only one attribute will change at a time
+    #     @res_data[:previousChanges] = story.topic_ad.previous_changes.first
+    #     @res_data[:isStatusUpdate] = story.topic_ad.previous_changes.first.try(:first) == :status
+    #     @res_data[:isImagesUpdate] = story_params.to_h[:topic_ad_attributes][:adwords_image_ids].present?
+    #     @res_data[:gadsErrors] = updated_gads.any? { |type, ad| ad.try(:[], :errors) }
+    #   end
+    # end
   end
 
   def preview
@@ -186,12 +190,22 @@ class AdwordsAdsController < ApplicationController
 
   private
 
-  def story_params
-    params.require(:story).permit(
-      topic_ad_attributes: [:id, :status, :long_headline, adwords_image_ids: []],
-      retarget_ad_attributes: [:id, :status, :long_headline, adwords_image_ids: []]
+  def ad_params 
+    params.require(:adwords_ad).permit(
+      :status,
+      :long_headline,
+      :main_color,
+      :accent_color,
+      adwords_image_ids: []
     )
   end
+
+  # def story_params
+  #   params.require(:story).permit(
+  #     topic_ad_attributes: [:id, :status, :long_headline, adwords_image_ids: []],
+  #     retarget_ad_attributes: [:id, :status, :long_headline, adwords_image_ids: []]
+  #   )
+  # end
 
   def add_missing_default_images(story)
     default_images = story.company.ad_images.default
