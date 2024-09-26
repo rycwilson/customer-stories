@@ -46,39 +46,39 @@ export function tableConfig(): Config {
       {
         name: 'status',
         data: 'status',
+        createdCell: (td: Node) => $(td).addClass('status'),
         render: (status, type, row: AdwordsAd) => {
           const { id, path } = row;
           return type !== 'display' ?
             status : `
-            <form action="${path}" class="ads-status" method="put" data-remote="true" data-type="script" data-submitted="">
-              <!-- topic -->
-              <input type="hidden" name="story[topic_ad_attributes][id]" value="${id}">
-              <input type="hidden" name="story[topic_ad_attributes][status]" value="PAUSED">
-              <div data-controller="bootstrap-switch" data-bootstrap-switch-disabled-value="true" data-bootstrap-switch-size-value="small">
+            <form 
+              action="${path}" 
+              method="post" 
+              data-remote="true" 
+              data-promoted-story-target="statusForm"
+              data-action="ajax:success->promoted-story#onAjaxSuccess">
+              <input type="hidden" name="_method" value="patch">
+              <input type="hidden" name="authenticity_token" value="${CSP.authToken}">
+              <input 
+                type="hidden" 
+                name="adwords_ad[status]" 
+                value="PAUSED" 
+                data-promoted-story-target="statusCheckbox"
+                ${status === 'PAUSED' ? 'checked' : ''}>
+              <div data-controller="bootstrap-switch" data-bootstrap-switch-size-value="small">
                 <input 
                   type="checkbox"
-                  class="form-control"
-                  name="story[topic_ad_attributes][status]"
+                  name="adwords_ad[status]"
                   value="ENABLED"
                   data-bootstrap-switch-target="switch"
+                  data-promoted-story-target="statusCheckbox"
                   data-on-text="<i class='fa fa-fw fa-play'></i>"
                   data-off-text="<i class='fa fa-fw fa-pause'></i>"
-                  ${status === 'ENABLED' ? 'checked' : null}>
+                  ${status === 'ENABLED' ? 'checked' : ''}>
               </div>
-              <div style="height: 14px;">
-                <span class="help-block" style="font-size: 10px; margin: 0">${status}</span>
-              </div>
-              </form>`;
+              <span class="help-block" data-promoted-story-target="statusLabel">${status}</span>
+            </form>`;
         }
-            // <!-- retarget -->
-            // <input type="hidden" name="story[retarget_ad_attributes][id]" value="${row.retarget_ad.id}">
-            // <input type="hidden" name="story[retarget_ad_attributes][status]" value="PAUSED">
-            // <input 
-            //   type="checkbox" 
-            //   class="hidden" 
-            //   name="story[retarget_ad_attributes][status]" 
-            //   value="ENABLED"
-            //   ${status === 'ENABLED' ? 'checked' : null}>
       },
       {
         name: 'curator',
@@ -113,6 +113,7 @@ export function tableConfig(): Config {
       const { path } = data as AdwordsAd;
       $(tr)
         .attr('data-controller', 'promoted-story')
+        .attr('data-action', 'bootstrap-switch:switch->promoted-story#updateStatus')
         .attr('data-promoted-story-datatable-outlet', '#promoted-stories-table')
         .attr('data-promoted-story-row-data-value', JSON.stringify({ path }))
     }
@@ -140,7 +141,7 @@ function actionsDropdownTemplate(row: AdwordsAd, type: string, set: any) {
         data-controller="modal-trigger" 
         data-modal-trigger-modal-outlet="#main-modal"
         data-modal-trigger-title-value="Promoted Story Images"
-        data-modal-trigger-turbo-frame-attrs-value=${JSON.stringify({ id: 'edit-adwords-ad-images', src: editPath })}
+        data-modal-trigger-turbo-frame-attrs-value=${JSON.stringify({ id: 'edit-ad-images', src: editPath })}
         role="button">
         <i class="fa fa-fw fa-image"></i>
         Assign Images
