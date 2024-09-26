@@ -28,6 +28,7 @@ function appFactory(): CustomerStoriesApp {
     promotedStories: undefined,
     currentUser: parseDatasetObject(document.body, 'currentUser', 'id', 'full_name'),
     // screenSize: null,
+    authToken: <string>(<HTMLMetaElement>document.head.querySelector('meta[name="csrf-token"]')).getAttribute('content'),
     init() {
       Rails.start();
       turboStart();

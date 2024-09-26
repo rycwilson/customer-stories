@@ -28,6 +28,7 @@ interface CustomerStoriesApp {
   storyContributions: { [key: number]: Contribution[] };
   promotedStories: PromotedStory[] | undefined;
   currentUser: User | null;
+  authToken: string;
   // screenSize: string;
   init(): void;
 }
