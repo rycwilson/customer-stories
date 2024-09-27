@@ -61,12 +61,12 @@ export default class ImageCardController extends Controller<HTMLLIElement> {
   
   disconnect() {
     $(this.formGroupTarget).off('change.bs.fileinput', this.changeFileInputHandler);
-    if (this.hasAdsOutlet) {
-      $(this.adsOutlet.element)
-        .off('validated.bs.validator', this.validatedFileInputHandler)
-        .off('valid.bs.validator', this.validFileInputHandler)
-        .off('invalid.bs.validator', this.invalidFileInputHandler);
-    }
+    
+    // after disconnect, any outlets (e.g. the parent form) will be null
+    $(this.element.closest('form'))
+      .off('validated.bs.validator', this.validatedFileInputHandler)
+      .off('valid.bs.validator', this.validFileInputHandler)
+      .off('invalid.bs.validator', this.invalidFileInputHandler);
   }
 
   onChangeFileInput({ target }: { target: HTMLElement }) {
