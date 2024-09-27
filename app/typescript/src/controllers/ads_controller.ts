@@ -5,13 +5,16 @@ export default class AdsController extends FormController<AdsController> {
   static targets = [
     'shortHeadlineSubmitBtn',
     'imageRequirements', 
-    'imageCard', 
+    'imageCard',
+    'defaultImageCard',
     'newImageCard', 
-    'newLogoCard', 
+    'newLogoCard',
   ];
+  declare readonly shortHeadlineInputTarget: HTMLInputElement;
   declare readonly shortHeadlineSubmitBtnTarget: HTMLButtonElement;
   declare readonly imageRequirementsTargets: HTMLAnchorElement[];
   declare readonly imageCardTargets: HTMLLIElement[];
+  declare readonly defaultImageCardTargets: HTMLLIElement[];
   declare readonly newImageCardTarget: HTMLLIElement;
   declare readonly newLogoCardTarget: HTMLLIElement;
 
@@ -42,16 +45,26 @@ export default class AdsController extends FormController<AdsController> {
         this.element.action.replace(/\.json$/, '') :
         (this.element.action.endsWith('.json') ? this.element.action : `${this.element.action}.json`);
     };
-    if (userAction == 'add') {
-      setFormat('html');
-    } else if (userAction === 'makeDefault') {
+    const toggleInputs = (shouldEnable: boolean) => {
+      [...this.defaultImageCardTargets, this.newImageCardTarget, this.newLogoCardTarget, ...this.imageCardTargets]
+        .filter(_card => {
+          return this.defaultImageCardTargets.includes(_card) ?
+            !_card.hasAttribute('data-image-card-image-id-value') :
+            _card !== card;
+        })
+        .forEach(_card => {
+          _card.querySelectorAll('input').forEach(input => input.disabled = !shouldEnable);
+        });
+    };
+    if (userAction == 'add' || userAction === 'makeDefault') {
       setFormat('html');
     } else if (userAction === 'delete') {
       setFormat('json');
       this.element.action += `?image_id=${imageId}`;
     }
-    // TODO disable inactive inputs
+    toggleInputs(false);
     this.element.requestSubmit();
+    toggleInputs(true);
   }
 
   onValidatedShortHeadline({ relatedTarget: input }: { relatedTarget: HTMLInputElement }) {
@@ -68,17 +81,17 @@ export default class AdsController extends FormController<AdsController> {
     });
     card?.remove();
   }
-
-  uploadFile(card: HTMLLIElement) {
-    card.setAttribute('data-image-card-open-file-dialog-value', 'true');
-  }
-
+  
   uploadImage() {
     this.uploadFile(this.newImageCardTarget);
   }
-
+  
   uploadLogo() {
     this.uploadFile(this.newLogoCardTarget);
+  }
+
+  uploadFile(card: HTMLLIElement) {
+    card.setAttribute('data-image-card-open-file-dialog-value', 'true');
   }
 
   validateForm() {

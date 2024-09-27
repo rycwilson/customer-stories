@@ -12,7 +12,10 @@ li.ad-image-card {
   data-image-card-kind-value=ad_image[:type]
   data-image-card-image-id-value=ad_image[:id]
   data-image-card-ads-outlet=(form_outlet if form_outlet)
-  data-ads-target=((ad_image[:id] ? 'imageCard' : (collection == 'images' ? 'newImageCard' : 'newLogoCard')) if is_company_image)
+  data-ads-target=( \
+    ad_image[:default] ? \
+      'defaultImageCard' : \
+      (ad_image[:id] ? 'imageCard' : "new#{collection == 'images' ? 'Image' : 'Logo'}Card") if is_company_image)
   data-adwords-ad-images-target=('imageCard' if ad.present?)
   data-action=('click->image-card#toggleSelected' if ad.present?)
   data-placeholder-url=(asset_url(ad_image_placeholder(ad_image[:type])) if is_company_image)
