@@ -1,9 +1,11 @@
 import { Controller } from '@hotwired/stimulus';
+import AdsController from './ads_controller';
+import CompanyProfileController from './company_profile_controller';
 
 export default class ImageCardController extends Controller<HTMLLIElement> {
-  static outlets = ['form'];
-  declare readonly formOutlet: HTMLFormElement;
-  declare readonly hasFormOutlet: boolean;
+  static outlets = ['ads'];
+  declare readonly adsOutlet: AdsController;
+  declare readonly hasAdsOutlet: boolean;
 
   static values = {
     kind: String,
@@ -43,21 +45,18 @@ export default class ImageCardController extends Controller<HTMLLIElement> {
 
   connect() {
     $(this.formGroupTarget).on('change.bs.fileinput', this.changeFileInputHandler);
-    if (this.hasFormOutlet) {
-      console.log($(this.formOutlet.element || 'foo'))
-      $(this.formOutlet.element)
+    if (this.hasAdsOutlet) {
+      $(this.adsOutlet.element)
         .on('validated.bs.validator', this.validatedFileInputHandler)
         .on('valid.bs.validator', this.validFileInputHandler)
         .on('invalid.bs.validator', this.invalidFileInputHandler);
-    } else {
-      console.log('wtf')
     }
   }
   
   disconnect() {
     $(this.formGroupTarget).off('change.bs.fileinput', this.changeFileInputHandler);
-    if (this.hasFormOutlet) {
-      $(this.formOutlet.element)
+    if (this.hasAdsOutlet) {
+      $(this.adsOutlet.element)
         .off('validated.bs.validator', this.validatedFileInputHandler)
         .off('valid.bs.validator', this.validFileInputHandler)
         .off('invalid.bs.validator', this.invalidFileInputHandler);
@@ -197,9 +196,9 @@ export default class ImageCardController extends Controller<HTMLLIElement> {
     this.adImageCheckboxTarget.checked = !this.adImageCheckboxTarget.checked;
   }
 
-  openFileDialogValueChanged(newVal: boolean) {
+  openFileDialogValueChanged(newVal: boolean, oldVal: boolean | undefined) {
+    // console.log(`openFileDialogValueChanged(${newVal}, ${oldVal})`)
     if (newVal) {
-      console.log('open file dialog')
       this.fileInputTarget.click();
       this.openFileDialogValue = false;
     }
