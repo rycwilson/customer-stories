@@ -347,18 +347,6 @@
   }
 }
 
-@mixin has-spinner() {
-  position: relative;
-
-  > .spinner {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-  }
-
-}
-
 // https://loading.io/css/
 @mixin lds-ring($size) {
   $margin: round($size * .5);

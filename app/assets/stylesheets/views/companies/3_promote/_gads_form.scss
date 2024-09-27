@@ -78,14 +78,19 @@ ul:is([id*="ad-images"]) {
     // }
   // }
 
-  &--uploading {
+  &--new {
     @include spinner('sm');
+    
     > .spinner {
       position: absolute;
       z-index: 1;
       top: 50%;
       left: 50%;
       transform: translate(-50%, -50%);
+    }
+
+    img {
+      display: none;
     }
   }
 
@@ -184,24 +189,6 @@ ul:is([id*="ad-images"]) {
 
   .has-error > & .thumbnail {
     display: none;
-  }
-
-  .uploading-spinner {
-    @include absolute-centered;
-    display: none;
-    font-size: 24px;
-    z-index: 1;
-  }
-
-  .ad-image-card--new & img {
-    display: none;
-  }
-
-  .ad-image-card--new .form-group:not(.has-error) & {
-    .uploading-spinner {
-      // display: initial;
-      display: revert;
-    }
   }
 }
 
