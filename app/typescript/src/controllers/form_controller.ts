@@ -11,7 +11,6 @@ import type CtaController from './cta_controller';
 import type AdsController from './ads_controller';
 import type { TomOptions } from 'tom-select/dist/types/types';
 import { serializeForm } from '../utils';
-import { initS3FileInput } from '../user_uploads';
 
 type SubclassController = (
   NewCustomerWinController | 
@@ -45,7 +44,6 @@ export default class FormController<Ctrl extends SubclassController> extends Con
     'referrerField',
     'requiredField',
     'customerContactBoolField',
-    's3FileInput'
   ];
 
   // all forms share these fields
@@ -67,7 +65,7 @@ export default class FormController<Ctrl extends SubclassController> extends Con
   connect(this: Ctrl) {
     this.removeErrorsOnValidInput();
     this.initialState = serializeForm(this.element);
-    this.s3FileInputTargets.forEach(initS3FileInput);
+    // this.s3FileInputTargets.forEach(initS3FileInput);
   }
 
   validate(e: CustomEvent) {

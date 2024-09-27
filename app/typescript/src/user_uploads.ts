@@ -1,3 +1,4 @@
+import type ImageCardController from './controllers/image_card_controller';
 // interface S3DirectPost {
 //   url: string;
 //   host: string;
@@ -39,13 +40,28 @@ export const imageValidatorOptions: ValidatorOptions = {
     'max-file-size': validateFileSize,
     'min-dimensions': validateImageDimensions,
     'required-image': function ($fileInput: JQuery<HTMLInputElement, any>) {
-      // console.log('checking for required image (skipping)...', $fileInput)
+      console.log('checking for required image (skipping)...', $fileInput)
     }
   }
 }
 
+export function onS3Done(this: ImageCardController, url: string) {
+  this.imageUrlInputTarget.value = url;
+
+  // if the input buffer's value isn't set to blank, it will force a request with data-type=html
+  this.fileInputTarget.value = '';
+
+  // pre-load the image so it will be in browser cache when response arrives (no flicker)
+  this.imgTarget.addEventListener(
+    'load', 
+    () => this.dispatch('upload-ready', { detail: { card: this.element, userAction: 'add' } }),
+    { once: true }
+  )
+  this.imgTarget.setAttribute('src', url);
+}
+
 // export function initS3FileInput($fileInput: JQuery<HTMLInputElement, any>, s3: S3DirectPost, assetHost?: string): void {
-export function initS3FileInput(input: HTMLInputElement): void {
+export function initS3FileInput(input: HTMLInputElement, onUploadDone: (url: string) => void): void {
   const $fileInput = $(input);
   const s3 = JSON.parse(<string>input.dataset.s3);
   const assetHost: string | undefined = input.form!.dataset.assetHost;  // undefined in development environment
@@ -63,7 +79,7 @@ export function initS3FileInput(input: HTMLInputElement): void {
       // const progress = parseInt(data.loaded / data.total * 100, 10);
     },
     submit: ({ target }: { target: EventTarget }, data: object) => {
-      console.info('s3 submit...') 
+      console.info('s3 submit') 
       /*
       *  When drag-dropping an image into summernote editor, the image gets uploaded twice, see:
       *    https://stackoverflow.com/questions/41768242
@@ -99,13 +115,14 @@ export function initS3FileInput(input: HTMLInputElement): void {
       }
     },
     start: (e: Event) => {
-      console.log('s3 start...')
+      console.log('s3 start')
     },
     done: (e: Event, data: any) => {
-      console.log('s3 done...')
       const key = $(<Document>data.jqXHR.responseXML).find('Key').text();
       const url = assetHost ? `${assetHost}/${key}` : `https://${s3.host}/${key}`;
-      let $imageUrlInput;
+      console.log('s3 done:', url)
+      // let $imageUrlInput;
+      onUploadDone(url);
 
       /*
       * find the image_url input, may be different for:
@@ -116,10 +133,10 @@ export function initS3FileInput(input: HTMLInputElement): void {
       */
 
       // promote images
-      if ($fileInput.is('[name*="images_attributes"]')) {
+      // if ($fileInput.is('[name*="images_attributes"]')) {
         // the hidden image_url input isn't inside the form-group lest jasny js screw with it
-        $imageUrlInput = $formGroup.prevAll('input[name*="[image_url]"]');
-      }
+        // $imageUrlInput = $formGroup.prevAll('input[name*="[image_url]"]');
+      // }
 
       // summernote
       if ($fileInput.is('#narrative__img-upload')) {
@@ -128,22 +145,19 @@ export function initS3FileInput(input: HTMLInputElement): void {
           `<img src="${url}" alt="story image" style="max-width: 100%">`
         );
 
-      } else {
-        // note the image is being uploaded to s3 even if there's a validation error (autoupload)
-        if ($formGroup.hasClass('has-error')) {
-          // console.log('error')
-        } else {
-          if ($imageUrlInput) {
-            $imageUrlInput.val(url);
-          } else {
-            $imageUrlInput = $('<input>', { type:'hidden', name: $fileInput.attr('name'), value: url });
-            $formGroup.append($imageUrlInput);
-          }
-        }
-      }
-
-      // if the input buffer's value isn't set to blank, it will force a request with data-type=html
-      $fileInput.val('');
+      } 
+      // else {
+      //   if ($formGroup.hasClass('has-error')) {
+      //     // console.log('error')
+      //   } else {
+      //     if ($imageUrlInput) {
+      //       $imageUrlInput.val(url);
+      //     } else {
+      //       $imageUrlInput = $('<input>', { type:'hidden', name: $fileInput.attr('name'), value: url });
+      //       $formGroup.append($imageUrlInput);
+      //     }
+      //   }
+      // }
     },
     fail: (e: Event, data: any) => {
       // possible to get a 403 Forbidden error
@@ -174,7 +188,10 @@ function setCardClassName($imageCard: JQuery<HTMLLIElement, any>, imageKind: AdI
 function validateFileSize($fileInput: JQuery<HTMLInputElement, any>): string | undefined {
   console.log('validating file size...')
   if ($fileInput.prop('files')[0].size > $fileInput.data('maxFileSize')) {
+    // console.log('image file size is invalid')
     return 'Image file size is too big';
+  } else {
+    // console.log('image file size is valid')
   }
 }
 
@@ -240,8 +257,10 @@ function validateImageDimensions($fileInput: JQuery<HTMLInputElement, any>): str
     '';
   if (!$fileInput.data('default-type')) setCardClassName($imageCard, imageKind);
   if (isValid) {
+    // console.log('image dimensions are valid')
     $imageCard.children('input[name*="[type]"]').val(imageKind);
   } else {
+    // console.log('image dimensions are not valid')
     return 'Image is wrong size';
   }
 }
