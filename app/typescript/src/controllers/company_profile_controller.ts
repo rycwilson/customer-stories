@@ -32,6 +32,10 @@ export default class CompanyProfileController extends FormController<CompanyProf
     }
   }
 
+  onUploadReady() {
+    // enable form submit (square required, landscape is not)
+  }
+
   onInputCompanyHeaderBackgroundColor({ target: input }: { target: HTMLInputElement }) {
     this.companyHeaderDemoTarget.style.backgroundColor = input.value;
   }

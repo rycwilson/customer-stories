@@ -8,8 +8,11 @@
       novalidate: true,
       data: { \
         controller: 'company-profile',
-        action: 'ajax:beforeSend->company-profile#validate ajax:complete->company-profile#onAjaxComplete',
-        asset_host: Rails.application.config.asset_host }}) do |form|
+        asset_host: Rails.application.config.asset_host,
+        action: [ \
+          'ajax:beforeSend->company-profile#validate',
+          'ajax:complete->company-profile#onAjaxComplete',
+          'image-card:upload-ready->company-profile#onUploadReady'].join(' ') }}) do |form|
   
   .form-group.required
     = form.label(:subdomain, class: 'col-sm-3 control-label')
