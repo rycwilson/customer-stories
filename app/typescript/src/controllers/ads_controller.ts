@@ -3,26 +3,35 @@ import { imageValidatorOptions } from '../user_uploads';
 
 export default class AdsController extends FormController<AdsController> {
   static targets = [
+    'shortHeadlineSubmitBtn',
     'imageRequirements', 
     'imageCard', 
     'newImageCard', 
     'newLogoCard', 
   ];
+  declare readonly shortHeadlineSubmitBtnTarget: HTMLButtonElement;
   declare readonly imageRequirementsTargets: HTMLAnchorElement[];
   declare readonly imageCardTargets: HTMLLIElement[];
   declare readonly newImageCardTarget: HTMLLIElement;
   declare readonly newLogoCardTarget: HTMLLIElement;
 
+  validatedShortHeadlineHandler = this.onValidatedShortHeadline.bind(this);
+
   connect() {
     super.connect();
+
     // jquery event listeners necessary for hooking into jquery plugin events
-    $(this.element).validator(imageValidatorOptions);
+    $(this.element)
+      .on('validated.bs.validator', this.validatedShortHeadlineHandler)
+      .validator(imageValidatorOptions);
     this.imageRequirementsTargets.forEach(this.initPopover);
   }
 
   disconnect() {
     super.disconnect();
-    $(this.element).validator('destroy');
+    $(this.element)
+      .off('validated.bs.validator', this.validatedShortHeadlineHandler)
+      .validator('destroy');
   }
 
   submitForm({ 
@@ -43,6 +52,13 @@ export default class AdsController extends FormController<AdsController> {
     }
     // TODO disable inactive inputs
     this.element.requestSubmit();
+  }
+
+  onValidatedShortHeadline({ relatedTarget: input }: { relatedTarget: HTMLInputElement }) {
+    if (input.name.includes('short_headline')) {
+      const shouldHideSubmitBtn = $(input).data()['bs.validator.errors'].length || input.value === input.dataset.initialValue;
+      this.shortHeadlineSubmitBtnTarget.classList.toggle('hidden', shouldHideSubmitBtn);
+    }
   }
 
   onDeletedImage({ detail: [res, status, xhr] }: { detail: [res: { id: string }, status: string, xhr: XMLHttpRequest] }) {
@@ -89,11 +105,6 @@ export default class AdsController extends FormController<AdsController> {
           'data-image-card-toggle-default-value', 
           _card.classList.contains('gads-default') ? `${toggleDefault}` : 'false');
       });
-  }
-
-  validateShortHeadline({ target: input }: { target: HTMLInputElement }) {
-    const btn = input.nextElementSibling as HTMLButtonElement;
-    btn.classList.toggle('hidden', !input.checkValidity());
   }
 
   initPopover(link: HTMLAnchorElement) {

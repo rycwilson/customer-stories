@@ -6,7 +6,7 @@
       model: company,
       html: { \
         id: 'gads-form',
-        class: 'form-horizontal foobar',
+        class: 'form-horizontal',
         data: { \
           controller: 'ads',
           asset_host: Rails.application.config.asset_host,
@@ -17,26 +17,22 @@
             'image-card:save-changes->ads#submitForm',
             'ajax:success->ads#onDeletedImage'].join(' ') }}) do |form|
           
-    .row 
-      .form-group.short-headline
-        = form.label(:adwords_short_headline, "Headline", class: 'col-sm-3 control-label')
-        .col-sm-9.col-md-8.col-lg-6
-          div
-            = form.text_field( \
-                :adwords_short_headline,
-                required: true,
-                class: 'form-control',
-                autocomplete: 'off',
-                maxlength: RESPONSIVE_AD_SHORT_HEADLINE_MAX.to_s,
-                data: { 'required-error': 'Required', action: 'input->ads#validateShortHeadline' })
-            button.btn.btn-success.hidden type="submit"
-              span Save
-              i.fa.fa-spin.fa-circle-o-notch style="display:none"
-              i.fa.fa-check style="display:none"
-          span.help-block.with-errors
-            | Max 30 characters
+    .form-group.short-headline
+      = form.label(:adwords_short_headline, 'Headline', class: 'col-sm-3 control-label')
+      .col-sm-9.col-md-8.col-lg-6
+        div
+          = form.text_field( \
+              :adwords_short_headline,
+              class: 'form-control',
+              autocomplete: 'off',
+              maxlength: RESPONSIVE_AD_SHORT_HEADLINE_MAX.to_s,
+              required: true,
+              data: { 'required-error': 'Required', initial_value: company.adwords_short_headline })
+          button.btn.btn-success.hidden type="submit" data-ads-target="shortHeadlineSubmitBtn" Save
+        span.help-block.with-errors
+          | Max 30 characters
 
-    .row style="margin-left:-30px;margin-right:-30px"
+    .row
       .image-library__collection
         label.col-sm-3.control-label Image Collection
         .col-sm-9.col-md-8.col-lg-6
@@ -62,7 +58,7 @@
 
       #image-library__marketing.tab-pane.in.active
 
-        .row style="margin-left:-30px;margin-right:-30px;margin-bottom:15px"
+        .row style="margin-bottom:15px"
           .col-sm-offset-3.col-sm-9.col-md-8.col-lg-6
             span.help-block 
               a.image-requirements.marketing {
@@ -79,7 +75,7 @@
                 data-ads-target="imageRequirements" }
                 | Requirements
 
-        .row style="margin-left:-30px;margin-right:-30px;margin-bottom:25px"
+        .row style="margin-bottom:25px"
           label.col-sm-3.control-label Default Images
           .col-sm-9.col-md-8.col-lg-6
             ul.image-library__default-images
@@ -98,7 +94,7 @@
                     field_name_prefix: 'company[adwords_images_attributes][1]',
                     collection: 'images' })
 
-        .row style="margin-left:-30px;margin-right:-30px;margin-bottom:25px"
+        .row style="margin-bottom:25px"
           / label.col-sm-3.control-label All Images
           .col-sm-offset-3.col-sm-9.col-md-8.col-lg-6.text-center
             button.btn.btn-secondary {
@@ -182,7 +178,8 @@
         ul.image-library__all-logos
           = render( \
               'adwords_images/ad_image_card',
-              { form_object: company,
+              { form_outlet: '#gads-form',
+                form_object: company,
                 ad_image: {},
                 field_name_prefix: ( \
                   "company[adwords_images_attributes][#{ 5 + company.ad_images.marketing.where.not(default: true).count }]"),
