@@ -16,10 +16,7 @@ export function tableConfig(): Config {
     columns: [
       {
         name: 'story',
-        data: {
-          _: 'storyId',
-          display: 'story.title'  
-        },
+        data: 'storyId',
         render: (storyId: number, type: string, row: AdwordsAd) => {
           const toggleBtn = `
             <button type="button" class="btn" data-action="promoted-story#toggleChildRow">
@@ -41,7 +38,7 @@ export function tableConfig(): Config {
       {
         name: 'longHeadline',
         data: 'longHeadline',
-        createdCell: (td: Node) => $(td).addClass('promoted-story-title form-is-clean')
+        // createdCell: (td: Node) => $(td).addClass('promoted-story-title form-is-clean')
       },
       {
         name: 'status',
