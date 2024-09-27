@@ -180,7 +180,7 @@ function validateFileSize($fileInput: JQuery<HTMLInputElement, any>): string | u
 
 // only want to validate new images => a url indicates an existing image
 function validateImageDimensions($fileInput: JQuery<HTMLInputElement, any>): string | undefined {
-  // console.log('validating image dimensions...')
+  console.log('validating image dimensions...')
 
   const img = $fileInput.closest('.form-group').find('img')[0];
   if (imageDidPersist(img)) return;
