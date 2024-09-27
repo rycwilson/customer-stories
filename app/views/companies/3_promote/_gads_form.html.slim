@@ -6,12 +6,16 @@
       model: company,
       html: { \
         id: 'gads-form',
-        class: 'form-horizontal',
+        class: 'form-horizontal foobar',
         data: { \
           controller: 'ads',
-          action: \
-            'image-card:make-default->ads#setNewDefault image-card:submit-form->ads#submitForm ajax:success->ads#onDeletedImage',
-          asset_host: Rails.application.config.asset_host }}) do |form|
+          asset_host: Rails.application.config.asset_host,
+          action: [ \
+            'image-card:make-default->ads#setNewDefault',
+            'image-card:image-ready->ads#validateForm',
+            'image-card:upload-ready->ads#submitForm',
+            'image-card:save-changes->ads#submitForm',
+            'ajax:success->ads#onDeletedImage'].join(' ') }}) do |form|
           
     .row 
       .form-group.short-headline
@@ -81,13 +85,15 @@
             ul.image-library__default-images
               = render( \
                   'adwords_images/ad_image_card',
-                  { form_object: company,
+                  { form_outlet: '#gads-form',
+                    form_object: company,
                     ad_image: company.ad_images.default.marketing.square.take || { type: 'SquareImage', default: true },
                     field_name_prefix: 'company[adwords_images_attributes][0]',
                     collection: 'images' })
               = render( \
                   'adwords_images/ad_image_card',
-                  { form_object: company,
+                  { form_outlet: '#gads-form',
+                    form_object: company,
                     ad_image: company.ad_images.default.marketing.landscape.take || { type: 'LandscapeImage', default: true },
                     field_name_prefix: 'company[adwords_images_attributes][1]',
                     collection: 'images' })
@@ -106,7 +112,8 @@
         ul.image-library__all-images
           = render( \
               'adwords_images/ad_image_card',
-              { form_object: company,
+              { form_outlet: '#gads-form',
+                form_object: company,
                 ad_image: {},
                 field_name_prefix: 'company[adwords_images_attributes][2]',
                 collection: 'images' })
@@ -146,14 +153,16 @@
             ul.image-library__default-logos
               = render( \
                   'adwords_images/ad_image_card',
-                  { form_object: company,
+                  { form_outlet: '#gads-form',
+                    form_object: company,
                     ad_image: company.ad_images.default.logo.square.take || { type: 'SquareLogo', default: true },
                     field_name_prefix: ( \
                       "company[adwords_images_attributes][#{ 3 + company.ad_images.marketing.where.not(default: true).count }]"),
                     collection: 'logos' })
               = render( \
                   'adwords_images/ad_image_card',
-                  { form_object: company,
+                  { form_outlet: '#gads-form',
+                    form_object: company,
                     ad_image: company.ad_images.default.logo.landscape.take || { type: 'LandscapeLogo', default: true },
                     field_name_prefix: ( \
                       "company[adwords_images_attributes][#{ 4 + company.ad_images.marketing.where.not(default: true).count }]"),

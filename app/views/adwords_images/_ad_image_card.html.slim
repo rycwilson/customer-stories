@@ -1,5 +1,6 @@
 - ad = form_object if form_object.class.name == 'AdwordsAd'
 - is_company_image = form_object.class.name == 'Company'
+- form_outlet ||= nil
 
 / TODO consolidate class names
 li.ad-image-card {
@@ -9,6 +10,7 @@ li.ad-image-card {
   data-controller="image-card"
   data-image-card-kind-value=ad_image[:type]
   data-image-card-image-id-value=ad_image[:id]
+  data-image-card-form-outlet=form_outlet
   data-ads-target=((ad_image[:id] ? 'imageCard' : (collection == 'images' ? 'newImageCard' : 'newLogoCard')) if is_company_image)
   data-adwords-ad-images-target=('imageCard' if ad.present?)
   data-action=('click->image-card#toggleSelected' if ad.present?)
@@ -22,7 +24,7 @@ li.ad-image-card {
         'adwords_ad[adwords_image_ids][]',
         ad_image[:id],
         ad.images.include?(ad_image),
-        { class: 'hidden', data: { image_card_target: 'adImageCheckbox' }})
+        { class: 'hidden', data: { image_card_target: 'adImageCheckbox' } })
     .ad-image-card__frame
       .thumbnail
         img src=ad_image[:image_url] alt="#{ad_image[:type].split(/(?=[A-Z])/)&.join(' ')}"
@@ -34,16 +36,17 @@ li.ad-image-card {
               i.fa.fa-check.fa-stack-1x
 
   - elsif is_company_image
+
     // new image
     - if ad_image[:id].nil?
-      = hidden_field_tag("#{field_name_prefix}[type]", value: '')
-      = hidden_field_tag("#{field_name_prefix}[image_url]", value: '')
+      = hidden_field_tag("#{field_name_prefix}[type]", '')
+      = hidden_field_tag("#{field_name_prefix}[image_url]", '', data: { image_card_target: 'imageUrlInput' })
       
     // existing image
     - else 
-      = hidden_field_tag("#{field_name_prefix}[id]", value: ad_image[:id])
-      = hidden_field_tag("#{field_name_prefix}[type]", value: ad_image[:type])
-      = hidden_field_tag("#{field_name_prefix}[image_url]", value: ad_image[:image_url])
+      = hidden_field_tag("#{field_name_prefix}[id]", ad_image[:id])
+      = hidden_field_tag("#{field_name_prefix}[type]", ad_image[:type])
+      = hidden_field_tag("#{field_name_prefix}[image_url]", ad_image[:image_url])
       = check_box_tag( \
           "#{field_name_prefix}[default]",
           true,
@@ -77,15 +80,17 @@ li.ad-image-card {
         .ad-image-card__errors
           i.fa.fa-warning
           .help-block.with-errors
-        .fileinput-preview.thumbnail
+        .fileinput-preview.thumbnail data-image-card-target="imgWrapper"
           = image_tag( \
               ad_image[:image_url] || ad_image_placeholder(ad_image[:type]),
-              alt: ad_image[:type]&.split(/(?=[A-Z])/)&.join(' '))
+              { alt: ad_image[:type]&.split(/(?=[A-Z])/)&.join(' '),
+                data: { image_card_target: 'img' } })
         .btn-file
           / name="company[adwords_images_attributes][#{image_index}][image_url]"
           input {
             type="file"
             accept="image/jpeg,image/png"
+            data-image-card-target="fileInput"
             data-ads-target=('s3FileInput' if ad_image[:default] || ad_image[:id].nil?)
             data-s3=(s3_direct_post.to_json if ad_image[:default] || ad_image[:id].nil?)
             data-validate="false"
@@ -98,10 +103,10 @@ li.ad-image-card {
 
       - if ad_image[:id]
         .ad-image-card__footer
-          button.btn.btn-sm.btn-default type="button" data-action="image-card#cancelAction"
+          button.btn.btn-sm.btn-default type="button" data-action="image-card#cancelChanges"
             | Cancel
-          button.btn.btn-sm.btn-danger type="button" data-submit-action="delete" data-action="image-card#submitForm"
+          button.btn.btn-sm.btn-danger type="button" data-user-action="delete" data-action="image-card#saveChanges"
             | Delete
-          button.btn.btn-sm.btn-success type="button" data-submit-action="makeDefault" data-action="image-card#submitForm"
+          button.btn.btn-sm.btn-success type="button" data-user-action="makeDefault" data-action="image-card#saveChanges"
             | Set as default
   
