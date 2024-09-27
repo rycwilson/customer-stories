@@ -1,6 +1,7 @@
 $brand-primary: #039be5;  // #0288d1 // #0074eb;  // #0095ff; //#d74b4b;  // #4885ed;
 $brand-success: #26b859;
 $brand-danger: #d11302;
+$state-danger-text: darken($brand-danger, 10%);
 
 $light-gray: #f9f9f9;
 $medium-gray: #efefef;
