@@ -61,7 +61,7 @@ export default class ImageCardController extends Controller<HTMLLIElement> {
   
   disconnect() {
     $(this.formGroupTarget).off('change.bs.fileinput', this.changeFileInputHandler);
-    
+
     // after disconnect, any outlets (e.g. the parent form) will be null
     $(this.element.closest('form'))
       .off('validated.bs.validator', this.validatedFileInputHandler)
@@ -126,7 +126,6 @@ export default class ImageCardController extends Controller<HTMLLIElement> {
   }
   
   toggleDefaultValueChanged(newVal: boolean, oldVal: boolean) {
-    // console.log(`toggleDefaultValueChanged(${newVal}, ${oldVal})`);˝˝
     if (oldVal === undefined) return;
     this.defaultImageCheckboxTarget.checked = newVal;
     if (!this.isDefaultImage) this.formGroupTarget.classList.toggle('to-be-default', newVal);

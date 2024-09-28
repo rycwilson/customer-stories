@@ -45,26 +45,26 @@ export default class AdsController extends FormController<AdsController> {
         this.element.action.replace(/\.json$/, '') :
         (this.element.action.endsWith('.json') ? this.element.action : `${this.element.action}.json`);
     };
-    const toggleInputs = (shouldEnable: boolean) => {
-      [...this.defaultImageCardTargets, this.newImageCardTarget, this.newLogoCardTarget, ...this.imageCardTargets]
-        .filter(_card => {
-          return this.defaultImageCardTargets.includes(_card) ?
-            !_card.hasAttribute('data-image-card-image-id-value') :
-            _card !== card;
-        })
-        .forEach(_card => {
-          _card.querySelectorAll('input').forEach(input => input.disabled = !shouldEnable);
-        });
+    const toggleInputs = (cards: HTMLLIElement[], shouldEnable: boolean) => {
+      cards.forEach(_card => {
+        _card.querySelectorAll('input').forEach(input => input.disabled = !shouldEnable);
+      });
     };
+    const inactiveCards = [...this.defaultImageCardTargets, this.newImageCardTarget, this.newLogoCardTarget, ...this.imageCardTargets]
+      .filter(_card => {
+        return this.defaultImageCardTargets.includes(_card) ?
+          !_card.hasAttribute('data-image-card-image-id-value') :
+          _card !== card;
+      });
     if (userAction == 'add' || userAction === 'makeDefault') {
       setFormat('html');
     } else if (userAction === 'delete') {
       setFormat('json');
       this.element.action += `?image_id=${imageId}`;
     }
-    toggleInputs(false);
+    toggleInputs(inactiveCards, false);
     this.element.requestSubmit();
-    toggleInputs(true);
+    toggleInputs(inactiveCards, true);
   }
 
   onValidatedShortHeadline({ relatedTarget: input }: { relatedTarget: HTMLInputElement }) {
@@ -110,8 +110,9 @@ export default class AdsController extends FormController<AdsController> {
   setNewDefault(
     { detail: { card, kind, toggleDefault } }: { detail: { card: HTMLLIElement, kind: AdImageKind, toggleDefault: boolean } }
   ) {
+    // console.log(card.className, kind, toggleDefault) 
     const sameKind = (_card: HTMLLIElement) => (new RegExp(`--${kind}`)).test(_card.className);
-    this.imageCardTargets
+    [...this.defaultImageCardTargets, ...this.imageCardTargets]
       .filter(_card => sameKind(_card) && _card !== card)
       .forEach(_card => {
         _card.setAttribute(

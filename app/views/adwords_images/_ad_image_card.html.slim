@@ -54,8 +54,8 @@ li.ad-image-card {
       = hidden_field_tag("#{field_name_prefix}[image_url]", ad_image[:image_url])
       = check_box_tag( \
           "#{field_name_prefix}[default]",
-          true,
-          ad_image[:default],
+          ad_image[:default] ? false : true,
+          false,
           { class: 'hidden', data: { image_card_target: 'defaultImageCheckbox' } })
       - unless ad_image[:default]
         = check_box_tag( \
