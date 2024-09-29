@@ -1,3 +1,6 @@
+- content_for(:head) do
+  meta name="turbo-cache-control" content="no-cache"
+
 = render('shared/modal')
 
 .dashboard data-controller="dashboard" data-dashboard-modal-outlet="#main-modal"
