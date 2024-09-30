@@ -19,7 +19,7 @@
           cursor: pointer;
 
           &:hover {
-            background-color: #efefef;
+            background-color: $blueish-gray-lighter;
           }
         }
       }
@@ -61,7 +61,7 @@
 }
 
 #show-contributions {
-  background-color: $medium-gray;
+  background-color: $blueish-gray-lighter;
 
   strong {
     font-weight: 600;
@@ -166,7 +166,7 @@
 }
 
 .og-tags__background {
-  background-color: #efefef;
+  background-color: $blueish-gray-lighter;
   padding: 15px;
 }
 

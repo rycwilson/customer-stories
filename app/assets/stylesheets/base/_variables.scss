@@ -1,14 +1,24 @@
-$brand-primary: #039be5;  // #0288d1 // #0074eb;  // #0095ff; //#d74b4b;  // #4885ed;
-$brand-success: #26b859;
-$brand-danger: #d11302;
-$state-danger-text: darken($brand-danger, 10%);
+$brand-primary: #0372aa;
+$brand-success: #198703; 
+$brand-danger: #e32926; // #e53935; 
+$brand-warning: #ff8000;
 
-$light-gray: #f9f9f9;
-$medium-gray: #efefef;
+$state-success-bg: #e5ffcf;     // 80% lightened brand-success
+$state-success-text: #355d1d;   
+$state-info-bg: #cfffff;        // 80% lightened brand-info
+$state-info-text: #1f5c5c;
+$state-warning-bg: #ffffb3;     // 80% lightened brand-warning
+$state-warning-text: #6b5000;
+$state-danger-bg: #ffe9e6;      // 75% lightened brand-danger
+$state-danger-text: #863427;
+
+$light-gray: mix($brand-primary, #f9f9f9, 1%);
+$gray-lighter: #eee;
+$blueish-gray-lighter: mix($brand-primary, $gray-lighter, 1%);
 $dark-gray: #e5e5e5;
 $nav-blue: $brand-primary; 
-$nav-blue-hover: #0082cc;
-$light-blue: #e8ffff;
+$nav-blue-hover: darken($brand-primary, 10%);
+$light-blue: #e8ffff;  // 90% lightened brand-primary
 
 $csp-body-font: 'Open Sans', sans-serif;
 $csp-title-font: 'Lato', 'Open Sans', sans-serif;
@@ -21,10 +31,6 @@ $company-logo-max-height: 50px !default;
 $stories-header-height: 48px !default;
  
 $stories-bg-color: $light-gray !default;  
-$stories-fg-color: $medium-gray !default;
-
-// same as btn-success, with opacity
-$status-on-color: rgba(140, 221, 129, 0.5); // #8CDD81;	 //  rgba(3, 155, 229, 0.35); (btn-primary w opacity)
 
 // https://www.invisionapp.com/inside-design/finding-the-right-color-palettes-for-data-visualizations/
 

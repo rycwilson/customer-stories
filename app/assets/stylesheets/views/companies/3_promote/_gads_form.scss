@@ -95,7 +95,7 @@ ul:is([id*="ad-images"]) {
   }
 
   &--did-save .thumbnail {
-    border-color: #0d9f40;
+    border-color: $state-success-text;
   }
 }
 
@@ -125,11 +125,11 @@ ul:is([id*="ad-images"]) {
     }
 
     &.did-save {
-      background-color: #dff0d8;
-      border: 2px solid #0d9f40;
+      background-color: $state-success-bg;
+      border: 2px solid $state-success-text;
       pointer-events: none;
       padding: 4px;
-      color: #0d9f40;
+      color: $state-success-text;
     }
   }
 

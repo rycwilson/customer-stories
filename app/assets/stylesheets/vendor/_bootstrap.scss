@@ -3,9 +3,14 @@
 
 .bootstrap-switch {
   .bootstrap-switch-handle-on.bootstrap-switch-primary {
-    background: $status-on-color;
+    background: $state-success-bg;
+    color: $state-success-text;
   }
   
+  .bootstrap-switch-handle-off.bootstrap-switch-default {
+    color: $gray-light;
+  }
+
   &.bootstrap-switch-disabled {
     cursor: not-allowed !important;
 
@@ -34,12 +39,12 @@ ul.dropdown-menu {
     font-family: $company-title-font;
     border-radius: 0; 
     padding: 0.85em 2em 0.85em 1.4em;
-    color: #555;
+    color: $gray-light;
 
     &:hover, 
     &:focus {
-      background-color: $medium-gray;
-      color: #222; 
+      background-color: $blueish-gray-lighter;
+      color: $gray; 
     }
   }
 
@@ -90,11 +95,11 @@ ul.dropdown-menu {
     width: 50%;
     padding: 8px 16px;
     border-color: #ccc;
-    color: #666;
+    color: $gray;
     transition: border-color 0s;
     
     &:hover {
-      color: #222;
+      color: $gray-dark;
 
       &:not(.active) {
         border-color: #ccc;
@@ -103,7 +108,7 @@ ul.dropdown-menu {
 
     &:hover, 
     &:active {
-      background-color: #e5e5e5;
+      background-color: $blueish-gray-lighter;
     }
 
     &:active, 
@@ -113,9 +118,9 @@ ul.dropdown-menu {
 
     &.active {
       pointer-events: none;
-      background-color: $medium-gray;
-      border-color: $nav-blue;
-      color: $nav-blue;
+      background-color: $blueish-gray-lighter;
+      border-color: $brand-primary;
+      color: $brand-primary;
     }
   }
 }

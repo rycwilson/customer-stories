@@ -78,8 +78,12 @@ select.tomselected + .ts-wrapper {
 
 select.tomselected + .ts-wrapper.multi,
 input.tomselected + .ts-wrapper.multi {
-  .ts-control > div.active {
-    background: $brand-primary;
+  .ts-control > div {
+    background: $blueish-gray-lighter;
+
+    &.active {
+      background: $brand-primary;
+    }
   }
 
   &.has-items {
@@ -142,7 +146,7 @@ input.tomselected + .ts-wrapper.multi {
 
   .optgroup-header {
     padding: 0.75rem;
-    background: $medium-gray;
+    background: $blueish-gray-lighter;
     font-size: 13px;
   }
 

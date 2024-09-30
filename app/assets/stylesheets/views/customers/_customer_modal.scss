@@ -9,7 +9,7 @@
 
   .customer-logo {
     position: relative;
-    background-color: #efefef;
+    background-color: $blueish-gray-lighter;
     padding: 4rem 2.5rem 0 2.5rem;
 
     .fileinput {
@@ -116,7 +116,7 @@
   .customer-logo__footer {
     // bottom: 0;
     height: 4rem;
-    background-color: #efefef;
+    background-color: $blueish-gray-lighter;
 
     .checkbox {
       display: flex; 

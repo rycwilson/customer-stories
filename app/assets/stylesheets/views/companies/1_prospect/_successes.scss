@@ -428,7 +428,7 @@
 
   .custom-title {
     @include flex-row-center-between;
-    background-color: #efefef;
+    background-color: $blueish-gray-lighter;
   }
 
   .popover-title {

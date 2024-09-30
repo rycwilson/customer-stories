@@ -79,7 +79,7 @@
   //   .new-contact {
   //     display: flex;
   //     flex-direction: column;
-  //     background-color: $medium-gray;
+  //     background-color: $gray-lighter;
   //     margin: -1em #{-1 * $modal-inner-padding} 1em;
   //     padding: 1em $modal-inner-padding 0;
 
@@ -113,3 +113,88 @@
     // overflow-y: scroll;
   }
 }
+
+// #new-success-modal, 
+// #new-contributor-modal {
+//   &#new-success-modal.in {
+//     overflow-y: scroll;  // force scroll so create/import are consistent
+//   }
+
+//   .modal-header {
+//     .close {
+//       font-size: 26px;
+//     }
+//   }
+
+//   .modal-body {
+//     padding: 25px 20px;
+
+//     .new-records {
+//       display: none;
+//       min-height: 117px;  // matches the file upload view
+
+//       label {
+//         margin-bottom: 10px;
+//       }
+
+//       li {
+//         margin-bottom: 5px;
+//       }
+//     }
+
+//     label:not(.radio-inline) {
+//       padding-right: 5px;
+//     }
+    
+//     .form-group.has-success {
+//       .input-group-addon:hover {
+//         color: #3c763d;
+//         border-color: #3c763d;
+//         background-color: #cbdac5;
+//       }
+//     }
+//     .form-group.has-warning {
+//       .input-group-addon:hover {
+//         color: #8a6d3b;
+//         border-color: #8a6d3b;
+//         background-color: #efebd7;
+//       }
+//     }
+
+//     .form-group.has-error {
+//       .input-group-addon:hover {
+//         color: #a94442;
+//         border-color: #a94442;
+//         background-color: #e0cfcf;
+//       }
+//     }
+
+//     .create-contributor, 
+//     .create-referrer {
+//       background: #eee;
+//       .form-group:last-of-type {
+//         span.help-block {
+//           margin-bottom: 0;
+//         }
+//       }
+//     }
+
+//     .create-contributor, 
+//     .create-referrer.new-success {
+//       margin: -68px -9px 16px -10px;
+//       padding: 68px 9px 9px 10px;
+//     }
+
+//     // this one doesn't have a bottom margin, hence the difference from above
+//     .create-referrer.new-contributor {
+//       margin: -43px -9px -4px -10px;
+//       padding: 68px 9px 9px 10px;
+//     }
+
+//     // mimic select2
+//     input:not([type="file"]), textarea {
+//       font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+//       padding-left: 12px;
+//     }
+//   }
+// }
