@@ -24,6 +24,7 @@
     "@rails/ujs": "^7.0.8",
     "animate.css": "^4.1.1",
     "blueimp-file-upload": "^10.32.0",
+    "bootoast": "^1.1.4",
     "bootstrap-datepicker": "^1.9.0",
     "bootstrap-daterangepicker": "^3.1.0",
     "bootstrap-horizon": "^1.0.1",
