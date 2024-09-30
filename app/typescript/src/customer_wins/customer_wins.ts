@@ -134,7 +134,7 @@ export function tableConfig(): Config {
                 data-modal-trigger-modal-outlet="#main-modal"
                 data-modal-trigger-title-value="Edit Customer"
                 data-modal-trigger-turbo-frame-attrs-value=${JSON.stringify(turboFrameAttrs)}>
-                <i class="glyphicon glyphicon-pencil"></i>
+                <i class="fa fa-pencil"></i>
                 <!-- <div><i class="fa fa-circle-o-notch"></i></div> -->
               </button>
             </td>
