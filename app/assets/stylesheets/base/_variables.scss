@@ -3,13 +3,16 @@ $brand-success: #198703;
 $brand-danger: #e32926; // #e53935; 
 $brand-warning: #ff8000;
 
-$state-success-bg: #e5ffcf;     // 80% lightened brand-success
-$state-success-text: #355d1d;   
-$state-info-bg: #cfffff;        // 80% lightened brand-info
-$state-info-text: #1f5c5c;
-$state-warning-bg: #ffffb3;     // 80% lightened brand-warning
-$state-warning-text: #6b5000;
-$state-danger-bg: #ffe9e6;      // 75% lightened brand-danger
+// all state backgrounds are 75%-lightened versions of the brand colors
+// for text: ask copilot to compute given existing bg/text relationships, 
+// then darken (if necessary) the text until it passes contrast check: #665c1e
+$state-success-bg: #bff2a9;     
+$state-success-text: #2a4d2a; 
+$state-info-bg: #c3ffff;       
+$state-info-text: #125959;
+$state-warning-bg: #ffffc0;   
+$state-warning-text: #5e541c;
+$state-danger-bg: #ffe9e6;    
 $state-danger-text: #863427;
 
 $light-gray: mix($brand-primary, #f9f9f9, 1%);
