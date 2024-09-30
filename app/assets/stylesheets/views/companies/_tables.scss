@@ -1,0 +1,191 @@
+#successes-table,
+#contributors-table,
+#story-contributors-table,
+#promoted-stories-table {
+  @include row-hover-highlight;
+  table-layout: fixed;
+
+  &:not(#promoted-stories-table) td.status {
+    // this ensures newlines will be respected
+    // ref: https://stackoverflow.com/questions/10937218
+    white-space: pre;
+  }
+
+  // child rows (must be nested under table id selectors to override datatables)
+  td.child-row,
+  td.contributor-child-row {
+    padding: 1.75rem 1rem 2rem;
+    background-color: $gray-lighter;
+    // border: 1px solid #08c;
+    // border-bottom: 3px solid #dfdfdf;
+  
+    .form-group {
+      width: 100%;
+      margin-bottom: 20px;
+  
+      .form-control {
+        width: 100%;
+        font-size: 13px;
+      }
+    }
+  
+    .col-sm-3 {
+      padding-left: 0;
+    }
+  
+    .col-sm-9 {
+      padding: 0;
+    }
+  }
+
+  // datatables table-striped class does not take row groups into account, so roll our own
+  // &:not(.has-row-groups) > tbody > tr.even {
+  //   background-color: #f9f9f9;
+  // }
+}
+
+.table-controls {
+  padding: 1.5em;
+  background-color: $blueish-gray-lighter;
+
+  > div {
+    @include flex-row-center-between;
+    width: 100%;
+
+    &:first-child {
+      flex-wrap: wrap;
+    }
+  }
+
+  button:not(.clear-button) {
+    &:first-of-type {
+      margin-right: 0.75em;
+    }
+  }
+
+  // TODO: Why does this result in different widths for the labels? Workaround is below
+  // label {
+  //   display: inline-block;
+  //   margin: 0 1em 0 0;
+  //   width: 60px;
+  // }
+
+  label {
+    position: relative;
+    margin: 0;
+
+    > * {
+      position: absolute;
+      right: 0.75em; 
+      top: 50%;
+      transform: translate(0, -50%);
+    }
+
+    &::before {
+      content: '';
+      display: inline-block;
+      width: 4.75em;
+    }
+  }
+
+  .curator-select,
+  .filter-select {
+    @include flex-row-center;
+    min-width: 225px; 
+    padding-bottom: 1.25em;
+
+    select {
+      flex-grow: 1;
+    }
+  }
+
+  .filter-select {
+    flex-grow: 1;
+    max-width: 340px;
+
+    i {
+      font-size: 1.25em;
+      color: $gray;
+    }
+  }
+}
+
+td.toggle-child,
+td[data-controller="dropdown"] {
+  position: relative;
+
+  > a,
+  > button {
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    transition: color 0.15s ease-in-out;
+    background-color: transparent;
+    color: $gray-light;
+
+
+    &:hover,
+    &:focus,
+    &:active {
+      color: $gray-dark;
+    }
+  }
+}
+
+td.toggle-child {
+  > button > i:last-child {
+    display: none;
+  }
+  
+  tr.dt-hasChild & > button {
+    color: $gray-dark;
+
+    > i:first-child {
+      display: none;
+    }
+  
+    > i:last-child {
+      display: inline-block;
+    }
+  }
+}
+
+td[data-controller="dropdown"] {
+  > a {
+    @include flex-row-center-center;
+    text-decoration: none;
+  }
+}
+
+.popover[data-controller="table-display-options"] {
+  max-width: revert;
+
+  label {
+    padding-right: 0;
+  }
+
+  .form-group:not(:first-child):not(:last-child) {
+    margin-bottom: 0.25em;
+  }
+
+  .popover-content {
+    position: relative;
+    padding: 1.25em 0;
+  }
+
+  &[data-table-display-options-resource-outlet="#customer-wins"] {
+    .popover-content {
+      left: -1em;
+      width: 25em;
+    }
+  }
+
+  &[data-table-display-options-resource-outlet="#contributors"] {
+    .popover-content {
+      left: -2em;
+      width: 30em;
+    }
+  }
+}

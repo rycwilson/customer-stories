@@ -84,9 +84,6 @@
 }
 
 #promoted-stories-table {
-  @include row-hover-highlight;
-  table-layout: fixed;
-
   td.promoted-story-title {
     position: relative;  // needed for click blocker
 
@@ -161,11 +158,6 @@
     .bootstrap-switch {
       background: #fff;
       margin-bottom: 5px;
-
-      .bootstrap-switch-handle-on.bootstrap-switch-primary, 
-      .bootstrap-switch-handle-off.bootstrap-switch-default {
-        color: #666;
-      }
     }
   }
 

@@ -11,29 +11,34 @@
 
 // @import 'RowGroup-1.0.0/css/rowGroup.bootstrap';
 
-table thead tr th,  
-table tfoot tr th {
-  font-weight: 400;
-  font-size: 14px;
-  border-bottom-width: 1px;
-}
-
 table.dataTable {
+  $header-background: darken($blueish-gray-lighter, 10%);
+  margin-top: 0 !important;
+
   thead {
     th {
-      background-color: #dfdfdf;
+      background-color: $header-background;
       font-weight: 600;
-      border: 1px solid #c6c6c6;
+      border: 1px solid darken($header-background, 10%);
+      
+      &:first-of-type,
+      &:last-of-type {
+        text-align: center;
+      }
+      
+      &:first-of-type {
+        color: $gray;
+      }
     }
     
     > tr {
-      > th.sorting:before {
+      > th.sorting::before {
         content: none;
       }
       
-      > th.sorting:after {
-        font-family: 'Glyphicons Halflings';
-        content: "\e150";
+      > th.sorting::after {
+        font-family: 'FontAwesome';
+        content: '\f0dc';
         opacity: 0.2;
         top: 8px;
         right: 8px;
@@ -42,33 +47,34 @@ table.dataTable {
         font-size: initial;
       }
 
-      > th.sorting_asc:after,
-      > th.sorting_desc:after {
-        color: $nav-blue;
+      > th.sorting_asc::after,
+      > th.sorting_desc::after {
+        color: $brand-primary;
         opacity: 1;
       }
 
-      > th.sorting_asc:after {
-        content: "\e155";
+      > th.sorting_asc::after {
+        content: '\f160';
       }
 
-      > th.sorting_desc:after {
-        content: "\e156";
+      > th.sorting_desc::after {
+        content: '\f161';
       }
     }
   }
 
   tbody tr.highlight {
-    background-color: #dff0d8 !important;
+    background-color: $light-blue !important;
   }
 
   tr.dtrg-group td {
-    background-color: #efefef;
+    background-color: $blueish-gray-lighter;
     font-weight: 600;
   }
 }
 
-.table-bordered > thead > tr > th, .table-bordered > thead > tr > td {
+.table-bordered > thead > tr > th, 
+.table-bordered > thead > tr > td {
   border-bottom-width: 1px;  // bootstrap 2px
 }
 
@@ -77,16 +83,6 @@ table.dataTable {
 .table.dataTable tbody .dt-hasChild:hover td,
 .table.dataTable tbody .dt-hasChild:hover th {
 	background-color: $light-blue !important; // $nav-blue !important;
-}
-
-div.dataTables_wrapper > div.dataTables_info {
-  visibility: hidden;
-}
-
-// settings apply for div.dataTables_info as it appears in headers
-div.dataTables_wrapper [class*="header"] div.dataTables_info {
-  margin-bottom: 0;
-  padding: 0;
 }
 
 // override bootstrap rule
@@ -99,68 +95,23 @@ div.dataTables_wrapper [class*="header"] div.dataTables_info {
   vertical-align: middle;
 }
 
-td {
-  i[class*="fa-caret"] { 
-    color: #999;
-  }
+// div.DTE_Inline {
+//   div.DTE_Inline_Field div.DTE_Field > label {
+//     // display: initial;
+//     display: revert;
+//     width: 100%;
+//     padding-left: 0;
+//     margin-bottom: 5px;
+//   }
+//   div.DTE_Inline_Field, div.DTE_Inline_Buttons {
+//     display: block;
+//     width: 100% !important;
+//   }
+//   div.DTE_Inline_Buttons div.DTE_Form_Buttons button {
+//     margin: 0 0 0 8px;
+//   }
+// }
 
-  &:hover {
-    i[class*="fa-caret"] {
-      color: #222;
-    }
-  } 
-}
-
-td.status.dropdown, 
-td[data-controller="dropdown"] {
-  position: relative;
-  text-align: center;
-  padding: 0;
-
-  > a {
-    position: absolute;
-    top: 0;
-    right: 0;
-    bottom: 0;
-    left: 0;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-  }
-}
-
-.datatable {
-  a {
-    text-decoration: none !important;
-  }
-
-  // child row
-  .dt-hasChild:hover + tr:not(.dtrg-group) > td[colspan]:not(.dataTables_empty) {
-    // border-color: #0095ff !important; // #0075b0
-  }
-
-  th.actions {
-    text-align: center;
-  }
-}
-
-div.DTE_Inline {
-  div.DTE_Inline_Field div.DTE_Field > label {
-    // display: initial;
-    display: revert;
-    width: 100%;
-    padding-left: 0;
-    margin-bottom: 5px;
-  }
-  div.DTE_Inline_Field, div.DTE_Inline_Buttons {
-    display: block;
-    width: 100% !important;
-  }
-  div.DTE_Inline_Buttons div.DTE_Form_Buttons button {
-    margin: 0 0 0 8px;
-  }
-}
-
-input.select2-search__field[aria-controls*="DTE_Field"] {
-  display: none;
-}
+// input.select2-search__field[aria-controls*="DTE_Field"] {
+//   display: none;
+// }

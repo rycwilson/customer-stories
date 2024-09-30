@@ -16,7 +16,6 @@
 }
 
 .layout-sidebar {
-  // border: 1px solid #dfdfdf;
   .nav {
     > li {
       margin: 0;    
@@ -24,19 +23,12 @@
       > a {
         display: flex;
         align-items: center;
-        // margin-left: -15px;
-        // margin-right: -15px;
         height: 56px;
-        font-family: 'Lato';
         border-left: 2px solid transparent;
-        font-size: 14px;
-        color: #666;
         padding: 10px 20px;
-
-        // > span {
-        //   display: flex;
-        //   align-items: center;
-        // }
+        font-family: 'Lato';
+        font-size: 14px;
+        color: $gray;
 
         i {
           font-size: 1.25em;
@@ -45,24 +37,20 @@
 
         &:hover, 
         &:focus {
-          background-color: $dark-gray;
-          // border-left: 2px solid #e5e5e5;
-          border-left: 2px solid $dark-gray;
-          color: #222;
+          background-color: darken($blueish-gray-lighter, 5%);
+          border-left: 2px solid darken($blueish-gray-lighter, 5%);
+          color: darken($gray, 5%);
         }
       }
       
       &.active {
-        // margin-right: 0;
         > a, 
-        a:hover, 
-        a:focus {
-          // border-left: 2px solid $nav-blue; // #0095ff;
-          border-left: 2px solid $nav-blue; // #0095ff;
-          // border-right-color: transparent; 
-          color: $nav-blue; // #0095ff;
+        > a:hover, 
+        > a:focus {
+          border-left: 2px solid $brand-primary;
+          color: $brand-primary;
           font-weight: 600;
-          background-color: #efefef;
+          background-color: $blueish-gray-lighter;
         }
       }
     }
@@ -74,12 +62,11 @@
 }
 
 .admin-sidebar {
-  background-color: #efefef;
+  background-color: $blueish-gray-lighter;
   padding: 15px;
   margin-top: 30px;
 
   h4 {
-    color: #d11302;
     margin-top: 0;
   }
 }
