@@ -3,7 +3,6 @@
 div {
   data-controller="bootstrap-switch #{'tooltip' if field == :preview_published}"
   data-bootstrap-switch-disabled-value=('true' if field == :preview_published)
-  data-bootstrap-switch-size-value="large"
   data-tooltip-options-value=({ title: 'Contact Customer Stories', container: 'body' }.to_json if field == :preview_published) }
   = story_form.label(field, kind)
   = story_form.check_box( \
