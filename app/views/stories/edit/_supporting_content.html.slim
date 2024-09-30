@@ -7,13 +7,13 @@
       autocomplete: 'off' }) do |form|
 
   .form-group 
-    .visible-sm-block.col-sm-12 
+    .visible-sm-block.col-sm-offset-1.col-sm-10
       = form.label(:quote, 'Customer Quote')
       = form.text_area( \
           :quote,
           { rows: 3, class: 'form-control', placeholder: 'Select a Contributor to autofill their Contribution here' })
     = form.label(:quote, 'Customer Quote', class: 'control-label col-md-3 visible-md-inline-block visible-lg-inline-block')
-    .col-md-8.col-lg-7.visible-md-block.visible-lg-block
+    .col-md-7.col-lg-6.visible-md-block.visible-lg-block
       = collection_select( \
           story,
           :featured_contributor_id,
@@ -42,11 +42,11 @@
 
   .form-group 
     = hidden_field_tag('story[formatted_video_url]', story.video_url)
-    .visible-sm-block.col-sm-12
+    .visible-sm-block.col-sm-offset-1.col-sm-10
       = form.label(:video_url, 'Video URL')
       = form.text_field(:video_url, class: 'form-control', placeholder: 'YouTube, Vimeo, or Wistia', autocomplete: 'off')
     = form.label(:video_url, 'Video URL', class: 'control-label col-md-3 visible-md-inline-block visible-lg-inline-block')
-    .col-md-8.col-lg-7.visible-md-block.visible-lg-block
+    .col-md-7.col-lg-6.visible-md-block.visible-lg-block
       = form.text_field(:video_url, class: 'form-control', placeholder: 'YouTube, Vimeo, or Wistia', autocomplete: 'off')
       #video-container.text-center
         - if story.video_info[:provider] == 'wistia'
@@ -73,10 +73,10 @@
           = image_tag('placeholders/video-placeholder.jpg', id: 'video-placeholder', alt: 'video thumbnail')
 
   .form-group 
-    .visible-sm-block.col-sm-12 
+    .visible-sm-block.col-sm-offset-1.col-sm-10
       / = form.label(:results, 'Results')
     = form.label(:results, class: 'control-label col-md-3 visible-md-inline-block visible-lg-inline-block')
-    .col-md-8.col-lg-7.visible-md-block.visible-lg-block
+    .col-md-7.col-lg-6.visible-md-block.visible-lg-block
       .list-group data-story-target="resultsList" data-controller="list-group"
         = form.fields_for(:success) do |success_form|
           = success_form.fields_for(:results) do |results_form|
