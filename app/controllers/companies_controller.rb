@@ -80,6 +80,7 @@ class CompaniesController < ApplicationController
         end
       end
     else
+      binding.pry
       # @flash = { mesg: @company.errors.full_messages.join(', '), status: 'danger' }
     end
   end
