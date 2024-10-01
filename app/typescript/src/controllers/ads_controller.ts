@@ -81,7 +81,7 @@ export default class AdsController extends FormController<AdsController> {
       return imageId === res.id;
     });
     card?.remove();
-    bsToast('success', 'Image deleted successfully');
+    bsToast('info', 'Image deleted successfully');
   }
   
   uploadImage() {

@@ -23,33 +23,43 @@
 
 .bootoast {
   position: relative;
+  padding: 1.25em;
+  font-size: $font-size-base;
 
-  > .bootoast-alert-container {
-    position: relative;
-    top: -1px;
-    padding-left: 2.5em;
-    font-size: $font-size-base;
-  }
-
-  > .glyphicon,
-  > .close {
+  > .glyphicon {
     position: absolute;
     top: 50%;
-    transform: translateY(-54%);
-
-    &.close {
-      right: 0.5em;
-      font-size: 2.5em;
-    }
-  }
-
-  // use FontAwesome instead of Glyphicons
-  > .glyphicon {
+    transform: translateY(-52%);
     font-family: 'FontAwesome';
-
+    font-size: 1.5em;
+    
+    // use FontAwesome instead of Glyphicons
     &.glyphicon-ok-sign::before {
       content: '\f00c';
     }
+
+    &.glyphicon-ok-sign + .bootoast-alert-container {
+      padding-left: 2.5em;
+    }
+  
+    &.glyphicon-info-sign::before {
+      content: '\f129';
+    }
+
+    + .bootoast-alert-container {
+      padding-left: 1.75em;
+    }
+  }
+
+  > .bootoast-alert-container {
+    padding-bottom: 2px;
+    font-weight: 600;
+  }
+
+  > .close {
+    top: -6px;
+    right: 0;
+    font-size: 2.25em;
   }
 }
 
@@ -156,4 +166,11 @@ ul.dropdown-menu {
       color: $brand-primary;
     }
   }
+}
+
+.form-control[disabled], 
+.form-control[readonly], 
+fieldset[disabled] 
+.form-control {
+  background-color: $blueish-gray-lighter;
 }

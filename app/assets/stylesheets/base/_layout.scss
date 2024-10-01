@@ -37,9 +37,9 @@
 
         &:hover, 
         &:focus {
-          background-color: darken($blueish-gray-lighter, 5%);
-          border-left: 2px solid darken($blueish-gray-lighter, 5%);
-          color: darken($gray, 5%);
+          background-color: darken($blueish-gray-lighter, 4%);
+          border-left: 2px solid darken($blueish-gray-lighter, 4%);
+          color: darken($gray, 10%);
         }
       }
       

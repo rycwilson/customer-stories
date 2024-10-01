@@ -1,13 +1,14 @@
 import bootoast from 'bootoast';
 
+const baseBootoastOptions = {
+  position: 'bottom-center',
+  timeout: 5,
+  animationDuration: 200,
+  dismissable: true
+};
+
 export function bsToast(type: string, message: string) {
-  const baseOptions = {
-    position: 'bottom-center',
-    timeout: 5,
-    animationDuration: 200,
-    dismissable: true
-  };
-  bootoast.toast({ ...baseOptions, type, message });
+  bootoast.toast({ ...baseBootoastOptions, type, message });
 }
 
 export function parseDatasetObject<Type>(element: HTMLElement, prop: string, ...requiredProps: string[]): Type | null {
