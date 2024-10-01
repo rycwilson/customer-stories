@@ -3,7 +3,7 @@ import { debounce } from '../utils';
 import tinycolor from 'tinycolor2';
 
 export default class CtaController extends FormController<CtaController> {
-  static values = { customButtonBackgroundColor: String, customButtonTextColor: String }
+  static values = { ...FormController.values, customButtonBackgroundColor: String, customButtonTextColor: String }
   declare readonly customButtonBackgroundColorValue: string;
   declare readonly customButtonTextColorValue: string;
 
