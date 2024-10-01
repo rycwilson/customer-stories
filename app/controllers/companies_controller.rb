@@ -64,8 +64,14 @@ class CompaniesController < ApplicationController
         head(:ok)
       elsif ad_images_update?
         respond_to do |format|
-          format.html { render(partial: 'companies/3_promote/gads_form', locals: { company: @company }) }
-          format.json { render(json: { id: params[:image_id] }) }
+          format.html do
+            toast = { type: 'success', message: params[:_method] == 'patch' ? 'Changes saved' : 'Image created successfully' }
+            render(partial: 'companies/3_promote/gads_form', locals: { company: @company, toast: })
+          end
+          format.json do 
+            i, deleted_image = company_params[:adwords_images_attributes].to_h.find { |k, v| v[:_destroy].present? }
+            render(json: { id: deleted_image[:id] }) 
+          end
         end
       else
         respond_to do |format|
@@ -80,7 +86,6 @@ class CompaniesController < ApplicationController
         end
       end
     else
-      binding.pry
       # @flash = { mesg: @company.errors.full_messages.join(', '), status: 'danger' }
     end
   end
