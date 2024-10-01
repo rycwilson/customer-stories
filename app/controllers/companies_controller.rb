@@ -65,7 +65,8 @@ class CompaniesController < ApplicationController
       elsif ad_images_update?
         respond_to do |format|
           format.html do
-            toast = { type: 'success', message: params[:_method] == 'patch' ? 'Changes saved' : 'Image created successfully' }
+            image_was_created = @company.adwords_images.any? { |ad_image| ad_image.previous_changes[:id].present? } 
+            toast = { type: 'success', message: image_was_created ? 'Image added successfully' : 'Changes saved' }
             render(partial: 'companies/3_promote/gads_form', locals: { company: @company, toast: })
           end
           format.json do 
@@ -86,6 +87,7 @@ class CompaniesController < ApplicationController
         end
       end
     else
+      puts @company.errors.full_messages
       # @flash = { mesg: @company.errors.full_messages.join(', '), status: 'danger' }
     end
   end
