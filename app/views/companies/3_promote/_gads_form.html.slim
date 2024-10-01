@@ -9,6 +9,7 @@
         class: 'form-horizontal',
         data: { \
           controller: 'ads',
+          ads_toast_value: (toast rescue nil),
           asset_host: Rails.application.config.asset_host,
           action: [ \
             'image-card:make-default->ads#setNewDefault',

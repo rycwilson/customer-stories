@@ -10,7 +10,7 @@ import type CompanyStoryTagsController from './company_story_tags_controller';
 import type CtaController from './cta_controller';
 import type AdsController from './ads_controller';
 import type { TomOptions } from 'tom-select/dist/types/types';
-import { serializeForm } from '../utils';
+import { serializeForm, bsToast } from '../utils';
 
 type SubclassController = (
   NewCustomerWinController | 
@@ -27,6 +27,11 @@ type SubclassController = (
 export default class FormController<Ctrl extends SubclassController> extends Controller<HTMLFormElement> {
   static outlets = ['modal'];
   declare readonly modalOutlet: ModalController;
+
+  static values = {
+    toast: { type: Object, default: {} }
+  };
+  declare toastValue: { type?: 'info' | 'success' | 'warning' | 'danger', message?: string };
 
   static targets = [    
     'customerSelect',
@@ -91,6 +96,15 @@ export default class FormController<Ctrl extends SubclassController> extends Con
 
   onAjaxComplete(this: Ctrl, { detail: [xhr, status] }: { detail: [xhr: XMLHttpRequest, status: string] }) {
     // console.log('superclass', xhr, status)
+  }
+
+  toastValueChanged(newVal: { type?: string, message?: string }) {
+    console.log('toastValueChanged()', newVal)
+    const { type, message } = newVal;
+    if (type && message) {
+      bsToast(type, message);
+      this.toastValue = {};
+    }
   }
 
   removeErrorsOnValidInput() {

@@ -1,5 +1,6 @@
 import FormController from './form_controller';
 import { imageValidatorOptions } from '../user_uploads';
+import { bsToast } from '../utils';
 
 export default class AdsController extends FormController<AdsController> {
   static targets = [
@@ -46,21 +47,21 @@ export default class AdsController extends FormController<AdsController> {
         (this.element.action.endsWith('.json') ? this.element.action : `${this.element.action}.json`);
     };
     const toggleInputs = (cards: HTMLLIElement[], shouldEnable: boolean) => {
-      cards.forEach(_card => {
-        _card.querySelectorAll('input').forEach(input => input.disabled = !shouldEnable);
-      });
+      cards.forEach(_card => _card.querySelectorAll('input').forEach(input => input.disabled = !shouldEnable));
     };
-    const inactiveCards = [...this.defaultImageCardTargets, this.newImageCardTarget, this.newLogoCardTarget, ...this.imageCardTargets]
-      .filter(_card => {
+    const inactiveCards = [
+      ...this.defaultImageCardTargets, this.newImageCardTarget, this.newLogoCardTarget, ...this.imageCardTargets
+    ].filter(_card => {
         return this.defaultImageCardTargets.includes(_card) ?
           !_card.hasAttribute('data-image-card-image-id-value') :
           _card !== card;
       });
-    if (userAction == 'add' || userAction === 'makeDefault') {
+    if (userAction == 'add') {
+      setFormat('html');
+    } else if (userAction === 'makeDefault') {
       setFormat('html');
     } else if (userAction === 'delete') {
       setFormat('json');
-      this.element.action += `?image_id=${imageId}`;
     }
     toggleInputs(inactiveCards, false);
     this.element.requestSubmit();
@@ -80,6 +81,7 @@ export default class AdsController extends FormController<AdsController> {
       return imageId === res.id;
     });
     card?.remove();
+    bsToast('success', 'Image deleted successfully');
   }
   
   uploadImage() {
@@ -120,6 +122,7 @@ export default class AdsController extends FormController<AdsController> {
           _card.classList.contains('gads-default') ? `${toggleDefault}` : 'false');
       });
   }
+
 
   initPopover(link: HTMLAnchorElement) {
     $(link).popover({
