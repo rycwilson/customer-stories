@@ -32,10 +32,10 @@ function appFactory(): CustomerStoriesApp {
     init() {
       Rails.start();
       turboStart();
-      document.documentElement.addEventListener('turbo:load', (e) => {
-        addTurboListeners();
+      addTurboListeners();
+      // document.documentElement.addEventListener('turbo:load', (e) => {
         // initView(controller, action);
-      }, { once: true });
+      // }, { once: true });
     }
   }
 }

@@ -76,10 +76,7 @@ export default class AdsController extends FormController<AdsController> {
   }
 
   onDeletedImage({ detail: [res, status, xhr] }: { detail: [res: { id: string }, status: string, xhr: XMLHttpRequest] }) {
-    const card = this.imageCardTargets.find(card => {
-      const imageId = card.getAttribute('data-image-card-image-id-value');
-      return imageId === res.id;
-    });
+    const card = this.imageCardTargets.find(card => res.id === card.getAttribute('data-image-card-image-id-value'));
     card?.remove();
     bsToast('info', 'Image deleted successfully');
   }
