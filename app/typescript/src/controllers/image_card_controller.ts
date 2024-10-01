@@ -104,13 +104,8 @@ export default class ImageCardController extends Controller<HTMLLIElement> {
 
   onValidFileInput({ relatedTarget: input }: { relatedTarget: HTMLInputElement }) {
     if (input === this.fileInputTarget && input.value) {
-      console.log('valid.bs.validator', input)
+      console.log('valid.bs.validator, uploading file:', input.files)
       $(input).fileupload('send', { files: input.files });
-
-      // Change event on the input will trigger the s3 upload
-      // => stop the event propagation so that the upload handler does not re-execute
-      // $input.closest('.ad-image-card').one('change.bs.fileinput', () => false);
-      // $input.trigger('change');
     }
   }
 
