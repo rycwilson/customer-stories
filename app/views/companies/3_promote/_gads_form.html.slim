@@ -38,8 +38,9 @@
         label.col-sm-3.control-label Image Collection
         .col-sm-9.col-md-8.col-lg-6
           .btn-group data-controller="btn-group"
-            a.btn.btn-secondary.active {
-              href="#image-library__marketing" 
+            a.btn.btn-secondary {
+              href="#image-library__marketing"
+              class=('active' if active_collection == 'images')
               data-toggle="tab" 
               data-btn-group-target="btn" 
               role="tab" }
@@ -47,7 +48,8 @@
               | &nbsp;&nbsp;
               | Marketing Images
             a.btn.btn-secondary {
-              href="#image-library__logos" 
+              href="#image-library__logos"
+              class=('active' if active_collection == 'logos')
               data-toggle="tab" 
               data-btn-group-target="btn"
               role="tab" }
@@ -57,7 +59,7 @@
 
     .image-library.tab-content
 
-      #image-library__marketing.tab-pane.in.active
+      #image-library__marketing.tab-pane class=('active' if active_collection == 'images')
 
         .row style="margin-bottom:15px"
           .col-sm-offset-3.col-sm-9.col-md-8.col-lg-6
@@ -122,7 +124,7 @@
                   field_name_prefix: "company[adwords_images_attributes][#{ 3 + i }]",
                   collection: 'images' })
 
-      #image-library__logos.tab-pane
+      #image-library__logos.tab-pane class=('active' if active_collection == 'logos')
 
         .row
           .form-group
