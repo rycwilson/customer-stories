@@ -1,19 +1,5 @@
 module CompaniesHelper
 
-  def ad_image_card_class_name(ad_image, collection='')
-    type_class_name = ad_image[:type]&.split(/(?=[A-Z])/)&.reverse&.join('--')&.downcase&.sub(/\A/, 'gads-')
-    if ad_image[:id].blank?
-      ad_image[:default] ? 
-        "#{type_class_name} gads-default #{ad_image[:type] =~ /Image/ ? 'gads-required' : ''}" :
-        "hidden ad-image-card--new gads-#{collection.singularize}"
-    else
-      "#{type_class_name}" \
-      "#{ad_image[:default] ? ' gads-default has-image' : ''}" \
-      "#{ad_image[:default] && ad_image[:type] =~ /Image/ ? ' gads-required' : ''}" \
-      "#{ad_image[:did_save] ? ' ad-image-card--did-save' : ''}"
-    end
-  end
-
   def ad_image_min_dimensions(type=nil)
     min_dimensions = {
       'SquareImage': {
@@ -39,13 +25,17 @@ module CompaniesHelper
   def ad_image_placeholder(type)
     case type
     when 'SquareImage'
-      RESPONSIVE_AD_SQUARE_IMAGE_PLACEHOLDER
+      'https://dummyimage.com/142/e2e3e3/3c3c3c&text=%E2%89%A5%20300%C3%97300'
+      # RESPONSIVE_AD_SQUARE_IMAGE_PLACEHOLDER
     when 'LandscapeImage'
-      RESPONSIVE_AD_LANDSCAPE_IMAGE_PLACEHOLDER
+      'https://dummyimage.com/195x102/e2e3e3/3c3c3c&text=%E2%89%A5%20600%C3%97314'
+      # RESPONSIVE_AD_LANDSCAPE_IMAGE_PLACEHOLDER
     when 'SquareLogo'
-      RESPONSIVE_AD_SQUARE_LOGO_PLACEHOLDER
+      'https://dummyimage.com/117/e2e3e3/3c3c3c&text=%E2%89%A5%20128%C3%97128'
+      # RESPONSIVE_AD_SQUARE_LOGO_PLACEHOLDER
     when 'LandscapeLogo'
-      RESPONSIVE_AD_LANDSCAPE_LOGO_PLACEHOLDER
+      'https://dummyimage.com/232x58/e2e3e3/3c3c3c&text=%E2%89%A5%20512%C3%97128'
+      # RESPONSIVE_AD_LANDSCAPE_LOGO_PLACEHOLDER
     else 
       ''
     end
