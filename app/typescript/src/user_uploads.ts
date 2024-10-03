@@ -171,19 +171,6 @@ function imageDidPersist(img: HTMLImageElement): boolean {
   return Boolean(src && src.includes('http'));
 }
 
-function setCardClassName($imageCard: JQuery<HTMLLIElement, any>, imageKind: AdImageKind | '') {
-  // console.log(`setCardClassName(${type})`, $imageCard.prop('class'))
-  const typeMatch = imageKind ? imageKind.match(/Square|Landscape/) : null;
-  const typeClassName = typeMatch ? `$&--${typeMatch[0].toLowerCase()}` : '';
-  $imageCard.attr(
-    'class',
-    $imageCard.attr('class')!
-      //.replace('hidden', '')
-      .replace(/gads-(image|logo)/, typeClassName)
-      .concat($imageCard.is('.gads-default') ? ' ad-image-card--new' : '') 
-  );
-};
-
 // http://stackoverflow.com/questions/39488774
 function validateFileSize($fileInput: JQuery<HTMLInputElement, any>): string | undefined {
   console.log('validating file size...')
@@ -199,15 +186,20 @@ function validateFileSize($fileInput: JQuery<HTMLInputElement, any>): string | u
 function validateImageDimensions($fileInput: JQuery<HTMLInputElement, any>): string | undefined {
   console.log('validating image dimensions...')
 
-  const img = $fileInput.closest('.form-group').find('img')[0];
-  if (imageDidPersist(img)) return;
-
-  const $imageCard = ($fileInput.closest('.ad-image-card') as unknown) as JQuery<HTMLLIElement, any>;
-  const collection: 'images' | 'logos' = $fileInput.data('collection');
+  const img = $fileInput.closest('.form-group').find('.fileinput-preview img')[0];
+  // if (imageDidPersist(img)) return;
+  
+  const $imageCard = <JQuery<HTMLLIElement, any>>($fileInput.closest('.ad-image-card') as unknown);
+  const matchGroups = (<string>$imageCard.attr('class'))
+    .match(/--(?<aspectRatio>Square|Landscape)(?<kind>Image|Logo)/)
+    ?.groups;
+  let imageKind = matchGroups ? Object.values(matchGroups).reduce((acc, val) => acc + val, '') : '';
+  let isValid;
+  const collection = $fileInput.data('collection');
   const width = img.naturalWidth;
   const height = img.naturalHeight;
-  const aspectRatio = width / height;
-  const hasCorrectAspectRatio = (requiredAspectRatio: number) => {
+  const hasAspectRatio = (requiredAspectRatio: number) => {
+    const aspectRatio = width / height;
     const aspectRatioTolerance = Number($fileInput.data('aspect-ratio-tolerance')); 
     const plusMinus = aspectRatioTolerance * requiredAspectRatio;
     return aspectRatio >= (requiredAspectRatio - plusMinus) && aspectRatio <= (requiredAspectRatio + plusMinus);
@@ -226,41 +218,37 @@ function validateImageDimensions($fileInput: JQuery<HTMLInputElement, any>): str
       aspect_ratio: landscapeLogoAspectRatio
     }
   } = $fileInput.data('min-dimensions');
-  const isSquareImage = width >= squareImageMin && height >= squareImageMin && hasCorrectAspectRatio(1);
+  const isSquareImage = width >= squareImageMin && height >= squareImageMin && hasAspectRatio(1);
   const isLandscapeImage = (
     width >= landscapeImageMinWidth &&
     height >= landscapeImageMinHeight &&
-    hasCorrectAspectRatio(landscapeImageAspectRatio)
+    hasAspectRatio(landscapeImageAspectRatio)
   );
-  const isSquareLogo = width >= squareLogoMin && height >= squareLogoMin && hasCorrectAspectRatio(1);
+  const isSquareLogo = width >= squareLogoMin && height >= squareLogoMin && hasAspectRatio(1);
   const isLandscapeLogo = (
     width >= landscapeLogoMinWidth &&
     height >= landscapeLogoMinHeight && 
-    hasCorrectAspectRatio(landscapeLogoAspectRatio)
+    hasAspectRatio(landscapeLogoAspectRatio)
   );
-  const isValid = (() => {
-    const defaultType = $fileInput.data('default-type');
-    return defaultType ? (
-        (defaultType === 'SquareImage' && isSquareImage) ||
-        (defaultType === 'LandscapeImage' && isLandscapeImage) ||
-        (defaultType === 'SquareLogo' && isSquareLogo) ||
-        (defaultType === 'LandscapeLogo' && isLandscapeLogo)
-      ) : (
-        (collection === 'images' && (isSquareImage || isLandscapeImage)) || 
-        (collection === 'logos' && (isSquareLogo || isLandscapeLogo))
-      );
-  })();
-  const imageKind: AdImageKind | '' = isValid ? 
-    (collection[0].toUpperCase() + collection.slice(1))
-      .replace(/^/, isSquareImage || isSquareLogo ? 'Square' : 'Landscape')
-      .replace(/s$/, '') as AdImageKind : 
-    '';
-  if (!$fileInput.data('default-type')) setCardClassName($imageCard, imageKind);
+  if (imageKind) {
+    isValid = (
+      (imageKind === 'SquareImage' && isSquareImage) ||
+      (imageKind === 'LandscapeImage' && isLandscapeImage) ||
+      (imageKind === 'SquareLogo' && isSquareLogo) ||
+      (imageKind === 'LandscapeLogo' && isLandscapeLogo)
+    );
+  } else if (collection === 'images' && (isSquareImage || isLandscapeImage)) {
+    isValid = true;
+    imageKind = `${isSquareImage ? 'Square' : 'Landscape'}Image`;
+  } else if (collection === 'logos' && (isSquareLogo || isLandscapeLogo)) {
+    isValid = true;
+    imageKind = `${isSquareLogo ? 'Square' : 'Landscape'}Logo`;
+  }
   if (isValid) {
-    // console.log('image dimensions are valid')
-    $imageCard.children('input[name*="[type]"]').val(imageKind);
+    $imageCard
+      .toggleClass(`image-card--${imageKind}`, true)
+      .children('input[name*="[type]"]').val(imageKind);
   } else {
-    // console.log('image dimensions are not valid')
     return 'Image is wrong size';
   }
 }
