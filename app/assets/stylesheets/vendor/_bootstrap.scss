@@ -1,6 +1,13 @@
+@import 'bootstrap-jasny/scss/jasny-bootstrap';
 @import 'bootstrap-switch/dist/css/bootstrap3/bootstrap-switch';
 @import 'bootoast/dist/bootoast.min';
 // @import 'bootstrap-daterangepicker/daterangepicker';
+
+// The overflow: hidden setting from jasny introduces a bit of extra height to the image card, thus making the spinner appear off center.
+// Not sure how that's supposed to work, but this seems to fix it...
+.btn-file {
+  overflow: visible;
+}
 
 .bootstrap-switch {
   .bootstrap-switch-handle-on.bootstrap-switch-primary {

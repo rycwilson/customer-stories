@@ -2,7 +2,6 @@
 
 @import 'bootstrap-sprockets';
 @import 'bootstrap';
-@import 'bootstrap-jasny/scss/jasny-bootstrap';
 
 @import 'font-awesome';
 
@@ -29,6 +28,10 @@
 @import 'views/stories/edit/edit';
 @import 'views/contributions/contributions';
 @import 'views/profile/profile';
+
+.turbo-progress-bar {
+  background: $light-blue;
+}
 
 // good example of file organization
 // also: https://sass-guidelin.es/#the-7-1-pattern
