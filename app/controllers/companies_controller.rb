@@ -70,7 +70,7 @@ class CompaniesController < ApplicationController
             render(partial: 'companies/3_promote/gads_form', locals: { company: @company, toast: })
           end
           format.json do 
-            i, deleted_image = company_params[:adwords_images_attributes].to_h.find { |k, v| v[:_destroy].present? }
+            i, deleted_image = company_params[:adwords_images_attributes].to_h.find { |k, v| v[:_destroy] == 'true' }
             render(json: { id: deleted_image[:id] }) 
           end
         end

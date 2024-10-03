@@ -1,7 +1,5 @@
 = turbo_frame_tag('company-ads-form') do
 
-  / url: update_gads_company_path(company),
-  / authenticity_token: true,
   = form_with( \
       model: company,
       html: { \
@@ -16,6 +14,8 @@
             'image-card:image-ready->ads#validateForm',
             'image-card:upload-ready->ads#submitForm',
             'image-card:save-changes->ads#submitForm',
+            'image-card:replace-default->ads#keepPreviousDefault',
+            'image-card:invalid-image->ads#onInvalidImage',
             'ajax:success->ads#onDeletedImage'].join(' ') }}) do |form|
           
     .form-group.short-headline
