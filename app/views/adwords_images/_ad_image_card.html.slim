@@ -1,6 +1,5 @@
-- form_outlet ||= nil
 - ad = form_object if form_object.class.name == 'AdwordsAd'
-- is_company_image = form_object.class.name
+- is_company_image = form_object.class.name == 'Company'
 - enable_file_upload = ad_image[:default] || ad_image[:id].nil?
 
 / TODO consolidate class names
@@ -11,7 +10,7 @@ li.ad-image-card {
   data-controller="image-card"
   data-image-card-kind-value=ad_image[:type]
   data-image-card-image-id-value=ad_image[:id]
-  data-image-card-ads-outlet=(form_outlet if form_outlet)
+  data-image-card-ads-outlet=(form_outlet rescue nil)
   data-ads-target=( \
     ad_image[:default] ? \
       'defaultImageCard' : \
@@ -46,39 +45,39 @@ li.ad-image-card {
     - if ad_image[:id].nil?
       = hidden_field_tag("#{field_name_prefix}[type]", '')
       = hidden_field_tag("#{field_name_prefix}[image_url]", '', data: { image_card_target: 'imageUrlInput' })
+      - if ad_image[:default]
+        = hidden_field_tag("#{field_name_prefix}[default]", true)
       
     // existing image
     - else 
-      = hidden_field_tag("#{field_name_prefix}[id]", ad_image[:id])
+      = hidden_field_tag("#{field_name_prefix}[id]", ad_image[:id], data: { image_card_target: 'idInput' })
       = hidden_field_tag("#{field_name_prefix}[type]", ad_image[:type])
-      = hidden_field_tag("#{field_name_prefix}[image_url]", ad_image[:image_url])
-      = check_box_tag( \
-          "#{field_name_prefix}[default]",
-          ad_image[:default] ? false : true,
-          false,
-          { class: 'hidden', data: { image_card_target: 'defaultImageCheckbox' } })
+      = hidden_field_tag("#{field_name_prefix}[image_url]", ad_image[:image_url], data: { image_card_target: 'imageUrlInput' })
+      = hidden_field_tag("#{field_name_prefix}[default]", ad_image[:default], data: { image_card_target: 'defaultInput' })
       - unless ad_image[:default]
-        = check_box_tag( \
-            "#{field_name_prefix}[_destroy]",
-            true,
-            false,
-            { class: 'hidden', data: { image_card_target: '_destroyImageCheckbox' } })
+        = hidden_field_tag("#{field_name_prefix}[_destroy]", false, data: { image_card_target: '_destroyInput' })
+
 
     .form-group.fileinput.fileinput-exists.has-feedback data-provides="fileinput" data-image-card-target="formGroup"
 
       .ad-image-card__header
-        - if ad_image[:id]
-          - if ad_image[:default]
-            // attaching data-trigger attribute to .file-input-preview does not work
-            button.btn-upload type="button" data-trigger="fileinput"
-              i.fa.fa-fw.fa-upload
-          - else
-            button.set-as-default type="button" data-action="image-card#makeDefault"
-              i.fa.fa-fw.fa-refresh
+        - if ad_image[:default]
+          / attaching data-trigger attribute to .file-input-preview does not work
+          button.btn-upload type="button" data-trigger="fileinput"
+            i.fa.fa-fw.fa-upload
+          /button.btn-remove type="button" data-action="image-card#reset" data-dismiss="fileinput"
+            i.fa.fa-fw.fa-remove
+        - elsif ad_image[:id]
+          button.set-as-default type="button" data-action="image-card#makeDefault"
+            i.fa.fa-fw.fa-refresh
+          |&nbsp;
+          button.btn-remove type="button" data-action="image-card#deleteImage"
+            i.fa.fa-fw.fa-remove
         |&nbsp;
-        button.btn-remove type="button" data-action="image-card#deleteImage"
+        button.btn-remove type="button" data-action="image-card#reset" data-dismiss="fileinput"
           i.fa.fa-fw.fa-remove
-        button.did-save type="button"
+        /|&nbsp;
+        /button.did-save type="button"
           i.fa.fa-fw.fa-check
 
       .ad-image-card__frame
