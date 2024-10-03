@@ -53,7 +53,7 @@ export default class AdsController extends FormController<AdsController> {
       ...this.defaultImageCardTargets, this.newImageCardTarget, this.newLogoCardTarget, ...this.imageCardTargets
     ].filter(_card => {
         return this.defaultImageCardTargets.includes(_card) ?
-          !_card.hasAttribute('data-image-card-image-id-value') :
+          _card !== card && !_card.hasAttribute('data-image-card-image-id-value') :
           _card !== card;
       });
     if (userAction == 'add') {
@@ -75,8 +75,14 @@ export default class AdsController extends FormController<AdsController> {
     }
   }
 
+  onInvalidImage({ detail: { input } }: { detail: { input: HTMLInputElement } }) {
+    input.setAttribute('data-validate', 'false');
+    // $(this.element).validator('update');
+  }
+
   onDeletedImage({ detail: [res, status, xhr] }: { detail: [res: { id: string }, status: string, xhr: XMLHttpRequest] }) {
-    const card = this.imageCardTargets.find(card => res.id === card.getAttribute('data-image-card-image-id-value'));
+    console.log(this.imageCardTargets)  
+    const card = this.imageCardTargets.find(card => res.id == card.getAttribute('data-image-card-image-id-value'));
     card?.remove();
     bsToast('info', 'Image deleted successfully');
   }
@@ -97,12 +103,13 @@ export default class AdsController extends FormController<AdsController> {
     $(this.element).validator('update').validator('validate');
   }
 
-  keepPreviousDefault(id: string) {
-    const i = this.imageCardTargets.length;
+  keepPreviousDefault({ detail: { prevDefaultImageId } }: { detail: { prevDefaultImageId: string } }) {
+    const i = [
+      ...this.defaultImageCardTargets, this.newImageCardTarget, this.newLogoCardTarget, ...this.imageCardTargets
+    ].length;
     this.element.insertAdjacentHTML('beforeend', `
-      <input type="hidden" name="company[adwords_images_attributes][${i}][id]" value="${id}">
+      <input type="hidden" name="company[adwords_images_attributes][${i}][id]" value="${prevDefaultImageId}">
       <input type="hidden" name="company[adwords_images_attributes][${i}][default]" value="false">
-      <input class="hidden" type="checkbox" name="company[adwords_images_attributes][${i}][default]" value="true">
     `);
   }
 
@@ -112,11 +119,13 @@ export default class AdsController extends FormController<AdsController> {
     // console.log(card.className, kind, toggleDefault) 
     const sameKind = (_card: HTMLLIElement) => (new RegExp(`--${kind}`)).test(_card.className);
     [...this.defaultImageCardTargets, ...this.imageCardTargets]
-      .filter(_card => sameKind(_card) && _card !== card)
+      .filter(_card => sameKind(_card) && _card !== card && card.hasAttribute('data-image-card-image-id-value'))
       .forEach(_card => {
+        // _card.classList.contains('gads-default') ? `${toggleDefault}` : 'false');
         _card.setAttribute(
           'data-image-card-toggle-default-value', 
-          _card.classList.contains('gads-default') ? `${toggleDefault}` : 'false');
+          'false'
+        )
       });
   }
 
