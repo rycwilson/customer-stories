@@ -13,22 +13,22 @@
     margin: 8px;
   }
 
-  .gads-image--square .ad-image-card__frame {
+  .image-card--SquareImage .ad-image-card__frame {
     width: 105px;
     height: 105px;
   }
 
-  .gads-image--landscape .ad-image-card__frame {
+  .image-card--LandscapeImage .ad-image-card__frame {
     width: 147px;
     height: 77px;
   }
 
-  .gads-logo--square .ad-image-card__frame {
+  .image-card--SquareLogo .ad-image-card__frame {
     width: 88px;
     height: 88px;
   }
 
-  .gads-logo--landscape & {
+  .image-card--LandscapeLogo & {
     width: 174px;
     height: 43.5px;
   }

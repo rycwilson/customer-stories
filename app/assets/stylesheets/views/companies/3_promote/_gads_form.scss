@@ -42,43 +42,13 @@ ul:is([id*="ad-images"]) {
 .ad-image-card {
   position: relative;
   display: inline-block;
-  background-color: $light-gray;
   margin: 0 4px 4px;
 
   &.gads-default {
     margin: 0 8px 8px;
   }
 
-  // .form-group {
-    // don't show a new uploaded image that hasn't been validated;
-    // ignore existing images as indicated by src attribute
-    // &.has-feedback:not(.to-be-added) {
-    // &.has-feedback {
-    //   // .fileinput-preview img:not([src*="http"]) {
-    //   img:not([src*="http"]) {
-    //     visibility: hidden;  // show img only if valid
-    //   }
-    // }
-  // }
-
-  // &--saving button {
-    // pointer-events: none;
-    
-    // &.btn-default {
-    //   opacity: 0.65;
-    // }
-    
-    // &.btn-success {
-    //   background-color: #008f30;    // same as .btn-success:active:focus
-    //   border-color: #008f30;
-
-    //   .spinner {
-    //     z-index: initial;
-    //   }
-    // }
-  // }
-
-  &--new {
+  &--uploading {
     @include spinner('sm');
     
     > .spinner {
@@ -88,20 +58,13 @@ ul:is([id*="ad-images"]) {
       left: 50%;
       transform: translate(-50%, -50%);
     }
-
-    img {
-      display: none;
-    }
   }
 
-  &--new img,
-  img[src*="data:"] {
+  &--uploading .fileinput-preview img,
+  .fileinput-preview img[src*="data:image"],
+  .has-error .fileinput-preview {
     display: none;
   }
-
-  // &--did-save .thumbnail {
-  //   border-color: $state-success-text;
-  // }
 }
 
 .ad-image-card__header {
@@ -112,7 +75,7 @@ ul:is([id*="ad-images"]) {
   z-index: 1;
   display: flex;
   justify-content: flex-end;
-  margin: 12px;
+  margin: 12px 10px;
   background-color: transparent;
 
   button {
@@ -138,10 +101,7 @@ ul:is([id*="ad-images"]) {
     // }
   }
 
-  // .ad-image-card--did-save & button:not(.did-save),
-  // .gads-default .has-error & .btn-upload,
-  // .did-save
-  .ad-image-card--new .form-group:not(.has-error) &,
+  .ad-image-card--uploading .form-group:not(.has-error) &,
   [class*="to-be-"] &,
   .has-error & button:not(:last-child),
   .gads-default & .btn-remove,
@@ -151,50 +111,39 @@ ul:is([id*="ad-images"]) {
 
   .has-error & .btn-remove:last-child {
     display: block;
+    margin: -5% -5% 0;
     background-color: transparent;
     color: $state-danger-text;
-    margin: -5% -5% 0;
 
     &:hover {
       background-color: transparent;
       color: darken($state-danger-text, 10%);
     }
   }
-
-  // .ad-image-card--did-save & .did-save {
-  //   // display: initial;
-  //   display: revert;
-  // }
 }
 
 .ad-image-card__frame {
-  .gads-image--square & {
+  .image-card--SquareImage & {
     width: calc(150px + #{$thumbnail-padding + 2px});
     height: calc(150px + #{$thumbnail-padding + 2px});
   }
 
-  .gads-logo--square & {
+  .image-card--SquareLogo & {
     width: calc(125px + #{$thumbnail-padding + 2px});
     height: calc(125px + #{$thumbnail-padding + 2px});
   }
 
-  .gads-image--landscape & {
+  .image-card--LandscapeImage & {
     width: 210px; // 244.5px;
   }
 
-  // .gads-image--square &,
-  // .gads-logo--square &,
-  .gads-image--landscape & {
+  .image-card--LandscapeImage & {
     height: calc(110px + #{$thumbnail-padding + 2px});
   }
 
-  .gads-logo--landscape & {
+  .image-card--LandscapeLogo & {
     width: 248px;
     height: calc(62px + #{$thumbnail-padding + 6px});
-  }
-
-  .has-error > & .thumbnail {
-    display: none;
   }
 }
 
@@ -245,17 +194,17 @@ ul:is([id*="ad-images"]) {
   border-bottom-right-radius: $thumbnail-border-radius;
 
   button {
-    border: none;
     margin: 0 3px;
     flex-grow: 0.5;
+    border: none;
   }
 
-  [class*="to-be-"] > & {
+  [class*="to-be-"] & {
     display: flex;
   }
 
-  .gads-image--square &,
-  .gads-logo--square & {
+  .image-card--SquareImage &,
+  .image-card--SquareLogo & {
     flex-direction: column;
     align-items: center;
 
@@ -264,11 +213,11 @@ ul:is([id*="ad-images"]) {
     }
   }
     
-  .gads-image--square & button {
+  .image-card--SquareImage & button {
     width: 75%;
   }
 
-  .gads-logo--square & button {
+  .image-card--SquareLogo & button {
     width: 90%;
   }
 
@@ -290,9 +239,7 @@ ul:is([id*="ad-images"]) {
   
   .short-headline {
     [class*="col-"] > div {
-      display:flex;
-      align-items:center;
-      justify-content:space-between
+      @include flex-row-center-between;
     }
     
     button {
@@ -308,7 +255,8 @@ ul:is([id*="ad-images"]) {
     transition: border 0s;
   }
 
-  .fileinput, .fileinput-preview {
+  .fileinput, 
+  .fileinput-preview {
     position: relative;
     margin: 0;  // override jasny bootstrap
   }
