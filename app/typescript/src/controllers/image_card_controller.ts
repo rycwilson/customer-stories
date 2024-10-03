@@ -125,7 +125,7 @@ export default class ImageCardController extends Controller<HTMLLIElement> {
         this.dispatch('replace-default', { detail: { prevDefaultImageId: this.idInputTarget.value } });
         this.idInputTarget.value = '';
       }
-      this.element.classList.add('ad-image-card--uploading');
+      this.element.classList.add('image-card--uploading');
       $(input).fileupload('send', { files: input.files });
     } else if (input === this.fileInputTarget) {
       console.log('valid.bs.validator, but no file?')

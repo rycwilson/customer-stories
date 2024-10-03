@@ -32,7 +32,7 @@
         ul data-max="15"
           - ad.company.ad_images.marketing.sort_by { |image| sort_ad_images(ad, image) }.each.with_index do |ad_image, i|
             = render( \
-                'adwords_images/ad_image_card',
+                'shared/image_card',
                 { form_object: ad,
                   ad_image:,
                   field_name_prefix: "adwords_ad[adwords_images_attributes][#{i}]",
@@ -42,7 +42,7 @@
         ul data-max="5"
           - ad.company.ad_images.logo.sort_by { |image| sort_ad_images(ad, image) }.each.with_index do |ad_image, i|
             = render( \
-                'adwords_images/ad_image_card',
+                'shared/image_card',
                 { form_object: ad,
                   ad_image:,
                   field_name_prefix: "adwords_ad[adwords_images_attributes][#{ i + ad.company.ad_images.marketing.count }]",

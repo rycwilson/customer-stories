@@ -12,10 +12,10 @@
           action: [ \
             'image-card:make-default->ads#setNewDefault',
             'image-card:image-ready->ads#updateValidator',
+            'image-card:clear-fileinput->ads#updateValidator',
+            'image-card:replace-default->ads#keepPreviousDefault',
             'image-card:upload-ready->ads#submitForm',
             'image-card:save-changes->ads#submitForm',
-            'image-card:replace-default->ads#keepPreviousDefault',
-            'image-card:clear-fileinput->ads#updateValidator',
             'ajax:success->ads#onDeletedImage'].join(' ') }}) do |form|
           
     .form-group.short-headline
@@ -81,14 +81,14 @@
           .col-sm-9.col-md-8.col-lg-6
             ul.image-library__default-images
               = render( \
-                  'adwords_images/ad_image_card',
+                  'shared/image_card',
                   { form_outlet: '#gads-form',
                     form_object: company,
                     ad_image: company.ad_images.default.marketing.square.take || { type: 'SquareImage', default: true },
                     field_name_prefix: 'company[adwords_images_attributes][0]',
                     collection: 'images' })
               = render( \
-                  'adwords_images/ad_image_card',
+                  'shared/image_card',
                   { form_outlet: '#gads-form',
                     form_object: company,
                     ad_image: company.ad_images.default.marketing.landscape.take || { type: 'LandscapeImage', default: true },
@@ -108,7 +108,7 @@
 
         ul.image-library__all-images
           = render( \
-              'adwords_images/ad_image_card',
+              'shared/image_card',
               { form_outlet: '#gads-form',
                 form_object: company,
                 ad_image: {},
@@ -116,7 +116,7 @@
                 collection: 'images' })
           - company.ad_images.marketing.where.not(default: true).each.with_index do |ad_image, i|
             = render( \
-                'adwords_images/ad_image_card',
+                'shared/image_card',
                 { form_object: company,
                   ad_image:,
                   field_name_prefix: "company[adwords_images_attributes][#{ 3 + i }]",
@@ -149,7 +149,7 @@
           .col-sm-9.col-md-8.col-lg-6
             ul.image-library__default-logos
               = render( \
-                  'adwords_images/ad_image_card',
+                  'shared/image_card',
                   { form_outlet: '#gads-form',
                     form_object: company,
                     ad_image: company.ad_images.default.logo.square.take || { type: 'SquareLogo', default: true },
@@ -157,7 +157,7 @@
                       "company[adwords_images_attributes][#{ 3 + company.ad_images.marketing.where.not(default: true).count }]"),
                     collection: 'logos' })
               = render( \
-                  'adwords_images/ad_image_card',
+                  'shared/image_card',
                   { form_outlet: '#gads-form',
                     form_object: company,
                     ad_image: company.ad_images.default.logo.landscape.take || { type: 'LandscapeLogo', default: true },
@@ -178,7 +178,7 @@
 
         ul.image-library__all-logos
           = render( \
-              'adwords_images/ad_image_card',
+              'shared/image_card',
               { form_outlet: '#gads-form',
                 form_object: company,
                 ad_image: {},
@@ -187,7 +187,7 @@
                 collection: 'logos' })
           - company.ad_images.logo.where.not(default: true).each.with_index do |ad_image, i|
             = render( \
-                'adwords_images/ad_image_card',
+                'shared/image_card',
                 { form_object: company,
                   ad_image:,
                   field_name_prefix: ( \

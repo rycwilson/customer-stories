@@ -2,7 +2,7 @@
 - is_company_image = form_object.class.name == 'Company'
 - enable_file_upload = ad_image[:default] || ad_image[:id].blank?
 
-li.ad-image-card {
+li.image-card {
   class=("image-card--#{ad_image[:type]}" if ad_image[:type])
   class=('gads-default' if ad_image[:default])
   class=('gads-required' if ad_image[:type] =~ /Image/)
@@ -30,7 +30,7 @@ li.ad-image-card {
         ad_image[:id],
         ad.images.include?(ad_image),
         { class: 'hidden', data: { image_card_target: 'adImageCheckbox' } })
-    .ad-image-card__frame
+    .image-card__frame
       .thumbnail
         img src=ad_image[:image_url] alt="#{ad_image[:type].split(/(?=[A-Z])/)&.join(' ')}"
         .check
@@ -60,7 +60,7 @@ li.ad-image-card {
 
     .form-group.fileinput.fileinput-new data-provides="fileinput" data-image-card-target="formGroup"
 
-      .ad-image-card__header
+      .image-card__header
         - if ad_image[:default]
           / attaching data-trigger attribute to .fileinput-preview does not work
           button.btn-upload type="button" data-trigger="fileinput"
@@ -75,8 +75,8 @@ li.ad-image-card {
         button.btn-remove type="button" data-dismiss="fileinput"
           i.fa.fa-fw.fa-remove
 
-      .ad-image-card__frame
-        .ad-image-card__errors
+      .image-card__frame
+        .image-card__errors
           i.fa.fa-warning
           .help-block.with-errors
         - if ad_image[:default]
@@ -104,7 +104,7 @@ li.ad-image-card {
             data-required-image=('true' if ad_image[:default] && ad_image[:type].include?('Image')) }
 
       - if ad_image[:id]
-        .ad-image-card__footer
+        .image-card__footer
           button.btn.btn-sm.btn-default type="button" data-action="image-card#cancelChanges"
             | Cancel
           button.btn.btn-sm.btn-danger type="button" data-user-action="delete" data-action="image-card#saveChanges"

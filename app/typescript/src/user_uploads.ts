@@ -189,7 +189,7 @@ function validateImageDimensions($fileInput: JQuery<HTMLInputElement, any>): str
   const img = $fileInput.closest('.form-group').find('.fileinput-preview img')[0];
   // if (imageDidPersist(img)) return;
   
-  const $imageCard = <JQuery<HTMLLIElement, any>>($fileInput.closest('.ad-image-card') as unknown);
+  const $imageCard = <JQuery<HTMLLIElement, any>>($fileInput.closest('.image-card') as unknown);
   const matchGroups = (<string>$imageCard.attr('class'))
     .match(/--(?<aspectRatio>Square|Landscape)(?<kind>Image|Logo)/)
     ?.groups;
