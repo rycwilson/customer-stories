@@ -2,7 +2,7 @@ import bootoast from 'bootoast';
 
 const baseBootoastOptions = {
   position: 'bottom-center',
-  timeout: 5,
+  timeout: 3,
   animationDuration: 200,
   dismissable: true
 };
