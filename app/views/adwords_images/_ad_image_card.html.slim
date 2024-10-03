@@ -1,11 +1,12 @@
 - ad = form_object if form_object.class.name == 'AdwordsAd'
 - is_company_image = form_object.class.name == 'Company'
-- enable_file_upload = ad_image[:default] || ad_image[:id].nil?
+- enable_file_upload = ad_image[:default] || ad_image[:id].blank?
 
-/ TODO consolidate class names
 li.ad-image-card {
-  class=ad_image_card_class_name(ad_image, collection)
   class=("image-card--#{ad_image[:type]}" if ad_image[:type])
+  class=('gads-default' if ad_image[:default])
+  class=('gads-required' if ad_image[:type] =~ /Image/)
+  class=('hidden' if ad_image[:id].blank? && !ad_image[:default])
   class=('selected' if ad.present? && ad.images.include?(ad_image))
   data-controller="image-card"
   data-image-card-kind-value=ad_image[:type]
@@ -42,31 +43,28 @@ li.ad-image-card {
   - elsif is_company_image
 
     // new image
-    - if ad_image[:id].nil?
-      = hidden_field_tag("#{field_name_prefix}[type]", '')
+    - if ad_image[:id].blank?
+      = hidden_field_tag("#{field_name_prefix}[type]", ad_image[:default] ? ad_image[:type] : '')
       = hidden_field_tag("#{field_name_prefix}[image_url]", '', data: { image_card_target: 'imageUrlInput' })
       - if ad_image[:default]
         = hidden_field_tag("#{field_name_prefix}[default]", true)
       
     // existing image
-    - else 
+    - else
       = hidden_field_tag("#{field_name_prefix}[id]", ad_image[:id], data: { image_card_target: 'idInput' })
-      = hidden_field_tag("#{field_name_prefix}[type]", ad_image[:type])
-      = hidden_field_tag("#{field_name_prefix}[image_url]", ad_image[:image_url], data: { image_card_target: 'imageUrlInput' })
       = hidden_field_tag("#{field_name_prefix}[default]", ad_image[:default], data: { image_card_target: 'defaultInput' })
-      - unless ad_image[:default]
+      - if ad_image[:default]
+        = hidden_field_tag("#{field_name_prefix}[image_url]", ad_image[:image_url], data: { image_card_target: 'imageUrlInput' })
+      - else
         = hidden_field_tag("#{field_name_prefix}[_destroy]", false, data: { image_card_target: '_destroyInput' })
 
-
-    .form-group.fileinput.fileinput-exists.has-feedback data-provides="fileinput" data-image-card-target="formGroup"
+    .form-group.fileinput.fileinput-new data-provides="fileinput" data-image-card-target="formGroup"
 
       .ad-image-card__header
         - if ad_image[:default]
-          / attaching data-trigger attribute to .file-input-preview does not work
+          / attaching data-trigger attribute to .fileinput-preview does not work
           button.btn-upload type="button" data-trigger="fileinput"
             i.fa.fa-fw.fa-upload
-          /button.btn-remove type="button" data-action="image-card#reset" data-dismiss="fileinput"
-            i.fa.fa-fw.fa-remove
         - elsif ad_image[:id]
           button.set-as-default type="button" data-action="image-card#makeDefault"
             i.fa.fa-fw.fa-refresh
@@ -74,31 +72,32 @@ li.ad-image-card {
           button.btn-remove type="button" data-action="image-card#deleteImage"
             i.fa.fa-fw.fa-remove
         |&nbsp;
-        button.btn-remove type="button" data-action="image-card#reset" data-dismiss="fileinput"
+        button.btn-remove type="button" data-dismiss="fileinput"
           i.fa.fa-fw.fa-remove
-        /|&nbsp;
-        /button.did-save type="button"
-          i.fa.fa-fw.fa-check
 
       .ad-image-card__frame
         .ad-image-card__errors
           i.fa.fa-warning
           .help-block.with-errors
-        .fileinput-preview.thumbnail data-image-card-target="imgWrapper"
-          = image_tag( \
-              ad_image[:image_url] || ad_image_placeholder(ad_image[:type]),
-              { alt: ad_image[:type]&.split(/(?=[A-Z])/)&.join(' '),
-                data: { image_card_target: 'img' } })
+        - if ad_image[:default]
+          .fileinput-new.thumbnail
+            img { 
+              src="#{ad_image[:image_url] or ad_image_placeholder(ad_image[:type])}"
+              alt=ad_image[:type].split(/(?=[A-Z])/)&.join(' ') }
+          .fileinput-preview.fileinput-exists.thumbnail data-image-card-target="preview"
+        - elsif ad_image[:id]
+          .thumbnail
+            img src=ad_image[:image_url] alt="#{ad_image[:type].split(/(?=[A-Z])/)&.join(' ')}"
+        - else
+          .fileinput-preview.fileinput-exists.thumbnail data-image-card-target="preview"
         .btn-file
-          / name="company[adwords_images_attributes][#{image_index}][image_url]"
           input {
             type="file"
             accept="image/jpeg,image/png"
             data-image-card-target="fileInput"
             data-s3=(s3_direct_post.to_json if enable_file_upload)
             data-validate="false"
-            data-collection="#{collection}"
-            data-default-type=(ad_image[:type] if ad_image[:default])
+            data-collection=collection
             data-max-file-size="5242880" 
             data-min-dimensions=ad_image_min_dimensions.to_json
             data-aspect-ratio-tolerance=RESPONSIVE_AD_ASPECT_RATIO_TOLERANCE

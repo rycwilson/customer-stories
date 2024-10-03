@@ -20,7 +20,8 @@ export default class ImageCardController extends Controller<HTMLLIElement> {
 
   static targets = [
     'formGroup', 
-    'imgWrapper', 
+    // 'imgWrapper', 
+    'preview',
     'idInput',
     'imageUrlInput', 
     'defaultInput',
@@ -29,11 +30,12 @@ export default class ImageCardController extends Controller<HTMLLIElement> {
     'adImageCheckbox', 
   ];
   declare readonly formGroupTarget: HTMLDivElement;
-  declare readonly imgWrapperTarget: HTMLDivElement;
+  declare readonly previewTarget: HTMLDivElement;
   declare readonly idInputTarget: HTMLInputElement;
   declare readonly hasIdInputTarget: boolean;
   declare readonly imageUrlInputTarget: HTMLInputElement;
   declare readonly defaultInputTarget: HTMLInputElement;
+  declare readonly hasDefaultInputTarget: boolean;
   declare readonly _destroyInputTarget: HTMLInputElement;
   declare readonly fileInputTarget: HTMLInputElement;
   declare readonly adImageCheckboxTarget: HTMLInputElement;
@@ -42,8 +44,6 @@ export default class ImageCardController extends Controller<HTMLLIElement> {
 
   changeFileInputHandler = this.onChangeFileInput.bind(this);
   clearFileInputHandler = this.onClearFileInput.bind(this);
-  resetFileInputHandler = this.onResetFileInput.bind(this);
-  resetedFileInputHandler = this.onResetedFileInput.bind(this);
   validateFileInputHandler = this.onValidateFileInput.bind(this);
   validFileInputHandler = this.onValidFileInput.bind(this);
   invalidFileInputHandler = this.onInvalidFileInput.bind(this);
@@ -51,11 +51,9 @@ export default class ImageCardController extends Controller<HTMLLIElement> {
 
   connect() {
     // jquery event listeners necessary for hooking into jquery plugin events
-    $(this.formGroupTarget).on('change.bs.fileinput', this.changeFileInputHandler);
-    $(this.fileInputTarget)
-      .on('clear.bs.fileinput', this.clearFileInputHandler)
-      .on('reset.bs.fileinput', this.resetFileInputHandler)
-      .on('reseted.bs.fileinput', this.resetedFileInputHandler);
+    $(this.formGroupTarget)
+      .on('change.bs.fileinput', this.changeFileInputHandler)
+      .on('clear.bs.fileinput', this.clearFileInputHandler);
 
     // bootstrap validator events trigger on the form 
     if (this.hasAdsOutlet) {
@@ -63,64 +61,55 @@ export default class ImageCardController extends Controller<HTMLLIElement> {
         .on('validate.bs.validator', this.validateFileInputHandler)
         .on('valid.bs.validator', this.validFileInputHandler)
         .on('invalid.bs.validator', this.invalidFileInputHandler)
-        .on('validated.bs.validator', this.validatedFileInputHandler)
+        .on('validated.bs.validator', this.validatedFileInputHandler);
     }
 
     if (this.fileInputTarget.hasAttribute('data-s3')) {
       initS3FileInput(this.fileInputTarget, onS3Done.bind(this));
     }
-
-    const imgObserver = new MutationObserver(mutations => {
-      console.log('img', mutations)
-    })
-    imgObserver.observe(this.imgWrapperTarget, { childList: true, subtree: false });
   }
   
   disconnect() {
-    $(this.formGroupTarget).off('change.bs.fileinput', this.changeFileInputHandler);
+    $(this.formGroupTarget)
+      .off('change.bs.fileinput', this.changeFileInputHandler)
+      .off('clear.bs.fileinput', this.clearFileInputHandler)
 
     // after disconnect, any outlets (e.g. the parent form) will be null
     $(this.element.closest('form'))
-      .off('validated.bs.validator', this.validatedFileInputHandler)
+      .off('validate.bs.validator', this.validateFileInputHandler)
       .off('valid.bs.validator', this.validFileInputHandler)
-      .off('invalid.bs.validator', this.invalidFileInputHandler);
+      .off('invalid.bs.validator', this.invalidFileInputHandler)
+      .off('validated.bs.validator', this.validatedFileInputHandler);
   }
 
   onChangeFileInput({ target }: { target: HTMLElement }) {
-    if (target === this.formGroupTarget) {
-
-      // jasny-bootstrap will remove and replace the image, this time with src set to the loaded image data
-      if (!this.imageDidLoad()) {
-        this.imageLoadTimer = window.setInterval(this.imageDidLoad.bind(this), 100);
-      }
-    } else {
-      console.log('is there another?', target)
+    if (!this.imageDidLoad()) {
+      this.imageLoadTimer = window.setInterval(this.imageDidLoad.bind(this), 100);
     }
+    // if (target === this.formGroupTarget) {
+    //   if (!this.imageDidLoad()) {
+    //     this.imageLoadTimer = window.setInterval(this.imageDidLoad.bind(this), 100);
+    //   }
+    // } else {
+    //   console.log('is there another?', target)
+    // }
   }
 
   imageDidLoad() {
     if (this.imgTarget?.complete) {
       window.clearInterval(this.imageLoadTimer);
       console.log('image did load')
-      if (this.isDefaultImage) {
-        this.element.classList.add('ad-image-card--new');
-      }
       this.fileInputTarget.setAttribute('data-validate', 'true');
-      this.dispatch('image-ready');
+      this.dispatch('image-ready', { detail: { shouldValidate: true } });
       return true;
     }
   }
 
   onClearFileInput(e: CustomEvent) {
-    console.log('clear.bs.fileinput', e)
-  }
-
-  onResetFileInput(e: CustomEvent) {
-    console.log('reset.bs.fileinput', e)
-  }
-
-  onResetedFileInput(e: CustomEvent) {
-    console.log('reseted.bs.fileinput', e)
+    console.log('clear.bs.fileinput')
+    this.element.classList.toggle('hidden', !this.isDefaultImage);    
+    this.fileInputTarget.setAttribute('data-validate', 'false');
+    this.dispatch('clear-fileinput');
   }
 
   onValidateFileInput({ relatedTarget: input }: { relatedTarget: HTMLInputElement }) {
@@ -136,18 +125,18 @@ export default class ImageCardController extends Controller<HTMLLIElement> {
         this.dispatch('replace-default', { detail: { prevDefaultImageId: this.idInputTarget.value } });
         this.idInputTarget.value = '';
       }
+      this.element.classList.add('ad-image-card--uploading');
       $(input).fileupload('send', { files: input.files });
+    } else if (input === this.fileInputTarget) {
+      console.log('valid.bs.validator, but no file?')
     }
   }
   
   onInvalidFileInput({ relatedTarget: input }: { relatedTarget: HTMLInputElement }) {
     if (input === this.fileInputTarget && input.value) {
-      this.element.classList.remove('ad-image-card--new');
-      // this.dispatch('invalid-image', { detail: { input } });
-      input.setAttribute('data-validate', 'false');
       console.log('invalid.bs.validator')
     } else if (input === this.fileInputTarget) {
-      console.log('invalid.bs.validator, but no file')
+      console.log('invalid.bs.validator, but no file?')
     }
   }
   
@@ -164,7 +153,7 @@ export default class ImageCardController extends Controller<HTMLLIElement> {
   }
   
   toggleDefaultValueChanged(newVal: boolean, oldVal: boolean) {
-    if (oldVal === undefined) return;
+    if (oldVal === undefined || !this.hasDefaultInputTarget) return;
     // this.defaultImageCheckboxTarget.checked = newVal;
     this.defaultInputTarget.value = newVal.toString();
     if (!this.isDefaultImage) this.formGroupTarget.classList.toggle('to-be-default', newVal);
@@ -173,18 +162,6 @@ export default class ImageCardController extends Controller<HTMLLIElement> {
   deleteImage() {
     this._destroyInputTarget.value = 'true';
     this.formGroupTarget.classList.add('to-be-removed');
-  }
-
-  reset() {
-    if (!this.isDefaultImage) {
-      // TODO make this work for logos too
-      this.element.classList.add('hidden');    
-      this.element.classList.add('gads-image');
-      this.element.classList.remove('ad-image-card--new');
-      // $(this.formGroupTarget).fileinput('reset');
-    }
-    this.formGroupTarget.classList.remove('has-error', 'has-danger');
-    // this.fileInputTarget.setAttribute('data-validate', 'false');
   }
 
   saveChanges({ target: btn }: { target: HTMLButtonElement }) {
@@ -199,7 +176,6 @@ export default class ImageCardController extends Controller<HTMLLIElement> {
       this.toggleDefaultValue = false;
       this.dispatchMakeDefaultEvent();
     } else {
-      // this._destroyImageCheckboxTarget.checked = false;
       this._destroyInputTarget.value = 'false';
     }
     this.formGroupTarget.classList.remove('to-be-default', 'to-be-removed');
@@ -217,8 +193,7 @@ export default class ImageCardController extends Controller<HTMLLIElement> {
     this.adImageCheckboxTarget.checked = !this.adImageCheckboxTarget.checked;
   }
 
-  openFileDialogValueChanged(newVal: boolean, oldVal: boolean | undefined) {
-    // console.log(`openFileDialogValueChanged(${newVal}, ${oldVal})`)
+  openFileDialogValueChanged(newVal: boolean) {
     if (newVal) {
       this.fileInputTarget.click();
       this.openFileDialogValue = false;
@@ -232,6 +207,6 @@ export default class ImageCardController extends Controller<HTMLLIElement> {
 
   // jasny-bootstrap will remove and replace the img tag when uploading
   get imgTarget() {
-    return <HTMLImageElement>this.imgWrapperTarget.querySelector(':scope > img');
+    return <HTMLImageElement>this.previewTarget.querySelector(':scope > img');
   }
 }
