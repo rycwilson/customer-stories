@@ -75,11 +75,6 @@ export default class AdsController extends FormController<AdsController> {
     }
   }
 
-  onInvalidImage({ detail: { input } }: { detail: { input: HTMLInputElement } }) {
-    input.setAttribute('data-validate', 'false');
-    // $(this.element).validator('update');
-  }
-
   onDeletedImage({ detail: [res, status, xhr] }: { detail: [res: { id: string }, status: string, xhr: XMLHttpRequest] }) {
     console.log(this.imageCardTargets)  
     const card = this.imageCardTargets.find(card => res.id == card.getAttribute('data-image-card-image-id-value'));
@@ -99,8 +94,11 @@ export default class AdsController extends FormController<AdsController> {
     card.setAttribute('data-image-card-open-file-dialog-value', 'true');
   }
 
-  validateForm() {
-    $(this.element).validator('update').validator('validate');
+  updateValidator({ detail: { shouldValidate } }: { detail: { shouldValidate?: boolean } }) {
+    $(this.element).validator('update');
+    if (shouldValidate) {
+      $(this.element).validator('validate'); 
+    }
   }
 
   keepPreviousDefault({ detail: { prevDefaultImageId } }: { detail: { prevDefaultImageId: string } }) {

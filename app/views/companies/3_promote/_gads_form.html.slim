@@ -11,11 +11,11 @@
           asset_host: Rails.application.config.asset_host,
           action: [ \
             'image-card:make-default->ads#setNewDefault',
-            'image-card:image-ready->ads#validateForm',
+            'image-card:image-ready->ads#updateValidator',
             'image-card:upload-ready->ads#submitForm',
             'image-card:save-changes->ads#submitForm',
             'image-card:replace-default->ads#keepPreviousDefault',
-            'image-card:invalid-image->ads#onInvalidImage',
+            'image-card:clear-fileinput->ads#updateValidator',
             'ajax:success->ads#onDeletedImage'].join(' ') }}) do |form|
           
     .form-group.short-headline
