@@ -94,71 +94,77 @@ ul:is([id*="ad-images"]) {
     }
   }
 
-  &--did-save .thumbnail {
-    border-color: $state-success-text;
+  &--new img,
+  img[src*="data:"] {
+    display: none;
   }
+
+  // &--did-save .thumbnail {
+  //   border-color: $state-success-text;
+  // }
 }
 
 .ad-image-card__header {
   position: absolute;
-  z-index: 1;
   top: 0;
   left: 0;
   right: 0;
+  z-index: 1;
   display: flex;
   justify-content: flex-end;
-  background-color: transparent;
   margin: 12px;
+  background-color: transparent;
 
   button {
-    background: none;
     border: none;
-    color: rgba(255, 255, 255, 0.85);
-    background-color: rgba(64, 64, 64, 0.5);
-    padding: 6px;
-    font-size: 16px;
     border-radius: 50%;
+    padding: 6px;
+    background: none;
+    background-color: rgba(64, 64, 64, 0.5);
+    font-size: 16px;
+    color: rgba(255, 255, 255, 0.85);
 
     &:hover {
       background-color: rgba(64, 64, 64, 0.75);
       color: #fff;
     }
 
-    &.did-save {
-      background-color: $state-success-bg;
-      border: 2px solid $state-success-text;
-      pointer-events: none;
-      padding: 4px;
-      color: $state-success-text;
-    }
+    // &.did-save {
+    //   background-color: $state-success-bg;
+    //   border: 2px solid $state-success-text;
+    //   pointer-events: none;
+    //   padding: 4px;
+    //   color: $state-success-text;
+    // }
   }
 
+  // .ad-image-card--did-save & button:not(.did-save),
+  // .gads-default .has-error & .btn-upload,
+  // .did-save
   .ad-image-card--new .form-group:not(.has-error) &,
-  [class*="to-be-"] > &,
-  .has-error > & .set-as-default,
-  .gads-default > .has-error > & .btn-upload,
+  [class*="to-be-"] &,
+  .has-error & button:not(:last-child),
   .gads-default & .btn-remove,
-  .ad-image-card--did-save & button:not(.did-save),
-  .did-save {
+  :not(.gads-default) & .btn-remove:last-child {
     display: none;
   }
 
-  .has-error > & .btn-remove {
+  .has-error & .btn-remove:last-child {
     display: block;
     background-color: transparent;
-    color: #a94442;
+    color: $state-danger-text;
     margin: -5% -5% 0;
 
     &:hover {
       background-color: transparent;
-      color: #690402;
+      color: darken($state-danger-text, 10%);
     }
   }
 
-  .ad-image-card--did-save & .did-save {
-    // display: initial;
-    display: revert;
-  }
+  // .ad-image-card--did-save & .did-save {
+  //   // display: initial;
+  //   display: revert;
+  // }
 }
 
 .ad-image-card__frame {
@@ -193,16 +199,17 @@ ul:is([id*="ad-images"]) {
 }
 
 .ad-image-card__errors {
-  width: 100%;
-  height: 100%;
-  display: none;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  color: #a94442;
-  padding: 30px;
-  border: 1px solid #a94442;
+  display: none;
+  border: 1px solid $state-danger-text;
   border-radius: $border-radius-base;
+  width: 100%;
+  height: 100%;
+  padding: 30px;
+  background: #fff;
+  color: $state-danger-text;
 
   .has-error & {
     display: flex;
@@ -227,13 +234,13 @@ ul:is([id*="ad-images"]) {
 .ad-image-card__footer {
   position: absolute;
   z-index: 1;
-  bottom: 0;
   right: 0;
+  bottom: 0;
   left: 0;
-  display: none;
   justify-content: center;
-  background-color: rgba(75, 75, 75, 0.7);
+  display: none;
   padding: 8px;
+  background-color: rgba(75, 75, 75, 0.7);
   border-bottom-left-radius: $thumbnail-border-radius;
   border-bottom-right-radius: $thumbnail-border-radius;
 
