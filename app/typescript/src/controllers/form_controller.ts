@@ -99,7 +99,7 @@ export default class FormController<Ctrl extends SubclassController> extends Con
   }
 
   toastValueChanged(newVal: { type?: string, message?: string }) {
-    console.log('toastValueChanged()', newVal)
+    // console.log('toastValueChanged()', newVal)
     const { type, message } = newVal;
     if (type && message) {
       bsToast(type, message);
