@@ -14,11 +14,11 @@ import type {
 
 export function onLoad(e: TurboLoadEvent) {
   // console.log(...logCommon(e), e)
-  const scrollPosition = sessionStorage.getItem("scrollPosition");
-  if (scrollPosition) {
-    scrollTo(0, parseInt(scrollPosition, 10));
-    sessionStorage.removeItem("scrollPosition");
-  }
+  // const scrollPosition = sessionStorage.getItem("scrollPosition");
+  // if (scrollPosition) {
+  //   scrollTo(0, parseInt(scrollPosition, 10));
+  //   sessionStorage.removeItem("scrollPosition");
+  // }
 }
 
 export function onClick(e: TurboClickEvent) {
