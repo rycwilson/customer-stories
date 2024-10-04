@@ -47,13 +47,14 @@ li.image-card {
       = hidden_field_tag("#{field_name_prefix}[type]", ad_image[:default] ? ad_image[:type] : '')
       = hidden_field_tag("#{field_name_prefix}[image_url]", '', data: { image_card_target: 'imageUrlInput' })
       - if ad_image[:default]
-        = hidden_field_tag("#{field_name_prefix}[default]", true)
+        = hidden_field_tag("#{field_name_prefix}[default]", true, data: { image_card_target: 'defaultInput' })
       
     // existing image
     - else
       = hidden_field_tag("#{field_name_prefix}[id]", ad_image[:id], data: { image_card_target: 'idInput' })
       = hidden_field_tag("#{field_name_prefix}[default]", ad_image[:default], data: { image_card_target: 'defaultInput' })
       - if ad_image[:default]
+        = hidden_field_tag("#{field_name_prefix}[type]", ad_image[:type])
         = hidden_field_tag("#{field_name_prefix}[image_url]", ad_image[:image_url], data: { image_card_target: 'imageUrlInput' })
       - else
         = hidden_field_tag("#{field_name_prefix}[_destroy]", false, data: { image_card_target: '_destroyInput' })
