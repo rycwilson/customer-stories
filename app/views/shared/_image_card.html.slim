@@ -8,9 +8,9 @@ li.image-card {
   class=('gads-required' if ad_image[:type] =~ /Image/)
   class=('hidden' if ad_image[:id].blank? && !ad_image[:default])
   class=('selected' if ad.present? && ad.images.include?(ad_image))
+  data-image-id=ad_image[:id]
   data-controller="image-card"
   data-image-card-kind-value=ad_image[:type]
-  data-image-card-image-id-value=ad_image[:id]
   data-image-card-ads-outlet=(form_outlet rescue nil)
   data-ads-target=( \
     ad_image[:default] ? \

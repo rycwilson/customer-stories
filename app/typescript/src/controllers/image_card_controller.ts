@@ -9,18 +9,15 @@ export default class ImageCardController extends Controller<HTMLLIElement> {
 
   static values = {
     kind: String,
-    imageId: Number,
     openFileDialog: { type: Boolean, default: false },
     toggleDefault: { type: Boolean, default: false }   // whether to make the image the default for that type
   }
   declare readonly kindValue: string;
-  declare readonly imageIdValue: number;
   declare openFileDialogValue: boolean;
   declare toggleDefaultValue: boolean;
 
   static targets = [
     'formGroup', 
-    // 'imgWrapper', 
     'preview',
     'idInput',
     'imageUrlInput', 
@@ -82,17 +79,10 @@ export default class ImageCardController extends Controller<HTMLLIElement> {
       .off('validated.bs.validator', this.validatedFileInputHandler);
   }
 
-  onChangeFileInput({ target }: { target: HTMLElement }) {
+  onChangeFileInput() {
     if (!this.imageDidLoad()) {
       this.imageLoadTimer = window.setInterval(this.imageDidLoad.bind(this), 100);
     }
-    // if (target === this.formGroupTarget) {
-    //   if (!this.imageDidLoad()) {
-    //     this.imageLoadTimer = window.setInterval(this.imageDidLoad.bind(this), 100);
-    //   }
-    // } else {
-    //   console.log('is there another?', target)
-    // }
   }
 
   imageDidLoad() {
@@ -119,24 +109,20 @@ export default class ImageCardController extends Controller<HTMLLIElement> {
   }
   
   onValidFileInput({ relatedTarget: input }: { relatedTarget: HTMLInputElement }) {
-    if (input === this.fileInputTarget && input.value) {
-      console.log('valid.bs.validator, uploading file:', input.files)
+    if (input === this.fileInputTarget) {
+      console.log('valid.bs.validator')
       if (this.isDefaultImage && this.hasIdInputTarget) {
         this.dispatch('replace-default', { detail: { prevDefaultImageId: this.idInputTarget.value } });
         this.idInputTarget.value = '';
       }
       this.element.classList.add('image-card--uploading');
       $(input).fileupload('send', { files: input.files });
-    } else if (input === this.fileInputTarget) {
-      console.log('valid.bs.validator, but no file?')
     }
   }
   
   onInvalidFileInput({ relatedTarget: input }: { relatedTarget: HTMLInputElement }) {
-    if (input === this.fileInputTarget && input.value) {
+    if (input === this.fileInputTarget) {
       console.log('invalid.bs.validator')
-    } else if (input === this.fileInputTarget) {
-      console.log('invalid.bs.validator, but no file?')
     }
   }
   
@@ -154,7 +140,6 @@ export default class ImageCardController extends Controller<HTMLLIElement> {
   
   toggleDefaultValueChanged(newVal: boolean, oldVal: boolean) {
     if (oldVal === undefined || !this.hasDefaultInputTarget) return;
-    // this.defaultImageCheckboxTarget.checked = newVal;
     this.defaultInputTarget.value = newVal.toString();
     if (!this.isDefaultImage) this.formGroupTarget.classList.toggle('to-be-default', newVal);
   }
@@ -165,10 +150,7 @@ export default class ImageCardController extends Controller<HTMLLIElement> {
   }
 
   saveChanges({ target: btn }: { target: HTMLButtonElement }) {
-    this.dispatch(
-      'save-changes',
-      { detail: { card: this.element, userAction: btn.dataset.userAction, imageId: this.imageIdValue } }
-    );
+    this.dispatch('save-changes', { detail: { card: this.element, userAction: btn.dataset.userAction } });
   }
 
   cancelChanges() {

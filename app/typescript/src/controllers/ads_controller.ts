@@ -38,9 +38,7 @@ export default class AdsController extends FormController<AdsController> {
       .validator('destroy');
   }
 
-  submitForm({ 
-    detail: { card, userAction, imageId } }: { detail: { card: HTMLLIElement, userAction: string, imageId?: number } 
-  }) {
+  submitForm({ detail: { card, userAction } }: { detail: { card: HTMLLIElement, userAction: string } }) {
     const setFormat = (type: string) => {
       this.element.action = type === 'html' ? 
         this.element.action.replace(/\.json$/, '') :
@@ -53,7 +51,7 @@ export default class AdsController extends FormController<AdsController> {
       ...this.defaultImageCardTargets, this.newImageCardTarget, this.newLogoCardTarget, ...this.imageCardTargets
     ].filter(_card => {
         return this.defaultImageCardTargets.includes(_card) ?
-          _card !== card && !_card.hasAttribute('data-image-card-image-id-value') :
+          _card !== card && !_card.dataset.imageId :
           _card !== card;
       });
     if (userAction == 'add') {
@@ -77,7 +75,7 @@ export default class AdsController extends FormController<AdsController> {
 
   onDeletedImage({ detail: [res, status, xhr] }: { detail: [res: { id: string }, status: string, xhr: XMLHttpRequest] }) {
     console.log(this.imageCardTargets)  
-    const card = this.imageCardTargets.find(card => res.id == card.getAttribute('data-image-card-image-id-value'));
+    const card = this.imageCardTargets.find(card => res.id == card.dataset.imageId);
     card?.remove();
     bsToast('info', 'Image deleted successfully');
   }
@@ -117,7 +115,7 @@ export default class AdsController extends FormController<AdsController> {
     // console.log(card.className, kind, toggleDefault) 
     const sameKind = (_card: HTMLLIElement) => (new RegExp(`--${kind}`)).test(_card.className);
     [...this.defaultImageCardTargets, ...this.imageCardTargets]
-      .filter(_card => sameKind(_card) && _card !== card && card.hasAttribute('data-image-card-image-id-value'))
+      .filter(_card => sameKind(_card) && _card !== card && card.dataset.imageId)
       .forEach(_card => {
         // _card.classList.contains('gads-default') ? `${toggleDefault}` : 'false');
         _card.setAttribute(
