@@ -1,0 +1,58 @@
+= turbo_frame_tag("#{action_name}-invitation-template")
+
+  = form_with( \
+      model: [@company, @template],
+      format: :json,
+      html: { \
+        id: 'invitation-template-form',
+        class: 'form-horizontal',
+        autocomplete: 'off',
+        novalidate: true,
+        data: { \
+          controller: 'invitation-template',
+          company_settings_target: 'invitationTemplateForm',
+          action: 'ajax:beforeSend->invitation-template#validate ajax:complete->invitation-template#onAjaxComplete' }}) do |form|
+
+    .row
+      .col-sm-12.col-md-offset-1.col-md-10.col-lg-offset-2.col-lg-8 
+        hr
+
+    .form-group.required
+      .col-sm-12.col-md-offset-1.col-md-10.col-lg-offset-2.col-lg-8 
+        = form.label(:name)
+        = form.text_field( \
+            :name,
+            class: 'form-control',
+            readonly: @company.invitation_templates.default.include?(@template),
+            data: { invitation_template_target: 'nameField'})
+
+    .form-group 
+      .col-sm-12.col-md-offset-1.col-md-10.col-lg-offset-2.col-lg-8
+        = form.label(:request_subject, 'Subject')
+      .col-sm-12.col-md-offset-1.col-md-10.col-lg-offset-2.col-lg-8
+        .input-group
+          = form.text_field(:request_subject, class: 'form-control')
+          .input-group-btn
+            button.btn.btn-default.dropdown-toggle type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"
+              | Insert&nbsp;&nbsp;
+              span.caret
+            ul.dropdown-menu.dropdown-menu-right.data-placeholders
+              li data-placeholder='[customer_name]'
+                a href="javascript:;" Customer name
+              li data-placeholder='[contributor_first_name]'
+                a href="javascript:;" Contributor first name
+              li data-placeholder='[contributor_full_name]'
+                a href="javascript:;" Contributor full name
+
+    .form-group
+      .col-sm-12.col-md-offset-1.col-md-10.col-lg-offset-2.col-lg-8
+        = form.label(:request_body, 'Body')
+      .col-sm-12.col-md-offset-1.col-md-10.col-lg-offset-2.col-lg-8
+        .invitation-template__summernote {
+          contenteditable="false"
+          data-controller="summernote"
+          data-summernote-enabled-value="true"
+          data-summernote-config-key-value="invitationTemplate"
+          data-summernote-config-args-value=[nil, current_user.photo_url, asset_path('placeholders/user-photo-missing.png')].to_json
+          data-invitation-template-target="note" }
+          = @template.request_body&.html_safe

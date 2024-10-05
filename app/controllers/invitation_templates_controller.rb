@@ -24,7 +24,8 @@ class InvitationTemplatesController < ApplicationController
     else
       @template = @company.invitation_templates.build(name: params[:template_name])
     end
-    render('invitation_templates/template_turbo_frame')
+    # render('invitation_templates/template_turbo_frame')
+    render('invitation_templates/template_form')
   end
 
   def show
@@ -32,7 +33,8 @@ class InvitationTemplatesController < ApplicationController
 
   def edit
     @template = @company.invitation_templates.find(params[:id])&.format_for_editor(current_user)
-    render('invitation_templates/template_turbo_frame')
+    # render('invitation_templates/template_turbo_frame')
+    render('invitation_templates/template_form')
   end
 
   def create

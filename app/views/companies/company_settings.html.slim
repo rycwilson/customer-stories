@@ -5,7 +5,10 @@
 
 = render('shared/navbars/company_nav', { company: @company, workflow_stage: @workflow_stage })
 
-.container {
+.visible-xs-block.text-center style="margin-top: 30px"
+  h4 Sorry, this screen size is not supported
+
+.container.hidden-xs {
   data-controller="company-settings" 
   data-company-settings-modal-outlet="#main-modal" 
   data-action="company-ctas:did-render->company-settings#onCtasFrameLoad" }

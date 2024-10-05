@@ -2,12 +2,11 @@
 
   .form-horizontal data-controller="company-ctas"
 
-    .row
-      .visible-sm-block.col-sm-12 
-        label#primary-cta-label-sm Banner
-      label#primary-cta-label-md-lg.control-label.col-md-3.visible-md-inline-block.visible-lg-inline-block
-        | Banner
-      .col-md-9.col-lg-6.visible-md-block.visible-lg-block
+    .form-group
+      .visible-sm-block.col-sm-offset-1.col-sm-11
+        label Header / Footer
+      label.col-md-3.control-label.visible-md-inline-block.visible-lg-inline-block Header / Footer
+      .col-sm-offset-1.col-sm-11.col-md-offset-0.col-md-8.col-lg-6
         - if company.ctas.primary.present?
           .list-group data-controller="list-group" data-list-group-collapsible-value="true"
             a.list-group-item {
@@ -28,12 +27,11 @@
             a.list-group-item--empty href="" aria-labelled-by="primary-cta-label-md-lg"
               p None
 
-    .row
-      .visible-sm-block.col-sm-12
-        label#additional-ctas-label-sm Sidebar
-      label#additional-ctas-label-md-lg.control-label.col-md-3.visible-md-inline-block.visible-lg-inline-block
-        | Sidebar
-      .col-md-9.col-lg-6.visible-md-block.visible-lg-block
+    .form-group
+      .visible-sm-block.col-sm-offset-1.col-sm-11
+        label Sidebar
+      label.col-md-3.control-label.visible-md-inline-block.visible-lg-inline-block Sidebar
+      .col-sm-offset-1.col-sm-11.col-md-offset-0.col-md-8.col-lg-6
         .list-group data-controller="list-group" data-list-group-collapsible-value="true" aria-labelledby="additional-ctas-label-md-lg"
           - company.ctas.secondary.each do |cta|
             a.list-group-item data-toggle="collapse" data-list-group-target="item" href="#edit-cta-#{cta.id}" aria-expanded="false"
@@ -55,4 +53,3 @@
           aria-label="New Call-To-Action" }
           i.fa.fa-plus
           |&nbsp;&nbsp;New
-

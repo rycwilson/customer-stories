@@ -31,14 +31,20 @@
 / = render('stories/shared/new_story_modal', { company: @company })
 / = render('stories/show/video_modal')
 
-.dashboard {
+.visible-xs-block.text-center style="margin-top: 30px"
+  h4 Sorry, this screen size is not supported
+
+.dashboard.hidden-xs {
   data-controller="dashboard" 
   data-dashboard-active-tab-value="#{@workflow_stage unless @workflow_stage == 'story'}"
   data-dashboard-modal-outlet="#main-modal" }
 
   = render('shared/navbars/company_nav', { company: @company, workflow_stage: @workflow_stage })
 
-  .tab-content data-dashboard-target="tabContent"
+  .visible-xs-block 
+    p.lead Sorry, this screen size is not supported
+
+  .tab-content.hidden-xs data-dashboard-target="tabContent"
     = render( \
         'companies/1_prospect/prospect',
         { company: @company, workflow_stage: @workflow_stage, active_tab: @prospect_tab })

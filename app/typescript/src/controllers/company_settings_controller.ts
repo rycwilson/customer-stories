@@ -15,12 +15,15 @@ export default class CompanySettingsController extends Controller {
     'invitationTemplateForm'
   ];
   declare tabTargets: HTMLAnchorElement[];
-  declare invitationTemplateSelectTargets: TomSelectInput[];
-  declare invitationTemplateTurboFrameTargets: FrameElement[];
-  declare invitationTemplateFormTargets: HTMLFormElement[];
+  // declare invitationTemplateSelectTargets: TomSelectInput[];
+  declare invitationTemplateSelectTarget: TomSelectInput;
+  // declare invitationTemplateTurboFrameTargets: FrameElement[];
+  declare invitationTemplateTurboFrameTarget: FrameElement;
+  // declare invitationTemplateFormTargets: HTMLFormElement[];
+  declare invitationTemplateFormTarget: HTMLFormElement;
 
   declare currentScreen: ScreenSize;
-  resizeHandler = debounce(this.onResize.bind(this), 200);
+  // resizeHandler = debounce(this.onResize.bind(this), 200);
 
   get activeTab() {
     return <HTMLAnchorElement>this.tabTargets.find(tab => (<HTMLLIElement>tab.parentElement).classList.contains('active'));
@@ -32,11 +35,11 @@ export default class CompanySettingsController extends Controller {
 
   connect() {
     this.initSidebar();
-    window.addEventListener('resize', this.resizeHandler);
+    // window.addEventListener('resize', this.resizeHandler);
   }
 
   disconnect() {
-    window.removeEventListener('resize', this.resizeHandler);
+    // window.removeEventListener('resize', this.resizeHandler);
   }  
   
   // tab hashes are appended with '-panel' to prevent auto-scrolling on page load
@@ -49,16 +52,16 @@ export default class CompanySettingsController extends Controller {
         this.element.classList.add('has-active-tab');
 
         // only the contributor invitations panel is concerned with screen size
-        const setCurrentScreen = () => {
-          this.currentScreen = this.visibleInvitationTemplateSelect.id.match(/(?<screen>(sm|md-lg)$)/).groups.screen;
-        }
+        // const setCurrentScreen = () => {
+        //   this.currentScreen = this.visibleInvitationTemplateSelect.id.match(/(?<screen>(sm|md-lg)$)/).groups.screen;
+        // }
         if (tab.href == '#contributor-invitations-panel') {
-          setCurrentScreen();
+          // setCurrentScreen();
         } else {
           const [contributorInvitationsTab] = (
             this.tabTargets.filter(tab => tab.getAttribute('href') == '#contributor-invitations-panel')
           )
-          contributorInvitationsTab.addEventListener('shown.bs.tab', setCurrentScreen, { once: true });
+          // contributorInvitationsTab.addEventListener('shown.bs.tab', setCurrentScreen, { once: true });
         }
       }).tab('show');
     }
@@ -103,10 +106,11 @@ export default class CompanySettingsController extends Controller {
     const templateId = +select.value || null;
     const isNewTemplate = isNaN(+select.value);
     const action = isNewTemplate ? 'new' : (templateId ? 'edit' : null);
-    const screen = select.id.match(/(?<screen>(sm|md-lg)$)/)?.groups?.screen;
-    const turboFrame = (
-      this.invitationTemplateTurboFrameTargets.find(frame => frame.classList.contains(screen))
-    ) as FrameElement;
+    // const screen = select.id.match(/(?<screen>(sm|md-lg)$)/)?.groups?.screen;
+    // const turboFrame = (
+    //   this.invitationTemplateTurboFrameTargets.find(frame => frame.classList.contains(screen))
+    // ) as FrameElement;
+    const turboFrame = this.invitationTemplateTurboFrameTarget;
     let path = action ? turboFrame.dataset[`${action}TemplatePath`] : null;
     select.tomselect.control_input.blur();
     if (isNewTemplate) {
@@ -116,7 +120,8 @@ export default class CompanySettingsController extends Controller {
     } else {
       turboFrame.innerHTML = '';
     }
-    turboFrame.setAttribute('id', action ? `${action}-invitation-template-${screen}` : '');
+    // turboFrame.setAttribute('id', action ? `${action}-invitation-template-${screen}` : '');
+    turboFrame.setAttribute('id', action ? `${action}-invitation-template` : '');
     turboFrame.setAttribute('src', path || ''); 
   }
 
@@ -139,8 +144,9 @@ export default class CompanySettingsController extends Controller {
   onInvitationTemplateFrameLoad({ target: turboFrame }: { target: FrameElement }) {
     const isNewTemplate = /new/.test(turboFrame.id);
     const isDefaultTemplate = !!turboFrame.querySelector('input[name*="[name]"][readonly]');
-    const screen = turboFrame.id.match(/(?<screen>(sm|md-lg)$)/)?.groups?.screen;
-    const select = this.invitationTemplateSelectTargets.find(select => select.id.includes(screen));
+    // const screen = turboFrame.id.match(/(?<screen>(sm|md-lg)$)/)?.groups?.screen;
+    // const select = this.invitationTemplateSelectTargets.find(select => select.id.includes(screen));
+    const select = this.invitationTemplateSelectTarget;
     const toolbar = select.parentElement;
     if (isNewTemplate) {
       select.tomselect.control_input.previousElementSibling.textContent = '\u2013 New Template \u2013';
@@ -151,41 +157,42 @@ export default class CompanySettingsController extends Controller {
   }
 
   get visibleInvitationTemplateSelect() {
-    return this.invitationTemplateSelectTargets.find(select => select.checkVisibility());
+    // return this.invitationTemplateSelectTargets.find(select => select.checkVisibility());
+    return this.invitationTemplateSelectTarget;
   }
 
-  onResize() {
-    const newSelect = this.visibleInvitationTemplateSelect;
-    const newScreen = newSelect?.id.match(/(?<screen>(sm|md-lg)$)/)?.groups?.screen || 'xs';
-    if (newScreen === this.currentScreen || newScreen === 'xs' || this.currentScreen === 'xs') {
-      this.currentScreen = newScreen;
-      return;
-    }
-    const oldSelect = this.invitationTemplateSelectTargets.find(select => select !== newSelect);
-    const newFrame = <FrameElement>this.invitationTemplateTurboFrameTargets.find(frame => frame.classList.contains(newScreen));
-    const oldFrame = <FrameElement>this.invitationTemplateTurboFrameTargets.find(frame => frame !== newFrame);
-    const copyFields = () => {
-      const newName = <HTMLInputElement>newFrame.querySelector(`input[class*="${newScreen}"][name*="name"]`);
-      const oldName = <HTMLInputElement>oldFrame.querySelector(`input[class*="${this.currentScreen}"][name*="name"]`);
-      newName.value = oldName.value;
-      const newSubject = <HTMLInputElement>newFrame.querySelector(`input[class*="${newScreen}"][name*="subject"]`);
-      const oldSubject = <HTMLInputElement>oldFrame.querySelector(`input[class*="${this.currentScreen}"][name*="subject"]`);
-      newSubject.value = oldSubject.value;
-    };
-    const copyCode = () => {
-      const newNote = <HTMLElement>newFrame.querySelector(`.invitation-template__summernote--${newScreen}`);
-      const oldNote = <HTMLElement>oldFrame.querySelector(`.invitation-template__summernote--${this.currentScreen}`);
-      $(newNote).summernote('code', $(oldNote).summernote('code'));
-    };
-    const copyForm = () => { copyFields(); copyCode(); };
-    if (oldSelect.value) {
-      if (newSelect.value !== oldSelect.value) {
-        newFrame.addEventListener('turbo:frame-load', copyForm, { once: true });
-        newSelect.tomselect.setValue(oldSelect.value);
-      } else {
-        copyForm();
-      }
-    }
-    this.currentScreen = newScreen;
-  } 
+  // onResize() {
+  //   const newSelect = this.visibleInvitationTemplateSelect;
+  //   const newScreen = newSelect?.id.match(/(?<screen>(sm|md-lg)$)/)?.groups?.screen || 'xs';
+  //   if (newScreen === this.currentScreen || newScreen === 'xs' || this.currentScreen === 'xs') {
+  //     this.currentScreen = newScreen;
+  //     return;
+  //   }
+  //   const oldSelect = this.invitationTemplateSelectTargets.find(select => select !== newSelect);
+  //   const newFrame = <FrameElement>this.invitationTemplateTurboFrameTargets.find(frame => frame.classList.contains(newScreen));
+  //   const oldFrame = <FrameElement>this.invitationTemplateTurboFrameTargets.find(frame => frame !== newFrame);
+  //   const copyFields = () => {
+  //     const newName = <HTMLInputElement>newFrame.querySelector(`input[class*="${newScreen}"][name*="name"]`);
+  //     const oldName = <HTMLInputElement>oldFrame.querySelector(`input[class*="${this.currentScreen}"][name*="name"]`);
+  //     newName.value = oldName.value;
+  //     const newSubject = <HTMLInputElement>newFrame.querySelector(`input[class*="${newScreen}"][name*="subject"]`);
+  //     const oldSubject = <HTMLInputElement>oldFrame.querySelector(`input[class*="${this.currentScreen}"][name*="subject"]`);
+  //     newSubject.value = oldSubject.value;
+  //   };
+  //   const copyCode = () => {
+  //     const newNote = <HTMLElement>newFrame.querySelector(`.invitation-template__summernote--${newScreen}`);
+  //     const oldNote = <HTMLElement>oldFrame.querySelector(`.invitation-template__summernote--${this.currentScreen}`);
+  //     $(newNote).summernote('code', $(oldNote).summernote('code'));
+  //   };
+  //   const copyForm = () => { copyFields(); copyCode(); };
+  //   if (oldSelect.value) {
+  //     if (newSelect.value !== oldSelect.value) {
+  //       newFrame.addEventListener('turbo:frame-load', copyForm, { once: true });
+  //       newSelect.tomselect.setValue(oldSelect.value);
+  //     } else {
+  //       copyForm();
+  //     }
+  //   }
+  //   this.currentScreen = newScreen;
+  // } 
 }

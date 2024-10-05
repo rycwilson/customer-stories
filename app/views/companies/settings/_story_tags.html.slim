@@ -15,9 +15,12 @@
       = tag_fields.check_box(:_destroy, { checked: false, hidden: true }, true, false)
 
     .form-group
-      label.col-sm-3.control-label for="company-#{tags[:name]}-tags"
+      .visible-sm-block.col-sm-offset-1.col-sm-11
+        label for="company-#{tags[:name]}-tags"
+          = tags[:name].capitalize
+      label.col-md-3.control-label.visible-md-inline-block.visible-lg-inline-block for="company-#{tags[:name]}-tags"
         = tags[:name].capitalize
-      .col-sm-9.col-md-8.col-lg-6
+      .col-sm-offset-1.col-sm-11.col-md-offset-0.col-md-8.col-lg-6
         input.form-control {
           id="company-#{tags[:name]}-tags"
           value=company.send(tags[:assoc]).map(&:name).join(',')
@@ -29,5 +32,5 @@
           data-dynamic-placeholder="Add tags" }
 
   .form-group
-    .col-sm-12.col-md-offset-3.col-md-8.col-lg-6.text-right
+    .col-sm-offset-1.col-sm-11.col-md-offset-3.col-md-8.col-lg-6
       = form.submit('Save changes', class: 'btn btn-success')
