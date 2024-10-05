@@ -134,6 +134,11 @@ ul.dropdown-menu {
   }
 }
 
+.radio-inline + .radio-inline,
+.checkbox-inline + .checkbox-inline {
+  margin-left: 1.25em;
+}
+
 .collapsing {
   -webkit-transition: none;
   transition: none;
