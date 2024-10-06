@@ -26,13 +26,6 @@ p.lead {
   }
 }
 
-#company-profile-form, 
-.invitation-template,  // the template select exists outside the form
-#invitation-template-form,
-#company-story-tags-form  {
-  @include horizontal-form; 
-}
-
 .companies.edit {
   // for safari
   input::-webkit-contacts-auto-fill-button {

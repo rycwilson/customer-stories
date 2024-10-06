@@ -3,10 +3,6 @@
   margin: 20px 0;
 }
 
-.user-profile, .change-password {
-  @include horizontal-form;
-}
-
 .user-photo-upload {
   display: flex;
   flex-direction: column;
