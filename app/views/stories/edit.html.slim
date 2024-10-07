@@ -3,7 +3,7 @@
 
 = render('shared/modal')
 
-.dashboard data-controller="dashboard" data-dashboard-modal-outlet="#main-modal"
+main.dashboard.hidden-xs data-controller="dashboard" data-dashboard-modal-outlet="#main-modal"
 
   = render('shared/navbars/company_nav', { company: @company, workflow_stage: @workflow_stage })
 
@@ -15,102 +15,102 @@
     = render('shared/loading_spinner')
 
     .container
-      .row
-        .col-sm-4.col-md-3.layout-sidebar
-          ul.nav
-            li
-              = link_to(dashboard_path('curate')) do 
-                i.fa.fa-fw.fa-chevron-left
-                |&nbsp;All Stories
-              end
-            li class=('active' if @active_tab == '#story-narrative-content')
-              a {
-                id="story-narrative-content-tab"
-                href="#story-narrative-content" 
-                data-toggle="tab" 
-                data-action="dashboard#setNavCookie"
-                aria-controls="story-narrative-content"
-                aria-expanded="#{@active_tab == '#story-narrative-content' ? 'true' : 'false'}"
-                role="tab" }
-                i.fa.fa-fw.fa-edit 
-                |&nbsp;Narrative
-            li class=('active' if @active_tab == '#story-supporting-content')
-              a {
-                id="story-supporting-content-tab"
-                href="#story-supporting-content" 
-                data-toggle="tab" 
-                data-action="dashboard#setNavCookie"
-                aria-controls="story-supporting-content"
-                aria-expanded="#{@active_tab == '#story-supporting-content' ? 'true' : 'false'}"
-                role="tab" }
-                i.fa.fa-fw.fa-quote-left
-                / i.fa.fa-fw.fa-info-circle
-                / |&nbsp;Supporting Content
-                |&nbsp;Testimonials & Results
-            li class=('active' if @active_tab == '#story-contributors')
-              a {
-                id="story-contributors-tab"
-                href="#story-contributors" 
-                data-toggle="tab" 
-                data-action="dashboard#setNavCookie"
-                aria-controls="story-contributors"
-                aria-expanded="#{@active_tab == '#story-contributors' ? 'true' : 'false'}"
-                role="tab" }
-                i.fa.fa-fw.fa-users
-                |&nbsp;Contributors
-            li class=('active' if @active_tab == '#story-settings')
-              a {
-                id="story-settings-tab"
-                href="#story-settings" 
-                data-toggle="tab" 
-                data-action="dashboard#setNavCookie"
-                aria-controls="story-settings"
-                aria-expanded="#{@active_tab == '#story-settings' ? 'true' : 'false'}"
-                role="tab" }
-                i.fa.fa-fw.fa-cloud-upload
-                |&nbsp;Publication Settings
+    
+      .layout-sidebar
+        ul.nav
+          li
+            = link_to(dashboard_path('curate')) do 
+              i.fa.fa-fw.fa-chevron-left
+              |&nbsp;All Stories
+            end
+          li class=('active' if @active_tab == '#story-narrative-content')
+            a {
+              id="story-narrative-content-tab"
+              href="#story-narrative-content" 
+              data-toggle="tab" 
+              data-action="dashboard#setNavCookie"
+              aria-controls="story-narrative-content"
+              aria-expanded="#{@active_tab == '#story-narrative-content' ? 'true' : 'false'}"
+              role="tab" }
+              i.fa.fa-fw.fa-edit 
+              |&nbsp;Narrative
+          li class=('active' if @active_tab == '#story-supporting-content')
+            a {
+              id="story-supporting-content-tab"
+              href="#story-supporting-content" 
+              data-toggle="tab" 
+              data-action="dashboard#setNavCookie"
+              aria-controls="story-supporting-content"
+              aria-expanded="#{@active_tab == '#story-supporting-content' ? 'true' : 'false'}"
+              role="tab" }
+              i.fa.fa-fw.fa-quote-left
+              / i.fa.fa-fw.fa-info-circle
+              / |&nbsp;Supporting Content
+              |&nbsp;Testimonials & Results
+          li class=('active' if @active_tab == '#story-contributors')
+            a {
+              id="story-contributors-tab"
+              href="#story-contributors" 
+              data-toggle="tab" 
+              data-action="dashboard#setNavCookie"
+              aria-controls="story-contributors"
+              aria-expanded="#{@active_tab == '#story-contributors' ? 'true' : 'false'}"
+              role="tab" }
+              i.fa.fa-fw.fa-users
+              |&nbsp;Contributors
+          li class=('active' if @active_tab == '#story-settings')
+            a {
+              id="story-settings-tab"
+              href="#story-settings" 
+              data-toggle="tab" 
+              data-action="dashboard#setNavCookie"
+              aria-controls="story-settings"
+              aria-expanded="#{@active_tab == '#story-settings' ? 'true' : 'false'}"
+              role="tab" }
+              i.fa.fa-fw.fa-cloud-upload
+              |&nbsp;Publication Settings
 
-        .col-sm-8.col-md-9.layout-main
-          .tab-content
+      .layout-main
+        .tab-content
 
-            #story-narrative-content.tab-pane {
-              class=('active in' if @active_tab == '#story-narrative-content')
-              aria-labelledby="story-narrative-content-tab"
-              role="tabpanel" }
-              = render('/stories/edit/narrative_content', { company: @company, story: @story })
-              
-            #story-supporting-content.tab-pane {
-              class=('active in' if @active_tab == '#story-supporting-content')
-              aria-labelledby="story-supporting-content-tab"
-              role="tabpanel" }
-              = render('stories/edit/supporting_content', { company: @company, story: @story })
-              
-            / Note this resource controller is NOT tagged with .resource-ctrl,
-            / as it is only a subset of contributions
-            #story-contributors.tab-pane {
-              class=('active in' if @active_tab == '#story-contributors') 
-              data-controller="resource"
-              data-story-target="contributors"
-              data-resource-dashboard-outlet=".dashboard"
-              data-resource-resource-outlet=".resource-ctrl"
-              data-resource-data-path-value=success_contributions_path(@story.success)
-              data-resource-checkbox-filters-value={ \
-                'show-completed': { checked: true, label: 'Contributors with a completed Contribution' },
-                'show-published': { checked: true, label: 'Contributors to published Customer Stories' } }.to_json
-              data-action="datatable:init->resource#onTableInitComplete"
-              data-resource-name="storyContributions"
-              data-story-id=@story.id
-              aria-labelledby="story-contributors-tab"
-              role="tabpanel" }
-              
-              = render( \
-                'companies/1_prospect/contributors/contributors_table',
-                { company: @company, story: @story })
+          #story-narrative-content.tab-pane {
+            class=('active in' if @active_tab == '#story-narrative-content')
+            aria-labelledby="story-narrative-content-tab"
+            role="tabpanel" }
+            = render('/stories/edit/narrative_content', { company: @company, story: @story })
+            
+          #story-supporting-content.tab-pane {
+            class=('active in' if @active_tab == '#story-supporting-content')
+            aria-labelledby="story-supporting-content-tab"
+            role="tabpanel" }
+            = render('stories/edit/supporting_content', { company: @company, story: @story })
+            
+          / Note this resource controller is NOT tagged with .resource-ctrl,
+          / as it is only a subset of contributions
+          #story-contributors.tab-pane {
+            class=('active in' if @active_tab == '#story-contributors') 
+            data-controller="resource"
+            data-story-target="contributors"
+            data-resource-dashboard-outlet=".dashboard"
+            data-resource-resource-outlet=".resource-ctrl"
+            data-resource-data-path-value=success_contributions_path(@story.success)
+            data-resource-checkbox-filters-value={ \
+              'show-completed': { checked: true, label: 'Contributors with a completed Contribution' },
+              'show-published': { checked: true, label: 'Contributors to published Customer Stories' } }.to_json
+            data-action="datatable:init->resource#onTableInitComplete"
+            data-resource-name="storyContributions"
+            data-story-id=@story.id
+            aria-labelledby="story-contributors-tab"
+            role="tabpanel" }
+            
+            = render( \
+              'companies/1_prospect/contributors/contributors_table',
+              { company: @company, story: @story })
 
-            #story-settings.tab-pane {
-              class=('active in' if @active_tab == '#story-settings')
-              aria-labelledby="story-settings-tab"
-              role="tabpanel" }
-              
-              = render('stories/edit/publication_settings', { company: @company, story: @story })
+          #story-settings.tab-pane {
+            class=('active in' if @active_tab == '#story-settings')
+            aria-labelledby="story-settings-tab"
+            role="tabpanel" }
+            
+            = render('stories/edit/publication_settings', { company: @company, story: @story })
 

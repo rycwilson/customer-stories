@@ -1,7 +1,10 @@
-.dashboard > .tab-content .container,
-.companies.edit > .container,
-.profile.edit > .container {
-  display: flex;
+.dashboard > .tab-content > .tab-pane,
+.companies.edit,
+.profile.edit,
+.stories.edit #story {
+  > .container {
+    display: flex;
+  }
 }
 
 .layout-main {
