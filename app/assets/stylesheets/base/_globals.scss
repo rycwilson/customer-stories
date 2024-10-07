@@ -1,6 +1,11 @@
 @import 'buttons';
 @import 'story_card';
 
+html,
+body {
+  height: 100%;
+}
+
 body {
   font-family: $csp-body-font;
   // font-size: 13px;

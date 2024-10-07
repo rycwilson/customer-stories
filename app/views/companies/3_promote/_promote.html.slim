@@ -1,5 +1,5 @@
 #promote.tab-pane {
-  class=('active in' if workflow_stage == 'promote')
+  class=('active' if workflow_stage == 'promote')
   data-dashboard-target="tabPanel"
   data-action="resource:loading->dashboard#onResourceLoading resource:ready->dashboard#onResourceReady"
   role="tabpanel" }
@@ -7,56 +7,54 @@
   = render('shared/loading_spinner')
 
   .container
-    .row
+    .layout-sidebar
+      ul.nav data-controller="nav-list"
+        li class=('active' if active_tab == '#promoted-stories')
+          a href="#promoted-stories" data-toggle="tab" data-action="dashboard#setNavCookie" data-nav-list-target="tab"
+            i.fa.fa-fw.fa-bullhorn
+            |&nbsp;Promoted Stories
+        li class=('active' if active_tab == '#promote-settings')
+          a href="#promote-settings" data-toggle="tab" data-action="dashboard#setNavCookie" data-nav-list-target="tab"
+            i.fa.fa-fw.fa-gear
+            |&nbsp;Settings
+      - if current_user.admin?
+        .admin-sidebar
+          h4.text-danger Admin
+          p The connection to Google Ads is presently disabled.
+          #gads-set-reset.text-center
+            button.btn.btn-secondary.disabled {
+              type="button" 
+              disabled=""
+              data-action="/companies/#{company.id}/set_reset_gads" }
+              span Set/Reset
+              i.fa.fa-spin.fa-circle-o-notch style="display:none"
+          div style="opacity: 0.5"
+            label Checklist
+            ul#gads-checklist
+              li 
+                | company.promote_tr = true
+              li 
+                | default headline
+              li
+                | default images w/ valid asset_id
+            #gads-results__wrapper
+              label Results
+              ul#gads-results
 
-      .layout-sidebar.col-sm-4.col-lg-3
-        ul.nav data-controller="nav-list"
-          li class=('active' if active_tab == '#promoted-stories')
-            a href="#promoted-stories" data-toggle="tab" data-action="dashboard#setNavCookie" data-nav-list-target="tab"
-              i.fa.fa-fw.fa-bullhorn
-              |&nbsp;Promoted Stories
-          li class=('active' if active_tab == '#promote-settings')
-            a href="#promote-settings" data-toggle="tab" data-action="dashboard#setNavCookie" data-nav-list-target="tab"
-              i.fa.fa-fw.fa-gear
-              |&nbsp;Settings
-        - if current_user.admin?
-          .admin-sidebar
-            h4.text-danger Admin
-            p The connection to Google Ads is presently disabled.
-            #gads-set-reset.text-center
-              button.btn.btn-secondary.disabled {
-                type="button" 
-                disabled=""
-                data-action="/companies/#{company.id}/set_reset_gads" }
-                span Set/Reset
-                i.fa.fa-spin.fa-circle-o-notch style="display:none"
-            div style="opacity: 0.5"
-              label Checklist
-              ul#gads-checklist
-                li 
-                  | company.promote_tr = true
-                li 
-                  | default headline
-                li
-                  | default images w/ valid asset_id
-              #gads-results__wrapper
-                label Results
-                ul#gads-results
+    .layout-main
+      .tab-content
+      
+        #promoted-stories.resource-ctrl.tab-pane {
+          class=('active in' if active_tab == '#promoted-stories')
+          data-dashboard-target="promotedStories"
+          data-controller="resource"
+          data-resource-dashboard-outlet=".dashboard"
+          data-resource-resource-outlet=".resource-ctrl:not(#promoted-stories)"
+          data-resource-data-path-value=company_adwords_ads_path(company)
+          data-resource-checkbox-filters-value={}
+          data-action="datatable:init->resource#onTableInitComplete"
+          data-resource-name="promotedStories" }
+          = render('companies/3_promote/promoted_stories_table', { company: })
 
-      .layout-main.col-sm-8.col-lg-9
-        .tab-content
-        
-          #promoted-stories.resource-ctrl.tab-pane {
-            class=('active in' if active_tab == '#promoted-stories')
-            data-dashboard-target="promotedStories"
-            data-controller="resource"
-            data-resource-dashboard-outlet=".dashboard"
-            data-resource-resource-outlet=".resource-ctrl:not(#promoted-stories)"
-            data-resource-data-path-value=company_adwords_ads_path(company)
-            data-resource-checkbox-filters-value={}
-            data-action="datatable:init->resource#onTableInitComplete"
-            data-resource-name="promotedStories" }
-            = render('companies/3_promote/promoted_stories_table', { company: })
-
-          #promote-settings.tab-pane class=('active' if active_tab == '#promote-settings')
-            = render('companies/3_promote/gads_form', { company:, active_collection: 'images' })
+        #promote-settings.tab-pane class=('active' if active_tab == '#promote-settings')
+          = render('companies/3_promote/gads_form', { company:, active_collection: 'images' })

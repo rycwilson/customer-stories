@@ -235,8 +235,6 @@ ul:is([id*="ad-images"]) {
 }
 
 #gads-form {
-  padding-top: 15px;
-  
   .short-headline {
     [class*="col-"] > div {
       @include flex-row-center-between;

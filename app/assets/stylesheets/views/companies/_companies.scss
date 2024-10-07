@@ -47,18 +47,23 @@ turbo-frame[data-modal-target="turboFrame"] {
   @include spinner('lg');
   position: relative;
 
-  > .spinner,
-  > .container {
+  > .spinner {
     position: absolute;
     top: 0;
     right: 0;
     left: 0;
+  }
+
+  > .spinner,
+  .layout-sidebar,
+  .layout-main {
     visibility: hidden;
     opacity: 0;
   }
 
   &.loading > .spinner,
-  &.ready > .container {
+  &.ready .layout-sidebar,
+  &.ready .layout-main {
     visibility: visible;
     opacity: 1;
   }
@@ -74,7 +79,8 @@ turbo-frame[data-modal-target="turboFrame"] {
       transition: opacity 0.15s ease-in;
     }
     
-    > .container {
+    .layout-sidebar,
+    .layout-main {
       transition: opacity 0.15s ease-out;
     }
   } 

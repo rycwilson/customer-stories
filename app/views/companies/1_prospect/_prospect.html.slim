@@ -1,5 +1,5 @@
 #prospect.tab-pane {
-  class=('active in' if workflow_stage == 'prospect')
+  class=('active' if workflow_stage == 'prospect')
   data-dashboard-target="tabPanel"
   data-action="resource:loading->dashboard#onResourceLoading resource:ready->dashboard#onResourceReady"
   role="tabpanel" }
@@ -7,71 +7,70 @@
   = render('shared/loading_spinner')
 
   .container
-    .row
-      .col-sm-4.col-lg-3.layout-sidebar
-        ul.nav data-controller="nav-list" role="tablist"
-          li class=('active' if active_tab == '#customer-wins')
-            a {
-              id="customer-wins-tab" 
-              href="#customer-wins" 
-              data-toggle="tab"
-              data-dashboard-target="customerWinsTab"
-              data-nav-list-target="tab"
-              data-action="dashboard#setNavCookie"
-              aria-controls="customer-wins"
-              aria-expanded="#{active_tab == '#customer-wins' ? 'true' : 'false'}"
-              role="tab" }
-              i.fa.fa-fw.fa-rocket
-              |&nbsp;Customer Wins
-              
-          li class=('active' if active_tab == '#contributors')
-            a {
-              id="contributors-tab" 
-              href="#contributors" 
-              data-toggle="tab"
-              data-dashboard-target="contributorsTab"
-              data-nav-list-target="tab"
-              data-action="dashboard#setNavCookie"
-              aria-controls="contributors"
-              aria-expanded="#{active_tab == '#contributors' ? 'true' : 'false'}"
-              role="tab" }
-              i.fa.fa-fw.fa-users
-              |&nbsp;Contributors
+    .layout-sidebar
+      ul.nav data-controller="nav-list" role="tablist"
+        li class=('active' if active_tab == '#customer-wins')
+          a {
+            id="customer-wins-tab" 
+            href="#customer-wins" 
+            data-toggle="tab"
+            data-dashboard-target="customerWinsTab"
+            data-nav-list-target="tab"
+            data-action="dashboard#setNavCookie"
+            aria-controls="customer-wins"
+            aria-expanded="#{active_tab == '#customer-wins' ? 'true' : 'false'}"
+            role="tab" }
+            i.fa.fa-fw.fa-rocket
+            |&nbsp;Customer Wins
+            
+        li class=('active' if active_tab == '#contributors')
+          a {
+            id="contributors-tab" 
+            href="#contributors" 
+            data-toggle="tab"
+            data-dashboard-target="contributorsTab"
+            data-nav-list-target="tab"
+            data-action="dashboard#setNavCookie"
+            aria-controls="contributors"
+            aria-expanded="#{active_tab == '#contributors' ? 'true' : 'false'}"
+            role="tab" }
+            i.fa.fa-fw.fa-users
+            |&nbsp;Contributors
 
-      .col-sm-8.col-lg-9.layout-main
-        .tab-content
-        
-          #customer-wins.resource-ctrl.tab-pane {
-            class=('active in' if active_tab == '#customer-wins') 
-            data-dashboard-target="customerWins"
-            data-controller="resource"
-            data-resource-dashboard-outlet=".dashboard"
-            data-resource-resource-outlet=".resource-ctrl:not(#customer-wins)"
-            data-resource-data-path-value="/successes"
-            data-resource-checkbox-filters-value={ \
-              'show-wins-with-story': { checked: true, label: 'Customer Wins with Story started'} }.to_json
-            data-action="datatable:init->resource#onTableInitComplete"
-            data-resource-name="customerWins"
-            aria-labelledby="customer-wins-tab"
-            role="tabpanel" }
+    .layout-main
+      .tab-content
+      
+        #customer-wins.resource-ctrl.tab-pane {
+          class=('active in' if active_tab == '#customer-wins') 
+          data-dashboard-target="customerWins"
+          data-controller="resource"
+          data-resource-dashboard-outlet=".dashboard"
+          data-resource-resource-outlet=".resource-ctrl:not(#customer-wins)"
+          data-resource-data-path-value="/successes"
+          data-resource-checkbox-filters-value={ \
+            'show-wins-with-story': { checked: true, label: 'Customer Wins with Story started'} }.to_json
+          data-action="datatable:init->resource#onTableInitComplete"
+          data-resource-name="customerWins"
+          aria-labelledby="customer-wins-tab"
+          role="tabpanel" }
 
-            = render('companies/1_prospect/successes/successes_table', { company: })
+          = render('companies/1_prospect/successes/successes_table', { company: })
 
-          #contributors.resource-ctrl.tab-pane {
-            class=('active in' if active_tab == '#contributors')
-            data-dashboard-target="contributors"
-            data-controller="resource"
-            data-resource-dashboard-outlet=".dashboard"
-            data-resource-resource-outlet=".resource-ctrl:not(#contributors)"
-            data-resource-data-path-value=company_contributions_path(company)
-            data-resource-checkbox-filters-value={ \
-              'show-completed': { checked: true, label: 'Contributors with a completed Contribution' },
-              'show-published': { checked: true, label: 'Contributors to published Customer Stories' }}.to_json
-            data-resource-invitation-template-select-html-value="
-              #{escape_once(render('invitation_templates/inline_select', { company: }))}"
-            data-action="datatable:init->resource#onTableInitComplete"
-            data-resource-name="contributions"
-            aria-labelledby="contributors-tab"
-            role="tabpanel" }
+        #contributors.resource-ctrl.tab-pane {
+          class=('active in' if active_tab == '#contributors')
+          data-dashboard-target="contributors"
+          data-controller="resource"
+          data-resource-dashboard-outlet=".dashboard"
+          data-resource-resource-outlet=".resource-ctrl:not(#contributors)"
+          data-resource-data-path-value=company_contributions_path(company)
+          data-resource-checkbox-filters-value={ \
+            'show-completed': { checked: true, label: 'Contributors with a completed Contribution' },
+            'show-published': { checked: true, label: 'Contributors to published Customer Stories' }}.to_json
+          data-resource-invitation-template-select-html-value="
+            #{escape_once(render('invitation_templates/inline_select', { company: }))}"
+          data-action="datatable:init->resource#onTableInitComplete"
+          data-resource-name="contributions"
+          aria-labelledby="contributors-tab"
+          role="tabpanel" }
 
-            = render('companies/1_prospect/contributors/contributors_table', { company: })
+          = render('companies/1_prospect/contributors/contributors_table', { company: })

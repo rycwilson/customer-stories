@@ -8,115 +8,113 @@
 .visible-xs-block.text-center style="margin-top: 30px"
   h4 Sorry, this screen size is not supported
 
-.container.hidden-xs {
+main.container.hidden-xs {
   data-controller="company-settings" 
   data-company-settings-modal-outlet="#main-modal" 
   data-action="company-ctas:did-render->company-settings#onCtasFrameLoad" }
-  .row
-    .col-sm-4.col-lg-3.layout-sidebar
-      
-      / no active tab set here; it will be set by the client based on page fragment identifier
-      ul.nav.nav--company {
-        class=('nav--new-company' if action_name == 'new')
-        data-controller="nav-list"
-        role="tablist" }
-        - unless action_name == 'new'
+  .layout-sidebar
+    / no active tab set here; it will be set by the client based on page fragment identifier
+    ul.nav.nav--company {
+      class=('nav--new-company' if action_name == 'new')
+      data-controller="nav-list"
+      role="tablist" }
+      - unless action_name == 'new'
 
-          li role="presentation"
-            a {
-              href="#customers-panel"
-              class=('disabled-tab' if @company.new_record?)
-              role="tab"
-              data-toggle="tab"
-              data-company-settings-target="tab"
-              data-nav-list-target="tab" }
-              i.fa.fa-fw.fa-handshake-o
-              |&nbsp;Customers
+        li role="presentation"
+          a {
+            href="#customers-panel"
+            class=('disabled-tab' if @company.new_record?)
+            role="tab"
+            data-toggle="tab"
+            data-company-settings-target="tab"
+            data-nav-list-target="tab" }
+            i.fa.fa-fw.fa-handshake-o
+            |&nbsp;Customers
 
-          li role="presentation"
-            a {
-              href="#contributor-invitations-panel" 
-              class=('disabled-tab' if @company.new_record?)
-              role="tab"
-              data-toggle="tab"
-              data-company-settings-target="tab"
-              data-nav-list-target="tab" }
-              i.fa.fa-fw.fa-envelope-o
-              |&nbsp;Contributor Invitations
-          
-          li role="presentation"
-            a {
-              href="#contributor-prompts-panel" 
-              class=('disabled-tab' if @company.new_record?)
-              role="tab"
-              data-toggle="tab"
-              data-company-settings-target="tab"
-              data-nav-list-target="tab" }
-              i.fa.fa-fw.fa-lightbulb-o
-              |&nbsp;Contributor Prompts
-
-          li role="presentation"
-            a {
-              href="#website-plugin-panel" 
-              class=('disabled-tab' if @company.new_record?)
-              role="tab"
-              data-toggle="tab"
-              data-company-settings-target="tab"
-              data-nav-list-target="tab" }
-              i.fa.fa-fw.fa-plug
-              |&nbsp;Website Plugin
-                
-          li role="presentation"
-            a {
-              href="#cta-links-forms-panel" 
-              class=('disabled-tab' if @company.new_record?)
-              role="tab"
-              data-toggle="tab"
-              data-company-settings-target="tab"
-              data-nav-list-target="tab" }
-              i.fa.fa-fw.fa-hand-pointer-o
-              |&nbsp;CTA Links & Forms
-
-          li role="presentation"
-            a {
-              href="#story-tags-panel" 
-              class=('disabled-tab' if @company.new_record?)
-              role="tab"
-              data-toggle="tab"
-              data-company-settings-target="tab"
-              data-nav-list-target="tab" }
-              i.fa.fa-fw.fa-tags
-              |&nbsp;Story Tags
+        li role="presentation"
+          a {
+            href="#contributor-invitations-panel" 
+            class=('disabled-tab' if @company.new_record?)
+            role="tab"
+            data-toggle="tab"
+            data-company-settings-target="tab"
+            data-nav-list-target="tab" }
+            i.fa.fa-fw.fa-envelope-o
+            |&nbsp;Contributor Invitations
         
-        li role="presentation" 
-          a href="#account-panel" data-toggle="tab" data-company-settings-target="tab"
-            i.fa.fa-fw.fa-gear
-            |&nbsp;Account Settings
+        li role="presentation"
+          a {
+            href="#contributor-prompts-panel" 
+            class=('disabled-tab' if @company.new_record?)
+            role="tab"
+            data-toggle="tab"
+            data-company-settings-target="tab"
+            data-nav-list-target="tab" }
+            i.fa.fa-fw.fa-lightbulb-o
+            |&nbsp;Contributor Prompts
 
-    .col-sm-8.col-lg-9.layout-main
-      .tab-content
+        li role="presentation"
+          a {
+            href="#website-plugin-panel" 
+            class=('disabled-tab' if @company.new_record?)
+            role="tab"
+            data-toggle="tab"
+            data-company-settings-target="tab"
+            data-nav-list-target="tab" }
+            i.fa.fa-fw.fa-plug
+            |&nbsp;Website Plugin
+              
+        li role="presentation"
+          a {
+            href="#cta-links-forms-panel" 
+            class=('disabled-tab' if @company.new_record?)
+            role="tab"
+            data-toggle="tab"
+            data-company-settings-target="tab"
+            data-nav-list-target="tab" }
+            i.fa.fa-fw.fa-hand-pointer-o
+            |&nbsp;CTA Links & Forms
 
-        #account-panel.tab-pane role="tabpanel"
-          = render('companies/settings/company_profile', company: @company)
+        li role="presentation"
+          a {
+            href="#story-tags-panel" 
+            class=('disabled-tab' if @company.new_record?)
+            role="tab"
+            data-toggle="tab"
+            data-company-settings-target="tab"
+            data-nav-list-target="tab" }
+            i.fa.fa-fw.fa-tags
+            |&nbsp;Story Tags
+      
+      li role="presentation" 
+        a href="#account-panel" data-toggle="tab" data-company-settings-target="tab"
+          i.fa.fa-fw.fa-gear
+          |&nbsp;Account Settings
 
-        - unless action_name == 'new'
+  .layout-main
+    .tab-content
 
-          #customers-panel.tab-pane role="tabpanel"
-            = render('customers', company: @company)
-            
-          #contributor-invitations-panel.tab-pane role="tabpanel"
-            = render( \
-                'companies/settings/invitation_templates',
-                { company: @company, templates_select: @templates_select })
+      #account-panel.tab-pane role="tabpanel"
+        = render('companies/settings/company_profile', company: @company)
 
-          #contributor-prompts-panel.tab-pane role="tabpanel"
-            = render('companies/settings/contributor_questions', company: @company)
+      - unless action_name == 'new'
+
+        #customers-panel.tab-pane role="tabpanel"
+          = render('customers', company: @company)
           
-          #website-plugin-panel.tab-pane role="tabpanel"
-            = render('plugins/config', company: @company)
+        #contributor-invitations-panel.tab-pane role="tabpanel"
+          = render( \
+              'companies/settings/invitation_templates',
+              { company: @company, templates_select: @templates_select })
 
-          #cta-links-forms-panel.tab-pane role="tabpanel"
-            = render('ctas', company: @company)
+        #contributor-prompts-panel.tab-pane role="tabpanel"
+          = render('companies/settings/contributor_questions', company: @company)
+        
+        #website-plugin-panel.tab-pane role="tabpanel"
+          = render('plugins/config', company: @company)
 
-          #story-tags-panel.tab-pane role="tabpanel"
-            = render('companies/settings/story_tags', company: @company)
+        #cta-links-forms-panel.tab-pane role="tabpanel"
+          = render('ctas', company: @company)
+
+        #story-tags-panel.tab-pane role="tabpanel"
+          = render('companies/settings/story_tags', company: @company)

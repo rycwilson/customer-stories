@@ -1,47 +1,45 @@
 - content_for(:head) do
-  / LI widget won't load if page is cached
   meta name="turbo-cache-control" content="no-cache"
 
-= render( \
-    'shared/navbars/company_nav', 
-    { company: @company, workflow_stage: nil })
+= render('shared/navbars/company_nav', { company: @company, workflow_stage: nil })
 
-.container
-  .row
-    .col-sm-4.col-lg-3.layout-sidebar
+.visible-xs-block.text-center style="margin-top: 30px"
+  h4 Sorry, this screen size is not supported
 
-      ul.nav data-controller="nav-list" role="tablist"
-        li.active
-          a href="#profile-tab" data-toggle="tab" data-nav-list-target="tab"
-            i.fa.fa-fw.fa-user
-            | &nbsp;&nbsp;Profile
-        li
-          a href="#password-tab" data-toggle="tab" data-nav-list-target="tab"
-            i.fa.fa-fw.fa-lock
-            | &nbsp;&nbsp;Change Password
-
-      - if @is_admin
-        .admin-sidebar
-          h4.text-danger Admin
-          .text-center
-            #switch-user.dropdown
-              button.btn.btn-default.dropdown-toggle {
-                type="button" 
-                data-toggle="dropdown" 
-                aria-haspopup="true" 
-                aria-expanded="true" }
-                | Switch User &nbsp;&nbsp;
-                span.caret
-              ul.dropdown-menu aria-labelledby="switch-user"
-                - @switch_users.each do |user|
-                  li
-                    = form_tag(switch_user_path, method: 'POST', remote: true) do
-                      = hidden_field_tag(:switch_user_id, user[:id], id: nil)
-                      = submit_tag(user[:name], style: 'background: none; border: none')
-                      
-    .col-sm-8.col-lg-9.layout-main
-      .tab-content
-        #profile-tab.tab-pane.in.active
-          = render('profile/user_profile', { user: @user, s3_direct_post: @s3_direct_post })
-        #password-tab.tab-pane
-          = render('profile/change_password', { user: @user })
+main.container.hidden-xs
+  
+  .layout-sidebar
+    ul.nav data-controller="nav-list" role="tablist"
+      li.active
+        a href="#profile-tab" data-toggle="tab" data-nav-list-target="tab"
+          i.fa.fa-fw.fa-user
+          | &nbsp;&nbsp;Profile
+      li
+        a href="#password-tab" data-toggle="tab" data-nav-list-target="tab"
+          i.fa.fa-fw.fa-lock
+          | &nbsp;&nbsp;Change Password
+    - if @is_admin
+      .admin-sidebar
+        h4.text-danger Admin
+        .text-center
+          #switch-user.dropdown
+            button.btn.btn-default.dropdown-toggle {
+              type="button" 
+              data-toggle="dropdown" 
+              aria-haspopup="true" 
+              aria-expanded="true" }
+              | Switch User &nbsp;&nbsp;
+              span.caret
+            ul.dropdown-menu aria-labelledby="switch-user"
+              - @switch_users.each do |user|
+                li
+                  = form_tag(switch_user_path, method: 'POST', remote: true) do
+                    = hidden_field_tag(:switch_user_id, user[:id], id: nil)
+                    = submit_tag(user[:name], style: 'background: none; border: none')
+                    
+  .layout-main
+    .tab-content
+      #profile-tab.tab-pane.in.active
+        = render('profile/user_profile', { user: @user, s3_direct_post: @s3_direct_post })
+      #password-tab.tab-pane
+        = render('profile/change_password', { user: @user })
