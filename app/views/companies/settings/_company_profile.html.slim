@@ -15,26 +15,38 @@
           'image-card:upload-ready->company-profile#onUploadReady'].join(' ') }}) do |form|
   
   .form-group.required
-    = form.label(:subdomain, class: 'col-sm-3 control-label')
-    .col-sm-9.col-md-8.col-lg-6
-      - if company.persisted?
-        = form.text_field(:subdomain, class: 'form-control', disabled: true)
-      - else
-        = form.text_field(:subdomain, class: 'form-control')
+    .visible-sm-block.col-sm-offset-1.col-sm-11
+      = form.label(:subdomain)
+    = form.label(:subdomain, class: 'control-label col-md-3 visible-md-inline-block visible-lg-inline-block')
+    .col-sm-offset-1.col-sm-11.col-md-offset-0.col-md-8.col-lg-6
+      = form.text_field(:subdomain, class: 'form-control', disabled: company.persisted?)
 
   .form-group.required
-    = form.label(:name, 'Company Name', class: 'col-sm-3 control-label')
-    .col-sm-9.col-md-8.col-lg-6
+    .visible-sm-block.col-sm-offset-1.col-sm-11
+      = form.label(:name, 'Company Name')
+    = form.label(:name, 'Company Name', class: 'control-label col-md-3 visible-md-inline-block visible-lg-inline-block')
+    .col-sm-offset-1.col-sm-11.col-md-offset-0.col-md-8.col-lg-6
       = form.text_field(:name, class: 'form-control')
   
   .form-group.required
-    = form.label(:website, 'Company Website', class: 'col-sm-3 control-label')
-    .col-sm-9.col-md-8.col-lg-6
+    .visible-sm-block.col-sm-offset-1.col-sm-11
+      = form.label(:website)
+    = form.label(:website, 'Company Website', class: 'control-label col-md-3 visible-md-inline-block visible-lg-inline-block')
+    .col-sm-offset-1.col-sm-11.col-md-offset-0.col-md-8.col-lg-6
       = form.text_field(:website, class: 'form-control')
+
+  .form-group 
+    .visible-sm-block.col-sm-offset-1.col-sm-11
+      label Company Logos
+    = form.label(:description, 'Company Logos', class: 'control-label col-md-3 visible-md-inline-block visible-lg-inline-block')
+    .col-sm-offset-1.col-sm-11.col-md-offset-0.col-md-8.col-lg-6
+      div logos go here
       
-  .row.custom-header-colors
-    label.col-sm-3.control-label Page Header
-    .col-sm-9.col-md-8.col-lg-6 style="padding-top:2px; margin-bottom:1.5rem"
+  .form-group.custom-header-colors
+    .visible-sm-block.col-sm-offset-1.col-sm-11
+      label Page Header  
+    label.control-label.col-md-3.visible-md-inline-block.visible-lg-inline-block Page Header
+    .col-sm-offset-1.col-sm-11.col-md-offset-0.col-md-8.col-lg-6 style="padding-top:3px"
       div
         = form.label(:header_color_1, 'Upper')
         = form.color_field( \
@@ -54,9 +66,9 @@
             data: { company_profile_target: 'storiesHeadingColorInput', action: 'company-profile#onInputStoriesHeadingColor' })
 
   .form-group
-    .col-sm-offset-3.col-sm-9.col-md-8.col-lg-6
+    .col-sm-offset-1.col-sm-11.col-md-offset-3.col-md-8.col-lg-6
       .company-logo-upload data-provides="fileinput"
-        div
+        /div
           button.company-logo-upload__button.btn {
             type="button" 
             data-company-profile-target="uploadLogoBtn" 
@@ -78,8 +90,10 @@
             | Customer Stories
 
   /.form-group
-    = form.label(:gtm_id, 'Google Tag Manager ID', class: 'col-sm-3 control-label')
-    .col-sm-9.col-md-8.col-lg-6
+    .visible-sm-block.col-sm-offset-1.col-sm-11
+      = form.label(:gtm_id, 'Google Tag Manager ID')
+    = form.label(:gtm_id, 'Google Tag Manager ID', class: 'control-label col-md-3 visible-md-inline-block visible-lg-inline-block')
+    .col-sm-offset-1.col-sm-11.col-md-offset-0.col-md-8.col-lg-6
       = form.text_field(:gtm_id, class: 'form-control')
 
   .row
