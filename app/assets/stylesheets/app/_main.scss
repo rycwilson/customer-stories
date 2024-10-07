@@ -7,7 +7,6 @@
 
 @import 'base/mixins';
 @import 'base/globals';
-@import 'base/layout';
 
 @import 'vendor/bootstrap';
 @import 'vendor/datatables';
@@ -22,6 +21,7 @@
 @import 'views/site';
 @import 'views/navbars/navbars';
 @import 'views/modals/modals';
+@import 'views/company_admin';
 @import 'views/companies/companies';
 @import 'views/stories/index/search_and_filters';
 @import 'views/stories/shared/gallery';
@@ -30,7 +30,7 @@
 @import 'views/profile/profile';
 
 .turbo-progress-bar {
-  background: $light-blue;
+  background: saturate(deepskyblue, 50%);
 }
 
 // good example of file organization
