@@ -73,6 +73,19 @@ hr {
 //     content: "\A0\A0*";
 //   }
 // }
+form {
+  .row {
+    margin-bottom: 1rem;
+  }
+  
+  .form-group,
+  .row {
+    .help-block {
+      margin-bottom: 0;
+    }
+  }
+}
+
 
 #flash {
   display: flex;

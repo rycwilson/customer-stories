@@ -33,55 +33,66 @@
         span.help-block.with-errors
           | Max 30 characters
 
-    .row
-      .image-library__collection
-        label.col-sm-3.control-label Image Collection
-        .col-sm-9.col-md-8.col-lg-6
-          .btn-group data-controller="btn-group"
-            a.btn.btn-secondary {
-              href="#image-library__marketing"
-              class=('active' if active_collection == 'images')
-              data-toggle="tab" 
-              data-btn-group-target="btn" 
-              role="tab" }
-              i.fa.fa-fw.fa-image
-              | &nbsp;&nbsp;
-              | Marketing Images
-            a.btn.btn-secondary {
-              href="#image-library__logos"
-              class=('active' if active_collection == 'logos')
-              data-toggle="tab" 
-              data-btn-group-target="btn"
-              role="tab" }
-              i.fa.fa-fw.fa-flag
-              | &nbsp;&nbsp;
-              | Logos
+    .form-group.image-collection
+      label.col-sm-3.control-label Image Collection
+      .col-sm-9.col-md-8.col-lg-6
+        .btn-group data-controller="btn-group"
+          a.btn.btn-secondary {
+            href="#image-library__marketing"
+            class=('active' if active_collection == 'images')
+            data-toggle="tab" 
+            data-btn-group-target="btn" 
+            role="tab" }
+            i.fa.fa-fw.fa-image
+            | &nbsp;&nbsp;
+            | Marketing Images
+          a.btn.btn-secondary {
+            href="#image-library__logos"
+            class=('active' if active_collection == 'logos')
+            data-toggle="tab" 
+            data-btn-group-target="btn"
+            role="tab" }
+            i.fa.fa-fw.fa-flag
+            | &nbsp;&nbsp;
+            | Logos
+      .col-sm-offset-3.col-sm-9.col-md-8.col-lg-6 
+        span.help-block data-ads-target="requirementsHelpBlock" class=('hidden' if active_collection != 'images')
+          a {
+            href="javascript:;"
+            role="button"
+            data-toggle="popover" 
+            data-placement="right" 
+            data-trigger="focus"
+            data-square-min="300x300" 
+            data-square-ratio="1:1"
+            data-landscape-min="600x314" 
+            data-landscape-ratio="1.91:1"
+            data-ads-target="imageRequirements" }
+            | Requirements
+        span.help-block.pull-right data-ads-target="requirementsHelpBlock" class=('hidden' if active_collection != 'logos')
+          a {
+            href="javascript:;" 
+            role="button"
+            data-toggle="popover" 
+            data-placement="right" 
+            data-trigger="focus"
+            data-square-min="128x128" 
+            data-square-ratio="1:1" 
+            data-square-suggest="1200x1200"
+            data-landscape-min="512x128" 
+            data-landscape-ratio="4:1" 
+            data-landscape-suggest="1200x300"
+            data-ads-target="imageRequirements" }
+            | Optional/Requirements
 
     .image-library.tab-content
 
       #image-library__marketing.tab-pane class=('active' if active_collection == 'images')
 
-        .row style="margin-bottom:15px"
-          .col-sm-offset-3.col-sm-9.col-md-8.col-lg-6
-            span.help-block 
-              a.image-requirements.marketing {
-                href="javascript:;"
-                type="button" 
-                role="button"
-                data-toggle="popover" 
-                data-placement="right" 
-                data-trigger="focus"
-                data-square-min="300x300" 
-                data-square-ratio="1:1"
-                data-landscape-min="600x314" 
-                data-landscape-ratio="1.91:1"
-                data-ads-target="imageRequirements" }
-                | Requirements
-
-        .row style="margin-bottom:25px"
+        .form-group
           label.col-sm-3.control-label Default Images
           .col-sm-9.col-md-8.col-lg-6
-            ul.image-uploads
+            ul.image-cards
               = render( \
                   'adwords_images/card',
                   { form_outlet: '#gads-form',
@@ -97,18 +108,14 @@
                     field_name_prefix: 'company[adwords_images_attributes][1]',
                     collection: 'images' })
 
-        .row style="margin-bottom:25px"
-          / label.col-sm-3.control-label All Images
+        .row
           .col-sm-offset-3.col-sm-9.col-md-8.col-lg-6.text-center
-            button.btn.btn-secondary {
-              type="button"
-              disabled=('true' if company.missing_default_ad_images?('marketing'))
-              data-action="ads#uploadImage"
-              style="width: 50%" }
+            /disabled=('true' if company.missing_default_ad_images?('marketing'))
+            button.btn.btn-secondary.btn-upload type="button" data-action="ads#uploadImage"
               i.fa.fa-fw.fa-upload
               |&nbsp;&nbsp;Upload an image
 
-        ul.image-uploads
+        ul.image-cards
           = render( \
               'adwords_images/card',
               { form_outlet: '#gads-form',
@@ -126,30 +133,10 @@
 
       #image-library__logos.tab-pane class=('active' if active_collection == 'logos')
 
-        .row
-          .form-group
-            .col-sm-offset-3.col-sm-9.col-md-8.col-lg-6
-              div style="display:inline-block;width:50%"
-              div style="display:inline-block;width:50%"
-                span.help-block
-                  a.image-requirements.logos {
-                    href="javascript:;" 
-                    data-toggle="popover" 
-                    data-placement="right" 
-                    data-trigger="focus"
-                    data-square-min="128x128" 
-                    data-square-ratio="1:1" 
-                    data-square-suggest="1200x1200"
-                    data-landscape-min="512x128" 
-                    data-landscape-ratio="4:1" 
-                    data-landscape-suggest="1200x300",
-                    data-ads-target="imageRequirements" }
-                    | Optional/Requirements
-
-        .row style="margin-left:-30px;margin-right:-30px;margin-bottom:25px"
+        .form-group
           label.col-sm-3.control-label Default Logos
           .col-sm-9.col-md-8.col-lg-6
-            ul.image-uploads
+            ul.image-cards
               = render( \
                   'adwords_images/card',
                   { form_outlet: '#gads-form',
@@ -167,18 +154,15 @@
                       "company[adwords_images_attributes][#{ 4 + company.ad_images.marketing.where.not(default: true).count }]"),
                     collection: 'logos' })
 
-        .row style="margin-left:-30px;margin-right:-30px;margin-bottom:25px"
+        .row
           / label.col-sm-3.control-label All Logos
           .col-sm-offset-3.col-sm-9.col-md-8.col-lg-6.text-center
-            button.btn.btn-secondary {
-              type="button"
-              disabled=('true' if company.missing_default_ad_images?('logo'))
-              data-action="ads#uploadLogo"
-              style="width: 50%" }
+            / disabled=('true' if company.missing_default_ad_images?('logo'))
+            button.btn.btn-secondary.btn-upload type="button" data-action="ads#uploadLogo"
               i.fa.fa-fw.fa-upload
               |&nbsp;&nbsp;Upload a logo
 
-        ul.image-uploads
+        ul.image-cards
           = render( \
               'adwords_images/card',
               { form_outlet: '#gads-form',

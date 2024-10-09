@@ -1,11 +1,3 @@
-.image-library__collection {
-  margin-bottom: 0;
-
-  .btn-group {
-    width: 100%;
-  }
-}
-
 .popover.image-requirements {
   max-width: 500px;
 
@@ -34,6 +26,21 @@
       width: 96px;
       margin-left: 15px;
     }
+  }
+
+  .image-collection {
+    .btn-group {
+      width: 100%;
+    }
+
+    .help-block {
+      width: 50%;
+    }
+  }
+
+  button.btn-upload {
+    margin: 1rem 0;
+    width: 50%;
   }
 }
 
