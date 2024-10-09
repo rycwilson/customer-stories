@@ -12,6 +12,8 @@
         action: [ \
           'ajax:beforeSend->company-profile#validate',
           'ajax:complete->company-profile#onAjaxComplete',
+          'image-card:image-ready->company-profile#updateValidator',
+          'image-card:clear-fileinput->company-profile#updateValidator',
           'image-card:upload-ready->company-profile#onUploadReady'].join(' ') }}) do |form|
   
   .form-group.required
@@ -40,7 +42,43 @@
       label Company Logos
     = form.label(:description, 'Company Logos', class: 'control-label col-md-3 visible-md-inline-block visible-lg-inline-block')
     .col-sm-offset-1.col-sm-11.col-md-offset-0.col-md-8.col-lg-6
-      div logos go here
+      ul.image-uploads
+        li.image-card {
+          class="image-card--SquareLogo image-card--company-logo"
+          data-controller="image-card"
+          data-image-card-kind-value="SquareLogo"
+          data-image-card-company-profile-outlet="#company-profile-form" }
+          = render('shared/loading_spinner')
+          = hidden_field_tag( \
+              'company[square_logo_url]',
+              company.square_logo_url,
+              data: { image_card_target: 'companySquareLogoUrlInput' })
+          = render( \
+              'shared/jasny_fileinput',
+              { upload_enabled: true,
+                image_type: 'SquareLogo',
+                image_url: company.square_logo_url,
+                image_replaceable: true,
+                collection: 'logos',
+                required: true })
+        li.image-card {
+          class="image-card--LandscapeLogo image-card--company-logo"
+          data-controller="image-card"
+          data-image-card-kind-value="LandscapeLogo"
+          data-image-card-company-profile-outlet="#company-profile-form" }
+          = render('shared/loading_spinner')
+          = hidden_field_tag( \
+              'company[landscape_logo_url]',
+              company.landscape_logo_url,
+              data: { image_card_target: 'companyLandscapeLogoUrlInput' })
+          = render( \
+              'shared/jasny_fileinput',
+              { upload_enabled: true,
+                image_type: 'LandscapeLogo',
+                image_url: company.landscape_logo_url,
+                image_replaceable: true,
+                collection: 'logos',
+                required: false })
       
   .form-group.custom-header-colors
     .visible-sm-block.col-sm-offset-1.col-sm-11

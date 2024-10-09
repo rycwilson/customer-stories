@@ -46,7 +46,15 @@ export const imageValidatorOptions: ValidatorOptions = {
 }
 
 export function onS3Done(this: ImageCardController, url: string) {
-  this.imageUrlInputTarget.value = url;
+  if (this.hasAdsOutlet) {
+    this.imageUrlInputTarget.value = url;
+  } else if (this.hasCompanyProfileOutlet) {
+    if (this.hasCompanySquareLogoUrlInputTarget) this.companySquareLogoUrlInputTarget.value = url;
+    if (this.hasCompanyLandscapeLogoUrlInputTarget) this.companyLandscapeLogoUrlInputTarget.value = url;
+  } else {
+    // summernote 
+    // customers
+  }
 
   // if the input buffer's value isn't set to blank, it will force a request with data-type=html
   this.fileInputTarget.value = '';

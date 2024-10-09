@@ -1,5 +1,5 @@
 import FormController from './form_controller';
-import { initS3FileInput } from '../user_uploads';
+import { imageValidatorOptions } from '../user_uploads';
 import tinycolor from 'tinycolor2';
 
 export default class CompanyProfileController extends FormController<CompanyProfileController> {
@@ -15,7 +15,12 @@ export default class CompanyProfileController extends FormController<CompanyProf
   declare readonly storiesHeadingColorInputTarget: HTMLInputElement;
 
   connect() {
-    // console.log('connect company profile')
+    super.connect();
+    $(this.element).validator(imageValidatorOptions);
+  }
+
+  disconnect() {
+    $(this.element).validator('destroy');
   }
 
   onAjaxComplete({ detail: [xhr, status] }: { detail: [xhr: XMLHttpRequest, status: string] }) {

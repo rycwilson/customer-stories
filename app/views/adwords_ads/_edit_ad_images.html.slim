@@ -29,20 +29,20 @@
     .tab-content
 
       #ad-images__marketing.tab-pane.active
-        ul data-max="15"
+        ul.image-uploads data-max="15"
           - ad.company.ad_images.marketing.sort_by { |image| sort_ad_images(ad, image) }.each.with_index do |ad_image, i|
             = render( \
-                'shared/image_card',
+                'adwords_images/card',
                 { form_object: ad,
                   ad_image:,
                   field_name_prefix: "adwords_ad[adwords_images_attributes][#{i}]",
                   collection: 'images' })
                   
       #ad-images__logos.tab-pane
-        ul data-max="5"
+        ul.image-uploads data-max="5"
           - ad.company.ad_images.logo.sort_by { |image| sort_ad_images(ad, image) }.each.with_index do |ad_image, i|
             = render( \
-                'shared/image_card',
+                'adwords_images/card',
                 { form_object: ad,
                   ad_image:,
                   field_name_prefix: "adwords_ad[adwords_images_attributes][#{ i + ad.company.ad_images.marketing.count }]",

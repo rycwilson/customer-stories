@@ -81,16 +81,16 @@
         .row style="margin-bottom:25px"
           label.col-sm-3.control-label Default Images
           .col-sm-9.col-md-8.col-lg-6
-            ul.image-library__default-images
+            ul.image-uploads
               = render( \
-                  'shared/image_card',
+                  'adwords_images/card',
                   { form_outlet: '#gads-form',
                     form_object: company,
                     ad_image: company.ad_images.default.marketing.square.take || { type: 'SquareImage', default: true },
                     field_name_prefix: 'company[adwords_images_attributes][0]',
                     collection: 'images' })
               = render( \
-                  'shared/image_card',
+                  'adwords_images/card',
                   { form_outlet: '#gads-form',
                     form_object: company,
                     ad_image: company.ad_images.default.marketing.landscape.take || { type: 'LandscapeImage', default: true },
@@ -102,15 +102,15 @@
           .col-sm-offset-3.col-sm-9.col-md-8.col-lg-6.text-center
             button.btn.btn-secondary {
               type="button"
-              class=('hidden' if company.missing_default_ad_images?('marketing'))
+              disabled=('true' if company.missing_default_ad_images?('marketing'))
               data-action="ads#uploadImage"
               style="width: 50%" }
               i.fa.fa-fw.fa-upload
               |&nbsp;&nbsp;Upload an image
 
-        ul.image-library__all-images
+        ul.image-uploads
           = render( \
-              'shared/image_card',
+              'adwords_images/card',
               { form_outlet: '#gads-form',
                 form_object: company,
                 ad_image: {},
@@ -118,7 +118,7 @@
                 collection: 'images' })
           - company.ad_images.marketing.where.not(default: true).each.with_index do |ad_image, i|
             = render( \
-                'shared/image_card',
+                'adwords_images/card',
                 { form_object: company,
                   ad_image:,
                   field_name_prefix: "company[adwords_images_attributes][#{ 3 + i }]",
@@ -149,9 +149,9 @@
         .row style="margin-left:-30px;margin-right:-30px;margin-bottom:25px"
           label.col-sm-3.control-label Default Logos
           .col-sm-9.col-md-8.col-lg-6
-            ul.image-library__default-logos
+            ul.image-uploads
               = render( \
-                  'shared/image_card',
+                  'adwords_images/card',
                   { form_outlet: '#gads-form',
                     form_object: company,
                     ad_image: company.ad_images.default.logo.square.take || { type: 'SquareLogo', default: true },
@@ -159,7 +159,7 @@
                       "company[adwords_images_attributes][#{ 3 + company.ad_images.marketing.where.not(default: true).count }]"),
                     collection: 'logos' })
               = render( \
-                  'shared/image_card',
+                  'adwords_images/card',
                   { form_outlet: '#gads-form',
                     form_object: company,
                     ad_image: company.ad_images.default.logo.landscape.take || { type: 'LandscapeLogo', default: true },
@@ -172,15 +172,15 @@
           .col-sm-offset-3.col-sm-9.col-md-8.col-lg-6.text-center
             button.btn.btn-secondary {
               type="button"
-              class=('hidden' if company.missing_default_ad_images?('logo'))
+              disabled=('true' if company.missing_default_ad_images?('logo'))
               data-action="ads#uploadLogo"
               style="width: 50%" }
               i.fa.fa-fw.fa-upload
               |&nbsp;&nbsp;Upload a logo
 
-        ul.image-library__all-logos
+        ul.image-uploads
           = render( \
-              'shared/image_card',
+              'adwords_images/card',
               { form_outlet: '#gads-form',
                 form_object: company,
                 ad_image: {},
@@ -189,7 +189,7 @@
                 collection: 'logos' })
           - company.ad_images.logo.where.not(default: true).each.with_index do |ad_image, i|
             = render( \
-                'shared/image_card',
+                'adwords_images/card',
                 { form_object: company,
                   ad_image:,
                   field_name_prefix: ( \

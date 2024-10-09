@@ -85,3 +85,17 @@ turbo-frame[data-modal-target="turboFrame"] {
     }
   } 
 }
+
+ul.image-uploads {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  margin: 0;
+
+  // &[class*="all"] {
+  //   margin-left: -15px;
+  //   margin-right: -15px;
+  // }
+}

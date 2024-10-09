@@ -1,11 +1,14 @@
 import { Controller } from '@hotwired/stimulus';
 import AdsController from './ads_controller';
+import CompanyProfileController from './company_profile_controller';
 import { initS3FileInput, onS3Done } from '../user_uploads';
 
 export default class ImageCardController extends Controller<HTMLLIElement> {
-  static outlets = ['ads'];
+  static outlets = ['ads', 'company-profile'];
   declare readonly adsOutlet: AdsController;
   declare readonly hasAdsOutlet: boolean;
+  declare readonly companyProfileOutlet: CompanyProfileController;
+  declare readonly hasCompanyProfileOutlet: boolean;
 
   static values = {
     kind: String,
@@ -24,9 +27,12 @@ export default class ImageCardController extends Controller<HTMLLIElement> {
     'defaultInput',
     '_destroyInput',
     'fileInput', 
-    'adImageCheckbox', 
+    'adImageCheckbox',
+    'companySquareLogoUrlInput',
+    'companyLandscapeLogoUrlInput',
   ];
   declare readonly formGroupTarget: HTMLDivElement;
+  declare readonly hasFormGroupTarget: boolean;
   declare readonly previewTarget: HTMLDivElement;
   declare readonly idInputTarget: HTMLInputElement;
   declare readonly hasIdInputTarget: boolean;
@@ -36,6 +42,10 @@ export default class ImageCardController extends Controller<HTMLLIElement> {
   declare readonly _destroyInputTarget: HTMLInputElement;
   declare readonly fileInputTarget: HTMLInputElement;
   declare readonly adImageCheckboxTarget: HTMLInputElement;
+  declare readonly companySquareLogoUrlInputTarget: HTMLInputElement;
+  declare readonly hasCompanySquareLogoUrlInputTarget: boolean;
+  declare readonly companyLandscapeLogoUrlInputTarget: HTMLInputElement;
+  declare readonly hasCompanyLandscapeLogoUrlInputTarget: boolean
 
   declare imageLoadTimer: number;
 
@@ -48,35 +58,39 @@ export default class ImageCardController extends Controller<HTMLLIElement> {
 
   connect() {
     // jquery event listeners necessary for hooking into jquery plugin events
-    $(this.formGroupTarget)
-      .on('change.bs.fileinput', this.changeFileInputHandler)
-      .on('clear.bs.fileinput', this.clearFileInputHandler);
+    if (this.fileUploadEnabled) {
+      $(this.formGroupTarget)
+        .on('change.bs.fileinput', this.changeFileInputHandler)
+        .on('clear.bs.fileinput', this.clearFileInputHandler);
 
-    // bootstrap validator events trigger on the form 
-    if (this.hasAdsOutlet) {
-      $(this.adsOutlet.element)
-        .on('validate.bs.validator', this.validateFileInputHandler)
-        .on('valid.bs.validator', this.validFileInputHandler)
-        .on('invalid.bs.validator', this.invalidFileInputHandler)
-        .on('validated.bs.validator', this.validatedFileInputHandler);
-    }
-
-    if (this.fileInputTarget.hasAttribute('data-s3')) {
-      initS3FileInput(this.fileInputTarget, onS3Done.bind(this));
+      // bootstrap validator events trigger on the form 
+      if (this.formOutlet) {
+        $(this.formOutlet.element)
+          .on('validate.bs.validator', this.validateFileInputHandler)
+          .on('valid.bs.validator', this.validFileInputHandler)
+          .on('invalid.bs.validator', this.invalidFileInputHandler)
+          .on('validated.bs.validator', this.validatedFileInputHandler);
+      }
+  
+      if (this.fileInputTarget.hasAttribute('data-s3')) {
+        initS3FileInput(this.fileInputTarget, onS3Done.bind(this));
+      }
     }
   }
   
   disconnect() {
-    $(this.formGroupTarget)
-      .off('change.bs.fileinput', this.changeFileInputHandler)
-      .off('clear.bs.fileinput', this.clearFileInputHandler)
-
-    // after disconnect, any outlets (e.g. the parent form) will be null
-    $(this.element.closest('form'))
-      .off('validate.bs.validator', this.validateFileInputHandler)
-      .off('valid.bs.validator', this.validFileInputHandler)
-      .off('invalid.bs.validator', this.invalidFileInputHandler)
-      .off('validated.bs.validator', this.validatedFileInputHandler);
+    if (this.fileUploadEnabled) {
+      $(this.formGroupTarget)
+        .off('change.bs.fileinput', this.changeFileInputHandler)
+        .off('clear.bs.fileinput', this.clearFileInputHandler)
+        
+      // after disconnect, any outlets (e.g. the parent form) will be null
+      $(this.element.closest('form'))
+        .off('validate.bs.validator', this.validateFileInputHandler)
+        .off('valid.bs.validator', this.validFileInputHandler)
+        .off('invalid.bs.validator', this.invalidFileInputHandler)
+        .off('validated.bs.validator', this.validatedFileInputHandler);
+    }
   }
 
   onChangeFileInput() {
@@ -97,7 +111,7 @@ export default class ImageCardController extends Controller<HTMLLIElement> {
 
   onClearFileInput(e: CustomEvent) {
     console.log('clear.bs.fileinput')
-    this.element.classList.toggle('hidden', !this.isDefaultImage);    
+    this.element.classList.toggle('hidden', this.hasAdsOutlet && !this.isDefaultImage);    
     this.fileInputTarget.setAttribute('data-validate', 'false');
     this.dispatch('clear-fileinput');
   }
@@ -190,5 +204,13 @@ export default class ImageCardController extends Controller<HTMLLIElement> {
   // jasny-bootstrap will remove and replace the img tag when uploading
   get imgTarget() {
     return <HTMLImageElement>this.previewTarget.querySelector(':scope > img');
+  }
+
+  get fileUploadEnabled() {
+    return this.hasFormGroupTarget;
+  }
+
+  get formOutlet() {
+    return this.hasAdsOutlet ? this.adsOutlet : this.companyProfileOutlet;
   }
 }
