@@ -25,17 +25,13 @@ module CompaniesHelper
   def ad_image_placeholder(type)
     case type
     when 'SquareImage'
-      'https://dummyimage.com/142/e2e3e3/3c3c3c&text=%E2%89%A5%20300%C3%97300'
-      # RESPONSIVE_AD_SQUARE_IMAGE_PLACEHOLDER
+      'https://placehold.co/300/e2e3e3/777?font=open+sans&text=%E2%89%A5%20300%C3%97300'
     when 'LandscapeImage'
-      'https://dummyimage.com/195x102/e2e3e3/3c3c3c&text=%E2%89%A5%20600%C3%97314'
-      # RESPONSIVE_AD_LANDSCAPE_IMAGE_PLACEHOLDER
+      'https://placehold.co/600x314/e2e3e3/777?font=open+sans&text=%E2%89%A5%20600%C3%97314'
     when 'SquareLogo'
-      'https://dummyimage.com/117/e2e3e3/3c3c3c&text=%E2%89%A5%20128%C3%97128'
-      # RESPONSIVE_AD_SQUARE_LOGO_PLACEHOLDER
+      'https://placehold.co/128x128/e2e3e3/777?font=open+sans&text=%E2%89%A5%20128%C3%97128'
     when 'LandscapeLogo'
-      'https://dummyimage.com/232x58/e2e3e3/3c3c3c&text=%E2%89%A5%20512%C3%97128'
-      # RESPONSIVE_AD_LANDSCAPE_LOGO_PLACEHOLDER
+      'https://placehold.co/512x128/e2e3e3/999?font=open+sans&text=%E2%89%A5%20512%C3%97128'
     else 
       ''
     end
