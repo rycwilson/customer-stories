@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2024_09_24_154935) do
+ActiveRecord::Schema.define(version: 2024_10_07_172730) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_stat_statements"
@@ -153,6 +153,8 @@ ActiveRecord::Schema.define(version: 2024_09_24_154935) do
     t.boolean "promote_tr", default: false
     t.boolean "promote_crm", default: false
     t.bigint "adwords_logo_media_id"
+    t.string "square_logo_url"
+    t.string "landscape_logo_url"
     t.index ["subdomain"], name: "index_companies_on_subdomain", unique: true
   end
 
