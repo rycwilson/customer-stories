@@ -107,6 +107,13 @@ export default class FormController<Ctrl extends SubclassController> extends Con
     }
   }
 
+  updateValidator({ detail: { shouldValidate } }: { detail: { shouldValidate?: boolean } }) {
+    $(this.element).validator('update');
+    if (shouldValidate) {
+      $(this.element).validator('validate'); 
+    }
+  }
+
   removeErrorsOnValidInput() {
     const removeError = (e: Event) => {
       const field = e.target as TomSelectInput | HTMLInputElement;

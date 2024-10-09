@@ -74,7 +74,6 @@ export default class AdsController extends FormController<AdsController> {
   }
 
   onDeletedImage({ detail: [res, status, xhr] }: { detail: [res: { id: string }, status: string, xhr: XMLHttpRequest] }) {
-    console.log(this.imageCardTargets)  
     const card = this.imageCardTargets.find(card => res.id == card.dataset.imageId);
     card?.remove();
     bsToast('info', 'Image deleted successfully');
@@ -90,13 +89,6 @@ export default class AdsController extends FormController<AdsController> {
 
   uploadFile(card: HTMLLIElement) {
     card.setAttribute('data-image-card-open-file-dialog-value', 'true');
-  }
-
-  updateValidator({ detail: { shouldValidate } }: { detail: { shouldValidate?: boolean } }) {
-    $(this.element).validator('update');
-    if (shouldValidate) {
-      $(this.element).validator('validate'); 
-    }
   }
 
   keepPreviousDefault({ detail: { prevDefaultImageId } }: { detail: { prevDefaultImageId: string } }) {
