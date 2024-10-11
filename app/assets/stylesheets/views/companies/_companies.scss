@@ -86,7 +86,7 @@ turbo-frame[data-modal-target="turboFrame"] {
   } 
 }
 
-ul.image-uploads {
+ul.image-cards {
   display: flex;
   flex-wrap: wrap;
   align-items: center;
@@ -94,8 +94,4 @@ ul.image-uploads {
   padding: 0;
   margin: 0;
 
-  // &[class*="all"] {
-  //   margin-left: -15px;
-  //   margin-right: -15px;
-  // }
 }
