@@ -1,0 +1,24 @@
+nav.company-header {
+  class="company-header--#{@company.subdomain}" 
+  style="background-color:#{@company.header_color_1}"
+  role="banner" }
+
+  .container
+
+    = link_to(@company.website, class: 'company-header__logo') do
+      = image_tag(@company.logo_url || LOGO_PLACEHOLDER, class: 'img-responsive', alt: "#{@company.name} Logo")
+
+    - if @company.ctas.primary.present?
+
+      .primary-cta.hidden-xs.hidden
+
+        - if @company.ctas.primary.type == 'CTALink'
+          = link_to( \
+              @company.ctas.primary.display_text,
+              @company.ctas.primary.link_url,
+              class: 'btn btn-lg btn-custom',
+              data: { \
+                bg_color: @company.primary_cta_background_color,
+                color: @company.primary_cta_text_color })
+
+        - elsif @company.ctas.primary.type == 'CTAForm'

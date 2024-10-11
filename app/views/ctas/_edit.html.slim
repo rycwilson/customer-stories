@@ -15,15 +15,12 @@
     method: :patch,
     remote: true,
     id: "cta-#{cta.id}-form",
-    data: { \
-      controller: 'cta',
-      cta_custom_button_background_color_value: company.primary_cta_background_color,
-      cta_custom_button_text_color_value: company.primary_cta_text_color }) do |form|
+    data: { controller: 'cta' }) do |form|
   
   = hidden_field_tag( \
-      "cta_#{cta.id}[company_attributes][id]", 
-      cta.company.id, 
-      disabled: !cta.primary?, 
+      "cta_#{cta.id}[company_attributes][id]",
+      company.id,
+      disabled: !cta.primary?,
       data: { cta_target: 'companyField' })
 
   .form-group 
@@ -70,19 +67,23 @@
         div
           = color_field_tag( \
               "cta_#{cta.id}[company_attributes][primary_cta_background_color]",
-              cta.company.primary_cta_background_color,
+              company.primary_cta_background_color,
               class: 'form-control',
               disabled: !cta.primary?,
               data: { cta_target: 'customButtonBackgroundColorInput companyField' })
           = label_tag("cta_#{cta.id}[company_attributes][primary_cta_text_color]", 'Text')
           = color_field_tag( \
               "cta_#{cta.id}[company_attributes][primary_cta_text_color]",
-              cta.company.primary_cta_text_color,
+              company.primary_cta_text_color,
               class: 'form-control',
               disabled: !cta.primary?,
               data: { cta_target: 'customButtonTextColorInput companyField' })
-      div style="background-color:#{cta.company.header_color_1}"
-        button.btn.btn-lg.btn-custom type="button" data-cta-target="customButtonDemo"
+      div style="background-color:#{company.header_color_1}"
+        button.btn.btn-lg.btn-custom {
+          type="button" 
+          data-cta-target="customButtonDemo"
+          data-bg-color="#{company.primary_cta_background_color}"
+          data-color="#{company.primary_cta_text_color}" }
           = cta.display_text
     div
       span.help-block CTA button will appear in the header as shown

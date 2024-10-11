@@ -1,5 +1,3 @@
-
-
 #company-nav.unregistered {
   > .container > .row {
     display: flex;
@@ -11,74 +9,23 @@
   }
 }
 
-.company-header__logo {
-  display: flex;
-  align-items: center;
-  padding: 0;
-  img {
-    max-height: $company-logo-max-height;
+.company-header {
+  height: $company-header-height;
+  
+  .container {
+    @include flex-row-center-between;
+    height: 100%;
+    padding: 0;
+    
+    &::before,
+    &::after {
+      content: none;
+    }
   }
 }
 
-.company-header {
-  /* color1, color2, and text color are defined in company model */
-  /* background-color set to transparent in mvpready-admin.css */
-  background-clip: border-box;
-  border: 0;
-  height: $company-header-height;
-  margin-bottom: 0;
-  border-radius: 0;
-  .navbar-container {
-    height: 100%;
-    .row {
-      height: 100%;
-      display: flex;
-      align-items: center;
-
-      // here we are adding an absolutely positioned element for the text
-      // so the btn background can be darkened without darkening text
-      .primary-cta {
-        position: relative;
-        display: inline-block;
-        cursor: pointer;
-        a {
-          text-decoration: none;
-          padding: 12px 32px;  // doubles bootstrap horizontal padding
-          border: 1px solid transparent;
-          transition: filter 0.25s ease;
-          // box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.15), 0 1px 1px rgba(0, 0, 0, 0.075);  // copied from mvp
-          // display text is rendered (but not shown thanks to opacity) in this span
-          // in order to establish button dimensions
-          span {
-            opacity: 0;
-          }
-        }
-        > div:last-child {
-          position: absolute;
-          pointer-events: none;  // allow click to pass through to <a>
-          top: 50%;
-          left: 50%;
-          transform: translate(-50%, -50%);
-          white-space: nowrap;  // ensure button expands with text
-          span {
-            font-weight: 600;
-            letter-spacing: 0.02rem;
-          }
-        }
-        &:hover {
-          a {
-            transition: filter 0.25s ease;
-            filter: brightness(90%);
-            &:active {
-              outline: none;  // get rid of the box shadow on click
-              box-shadow: 0 0;
-              filter: brightness(85%);
-              transition: filter 0s;
-            }
-          }
-        }
-      }
-
-    }
+.company-header__logo {
+  img {
+    max-height: $company-logo-max-height;
   }
 }
