@@ -45,13 +45,6 @@ module ApplicationHelper
     end
   end
 
-  def fixed_navbar? (company, controller, action)
-    company.present? &&
-    ['compas', 'pixlee'].include?(company.subdomain) &&
-    controller == 'stories' &&
-    (action == 'index' || action == 'show')
-  end
-
   def production?
     ENV['HOST_NAME'] == 'customerstories.net'
   end
@@ -71,9 +64,9 @@ module ApplicationHelper
     company.present? && user_signed_in? && (current_user.company_id == company.id)
   end
 
-  def registered_user_without_company?
-    user_signed_in? && current_user.company_id.blank?
-  end
+  # def registered_user_without_company?
+  #   user_signed_in? && current_user.company_id.blank?
+  # end
 
   # method takes a url and strips out the subdomain (as defined by the current request)
   def strip_subdomain url
