@@ -4,6 +4,7 @@ import TomSelect, { tsBaseOptions, addMultiSelectPlaceholder } from '../tomselec
 import type { TomOption, TomItem } from 'tom-select/dist/types/types';
 import { type CBOptions } from 'tom-select/dist/types/plugins/clear_button/types';
 import { init as initStoryCard } from './story_card';
+import { setCustomButtonProps } from '../utils';
 
 export const testExports = { foo }
 
@@ -39,6 +40,14 @@ const replaceStateFn = history.replaceState;
 history.replaceState = (state, title, url) => {
   replaceStateFn.call(history, state, title, url);
   setActiveFilters();
+}
+
+const headerCTA = <HTMLAnchorElement | HTMLButtonElement>(
+  document.querySelector('.company-header .primary-cta a') || document.querySelector('.company-header .primary-cta button')
+);
+if (headerCTA) {
+  setCustomButtonProps(headerCTA);
+  headerCTA.parentElement?.classList.remove('hidden');
 }
 
 function setActiveFilters() {

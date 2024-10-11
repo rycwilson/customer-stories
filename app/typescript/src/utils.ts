@@ -1,4 +1,7 @@
-import bootoast from 'bootoast';
+let bootoast: any;
+if (window.jQuery) import('bootoast').then(_bootoast => bootoast = _bootoast);
+
+import tinycolor from 'tinycolor2';
 
 const baseBootoastOptions = {
   position: 'bottom-center',
@@ -8,7 +11,21 @@ const baseBootoastOptions = {
 };
 
 export function bsToast(type: string, message: string) {
-  bootoast.toast({ ...baseBootoastOptions, type, message });
+  bootoast?.toast({ ...baseBootoastOptions, type, message });
+}
+
+// Using css variables to capture style allows for use of the custom-button-variant mixin,
+// which itself is just a copy of bootstrap's button-variant mixin that has been modified to use css variables.
+// Thus standard bootstrap styling is conserved while allowing for dynamic custom button colors.
+export function setCustomButtonProps(btn: HTMLElement) {
+  const { bgColor, color } = btn.dataset as { bgColor: string, color: string };
+  btn.style.setProperty('--btn-custom-bg', bgColor);
+  btn.style.setProperty('--btn-custom-bg-darken-10', tinycolor(bgColor).darken(10).toString());
+  btn.style.setProperty('--btn-custom-bg-darken-17', tinycolor(bgColor).darken(17).toString());
+  btn.style.setProperty('--btn-custom-border', bgColor);
+  btn.style.setProperty('--btn-custom-border-darken-12', tinycolor(bgColor).darken(12).toString());
+  btn.style.setProperty('--btn-custom-border-darken-25', tinycolor(bgColor).darken(25).toString());
+  btn.style.setProperty('--btn-custom-color', color);
 }
 
 export function parseDatasetObject<Type>(element: HTMLElement, prop: string, ...requiredProps: string[]): Type | null {

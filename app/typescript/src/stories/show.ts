@@ -1,6 +1,7 @@
 import Cookies from 'js-cookie';
 import imagesLoaded from 'imagesloaded';
 import { init as initStoryCard } from './story_card';
+import { setCustomButtonProps } from '../utils';
 
 // TODO replace bootstrap modal with native dialog
 import '../jquery';
@@ -24,6 +25,14 @@ initShareButtons();
 
 const editStoryLink = document.querySelector('.stories-header__edit');
 if (editStoryLink) editStoryLink.addEventListener('click', () => Cookies.set('csp-edit-story-tab', '#story-narrative-content'));
+
+const headerCTA = <HTMLAnchorElement | HTMLButtonElement>(
+  document.querySelector('.company-header .primary-cta a') || document.querySelector('.company-header .primary-cta button')
+);
+if (headerCTA) {
+  setCustomButtonProps(headerCTA);
+  headerCTA.parentElement?.classList.remove('hidden');
+}
 
 function initMoreStories() {
   if (isMobileView() && document.querySelector('.primary-cta-xs')) return false;
