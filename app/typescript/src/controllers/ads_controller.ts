@@ -10,6 +10,7 @@ export default class AdsController extends FormController<AdsController> {
     'defaultImageCard',
     'newImageCard', 
     'newLogoCard',
+    'requirementsHelpBlock'
   ];
   declare readonly shortHeadlineInputTarget: HTMLInputElement;
   declare readonly shortHeadlineSubmitBtnTarget: HTMLButtonElement;
@@ -18,14 +19,17 @@ export default class AdsController extends FormController<AdsController> {
   declare readonly defaultImageCardTargets: HTMLLIElement[];
   declare readonly newImageCardTarget: HTMLLIElement;
   declare readonly newLogoCardTarget: HTMLLIElement;
+  declare readonly requirementsHelpBlockTargets: HTMLSpanElement[];
 
   validatedShortHeadlineHandler = this.onValidatedShortHeadline.bind(this);
+  shownTabHandler = this.onShownTab.bind(this);
 
   connect() {
     super.connect();
 
     // jquery event listeners necessary for hooking into jquery plugin events
     $(this.element)
+      .on('shown.bs.tab', this.shownTabHandler)
       .on('validated.bs.validator', this.validatedShortHeadlineHandler)
       .validator(imageValidatorOptions);
     this.imageRequirementsTargets.forEach(this.initPopover);
@@ -34,6 +38,7 @@ export default class AdsController extends FormController<AdsController> {
   disconnect() {
     super.disconnect();
     $(this.element)
+      .off('shown.bs.tab', this.shownTabHandler)
       .off('validated.bs.validator', this.validatedShortHeadlineHandler)
       .validator('destroy');
   }
@@ -71,6 +76,10 @@ export default class AdsController extends FormController<AdsController> {
       const shouldHideSubmitBtn = $(input).data()['bs.validator.errors'].length || input.value === input.dataset.initialValue;
       this.shortHeadlineSubmitBtnTarget.classList.toggle('hidden', shouldHideSubmitBtn);
     }
+  }
+
+  onShownTab() {
+    this.requirementsHelpBlockTargets.forEach(span => span.classList.toggle('hidden'));
   }
 
   onDeletedImage({ detail: [res, status, xhr] }: { detail: [res: { id: string }, status: string, xhr: XMLHttpRequest] }) {
