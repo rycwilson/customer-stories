@@ -4,11 +4,15 @@ import tinycolor from 'tinycolor2';
 
 export default class CompanyProfileController extends FormController<CompanyProfileController> {
   static targets = [
+    'squareLogoCard',
+    'landscapeLogoCard',
     'companyHeaderDemo', 
     'storiesHeaderDemo', 
     'storiesHeadingDemo', 
     'storiesHeadingColorInput'
   ];
+  declare readonly squareLogoCardTarget: HTMLLIElement;
+  declare readonly landscapeLogoCardTarget: HTMLLIElement;
   declare readonly companyHeaderDemoTarget: HTMLDivElement;
   declare readonly storiesHeaderDemoTarget: HTMLDivElement;
   declare readonly storiesHeadingDemoTarget: HTMLHeadingElement;
@@ -23,22 +27,13 @@ export default class CompanyProfileController extends FormController<CompanyProf
     $(this.element).validator('destroy');
   }
 
-  onAjaxComplete({ detail: [xhr, status] }: { detail: [xhr: XMLHttpRequest, status: string] }) {
-    const { company } = JSON.parse(xhr.response);
-    if (status === 'OK') {
-      if (company.previous_changes.logo_url) {
-        const s3Data = JSON.parse(this.element.dataset.s3 as string);
-        const { s3_direct_post: { fields: postData } } = JSON.parse(xhr.response);
-        this.element.dataset.s3 = JSON.stringify({ ...s3Data, postData });
-        // initS3Upload($(this.element));
-      }
-    } else {
-      // let FormController handle errors
-    }
+  onAjaxSuccess({ detail: [data, status, xhr] }: { detail: [data: any, status: string, xhr: XMLHttpRequest] }) {
+    console.log('company profile', status)
   }
 
-  onUploadReady() {
-    // enable form submit (square required, landscape is not)
+  onUploadReady({ detail: { card } }: { detail: { card: HTMLLIElement } }) {
+    console.log('card', card)
+    card.classList.remove('image-card--uploading');
   }
 
   onInputCompanyHeaderBackgroundColor({ target: input }: { target: HTMLInputElement }) {
