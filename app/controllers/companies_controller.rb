@@ -78,17 +78,15 @@ class CompaniesController < ApplicationController
         end
       else
         respond_to do |format|
-          format.json do
-            render(
-              json: { 
-                company: @company.as_json(only: [], methods: [:previous_changes]), 
-                s3_direct_post: { fields: @s3_direct_post.fields }
-              }
-            )
+          format.html do
+            toast = { type: 'success', message: 'Account settings updated successfully' }
+            render(partial: 'companies/settings/company_profile', locals: { company: @company, toast: })
           end
         end
       end
     else
+      # "Adwords images media can't be blank" => error uploading to s3
+      # "Adwords images image_url can't be blank" => error uploading to browser
       puts @company.errors.full_messages
       # @flash = { mesg: @company.errors.full_messages.join(', '), status: 'danger' }
     end
@@ -198,9 +196,11 @@ class CompaniesController < ApplicationController
     params.require(:company).permit(
       :name, 
       :subdomain, 
-      :logo_url, 
-      :website, 
-      :gtm_id, 
+      :website,
+      :logo_url,
+      :square_logo_url,
+      :landscape_logo_url,
+      :gtm_id,
       :header_color_1, 
       :header_color_2, 
       :header_text_color, 
