@@ -63,14 +63,11 @@ export default class FormController<Ctrl extends SubclassController> extends Con
   declare readonly hasContributorSelectTarget: boolean;
   declare readonly hasReferrerSelectTarget: boolean;
 
-  declare readonly s3FileInputTargets: HTMLInputElement[];
-
   declare initialState: string;
 
   connect(this: Ctrl) {
     this.removeErrorsOnValidInput();
     this.initialState = serializeForm(this.element);
-    // this.s3FileInputTargets.forEach(initS3FileInput);
   }
 
   validate(e: CustomEvent) {
