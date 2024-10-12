@@ -13,7 +13,7 @@ export default class extends Controller {
       const item = <HTMLAnchorElement>this.element.querySelector(`a[href="#edit-cta-${id}"]`);
       item.nextElementSibling?.remove();
       item.remove();
-      window.scrollTo(0, 0);
+      // window.scrollTo(0, 0);
     }
   }
 }

@@ -77,7 +77,7 @@ export default class CompanySettingsController extends Controller {
   }
 
   onCtasFrameLoad(e: Event) {
-    window.scrollTo(0, 0);
+    // window.scrollTo(0, 0);
     if (this.modalOutlet.element.classList.contains('in')) this.modalOutlet.hide();
   }
   
@@ -95,7 +95,7 @@ export default class CompanySettingsController extends Controller {
         })
         .on('shown.bs.tab', (e: JQuery.TriggeredEvent) => {
           const tabHash = e.target.hash;
-          window.scrollTo(0, 0);
+          // window.scrollTo(0, 0);
           // window.addEventListener('scroll', (e) => { window.scrollTo(0, 0) }, { once: true });
           Cookies.set('csp-company-settings-tab', tabHash);
         });
