@@ -211,6 +211,6 @@ export default class ImageCardController extends Controller<HTMLLIElement> {
   }
 
   get formOutlet() {
-    return this.hasAdsOutlet ? this.adsOutlet : this.companyProfileOutlet;
+    return this.hasAdsOutlet ? this.adsOutlet : (this.hasCompanyProfileOutlet ? this.companyProfileOutlet : null);
   }
 }
