@@ -1,97 +1,100 @@
 - is_dashboard = workflow_stage.present?
 
-nav#company-nav.hidden-xs class="#{'unregistered' unless company&.persisted?}"
-  .container.company-nav-container
-    .row
-      .col-sm-8.col-md-9
-        - if controller_name == 'profile' && !current_user.company_registered?
-          span Are you a Customer Reference Program Manager?
-          |&nbsp;&nbsp;
-          = link_to('Register your Company', register_company_path)
-        - else
-          / https://stackoverflow.com/questions/556153
-          ul.nav.nav-tabs.nav-workflow data-controller="nav-list" role="tablist" data-turbo=('false' if is_dashboard)
-            - ['prospect', 'curate', 'story', 'promote', 'measure'].each do |tab_name|
-              li {
-                class=('active' if workflow_stage == tab_name)
-                class=('hidden' if (tab_name == 'story' && @story.nil?) || (tab_name != 'story' && @story.present?))
-                role="presentation" }
-                / 
-                a {
-                  href="#{is_dashboard ? '#' : '/'}#{tab_name == 'story' ? 'curate' : tab_name}" 
-                  data-toggle=('tab' if is_dashboard) 
-                  data-action=('dashboard#onTabClick' if is_dashboard)
-                  data-dashboard-target=('tab' if is_dashboard)
-                  data-nav-list-target="tab"
-                  aria-controls=((tab_name == 'story' ? 'curate' : tab_name) if is_dashboard)
-                  aria-expanded=((workflow_stage == tab_name ? 'true' : 'false') if is_dashboard)
-                  role=('tab' if is_dashboard) }
-                  = tab_name.capitalize
-                - if workflow_stage == 'story'
-                  i.fa.fa-chevron-right
-                  span = @story.customer.name
-                  i.fa.fa-chevron-right
-                  span = @story.title
+nav.company-nav.hidden-xs class="#{'unregistered' unless company&.persisted?}"
+  .container
+    
+    - if controller_name == 'profile' && !current_user.company_registered?
+      span Are you a Customer Reference Program Manager?
+      |&nbsp;&nbsp;
+      = link_to('Register your Company', register_company_path)
+    - else
+      / https://stackoverflow.com/questions/556153
+      ul.nav.nav-tabs.nav-workflow data-controller="nav-list" role="tablist" data-turbo=('false' if is_dashboard)
+        - ['prospect', 'curate', 'story', 'promote', 'measure'].each do |tab_name|
+          li {
+            class=('active' if workflow_stage == tab_name)
+            class=('hidden' if (tab_name == 'story' && @story.nil?) || (tab_name != 'story' && @story.present?))
+            role="presentation" }
+            / 
+            a {
+              href="#{is_dashboard ? '#' : '/'}#{tab_name == 'story' ? 'curate' : tab_name}" 
+              data-toggle=('tab' if is_dashboard) 
+              data-action=('dashboard#onTabClick' if is_dashboard)
+              data-dashboard-target=('tab' if is_dashboard)
+              data-nav-list-target="tab"
+              aria-controls=((tab_name == 'story' ? 'curate' : tab_name) if is_dashboard)
+              aria-expanded=((workflow_stage == tab_name ? 'true' : 'false') if is_dashboard)
+              role=('tab' if is_dashboard) }
+              = tab_name.capitalize
+            - if workflow_stage == 'story'
+              i.fa.fa-chevron-right
+              span = @story.customer.name
+              i.fa.fa-chevron-right
+              span = @story.title
 
-      .col-sm-4.col-md-3
-        ul.nav.nav-tabs.nav-settings.pull-right role="tablist"
-          li.dropdown.user-profile class="#{'active' if controller_name == 'profile'}"
-            a.dropdown-toggle data-toggle="dropdown" href="javascript:;"
-              i.fa.fa-fw.fa-user-circle-o
-              i.fa.fa-caret-down
+    ul.nav.nav-tabs.nav-settings role="tablist"
+      li.dropdown.user-profile class="#{'active' if controller_name == 'profile'}"
+        a.dropdown-toggle data-toggle="dropdown" href="javascript:;"
+          i.fa.fa-fw.fa-user-circle-o
+          i.fa.fa-caret-down
 
-            ul.dropdown-menu.dropdown-menu-right role="menu"
-              - if curator?(company)
-                li
-                  a href="/user-profile"
-                    i.fa.fa-fw.fa-user-circle-o
-                    = current_user.full_name
-              - else
-                li
-                  = link_to(edit_profile_no_company_path) do
-                    i.fa.fa-fw.fa-user-circle-o
-                    = current_user.full_name
-              / <li role="separator" class="divider"></li>
-              li
-                = link_to(destroy_user_session_path, method: :delete) do
-                  i.fa.fa-fw.fa-sign-out
-                  | Sign out
-            div
-            
-          li.dropdown.company-settings class="#{'active' if current_page?(controller: 'companies', action: 'edit')}"
-            a.dropdown-toggle data-toggle="dropdown" href="javascript:;" 
+        ul.dropdown-menu.dropdown-menu-right role="menu"
+          - if curator?(company)
+            li
+              a href="/user-profile"
+                i.fa.fa-fw.fa-user-circle-o
+                = current_user.full_name
+          - else
+            li
+              = link_to(edit_profile_no_company_path) do
+                i.fa.fa-fw.fa-user-circle-o
+                = current_user.full_name
+          / <li role="separator" class="divider"></li>
+          li
+            = link_to(destroy_user_session_path, method: :delete) do
+              i.fa.fa-fw.fa-sign-out
+              | Sign out
+        div
+        
+      li.dropdown.company-settings {
+        class=('active' if current_page?(controller: 'companies', action: 'edit'))
+        class=('has-image' if company.square_logo_url.present?) }
+        a.dropdown-toggle data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false"
+          - if company.square_logo_url.present?
+            = image_tag(company.square_logo_url, alt: "#{company.name} Logo")
+          - else 
+            i.fa.fa-fw.fa-gear
+          i.fa.fa-caret-down
+        ul.dropdown-menu.dropdown-menu-right role="menu"
+          li.dropdown-header
+            = company.name
+          li.divider role="separator"
+          li 
+            a href="/settings#customers"
+              i.fa.fa-fw.fa-handshake-o 
+              | Customers
+          li
+            a href="/settings#contributor-invitations"
+              i.fa.fa-fw.fa-envelope-o
+              | Contributor Invitations
+          li
+            a href="/settings#contributor-prompts"
+              i.fa.fa-fw.fa-lightbulb-o
+              | Contributor Prompts
+          li
+            a href="/settings#website-plugin"
+              i.fa.fa-fw.fa-plug
+              | Website Plugin
+          li
+            a href="/settings#cta-links-forms"
+              i.fa.fa-fw.fa-hand-pointer-o
+              | CTA Links & Forms
+          li
+            a href="/settings#story-tags"
+              i.fa.fa-fw.fa-tags
+              | Story Tags
+          li
+            a href="/settings#account"
               i.fa.fa-fw.fa-gear
-              i.fa.fa-caret-down
-            ul.dropdown-menu.dropdown-menu-right role="menu"
-              li.dropdown-header
-                = company.name
-              li.divider role="separator"
-              li 
-                a href="/settings#customers"
-                  i.fa.fa-fw.fa-handshake-o 
-                  | Customers
-              li
-                a href="/settings#contributor-invitations"
-                  i.fa.fa-fw.fa-envelope-o
-                  | Contributor Invitations
-              li
-                a href="/settings#contributor-prompts"
-                  i.fa.fa-fw.fa-lightbulb-o
-                  | Contributor Prompts
-              li
-                a href="/settings#website-plugin"
-                  i.fa.fa-fw.fa-plug
-                  | Website Plugin
-              li
-                a href="/settings#cta-links-forms"
-                  i.fa.fa-fw.fa-hand-pointer-o
-                  | CTA Links & Forms
-              li
-                a href="/settings#story-tags"
-                  i.fa.fa-fw.fa-tags
-                  | Story Tags
-              li
-                a href="/settings#account"
-                  i.fa.fa-fw.fa-gear
-                  | Account Settings
-            div
+              | Account Settings
+        /div

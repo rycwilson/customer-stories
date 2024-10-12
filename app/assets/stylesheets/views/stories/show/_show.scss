@@ -547,7 +547,7 @@
   }
 
   @media only screen and (min-width: 1200px) {
-    .container:not(.navbar-container):not(.company-nav-container), .cs-container {
+    .container:not(.navbar-container), .cs-container {
       width: 1120px;
     }
     .testimonial, .cs-testimonial {

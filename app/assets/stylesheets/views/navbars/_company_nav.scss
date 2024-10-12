@@ -1,11 +1,16 @@
-#company-nav {
+.company-nav {
   margin-bottom: 40px;
-  background-color: #fff;
   border-bottom: 1px solid #dfdfdf;
-  // padding-top: 7px;
+  background-color: #fff;
 
-  .row {
-    @include flex-row-center;
+  .container {
+    display: flex;
+    justify-content: space-between;
+
+    &::before,
+    &::after {
+      content: none;
+    }
   }
 
   &.unregistered {
@@ -15,123 +20,156 @@
     }
   }
 
-  .nav-tabs > li {
-    > a {
-      padding: 0.7em 0.9em 0.6em;
-      font-size: 1.25em;
+  .nav-tabs {
+    border: none;
 
-      &.dropdown-toggle {
-        > :first-child {
-          margin-right: 0.35em;
-        }
-      }
-    }
+    > li {
+      margin-bottom: 0;
 
-    &,
-    &.dropdown {
-      > a, 
-      > a:hover, 
-      > a:focus {
-        border: {
-          width: 0.15em 0;
-          style: solid;
-          color: transparent;
+      > a {
+        padding: 0.7em 0.8em 0.6em;
+        font-size: 1.25em;
+    
+        &, 
+        &:hover, 
+        &:focus {
+          border: {
+            width: 0.15em 0;
+            style: solid;
+            color: transparent;
+          }
         }
+
+        &.dropdown-toggle {
+          > :first-child {
+            margin-right: 0.35em;
+          }
+    
+          &:has(img) {
+            padding-top: 0;
+            padding-bottom: 0;
+          }
+        }
+        
       }
 
       &:not(.active) {
         > a {
-          color: #666;
+          color: $gray;
+          font-weight: 400;
         }
         
         > a:hover, 
         > a:focus,
         &.open:not(.active) > a {
-          color: #222;
+          color: $gray-darker;
+        }
+      }
+
+      &.active {
+        > a, 
+        > a:hover, 
+        > a:focus {
+          color: $nav-blue; 
+          border-bottom-color: $nav-blue;
+          font-weight: bold;
         }
       }
     }
 
-    &.active {
-      > a, 
-      > a:hover, 
-      > a:focus {
-        color: $nav-blue; 
-        border-bottom-color: $nav-blue;
-        font-weight: bold;
+    &.nav-workflow {
+      display: flex;
+      justify-content: space-between;
+      width: 29em;
+      
+      // this removes space from left and right edge
+      &::before,
+      &::after {
+        content: none;
+      }
+      
+      [data-dashboard-active-tab-value="story"] & {
+        display: block;
+        width: auto;
+      }
+
+      > li {
+        > a {
+          display: inline-block;
+          font-family: 'Lato';
+      
+          ~ i {
+            font-size: 0.85em;
+            color: $nav-blue;
+          }
+        
+          ~ span {
+            font-size: $font-size-base;
+          }
+        
+          ~ i,
+          ~ span {
+            margin-right: 1em
+          }
+        }
+      }
+    }
+
+    &.nav-settings {
+      > li {
+        > a.dropdown-toggle {
+          display: flex;
+          align-items: center;
+          height: 52.75px;    // matches workflow tab height;
+          padding-top: 0.1em; // matches workflow padding disparity (0.7em - 0.6em)
+          padding-bottom: 0;
+          
+          img {
+            height: 90%;
+            opacity: 0.85;
+          }
+
+          &:hover,
+          &:focus {
+            img {
+              opacity: 1;
+            }
+          }
+        }
+
+        &.active > a > img {
+          opacity: 1;
+        }
       }
     }
   }
 }
 
-.nav-tabs.nav-workflow {
-  @include flex-row-center-between;
-  width: 30em;
-  border-bottom: 0;
+// .nav-tabs.nav-settings {
+  // @mixin tab-arrows($width) {
+  //   > div {
+  //     visibility: hidden;
+  //     position: absolute; 
+  //     bottom: -6px; 
+  //     width: 0;
+  //     height: 0;
+  //     border-top: 6px solid $nav-blue;
+  //     border-left: ($width / 2 + 0px) solid transparent; 
+  //     border-right: ($width / 2 + 0px) solid transparent; 
+  //   }
+  //   &.active > div {
+  //     // visibility: visible;  // temporarily hidden
+  //   }
+  // }
 
-  // this removes space from left and right edge
-  &::before,
-  &::after {
-    content: none;
-  }
+  // li.dropdown {
+  //   @include tab-arrows(64);  
 
-  [data-dashboard-active-tab-value="story"] & {
-    display: block;
-    width: auto;
-  }
-
-  > li {
-    margin-bottom: 0;
-
-    > a {
-      display: inline-block;
-      font-family: 'Lato';
-      font-weight: 400;
-
-      ~ i {
-        font-size: 0.85em;
-        color: $nav-blue;
-      }
-    
-      ~ span {
-        font-size: $font-size-base;
-      }
-    
-      ~ i,
-      ~ span {
-        margin-right: 1em
-      }
-    }
-  }
-}
-
-.nav-tabs.nav-settings {
-  @mixin tab-arrows($width) {
-    > div {
-      visibility: hidden;
-      position: absolute; 
-      bottom: -6px; 
-      width: 0;
-      height: 0;
-      border-top: 6px solid $nav-blue;
-      border-left: ($width / 2 + 0px) solid transparent; 
-      border-right: ($width / 2 + 0px) solid transparent; 
-    }
-    &.active > div {
-      // visibility: visible;  // temporarily hidden
-    }
-  }
-
-  border: 0;
-
-  li.dropdown {
-    @include tab-arrows(64);  
-
-    // &.open:not(.active) {
-      // remove the caret from dropdown
-      // .dropdown-menu::after, .dropdown-menu::before {
-      //   display:none;
-      // }
-    // }
-  }
-}
+  //   // &.open:not(.active) {
+  //     // remove the caret from dropdown
+  //     // .dropdown-menu::after, .dropdown-menu::before {
+  //     //   display:none;
+  //     // }
+  //   // }
+  // }
+// }

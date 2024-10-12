@@ -89,12 +89,12 @@ ul.dropdown-menu {
     font-family: $company-title-font;
     border-radius: 0; 
     padding: 0.85em 2em 0.85em 1.4em;
-    color: $gray-light;
+    color: $gray;
 
     &:hover, 
     &:focus {
       background-color: $blueish-gray-lighter;
-      color: $gray; 
+      color: $gray-darker; 
     }
   }
 
