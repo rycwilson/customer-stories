@@ -20,7 +20,7 @@ main.container.hidden-xs {
       role="tablist" }
       - unless action_name == 'new'
 
-        li role="presentation"
+        /li role="presentation"
           a {
             href="#customers-panel"
             class=('disabled-tab' if @company.new_record?)
@@ -99,7 +99,7 @@ main.container.hidden-xs {
 
       - unless action_name == 'new'
 
-        #customers-panel.tab-pane role="tabpanel"
+        /#customers-panel.tab-pane role="tabpanel"
           = render('customers', company: @company)
           
         #contributor-invitations-panel.tab-pane role="tabpanel"
