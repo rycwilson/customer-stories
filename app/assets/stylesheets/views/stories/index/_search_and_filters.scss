@@ -201,17 +201,9 @@
 
 .search-and-filters.visible-md-block {
   float: left;
-  background-color: $blueish-gray-lighter;
+  width: 282px;
   padding: 20px 15px;
-
-  .stories.index & {
-    width: 282px;
-  }
-
-  .companies.show & {
-    flex: 0 0 282px;
-  }
-
+  background-color: $blueish-gray-lighter;
 
   .form-group:last-of-type {
     margin-bottom: 5px;
