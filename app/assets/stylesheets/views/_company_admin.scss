@@ -1,23 +1,44 @@
 @import './adwords_images/card';
 
-.dashboard > .tab-content > .tab-pane,
+body {
+  padding-top: 8.5rem;
+}
+
+.dashboard > .tab-content > .tab-pane:not(#curate),
 .companies.edit,
 .profile.edit,
 .stories.edit #story {
   > .container {
     display: flex;
+    align-items: flex-start;
+    min-height: 100vh;
   }
 }
 
+.layout-sidebar,
 .layout-main {
+  position: sticky;
+  // top: 1rem;
+  // top: 8.5rem;
+  transition: top 0.2s ease-out, opacity .15s ease-out;
+
+  // &.layout-sidebar.collapse-header {
+  //   top: 1rem;
+  //   transition: top 0.2s ease-in;
+  // }
+}
+
+.layout-main {
+  top: 1rem;
   flex-grow: 1;
   margin-left: 1.5rem;
-  padding-bottom: 100px;
+  padding-bottom: 10rem;
 }
 
 .layout-sidebar {
-  margin-right: 1.5rem;
+  top: 54px;
   flex: 0 0 260px;
+  margin-right: 1.5rem;
 
   .nav {
     > li {
@@ -26,7 +47,7 @@
       > a {
         display: flex;
         align-items: center;
-        height: 56px;
+        height: 3.75em;
         border-left: 2px solid transparent;
         padding: 10px 20px;
         // font-family: 'Lato';
@@ -42,7 +63,7 @@
         &:focus {
           background-color: darken($blueish-gray-lighter, 4%);
           border-left: 2px solid darken($blueish-gray-lighter, 4%);
-          color: darken($gray, 10%);
+          color: $gray-darker; //darken($gray, 10%);
         }
       }
       
@@ -65,7 +86,7 @@
 }
 
 .form-horizontal {
-  padding-top: 1.5rem;
+  padding-top: 1rem;
 }
 
 .admin-sidebar {
