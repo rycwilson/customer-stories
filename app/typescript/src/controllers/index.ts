@@ -58,6 +58,9 @@ application.register('datatable-row', DatatableRowController);
 import FormController from './form_controller.js';
 application.register('form', FormController);
 
+import HeaderController from './header_controller.js';
+application.register('header', HeaderController);
+
 import ImageCardController from './image_card_controller.js';
 application.register('image-card', ImageCardController);
 

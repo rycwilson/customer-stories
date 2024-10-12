@@ -1,7 +1,11 @@
 .company-nav {
-  margin-bottom: 40px;
   border-bottom: 1px solid #dfdfdf;
   background-color: #fff;
+  transition: top 0.2s ease-in;
+
+  &.collapse-header {
+    top: -54px;
+  }
 
   .container {
     display: flex;

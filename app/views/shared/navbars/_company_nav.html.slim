@@ -1,6 +1,6 @@
 - is_dashboard = workflow_stage.present?
 
-nav.company-nav.hidden-xs class="#{'unregistered' unless company&.persisted?}"
+nav.company-nav.navbar-fixed-top.hidden-xs data-controller="header" class="#{'unregistered' unless company&.persisted?}"
   .container
     
     - if controller_name == 'profile' && !current_user.company_registered?
@@ -69,7 +69,7 @@ nav.company-nav.hidden-xs class="#{'unregistered' unless company&.persisted?}"
           li.dropdown-header
             = company.name
           li.divider role="separator"
-          li 
+          /li 
             a href="/settings#customers"
               i.fa.fa-fw.fa-handshake-o 
               | Customers
