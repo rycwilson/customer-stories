@@ -316,7 +316,7 @@
 // https://loading.io/css/
 @mixin lds-ring($size) {
   $margin: round($size * .5);
-  $thickness: round($size * .1);
+  $thickness: round($size * .075);
 
   > .lds-ring {
     display: inline-block;

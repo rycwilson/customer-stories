@@ -57,31 +57,23 @@ turbo-frame[data-modal-target="turboFrame"] {
   > .spinner,
   .layout-sidebar,
   .layout-main {
-    visibility: hidden;
     opacity: 0;
   }
 
   &.loading > .spinner,
   &.ready .layout-sidebar,
   &.ready .layout-main {
-    visibility: visible;
     opacity: 1;
   }
 
   &.loading > .spinner {
-    transition: opacity 0.15s ease-out;   // matches bootstrap .fade transition
+    transition: opacity .15s ease-out;   // matches bootstrap .fade transition
   }
 
   &.ready {
     > .spinner {
-      visibility: hidden;
       opacity: 0;
-      transition: opacity 0.15s ease-in;
-    }
-    
-    .layout-sidebar,
-    .layout-main {
-      transition: opacity 0.15s ease-out;
+      transition: opacity 0s step-end;
     }
   } 
 }
@@ -93,5 +85,4 @@ ul.image-cards {
   justify-content: center;
   padding: 0;
   margin: 0;
-
 }
