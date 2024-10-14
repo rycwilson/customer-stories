@@ -6,7 +6,7 @@ import tinycolor from 'tinycolor2';
 const baseBootoastOptions = {
   position: 'bottom-center',
   timeout: 3,
-  animationDuration: 200,
+  animationDuration: 150,
   dismissable: true
 };
 

@@ -20,7 +20,7 @@ body {
   position: sticky;
   // top: 1rem;
   // top: 8.5rem;
-  transition: top 0.2s ease-out, opacity .15s ease-out;
+  transition: top 0.15s ease-out, opacity .15s ease-out;
 
   // &.layout-sidebar.collapse-header {
   //   top: 1rem;
@@ -36,7 +36,8 @@ body {
 }
 
 .layout-sidebar {
-  top: 54px;
+  // top: calc(#{1rem} + 54px);
+  top: 8.5rem;
   flex: 0 0 260px;
   margin-right: 1.5rem;
 

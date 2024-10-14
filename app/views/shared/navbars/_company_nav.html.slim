@@ -57,8 +57,7 @@ nav.company-nav.navbar-fixed-top.hidden-xs data-controller="header" class="#{'un
         div
         
       li.dropdown.company-settings {
-        class=('active' if current_page?(controller: 'companies', action: 'edit'))
-        class=('has-image' if company.square_logo_url.present?) }
+        class=('active' if current_page?(controller: 'companies', action: 'edit')) }
         a.dropdown-toggle data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false"
           - if company.square_logo_url.present?
             = image_tag(company.square_logo_url, alt: "#{company.name} Logo")
