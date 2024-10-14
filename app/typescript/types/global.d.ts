@@ -26,6 +26,7 @@ interface Window {
 interface CustomerStoriesApp {
   customerWins: CustomerWin[] | undefined;
   contributions: Contribution[] | undefined;
+  stories: Story[] | undefined;
   storyContributions: { [key: number]: Contribution[] };
   promotedStories: PromotedStory[] | undefined;
   currentUser: User | null;
@@ -35,7 +36,7 @@ interface CustomerStoriesApp {
 }
 
 type ScreenSize = 'xs' | 'sm' | 'md-lg';
-type ResourceName = 'customerWins' | 'contributions' | 'storyContributions' | 'promotedStories';
+type ResourceName = 'customerWins' | 'contributions' | 'storyContributions' | 'stories' | 'promotedStories';
 type TomSelectInput = HTMLSelectElement & TomInput;
 type SelectInputKind = 'filter' | 'curator' | 'status' | 'customer' | 'category' | 'product' | 'storyTag' | 'contributor' | 'referrer' | 'invitationTemplate' | 'story';
 type AdImageKind = 'SquareImage' | 'LandscapeImage' | 'SquareLogo' | 'LandscapeLogo';

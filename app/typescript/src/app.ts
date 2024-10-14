@@ -24,6 +24,7 @@ function appFactory(): CustomerStoriesApp {
   return {
     customerWins: undefined,
     contributions: undefined,
+    stories: undefined,
     storyContributions: {},
     promotedStories: undefined,
     currentUser: parseDatasetObject(document.body, 'currentUser', 'id', 'full_name'),
@@ -33,9 +34,6 @@ function appFactory(): CustomerStoriesApp {
       Rails.start();
       turboStart();
       addTurboListeners();
-      // document.documentElement.addEventListener('turbo:load', (e) => {
-        // initView(controller, action);
-      // }, { once: true });
     }
   }
 }

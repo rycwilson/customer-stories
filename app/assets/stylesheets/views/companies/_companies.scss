@@ -27,7 +27,6 @@ td[data-controller="dropdown"] .dropdown-menu {
   }
 }
 
-
 turbo-frame[data-modal-target="turboFrame"] {
   @include spinner('md');
 
@@ -42,40 +41,39 @@ turbo-frame[data-modal-target="turboFrame"] {
 }
 
 #prospect,
+#curate,
 #story,
 #promote {
   @include spinner('lg');
-  position: relative;
 
   > .spinner {
-    position: absolute;
-    top: 0;
+    position: fixed;
+    top: 8.5rem;
     right: 0;
     left: 0;
+
+    .loading > & {
+      transition: opacity .15s ease-out;
+    }
+
+    .ready > & {
+      visibility: hidden;
+      opacity: 0;
+      transition: opacity 0s step-end;
+    }
   }
 
   > .spinner,
-  .layout-sidebar,
-  .layout-main {
+  > .container {
+    visibility: hidden;
     opacity: 0;
   }
 
   &.loading > .spinner,
-  &.ready .layout-sidebar,
-  &.ready .layout-main {
+  &.ready > .container {
+    visibility: visible;
     opacity: 1;
   }
-
-  &.loading > .spinner {
-    transition: opacity .15s ease-out;   // matches bootstrap .fade transition
-  }
-
-  &.ready {
-    > .spinner {
-      opacity: 0;
-      transition: opacity 0s step-end;
-    }
-  } 
 }
 
 ul.image-cards {

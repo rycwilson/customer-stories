@@ -115,12 +115,14 @@ export default class ResourceController extends Controller<HTMLDivElement> {
     searchTable(this);
   }
 
-  tableConfig(): Config {
+  tableConfig(): Config | undefined {
     switch (this.resourceName) {
       case 'customerWins':
         return customerWinsTableConfig();
       case 'contributions':
         return contributorsTableConfig(this.invitationTemplateSelectHtmlValue);
+      case 'stories':
+        return undefined;
       case 'storyContributions':
         return contributorsTableConfig(this.invitationTemplateSelectHtmlValue, +(this.element.dataset.storyId as string));
       case 'promotedStories':

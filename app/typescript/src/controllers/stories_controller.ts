@@ -28,17 +28,22 @@ export default class extends Controller<HTMLDivElement> {
   declare readonly filterSelectTargets: TomSelectInput[];
   
   readyFilters = 0;
+  frameObserver = new MutationObserver((mutations) => {
+    if (this.turboFrameTarget.hasAttribute('busy')) {
+      this.dispatch('loading');
+      this.frameObserver.disconnect();
+    }
+  });
 
   connect() {
-    // console.log('connect stories')
-    
-    // document.documentElement.addEventListener('turbo:frame-render', this.onGalleryRender.bind(this));
+    this.frameObserver.observe(this.turboFrameTarget, { attributes: true });
     this.turboFrameTarget.addEventListener('turbo:frame-render', this.onRenderStories.bind(this));
   }
   
   disconnect() {
     // no need for this since listener is attached to the frame (which will disappear along with its listeners when this disconnects)
     // document.documentElement.removeEventListener('turbo:frame-render', this.onGalleryRender.bind(this));
+    this.frameObserver.disconnect();
   }
   
   get activeFilters() {
@@ -54,7 +59,6 @@ export default class extends Controller<HTMLDivElement> {
     if (this.turboFrameTarget.src) {
       const newSrc = new URL(this.turboFrameTarget.src);
       if (updateSearchParams) updateSearchParams(newSrc);
-      // console.log('fetching', newSrc.toString())
       this.turboFrameTarget.src = newSrc.toString();
     }
   }
@@ -134,7 +138,10 @@ export default class extends Controller<HTMLDivElement> {
   
   onRenderStories(e: Event) {
     // const frame = e.target as FrameElement;
-    imagesLoaded('#stories-gallery', (instance) => this.galleryTarget.classList.remove('hidden'));
+    imagesLoaded('#stories-gallery', (instance) => {
+      this.galleryTarget.classList.remove('hidden');
+      this.dispatch('ready', { detail: { resourceName: 'stories' } });
+    })
     const showResults = (target: HTMLSpanElement) => {
       const results = this.cardTargets.length;
       target.textContent = `${results} ${results === 1 ? 'story' : 'stories'}`;

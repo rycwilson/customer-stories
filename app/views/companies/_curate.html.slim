@@ -1,7 +1,10 @@
 #curate.tab-pane {
-  class=('active in' if workflow_stage == 'curate')
+  class=('active' if workflow_stage == 'curate')
   data-dashboard-target="tabPanel"
+  data-action="stories:loading->dashboard#onResourceLoading stories:ready->dashboard#onResourceReady"
   role="tabpanel" }
+
+  = render('shared/loading_spinner')
 
   .container {
     data-controller="stories" 

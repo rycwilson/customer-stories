@@ -65,34 +65,32 @@ export default class DashboardController extends Controller<HTMLDivElement> {
   declare activeTabValue: DashboardTab | null;
   
   tabRestorationListener = this.onTabRestoration.bind(this);
-  spinnerTimers: Record<DashboardTab.Prospect | 'story' | DashboardTab.Promote, number> = { 
-    prospect: 0, 
+  spinnerTimers: { [key: string]: number } = { 
+    prospect: 0,
+    curate: 0,
     story: 0, 
     promote: 0 
   };
   readyState: ReadyState = new Proxy(
-    { customerWins: false, contributions: false, storyContributions: false, promotedStories: false },
+    { customerWins: false, contributions: false, stories: false, storyContributions: false, promotedStories: false },
     { set: this.onReadyStateChange.bind(this) }
   )
 
   initialize() {
-    // console.log('init dashbaord')
   }
   
   connect() {
-    // console.log('connect dashboard')
     addEventListener('popstate', this.tabRestorationListener);
     document.documentElement.addEventListener('turbo:visit', this.tabRestorationListener)
   }
 
   disconnect() {
-    // console.log('disconnect dashboard')
     removeEventListener('popstate', this.tabRestorationListener);
     document.documentElement.removeEventListener('turbo:visit', this.tabRestorationListener)
   }
 
   onResourceLoading({ currentTarget: tabPanel }: { currentTarget: HTMLDivElement }) {
-    window.setTimeout(() => tabPanel.classList.add('loading'), 1000);
+    this.spinnerTimers[tabPanel.id] = window.setTimeout(() => tabPanel.classList.add('loading'), 1000);
   }
 
   onResourceReady({ detail: { resourceName } }: { detail: { resourceName: ResourceName }}) {
@@ -105,9 +103,8 @@ export default class DashboardController extends Controller<HTMLDivElement> {
     resourceName: ResourceName, 
     isReady: boolean
   ) {
-    const setReady = (containerId: DashboardTab.Prospect | 'story' | DashboardTab.Promote) => {
+    const setReady = (containerId: DashboardTab.Prospect | DashboardTab.Curate | 'story' | DashboardTab.Promote) => {
       const container = containerId === 'story' ? this.storyTarget : this.getTabPanel(containerId);
-      // console.log(`${panel.id} is ready`)
       window.clearTimeout(this.spinnerTimers[containerId]);
       container.classList.remove('loading');
       container.classList.add('ready');
@@ -116,6 +113,8 @@ export default class DashboardController extends Controller<HTMLDivElement> {
     resources[resourceName] = isReady;
     if (/customerWins|contributions/.test(resourceName) && resources.customerWins && resources.contributions) {
       setReady(DashboardTab.Prospect);
+    } else if (resourceName === 'stories') {
+      setReady(DashboardTab.Curate);
     } else if (resourceName === 'storyContributions') {
       setReady('story');
     } else if (resources.promotedStories) {
@@ -135,9 +134,7 @@ export default class DashboardController extends Controller<HTMLDivElement> {
   }
 
   activeTabValueChanged(activeTab: DashboardTab) {
-    // console.log('dashboard.activeTab:', activeTab || typeof activeTab)
     if (activeTab) {
-      this.tabContentTarget.classList.remove('hidden');
       this.initTabPanel(activeTab);
     }
   }
@@ -210,12 +207,6 @@ export default class DashboardController extends Controller<HTMLDivElement> {
   }
 
   initTabPanel(tab: DashboardTab) {
-    if (tab === DashboardTab.Prospect || tab === DashboardTab.Promote) {
-      this.spinnerTimers[tab] = window.setTimeout(() => {
-        // console.log(`${tab} is loading`)
-        this.getTabPanel(tab).classList.add('loading');
-      }, 1000);
-    }
     if (tab === DashboardTab.Prospect) {
       this.customerWinsTarget.setAttribute('data-resource-init-value', 'true');
       this.contributorsTarget.setAttribute('data-resource-init-value', 'true');
