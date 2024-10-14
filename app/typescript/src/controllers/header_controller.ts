@@ -5,6 +5,7 @@ export default class HeaderController extends Controller<HTMLElement>{
   scrollHandler = this.onScroll.bind(this);
   minScroll = 10;
   isScrolling = false;
+  minScrollTop = 300;
   lastScrollTop = 0;
 
   connect() {
@@ -19,11 +20,12 @@ export default class HeaderController extends Controller<HTMLElement>{
     const scrollTop = window.scrollY;
     if (Math.abs(this.lastScrollTop - scrollTop) <= this.minScroll) return false;
     if (scrollTop > this.lastScrollTop && scrollTop > this.element.offsetHeight) {
+      if (scrollTop < this.minScrollTop) return false;
       this.element.classList.add('collapse-header');
-      document.querySelectorAll('.layout-sidebar')?.forEach(sidebar => sidebar.classList.add('collapse-header'));
+      // document.querySelectorAll('.layout-sidebar')?.forEach(sidebar => sidebar.classList.add('collapse-header'));
     } else {
       this.element.classList.remove('collapse-header');
-      document.querySelectorAll('.layout-sidebar')?.forEach(sidebar => sidebar.classList.remove('collapse-header'));
+      // document.querySelectorAll('.layout-sidebar')?.forEach(sidebar => sidebar.classList.remove('collapse-header'));
     }
     this.lastScrollTop = scrollTop;
   }
