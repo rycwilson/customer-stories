@@ -331,10 +331,10 @@
       width: $size;
       height: $size;
       margin: $margin;
-      border: $thickness solid #777;
+      border: $thickness solid $gray-light;
       border-radius: 50%;
       animation: lds-ring 1.2s cubic-bezier(0.5, 0, 0.5, 1) infinite;
-      border-color: #777 transparent transparent transparent;
+      border-color: $gray-light transparent transparent transparent;
     }
     
     div:nth-child(1) {
