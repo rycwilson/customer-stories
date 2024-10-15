@@ -67,12 +67,12 @@ class CompaniesController < ApplicationController
           format.html do
             active_collection = @company.ad_images.select { |ad_image| ad_image.previous_changes.present? }
               &.first&.type&.match(/(?<supertype>Image|Logo)/).try(:[], :supertype)&.downcase&.pluralize || 'images'
-            image_was_created = @company.adwords_images.any? { |ad_image| ad_image.previous_changes[:id].present? } 
+            image_was_created = @company.ad_images.any? { |ad_image| ad_image.previous_changes[:id].present? } 
             toast = { type: 'success', message: image_was_created ? 'Image added successfully' : 'Changes saved' }
             render(partial: 'companies/3_promote/gads_form', locals: { company: @company, active_collection:, toast: })
           end
           format.json do 
-            i, deleted_image = company_params[:adwords_images_attributes].to_h.find { |k, v| v[:_destroy] == 'true' }
+            _, deleted_image = company_params[:adwords_images_attributes].to_h.find { |k, v| v[:_destroy] == 'true' }
             render(json: { id: deleted_image[:id] }) 
           end
         end
