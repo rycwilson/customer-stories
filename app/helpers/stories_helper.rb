@@ -1,5 +1,15 @@
 module StoriesHelper
 
+  def company_header_logo_url(company)
+    if company.header_logo_type == 'SquareLogo' && company.square_logo_url.present?
+      company.square_logo_url
+    elsif company.header_logo_type == 'LandscapeLogo' && company.landscape_logo_url.present?
+      company.landscape_logo_url
+    else
+      company.logo_url || LOGO_PLACEHOLDER
+    end
+  end
+  
   def disallow_search_indexing?(company=nil)
     staging? || company&.subdomain == 'pixlee'
   end
