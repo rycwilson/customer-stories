@@ -14,9 +14,7 @@ class AdwordsImage < ApplicationRecord
   scope :square, -> { where(type: ['SquareImage', 'SquareLogo']) }
   scope :landscape, -> { where(type: ['LandscapeImage', 'LandscapeLogo']) }
 
-  validates_presence_of :company  # https://launchacademy.com/blog/validating-associations-in-rails
-  # validates_presence_of :type, # SquareLogo, LandscapeLogo, SquareImage, LandscapeImage
-  # validates_presence_of :image_url  # check for specific format (csp or maybe google)
+  validates_presence_of :company, :type, :image_url  # https://launchacademy.com/blog/validating-associations-in-rails
   
   # upload to gads regardless of company.promote_tr
   # validates_presence_of :asset_id

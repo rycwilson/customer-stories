@@ -7,6 +7,7 @@ class Company < ApplicationRecord
   validates :name, presence: true, uniqueness: true
   validates :subdomain, presence: true, uniqueness: true, subdomain: true
   validates :website, presence: true, uniqueness: true, website: true
+  validates_associated :adwords_images
 
   has_many :users # no dependent: :destroy users, handle more gracefully
 
