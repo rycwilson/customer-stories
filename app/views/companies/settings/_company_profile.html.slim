@@ -124,11 +124,17 @@
           a.LandscapeLogo {
             href="javascript:;"
             class=('hidden' if company.header_logo_type == 'SquareLogo') }
-            = image_tag(company.landscape_logo_url || LOGO_PLACEHOLDER, alt: 'Company Logo')
+            = image_tag( \
+                company.landscape_logo_url || LOGO_PLACEHOLDER,
+                class: company.landscape_logo_url.blank? ? 'generic' : '',
+                alt: 'Company Logo')
           a.SquareLogo {
             href="javascript:;"
             class=('hidden' if company.header_logo_type == 'LandscapeLogo') }
-            = image_tag(company.square_logo_url || LOGO_PLACEHOLDER, alt: 'Company Logo')
+            = image_tag( \
+                company.square_logo_url || LOGO_PLACEHOLDER,
+                class: company.square_logo_url.blank? ? 'generic' : '',
+                alt: 'Company Logo')
         div {
           class="stories-header-demo stories-header-demo--bg-#{color_shade(company.header_color_2)}"
           data-company-profile-target="storiesHeaderDemo"

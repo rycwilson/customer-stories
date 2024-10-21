@@ -37,6 +37,10 @@ p.lead {
 
   img {
     max-height: $company-logo-max-height;
+
+    &.generic {
+      max-height: 50px;
+    }
   }
 }
 
