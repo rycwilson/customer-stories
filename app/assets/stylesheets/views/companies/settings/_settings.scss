@@ -24,10 +24,16 @@ p.lead {
   }
 }
 
+.company-header-demo,
+.stories-header-demo {
+  border: 1px solid #ddd;
+}
+
 .company-header-demo {
   @include flex-row-center;
-  height: $company-header-height;
+  border-bottom: 0;
   padding: 0 5px;
+  height: $company-header-height;
 
   img {
     max-height: $company-logo-max-height;
@@ -36,9 +42,9 @@ p.lead {
 
 .stories-header-demo {
   @include flex-row-center;
-  // border: none;
+  border-top: 0;
   height: $stories-header-height;
-  padding: 0 15px;
+  padding: 0 20px;
 
   &--bg-light {
     @extend .stories-header-demo;
