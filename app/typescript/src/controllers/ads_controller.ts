@@ -49,16 +49,6 @@ export default class AdsController extends FormController<AdsController> {
         this.element.action.replace(/\.json$/, '') :
         (this.element.action.endsWith('.json') ? this.element.action : `${this.element.action}.json`);
     };
-    const toggleInputs = (cards: HTMLLIElement[], shouldEnable: boolean) => {
-      cards.forEach(_card => _card.querySelectorAll('input').forEach(input => input.disabled = !shouldEnable));
-    };
-    const inactiveCards = [
-      ...this.defaultImageCardTargets, this.newImageCardTarget, this.newLogoCardTarget, ...this.imageCardTargets
-    ].filter(_card => {
-        return this.defaultImageCardTargets.includes(_card) ?
-          _card !== card && !_card.dataset.imageId :
-          _card !== card;
-      });
     if (userAction == 'add') {
       setFormat('html');
     } else if (userAction === 'makeDefault') {
@@ -66,9 +56,7 @@ export default class AdsController extends FormController<AdsController> {
     } else if (userAction === 'delete') {
       setFormat('json');
     }
-    toggleInputs(inactiveCards, false);
     this.element.requestSubmit();
-    toggleInputs(inactiveCards, true);
   }
 
   onValidatedShortHeadline({ relatedTarget: input }: { relatedTarget: HTMLInputElement }) {
@@ -118,11 +106,12 @@ export default class AdsController extends FormController<AdsController> {
     [...this.defaultImageCardTargets, ...this.imageCardTargets]
       .filter(_card => sameKind(_card) && _card !== card && card.dataset.imageId)
       .forEach(_card => {
-        // _card.classList.contains('gads-default') ? `${toggleDefault}` : 'false');
-        _card.setAttribute(
-          'data-image-card-toggle-default-value', 
-          'false'
-        )
+        if (_card.classList.contains('gads-default')) {
+          _card.setAttribute('data-image-card-enable-inputs-value', toggleDefault ? 'true' : 'false');
+          _card.setAttribute('data-image-card-toggle-default-value', toggleDefault ? 'false' : 'true');
+        } else {
+          _card.setAttribute('data-image-card-toggle-default-value', 'false');
+        }
       });
   }
 

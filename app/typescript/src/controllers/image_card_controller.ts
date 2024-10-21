@@ -12,16 +12,19 @@ export default class ImageCardController extends Controller<HTMLLIElement> {
 
   static values = {
     kind: String,
+    enableInputs: { type: Boolean, default: false },
     openFileDialog: { type: Boolean, default: false },
     toggleDefault: { type: Boolean, default: false }   // whether to make the image the default for that type
   }
   declare readonly kindValue: string;
+  declare enableInputsValue: boolean;
   declare openFileDialogValue: boolean;
   declare toggleDefaultValue: boolean;
 
   static targets = [
     'formGroup', 
     'preview',
+    'input',
     'idInput',
     'imageUrlInput', 
     'defaultInput',
@@ -34,6 +37,7 @@ export default class ImageCardController extends Controller<HTMLLIElement> {
   declare readonly formGroupTarget: HTMLDivElement;
   declare readonly hasFormGroupTarget: boolean;
   declare readonly previewTarget: HTMLDivElement;
+  declare readonly inputTargets: HTMLInputElement[];
   declare readonly idInputTarget: HTMLInputElement;
   declare readonly hasIdInputTarget: boolean;
   declare readonly imageUrlInputTarget: HTMLInputElement;
@@ -149,7 +153,13 @@ export default class ImageCardController extends Controller<HTMLLIElement> {
 
   makeDefault() {
     this.toggleDefaultValue = true;
+    this.enableInputsValue = true;
     this.dispatchMakeDefaultEvent();
+  }
+
+  enableInputsValueChanged(shouldEnable: boolean, wasEnabled: boolean) {
+    if (shouldEnable === wasEnabled || wasEnabled === undefined) return;
+    this.inputTargets.forEach((input: HTMLInputElement) => input.disabled = !shouldEnable);
   }
   
   toggleDefaultValueChanged(newVal: boolean, oldVal: boolean) {
@@ -160,6 +170,7 @@ export default class ImageCardController extends Controller<HTMLLIElement> {
 
   deleteImage() {
     this._destroyInputTarget.value = 'true';
+    this.enableInputsValue = true;
     this.formGroupTarget.classList.add('to-be-removed');
   }
 
@@ -174,6 +185,7 @@ export default class ImageCardController extends Controller<HTMLLIElement> {
     } else {
       this._destroyInputTarget.value = 'false';
     }
+    this.enableInputsValue = false;
     this.formGroupTarget.classList.remove('to-be-default', 'to-be-removed');
   }
 

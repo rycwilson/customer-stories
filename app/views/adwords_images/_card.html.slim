@@ -19,8 +19,7 @@ li.image-card {
   data-action=('click->image-card#toggleSelected' if ad.present?)
   data-toggle=('popover' if ad.present?) }
 
-  - if upload_enabled
-    = render('shared/loading_spinner')
+  = render('shared/loading_spinner') if upload_enabled
 
   - if ad.present?
     = check_box_tag( \
@@ -42,20 +41,48 @@ li.image-card {
 
     // new image
     - if ad_image[:id].blank?
-      = hidden_field_tag("#{field_name_prefix}[type]", ad_image[:default] ? ad_image[:type] : '')
-      = hidden_field_tag("#{field_name_prefix}[image_url]", '', data: { image_card_target: 'imageUrlInput' })
+      = hidden_field_tag( \
+          "#{field_name_prefix}[type]",
+          ad_image[:default] ? ad_image[:type] : '',
+          disabled: true,
+          data: { image_card_target: 'input' })
+      = hidden_field_tag( \
+          "#{field_name_prefix}[image_url]",
+          '',
+          disabled: true,
+          data: { image_card_target: 'input imageUrlInput' })
       - if ad_image[:default]
-        = hidden_field_tag("#{field_name_prefix}[default]", true, data: { image_card_target: 'defaultInput' })
+        = hidden_field_tag( \
+            "#{field_name_prefix}[default]",
+            true,
+            disabled: true,
+            data: { image_card_target: 'input defaultInput' })
 
     // existing image
     - else
-      = hidden_field_tag("#{field_name_prefix}[id]", ad_image[:id], data: { image_card_target: 'idInput' })
-      = hidden_field_tag("#{field_name_prefix}[default]", ad_image[:default], data: { image_card_target: 'defaultInput' })
+      = hidden_field_tag( \
+          "#{field_name_prefix}[id]",
+          ad_image[:id],
+          disabled: true,
+          data: { image_card_target: 'input idInput' })
+      = hidden_field_tag( \
+          "#{field_name_prefix}[default]",
+          ad_image[:default],
+          disabled: true,
+          data: { image_card_target: 'input defaultInput' })
       - if ad_image[:default]
-        = hidden_field_tag("#{field_name_prefix}[type]", ad_image[:type])
-        = hidden_field_tag("#{field_name_prefix}[image_url]", ad_image[:image_url], data: { image_card_target: 'imageUrlInput' })
+        = hidden_field_tag("#{field_name_prefix}[type]", ad_image[:type], disabled: true)
+        = hidden_field_tag( \
+            "#{field_name_prefix}[image_url]",
+            ad_image[:image_url],
+            disabled: true,
+            data: { image_card_target: 'input imageUrlInput' })
       - else
-        = hidden_field_tag("#{field_name_prefix}[_destroy]", false, data: { image_card_target: '_destroyInput' })
+        = hidden_field_tag( \
+            "#{field_name_prefix}[_destroy]",
+            false,
+            disabled: true,
+            data: { image_card_target: 'input _destroyInput' })
 
     = render( \
         'shared/jasny_fileinput',

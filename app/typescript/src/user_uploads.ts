@@ -55,6 +55,7 @@ export function onS3Done(this: ImageCardController, url: string) {
     // summernote 
     // customers
   }
+  this.enableInputsValue = true;
 
   // if the input buffer's value isn't set to blank, it will force a request with data-type=html
   this.fileInputTarget.value = '';
