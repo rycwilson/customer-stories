@@ -55,7 +55,8 @@
             = hidden_field_tag( \
                 'company[square_logo_url]',
                 company.square_logo_url,
-                data: { image_card_target: 'companySquareLogoUrlInput' })
+                disabled: true,
+                data: { image_card_target: 'input companySquareLogoUrlInput' })
             = render( \
                 'shared/jasny_fileinput',
                 { upload_enabled: true,
@@ -74,7 +75,8 @@
             = hidden_field_tag( \
                 'company[landscape_logo_url]',
                 company.landscape_logo_url,
-                data: { image_card_target: 'companyLandscapeLogoUrlInput' })
+                disabled: true,
+                data: { image_card_target: 'input companyLandscapeLogoUrlInput' })
             = render( \
                 'shared/jasny_fileinput',
                 { upload_enabled: true,
@@ -88,12 +90,12 @@
       .visible-sm-block.col-sm-offset-1.col-sm-11
         label Page Header  
       label.control-label.col-md-3.visible-md-inline-block.visible-lg-inline-block Page Header
-      .col-sm-offset-1.col-sm-11.col-md-offset-0.col-md-8.col-lg-6
-        label.radio-inline
-          input type="radio" name="header-logo" value="SquareLogo" checked="true"
+      .col-sm-offset-1.col-sm-11.col-md-offset-0.col-md-8.col-lg-6 data-action="change->company-profile#onChangeHeaderLogoType"
+        = label_tag('company_header_logo_type_squarelogo', class: 'radio-inline') do 
+          = form.radio_button(:header_logo_type, 'SquareLogo')
           | Square Logo
-        label.radio-inline
-          input type="radio" name="header-logo" value="LandscapeLogo"
+        = label_tag('company_header_logo_type_landscapelogo', class: 'radio-inline') do
+          = form.radio_button(:header_logo_type, 'LandscapeLogo')
           | Landscape Logo
 
     .row.custom-header-colors
@@ -119,8 +121,14 @@
     .form-group
       .col-sm-offset-1.col-sm-11.col-md-offset-3.col-md-8.col-lg-6
         .company-header-demo data-company-profile-target="companyHeaderDemo" style="background-color:#{company.header_color_1}"
-          a href="#"
+          a.LandscapeLogo {
+            href="javascript:;"
+            class=('hidden' if company.header_logo_type == 'SquareLogo') }
             = image_tag(company.landscape_logo_url || LOGO_PLACEHOLDER, alt: 'Company Logo')
+          a.SquareLogo {
+            href="javascript:;"
+            class=('hidden' if company.header_logo_type == 'LandscapeLogo') }
+            = image_tag(company.square_logo_url || LOGO_PLACEHOLDER, alt: 'Company Logo')
         div {
           class="stories-header-demo stories-header-demo--bg-#{color_shade(company.header_color_2)}"
           data-company-profile-target="storiesHeaderDemo"

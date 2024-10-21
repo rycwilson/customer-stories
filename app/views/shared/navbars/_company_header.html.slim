@@ -6,7 +6,10 @@ nav.company-header {
   .container
 
     = link_to(@company.website, class: 'company-header__logo') do
-      = image_tag(@company.logo_url || LOGO_PLACEHOLDER, class: 'img-responsive', alt: "#{@company.name} Logo")
+      = image_tag( \
+          @company.send(@company.header_logo_type == 'SquareLogo' ? :square_logo_url : :landscape_logo_url) || LOGO_PLACEHOLDER,
+          class: 'img-responsive',
+          alt: "#{@company.name} Logo")
 
     - if @company.ctas.primary.present?
 

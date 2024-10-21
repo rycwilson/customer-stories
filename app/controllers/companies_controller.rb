@@ -201,6 +201,7 @@ class CompaniesController < ApplicationController
       :square_logo_url,
       :landscape_logo_url,
       :gtm_id,
+      :header_logo_type,
       :header_color_1, 
       :header_color_2, 
       :header_text_color, 

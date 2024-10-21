@@ -32,8 +32,19 @@ export default class CompanyProfileController extends FormController<CompanyProf
   }
 
   onUploadReady({ detail: { card } }: { detail: { card: HTMLLIElement } }) {
-    console.log('card', card)
     card.classList.remove('image-card--uploading');
+    [...this.companyHeaderDemoTarget.children].forEach((link: Element) => {
+      if (card.className.includes(link.className)) {
+        const url = (<HTMLInputElement>card.querySelector(':scope > input[name*="url"]')).value;
+        (<HTMLImageElement>link.querySelector(':scope > img')).src = url;
+      }
+    });
+  }
+
+  onChangeHeaderLogoType({ target: input }: { target: HTMLInputElement }) {
+    [...this.companyHeaderDemoTarget.children].forEach((link: Element) => {
+      link.classList.toggle('hidden', !link.classList.contains(input.value));
+    });
   }
 
   onInputCompanyHeaderBackgroundColor({ target: input }: { target: HTMLInputElement }) {
