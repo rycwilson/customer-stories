@@ -101,10 +101,7 @@ Rails.application.routes.draw do
           resources :results, only: [:create, :destroy]
           collection { post '/import', to: 'successes#import' }
         end
-        resources :stories, only: [:new, :edit, :create, :update, :destroy], shallow: true do
-          put '/create_gads', on: :member, to: 'adwords_ads#create'
-          put '/update_gads', on: :member, to: 'adwords_ads#update'
-        end
+        resources :stories, only: [:new, :edit, :create, :update, :destroy], shallow: true
         # resources :stories, only: [:create]
         resources :contributions, except: [:new, :edit, :update], shallow: true do
           # need to distinguish '/contributions/:id' routes from '/contributions/:token' routes;
@@ -118,7 +115,6 @@ Rails.application.routes.draw do
         end
         resources :ctas, only: [:new, :show, :create, :update, :destroy]
         resources :invitation_templates
-        member { put :update_gads }
         member { get :set_reset_gads }
         member { get '/promote-settings', to: 'companies#show' }
         member { put :widget }
