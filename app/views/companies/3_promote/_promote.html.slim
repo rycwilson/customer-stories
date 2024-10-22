@@ -54,7 +54,32 @@
           data-resource-checkbox-filters-value={}
           data-action="datatable:init->resource#onTableInitComplete"
           data-resource-name="promotedStories" }
-          = render('companies/3_promote/promoted_stories_table', { company: })
+          
+          = render( \
+              'companies/shared/table_controls',
+              { company: company, 
+                curator_id: current_user.id,
+                row_name: '',
+                modal_turbo_frame_attrs: nil,
+                dashboard_target: 'promotedStoriesFilter',
+                search_options: { \
+                  'Customer' => company.customers.sort_by(&:name).map { |customer| [customer.name, "customer-#{customer.id}"] } }})
+
+          table#promoted-stories-table.table.datatable.table-bordered {
+            data-controller="datatable"
+            data-resource-target="datatable"
+            data-datatable-dashboard-outlet=".dashboard"
+            data-datatable-resource-outlet="#promoted-stories"
+            data-promote-tr="#{company.promote_tr}" }
+            thead
+              tr
+                th
+                  i.fa.fa-bullhorn
+                th Customer
+                th Story Title
+                th Status
+                th Curator
+                th Actions
 
         #promote-settings.tab-pane class=('active' if active_tab == '#promote-settings')
           = render('companies/3_promote/gads_form', { company:, active_collection: 'images' })
