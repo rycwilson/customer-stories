@@ -92,44 +92,6 @@ class CompaniesController < ApplicationController
     end
   end
 
-  def update_gads
-    # sleep 3
-    puts 'companies#update_gads'
-    # awesome_print(company_params.to_h)
-    company = Company.find(params[:id])
-    if company.update(company_params)
-      # if company.promote_tr? && ads must be modified (e.g. short headline changed, images removed)
-      # end
-    else
-      @errors = company.errors.full_messages
-    end
-    respond_to do |format|
-      format.js do
-        ad_images_params = company_params.to_h[:adwords_images_attributes]
-        @saved_image = saved_ad_image(ad_images_params)
-        @swapped_default_image = swapped_default_ad_image(ad_images_params)
-        @prev_default_image = prev_default_ad_image(ad_images_params)
-        image_type = (@saved_image || @swapped_default_image).try(:[], :type)
-        @collection = image_type&.split(/(?=[A-Z])/).try(:[], 1)&.downcase.try(:concat, 's') || ''
-        @res_data = {
-          'savedImage' => @saved_image,
-          's3DirectPostFields' => @saved_image.present? && set_s3_direct_post().fields,
-          'swappedDefaultImageId' => @swapped_default_image.try(:[], :id),
-          'prevDefaultImageId' => @prev_default_image.try(:[], :id),
-          'collection' => @collection,
-          'imageType' => image_type,
-          'typeClassName' => image_type&.split(/(?=[A-Z])/)&.reverse&.join('--')&.downcase&.sub(/\A/, 'gads-'),
-          'removedImageId' => removed_ad_image_id(ad_images_params),
-        }
-        @saved_image_card = image_card(@saved_image, @collection)
-        @modal_image_card = image_card(@saved_image, @collection, false)
-        @swapped_default_image_card = image_card(@swapped_default_image, @collection)
-        @prev_default_image_card = image_card(@prev_default_image, @collection)
-        @new_image_card = @saved_image && !@prev_default_image ? image_card({}, @collection) : nil
-      end
-    end
-  end
-
   def set_reset_gads
     company = Company.find(params[:id])
     if company.ready_for_gads?

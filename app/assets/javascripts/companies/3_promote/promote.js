@@ -1,9 +1,6 @@
-
-//= require ./promoted_stories
 //= require ./gads_form
 
 function promoteListeners () {
-  promotedStoriesListeners();
   promoteSettingsListeners();
   $(document)
     // manually hide the tooltip when navigating away (since it has container: body)
