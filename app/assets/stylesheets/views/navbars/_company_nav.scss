@@ -121,7 +121,7 @@
       > li {
         > a.dropdown-toggle {
           img {
-            height: 90%;
+            height: 42px;   // don't use % or the image will grow horizontally depending on the image's size
             opacity: 0.85;
           }
           
