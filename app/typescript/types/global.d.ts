@@ -92,7 +92,7 @@ interface CustomerWin {
   new_story_path?: string;
   curator: User; 
   customer: Customer; 
-  story: Story;
+  story?: Story;
   path?: string;
 }
 

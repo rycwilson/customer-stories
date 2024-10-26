@@ -29,16 +29,8 @@ class SuccessesController < ApplicationController
 
   def index
     company = Company.find_by(subdomain: request.subdomain) || current_user.company
-    successes = company.successes.to_json(
-      only: [:id, :name],
-      methods: [:display_status, :referrer, :contact, :timestamp, :new_story_path, :path],
-      include: {
-        curator: { only: [:id], methods: [:full_name] },
-        customer: { only: [:id, :name, :slug] },
-        story: { only: [:id, :title, :slug] }
-      }
-    )
-    respond_to { |format| format.json { render({ json: successes }) } }
+    @successes = company.successes.includes(:curator, :customer, :story)
+    respond_to { |format| format.json }
   end
 
   def new 

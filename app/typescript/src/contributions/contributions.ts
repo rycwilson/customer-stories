@@ -201,13 +201,13 @@ function actionsDropdownTemplate(row: Contribution, type: string, set: any) {
   const { id, status, invitation_template: invitationTemplate, invitation, success: customerWin, path } = row;
   const shouldShowStoryLinks = window.location.pathname === '/prospect';
   const storyExists = Boolean(customerWin?.story);
-  const editStoryPath = storyExists ? `/stories/${customerWin?.story.slug}/edit` : undefined;
+  const editStoryPath = storyExists ? `/stories/${customerWin?.story!.slug}/edit` : undefined;
   const isPreInvite = status === 'pre_request';
   const didNotRespond = status === 'did_not_respond';
   const wasSubmitted = status && status.includes('submitted');
   const viewStoryDropdownItem = !storyExists ? '' : `
       <li>
-        <a href="${customerWin?.story.csp_story_path}" data-turbo="false" target="_blank" rel="noopener">
+        <a href="${customerWin?.story!.csp_story_path}" data-turbo="false" target="_blank" rel="noopener">
           <i class="fa fa-search fa-fw action"></i>
           View Story
         </a>

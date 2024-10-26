@@ -86,7 +86,7 @@ export default class ContributionController extends DatatableRowController<Contr
   deleteRow() {
     return super.deleteRow().then(() => {
       CSP.contributions = CSP.contributions!.filter(contribution => contribution.id !== this.id);
-      let storyContributions: Contribution[] | undefined = CSP.storyContributions[this.customerWin.story?.id];
+      let storyContributions = this.customerWin.story ? CSP.storyContributions[this.customerWin.story.id] : undefined;
       if (storyContributions) {
         storyContributions = storyContributions.filter(contribution => contribution.id !== this.id);
       }

@@ -13,45 +13,11 @@ class ContributionsController < ApplicationController
 
   def index
     company = Company.find(params[:company_id]) if params[:company_id].present?
-    success = Success.find(params[:success_id]) if params[:success_id].present?
-    # Get contributions data for a win story. Success and contributor data already exist in the client.
-    # if params[:win_story]
-    #   # https://stackoverflow.com/questions/42846286/pginvalidcolumnreference-error-for-select-distinct-order-by-expressions-mus#answer-64919233
-    #   contributions = {
-    #     invitation_templates: JSON.parse(success.invitation_templates.to_json({ only: [:id, :name] })),
-    #     questions: JSON.parse(success.questions.unscope(:order).distinct.to_json({ only: [:id, :question, :invitation_template_id] })),
-    #     answers: JSON.parse(success.answers.to_json({ only: [:answer, :contribution_id, :contributor_question_id] }))
-    #   }.to_json
-
-    # else  # datatables source data (contributors)
-    contributions = (success.present? ? success.contributions : company.contributions)
-      # .sort_by do |contribution| 
-      #   [contribution.success.name, contribution.contributor.last_name]
-      # end
-      .to_json(
-        only: [:id, :status, :publish_contributor, :contributor_unpublished],
-        methods: [:display_status, :timestamp].push(success.present? ? nil : :path).compact,
-        include: {
-          success: {
-            only: [:id, :customer_id, :curator_id, :name],
-            include: {
-              curator: { only: [:id], methods: [:full_name] },
-              customer: { only: [:id, :name, :slug] },
-              story: { 
-                only: [:id, :title, :published, :slug],
-                methods: [:csp_story_path] 
-              }
-            }
-          },
-          contributor: { only: [:id, :email, :first_name, :last_name, :phone, :title, :linkedin_url], methods: [:full_name] },
-          referrer: { only: [:id, :email, :first_name, :last_name, :title], methods: [:full_name] },
-          invitation_template: { only: [:id, :name], method: [:path] },
-          contributor_invitation: { only: [:id] }
-        }
-      )
-    # end
-    # pp(JSON.parse(data))
-    respond_to { |format| format.json { render({ json: contributions }) } }
+    @success = Success.find(params[:success_id]) if params[:success_id].present?
+    @contributions = @success.present? ? 
+      @success.contributions.includes({ success: [:curator, :customer, :story] }, :contributor, :referrer, :invitation_template, :contributor_invitation) : 
+      company.contributions.includes({ success: [:curator, :customer, :story] }, :contributor, :referrer, :invitation_template, :contributor_invitation)
+    respond_to { |format| format.json }
   end
 
   def new
