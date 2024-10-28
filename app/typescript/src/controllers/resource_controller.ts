@@ -49,6 +49,8 @@ export default class ResourceController extends Controller<HTMLDivElement> {
   // declare dt instead of initializing it to avoid having to allow for undefined value
   // if the table fails to initialize, errors will be handled in the datatable controller
   declare dt: Api<any>;
+
+  // onTableInitComplete = tableInitComplete;
   
   connect() {
     // console.log(`connect ${this.resourceName}`)
@@ -68,7 +70,7 @@ export default class ResourceController extends Controller<HTMLDivElement> {
     if (shouldInit) {
       if (this.dataExists) {
         // console.log('init table (data exists): ', this.resourceName)
-        initTable(this);
+        initTable.call(this);
       } else {
         this.dispatch('loading');
         getJSON(this.dataPathValue, this.searchParamsValue).then(data => {
@@ -78,25 +80,25 @@ export default class ResourceController extends Controller<HTMLDivElement> {
             CSP[this.resourceName] = data;
           }
           // console.log('init table (data was fetched): ', this.resourceName)
-          initTable(this);
+          initTable.call(this);
         })
       }
     }
   }
 
   onTableInitComplete(e: CustomEvent) {
-    tableInitComplete(this, e.detail.dt);
+    tableInitComplete.call(this, e.detail.dt);
   }
 
   onTomselectSearch(e: CustomEvent) {
-    searchTable(this, e, this.resourceOutlets);
+    searchTable.call(this, e);
   }
 
   onChangeCurator(e: CustomEvent) {
     if (this.resourceName && /customerWins|contributions/.test(this.resourceName)) {
       this.updateNewItemPath();
     }
-    searchTable(this, e, this.resourceOutlets);
+    searchTable.call(this, e);
   }
 
   onChangeFilter(e: CustomEvent) {
@@ -107,12 +109,12 @@ export default class ResourceController extends Controller<HTMLDivElement> {
         outlet.updateNewItemPath();
       });
     } 
-    searchTable(this, e, this.resourceOutlets);
+    searchTable.call(this, e);
   }
   
   checkboxFiltersValueChanged(newVal: object, oldVal: object) {
     if (Object.keys(oldVal).length === 0) return false;
-    searchTable(this);
+    searchTable.call(this);
   }
 
   tableConfig(): Config | undefined {

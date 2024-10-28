@@ -1,7 +1,7 @@
 import { Controller } from '@hotwired/stimulus';
 import type DashboardController from './dashboard_controller';
 import type ResourceController from './resource_controller';
-import { toggleRowGroups, initDisplayOptions as resetDisplayOptions } from '../tables';
+import { toggleRowGroups as toggleTableRowGroups, initDisplayOptions as resetDisplayOptions } from '../tables';
 
 export default class extends Controller<HTMLDivElement> {
   static outlets = ['dashboard', 'resource'];
@@ -18,7 +18,7 @@ export default class extends Controller<HTMLDivElement> {
   }
 
   disconnect() {
-    resetDisplayOptions(this.resourceOutlet, true);
+    resetDisplayOptions.call(this.resourceOutlet, true);
     document.removeEventListener('click', this.clickAwayHandler);
   }
   
@@ -32,8 +32,7 @@ export default class extends Controller<HTMLDivElement> {
   }
 
   toggleRowGroups({ target: checkbox }: { target: HTMLInputElement }) {
-    if (!(checkbox instanceof HTMLInputElement)) return;
-    toggleRowGroups(this.resourceOutlet, checkbox.checked);
+    toggleTableRowGroups.call(this.resourceOutlet, checkbox.checked);
   }
 
   toggleFilter({ target: checkbox }: { target: HTMLInputElement }) {

@@ -2,32 +2,30 @@ import { kebabize } from './utils';
 import type ResourceController from './controllers/resource_controller';
 import { type Api as DataTableApi } from 'datatables.net-bs';
 
-export function init(resourceCtrl: ResourceController) {
-  resourceCtrl.datatableTarget.setAttribute('data-datatable-ready-value', 'true');
+export function init(this: ResourceController) {
+  this.datatableTarget.setAttribute('data-datatable-ready-value', 'true');
 }
 
-export function initComplete(resourceCtrl: ResourceController, dt: DataTableApi<any>) {
-  const dispatchReadyEvent = () => resourceCtrl.dispatch('ready', { detail: { resourceName: resourceCtrl.resourceName } });
-  resourceCtrl.dt = dt;
-  if (resourceCtrl.resourceName === 'storyContributions') {
+export function initComplete(this: ResourceController, dt: DataTableApi<any>) {
+  const dispatchReadyEvent = () => this.dispatch('ready', { detail: { resourceName: this.resourceName } });
+  this.dt = dt;
+  if (this.resourceName === 'storyContributions') {
     dispatchReadyEvent();
   } else {
-    initDisplayOptions(resourceCtrl);
+    initDisplayOptions.call(this);
     window.setTimeout(() => {
-      resourceCtrl.dt.one('draw', dispatchReadyEvent);
-      // console.log('searching table', resourceCtrl.resourceName)
-      search(resourceCtrl);
+      this.dt.one('draw', dispatchReadyEvent);
+      // console.log('searching table', this.resourceName)
+      search.call(this);
     });
   }
 }
 
-export function toggleRowGroups(resourceCtrl: ResourceController, shouldEnable: boolean) {
-  resourceCtrl.datatableTarget.setAttribute('data-datatable-enable-row-groups-value', shouldEnable.toString());
+export function toggleRowGroups(this: ResourceController, shouldEnable: boolean) {
+  this.datatableTarget.setAttribute('data-datatable-enable-row-groups-value', shouldEnable.toString());
 }
 
-export function search(
-  resourceCtrl: ResourceController, e?: CustomEvent, syncedResourceCtrls?: ResourceController[]
-) {
+export function search(this: ResourceController, e?: CustomEvent) {
   const { 
     type: eventType, 
     detail: { searchResults: tsSearchResults } 
@@ -37,7 +35,7 @@ export function search(
   } = e || { type: '', detail: {} };
   const isCuratorChange = eventType.includes('change-curator');
   const isFilterChange = eventType.includes('change-filter');
-  const columnFilters = Object.entries(resourceCtrl.checkboxFiltersValue)
+  const columnFilters = Object.entries(this.checkboxFiltersValue)
     .filter(([filterId, filter]) => !filter.checked)
     .map(([filterId, filter]) => {
       switch (filterId) {
@@ -53,22 +51,22 @@ export function search(
     });
 
   // sync curator and filter selections, but not search text input
-  if (syncedResourceCtrls) {
+  if (this.hasResourceOutlet) {
     if (isCuratorChange) {
-      syncedResourceCtrls.forEach(ctrl => {
-        ctrl.curatorSelectTarget.tomselect.setValue(resourceCtrl.curatorSelectTarget.value, true);
+      this.resourceOutlets.forEach(ctrl => {
+        ctrl.curatorSelectTarget.tomselect.setValue(this.curatorSelectTarget.value, true);
       })
     }
     if (isFilterChange) {
-      syncedResourceCtrls.forEach(ctrl => {
-        ctrl.filterSelectTarget.tomselect.setValue(resourceCtrl.filterSelectTarget.value, true);
+      this.resourceOutlets.forEach(ctrl => {
+        ctrl.filterSelectTarget.tomselect.setValue(this.filterSelectTarget.value, true);
       })
     }
     if (isCuratorChange || isFilterChange) {
       // wait for the visible table to be drawn before searching the sync'ed table
-      resourceCtrl.element.addEventListener('datatable:drawn', () => {
-        syncedResourceCtrls.forEach(ctrl => {
-          if (ctrl['dt']) setTimeout(() => search(ctrl))    // dt exists if the table has loaded
+      this.element.addEventListener('datatable:drawn', () => {
+        this.resourceOutlets.forEach(ctrl => {
+          if (ctrl['dt']) setTimeout(() => search.call(ctrl))    // dt exists if the table has loaded
         });
       }, { once: true });
     }
@@ -80,22 +78,22 @@ export function search(
   //   ...tsSearchResults ? { tsSearchResults } : { filterVal: resourceCtrl.filterSelectTarget.value }
   // }))
 
-  resourceCtrl.datatableTarget.setAttribute(
+  this.datatableTarget.setAttribute(
     'data-datatable-search-params-value', 
     JSON.stringify({
-      ...{ curatorId: resourceCtrl.curatorSelectTarget.value },
+      ...{ curatorId: this.curatorSelectTarget.value },
       ...{ columnFilters },
-      ...tsSearchResults ? { tsSearchResults } : { filterVal: resourceCtrl.filterSelectTarget.value }
+      ...tsSearchResults ? { tsSearchResults } : { filterVal: this.filterSelectTarget.value }
     })
   );
 }
 
-export function initDisplayOptions(resourceCtrl: ResourceController, isReset?: boolean) {
-  const btn = resourceCtrl.tableDisplayOptionsBtnTarget;
-  const resourceIdentifier = resourceCtrl.resourceName === 'customerWins' ? 'customer-wins' : 'contributors';
-  const groupByResourceName = resourceCtrl.resourceName === 'customerWins' ? 'Customer' : 'Customer Win';
-  const enableRowGroups = resourceCtrl.datatableTarget.getAttribute('data-datatable-enable-row-groups-value') === 'true';
-  const content = displayOptionsPopoverContent(groupByResourceName, enableRowGroups, resourceCtrl.checkboxFiltersValue);
+export function initDisplayOptions(this: ResourceController, isReset?: boolean) {
+  const btn = this.tableDisplayOptionsBtnTarget;
+  const resourceIdentifier = this.resourceName === 'customerWins' ? 'customer-wins' : 'contributors';
+  const groupByResourceName = this.resourceName === 'customerWins' ? 'Customer' : 'Customer Win';
+  const enableRowGroups = this.datatableTarget.getAttribute('data-datatable-enable-row-groups-value') === 'true';
+  const content = displayOptionsPopoverContent(groupByResourceName, enableRowGroups, this.checkboxFiltersValue);
   if (isReset) $(btn).data()['bs.popover'].options.content = content;
   else $(btn).popover({
     content,

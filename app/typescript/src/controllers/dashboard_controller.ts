@@ -97,12 +97,7 @@ export default class DashboardController extends Controller<HTMLDivElement> {
     this.readyState[resourceName] = true;
   }
 
-  onReadyStateChange(
-    this: DashboardController,
-    resources: { [key in ResourceName]: boolean }, 
-    resourceName: ResourceName, 
-    isReady: boolean
-  ) {
+  onReadyStateChange(resources: { [key in ResourceName]: boolean }, resourceName: ResourceName, isReady: boolean) {
     const setReady = (containerId: DashboardTab.Prospect | DashboardTab.Curate | 'story' | DashboardTab.Promote) => {
       const container = containerId === 'story' ? this.storyTarget : this.getTabPanel(containerId);
       window.clearTimeout(this.spinnerTimers[containerId]);
