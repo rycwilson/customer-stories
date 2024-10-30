@@ -1,0 +1,9 @@
+= select_tag( \
+    nil,
+    options_from_collection_for_select(company.curators, :id, :full_name, curator_id),
+    { include_blank: true,
+      placeholder: 'Select',
+      class: 'form-control',
+      data: { \
+        controller: 'tomselect', 
+        tomselect_kind_value: 'curator' } })
