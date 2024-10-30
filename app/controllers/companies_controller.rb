@@ -14,6 +14,7 @@ class CompaniesController < ApplicationController
 
   def show
     redirect_to(dashboard_path('curate')) if request.path =~ /\/companies\/\d+/
+    @curator_id = preselected_curator_id(@company)
     @workflow_stage = params[:workflow_stage]
     @prospect_tab = cookies['csp-prospect-tab'] || '#customer-wins'
     @promote_tab = cookies['csp-promote-tab'] || '#promoted-stories'
@@ -32,7 +33,6 @@ class CompaniesController < ApplicationController
       end
     end.to_h.compact
     @filters_match_type = cookies['csp-dashboard-filters-match-type'] || 'all'
-    @curate_view = 'stories'
   end
 
   def edit
@@ -198,6 +198,18 @@ class CompaniesController < ApplicationController
 
   def ad_images_update?
     company_params[:adwords_images_attributes].present?
+  end
+
+  def preselected_curator_id company
+    if cookies['csp-curator-id']
+      unless cookies['csp-curator-id'].blank? 
+        company.curators.exists?(cookies['csp-curator-id']) ? cookies['csp-curator-id'].to_i : current_user.id
+      else
+        nil
+      end
+    else
+      current_user.id
+    end
   end
 
   def set_form_options(params, company=nil)
