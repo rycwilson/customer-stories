@@ -34,6 +34,9 @@ application.register('company-story-tags', CompanyStoryTagsController);
 import ContributionController from './contribution_controller.js';
 application.register('contribution', ContributionController);
 
+import ContributionsController from './contributions_controller.js';
+application.register('contributions', ContributionsController);
+
 import ContributorInvitationController from './contributor_invitation_controller.js';
 application.register('contributor-invitation', ContributorInvitationController);
 
@@ -45,6 +48,9 @@ application.register('customer-form', CustomerFormController);
 
 import CustomerWinController from './customer_win_controller.js';
 application.register('customer-win', CustomerWinController);
+
+import CustomerWinsController from './customer_wins_controller.js';
+application.register('customer-wins', CustomerWinsController);
 
 import DashboardController from './dashboard_controller.js';
 application.register('dashboard', DashboardController);
@@ -93,6 +99,9 @@ application.register("plugins", PluginsController);
 
 import PromotedStoryController from './promoted_story_controller.js';
 application.register('promoted-story', PromotedStoryController);
+
+import PromotedStoriesController from './promoted_stories_controller.js';
+application.register('promoted-stories', PromotedStoriesController);
 
 import ResourceController from './resource_controller.js';
 application.register('resource', ResourceController);
