@@ -1,0 +1,30 @@
+.form-horizontal 
+
+  .form-group 
+    label.control-label Curator
+    div 
+      = render('companies/shared/curator_select', { company:, curator_id: })
+  
+  .form-group 
+    label.control-label Group 
+    div 
+      .checkbox 
+        label for="group-by-customer"
+          input#group-by-customer {
+            type="checkbox" 
+            data-action="table-display-options#toggleRowGroups" 
+            checked=('true' if enable_row_groups)
+            disabled="true" } 
+          | by Customer Win
+
+  .form-group 
+    label.control-label Show 
+    div 
+      .checkbox 
+        label for="show-completed"
+          input#show-completed type="checkbox" data-action="table-display-options#toggleFilter" checked="true" 
+          | Contributors with a completed Contribution
+      .checkbox 
+        label for="show-published"
+          input#show-published type="checkbox" data-action="table-display-options#toggleFilter" checked="true" 
+          | Contributors to published Customer Storie

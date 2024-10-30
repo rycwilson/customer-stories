@@ -1,0 +1,25 @@
+.form-horizontal 
+
+  .form-group
+    label.control-label Curator
+    div
+      = render('companies/shared/curator_select', { company:, curator_id: })
+
+  .form-group 
+    label.control-label Group 
+    div
+      .checkbox 
+        label for="group-by-customer-win"
+          input#group-by-customer-win {
+            type="checkbox" 
+            data-action="table-display-options#toggleRowGroups" 
+            checked=('true' if enable_row_groups) }
+          | by Customer 
+  
+  .form-group 
+    label.control-label Show 
+    div
+      .checkbox 
+        label for="show-wins-with-story"
+          input#show-wins-with-story type="checkbox" data-action="table-display-options#toggleFilter" checked="true" 
+          | Customer Wins with Story started
