@@ -4,7 +4,7 @@ export function newContributionPath(customerWinId: string | number, params: URLS
   return `/successes/${customerWinId || '0'}/contributions/new${params.size > 0 ? `?${params}` : ''}`;
 }
 
-export function tableConfig(invitationTemplateSelectHtml: string, storyId?: number): Config {
+export function dataTableConfig(invitationTemplateSelectHtml: string, storyId?: number): Config {
   const colIndices = {
     contributor: 1,
     success: 2,
@@ -158,7 +158,7 @@ export function tableConfig(invitationTemplateSelectHtml: string, storyId?: numb
       // console.log('createdRow ', id)
       $(tr)
       // .attr('data-datatable-target', 'row')
-        .attr('data-contribution-datatable-outlet', storyId ? '#story-contributors-table' : '#contributors-table')
+        .attr('data-contribution-datatable-outlet', storyId ? '#story-contributions-table' : '#contributions-table')
         .attr('data-contribution-resource-outlet', '#customer-wins')
         .attr(
           'data-contribution-row-data-value', 
@@ -213,7 +213,7 @@ function actionsDropdownTemplate(row: Contribution, type: string, set: any) {
         </a>
       </li>
     `;
-  const editStoryDropdownItems = [['story-settings', 'fa-gear'], ['story-content', 'fa-edit'], ['story-contributors', 'fa-users']]
+  const editStoryDropdownItems = [['story-settings', 'fa-gear'], ['story-content', 'fa-edit'], ['story-contributions', 'fa-users']]
     .map(([tab, icon]) => {
       const section = tab[tab.indexOf('-') + 1].toUpperCase() + tab.slice(tab.indexOf('-') + 2, tab.length);
       return `
@@ -235,7 +235,7 @@ function actionsDropdownTemplate(row: Contribution, type: string, set: any) {
     </li>
   `;
   return `
-    <a id="contributors-action-dropdown-${id}" 
+    <a id="contributions-action-dropdown-${id}" 
       href="#" 
       class="dropdown-toggle" 
       data-toggle="dropdown"
@@ -246,7 +246,7 @@ function actionsDropdownTemplate(row: Contribution, type: string, set: any) {
     <ul 
       class="contributor-actions dropdown-menu dropdown-menu-right" 
       data-dropdown-target="dropdownMenu"
-      aria-labelledby="contributors-action-dropdown-${id}">
+      aria-labelledby="contributions-action-dropdown-${id}">
       <li class="${isPreInvite && !invitationTemplate ? 'disabled' : ''}">
         <a 
           href="javascript:;" 

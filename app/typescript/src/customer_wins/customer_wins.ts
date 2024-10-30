@@ -9,7 +9,7 @@ export function editCustomerWinPath(successId: string | number) {
   return `/successes/${successId}/edit`;
 }
 
-export function tableConfig(): Config {
+export function dataTableConfig(): Config {
   const colIndices = { success: 1, customer: 2, curator: 3, status: 4, story: 5, actions: 6 };
   return {
     data: CSP.customerWins,
@@ -173,7 +173,7 @@ function actionsDropdownTemplate(row: CustomerWin, type: string, set: any) {
     src: action === 'Add' ? `/successes/${id}/contributions/new` : '' 
   };
   const editStoryPath = story ? `/stories/${story.slug}/edit` : undefined;
-  const editStoryDropdownItems = [['story-settings', 'fa-gear'], ['story-content', 'fa-edit'], ['story-contributors', 'fa-users']]
+  const editStoryDropdownItems = [['story-settings', 'fa-gear'], ['story-content', 'fa-edit'], ['story-contributions', 'fa-users']]
     .map(([tab, icon]) => {
       const section = tab[tab.indexOf('-') + 1].toUpperCase() + tab.slice(tab.indexOf('-') + 2, tab.length);
       return `

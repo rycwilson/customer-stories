@@ -3,11 +3,9 @@
 = render( \
     'companies/shared/table_controls',
     { company:, 
-      curator_id:,
       resource_name: 'contributions',
       resource_ctrl_id: 'contributions',
       row_name: 'Contributor',
-      hide_filters: story.present?,
       modal_turbo_frame_attrs: { \
         id: 'new-contribution', 
         src: new_success_contribution_path(story ? story.success_id : 0) },

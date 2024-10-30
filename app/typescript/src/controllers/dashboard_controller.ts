@@ -17,6 +17,7 @@ interface ReadyState {
   [key: string]: boolean;
   customerWins: boolean;
   contributions: boolean;
+  storyContributions: boolean;
   promotedStories: boolean;
 };
 
@@ -30,15 +31,13 @@ export default class DashboardController extends Controller<HTMLDivElement> {
     'tabPanel',
     'customerWins', 
     'customerWinsTab', 
-    'addCustomerWinBtn', 
-    'customerWinsFilter', 
-    'contributors', 
-    'contributorsTab', 
-    'addContributorBtn', 
-    'contributorsFilter',
+    'customerWinsSearchSelect', 
+    'contributions', 
+    'contributionsTab', 
+    'contributionsSearchSelect',
     'promotedStories', 
     'promotedStoriesTab', 
-    'promotedStoriesFilter',
+    'promotedStoriesSearchSelect',
     'story',
     'storyVisitors',
     'storyVisitorsTab',
@@ -50,16 +49,14 @@ export default class DashboardController extends Controller<HTMLDivElement> {
   declare readonly tabPanelTargets: HTMLDivElement[];
   declare readonly customerWinsTarget: HTMLDivElement;
   declare readonly customerWinsTabTarget: HTMLAnchorElement;
-  declare readonly addCustomerWinBtnTarget: HTMLButtonElement;
-  declare readonly customerWinsFilterTarget: TomSelectInput;
-  declare readonly contributorsTarget: HTMLDivElement;
-  declare readonly contributorsTabTarget: HTMLAnchorElement;
-  declare readonly addContributorBtnTarget: HTMLButtonElement;
-  declare readonly contributorsFilterTarget: TomSelectInput;
+  declare readonly customerWinsSearchSelectTarget: TomSelectInput;
+  declare readonly contributionsTarget: HTMLDivElement;
+  declare readonly contributionsTabTarget: HTMLAnchorElement;
+  declare readonly contributionsSearchSelectTarget: TomSelectInput;
   declare readonly storyTarget: HTMLDivElement;
   declare readonly promotedStoriesTarget: HTMLDivElement;
-  declare readonly promotedStoriesFilterTarget: TomSelectInput;
   declare readonly promotedStoriesTabTarget: HTMLAnchorElement;
+  declare readonly promotedStoriesSearchSelectTarget: TomSelectInput;
 
   static values = { activeTab: { type: String, default: '' } };    
   declare activeTabValue: DashboardTab | null;
@@ -90,10 +87,12 @@ export default class DashboardController extends Controller<HTMLDivElement> {
   }
 
   onResourceLoading({ currentTarget: tabPanel }: { currentTarget: HTMLDivElement }) {
+    console.log('resource loading:', tabPanel.id)
     this.spinnerTimers[tabPanel.id] = window.setTimeout(() => tabPanel.classList.add('loading'), 1000);
   }
 
   onResourceReady({ detail: { resourceName } }: { detail: { resourceName: ResourceName }}) {
+    console.log('resource ready:', resourceName)
     this.readyState[resourceName] = true;
   }
 
@@ -145,7 +144,7 @@ export default class DashboardController extends Controller<HTMLDivElement> {
     };
     if (this.showingCustomerWins) {
       const customerWinId = link.dataset.customerWinId || '';
-      $(this.contributorsTabTarget).one('shown.bs.tab', showModal);
+      $(this.contributionsTabTarget).one('shown.bs.tab', showModal);
       this.showCustomerWinContributors(customerWinId);
     } else if (this.showingContributors) {
       showModal();
@@ -159,8 +158,8 @@ export default class DashboardController extends Controller<HTMLDivElement> {
 
   showCustomerWinContributors(customerWinId: string) {
     // console.log(`showCustomerWinContributors(${customerWinId})`)
-    this.contributorsFilterTarget.tomselect.setValue(`success-${customerWinId}`);
-    $(this.contributorsTabTarget)
+    this.contributionsSearchSelectTarget.tomselect.setValue(`success-${customerWinId}`);
+    $(this.contributionsTabTarget)
       .one('shown.bs.tab', () => scrollTo(0, 65))
       .tab('show');
       
@@ -171,7 +170,7 @@ export default class DashboardController extends Controller<HTMLDivElement> {
 
   showContributionCustomerWin({ currentTarget: link }: { currentTarget: HTMLAnchorElement }) {
     if (!link.dataset.customerWinId) return false;
-    this.customerWinsFilterTarget.tomselect.setValue(`success-${link.dataset.customerWinId}`);
+    this.customerWinsSearchSelectTarget.tomselect.setValue(`success-${link.dataset.customerWinId}`);
     $(this.customerWinsTabTarget)
       .one('shown.bs.tab', () => scrollTo(0, 65))
       .tab('show');
@@ -202,11 +201,12 @@ export default class DashboardController extends Controller<HTMLDivElement> {
   }
 
   initTabPanel(tab: DashboardTab) {
+    console.log('initTabPanel()')
     if (tab === DashboardTab.Prospect) {
-      this.customerWinsTarget.setAttribute('data-resource-init-value', 'true');
-      this.contributorsTarget.setAttribute('data-resource-init-value', 'true');
+      this.customerWinsTarget.setAttribute('data-customer-wins-init-value', 'true');
+      this.contributionsTarget.setAttribute('data-contributions-init-value', 'true');
     } else if (tab === DashboardTab.Promote) {
-      this.promotedStoriesTarget.setAttribute('data-resource-init-value', 'true');
+      this.promotedStoriesTarget.setAttribute('data-promoted-stories-init-value', 'true');
     }
   }
 
@@ -224,7 +224,7 @@ export default class DashboardController extends Controller<HTMLDivElement> {
   get showingContributors() {
     return (
       this.activeTabValue === DashboardTab.Prospect && 
-      this.contributorsTabTarget.getAttribute('aria-expanded') === 'true'
+      this.contributionsTabTarget.getAttribute('aria-expanded') === 'true'
     );
   }
 

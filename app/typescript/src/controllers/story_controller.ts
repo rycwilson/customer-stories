@@ -7,21 +7,21 @@ export default class StoryController extends Controller<HTMLDivElement> {
     'narrativeTextarea',
     'hiddenLinkInput', 
     'hiddenLinkCopyBtn',
-    'contributors',
+    'contributions',
     'resultsList'
   ];
   declare readonly titleInputTargets: HTMLInputElement[];
   declare readonly narrativeTextareaTargets: HTMLTextAreaElement[];
   declare readonly hiddenLinkInputTarget: HTMLInputElement;
   declare readonly hiddenLinkCopyBtnTarget: HTMLButtonElement;
-  declare readonly contributorsTarget: HTMLDivElement;
+  declare readonly contributionsTarget: HTMLDivElement;
   declare readonly resultsListTarget: HTMLUListElement;
 
   declare currentScreen: ScreenSize;
   resizeHandler = debounce(this.onResize.bind(this), 200);
  
   connect() {
-    this.contributorsTarget.setAttribute('data-resource-init-value', 'true');
+    this.contributionsTarget.setAttribute('data-resource-init-value', 'true');
     window.addEventListener('resize', this.resizeHandler);
   }
 

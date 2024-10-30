@@ -37,7 +37,7 @@
   
 main.dashboard.hidden-xs {
   data-controller="dashboard" 
-  data-dashboard-active-tab-value="#{@workflow_stage unless @workflow_stage == 'story'}"
+  data-dashboard-active-tab-value=@workflow_stage
   data-dashboard-modal-outlet="#main-modal" }
 
   = render('shared/navbars/company_nav', { company: @company, workflow_stage: @workflow_stage })
@@ -45,18 +45,19 @@ main.dashboard.hidden-xs {
   .tab-content data-dashboard-target="tabContent"
     = render( \
         'companies/1_prospect/prospect',
-        { company: @company, workflow_stage: @workflow_stage, active_tab: @prospect_tab })
+        { company: @company, curator_id: @curator_id, workflow_stage: @workflow_stage, active_tab: @prospect_tab })
 
     = render( \
         'companies/curate',
-        { company: @company, workflow_stage: @workflow_stage, story: @story})
+        { company: @company, curator_id: @curator_id, workflow_stage: @workflow_stage, story: @story})
 
     = render( \
         'companies/3_promote/promote',
-        { company: @company, workflow_stage: @workflow_stage, active_tab: @promote_tab })
+        { company: @company, curator_id: @curator_id, workflow_stage: @workflow_stage, active_tab: @promote_tab })
 
     = render( \
         'companies/4_measure/measure',
         { company: @company,
+          curator_id: @curator_id,
           workflow_stage: @workflow_stage,
           active_tab: @measure_tab })

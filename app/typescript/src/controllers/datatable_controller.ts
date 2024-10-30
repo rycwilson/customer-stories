@@ -1,20 +1,25 @@
-import { Controller } from "@hotwired/stimulus";
-import type ResourceController from "./resource_controller";
+import { Controller } from '@hotwired/stimulus';
+import type CustomerWinsController from './customer_wins_controller';
+import type ContributionsController from './contributions_controller';
+import type PromotedStoriesController from './promoted_stories_controller';
 import DataTable from 'datatables.net-bs';
 import type { Api, Config } from 'datatables.net-bs';
 import 'datatables.net-rowgroup-bs';
 
 interface SearchParams {
-  curatorId: string,
-  columnFilters: { column: string, q: string, regEx: boolean, smartSearch: boolean }[],
+  filters: { column: string, q: string, regEx: boolean, smartSearch: boolean }[],
   tsSearchResults?: { [column: string]: string },
-  filterVal?: string
+  searchVal?: string
 }
 
 export default class DatatableController extends Controller<HTMLTableElement> {
-  static outlets = ['resource', 'stories'];
-  declare readonly resourceOutlet: ResourceController;
-  declare readonly storiesOutlet: ResourceController;
+  static outlets = ['customer-wins', 'contributions', 'promoted-stories'];
+  declare readonly hasCustomerWinsOutlet: boolean;
+  declare readonly customerWinsOutlet: CustomerWinsController;
+  declare readonly hasContributionsOutlet: boolean;
+  declare readonly contributionsOutlet: ContributionsController;
+  declare readonly hasPromotedStoriesOutlet: boolean;
+  declare readonly promotedStoriesOutlet: PromotedStoriesController;
 
   // static targets = ['row'];   // rowTargets exclude row groups
   // declare readonly rowTargets: HTMLTableRowElement[];
@@ -35,22 +40,26 @@ export default class DatatableController extends Controller<HTMLTableElement> {
   connect() {
   }
   
-  get baseOptions(): Config {
+  get resourceOutlet(): CustomerWinsController | ContributionsController | PromotedStoriesController {
+    if (this.hasCustomerWinsOutlet) return this.customerWinsOutlet;
+    if (this.hasContributionsOutlet) return this.contributionsOutlet;
+    if (this.hasPromotedStoriesOutlet) return this.promotedStoriesOutlet;
+    throw new Error('No valid resource outlet found.')
+  }
+
+  get baseConfig(): Config {
     const ctrl = this;
     return {
       deferRender: true,
       autoWidth: false,
       dom: 'tip',
-      pageLength: 75,
+      pageLength: 50,
       drawCallback(this: JQuery<HTMLTableElement, any>, settings: object) {
-        // console.log('drawCallback', this[0].id)
+        console.log('drawCallback', this[0].id)
         if (ctrl.didInitialize) ctrl.redrawRowGroups();
         ctrl.dispatch('drawn');
       },
-
-      // TODO: what is the type of this?
       initComplete(this: any, settings: object) {
-        // console.log('initComplete()')
         ctrl.cloneFilterResults();
         ctrl.didInitialize = true;
         ctrl.dispatch('init', { detail: { dt: this.api() } });
@@ -59,11 +68,10 @@ export default class DatatableController extends Controller<HTMLTableElement> {
   };
 
   readyValueChanged(dataIsReady: boolean) {
-    // console.log('dataIsReady', dataIsReady)
     if (dataIsReady) {
       this.dt = new DataTable(
         this.element, 
-        { ...this.baseOptions, ...this.resourceOutlet.tableConfig() }
+        { ...this.baseConfig, ...this.resourceOutlet.tableConfig }
       );
     }
   }
@@ -75,16 +83,13 @@ export default class DatatableController extends Controller<HTMLTableElement> {
     }
   }
 
-  search({ curatorId, columnFilters, filterVal, tsSearchResults }: SearchParams) {
-    // console.log('curatorId: ', curatorId)
-    // console.log('columnFilters: ', columnFilters)
-    // console.log('filterVal: ', filterVal)
-    // console.log('tsSearchResults: ', tsSearchResults)
+  search({ filters, searchVal, tsSearchResults }: SearchParams) {
+    // console.log('searching datatable:', filters, searchVal, tsSearchResults);
+
     let dtSearch = this.dt.search('')
     dtSearch.columns().search('') 
-    dtSearch.column('curator:name').search(curatorId ? `^${curatorId}$` : '', true, false);
 
-    columnFilters.forEach(({ column, q, regEx: isRegEx, smartSearch: useSmartSearch }) => {
+    filters.forEach(({ column, q, regEx: isRegEx, smartSearch: useSmartSearch }) => {
       dtSearch = dtSearch.column(`${column}:name`).search(q, isRegEx, useSmartSearch);
     });
     
@@ -94,9 +99,8 @@ export default class DatatableController extends Controller<HTMLTableElement> {
       Object.keys(tsSearchResults).forEach(column => {
         dtSearch = dtSearch.column(`${column}:name`).search(`^(${tsSearchResults[column]})$`, true, false);
       });
-    } else if (filterVal) {
-      const column = filterVal.slice(0, filterVal.indexOf('-'));
-      const id = filterVal.slice(filterVal.indexOf('-') + 1, filterVal.length);
+    } else if (searchVal) {
+      const [column, id] = searchVal.split('-');
       // console.log(`${column}:name`, `^${id}$`)
       dtSearch = dtSearch.column(`${column}:name`).search(`^${id}$`, true, false);
     }

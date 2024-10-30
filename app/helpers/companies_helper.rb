@@ -1,4 +1,7 @@
 module CompaniesHelper
+  def invitation_template_select_escaped_html company
+    escape_once(render('invitation_templates/inline_select', { company: }))
+  end
 
   def ad_image_min_dimensions(type=nil)
     min_dimensions = {

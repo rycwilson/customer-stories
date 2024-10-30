@@ -1,7 +1,7 @@
 #promote.tab-pane {
   class=('active' if workflow_stage == 'promote')
   data-dashboard-target="tabPanel"
-  data-action="resource:loading->dashboard#onResourceLoading resource:ready->dashboard#onResourceReady"
+  data-action="promoted-stories:loading->dashboard#onResourceLoading promoted-stories:ready->dashboard#onResourceReady"
   role="tabpanel" }
 
   = render('shared/loading_spinner')
@@ -47,29 +47,30 @@
         #promoted-stories.resource-ctrl.tab-pane {
           class=('active in' if active_tab == '#promoted-stories')
           data-dashboard-target="promotedStories"
-          data-controller="resource"
-          data-resource-dashboard-outlet=".dashboard"
-          data-resource-resource-outlet=".resource-ctrl:not(#promoted-stories)"
-          data-resource-data-path-value=company_adwords_ads_path(company)
-          data-resource-checkbox-filters-value={}
-          data-action="datatable:init->resource#onTableInitComplete"
-          data-resource-name="promotedStories" }
+          data-resource-name="promotedStories"
+          data-controller="promoted-stories"
+          data-promoted-stories-customer-wins-outlet="#customer-wins"
+          data-promoted-stories-contributions-outlet="#contributions"
+          data-promoted-stories-data-path-value=company_adwords_ads_path(company)
+          data-promoted-stories-filters-value={ 'curator-id': curator_id }.to_json
+          data-promoted-stories-display-options-html-value=promoted_stories_display_options_escaped_html(company, curator_id)
+          data-action="datatable:init->promoted-stories#onTableInitComplete" }
           
           = render( \
               'companies/shared/table_controls',
-              { company: company, 
-                curator_id: current_user.id,
-                row_name: '',
-                modal_turbo_frame_attrs: nil,
-                dashboard_target: 'promotedStoriesFilter',
+              { company:, 
+                resource_name: 'promotedStories',
+                resource_ctrl_id: 'promoted-stories',
+                row_name: 'Promoted Story',
+                modal_turbo_frame_attrs: {},
                 search_options: { \
                   'Customer' => company.customers.sort_by(&:name).map { |customer| [customer.name, "customer-#{customer.id}"] } }})
 
           table#promoted-stories-table.table.datatable.table-bordered {
+            data-promoted-stories-target="datatable"
             data-controller="datatable"
-            data-resource-target="datatable"
             data-datatable-dashboard-outlet=".dashboard"
-            data-datatable-resource-outlet="#promoted-stories"
+            data-datatable-promoted-stories-outlet="#promoted-stories"
             data-promote-tr="#{company.promote_tr}" }
             thead
               tr

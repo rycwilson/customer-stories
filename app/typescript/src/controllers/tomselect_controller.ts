@@ -20,7 +20,7 @@ export default class extends Controller<TomSelectInput> {
   declare currentSearchResults: any[];
 
   connect() {
-    // invitation templates from contributors table
+    // invitation templates from contributions table
     if (this.ts) {
       // console.log('ts already initialized ', this.element.closest('tr').id)
       return;    

@@ -32,7 +32,6 @@ export default class HeaderController extends Controller<HTMLElement>{
 
   // https://medium.com/@mariusc23/hide-header-on-scroll-down-show-on-scroll-up-67bbaae9a78c
   onScroll() {
-    console.log('scrolling')
     if (this.isScrolling) return false;
     this.isScrolling = true;
     setTimeout(() => {

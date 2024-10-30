@@ -43,7 +43,7 @@ export default class CustomerWinController extends DatatableRowController<Custom
     };
     if (this.contributionsHtml) showInModal();
     else {
-      // const contributionIds = this.contributorsCtrl.dt.data().toArray()
+      // const contributionIds = this.contributionsCtrl.dt.data().toArray()
       const contributionIds = (CSP['contributions'] as Contribution[])
         .filter((contribution: Contribution) => (
           (contribution.success?.id == this.id) && contribution.status && /(contribution|feedback)/.test(contribution.status)

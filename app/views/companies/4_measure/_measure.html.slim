@@ -1,7 +1,7 @@
 #measure.tab-pane {
   class=('active' if workflow_stage == 'measure')
   data-dashboard-target="tabPanel"
-  data-action="resource:loading->dashboard#onResourceLoading resource:ready->dashboard#onResourceReady"
+  data-action="stories:loading->dashboard#onResourceLoading stories:ready->dashboard#onResourceReady"
   role="tabpanel" }
 
   = render('shared/loading_spinner')
@@ -32,7 +32,7 @@
             data-nav-list-target="tab"
             data-action="dashboard#setNavCookie"
             aria-controls="recent-activity"
-            aria-expanded="#{active_tab == '#contributors' ? 'true' : 'false'}"
+            aria-expanded="#{active_tab == '#contributions' ? 'true' : 'false'}"
             role="tab" }
             i.fa.fa-fw.fa-line-chart
             |&nbsp;Recent Activity
@@ -57,7 +57,7 @@
 
         / data-controller="resource"
         / data-resource-dashboard-outlet=".dashboard"
-        / data-resource-resource-outlet=".resource-ctrl:not(#contributors)"
+        / data-resource-resource-outlet=".resource-ctrl:not(#contributions)"
         / data-resource-data-path-value=company_contributions_path(company)
         / data-resource-checkbox-filters-value={ \
         /   'show-completed': { checked: true, label: 'Contributors with a completed Contribution' },

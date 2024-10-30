@@ -1,63 +1,68 @@
 import { Controller } from "@hotwired/stimulus";
-import type DashboardController from "./dashboard_controller";
+import type CustomerWinsController from "./customer_wins_controller";
+import type ContributionsController from "./contributions_controller";
+import type PromotedStoriesController from "./promoted_stories_controller";
 import { getJSON, kebabize } from '../utils';
-import { 
-  init as initTable,
-  initComplete as tableInitComplete,
-  search as searchTable
-} from '../tables.js';
-import { tableConfig as customerWinsTableConfig, newCustomerWinPath } from '../customer_wins/customer_wins';
-import { tableConfig as contributorsTableConfig, newContributionPath } from '../contributions/contributions';
-import { tableConfig as promotedStoriesTableConfig } from '../promoted_stories/promoted_stories';
+import { init as initTable, initDisplayOptions as initTableDisplayOptions, search as searchTable } from '../tables.js';
 import type { Api, Config } from "datatables.net-bs";
 
-export default class ResourceController extends Controller<HTMLDivElement> {
-  static outlets = ['dashboard', 'resource'];
-  declare readonly dashboardOutlet: DashboardController;
-  declare readonly resourceOutlets: ResourceController[];
-  declare readonly hasResourceOutlet: boolean;
+// type SubclassController = CustomerWinsController | ContributionsController | PromotedStoriesController;
+type FiltersValue = { [key: string]: boolean | number | null };
+
+export default class ResourceController extends Controller<HTMLElement> {
+  static outlets = ['customer-wins', 'contributions', 'promoted-stories'];
+  declare readonly customerWinsOutlet: CustomerWinsController;
+  declare readonly hasCustomerWinsOutlet: boolean;
+  declare readonly contributionsOutlet: ContributionsController;
+  declare readonly hasContributionsOutlet: boolean;
+  declare readonly promotedStoriesOutlet: PromotedStoriesController;
+  declare readonly hasPromotedStoriesOutlet: boolean;
 
   static targets = [
-    'curatorSelect', 
-    'filterSelect', 
+    'searchSelect', 
     'filterResults',
     'newItemBtn', 
-    'tableDisplayOptionsBtn',
+    'displayOptionsBtn',
     'datatable'
   ];
-  declare readonly curatorSelectTarget: TomSelectInput;
-  declare readonly filterSelectTarget: TomSelectInput;
+  declare readonly searchSelectTarget: TomSelectInput;
   declare readonly filterResultsTarget: HTMLDivElement;
   declare readonly datatableTarget: HTMLDivElement;
   declare readonly newItemBtnTarget: HTMLButtonElement;
-  declare readonly tableDisplayOptionsBtnTarget: HTMLButtonElement;
+  declare readonly displayOptionsBtnTarget: HTMLButtonElement;
   
   static values = {
     dataPath: String,
     searchParams: { type: String, default: '' },
     init: { type: Boolean, default: false },
-    checkboxFilters: { type: Object, default: {} },
-    invitationTemplateSelectHtml: { type: String, default: '' }
+    filters: { type: Object, default: {} },
+    displayOptionsHtml: String
   }
   declare readonly dataPathValue: string;
   declare readonly searchParamsValue: string;
   declare readonly initValue: boolean;
-  declare checkboxFiltersValue: { [inputId: string]: { checked: boolean, label: string }};
-  declare readonly invitationTemplateSelectHtmlValue: string;
+  declare filtersValue: FiltersValue;
+  declare readonly displayOptionsHtmlValue: string;
 
   // dt is defined when the table is initialized
   // declare dt instead of initializing it to avoid having to allow for undefined value
   // if the table fails to initialize, errors will be handled in the datatable controller
   declare dt: Api<any>;
-
-  // onTableInitComplete = tableInitComplete;
   
   connect() {
-    // console.log(`connect ${this.resourceName}`)
+    console.log('connect', this.identifier)
   }
 
   get resourceName() {
     return this.element.dataset.resourceName as ResourceName;
+  }
+
+  get resourceOutlets(): (CustomerWinsController | ContributionsController | PromotedStoriesController)[] {
+    const outlets = [];
+    if (this.hasCustomerWinsOutlet) outlets.push(this.customerWinsOutlet);
+    if (this.hasContributionsOutlet) outlets.push(this.contributionsOutlet);
+    if (this.hasPromotedStoriesOutlet) outlets.push(this.promotedStoriesOutlet);
+    return outlets;
   }
 
   get dataExists() {
@@ -75,6 +80,7 @@ export default class ResourceController extends Controller<HTMLDivElement> {
         this.dispatch('loading');
         getJSON(this.dataPathValue, this.searchParamsValue).then(data => {
           if (this.resourceName === 'storyContributions') {
+            console.log(data)
             CSP[this.resourceName][+(this.element.dataset.storyId as string)] = data;
           } else {
             CSP[this.resourceName] = data;
@@ -87,76 +93,85 @@ export default class ResourceController extends Controller<HTMLDivElement> {
   }
 
   onTableInitComplete(e: CustomEvent) {
-    tableInitComplete.call(this, e.detail.dt);
+    this.dt = e.detail.dt;
+    initTableDisplayOptions.call(this);
+    setTimeout(() => {
+      this.dt.one('draw', () => {
+        console.log('draw after init:', this.resourceName)
+        this.dispatch('ready', { detail: { resourceName: this.resourceName } });
+      })
+      searchTable.call(this);
+    });
   }
 
   onTomselectSearch(e: CustomEvent) {
-    searchTable.call(this, e);
+    searchTable.call(this, e.detail.searchResults);
   }
 
-  onChangeCurator(e: CustomEvent) {
-    if (this.resourceName && /customerWins|contributions/.test(this.resourceName)) {
-      this.updateNewItemPath();
-    }
-    searchTable.call(this, e);
-  }
+  // onChangeCurator(e: CustomEvent) {
+  //   if (this.resourceName && /customerWins|contributions/.test(this.resourceName)) {
+  //     // this.updateNewItemPath();
+  //   }
+  //   searchTable.call(this, e);
+  // }
 
-  onChangeFilter(e: CustomEvent) {
-    if (this.resourceName && /customerWins|contributions/.test(this.resourceName)) {
-      this.updateNewItemPath();
-      this.resourceOutlets.forEach(outlet => {
-        if (/storyContributions|promotedStories/.test(outlet.resourceName)) return;
-        outlet.updateNewItemPath();
-      });
-    } 
-    searchTable.call(this, e);
-  }
-  
-  checkboxFiltersValueChanged(newVal: object, oldVal: object) {
-    if (Object.keys(oldVal).length === 0) return false;
+  onChangeSearchSelect(e: CustomEvent) {
+    // if (this.resourceName && /customerWins|contributions/.test(this.resourceName)) {
+    //   this.updateNewItemPath();
+    //   this.resourceOutlets.forEach(outlet => {
+    //     if (/storyContributions|promotedStories/.test(outlet.resourceName)) return;
+    //     outlet.updateNewItemPath();
+    //   });
+    // } 
+    this.addSyncListener((ctrl) => ctrl.searchSelectTarget.tomselect.setValue(this.searchSelectTarget.value));
     searchTable.call(this);
   }
-
-  tableConfig(): Config | undefined {
-    switch (this.resourceName) {
-      case 'customerWins':
-        return customerWinsTableConfig();
-      case 'contributions':
-        return contributorsTableConfig(this.invitationTemplateSelectHtmlValue);
-      case 'stories':
-        return undefined;
-      case 'storyContributions':
-        return contributorsTableConfig(this.invitationTemplateSelectHtmlValue, +(this.element.dataset.storyId as string));
-      case 'promotedStories':
-        return promotedStoriesTableConfig();
-      // default: 
-      //   throw new Error('Missing table configuration');
-    } 
+  
+  filtersValueChanged(newVal: FiltersValue, oldVal: FiltersValue) {
+    // console.log('old filtersValue:', oldVal)
+    // console.log('new filtersValue:', newVal)
+    if (Object.keys(oldVal).length === 0) return false;
+    if (newVal['curator-id'] !== oldVal['curator-id']) {
+      this.addSyncListener((ctrl) => (
+        ctrl.filtersValue = { ...ctrl.filtersValue, ...{ 'curator-id': this.filtersValue['curator-id'] } }
+      ));
+    }
+    searchTable.call(this);
+  }
+  
+  addSyncListener(syncResource: (ctrl: ResourceController) => void) {
+    this.element.addEventListener('datatable:drawn', () => {
+      this.resourceOutlets.forEach(ctrl => {
+        // console.log('syncing:', ctrl.resourceName);
+        if (ctrl['dt']) setTimeout(() => syncResource(ctrl));   // dt exists if the table has loaded
+      });
+    }, { once: true });
   }
 
-  updateNewItemPath() {
-    const filterVal = this.filterSelectTarget.value;
-    const type = filterVal && filterVal.slice(0, filterVal.lastIndexOf('-'));
-    const id = filterVal && filterVal.slice(filterVal.lastIndexOf('-') + 1, filterVal.length);
-    const customerWinId = type === 'success' ? id : '';
-    const params = new URLSearchParams();
-    params.set('curator_id', this.curatorSelectTarget.value);
-    if (filterVal) params.set(`${type}_id`, id);
-    this.newItemBtnTarget.setAttribute(
-      'data-modal-trigger-turbo-frame-attrs-value',
-      JSON.stringify({ 
-        id: `new-${kebabize(this.resourceName)}`.slice(0, -1),  // remove the trailing 's' 
-        src: (() => {
-          switch (this.resourceName) {
-            case 'customerWins':
-              return newCustomerWinPath(params);
-            case 'contributions':
-              return newContributionPath(customerWinId, params);
-            default: 
-              return '';
-          }
-        })()
-      })
-    );
-  }
+  // updateNewItemPath() {
+  //   const filterVal = this.searchSelectTarget.value;
+  //   const type = filterVal && filterVal.slice(0, filterVal.lastIndexOf('-'));
+  //   const id = filterVal && filterVal.slice(filterVal.lastIndexOf('-') + 1, filterVal.length);
+  //   const customerWinId = type === 'success' ? id : '';
+  //   const params = new URLSearchParams();
+  //   params.set('curator_id', this.curatorSelectTarget.value);
+  //   if (filterVal) params.set(`${type}_id`, id);
+  //   this.newItemBtnTarget.setAttribute(
+  //     'data-modal-trigger-turbo-frame-attrs-value',
+  //     JSON.stringify({ 
+  //       id: `new-${kebabize(this.resourceName)}`.slice(0, -1),  // remove the trailing 's' 
+  //       src: (() => {
+  //         switch (this.resourceName) {
+  //           case 'customerWins':
+  //             return newCustomerWinPath(params);
+  //           case 'contributions':
+  //             return newContributionPath(customerWinId, params);
+  //           default: 
+  //             return '';
+  //         }
+  //       })()
+  //     })
+  //   );
+  // }
+
 }
