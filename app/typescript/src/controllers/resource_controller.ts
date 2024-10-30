@@ -50,7 +50,7 @@ export default class ResourceController extends Controller<HTMLElement> {
   declare dt: Api<any>;
   
   connect() {
-    console.log('connect', this.identifier)
+    // console.log('connect resource', this.identifier)
   }
 
   get resourceName() {
@@ -80,7 +80,6 @@ export default class ResourceController extends Controller<HTMLElement> {
         this.dispatch('loading');
         getJSON(this.dataPathValue, this.searchParamsValue).then(data => {
           if (this.resourceName === 'storyContributions') {
-            console.log(data)
             CSP[this.resourceName][+(this.element.dataset.storyId as string)] = data;
           } else {
             CSP[this.resourceName] = data;
@@ -97,7 +96,7 @@ export default class ResourceController extends Controller<HTMLElement> {
     initTableDisplayOptions.call(this);
     setTimeout(() => {
       this.dt.one('draw', () => {
-        console.log('draw after init:', this.resourceName)
+        // console.log('draw after init:', this.resourceName)
         this.dispatch('ready', { detail: { resourceName: this.resourceName } });
       })
       searchTable.call(this);

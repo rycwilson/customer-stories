@@ -55,7 +55,7 @@ export default class DatatableController extends Controller<HTMLTableElement> {
       dom: 'tip',
       pageLength: 50,
       drawCallback(this: JQuery<HTMLTableElement, any>, settings: object) {
-        console.log('drawCallback', this[0].id)
+        // console.log('drawCallback', this[0].id)
         if (ctrl.didInitialize) ctrl.redrawRowGroups();
         ctrl.dispatch('drawn');
       },
