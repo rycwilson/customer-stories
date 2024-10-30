@@ -41,6 +41,10 @@
     > li {
       float: none;
 
+      // for Story tab
+      display: flex;
+      align-items: center;
+
       > a {
         display: flex;
         align-items: center;
@@ -88,7 +92,7 @@
 
     &.nav-workflow {
       justify-content: space-between;
-      width: 29em;
+      width: 30em;
       
       [data-dashboard-active-tab-value="story"] & {
         display: block;
