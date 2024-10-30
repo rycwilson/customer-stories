@@ -1,25 +1,24 @@
-/.loading style="height:3rem"
-  = image_tag('icons/180-ring.svg', alt: 'loading', style: 'height:100%')
-
 = render( \
     'companies/shared/table_controls',
-    { company: company, 
-      curator_id: current_user.id,
+    { company:, 
+      curator_id:,
+      resource_name: 'customerWins',
+      resource_ctrl_id: 'customer-wins',
       row_name: 'Customer Win',
       modal_turbo_frame_attrs: { \
-        id: 'new-customer-win', 
+        id: 'new-customer-win',
         src: new_company_success_path(company) + "?curator_id=#{current_user.id}" },
-      dashboard_target: 'customerWinsFilter',
       search_options: { \
         'Customer' => company.customers.sort_by(&:name).map { |customer| [customer.name, "customer-#{customer.id}"] },
         'Customer Win' => company.successes.sort_by(&:updated_at).reverse.map { |success| [success.name, "success-#{success.id}"] } }})  
 
-table#successes-table.table.datatable.table-bordered.has-row-groups {
+table#successes-table.table.datatable.table-bordered {
+  class=('has-row-groups' if enable_row_groups)
   data-controller="datatable"
-  data-resource-target="datatable"
+  data-customer-wins-target="datatable"
   data-datatable-dashboard-outlet=".dashboard"
-  data-datatable-resource-outlet="#customer-wins"
-  data-datatable-enable-row-groups-value="true" }
+  data-datatable-customer-wins-outlet="#customer-wins"
+  data-datatable-enable-row-groups-value=enable_row_groups }
   thead
     tr
       th
