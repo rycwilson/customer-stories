@@ -1,5 +1,5 @@
+import Cookies from 'js-cookie';
 import { Controller } from '@hotwired/stimulus';
-// import type ResourceController from './resource_controller';
 import type CustomerWinsController from "./customer_wins_controller";
 import type ContributionsController from "./contributions_controller";
 import type PromotedStoriesController from "./promoted_stories_controller";
@@ -52,6 +52,7 @@ export default class TableDisplayOptionsController extends Controller<HTMLDivEle
 
   onChangeCurator({ target: select }: { target: TomSelectInput }) {
     this.resourceOutlet.filtersValue = { ...this.resourceOutlet.filtersValue, 'curator-id': +select.value || null };
+    Cookies.set('csp-curator-id', select.value);
   }
   
   onClickAway(e: Event) {
