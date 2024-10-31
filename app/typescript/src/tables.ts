@@ -57,7 +57,7 @@ export function initDisplayOptions(this: ResourceController, isReset = false) {
       html: true,
       animation: false,
       container: 'body',
-      title: 'Display Settings',
+      title: 'Table Preferences',
       placement: 'auto left',
       template: `
         <div 

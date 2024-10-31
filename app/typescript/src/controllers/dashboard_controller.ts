@@ -87,12 +87,10 @@ export default class DashboardController extends Controller<HTMLDivElement> {
   }
 
   onResourceLoading({ currentTarget: tabPanel }: { currentTarget: HTMLDivElement }) {
-    console.log('resource loading:', tabPanel.id)
     this.spinnerTimers[tabPanel.id] = window.setTimeout(() => tabPanel.classList.add('loading'), 1000);
   }
 
   onResourceReady({ detail: { resourceName } }: { detail: { resourceName: ResourceName }}) {
-    console.log('resource ready:', resourceName)
     this.readyState[resourceName] = true;
   }
 
@@ -128,9 +126,7 @@ export default class DashboardController extends Controller<HTMLDivElement> {
   }
 
   activeTabValueChanged(activeTab: DashboardTab) {
-    if (activeTab) {
-      this.initTabPanel(activeTab);
-    }
+    if (activeTab) this.initTabPanel(activeTab);
   }
 
   addCustomerWinContributors({ currentTarget: link }: { currentTarget: HTMLAnchorElement }) {
