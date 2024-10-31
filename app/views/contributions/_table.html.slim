@@ -19,7 +19,6 @@ table.table.datatable.table-bordered {
   class=('has-row-groups' if enable_row_groups && story.nil?)
   data-contributions-target="datatable"
   data-controller="datatable"
-  data-datatable-dashboard-outlet=".dashboard"
   data-datatable-enable-row-groups-value="#{enable_row_groups && story.nil? ? 'true' : 'false'}"
   data-datatable-contributions-outlet="#{story ? '#story-contributions' : '#contributions'}" }
 
