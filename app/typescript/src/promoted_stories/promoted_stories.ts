@@ -98,11 +98,11 @@ export function dataTableConfig(): Config {
       { visible: false , targets: [colIndices.curator], },
       { orderable: false, targets: [0, colIndices.actions] },
       { searchable: false, targets: [0, colIndices.status, colIndices.title] },
-      { targets: 0, width: '2em' },
+      { targets: 0, width: '1.75em' },
       { targets: colIndices.customer, width: 'auto' },
       { targets: colIndices.title, width: 'auto' },
-      { targets: colIndices.status, width: '5em' },
-      { targets: colIndices.actions, width: '4.5em' },
+      { targets: colIndices.status, width: '3.75em' },
+      { targets: colIndices.actions, width: '5em' },
     ],
 
     createdRow: function (tr: Node, data: object | any[], index: number) { 
@@ -126,7 +126,7 @@ function actionsDropdownTemplate(row: AdwordsAd, type: string, set: any) {
       data-toggle="dropdown"
       aria-haspopup="true" 
       aria-expanded="false">
-      <i class="fa fa-caret-down"></i>
+      <i style="font-size:1.15em" class="fa fa-ellipsis-v"></i>
     </a>
     <ul 
       class="dropdown-menu dropdown-menu-right" 

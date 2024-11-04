@@ -24,19 +24,26 @@ export function dataTableConfig(): Config {
 
     columns: [
       {
-        name: 'success',  // this should match the value of the table's search/select options, e.g. value="success-1"
-        data: 'id',
-        render: (customerWinId: number, type: string, row: CustomerWin) => {
+        name: 'toggleChild',
+        data: null,
+        render: (data: any, type: string, row: CustomerWin) => {
           const toggleBtn = `
             <button type="button" class="btn" data-action="customer-win#toggleChildRow">
               <i class="fa fa-caret-right"></i>
               <i class="fa fa-caret-down"></i>
             </button>
           `;
-          return type === 'display' ? toggleBtn : customerWinId;
+          return type === 'display' ? toggleBtn : data;
         },
         createdCell: (td) => $(td).addClass('toggle-child')
       },
+      // {
+      //   name: 'success',  // this should match the value of the table's search/select options, e.g. value="success-1"
+      //   data: 'id',
+      //   render: (customerWinId: number, type: string, row: CustomerWin) => {
+      //     return type === 'display' ? '<input type="checkbox">' : customerWinId;
+      //   },
+      // },
       {
         name: 'name',
         data: {
@@ -104,14 +111,14 @@ export function dataTableConfig(): Config {
         orderable: false 
       },
       {
-        targets: [colIndices.story, colIndices.actions],
+        targets: [0, colIndices.story, colIndices.actions],
         searchable: false,
       },
-      { targets: [colIndices.curator, colIndices.story],  width: '0%' },  // hidden
-      { targets: 0, width: '2em' },
+      { targets: [colIndices.curator, colIndices.story],  width: '0' },  // hidden
+      { targets: [0], width: '1.75em' },
       { targets: colIndices.success, width: 'auto' },
       { targets: colIndices.status, width: '12em' },
-      { targets: colIndices.actions, width: '4.5em' }
+      { targets: colIndices.actions, width: '5em' }
     ],
 
     rowGroup: {
@@ -193,7 +200,7 @@ function actionsDropdownTemplate(row: CustomerWin, type: string, set: any) {
       data-toggle="dropdown"
       aria-haspopup="true" 
       aria-expanded="false">
-      <i class="fa fa-caret-down"></i>
+      <i style="font-size:1.15em" class="fa fa-ellipsis-v"></i>
     </a>
     <ul 
       class="dropdown-menu dropdown-menu-right" 

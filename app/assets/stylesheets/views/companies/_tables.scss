@@ -5,6 +5,39 @@
   @include row-hover-highlight;
   table-layout: fixed;
 
+  th,
+  td {
+    > input[type="checkbox"] {
+      margin: 0;
+    }
+  }
+
+  th.sorting::after {
+    &.customer {
+      left: 85px;
+    }
+
+    &.customer-win {
+      left: 114px;
+    }
+
+    &.contributor {
+      left: 98px;
+    }
+
+    &.invitation-template {
+      left: 152px;
+    }
+
+    &.story-title {
+      left: 87px;
+    }
+
+    &.status {
+      left: 62px
+    }
+  }
+
   &:not(#promoted-stories-table) td.status {
     // this ensures newlines will be respected
     // ref: https://stackoverflow.com/questions/10937218
@@ -85,15 +118,22 @@ td.toggle-child,
 td[data-controller="dropdown"] {
   position: relative;
 
+  > a {
+    text-decoration: none;
+  }
+
   > a,
   > button {
+    @include flex-row-center-center;
     position: absolute;
     top: 0;
     right: 0;
     bottom: 0;
     left: 0;
+    padding: 0;
     transition: color 0.15s ease-in-out;
     background-color: transparent;
+    font-size: 1.25em;
     color: $gray-light;
 
 
@@ -120,13 +160,6 @@ td.toggle-child {
     > i:last-child {
       display: inline-block;
     }
-  }
-}
-
-td[data-controller="dropdown"] {
-  > a {
-    @include flex-row-center-center;
-    text-decoration: none;
   }
 }
 

@@ -72,6 +72,10 @@
 
 table {
   background-color: #fff;
+
+  &.table > thead > tr > th {
+    border-bottom-color: darken($blueish-gray-lighter, 10%);
+  }
 }
 
 ul.dropdown-menu {

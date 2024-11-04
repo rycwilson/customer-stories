@@ -13,7 +13,7 @@
         'Customer' => company.customers.sort_by(&:name).map { |customer| [customer.name, "customer-#{customer.id}"] },
         'Customer Win' => company.successes.sort_by(&:updated_at).reverse.map { |success| [success.name, "success-#{success.id}"] } }})  
 
-table#successes-table.table.datatable.table-bordered {
+table#successes-table.table {
   class=('has-row-groups' if enable_row_groups)
   data-controller="datatable"
   data-customer-wins-target="datatable"
@@ -23,12 +23,14 @@ table#successes-table.table.datatable.table-bordered {
     tr
       th
         i.fa.fa-rocket
-      th Customer Win
+      /th 
+        input type="checkbox"
+      th.customer-win Customer Win
       / hidden, row grouping
-      th Customer
+      th.customer Customer
       / hidden
       th Curator
-      th Status
+      th.status Status
       / hidden
       th Story
-      th Actions
+      th

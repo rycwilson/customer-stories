@@ -63,25 +63,22 @@ export function dataTableConfig(invitationTemplateSelectHtml: string, storyId?: 
           _: (row: Contribution, type: string, set: any) => row.invitation_template?.id || '',
           // display: 'invitation_template.name' || '',
           display: (row: Contribution) => {
-            return row.invitation_template ? 
-              invitationTemplateSelectHtml.replace(
-                `<option value="${row.invitation_template.id}">`, 
-                `<option value="${row.invitation_template.id}" selected>`
-              ) :
-              invitationTemplateSelectHtml;
+            return row.invitation_template ? row.invitation_template.name : '';
+            // return row.invitation_template ? 
+            //   invitationTemplateSelectHtml.replace(
+            //     `<option value="${row.invitation_template.id}">`, 
+            //     `<option value="${row.invitation_template.id}" selected>`
+            //   ) :
+            //   invitationTemplateSelectHtml;
           },
           sort: (row: Contribution, type: string, set: any) => row.invitation_template?.name || ''
         },
         // defaultContent: '<span class="placeholder">Select</span>',
-        createdCell: function (this: JQuery<HTMLTableElement, any>, td: Node) {
-          // console.log('')
-          $(td)
-            .addClass('invitation-template')
-            .css('height', '0')   // does not change height, but allows for 100% height of the td's child element
-          // this.one({ 'draw.dt': () => {
-          //   console.log('draw.dt', td)
-          // }})
-        }
+        // createdCell: function (this: JQuery<HTMLTableElement, any>, td: Node) {
+        //   $(td)
+        //     .addClass('invitation-template')
+        //     .css('height', '0')   // does not change height, but allows for 100% height of the td's child element
+        // }
       },
 
       { 
@@ -133,7 +130,7 @@ export function dataTableConfig(invitationTemplateSelectHtml: string, storyId?: 
         searchable: false,
       },
       // { targets: [colIndices.success, colIndices.curator, colIndices.customer, colIndices.storyPublished], width: '0%' },
-      { targets: 0, width: '2em' },
+      { targets: 0, width: '1.75em' },
       { targets: [colIndices.contributor, colIndices.invitationTemplate], width: 'auto' },
       { targets: colIndices.status, width: '10em' },
       { targets: colIndices.actions, width: '4.5em' }
@@ -241,7 +238,7 @@ function actionsDropdownTemplate(row: Contribution, type: string, set: any) {
       data-toggle="dropdown"
       aria-haspopup="true" 
       aria-expanded="false">
-      <i class="fa fa-caret-down"></i>
+      <i style="font-size:1.15em" class="fa fa-ellipsis-v"></i>
     </a>
     <ul 
       class="contributor-actions dropdown-menu dropdown-menu-right" 

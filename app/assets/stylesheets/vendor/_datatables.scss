@@ -19,7 +19,7 @@ table.dataTable {
     th {
       background-color: $header-background;
       font-weight: 600;
-      border: 1px solid darken($header-background, 10%);
+      // border: 1px solid darken($header-background, 10%);
       
       &:first-of-type,
       &:last-of-type {
@@ -39,10 +39,12 @@ table.dataTable {
       > th.sorting::after {
         font-family: 'FontAwesome';
         content: '\f0dc';
-        opacity: 0.2;
-        top: 8px;
-        right: 8px;
-        bottom: 8px;
+        opacity: 0.25;
+        // top: 8px;
+        top: calc(1px + #{50%});
+        transform: translate(0, -50%);
+        right: revert;  // set individual for each th so that icon aligns with text instead of right border
+        // bottom: 8px;
         line-height: initial;
         font-size: initial;
       }

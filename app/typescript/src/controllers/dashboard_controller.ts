@@ -197,7 +197,6 @@ export default class DashboardController extends Controller<HTMLDivElement> {
   }
 
   initTabPanel(tab: DashboardTab) {
-    console.log('initTabPanel()')
     if (tab === DashboardTab.Prospect) {
       this.customerWinsTarget.setAttribute('data-customer-wins-init-value', 'true');
       this.contributionsTarget.setAttribute('data-contributions-init-value', 'true');

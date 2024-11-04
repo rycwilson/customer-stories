@@ -14,7 +14,7 @@
         'Customer Win' => company.successes.sort_by(&:updated_at).map { |success| [success.name, "success-#{success.id}"] },
         'Contributor' => company.contributors.sort_by(&:last_name).map { |user| [user.full_name, "contributor-#{user.id}"] } } })
 
-table.table.datatable.table-bordered {
+table.table {
   id="#{story ? 'story-contributions-table' : 'contributions-table'}"
   class=('has-row-groups' if enable_row_groups && story.nil?)
   data-contributions-target="datatable"
@@ -26,19 +26,19 @@ table.table.datatable.table-bordered {
     tr
       th
         i.fa.fa-user
-      th Contributor
+      th.contributor Contributor
 
       / hidden
       th Customer Win
 
-      th Invitation Template
+      th.invitation-template Invitation Template
 
       / hidden
       th Curator
       th Customer
       
-      th Status
-      th.actions Actions
+      th.status Status
+      th.actions
 
       / hidden boolean
       th Story Published
