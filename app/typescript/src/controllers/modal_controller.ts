@@ -62,6 +62,7 @@ export default class ModalController extends Controller<HTMLDivElement> {
       }
       this.turboFrameTarget.id = id;
       this.turboFrameTarget.src = src;
+      this.element.classList.add(this.turboFrameTarget.id);
     } else {
       this.turboFrameTarget.replaceChildren();
     }
@@ -82,7 +83,7 @@ export default class ModalController extends Controller<HTMLDivElement> {
   setFooterContent() {
     if (this.hasFormTarget) {
       this.dismissBtnTarget.textContent = 'Cancel';
-      // this.submitBtnTarget.value = this.formTarget.dataset.submitBtnText || 'Save changes';
+      this.submitBtnTarget.value = this.formTarget.dataset.submitBtnText || 'Save changes';
       this.footerTarget.classList.remove('hidden');
       this.submitBtnTarget.setAttribute('form', this.formTarget.id);
     } else {
@@ -107,10 +108,11 @@ export default class ModalController extends Controller<HTMLDivElement> {
   }
 
   onHidden(this: ModalController, e: any) {
+    this.element.classList.remove(this.turboFrameTarget.id);
     this.turboFrameAttrsValue = {};
     this.bodyContentValue = '';
     this.dismissBtnTarget.textContent = '';
-    // this.submitBtnTarget.value = '';
+    this.submitBtnTarget.value = '';
     this.footerTarget.classList.add('hidden');
   }
 }

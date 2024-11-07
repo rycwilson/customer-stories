@@ -2,6 +2,26 @@
   // .modal-content {
     // overflow: hidden;
   // }
+  &.new-customer-win,
+  &.new-contribution {
+    .modal-content {
+      margin: 0 auto;
+      width: 75%;
+    }
+
+    .form-group:has(select[data-tomselect-kind-value="referrer"] + .ts-wrapper.has-items),
+    .form-group:has(select[data-tomselect-kind-value="contributor"] + .ts-wrapper.has-items) {
+      .help-block {
+        display: none;
+      }
+
+      &:has(.item[data-value="0"]) {
+        margin-bottom: 1.25rem;
+      }
+    }
+
+    
+  }
 
   // tomselect option e.g. '- Create New Contributor -'
   [data-value="0"] {
@@ -39,9 +59,9 @@
     font-size: 2.5em;
   }
 
-  // .modal-body {
+  .modal-body {
     // padding: #{2 * $modal-inner-padding} #{2 * $modal-inner-padding} $modal-inner-padding;
-  // }
+  }
 
   .control-label {
     padding-right: 0;
@@ -67,6 +87,23 @@
 
   textarea {
     resize: vertical;
+  }
+
+  .form-horizontal {
+    .form-group {
+      display: flex;
+      margin-left: 0;
+      margin-right: 0;
+
+      > label,
+      > div:first-child {
+        margin-right: 1.25em;
+      }
+  
+      > div:last-child {
+        flex-grow: 1;
+      }
+    }
   }
 
   // // TODO: break this out into forms.scss

@@ -1,8 +1,10 @@
 @import 'tables';
-@import '1_prospect/prospect';
+@import '../customer_wins/table';
+@import '../customer_wins/win_story';
+@import '../contributions/table';
+@import '../customers/customer_modal';
 @import 'promote';
 @import '4_measure/measure';
-@import 'settings/settings';
 
 .companies.new {
   .disabled-tab {
@@ -25,6 +27,15 @@ td[data-controller="dropdown"] .dropdown-menu {
     top: auto;
     bottom: 90%;
   }
+}
+
+ul.image-cards {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  margin: 0;
 }
 
 turbo-frame[data-modal-target="turboFrame"] {
@@ -74,13 +85,4 @@ turbo-frame[data-modal-target="turboFrame"] {
     visibility: visible;
     opacity: 1;
   }
-}
-
-ul.image-cards {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  justify-content: center;
-  padding: 0;
-  margin: 0;
 }

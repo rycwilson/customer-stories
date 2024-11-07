@@ -1,9 +1,7 @@
 = content_tag :div, 'class' => 'new-contact hidden', "data-#{controller_id}-target" => "#{contact_type}Fields" do
   = parent_form_or_fields.fields_for( \
       contact_type.to_sym,
-      contact_type == 'referrer' ? \
-        parent_form_or_fields.object.build_referrer : \
-        parent_form_or_fields.object.build_contributor) do |user_fields|
+      parent_form_or_fields.object.send("build_#{contact_type}")) do |user_fields|
 
     = user_fields.hidden_field( \
         :id,
@@ -23,39 +21,36 @@
         data: { "#{controller_id}-target" => "#{contact_type}Field" })
 
     .form-group.required
-      = user_fields.label(:first_name, 'First Name', class: 'col-sm-3 control-label')
-      .col-sm-9
-        / tabindex: '-1' allows manual focus
-        = user_fields.text_field( \
-            :first_name,
-            class: 'form-control',
-            required: true,
-            disabled: true,
-            tabindex: '-1',
-            data: { "#{controller_id}-target" => "#{contact_type}Field requiredField" })
-        span.help-block 
-          | Required
+      = user_fields.label(:first_name, 'First Name')
+      / tabindex: '-1' allows manual focus
+      = user_fields.text_field( \
+          :first_name,
+          class: 'form-control',
+          required: true,
+          disabled: true,
+          tabindex: '-1',
+          data: { "#{controller_id}-target" => "#{contact_type}Field requiredField" })
+      span.help-block 
+        | Required
 
     .form-group.required
-      = user_fields.label(:last_name, 'Last Name', class: 'col-sm-3 control-label')
-      .col-sm-9
-        = user_fields.text_field( \
-            :last_name,
-            class: 'form-control',
-            required: true,
-            disabled: true,
-            data: { "#{controller_id}-target" => "#{contact_type}Field requiredField" })
-        span.help-block 
-          | Required
+      = user_fields.label(:last_name, 'Last Name')
+      = user_fields.text_field( \
+          :last_name,
+          class: 'form-control',
+          required: true,
+          disabled: true,
+          data: { "#{controller_id}-target" => "#{contact_type}Field requiredField" })
+      span.help-block 
+        | Required
 
     .form-group.required
-      = user_fields.label(:email, 'Email', class: 'col-sm-3 control-label')
-      .col-sm-9
-        = user_fields.email_field( \
-            :email,
-            class: 'form-control',
-            required: true,
-            disabled: true,
-            data: { "#{controller_id}-target" => "#{contact_type}Field requiredField" })
-        span.help-block
-          | Required
+      = user_fields.label(:email, 'Email')
+      = user_fields.email_field( \
+          :email,
+          class: 'form-control',
+          required: true,
+          disabled: true,
+          data: { "#{controller_id}-target" => "#{contact_type}Field requiredField" })
+      span.help-block
+        | Required

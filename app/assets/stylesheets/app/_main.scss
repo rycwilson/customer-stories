@@ -21,8 +21,9 @@
 @import 'views/site';
 @import 'views/navbars/navbars';
 @import 'views/modals/modals';
-@import 'views/company_admin';
-@import 'views/companies/companies';
+@import 'views/companies/admin';
+@import 'views/companies/dashboard';
+@import 'views/companies/settings/settings';
 @import 'views/stories/index/search_and_filters';
 @import 'views/stories/shared/gallery';
 @import 'views/stories/edit/edit';

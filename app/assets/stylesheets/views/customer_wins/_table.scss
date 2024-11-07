@@ -1,0 +1,134 @@
+#successes-table {
+  td.toggle-child.disabled {
+    pointer-events: none;
+  }
+
+  tr.dtrg-group {
+    td:first-of-type {  // customer name
+      border-right-width: 0;
+    }
+
+    td:last-of-type {  // edit customer
+      position: relative;
+      padding: 0;
+    }
+
+    &:hover {
+      button.edit-customer {
+        // display: initial;
+        display: revert;
+      }
+    }
+  }
+
+  button.edit-customer {
+    display: none;
+    position: absolute;
+    width: 100%;
+    background: none;
+    border: none;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    padding: 0;
+
+    > i,
+    > div {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      color: #777;
+    }
+
+    > div {
+      opacity: 0;
+      visibility: hidden;
+    }
+
+    &:hover > i,
+    > div > i {
+      color: #333;
+    }
+
+    &.loading {
+      // display: initial;
+      display: revert;
+    }
+
+    &.still-loading {
+      > i,
+      > div {
+        transition: opacity 0.25s ease-in-out;
+      }
+
+      > i {
+        opacity: 0;
+        visibility: hidden;
+      }
+  
+      > div {
+        opacity: 1;
+        visibility: visible;
+      }
+    }
+  }
+}
+
+#new-success-form {
+  .form-group.source {
+    margin-bottom: 15px;
+
+    label.radio-inline:first-child {
+      margin-right: 1em;
+    }
+  }
+
+  .form-group.csv-file {
+    // margin-bottom: 15px;
+
+    > * {
+      // margin-top: 10px;
+    }
+
+    .fileinput {
+      margin-bottom: 0;
+      padding-bottom: 33px; // leaves space for .help-block
+    }
+
+    // ref: https://stackoverflow.com/questions/19695053
+    .fileinput .form-control {
+      margin-bottom: 0;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      width: 100%;
+      // emulate select2
+      padding-left: 12px;
+      font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+      .fileinput-filename.placeholder {
+        color: #999;
+      }
+    }
+
+    // fix for cursor:pointer not working on file inputs: https://stackoverflow.com/questions/572768
+    label[for="csv-file-input"] {
+      cursor: pointer;
+      margin-bottom: 0;
+      padding: 0;
+
+      #csv-file-input {
+        display: none;
+      }
+    }
+  }
+
+  .form-group.csv-file.has-error, 
+  .form-group.csv-file.has-warning, 
+  .form-group.csv-file.has-success {
+    .fileinput {
+      padding-bottom: 0;
+    }
+  }
+}
