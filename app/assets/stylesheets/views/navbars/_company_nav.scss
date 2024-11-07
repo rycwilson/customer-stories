@@ -4,6 +4,10 @@
   background-color: #fff;
   transition: top 0.15s ease-in;
 
+  body.modal-open & {
+    right: 15px;
+  }
+
   &.collapse-header {
     top: -53px;   // 50 + 2 (top border) + 1 (bottom border)
   }
