@@ -128,24 +128,19 @@ export function dataTableConfig(): Config {
         const customerName = group;
         const customerId = groupRows.data()[0].customer.id;
         const turboFrameAttrs = { id: `edit-customer-${customerId}`, src: `/customers/${customerId}/edit` };
-        return $(`
-          <tr />`).append(`
-            <td colspan="3"> 
-              <span style="font-weight:600">${customerName}</span>
-            </td>
-            <td colspan="1">
-              <button 
-                type="button" 
-                class="edit-customer" 
-                data-controller="modal-trigger"
-                data-modal-trigger-modal-outlet="#main-modal"
-                data-modal-trigger-title-value="Edit Customer"
-                data-modal-trigger-turbo-frame-attrs-value=${JSON.stringify(turboFrameAttrs)}>
-                <i class="fa fa-pencil"></i>
-                <!-- <div><i class="fa fa-circle-o-notch"></i></div> -->
-              </button>
-            </td>
-          `);
+        return $('<tr />').append(`
+          <td colspan="4"> 
+            <a 
+              href="javascript:;" 
+              style="font-weight:600"
+              data-controller="modal-trigger"
+              data-modal-trigger-modal-outlet="#main-modal"
+              data-modal-trigger-title-value="Edit Customer"
+              data-modal-trigger-turbo-frame-attrs-value=${JSON.stringify(turboFrameAttrs)}>
+              ${customerName}
+            </a>
+          </td>
+        `);
       }
     },
 
