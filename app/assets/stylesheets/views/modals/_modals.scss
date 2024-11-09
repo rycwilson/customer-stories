@@ -3,7 +3,9 @@
     // overflow: hidden;
   // }
   &.new-customer-win,
-  &.new-contribution {
+  &.new-contribution,
+  &.new-story,
+  &[class*="edit-customer"] {
     .modal-content {
       margin: 0 auto;
       width: 75%;

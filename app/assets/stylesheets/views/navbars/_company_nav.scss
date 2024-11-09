@@ -104,20 +104,29 @@
       }
 
       > li {
-        > a {
+        > a,
+        > button,
+        > span {
           font-family: 'Lato';
+
+          &.btn-link {
+            border: 0;
+            padding: 0;
+            text-decoration: none;
+          }
       
           ~ i {
             font-size: 0.85em;
-            color: $nav-blue;
+            color: $brand-primary;
           }
         
-          ~ span {
-            font-size: $font-size-base;
-          }
+          // ~ span {
+          //   font-size: $font-size-base;
+          // }
         
           ~ i,
-          ~ span {
+          ~ span,
+          ~ button {
             margin-right: 1em
           }
         }

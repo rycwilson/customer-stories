@@ -1,15 +1,7 @@
 #customer-form {
-  .col-sm-2 {
-    width: 20%;
-  }
-
-  .col-sm-10 {
-    width: 80%;
-  }
-
   .customer-logo {
     position: relative;
-    background-color: $blueish-gray-lighter;
+    background-color: $light-gray;
     padding: 4rem 2.5rem 0 2.5rem;
 
     .fileinput {
@@ -116,7 +108,7 @@
   .customer-logo__footer {
     // bottom: 0;
     height: 4rem;
-    background-color: $blueish-gray-lighter;
+    background-color: $light-gray;
 
     .checkbox {
       display: flex; 
