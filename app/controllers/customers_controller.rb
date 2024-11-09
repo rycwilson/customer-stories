@@ -1,9 +1,8 @@
 class CustomersController < ApplicationController
 
   def edit
-    @customer = Customer.find(params[:id])
-    @s3_direct_post = set_s3_direct_post()
-    render(:edit, layout: false)
+    @customer = Customer.friendly.find(params[:id])
+    # render(:edit, layout: false)
   end
 
   def update
