@@ -9,6 +9,7 @@ import type ContributorInvitationController from './contributor_invitation_contr
 import type CompanyStoryTagsController from './company_story_tags_controller';
 import type CtaController from './cta_controller';
 import type AdsController from './ads_controller';
+import type CustomerController from './customer_controller';
 import type { TomOptions } from 'tom-select/dist/types/types';
 import { serializeForm, bsToast } from '../utils';
 
@@ -21,7 +22,8 @@ type SubclassController = (
   ContributorInvitationController |
   CompanyStoryTagsController |
   CtaController |
-  AdsController
+  AdsController |
+  CustomerController
 );
 
 export default class FormController<Ctrl extends SubclassController> extends Controller<HTMLFormElement> {

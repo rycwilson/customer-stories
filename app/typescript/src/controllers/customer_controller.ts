@@ -1,6 +1,6 @@
-import { Controller } from '@hotwired/stimulus';
+import FormController from './form_controller';
 
-export default class extends Controller<HTMLFormElement> {
+export default class CustomerController extends FormController<CustomerController> {
   static targets = ['logoContainer'];
   declare readonly logoContainerTarget: HTMLDivElement;
 

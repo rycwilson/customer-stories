@@ -43,8 +43,8 @@ application.register('contributor-invitation', ContributorInvitationController);
 import CtaController from "./cta_controller.js";
 application.register("cta", CtaController);
 
-import CustomerFormController from './customer_form_controller.js';
-application.register('customer-form', CustomerFormController);
+import CustomerController from './customer_controller.js';
+application.register('customer', CustomerController);
 
 import CustomerWinController from './customer_win_controller.js';
 application.register('customer-win', CustomerWinController);
