@@ -37,7 +37,7 @@
         type="file"
         accept="image/jpeg,image/png"
         data-image-card-target="fileInput"
-        data-s3=(s3_direct_post.to_json if upload_enabled)
+        data-s3=(s3_direct_post().to_json if upload_enabled)
         data-validate="false"
         data-collection=collection
         data-max-file-size="5242880" 

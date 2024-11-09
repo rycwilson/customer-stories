@@ -2,7 +2,6 @@ class CustomersController < ApplicationController
 
   def edit
     @customer = Customer.friendly.find(params[:id])
-    # render(:edit, layout: false)
   end
 
   def update
