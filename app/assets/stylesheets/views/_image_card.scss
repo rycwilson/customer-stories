@@ -1,16 +1,16 @@
 .image-card {
   position: relative;
-
+  
   @at-root li#{&} {
     display: inline-block;
     margin: 0.5rem;
-
+    
     &.gads-default,
     &--company-logo {
       margin: 0 0.5rem;
     }
   }
-
+  
   &--uploading {
     @include spinner('sm');
     
@@ -22,7 +22,7 @@
       transform: translate(-50%, -50%);
     }
   }
-
+  
   &--uploading .fileinput-preview img,
   .fileinput-preview img[src*="data:image"],
   .has-error .fileinput-preview {
@@ -89,10 +89,6 @@
 }
 
 .image-card__frame {
-  #customer-form & {
-    height: 11rem;
-  }
-  
   .image-card--SquareImage & {
     width: calc(150px + #{$thumbnail-padding + 2px});
     height: calc(150px + #{$thumbnail-padding + 2px});
@@ -118,10 +114,6 @@
     height: 100%;
     padding: calc(#{$thumbnail-padding + 2px});
     transition: border 0s;
-
-    #customer-form & > img {
-      max-width: 75%;
-    }
   }
 }
 

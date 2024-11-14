@@ -32,7 +32,7 @@
         ul.image-cards data-max="15"
           - ad.company.ad_images.marketing.sort_by { |image| sort_ad_images(ad, image) }.each.with_index do |ad_image, i|
             = render( \
-                'companies/shared/image_card',
+                'shared/image_card',
                 { form_ctrl: form.options[:html][:data][:controller],
                   _image: ad_image,
                   upload_enabled: false,
@@ -43,7 +43,7 @@
         ul.image-cards data-max="5"
           - ad.company.ad_images.logo.sort_by { |image| sort_ad_images(ad, image) }.each.with_index do |ad_image, i|
             = render( \
-                'companies/shared/image_card',
+                'shared/image_card',
                 { form_ctrl: form.options[:html][:data][:controller],
                   _image: ad_image,
                   upload_enabled: false,

@@ -36,6 +36,10 @@
 
   = render('shared/loading_spinner') if upload_enabled
 
+  - if is_customer_logo
+    .customer-name 
+      span = customer_name
+
   - if is_company_logo 
     = hidden_field_tag( \
         "company[#{_image[:type].split(/(?=[A-Z])/)&.join('_').downcase}_url]",
