@@ -20,12 +20,11 @@ export default class CompanyProfileController extends FormController<CompanyProf
   }
 
   disconnect() {
-    super.disconnect();
     $(this.element).validator('destroy');
+    super.disconnect();
   }
 
   onAjaxSuccess({ detail: [data, status, xhr] }: { detail: [data: any, status: string, xhr: XMLHttpRequest] }) {
-    console.log('company profile', status)
   }
 
   onUploadReady({ detail: { card } }: { detail: { card: HTMLLIElement } }) {

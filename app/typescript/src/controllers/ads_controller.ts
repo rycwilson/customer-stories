@@ -36,11 +36,11 @@ export default class AdsController extends FormController<AdsController> {
   }
 
   disconnect() {
-    super.disconnect();
     $(this.element)
       .off('shown.bs.tab', this.shownTabHandler)
       .off('validated.bs.validator', this.validatedShortHeadlineHandler)
       .validator('destroy');
+    super.disconnect();
   }
 
   submitForm({ detail: { card, userAction } }: { detail: { card: HTMLLIElement, userAction: string } }) {
