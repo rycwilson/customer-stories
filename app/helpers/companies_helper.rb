@@ -25,7 +25,7 @@ module CompaniesHelper
     type ? min_dimensions[type.to_sym] : min_dimensions
   end
 
-  def ad_image_placeholder(type)
+  def sized_image_placeholder(type)
     case type
     when 'SquareImage'
       'https://placehold.co/300/e2e3e3/777?font=open+sans&text=%E2%89%A5%20300%C3%97300'
