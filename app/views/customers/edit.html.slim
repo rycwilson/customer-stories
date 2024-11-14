@@ -10,7 +10,8 @@
           modal_target: 'form',
           turbo_frame: '_top',
           submit_btn_text: 'Save changes',
-          asset_host: Rails.application.config.asset_host } }) do |form|
+          asset_host: Rails.application.config.asset_host,
+          action: 'image-card:image-ready->customer#updateValidator' } }) do |form|
 
     .form-group
       = form.label(:name)
@@ -22,12 +23,15 @@
 
     .form-group
       = form.label(:logo_url, 'Logo')
-      .customer-logo {
+      = render( \
+          'companies/shared/image_card', 
+          { form_ctrl: form.options[:html][:data][:controller],
+            _image: { url: @customer.logo_url } })
+
+      /.customer-logo {
         class="#{'with-customer-name' if @customer.show_name_with_logo?}" 
         data-customer-target="logoContainer" }
-
         .fileinput data-provides="fileinput"
-
           .customer-logo__header
             .customer-logo__flash
               span Spaces in file name not allowed
@@ -36,16 +40,13 @@
                 i.fa.fa-fw.fa-upload
                 |&nbsp;&nbsp;
                 span Upload an image
-
           .fileinput-preview.thumbnail
             = image_tag(@customer.logo_url.present? ? @customer.logo_url : LOGO_PLACEHOLDER, alt: 'customer logo url')
             
           .customer-name.text-center
             = @customer.name
-
           .btn-file
             input type="file" name="customer[logo_url]" data-s3=s3_direct_post().to_json
-
         .customer-logo__footer.text-center
           .checkbox
             = form.label(:show_name_with_logo)
