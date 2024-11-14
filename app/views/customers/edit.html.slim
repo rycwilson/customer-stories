@@ -21,34 +21,15 @@
       = form.label(:description)
       = form.text_area(:description, class: 'form-control', style: 'width: 100%', rows: 4) 
 
-    .form-group
-      = form.label(:logo_url, 'Logo')
+    .form-group.logo
+      div
+        = form.label(:logo_url, 'Logo')
+        .checkbox
+          = form.label(:show_name_with_logo)
+            = form.check_box(:show_name_with_logo)
+            = 'Show name'
       = render( \
-          'companies/shared/image_card', 
+          'shared/image_card', 
           { form_ctrl: form.options[:html][:data][:controller],
-            _image: { url: @customer.logo_url } })
-
-      /.customer-logo {
-        class="#{'with-customer-name' if @customer.show_name_with_logo?}" 
-        data-customer-target="logoContainer" }
-        .fileinput data-provides="fileinput"
-          .customer-logo__header
-            .customer-logo__flash
-              span Spaces in file name not allowed
-            .customer-logo__upload.text-center 
-              button type="button" data-trigger="fileinput"
-                i.fa.fa-fw.fa-upload
-                |&nbsp;&nbsp;
-                span Upload an image
-          .fileinput-preview.thumbnail
-            = image_tag(@customer.logo_url.present? ? @customer.logo_url : LOGO_PLACEHOLDER, alt: 'customer logo url')
-            
-          .customer-name.text-center
-            = @customer.name
-          .btn-file
-            input type="file" name="customer[logo_url]" data-s3=s3_direct_post().to_json
-        .customer-logo__footer.text-center
-          .checkbox
-            = form.label(:show_name_with_logo)
-              = form.check_box(:show_name_with_logo, data: { action: 'customer#toggleShowName' })
-              = 'Show name with logo'
+            _image: { url: @customer.logo_url },
+            customer_name: @customer.name })
