@@ -1,9 +1,4 @@
 import type ImageCardController from './controllers/image_card_controller';
-// interface S3DirectPost {
-//   url: string;
-//   host: string;
-//   postData: string;   // JSON string (key, policy, x-amz-credential, x-amz-algorithm, x-amz-date, x-amz-signature)
-// }
 
 interface JasnyFileInputContainer extends HTMLDivElement {
   fileinput: ((options: object) => void) & ((action: string) => void)
@@ -46,16 +41,8 @@ export const imageValidatorOptions: ValidatorOptions = {
 }
 
 export function onS3Done(this: ImageCardController, url: string) {
-  if (this.hasAdsOutlet) {
-    this.imageUrlInputTarget.value = url;
-  } else if (this.hasCompanyProfileOutlet) {
-    if (this.hasCompanySquareLogoUrlInputTarget) this.companySquareLogoUrlInputTarget.value = url;
-    if (this.hasCompanyLandscapeLogoUrlInputTarget) this.companyLandscapeLogoUrlInputTarget.value = url;
-  } else {
-    // summernote 
-    // customers
-  }
-  this.enableInputsValue = true;
+  this.urlInputTarget.value = url;
+  this.inputsEnabledValue = true;
 
   // if the input buffer's value isn't set to blank, it will force a request with data-type=html
   this.fileInputTarget.value = '';
@@ -63,13 +50,18 @@ export function onS3Done(this: ImageCardController, url: string) {
   // pre-load the image so it will be in browser cache when response arrives (no flicker)
   this.imgTarget.addEventListener(
     'load', 
-    () => this.dispatch('upload-ready', { detail: { card: this.element, userAction: 'add' } }),
+    () => {
+      // remove the spinner for cases in which the form is not immediately sent upon successful upload
+      if (this.hasCompanyProfileOutlet || this.hasCustomerOutlet) {
+        this.element.classList.remove('image-card--uploading');
+      }
+      this.dispatch('upload-ready', { detail: { card: this.element, userAction: 'add' } });
+    },
     { once: true }
   )
   this.imgTarget.setAttribute('src', url);
 }
 
-// export function initS3FileInput($fileInput: JQuery<HTMLInputElement, any>, s3: S3DirectPost, assetHost?: string): void {
 export function initS3FileInput(input: HTMLInputElement, onUploadDone: (url: string) => void) {
   const $fileInput = $(input);
   const s3 = JSON.parse(<string>input.dataset.s3);

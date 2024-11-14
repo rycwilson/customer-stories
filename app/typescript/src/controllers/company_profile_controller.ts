@@ -4,15 +4,11 @@ import tinycolor from 'tinycolor2';
 
 export default class CompanyProfileController extends FormController<CompanyProfileController> {
   static targets = [
-    'squareLogoCard',
-    'landscapeLogoCard',
     'companyHeaderDemo', 
     'storiesHeaderDemo', 
     'storiesHeadingDemo', 
     'storiesHeadingColorInput'
   ];
-  declare readonly squareLogoCardTarget: HTMLLIElement;
-  declare readonly landscapeLogoCardTarget: HTMLLIElement;
   declare readonly companyHeaderDemoTarget: HTMLDivElement;
   declare readonly storiesHeaderDemoTarget: HTMLDivElement;
   declare readonly storiesHeadingDemoTarget: HTMLHeadingElement;
@@ -24,6 +20,7 @@ export default class CompanyProfileController extends FormController<CompanyProf
   }
 
   disconnect() {
+    super.disconnect();
     $(this.element).validator('destroy');
   }
 
@@ -32,7 +29,6 @@ export default class CompanyProfileController extends FormController<CompanyProf
   }
 
   onUploadReady({ detail: { card } }: { detail: { card: HTMLLIElement } }) {
-    card.classList.remove('image-card--uploading');
     [...this.companyHeaderDemoTarget.children].forEach((link: Element) => {
       if (card.className.includes(link.className)) {
         const url = (<HTMLInputElement>card.querySelector(':scope > input[name*="url"]')).value;

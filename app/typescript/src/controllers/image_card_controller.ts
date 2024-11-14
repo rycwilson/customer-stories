@@ -4,20 +4,22 @@ import CompanyProfileController from './company_profile_controller';
 import { initS3FileInput, onS3Done } from '../user_uploads';
 
 export default class ImageCardController extends Controller<HTMLLIElement> {
-  static outlets = ['ads', 'company-profile'];
+  static outlets = ['ads', 'company-profile', 'customer'];
   declare readonly adsOutlet: AdsController;
   declare readonly hasAdsOutlet: boolean;
   declare readonly companyProfileOutlet: CompanyProfileController;
   declare readonly hasCompanyProfileOutlet: boolean;
+  declare readonly customerOutlet: Controller;
+  declare readonly hasCustomerOutlet: boolean;
 
   static values = {
     kind: String,
-    enableInputs: { type: Boolean, default: false },
+    inputsEnabled: { type: Boolean, default: false },
     openFileDialog: { type: Boolean, default: false },
     toggleDefault: { type: Boolean, default: false }   // whether to make the image the default for that type
   }
   declare readonly kindValue: string;
-  declare enableInputsValue: boolean;
+  declare inputsEnabledValue: boolean;
   declare openFileDialogValue: boolean;
   declare toggleDefaultValue: boolean;
 
@@ -26,13 +28,11 @@ export default class ImageCardController extends Controller<HTMLLIElement> {
     'preview',
     'input',
     'idInput',
-    'imageUrlInput', 
+    'urlInput', 
     'defaultInput',
     '_destroyInput',
     'fileInput', 
     'adImageCheckbox',
-    'companySquareLogoUrlInput',
-    'companyLandscapeLogoUrlInput',
   ];
   declare readonly formGroupTarget: HTMLDivElement;
   declare readonly hasFormGroupTarget: boolean;
@@ -40,16 +40,12 @@ export default class ImageCardController extends Controller<HTMLLIElement> {
   declare readonly inputTargets: HTMLInputElement[];
   declare readonly idInputTarget: HTMLInputElement;
   declare readonly hasIdInputTarget: boolean;
-  declare readonly imageUrlInputTarget: HTMLInputElement;
+  declare readonly urlInputTarget: HTMLInputElement;
   declare readonly defaultInputTarget: HTMLInputElement;
   declare readonly hasDefaultInputTarget: boolean;
   declare readonly _destroyInputTarget: HTMLInputElement;
   declare readonly fileInputTarget: HTMLInputElement;
   declare readonly adImageCheckboxTarget: HTMLInputElement;
-  declare readonly companySquareLogoUrlInputTarget: HTMLInputElement;
-  declare readonly hasCompanySquareLogoUrlInputTarget: boolean;
-  declare readonly companyLandscapeLogoUrlInputTarget: HTMLInputElement;
-  declare readonly hasCompanyLandscapeLogoUrlInputTarget: boolean
 
   declare imageLoadTimer: number;
 
@@ -105,8 +101,8 @@ export default class ImageCardController extends Controller<HTMLLIElement> {
 
   imageDidLoad() {
     if (this.imgTarget?.complete) {
-      window.clearInterval(this.imageLoadTimer);
       console.log('image did load')
+      window.clearInterval(this.imageLoadTimer);
       this.fileInputTarget.setAttribute('data-validate', 'true');
       this.dispatch('image-ready', { detail: { shouldValidate: true } });
       return true;
@@ -147,17 +143,17 @@ export default class ImageCardController extends Controller<HTMLLIElement> {
   onValidatedFileInput({ relatedTarget: input }: { relatedTarget: HTMLInputElement }) {
     if (input === this.fileInputTarget && !this.isDefaultImage) {
       console.log('validated.bs.validator')
-      this.element.classList.remove('hidden');
+      if (this.element.classList.contains('hidden')) this.element.classList.remove('hidden');
     }
   }
 
   makeDefault() {
     this.toggleDefaultValue = true;
-    this.enableInputsValue = true;
+    this.inputsEnabledValue = true;
     this.dispatchMakeDefaultEvent();
   }
 
-  enableInputsValueChanged(shouldEnable: boolean, wasEnabled: boolean) {
+  inputsEnabledValueChanged(shouldEnable: boolean, wasEnabled: boolean) {
     if (shouldEnable === wasEnabled || wasEnabled === undefined) return;
     this.inputTargets.forEach((input: HTMLInputElement) => input.disabled = !shouldEnable);
   }
@@ -170,7 +166,7 @@ export default class ImageCardController extends Controller<HTMLLIElement> {
 
   deleteImage() {
     this._destroyInputTarget.value = 'true';
-    this.enableInputsValue = true;
+    this.inputsEnabledValue = true;
     this.formGroupTarget.classList.add('to-be-removed');
   }
 
@@ -185,7 +181,7 @@ export default class ImageCardController extends Controller<HTMLLIElement> {
     } else {
       this._destroyInputTarget.value = 'false';
     }
-    this.enableInputsValue = false;
+    this.inputsEnabledValue = false;
     this.formGroupTarget.classList.remove('to-be-default', 'to-be-removed');
   }
 
@@ -223,6 +219,8 @@ export default class ImageCardController extends Controller<HTMLLIElement> {
   }
 
   get formOutlet() {
-    return this.hasAdsOutlet ? this.adsOutlet : (this.hasCompanyProfileOutlet ? this.companyProfileOutlet : null);
+    if (this.hasAdsOutlet) return this.adsOutlet;
+    if (this.hasCompanyProfileOutlet) return this.companyProfileOutlet;
+    if (this.hasCustomerOutlet) return this.customerOutlet;
   }
 }
