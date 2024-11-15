@@ -2,15 +2,15 @@
 
 select.tomselected + .ts-wrapper,
 input.tomselected + .ts-wrapper {
-  &:not(.has-items):not(.invitation-template-inline-select) {
-    height: 34px;
+  &:not(.multi.has-items):not(.invitation-template-inline-select) {
+    height: 34px;   // match inputs
   }
 
   > .ts-control {
     height: 100%;
   
     [data-value="0"] {
-      color: #666;
+      color: $gray-light;
     }
   }
 }
