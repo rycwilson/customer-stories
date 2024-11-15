@@ -24,7 +24,10 @@ export const tsBaseOptions = {
   },
   onFocus(this: TomSelect) {
     const listbox = <HTMLElement>this.dropdown.firstElementChild;
-    const dropdownMaxHeight = document.documentElement.clientHeight - this.wrapper.getBoundingClientRect().bottom;
-    listbox.style.maxHeight = `${dropdownMaxHeight - 15}px`;
+    const dropdownMaxHeight = Math.min(
+      (document.documentElement.clientHeight - this.wrapper.getBoundingClientRect().bottom - 15),
+      500
+    );
+    listbox.style.maxHeight = `${dropdownMaxHeight}px`;
   },
 };
