@@ -2,7 +2,7 @@ json.array! @contributions do |contribution|
   json.(contribution, :id, :status, :publish_contributor, :contributor_unpublished)
   json.display_status contribution.display_status
   json.timestamp contribution.timestamp
-  json.path contribution.path unless @success.present?
+  json.path contribution.path
   json.success do
     json.(contribution.success, :id, :customer_id, :curator_id, :name)
     json.curator do
