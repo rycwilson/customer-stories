@@ -5,6 +5,7 @@ source 'https://rubygems.org'
 gem 'activerecord-import'
 gem 'awesome_print'
 # gem 'aws-sdk-rails', '~> 3.0'
+gem 'aws-sdk-ses', '~> 1.6'
 gem 'aws-sdk-s3', '~> 1.0'
 gem 'bootsnap', '>= 1.4.4', require: false
 gem 'bootstrap-tab-history-rails'
