@@ -107,11 +107,11 @@ Rails.application.configure do
   #  something different, e.g. 'floating-spire-2927.herokuapp.com'
   config.action_mailer.default_url_options = { host: ENV['HOST_NAME'] }
   ActionMailer::Base.smtp_settings = {
-    :address        => 'smtp.sendgrid.net',
+    :address        => 'email-smtp.us-west-1.amazonaws.com',
     :port           => '587',
     :authentication => :plain,
-    :user_name      => ENV['SENDGRID_USERNAME'],
-    :password       => ENV['SENDGRID_PASSWORD'],
+    :user_name      => ENV['AWS_ACCESS_KEY_ID'],
+    :password       => ENV['AWS_SMTP_PASSWORD'],
     :domain         => ENV['HOST_NAME'],
     :enable_starttls_auto => true
   }
