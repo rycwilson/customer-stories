@@ -39,11 +39,11 @@ module ApplicationHelper
   def custom_stylesheet?(company, layout)
     case layout
     when 'application'
-      %w(pixlee varmour).include?(company.subdomain)
+      company&.subdomain.in? %w(pixlee varmour)
     when 'stories'
-      %w(pixlee centerforcustomerengagement compas trunity varmour).include?(company.subdomain)
+      company.subdomain.in? %w(pixlee centerforcustomerengagement compas trunity varmour)
     when 'plugins'
-      %w(pixlee trunity varmour).include?(company.subdomain)
+      company.subdomain.in? %w(pixlee trunity varmour)
     else
       false
     end

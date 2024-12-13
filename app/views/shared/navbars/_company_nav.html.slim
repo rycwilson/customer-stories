@@ -1,12 +1,13 @@
 - is_dashboard = workflow_stage.present?
 
-nav.company-nav.navbar-fixed-top.hidden-xs data-controller="header" class="#{'unregistered' unless company&.persisted?}"
+nav.company-nav.navbar-fixed-top.hidden-xs data-controller="header"
   .container
     
-    - if controller_name == 'profile' && !current_user.company_registered?
-      span Are you a Customer Reference Program Manager?
-      |&nbsp;&nbsp;
-      = link_to('Register your Company', register_company_path)
+    - if current_user.company.blank?
+      .welcome-mesg
+        h4
+          = "Welcome to Customer Stories.\u00A0\u00A0Please #{controller_name == 'profile' ? '<a href="/companies/new">register</a>' : 'register'} your company.".html_safe
+            
     - else
       / https://stackoverflow.com/questions/556153
       ul.nav.nav-tabs.nav-workflow data-controller="nav-list" role="tablist" data-turbo=('false' if is_dashboard)
@@ -61,18 +62,17 @@ nav.company-nav.navbar-fixed-top.hidden-xs data-controller="header" class="#{'un
               i.fa.fa-fw.fa-sign-out
               | Sign out
         div
-        
-      li.dropdown.company-settings {
-        class=('active' if current_page?(controller: 'companies', action: 'edit')) }
+      
+      li.dropdown.company-settings class=('active' if controller_name == 'companies' && action_name =~ /new|edit/)
         a.dropdown-toggle data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false"
-          - if company.square_logo_url.present?
+          - if company&.square_logo_url.present?
             = image_tag(company.square_logo_url, alt: "#{company.name} Logo")
           - else 
             i.fa.fa-fw.fa-gear
           i.fa.fa-caret-down
         ul.dropdown-menu.dropdown-menu-right role="menu"
           li.dropdown-header
-            = company.name
+            = company&.name
           li.divider role="separator"
           /li 
             a href="/settings#customers"

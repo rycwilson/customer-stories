@@ -41,7 +41,7 @@ class ApplicationController < ActionController::Base
   end
 
   def linkedin_auth
-    auth_url = user_signed_in? && current_user.company_registered? ?
+    auth_url = user_signed_in? && current_user.company.present? ?
       CURATOR_LINKEDIN_AUTH_URL :
       CONTRIBUTOR_LINKEDIN_AUTH_URL
 

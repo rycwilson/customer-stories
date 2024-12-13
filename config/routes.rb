@@ -46,6 +46,9 @@ Rails.application.routes.draw do
   #   end
   # end
 
+   # these will be without subdomain
+   resources :companies, only: [:new, :create]
+
   # valid subdomains (company/subdomain exists, excludes www)
   constraints(CompanySubdomain) do
 
@@ -234,10 +237,6 @@ Rails.application.routes.draw do
 
   root 'site#landing', { action: 'home' }
   get '/:page', to: 'site#landing', constraints: { page: /product|plans|company|team|terms|privacy|our-story/ }
-
-  # these will be without subdomain
-  get   '/register', to: 'companies#new', as: 'register_company'
-  post  '/companies', to: 'companies#create', as: 'create_company'
 
   # user profile - company not registered (Curator or Contributor)
   # (need to give the route a different alias to distinguish from the one

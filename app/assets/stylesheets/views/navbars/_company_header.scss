@@ -1,14 +1,3 @@
-.company-nav.unregistered {
-  > .container > .row {
-    display: flex;
-    align-items: center;
-  }
-  .nav-workflow a,
-  .dropdown.company-settings {
-    display: none;
-  }
-}
-
 .company-header {
   height: $company-header-height;
   

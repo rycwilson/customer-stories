@@ -79,10 +79,6 @@ class User < ApplicationRecord
     self.linkedin_photo_url.present?
   end
 
-  def company_registered?
-    self.company_id.present?
-  end
-
   def dont_publish_as_contributor
     self.own_contributions.each { |c| c.update(publish_contributor: false) }
   end
