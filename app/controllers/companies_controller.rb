@@ -35,7 +35,6 @@ class CompaniesController < ApplicationController
   end
 
   def edit
-    redirect_to(company_settings_path) if request.path =~ /\/companies\/\d+/
     render :company_settings
   end
 

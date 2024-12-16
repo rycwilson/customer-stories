@@ -46,9 +46,6 @@ Rails.application.routes.draw do
   #   end
   # end
 
-   # these will be without subdomain
-   resources :companies, only: [:new, :create]
-
   # valid subdomains (company/subdomain exists, excludes www)
   constraints(CompanySubdomain) do
 
@@ -93,10 +90,8 @@ Rails.application.routes.draw do
           }
 
     authenticate :user do
-
-      get '/settings', to: 'companies#edit', as: 'company_settings'
-
-      resources :companies, only: [:show, :edit, :update] do
+      get '/settings', to: 'companies#edit', as: 'edit_company'
+      resources :companies, only: [:show, :update] do
         resources :customers, only: [:edit, :create, :update, :destroy], shallow: true
         resources :successes, except: [:index], shallow: true do
           resource :story, only: [:new, :create]
@@ -228,6 +223,13 @@ Rails.application.routes.draw do
     # broken links
     get '/*all', to: 'site#valid_subdomain_bad_path'
 
+  end
+
+  # registered user, unregistered company
+  # this must come after the CompanySubdomain constraint
+  authenticate(:user) do
+    get 'settings', to: 'companies#new', as: 'new_company'
+    post 'settings', to: 'companies#create', as: 'companies'
   end
 
   # all other subdomains
