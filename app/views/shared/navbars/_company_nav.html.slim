@@ -6,7 +6,8 @@ nav.company-nav.navbar-fixed-top.hidden-xs data-controller="header"
     - if current_user.company.blank?
       .welcome-mesg
         h4
-          = "Welcome to Customer Stories.\u00A0\u00A0Please #{controller_name == 'profile' ? '<a href="/companies/new">register</a>' : 'register'} your company.".html_safe
+          = "Complete sign-up by configuring your #{controller_name == 'profile' ? '<a href="' + new_company_path + '">account settings</a>' : 'account settings'}.".html_safe
+          / = "Welcome to Customer Stories.\u00A0\u00A0Please #{controller_name == 'profile' ? '<a href="' + new_company_path + '">register</a>' : 'register'} your company.".html_safe
             
     - else
       / https://stackoverflow.com/questions/556153
@@ -71,35 +72,32 @@ nav.company-nav.navbar-fixed-top.hidden-xs data-controller="header"
             i.fa.fa-fw.fa-gear
           i.fa.fa-caret-down
         ul.dropdown-menu.dropdown-menu-right role="menu"
-          li.dropdown-header
-            = company&.name
-          li.divider role="separator"
-          /li 
-            a href="/settings#customers"
-              i.fa.fa-fw.fa-handshake-o 
-              | Customers
-          li
-            a href="/settings#contributor-invitations"
+          - if company&.persisted?
+            li.dropdown-header
+              = company.name
+            li.divider role="separator"
+          li class=('disabled' unless company&.persisted?)
+            a href="#{company&.persisted? ? '/settings#contributor-invitations' : 'javascript:;'}"
               i.fa.fa-fw.fa-envelope-o
               | Contributor Invitations
-          li
-            a href="/settings#contributor-prompts"
+          li class=('disabled' unless company&.persisted?)
+            a href="#{company&.persisted? ? '/settings#contributor-prompts' : 'javascript:;'}"
               i.fa.fa-fw.fa-lightbulb-o
               | Contributor Prompts
-          li
-            a href="/settings#website-plugin"
+          li class=('disabled' unless company&.persisted?)
+            a href="#{company&.persisted? ? '/settings#website-plugin' : 'javascript:;'}"
               i.fa.fa-fw.fa-plug
               | Website Plugin
-          li
-            a href="/settings#cta-links-forms"
+          li class=('disabled' unless company&.persisted?)
+            a href="#{company&.persisted? ? '/settings#cta-links-forms' : 'javascript:;'}"
               i.fa.fa-fw.fa-hand-pointer-o
               | CTA Links & Forms
-          li
-            a href="/settings#story-tags"
+          li class=('disabled' unless company&.persisted?)
+            a href="#{company&.persisted? ? '/settings#story-tags' : 'javascript:;'}"
               i.fa.fa-fw.fa-tags
               | Story Tags
-          li
-            a href="/settings#account"
+          li class=('hidden' if company&.new_record?)
+            a href="/settings#{company&.persisted? ? '#account' : ''}"
               i.fa.fa-fw.fa-gear
               | Account Settings
         /div

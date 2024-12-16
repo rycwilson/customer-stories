@@ -19,18 +19,6 @@ main.container.hidden-xs {
       data-controller="nav-list"
       role="tablist" }
       - unless action_name == 'new'
-
-        /li role="presentation"
-          a {
-            href="#customers-panel"
-            class=('disabled-tab' if @company.new_record?)
-            role="tab"
-            data-toggle="tab"
-            data-company-settings-target="tab"
-            data-nav-list-target="tab" }
-            i.fa.fa-fw.fa-handshake-o
-            |&nbsp;Customers
-
         li role="presentation"
           a {
             href="#contributor-invitations-panel" 
@@ -87,7 +75,7 @@ main.container.hidden-xs {
             |&nbsp;Story Tags
       
       li role="presentation" 
-        a href="#account-panel" data-toggle="tab" data-company-settings-target="tab"
+        a href="#account-panel" data-toggle="tab" data-company-settings-target="tab" style="#{@company.new_record? ? 'pointer-events:none' : ''}"
           i.fa.fa-fw.fa-gear
           |&nbsp;Account Settings
 
