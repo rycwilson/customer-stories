@@ -69,16 +69,19 @@ Rails.application.routes.draw do
       get '/share_on_linkedin', on: :member, to: 'stories#share_on_linkedin'
     end
 
-
     # routing constraints cause issues within the devise authenticate block
     # (possible explanation? https://anadea.info/blog/rails-authentication-routing-constraints-considered-harmful)
     # => bring these routes outside the authenticate block and authenticate in the controller
-    get '/:workflow_stage', to: 'companies#show',
-          constraints: lambda { |params, request|
-            # params[:id] = request.env['warden'].user(:user).try(:company_id).to_s
-            params[:workflow_stage] =~ /prospect|curate|promote|measure/
-            # params[:id].present?  # i.e. user signed in
-          }, as: 'dashboard'
+    get(
+      '/:workflow_stage', 
+      to: 'companies#show',
+      constraints: lambda { |params, request|
+        # params[:id] = request.env['warden'].user(:user).try(:company_id).to_s
+        params[:workflow_stage] =~ /prospect|curate|promote|measure/
+        # params[:id].present?  # i.e. user signed in
+      }, 
+      as: 'dashboard'
+    )
     # get '/curate/:customer_slug/:story_slug', to: 'stories#edit',
     #       constraints: lambda { |params, request|
     #         Customer.friendly.exists?(params[:customer_slug]) &&
@@ -228,8 +231,8 @@ Rails.application.routes.draw do
   # registered user, unregistered company
   # this must come after the CompanySubdomain constraint
   authenticate(:user) do
-    get 'settings', to: 'companies#new', as: 'new_company'
-    post 'settings', to: 'companies#create', as: 'companies'
+    get '/settings', to: 'companies#new', as: 'new_company'
+    post '/settings', to: 'companies#create', as: 'companies'
   end
 
   # all other subdomains

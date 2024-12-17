@@ -194,25 +194,22 @@ class ApplicationController < ActionController::Base
   end
 
   def configure_permitted_parameters
-    devise_parameter_sanitizer.permit(:sign_up,
-      keys: [:first_name, :last_name, :sign_up_code, :admin_access_code])
-    devise_parameter_sanitizer.permit(:account_update) { |user|
+    devise_parameter_sanitizer.permit(:sign_up, keys: [:first_name, :last_name, :sign_up_code, :admin_access_code])
+    devise_parameter_sanitizer.permit(:account_update) do |user|
       user.permit(:email, :first_name, :last_name, :photo_url, :linkedin_url, :title, :phone, :password, :password_confirmation, :current_password)
-    }
+    end
   end
 
-  # change devise redirect on sign in
   def after_sign_in_path_for resource
     if session[:user_return_to].present?
       session[:user_return_to]
     elsif resource.class.name == 'User'
-      # binding.remote_pry
-      if resource.company_id.present?  # returning users
+      if resource.company.present?
         url_for({
-            subdomain: resource.company.subdomain,
-            controller: '/companies',
-            action: 'show',
-            id: resource.company.id,
+          subdomain: resource.company.subdomain,
+          controller: '/companies',   # the / is necessary lest it be interpreted as '/users/[the specified controller]'
+          action: 'show',
+          id: resource.company_id,
         })
       else
         edit_profile_no_company_path
