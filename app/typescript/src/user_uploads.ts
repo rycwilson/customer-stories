@@ -52,7 +52,7 @@ export function onS3Done(this: ImageCardController, url: string) {
     'load', 
     () => {
       // remove the spinner for cases in which the form is not immediately sent upon successful upload
-      if (this.hasCompanyProfileOutlet || this.hasCustomerOutlet) {
+      if (this.hasUserProfileOutlet || this.hasCompanyProfileOutlet || this.hasCustomerOutlet) {
         this.element.classList.remove('image-card--uploading');
       }
       this.dispatch('upload-ready', { detail: { card: this.element, userAction: 'add' } });

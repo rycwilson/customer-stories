@@ -1,13 +1,13 @@
 import { Controller } from '@hotwired/stimulus';
-import AdsController from './ads_controller';
-import CompanyProfileController from './company_profile_controller';
 import { initS3FileInput, onS3Done } from '../user_uploads';
 
-export default class ImageCardController extends Controller<HTMLLIElement> {
-  static outlets = ['ads', 'company-profile', 'customer'];
-  declare readonly adsOutlet: AdsController;
+export default class ImageCardController extends Controller<HTMLDivElement | HTMLLIElement> {
+  static outlets = ['ads', 'user-profile', 'company-profile', 'customer'];
+  declare readonly adsOutlet: Controller;
   declare readonly hasAdsOutlet: boolean;
-  declare readonly companyProfileOutlet: CompanyProfileController;
+  declare readonly userProfileOutlet: Controller;
+  declare readonly hasUserProfileOutlet: boolean;
+  declare readonly companyProfileOutlet: Controller;
   declare readonly hasCompanyProfileOutlet: boolean;
   declare readonly customerOutlet: Controller;
   declare readonly hasCustomerOutlet: boolean;
@@ -220,6 +220,7 @@ export default class ImageCardController extends Controller<HTMLLIElement> {
 
   get formOutlet() {
     if (this.hasAdsOutlet) return this.adsOutlet;
+    if (this.hasUserProfileOutlet) return this.userProfileOutlet;
     if (this.hasCompanyProfileOutlet) return this.companyProfileOutlet;
     if (this.hasCustomerOutlet) return this.customerOutlet;
   }
