@@ -8,7 +8,7 @@
 
   .user-photo {
     margin-bottom: 2.25rem;
-    
+
     @media (min-width: 991px) {
       padding: 0;
       text-align: right;
@@ -36,14 +36,6 @@
     > .thumbnail {
       width: auto;
     }
-  }
-
-  @media (min-width: 991px) {
-    // left: 5rem;
-  }
-
-  @media (min-width: 1200px) {
-    left: 5rem;
   }
 }
 
