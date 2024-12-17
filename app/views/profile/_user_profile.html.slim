@@ -1,81 +1,70 @@
-
 = form_with( \
     model: user,
-    url: registration_path(user), 
-    method: 'PUT', 
-    local: false, 
-    authenticity_token: true,
+    url: user_registration_path(user),
     html: { \
       id: 'user-profile-form',
+      class: 'form-horizontal',
       autocomplete: 'off',
-      class: 'user-profile directUpload form-horizontal',
+      novalidate: true,
       data: { \
-        url: s3_direct_post.url,
-        host: URI.parse(s3_direct_post.url).host,
+        controller: 'user-profile',
+        user_profile_toast_value: (toast rescue nil),
         asset_host: Rails.application.config.asset_host,
-        s3_data: s3_direct_post.fields,
-        controller: 'user-profile' }}) do |f|
+        action: [ \
+          'ajax:beforeSend->user-profile#validate',
+          'ajas:success->user-profile#onAjaxSuccess',
+          'image-card:image-ready->user-profile#updateValidator',
+          'image-card:clear-fileinput->user-profile#updateValidator',
+          'image-card:upload-ready->user-profile#onUploadReady'].join(' ') }}) do |form|
 
-  .visible-sm-block.visible-md-block
-    .form-group
-      .col-sm-offset-3.col-sm-9
-        = render('profile/user_photo', { user: user, user_form: f, screen: 'sm' })
-    .form-group
-      = f.label(:first_name, 'First Name', for: 'user-first-name-sm', class: 'col-sm-3 control-label')
-      .col-sm-9.col-md-8
-        = f.text_field(:first_name, id: 'user-first-name-sm', class: 'form-control')
-    .form-group
-      = f.label(:last_name, 'Last Name', for: 'user-last-name-sm', class: 'col-sm-3 control-label')
-      .col-sm-9.col-md-8
-        = f.text_field(:last_name, id: 'user-last-name-sm', class: 'form-control')
-    .form-group
-      = f.label(:title, 'Job Title', for: 'user-title-sm', class: 'col-sm-3 control-label')
-      .col-sm-9.col-md-8
-        = f.text_field(:title, id: 'user-title-sm', class: 'form-control')
-    .form-group
-      = f.label(:email, 'Email', for: 'user-email-sm', class: 'col-sm-3 control-label')
-      .col-sm-9.col-md-8
-        = f.email_field(:email, id: 'user-email-sm', class: 'form-control')
-    .form-group
-      = f.label(:phone, 'Phone', for: 'user-phone-sm',  class: 'col-sm-3 control-label')
-      .col-sm-9.col-md-8
-        = f.telephone_field(:phone, id: 'user-phone-sm', class: 'form-control')
-    .form-group
-      .col-sm-12.col-md-offset-3.col-md-8.text-right
-        button type="submit" class="btn btn-success" form="user-profile-form" style="width:114px"
-          span Save changes
-          i.fa.fa-spin.fa-circle-o-notch style="display: none"
-          i.fa.fa-check style="display: none"
+  .row
+    .col-sm-12.col-md-4.col-lg-3
+      .user-photo.col-sm-offset-4.col-sm-8.col-md-offset-3.col-md-9.col-lg-offset-0.col-lg-12 
+        = render( \
+            'shared/image_card',
+            { form_ctrl: form.options[:html][:data][:controller],
+              _image: { url: user.photo_url } })
+    .form-group.col-sm-12.col-md-8.col-lg-9
+      = form.label(:first_name, 'First Name', class: 'control-label col-sm-4 col-md-3 col-lg-2')
+      .col-sm-8.col-md-9.col-lg-10
+        = form.text_field(:first_name, class: 'form-control')
 
-  .visible-lg-block
-    .row
-      .col-lg-3 style="display: flex; justify-content: flex-end; padding: 0"
-        .form-group
-          = render('profile/user_photo', { user: user, user_form: f, screen: 'lg' })
-      .col-lg-6
-        .form-group
-          = f.label(:first_name, 'First Name', class: 'col-lg-4 control-label', style: 'width: 25%')
-          .col-lg-8 style="width: 75%"
-            = f.text_field(:first_name, class: 'form-control')
-        .form-group
-          = f.label(:last_name, 'Last Name', class: 'col-lg-4 control-label', style: 'width: 25%')
-          .col-lg-8 style="width: 75%"
-            = f.text_field(:last_name, class: 'form-control')
-        .form-group
-          = f.label(:title, 'Job Title', class: 'col-lg-4 control-label', style: 'width: 25%')
-          .col-lg-8 style="width: 75%"
-            = f.text_field(:title, class: 'form-control')
-        .form-group
-          = f.label(:email, 'Email', class: 'col-sm-3 control-label', style: 'width: 25%')
-          .col-lg-8 style="width: 75%"
-            = f.email_field(:email, class: 'form-control')
-        .form-group
-          = f.label(:phone, 'Phone', class: 'col-sm-3 control-label', style: 'width: 25%')
-          .col-lg-8 style="width: 75%"
-            = f.telephone_field(:phone, class: 'form-control')
-        .form-group
-          .col-lg-12.text-right
-            button type="submit" class="btn btn-success" form="user-profile-form" style="width:114px"
-              span Save changes
-              i.fa.fa-spin.fa-circle-o-notch style="display:none"
-              i.fa.fa-check style="display: none"
+    / filler
+    .col-sm-12.col-md-4.col-lg-3
+      .col-sm-offset-4.col-sm-8.col-md-offset-3.col-md-9.col-lg-offset-0.col-lg-12 
+
+    .form-group.col-sm-12.col-md-8.col-lg-9
+      = form.label(:last_name, 'Last Name', class: 'control-label col-sm-4 col-md-3 col-lg-2')
+      .col-sm-8.col-md-9.col-lg-10 
+        = form.text_field(:last_name, class: 'form-control')
+    
+    / filler
+    .col-sm-12.col-md-4.col-lg-3
+      .col-sm-offset-4.col-sm-8.col-md-offset-3.col-md-9.col-lg-offset-0.col-lg-12 
+      
+    .form-group.col-sm-12.col-md-8.col-lg-9
+      = form.label(:title, 'Job Title', class: 'control-label col-sm-4 col-md-3 col-lg-2')
+      .col-sm-8.col-md-9.col-lg-10 
+        = form.text_field(:title, class: 'form-control')
+
+    / filler
+    .col-sm-12.col-md-4.col-lg-3
+      .col-sm-offset-4.col-sm-8.col-md-offset-3.col-md-9.col-lg-offset-0.col-lg-12 
+      
+    .form-group.col-sm-12.col-md-8.col-lg-9
+      = form.label(:email, class: 'control-label col-sm-4 col-md-3 col-lg-2')
+      .col-sm-8.col-md-9.col-lg-10 
+        = form.email_field(:email, class: 'form-control')
+
+    / filler
+    .col-sm-12.col-md-4.col-lg-3
+      .col-sm-offset-4.col-sm-8.col-md-offset-3.col-md-9.col-lg-offset-0.col-lg-12 
+
+    .form-group.col-sm-12.col-md-8.col-lg-9
+      = form.label(:phone, class: 'control-label col-sm-4 col-md-3 col-lg-2')
+      .col-sm-8.col-md-9.col-lg-10 
+        = form.telephone_field(:phone, class: 'form-control')
+
+    .col-sm-12.col-md-offset-4.col-md-8.col-lg-offset-3.col-lg-9
+      .col-sm-offset-4.col-sm-8.col-md-offset-3.col-md-9.col-lg-offset-2.col-lg-10
+        = form.submit('Save changes', class: 'btn btn-success')    
