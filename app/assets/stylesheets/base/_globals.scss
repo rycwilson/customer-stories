@@ -74,14 +74,27 @@ hr {
 //   }
 // }
 form {
-  .row {
-    margin-bottom: 1.25rem;
-  }
-  
   .form-group,
   .row {
     .help-block {
       margin-bottom: 0;
+      font-size: $font-size-small;
+    }
+  }
+
+  .row {
+    margin-bottom: 1.25rem;
+  }
+  
+  &.form-horizontal [type="submit"] {
+    margin-top: 0.75rem;
+  }
+
+  &#user-profile-form,
+  &#company-profile-form {
+    @media (min-width: 1200px)  {
+      position: relative;
+      left: 4rem;
     }
   }
 }
