@@ -150,6 +150,10 @@
             }
           }
         }
+
+        &:first-of-type {
+          margin-right: 0.5rem;
+        }
         
         &.active > a > img {
           opacity: 1;
