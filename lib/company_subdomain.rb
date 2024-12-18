@@ -1,7 +1,5 @@
 class CompanySubdomain
-
-  def self.matches? (request)
-    request.subdomain.present? && (request.subdomain != 'www') && Company.any? { |c| c.subdomain == request.subdomain }
+  def self.matches? request
+    request.subdomain.present? && Company.exists? { |company| company.subdomain == request.subdomain }
   end
-
 end

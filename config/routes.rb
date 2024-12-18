@@ -23,6 +23,7 @@ Rails.application.routes.draw do
       omniauth_callbacks_controller: 'users/omniauth_callbacks'
     }
   )
+
   as(:user) do
     get('/user-profile', to: 'users/registrations#edit', as: 'edit_user')
   end
@@ -58,7 +59,6 @@ Rails.application.routes.draw do
   #   end
   # end
 
-  # valid subdomains (company/subdomain exists, excludes www)
   constraints(CompanySubdomain) do
 
     get '/', to: 'stories#index'
@@ -81,31 +81,15 @@ Rails.application.routes.draw do
       get '/share_on_linkedin', on: :member, to: 'stories#share_on_linkedin'
     end
 
-    # routing constraints cause issues within the devise authenticate block
-    # (possible explanation? https://anadea.info/blog/rails-authentication-routing-constraints-considered-harmful)
-    # => bring these routes outside the authenticate block and authenticate in the controller
     get(
-      '/:workflow_stage', 
-      to: 'companies#show',
-      constraints: lambda { |params, request|
-        # params[:id] = request.env['warden'].user(:user).try(:company_id).to_s
-        params[:workflow_stage] =~ /prospect|curate|promote|measure/
-        # params[:id].present?  # i.e. user signed in
-      }, 
-      as: 'dashboard'
+      '/promote/preview/:story_slug', 
+      to: 'adwords_ads#preview',
+      constraints: lambda { |params, request| Story.friendly.exists?(params[:story_slug]) }
     )
-    # get '/curate/:customer_slug/:story_slug', to: 'stories#edit',
-    #       constraints: lambda { |params, request|
-    #         Customer.friendly.exists?(params[:customer_slug]) &&
-    #         Story.friendly.exists?(params[:story_slug])
-    #       }, as: 'curate_story'
-    get '/promote/preview/:story_slug', to: 'adwords_ads#preview',
-          constraints: lambda { |params, request|
-            Story.friendly.exists?(params[:story_slug])
-          }
 
-    authenticate :user do
-      get '/settings', to: 'companies#edit', as: 'edit_company'
+    authenticate(:user) do
+      get('/:workflow_stage', to: 'companies#show', workflow_stage: /prospect|curate|promote|measure/, as: 'dashboard')
+      get('/settings', to: 'companies#edit', as: 'edit_company')
       resources :companies, only: [:show, :update] do
         resources :customers, only: [:edit, :create, :update, :destroy], shallow: true
         resources :successes, except: [:index], shallow: true do
@@ -147,40 +131,12 @@ Rails.application.routes.draw do
 
       # impersonate another user
       devise_scope(:user) do
-        post(
-          '/impersonate/:imitable_user_id', 
-          to: 'users/sessions#impersonate', 
-          as: 'impersonate_user',
-        )
+        post('/impersonate/:imitable_user_id', to: 'users/sessions#impersonate', as: 'impersonate_user')
       end
 
       # approval PDF
       get '/stories/:id/approval', to: 'stories#approval', as: 'story_approval'
-
     end
-
-    # get '/:workflow_stage', to: 'companies#show',
-    #         constraints: lambda { |params, request|
-    #           params[:id] = request.env['warden'].user(:user).try(:company_id).to_s
-    #           params[:workflow_stage].match(/(prospect|curate|promote|measure)/) &&
-    #           params[:id].present?  # i.e. user signed in
-    #         }, as: 'company_main'
-    #   get '/curate/:customer_slug/:story_slug', to: 'stories#edit',
-    #         constraints: lambda { |params, request|
-    #           Customer.friendly.exists?(params[:customer_slug]) &&
-    #           Story.friendly.exists?(params[:story_slug]) &&
-    #           params[:id] = Story.friendly.find(params[:story_slug]).id
-    #         }, as: 'curate_story'
-    #   get '/promote/preview/:story_slug', to: 'adwords#preview',
-    #         constraints: lambda { |params, request|
-    #           Story.friendly.exists?(params[:story_slug]) &&
-    #           params[:id] = Story.friendly.find(params[:story_slug]).id
-    #         }
-    #   get '/settings', to: 'companies#edit',
-    #         constraints: lambda { |params, request|
-    #           params[:id] = request.env['warden'].user(:user).company_id.to_s
-    #           true
-    #         }, as: 'company_settings'
 
     # token needed for access outside of user-authorized routes
     # type IN ('contribution', 'feedback', 'opt_out', 'remove')
