@@ -5,15 +5,16 @@
 - is_company_ad_image = form_ctrl == 'ads'
 - is_default_company_ad_image = is_company_ad_image && _image[:default]
 - is_ad_image = form_ctrl.nil?
+- is_user_photo = form_ctrl == 'user-profile'
 - is_company_logo = form_ctrl == 'company-profile'
 - is_customer_logo = form_ctrl == 'customer'
 - upload_enabled = local_assigns.fetch(:upload_enabled, true)
 - size_validation_enabled = upload_enabled && !is_customer_logo
-- image_replaceable = is_company_logo || is_customer_logo || (is_company_ad_image && _image[:default])
+- image_replaceable = is_user_photo || is_company_logo || is_customer_logo || (is_company_ad_image && _image[:default])
 - image_exists = _image[:image_url].present? || _image[:url].present? 
 
 = content_tag( \
-    is_customer_logo ? :div : :li,
+    (is_user_photo or is_customer_logo) ? :div : :li,
     class: [ \
       'image-card',
       { "image-card--#{_image[:type]}" => _image[:type].present? },
@@ -30,6 +31,7 @@
         _image[:default] ? \
           'defaultImageCard' : \
           (_image[:id] ? 'imageCard' : "new#{collection.singularize.capitalize}Card")) if is_company_ad_image),
+      image_card_user_profile_outlet: ('#user-profile-form' if is_user_photo),
       image_card_company_profile_outlet: ('#company-profile-form' if is_company_logo),
       image_card_customer_outlet: ('#customer-form' if is_customer_logo),
       action: ('click->image-card#toggleSelected' if is_ad_image) }) do
@@ -43,6 +45,13 @@
   - if is_company_logo 
     = hidden_field_tag( \
         "company[#{_image[:type].split(/(?=[A-Z])/)&.join('_').downcase}_url]",
+        _image[:url],
+        disabled: true,
+        data: { image_card_target: 'input urlInput' })
+  
+  - elsif is_user_photo
+    = hidden_field_tag( \
+        "user[photo_url]",
         _image[:url],
         disabled: true,
         data: { image_card_target: 'input urlInput' })
@@ -132,7 +141,7 @@
         - if upload_enabled
           / attaching data-trigger attribute to .fileinput-preview does not work
           button type="button" data-trigger="fileinput"
-            i.fa.fa-fw.fa-upload
+            i.fa.fa-fw class="fa-#{is_user_photo ? 'camera' : 'upload'}"
         - elsif is_company_ad_image && _image[:id].present? && !_image[:default]
           button.make-default type="button" data-action="image-card#makeDefault"
             i.fa.fa-fw.fa-refresh
@@ -150,7 +159,7 @@
         - if image_replaceable
           .fileinput-new.thumbnail
             img {
-              src="#{_image[:type].present? ? sized_image_placeholder(_image[:type]) : asset_url(LOGO_PLACEHOLDER)}" 
+              src="#{_image[:type].present? ? sized_image_placeholder(_image[:type]) : (is_user_photo ? asset_url('placeholders/user-photo-missing.png') : asset_url(LOGO_PLACEHOLDER))}" 
               alt="#{_image[:type]&.split(/(?=[A-Z])/)&.join(' ')}" }
           .fileinput-preview.fileinput-exists.thumbnail data-image-card-target="preview"
             - if image_exists
@@ -171,7 +180,7 @@
             data-validate="false"
             data-collection=collection
             data-max-file-size="5242880" 
-            data-min-dimensions=(ad_image_min_dimensions.to_json unless is_customer_logo)
+            data-min-dimensions=(ad_image_min_dimensions.to_json unless is_user_photo || is_customer_logo)
             data-aspect-ratio-tolerance=RESPONSIVE_AD_ASPECT_RATIO_TOLERANCE
             data-required-image=('true' if required) }
 
