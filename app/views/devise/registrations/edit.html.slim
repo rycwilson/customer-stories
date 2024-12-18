@@ -1,0 +1,144 @@
+- content_for(:head) do
+  meta name="turbo-cache-control" content="no-cache"
+
+= render('shared/navbars/company_nav', { company: current_user.company, workflow_stage: nil })
+
+.visible-xs-block.text-center style="margin-top: 30px"
+  h4 Sorry, this screen size is not supported
+
+main.container.hidden-xs
+  
+  .layout-sidebar
+    ul.nav data-controller="nav-list" role="tablist"
+      li.active
+        a href="#profile-tab" data-toggle="tab" data-nav-list-target="tab"
+          i.fa.fa-fw.fa-user
+          | &nbsp;&nbsp;Profile
+      li
+        a href="#password-tab" data-toggle="tab" data-nav-list-target="tab"
+          i.fa.fa-fw.fa-lock
+          | &nbsp;&nbsp;Change Password
+    - if @is_admin
+      .admin-sidebar
+        h4.text-danger Admin
+        .text-center
+          #impersonate-user.btn-group
+            button.btn.btn-default.dropdown-toggle {
+              type="button" 
+              data-toggle="dropdown" 
+              aria-haspopup="true" 
+              aria-expanded="false" }
+              | Impersonate&nbsp;&nbsp;
+              span.caret
+            ul.dropdown-menu aria-labelledby="impersonate-user"
+              - @imitable_users.each do |user|
+                li
+                  / the synchronous response approach has a 401 issue when redirecting to the impersonated user's subdomain
+                  /= link_to("#{user.full_name} (#{user.company.name})", impersonate_user_path(user), method: :post, remote: true, format: :js)
+                  = link_to( \
+                      "#{user.full_name} (#{user.company.name})", 
+                      impersonate_user_path(user), 
+                      method: :post, 
+                      remote: true, 
+                      format: :js)
+                    
+  .layout-main
+    .tab-content
+      #profile-tab.tab-pane.in.active
+
+        = turbo_frame_tag('edit-user-profile') do
+
+          = form_with( \
+              model: current_user,
+              url: user_registration_path,
+              html: { \
+                id: 'user-profile-form',
+                class: 'form-horizontal',
+                autocomplete: 'off',
+                novalidate: true,
+                data: { \
+                  controller: 'user-profile',
+                  user_profile_toast_value: (@toast rescue nil),
+                  asset_host: Rails.application.config.asset_host,
+                  action: [ \
+                    'ajax:beforeSend->user-profile#validate',
+                    'ajax:success->user-profile#onAjaxSuccess',
+                    'image-card:image-ready->user-profile#updateValidator',
+                    'image-card:clear-fileinput->user-profile#updateValidator',
+                    'image-card:upload-ready->user-profile#onUploadReady'].join(' ') }}) do |form|
+
+            .row
+              .col-sm-12.col-md-4.col-lg-3
+                .user-photo.col-sm-offset-4.col-sm-8.col-md-offset-3.col-md-9.col-lg-offset-0.col-lg-12 
+                  = render( \
+                      'shared/image_card',
+                      { form_ctrl: form.options[:html][:data][:controller],
+                        _image: { url: @user.photo_url } })
+              .form-group.col-sm-12.col-md-8.col-lg-9
+                = form.label(:first_name, 'First Name', class: 'control-label col-sm-4 col-md-3 col-lg-2')
+                .col-sm-8.col-md-9.col-lg-10
+                  = form.text_field(:first_name, class: 'form-control')
+
+              .col-sm-12.col-md-4.col-lg-3
+                .col-sm-offset-4.col-sm-8.col-md-offset-3.col-md-9.col-lg-offset-0.col-lg-12 
+
+              .form-group.col-sm-12.col-md-8.col-lg-9
+                = form.label(:last_name, 'Last Name', class: 'control-label col-sm-4 col-md-3 col-lg-2')
+                .col-sm-8.col-md-9.col-lg-10 
+                  = form.text_field(:last_name, class: 'form-control')
+              
+              .col-sm-12.col-md-4.col-lg-3
+                .col-sm-offset-4.col-sm-8.col-md-offset-3.col-md-9.col-lg-offset-0.col-lg-12 
+                
+              .form-group.col-sm-12.col-md-8.col-lg-9
+                = form.label(:title, 'Job Title', class: 'control-label col-sm-4 col-md-3 col-lg-2')
+                .col-sm-8.col-md-9.col-lg-10 
+                  = form.text_field(:title, class: 'form-control')
+
+              .col-sm-12.col-md-4.col-lg-3
+                .col-sm-offset-4.col-sm-8.col-md-offset-3.col-md-9.col-lg-offset-0.col-lg-12 
+                
+              .form-group.col-sm-12.col-md-8.col-lg-9
+                = form.label(:email, class: 'control-label col-sm-4 col-md-3 col-lg-2')
+                .col-sm-8.col-md-9.col-lg-10 
+                  = form.email_field(:email, class: 'form-control')
+
+              .col-sm-12.col-md-4.col-lg-3
+                .col-sm-offset-4.col-sm-8.col-md-offset-3.col-md-9.col-lg-offset-0.col-lg-12 
+
+              .form-group.col-sm-12.col-md-8.col-lg-9
+                = form.label(:phone, class: 'control-label col-sm-4 col-md-3 col-lg-2')
+                .col-sm-8.col-md-9.col-lg-10 
+                  = form.telephone_field(:phone, class: 'form-control')
+
+              .col-sm-12.col-md-offset-4.col-md-8.col-lg-offset-3.col-lg-9
+                .col-sm-offset-4.col-sm-8.col-md-offset-3.col-md-9.col-lg-offset-2.col-lg-10
+                  = form.submit('Save changes', class: 'btn btn-success')    
+
+      #password-tab.tab-pane
+
+        = form_with( \
+            model: current_user,
+            url: user_registration_path,
+            html: { \
+              id: 'change-password-form',
+              class: 'change-password form-horizontal' }) do |form|
+
+          .form-group 
+            = form.label(:current_password, 'Current Fart', class: 'control-label col-sm-4')
+            .col-sm-8.col-md-6.col-lg-4 
+              = form.password_field(:current_password, class: 'form-control', autocomplete: 'off')
+
+          .form-group 
+            = form.label(:password, 'New Password', class: 'control-label col-sm-4')
+            .col-sm-8.col-md-6.col-lg-4 
+              = form.password_field(:password, class: 'form-control', autocomplete: 'off')
+
+          .form-group 
+            = form.label(:password_confirmation, 'Confirm', class: 'control-label col-sm-4')
+            .col-sm-8.col-md-6.col-lg-4 
+              = form.password_field(:password_confirmation, class: 'form-control', autocomplete: 'off')
+
+          .form-group
+            .col-sm-12.col-md-offset-4.col-md-6.col-lg-4
+              = form.submit('Update password', class: 'btn btn-success')

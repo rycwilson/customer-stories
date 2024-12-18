@@ -9,14 +9,32 @@ Rails.application.routes.default_url_options = {
 }
 
 Rails.application.routes.draw do
-
   devise_for :admins
   mount RailsAdmin::Engine => '/admin', as: 'rails_admin'
 
+  devise_for(
+    :users, 
+    controllers: {
+      sessions: 'users/sessions',
+      registrations: 'users/registrations',
+      passwords: 'users/passwords',
+      confirmations: 'users/confirmations',
+      unlocks_controller: 'users/unlocks',
+      omniauth_callbacks_controller: 'users/omniauth_callbacks'
+    }
+  )
+  as(:user) do
+    get('/user-profile', to: 'users/registrations#edit', as: 'edit_user')
+  end
+
   use_doorkeeper
 
-  # zapier
   authenticate(:user) do
+    # registered user, unregistered company
+    get('/settings', to: 'companies#new', as: 'new_company', constraints: { subdomain: '' })
+    post('/settings', to: 'companies#create', as: 'companies', constraints: { subdomain: '' })
+    
+    # zapier
     get '/auth-test', to: 'application#auth_test'
     get '/curators', to: 'companies#get_curators'
     get '/invitation_templates', to: 'companies#get_invitation_templates'
@@ -25,12 +43,6 @@ Rails.application.routes.draw do
     post '/successes', to: 'successes#create', constraints: { zapier_create: 'true' }
     post '/contributions', to: 'contributions#create', constraints: { zapier_create: 'true' }
   end
-
-  get '/sitemap', to: 'site#sitemap'
-  get '/:google', to: 'site#google_verify', constraints: { google: /google\w+/ }
-
-  # sendgrid events (currently tracking open and click)
-  post '/esp/notifications', to: 'site#esp_notifications'
 
   # constraints(DevSubdomain) do
   #   authenticate(:user) do
@@ -133,15 +145,14 @@ Rails.application.routes.draw do
       get '/analytics/visitors', to: 'analytics#visitors', as: 'measure_visitors'
       get '/analytics/stories', to: 'analytics#stories', as: 'measure_stories'
 
-      # switch to a different user (this needs to come before the next route below)
-      post(
-        '/user-profile', 
-        to: 'profile#switch', 
-        as: 'switch_user',
-        constraints: -> (request) { request.params[:switch_user_id].present? }
-      )
-      # user profile
-      get '/user-profile', to: 'profile#edit', as: 'edit_profile'
+      # impersonate another user
+      devise_scope(:user) do
+        post(
+          '/impersonate/:imitable_user_id', 
+          to: 'users/sessions#impersonate', 
+          as: 'impersonate_user',
+        )
+      end
 
       # approval PDF
       get '/stories/:id/approval', to: 'stories#approval', as: 'story_approval'
@@ -178,19 +189,12 @@ Rails.application.routes.draw do
     get '/contributions/:token/:type', to: 'contributions#update', constraints: { type: /(opt_out|remove)/ }
     put '/contributions/:token', to: 'contributions#update', as: 'contributor_submission', constraints: { submission: true }
 
-    # linkedin
-    get '/user-profile/linkedin_connect', to: 'profile#linkedin_connect', as: 'linkedin_connect'
-    get '/user-profile/linkedin_callback', to: 'profile#linkedin_callback'
-
-    get '/linkedin_auth', to: 'application#linkedin_auth'
-
-
     # need to pick up on devise sign-in route here, without doing so explicitly
     # as that will conflict with devise routes declared below
     # 'method' instead of 'action' - latter is keyword with its own params entry
-    devise_scope :user do
-      get '/:devise/:method', to: 'users/sessions#new', constraints: { devise: 'users', method: 'sign_in' }
-    end
+    # devise_scope :user do
+    #   get '/:devise/:method', to: 'users/sessions#new', constraints: { devise: 'users', method: 'sign_in' }
+    # end
 
     # public story route moved down here so it doesn't hijack any other routes via dynamic segments.
     # don't call this route 'story' or it will leave the PUT and DELETE routes (above)
@@ -225,14 +229,6 @@ Rails.application.routes.draw do
 
     # broken links
     get '/*all', to: 'site#valid_subdomain_bad_path'
-
-  end
-
-  # registered user, unregistered company
-  # this must come after the CompanySubdomain constraint
-  authenticate(:user) do
-    get '/settings', to: 'companies#new', as: 'new_company'
-    post '/settings', to: 'companies#create', as: 'companies'
   end
 
   # all other subdomains
@@ -242,28 +238,9 @@ Rails.application.routes.draw do
 
   root 'site#landing', { action: 'home' }
   get '/:page', to: 'site#landing', constraints: { page: /product|plans|company|team|terms|privacy|our-story/ }
+  get '/sitemap', to: 'site#sitemap'
+  get '/:google', to: 'site#google_verify', constraints: { google: /google\w+/ }
 
-  # user profile - company not registered (Curator or Contributor)
-  # (need to give the route a different alias to distinguish from the one
-  #  under subdomains)
-  get   '/user-profile', to: 'profile#edit', as: 'edit_profile_no_company'
-  get   '/user-profile/linkedin_connect', to: 'profile#linkedin_connect', as: 'linkedin_connect_no_company'
-  get   '/user-profile/linkedin_callback', to: 'profile#linkedin_callback'
-
-  get '/linkedin_auth_callback', to: 'application#linkedin_auth_callback'
-
-  # above comments about distinguishing the route apply to below as well
-  #
   # this route is for the case of a Contributor being logged in (no subdomain)
-  # and updating a Contribution by checking or unchecking a LinkedIn Profile box
   put   '/contributions/:token', to: 'contributions#update'
-
-  devise_for :users, controllers: {
-      sessions: 'users/sessions',
-      registrations: 'users/registrations',
-      passwords: 'users/passwords',
-      confirmations: 'users/confirmations',
-      unlocks_controller: 'users/unlocks',
-      omniauth_callbacks_controller: 'users/omniauth_callbacks'
-    }
 end

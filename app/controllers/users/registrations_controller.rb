@@ -1,6 +1,19 @@
 # http://stackoverflow.com/questions/6234045/how-do-you-access-devise-controllers
 
 class Users::RegistrationsController < Devise::RegistrationsController
+  IMITABLE_USERS = [
+    'Dan acme-test',
+    'Dan Lindblom',
+    'Dan Demo',
+    'Ryan Wilson',
+    'Ryan Palo',
+    'Bill Lee',
+    'Carlos Ramon',
+    'Kevin Turner',
+    'Heather Annesley',
+    'Haley Fraser',
+    'Rachelle Benson'
+  ]
 # before_filter :configure_sign_up_params, only: [:create]
 # before_action :configure_account_update_params, only: [:update]
 # before_action :set_s3_direct_post, only: [:edit, :update]
@@ -55,9 +68,24 @@ class Users::RegistrationsController < Devise::RegistrationsController
     end
   end
 
-  # GET /resource/edit
+  # GET /user-profile
   def edit
-    super
+    # if a request is received at the default devise route, redirect to the custom route
+    redirect_to(edit_user_path) && return if request.path == edit_user_registration_path
+
+    # original_user = User.find_by_id(session[:original_user_id])
+    # @is_admin = current_user.admin? || original_user&.admin?
+    @is_admin = current_user.admin? || true_user.admin?
+    if @is_admin
+      @imitable_users = IMITABLE_USERS.flat_map do |name|
+        User
+          .where.not(company_id: nil)
+          .where(first_name: name.split(' ').first, last_name: name.split(' ').last)
+          # .map { |user| { id: user.id, email: user.email, name: "#{user.full_name} (#{user.company.name})" } }
+      end
+    end
+
+    render(:edit, layout: 'application')
   end
 
   # PUT /resource

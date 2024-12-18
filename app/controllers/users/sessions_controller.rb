@@ -23,6 +23,7 @@ class Users::SessionsController < Devise::SessionsController
   # after that we need another way to keep track.
   # (see also application.html.erb)
   def new
+    # redirect_to(new_user_session_path) and return if request.path =~ /users/
     @zap_auth_initial_req = true if request.referer.try(:include?, 'zapier')
     # @zap_auth_initial_req = true
     @zap_auth_retry = params.dig(:user, :zap_auth_submitted).present?
@@ -30,21 +31,30 @@ class Users::SessionsController < Devise::SessionsController
   end
 
   # POST /resource/sign_in
-  # overriding native devise in order to customize flash message
   def create
-    self.resource = warden.authenticate!(auth_options)
-    # flash[:notice] = "Signed in" if is_flashing_format?
-    flash.delete(:notice) # skip it
-    sign_in(resource_name, resource)
-    yield resource if block_given?
-    respond_with(resource, location: after_sign_in_path_for(resource))
+    super
+    flash.delete(:notice)
   end
 
   # DELETE /resource/sign_out
   def destroy
-    gon.push({ company: nil, stories: nil, current_user: nil })
     super
-    flash.delete(:notice)  # skip the flash for sign out
+    flash.delete(:notice)
+  end
+
+  def impersonate
+    redirect_to(edit_user_path) && return unless true_user.admin?
+    if imitable_user = User.find_by_id(params[:imitable_user_id])
+      impersonate_user(imitable_user)
+      @toast = { type: 'success', message: "Impersonating #{imitable_user.full_name}" }
+    else
+      # @toast = { type: 'danger', message: 'User not found' }
+    end
+    # this results in a 401 when redirecting to a different subdomain - why?
+    # redirect_to edit_user_url(subdomain: current_user.company.subdomain)
+    respond_to do |format|
+      format.js { render js: 'window.location.reload()' }
+    end
   end
 
   # protected

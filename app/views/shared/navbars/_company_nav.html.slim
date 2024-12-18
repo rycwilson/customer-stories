@@ -6,7 +6,7 @@ nav.company-nav.navbar-fixed-top.hidden-xs data-controller="header"
     - if current_user.company.blank?
       .welcome-mesg
         h4
-          = "Complete sign-up by configuring your #{controller_name == 'profile' ? '<a href="' + new_company_path + '">account settings</a>' : 'account settings'}.".html_safe
+          = "Complete sign-up by configuring your #{devise_controller? ? '<a href="' + new_company_path + '">account settings</a>' : 'account settings'}.".html_safe
           / = "Welcome to Customer Stories.\u00A0\u00A0Please #{controller_name == 'profile' ? '<a href="' + new_company_path + '">register</a>' : 'register'} your company.".html_safe
             
     - else
@@ -41,23 +41,16 @@ nav.company-nav.navbar-fixed-top.hidden-xs data-controller="header"
               span = @story.title
 
     ul.nav.nav-tabs.nav-settings role="tablist"
-      li.dropdown.user-profile class="#{'active' if controller_name == 'profile'}"
+      li.dropdown.user-profile class="#{'active' if devise_controller?}"
         a.dropdown-toggle data-toggle="dropdown" href="javascript:;"
           i.fa.fa-fw.fa-user-circle-o
           i.fa.fa-caret-down
 
         ul.dropdown-menu.dropdown-menu-right role="menu"
-          - if curator?(company)
-            li
-              a href="/user-profile"
-                i.fa.fa-fw.fa-user-circle-o
-                = current_user.full_name
-          - else
-            li
-              = link_to(edit_profile_no_company_path) do
-                i.fa.fa-fw.fa-user-circle-o
-                = current_user.full_name
-          / <li role="separator" class="divider"></li>
+          li
+            = link_to(edit_user_path) do
+              i.fa.fa-fw.fa-user-circle-o
+              = current_user.full_name
           li
             = link_to(destroy_user_session_path, method: :delete) do
               i.fa.fa-fw.fa-sign-out
@@ -97,7 +90,7 @@ nav.company-nav.navbar-fixed-top.hidden-xs data-controller="header"
               i.fa.fa-fw.fa-tags
               | Story Tags
           li class=('hidden' if company&.new_record?)
-            a href="/settings#{company&.persisted? ? '#account' : ''}"
+            = link_to(company&.persisted? ? edit_company_path + '#account' : new_company_path) do
               i.fa.fa-fw.fa-gear
               | Account Settings
         /div
