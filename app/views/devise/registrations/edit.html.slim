@@ -33,8 +33,8 @@ main.container.hidden-xs
             ul.dropdown-menu aria-labelledby="impersonate-user"
               - @imitable_users.each do |user|
                 li
-                  / the synchronous response approach has a 401 issue when redirecting to the impersonated user's subdomain
-                  /= link_to("#{user.full_name} (#{user.company.name})", impersonate_user_path(user), method: :post, remote: true, format: :js)
+                  / the synchronous approach has a 401 issue when redirecting to the impersonated user's subdomain
+                  /= link_to("#{user.full_name} (#{user.company.name})", impersonate_user_path(user), method: :post)
                   = link_to( \
                       "#{user.full_name} (#{user.company.name})", 
                       impersonate_user_path(user), 
