@@ -4,15 +4,6 @@ class Users::SessionsController < Devise::SessionsController
   # before_filter :configure_sign_in_params, only: [:create]
   layout('landing')
 
-  # if attempting to log in through a subdomain (in the url, not in the form),
-  # validate that request.subdomain matches the user.company.subdomain
-  # this callback assumes the user exists.
-  before_action(only: :create) do
-    if request.subdomain.present? && request.subdomain != DEV_TUNNEL_SUBDOMAIN
-      validate_user_subdomain(request.subdomain, params[:user][:email])
-    end
-  end
-
   # GET /resource/sign_in
   # a sign_in form submitted as zap auth request will have f.hidden_field(:zap_auth_submitted, value: true)
   # and that param will appear here if a validation error results in re-render
@@ -32,6 +23,10 @@ class Users::SessionsController < Devise::SessionsController
 
   # POST /resource/sign_in
   def create
+    # user will be authenticated by warden before this action is reached:
+    # https://github.com/heartcombo/devise/issues/4951
+    # https://github.com/heartcombo/devise/issues/5602
+    return sign_out_and_redirect(current_user) if unauthorized_subdomain?
     super
     flash.delete(:notice)
   end
@@ -69,14 +64,7 @@ class Users::SessionsController < Devise::SessionsController
 
   private
 
-  def validate_user_subdomain subdomain, email
-    if User.find_by(email: email).try(:company).try(:subdomain) == subdomain
-      true
-    else
-      # kill session since user is already logged in at this point (not sure why!)
-      request.reset_session
-      redirect_to(root_url(host: request.domain), flash: { danger: "Not authorized" }) and return false
-    end
+  def unauthorized_subdomain?
+    request.subdomain.present? && request.subdomain != DEV_TUNNEL_SUBDOMAIN && current_user&.company&.subdomain != request.subdomain
   end
-
 end
