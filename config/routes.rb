@@ -24,6 +24,7 @@ Rails.application.routes.draw do
     }
   )
 
+  # since this is going to a devise controller, no authenticate block is needed
   as(:user) do
     get('/user-profile', to: 'users/registrations#edit', as: 'edit_user')
   end
@@ -177,11 +178,6 @@ Rails.application.routes.draw do
         hidden_link: true
       )
     end
-        
-    # find a tag by its slug, necessary to set filter select boxes
-    # on sync load of stories#index
-    get   '/companies/:company_id/story_categories/:slug', to: 'story_categories#show'
-    get   '/companies/:company_id/products/:slug', to: 'products#show'
 
     # broken links
     get '/*all', to: 'site#valid_subdomain_bad_path'
