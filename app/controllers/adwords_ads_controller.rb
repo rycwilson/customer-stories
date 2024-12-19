@@ -6,6 +6,41 @@ class AdwordsAdsController < ApplicationController
     respond_to { |format| format.json }
   end
 
+  def show 
+    ad = AdwordsAd.find params[:id]   # this will be the topic ad
+    @story = Story.includes(adwords_ads: { adwords_images: {} }).find(ad.story_id)
+    # disable the ad links in production
+    @company = @story.company
+    @is_production = ENV['HOST_NAME'] == 'customerstories.net'
+    @story_url = @story.csp_story_url
+    @short_headline = @company.adwords_short_headline
+    @long_headline = @story.ads.long_headline
+    @call_to_action = 'See More'
+  
+    # must use strict_encode do newlines aren't added
+    # @image_base64 = Base64.strict_encode64( open(@image_url) { |io| io.read } )
+    # @image_dominant_color = Miro::DominantColors.new(@image_url).to_hex[0]
+  
+    # same for the logo
+    @image_url = (
+      @story.ads.first&.images&.marketing&.landscape&.take&.image_url || 
+      @company.ad_images.default.marketing.landscape.take&.image_url ||
+      helpers.asset_url(RESPONSIVE_AD_LANDSCAPE_IMAGE_PLACEHOLDER)
+    )
+    @square_image_url = (
+      @story.ads.first&.images&.marketing&.square&.take&.image_url || 
+      @company.ad_images.default.marketing.square.take&.image_url ||
+      helpers.asset_url(RESPONSIVE_AD_SQUARE_IMAGE_PLACEHOLDER)
+    )
+    @logo_url = (
+      @story.ads.first&.images&.logo&.square&.take&.image_url || 
+      @company.ad_images.default.logo.square.take&.image_url ||
+      helpers.asset_url(RESPONSIVE_AD_SQUARE_LOGO_PLACEHOLDER)
+    )
+    set_ad_parameters(@long_headline)
+    render(layout: false)
+  end
+
   def edit 
     @ad = AdwordsAd.find params[:id]
     render(partial: 'adwords_ads/edit_ad_images', locals: { ad: @ad })
@@ -154,50 +189,10 @@ class AdwordsAdsController < ApplicationController
     # end
   end
 
-  def preview
-    @story = Story.includes(adwords_ads: { adwords_images: {} }).friendly.find(params[:story_slug])
-    # disable the ad links in production
-    @company = @story.company
-    @is_production = ENV['HOST_NAME'] == 'customerstories.net'
-    @story_url = @story.csp_story_url
-    @short_headline = @company.adwords_short_headline
-    @long_headline = @story.ads.long_headline
-    @call_to_action = 'See More'
-
-    # must use strict_encode do newlines aren't added
-    # @image_base64 = Base64.strict_encode64( open(@image_url) { |io| io.read } )
-    # @image_dominant_color = Miro::DominantColors.new(@image_url).to_hex[0]
-
-    # same for the logo
-    @image_url = (
-      @story.ads.first&.images&.marketing&.landscape&.take&.image_url || 
-      @company.ad_images.default.marketing.landscape.take&.image_url ||
-      helpers.asset_url(RESPONSIVE_AD_LANDSCAPE_IMAGE_PLACEHOLDER)
-    )
-    @square_image_url = (
-      @story.ads.first&.images&.marketing&.square&.take&.image_url || 
-      @company.ad_images.default.marketing.square.take&.image_url ||
-      helpers.asset_url(RESPONSIVE_AD_SQUARE_IMAGE_PLACEHOLDER)
-    )
-    @logo_url = (
-      @story.ads.first&.images&.logo&.square&.take&.image_url || 
-      @company.ad_images.default.logo.square.take&.image_url ||
-      helpers.asset_url(RESPONSIVE_AD_SQUARE_LOGO_PLACEHOLDER)
-    )
-    set_ad_parameters(@long_headline)
-    render :ads_preview, layout: false
-  end
-
   private
 
   def ad_params 
-    params.require(:adwords_ad).permit(
-      :status,
-      :long_headline,
-      :main_color,
-      :accent_color,
-      adwords_image_ids: []
-    )
+    params.require(:adwords_ad).permit(:status, :long_headline, :main_color, :accent_color, adwords_image_ids: [])
   end
 
   # def story_params

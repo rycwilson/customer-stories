@@ -82,12 +82,6 @@ Rails.application.routes.draw do
       get '/share_on_linkedin', on: :member, to: 'stories#share_on_linkedin'
     end
 
-    get(
-      '/promote/preview/:story_slug', 
-      to: 'adwords_ads#preview',
-      constraints: lambda { |params, request| Story.friendly.exists?(params[:story_slug]) }
-    )
-
     authenticate(:user) do
       get('/:workflow_stage', to: 'companies#show', workflow_stage: /prospect|curate|promote|measure/, as: 'dashboard')
       get('/settings', to: 'companies#edit', as: 'edit_company')
@@ -114,13 +108,12 @@ Rails.application.routes.draw do
         resources :ctas, only: [:new, :show, :create, :update, :destroy]
         resources :invitation_templates
         member { get :set_reset_gads }
-        member { get '/promote-settings', to: 'companies#show' }
         member { put :widget }
         # need :get for the sync. response (redirect_to)
         # and :put for the async. response (see companies/promote.js.erb)
         member { put '/adwords/reset', to: 'adwords#sync_company', as: 'adwords_sync' }
         
-        resources :adwords_ads, only: [:index, :edit, :update], shallow: true
+        resources :adwords_ads, only: [:index, :show, :edit, :update], shallow: true
       end
 
       get '/successes', to: 'successes#index'

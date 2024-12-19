@@ -118,7 +118,7 @@ export function dataTableConfig(): Config {
 }
 
 function actionsDropdownTemplate(row: AdwordsAd, type: string, set: any) {
-  const { id, editPath } = row;
+  const { id, path, editPath } = row;
   return `
     <a id="promoted-story-actions-dropdown-${id}" 
       href="#" 
@@ -145,7 +145,7 @@ function actionsDropdownTemplate(row: AdwordsAd, type: string, set: any) {
       </a>
     </li>
     <li>
-      <a href="/promote/preview/${id}" target="_blank">
+      <a href="${path}" target="_blank">
         <i class="fa fa-fw fa-external-link"></i>
         Preview
       </a>
