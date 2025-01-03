@@ -52,10 +52,11 @@ nav.company-nav.navbar-fixed-top.hidden-xs data-controller="header"
               i.fa.fa-fw.fa-user-circle-o
               = current_user.full_name
           li
-            = link_to(destroy_user_session_path, method: :delete) do
+            / https://github.com/hotwired/turbo/issues/119#issuecomment-765708124
+            = button_to(destroy_user_session_path, method: :delete, data: { turbo: 'false' }) do
               i.fa.fa-fw.fa-sign-out
               | Sign out
-        div
+        /div
       
       li.dropdown.company-settings class=('active' if controller_name == 'companies' && action_name =~ /new|edit/)
         a.dropdown-toggle data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false"

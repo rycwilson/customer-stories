@@ -88,18 +88,25 @@ ul.dropdown-menu {
     font-size: 1.25em;
   }
 
-  a {
+  a,
+  button {
     @include flex-row-center;
     font-family: $company-title-font;
     border-radius: 0; 
-    padding: 0.85em 2em 0.85em 1.4em;
     color: $gray;
+    padding: 0.85em 2em 0.85em 1.4em;
 
     &:hover, 
     &:focus {
       background-color: $blueish-gray-lighter;
       color: $gray-darker; 
     }
+  }
+  
+  button {
+    border: 0;
+    width: 100%;
+    background: transparent;
   }
 
   &.dropdown-menu-right {
