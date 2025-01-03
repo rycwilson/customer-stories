@@ -29,15 +29,15 @@ nav.navbar.navbar-default.navbar-fixed-top role="banner"
             - if storefront_page == 'plans'
               span.sr-only (current)
 
-        - if user_signed_in? && current_user.company_id.present?
+        - if user_signed_in?
           li
             = link_to( \
-                company_url(subdomain: current_user.company.subdomain, id: current_user.company_id),
-                class: 'navbar-brand') do
-              - if current_user.company.logo_url.present?
-                = image_tag current_user.company.logo_url
+                current_user.company.present? ? dashboard_url('curate', subdomain: current_user.company.subdomain) : new_company_path, 
+                class: current_user.company&.square_logo_url.present? ? 'navbar-brand' : '') do
+              - if current_user.company&.square_logo_url.present?
+                = image_tag(current_user.company.square_logo_url, alt: "#{company.name} Logo")
               - else
-                = image_tag(LOGO_PLACEHOLDER, alt: "logo")
+                | Account
         - else
           li class=('active' if is_sign_up)
             = link_to(File.join(root_url(subdomain: nil), new_user_registration_path)) do
