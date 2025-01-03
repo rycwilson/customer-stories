@@ -4,7 +4,7 @@
 # request.env['warden'].user(:user)
 #
 Rails.application.routes.default_url_options = {
-  protocol: Rails.env.development? || Rails.env.test? ? 'http' : 'https',
+  protocol: Rails.env.production? ? 'https' : 'http',
   host: ENV['HOST_NAME']
 }
 
@@ -181,7 +181,8 @@ Rails.application.routes.draw do
   get '/', to: 'site#invalid_subdomain', constraints: { subdomain: /.+/ }
   get '/*all', to: 'site#invalid_subdomain', constraints: { subdomain: /.+/ }
 
-  root 'site#landing', { action: 'home' }
+  # landing pages
+  root 'site#landing'
   get '/:page', to: 'site#landing', constraints: { page: /product|plans|company|team|terms|privacy|our-story/ }
   get '/sitemap', to: 'site#sitemap'
   get '/:google', to: 'site#google_verify', constraints: { google: /google\w+/ }

@@ -2,10 +2,6 @@ class SiteController < ApplicationController
 
   skip_before_action :verify_authenticity_token, only: :esp_notifications
 
-  def index
-    render(action: 'home', layout: 'landing')
-  end
-
   def strip_subdomain
     if request.query_string.present?
       redirect_to request.protocol + request.domain + request.path + '?' + request.query_string

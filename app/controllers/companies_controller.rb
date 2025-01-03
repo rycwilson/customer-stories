@@ -12,7 +12,6 @@ class CompaniesController < ApplicationController
   end
 
   def show
-    redirect_to(dashboard_path('curate')) if request.path =~ /\/companies\/\d+/
     @curator_id = preselected_curator_id(@company)
     @workflow_stage = params[:workflow_stage]
     @prospect_tab = cookies['csp-prospect-tab'] || '#customer-wins'
