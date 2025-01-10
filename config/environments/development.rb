@@ -3,16 +3,16 @@ require "active_support/core_ext/integer/time"
 Rails.application.configure do
   # Settings specified here will take precedence over those in config/application.rb.
 
-  config.hosts << ".lvh.me"
+  config.hosts << '.lvh.me'
 
   # for viewing via mobile on local network:
   # get localhost IP from system preferences => network (here it's 192.168.1.3)
   # point mobile browser to [subdomain].192.168.1.3.xip.io:3000  
   # config.action_dispatch.tld_length = 5
 
-  # this ensures subdomans work properly in dev environment (was originally in session_store.rb)
+  # this ensures subdomans work in dev environment (was originally in session_store.rb)
   # ref http://stackoverflow.com/questions/10402777
-  config.session_store(:cookie_store, key: '_csp_session', domain: 'lvh.me', tld_length: 2)
+  config.session_store(:cookie_store, key: '_csp_session', domain: :all, tld_length: 2)
 
   # In the development environment your application's code is reloaded on
   # every request. This slows down response time but is perfect for development
@@ -55,6 +55,7 @@ Rails.application.configure do
   # Store uploaded files on the local file system (see config/storage.yml for options)
   config.active_storage.service = :local
 
+  config.action_mailer.default_url_options = { protocol: 'http', host: 'lvh.me', port: 3000 }
   config.action_mailer.perform_deliveries = false
 
   # Print deprecation notices to the Rails logger.
