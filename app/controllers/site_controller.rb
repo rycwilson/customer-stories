@@ -1,21 +1,12 @@
 class SiteController < ApplicationController
-
   skip_before_action :verify_authenticity_token, only: :esp_notifications
 
-  def strip_subdomain
-    if request.query_string.present?
-      redirect_to request.protocol + request.domain + request.path + '?' + request.query_string
+  def not_found
+    if current_user&.company.present?
+      redirect_to root_url(subdomain: current_user.company.subdomain)
     else
-      redirect_to request.protocol + request.domain + request.path
+      redirect_to(user_signed_in? ? new_company_url(subdomain: '') : root_url(subdomain: ''))
     end
-  end
-
-  def valid_subdomain_bad_path
-    redirect_to root_url(host: request.host), flash: { warning: "Page doesn't exist" }
-  end
-
-  def invalid_subdomain
-    redirect_to root_url(host: request.domain)
   end
 
   def landing

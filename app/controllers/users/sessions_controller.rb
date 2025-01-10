@@ -41,9 +41,9 @@ class Users::SessionsController < Devise::SessionsController
     redirect_to(edit_user_path) && return unless true_user.admin?
     if imitable_user = User.find_by_id(params[:imitable_user_id])
       impersonate_user(imitable_user)
+      session['authorized_subdomains'] = ['', imitable_user.company.subdomain]
       @toast = { type: 'success', message: "Impersonating #{imitable_user.full_name}" }
-
-      # both redirects result in a 401 - why?
+      # TODO both redirects result in a 401 - why?
       # redirect_to edit_user_url(subdomain: current_user.company.subdomain)
       # redirect_to url_for(subdomain: current_user.company.subdomain, controller: 'users/registrations', action: 'edit')
       respond_to do |format|
@@ -62,9 +62,5 @@ class Users::SessionsController < Devise::SessionsController
   #   devise_parameter_sanitizer.for(:sign_in) << :attribute
   # end
 
-  private
-
-  def unauthorized_subdomain?
-    request.subdomain.present? && request.subdomain != DEV_TUNNEL_SUBDOMAIN && current_user&.company&.subdomain != request.subdomain
-  end
+  # private
 end

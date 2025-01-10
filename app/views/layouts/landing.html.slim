@@ -22,11 +22,7 @@ html lang="en-US"
     - if @storefront_page 
       = render('site/shared/site_index_meta_tags')
 
-    = render( \
-        'shared/navbars/landing_navbar', 
-        { storefront_page: @storefront_page, 
-          is_sign_in: controller_name == 'sessions', 
-          is_sign_up: controller_name == 'registrations' })
+    = render('shared/navbars/landing_navbar', { storefront_page: @storefront_page })
 
     main = yield 
     

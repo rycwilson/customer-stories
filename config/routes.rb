@@ -62,7 +62,7 @@ Rails.application.routes.draw do
 
   constraints(CompanySubdomain) do
 
-    get '/', to: 'stories#index'
+    get '/', to: 'stories#index', as: 'public_stories'
 
     get '/plugins/:type/cs', to: 'plugins#main'
     # get '/widgets/:type/cs', to: 'plugins#main'  # legacy (was varmour)
@@ -171,22 +171,19 @@ Rails.application.routes.draw do
         hidden_link: true
       )
     end
-
-    # broken links
-    get '/*all', to: 'site#valid_subdomain_bad_path'
   end
 
-  # all other subdomains
-  # get '/*all', to: 'site#strip_subdomain', constraints: { subdomain: 'www' }
-  get '/', to: 'site#invalid_subdomain', constraints: { subdomain: /.+/ }
-  get '/*all', to: 'site#invalid_subdomain', constraints: { subdomain: /.+/ }
+  get '/', to: 'site#not_found', constraints: { subdomain: /.+/ }
+  get '/*all', to: 'site#not_found', constraints: { subdomain: /.+/ }
 
   # landing pages
   root 'site#landing'
   get '/:page', to: 'site#landing', constraints: { page: /product|plans|company|team|terms|privacy|our-story/ }
   get '/sitemap', to: 'site#sitemap'
   get '/:google', to: 'site#google_verify', constraints: { google: /google\w+/ }
-
+  
   # this route is for the case of a Contributor being logged in (no subdomain)
-  put   '/contributions/:token', to: 'contributions#update'
+  put '/contributions/:token', to: 'contributions#update'
+  
+  match '*all', via: :all, to: 'site#not_found'
 end
