@@ -35,17 +35,17 @@ nav.navbar.navbar-default.navbar-fixed-top role="banner"
                 current_user.company.present? ? dashboard_url('curate', subdomain: current_user.company.subdomain) : new_company_path, 
                 class: current_user.company&.square_logo_url.present? ? 'navbar-brand' : '') do
               - if current_user.company&.square_logo_url.present?
-                = image_tag(current_user.company.square_logo_url, alt: "#{company.name} Logo")
+                = image_tag(current_user.company.square_logo_url, alt: "#{current_user.company.name} Logo")
               - else
                 | Account
         - else
-          li class=('active' if is_sign_up)
+          li class=('active' if controller_name == 'registrations')
             = link_to(File.join(root_url(subdomain: nil), new_user_registration_path)) do
               | Create Account 
-              - if is_sign_up
+              - if controller_name == 'registrations'
                 span.sr-only (current)
-          li class=('active' if is_sign_in)
+          li class=('active' if controller_name == 'sessions')
             = link_to(new_user_session_path) do 
               | Sign in
-              - if is_sign_in
+              - if controller_name == 'sessions'
                 span.sr-only (current)
