@@ -72,15 +72,6 @@ module ApplicationHelper
   #   user_signed_in? && current_user.company_id.blank?
   # end
 
-  # method takes a url and strips out the subdomain (as defined by the current request)
-  def strip_subdomain url
-    if request.subdomain.present?
-      url.sub(request.subdomain + '.', '')
-    else
-      url
-    end
-  end
-
   # http://www.w3.org/TR/AERT#color-contrast
   def color_shade(hex_color)
     # make sure it's a six-character hex value (not counting #)
