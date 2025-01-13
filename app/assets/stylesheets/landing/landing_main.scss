@@ -18,8 +18,6 @@ $light-blue: #f0ffff; // eaf6fb
 $gray: #e0e8eb; // #b8d5d7;
 $light-gray: #eaf2f5;
 
-$alert-red: #d9534f;
-
 @import 'navbar';
 @import 'buttons';
 @import 'devise';
@@ -28,12 +26,12 @@ $alert-red: #d9534f;
 
 .has-error {
   .control-label {
-    color: $alert-red;
+    color: $state-danger-text;
   }
 
   .form-control,
   .form-control:focus {
-    border-color: $alert-red;
+    border-color: $state-danger-text;
   }
 }
 
@@ -132,6 +130,12 @@ i,
 
 .heading-block::after {
   background-color: $accent-color;
+}
+
+.alert-danger {
+  background-color: $state-danger-bg;
+  border-color: $state-danger-bg;
+  color: $state-danger-text;
 }
 
 // replace Oswald with Lato

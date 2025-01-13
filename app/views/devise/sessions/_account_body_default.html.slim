@@ -1,12 +1,13 @@
 - if path == new_user_session_path
-  h3 Sign in to your account
+  h3 = "Sign in to #{Company.exists?(subdomain: request.subdomain) ? Company.find_by_subdomain(request.subdomain).name : 'your account'}"
 - elsif path == new_admin_session_path
   h3 CSP Admin
-p
+
+/p
   | Don't have an account?&nbsp;&nbsp;&nbsp;
   = link_to( \
-      'Sign up', 
-      request.path.include?('users') ? strip_subdomain(new_user_registration_url) : new_admin_registration_path)
+      'Create account', 
+      request.path.include?('users') ? new_user_registration_url(subdomain: '') : new_admin_registration_path)
 
 = form_for( \
     resource, 
@@ -18,7 +19,7 @@ p
 
   .form-group
     = f.label(:email, class: 'control-label')
-    = f.email_field(:email, { class: 'form-control', required: true, autocomplete: 'off', placeholder: 'Email address' })
+    = f.email_field(:email, { class: 'form-control', required: true, autofocus: true, placeholder: 'Email address' })
 
   .form-group style="margin-bottom:0"
     = f.label(:password, class: 'control-label')
