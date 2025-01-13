@@ -12,21 +12,23 @@ Rails.application.routes.draw do
   devise_for :admins
   mount RailsAdmin::Engine => '/admin', as: 'rails_admin'
 
-  devise_for(
-    :users, 
-    controllers: {
-      sessions: 'users/sessions',
-      registrations: 'users/registrations',
-      passwords: 'users/passwords',
-      confirmations: 'users/confirmations',
-      unlocks_controller: 'users/unlocks',
-      omniauth_callbacks_controller: 'users/omniauth_callbacks'
-    }
-  )
+  constraints(DeviseSubdomain) do
+    devise_for(
+      :users, 
+      controllers: {
+        sessions: 'users/sessions',
+        registrations: 'users/registrations',
+        passwords: 'users/passwords',
+        confirmations: 'users/confirmations',
+        unlocks_controller: 'users/unlocks',
+        omniauth_callbacks_controller: 'users/omniauth_callbacks'
+      }
+    )
 
-  # since this is going to a devise controller, no authenticate block is needed
-  as(:user) do
-    get('/user-profile', to: 'users/registrations#edit', as: 'edit_user')
+    # since this is going to a devise controller, no authenticate block is needed
+    as(:user) do
+      get('/user-profile', to: 'users/registrations#edit', as: 'edit_user')
+    end
   end
 
   use_doorkeeper
