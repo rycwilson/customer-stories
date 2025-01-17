@@ -3,8 +3,7 @@ class User < ApplicationRecord
   # RYAN = self.find_by(email:'rycwilson@gmail.com')
 
   belongs_to :company, optional: true
-  validates :first_name, presence: true
-  validates :last_name, presence: true
+  validates :first_name, :last_name, :email, presence: true
   validates :phone, format: { without: /_/ }
   # validate correct format OR empty string
 

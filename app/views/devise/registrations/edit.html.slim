@@ -46,6 +46,7 @@ main.container.hidden-xs
     .tab-content
       #profile-tab.tab-pane.in.active
 
+        / disable rails-ujs so as not to interfere with turbo (note this is unnecessary when using turbo frames)
         = form_with( \
             model: current_user,
             url: user_registration_path,
@@ -60,8 +61,7 @@ main.container.hidden-xs
                 user_profile_toast_value: (@toast rescue nil),
                 asset_host: Rails.application.config.asset_host,
                 action: [ \
-                  'ajax:beforeSend->user-profile#validate',
-                  'ajax:success->user-profile#onAjaxSuccess',
+                  'submit->user-profile#validate',
                   'image-card:image-ready->user-profile#updateValidator',
                   'image-card:clear-fileinput->user-profile#updateValidator',
                   'image-card:upload-ready->user-profile#onUploadReady'].join(' ') }}) do |form|
@@ -76,7 +76,9 @@ main.container.hidden-xs
             .form-group.col-sm-12.col-md-8.col-lg-9
               = form.label(:first_name, 'First Name', class: 'control-label col-sm-4 col-md-3 col-lg-2')
               .col-sm-8.col-md-9.col-lg-10
-                = form.text_field(:first_name, class: 'form-control')
+                = form.text_field(:first_name, class: 'form-control', required: true)
+                span.help-block.with-errors.hidden
+                  | Required
 
             .col-sm-12.col-md-4.col-lg-3
               .col-sm-offset-4.col-sm-8.col-md-offset-3.col-md-9.col-lg-offset-0.col-lg-12 
@@ -84,7 +86,9 @@ main.container.hidden-xs
             .form-group.col-sm-12.col-md-8.col-lg-9
               = form.label(:last_name, 'Last Name', class: 'control-label col-sm-4 col-md-3 col-lg-2')
               .col-sm-8.col-md-9.col-lg-10 
-                = form.text_field(:last_name, class: 'form-control')
+                = form.text_field(:last_name, class: 'form-control', required: true)
+                span.help-block.with-errors.hidden
+                  | Required
             
             .col-sm-12.col-md-4.col-lg-3
               .col-sm-offset-4.col-sm-8.col-md-offset-3.col-md-9.col-lg-offset-0.col-lg-12 
@@ -100,7 +104,9 @@ main.container.hidden-xs
             .form-group.col-sm-12.col-md-8.col-lg-9
               = form.label(:email, class: 'control-label col-sm-4 col-md-3 col-lg-2')
               .col-sm-8.col-md-9.col-lg-10 
-                = form.email_field(:email, class: 'form-control')
+                = form.email_field(:email, class: 'form-control', required: true)
+                span.help-block.with-errors.hidden
+                  | Required
 
             .col-sm-12.col-md-4.col-lg-3
               .col-sm-offset-4.col-sm-8.col-md-offset-3.col-md-9.col-lg-offset-0.col-lg-12 
@@ -112,7 +118,7 @@ main.container.hidden-xs
 
             .col-sm-12.col-md-offset-4.col-md-8.col-lg-offset-3.col-lg-9
               .col-sm-offset-4.col-sm-8.col-md-offset-3.col-md-9.col-lg-offset-2.col-lg-10
-                = form.submit('Save changes', class: 'btn btn-success')    
+                = form.submit('Save changes', class: 'btn btn-success', data: { user_profile_target: 'submitBtn' })    
 
       #password-tab.tab-pane
 

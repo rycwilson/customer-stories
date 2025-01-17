@@ -88,6 +88,8 @@ class Users::RegistrationsController < Devise::RegistrationsController
 
   # PUT /resource
   def update
+    # TODO: for errors, handle conflict between devise and turbo outlined here: https://discuss.hotwired.dev/t/forms-without-redirect/1606
+    # => workaround is to ensure client-side validation
     super
   end
 
@@ -109,13 +111,14 @@ class Users::RegistrationsController < Devise::RegistrationsController
 
   # user, @user, resource are all the same thing
   def update_resource user, params
-    if params[:password]
+    user.send(params[:password].present? ? :update_with_password : :update_without_password, params)
+    # if params[:password]
       # @password_update = true
-      resource.update_with_password(params)
-    else
+      # resource.update_with_password(params)
+    # else
       # @password_update = false
-      resource.update_without_password(params)
-    end
+      # resource.update_without_password(params)
+    # end
     # if @user.errors.present?
     #   @flash_mesg = @user.errors.full_messages.join(', ')
     #   @status = 'danger'

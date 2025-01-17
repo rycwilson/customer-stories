@@ -51,8 +51,9 @@ export default class FormController<Ctrl extends SubclassController> extends Con
     'referrerSelect',
     'referrerFields',
     'referrerField',
-    'requiredField',
+    // 'requiredField',
     'customerContactBoolField',
+    'submitBtn'
   ];
 
   // all forms share these fields
@@ -61,7 +62,8 @@ export default class FormController<Ctrl extends SubclassController> extends Con
   declare readonly customerNameTarget: HTMLInputElement;
   declare readonly successFieldTargets: HTMLInputElement[];
   declare readonly successNameTarget: HTMLInputElement;
-  declare readonly requiredFieldTargets: (TomSelectInput | HTMLInputElement)[];
+  declare readonly submitBtnTarget: HTMLInputElement | HTMLButtonElement;
+  // declare readonly requiredFieldTargets: (TomSelectInput | HTMLInputElement)[];
   
   declare readonly hasCustomerWinSelectTarget: boolean;
   declare readonly hasContributorSelectTarget: boolean;
@@ -69,30 +71,57 @@ export default class FormController<Ctrl extends SubclassController> extends Con
 
   declare initialState: string;
 
-  connect(this: Ctrl) {
-    this.removeErrorsOnValidInput();
+  validInputHandler = this.onValidInput.bind(this);
+
+  connect() {
     this.initialState = serializeForm(this.element);
+    this.requiredFieldTargets.forEach(field => {
+      field.addEventListener(field instanceof HTMLSelectElement ? 'change' : 'input', this.onValidInput);
+    })
+  }
+
+  disconnect() {
+    this.requiredFieldTargets.forEach(field => {
+      field.removeEventListener(field instanceof HTMLSelectElement ? 'change' : 'input', this.onValidInput);
+    })
   }
 
   validate(e: CustomEvent) {
     let isValid = true;
-
-    // the hidden text fields are enabled/disabled via the disabled property,
+    
+    // the text fields are enabled/disabled via the disabled property,
     // whereas the select inputs are enabled/disabled by toggling the [name] attribute (precludes ui changes)
     this.requiredFieldTargets
-      .filter(field => field.name && !field.disabled)
       .forEach(field => {
+        if (!field.name || field.disabled) return;
         if (!field.checkValidity()) {
           field.closest('.form-group').classList.add('has-error');
+          if (field.nextElementSibling.classList.contains('help-block', 'with-errors')) {
+            field.nextElementSibling.classList.remove('hidden');
+          }
           isValid = false;
         }
       });
     if (!this.element.classList.contains('was-validated')) this.element.classList.add('was-validated');
-    if (!isValid) e.preventDefault();
+    if (!isValid) {
+      e.preventDefault();
+      this.requiredFieldTargets[0].focus();
+
+      // regardless of validity, rails-ujs will disable the submit button => undo this
+      new MutationObserver(mutations => {
+        mutations.forEach(mutation => {
+          if (mutation.attributeName === 'disabled') this.submitBtnTarget.disabled = false;
+        });
+      }).observe(this.submitBtnTarget, { attributes: true })
+    }
   }
 
   get isDirty() {
     return serializeForm(this.element) !== this.initialState;
+  }
+
+  get requiredFieldTargets(): (TomSelectInput | HTMLInputElement)[] {
+    return [...this.element.querySelectorAll('[required]')];
   }
 
   onAjaxComplete(this: Ctrl, { detail: [xhr, status] }: { detail: [xhr: XMLHttpRequest, status: string] }) {
@@ -115,16 +144,14 @@ export default class FormController<Ctrl extends SubclassController> extends Con
     }
   }
 
-  removeErrorsOnValidInput() {
-    const removeError = (e: Event) => {
-      const field = e.target as TomSelectInput | HTMLInputElement;
-      if (field.value.trim()) {
-        (field.closest('.form-group') as HTMLDivElement).classList.remove('has-error');
+  onValidInput(e: Event) {
+    const input: TomSelectInput | HTMLInputElement = e.target;
+    if (input.value.trim()) {
+      input.closest('.form-group').classList.remove('has-error');
+      if (input.nextElementSibling.classList.contains('help-block', 'with-errors')) {
+        input.nextElementSibling.classList.add('hidden');
       }
     }
-    this.requiredFieldTargets.forEach(field => {
-      field.addEventListener(field instanceof HTMLSelectElement ? 'change' : 'input', removeError);
-    })
   }
 
   onChangeContact(
