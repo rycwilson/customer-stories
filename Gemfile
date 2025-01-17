@@ -11,6 +11,9 @@ gem 'bootsnap', '>= 1.4.4', require: false
 gem 'bootstrap-tab-history-rails'
 # gem 'bower-rails', '~> 0.11.0'
 gem 'browser-timezone-rails'
+
+gem 'concurrent-ruby', '1.3.4'  # (devise dependency) https://stackoverflow.com/questions/79360526/uninitialized-constant-activesupportloggerthreadsafelevellogger-nameerror
+
 # gem 'connection_pool'
 # gem 'dalli'
 gem 'devise'
