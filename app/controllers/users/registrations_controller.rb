@@ -14,14 +14,13 @@ class Users::RegistrationsController < Devise::RegistrationsController
     'Haley Fraser',
     'Rachelle Benson'
   ]
-# before_filter :configure_sign_up_params, only: [:create]
-# before_action :configure_account_update_params, only: [:update]
-# before_action :set_s3_direct_post, only: [:edit, :update]
 
   layout('landing')
   respond_to :html, :js
 
-  before_action(only: [:new]) { set_preserved_form_data }
+  before_action(:configure_sign_in_params, only: [:create])
+  before_action(:configure_account_update_params, only: [:update])
+  before_action(:set_preserved_form_data, only: [:new])
 
   # GET /resource/sign_up
   def new
@@ -72,9 +71,6 @@ class Users::RegistrationsController < Devise::RegistrationsController
   def edit
     # if a request is received at the default devise route, redirect to the custom route
     redirect_to(edit_user_path) && return if request.path == edit_user_registration_path
-
-    # original_user = User.find_by_id(session[:original_user_id])
-    # @is_admin = current_user.admin? || original_user&.admin?
     @is_admin = current_user.admin? || true_user.admin?
     if @is_admin
       @imitable_users = IMITABLE_USERS.flat_map do |name|
@@ -84,36 +80,15 @@ class Users::RegistrationsController < Devise::RegistrationsController
           # .map { |user| { id: user.id, email: user.email, name: "#{user.full_name} (#{user.company.name})" } }
       end
     end
-
-    render(:edit, layout: 'application')
+    if flash[:notice]
+      @toast = { type: 'success', message: 'Profile updated successfully' }
+    end
+    render(layout: 'application')
   end
 
   # PUT /resource
-  # overriding native devise in order to customize flash message
   def update
-    if params[:user][:photo_url]
-      @s3_direct_post_fields = set_s3_direct_post().fields
-    end
     super
-    # self.resource = resource_class.to_adapter.get!(send(:"current_#{resource_name}").to_key)
-    # prev_unconfirmed_email = resource.unconfirmed_email if resource.respond_to?(:unconfirmed_email)
-
-    # resource_updated = update_resource(resource, account_update_params)
-    # yield resource if block_given?
-    # if resource_updated
-    #   if is_flashing_format?
-    #     if update_needs_confirmation?(resource, prev_unconfirmed_email)
-    #       set_flash_message :notice, :update_needs_confirmation
-    #     else
-    #       flash[:notice] = 'Account updated'
-    #     end
-    #   end
-    #   sign_in resource_name, resource, bypass: true
-    #   respond_with resource, location: after_update_path_for(resource)
-    # else
-    #   clean_up_passwords resource
-    #   respond_with resource
-    # end
   end
 
   # DELETE /resource
@@ -132,28 +107,25 @@ class Users::RegistrationsController < Devise::RegistrationsController
 
   protected
 
-  # override the update action
-  # user, @user, resource are all the same thing (weird)
+  # user, @user, resource are all the same thing
   def update_resource user, params
-    # @linkedin_url_changed = (params[:linkedin_url] != @user.linkedin_url) ? true : false
-    if params[:password].blank?
-      resource.update_without_password params
-      @password_update = false
+    if params[:password]
+      # @password_update = true
+      resource.update_with_password(params)
     else
-      resource.update params
-      @password_update = true
+      # @password_update = false
+      resource.update_without_password(params)
     end
-    if @user.errors.present?
-      @flash_mesg = @user.errors.full_messages.join(', ')
-      @status = 'danger'
-    else
-      @status = 'success'
-    end
+    # if @user.errors.present?
+    #   @flash_mesg = @user.errors.full_messages.join(', ')
+    #   @status = 'danger'
+    # else
+    #   @status = 'success'
+    # end
   end
 
-  # change redirect on update
   def after_update_path_for user
-    edit_profile_path
+    edit_user_path
   end
 
   # If you have extra params to permit, append them to the sanitizer.
@@ -178,6 +150,14 @@ class Users::RegistrationsController < Devise::RegistrationsController
   # end
 
   private
+
+  def configure_sign_up_params
+    devise_parameter_sanitizer.permit(:sign_up, keys: [:first_name, :last_name, :sign_up_code, :admin_access_code])
+  end
+
+  def configure_account_update_params
+    devise_parameter_sanitizer.permit(:account_update, keys: [:email, :first_name, :last_name, :photo_url, :title, :phone, :password, :password_confirmation, :current_password])
+  end
 
   def set_preserved_form_data
     @sign_up_email = session[:sign_up_email]
