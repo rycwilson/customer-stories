@@ -1,6 +1,11 @@
-#user-profile-form {
-  position: relative;
+#user-profile-form,
+#change-password-form {
+  input {
+    max-width: 28rem;
+  }
+}
 
+#user-profile-form {
   .user-photo {
     margin-bottom: 2.25rem;
 
@@ -15,13 +20,8 @@
     margin-right: 0;
   }
 
-  input {
-    max-width: 275px;
-  }
-
   .image-card {
     display: inline-block;
-
   }
 
   .image-card__frame {
@@ -31,61 +31,6 @@
     > .thumbnail {
       width: auto;
     }
-  }
-}
-
-.user-photo-upload {
-  display: flex;
-  flex-direction: column;
-  width: 170px; 
-  height: 170px; 
-  background: $blueish-gray-lighter;
-  .fileinput {
-    margin-bottom: 0;  // override jasny
-    padding-top: 12px;
-    width: 100%;
-    display: flex;
-    justify-content: center;
-    .thumbnail {
-      pointer-events: none;
-      width: 120px;
-      height: 120px;
-      margin-bottom: 0;  // override jasny
-      div {
-        height: 100%;
-        width: 100%;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-
-        // these settings come from jasny and bootstrap;
-        // => need to recreate them since insertion of centering div kills them
-        img {
-          max-height: 100%;
-          display: block;
-          max-width: 100%;
-          height: auto;
-          margin-left: auto;
-          margin-right: auto;
-        }
-      }
-    }
-  }
-}
-
-.btn.user-photo-upload__button {
-  flex-grow: 1;
-  background: none;
-  border: none;
-  padding: 5px 12px 7px 12px;
-  font-size: 13px;
-  width: 100%;
-  color: #666;
-  &:hover, &:focus, &.focus {
-    color: #222;
-  }
-  &:active, &.active {
-    box-shadow: none;
   }
 }
 
