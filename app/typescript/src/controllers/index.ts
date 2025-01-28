@@ -4,9 +4,6 @@
 
 import { application } from "./application.js"
 
-// import HelloController from "./hello_controller"
-// application.register("hello", HelloController)
-
 import AdsController from './ads_controller.js';
 application.register('ads', AdsController);
 
@@ -124,8 +121,11 @@ application.register('summernote', SummernoteController);
 import TableDisplayOptionsController from './table_display_options_controller.js';
 application.register('table-display-options', TableDisplayOptionsController);
 
-import TagsController from "./tags_controller.js";
-application.register("tags", TagsController);
+import TagsController from './tags_controller.js';
+application.register('tags', TagsController);
+
+import ToastController from './toast_controller.js';
+application.register('toast', ToastController);
 
 import TomselectController from './tomselect_controller.js';
 application.register('tomselect', TomselectController);

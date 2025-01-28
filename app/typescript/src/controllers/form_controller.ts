@@ -4,6 +4,7 @@ import type NewCustomerWinController from './new_customer_win_controller';
 import type NewContributionController from './new_contribution_controller';
 import type NewStoryController from './new_story_controller';
 import type UserProfileController from './user_profile_controller';
+import type ChangePasswordController from './change_password_controller';
 import type CompanyProfileController from './company_profile_controller';
 import type InvitationTemplateController from './invitation_template_controller';
 import type ContributorInvitationController from './contributor_invitation_controller';
@@ -12,13 +13,14 @@ import type CtaController from './cta_controller';
 import type AdsController from './ads_controller';
 import type CustomerController from './customer_controller';
 import type { TomOptions } from 'tom-select/dist/types/types';
-import { serializeForm, bsToast } from '../utils';
+import { serializeForm } from '../utils';
 
 type SubclassController = (
   NewCustomerWinController | 
   NewContributionController | 
   NewStoryController |
   UserProfileController |
+  ChangePasswordController |
   CompanyProfileController |
   InvitationTemplateController |
   ContributorInvitationController |
@@ -31,11 +33,6 @@ type SubclassController = (
 export default class FormController<Ctrl extends SubclassController> extends Controller<HTMLFormElement> {
   static outlets = ['modal'];
   declare readonly modalOutlet: ModalController;
-
-  static values = {
-    toast: { type: Object, default: {} }
-  };
-  declare toastValue: { type?: 'info' | 'success' | 'warning' | 'danger', message?: string };
 
   static targets = [    
     'customerSelect',
@@ -86,34 +83,25 @@ export default class FormController<Ctrl extends SubclassController> extends Con
     })
   }
 
-  validate(e: CustomEvent) {
+  validate(e: SubmitEvent): boolean {
     let isValid = true;
     
-    // the text fields are enabled/disabled via the disabled property,
-    // whereas the select inputs are enabled/disabled by toggling the [name] attribute (precludes ui changes)
-    this.requiredFieldTargets
-      .forEach(field => {
-        if (!field.name || field.disabled) return;
-        if (!field.checkValidity()) {
-          field.closest('.form-group').classList.add('has-error');
-          if (field.nextElementSibling.classList.contains('help-block', 'with-errors')) {
-            field.nextElementSibling.classList.remove('hidden');
-          }
-          isValid = false;
-        }
-      });
-    if (!this.element.classList.contains('was-validated')) this.element.classList.add('was-validated');
+    // text fields are enabled/disabled via the disabled property
+    // select inputs are enabled/disabled by toggling the [name] attribute, as this precludes ui (style) changes
+    this.requiredFieldTargets.forEach(field => {
+      if (field.disabled || !field.name || field.name === 'user[password_confirmation]') return;
+      if (!field.checkValidity()) {
+        field.closest('.form-group').classList.add('has-error');
+        isValid = false;
+      }
+    });
+    this.element.classList.add('was-validated');
     if (!isValid) {
       e.preventDefault();
-      this.requiredFieldTargets[0].focus();
-
-      // regardless of validity, rails-ujs will disable the submit button => undo this
-      new MutationObserver(mutations => {
-        mutations.forEach(mutation => {
-          if (mutation.attributeName === 'disabled') this.submitBtnTarget.disabled = false;
-        });
-      }).observe(this.submitBtnTarget, { attributes: true })
+      e.stopPropagation();  // stops rails-ujs from disabling the submit button
+      this.requiredFieldTargets.find(field => !field.checkValidity())?.focus();
     }
+    return isValid;
   }
 
   get isDirty() {
@@ -128,15 +116,6 @@ export default class FormController<Ctrl extends SubclassController> extends Con
     // console.log('superclass', xhr, status)
   }
 
-  toastValueChanged(newVal: { type?: string, message?: string }) {
-    // console.log('toastValueChanged()', newVal)
-    const { type, message } = newVal;
-    if (type && message) {
-      bsToast(type, message);
-      this.toastValue = {};
-    }
-  }
-
   updateValidator({ detail: { shouldValidate } }: { detail: { shouldValidate?: boolean } }) {
     $(this.element).validator('update');
     if (shouldValidate) {
@@ -148,9 +127,6 @@ export default class FormController<Ctrl extends SubclassController> extends Con
     const input: TomSelectInput | HTMLInputElement = e.target;
     if (input.value.trim()) {
       input.closest('.form-group').classList.remove('has-error');
-      if (input.nextElementSibling.classList.contains('help-block', 'with-errors')) {
-        input.nextElementSibling.classList.add('hidden');
-      }
     }
   }
 

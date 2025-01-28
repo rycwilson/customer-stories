@@ -29,6 +29,8 @@ html lang="en-US" prefix="og: http://ogp.me/ns# fb: http://ogp.me/ns/fb#"
 
   body {
     class="#{@company&.subdomain} #{controller_name} #{action_name}"
+    data-controller="toast"
+    data-toast-toast-value=(@toast.to_json if defined? @toast)
     data-current-user="#{current_user.to_json(only: [:id], methods: [:full_name])}" }
 
     - if @zap_auth_initial_req
