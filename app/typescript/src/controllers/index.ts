@@ -124,8 +124,8 @@ application.register('summernote', SummernoteController);
 import TableDisplayOptionsController from './table_display_options_controller.js';
 application.register('table-display-options', TableDisplayOptionsController);
 
-import TagssController from "./tags_controller.js";
-application.register("tags", TagssController);
+import TagsController from "./tags_controller.js";
+application.register("tags", TagsController);
 
 import TomselectController from './tomselect_controller.js';
 application.register('tomselect', TomselectController);
