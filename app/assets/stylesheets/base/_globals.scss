@@ -82,6 +82,16 @@ form {
     }
   }
 
+  .form-group {
+    [required] + .help-block {
+      display: none;
+    }
+
+    &.has-error [required] + .help-block {
+      display: block
+    }
+  }
+
   .row {
     margin-bottom: 1.25rem;
   }

@@ -76,24 +76,6 @@
     padding-right: 0;
   }
 
-  .form-group {
-    // margin-bottom: 2em;
-
-    &.required {
-      .help-block {
-        display: none;
-      }
-
-      &.has-error {
-        // margin-bottom: 0.5em;
-  
-        .help-block {
-          display: block
-        }
-      }
-    }
-  }
-
   textarea {
     resize: vertical;
   }
