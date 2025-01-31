@@ -5,9 +5,9 @@ export default class extends Controller {
   static values = {
     toast: { type: Object, default: {} }
   };
-  declare toastValue: { type?: 'info' | 'success' | 'warning' | 'danger', message?: string };
+  declare toastValue: { type?: BootstrapAlert, message?: string };
 
-  toastValueChanged(newVal: { type?: string, message?: string }) {
+  toastValueChanged(newVal: { type?: BootstrapAlert, message?: string }) {
     const { type, message } = newVal;
     if (type && message) {
       bsToast(type, message);
