@@ -40,21 +40,37 @@
     font-family: 'FontAwesome';
     font-size: 1.5em;
     
-    // use FontAwesome instead of Glyphicons
-    &.glyphicon-ok-sign::before {
-      content: '\f00c';
+    + .bootoast-alert-container {
+      padding-left: 1.75em;
     }
 
-    &.glyphicon-ok-sign + .bootoast-alert-container {
-      padding-left: 2.5em;
+    // use FontAwesome instead of Glyphicons
+    &.glyphicon-ok-sign {
+      &::before {
+        content: '\f00c';
+      }
+
+      & + .bootoast-alert-container {
+        padding-left: 2.5em;
+      }
     }
-  
+
     &.glyphicon-info-sign::before {
       content: '\f129';
     }
 
-    + .bootoast-alert-container {
-      padding-left: 1.75em;
+    &.glyphicon-exclamation-sign::before {
+      content: '\f12a';
+    }
+    
+    &.glyphicon-remove-sign {
+      &::before {
+        content: '\f00d';
+      }
+
+      & + .bootoast-alert-container {
+        padding-left: 2.25em;
+      }
     }
   }
 
@@ -64,7 +80,7 @@
   }
 
   > .close {
-    top: -7px;
+    top: -6px;
     right: 0;
     font-size: 2.25em;
   }
