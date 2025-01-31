@@ -19,8 +19,8 @@
   },
   "homepage": "https://github.com/dlindblodev/csp#readme",
   "dependencies": {
-    "@hotwired/stimulus": "^3.2.1",
-    "@hotwired/turbo-rails": "^7.3.0",
+    "@hotwired/stimulus": "^3.2.2",
+    "@hotwired/turbo-rails": "^8.0.12",
     "@rails/ujs": "^7.0.8",
     "animate.css": "^4.1.1",
     "blueimp-file-upload": "^10.32.0",
