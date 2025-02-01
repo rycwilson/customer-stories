@@ -2,8 +2,7 @@ import { Controller } from "@hotwired/stimulus";
 import Cookies from 'js-cookie';
 import type ModalController from './modal_controller';
 import { parseDatasetObject } from '../utils';
-import { visit as turboVisit, navigator as turboNavigator } from '@hotwired/turbo';
-import { type TurboVisitEvent } from "@hotwired/turbo";
+import { visit as turboVisit, type TurboVisitEvent } from '@hotwired/turbo';
 
 // excludes stories#edit, which also renders the dashboard
 enum DashboardTab {
@@ -119,7 +118,7 @@ export default class DashboardController extends Controller<HTMLDivElement> {
     const tabName = tab.getAttribute('aria-controls') as DashboardTab;
     $(tab).one('shown.bs.tab', () => setTimeout(() => this.activeTabValue = tabName as DashboardTab));
     history.pushState(
-      { turbo: { restorationIdentifier: turboNavigator.history.restorationIdentifier } }, 
+      { turbo: { restorationIdentifier: Turbo.navigator.history.restorationIdentifier } }, 
       '', 
       `/${tabName}`
     );

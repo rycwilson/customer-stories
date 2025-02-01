@@ -1,7 +1,7 @@
 import { Controller } from '@hotwired/stimulus';
 import type ModalController from './modal_controller';
 import Cookies from 'js-cookie';
-import { navigator as turboNavigator, type FrameElement } from '@hotwired/turbo';
+import { type FrameElement } from '@hotwired/turbo';
 import { debounce } from '../utils';
 
 export default class CompanySettingsController extends Controller {
@@ -88,7 +88,7 @@ export default class CompanySettingsController extends Controller {
           const tabHash = e.currentTarget.hash;
           const locationHash = tabHash.replace('-panel', '');
           history.replaceState(
-            { turbo: { restorationIdentifier: turboNavigator.history.restorationIdentifier } }, 
+            { turbo: { restorationIdentifier: Turbo.navigator.history.restorationIdentifier } }, 
             '', 
             locationHash
           );
