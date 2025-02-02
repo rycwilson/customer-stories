@@ -1,18 +1,4 @@
-let bootoast: any;
-if (window.jQuery) import('bootoast').then(_bootoast => bootoast = _bootoast);
-
 import tinycolor from 'tinycolor2';
-
-const baseBootoastOptions = {
-  timeout: 3,
-  animationDuration: 150,
-  dismissable: true
-};
-
-export function bsToast(type: BootstrapAlert, message: string) {
-  const position = type === 'danger' ? 'top-center' : 'bottom-center';
-  bootoast?.toast({ ...baseBootoastOptions, type, message, position });
-}
 
 // Using css variables to capture style allows for use of the custom-button-variant mixin,
 // which itself is just a copy of bootstrap's button-variant mixin that has been modified to use css variables.
