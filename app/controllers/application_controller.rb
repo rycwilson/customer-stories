@@ -17,6 +17,8 @@ class ApplicationController < ActionController::Base
 
   helper_method :company_curator?
 
+  add_flash_types :info, :warning
+
   def auth_test
     respond_to do |format|
       format.any do  # zapier sends GET request with Accept = */* (any format permissable)
