@@ -1,9 +1,3 @@
-/ challenge: get the cache preview to be responsive to tab selection
-  workaround: no preview-cache
-  changed to no-cache for consistency with edit
-- content_for(:head) do
-  meta name="turbo-cache-control" content="no-cache"
-
 / include templates for both companies#show and stories#edit
 / - content_for(:underscore_templates) do
   /= render('companies/1_prospect//successes/successes_table_header_template')
