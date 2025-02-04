@@ -1,9 +1,4 @@
-= render('shared/modal')
-
 = render('shared/navbars/company_nav', { company: @company, workflow_stage: @workflow_stage })
-
-.visible-xs-block.text-center style="margin-top: 30px"
-  h4 Sorry, this screen size is not supported
 
 main.container.hidden-xs {
   data-controller="company-settings" 

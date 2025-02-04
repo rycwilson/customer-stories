@@ -14,7 +14,6 @@
   / = render('stories/edit/content/video_templates')
 
 / include modals for both companies#show and stories#edit
-= render('shared/modal')
 / = render('customers/customer_modal', { company: @company })
 / = render('companies/1_prospect/successes/new_success_modal', { company: @company })
 / = render('companies/1_prospect/successes/win_story/win_story_zapier_modal', { company: @company })
@@ -24,10 +23,6 @@
 / = render('companies/3_promote/ads_images_modal', { company: @company })
 / = render('stories/shared/new_story_modal', { company: @company })
 / = render('stories/show/video_modal')
-
-
-.visible-xs-block.text-center style="margin-top: 30px"
-  h4 Sorry, this screen size is not supported
   
 main.dashboard.hidden-xs {
   data-controller="dashboard" 
