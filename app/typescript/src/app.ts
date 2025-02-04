@@ -1,5 +1,5 @@
 import Rails from '@rails/ujs';
-import { start as turboStart } from "@hotwired/turbo";
+import '@hotwired/turbo';
 import * as turboCallbacks from './turbo_callbacks';
 
 import './jquery';
@@ -20,6 +20,11 @@ import { parseDatasetObject } from './utils';
 window.CSP ||= appFactory();
 window.CSP.init();
 
+// const observer = new MutationObserver(mutations => {
+//   mutations.forEach(mutation => console.log(mutation));
+// });
+// observer.observe(document.documentElement, { childList: true, subtree: false } )
+
 function appFactory(): CustomerStoriesApp {
   return {
     customerWins: undefined,
@@ -32,7 +37,6 @@ function appFactory(): CustomerStoriesApp {
     authToken: <string>(<HTMLMetaElement>document.head.querySelector('meta[name="csrf-token"]')).getAttribute('content'),
     init() {
       Rails.start();
-      turboStart();
       addTurboListeners();
     }
   }

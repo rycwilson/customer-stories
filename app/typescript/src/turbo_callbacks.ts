@@ -26,7 +26,7 @@ export function onClick(e: TurboClickEvent) {
 }
 
 export function beforeVisit(e: TurboBeforeVisitEvent) {
-  // console.log('turbo:before-visit\n', `${location.pathname}\n`, e)
+  console.log('turbo:before-visit\n', `${location.pathname}\n`, e)
 }
 
 export function onVisit(e: TurboVisitEvent) {
@@ -39,11 +39,11 @@ export function onSubmitStart(e: TurboSubmitStartEvent) {
 }
 
 export function onSubmitEnd(e: TurboSubmitEndEvent) {
-  // console.log('turbo:submit-end', e)
+  console.log('turbo:submit-end', e)
 }
 
 export function beforeRender(e: TurboBeforeRenderEvent) {
-  // console.log('turbo:before-render\n', `${location.pathname}\n`, e)
+  console.log('turbo:before-render', e)
   // e.preventDefault()   // pause render
   // e.detail.resume()   // resume render
 
@@ -72,40 +72,37 @@ export function onFrameRender(e: TurboFrameRenderEvent) {
 
 // no custom event type for this
 export function beforeFetchRequest(e: CustomEvent) {
-  // console.log( 
-  //   ...logCommon(e),
-  //   `${e.detail.fetchOptions.method} ${e.detail.url.href}\n`,
-  //   `referrer: ${e.detail.fetchOptions.referrer}\n`,
-  //   e
-  // );
+  console.log( 
+    ...logCommon(e),
+    `${e.detail.fetchOptions.method} ${e.detail.url.pathname}\n`,
+    e
+  );
 }
 
 // no custom event type for this
 export function beforeFetchResponse(e: CustomEvent) {
-  // const { response } = e.detail.fetchResponse;
-  // console.log(
-  //   ...logCommon(e),
-  //   `${response.status} ${response.statusText} ${response.url}\n`,
-  //   e
-  // )
+  const { response } = e.detail.fetchResponse;
+  console.log(
+    ...logCommon(e),
+    `${response.status} ${response.statusText}\n`,
+    e
+  )
 }
 
 // no custom event type for this
 export function beforeCache(e: TurboBeforeCacheEvent) {
-  console.log(...logCommon(e), e)
+  // console.log(...logCommon(e), e)
 }
 
 function logCommon(e: CustomEvent) {
-  const body = (e.target as HTMLHtmlElement).querySelector(':scope > body') as HTMLBodyElement;
-  let target;
-  if (body) {
-    target = body.classList.contains('show') ? 
-      'dashboard' : 
-      (body.classList.contains('edit') ? 'settings' : 'profile');
+  const { target } = e;
+  if (target instanceof HTMLHtmlElement) {
+
+  } else if (target instanceof HTMLFormElement) {
   }
   return [
-    `${location.pathname}\n`,
-    `${e.type}\n`, 
-    `target: ${target || 'unknown'}\n`
+    `location: ${location.pathname}\n`,
+    `type: ${e.type}\n`, 
+    `target: ${target}\n`
   ];
 }
