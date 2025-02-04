@@ -33,6 +33,13 @@ export default class ToastController extends Controller {
       message = flash[flashType]
       position = flashType === 'alert' ? 'top-center' : 'bottom-center';
     }
-    if (type && message) bootoast.toast({ ...baseOptions, type, message, position });
+    if (type && message) {
+      try {
+        bootoast.toast({ ...baseOptions, type, message, position });
+      } catch (error) {
+        // TODO: why is bootoast sometimes not defined?
+        console.error(error);
+      }
+    }
   }
 }
