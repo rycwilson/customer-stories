@@ -9,7 +9,7 @@ const baseOptions = {
   dismissable: true
 };
 
-export default class extends Controller {
+export default class ToastController extends Controller {
   static values = { flash: Object };
   declare flashValue: FlashHash;
 
@@ -17,7 +17,7 @@ export default class extends Controller {
     console.log('flash:', flash)
     let type, message, position;    // these are bootoast option names and should not be changed
     
-    // note that Object.keys will return an array of string despite Flash type definition:
+    // note that Object.keys will return an array of strings despite FlashHash declaration
     // https://github.com/Microsoft/TypeScript/issues/12870
     const flashType = (Object.keys(flash) as (keyof FlashHash)[])[0];
     if (flashType) {

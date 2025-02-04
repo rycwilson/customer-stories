@@ -6,6 +6,7 @@ html lang="en-US" prefix="og: http://ogp.me/ns# fb: http://ogp.me/ns/fb#"
       name="viewport"
       content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" }
     = csrf_meta_tags()
+    /meta name="turbo-refresh-method" content="morph"
     - if disallow_search_indexing?(@company)
       meta name="robots" content="noindex"
     title = page_title(controller_name, action_name, company: @company)
@@ -29,9 +30,9 @@ html lang="en-US" prefix="og: http://ogp.me/ns# fb: http://ogp.me/ns/fb#"
 
   body {
     class="#{@company&.subdomain} #{controller_name} #{action_name}"
-    data-controller="toast"
-    data-toast-toast-value=(@toast.to_json if defined? @toast)
     data-current-user="#{current_user.to_json(only: [:id], methods: [:full_name])}" }
+
+    = render('shared/toaster')
 
     - if @zap_auth_initial_req
       / nothing
