@@ -1,29 +1,3 @@
-/ include templates for both companies#show and stories#edit
-/ - content_for(:underscore_templates) do
-  /= render('companies/1_prospect//successes/successes_table_header_template')
-  / = render('companies/1_prospect/successes/win_story/note_insertion_dropdown_template')
-  / = render('companies/1_prospect/successes/win_story/individual_contribution_template')
-  / = render('companies/1_prospect/successes/win_story/group_contribution_template')
-  / = render('companies/1_prospect/successes/win_story/customer_logo_template')
-  / = render('companies/1_prospect/contributors/contributors_table_header_template')
-  / = render('companies/1_prospect/contributors/contributor_child_row_template')
-  / render 'companies/1_prospect/contributors/csp_linkedin_widget_template')
-  / = render('companies/3_promote/ads_status_form_template')
-  / = render('stories/index/index_template', { company: @company })
-  / = render('stories/edit/content/results_templates')
-  / = render('stories/edit/content/video_templates')
-
-/ include modals for both companies#show and stories#edit
-/ = render('customers/customer_modal', { company: @company })
-/ = render('companies/1_prospect/successes/new_success_modal', { company: @company })
-/ = render('companies/1_prospect/successes/win_story/win_story_zapier_modal', { company: @company })
-/ = render('companies/1_prospect/contributors/new_contributor_modal', { company: @company })
-/ = render('companies/1_prospect/contributors/contribution_request_modal', { company: @company})
-/ = render('companies/shared/contributions_modal')
-/ = render('companies/3_promote/ads_images_modal', { company: @company })
-/ = render('stories/shared/new_story_modal', { company: @company })
-/ = render('stories/show/video_modal')
-  
 main.dashboard.hidden-xs {
   data-controller="dashboard" 
   data-dashboard-active-tab-value=@workflow_stage
