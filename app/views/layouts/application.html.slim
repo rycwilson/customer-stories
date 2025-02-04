@@ -7,6 +7,7 @@ html lang="en-US" prefix="og: http://ogp.me/ns# fb: http://ogp.me/ns/fb#"
       content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" }
     = csrf_meta_tags()
     /meta name="turbo-refresh-method" content="morph"
+    meta name="turbo-prefetch" content="false"
     - if disallow_search_indexing?(@company)
       meta name="robots" content="noindex"
     title = page_title(controller_name, action_name, company: @company)
