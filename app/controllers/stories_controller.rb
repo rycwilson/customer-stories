@@ -430,8 +430,7 @@ class StoriesController < ApplicationController
   #   - the correct link if outdated slug is used
   #   - company's story index if not published or not curator
   def set_public_story_or_redirect company
-    @story = Story.find_by(hidden_link: request.url) ||
-             Story.friendly.find(params[:title])
+    @story = Story.find_by(hidden_link: request.url) || Story.friendly.find(params[:title])
     if params[:hidden_link].present? 
       if @story.published?
         redirect_to(@story.csp_story_path, status: :moved_permanently) and return
@@ -440,7 +439,7 @@ class StoriesController < ApplicationController
       redirect_to(@story.csp_story_path, status: :moved_permanently) and return
     elsif request.format == 'application/pdf' || params[:is_plugin]
       @story
-    elsif !@story.published? && !company_curator?(company.id)
+    elsif not @story.published? and not company.curators.include?(current_user)
       redirect_to(root_url(subdomain:request.subdomain, host:request.domain)) and return
     end
   end

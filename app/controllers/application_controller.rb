@@ -2,6 +2,7 @@ class ApplicationController < ActionController::Base
   # Prevent CSRF attacks by raising an exception.
   # For APIs, you may want to use :null_session instead.
   protect_from_forgery(with: :exception)
+  add_flash_types(:info, :warning)
 
   impersonates(:user)
   
@@ -13,10 +14,6 @@ class ApplicationController < ActionController::Base
   before_action({ only: [:linkedin_auth_callback] }) { linkedin_authenticated?(params[:state]) }
   before_action(if: [:company_page?, :impersonating_user?]) { flash.now[:warning] = "Impersonating user: #{current_user.full_name}" }
   before_action(:set_footer_links, if: -> { (controller_name == 'site') || :devise_controller? })
-  
-  helper_method :company_curator?
-
-  add_flash_types :info, :warning
 
   def auth_test
     respond_to do |format|

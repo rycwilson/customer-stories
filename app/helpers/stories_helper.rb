@@ -31,10 +31,6 @@ module StoriesHelper
     end
   end
 
-  def curator_story_view? (company_id)
-    company_curator?(company_id) && controller_name == 'stories' && action_name == 'show'
-  end
-
   def csp_landing
     if ENV['HOST_NAME'] == 'customerstories.net'
       'https://customerstories.net'
@@ -42,16 +38,6 @@ module StoriesHelper
       'https://customerstories.org'
     else
       'http://lvh.me:3000'
-    end
-  end
-
-  def grid_item_link company_id, story
-    if story.published?
-      story.csp_story_path
-    elsif company_curator? company_id
-      edit_story_path story.id
-    else
-      "javascript:;"
     end
   end
 
