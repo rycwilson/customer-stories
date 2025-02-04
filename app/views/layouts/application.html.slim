@@ -34,11 +34,11 @@ html lang="en-US" prefix="og: http://ogp.me/ns# fb: http://ogp.me/ns/fb#"
     class="#{@company&.subdomain} #{controller_name} #{action_name}"
     data-current-user="#{current_user.to_json(only: [:id], methods: [:full_name])}" }
 
-    .visible-xs-block.text-center style="margin-top: 3rem"
-      h4 Sorry, this screen size is not supported
-
-    = render('shared/toaster')
-    = render('shared/modal') unless controller_name == 'registrations'
+    - if company_admin_page?
+      .visible-xs-block.text-center style="margin-top: 3rem"
+        h4 Sorry, this screen size is not foobar
+      = render('shared/toaster')
+      = render('shared/modal') unless controller_name == 'registrations'
 
     - if @zap_auth_initial_req
       / nothing

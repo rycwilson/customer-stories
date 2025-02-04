@@ -3,8 +3,8 @@ class ApplicationController < ActionController::Base
   # For APIs, you may want to use :null_session instead.
   protect_from_forgery(with: :exception)
   add_flash_types(:info, :warning)
-
   impersonates(:user)
+  helper_method(:company_admin_page?)
   
   before_action(unless: :skip_subdomain_authorization?) do 
     if unauthorized_subdomain?
@@ -12,7 +12,7 @@ class ApplicationController < ActionController::Base
     end
   end
   before_action({ only: [:linkedin_auth_callback] }) { linkedin_authenticated?(params[:state]) }
-  before_action(if: [:company_page?, :impersonating_user?]) { flash.now[:warning] = "Impersonating user: #{current_user.full_name}" }
+  before_action(if: [:company_admin_page?, :impersonating_user?]) { flash.now[:warning] = "Impersonating user: #{current_user.full_name}" }
   before_action(:set_footer_links, if: -> { (controller_name == 'site') || :devise_controller? })
 
   def auth_test
@@ -204,7 +204,7 @@ class ApplicationController < ActionController::Base
     controller_name == 'stories' and action_name.in? ['index', 'show'] or controller_name == 'contributions'
   end
 
-  def company_page?
+  def company_admin_page?
     controller_name == 'companies' && action_name.in?(['show', 'edit']) or
     controller_name == 'registrations' && action_name == 'edit' or
     controller_name == 'stories' && action_name == 'edit'
