@@ -70,27 +70,50 @@ class Users::RegistrationsController < Devise::RegistrationsController
   # GET /user-profile
   def edit
     # if a request is received at the default devise route, redirect to the custom route
-    redirect_to(edit_user_path) && return if request.path == edit_user_registration_path
+    redirect_to(edit_user_path) and return if request.path == edit_user_registration_path
     @is_admin = current_user.admin? || true_user.admin?
     if @is_admin
       @imitable_users = IMITABLE_USERS.flat_map do |name|
-        User
-          .where.not(company_id: nil)
-          .where(first_name: name.split(' ').first, last_name: name.split(' ').last)
-          # .map { |user| { id: user.id, email: user.email, name: "#{user.full_name} (#{user.company.name})" } }
+        User.where.not(company_id: nil).where(first_name: name.split(' ').first, last_name: name.split(' ').last)
       end
-    end
-    if flash[:notice]
-      @toast = { type: 'success', message: 'Profile updated successfully' }
     end
     render(layout: 'application')
   end
-
+  
   # PUT /resource
   def update
-    # TODO: for errors, handle conflict between devise and turbo outlined here: https://discuss.hotwired.dev/t/forms-without-redirect/1606
-    # => workaround is to ensure client-side validation
-    super
+    if account_update_params[:password].blank?
+      super
+    else
+      self.resource = resource_class.to_adapter.get!(send(:"current_#{resource_name}").to_key)
+      prev_unconfirmed_email = resource.unconfirmed_email if resource.respond_to?(:unconfirmed_email)
+      resource_updated = update_resource(resource, account_update_params)
+      yield resource if block_given?
+      if resource_updated
+        set_flash_message_for_update(resource, prev_unconfirmed_email)
+        bypass_sign_in resource, scope: resource_name if sign_in_after_change_password?
+  
+        # TODO: Why is the changed password verbiage in devise.en.yml not applied here? is it applied somewhere else?
+        flash[:notice] = 'Password changed successfully'
+        respond_with resource, location: after_update_path_for(resource)
+      else
+        clean_up_passwords resource
+        set_minimum_password_length
+        respond_to do |format|
+          flash.now[:alert] = resource.errors.full_messages.join(', ')
+          format.html { respond_with resource }
+          format.turbo_stream do 
+            render(
+              status: 422,
+              turbo_stream: [ 
+                turbo_stream.replace('change-password-form', partial: 'devise/registrations/password_form'),
+                turbo_stream.replace('toaster', partial: 'shared/toaster')
+              ]
+            )
+          end
+        end
+      end
+    end
   end
 
   # DELETE /resource
@@ -112,19 +135,6 @@ class Users::RegistrationsController < Devise::RegistrationsController
   # user, @user, resource are all the same thing
   def update_resource user, params
     user.send(params[:password].present? ? :update_with_password : :update_without_password, params)
-    # if params[:password]
-      # @password_update = true
-      # resource.update_with_password(params)
-    # else
-      # @password_update = false
-      # resource.update_without_password(params)
-    # end
-    # if @user.errors.present?
-    #   @flash_mesg = @user.errors.full_messages.join(', ')
-    #   @status = 'danger'
-    # else
-    #   @status = 'success'
-    # end
   end
 
   def after_update_path_for user
