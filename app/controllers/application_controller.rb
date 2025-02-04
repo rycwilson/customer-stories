@@ -1,20 +1,19 @@
 class ApplicationController < ActionController::Base
-  impersonates(:user)
-
   # Prevent CSRF attacks by raising an exception.
   # For APIs, you may want to use :null_session instead.
-  protect_from_forgery with: :exception
+  protect_from_forgery(with: :exception)
 
-  before_action :set_footer_links, if: -> { (controller_name == 'site') || :devise_controller? }
-
+  impersonates(:user)
+  
   before_action(unless: :skip_subdomain_authorization?) do 
     if unauthorized_subdomain?
       redirect_to(current_user.company.blank? ? new_company_url(subdomain: '') : public_stories_url(subdomain: current_user.company.subdomain))
     end
   end
-
   before_action({ only: [:linkedin_auth_callback] }) { linkedin_authenticated?(params[:state]) }
-
+  before_action(if: [:company_page?, :impersonating_user?]) { flash.now[:warning] = "Impersonating user: #{current_user.full_name}" }
+  before_action(:set_footer_links, if: -> { (controller_name == 'site') || :devise_controller? })
+  
   helper_method :company_curator?
 
   add_flash_types :info, :warning
@@ -206,6 +205,16 @@ class ApplicationController < ActionController::Base
 
   def public_page?
     controller_name == 'stories' and action_name.in? ['index', 'show'] or controller_name == 'contributions'
+  end
+
+  def company_page?
+    controller_name == 'companies' && action_name.in?(['show', 'edit']) or
+    controller_name == 'registrations' && action_name == 'edit' or
+    controller_name == 'stories' && action_name == 'edit'
+  end
+
+  def impersonating_user?
+    user_signed_in? and current_user != true_user
   end
 
   def unauthorized_subdomain?

@@ -99,8 +99,8 @@ class Users::RegistrationsController < Devise::RegistrationsController
       else
         clean_up_passwords resource
         set_minimum_password_length
+        flash.now[:alert] = resource.errors.full_messages.join(', ')
         respond_to do |format|
-          flash.now[:alert] = resource.errors.full_messages.join(', ')
           format.html { respond_with resource }
           format.turbo_stream do 
             render(
