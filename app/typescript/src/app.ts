@@ -20,10 +20,10 @@ import { parseDatasetObject } from './utils';
 window.CSP ||= appFactory();
 window.CSP.init();
 
-// const observer = new MutationObserver(mutations => {
-//   mutations.forEach(mutation => console.log(mutation));
-// });
-// observer.observe(document.documentElement, { childList: true, subtree: false } )
+const observer = new MutationObserver(mutations => {
+  mutations.forEach(mutation => console.log(mutation));
+});
+observer.observe(document.documentElement, { childList: true, subtree: false } )
 
 function appFactory(): CustomerStoriesApp {
   return {
