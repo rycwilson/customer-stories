@@ -65,7 +65,7 @@
     
     &.glyphicon-remove-sign {
       &::before {
-        content: '\f00d';
+        content: '\f05e';   // fa-ban
       }
 
       & + .bootoast-alert-container {
