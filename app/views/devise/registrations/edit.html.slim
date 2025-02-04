@@ -10,7 +10,7 @@ main.container.hidden-xs
   
   .layout-sidebar
     ul.nav data-controller="nav-list" role="tablist"
-      li.active
+      li class="active"
         a href="#profile-tab" data-toggle="tab" data-nav-list-target="tab"
           i.fa.fa-fw.fa-user
           | &nbsp;&nbsp;Profile
@@ -44,10 +44,10 @@ main.container.hidden-xs
                     
   .layout-main
     .tab-content
-    
+
       #profile-tab.tab-pane.active
 
-        / disable rails-ujs so as not to interfere with turbo (note this is unnecessary when using turbo frames)
+        / disable rails-ujs (data-remote: false) so as not to interfere with turbo (not necessary when using turbo frames)
         = form_with( \
             model: current_user,
             url: user_registration_path,
@@ -59,7 +59,6 @@ main.container.hidden-xs
               data: { \
                 remote: false,
                 controller: 'user-profile',
-                user_profile_toast_value: (@toast rescue nil),
                 asset_host: Rails.application.config.asset_host,
                 action: [ \
                   'submit->user-profile#validate',
@@ -77,8 +76,8 @@ main.container.hidden-xs
             .form-group.col-sm-12.col-md-8.col-lg-9
               = form.label(:first_name, 'First Name', class: 'control-label col-sm-4 col-md-3 col-lg-2')
               .col-sm-8.col-md-9.col-lg-10
-                = form.text_field(:first_name, class: 'form-control', required: true)
-                span.help-block.with-errors.hidden
+                = form.text_field(:first_name, class: 'form-control', required: true, tabindex: 0)
+                .help-block.with-errors
                   | Required
 
             .col-sm-12.col-md-4.col-lg-3
@@ -88,7 +87,7 @@ main.container.hidden-xs
               = form.label(:last_name, 'Last Name', class: 'control-label col-sm-4 col-md-3 col-lg-2')
               .col-sm-8.col-md-9.col-lg-10 
                 = form.text_field(:last_name, class: 'form-control', required: true)
-                span.help-block.with-errors.hidden
+                .help-block.with-errors
                   | Required
             
             .col-sm-12.col-md-4.col-lg-3
@@ -106,7 +105,7 @@ main.container.hidden-xs
               = form.label(:email, class: 'control-label col-sm-4 col-md-3 col-lg-2')
               .col-sm-8.col-md-9.col-lg-10 
                 = form.email_field(:email, class: 'form-control', required: true)
-                span.help-block.with-errors.hidden
+                .help-block.with-errors
                   | Required
 
             .col-sm-12.col-md-4.col-lg-3
@@ -122,29 +121,4 @@ main.container.hidden-xs
                 = form.submit('Save changes', class: 'btn btn-success', data: { user_profile_target: 'submitBtn' })    
 
       #password-tab.tab-pane
-
-        = form_with( \
-            model: current_user,
-            url: user_registration_path,
-            html: { \
-              id: 'change-password-form',
-              class: 'change-password form-horizontal' }) do |form|
-
-          .form-group 
-            = form.label(:current_password, 'Current Password', class: 'control-label col-sm-4')
-            .col-sm-8.col-md-6.col-lg-4 
-              = form.password_field(:current_password, class: 'form-control', autocomplete: 'off')
-
-          .form-group 
-            = form.label(:password, 'New Password', class: 'control-label col-sm-4')
-            .col-sm-8.col-md-6.col-lg-4 
-              = form.password_field(:password, class: 'form-control', autocomplete: 'off')
-
-          .form-group 
-            = form.label(:password_confirmation, 'Confirm', class: 'control-label col-sm-4')
-            .col-sm-8.col-md-6.col-lg-4 
-              = form.password_field(:password_confirmation, class: 'form-control', autocomplete: 'off')
-
-          .form-group
-            .col-sm-12.col-md-offset-4.col-md-6.col-lg-4
-              = form.submit('Update password', class: 'btn btn-success')
+        = render('devise/registrations/password_form')
