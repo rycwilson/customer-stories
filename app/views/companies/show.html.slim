@@ -7,19 +7,19 @@ main.dashboard.hidden-xs {
   
   .tab-content data-dashboard-target="tabContent"
     = render( \
-        'companies/1_prospect/prospect',
+        'companies/dashboard/prospect',
         { company: @company, curator_id: @curator_id, workflow_stage: @workflow_stage, active_tab: @prospect_tab })
 
     = render( \
-        'companies/curate',
+        'companies/dashboard/curate',
         { company: @company, curator_id: @curator_id, workflow_stage: @workflow_stage, story: @story})
 
     = render( \
-        'companies/3_promote/promote',
+        'companies/dashboard/promote',
         { company: @company, curator_id: @curator_id, workflow_stage: @workflow_stage, active_tab: @promote_tab })
 
     = render( \
-        'companies/4_measure/measure',
+        'companies/dashboard/measure',
         { company: @company,
           curator_id: @curator_id,
           workflow_stage: @workflow_stage,

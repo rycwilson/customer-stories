@@ -78,9 +78,6 @@ main.container.hidden-xs {
         = render('companies/settings/company_profile', company: @company)
 
       - unless action_name == 'new'
-
-        /#customers-panel.tab-pane role="tabpanel"
-          = render('customers', company: @company)
           
         #contributor-invitations-panel.tab-pane role="tabpanel"
           = render( \
@@ -94,7 +91,7 @@ main.container.hidden-xs {
           = render('plugins/config', company: @company)
 
         #cta-links-forms-panel.tab-pane role="tabpanel"
-          = render('ctas', company: @company)
+          = render('companies/settings/ctas', company: @company)
 
         #story-tags-panel.tab-pane role="tabpanel"
           = render('companies/settings/story_tags', company: @company)

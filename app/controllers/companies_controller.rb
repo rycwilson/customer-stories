@@ -8,7 +8,7 @@ class CompaniesController < ApplicationController
 
   def new
     @company = Company.new
-    render :company_settings
+    render :edit
   end
 
   def show
@@ -34,7 +34,7 @@ class CompaniesController < ApplicationController
   end
 
   def edit
-    render :company_settings
+    # render :company_settings
   end
 
   def create

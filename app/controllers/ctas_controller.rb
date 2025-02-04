@@ -17,7 +17,7 @@ class CtasController < ApplicationController
     respond_to do |format|
       format.turbo_stream do 
         render(
-          turbo_stream: turbo_stream.replace('company-ctas', partial: 'companies/ctas', locals: { company: @company })
+          turbo_stream: turbo_stream.replace('company-ctas', partial: 'companies/settings/ctas', locals: { company: @company })
         )
       end
     end
@@ -33,7 +33,7 @@ class CtasController < ApplicationController
       cta.update(_cta_params)
       @company.reload if _cta_params[:company_attributes].present?
     end
-    render(partial: 'companies/ctas', locals: { company: @company })
+    render(partial: 'companies/settings/ctas', locals: { company: @company })
   end
 
   def destroy
