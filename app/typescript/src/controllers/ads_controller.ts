@@ -1,6 +1,6 @@
 import FormController from './form_controller';
 import { imageValidatorOptions } from '../user_uploads';
-import { bsToast } from '../utils';
+// import { bsToast } from '../utils';
 
 export default class AdsController extends FormController<AdsController> {
   static targets = [
@@ -73,7 +73,11 @@ export default class AdsController extends FormController<AdsController> {
   onDeletedImage({ detail: [res, status, xhr] }: { detail: [res: { id: string }, status: string, xhr: XMLHttpRequest] }) {
     const card = this.imageCardTargets.find(card => res.id == card.dataset.imageId);
     card?.remove();
-    bsToast('info', 'Image deleted successfully');
+    // bsToast('info', 'Image deleted successfully');
+    // document.getElementById('toaster')?.setAttribute(
+    //   'data-toast-flash-value', 
+    //   JSON.stringify({ type: 'info', message: 'Image deleted successfully' })
+    // );
   }
   
   uploadImage() {
