@@ -63,10 +63,15 @@ class UserMailer < ApplicationMailer
   end
 
   # type is one of: request, remind, alert, test
-  def send_mail (type, sender, recipient, subject)
+  # def send_mail (type, sender, recipient, subject)
+  def send_mail
     if Rails.env.development?
-      recipient_address = "#{recipient.full_name} <ryan@customerstories.net>"
-      sender_address = "#{sender.full_name} <dev-test@customerstories.net>"
+      subject = 'This is a test subject'
+      @body = 'This is a test body'
+      # recipient_address = "#{recipient.full_name} <ryan@customerstories.net>"
+      recipient_address = 'Ryan Wilson <ryan@ryanwilson.dev>'
+      # sender_address = "#{sender.full_name} <dev-test@customerstories.net>"
+      sender_address = 'Ryan Wilson <ryan@lvh.me>'
     elsif ENV['HOST_NAME'] == 'customerstories.org'  # staging
       if CSP_EMAILS.include?(sender.email)
         recipient_address = "#{recipient.full_name} <#{sender.email}>"
@@ -82,9 +87,9 @@ class UserMailer < ApplicationMailer
       sender_address = "#{sender.full_name} <#{sender.email}>"
     end
 
-    if type == 'alert'
-      sender_address = "Customer Stories Alerts <no-reply@customerstories.net>"
-    end
+    # if type == 'alert'
+    #   sender_address = "Customer Stories Alerts <no-reply@customerstories.net>"
+    # end
 
     mail to: recipient_address, from: sender_address, subject: subject,
          template_path: 'user_mailer', template_name: 'standard_template'
