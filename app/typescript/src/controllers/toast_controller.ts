@@ -1,7 +1,5 @@
 import { Controller } from "@hotwired/stimulus";
-
-let bootoast: any;
-import('bootoast').then(_bootoast => bootoast = _bootoast);
+import bootoast from 'bootoast';
 
 const baseOptions = {
   timeout: 3,
@@ -34,12 +32,7 @@ export default class ToastController extends Controller {
       position = flashType === 'alert' ? 'top-center' : 'bottom-center';
     }
     if (type && message) {
-      try {
-        bootoast.toast({ ...baseOptions, type, message, position });
-      } catch (error) {
-        // TODO: why is bootoast sometimes not defined?
-        console.error(error);
-      }
+      bootoast.toast({ ...baseOptions, type, message, position });
     }
   }
 }
