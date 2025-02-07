@@ -11,8 +11,6 @@ Rails.application.configure do
   #     custom_rule: proc { |request| request.params.keys.include?('is_plugin') }
   # end
 
-  config.session_store(:cookie_store, key: '_csp_session', domain: "customerstories.#{ENV['HOST_NAME'] == 'customerstories.net' ? 'net' : 'org'}", tld_length: 2)
-
   # Code is not reloaded between requests.
   config.cache_classes = true
 

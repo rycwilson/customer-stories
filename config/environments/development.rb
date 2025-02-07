@@ -10,10 +10,6 @@ Rails.application.configure do
   # point mobile browser to [subdomain].192.168.1.3.xip.io:3000  
   # config.action_dispatch.tld_length = 5
 
-  # this ensures subdomans work in dev environment (was originally in session_store.rb)
-  # ref http://stackoverflow.com/questions/10402777
-  config.session_store(:cookie_store, key: '_csp_session', domain: :all, tld_length: 2)
-
   # In the development environment your application's code is reloaded on
   # every request. This slows down response time but is perfect for development
   # since you don't have to restart the web server when you make code changes.
