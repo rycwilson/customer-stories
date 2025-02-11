@@ -1,6 +1,8 @@
 //= link_tree ../images
 
-//= link landing.js
+//= link mvpready_core.js
+//= link mvpready_helpers.js
+//= link mvpready_landing.js
 //= link_tree ../builds
 
 //= link_directory ../stylesheets .css

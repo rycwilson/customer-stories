@@ -6,7 +6,7 @@
   "type": "module",
   "scripts": {
     "test": "NODE_PATH=/Users/wilson/.rbenv/versions/3.1.2/lib/ruby/gems/3.1.0/gems:$NODE_PATH jest --no-cache",
-    "build": "NODE_PATH=/Users/wilson/.rbenv/versions/3.1.2/lib/ruby/gems/3.1.0/gems:$NODE_PATH esbuild app/typescript/emit/app.js app/typescript/emit/stories/index.js app/typescript/emit/stories/show.js --minify --bundle --sourcemap --outdir=app/assets/builds"
+    "build": "NODE_PATH=/Users/wilson/.rbenv/versions/3.1.2/lib/ruby/gems/3.1.0/gems:$NODE_PATH esbuild app/typescript/emit/app.js app/typescript/emit/landing.js app/typescript/emit/stories/index.js app/typescript/emit/stories/show.js --minify --bundle --sourcemap --outdir=app/assets/builds"
   },
   "repository": {
     "type": "git",
