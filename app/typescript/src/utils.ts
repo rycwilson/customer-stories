@@ -50,6 +50,34 @@ export async function getJSON(dataPath: string, params: string) {
   }
 }
 
+// https://medium.com/@mariusc23/hide-header-on-scroll-down-show-on-scroll-up-67bbaae9a78c
+function toggleHeader(header: HTMLElement, minScroll: number, minScrollTop: number, lastScrollTop: number) {
+  const scrollTop = window.scrollY;
+  if (Math.abs(lastScrollTop - scrollTop) <= minScroll) return false;
+  if (scrollTop > lastScrollTop && scrollTop > header.offsetHeight) {
+    if (scrollTop < minScrollTop) return false;
+    header.classList.add('collapse-header');
+  } else {
+    header.classList.remove('collapse-header');
+  }
+  return scrollTop;
+}
+
+export function toggleHeaderOnScroll(header: HTMLElement) {  
+  const minScroll = 10;
+  const minScrollTop = 300;
+  let isScrolling = false;
+  let lastScrollTop = 0;
+  return (e: Event) => {
+    if (isScrolling) return false;
+    isScrolling = true;
+    window.setTimeout(() => {
+      lastScrollTop = toggleHeader(header, minScroll, minScrollTop, lastScrollTop) || lastScrollTop;
+      isScrolling = false;
+    }, 250);
+  }
+}
+
 export function debounce(callback: VoidFunction, wait: number, immediate = false) {
   let timeout: number | null;
   return () => {
