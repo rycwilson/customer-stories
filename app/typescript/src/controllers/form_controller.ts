@@ -13,9 +13,9 @@ import type CtaController from './cta_controller';
 import type AdsController from './ads_controller';
 import type CustomerController from './customer_controller';
 import type { TomOptions } from 'tom-select/dist/types/types';
-import { serializeForm } from '../utils';
+import { validateForm, serializeForm } from '../utils';
 
-type SubclassController = (
+export type SubclassController = (
   NewCustomerWinController | 
   NewContributionController | 
   NewStoryController |
@@ -84,24 +84,25 @@ export default class FormController<Ctrl extends SubclassController> extends Con
   }
 
   validate(e: SubmitEvent): boolean {
-    let isValid = true;
+    return validateForm(e);
+    // let isValid = true;
     
-    // text fields are enabled/disabled via the disabled property
-    // select inputs are enabled/disabled by toggling the [name] attribute, as this precludes ui (style) changes
-    this.requiredFieldTargets.forEach(field => {
-      if (field.disabled || !field.name || field.name === 'user[password_confirmation]') return;
-      if (!field.checkValidity()) {
-        field.closest('.form-group').classList.add('has-error');
-        isValid = false;
-      }
-    });
-    this.element.classList.add('was-validated');
-    if (!isValid) {
-      e.preventDefault();
-      e.stopPropagation();  // stops rails-ujs from disabling the submit button
-      this.requiredFieldTargets.find(field => !field.checkValidity())?.focus();
-    }
-    return isValid;
+    // // text fields are enabled/disabled via the disabled property
+    // // select inputs are enabled/disabled by toggling the [name] attribute, as this precludes ui (style) changes
+    // this.requiredFieldTargets.forEach(field => {
+    //   if (field.disabled || !field.name || field.name === 'user[password_confirmation]') return;
+    //   if (!field.checkValidity()) {
+    //     field.closest('.form-group').classList.add('has-error');
+    //     isValid = false;
+    //   }
+    // });
+    // this.element.classList.add('was-validated');
+    // if (!isValid) {
+    //   e.preventDefault();
+    //   e.stopPropagation();  // stops rails-ujs from disabling the submit button
+    //   this.requiredFieldTargets.find(field => !field.checkValidity())?.focus();
+    // }
+    // return isValid;
   }
 
   get isDirty() {
