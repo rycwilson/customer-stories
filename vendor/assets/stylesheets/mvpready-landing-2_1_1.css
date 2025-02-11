@@ -1809,12 +1809,12 @@ fieldset[disabled] .btn-transparent.active {
 .account-form .placeholder-hidden {
   display: none;
 }
-.account-form .form-control {
+/* .account-form .form-control {
   height: 40px;
   padding-top: 8px;
   padding-bottom: 8px;
   margin-bottom: 1.25em;
-}
+} */
 .account-body {
   position: relative;
   padding: 35px 30px 10px;
