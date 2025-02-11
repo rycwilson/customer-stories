@@ -13,7 +13,9 @@
     resource, 
     as: resource_name,
     url: session_path(resource_name),
-    html: { class: 'form account-form' }) do |f|
+    html: { \
+      class: 'form account-form',
+      novalidate: true }) do |f|
 
   = render('devise/shared/error_messages', resource: resource) if flash[:alert]
 

@@ -82,18 +82,24 @@ export function toggleHeaderOnScroll(header: HTMLElement) {
 
 export function validateForm(e: SubmitEvent): boolean {
   const form = <HTMLFormElement>e.target;
-  const formCtrl = <FormController<SubclassController>>application.getControllerForElementAndIdentifier(
-    form, 
-    <string>form.dataset.controller
-  );
   let isValid = true;
+  const requiredFields: (HTMLInputElement | TomSelectInput)[] = [...form.querySelectorAll('input[required], select[required]')];
   
   // text fields are enabled/disabled via the disabled property
   // select inputs are enabled/disabled by toggling the [name] attribute, as this precludes ui (style) changes
-  formCtrl.requiredFieldTargets.forEach(field => {
+  requiredFields.forEach(field => {
     if (field.disabled || !field.name || field.name === 'user[password_confirmation]') return;
     if (!field.checkValidity()) {
       field.closest('.form-group').classList.add('has-error');
+      field.addEventListener(
+        field instanceof HTMLSelectElement ? 'change' : 'input', 
+        ({ target: _field }: { target: HTMLInputElement | TomSelectInput }) => {
+          if (_field.value.trim()) {
+            _field.closest('.form-group').classList.remove('has-error');
+          }
+        },
+        { once: true }
+      )
       isValid = false;
     }
   });
@@ -101,7 +107,7 @@ export function validateForm(e: SubmitEvent): boolean {
   if (!isValid) {
     e.preventDefault();
     e.stopPropagation();  // stops rails-ujs from disabling the submit button
-    formCtrl.requiredFieldTargets.find(field => !field.checkValidity())?.focus();
+    requiredFields.find(field => !field.checkValidity())?.focus();
   }
   return isValid;
 }

@@ -9,86 +9,67 @@
     .account-wrapper
       .account-body
 
-        - if request.path == '/users/sign_up' || request.path == '/users'
-          h3 Create your Account
-        - elsif request.path == '/admins/sign_up' || request.path == '/admins'
-          h3 Admin Registration   
+        h3 = "Create a new #{'Admin' if defined? @admin} account"
 
         p
-          | Already have an account?&nbsp;&nbsp;&nbsp;
+          | Already have an account?&nbsp;&nbsp;
           = link_to('Sign in', request.path.include?('users') ? new_user_session_path : new_admin_session_path)
 
         = form_for( \
             resource, 
             as: resource_name,
             url: registration_path(resource_name),
-            html: { class: 'form account-form' }) do |f|
+            html: { \
+              class: 'form account-form',
+              autocomplete: 'off',
+              novalidate: true }) do |form|
 
-          = render('devise/shared/error_messages', resource: resource) if flash[:alert]
-
-          .form-group
-            = f.label(:email, class: 'control-label')
-            = f.email_field( \
-                :email,
-                { class: 'form-control',
-                  required: true,
-                  autocomplete: 'off',
-                  placeholder: 'Email address',
-                  value: @sign_up_email })
+          = render('devise/shared/error_messages', resource:) if flash[:alert]
 
           .form-group
-            = f.label(:first_name, class: 'control-label')
-            = f.text_field( \
-                :first_name,
-                { class: 'form-control',
-                  required: true,
-                  autocomplete: 'off',
-                  placeholder: 'First name',
-                  value: @sign_up_first_name })
+            = form.label(:email, class: 'control-label')
+            = form.email_field(:email, class: 'form-control', required: true, placeholder: 'Email address')
+            .help-block.with-errors
+              | Required
 
           .form-group
-            = f.label(:last_name, class: 'control-label')
-            = f.text_field( \
-                :last_name,
-                { class: 'form-control',
-                  required: true,
-                  autocomplete: 'off',
-                  placeholder: 'Last name',
-                  value: @sign_up_last_name })
+            = form.label(:first_name, class: 'control-label')
+            = form.text_field(:first_name, class: 'form-control', required: true, placeholder: 'First name')
+            .help-block.with-errors
+              | Required
 
           .form-group
-            = f.label(:password, class: 'control-label')
-            = f.password_field(:password, { class: 'form-control', required: true, minlength: 8, autocomplete: "off", placeholder: 'Password' })
-            - if @validatable
-              span.help-block
-                = "Must be at least #{@minimum_password_length} characters"
+            = form.label(:last_name, class: 'control-label')
+            = form.text_field(:last_name, class: 'form-control', required: true, placeholder: 'Last name')
+            .help-block.with-errors
+              | Required
 
-          /.form-group
-                <%#= f.label :password_confirmation, class: 'control-label col-md-3'
-                .col-md-9
-                  <%#= f.password_field :password, { class: 'form-control',
-                      id: 'signup-pw-conf', tabindex: '5', autocomplete: "off" }
-                </div>
-              </div>
+          .form-group
+            = form.label(:password, class: 'control-label')
+            = form.password_field(:password, { class: 'form-control', required: true, minlength: 8, placeholder: 'Password' })
+            .help-block.with-errors 
+              | Minimum 8 characters
 
-          - if request.path == '/users/sign_up' || request.path == '/users'
+          - if defined? @user
             .form-group
-              = f.label(:sign_up_code, class: 'control-label')
-              = f.text_field(:sign_up_code, { class: 'form-control', required: true, placeholder: 'Sign up code' })
-          - elsif request.path == '/admins/sign_up' || request.path == '/admins'
+              = form.label(:sign_up_code, class: 'control-label')
+              = form.text_field(:sign_up_code, { class: 'form-control', required: true, placeholder: 'Sign up code' })
+              .help-block.with-errors
+                | Required 
+          - elsif defined? @admin
             .form-group
-              = f.label(:admin_access_code, 'Admin code', class: 'control-label')
-              = f.text_field(:admin_access_code, { class: 'form-control' })
+              = form.label(:admin_access_code, 'Admin code', class: 'control-label')
+              = form.text_field(:admin_access_code, { class: 'form-control' })
+              .help-block.with-errors
+                | Required
 
           .form-group
-            = f.submit('Create Account', { class: 'btn btn-secondary btn-block btn-lg' })
-              /i.fa.fa-play-circle
+            = form.submit('Create Account', { class: 'btn btn-secondary btn-block btn-lg' })
 
-          - if controller_name == 'registrations'
-            .form-group.text-center
-              p Please review the <a href="/terms">Terms of Service</a> and <a href="/privacy">Privacy Policy</a>. By creating an account, you are agreeing to these terms and conditions.
+          .form-group.text-center
+            p Please review the <a href="/terms">Terms of Service</a> and <a href="/privacy">Privacy Policy</a>. By creating an account, you are agreeing to these terms and conditions.
 
-      .account-footer
+      / .account-footer
         /p
           | Didn't get confirmation?&nbsp;&nbsp;
           = link_to()'Resend email', new_user_confirmation_path)
