@@ -45,14 +45,14 @@ $light-gray: #eaf2f5;
   margin: 0;
 }
 
-// bootstrap overrides
 html,
 body {
-  font-size: 14px;
-  // min-height: 100%;  // challenge: the footers do not have explicit height
+  height: 100%;
 }
 
 body {
+  font-size: 14px;
+
   @include bs-xs {
     padding-top: $mobile-navbar-height;
   }
@@ -82,7 +82,7 @@ body {
 }
 
 main {
-  min-height: 100vh;  // this will hide the footers => ok
+  min-height: 100vh;  // this will hide the footers
 }
 
 // MVP overrides

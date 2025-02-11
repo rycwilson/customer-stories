@@ -10,11 +10,26 @@ body.devise {
     color: $body-text-color;
 
     p {
-      line-height: 1.2em;
+      line-height: 1.25em;
     }
-
+  }
+  
+  .account-form { 
     .form-group {
-      margin-bottom: 20px;
+      margin-bottom: $form-group-margin-bottom;
+
+      [required] + .help-block {
+        display: none;
+      }
+    
+      &.has-error [required] + .help-block {
+        display: block
+      }
     }
+  }
+
+  .help-block {
+    margin-bottom: 0;
+    font-size: $font-size-small;
   }
 }
