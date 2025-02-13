@@ -7,8 +7,6 @@ const header = <HTMLElement>document.body.querySelector(':scope > nav');
 const signInForm: HTMLFormElement | null = document.querySelector('form[action="/users/sign_in"]'); 
 const signUpForm: HTMLFormElement | null = document.querySelector('form[action="/users"]');
 
-console.log(signUpForm)
-
 window.addEventListener('scroll', toggleHeaderOnScroll(header), { passive: true });
 if (signInForm) signInForm.addEventListener('submit', validateForm);
 if (signUpForm) signUpForm.addEventListener('submit', validateForm);

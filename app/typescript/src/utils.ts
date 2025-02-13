@@ -1,6 +1,4 @@
-import { application } from "./controllers/application.js"
 import tinycolor from 'tinycolor2';
-import FormController, { type SubclassController } from './controllers/form_controller';
 
 // Using css variables to capture style allows for use of the custom-button-variant mixin,
 // which itself is just a copy of bootstrap's button-variant mixin that has been modified to use css variables.
@@ -80,34 +78,47 @@ export function toggleHeaderOnScroll(header: HTMLElement) {
   }
 }
 
+function formControlIsValid(control: HTMLInputElement | TomSelectInput) {
+  const validityState = control.validity;
+  if (validityState.valueMissing) {
+    control.setCustomValidity('Required');
+  } else if (validityState.typeMismatch) {
+    control.setCustomValidity('Invalid format');
+  } else {
+    control.setCustomValidity('');
+  }
+  const isValid = control.checkValidity();
+  if (!isValid) {
+    const helpBlock = control.nextElementSibling;
+    helpBlock.textContent = control.validationMessage;
+    control.closest('.form-group').classList.add('has-error');
+    control.removeEventListener(control instanceof HTMLSelectElement ? 'change' : 'input', clearValidationError);
+    control.addEventListener(control instanceof HTMLSelectElement ? 'change' : 'input', clearValidationError, { once: true })
+  }
+  return isValid;
+}
+
+function clearValidationError({ target: control }: { target: HTMLInputElement | TomSelectInput }) {
+  if (formControlIsValid(control)) {
+    control.closest('.form-group').classList.remove('has-error');
+  }
+}
+
 export function validateForm(e: SubmitEvent): boolean {
   const form = <HTMLFormElement>e.target;
-  let isValid = true;
   const requiredFields: (HTMLInputElement | TomSelectInput)[] = [...form.querySelectorAll('input[required], select[required]')];
-  
-  // text fields are enabled/disabled via the disabled property
-  // select inputs are enabled/disabled by toggling the [name] attribute, as this precludes ui (style) changes
-  requiredFields.forEach(field => {
-    if (field.disabled || !field.name || field.name === 'user[password_confirmation]') return;
-    if (!field.checkValidity()) {
-      field.closest('.form-group').classList.add('has-error');
-      field.addEventListener(
-        field instanceof HTMLSelectElement ? 'change' : 'input', 
-        ({ target: _field }: { target: HTMLInputElement | TomSelectInput }) => {
-          if (_field.value.trim()) {
-            _field.closest('.form-group').classList.remove('has-error');
-          }
-        },
-        { once: true }
-      )
-      isValid = false;
-    }
+  let isValid = true;
+  requiredFields.forEach(control => {
+    // some select controls are disabled by toggling the [name] attribute, as this precludes ui (style) changes
+    // inputs that are disabled via the [disabled] attribute are always valid
+    if (!control.name || control.name === 'user[password_confirmation]') return;
+    isValid = formControlIsValid(control) && isValid;
   });
   form.classList.add('was-validated');
   if (!isValid) {
     e.preventDefault();
     e.stopPropagation();  // stops rails-ujs from disabling the submit button
-    requiredFields.find(field => !field.checkValidity())?.focus();
+    requiredFields.find(control => !control.checkValidity())?.focus();
   }
   return isValid;
 }

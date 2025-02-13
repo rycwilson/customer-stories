@@ -48,7 +48,6 @@ export default class FormController<Ctrl extends SubclassController> extends Con
     'referrerSelect',
     'referrerFields',
     'referrerField',
-    // 'requiredField',
     'customerContactBoolField',
     'submitBtn'
   ];
@@ -60,7 +59,6 @@ export default class FormController<Ctrl extends SubclassController> extends Con
   declare readonly successFieldTargets: HTMLInputElement[];
   declare readonly successNameTarget: HTMLInputElement;
   declare readonly submitBtnTarget: HTMLInputElement | HTMLButtonElement;
-  // declare readonly requiredFieldTargets: (TomSelectInput | HTMLInputElement)[];
   
   declare readonly hasCustomerWinSelectTarget: boolean;
   declare readonly hasContributorSelectTarget: boolean;
@@ -68,49 +66,19 @@ export default class FormController<Ctrl extends SubclassController> extends Con
 
   declare initialState: string;
 
-  validInputHandler = this.onValidInput.bind(this);
-
   connect() {
     this.initialState = serializeForm(this.element);
-    this.requiredFieldTargets.forEach(field => {
-      field.addEventListener(field instanceof HTMLSelectElement ? 'change' : 'input', this.onValidInput);
-    })
   }
 
   disconnect() {
-    this.requiredFieldTargets.forEach(field => {
-      field.removeEventListener(field instanceof HTMLSelectElement ? 'change' : 'input', this.onValidInput);
-    })
   }
 
   validate(e: SubmitEvent): boolean {
     return validateForm(e);
-    // let isValid = true;
-    
-    // // text fields are enabled/disabled via the disabled property
-    // // select inputs are enabled/disabled by toggling the [name] attribute, as this precludes ui (style) changes
-    // this.requiredFieldTargets.forEach(field => {
-    //   if (field.disabled || !field.name || field.name === 'user[password_confirmation]') return;
-    //   if (!field.checkValidity()) {
-    //     field.closest('.form-group').classList.add('has-error');
-    //     isValid = false;
-    //   }
-    // });
-    // this.element.classList.add('was-validated');
-    // if (!isValid) {
-    //   e.preventDefault();
-    //   e.stopPropagation();  // stops rails-ujs from disabling the submit button
-    //   this.requiredFieldTargets.find(field => !field.checkValidity())?.focus();
-    // }
-    // return isValid;
   }
 
   get isDirty() {
     return serializeForm(this.element) !== this.initialState;
-  }
-
-  get requiredFieldTargets(): (TomSelectInput | HTMLInputElement)[] {
-    return [...this.element.querySelectorAll('[required]')];
   }
 
   onAjaxComplete(this: Ctrl, { detail: [xhr, status] }: { detail: [xhr: XMLHttpRequest, status: string] }) {
