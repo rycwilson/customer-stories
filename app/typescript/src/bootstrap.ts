@@ -11,3 +11,4 @@ import 'bootstrap-jasny/js/fileinput';
 import 'bootstrap-validator';
 
 $.fn.collapse.Constructor.TRANSITION_DURATION = 0;
+$.fn.validator.Constructor.INPUT_SELECTOR = '[type="file"]';
