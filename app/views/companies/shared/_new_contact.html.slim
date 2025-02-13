@@ -20,8 +20,8 @@
         disabled: true,
         data: { "#{controller_id}-target" => "#{contact_type}Field" })
 
-    .form-group.required
-      = user_fields.label(:first_name, 'First Name')
+    .form-group
+      = user_fields.label(:first_name, 'First Name', class: 'control-label')
       / tabindex: '-1' allows manual focus
       = user_fields.text_field( \
           :first_name,
@@ -29,28 +29,25 @@
           required: true,
           disabled: true,
           tabindex: '-1',
-          data: { "#{controller_id}-target" => "#{contact_type}Field requiredField" })
-      span.help-block 
-        | Required
+          data: { "#{controller_id}-target" => "#{contact_type}Field" })
+      .help-block.with-errors
 
-    .form-group.required
-      = user_fields.label(:last_name, 'Last Name')
+    .form-group
+      = user_fields.label(:last_name, 'Last Name', class: 'control-label')
       = user_fields.text_field( \
           :last_name,
           class: 'form-control',
           required: true,
           disabled: true,
-          data: { "#{controller_id}-target" => "#{contact_type}Field requiredField" })
-      span.help-block 
-        | Required
+          data: { "#{controller_id}-target" => "#{contact_type}Field" })
+      .help-block.with-errors
 
-    .form-group.required
-      = user_fields.label(:email, 'Email')
+    .form-group
+      = user_fields.label(:email, 'Email', class: 'control-label')
       = user_fields.email_field( \
           :email,
           class: 'form-control',
           required: true,
           disabled: true,
-          data: { "#{controller_id}-target" => "#{contact_type}Field requiredField" })
-      span.help-block
-        | Required
+          data: { "#{controller_id}-target" => "#{contact_type}Field" })
+      .help-block.with-errors

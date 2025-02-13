@@ -12,39 +12,42 @@
           company_profile_toast_value: (toast rescue nil),
           asset_host: Rails.application.config.asset_host,
           action: [ \
-            'ajax:beforeSend->company-profile#validate',
+            'submit->company-profile#validate',
             'ajax:success->company-profile#onAjaxSuccess',
             'image-card:image-ready->company-profile#updateValidator',
             'image-card:clear-fileinput->company-profile#updateValidator',
             'image-card:upload-ready->company-profile#onUploadReady'].join(' ') }}) do |form|
     
-    .form-group.required
+    .form-group
       .visible-sm-block.col-sm-offset-1.col-sm-11
-        = form.label(:subdomain)
+        = form.label(:subdomain, class: 'control-label')
       = form.label(:subdomain, class: 'control-label col-md-3 visible-md-inline-block visible-lg-inline-block')
       .col-sm-offset-1.col-sm-11.col-md-offset-0.col-md-8.col-lg-6
-        = form.text_field(:subdomain, class: 'form-control', disabled: company.persisted?)
+        = form.text_field(:subdomain, class: 'form-control', required: true, disabled: company.persisted?)
+        .help-block.with-errors
 
-    .form-group.required
+    .form-group
       .visible-sm-block.col-sm-offset-1.col-sm-11
-        = form.label(:name, 'Company Name')
+        = form.label(:name, 'Company Name', class: 'control-label')
       = form.label(:name, 'Company Name', class: 'control-label col-md-3 visible-md-inline-block visible-lg-inline-block')
       .col-sm-offset-1.col-sm-11.col-md-offset-0.col-md-8.col-lg-6
-        = form.text_field(:name, class: 'form-control')
+        = form.text_field(:name, class: 'form-control', required: true)
+        .help-block.with-errors
     
-    .form-group.required
+    .form-group
       .visible-sm-block.col-sm-offset-1.col-sm-11
-        = form.label(:website)
+        = form.label(:website, class: 'control-label')
       = form.label( \
           :website,
           'Company Website',
           class: 'control-label col-md-3 visible-md-inline-block visible-lg-inline-block')
       .col-sm-offset-1.col-sm-11.col-md-offset-0.col-md-8.col-lg-6
-        = form.text_field(:website, class: 'form-control')
+        = form.text_field(:website, class: 'form-control', required: true)
+        .help-block.with-errors
 
     .form-group 
       .visible-sm-block.col-sm-offset-1.col-sm-11
-        label Company Logos
+        label.control-label Company Logos
       = form.label( \
           :description,
           'Company Logos',

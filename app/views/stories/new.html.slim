@@ -11,11 +11,11 @@
           controller: 'new-story',
           new_story_modal_outlet: '#main-modal',
           modal_target: 'form',
-          action: 'ajax:beforeSend->new-story#validate',
+          action: 'submit->new-story#validate',
           submit_btn_text: 'Add Story' } }) do |form|
 
-    .form-group.required 
-      = form.label(:title, 'Story Title')
+    .form-group
+      = form.label(:title, 'Story Title', class: 'control-label')
       / tabindex: '-1' allows manual focus
       / TODO but it prevents the field from being focused when cycling with tab
       = form.text_field( \
@@ -23,9 +23,8 @@
           class: 'form-control',
           required: true,
           tabindex: '-1',
-          data: { new_story_target: 'storyTitle requiredField' })
-      span.help-block 
-        | Required
+          data: { new_story_target: 'storyTitle' })
+      .help-block.with-errors 
 
     = form.fields_for(:success, @success || form.object.build_success) do |success_fields|
       / = success_fields.hidden_field(:id)
@@ -45,8 +44,8 @@
         = customer_fields.hidden_field(:name, data: { new_story_target: 'customerName customerField' })
         = customer_fields.hidden_field(:company_id, value: @company.id, data: { new_story_target: 'customerField' })
     
-      .form-group.required
-        = success_fields.label(:customer_id, 'Customer', style: @success ? 'pointer-events:none' : '')
+      .form-group
+        = success_fields.label(:customer_id, 'Customer', class: 'control-label', style: @success ? 'pointer-events:none' : '')
         = success_fields.collection_select( \
             :customer_id,
             @company.customers.sort_by { |customer| customer.name.downcase },
@@ -54,21 +53,20 @@
             :name,
             { include_blank: true }.merge(@customer_id ? { selected: @customer_id } : {}),
             { class: "form-control #{@success ? 'readonly' : ''}",
-              placeholder: 'Select or Create',
+              placeholder: 'Select or enter the name of a new Customer',
               required: true,
               data: { \
                 controller: 'tomselect',
-                new_story_target: 'customerSelect requiredField',
+                new_story_target: 'customerSelect',
                 tomselect_kind_value: 'customer',
                 tomselect_custom_options_value: { create: true, persist: false },
                 tomselect_prevent_focus_value: @success ? true : false,
                 action: 'new-story#onChangeCustomer',
                 field_name: "#{success_fields.object_name}[customer_id]" } })
-        span.help-block 
-          | Required
+        .help-block.with-errors 
 
     .form-group data-action="tomselect:dropdown-did-open->new-story#filterCustomerWinOptions"
-      = form.label(:success_id, 'Customer Win', style: @success ? 'pointer-events:none' : '')
+      = form.label(:success_id, 'Customer Win', class: 'control-label', style: @success ? 'pointer-events:none' : '')
       / can't use collection_select here because we need to add data-customer-id to the options 
       / (the Curate page may not have access to the successes table)
       = form.select( \
@@ -80,7 +78,7 @@
             selected: @success&.id),
           { include_blank: true },
           { class: "form-control #{@success ? 'readonly' : ''}",
-            placeholder: 'Select or Create',
+            placeholder: 'Select or enter the name of a new Customer Win',
             data: { \
               controller: 'tomselect',
               tomselect_kind_value: 'customerWin',
@@ -89,12 +87,12 @@
               new_story_target: 'customerWinSelect',
               action: 'new-story#onChangeCustomerWin',
               field_name: "#{form.object_name}[success_id]" } })
-      span.help-block 
+      .help-block 
         | Optional
 
     = form.fields_for(:success, @success || form.object.build_success) do |success_fields|
       .form-group 
-        = form.label(:story_category_ids, 'Category Tags')
+        = form.label(:story_category_ids, 'Category Tags', class: 'control-label')
         = success_fields.collection_select( \
             :story_category_ids,
             @company.story_categories,
@@ -107,11 +105,11 @@
                 controller: 'tomselect',
                 tomselect_kind_value: 'storyTag',
                 dynamic_placeholder: 'Select' } })
-        span.help-block 
+        .help-block 
           | Optional
 
       .form-group 
-        = form.label(:product_ids, 'Product Tags')
+        = form.label(:product_ids, 'Product Tags', class: 'control-label')
         = success_fields.collection_select( \
             :product_ids,
             @company.products,
@@ -124,5 +122,5 @@
                 controller: 'tomselect',
                 tomselect_kind_value: 'storyTag',
                 dynamic_placeholder: 'Select' } })
-        span.help-block 
+        .help-block 
           | Optional

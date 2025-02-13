@@ -5,20 +5,24 @@
       format: :json,
       html: { \
         id: 'customer-form',
+        autocomplete: 'off',
         data: { \
           controller: 'customer',
           modal_target: 'form',
           turbo_frame: '_top',
           submit_btn_text: 'Save changes',
           asset_host: Rails.application.config.asset_host,
-          action: 'image-card:image-ready->customer#updateValidator' } }) do |form|
+          action: [ \
+            'submit->customer#validate',
+            'image-card:image-ready->customer#updateValidator' ].join(' ') }}) do |form|
 
     .form-group
-      = form.label(:name)
-      = form.text_field(:name, autocomplete: 'off', class: 'form-control')
+      = form.label(:name, class: 'control-label')
+      = form.text_field(:name, class: 'form-control', required: true)
+      .help-block.with-errors
 
     .form-group
-      = form.label(:description)
+      = form.label(:description, class: 'control-label')
       = form.text_area(:description, class: 'form-control', style: 'width: 100%', rows: 4) 
 
     .form-group.logo

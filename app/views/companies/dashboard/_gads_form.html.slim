@@ -28,7 +28,7 @@
               autocomplete: 'off',
               maxlength: RESPONSIVE_AD_SHORT_HEADLINE_MAX.to_s,
               required: true,
-              data: { 'required-error': 'Required', initial_value: company.adwords_short_headline })
+              data: { validate: true, 'required-error': 'Required', initial_value: company.adwords_short_headline })
           button.btn.btn-success.hidden type="submit" data-ads-target="shortHeadlineSubmitBtn" Save
         span.help-block.with-errors
           | Max 30 characters
