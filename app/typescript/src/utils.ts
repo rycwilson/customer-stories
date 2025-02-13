@@ -89,9 +89,10 @@ function formControlIsValid(control: HTMLInputElement | TomSelectInput) {
   }
   const isValid = control.checkValidity();
   if (!isValid) {
-    const helpBlock = control.nextElementSibling;
-    helpBlock.textContent = control.validationMessage;
-    control.closest('.form-group').classList.add('has-error');
+    const formGroup = control.closest('.form-group');
+    const helpBlock = formGroup.querySelector('.help-block');
+    formGroup.classList.add('has-error');
+    if (helpBlock) helpBlock.textContent = control.validationMessage;
     control.removeEventListener(control instanceof HTMLSelectElement ? 'change' : 'input', clearValidationError);
     control.addEventListener(control instanceof HTMLSelectElement ? 'change' : 'input', clearValidationError, { once: true })
   }
