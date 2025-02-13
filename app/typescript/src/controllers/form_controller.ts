@@ -92,13 +92,6 @@ export default class FormController<Ctrl extends SubclassController> extends Con
     }
   }
 
-  onValidInput(e: Event) {
-    const input: TomSelectInput | HTMLInputElement = e.target;
-    if (input.value.trim()) {
-      input.closest('.form-group').classList.remove('has-error');
-    }
-  }
-
   onChangeContact(
     this: NewCustomerWinController | NewContributionController, 
     { target: select }: { target: TomSelectInput }
