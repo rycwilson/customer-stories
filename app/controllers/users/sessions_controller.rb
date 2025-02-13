@@ -38,7 +38,7 @@ class Users::SessionsController < Devise::SessionsController
   end
 
   def impersonate
-    redirect_to(edit_user_path) && return unless true_user.admin?
+    redirect_to(edit_user_path) and return unless true_user.admin?
     if imitable_user = User.find_by_id(params[:imitable_user_id])
       impersonate_user(imitable_user)
       session['authorized_subdomains'] = ['', imitable_user.company.subdomain]

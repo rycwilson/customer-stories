@@ -3,45 +3,45 @@
 - elsif path == new_admin_session_path
   h3 CSP Admin
 
-/p
-  | Don't have an account?&nbsp;&nbsp;&nbsp;
+p
+  | Don't have an account?&nbsp;&nbsp;
   = link_to( \
       'Create account', 
-      request.path.include?('users') ? new_user_registration_url(subdomain: '') : new_admin_registration_path)
+      resource.class.name === 'User' ? new_user_registration_url(subdomain: '') : new_admin_registration_path)
 
 = form_for( \
     resource, 
     as: resource_name,
     url: session_path(resource_name),
     html: { \
-      class: 'form account-form',
-      novalidate: true }) do |f|
+      class: 'account-form',
+      novalidate: true }) do |form|
 
   = render('devise/shared/error_messages', resource: resource) if flash[:alert]
 
   .form-group
-    = f.label(:email, class: 'control-label')
-    = f.email_field(:email, { class: 'form-control', required: true, autofocus: true, placeholder: 'Email address' })
+    = form.label(:email, class: 'control-label')
+    = form.email_field(:email, { class: 'form-control', required: true, autofocus: true, placeholder: 'Email address' })
 
-  .form-group style="margin-bottom:0"
-    = f.label(:password, class: 'control-label')
-    = f.password_field(:password, { class: 'form-control', required: true, minlength: 8, autocomplete: 'off', placeholder: 'Password' })
+  .form-group
+    = form.label(:password, class: 'control-label')
+    = form.password_field(:password, { class: 'form-control', required: true, minlength: 8, autocomplete: 'off', placeholder: 'Password' })
 
-  div style="margin-bottom:30px"
+  div
     - if devise_mapping.rememberable?
       .form-group style="display:flex; align-items:center; justify-content:space-between"
         .checkbox-inline style="margin: 0"
-          = f.check_box(:remember_me)
-          = f.label(:remember_me, style: 'margin:0')
+          = form.check_box(:remember_me)
+          = form.label(:remember_me, style: 'margin:0')
         = link_to('Forgot password?', request.path.include?('users') ? new_user_password_path : new_admin_password_path)
     - else 
       = link_to( \
           'Forgot password?', 
-          request.path.include?('users') ? new_user_password_path : new_admin_password_path,
+          resource.class.name === 'User' ? new_user_password_path : new_admin_password_path,
           class: 'pull-right')
 
   .form-group
-    = f.submit('Sign in', { class: 'btn btn-secondary btn-block btn-lg' })
+    = form.submit('Sign in', { class: 'btn btn-secondary btn-block btn-lg' })
 
 - if path == '/users/sign_in'
 .form-group.text-center
