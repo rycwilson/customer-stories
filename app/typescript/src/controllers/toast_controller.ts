@@ -2,7 +2,7 @@ import { Controller } from "@hotwired/stimulus";
 import bootoast from 'bootoast';
 
 const baseOptions = {
-  timeout: 3,
+  timeout: 4,
   animationDuration: 150,
   dismissable: true
 };
@@ -29,10 +29,9 @@ export default class ToastController extends Controller {
         }
       })();
       message = flash[flashType]
-      position = flashType === 'alert' ? 'top-center' : 'bottom-center';
     }
     if (type && message) {
-      bootoast.toast({ ...baseOptions, type, message, position });
+      bootoast.toast({ ...baseOptions, type, message, position: 'top-right' });
     }
   }
 }
