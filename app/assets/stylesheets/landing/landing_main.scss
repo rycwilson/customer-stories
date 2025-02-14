@@ -1,7 +1,7 @@
-@import 'font-awesome';
-@import 'landing_bootstrap';
-@import 'mvpready-landing-2_1_1';
 @import 'base/variables';
+@import 'landing_bootstrap';
+@import 'font-awesome';
+@import 'mvpready-landing-2_1_1';
 @import 'base/mixins';
 @import 'views/site';
 
@@ -23,27 +23,6 @@ $light-gray: #eaf2f5;
 @import 'devise';
 @import 'pricing';
 @import 'footer';
-
-.has-error {
-  .control-label {
-    color: $state-danger-text;
-  }
-
-  .form-control,
-  .form-control:focus {
-    border-color: $state-danger-text;
-  }
-}
-
-#flash {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  height: $navbar-height;
-  border-radius: 0;
-  font-size: 16px;
-  margin: 0;
-}
 
 html,
 body {
@@ -132,11 +111,11 @@ i,
   background-color: $accent-color;
 }
 
-.alert-danger {
-  background-color: $state-danger-bg;
-  border-color: $state-danger-bg;
-  color: $state-danger-text;
-}
+// .alert-danger {
+//   background-color: $state-danger-bg;
+//   border-color: $state-danger-bg;
+//   color: $state-danger-text;
+// }
 
 // replace Oswald with Lato
 // note the need to change font weight: Lato only has 300,400,700 but Oswald uses 500,600
