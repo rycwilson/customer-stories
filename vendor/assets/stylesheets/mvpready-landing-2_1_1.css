@@ -650,7 +650,7 @@ fieldset[disabled] .btn-transparent.active {
   font-family: 'Open Sans', 'Trebuchet MS', arial, sans-serif;
   font-size: 13px;
 }
-.alert {
+/* .alert {
   text-shadow: 1px 1px 1px rgba(0, 0, 0, 0.2);
 }
 .alert strong {
@@ -699,7 +699,7 @@ fieldset[disabled] .btn-transparent.active {
 }
 .alert-danger .alert-link {
   color: #e6e6e6;
-}
+} */
 .form-group {
   margin-bottom: 25px;
 }
