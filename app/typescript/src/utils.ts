@@ -83,7 +83,9 @@ function formControlIsValid(control: HTMLInputElement | TomSelectInput) {
   if (validityState.valueMissing) {
     control.setCustomValidity('Required');
   } else if (validityState.typeMismatch) {
-    control.setCustomValidity('Invalid format');
+    control.setCustomValidity(`Must be valid ${control.type} format`);
+  } else if (validityState.tooShort) {
+    control.setCustomValidity(`Must be at least ${control.minLength} characters`);
   } else {
     control.setCustomValidity('');
   }
