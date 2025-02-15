@@ -16,9 +16,9 @@ class Users::RegistrationsController < Devise::RegistrationsController
   ]
 
   layout('landing')
-  respond_to :html, :js
+  # respond_to :html, :js
 
-  before_action(:configure_sign_in_params, only: [:create])
+  before_action(:configure_sign_up_params, only: [:create])
   before_action(:configure_account_update_params, only: [:update])
   before_action(:set_preserved_form_data, only: [:new])
 
@@ -29,48 +29,16 @@ class Users::RegistrationsController < Devise::RegistrationsController
 
   # POST /resource
   def create
-    # super
-    build_resource(sign_up_params)
-
-    resource.save
-    yield resource if block_given?
-    if resource.persisted?
-      if resource.active_for_authentication?
-        set_flash_message! :notice, :signed_up
-        sign_up(resource_name, resource)
-        respond_with resource, location: after_sign_up_path_for(resource)
-      else
-        set_flash_message! :notice, :"signed_up_but_#{resource.inactive_message}"
-        expire_data_after_sign_in!
-        respond_with resource, location: after_inactive_sign_up_path_for(resource)
-      end
-    else
-      clean_up_passwords resource
-      set_minimum_password_length
-      # respond_with resource
-      session[:sign_up_email] = resource.email
-      session[:sign_up_first_name] = resource.first_name
-      session[:sign_up_last_name] = resource.last_name
-      redirect_back(
-        fallback_location: { action: 'new' }, 
-        flash: {
-          alert: resource.errors.full_messages.map do |mesg|
-            case mesg
-            when 'Sign up code is not included in the list'
-              'Invalid sign up code'
-            else
-              mesg
-            end
-          end
-        }
-      )
-    end
+    super
   end
 
   # GET /user-profile
   def edit
     # if a request is received at the default devise route, redirect to the custom route
-    redirect_to(edit_user_path) and return if request.path == edit_user_registration_path
+    if request.path == edit_user_registration_path
+      redirect_to(edit_user_path)
+      return 
+    end
     @is_admin = current_user.admin? || true_user.admin?
     if @is_admin
       @imitable_users = IMITABLE_USERS.flat_map do |name|
@@ -81,6 +49,9 @@ class Users::RegistrationsController < Devise::RegistrationsController
   end
   
   # PUT /resource
+  # devise should work with turbo since v4.9: 
+  # https://discuss.hotwired.dev/t/forms-without-redirect/1606/22
+  # https://github.com/heartcombo/devise/blob/v4.9.0/CHANGELOG.md#490---2023-02-17
   def update
     if account_update_params[:password].blank?
       super
@@ -104,11 +75,11 @@ class Users::RegistrationsController < Devise::RegistrationsController
           format.html { respond_with resource }
           format.turbo_stream do 
             render(
-              status: 422,
               turbo_stream: [ 
                 turbo_stream.replace('change-password-form', partial: 'devise/registrations/password_form'),
                 turbo_stream.replace('toaster', partial: 'shared/toaster')
-              ]
+              ],
+              status: :unprocessable_entity
             )
           end
         end
@@ -142,14 +113,14 @@ class Users::RegistrationsController < Devise::RegistrationsController
   end
 
   # If you have extra params to permit, append them to the sanitizer.
-  # def configure_sign_up_params
-  #   devise_parameter_sanitizer.for(:sign_up) << :attribute
-  # end
+  def configure_sign_up_params
+    devise_parameter_sanitizer.permit(:sign_up, keys: [:first_name, :last_name, :sign_up_code, :admin_access_code])
+  end
 
   # If you have extra params to permit, append them to the sanitizer.
-  # def configure_account_update_params
-  #   devise_parameter_sanitizer.for(:account_update) << :attribute
-  # end
+  def configure_account_update_params
+    devise_parameter_sanitizer.permit(:account_update, keys: [:email, :first_name, :last_name, :photo_url, :title, :phone, :password, :password_confirmation, :current_password])
+  end
 
   # The path used after sign up.
   def after_sign_up_path_for user
@@ -163,14 +134,6 @@ class Users::RegistrationsController < Devise::RegistrationsController
   # end
 
   private
-
-  def configure_sign_up_params
-    devise_parameter_sanitizer.permit(:sign_up, keys: [:first_name, :last_name, :sign_up_code, :admin_access_code])
-  end
-
-  def configure_account_update_params
-    devise_parameter_sanitizer.permit(:account_update, keys: [:email, :first_name, :last_name, :photo_url, :title, :phone, :password, :password_confirmation, :current_password])
-  end
 
   def set_preserved_form_data
     @sign_up_email = session[:sign_up_email]
