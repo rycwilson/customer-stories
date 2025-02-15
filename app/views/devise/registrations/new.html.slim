@@ -13,58 +13,55 @@
 
         p
           | Already have an account?&nbsp;&nbsp;
-          = link_to('Sign in', request.path.include?('users') ? new_user_session_path : new_admin_session_path)
+          = link_to('Sign in', (defined? @user) ? new_user_session_path : new_admin_session_path)
 
         = form_for( \
             resource, 
             as: resource_name,
             url: registration_path(resource_name),
             html: { \
-              class: 'form account-form',
-              autocomplete: 'off',
-              novalidate: true }) do |form|
+              class: 'account-form',
+              novalidate: true,
+              data: { resource_errors: (resource.errors.full_messages if resource.errors.any?) } }) do |form|
 
-          = render('devise/shared/error_messages', resource:) if flash[:alert]
+          /= render('devise/shared/error_messages', resource: resource)
 
           .form-group
             = form.label(:email, class: 'control-label')
-            = form.email_field(:email, class: 'form-control', required: true, placeholder: 'Email address')
+            = form.email_field( \
+                :email,
+                class: 'form-control',
+                required: true,
+                autofocus: true,
+                autocomplete: 'email',
+                placeholder: 'Email address')
             .help-block.with-errors
-              | Required
-
-          .form-group
-            = form.label(:first_name, class: 'control-label')
-            = form.text_field(:first_name, class: 'form-control', required: true, placeholder: 'First name')
-            .help-block.with-errors
-              | Required
-
-          .form-group
-            = form.label(:last_name, class: 'control-label')
-            = form.text_field(:last_name, class: 'form-control', required: true, placeholder: 'Last name')
-            .help-block.with-errors
-              | Required
 
           .form-group
             = form.label(:password, class: 'control-label')
-            = form.password_field(:password, { class: 'form-control', required: true, minlength: 8, placeholder: 'Password' })
+            = form.password_field( \
+                :password,
+                class: 'form-control',
+                required: true,
+                minlength: 8,
+                autocomplete: 'new-password',
+                placeholder: '8 characters minimum')
             .help-block.with-errors 
-              | Minimum 8 characters
 
           - if defined? @user
             .form-group
               = form.label(:sign_up_code, class: 'control-label')
-              = form.text_field(:sign_up_code, { class: 'form-control', required: true, placeholder: 'Sign up code' })
+              = form.text_field(:sign_up_code, class: 'form-control', required: true, autocomplete: 'off', placeholder: 'Sign up code')
               .help-block.with-errors
-                | Required 
+          
           - elsif defined? @admin
             .form-group
               = form.label(:admin_access_code, 'Admin code', class: 'control-label')
-              = form.text_field(:admin_access_code, { class: 'form-control' })
+              = form.text_field(:admin_access_code, class: 'form-control', required: true, autocomplete: 'off', placeholder: 'Admin access code')
               .help-block.with-errors
-                | Required
 
           .form-group
-            = form.submit('Create Account', { class: 'btn btn-secondary btn-block btn-lg' })
+            = form.submit('Create Account', class: 'btn btn-secondary btn-block btn-lg')
 
           .form-group.text-center
             p Please review the <a href="/terms">Terms of Service</a> and <a href="/privacy">Privacy Policy</a>. By creating an account, you are agreeing to these terms and conditions.

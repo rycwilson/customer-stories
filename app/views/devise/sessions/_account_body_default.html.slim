@@ -1,13 +1,13 @@
-- if path == new_user_session_path
+- if resource_name == :user
   h3 = "Sign in to #{Company.exists?(subdomain: request.subdomain) ? Company.find_by_subdomain(request.subdomain).name : 'your account'}"
-- elsif path == new_admin_session_path
+- elsif resource_name == :admin
   h3 CSP Admin
 
-p
+/p
   | Don't have an account?&nbsp;&nbsp;
   = link_to( \
       'Create account', 
-      resource.class.name === 'User' ? new_user_registration_url(subdomain: '') : new_admin_registration_path)
+      resource_name == :user ? new_user_registration_url(subdomain: '') : new_admin_registration_path)
 
 = form_for( \
     resource, 
@@ -15,34 +15,49 @@ p
     url: session_path(resource_name),
     html: { \
       class: 'account-form',
-      novalidate: true }) do |form|
+      novalidate: true,
+      data: { flash: (flash.to_h if flash.any?) } }) do |form|
 
-  = render('devise/shared/error_messages', resource: resource) if flash[:alert]
+  /= render('devise/shared/error_messages', resource: resource)
 
   .form-group
     = form.label(:email, class: 'control-label')
-    = form.email_field(:email, { class: 'form-control', required: true, autofocus: true, placeholder: 'Email address' })
+    = form.email_field( \
+        :email,
+        class: 'form-control',
+        required: true,
+        autofocus: true,
+        autocomplete: 'email',
+        placeholder: 'Email address')
+    .help-block.with-errors
 
   .form-group
     = form.label(:password, class: 'control-label')
-    = form.password_field(:password, { class: 'form-control', required: true, minlength: 8, autocomplete: 'off', placeholder: 'Password' })
+    = form.password_field( \
+        :password,
+        class: 'form-control',
+        required: true,
+        minlength: 8,
+        autocomplete: 'current-password',
+        placeholder: 'Password')
+    .help-block.with-errors
 
-  div
+  div style="margin-top:-0.75em"
     - if devise_mapping.rememberable?
       .form-group style="display:flex; align-items:center; justify-content:space-between"
         .checkbox-inline style="margin: 0"
           = form.check_box(:remember_me)
           = form.label(:remember_me, style: 'margin:0')
-        = link_to('Forgot password?', request.path.include?('users') ? new_user_password_path : new_admin_password_path)
+        = link_to('Forgot password?', resource_name == :user ? new_user_password_path : new_admin_password_path)
     - else 
       = link_to( \
           'Forgot password?', 
-          resource.class.name === 'User' ? new_user_password_path : new_admin_password_path,
+          resource_name == :user ? new_user_password_path : new_admin_password_path,
           class: 'pull-right')
 
   .form-group
-    = form.submit('Sign in', { class: 'btn btn-secondary btn-block btn-lg' })
+    = form.submit('Sign in', class: 'btn btn-secondary btn-block btn-lg')
 
-- if path == '/users/sign_in'
-.form-group.text-center
-  p By signing in you are agreeing to the <a href="/terms">Terms of Service</a> and <a href="/privacy">Privacy Policy</a>.
+  - if resource_name == :user
+    .form-group.text-center
+      p By signing in you are agreeing to the <a href="/terms">Terms of Service</a> and <a href="/privacy">Privacy Policy</a>.
