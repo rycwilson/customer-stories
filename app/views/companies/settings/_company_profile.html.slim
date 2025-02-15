@@ -1,135 +1,133 @@
-= turbo_frame_tag('edit-company-profile') do
+= form_with( \
+    model: company,
+    html: { \
+      id: 'company-profile-form',
+      class: 'form-horizontal',
+      autocomplete: 'off',
+      novalidate: true,
+      data: { \
+        remote: false,
+        controller: 'company-profile',
+        asset_host: Rails.application.config.asset_host,
+        action: [ \
+          'submit->company-profile#validate',
+          'ajax:success->company-profile#onAjaxSuccess',
+          'image-card:image-ready->company-profile#updateValidator',
+          'image-card:clear-fileinput->company-profile#updateValidator',
+          'image-card:upload-ready->company-profile#onUploadReady'].join(' ') }}) do |form|
+  
+  .form-group
+    .visible-sm-block.col-sm-offset-1.col-sm-11
+      = form.label(:subdomain, 'Custom Domain', class: 'control-label')
+    = form.label(:subdomain, 'Custom Domain', class: 'control-label col-md-3 visible-md-inline-block visible-lg-inline-block')
+    .col-sm-offset-1.col-sm-11.col-md-offset-0.col-md-8.col-lg-6
+      = form.text_field(:subdomain, class: 'form-control', required: true, disabled: company.persisted?)
+      .help-block.with-errors
 
-  = form_with( \
-      model: company,
-      html: { \
-        id: 'company-profile-form',
-        class: 'form-horizontal',
-        autocomplete: 'off',
-        novalidate: true,
-        data: { \
-          controller: 'company-profile',
-          company_profile_toast_value: (toast rescue nil),
-          asset_host: Rails.application.config.asset_host,
-          action: [ \
-            'submit->company-profile#validate',
-            'ajax:success->company-profile#onAjaxSuccess',
-            'image-card:image-ready->company-profile#updateValidator',
-            'image-card:clear-fileinput->company-profile#updateValidator',
-            'image-card:upload-ready->company-profile#onUploadReady'].join(' ') }}) do |form|
-    
-    .form-group
-      .visible-sm-block.col-sm-offset-1.col-sm-11
-        = form.label(:subdomain, class: 'control-label')
-      = form.label(:subdomain, class: 'control-label col-md-3 visible-md-inline-block visible-lg-inline-block')
-      .col-sm-offset-1.col-sm-11.col-md-offset-0.col-md-8.col-lg-6
-        = form.text_field(:subdomain, class: 'form-control', required: true, disabled: company.persisted?)
-        .help-block.with-errors
+  .form-group
+    .visible-sm-block.col-sm-offset-1.col-sm-11
+      = form.label(:name, 'Company Name', class: 'control-label')
+    = form.label(:name, 'Company Name', class: 'control-label col-md-3 visible-md-inline-block visible-lg-inline-block')
+    .col-sm-offset-1.col-sm-11.col-md-offset-0.col-md-8.col-lg-6
+      = form.text_field(:name, class: 'form-control', required: true)
+      .help-block.with-errors
+  
+  .form-group
+    .visible-sm-block.col-sm-offset-1.col-sm-11
+      = form.label(:website, class: 'control-label')
+    = form.label( \
+        :website,
+        'Company Website',
+        class: 'control-label col-md-3 visible-md-inline-block visible-lg-inline-block')
+    .col-sm-offset-1.col-sm-11.col-md-offset-0.col-md-8.col-lg-6
+      = form.text_field(:website, class: 'form-control', required: true)
+      .help-block.with-errors
 
-    .form-group
-      .visible-sm-block.col-sm-offset-1.col-sm-11
-        = form.label(:name, 'Company Name', class: 'control-label')
-      = form.label(:name, 'Company Name', class: 'control-label col-md-3 visible-md-inline-block visible-lg-inline-block')
-      .col-sm-offset-1.col-sm-11.col-md-offset-0.col-md-8.col-lg-6
-        = form.text_field(:name, class: 'form-control', required: true)
-        .help-block.with-errors
-    
-    .form-group
-      .visible-sm-block.col-sm-offset-1.col-sm-11
-        = form.label(:website, class: 'control-label')
-      = form.label( \
-          :website,
-          'Company Website',
-          class: 'control-label col-md-3 visible-md-inline-block visible-lg-inline-block')
-      .col-sm-offset-1.col-sm-11.col-md-offset-0.col-md-8.col-lg-6
-        = form.text_field(:website, class: 'form-control', required: true)
-        .help-block.with-errors
+  .form-group 
+    .visible-sm-block.col-sm-offset-1.col-sm-11
+      label.control-label Company Logos
+    = form.label( \
+        :description,
+        'Company Logos',
+        class: 'control-label col-md-3 visible-md-inline-block visible-lg-inline-block')
+    .col-sm-offset-1.col-sm-11.col-md-offset-0.col-md-8.col-lg-6
+      ul.image-cards.list-unstyled
+        = render( \
+            'shared/image_card',
+            { form_ctrl: form.options[:html][:data][:controller],
+              _image: { type: 'SquareLogo', url: company.square_logo_url },
+              required: true })
 
-    .form-group 
-      .visible-sm-block.col-sm-offset-1.col-sm-11
-        label.control-label Company Logos
-      = form.label( \
-          :description,
-          'Company Logos',
-          class: 'control-label col-md-3 visible-md-inline-block visible-lg-inline-block')
-      .col-sm-offset-1.col-sm-11.col-md-offset-0.col-md-8.col-lg-6
-        ul.image-cards.list-unstyled
-          = render( \
-              'shared/image_card',
-              { form_ctrl: form.options[:html][:data][:controller],
-                _image: { type: 'SquareLogo', url: company.square_logo_url },
-                required: true })
+        = render( \
+            'shared/image_card',
+            { form_ctrl: form.options[:html][:data][:controller],
+              _image: { type: 'LandscapeLogo', url: company.landscape_logo_url } })
 
-          = render( \
-              'shared/image_card',
-              { form_ctrl: form.options[:html][:data][:controller],
-                _image: { type: 'LandscapeLogo', url: company.landscape_logo_url } })
+  .row
+    .visible-sm-block.col-sm-offset-1.col-sm-11
+      label Page Header  
+    label.control-label.col-md-3.visible-md-inline-block.visible-lg-inline-block Page Header
+    .col-sm-offset-1.col-sm-11.col-md-offset-0.col-md-8.col-lg-6 data-action="change->company-profile#onChangeHeaderLogoType"
+      = label_tag('company_header_logo_type_squarelogo', class: 'radio-inline') do 
+        = form.radio_button(:header_logo_type, 'SquareLogo')
+        | Square Logo
+      = label_tag('company_header_logo_type_landscapelogo', class: 'radio-inline') do
+        = form.radio_button(:header_logo_type, 'LandscapeLogo')
+        | Landscape Logo
 
-    .row
-      .visible-sm-block.col-sm-offset-1.col-sm-11
-        label Page Header  
-      label.control-label.col-md-3.visible-md-inline-block.visible-lg-inline-block Page Header
-      .col-sm-offset-1.col-sm-11.col-md-offset-0.col-md-8.col-lg-6 data-action="change->company-profile#onChangeHeaderLogoType"
-        = label_tag('company_header_logo_type_squarelogo', class: 'radio-inline') do 
-          = form.radio_button(:header_logo_type, 'SquareLogo')
-          | Square Logo
-        = label_tag('company_header_logo_type_landscapelogo', class: 'radio-inline') do
-          = form.radio_button(:header_logo_type, 'LandscapeLogo')
-          | Landscape Logo
+  .row.custom-header-colors
+    .col-sm-offset-1.col-sm-11.col-md-offset-3.col-md-8.col-lg-6
+      div
+        = form.label(:header_color_1, 'Upper')
+        = form.color_field( \
+            :header_color_1,
+            class: 'form-control',
+            data: { action: 'company-profile#onInputCompanyHeaderBackgroundColor' })
+      div
+        = form.label(:header_color_2, 'Lower')
+        = form.color_field( \
+            :header_color_2,
+            class: 'form-control',
+            data: { action: 'company-profile#onInputStoriesHeaderBackgroundColor' })
+      div
+        = form.label(:header_text_color, 'Heading')
+        = form.color_field(:header_text_color,
+            class: 'form-control',
+            data: { \
+              company_profile_target: 'storiesHeadingColorInput',
+              action: 'company-profile#onInputStoriesHeadingColor' })
 
-    .row.custom-header-colors
-      .col-sm-offset-1.col-sm-11.col-md-offset-3.col-md-8.col-lg-6
-        div
-          = form.label(:header_color_1, 'Upper')
-          = form.color_field( \
-              :header_color_1,
-              class: 'form-control',
-              data: { action: 'company-profile#onInputCompanyHeaderBackgroundColor' })
-        div
-          = form.label(:header_color_2, 'Lower')
-          = form.color_field( \
-              :header_color_2,
-              class: 'form-control',
-              data: { action: 'company-profile#onInputStoriesHeaderBackgroundColor' })
-        div
-          = form.label(:header_text_color, 'Heading')
-          = form.color_field(:header_text_color,
-              class: 'form-control',
-              data: { \
-                company_profile_target: 'storiesHeadingColorInput',
-                action: 'company-profile#onInputStoriesHeadingColor' })
+  .form-group
+    .col-sm-offset-1.col-sm-11.col-md-offset-3.col-md-8.col-lg-6
+      .company-header-demo data-company-profile-target="companyHeaderDemo" style="background-color:#{company.header_color_1}"
+        a.LandscapeLogo {
+          href="javascript:;"
+          class=('hidden' if company.header_logo_type == 'SquareLogo') }
+          = image_tag( \
+              company.landscape_logo_url || LOGO_PLACEHOLDER,
+              class: company.landscape_logo_url.blank? ? 'generic' : '',
+              alt: 'Company Logo')
+        a.SquareLogo {
+          href="javascript:;"
+          class=('hidden' if company.header_logo_type == 'LandscapeLogo') }
+          = image_tag( \
+              company.square_logo_url || LOGO_PLACEHOLDER,
+              class: company.square_logo_url.blank? ? 'generic' : '',
+              alt: 'Company Logo')
+      div {
+        class="stories-header-demo stories-header-demo--bg-#{color_shade(company.header_color_2)}"
+        data-company-profile-target="storiesHeaderDemo"
+        style="#{stories_header_custom_colors(company)}" }
+        h3 data-company-profile-target="storiesHeadingDemo"
+          | Customer Stories
 
-    .form-group
-      .col-sm-offset-1.col-sm-11.col-md-offset-3.col-md-8.col-lg-6
-        .company-header-demo data-company-profile-target="companyHeaderDemo" style="background-color:#{company.header_color_1}"
-          a.LandscapeLogo {
-            href="javascript:;"
-            class=('hidden' if company.header_logo_type == 'SquareLogo') }
-            = image_tag( \
-                company.landscape_logo_url || LOGO_PLACEHOLDER,
-                class: company.landscape_logo_url.blank? ? 'generic' : '',
-                alt: 'Company Logo')
-          a.SquareLogo {
-            href="javascript:;"
-            class=('hidden' if company.header_logo_type == 'LandscapeLogo') }
-            = image_tag( \
-                company.square_logo_url || LOGO_PLACEHOLDER,
-                class: company.square_logo_url.blank? ? 'generic' : '',
-                alt: 'Company Logo')
-        div {
-          class="stories-header-demo stories-header-demo--bg-#{color_shade(company.header_color_2)}"
-          data-company-profile-target="storiesHeaderDemo"
-          style="#{stories_header_custom_colors(company)}" }
-          h3 data-company-profile-target="storiesHeadingDemo"
-            | Customer Stories
+  /.form-group
+    .visible-sm-block.col-sm-offset-1.col-sm-11
+      = form.label(:gtm_id, 'Google Tag Manager ID')
+    = form.label(:gtm_id, 'Google Tag Manager ID', class: 'control-label col-md-3 visible-md-inline-block visible-lg-inline-block')
+    .col-sm-offset-1.col-sm-11.col-md-offset-0.col-md-8.col-lg-6
+      = form.text_field(:gtm_id, class: 'form-control')
 
-    /.form-group
-      .visible-sm-block.col-sm-offset-1.col-sm-11
-        = form.label(:gtm_id, 'Google Tag Manager ID')
-      = form.label(:gtm_id, 'Google Tag Manager ID', class: 'control-label col-md-3 visible-md-inline-block visible-lg-inline-block')
-      .col-sm-offset-1.col-sm-11.col-md-offset-0.col-md-8.col-lg-6
-        = form.text_field(:gtm_id, class: 'form-control')
-
-    .row
-      .col-sm-offset-1.col-sm-11.col-md-offset-3.col-md-8.col-lg-6
-        = form.submit(class: 'btn btn-success')
+  .row
+    .col-sm-offset-1.col-sm-11.col-md-offset-3.col-md-8.col-lg-6
+      = form.submit('Save changes', class: 'btn btn-success')

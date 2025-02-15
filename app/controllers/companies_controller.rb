@@ -75,9 +75,17 @@ class CompaniesController < ApplicationController
         end
       else
         respond_to do |format|
+          format.turbo_stream do
+            flash.now[:notice] = 'Account updated successfully'
+            render(
+              turbo_stream: [ 
+                turbo_stream.replace('company-profile-form', partial: 'companies/settings/company_profile', locals: { company: @company }),
+                turbo_stream.replace('toaster', partial: 'shared/toaster')
+              ]
+            )
+          end
           format.html do
-            toast = { type: 'success', message: 'Account settings updated successfully' }
-            render(partial: 'companies/settings/company_profile', locals: { company: @company, toast: })
+            redirect_to edit_company_path(@company), flash: { notice: 'Account updated successfully' }
           end
         end
       end
