@@ -50,7 +50,7 @@ nav.company-nav.navbar-fixed-top.hidden-xs data-controller="header"
           li
             = link_to(edit_user_path) do
               i.fa.fa-fw.fa-user-circle-o
-              = current_user.full_name
+              = current_user.full_name or current_user.email.split('@').first
           li
             / https://github.com/hotwired/turbo/issues/119#issuecomment-765708124
             = button_to(destroy_user_session_path, method: :delete, data: { turbo: 'false' }) do
@@ -58,7 +58,13 @@ nav.company-nav.navbar-fixed-top.hidden-xs data-controller="header"
               | Sign out
         /div
       
-      li.dropdown.company-settings class=('active' if controller_name == 'companies' && action_name =~ /new|edit/)
+      / dropdown disabled when on companies#edit due to:
+        - clicking links in dropdown is not activating corresponding tab (?)
+        - would necessitate a separate partial for turbo stream update on company change (name change)
+        - not sure what the best ux is for this
+      li.dropdown.company-settings {
+        class=('active' if controller_name == 'companies' and action_name =~ /new|edit/) 
+        style=('pointer-events:none' if controller_name == 'companies' and action_name =~ /new|edit/) }
         a.dropdown-toggle data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false"
           - if company&.square_logo_url.present?
             = image_tag(company.square_logo_url, alt: "#{company.name} Logo")
