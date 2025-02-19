@@ -3,7 +3,7 @@ import type ModalController from './modal_controller';
 import type NewCustomerWinController from './new_customer_win_controller';
 import type NewContributionController from './new_contribution_controller';
 import type NewStoryController from './new_story_controller';
-import type UserProfileController from './user_profile_controller';
+// import type UserProfileController from './user_profile_controller';
 import type ChangePasswordController from './change_password_controller';
 import type CompanyProfileController from './company_profile_controller';
 import type InvitationTemplateController from './invitation_template_controller';
@@ -11,23 +11,24 @@ import type ContributorInvitationController from './contributor_invitation_contr
 import type CompanyStoryTagsController from './company_story_tags_controller';
 import type CtaController from './cta_controller';
 import type AdsController from './ads_controller';
-import type CustomerController from './customer_controller';
+// import type CustomerController from './customer_controller';
 import type { TomOptions } from 'tom-select/dist/types/types';
 import { validateForm, serializeForm } from '../utils';
+import { imageValidatorOptions } from '../user_uploads';
 
+// UserProfileController |
+// CustomerController
 export type SubclassController = (
   NewCustomerWinController | 
   NewContributionController | 
   NewStoryController |
-  UserProfileController |
   ChangePasswordController |
   CompanyProfileController |
   InvitationTemplateController |
   ContributorInvitationController |
   CompanyStoryTagsController |
   CtaController |
-  AdsController |
-  CustomerController
+  AdsController
 );
 
 export default class FormController<Ctrl extends SubclassController> extends Controller<HTMLFormElement> {
@@ -68,9 +69,13 @@ export default class FormController<Ctrl extends SubclassController> extends Con
 
   connect() {
     this.initialState = serializeForm(this.element);
+
+    // validator will only run for file inputs (image upload)
+    $(this.element).validator(imageValidatorOptions);
   }
 
   disconnect() {
+    $(this.element).validator('destroy');
   }
 
   validate(e: SubmitEvent): boolean {

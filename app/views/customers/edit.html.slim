@@ -7,14 +7,14 @@
         id: 'customer-form',
         autocomplete: 'off',
         data: { \
-          controller: 'customer',
+          controller: 'form',
           modal_target: 'form',
           turbo_frame: '_top',
           submit_btn_text: 'Save changes',
           asset_host: Rails.application.config.asset_host,
           action: [ \
-            'submit->customer#validate',
-            'image-card:image-ready->customer#updateValidator' ].join(' ') }}) do |form|
+            'submit->form#validate',
+            'image-card:image-ready->form#updateValidator' ].join(' ') }}) do |form|
 
     .form-group
       = form.label(:name, class: 'control-label')
@@ -32,8 +32,4 @@
           = form.label(:show_name_with_logo)
             = form.check_box(:show_name_with_logo)
             = 'Show name'
-      = render( \
-          'shared/image_card', 
-          { form_ctrl: form.options[:html][:data][:controller],
-            _image: { url: @customer.logo_url },
-            customer_name: @customer.name })
+      = render('shared/image_card', model: 'Customer', _image: { url: @customer.logo_url }, customer_name: @customer.name)

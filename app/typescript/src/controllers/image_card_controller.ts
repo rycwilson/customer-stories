@@ -2,15 +2,13 @@ import { Controller } from '@hotwired/stimulus';
 import { initS3FileInput, onS3Done } from '../user_uploads';
 
 export default class ImageCardController extends Controller<HTMLDivElement | HTMLLIElement> {
-  static outlets = ['ads', 'user-profile', 'company-profile', 'customer'];
+  static outlets = ['form', 'ads', 'company-profile'];
+  declare readonly formOutlet: Controller;
+  declare readonly hasFormOutlet: boolean;
   declare readonly adsOutlet: Controller;
   declare readonly hasAdsOutlet: boolean;
-  declare readonly userProfileOutlet: Controller;
-  declare readonly hasUserProfileOutlet: boolean;
   declare readonly companyProfileOutlet: Controller;
   declare readonly hasCompanyProfileOutlet: boolean;
-  declare readonly customerOutlet: Controller;
-  declare readonly hasCustomerOutlet: boolean;
 
   static values = {
     kind: String,
@@ -64,8 +62,8 @@ export default class ImageCardController extends Controller<HTMLDivElement | HTM
         .on('clear.bs.fileinput', this.clearFileInputHandler);
 
       // bootstrap validator events trigger on the form 
-      if (this.formOutlet) {
-        $(this.formOutlet.element)
+      if (this.parentFormOutlet) {
+        $(this.parentFormOutlet.element)
           .on('validate.bs.validator', this.validateFileInputHandler)
           .on('valid.bs.validator', this.validFileInputHandler)
           .on('invalid.bs.validator', this.invalidFileInputHandler)
@@ -117,8 +115,9 @@ export default class ImageCardController extends Controller<HTMLDivElement | HTM
   }
 
   onValidateFileInput({ relatedTarget: input }: { relatedTarget: HTMLInputElement }) {
+    console.log('validate.bs.validator')
     if (input === this.fileInputTarget) {
-      console.log('validate.bs.validator')
+      // console.log('validate.bs.validator')
     }
   }
   
@@ -218,10 +217,9 @@ export default class ImageCardController extends Controller<HTMLDivElement | HTM
     return this.hasFormGroupTarget;
   }
 
-  get formOutlet() {
+  get parentFormOutlet() {
+    if (this.hasFormOutlet) return this.formOutlet;
     if (this.hasAdsOutlet) return this.adsOutlet;
-    if (this.hasUserProfileOutlet) return this.userProfileOutlet;
     if (this.hasCompanyProfileOutlet) return this.companyProfileOutlet;
-    if (this.hasCustomerOutlet) return this.customerOutlet;
   }
 }

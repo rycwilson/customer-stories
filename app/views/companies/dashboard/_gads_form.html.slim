@@ -95,12 +95,12 @@
             ul.image-cards.list-unstyled
               = render( \
                   'shared/image_card',
-                  { form_ctrl: form.options[:html][:data][:controller],
+                  { model: 'AdwordsImage',
                     _image: company.ad_images.default.marketing.square.take || { type: 'SquareImage', default: true },
                     field_name_prefix: 'company[adwords_images_attributes][0]' })
               = render( \
                   'shared/image_card',
-                  { form_ctrl: form.options[:html][:data][:controller],
+                  { model: 'AdwordsImage',
                     _image: company.ad_images.default.marketing.landscape.take || { type: 'LandscapeImage', default: true },
                     field_name_prefix: 'company[adwords_images_attributes][1]' })
 
@@ -114,13 +114,13 @@
         ul.image-cards.list-unstyled
           = render( \
               'shared/image_card',
-              { form_ctrl: form.options[:html][:data][:controller],
+              { model: 'AdwordsImage',
                 collection: 'images',
                 field_name_prefix: 'company[adwords_images_attributes][2]' })
           - company.ad_images.marketing.where.not(default: true).each.with_index do |ad_image, i|
             = render( \
                 'shared/image_card',
-                { form_ctrl: form.options[:html][:data][:controller],
+                { model: 'AdwordsImage',
                   _image: ad_image,
                   upload_enabled: false,
                   field_name_prefix: "company[adwords_images_attributes][#{ 3 + i }]" })
@@ -133,13 +133,13 @@
             ul.image-cards
               = render( \
                   'shared/image_card',
-                  { form_ctrl: form.options[:html][:data][:controller],
+                  { model: 'AdwordsImage',
                     _image: company.ad_images.default.logo.square.take || { type: 'SquareLogo', default: true },
                     field_name_prefix: ( \
                       "company[adwords_images_attributes][#{ 3 + company.ad_images.marketing.where.not(default: true).count }]") })
               = render( \
                   'shared/image_card',
-                  { form_ctrl: form.options[:html][:data][:controller],
+                  { model: 'AdwordsImage',
                     _image: company.ad_images.default.logo.landscape.take || { type: 'LandscapeLogo', default: true },
                     field_name_prefix: ( \
                       "company[adwords_images_attributes][#{ 4 + company.ad_images.marketing.where.not(default: true).count }]") })
@@ -155,14 +155,14 @@
         ul.image-cards
           = render( \
               'shared/image_card',
-              { form_ctrl: form.options[:html][:data][:controller],
+              { model: 'AdwordsImage',
                 collection: 'logos',
                 field_name_prefix: ( \
                   "company[adwords_images_attributes][#{ 5 + company.ad_images.marketing.where.not(default: true).count }]") })
           - company.ad_images.logo.where.not(default: true).each.with_index do |ad_image, i|
             = render( \
                 'shared/image_card',
-                { form_ctrl: form.options[:html][:data][:controller],
+                { model: 'AdwordsImage',
                   _image: ad_image,
                   upload_enabled: false,
                   field_name_prefix: ( \

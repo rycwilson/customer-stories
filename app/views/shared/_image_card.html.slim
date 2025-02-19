@@ -2,68 +2,62 @@
 - selected ||= false
 - required ||= false
 - collection ||= _image[:type]&.split(/(?=[A-Z])/)&.last&.downcase&.pluralize
-- is_company_ad_image = form_ctrl == 'ads'
-- is_default_company_ad_image = is_company_ad_image && _image[:default]
-- is_ad_image = form_ctrl.nil?
-- is_user_photo = form_ctrl == 'user-profile'
-- is_company_logo = form_ctrl == 'company-profile'
-- is_customer_logo = form_ctrl == 'customer'
+- is_default_ad_image = model == 'AdwordsImage' && _image[:default]
 - upload_enabled = local_assigns.fetch(:upload_enabled, true)
-- size_validation_enabled = upload_enabled && !is_customer_logo
-- image_replaceable = is_user_photo || is_company_logo || is_customer_logo || (is_company_ad_image && _image[:default])
+- size_validation_enabled = upload_enabled && model != 'Customer'
+- image_replaceable = model.in? ['User', 'Company', 'Customer'] || is_default_ad_image
 - image_exists = _image[:image_url].present? || _image[:url].present? 
 
 = content_tag( \
-    (is_user_photo or is_customer_logo) ? :div : :li,
+    model.in?(['User', 'Customer']) ? :div : :li,
     class: [ \
       'image-card',
       { "image-card--#{_image[:type]}" => _image[:type].present? },
-      { 'gads-required' => is_company_ad_image && _image[:type]&.include?('Image') },
-      { 'gads-default' => is_company_ad_image && _image[:default] },
-      { hidden: is_company_ad_image && _image.blank? },
+      { 'gads-required' => (model == 'AdwordsImage' and _image[:type] =~ /Image/) },
+      { 'gads-default' => is_default_ad_image },
+      { hidden: (model == 'AdwordsImage' and _image.blank?) },
       { selected: }],
     data: { \
       image_id: _image[:id],
       controller: 'image-card',
       image_card_kind_value: _image[:type],
-      image_card_ads_outlet: ('#gads-form' if is_company_ad_image),
+      image_card_form_outlet: model == 'User' ? '#user-profile-form' : (model == 'Customer' ? '#customer-form' : nil),
+      image_card_ads_outlet: ('#gads-form' if model == 'AdwordsImage'),
       ads_target: (( \
         _image[:default] ? \
           'defaultImageCard' : \
-          (_image[:id] ? 'imageCard' : "new#{collection.singularize.capitalize}Card")) if is_company_ad_image),
-      image_card_user_profile_outlet: ('#user-profile-form' if is_user_photo),
-      image_card_company_profile_outlet: ('#company-profile-form' if is_company_logo),
-      image_card_customer_outlet: ('#customer-form' if is_customer_logo),
-      action: ('click->image-card#toggleSelected' if is_ad_image) }) do
+          (_image[:id] ? 'imageCard' : "new#{collection.singularize.capitalize}Card")) if model == 'AdwordsImage'),
+      image_card_company_profile_outlet: ('#company-profile-form' if model == 'Company'),
+      action: ('click->image-card#toggleSelected' if model == 'AdwordsAd') }) do
 
   = render('shared/loading_spinner') if upload_enabled
 
-  - if is_customer_logo
+  - if model == 'Customer'
     .customer-name 
       span = customer_name
 
-  - if is_company_logo 
+  - if model == 'Company' 
     = hidden_field_tag( \
         "company[#{_image[:type].split(/(?=[A-Z])/)&.join('_').downcase}_url]",
         _image[:url],
         disabled: true,
         data: { image_card_target: 'input urlInput' })
   
-  - elsif is_user_photo
+  - elsif model == 'User'
     = hidden_field_tag( \
         "user[photo_url]",
         _image[:url],
         disabled: true,
         data: { image_card_target: 'input urlInput' })
 
-  - elsif is_customer_logo
+  - elsif model == 'Customer'
     = hidden_field_tag( \
         "customer[logo_url]",
         _image[:url],
         disabled: true,
         data: { image_card_target: 'input urlInput' })
 
-  - elsif is_ad_image
+  - elsif model == 'AdwordsAd'
     = check_box_tag( \
         'adwords_ad[adwords_image_ids][]',
         _image[:id],
@@ -79,13 +73,13 @@
               i.fa.fa-circle-o.fa-stack-2x
               i.fa.fa-check.fa-stack-1x
 
-  - elsif is_company_ad_image
+  - elsif model == 'AdwordsImage'
 
     // new image
     - if _image[:id].blank?
       = hidden_field_tag( \
           "#{field_name_prefix}[type]",
-          is_default_company_ad_image ? _image[:type] : '',
+          is_default_ad_image ? _image[:type] : '',
           disabled: true,
           data: { image_card_target: 'input' })
       = hidden_field_tag( \
@@ -93,7 +87,7 @@
           '',
           disabled: true,
           data: { image_card_target: 'input urlInput' })
-      - if is_default_company_ad_image
+      - if is_default_ad_image
         = hidden_field_tag( \
             "#{field_name_prefix}[default]",
             true,
@@ -112,7 +106,7 @@
           _image[:default],
           disabled: true,
           data: { image_card_target: 'input defaultInput' })
-      - if is_default_company_ad_image
+      - if is_default_ad_image
         = hidden_field_tag( \
             "#{field_name_prefix}[type]",
             _image[:type],
@@ -130,7 +124,7 @@
             disabled: true,
             data: { image_card_target: 'input _destroyInput' })
     
-  - unless is_ad_image
+  - unless model == 'AdwordsAd'
 
     .form-group.fileinput {
       class="fileinput-#{image_exists ? 'exists' : 'new'}" 
@@ -141,8 +135,8 @@
         - if upload_enabled
           / attaching data-trigger attribute to .fileinput-preview does not work
           button type="button" data-trigger="fileinput"
-            i.fa.fa-fw class="fa-#{is_user_photo ? 'camera' : 'upload'}"
-        - elsif is_company_ad_image && _image[:id].present? && !_image[:default]
+            i.fa.fa-fw class="fa-#{model == 'User' ? 'camera' : 'upload'}"
+        - elsif model == 'AdwordsImage' and _image[:id].present? and not _image[:default]
           button.make-default type="button" data-action="image-card#makeDefault"
             i.fa.fa-fw.fa-refresh
           |&nbsp;
@@ -159,7 +153,7 @@
         - if image_replaceable
           .fileinput-new.thumbnail
             img {
-              src="#{_image[:type].present? ? sized_image_placeholder(_image[:type]) : (is_user_photo ? asset_url('placeholders/user-photo-missing.png') : asset_url(LOGO_PLACEHOLDER))}" 
+              src="#{_image[:type].present? ? sized_image_placeholder(_image[:type]) : (model == 'User' ? asset_url('placeholders/user-photo-missing.png') : asset_url(LOGO_PLACEHOLDER))}" 
               alt="#{_image[:type]&.split(/(?=[A-Z])/)&.join(' ')}" }
           .fileinput-preview.fileinput-exists.thumbnail data-image-card-target="preview"
             - if image_exists
@@ -180,11 +174,11 @@
             data-validate="false"
             data-collection=collection
             data-max-file-size="5242880" 
-            data-min-dimensions=(ad_image_min_dimensions.to_json unless is_user_photo || is_customer_logo)
+            data-min-dimensions=(ad_image_min_dimensions.to_json unless model.in? ['User', 'Customer'])
             data-aspect-ratio-tolerance=RESPONSIVE_AD_ASPECT_RATIO_TOLERANCE
             data-required-image=('true' if required) }
 
-      - if is_company_ad_image && _image[:id].present? && !_image[:default]
+      - if model == 'AdwordsImage' and _image[:id].present? and not _image[:default]
         .image-card__footer
           button.btn.btn-sm.btn-default type="button" data-action="image-card#cancelChanges"
             | Cancel

@@ -33,19 +33,19 @@
           - ad.company.ad_images.marketing.sort_by { |image| sort_ad_images(ad, image) }.each.with_index do |ad_image, i|
             = render( \
                 'shared/image_card',
-                { form_ctrl: form.options[:html][:data][:controller],
-                  _image: ad_image,
-                  upload_enabled: false,
-                  selected: ad.images.include?(ad_image),
-                  field_name_prefix: "adwords_ad[adwords_images_attributes][#{i}]" })
+                model: 'AdwordsAd',
+                _image: ad_image,
+                upload_enabled: false,
+                selected: ad.images.include?(ad_image),
+                field_name_prefix: "adwords_ad[adwords_images_attributes][#{i}]")
                   
       #ad-images__logos.tab-pane
         ul.image-cards data-max="5"
           - ad.company.ad_images.logo.sort_by { |image| sort_ad_images(ad, image) }.each.with_index do |ad_image, i|
             = render( \
                 'shared/image_card',
-                { form_ctrl: form.options[:html][:data][:controller],
-                  _image: ad_image,
-                  upload_enabled: false,
-                  selected: ad.images.include?(ad_image),
-                  field_name_prefix: "adwords_ad[adwords_images_attributes][#{ i + ad.company.ad_images.marketing.count }]" })
+                model: 'AdwordsAd',
+                _image: ad_image,
+                upload_enabled: false,
+                selected: ad.images.include?(ad_image),
+                field_name_prefix: "adwords_ad[adwords_images_attributes][#{ i + ad.company.ad_images.marketing.count }]")

@@ -43,8 +43,8 @@ application.register('contributor-invitation', ContributorInvitationController);
 import CtaController from "./cta_controller.js";
 application.register("cta", CtaController);
 
-import CustomerController from './customer_controller.js';
-application.register('customer', CustomerController);
+// import CustomerController from './customer_controller.js';
+// application.register('customer', CustomerController);
 
 import CustomerWinController from './customer_win_controller.js';
 application.register('customer-win', CustomerWinController);
@@ -133,8 +133,8 @@ application.register('tomselect', TomselectController);
 import TooltipController from './tooltip_controller.js';
 application.register('tooltip', TooltipController);
 
-import UserProfileController from "./user_profile_controller.js";
-application.register("user-profile", UserProfileController);
+// import UserProfileController from "./user_profile_controller.js";
+// application.register("user-profile", UserProfileController);
 
 import WinStoryController from './win_story_controller.js';
 application.register('win-story', WinStoryController);
