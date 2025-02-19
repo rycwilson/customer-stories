@@ -6,8 +6,9 @@
         id: 'gads-form',
         class: 'form-horizontal',
         data: { \
-          controller: 'ads',
-          ads_toast_value: (toast rescue nil),
+          remote: false,
+          controller: 'ads toast',
+          toast_flash_value: (flash.to_h if flash.present?),
           asset_host: Rails.application.config.asset_host,
           action: [ \
             'image-card:make-default->ads#setNewDefault',
