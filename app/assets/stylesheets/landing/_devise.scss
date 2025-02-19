@@ -9,12 +9,18 @@ body.devise {
     box-shadow: none;
     color: $body-text-color;
 
+    a {
+      font-weight: 600;
+    }
+    
     p {
-      line-height: 1.35em;
+      line-height: 1.5em;
     }
   }
   
   .account-form { 
+    margin: 1.75em 0;
+
     .form-group {
       margin-bottom: $form-group-margin-bottom;
 
