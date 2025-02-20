@@ -46,7 +46,7 @@ export default class CompanySettingsController extends Controller {
   initSidebar() {
     let activeTab: HTMLAnchorElement | undefined;
     let navCookie: string | undefined;
-    const defaultTab = <HTMLAnchorElement>this.tabTargets[0];
+    const defaultTab = <HTMLAnchorElement>this.tabTargets.find(tab => tab.getAttribute('href') === '#account-panel');
     const showPage = (tab: HTMLAnchorElement) => {
       $(tab).one('shown.bs.tab', () => {
         this.element.classList.add('has-active-tab');
