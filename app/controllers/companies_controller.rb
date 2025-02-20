@@ -41,16 +41,14 @@ class CompaniesController < ApplicationController
     @company = Company.new(company_params)
     if @company.save
       @company.users << current_user
-      redirect_to File.join(request.protocol + "#{@company.subdomain}." + request.domain + request.port_string, company_path(@company)), flash: { success: "Account setup complete" }
-      # if current_user.linkedin_url.present?
-      #   redirect_to File.join(request.protocol + "#{@company.subdomain}." + request.domain + request.port_string, company_path(@company)), flash: { success: "Account setup complete" }
-      # else
-      #   redirect_to File.join(request.protocol + "#{@company.subdomain}." + request.domain + request.port_string, edit_profile_path), flash: { info: "Complete your account setup by connecting to LinkedIn" }
-      # end
+      session['authorized_subdomains'] = ['', @company.subdomain]
+      session['user_return_to'] = edit_company_path
+      redirect_to edit_company_url(subdomain: @company.subdomain), flash: { notice: 'Company created successfully' }
     else
       # validation(s): presence / uniqueness of name, presence of subdomain
-      flash[:danger] = @company.errors.full_messages.join(', ')
-      redirect_to(register_company_path)
+      flash.now[:danger] = @company.errors.full_messages.join(', ')
+      # redirect_to(register_company_path)
+      render :edit
     end
 
   end
@@ -65,8 +63,8 @@ class CompaniesController < ApplicationController
             active_collection = @company.ad_images.select { |ad_image| ad_image.previous_changes.present? }
               &.first&.type&.match(/(?<supertype>Image|Logo)/).try(:[], :supertype)&.downcase&.pluralize || 'images'
             image_was_created = @company.ad_images.any? { |ad_image| ad_image.previous_changes[:id].present? } 
-            toast = { type: 'success', message: image_was_created ? 'Image added successfully' : 'Changes saved' }
-            render(partial: 'companies/3_promote/gads_form', locals: { company: @company, active_collection:, toast: })
+            flash.now[:notice] = image_was_created ? 'Image added successfully' : 'Changes saved'
+            render(partial: 'companies/dashboard/gads_form', locals: { company: @company, active_collection: })
           end
           format.json do 
             _, deleted_image = company_params[:adwords_images_attributes].to_h.find { |k, v| v[:_destroy] == 'true' }
