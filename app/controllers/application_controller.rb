@@ -150,9 +150,13 @@ class ApplicationController < ActionController::Base
 
   def after_sign_out_path_for resource
     if request.subdomain.present?
-      public_stories_url(subdomain: request.subdomain)
+      if @not_authorized_for_subdomain
+        new_user_session_url(subdomain: '')
+      else
+        public_stories_url(subdomain: request.subdomain)
+      end
     else
-      root_url(subdomain: '')
+      new_user_session_url(subdomain: '')
     end
   end
 

@@ -1,6 +1,6 @@
 Warden::Manager.after_set_user do |user, auth, opts|
   # include '' for the case of signing in without a subdomain
-  auth.env['rack.session']['authorized_subdomains'] ||= ['', user.company&.subdomain].compact
+  # auth.env['rack.session']['authorized_subdomains'] ||= ['', user.company&.subdomain].compact
 end
 
 # frozen_string_literal: true

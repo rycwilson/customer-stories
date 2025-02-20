@@ -42,6 +42,7 @@ class Users::SessionsController < Devise::SessionsController
       return
     end
     super
+    session['authorized_subdomains'] = ['', current_user.company&.subdomain].compact
     flash.delete(:notice)
   end
 
