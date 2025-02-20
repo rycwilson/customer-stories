@@ -3,7 +3,7 @@ class User < ApplicationRecord
   # RYAN = self.find_by(email:'rycwilson@gmail.com')
 
   belongs_to :company, optional: true
-  validates :first_name, :last_name, :email, presence: true
+  # validates :first_name, :last_name, :email, presence: true
   validates :phone, format: { without: /_/ }
   # validate correct format OR empty string
 
@@ -53,7 +53,7 @@ class User < ApplicationRecord
 
   # Adding signup code for beta control
   attr_accessor :sign_up_code
-  validates(:sign_up_code, on: [:create], presence: true, inclusion: { in: ["csp_beta"] })
+  validates(:sign_up_code, on: :create, presence: { message: "can't be blank" }, inclusion: { in: ['csp_beta'], message: 'is invalid' })
 
   attr_accessor :skip_callbacks
 
@@ -69,7 +69,11 @@ class User < ApplicationRecord
   has_many :access_tokens, class_name: "Doorkeeper::AccessToken", foreign_key: :resource_owner_id, dependent: :delete_all # or :destroy if you need callbacks
 
   def full_name
-    first_name + " " + last_name
+    if first_name.present? and last_name.present?
+      first_name + " " + last_name
+    else 
+      nil
+    end
   end
 
   def linkedin_data_present?
