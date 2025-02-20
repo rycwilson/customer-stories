@@ -56,6 +56,7 @@ export default class AdsController extends FormController<AdsController> {
     } else if (userAction === 'delete') {
       setFormat('json');
     }
+    // TODO: Turbo.navigator.submitForm(this.element) would make a polyfill for Safari unecessary
     this.element.requestSubmit();
   }
 

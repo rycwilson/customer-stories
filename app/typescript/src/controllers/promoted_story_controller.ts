@@ -35,6 +35,7 @@ export default class PromotedStoryController extends DatatableRowController<Prom
     this.statusCheckboxTargets.forEach((checkbox: HTMLInputElement) => {
       checkbox.checked = checkbox.value === 'ENABLED' ? state : !state;
     });
+    // TODO: Turbo.navigator.submitForm(this.element) would make a polyfill for Safari unecessary
     this.statusFormTarget.requestSubmit();
     this.$statusSwitch.bootstrapSwitch('disabled', true);
     this.statusLabelTarget.textContent = '\u00A0';
