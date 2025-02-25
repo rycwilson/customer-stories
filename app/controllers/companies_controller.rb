@@ -34,7 +34,6 @@ class CompaniesController < ApplicationController
   end
 
   def edit
-    # render :company_settings
   end
 
   def create
@@ -42,8 +41,7 @@ class CompaniesController < ApplicationController
     if @company.save
       @company.users << current_user
       session['authorized_subdomains'] = ['', @company.subdomain]
-      session['user_return_to'] = edit_company_path
-      redirect_to edit_company_url(subdomain: @company.subdomain), flash: { notice: 'Company created successfully' }
+      redirect_to edit_company_url(subdomain: @company.subdomain), flash: { notice: 'Company registered successfully' }
     else
       # validation(s): presence / uniqueness of name, presence of subdomain
       flash.now[:danger] = @company.errors.full_messages.join(', ')
@@ -72,20 +70,9 @@ class CompaniesController < ApplicationController
           end
         end
       else
-        respond_to do |format|
-          format.turbo_stream do
-            flash.now[:notice] = 'Account updated successfully'
-            render(
-              turbo_stream: [ 
-                turbo_stream.replace('company-profile-form', partial: 'companies/settings/company_profile', locals: { company: @company }),
-                turbo_stream.replace('toaster', partial: 'shared/toaster')
-              ]
-            )
-          end
-          format.html do
-            redirect_to edit_company_path(@company), flash: { notice: 'Account updated successfully' }
-          end
-        end
+        # TODO: if the square logo was added or updated, need to render the navbar (turbo stream response)
+        flash.now[:notice] = 'Account updated successfully'
+        render(partial: 'companies/settings/company_profile', locals: { company: @company })
       end
     else
       # "Adwords images media can't be blank" => error uploading to s3
