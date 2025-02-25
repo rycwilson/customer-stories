@@ -9,6 +9,10 @@ body.devise {
     box-shadow: none;
     color: $body-text-color;
 
+    h4 {
+      margin-bottom: 0.5em;
+    }
+
     a {
       font-weight: 600;
     }
