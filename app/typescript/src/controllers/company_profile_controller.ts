@@ -24,8 +24,9 @@ export default class CompanyProfileController extends FormController<CompanyProf
     super.disconnect();
   }
 
-  onAjaxSuccess({ detail: [data, status, xhr] }: { detail: [data: any, status: string, xhr: XMLHttpRequest] }) {
-  }
+  // rails-ujs is disabled on the form
+  // onAjaxSuccess({ detail: [data, status, xhr] }: { detail: [data: any, status: string, xhr: XMLHttpRequest] }) {
+  // }
 
   onUploadReady({ detail: { card } }: { detail: { card: HTMLLIElement } }) {
     [...this.companyHeaderDemoTarget.children].forEach((link: Element) => {
