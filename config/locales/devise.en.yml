@@ -21,7 +21,8 @@ en:
       unconfirmed: "You have to confirm your email address before continuing."
     mailer:
       confirmation_instructions:
-        subject: "Confirmation instructions"
+        # subject: "Confirmation instructions"
+        subject: "Welcome to Customer Stories! Please verify your email."
       reset_password_instructions:
         subject: "Reset password instructions"
       unlock_instructions:
