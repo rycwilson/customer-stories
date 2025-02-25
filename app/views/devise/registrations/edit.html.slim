@@ -52,7 +52,8 @@ main.container.hidden-xs
               novalidate: true,
               data: { \
                 remote: false,
-                controller: 'form',
+                controller: 'form toast',
+                toast_flash_value: (flash.to_h if flash.any? and turbo_frame_request_id == 'user-profile'),
                 asset_host: Rails.application.config.asset_host,
                 action: [ \
                   'submit->form#validate',
