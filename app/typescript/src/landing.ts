@@ -33,7 +33,7 @@ if (accountForm) {
     });
   } else if (accountForm.dataset.resourceErrors) {
     JSON.parse(accountForm.dataset.resourceErrors).forEach((error: string) => {
-      bootoast.toast({ ...toasterBaseOptions, type: 'danger', message: error, position: 'top-center' }); 
+      bootoast.toast({ ...toasterBaseOptions, type: 'danger', timeout: false, message: error, position: 'top-center' }); 
     });
   }
 }
