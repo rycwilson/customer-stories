@@ -8,7 +8,7 @@ const baseOptions = {
 };
 
 export default class ToastController extends Controller {
-  static values = { flash: Object };
+  static values = { flash: { type: Object, default: {} } };
   declare flashValue: FlashHash;
 
   flashValueChanged(flash: FlashHash) {
