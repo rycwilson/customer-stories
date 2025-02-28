@@ -13,7 +13,7 @@
 
         p
           | Already have an account?&nbsp;&nbsp;
-          = link_to('Sign in', (defined? @user) ? new_user_session_path : new_admin_session_path)
+          = link_to('Sign in', (defined? @user) ? new_session_path : new_admin_session_path)
 
         = form_for( \
             resource, 
@@ -38,7 +38,7 @@
             .help-block.with-errors
 
           .form-group
-            = form.label(:password, class: 'control-label')
+            = form.label(:password, 'Create Password', class: 'control-label')
             = form.password_field( \
                 :password,
                 class: 'form-control',
@@ -61,7 +61,7 @@
               .help-block.with-errors
 
           .form-group
-            = form.submit('Create Account', class: 'btn btn-secondary btn-block btn-lg')
+            = form.submit('Create account', class: 'btn btn-secondary btn-block btn-lg')
 
           .form-group.text-center
             p Please review the <a href="/terms">Terms of Service</a> and <a href="/privacy">Privacy Policy</a>. By creating an account, you are agreeing to these terms and conditions.

@@ -24,6 +24,10 @@ class Users::RegistrationsController < Devise::RegistrationsController
 
   # GET /resource/sign_up
   def new
+    if request.subdomain.present? or request.path == new_user_registration_path
+      redirect_to new_user_url(subdomain: nil)
+      return
+    end
     super
   end
 
