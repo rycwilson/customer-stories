@@ -46,7 +46,6 @@ class Users::SessionsController < Devise::SessionsController
       return
     end
     super
-    session['authorized_subdomains'] = ['', current_user.company&.subdomain].compact
     flash.delete(:notice)
   end
 
@@ -57,11 +56,6 @@ class Users::SessionsController < Devise::SessionsController
   end
 
   def impersonate
-    # redirect_to(edit_user_path) and return unless true_user.admin?
-    # if not true_user.admin?
-    #   redirect_to(edit_user_path)
-    #   return
-    # end
     if true_user.admin? and imitable_user = User.find_by_id(params[:imitable_user_id])
       impersonate_user(imitable_user)
       session['authorized_subdomains'] = ['', imitable_user.company.subdomain]
@@ -72,7 +66,7 @@ class Users::SessionsController < Devise::SessionsController
         format.js { render js: "window.location.replace('#{edit_user_url(subdomain: current_user.company.subdomain)}')" }
       end
     else
-      redirect_to(edit_user_path)
+      redirect_to edit_user_path
     end
   end
 
