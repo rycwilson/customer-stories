@@ -18,18 +18,18 @@ nav.navbar.navbar-default.navbar-fixed-top role="banner"
               span.sr-only (current)
 
         li class=('active' if storefront_page == 'product')
-          a href="#{File.join(root_url(subdomain: nil), 'product')}"
+          a href="#{root_url(subdomain: nil) + 'product'}"
             | Product 
             - if storefront_page == 'product'
               span.sr-only (current)
 
         li class=('active' if storefront_page == 'plans')
-          a href="#{File.join(root_url(subdomain: nil), 'plans')}" 
+          a href="#{root_url(subdomain: nil) + 'plans'}"
             | Plans
             - if storefront_page == 'plans'
               span.sr-only (current)
 
-        - if user_signed_in?
+        /- if user_signed_in?
           li
             = link_to( \
                 current_user.company.present? ? dashboard_url('curate', subdomain: current_user.company.subdomain) : new_company_path, 
@@ -38,14 +38,14 @@ nav.navbar.navbar-default.navbar-fixed-top role="banner"
                 = image_tag(current_user.company.square_logo_url, alt: "#{current_user.company.name} Logo")
               - else
                 | Account
-        - else
-          li class=('active' if controller_name == 'registrations')
-            = link_to(File.join(root_url(subdomain: nil), new_user_registration_path)) do
-              | Create Account 
-              - if controller_name == 'registrations'
-                span.sr-only (current)
-          li class=('active' if controller_name == 'sessions')
-            = link_to(new_user_session_path) do 
-              | Sign in
-              - if controller_name == 'sessions'
-                span.sr-only (current)
+        /- else
+        li class=('active' if controller_name == 'registrations')
+          = link_to(new_user_url(subdomain: nil)) do
+            | Create Account 
+            - if controller_name == 'registrations'
+              span.sr-only (current)
+        li class=('active' if controller_name == 'sessions')
+          = link_to(new_session_path) do 
+            | Sign in
+            - if controller_name == 'sessions'
+              span.sr-only (current)
