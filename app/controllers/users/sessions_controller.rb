@@ -14,7 +14,11 @@ class Users::SessionsController < Devise::SessionsController
   # after that we need another way to keep track.
   # (see also application.html.erb)
   def new
-    # redirect_to(new_user_session_path) and return if request.path =~ /users/
+    if request.path == new_user_session_path
+      redirect_to new_session_path
+      return
+    end
+
     @zap_auth_initial_req = true if request.referer.try(:include?, 'zapier')
     # @zap_auth_initial_req = true
     @zap_auth_retry = params.dig(:user, :zap_auth_submitted).present?
