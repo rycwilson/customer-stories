@@ -5,9 +5,7 @@
 
 p
   | Don't have an account?&nbsp;&nbsp;
-  = link_to( \
-      'Create account', 
-      resource_name == :user ? new_user_registration_url(subdomain: '') : new_admin_registration_path)
+  = link_to('Create account', resource_name == :user ? new_user_url(subdomain: '') : new_admin_registration_path)
 
 = form_for( \
     resource, 
@@ -42,7 +40,7 @@ p
         placeholder: 'Password')
     .help-block.with-errors
 
-  div style="margin-top:-0.75em"
+  div style="margin-top:-0.5em"
     - if devise_mapping.rememberable?
       .form-group style="display:flex; align-items:center; justify-content:space-between"
         .checkbox-inline style="margin: 0"
