@@ -25,9 +25,10 @@ Rails.application.routes.draw do
       }
     )
 
-    # since this is going to a devise controller, no authenticate block is needed
     as(:user) do
+      # since this is going to a devise controller, no authenticate block is needed
       get('/create-account', to: 'users/registrations#new', as: 'new_user')
+      
       get('/sign-in', to: 'users/sessions#new', as: 'new_session')
       get('/user-profile', to: 'users/registrations#edit', as: 'edit_user')
     end
