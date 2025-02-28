@@ -1,0 +1,34 @@
+.content
+  .container
+    .account-wrapper
+      .account-body
+
+        h3
+          | Resend account confirmation
+
+        p
+          | If you have an account with us, we'll resend a confirmation email with a link to verify your email address.
+
+        = form_for( \
+            resource, 
+            as: resource_name,
+            url: confirmation_path(resource_name),
+            html: { \
+              method: :post,
+              class: 'account-form',
+              novalidate: true,
+              data: { flash: (flash.to_h if flash.any?) } }) do |form|
+
+          .form-group
+            = form.label(:email, class: 'control-label')
+            = form.email_field( \
+                :email,
+                class: 'form-control',
+                required: true,
+                autofocus: true,
+                autocomplete: 'email',
+                placeholder: 'Email address')
+            .help-block.with-errors
+
+          .form-group
+            = form.submit('Resend confirmation', class: 'btn btn-secondary btn-block btn-lg')
