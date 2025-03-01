@@ -28,7 +28,7 @@ RSpec.describe 'Companies', type: :request do
   shared_examples 'redirect to auth' do |path|
     it 'redirects to the sign in page' do
       get root_url(subdomain: company.subdomain) + path
-      expect(response).to redirect_to(new_session_url(subdomain: company.subdomain))
+      expect(response).to redirect_to(new_csp_session_url(subdomain: company.subdomain))
     end
   end
 
