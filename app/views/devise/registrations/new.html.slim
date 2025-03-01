@@ -13,7 +13,7 @@
 
         p
           | Already have an account?&nbsp;&nbsp;
-          = link_to('Sign in', (defined? @user) ? new_session_path : new_admin_session_path)
+          = link_to('Sign in', (defined? @user) ? new_csp_session_path : new_admin_session_path)
 
         = form_for( \
             resource, 

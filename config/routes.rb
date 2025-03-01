@@ -29,8 +29,10 @@ Rails.application.routes.draw do
       # since this is going to a devise controller, no authenticate block is needed
       get('/create-account', to: 'users/registrations#new', as: 'new_user')
       
-      get('/sign-in', to: 'users/sessions#new', as: 'new_session')
+      # do not name this route 'new_session' or it will conflict with devise
+      get('/sign-in', to: 'users/sessions#new', as: 'new_csp_session')
       get('/user-profile', to: 'users/registrations#edit', as: 'edit_user')
+      get('/resend-account-confirmation', to: 'users/confirmations#new', as: 'new_csp_confirmation')
     end
   end
 

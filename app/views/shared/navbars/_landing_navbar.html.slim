@@ -45,7 +45,7 @@ nav.navbar.navbar-default.navbar-fixed-top role="banner"
             - if controller_name == 'registrations'
               span.sr-only (current)
         li class=('active' if controller_name == 'sessions')
-          = link_to(new_session_path) do 
+          = link_to(new_csp_session_path) do 
             | Sign in
             - if controller_name == 'sessions'
               span.sr-only (current)

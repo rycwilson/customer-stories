@@ -15,7 +15,7 @@ class Users::SessionsController < Devise::SessionsController
   # (see also application.html.erb)
   def new
     if request.path == new_user_session_path
-      redirect_to new_session_path
+      redirect_to new_csp_session_path
       return
     end
 
