@@ -19,17 +19,21 @@ if (accountForm) {
   if (accountForm.dataset.flash) {
     const flash = JSON.parse(accountForm.dataset.flash);
     Object.keys(flash).forEach((flashType: string) => {
-      const type = (() => {
-        if (flashType === 'notice') {
-          return 'success';
-        } else if (flashType === 'alert') {
-          return 'danger';
-        } else {
-          return flashType;
-        }
-      })();
-      const message = flash[flashType];
-      bootoast.toast({ ...toasterBaseOptions, type, message, position: 'top-center' });
+      bootoast.toast({ 
+        ...toasterBaseOptions, 
+        type: (() => {
+          if (flashType === 'notice') {
+            return 'success';
+          } else if (flashType === 'alert') {
+            return 'danger';
+          } else {
+            return flashType;
+          }
+        })(), 
+        message: flash[flashType], 
+        position: 'top-center',
+        timeout: flashType === 'alert' ? false : toasterBaseOptions.timeout
+      });
     });
   } else if (accountForm.dataset.resourceErrors) {
     JSON.parse(accountForm.dataset.resourceErrors).forEach((error: string) => {
