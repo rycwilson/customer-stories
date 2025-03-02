@@ -25,6 +25,7 @@ class Users::RegistrationsController < Devise::RegistrationsController
   # GET /resource/sign_up
   def new
     if request.subdomain.present? or request.path == new_user_registration_path
+      flash.keep
       redirect_to new_user_url(subdomain: nil)
       return
     end
@@ -40,6 +41,7 @@ class Users::RegistrationsController < Devise::RegistrationsController
   def edit
     # if a request is received at the default devise route, redirect to the custom route
     if request.path == edit_user_registration_path
+      flash.keep
       redirect_to(edit_user_path)
       return 
     end
