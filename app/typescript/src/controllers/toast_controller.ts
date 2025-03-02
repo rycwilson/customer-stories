@@ -12,7 +12,7 @@ export default class ToastController extends Controller {
   declare flashValue: FlashHash;
 
   flashValueChanged(flash: FlashHash) {
-    console.log('flash:', flash)
+    // console.log('flash:', flash, this.element)
     let type, message, position;    // these are bootoast option names and should not be changed
     
     // note that Object.keys will return an array of strings despite FlashHash declaration
