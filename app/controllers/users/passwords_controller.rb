@@ -18,7 +18,7 @@ class Users::PasswordsController < Devise::PasswordsController
   # GET /resource/password/edit?reset_password_token=abcdef
   def edit
     if request.path == edit_user_password_path
-      redirect_to(edit_csp_password_url, status: :moved_permanently)
+      redirect_to(edit_csp_password_path, reset_password_token:, status: :moved_permanently)
       return
     end
     super
