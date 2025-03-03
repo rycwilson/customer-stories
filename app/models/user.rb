@@ -1,7 +1,5 @@
 
 class User < ApplicationRecord
-  # RYAN = self.find_by(email:'rycwilson@gmail.com')
-
   belongs_to :company, optional: true
   # validates :first_name, :last_name, :email, presence: true
   validates :phone, format: { without: /_/ }
@@ -11,17 +9,10 @@ class User < ApplicationRecord
   # validates :linkedin_url, format: { with: /(\Ahttps:\/\/www.linkedin.com\/|\A(?![\s\S]))/,
   #                                    message: 'must begin with "https://www.linkedin.com/"' }
 
-  # photo_url validation is handled on the front-end for now.
-  # due to S3 presence (?), server-side validation failures of photo_url
-  # open a devise view (not what we want)
-  # validates :photo_url, format: { without: /\s/ }
-
-  # a User can have his own contribution(s) (i.e. he is contributor),
-  # or he can be the Referrer for contribution(s)
   has_many :own_contributions, class_name: 'Contribution', foreign_key: 'contributor_id', dependent: :destroy
   has_many :referred_contributions, class_name: 'Contribution', foreign_key: 'referrer_id'
 
-  has_many :successes, class_name: 'Success', foreign_key: 'curator_id' # curator, no (dependent: :destroy)
+  has_many :successes, class_name: 'Success', foreign_key: 'curator_id'
   has_many :stories, through: :successes
 
   after_update_commit do 
@@ -57,9 +48,8 @@ class User < ApplicationRecord
 
   attr_accessor :skip_callbacks
 
-  # Include default devise modules. Others available are:
-  # :lockable, :timeoutable and :omniauthable
-  devise :database_authenticatable, :registerable, :recoverable, :rememberable, :trackable, :validatable, :lockable, :confirmable
+  devise :database_authenticatable, :registerable, :recoverable, :rememberable, :trackable, :validatable, :confirmable
+  # :lockable, :timeoutable, :omniauthable
   
   # doorkeeper
   devise :doorkeeper
