@@ -26,7 +26,7 @@ class Users::RegistrationsController < Devise::RegistrationsController
   def new
     if request.subdomain.present? or request.path == new_user_registration_path
       flash.keep
-      redirect_to new_user_url(subdomain: nil)
+      redirect_to(new_user_url(subdomain: nil), status: :moved_permanently)
       return
     end
     super
@@ -42,7 +42,7 @@ class Users::RegistrationsController < Devise::RegistrationsController
     # if a request is received at the default devise route, redirect to the custom route
     if request.path == edit_user_registration_path
       flash.keep
-      redirect_to(edit_user_path)
+      redirect_to(edit_user_path, status: :moved_permanently)
       return 
     end
     @is_admin = current_user.admin? || true_user.admin?

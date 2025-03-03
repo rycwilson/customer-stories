@@ -16,7 +16,7 @@ class Users::SessionsController < Devise::SessionsController
   def new
     if request.path == new_user_session_path
       flash.keep
-      redirect_to new_csp_session_path
+      redirect_to(new_csp_session_path, status: :moved_permanently)
       return
     end
 
@@ -28,7 +28,7 @@ class Users::SessionsController < Devise::SessionsController
     self.resource = resource_class.new(sign_in_params)
     clean_up_passwords(resource)
     yield resource if block_given?
-    if flash.alert == I18n.t('devise.failure.unauthenticated')
+    if flash.alert == I18n.t('devise.failure.unauthenticated')    # "Sign in to continue"
       flash[:info] = flash.alert
       flash.delete(:alert)
     end
