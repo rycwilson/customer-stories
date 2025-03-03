@@ -1,0 +1,39 @@
+.content
+  .container
+    .account-wrapper
+      .account-body
+
+        h3 Reset your password
+
+        = form_for( \
+            resource, 
+            as: resource_name, 
+            url: password_path(resource_name), 
+            html: { method: :put, class: 'account-form', novalidate: true }) do |form|
+  
+          = form.hidden_field(:reset_password_token)
+
+          .form-group
+            = form.label(:password, 'New Password', class: 'control-label')
+            = form.password_field( \
+                :password,
+                class: 'form-control',
+                required: true,
+                minlength: 8,
+                autofocus: true,
+                autocomplete: 'new-password')
+            .help-block.with-errors
+              | Must be at least 8 characters
+
+          .form-group
+            = form.label(:password_confirmation, 'Confirm New Password', class: 'control-label')
+            = form.password_field( \
+                :password_confirmation,
+                class: 'form-control',
+                required: true,
+                autocomplete: 'new-password')
+            .help-block.with-errors
+
+          .form-group
+            = form.submit('Reset password', class: 'btn btn-secondary btn-block btn-lg')
+

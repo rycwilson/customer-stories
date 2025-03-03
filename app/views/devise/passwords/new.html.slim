@@ -13,8 +13,6 @@
             url: password_path(resource_name), 
             html: { method: :post, class: 'account-form', novalidate: true }) do |form|
 
-          /= devise_error_messages!
-
           .form-group
             = form.label(:email, class: 'control-label')
             = form.email_field( \
@@ -26,6 +24,6 @@
             .help-block.with-errors
 
           .form-group
-            = form.submit('Reset password', class: "btn btn-secondary btn-block btn-lg")
+            = form.submit('Send password reset email', class: 'btn btn-secondary btn-block btn-lg')
 
         /p = "Didn't get an account confirmation email?<br>#{link_to('Resend confirmation', new_csp_confirmation_path)}".html_safe
