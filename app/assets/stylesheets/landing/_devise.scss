@@ -26,9 +26,9 @@ body.devise {
     margin: 1.75em 0;
 
     .form-group {
-      margin-bottom: $form-group-margin-bottom;
+      margin-bottom: 2rem; //$form-group-margin-bottom;
 
-      [required] + .help-block {
+      [required]:not([autocomplete="new-password"]) + .help-block {
         display: none;
       }
     

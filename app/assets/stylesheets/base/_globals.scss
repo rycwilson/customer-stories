@@ -83,7 +83,7 @@ form {
   }
 
   .form-group {
-    [required] + .help-block {
+    [required]:not([autocomplete="new-password"]) + .help-block {
       display: none;
     }
 
