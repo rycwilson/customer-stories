@@ -3,11 +3,9 @@
     .account-wrapper
       .account-body
 
-        h3
-          | Resend account confirmation
+        h3 Resend account confirmation
 
-        p
-          | If you have an account with us, we'll resend a confirmation email with a link to verify your email address.
+        p If you have an account with us, we'll resend a confirmation email with a link to verify your email address.
 
         = form_for( \
             resource, 
@@ -26,8 +24,7 @@
                 class: 'form-control',
                 required: true,
                 autofocus: true,
-                autocomplete: 'email',
-                placeholder: 'Email address')
+                autocomplete: 'email')
             .help-block.with-errors
 
           .form-group

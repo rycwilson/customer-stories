@@ -1,35 +1,31 @@
 .content
   .container
-    .xs-30
     .account-wrapper
-
       .account-body
 
         h3 Reset your password
 
-        p
-          | Don't have an account?&nbsp;&nbsp;&nbsp;
-          = link_to( \
-            'Sign up', 
-              request.path.include?('users') ? new_user_url(subdomain: '') : new_admin_registration_path)
+        p We'll send password reset information to the email address associated with your account.
 
         = form_for( \
             resource, 
             as: resource_name, 
             url: password_path(resource_name), 
-            html: { class: 'account-form', method: :post }) do |f|
+            html: { method: :post, class: 'account-form', novalidate: true }) do |form|
 
-          = devise_error_messages!
-
-          .form-group
-            = f.label(:email, class: 'control-label')
-            = f.email_field(:email, { autofocus: true, class: 'form-control', id: 'login-username', placeholder: 'Email address' })
+          /= devise_error_messages!
 
           .form-group
-            = f.submit('Send reset link', class: "btn btn-secondary btn-block btn-lg", disabled: true)
+            = form.label(:email, class: 'control-label')
+            = form.email_field( \
+                :email,
+                class: 'form-control',
+                required: true,
+                autofocus: true,
+                autocomplete: 'email')
+            .help-block.with-errors
 
-      .account-footer
-        / (confirmations controllers are not configured)
-        /p 
-          | Didn't get confirmation? &nbsp;
-          = link_to('Resend email', new_user_confirmation_path)
+          .form-group
+            = form.submit('Reset password', class: "btn btn-secondary btn-block btn-lg")
+
+        /p = "Didn't get an account confirmation email?<br>#{link_to('Resend confirmation', new_csp_confirmation_path)}".html_safe

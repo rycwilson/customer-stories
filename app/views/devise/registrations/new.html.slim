@@ -33,8 +33,7 @@
                 class: 'form-control',
                 required: true,
                 autofocus: true,
-                autocomplete: 'email',
-                placeholder: 'Email address')
+                autocomplete: 'email')
             .help-block.with-errors
 
           .form-group
@@ -44,20 +43,20 @@
                 class: 'form-control',
                 required: true,
                 minlength: 8,
-                autocomplete: 'new-password',
-                placeholder: '8 characters minimum')
+                autocomplete: 'new-password')
             .help-block.with-errors 
+              | Must be at least 8 characters
 
           - if defined? @user
             .form-group
               = form.label(:sign_up_code, class: 'control-label')
-              = form.text_field(:sign_up_code, class: 'form-control', required: true, autocomplete: 'off', placeholder: 'Sign up code')
+              = form.text_field(:sign_up_code, class: 'form-control', required: true, autocomplete: 'off')
               .help-block.with-errors
           
           - elsif defined? @admin
             .form-group
               = form.label(:admin_access_code, 'Admin code', class: 'control-label')
-              = form.text_field(:admin_access_code, class: 'form-control', required: true, autocomplete: 'off', placeholder: 'Admin access code')
+              = form.text_field(:admin_access_code, class: 'form-control', required: true, autocomplete: 'off')
               .help-block.with-errors
 
           .form-group

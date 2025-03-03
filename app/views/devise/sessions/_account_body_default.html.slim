@@ -25,8 +25,7 @@ p
         class: 'form-control',
         required: true,
         autofocus: true,
-        autocomplete: 'email',
-        placeholder: 'Email address')
+        autocomplete: 'email')
     .help-block.with-errors
 
   .form-group
@@ -36,11 +35,10 @@ p
         class: 'form-control',
         required: true,
         minlength: 8,
-        autocomplete: 'current-password',
-        placeholder: 'Password')
+        autocomplete: 'current-password')
     .help-block.with-errors
 
-  div style="margin-top:-0.5em"
+  .form-group
     - if devise_mapping.rememberable?
       .form-group style="display:flex; align-items:center; justify-content:space-between"
         .checkbox-inline style="margin: 0"
