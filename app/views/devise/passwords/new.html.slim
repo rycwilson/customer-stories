@@ -15,12 +15,7 @@
 
           .form-group
             = form.label(:email, class: 'control-label')
-            = form.email_field( \
-                :email,
-                class: 'form-control',
-                required: true,
-                autofocus: true,
-                autocomplete: 'email')
+            = form.email_field(:email, class: 'form-control', required: true, autofocus: true, autocomplete: 'email')
             .help-block.with-errors
 
           .form-group

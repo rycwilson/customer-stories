@@ -1,15 +1,17 @@
 .masthead 
   .container 
     h4.text-center.text-lg style="margin:0; padding: 15px 0; color:#16556a"
-      | For a demo or sign up code, please <strong><a href="mailto:info@customerstories.net">contact us</a>.</strong>
+      | For a demo or sign up code, please <strong><a href="mailto:info@customerstories.net">contact us</a></strong>.
 
-.content style="padding-top:15px"
+.content
   .container
-    / hr.spacer-sm
     .account-wrapper
-      .account-body
+      .account-body style="padding-top:1rem"
 
         h3 = "Create your #{'Admin' if defined? @admin} account"
+
+        /.alert.alert-info.text-center style="background:#85cee6; margin: 0 25px"
+          | For a sign up code, please <a href="mailto:info@customerstories.net">contact us</a>.
 
         p
           | Already have an account?&nbsp;&nbsp;

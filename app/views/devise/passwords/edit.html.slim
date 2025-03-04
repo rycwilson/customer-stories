@@ -9,7 +9,11 @@
             resource, 
             as: resource_name, 
             url: password_path(resource_name), 
-            html: { method: :put, class: 'account-form', novalidate: true }) do |form|
+            html: { \
+              method: :put,
+              class: 'account-form',
+              novalidate: true,
+              data: { resource_errors: (resource.errors.full_messages if resource.errors.any?) } }) do |form|
   
           = form.hidden_field(:reset_password_token)
 
