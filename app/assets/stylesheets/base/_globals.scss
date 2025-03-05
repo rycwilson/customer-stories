@@ -109,21 +109,6 @@ form {
   }
 }
 
-
-#flash {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  height: 65px;
-  border-radius: 0;
-  font-size: 16px;
-  margin: 0;
-}
-body.sessions #flash,
-body.site #flash {
-  height: 85px;
-}
-
 /**
  * this needs to be in global scope due to fixed position
  */
