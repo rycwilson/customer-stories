@@ -43,7 +43,7 @@ class Users::SessionsController < Devise::SessionsController
     if unauthorized_subdomain?
       @not_authorized_for_subdomain = true
       sign_out_and_redirect(current_user)
-      flash.alert = 'Not authorized'
+      flash.alert = "Not authorized for #{request.host}"
       return
     end
     super
