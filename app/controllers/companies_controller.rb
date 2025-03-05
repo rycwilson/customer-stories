@@ -63,10 +63,9 @@ class CompaniesController < ApplicationController
         active_collection = @company.ad_images.select { |ad_image| ad_image.previous_changes.present? }
           &.first&.type&.match(/(?<supertype>Image|Logo)/).try(:[], :supertype)&.downcase&.pluralize || 'images'
         image_was_created = @company.ad_images.any? { |ad_image| ad_image.previous_changes[:id].present? } 
-        # flash.now[:notice] = image_was_created ? 'Image was uploaded' : 'Changes were saved'
-        # render(partial: 'companies/dashboard/gads_form', locals: { company: @company, active_collection: })
         redirect_to(
-          dashboard_path('promote', turbo_frame_request_id:, active_collection:), 
+          dashboard_path('promote', turbo_frame_request_id:, active_collection:),
+          status: :see_other,
           flash: { notice: image_was_created ? 'Image was uploaded' : 'Changes were saved' },
         )
       else
