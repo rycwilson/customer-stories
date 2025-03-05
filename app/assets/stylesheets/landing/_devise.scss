@@ -22,6 +22,11 @@ body.devise {
     p {
       line-height: 1.5em;
     }
+
+    input[type="radio"],
+    input[type="checkbox"] {
+      accent-color: $nav-blue;
+    }
   }
   
   .account-form { 
