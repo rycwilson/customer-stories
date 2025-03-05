@@ -45,8 +45,7 @@ class Users::RegistrationsController < Devise::RegistrationsController
       redirect_to(edit_user_path, status: :moved_permanently)
       return 
     end
-    @is_admin = current_user.admin? || true_user.admin?
-    if @is_admin
+    if true_user.admin?
       @imitable_users = IMITABLE_USERS.flat_map do |name|
         User.where.not(company_id: nil).where(first_name: name.split(' ').first, last_name: name.split(' ').last)
       end
