@@ -55,7 +55,7 @@ export function onS3Done(this: ImageCardController, url: string) {
       if (this.hasFormOutlet || this.hasCompanyProfileOutlet) {
         this.element.classList.remove('image-card--uploading');
       }
-      this.dispatch('upload-ready', { detail: { card: this.element, userAction: 'add' } });
+      this.dispatch('upload-ready');
     },
     { once: true }
   )

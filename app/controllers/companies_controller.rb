@@ -12,25 +12,29 @@ class CompaniesController < ApplicationController
   end
 
   def show
-    @curator_id = preselected_curator_id(@company)
-    @workflow_stage = params[:workflow_stage]
-    @prospect_tab = cookies['csp-prospect-tab'] || '#customer-wins'
-    @promote_tab = cookies['csp-promote-tab'] || '#promoted-stories'
-    @measure_tab = cookies['csp-measure-tab'] || '#story-visitors'
-    # @recent_activity = Rails.cache.fetch("#{@company.subdomain}/recent-activity") { @company.recent_activity(30) }
-    # @recent_activity = @company.recent_activity(30)
-    # @story_views_30_day_count = PageView.joins(:visitor_session).company_story_views_since(@company.id, 30).count
-    @filters = %i(curator status customer category product).map do |type| 
-      # curator is the only field that will set a cookie to '' on clear (to override the default of current_user.id)
-      cookie_val = cookies["csp-#{type}-filter"]
-      if cookie_val.blank?
-        # set curator to current_user unless the curator filter was explicitly cleared
-        [type, (type == :curator && cookie_val.nil?) ? current_user.id : nil]
-      else
-        [type, cookie_val.to_i]
-      end
-    end.to_h.compact
-    @filters_match_type = cookies['csp-dashboard-filters-match-type'] || 'all'
+    if params['turbo_frame_request_id'] == 'company-ads-settings'
+      render(partial: 'companies/dashboard/gads_form', locals: { company: @company, active_collection: params['active_collection'] })
+    else
+      @curator_id = preselected_curator_id(@company)
+      @workflow_stage = params[:workflow_stage]
+      @prospect_tab = cookies['csp-prospect-tab'] || '#customer-wins'
+      @promote_tab = cookies['csp-promote-tab'] || '#promoted-stories'
+      @measure_tab = cookies['csp-measure-tab'] || '#story-visitors'
+      # @recent_activity = Rails.cache.fetch("#{@company.subdomain}/recent-activity") { @company.recent_activity(30) }
+      # @recent_activity = @company.recent_activity(30)
+      # @story_views_30_day_count = PageView.joins(:visitor_session).company_story_views_since(@company.id, 30).count
+      @filters = %i(curator status customer category product).map do |type| 
+        # curator is the only field that will set a cookie to '' on clear (to override the default of current_user.id)
+        cookie_val = cookies["csp-#{type}-filter"]
+        if cookie_val.blank?
+          # set curator to current_user unless the curator filter was explicitly cleared
+          [type, (type == :curator && cookie_val.nil?) ? current_user.id : nil]
+        else
+          [type, cookie_val.to_i]
+        end
+      end.to_h.compact
+      @filters_match_type = cookies['csp-dashboard-filters-match-type'] || 'all'
+    end
   end
 
   def edit
@@ -55,20 +59,16 @@ class CompaniesController < ApplicationController
     if @company.update(company_params)
       if tags_update?
         head(:ok)
-      elsif ad_images_update?
-        respond_to do |format|
-          format.html do
-            active_collection = @company.ad_images.select { |ad_image| ad_image.previous_changes.present? }
-              &.first&.type&.match(/(?<supertype>Image|Logo)/).try(:[], :supertype)&.downcase&.pluralize || 'images'
-            image_was_created = @company.ad_images.any? { |ad_image| ad_image.previous_changes[:id].present? } 
-            flash.now[:notice] = image_was_created ? 'Image added successfully' : 'Changes saved'
-            render(partial: 'companies/dashboard/gads_form', locals: { company: @company, active_collection: })
-          end
-          format.json do 
-            _, deleted_image = company_params[:adwords_images_attributes].to_h.find { |k, v| v[:_destroy] == 'true' }
-            render(json: { id: deleted_image[:id] }) 
-          end
-        end
+      elsif turbo_frame_request_id == 'company-ads-settings'
+        active_collection = @company.ad_images.select { |ad_image| ad_image.previous_changes.present? }
+          &.first&.type&.match(/(?<supertype>Image|Logo)/).try(:[], :supertype)&.downcase&.pluralize || 'images'
+        image_was_created = @company.ad_images.any? { |ad_image| ad_image.previous_changes[:id].present? } 
+        # flash.now[:notice] = image_was_created ? 'Image was uploaded' : 'Changes were saved'
+        # render(partial: 'companies/dashboard/gads_form', locals: { company: @company, active_collection: })
+        redirect_to(
+          dashboard_path('promote', turbo_frame_request_id:, active_collection:), 
+          flash: { notice: image_was_created ? 'Image was uploaded' : 'Changes were saved' },
+        )
       else
         # TODO: if the square logo was added or updated, need to render the navbar (turbo stream response)
         flash.now[:notice] = 'Account updated successfully'

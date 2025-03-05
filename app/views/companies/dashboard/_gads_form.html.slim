@@ -1,4 +1,4 @@
-= turbo_frame_tag('company-ads-form') do
+= turbo_frame_tag('company-ads-settings') do
 
   = form_with( \
       model: company,
@@ -8,18 +8,16 @@
         data: { \
           remote: false,
           controller: 'ads toast',
-          toast_flash_value: (flash.to_h if flash.present? and turbo_frame_request_id == 'company-ads-form'),
+          toast_flash_value: (flash.to_h if flash.present? and turbo_frame_request_id == 'company-ads-settings'),
           asset_host: Rails.application.config.asset_host,
           action: [ \
             'image-card:make-default->ads#setNewDefault',
             'image-card:image-ready->ads#updateValidator',
             'image-card:clear-fileinput->ads#updateValidator',
             'image-card:replace-default->ads#keepPreviousDefault',
-            'image-card:upload-ready->ads#submitForm',
-            'image-card:save-changes->ads#submitForm',
-            'ajax:success->ads#onDeletedImage'].join(' ') }}) do |form|
+            'image-card:upload-ready->ads#submitForm'].join(' ') }}) do |form|
           
-    .form-group.short-headline data-form-builder=form.options[:html][:data][:controller]
+    .form-group.short-headline
       = form.label(:adwords_short_headline, 'Headline', class: 'col-sm-3 control-label')
       .col-sm-9.col-md-8.col-lg-6
         div

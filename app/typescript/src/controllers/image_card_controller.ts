@@ -169,10 +169,6 @@ export default class ImageCardController extends Controller<HTMLDivElement | HTM
     this.formGroupTarget.classList.add('to-be-removed');
   }
 
-  saveChanges({ target: btn }: { target: HTMLButtonElement }) {
-    this.dispatch('save-changes', { detail: { card: this.element, userAction: btn.dataset.userAction } });
-  }
-
   cancelChanges() {
     if (this.toggleDefaultValue) {
       this.toggleDefaultValue = false;

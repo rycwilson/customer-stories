@@ -1,6 +1,5 @@
 import FormController from './form_controller';
 import { imageValidatorOptions } from '../user_uploads';
-// import { bsToast } from '../utils';
 
 export default class AdsController extends FormController<AdsController> {
   static targets = [
@@ -43,21 +42,9 @@ export default class AdsController extends FormController<AdsController> {
     super.disconnect();
   }
 
-  submitForm({ detail: { card, userAction } }: { detail: { card: HTMLLIElement, userAction: string } }) {
-    const setFormat = (type: string) => {
-      this.element.action = type === 'html' ? 
-        this.element.action.replace(/\.json$/, '') :
-        (this.element.action.endsWith('.json') ? this.element.action : `${this.element.action}.json`);
-    };
-    if (userAction == 'add') {
-      setFormat('html');
-    } else if (userAction === 'makeDefault') {
-      setFormat('html');
-    } else if (userAction === 'delete') {
-      setFormat('json');
-    }
-    // TODO: Turbo.navigator.submitForm(this.element) would make a polyfill for Safari unecessary
-    this.element.requestSubmit();
+  submitForm(e: CustomEvent) {
+    console.log(e)
+    this.element.requestSubmit()
   }
 
   onValidatedShortHeadline({ relatedTarget: input }: { relatedTarget: HTMLInputElement }) {
@@ -69,16 +56,6 @@ export default class AdsController extends FormController<AdsController> {
 
   onShownTab() {
     this.requirementsHelpBlockTargets.forEach(span => span.classList.toggle('hidden'));
-  }
-
-  onDeletedImage({ detail: [res, status, xhr] }: { detail: [res: { id: string }, status: string, xhr: XMLHttpRequest] }) {
-    const card = this.imageCardTargets.find(card => res.id == card.dataset.imageId);
-    card?.remove();
-    // bsToast('info', 'Image deleted successfully');
-    // document.getElementById('toaster')?.setAttribute(
-    //   'data-toast-flash-value', 
-    //   JSON.stringify({ type: 'info', message: 'Image deleted successfully' })
-    // );
   }
   
   uploadImage() {
