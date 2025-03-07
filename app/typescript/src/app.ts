@@ -38,7 +38,7 @@ function appFactory(): CustomerStoriesApp {
     authToken: <string>(<HTMLMetaElement>document.head.querySelector('meta[name="csrf-token"]')).getAttribute('content'),
     init() {
       Rails.start();
-      addTurboListeners();
+      // addTurboListeners();
     }
   }
 }
