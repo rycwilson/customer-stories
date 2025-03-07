@@ -65,7 +65,7 @@ nav.company-nav.navbar-fixed-top.hidden-xs data-controller="header"
       li.dropdown.company-settings {
         class=('active' if controller_name == 'companies' and action_name =~ /new|edit/) 
         style=('pointer-events:none' if controller_name == 'companies' and action_name =~ /new|edit/) }
-        a.dropdown-toggle data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false"
+        a.dropdown-toggle id="company-admin-logo" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false"
           - if company&.square_logo_url.present?
             = image_tag(company.square_logo_url, alt: "#{company.name} Logo")
           - else 

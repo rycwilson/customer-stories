@@ -69,9 +69,33 @@ class CompaniesController < ApplicationController
           flash: { notice: image_was_created ? 'Image was uploaded' : 'Changes were saved' },
         )
       else
-        # TODO: if the square logo was added or updated, need to render the navbar (turbo stream response)
-        flash.now[:notice] = 'Account updated successfully'
-        render(partial: 'companies/settings/company_profile', locals: { company: @company })
+        # TODO: handle case of absent primary CTA
+        flash.now[:notice] = 'Account settings were updated'
+        respond_to do |format|
+          format.turbo_stream do 
+            render(
+              #toaster data-controller="toast" data-toast-flash-value=(flash.to_h.to_json if flash.any?)
+              turbo_stream: [
+                turbo_stream.replace(
+                  'toaster', 
+                  html: "<div id=\"toaster\" data-controller=\"toast\" data-toast-flash-value='#{flash.to_h.to_json}'></div>".html_safe
+                ),
+                turbo_stream.replace(
+                  'company-profile-form', 
+                  partial: 'companies/settings/company_profile', locals: { company: @company }
+                ),
+                turbo_stream.update(
+                  "edit-cta-#{@company.ctas.primary.id}",
+                  partial: 'ctas/edit', locals: { company: @company, cta: @company.ctas.primary }
+                ),
+                turbo_stream.update(
+                  'company-admin-logo', 
+                  html: "<img src=\"#{@company.square_logo_url}\" alt=\"#{@company.name} logo\"><i class=\"fa fa-caret-down\"></i>".html_safe
+                )
+              ]
+            )
+          end
+        end
       end
     else
       # "Adwords images media can't be blank" => error uploading to s3
