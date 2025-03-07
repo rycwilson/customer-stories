@@ -239,14 +239,18 @@ class Company < ApplicationRecord
   accepts_nested_attributes_for :adwords_images, allow_destroy: true
 
   after_update_commit do 
-    logo_was_updated = previous_changes.keys.include?('logo_url') && previous_changes[:logo_url].first.present?
-    adwords_logo_was_updated = previous_changes.keys.include?('adwords_logo_url') && previous_changes[:adwords_logo_url].first.present?
-    if logo_was_updated
-      S3Util::delete_object(S3_BUCKET, previous_changes[:logo_url].first)
+    square_logo_was_updated = previous_changes.keys.include?('square_logo_url') and previous_changes[:square_logo_url].first.present?
+    landscape_logo_was_updated = previous_changes.keys.include?('landscape_logo_url') and previous_changes[:landscape_logo_url].first.present?
+    if square_logo_was_updated
+      S3Util::delete_object(S3_BUCKET, previous_changes[:square_logo_url].first)
     end
-    if adwords_logo_was_updated
-      S3Util::delete_object(S3_BUCKET, previous_changes[:adwords_logo_url].first)
+    if landscape_logo_was_updated
+      S3Util::delete_object(S3_BUCKET, previous_changes[:landscape_logo_url].first)
     end
+    # adwords_logo_was_updated = previous_changes.keys.include?('adwords_logo_url') && previous_changes[:adwords_logo_url].first.present?
+    # if adwords_logo_was_updated
+    #   S3Util::delete_object(S3_BUCKET, previous_changes[:adwords_logo_url].first)
+    # end
   end
 
   after_commit(on: [:create], unless: -> { skip_callbacks }) do
