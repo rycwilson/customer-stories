@@ -1,5 +1,4 @@
 import FormController from './form_controller';
-import { imageValidatorOptions } from '../user_uploads';
 import tinycolor from 'tinycolor2';
 
 export default class CompanyProfileController extends FormController<CompanyProfileController> {
@@ -14,21 +13,17 @@ export default class CompanyProfileController extends FormController<CompanyProf
   declare readonly storiesHeadingDemoTarget: HTMLHeadingElement;
   declare readonly storiesHeadingColorInputTarget: HTMLInputElement;
 
-  connect() {
-    super.connect();
-    $(this.element).validator(imageValidatorOptions);
-  }
-
-  disconnect() {
-    $(this.element).validator('destroy');
-    super.disconnect();
-  }
-
-  // rails-ujs is disabled on the form
-  // onAjaxSuccess({ detail: [data, status, xhr] }: { detail: [data: any, status: string, xhr: XMLHttpRequest] }) {
+  // connect() {
+  //   super.connect();
   // }
 
-  onUploadReady({ detail: { card } }: { detail: { card: HTMLLIElement } }) {
+  // disconnect() {
+  //   super.disconnect();
+  // }
+
+  onUploadReady(e: CustomEvent) {
+    const card = e.detail.card;
+    this.updateValidator(e);
     [...this.companyHeaderDemoTarget.children].forEach((link: Element) => {
       if (card.className.includes(link.className)) {
         const url = (<HTMLInputElement>card.querySelector(':scope > input[name*="url"]')).value;

@@ -90,10 +90,13 @@ export default class FormController<Ctrl extends SubclassController> extends Con
     // console.log('superclass', xhr, status)
   }
 
-  updateValidator({ detail: { shouldValidate } }: { detail: { shouldValidate?: boolean } }) {
+  updateValidator(e: CustomEvent) {
+    const card = e.detail.card;
+    const fileInput = card.querySelector('[data-image-card-target="fileInput"]');
+    fileInput.setAttribute('data-validate', e.type === 'image-card:image-ready' ? 'true' : 'false');
     $(this.element).validator('update');
-    if (shouldValidate) {
-      $(this.element).validator('validate'); 
+    if (e.type === 'image-card:image-ready') {
+      $(this.element).validator('validate');
     }
   }
 

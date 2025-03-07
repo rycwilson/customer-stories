@@ -101,8 +101,7 @@ export default class ImageCardController extends Controller<HTMLDivElement | HTM
     if (this.imgTarget?.complete) {
       console.log('image did load')
       window.clearInterval(this.imageLoadTimer);
-      this.fileInputTarget.setAttribute('data-validate', 'true');
-      this.dispatch('image-ready', { detail: { shouldValidate: true } });
+      this.dispatch('image-ready', { detail: { card: this.element } });
       return true;
     }
   }
@@ -110,14 +109,12 @@ export default class ImageCardController extends Controller<HTMLDivElement | HTM
   onClearFileInput(e: CustomEvent) {
     console.log('clear.bs.fileinput')
     this.element.classList.toggle('hidden', this.hasAdsOutlet && !this.isDefaultImage);    
-    this.fileInputTarget.setAttribute('data-validate', 'false');
-    this.dispatch('clear-fileinput');
+    this.dispatch('clear-fileinput', { detail: { card: this.element } });
   }
 
   onValidateFileInput({ relatedTarget: input }: { relatedTarget: HTMLInputElement }) {
-    console.log('validate.bs.validator')
     if (input === this.fileInputTarget) {
-      // console.log('validate.bs.validator')
+      console.log('validate.bs.validator')
     }
   }
   
@@ -142,7 +139,9 @@ export default class ImageCardController extends Controller<HTMLDivElement | HTM
   onValidatedFileInput({ relatedTarget: input }: { relatedTarget: HTMLInputElement }) {
     if (input === this.fileInputTarget && !this.isDefaultImage) {
       console.log('validated.bs.validator')
-      if (this.element.classList.contains('hidden')) this.element.classList.remove('hidden');
+      if (this.element.classList.contains('hidden')) {
+        this.element.classList.remove('hidden');
+      }
     }
   }
 
