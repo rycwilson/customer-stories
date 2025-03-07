@@ -1,5 +1,4 @@
 import FormController from './form_controller';
-import { imageValidatorOptions } from '../user_uploads';
 
 export default class AdsController extends FormController<AdsController> {
   static targets = [
@@ -30,7 +29,6 @@ export default class AdsController extends FormController<AdsController> {
     $(this.element)
       .on('shown.bs.tab', this.shownTabHandler)
       .on('validated.bs.validator', this.validatedShortHeadlineHandler)
-      .validator(imageValidatorOptions);
     this.imageRequirementsTargets.forEach(this.initPopover);
   }
 
@@ -38,7 +36,6 @@ export default class AdsController extends FormController<AdsController> {
     $(this.element)
       .off('shown.bs.tab', this.shownTabHandler)
       .off('validated.bs.validator', this.validatedShortHeadlineHandler)
-      .validator('destroy');
     super.disconnect();
   }
 
