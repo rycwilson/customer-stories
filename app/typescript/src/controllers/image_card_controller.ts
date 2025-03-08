@@ -108,7 +108,17 @@ export default class ImageCardController extends Controller<HTMLDivElement | HTM
 
   onClearFileInput(e: CustomEvent) {
     console.log('clear.bs.fileinput')
-    this.element.classList.toggle('hidden', this.hasAdsOutlet && !this.isDefaultImage);    
+    this.element.classList.toggle('hidden', this.hasAdsOutlet && !this.isDefaultImage);
+    if (this.element.dataset.previousUrl) {
+      setTimeout(() => {
+        // TODO: why does this event fire twice? We need to check if img is already there lest we add it twice
+        if (this.previewTarget.children.length === 0) {
+          this.previewTarget.insertAdjacentHTML('afterbegin', `<img src="${this.element.dataset.previousUrl}">`);
+        }
+        this.formGroupTarget.classList.remove('fileinput-new');
+        this.formGroupTarget.classList.add('fileinput-exists');
+      })
+    }
     this.dispatch('clear-fileinput', { detail: { card: this.element } });
   }
 

@@ -19,6 +19,7 @@
       { selected: }],
     data: { \
       image_id: _image[:id],
+      previous_url: (_image[:image_url] or _image[:url] if image_exists),
       controller: 'image-card',
       image_card_kind_value: _image[:type],
       image_card_form_outlet: model == 'User' ? '#user-profile-form' : (model == 'Customer' ? '#customer-form' : nil),
