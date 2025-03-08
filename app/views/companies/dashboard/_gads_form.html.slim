@@ -16,6 +16,8 @@
             'image-card:clear-fileinput->ads#updateValidator',
             'image-card:replace-default->ads#keepPreviousDefault',
             'image-card:upload-ready->ads#submitForm'].join(' ') }}) do |form|
+    
+    = form.hidden_field(:active_collection, value: active_collection, data: { ads_target: 'activeCollectionInput' })
           
     .form-group.short-headline
       = form.label(:adwords_short_headline, 'Headline', class: 'col-sm-3 control-label')
@@ -40,7 +42,9 @@
             href="#image-library__marketing"
             class=('active' if active_collection == 'images')
             data-toggle="tab" 
-            data-btn-group-target="btn" 
+            data-btn-group-target="btn"
+            data-action="ads#updateActiveCollection"
+            data-collection="images" 
             role="tab" }
             i.fa.fa-fw.fa-image
             | &nbsp;&nbsp;
@@ -50,6 +54,8 @@
             class=('active' if active_collection == 'logos')
             data-toggle="tab" 
             data-btn-group-target="btn"
+            data-action="ads#updateActiveCollection"
+            data-collection="logos"
             role="tab" }
             i.fa.fa-fw.fa-flag
             | &nbsp;&nbsp;

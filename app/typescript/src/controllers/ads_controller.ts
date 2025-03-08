@@ -8,7 +8,8 @@ export default class AdsController extends FormController<AdsController> {
     'defaultImageCard',
     'newImageCard', 
     'newLogoCard',
-    'requirementsHelpBlock'
+    'requirementsHelpBlock',
+    'activeCollectionInput'
   ];
   declare readonly shortHeadlineInputTarget: HTMLInputElement;
   declare readonly shortHeadlineSubmitBtnTarget: HTMLButtonElement;
@@ -18,6 +19,7 @@ export default class AdsController extends FormController<AdsController> {
   declare readonly newImageCardTarget: HTMLLIElement;
   declare readonly newLogoCardTarget: HTMLLIElement;
   declare readonly requirementsHelpBlockTargets: HTMLSpanElement[];
+  declare readonly activeCollectionInputTarget: HTMLInputElement;
 
   validatedShortHeadlineHandler = this.onValidatedShortHeadline.bind(this);
   shownTabHandler = this.onShownTab.bind(this);
@@ -91,6 +93,13 @@ export default class AdsController extends FormController<AdsController> {
           _card.setAttribute('data-image-card-toggle-default-value', 'false');
         }
       });
+  }
+
+  updateActiveCollection({ target: btn }: { target: HTMLAnchorElement }) {
+    const collection = btn.dataset.collection;
+    if (collection === 'images' || collection === 'logos') {
+      this.activeCollectionInputTarget.value = collection;
+    }
   }
 
   initPopover(link: HTMLAnchorElement) {

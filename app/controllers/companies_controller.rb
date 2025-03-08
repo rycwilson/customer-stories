@@ -12,29 +12,25 @@ class CompaniesController < ApplicationController
   end
 
   def show
-    if params['turbo_frame_request_id'] == 'company-ads-settings'
-      render(partial: 'companies/dashboard/gads_form', locals: { company: @company, active_collection: params['active_collection'] })
-    else
-      @curator_id = preselected_curator_id(@company)
-      @workflow_stage = params[:workflow_stage]
-      @prospect_tab = cookies['csp-prospect-tab'] || '#customer-wins'
-      @promote_tab = cookies['csp-promote-tab'] || '#promoted-stories'
-      @measure_tab = cookies['csp-measure-tab'] || '#story-visitors'
-      # @recent_activity = Rails.cache.fetch("#{@company.subdomain}/recent-activity") { @company.recent_activity(30) }
-      # @recent_activity = @company.recent_activity(30)
-      # @story_views_30_day_count = PageView.joins(:visitor_session).company_story_views_since(@company.id, 30).count
-      @filters = %i(curator status customer category product).map do |type| 
-        # curator is the only field that will set a cookie to '' on clear (to override the default of current_user.id)
-        cookie_val = cookies["csp-#{type}-filter"]
-        if cookie_val.blank?
-          # set curator to current_user unless the curator filter was explicitly cleared
-          [type, (type == :curator && cookie_val.nil?) ? current_user.id : nil]
-        else
-          [type, cookie_val.to_i]
-        end
-      end.to_h.compact
-      @filters_match_type = cookies['csp-dashboard-filters-match-type'] || 'all'
-    end
+    @curator_id = preselected_curator_id(@company)
+    @workflow_stage = params[:workflow_stage]
+    @prospect_tab = cookies['csp-prospect-tab'] || '#customer-wins'
+    @promote_tab = cookies['csp-promote-tab'] || '#promoted-stories'
+    @measure_tab = cookies['csp-measure-tab'] || '#story-visitors'
+    # @recent_activity = Rails.cache.fetch("#{@company.subdomain}/recent-activity") { @company.recent_activity(30) }
+    # @recent_activity = @company.recent_activity(30)
+    # @story_views_30_day_count = PageView.joins(:visitor_session).company_story_views_since(@company.id, 30).count
+    @filters = %i(curator status customer category product).map do |type| 
+      # curator is the only field that will set a cookie to '' on clear (to override the default of current_user.id)
+      cookie_val = cookies["csp-#{type}-filter"]
+      if cookie_val.blank?
+        # set curator to current_user unless the curator filter was explicitly cleared
+        [type, (type == :curator && cookie_val.nil?) ? current_user.id : nil]
+      else
+        [type, cookie_val.to_i]
+      end
+    end.to_h.compact
+    @filters_match_type = cookies['csp-dashboard-filters-match-type'] || 'all'
   end
 
   def edit
@@ -60,13 +56,11 @@ class CompaniesController < ApplicationController
       if tags_update?
         head(:ok)
       elsif turbo_frame_request_id == 'company-ads-settings'
-        active_collection = @company.ad_images.select { |ad_image| ad_image.previous_changes.present? }
-          &.first&.type&.match(/(?<supertype>Image|Logo)/).try(:[], :supertype)&.downcase&.pluralize || 'images'
         image_was_created = @company.ad_images.any? { |ad_image| ad_image.previous_changes[:id].present? } 
-        redirect_to(
-          dashboard_path('promote', turbo_frame_request_id:, active_collection:),
-          status: :see_other,
-          flash: { notice: image_was_created ? 'Image was uploaded' : 'Changes were saved' },
+        flash.now[:notice] = image_was_created ? 'Image was uploaded' : 'Changes were saved'
+        render(
+          partial: 'companies/dashboard/gads_form', 
+          locals: { company: @company, active_collection: params[:company][:active_collection] || 'images' }
         )
       else
         # TODO: handle case of absent primary CTA
