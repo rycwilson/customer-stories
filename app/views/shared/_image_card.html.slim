@@ -5,7 +5,7 @@
 - is_default_ad_image = model == 'AdwordsImage' && _image[:default]
 - upload_enabled = local_assigns.fetch(:upload_enabled, true)
 - size_validation_enabled = upload_enabled && model != 'Customer'
-- image_replaceable = model.in? ['User', 'Company', 'Customer'] || is_default_ad_image
+- image_replaceable = model.in?(['User', 'Company', 'Customer']) || is_default_ad_image
 - image_exists = _image[:image_url].present? || _image[:url].present? 
 
 = content_tag( \
