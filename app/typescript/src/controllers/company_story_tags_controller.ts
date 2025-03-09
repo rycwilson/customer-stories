@@ -18,6 +18,9 @@ export default class CompanyStoryTagsController extends FormController<CompanySt
   }
 
   onChangeTags({ target: input }: { target: HTMLInputElement }) {
+    // when focus is lost with new tag(s) entered e.target will be the new item input element instead of the main input element
+    // input.tomselect.settings.createOnBlur is false, so in this case we can ignore the change event
+    if (input.id.includes('ts-control')) return;
     const kind = input.dataset.tomselectKindValue!;
     const tagNames = input.value ? input.value.split(',') : [];
     const tagNameInputTargets = this[`${kind}TagNameInputTargets`];
