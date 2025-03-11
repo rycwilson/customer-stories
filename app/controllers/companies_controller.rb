@@ -53,11 +53,13 @@ class CompaniesController < ApplicationController
 
   def update
     if @company.update(company_params)
-      if tags_update?
-        head(:ok)
+      if turbo_frame_request_id == 'company-story-tags'
+        flash.now[:notice] = 'Story tags were updated'
+        render(partial: 'companies/settings/story_tags', locals: { company: @company,  })
       elsif turbo_frame_request_id == 'company-ads-settings'
-        image_was_created = @company.ad_images.any? { |ad_image| ad_image.previous_changes[:id].present? } 
-        flash.now[:notice] = image_was_created ? 'Image was uploaded' : 'Changes were saved'
+        image_was_created = company_params[:adwords_images_attributes].to_h.any? { |index, ad| ad[:id].blank? } 
+        image_was_destroyed = company_params[:adwords_images_attributes].to_h.any? { |index, ad| ad[:_destroy] == 'true' }
+        flash.now[:notice] = image_was_created ? 'Image was added' : (image_was_destroyed ? 'Image was deleted' : 'Default image was updated')
         render(
           partial: 'companies/dashboard/gads_form', 
           locals: { company: @company, active_collection: params[:company][:active_collection] || 'images' }
@@ -68,7 +70,6 @@ class CompaniesController < ApplicationController
         respond_to do |format|
           format.turbo_stream do 
             render(
-              #toaster data-controller="toast" data-toast-flash-value=(flash.to_h.to_json if flash.any?)
               turbo_stream: [
                 turbo_stream.replace(
                   'toaster', 
@@ -197,14 +198,6 @@ class CompaniesController < ApplicationController
       render file: 'public/403', status: 403, layout: false
       false
     end
-  end
-
-  def tags_update?
-    company_params[:story_categories_attributes].present? or company_params[:products_attributes].present?
-  end
-
-  def ad_images_update?
-    company_params[:adwords_images_attributes].present?
   end
 
   def preselected_curator_id company
