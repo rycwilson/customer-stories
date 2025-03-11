@@ -1,11 +1,13 @@
 = turbo_frame_tag('company-ctas')
 
-  .form-horizontal data-controller="company-ctas"
+  .form-horizontal {
+    data-controller="company-ctas toast"
+    data-toast-flash-value=(flash.to_h.to_json if flash.any? and turbo_frame_request_id == 'company-ctas') }
 
     .form-group
       .visible-sm-block.col-sm-offset-1.col-sm-11
-        label Header / Footer
-      label.col-md-3.control-label.visible-md-inline-block.visible-lg-inline-block Header / Footer
+        label Main
+      label.col-md-3.control-label.visible-md-inline-block.visible-lg-inline-block Main
       .col-sm-offset-1.col-sm-11.col-md-offset-0.col-md-8.col-lg-6
         - if company.ctas.primary.present?
           .list-group data-controller="list-group" data-list-group-collapsible-value="true"

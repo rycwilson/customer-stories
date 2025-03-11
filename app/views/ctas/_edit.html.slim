@@ -1,13 +1,3 @@
-// absolutely positioned at bottom to avoid nested form tags
-- unless cta.primary?
-  = button_to( \
-      'Delete', 
-      company_cta_path(company, cta),
-      method: :delete, 
-      remote: true, 
-      class: 'btn btn-sm btn-danger',
-      form: { data: { turbo: false, action: 'ajax:complete->company-ctas#onDestroy' } })
-
 / since distinct id/name attributes are required, use form_tag instead of form_with (which auto-generates id/name attributes)
 = form_tag( \
     # company_cta_path(company, cta, format: :json),
@@ -58,12 +48,12 @@
       .checkbox
         = label_tag("cta_#{cta.id}[primary]") do
           = check_box_tag("cta_#{cta.id}[primary]", cta.primary? ? false : true, false, data: { action: 'cta#togglePrimary' })
-          = "#{cta.primary? ? 'Remove' : 'Make this the'} Banner CTA"
+          = "#{cta.primary? ? 'Remove as' : 'Make this the'} Main CTA"
 
   .cta__custom-button--edit class=('hidden' if !cta.primary?) data-cta-target="customButton" 
     div
       div
-        = label_tag("cta_#{cta.id}[company_attributes][primary_cta_background_color]", 'Button')
+        = label_tag("cta_#{cta.id}[company_attributes][primary_cta_basackground_color]", 'Button')
         div
           = color_field_tag( \
               "cta_#{cta.id}[company_attributes][primary_cta_background_color]",
@@ -90,5 +80,12 @@
 
   hr
 
-  .text-right
+  div style="display:flex; justify-content:#{cta.primary? ? 'flex-end' : 'space-between'}"
+    - unless cta.primary?
+      = link_to( \
+          'Delete',
+          company_cta_path(company, cta),
+          remote: false,
+          class: 'btn btn-sm btn-danger',
+          data: { turbo_method: 'delete' })
     = submit_tag('Save changes', class: 'btn btn-sm btn-success')

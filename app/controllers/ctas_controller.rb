@@ -1,6 +1,7 @@
 class CtasController < ApplicationController
+  before_action(except: :show) { @company = Company.find(params[:company_id]) }
+
   def new
-    @company = Company.find(params[:company_id])
   end
 
   # return html for cta forms
@@ -10,8 +11,6 @@ class CtasController < ApplicationController
   end
 
   def create
-    @company = Company.find(params[:company_id])
-
     # update_company allows for an atomic update of a company's primary cta, can be re-used here
     update_company(@company, cta_params)
     respond_to do |format|
@@ -24,7 +23,6 @@ class CtasController < ApplicationController
   end
 
   def update
-    @company = Company.find(params[:company_id])
     cta = CallToAction.find(params[:id])
     _cta_params = cta_params(cta)
     if primary_replacement?(@company, _cta_params)
@@ -38,7 +36,8 @@ class CtasController < ApplicationController
 
   def destroy
     CallToAction.find(params[:id])&.destroy
-    head(:ok)
+    flash.now[:notice] = 'CTA was deleted'
+    render(partial: 'companies/settings/ctas', locals: { company: @company })
   end
 
   private
