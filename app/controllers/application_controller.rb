@@ -141,7 +141,7 @@ class ApplicationController < ActionController::Base
       if current_resource.company.present?
         dashboard_url('curate', subdomain: current_resource.company.subdomain)
       else
-        edit_user_registration_path
+        edit_csp_user_registration_path
       end
     elsif current_resource.class.name == 'Admin'
       rails_admin_path
@@ -151,12 +151,12 @@ class ApplicationController < ActionController::Base
   def after_sign_out_path_for resource
     if request.subdomain.present?
       if @not_authorized_for_subdomain
-        new_csp_session_url(subdomain: '')
+        new_csp_user_session_url(subdomain: '')
       else
         public_stories_url(subdomain: request.subdomain)
       end
     else
-      new_csp_session_url(subdomain: '')
+      new_csp_user_session_url(subdomain: '')
     end
   end
 

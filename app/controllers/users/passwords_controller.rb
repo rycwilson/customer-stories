@@ -3,12 +3,12 @@
 class Users::PasswordsController < Devise::PasswordsController
   layout('landing')
 
-  # GET /resource/password/new
+  # GET /send-password-reset
   def new
-    # if request.subdomain.present? or request.path == new_user_password_path
-    #   redirect_to(new_csp_password_url(subdomain: nil), status: :moved_permanently)
-    #   return
-    # end
+    if request.subdomain.present? or request.path == new_user_password_path
+      redirect_to(new_csp_user_password_url(subdomain: nil), status: :moved_permanently)
+      return
+    end
     super
   end
 
@@ -17,12 +17,12 @@ class Users::PasswordsController < Devise::PasswordsController
     super
   end
 
-  # GET /resource/password/edit?reset_password_token=abcdef
+  # GET /reset-password?reset_password_token=abcdef
   def edit
-    # if request.path == edit_user_password_path
-    #   redirect_to(edit_csp_password_path(reset_password_token: params[:reset_password_token]), status: :moved_permanently)
-    #   return
-    # end
+    if request.path == edit_user_password_path
+      redirect_to(edit_csp_user_password_path(reset_password_token: params[:reset_password_token]), status: :moved_permanently)
+      return
+    end
     super
   end
 
@@ -35,7 +35,7 @@ class Users::PasswordsController < Devise::PasswordsController
 
   def after_resetting_password_path_for(resource)
     # super(resource)
-    edit_user_url(subdomain: resource.company&.subdomain)
+    edit_csp_user_registration_url(subdomain: resource.company&.subdomain)
   end
 
   # The path used after sending reset password instructions

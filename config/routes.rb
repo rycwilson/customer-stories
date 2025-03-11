@@ -25,17 +25,17 @@ Rails.application.routes.draw do
       }
     )
 
+    # routes going to a devise controller don't need to be part of an authenticate block
     as(:user) do
-      # since this is going to a devise controller, no authenticate block is needed
-      get('/create-account', to: 'users/registrations#new', as: 'new_user')
+      get('/create-account', to: 'users/registrations#new', as: 'new_csp_user_registration')
       
       # do not name this route 'new_session' or it will conflict with devise
-      get('/sign-in', to: 'users/sessions#new', as: 'new_csp_session')
-      get('/resend-confirmation', to: 'users/confirmations#new', as: 'new_csp_confirmation')
-      get('/send-password-reset', to: 'users/passwords#new', as: 'new_csp_password')
-      get('/reset-password', to: 'users/passwords#edit', as: 'edit_csp_password')
-      put('/reset-password', to: 'users/passwords#update', as: 'csp_password')
-      get('/user-profile', to: 'users/registrations#edit', as: 'edit_user')
+      get('/sign-in', to: 'users/sessions#new', as: 'new_csp_user_session')
+      get('/resend-confirmation', to: 'users/confirmations#new', as: 'new_csp_user_confirmation')
+      get('/send-password-reset', to: 'users/passwords#new', as: 'new_csp_user_password')
+      get('/reset-password', to: 'users/passwords#edit', as: 'edit_csp_user_password')
+      # put('/reset-password', to: 'users/passwords#update', as: 'csp_password')
+      get('/user-profile', to: 'users/registrations#edit', as: 'edit_csp_user_registration')
     end
   end
 

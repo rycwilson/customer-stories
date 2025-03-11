@@ -27,6 +27,6 @@ class Users::ConfirmationsController < Devise::ConfirmationsController
   def after_confirmation_path_for(resource_name, resource)
     # super(resource_name, resource)
     sign_in(resource)
-    edit_user_url(subdomain: resource.company&.subdomain)
+    edit_csp_user_registration_url(subdomain: resource.company&.subdomain)
   end
 end

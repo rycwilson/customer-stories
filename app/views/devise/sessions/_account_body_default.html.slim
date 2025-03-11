@@ -5,7 +5,7 @@
 
 p
   | Don't have an account?&nbsp;&nbsp;
-  = link_to('Create account', resource_name == :user ? new_user_url(subdomain: '') : new_admin_registration_path)
+  = link_to('Create account', resource_name == :user ? new_csp_user_registration_url(subdomain: '') : new_admin_registration_path)
 
 = form_for( \
     resource, 
@@ -42,7 +42,7 @@ p
     = form.label(:remember_me, class: 'checkbox-inline', style: 'margin:0')
       = form.check_box(:remember_me)
       | Remember me
-    = link_to('Forgot password?', resource_name == :user ? new_csp_password_path : new_admin_password_path)
+    = link_to('Forgot password?', resource_name == :user ? new_csp_user_password_path : new_admin_password_path)
 
   .form-group
     = form.submit('Sign in', class: 'btn btn-secondary btn-block btn-lg')

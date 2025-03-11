@@ -16,17 +16,16 @@ class Users::RegistrationsController < Devise::RegistrationsController
   ]
 
   layout('landing')
-  # respond_to :html, :js
 
   before_action(:configure_sign_up_params, only: [:create])
   before_action(:configure_account_update_params, only: [:update])
   before_action(:set_preserved_form_data, only: [:new])
 
-  # GET /resource/sign_up
+  # GET /create-account
   def new
     if request.subdomain.present? or request.path == new_user_registration_path
       flash.keep
-      redirect_to(new_user_url(subdomain: nil), status: :moved_permanently)
+      redirect_to(new_csp_user_registration_url(subdomain: nil), status: :moved_permanently)
       return
     end
     super
@@ -42,7 +41,7 @@ class Users::RegistrationsController < Devise::RegistrationsController
     # if a request is received at the default devise route, redirect to the custom route
     if request.path == edit_user_registration_path
       flash.keep
-      redirect_to(edit_user_path, status: :moved_permanently)
+      redirect_to(edit_csp_user_registration_path, status: :moved_permanently)
       return 
     end
     if true_user.admin?
@@ -114,7 +113,7 @@ class Users::RegistrationsController < Devise::RegistrationsController
   end
 
   def after_update_path_for user
-    edit_user_path
+    edit_csp_user_registration_path
   end
 
   # If you have extra params to permit, append them to the sanitizer.

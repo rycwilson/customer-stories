@@ -15,7 +15,7 @@
 
         p
           | Already have an account?&nbsp;&nbsp;
-          = link_to('Sign in', (defined? @user) ? new_csp_session_path : new_admin_session_path)
+          = link_to('Sign in', (defined? @user) ? new_csp_user_session_path : new_admin_session_path)
 
         = form_for( \
             resource, 
@@ -70,4 +70,4 @@
       / .account-footer
         /p
           | Didn't get confirmation?&nbsp;&nbsp;
-          = link_to()'Resend email', new_user_confirmation_path)
+          = link_to()'Resend email', new_csp_user_confirmation_path)

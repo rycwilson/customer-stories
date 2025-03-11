@@ -16,7 +16,7 @@ class Users::SessionsController < Devise::SessionsController
   def new
     if request.path == new_user_session_path
       flash.keep
-      redirect_to(new_csp_session_path, status: :moved_permanently)
+      redirect_to(new_csp_user_session_path, status: :moved_permanently)
       return
     end
 
@@ -61,13 +61,13 @@ class Users::SessionsController < Devise::SessionsController
       impersonate_user(imitable_user)
       session['authorized_subdomains'] = ['', imitable_user.company.subdomain]
       # TODO both redirects result in a 401 - why?
-      # redirect_to edit_user_url(subdomain: current_user.company.subdomain)
+      # redirect_to edit_csp_user_registration_url(subdomain: current_user.company.subdomain)
       # redirect_to url_for(subdomain: current_user.company.subdomain, controller: 'users/registrations', action: 'edit')
       respond_to do |format|
-        format.js { render js: "window.location.replace('#{edit_user_url(subdomain: current_user.company.subdomain)}')" }
+        format.js { render js: "window.location.replace('#{edit_csp_user_registration_url(subdomain: current_user.company.subdomain)}')" }
       end
     else
-      redirect_to edit_user_path
+      redirect_to edit_csp_user_registraation_path
     end
   end
 
