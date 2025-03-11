@@ -8,7 +8,7 @@
         = form_for( \
             resource, 
             as: resource_name, 
-            url: password_path(resource_name), 
+            url: csp_password_path(resource_name), 
             html: { \
               method: :put,
               class: 'account-form',

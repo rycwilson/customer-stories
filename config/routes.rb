@@ -33,10 +33,8 @@ Rails.application.routes.draw do
       get('/sign-in', to: 'users/sessions#new', as: 'new_csp_session')
       get('/resend-confirmation', to: 'users/confirmations#new', as: 'new_csp_confirmation')
       get('/send-password-reset', to: 'users/passwords#new', as: 'new_csp_password')
-
-      # get('/reset-password', to: 'users/passwords#edit', as: 'edit_csp_password')
-      # put('/reset-password', to: 'users/passwords#update', as: 'csp_password')
-      
+      get('/reset-password', to: 'users/passwords#edit', as: 'edit_csp_password')
+      put('/reset-password', to: 'users/passwords#update', as: 'csp_password')
       get('/user-profile', to: 'users/registrations#edit', as: 'edit_user')
     end
   end
