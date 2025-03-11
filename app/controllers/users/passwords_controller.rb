@@ -33,9 +33,11 @@ class Users::PasswordsController < Devise::PasswordsController
 
   # protected
 
-  # def after_resetting_password_path_for(resource)
+  def after_resetting_password_path_for(resource)
     # super(resource)
-  # end
+    sign_in(resource)
+    edit_user_url(subdomain: resource.company&.subdomain)
+  end
 
   # The path used after sending reset password instructions
   # def after_sending_reset_password_instructions_path_for(resource_name)
