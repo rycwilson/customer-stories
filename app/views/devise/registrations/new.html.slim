@@ -20,7 +20,7 @@
         = form_for( \
             resource, 
             as: resource_name,
-            url: registration_path(resource_name),
+            url: create_user_registration_path,
             html: { \
               class: 'account-form',
               novalidate: true,

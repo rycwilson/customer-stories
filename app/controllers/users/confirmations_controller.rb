@@ -1,12 +1,16 @@
 class Users::ConfirmationsController < Devise::ConfirmationsController
   layout('landing')
   
-  # GET /resource/confirmation/new
+  # GET /resend-confirmation 
    def new
-     super
+    if request.subdomain.present? or request.path == new_user_confirmation_path
+      redirect_to(resend_user_confirmation_url(subdomain: nil), status: :moved_permanently)
+      return
+    end
+    super
    end
 
-  # POST /resource/confirmation
+  # POST /resend-confirmation
    def create
      super
    end
@@ -16,7 +20,7 @@ class Users::ConfirmationsController < Devise::ConfirmationsController
      super
    end
 
-  # protected
+  protected
 
   # The path used after resending confirmation instructions.
   # def after_resending_confirmation_instructions_path_for(resource_name)

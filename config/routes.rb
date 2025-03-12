@@ -26,11 +26,14 @@ Rails.application.routes.draw do
     )
 
     # custom routes
-    # (routes going to a devise controller don't need to be part of an authenticate block)
+    # add 'csp' to the name where necessary to prevent conflict with devise routes
+    # note: routes going to a devise controller don't need to be part of an authenticate block
     as(:user) do
       get('/create-account', to: 'users/registrations#new', as: 'new_csp_user_registration')
+      post('/create-account', to: 'users/registrations#create', as: 'create_user_registration')
       get('/sign-in', to: 'users/sessions#new', as: 'new_csp_user_session')
       get('/resend-confirmation', to: 'users/confirmations#new', as: 'new_csp_user_confirmation')
+      post('/resend-confirmation', to: 'users/confirmations#create', as: 'resend_user_confirmation')
       get('/send-password-reset', to: 'users/passwords#new', as: 'new_csp_user_password')
       post('/send-password-reset', to: 'users/passwords#create', as: 'send_user_password_reset')
       get('/reset-password', to: 'users/passwords#edit', as: 'edit_csp_user_password')

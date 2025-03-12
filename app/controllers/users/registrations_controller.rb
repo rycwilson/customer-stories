@@ -14,12 +14,9 @@ class Users::RegistrationsController < Devise::RegistrationsController
     'Haley Fraser',
     'Rachelle Benson'
   ]
-
   layout('landing')
-
   before_action(:configure_sign_up_params, only: [:create])
   before_action(:configure_account_update_params, only: [:update])
-  before_action(:set_preserved_form_data, only: [:new])
 
   # GET /create-account
   def new
@@ -31,7 +28,7 @@ class Users::RegistrationsController < Devise::RegistrationsController
     super
   end
 
-  # POST /resource
+  # POST /create-account
   def create
     super
   end
@@ -108,11 +105,11 @@ class Users::RegistrationsController < Devise::RegistrationsController
   protected
 
   # user, @user, resource are all the same thing
-  def update_resource user, params
+  def update_resource resource, params
     user.send(params[:password].present? ? :update_with_password : :update_without_password, params)
   end
 
-  def after_update_path_for user
+  def after_update_path_for resource
     edit_csp_user_registration_path
   end
 
@@ -127,7 +124,7 @@ class Users::RegistrationsController < Devise::RegistrationsController
   end
 
   # The path used after sign up.
-  def after_sign_up_path_for user
+  def after_sign_up_path_for resource
     # a page to direct them to check their email
     new_company_path
   end
@@ -136,15 +133,4 @@ class Users::RegistrationsController < Devise::RegistrationsController
   # def after_inactive_sign_up_path_for(resource)
   #   super(resource)
   # end
-
-  private
-
-  def set_preserved_form_data
-    @sign_up_email = session[:sign_up_email]
-    @sign_up_first_name = session[:sign_up_first_name]
-    @sign_up_last_name = session[:sign_up_last_name]
-    session.delete(:sign_up_email)
-    session.delete(:sign_up_first_name)
-    session.delete(:sign_up_last_name)
-  end
 end

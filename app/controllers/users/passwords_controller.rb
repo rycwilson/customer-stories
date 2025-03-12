@@ -31,7 +31,7 @@ class Users::PasswordsController < Devise::PasswordsController
     super
   end
 
-  # protected
+  protected
 
   def after_resetting_password_path_for(resource)
     # super(resource)

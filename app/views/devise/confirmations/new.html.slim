@@ -10,12 +10,12 @@
         = form_for( \
             resource, 
             as: resource_name,
-            url: confirmation_path(resource_name),
+            url: resend_user_confirmation_path,
             html: { \
               method: :post,
               class: 'account-form',
               novalidate: true,
-              data: { flash: (flash.to_h if flash.any?) } }) do |form|
+              data: { resource_errors: (resource.errors.full_messages if resource.errors.any?) } }}) do |form|
 
           .form-group
             = form.label(:email, class: 'control-label')
