@@ -81,11 +81,11 @@
     }
 
     &.glyphicon-info-sign::before {
-      content: '\f129';
+      content: '\f05a'; // info without circle: '\f129';
     }
 
     &.glyphicon-exclamation-sign::before {
-      content: '\f12a';
+      content: '\f071'; // exclamation with no triangle: '\f12a';
     }
     
     &.glyphicon-remove-sign {
