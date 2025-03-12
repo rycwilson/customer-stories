@@ -15,7 +15,7 @@
               method: :post,
               class: 'account-form',
               novalidate: true,
-              data: { resource_errors: (resource.errors.full_messages if resource.errors.any?) } }}) do |form|
+              data: { resource_errors: (resource.errors.full_messages if resource.errors.any?) } }) do |form|
 
           .form-group
             = form.label(:email, class: 'control-label')
