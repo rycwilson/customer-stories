@@ -54,41 +54,45 @@ class CompaniesController < ApplicationController
   def update
     if @company.update(company_params)
       if turbo_frame_request_id == 'company-story-tags'
-        flash.now[:notice] = 'Story tags were updated'
+        flash.now[:notice] = 'Story tags have been updated'
         render(partial: 'companies/settings/story_tags', locals: { company: @company,  })
       elsif turbo_frame_request_id == 'company-ads-settings'
         image_was_created = company_params[:adwords_images_attributes].to_h.any? { |index, ad| ad[:id].blank? } 
         image_was_destroyed = company_params[:adwords_images_attributes].to_h.any? { |index, ad| ad[:_destroy] == 'true' }
-        flash.now[:notice] = image_was_created ? 'Image was added' : (image_was_destroyed ? 'Image was deleted' : 'Default image was updated')
+        flash.now[:notice] = image_was_created ? 'Image has been added' : (image_was_destroyed ? 'Image has been deleted' : 'Default image has been updated')
         render(
           partial: 'companies/dashboard/gads_form', 
           locals: { company: @company, active_collection: params[:company][:active_collection] || 'images' }
         )
       else
         # TODO: handle case of absent primary CTA
-        flash.now[:notice] = 'Account settings were updated'
+        flash.now[:notice] = 'Account settings have been updated'
+        # binding.pry
         respond_to do |format|
           format.turbo_stream do 
-            render(
-              turbo_stream: [
-                turbo_stream.replace(
-                  'toaster', 
-                  html: "<div id=\"toaster\" data-controller=\"toast\" data-toast-flash-value='#{flash.to_h.to_json}'></div>".html_safe
-                ),
-                turbo_stream.replace(
-                  'company-profile-form', 
-                  partial: 'companies/settings/company_profile', locals: { company: @company }
-                ),
-                turbo_stream.update(
-                  "edit-cta-#{@company.ctas.primary.id}",
-                  partial: 'ctas/edit', locals: { company: @company, cta: @company.ctas.primary }
-                ),
-                turbo_stream.update(
-                  'company-admin-logo', 
-                  html: "<img src=\"#{@company.square_logo_url}\" alt=\"#{@company.name} logo\"><i class=\"fa fa-caret-down\"></i>".html_safe
-                )
-              ]
-            )
+            turbo_stream_actions = [
+              turbo_stream.replace(
+                'toaster', 
+                html: "<div id=\"toaster\" data-controller=\"toast\" data-toast-flash-value='#{flash.to_h.to_json}'></div>".html_safe
+              ),
+              turbo_stream.replace(
+                'company-profile-form', 
+                partial: 'companies/settings/company_profile', locals: { company: @company }
+              )     
+            ]
+            if @company.previous_changes[:square_logo_url].present?
+              turbo_stream_actions << turbo_stream.update(
+                'company-admin-logo', 
+                html: "<img src=\"#{@company.square_logo_url}\" alt=\"#{@company.name} logo\"><i class=\"fa fa-caret-down\"></i>".html_safe
+              )
+            end
+            if @company.previous_changes[:header_color_1].present? and @company.ctas.primary.present?
+              turbo_stream_actions << turbo_stream.update(
+                "edit-cta-#{@company.ctas.primary.id}",
+                partial: 'ctas/edit', locals: { company: @company, cta: @company.ctas.primary }
+              )
+            end
+            render(turbo_stream: turbo_stream_actions)
           end
         end
       end
