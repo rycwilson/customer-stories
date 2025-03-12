@@ -4,7 +4,7 @@ class Users::SessionsController < Devise::SessionsController
   # before_filter :configure_sign_in_params, only: [:create]
   layout('landing')
 
-  # GET /resource/sign_in
+  # GET /sign-in
   # a sign_in form submitted as zap auth request will have f.hidden_field(:zap_auth_submitted, value: true)
   # and that param will appear here if a validation error results in re-render
   # Why is this necessary?
