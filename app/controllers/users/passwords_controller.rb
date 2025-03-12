@@ -12,7 +12,7 @@ class Users::PasswordsController < Devise::PasswordsController
     super
   end
 
-  # POST /resource/password
+  # POST /send-password-reset
   def create
     super
   end

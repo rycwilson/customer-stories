@@ -8,7 +8,7 @@
         = form_for( \
             resource, 
             as: resource_name, 
-            url: password_path(resource_name), 
+            url: reset_user_password_path, 
             html: { \
               method: :put,
               class: 'account-form',
