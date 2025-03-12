@@ -41,36 +41,30 @@
     font-size: 1.5em;
     
     + .bootoast-alert-container {
-      padding-left: 1.75em;
+      padding-left: 2.3em;
     }
 
     // use FontAwesome instead of Glyphicons
-    &.glyphicon-ok-sign {
+    &.glyphicon-ok-sign::before {
+      content: '\f058'; //'\f00c';
+    }
+    
+    &.glyphicon-info-sign::before {
+      content: '\f05a'; // info without circle: '\f129';
+    }
+    
+    &.glyphicon-exclamation-sign {
       &::before {
-        content: '\f00c';
+        content: '\f071'; // exclamation with no triangle: '\f12a';
       }
 
       & + .bootoast-alert-container {
         padding-left: 2.5em;
       }
     }
-
-    &.glyphicon-info-sign::before {
-      content: '\f05a'; // info without circle: '\f129';
-    }
-
-    &.glyphicon-exclamation-sign::before {
-      content: '\f071'; // exclamation with no triangle: '\f12a';
-    }
     
-    &.glyphicon-remove-sign {
-      &::before {
-        content: '\f05e';   // fa-ban
-      }
-
-      & + .bootoast-alert-container {
-        padding-left: 2.25em;
-      }
+    &.glyphicon-remove-sign::before {
+      content: '\f05e';   // fa-ban
     }
   }
 
