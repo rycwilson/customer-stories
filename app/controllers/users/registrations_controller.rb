@@ -106,7 +106,7 @@ class Users::RegistrationsController < Devise::RegistrationsController
 
   # user, @user, resource are all the same thing
   def update_resource resource, params
-    user.send(params[:password].present? ? :update_with_password : :update_without_password, params)
+    resource.send(params[:password].present? ? :update_with_password : :update_without_password, params)
   end
 
   def after_update_path_for resource
