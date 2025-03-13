@@ -175,7 +175,7 @@
             data-validate="false"
             data-collection=collection
             data-max-file-size="5242880" 
-            data-min-dimensions=(ad_image_min_dimensions.to_json unless model.in? ['User', 'Customer'])
+            data-min-dimensions=(uploaded_image_min_dimensions.to_json unless model == 'Customer')
             data-aspect-ratio-tolerance=RESPONSIVE_AD_ASPECT_RATIO_TOLERANCE
             data-required-image=('true' if required) }
 

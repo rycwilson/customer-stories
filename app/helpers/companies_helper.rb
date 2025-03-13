@@ -3,7 +3,7 @@ module CompaniesHelper
     escape_once(render('invitation_templates/inline_select', { company: }))
   end
 
-  def ad_image_min_dimensions(type=nil)
+  def uploaded_image_min_dimensions(type = nil)
     min_dimensions = {
       'SquareImage': {
         width: RESPONSIVE_AD_SQUARE_IMAGE_MIN
