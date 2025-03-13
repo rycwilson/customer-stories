@@ -17,7 +17,7 @@ class Customer < ApplicationRecord
     logo_was_updated = previous_changes.keys.include?('logo_url') && previous_changes[:logo_url].first.present?
     puts "logo_was_updated? #{logo_was_updated}"
     if logo_was_updated
-      # S3Util::delete_object(S3_BUCKET, previous_changes[:logo_url].first)
+      # S3Util.delete_object(S3_BUCKET, previous_changes[:logo_url].first)
     end
   end
 

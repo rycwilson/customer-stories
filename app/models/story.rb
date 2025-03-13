@@ -212,7 +212,7 @@ class Story < ApplicationRecord
   after_update_commit do 
     og_image_was_updated = previous_changes.keys.include?('og_image_url') && previous_changes[:og_image_url].first.present?
     if og_image_was_updated
-      S3Util::delete_object(S3_BUCKET, previous_changes[:og_image_url].first)
+      S3Util.delete_object(S3_BUCKET, previous_changes[:og_image_url].first)
     end
   end
 

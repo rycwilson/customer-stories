@@ -242,14 +242,14 @@ class Company < ApplicationRecord
     square_logo_was_updated = previous_changes.keys.include?('square_logo_url') and previous_changes[:square_logo_url].first.present?
     landscape_logo_was_updated = previous_changes.keys.include?('landscape_logo_url') and previous_changes[:landscape_logo_url].first.present?
     if square_logo_was_updated
-      S3Util::delete_object(S3_BUCKET, previous_changes[:square_logo_url].first)
+      S3Util.delete_object(S3_BUCKET, previous_changes[:square_logo_url].first)
     end
     if landscape_logo_was_updated
-      S3Util::delete_object(S3_BUCKET, previous_changes[:landscape_logo_url].first)
+      S3Util.delete_object(S3_BUCKET, previous_changes[:landscape_logo_url].first)
     end
     # adwords_logo_was_updated = previous_changes.keys.include?('adwords_logo_url') && previous_changes[:adwords_logo_url].first.present?
     # if adwords_logo_was_updated
-    #   S3Util::delete_object(S3_BUCKET, previous_changes[:adwords_logo_url].first)
+    #   S3Util.delete_object(S3_BUCKET, previous_changes[:adwords_logo_url].first)
     # end
   end
 

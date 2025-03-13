@@ -23,7 +23,7 @@ class AdwordsImage < ApplicationRecord
   # https://medium.com/appaloosa-store-engineering/caution-when-using-before-destroy-with-model-association-71600b8bfed2
   # before_destroy :update_ads, prepend: true, if: :promote_enabled?
 
-  after_destroy_commit { S3Util::delete_object(S3_BUCKET, image_url) }
+  after_destroy_commit { S3Util.delete_object(S3_BUCKET, image_url) }
 
   private
 

@@ -20,7 +20,7 @@ class User < ApplicationRecord
 
     photo_was_updated = previous_changes.keys.include?('photo_url') && previous_changes[:photo_url].first.present?
     if photo_was_updated
-      S3Util::delete_object(S3_BUCKET, previous_changes[:photo_url].first)
+      S3Util.delete_object(S3_BUCKET, previous_changes[:photo_url].first)
     end
     
     # expire cache
