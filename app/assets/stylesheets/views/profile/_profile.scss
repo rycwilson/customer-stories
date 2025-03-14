@@ -23,25 +23,4 @@
   .image-card {
     display: inline-block;
   }
-
-  .image-card__frame {
-    height: 120px;
-    
-    &,
-    > .thumbnail {
-      width: auto;
-    }
-  }
-}
-
-.profile.edit {
-
-  // for safari
-  input::-webkit-contacts-auto-fill-button {
-    visibility: hidden;
-    display: none !important;
-    pointer-events: none;
-    position: absolute;
-    right: 0;
-  }
 }
