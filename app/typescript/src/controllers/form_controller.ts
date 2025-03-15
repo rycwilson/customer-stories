@@ -14,7 +14,7 @@ import type AdsController from './ads_controller';
 // import type CustomerController from './customer_controller';
 import type { TomOptions } from 'tom-select/dist/types/types';
 import { validateForm, serializeForm } from '../utils';
-import { imageValidatorOptions } from '../user_uploads';
+import { validateFileSize, validateImageDimensions } from '../user_uploads';
 
 // UserProfileController |
 // CustomerController
@@ -71,7 +71,17 @@ export default class FormController<Ctrl extends SubclassController> extends Con
     this.initialState = serializeForm(this.element);
 
     // validator will only run for file inputs (image upload)
-    $(this.element).validator(imageValidatorOptions);
+    $(this.element).validator({
+      focus: false,
+      disable: false,
+      custom: {
+        'max-file-size': validateFileSize.bind(this),
+        'min-dimensions': validateImageDimensions.bind(this),
+        'required-image': function ($fileInput: JQuery<HTMLInputElement, any>) {
+          console.log('checking for required image (skipping)...', $fileInput)
+        }
+      }
+    });
   }
 
   disconnect() {

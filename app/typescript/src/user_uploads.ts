@@ -28,17 +28,7 @@ interface JasnyFileInputContainer extends HTMLDivElement {
 //   }
 // }
 
-export const imageValidatorOptions: ValidatorOptions = {
-  focus: false,
-  disable: false,
-  custom: {
-    'max-file-size': validateFileSize,
-    'min-dimensions': validateImageDimensions,
-    'required-image': function ($fileInput: JQuery<HTMLInputElement, any>) {
-      console.log('checking for required image (skipping)...', $fileInput)
-    }
-  }
-}
+
 
 export function onS3Done(this: ImageCardController, url: string) {
   this.urlInputTarget.value = url;
@@ -173,7 +163,7 @@ function imageDidPersist(img: HTMLImageElement): boolean {
 }
 
 // http://stackoverflow.com/questions/39488774
-function validateFileSize($fileInput: JQuery<HTMLInputElement, any>): string | undefined {
+export function validateFileSize(this: FormController<any>, $fileInput: JQuery<HTMLInputElement, any>): string | undefined {
   console.log('validating file size...')
   if ($fileInput.prop('files')[0].size > $fileInput.data('maxFileSize')) {
     // console.log('image file size is invalid')
@@ -184,7 +174,7 @@ function validateFileSize($fileInput: JQuery<HTMLInputElement, any>): string | u
 }
 
 // only want to validate new images => a url indicates an existing image
-function validateImageDimensions($fileInput: JQuery<HTMLInputElement, any>): string | undefined {
+export function validateImageDimensions($fileInput: JQuery<HTMLInputElement, any>): string | undefined {
   console.log('validating image dimensions...')
 
   const img = $fileInput.closest('.form-group').find('.fileinput-preview img')[0];
