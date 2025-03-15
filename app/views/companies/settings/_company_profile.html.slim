@@ -1,12 +1,12 @@
 = form_with( \
     model: company,
+    local: true,
     html: { \
       id: 'company-profile-form',
       class: 'form-horizontal',
       autocomplete: 'off',
       novalidate: true,
       data: { \
-        remote: false,
         turbo: (false if company.new_record?),
         controller: 'company-profile',
         asset_host: Rails.application.config.asset_host,
