@@ -31,7 +31,13 @@ export default class ToastController extends Controller {
       message = flash[flashType]
     }
     if (type && message) {
-      bootoast.toast({ ...baseOptions, type, message, position: 'bottom-center' });
+      bootoast.toast({ 
+        ...baseOptions, 
+        type, 
+        message, 
+        timeout: type === 'danger' ? false : baseOptions.timeout, 
+        position: type === 'danger' ? 'top-center' : 'bottom-center' 
+      });
     }
   }
 }
