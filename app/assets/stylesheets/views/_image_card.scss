@@ -24,8 +24,8 @@
   }
   
   &--uploading .fileinput-preview img,
-  .fileinput-preview img[src*="data:image"],
-  .has-error .fileinput-preview {
+  // .has-error .fileinput-preview,
+  .fileinput-preview img[src*="data:image"] {
     display: none;
   }
 
@@ -67,25 +67,26 @@
     }
   }
 
-  .image-card--uploading .form-group:not(.has-error) &,
+  // .image-card--uploading .form-group:not(.has-error) &,
+  .image-card--uploading .form-group &,
   [class*="to-be-"] &,
-  .has-error & button:not(:last-child),
-  .gads-default & .btn-remove,
-  :not(.gads-default) & .btn-remove:last-child {
+  // .has-error & button:not(:last-child),
+  // :not(.gads-default) & .btn-remove:last-child
+  .gads-default & .btn-remove {
     display: none;
   }
 
-  .has-error & .btn-remove:last-child {
-    display: block;
-    margin: -5% -5% 0;
-    background-color: transparent;
-    color: $state-danger-text;
+  // .has-error & .btn-remove:last-child {
+  //   display: block;
+  //   margin: -5% -5% 0;
+  //   background-color: transparent;
+  //   color: $state-danger-text;
 
-    &:hover {
-      background-color: transparent;
-      color: darken($state-danger-text, 10%);
-    }
-  }
+  //   &:hover {
+  //     background-color: transparent;
+  //     color: darken($state-danger-text, 10%);
+  //   }
+  // }
 }
 
 .image-card__frame {
@@ -117,38 +118,38 @@
   }
 }
 
-.image-card__errors {
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  display: none;
-  border: 1px solid $state-danger-text;
-  border-radius: $border-radius-base;
-  width: 100%;
-  height: 100%;
-  padding: 30px;
-  background: #fff;
-  color: $state-danger-text;
+// .image-card__errors {
+//   flex-direction: column;
+//   align-items: center;
+//   justify-content: center;
+//   display: none;
+//   border: 1px solid $state-danger-text;
+//   border-radius: $border-radius-base;
+//   width: 100%;
+//   height: 100%;
+//   padding: 30px;
+//   background: #fff;
+//   color: $state-danger-text;
 
-  .has-error & {
-    display: flex;
-  }
+//   .has-error & {
+//     display: flex;
+//   }
 
-  i {
-    font-size: 20px;
-    margin-bottom: 8px;
-  }
+//   i {
+//     font-size: 20px;
+//     margin-bottom: 8px;
+//   }
 
-  div {
-    text-align: center;
-    font-size: 13px;
-    margin-bottom: 0;
-  }
+//   div {
+//     text-align: center;
+//     font-size: 13px;
+//     margin-bottom: 0;
+//   }
   
-  li {
-    margin: 0
-  }
-}
+//   li {
+//     margin: 0
+//   }
+// }
 
 .image-card__footer {
   position: absolute;
