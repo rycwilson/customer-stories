@@ -41,23 +41,22 @@ main.container.hidden-xs
 
       #profile-tab.tab-pane.active
 
-        / disable rails-ujs (data-remote: false) so as not to interfere with turbo (not necessary when using turbo frames)
         = form_with( \
             model: current_user,
             url: user_registration_path,
+            local: true,
             html: { \
               id: 'user-profile-form',
               class: 'form-horizontal',
               autocomplete: 'off',
               novalidate: true,
               data: { \
-                remote: false,
                 controller: 'form',
                 asset_host: Rails.application.config.asset_host,
                 action: [ \
-                  'submit->form#validate',
-                  'image-card:image-ready->form#updateValidator',
-                  'image-card:clear-fileinput->form#updateValidator'].join(' ') }}) do |form|
+                  'image-card:ready-to-validate->form#updateValidator',
+                  'image-card:validated->form#updateValidator',
+                  'submit->form#validate'].join(' ') }}) do |form|
 
           .row
             .col-sm-12.col-md-4.col-lg-3
