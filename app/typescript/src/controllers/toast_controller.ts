@@ -12,8 +12,8 @@ export default class ToastController extends Controller {
   declare flashValue: FlashHash;
 
   flashValueChanged(flash: FlashHash) {
-    // console.log('flash:', flash, this.element)
-    let type, message, position;    // these are bootoast option names and should not be changed
+    // console.log('flash:', flash)
+    let type, message;    // these are bootoast option names and should not be changed
     
     // note that Object.keys will return an array of strings despite FlashHash declaration
     // https://github.com/Microsoft/TypeScript/issues/12870
@@ -28,7 +28,8 @@ export default class ToastController extends Controller {
           return flashType;
         }
       })();
-      message = flash[flashType]
+      // remove the trailing timestamp (there to ensure this method is always triggered)
+      message = flash[flashType]?.replace(/\d+$/, '');  
     }
     if (type && message) {
       bootoast.toast({ 
