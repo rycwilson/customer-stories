@@ -23,7 +23,6 @@ export default class CompanyProfileController extends FormController<CompanyProf
 
   onUploadReady(e: CustomEvent) {
     const card = e.detail.card;
-    this.updateValidator(e);
     [...this.companyHeaderDemoTarget.children].forEach((link: Element) => {
       if (card.className.includes(link.className)) {
         const url = (<HTMLInputElement>card.querySelector(':scope > input[name*="url"]')).value;

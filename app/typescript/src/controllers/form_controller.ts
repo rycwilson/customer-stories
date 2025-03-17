@@ -3,7 +3,6 @@ import type ModalController from './modal_controller';
 import type NewCustomerWinController from './new_customer_win_controller';
 import type NewContributionController from './new_contribution_controller';
 import type NewStoryController from './new_story_controller';
-// import type UserProfileController from './user_profile_controller';
 import type ChangePasswordController from './change_password_controller';
 import type CompanyProfileController from './company_profile_controller';
 import type InvitationTemplateController from './invitation_template_controller';
@@ -11,13 +10,10 @@ import type ContributorInvitationController from './contributor_invitation_contr
 import type CompanyStoryTagsController from './company_story_tags_controller';
 import type CtaController from './cta_controller';
 import type AdsController from './ads_controller';
-// import type CustomerController from './customer_controller';
 import type { TomOptions } from 'tom-select/dist/types/types';
 import { validateForm, serializeForm } from '../utils';
 import { validateFileSize, validateImageDimensions } from '../user_uploads';
 
-// UserProfileController |
-// CustomerController
 export type SubclassController = (
   NewCustomerWinController | 
   NewContributionController | 
@@ -67,10 +63,14 @@ export default class FormController<Ctrl extends SubclassController> extends Con
 
   declare initialState: string;
 
+  get isDirty() {
+    return serializeForm(this.element) !== this.initialState;
+  }
+
   connect() {
     this.initialState = serializeForm(this.element);
 
-    // validator will only run for file inputs (image upload)
+    // validator will only run for file inputs (app/typescript/src/bootstrap.ts)
     $(this.element).validator({
       focus: false,
       disable: false,
@@ -92,20 +92,15 @@ export default class FormController<Ctrl extends SubclassController> extends Con
     return validateForm(e);
   }
 
-  get isDirty() {
-    return serializeForm(this.element) !== this.initialState;
-  }
-
-  onAjaxComplete(this: Ctrl, { detail: [xhr, status] }: { detail: [xhr: XMLHttpRequest, status: string] }) {
+  // onAjaxComplete(this: Ctrl, { detail: [xhr, status] }: { detail: [xhr: XMLHttpRequest, status: string] }) {
     // console.log('superclass', xhr, status)
-  }
+  // }
 
-  updateValidator(e: CustomEvent) {
-    const card = e.detail.card;
-    const fileInput = card.querySelector('[data-image-card-target="fileInput"]');
-    fileInput.setAttribute('data-validate', e.type === 'image-card:image-ready' ? 'true' : 'false');
+  updateValidator({ type: eventType, detail: { fileInput } }: { type: string, detail: { fileInput: HTMLInputElement } }) {
+    console.log('updating validator', eventType)
+    fileInput.setAttribute('data-validate', eventType === 'image-card:ready-to-validate' ? 'true' : 'false');
     $(this.element).validator('update');
-    if (e.type === 'image-card:image-ready') {
+    if (eventType === 'image-card:ready-to-validate') {
       $(this.element).validator('validate');
     }
   }

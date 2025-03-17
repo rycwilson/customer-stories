@@ -12,8 +12,8 @@
           asset_host: Rails.application.config.asset_host,
           action: [ \
             'image-card:make-default->ads#setNewDefault',
-            'image-card:image-ready->ads#updateValidator',
-            'image-card:clear-fileinput->ads#updateValidator',
+            'image-card:ready-to-validate->ads#updateValidator',
+            'image-card:validated->ads#updateValidator',
             'image-card:replace-default->ads#keepPreviousDefault',
             'image-card:upload-ready->ads#submitForm'].join(' ') }}) do |form|
     
@@ -68,6 +68,7 @@
             data-toggle="popover" 
             data-placement="right" 
             data-trigger="focus"
+            data-collection="images"
             data-square-min="300x300" 
             data-square-ratio="1:1"
             data-landscape-min="600x314" 
@@ -81,6 +82,7 @@
             data-toggle="popover" 
             data-placement="right" 
             data-trigger="focus"
+            data-collection="logos"
             data-square-min="128x128" 
             data-square-ratio="1:1" 
             data-square-suggest="1200x1200"

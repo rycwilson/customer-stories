@@ -11,9 +11,9 @@
         controller: 'company-profile',
         asset_host: Rails.application.config.asset_host,
         action: [ \
-          'image-card:image-ready->company-profile#updateValidator',
+          'image-card:ready-to-validate->company-profile#updateValidator',
           'image-card:upload-ready->company-profile#onUploadReady',
-          'image-card:clear-fileinput->company-profile#updateValidator',
+          'image-card:validated->company-profile#updateValidator',
           'submit->company-profile#validate'].join(' ') }}) do |form|
   
   .form-group
