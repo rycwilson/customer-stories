@@ -19,9 +19,7 @@
       { selected: }],
     data: { \
       image_id: _image[:id],
-      previous_url: (_image[:image_url] or _image[:url] if image_exists),
       controller: 'image-card',
-      image_card_kind_value: _image[:type],
       image_card_form_outlet: model == 'User' ? '#user-profile-form' : (model == 'Customer' ? '#customer-form' : nil),
       image_card_ads_outlet: ('#gads-form' if model == 'AdwordsImage'),
       ads_target: (( \
@@ -82,7 +80,7 @@
           "#{field_name_prefix}[type]",
           is_default_ad_image ? _image[:type] : '',
           disabled: true,
-          data: { image_card_target: 'input' })
+          data: { image_card_target: 'input typeInput' })
       = hidden_field_tag( \
           "#{field_name_prefix}[image_url]",
           '',
@@ -144,11 +142,11 @@
           button.btn-remove type="button" data-action="image-card#deleteImage"
             i.fa.fa-fw.fa-remove
         |&nbsp;
-        button.btn-remove type="button" data-dismiss="fileinput"
+        /button.btn-remove type="button" data-dismiss="fileinput"
           i.fa.fa-fw.fa-remove
 
       .image-card__frame
-        .image-card__errors
+        /.image-card__errors
           i.fa.fa-warning
           .help-block.with-errors
         - if image_replaceable
@@ -174,8 +172,11 @@
             data-s3=(s3_direct_post.to_json if upload_enabled)
             data-validate="false"
             data-collection=collection
+            data-image-type=(_image[:type] if _image[:type].present?)
             data-max-file-size="5242880" 
             data-min-dimensions=(uploaded_image_min_dimensions.to_json unless model == 'Customer')
+            data-min-width=(uploaded_image_min_dimensions(_image[:type])[:width] if _image[:type].present?)
+            data-min-height=(uploaded_image_min_dimensions(_image[:type])[:height] if _image[:type].present?)
             data-aspect-ratio-tolerance=RESPONSIVE_AD_ASPECT_RATIO_TOLERANCE
             data-required-image=('true' if required) }
 
@@ -187,4 +188,7 @@
             | Delete
           button.btn.btn-sm.btn-success type="submit"
             | Make default
+    /- if is_default_ad_image or model.in?(['User', 'Company'])
+      .help-block.text-left
+        = "\u2265 #{uploaded_image_min_dimensions(_image[:type])[:width]} x #{uploaded_image_min_dimensions(_image[:type])[:height]}"
 

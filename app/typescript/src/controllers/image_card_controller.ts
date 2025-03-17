@@ -11,12 +11,10 @@ export default class ImageCardController extends Controller<HTMLDivElement | HTM
   declare readonly hasCompanyProfileOutlet: boolean;
 
   static values = {
-    kind: String,
     inputsEnabled: { type: Boolean, default: false },
     openFileDialog: { type: Boolean, default: false },
     toggleDefault: { type: Boolean, default: false }   // whether to make the image the default for that type
   }
-  declare readonly kindValue: string;
   declare inputsEnabledValue: boolean;
   declare openFileDialogValue: boolean;
   declare toggleDefaultValue: boolean;
@@ -26,7 +24,8 @@ export default class ImageCardController extends Controller<HTMLDivElement | HTM
     'preview',
     'input',
     'idInput',
-    'urlInput', 
+    'urlInput',
+    'typeInput', 
     'defaultInput',
     '_destroyInput',
     'fileInput', 
@@ -39,6 +38,8 @@ export default class ImageCardController extends Controller<HTMLDivElement | HTM
   declare readonly idInputTarget: HTMLInputElement;
   declare readonly hasIdInputTarget: boolean;
   declare readonly urlInputTarget: HTMLInputElement;
+  declare readonly typeInputTarget: HTMLInputElement;
+  declare readonly hasTypeInputTarget: boolean;
   declare readonly defaultInputTarget: HTMLInputElement;
   declare readonly hasDefaultInputTarget: boolean;
   declare readonly _destroyInputTarget: HTMLInputElement;
@@ -48,7 +49,8 @@ export default class ImageCardController extends Controller<HTMLDivElement | HTM
   declare imageLoadTimer: number;
 
   changeFileInputHandler = this.onChangeFileInput.bind(this);
-  clearFileInputHandler = this.onClearFileInput.bind(this);
+  // clearFileInputHandler = this.onClearFileInput.bind(this);
+  // resetFileInputHandler = this.onResetFileInput.bind(this);
   validateFileInputHandler = this.onValidateFileInput.bind(this);
   validFileInputHandler = this.onValidFileInput.bind(this);
   invalidFileInputHandler = this.onInvalidFileInput.bind(this);
@@ -59,7 +61,8 @@ export default class ImageCardController extends Controller<HTMLDivElement | HTM
     if (this.fileUploadEnabled) {
       $(this.formGroupTarget)
         .on('change.bs.fileinput', this.changeFileInputHandler)
-        .on('clear.bs.fileinput', this.clearFileInputHandler);
+        // .on('reseted.bs.fileinput', this.resetFileInputHandler);
+        // .on('clear.bs.fileinput', this.clearFileInputHandler);
 
       // bootstrap validator events trigger on the form 
       if (this.parentFormOutlet) {
@@ -80,7 +83,8 @@ export default class ImageCardController extends Controller<HTMLDivElement | HTM
     if (this.fileUploadEnabled) {
       $(this.formGroupTarget)
         .off('change.bs.fileinput', this.changeFileInputHandler)
-        .off('clear.bs.fileinput', this.clearFileInputHandler)
+        // .off('reseted.bs.fileinput', this.resetFileInputHandler)
+        // .off('clear.bs.fileinput', this.clearFileInputHandler)
         
       // after disconnect, any outlets (e.g. the parent form) will be null
       $(this.element.closest('form'))
@@ -92,6 +96,7 @@ export default class ImageCardController extends Controller<HTMLDivElement | HTM
   }
 
   onChangeFileInput() {
+    console.log('change.bs.fileinput')
     if (!this.imageDidLoad()) {
       this.imageLoadTimer = window.setInterval(this.imageDidLoad.bind(this), 100);
     }
@@ -100,26 +105,14 @@ export default class ImageCardController extends Controller<HTMLDivElement | HTM
   imageDidLoad() {
     if (this.imgTarget?.complete) {
       console.log('image did load')
-      window.clearInterval(this.imageLoadTimer);
-      this.dispatch('image-ready', { detail: { card: this.element } });
+      clearInterval(this.imageLoadTimer);
+
+      // set dimensions for validation
+      this.fileInputTarget.setAttribute('data-width', this.imgTarget.naturalWidth.toString());
+      this.fileInputTarget.setAttribute('data-height', this.imgTarget.naturalHeight.toString());
+      this.dispatch('ready-to-validate', { detail: { fileInput: this.fileInputTarget } });
       return true;
     }
-  }
-
-  onClearFileInput(e: CustomEvent) {
-    console.log('clear.bs.fileinput')
-    this.element.classList.toggle('hidden', this.hasAdsOutlet && !this.isDefaultImage);
-    if (this.element.dataset.previousUrl) {
-      setTimeout(() => {
-        // TODO: why does this event fire twice? We need to check if img is already there lest we add it twice
-        if (this.previewTarget.children.length === 0) {
-          this.previewTarget.insertAdjacentHTML('afterbegin', `<img src="${this.element.dataset.previousUrl}">`);
-        }
-        this.formGroupTarget.classList.remove('fileinput-new');
-        this.formGroupTarget.classList.add('fileinput-exists');
-      })
-    }
-    this.dispatch('clear-fileinput', { detail: { card: this.element } });
   }
 
   onValidateFileInput({ relatedTarget: input }: { relatedTarget: HTMLInputElement }) {
@@ -131,11 +124,17 @@ export default class ImageCardController extends Controller<HTMLDivElement | HTM
   onValidFileInput({ relatedTarget: input }: { relatedTarget: HTMLInputElement }) {
     if (input === this.fileInputTarget) {
       console.log('valid.bs.validator')
-      if (this.isDefaultImage && this.hasIdInputTarget) {
+      const imageType = <string>input.dataset.imageType;
+      const isDefaultReplacement = this.isDefaultImage && this.hasIdInputTarget
+      this.element.classList.add(`image-card--${input.dataset.imageType}`, 'image-card--uploading');
+      this.element.classList.remove('hidden');
+      if (this.hasTypeInputTarget) {
+        this.typeInputTarget.value = imageType;
+      }
+      if (isDefaultReplacement) {
         this.dispatch('replace-default', { detail: { prevDefaultImageId: this.idInputTarget.value } });
         this.idInputTarget.value = '';
       }
-      this.element.classList.add('image-card--uploading');
       $(input).fileupload('send', { files: input.files });
     }
   }
@@ -143,15 +142,18 @@ export default class ImageCardController extends Controller<HTMLDivElement | HTM
   onInvalidFileInput({ relatedTarget: input }: { relatedTarget: HTMLInputElement }) {
     if (input === this.fileInputTarget) {
       console.log('invalid.bs.validator')
+      if (this.parentFormOutlet) {
+        (<HTMLFormElement>this.parentFormOutlet.element).reset();
+      }
+      $(this.formGroupTarget).fileinput('reset');
     }
   }
   
-  onValidatedFileInput({ relatedTarget: input }: { relatedTarget: HTMLInputElement }) {
-    if (input === this.fileInputTarget && !this.isDefaultImage) {
+  onValidatedFileInput(e: any) {
+    const input = e.relatedTarget;
+    if (input === this.fileInputTarget) {
       console.log('validated.bs.validator')
-      if (this.element.classList.contains('hidden')) {
-        this.element.classList.remove('hidden');
-      }
+      this.dispatch('validated', { detail: { fileInput: input } });
     }
   }
 
@@ -192,7 +194,7 @@ export default class ImageCardController extends Controller<HTMLDivElement | HTM
   dispatchMakeDefaultEvent() {
     this.dispatch(
       'make-default', 
-      { detail: { card: this.element, kind: this.kindValue, toggleDefault: this.toggleDefaultValue } }
+      { detail: { card: this.element, kind: this.fileInputTarget.dataset.imageType, toggleDefault: this.toggleDefaultValue } }
     );
   }
 
@@ -201,8 +203,8 @@ export default class ImageCardController extends Controller<HTMLDivElement | HTM
     this.adImageCheckboxTarget.checked = !this.adImageCheckboxTarget.checked;
   }
 
-  openFileDialogValueChanged(newVal: boolean) {
-    if (newVal) {
+  openFileDialogValueChanged(shouldOpen: boolean) {
+    if (shouldOpen) {
       this.fileInputTarget.click();
       this.openFileDialogValue = false;
     }
