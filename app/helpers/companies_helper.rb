@@ -5,24 +5,24 @@ module CompaniesHelper
 
   def uploaded_image_min_dimensions(type = nil)
     min_dimensions = {
-      'SquareImage': {
-        width: RESPONSIVE_AD_SQUARE_IMAGE_MIN
+      'SquareImage' => {
+        width: RESPONSIVE_AD_SQUARE_IMAGE_MIN,
       },
-      'LandscapeImage': {
+      'LandscapeImage' => {
         width: RESPONSIVE_AD_LANDSCAPE_IMAGE_MIN.split('x')[0].to_i,
         height: RESPONSIVE_AD_LANDSCAPE_IMAGE_MIN.split('x')[1].to_i,
         aspect_ratio: RESPONSIVE_AD_LANDSCAPE_IMAGE_ASPECT_RATIO
       },
-      'SquareLogo': {
+      'SquareLogo' => {
         width: RESPONSIVE_AD_SQUARE_LOGO_MIN,
       },
-      'LandscapeLogo': {
+      'LandscapeLogo' => {
         width: RESPONSIVE_AD_LANDSCAPE_LOGO_MIN.split('x')[0].to_i,
         height: RESPONSIVE_AD_LANDSCAPE_LOGO_MIN.split('x')[1].to_i,
         aspect_ratio: RESPONSIVE_AD_LANDSCAPE_LOGO_ASPECT_RATIO
       }
     }
-    type ? min_dimensions[type.to_sym] : min_dimensions
+    type ? min_dimensions[type] : min_dimensions
   end
 
   def sized_image_placeholder(type)
