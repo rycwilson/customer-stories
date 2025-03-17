@@ -103,6 +103,7 @@ export default class AdsController extends FormController<AdsController> {
   }
 
   initPopover(link: HTMLAnchorElement) {
+    const collection = link.dataset.collection;
     $(link).popover({
       html: true,
       container: 'body',
@@ -116,25 +117,22 @@ export default class AdsController extends FormController<AdsController> {
       `,
       content: function () {
         return `
-          <h4><strong>Square ${$(this).is('.marketing') ? 'Image' : 'Logo'}</strong></h4>
-          <span>(${$(this).is('.marketing') ? 'required' : 'optional/recommended'})</span>
+          <h4><strong>Square ${collection === 'images' ? 'Image' : 'Logo'}</strong></h4>
+          <span>(${collection === 'images' ? 'required' : 'optional/recommended'})</span>
           <ul>
             <li>Minimum dimensions: ${$(this).data('square-min')}</li>
             <li>Aspect ratio within 1% of ${$(this).data('square-ratio')}</li>
-            ${$(this).is('.logos') ? 
-              `<li>Suggested dimensions: ${$(this).data('square-suggest')}</li>` : 
-              ''
-            }
+            ${collection === 'logos' ? `<li>Suggested dimensions: ${$(this).data('square-suggest')}</li>` : ''}
             <li>Maximum size: 5MB (5,242,880 bytes)</li>
             <li>Image may be cropped horizontally up to 5% on each side</li>
             <li>Text may cover no more than 20% of the image</li>
-            ${$(this).is('.logos') ?
+            ${collection === 'logos' ?
               '<li>Transparent background is best, but only if the logo is centered</li>' : 
               ''
             }
           </ul>
-          <h4><strong>Landscape ${$(this).is('.marketing') ? 'Image' : 'Logo'}</strong></h4>
-          <span>(${$(this).is('.marketing') ? 'required' : 'optional/recommended'})</span>
+          <h4><strong>Landscape ${collection === 'images' ? 'Image' : 'Logo'}</strong></h4>
+          <span>(${collection === 'images' ? 'required' : 'optional/recommended'})</span>
           <ul>
             <li>Minimum dimensions: ${$(this).data('landscape-min')}</li>
             <li>Aspect ratio within 1% of ${$(this).data('landscape-ratio')}</li>
@@ -145,10 +143,7 @@ export default class AdsController extends FormController<AdsController> {
             <li>Maximum size: 5MB (5,242,880 bytes)</li>
             <li>Image may be cropped horizontally up to 5% on each side</li>
             <li>Text may cover no more than 20% of the image</li>
-            ${$(this).is('.logos') ? 
-              '<li>Transparent background is best, but only if the logo is centered</li>' :
-              ''
-            }
+            ${collection === 'logos' ? '<li>Transparent background is best, but only if the logo is centered</li>' : ''}
           </ul>
         `;
       }
