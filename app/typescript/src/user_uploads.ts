@@ -1,3 +1,4 @@
+import type FormController from './controllers/form_controller'
 import type ImageCardController from './controllers/image_card_controller';
 
 interface JasnyFileInputContainer extends HTMLDivElement {
@@ -166,29 +167,26 @@ function imageDidPersist(img: HTMLImageElement): boolean {
 export function validateFileSize(this: FormController<any>, $fileInput: JQuery<HTMLInputElement, any>): string | undefined {
   console.log('validating file size...')
   if ($fileInput.prop('files')[0].size > $fileInput.data('maxFileSize')) {
-    // console.log('image file size is invalid')
-    return 'Image file size is too big';
+    const error = 'File size must be less than 5.2MB';
+    console.error(error)
+    setTimeout(() => this.element.setAttribute('data-toast-flash-value', JSON.stringify({ alert: error + Date.now() })));
+    return error;
   } else {
-    // console.log('image file size is valid')
+    // valid
   }
 }
 
 // only want to validate new images => a url indicates an existing image
-export function validateImageDimensions($fileInput: JQuery<HTMLInputElement, any>): string | undefined {
+export function validateImageDimensions(this: FormController<any>, $fileInput: JQuery<HTMLInputElement, any>): string | undefined {
   console.log('validating image dimensions...')
-
-  const img = $fileInput.closest('.form-group').find('.fileinput-preview img')[0];
-  // if (imageDidPersist(img)) return;
-  
-  const $imageCard = <JQuery<HTMLLIElement, any>>($fileInput.closest('.image-card') as unknown);
-  const matchGroups = (<string>$imageCard.attr('class'))
-    .match(/--(?<aspectRatio>Square|Landscape)(?<kind>Image|Logo)/)
-    ?.groups;
-  let imageKind = matchGroups ? Object.values(matchGroups).reduce((acc, val) => acc + val, '') : '';
-  let isValid;
+  let isValid, imageType;
+  imageType = $fileInput.data('imageType');
   const collection = $fileInput.data('collection');
-  const width = img.naturalWidth;
-  const height = img.naturalHeight;
+  const width = +<string>$fileInput.attr('data-width');  // this will have been set when the image was loaded into the broswer (see ImageCardController)
+  const height = +<string>$fileInput.attr('data-height');
+  const minWidth: string | undefined = $fileInput.data('minWidth');
+  const minHeight: string | undefined = $fileInput.data('minHeight');
+  console.log(width, height)
   const hasAspectRatio = (requiredAspectRatio: number) => {
     const aspectRatio = width / height;
     const aspectRatioTolerance = Number($fileInput.data('aspect-ratio-tolerance')); 
@@ -208,7 +206,7 @@ export function validateImageDimensions($fileInput: JQuery<HTMLInputElement, any
       height: landscapeLogoMinHeight ,
       aspect_ratio: landscapeLogoAspectRatio
     }
-  } = $fileInput.data('min-dimensions');
+  } = $fileInput.data('minDimensions');
   const isSquareImage = width >= squareImageMin && height >= squareImageMin && hasAspectRatio(1);
   const isLandscapeImage = (
     width >= landscapeImageMinWidth &&
@@ -221,25 +219,31 @@ export function validateImageDimensions($fileInput: JQuery<HTMLInputElement, any
     height >= landscapeLogoMinHeight && 
     hasAspectRatio(landscapeLogoAspectRatio)
   );
-  if (imageKind) {
+  if (imageType) {
     isValid = (
-      (imageKind === 'SquareImage' && isSquareImage) ||
-      (imageKind === 'LandscapeImage' && isLandscapeImage) ||
-      (imageKind === 'SquareLogo' && isSquareLogo) ||
-      (imageKind === 'LandscapeLogo' && isLandscapeLogo)
+      (imageType === 'SquareImage' && isSquareImage) ||
+      (imageType === 'LandscapeImage' && isLandscapeImage) ||
+      (imageType === 'SquareLogo' && isSquareLogo) ||
+      (imageType === 'LandscapeLogo' && isLandscapeLogo)
     );
   } else if (collection === 'images' && (isSquareImage || isLandscapeImage)) {
     isValid = true;
-    imageKind = `${isSquareImage ? 'Square' : 'Landscape'}Image`;
+    imageType = `${isSquareImage ? 'Square' : 'Landscape'}Image`;
   } else if (collection === 'logos' && (isSquareLogo || isLandscapeLogo)) {
     isValid = true;
-    imageKind = `${isSquareLogo ? 'Square' : 'Landscape'}Logo`;
+    imageType = `${isSquareLogo ? 'Square' : 'Landscape'}Logo`;
   }
   if (isValid) {
-    $imageCard
-      .toggleClass(`image-card--${imageKind}`, true)
-      .children('input[name*="[type]"]').val(imageKind);
+    $fileInput.attr('data-image-type', imageType!);
   } else {
-    return 'Image is wrong size';
+    const error = (minWidth && minHeight) ?
+      `Image must be at least ${minWidth}px \u00d7 ${minHeight}px` :
+      'Image does not meet size requirements';
+    console.error(error)
+
+    // use setTimeout to ensure one flash message does not squash another (e.g. both file size and image dimensions fail to validate)
+    // timestamp is for ensuring flashValueChanged is called in the controller (see ToastController)
+    setTimeout(() => this.element.setAttribute('data-toast-flash-value', JSON.stringify({ alert: error + Date.now() })));
+    return error;
   }
 }
