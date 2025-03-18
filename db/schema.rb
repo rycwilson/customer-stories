@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2024_10_21_203633) do
+ActiveRecord::Schema.define(version: 2025_03_18_200506) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_stat_statements"
@@ -509,6 +509,7 @@ ActiveRecord::Schema.define(version: 2024_10_21_203633) do
     t.string "linkedin_company"
     t.string "linkedin_location"
     t.string "linkedin_photo_url"
+    t.boolean "imitable", default: false
     t.index ["company_id"], name: "index_users_on_company_id"
     t.index ["email"], name: "index_users_on_email", unique: true
   end

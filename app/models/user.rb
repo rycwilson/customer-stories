@@ -15,6 +15,8 @@ class User < ApplicationRecord
   has_many :successes, class_name: 'Success', foreign_key: 'curator_id'
   has_many :stories, through: :successes
 
+  scope :imitable, -> { where(imitable: true) }
+
   after_update_commit do 
     dont_publish_as_contributor if linkedin_profile_removed?
 
