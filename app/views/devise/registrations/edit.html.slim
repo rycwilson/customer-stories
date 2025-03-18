@@ -25,7 +25,7 @@ main.container.hidden-xs
               | Impersonate&nbsp;&nbsp;
               span.caret
             ul.dropdown-menu aria-labelledby="impersonate-user"
-              - @imitable_users.each do |user|
+              - User.imitable.order(:first_name).each do |user|
                 li
                   / the synchronous approach has a 401 issue when redirecting to the impersonated user's subdomain
                   /= link_to("#{user.full_name} (#{user.company.name})", impersonate_user_path(user), method: :post)
@@ -43,7 +43,7 @@ main.container.hidden-xs
 
         = form_with( \
             model: current_user,
-            url: user_registration_path,
+            url: update_csp_user_registration_path,
             local: true,
             html: { \
               id: 'user-profile-form',

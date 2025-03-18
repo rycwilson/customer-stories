@@ -39,6 +39,7 @@ Rails.application.routes.draw do
       get('/reset-password', to: 'users/passwords#edit', as: 'edit_csp_user_password')
       put('/reset-password', to: 'users/passwords#update', as: 'reset_user_password')
       get('/user-profile', to: 'users/registrations#edit', as: 'edit_csp_user_registration')
+      patch('/user-profile', to: 'users/registrations#update', as: 'update_csp_user_registration')
     end
   end
 
