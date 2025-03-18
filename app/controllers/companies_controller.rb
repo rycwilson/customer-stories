@@ -59,7 +59,7 @@ class CompaniesController < ApplicationController
       elsif turbo_frame_request_id == 'company-ads-settings'
         image_was_created = company_params[:adwords_images_attributes].to_h.any? { |index, ad| ad[:id].blank? } 
         image_was_destroyed = company_params[:adwords_images_attributes].to_h.any? { |index, ad| ad[:_destroy] == 'true' }
-        flash.now[:notice] = image_was_created ? 'Image has been added' : (image_was_destroyed ? 'Image has been deleted' : 'Default image has been updated')
+        flash.now[:notice] = image_was_created ? 'Image has been added' : (image_was_destroyed ? 'Image was deleted' : 'Default image has been updated')
         render(
           partial: 'companies/dashboard/gads_form', 
           locals: { company: @company, active_collection: params[:company][:active_collection] || 'images' }
@@ -67,7 +67,6 @@ class CompaniesController < ApplicationController
       else
         # TODO: handle case of absent primary CTA
         flash.now[:notice] = 'Account settings have been updated'
-        # binding.pry
         respond_to do |format|
           format.turbo_stream do 
             turbo_stream_actions = [

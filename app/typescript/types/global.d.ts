@@ -39,7 +39,7 @@ type ScreenSize = 'xs' | 'sm' | 'md-lg';
 type ResourceName = 'customerWins' | 'contributions' | 'storyContributions' | 'stories' | 'promotedStories';
 type TomSelectInput = HTMLSelectElement & TomInput;
 type SelectInputKind = 'filter' | 'curator' | 'status' | 'customer' | 'category' | 'product' | 'storyTag' | 'contributor' | 'referrer' | 'invitationTemplate' | 'story';
-type AdImageKind = 'SquareImage' | 'LandscapeImage' | 'SquareLogo' | 'LandscapeLogo';
+type AdImage = 'SquareImage' | 'LandscapeImage' | 'SquareLogo' | 'LandscapeLogo';
 type FlashHash = Partial<{ [key in 'notice' | 'alert' | 'info' | 'warning']: string }>;
 
 interface StringIndexable {

@@ -13,7 +13,6 @@
     class: [ \
       'image-card',
       { "image-card--#{_image[:type]}" => _image[:type].present? },
-      { 'gads-required' => (model == 'AdwordsImage' and _image[:type] =~ /Image/) },
       { 'gads-default' => is_default_ad_image },
       { hidden: (model == 'AdwordsImage' and _image.blank?) },
       { selected: }],
@@ -22,11 +21,11 @@
       controller: 'image-card',
       image_card_form_outlet: model == 'User' ? '#user-profile-form' : (model == 'Customer' ? '#customer-form' : nil),
       image_card_ads_outlet: ('#gads-form' if model == 'AdwordsImage'),
+      image_card_company_profile_outlet: ('#company-profile-form' if model == 'Company'),
       ads_target: (( \
         _image[:default] ? \
           'defaultImageCard' : \
           (_image[:id] ? 'imageCard' : "new#{collection.singularize.capitalize}Card")) if model == 'AdwordsImage'),
-      image_card_company_profile_outlet: ('#company-profile-form' if model == 'Company'),
       action: ('click->image-card#toggleSelected' if model == 'AdwordsAd') }) do
 
   = render('shared/loading_spinner') if upload_enabled

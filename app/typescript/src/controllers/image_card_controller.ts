@@ -56,6 +56,26 @@ export default class ImageCardController extends Controller<HTMLDivElement | HTM
   invalidFileInputHandler = this.onInvalidFileInput.bind(this);
   validatedFileInputHandler = this.onValidatedFileInput.bind(this);
 
+  // jasny-bootstrap will remove and replace the img tag when uploading
+  get imgTarget() {
+    return <HTMLImageElement>this.previewTarget.querySelector(':scope > img');
+  }
+
+  get isDefaultImage() {
+    // return this.element.className.includes('--default');
+    return this.element.classList.contains('gads-default');
+  }
+
+  get fileUploadEnabled() {
+    return this.hasFormGroupTarget;
+  }
+
+  get parentFormOutlet() {
+    if (this.hasFormOutlet) return this.formOutlet;
+    if (this.hasAdsOutlet) return this.adsOutlet;
+    if (this.hasCompanyProfileOutlet) return this.companyProfileOutlet;
+  }
+
   connect() {
     // jquery event listeners necessary for hooking into jquery plugin events
     if (this.fileUploadEnabled) {
@@ -168,10 +188,10 @@ export default class ImageCardController extends Controller<HTMLDivElement | HTM
     this.inputTargets.forEach((input: HTMLInputElement) => input.disabled = !shouldEnable);
   }
   
-  toggleDefaultValueChanged(newVal: boolean, oldVal: boolean) {
-    if (oldVal === undefined || !this.hasDefaultInputTarget) return;
-    this.defaultInputTarget.value = newVal.toString();
-    if (!this.isDefaultImage) this.formGroupTarget.classList.toggle('to-be-default', newVal);
+  toggleDefaultValueChanged(shouldToggleOn: boolean, wasToggledOn: boolean) {
+    if (wasToggledOn === undefined || !this.hasDefaultInputTarget) return;
+    this.defaultInputTarget.value = shouldToggleOn.toString();
+    if (!this.isDefaultImage) this.formGroupTarget.classList.toggle('to-be-default', shouldToggleOn);
   }
 
   deleteImage() {
@@ -194,7 +214,7 @@ export default class ImageCardController extends Controller<HTMLDivElement | HTM
   dispatchMakeDefaultEvent() {
     this.dispatch(
       'make-default', 
-      { detail: { card: this.element, kind: this.fileInputTarget.dataset.imageType, toggleDefault: this.toggleDefaultValue } }
+      { detail: { card: this.element, imageType: this.fileInputTarget.dataset.imageType, toggleDefault: this.toggleDefaultValue } }
     );
   }
 
@@ -210,23 +230,4 @@ export default class ImageCardController extends Controller<HTMLDivElement | HTM
     }
   } 
 
-  get isDefaultImage() {
-    // return this.element.className.includes('--default');
-    return this.element.classList.contains('gads-default');
-  }
-
-  // jasny-bootstrap will remove and replace the img tag when uploading
-  get imgTarget() {
-    return <HTMLImageElement>this.previewTarget.querySelector(':scope > img');
-  }
-
-  get fileUploadEnabled() {
-    return this.hasFormGroupTarget;
-  }
-
-  get parentFormOutlet() {
-    if (this.hasFormOutlet) return this.formOutlet;
-    if (this.hasAdsOutlet) return this.adsOutlet;
-    if (this.hasCompanyProfileOutlet) return this.companyProfileOutlet;
-  }
 }
