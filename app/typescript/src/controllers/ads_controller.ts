@@ -80,19 +80,23 @@ export default class AdsController extends FormController<AdsController> {
   }
 
   setNewDefault({
-    detail: { card, kind, toggleDefault } }: { detail: { card: HTMLLIElement, kind: AdImageKind, toggleDefault: boolean }
+    detail: { card, imageType, toggleDefault } }: { detail: { card: HTMLLIElement, imageType: AdImage, toggleDefault: boolean }
   }) {
-    const sameKind = (_card: HTMLLIElement) => (new RegExp(`--${kind}`)).test(_card.className);
-    [...this.defaultImageCardTargets, ...this.imageCardTargets]
-      .filter(_card => sameKind(_card) && _card !== card && card.dataset.imageId)
-      .forEach(_card => {
-        if (_card.classList.contains('gads-default')) {
-          _card.setAttribute('data-image-card-inputs-enabled-value', toggleDefault ? 'true' : 'false');
-          _card.setAttribute('data-image-card-toggle-default-value', toggleDefault ? 'false' : 'true');
-        } else {
-          _card.setAttribute('data-image-card-toggle-default-value', 'false');
+    const sameType = (_card: HTMLLIElement) => (new RegExp(`--${imageType}`)).test(_card.className);
+    this.defaultImageCardTargets.forEach(defaultImageCard => {
+      if (sameType(defaultImageCard)) {
+        defaultImageCard.setAttribute('data-image-card-toggle-default-value', toggleDefault ? 'false' : 'true');
+        defaultImageCard.setAttribute('data-image-card-inputs-enabled-value', toggleDefault ? 'true' : 'false');
+      }
+    });
+    if (toggleDefault) {
+      this.imageCardTargets.forEach(imageCard => {
+        if (card !== imageCard && sameType(imageCard)) {
+          imageCard.setAttribute('data-image-card-toggle-default-value', 'false');
+          imageCard.setAttribute('data-image-card-inputs-enabled-value', 'false');
         }
       });
+    }
   }
 
   updateActiveCollection({ target: btn }: { target: HTMLAnchorElement }) {
