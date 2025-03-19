@@ -8,6 +8,7 @@ body {
 .companies.new,
 .companies.edit,
 .registrations.edit,
+.registrations.update,    // when there is an error and 422 response
 .stories.edit #story {
   > .container {
     display: flex;

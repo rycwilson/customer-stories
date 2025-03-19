@@ -4,11 +4,11 @@ main.container.hidden-xs
   
   .layout-sidebar
     ul.nav data-controller="nav-list" role="tablist"
-      li class="active"
+      li class=("active" if action_name == 'edit')
         a href="#profile-tab" data-toggle="tab" data-nav-list-target="tab"
           i.fa.fa-fw.fa-user
           | &nbsp;&nbsp;Profile
-      li
+      li class=("active" if action_name == 'update')
         a href="#password-tab" data-toggle="tab" data-nav-list-target="tab"
           i.fa.fa-fw.fa-lock
           | &nbsp;&nbsp;Change Password
@@ -39,7 +39,7 @@ main.container.hidden-xs
   .layout-main
     .tab-content
 
-      #profile-tab.tab-pane.active
+      #profile-tab.tab-pane class=('active' if action_name == 'edit')
 
         = form_with( \
             model: current_user,
@@ -106,5 +106,60 @@ main.container.hidden-xs
               .col-sm-offset-4.col-sm-8.col-md-offset-3.col-md-9.col-lg-offset-2.col-lg-10
                 = form.submit('Save changes', class: 'btn btn-success', data: { user_profile_target: 'submitBtn' })    
 
-      #password-tab.tab-pane
-        = render('devise/registrations/password_form')
+      #password-tab.tab-pane class=('active' if action_name == 'update')
+
+        = form_with( \
+            model: current_user,
+            url: update_csp_user_registration_path,
+            local: true,
+            html: { \
+              id: 'change-password-form',
+              class: 'form-horizontal',
+              novalidate: true,
+              data: { \
+                controller: 'change-password',
+                action: 'submit->change-password#validate' } }) do |form|
+
+          / = render('devise/shared/error_messages', { resource: })
+
+          .form-group 
+            .visible-sm-block.col-sm-offset-2.col-sm-10
+              = form.label(:current_password)
+            = form.label(:current_password, 'Current Password', class: 'control-label col-md-4 visible-md-inline-block visible-lg-inline-block')
+            .col-sm-offset-2.col-sm-10.col-md-offset-0.col-md-8
+              = form.password_field(:current_password, class: 'form-control', required: true, autocomplete: 'current-password')
+              .help-block.with-errors
+                | Required
+
+          .form-group
+            .visible-sm-block.col-sm-offset-2.col-sm-10
+              = form.label(:password, 'New Password')
+            = form.label(:password, 'New Password', class: 'control-label col-md-4 visible-md-inline-block visible-lg-inline-block')
+            .col-sm-offset-2.col-sm-10.col-md-offset-0.col-md-8 
+              = form.password_field( \
+                  :password,
+                  class: 'form-control',
+                  required: true,
+                  minlength: 8,
+                  autocomplete: 'new-password',
+                  data: { change_password_target: 'newPassword' })
+              .help-block.with-errors
+                | Must be at least 8 characters
+
+          .form-group
+            .visible-sm-block.col-sm-offset-2.col-sm-10
+              = form.label(:password_confirmation, 'Confirm New Password')
+            = form.label(:password_confirmation, 'Confirm New Password', class: 'control-label col-md-4 visible-md-inline-block visible-lg-inline-block')
+            .col-sm-offset-2.col-sm-10.col-md-offset-0.col-md-8
+              = form.password_field( \
+                  :password_confirmation,
+                  class: 'form-control',
+                  required: true,
+                  autocomplete: 'new-password',
+                  data: { change_password_target: 'newPasswordConfirmation' })
+              .help-block.with-errors
+                | Passwords must match
+
+          .row
+            .col-sm-offset-2.col-sm-10.col-md-offset-4.col-md-8
+              = form.submit('Submit', class: 'btn btn-success', data: { change_password_target: 'submitBtn' })

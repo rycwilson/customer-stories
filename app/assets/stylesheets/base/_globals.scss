@@ -83,7 +83,7 @@ form {
   }
 
   .form-group {
-    [required]:not([autocomplete="new-password"]) + .help-block {
+    [required]:not([name="user[password]"]) + .help-block {
       display: none;
     }
 
@@ -103,6 +103,12 @@ form {
   &#user-profile-form,
   &#company-profile-form {
     @media (min-width: 1200px)  {
+      position: relative;
+      left: 4rem;
+    }
+  }
+  &#change-password-form {
+    @media (min-width: 992px)  {
       position: relative;
       left: 4rem;
     }

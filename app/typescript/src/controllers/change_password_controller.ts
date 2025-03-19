@@ -1,9 +1,18 @@
+import { type TurboSubmitEndEvent } from '@hotwired/turbo';
 import FormController from './form_controller';
 
 export default class ChangePasswordController extends FormController<ChangePasswordController> {
   static targets = ['newPassword', 'newPasswordConfirmation'];
   declare readonly newPasswordTarget: HTMLInputElement;
   declare newPasswordConfirmationTarget: HTMLInputElement;
+
+  get hasInvalidNewPassword() {
+    return !this.newPasswordTarget.checkValidity();
+  }
+
+  get passwordsDoNotMatch() {
+    return this.newPasswordTarget.value !== this.newPasswordConfirmationTarget.value;
+  }
 
   validate(e: SubmitEvent) {
     let isValid = super.validate(e);
@@ -22,13 +31,5 @@ export default class ChangePasswordController extends FormController<ChangePassw
       this.newPasswordConfirmationTarget.value = '';
     }
     return isValid;
-  }
-
-  get hasInvalidNewPassword() {
-    return !this.newPasswordTarget.checkValidity();
-  }
-
-  get passwordsDoNotMatch() {
-    return this.newPasswordTarget.value !== this.newPasswordConfirmationTarget.value;
   }
 }
