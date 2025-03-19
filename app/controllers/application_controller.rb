@@ -210,7 +210,7 @@ class ApplicationController < ActionController::Base
 
   def company_admin_page?
     controller_name == 'companies' && action_name.in?(['new', 'show', 'edit']) or
-    controller_name == 'registrations' && action_name == 'edit' or
+    controller_name == 'registrations' && action_name.in?(['edit', 'update']) or
     controller_name == 'stories' && action_name == 'edit'
   end
 
