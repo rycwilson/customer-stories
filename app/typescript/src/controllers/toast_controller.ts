@@ -8,8 +8,12 @@ const baseOptions = {
 };
 
 export default class ToastController extends Controller {
-  static values = { flash: { type: Object, default: {} } };
+  static values = { 
+    flash: { type: Object, default: {} },
+    errors: { type: Array, default: [] }
+  };
   declare flashValue: FlashHash;
+  declare errorsValue: string[];
 
   flashValueChanged(flash: FlashHash) {
     console.log('flash:', flash)
@@ -40,5 +44,18 @@ export default class ToastController extends Controller {
         position: type === 'danger' ? 'top-center' : 'bottom-center' 
       });
     }
+  }
+
+  errorsValueChanged(errors: string[]) {
+    console.log('errors:', errors)
+    errors.forEach(error => { 
+      bootoast.toast({ 
+        ...baseOptions, 
+        type: 'danger', 
+        message: error, 
+        timeout: false, 
+        position: 'top-center'
+      });
+    });
   }
 }

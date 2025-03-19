@@ -1,7 +1,7 @@
 # http://stackoverflow.com/questions/6234045/how-do-you-access-devise-controllers
 
 class Users::RegistrationsController < Devise::RegistrationsController
-  layout('landing', only: [:new])
+  layout('landing', only: [:new, :create])
   layout('application', only: [:edit, :update])
   before_action(:configure_sign_up_params, only: [:create])
   before_action(:configure_account_update_params, only: [:update])
@@ -50,7 +50,7 @@ class Users::RegistrationsController < Devise::RegistrationsController
         bypass_sign_in resource, scope: resource_name if sign_in_after_change_password?
         respond_with resource, location: after_update_path_for(resource)
       else
-        flash.now[:alert] = resource.errors.full_messages.join(', ')
+        @errors = resource.errors.full_messages   # must be set before the response
         clean_up_passwords resource
         set_minimum_password_length
         respond_with resource
@@ -97,12 +97,10 @@ class Users::RegistrationsController < Devise::RegistrationsController
   
   private
   
-  # If you have extra params to permit, append them to the sanitizer.
   def configure_sign_up_params
     devise_parameter_sanitizer.permit(:sign_up, keys: [:first_name, :last_name, :sign_up_code, :admin_access_code])
   end
   
-  # If you have extra params to permit, append them to the sanitizer.
   def configure_account_update_params
     devise_parameter_sanitizer.permit(:account_update, keys: [:email, :first_name, :last_name, :photo_url, :title, :phone, :password, :password_confirmation, :current_password])
   end
