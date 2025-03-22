@@ -1,26 +1,54 @@
-#user-profile-form,
-#change-password-form {
+.user-profile {
+  form {
+    width: 100%;
+  }
+  
   input {
     max-width: 28rem;
   }
-}
-
-#user-profile-form {
-  .user-photo {
-    margin-bottom: 2.25rem;
-
-    @media (min-width: 991px) {
-      padding: 0;
-      text-align: right;
+  
+  .input-group {
+    max-width: 28rem;
+    
+    &:not(:has(.input-group-btn)) {
+      width: 100%;
+      
+      input {
+        border-top-right-radius: $input-border-radius;
+        border-bottom-left-radius: $input-border-radius;
+      }
     }
   }
+}
 
-  .form-group {
-    margin-left: 0;
-    margin-right: 0;
-  }
-
+.user-profile__photo {
+  margin-bottom: 2.25rem;
+  
   .image-card {
     display: inline-block;
   }
+}
+
+.user-profile__password {
+  display: flex;
+
+  > [class*="col-"]:not(label) {
+    display: flex;
+    flex-direction: column; 
+    justify-content: flex-end
+  }
+
+  input {
+    &[disabled],
+    &[disabled] ~ .help-block,
+    &:not([disabled]) ~ a {
+      display: none;
+    }
+  }
+
+  // &--current {
+  //   label::before {
+  //     content: 'Current ';
+  //   }
+  // }
 }
