@@ -40,7 +40,7 @@ type ResourceName = 'customerWins' | 'contributions' | 'storyContributions' | 's
 type TomSelectInput = HTMLSelectElement & TomInput;
 type SelectInputKind = 'filter' | 'curator' | 'status' | 'customer' | 'category' | 'product' | 'storyTag' | 'contributor' | 'referrer' | 'invitationTemplate' | 'story';
 type AdImage = 'SquareImage' | 'LandscapeImage' | 'SquareLogo' | 'LandscapeLogo';
-type FlashHash = Partial<{ [key in 'notice' | 'alert' | 'info' | 'warning']: string }>;
+type FlashHash = Partial<{ readonly [key in 'notice' | 'alert' | 'info' | 'warning']: string }>;
 
 interface StringIndexable {
   [key: string]: any;
