@@ -68,21 +68,54 @@ main.user-profile.container.hidden-xs
         .form-group
           = form.label(:first_name, 'First Name', class: 'control-label col-sm-3 col-lg-2')
           .col-sm-9.col-lg-10
-            = form.text_field(:first_name, class: 'form-control', required: true, tabindex: 0)
+            = form.text_field( \
+                :first_name,
+                class: 'form-control',
+                required: true,
+                autocomplete: 'given-name',
+                tabindex: 0,
+                data: { user_profile_target: 'userField', initial_value: form.object.first_name })
             .help-block.with-errors
 
       .col-sm-8
         .form-group
           = form.label(:last_name, 'Last Name', class: 'control-label col-sm-3 col-lg-2')
           .col-sm-9.col-lg-10
-            = form.text_field(:last_name, class: 'form-control', required: true)
+            = form.text_field( \
+                :last_name,
+                class: 'form-control',
+                required: true,
+                autocomplete: 'family-name',
+                data: { user_profile_target: 'userField', initial_value: form.object.last_name })
             .help-block.with-errors
 
       .col-sm-8
         .form-group
           = form.label(:title, 'Job Title', class: 'control-label col-sm-3 col-lg-2')
           .col-sm-9.col-lg-10 
-            = form.text_field(:title, class: 'form-control')
+            = form.text_field( \
+                :title,
+                class: 'form-control',
+                autocomplete: 'organization-title',
+                data: { user_profile_target: 'userField', initial_value: form.object.title })
+
+      .col-sm-offset-4.col-sm-8
+        .form-group
+          = form.label(:phone, class: 'control-label col-sm-3 col-lg-2')
+          .col-sm-9.col-lg-10 
+            / autocomplete is off to avoid browser interpreting this as the username field and offering to save the password
+            / (but it's not working?)
+            = form.telephone_field( \
+                :phone,
+                class: 'form-control',
+                autocomplete: 'tel',
+                required: true,
+                data: { user_profile_target: 'userField', initial_value: form.object.phone })
+            / .input-group
+            /   .input-group-btn 
+            /     button.btn.btn-default type="button" data-action="user-profile#editPhone"
+            /       i.fa.fa-pencil
+            / .help-block
 
       .col-sm-offset-4.col-sm-8
         .form-group
@@ -92,45 +125,58 @@ main.user-profile.container.hidden-xs
               = form.email_field( \
                   :email,
                   class: 'form-control',
+                  autocomplete: 'username',
                   required: true,
                   disabled: true,
-                  data: { user_profile_target: 'emailField', original_value: form.object.email })
+                  data: { user_profile_target: 'emailField' })
               .input-group-btn 
                 button.btn.btn-default type="button" data-action="user-profile#editEmail"
                   i.fa.fa-pencil
-            .help-block.with-errors
+            .help-block
 
       .col-sm-offset-4.col-sm-8
-        .form-group
-          = form.label(:phone, class: 'control-label col-sm-3 col-lg-2')
-          .col-sm-9.col-lg-10 
-            .input-group
-              = form.telephone_field( \
-                  :phone,
-                  class: 'form-control',
-                  required: true,
-                  disabled: true,
-                  data: { user_profile_target: 'phoneField', original_value: form.object.phone })
-              .input-group-btn 
-                button.btn.btn-default type="button" data-action="user-profile#editPhone"
-                  i.fa.fa-pencil
-            .help-block.with-errors
-
+        .user-profile__current-password.form-group
+          = form.label(:current_password, 'Password', class: 'control-label col-sm-3 col-lg-2')
+          .col-sm-9.col-lg-10
+            = form.password_field( \
+                :current_password,
+                class: 'form-control',
+                autocomplete: 'current-password',
+                required: true,
+                disabled: true,
+                data: { user_profile_target: 'currentPasswordField' })
+            a href="javascript:;" data-action="user-profile#changePassword"
+              | Change
+            .help-block 
+      
       .col-sm-offset-4.col-sm-8
         .user-profile__password.form-group
-          = form.label(:password, 'Password', class: 'control-label col-sm-3 col-lg-2')
+          = form.label(:password, 'New Password', class: 'control-label col-sm-3 col-lg-2')
           .col-sm-9.col-lg-10
             = form.password_field( \
                 :password,
                 class: 'form-control',
+                autocomplete: 'new-password',
+                minlength: 8,
                 required: true,
                 disabled: true,
-                autocomplete: 'current-password',
                 data: { user_profile_target: 'passwordField' })
-            a href="javascript:;" data-action="user-profile#changePassword"
-              | Change
-            .help-block 
-              | Your password is required to make these changes
+            .help-block
+              | Must be at least 8 characters
+
+      .col-sm-offset-4.col-sm-8
+        .user-profile__password-confirmation.form-group
+          = form.label(:password_confirmation, 'Confirm New Password', class: 'control-label col-sm-3 col-lg-2')
+          .col-sm-9.col-lg-10
+            = form.password_field( \
+                :password_confirmation,
+                class: 'form-control',
+                autocomplete: 'new-password',
+                required: true,
+                disabled: true,
+                data: { user_profile_target: 'passwordConfirmationField' })
+            .help-block
+              | Passwords must match
 
       .col-sm-offset-4.col-sm-8
         .form-group

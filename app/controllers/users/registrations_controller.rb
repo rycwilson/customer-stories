@@ -37,24 +37,25 @@ class Users::RegistrationsController < Devise::RegistrationsController
   # https://discuss.hotwired.dev/t/forms-without-redirect/1606/22
   # https://github.com/heartcombo/devise/blob/v4.9.0/CHANGELOG.md#490---2023-02-17
   def update
-    if account_update_params[:password].blank?
-      super
-    else
-      self.resource = resource_class.to_adapter.get!(send(:"current_#{resource_name}").to_key)
-      prev_unconfirmed_email = resource.unconfirmed_email if resource.respond_to?(:unconfirmed_email)
-      resource_updated = update_resource(resource, account_update_params)
-      yield resource if block_given?
-      if resource_updated
-        # set_flash_message_for_update(resource, prev_unconfirmed_email)
+    self.resource = resource_class.to_adapter.get!(send(:"current_#{resource_name}").to_key)
+    prev_unconfirmed_email = resource.unconfirmed_email if resource.respond_to?(:unconfirmed_email)
+    resource_updated = update_resource(resource, account_update_params)
+    yield resource if block_given?
+    if resource_updated
+      if account_update_params[:password].present?
         flash[:notice] = 'Password changed successfully'
-        bypass_sign_in resource, scope: resource_name if sign_in_after_change_password?
-        respond_with resource, location: after_update_path_for(resource)
+      elsif account_update_params[:email].present? && resource.email != account_update_params[:email]
+        flash[:notice] = 'Email changed successfully'
       else
-        @errors = resource.errors.full_messages   # must be set before the response
-        clean_up_passwords resource
-        set_minimum_password_length
-        respond_with resource
+        set_flash_message_for_update(resource, prev_unconfirmed_email)
       end
+      bypass_sign_in resource, scope: resource_name if sign_in_after_change_password?
+      respond_with resource, location: after_update_path_for(resource)
+    else
+      @errors = resource.errors.full_messages   # must be set before the response
+      clean_up_passwords resource
+      set_minimum_password_length
+      respond_with resource
     end
   end
 
@@ -76,7 +77,7 @@ class Users::RegistrationsController < Devise::RegistrationsController
 
   # user, @user, resource are all the same thing
   def update_resource resource, params
-    resource.send(params[:password].present? ? :update_with_password : :update_without_password, params)
+    resource.send(params[:current_password].present? ? :update_with_password : :update_without_password, params)
   end
 
   def after_update_path_for resource

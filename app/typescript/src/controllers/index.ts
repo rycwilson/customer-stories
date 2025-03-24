@@ -16,9 +16,6 @@ application.register('btn-group', BtnGroupController);
 import DropdownController from './dropdown_controller.js';
 application.register('dropdown', DropdownController);
 
-import ChangePasswordController from './change_password_controller.js';
-application.register('change-password', ChangePasswordController);
-
 import CompanyCtasController from './company_ctas_controller.js';
 application.register('company-ctas', CompanyCtasController);
 

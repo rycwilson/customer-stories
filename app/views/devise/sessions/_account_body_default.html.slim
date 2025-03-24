@@ -26,7 +26,7 @@ p
         required: true,
         autofocus: true,
         autocomplete: 'email')
-    .help-block.with-errors
+    .help-block
 
   .form-group
     = form.label(:password, class: 'control-label')
@@ -36,7 +36,7 @@ p
         required: true,
         minlength: 8,
         autocomplete: 'current-password')
-    .help-block.with-errors
+    .help-block
 
   .form-group style="display:flex; align-items:center; justify-content:space-between"
     = form.label(:remember_me, class: 'checkbox-inline', style: 'margin:0')

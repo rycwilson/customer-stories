@@ -4,7 +4,6 @@ import type NewCustomerWinController from './new_customer_win_controller';
 import type NewContributionController from './new_contribution_controller';
 import type NewStoryController from './new_story_controller';
 import type UserProfileController from './user_profile_controller';
-import type ChangePasswordController from './change_password_controller';
 import type CompanyProfileController from './company_profile_controller';
 import type InvitationTemplateController from './invitation_template_controller';
 import type ContributorInvitationController from './contributor_invitation_controller';
@@ -20,7 +19,6 @@ export type SubclassController = (
   NewContributionController | 
   NewStoryController |
   UserProfileController |
-  ChangePasswordController |
   CompanyProfileController |
   InvitationTemplateController |
   ContributorInvitationController |

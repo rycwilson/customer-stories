@@ -114,7 +114,7 @@ export function validateForm(e: SubmitEvent): boolean {
   requiredFields.forEach(control => {
     // some select controls are disabled by toggling the [name] attribute, as this precludes ui (style) changes
     // inputs that are disabled via the [disabled] attribute are always valid
-    if (!control.name || control.name === 'user[password_confirmation]') return;
+    if (control.disabled || !control.name || control.name === 'user[password_confirmation]') return;
     isValid = formControlIsValid(control) && isValid;
   });
   form.classList.add('was-validated');

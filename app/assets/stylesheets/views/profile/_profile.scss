@@ -1,26 +1,3 @@
-.user-profile {
-  form {
-    width: 100%;
-  }
-  
-  input {
-    max-width: 28rem;
-  }
-  
-  .input-group {
-    max-width: 28rem;
-    
-    &:not(:has(.input-group-btn)) {
-      width: 100%;
-      
-      input {
-        border-top-right-radius: $input-border-radius;
-        border-bottom-left-radius: $input-border-radius;
-      }
-    }
-  }
-}
-
 .user-profile__photo {
   margin-bottom: 2.25rem;
   
@@ -29,7 +6,25 @@
   }
 }
 
-.user-profile__password {
+.user-profile form {
+  width: 100%;
+  
+  .input-group,
+  input {
+    max-width: 28rem;
+  }
+  
+  .input-group:not(:has(.input-group-btn)) {
+    width: 100%;
+      
+    input {
+      border-top-right-radius: $input-border-radius;
+      border-bottom-left-radius: $input-border-radius;
+    }
+  }
+}
+
+.user-profile__current-password {
   display: flex;
 
   > [class*="col-"]:not(label) {
@@ -43,12 +38,34 @@
     &[disabled] ~ .help-block,
     &:not([disabled]) ~ a {
       display: none;
+
+      &.help-block {
+        margin-top: 0;
+      }
     }
   }
 
-  // &--current {
-  //   label::before {
-  //     content: 'Current ';
-  //   }
-  // }
+  form.has-new-password & {
+    label::before {
+      content: 'Current ';
+    }
+  }
+}
+
+.user-profile__password,
+.user-profile__password-confirmation {
+  display: none;
+  
+  form.has-new-password & {
+    display: block;
+  }
+}
+
+// allow these labels to overflow to the left
+.user-profile__current-password,
+.user-profile__password-confirmation {
+  label {
+    direction: rtl;
+    white-space: nowrap;
+  }
 }
