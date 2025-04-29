@@ -1,8 +1,15 @@
 # http://stackoverflow.com/questions/6234045/how-do-you-access-devise-controllers
 
 class Users::RegistrationsController < Devise::RegistrationsController
-  layout('landing', only: [:new, :create])
-  layout('application', only: [:edit, :update])
+  # this does not work (see below)
+  # layout('landing', only: [:new, :create])
+  # layout('application', only: [:edit, :update])
+
+  # The call to super means the parent controller will determine the layout (and it will use the default 'application'), 
+  # calls to layout in this file (as above) notwithstanding
+  # => this is why the above approach does not work
+  # => set the layout dynamically by passing a lamda
+  layout(-> controller { %w(new create).include?(controller.action_name) ? 'landing' : 'application' })
   before_action(:configure_sign_up_params, only: [:create])
   before_action(:configure_account_update_params, only: [:update])
 
