@@ -3,8 +3,6 @@ DEV_TUNNEL_SUBDOMAIN = "cspdev"
 DEMO_COMPANY_ID = 24
 SAMPLE_COMPANY_ID = 10  # varmour
 
-INDUSTRIES = ['Education', 'Government', 'Financial Services', 'Healthcare', 'Hospitality', 'Manufacturing', 'Media and Entertainment', 'Service Provider', 'Technology', 'IT', 'Telecommunications'];
-
 # LOGO_PLACEHOLDER_URL = "https://s3-us-west-1.amazonaws.com/csp-production-assets/shared/logo-placeholder.png"
 LOGO_PLACEHOLDER = 'placeholders/logo-placeholder.png'
 
