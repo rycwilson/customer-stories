@@ -1,190 +1,69 @@
-INDUSTRIES = %w(
-  Aerospace & Defense
-  Agriculture
-  Automotive 
-  Education 
-  Energy & Utilities 
-  Financial Services 
-  Government 
-  Healthcare & Life Sciences
-  Legal
-  Manufacturing 
-  Marketing & Advertising
-  Media & Entertainment 
-  Non-Profit
-  Professional Services
-  Real Estate & Construction
-  Retail
-  Technology 
-  Telecommunications
-  Transport & Logistics
-  Travel & Hospitality
-  Other
-);
-
-CATEGORIES = [
-  'Tools & Equipment',
-  'Novelty & Entertainment',
-  'Transportation & Mobility',
-  'Science & Technology',
-  'Safety & Security'
-]
-
-PRODUCTS = [
-  'Anvil',
-  'Rocket Sled',
-  'Explosive Tennis Balls',
-  'Earthquake Pills',
-  'Giant Rubber Band',
-  'Invisible Paint',
-  'Jet-Powered Roller Skates',
-  'Trap Door Deluxe',
-  'Pogo Cannon',
-  'Rubber Chicken',
-  'Boomerang Sawblade',
-  'Suction Boots',
-  'Banana Peel Dispenser',
-  'Iron Carrot',
-  'Glue Grenade',
-  'Time-Space Gun',
-]
-
-CUSTOMERS = [
-  { name: "Clearbyte", industry: "Technology" },
-  { name: "Netwise", industry: "Technology" },
-  { name: "Codepath", industry: "Education" },
-  { name: "Signalform", industry: "Telecommunications" },
-  { name: "Fundspring", industry: "Financial Services" },
-  { name: "Trustwell", industry: "Financial Services" },
-  { name: "Blueledger", industry: "Financial Services" },
-  { name: "Yieldstone", industry: "Financial Services" },
-  { name: "Wellara", industry: "Healthcare & Life Sciences" },
-  { name: "Carespire", industry: "Healthcare & Life Sciences" },
-  { name: "Pathwise Health", industry: "Healthcare & Life Sciences" },
-  { name: "Purevita", industry: "Healthcare & Life Sciences" },
-  { name: "Gridline Energy", industry: "Energy & Utilities" },
-  { name: "Solarveil", industry: "Energy & Utilities" },
-  { name: "Nextwell Power", industry: "Energy & Utilities" },
-  { name: "Coreflow Utilities", industry: "Energy & Utilities" },
-  { name: "Harvest & Hearth", industry: "Retail" },
-  { name: "Everfold", industry: "Retail" },
-  { name: "Goldencrate", industry: "Retail" },
-  { name: "Kindroot", industry: "Retail" },
-  { name: "Broadlynx", industry: "Telecommunications" },
-  { name: "Voicefront", industry: "Telecommunications" },
-  { name: "Streamwise", industry: "Media & Entertainment" },
-  { name: "Steelmark", industry: "Manufacturing" },
-  { name: "Ironridge Systems", industry: "Manufacturing" },
-  { name: "Craftline Tools", industry: "Manufacturing" },
-  { name: "Forgeway", industry: "Manufacturing" },
-  { name: "Skyreach Dynamics", industry: "Aerospace & Defense" },
-  { name: "Northbeam Technologies", industry: "Aerospace & Defense" },
-  { name: "Flightcore", industry: "Aerospace & Defense" },
-  { name: "Freightnest", industry: "Transport & Logistics" },
-  { name: "Roadspire", industry: "Transport & Logistics" },
-  { name: "Portlane Group", industry: "Transport & Logistics" },
-  { name: "Earthwell Farms", industry: "Agriculture" },
-  { name: "Greenline Resources", industry: "Agriculture" }
-]
-
-RESULTS = [
-  "Increased sales by 37%",
-  "Reduced response time by 45%",
-  "Boosted customer engagement by 25%",
-  "Elevated productivity by 60%",
-  "Cut operational costs by 30%",
-  "Streamlined supply chain, improving delivery times by 22%",
-  "Boosted customer retention by 40%",
-  "Reduced service downtime by 50%",
-  "Increased employee satisfaction by 35%",
-  "Improved customer satisfaction across all service channels",
-  "Enhanced team collaboration and communication",
-  "Strengthened brand reputation in the industry",
-  "Elevated employee morale through workplace improvements",
-  "Achieved 90% on-time project delivery rate",
-  "Increased customer lifetime value by 15%",
-  "Improved customer support ticket resolution time by 40%",
-  "Increased production efficiency by 12%",
-  "Increased market share by 18%",
-  "Improved net promoter score (NPS) by 10 points",
-  "Increased client trust and long-term partnerships"
-]
-
-def generate_customer_win_and_story
-  format_acme_product = Proc.new { |product| "Acme #{product}" }
-
-  customer = CUSTOMERS.sample
-  customer_name = customer[:name]
-  product = PRODUCTS.sample
-  acme_product = format_acme_product.call(product)
-
-  buzzword = Faker::Company.buzzword.capitalize
-  department = Faker::Commerce.department
-  job_field = Faker::Job.field
-  job_title = Faker::Job.title
-  percentage = rand(25..75)
-  verb = %w[
-    Achieved Boosted Delivered Drove Enabled Enhanced Expanded
-    Elevated Grew Improved Increased Modernized Optimized Strengthened
-    Streamlined Transformed Unlocked Created Accelerated
-  ].sample
-
-  formats = [
-    -> {
-      {
-        customer_win: "#{product} Implementation Project",
-        customer_story: "#{customer_name} #{verb} #{department} Operations with #{acme_product}"
-      }
-    },
-    -> {
-      {
-        customer_win: "#{job_field} Optimization Using #{product}",
-        customer_story: "How #{customer_name} #{verb} Results in #{job_field} with #{acme_product}"
-      }
-    },
-    -> {
-      {
-        customer_win: "#{job_title} Enablement via #{product}",
-        customer_story: "#{customer_name} #{verb} Its #{job_title.pluralize} with #{acme_product}"
-      }
-    },
-    -> {
-      {
-        customer_win: "#{product} Integration in #{department}",
-        customer_story: "#{customer_name} #{verb} #{department} Workflows with #{acme_product}"
-      }
-    },
-    -> {
-      {
-        customer_win: "#{buzzword} Initiative: #{product} Rollout",
-        customer_story: "#{customer_name} #{verb} Business Outcomes with Its #{buzzword} Initiative and #{acme_product}"
-      }
-    },
-    -> {
-      {
-        customer_win: "Deployment of #{product} Across #{job_field}",
-        customer_story: "#{customer_name} #{verb} #{job_field} Performance by Scaling #{acme_product}"
-      }
-    },
-    -> {
-      {
-        customer_win: "Performance Gains Through #{product} Adoption",
-        customer_story: "#{customer_name} #{verb} Efficiency by #{percentage}% Using #{acme_product}"
-      }
-    },
-    -> {
-      {
-        customer_win: "Modernizing #{department} with #{product}",
-        customer_story: "#{customer_name} #{verb} #{department} Productivity by #{percentage}% with #{acme_product}"
-      }
-    },
-    -> {
-      {
-        customer_win: "Revamping #{job_field} Processes with #{product}",
-        customer_story: "#{customer_name} #{verb} #{job_field} Throughput by #{percentage}% Thanks to #{acme_product}"
-      }
-    }
-  ]
-
-  formats.sample.call
+# Destroy existing data
+acme = Company.find_by(subdomain: 'acme-test')
+if acme
+  # Destroy associated data to avoid orphaning
+  User.joins(:contributions).where(contributions: { success: { company_id: acme.id } }).destroy_all
+  acme.destroy
 end
+
+# Create Acme company
+acme = Company.create!(name: 'Acme Test', subdomain: 'acme-test', website: 'https://example.com')
+
+# Associate curators
+curators = User.where(email: ['rycwilson@gmail.com', 'acme-test@customerstories.net'])
+curators.each { |curator| acme.curators << curator }
+
+# Create story categories
+story_categories = SeedData::CATEGORIES.map { |category| acme.story_categories.create!(category) }
+
+# Create products
+products = SeedData::PRODUCTS.map { |product| acme.products.create!(name: product[:name]) }
+
+# Create customers and their associated data
+SeedData::CUSTOMERS.each do |customer_data|
+  customer = acme.customers.create!(name: customer_data[:name])
+
+  # Create users for the customer
+  users = 4.times.map do
+    first_name = Faker::Name.unique.first_name
+    last_name = Faker::Name.unique.last_name
+    customer.users.create!(
+      first_name: first_name,
+      last_name: last_name,
+      email: "#{first_name.downcase}@#{customer.name.downcase.gsub(/\s+/, '')}.com"
+    )
+  end
+
+  # Create successes and associated data
+  4.times do |i|
+    success_data = SeedData.generate_success_and_story
+    success = customer.successes.create!(name: success_data[:success_name])
+
+    # Associate story with 3 of the 4 successes
+    if i < 3
+      story = success.create_story!(title: success_data[:story_title],
+                                    logo_published: i == 1 || i == 2,
+                                    published: i == 2)
+
+      # Add results to the story
+      SeedData::RESULTS.sample(rand(2..3)).each do |result|
+        story.results.create!(description: result)
+      end
+    end
+
+    # Add contributions to the success
+    3.times do |j|
+      contributor = users[j]
+      referrer = j == 2 ? users.last : nil
+      success.contributions.create!(contributor: contributor, referrer: referrer)
+    end
+
+    # Associate success with a random story category and product
+    success.update!(story_category: story_categories.sample, product: products.sample)
+  end
+end
+
+# Create invitation templates
+acme.invitation_templates.create!(SeedData::CUSTOMER_INVITATION_TEMPLATE)
+acme.invitation_templates.create!(SeedData::CUSTOMER_SUCCESS_INVITATION_TEMPLATE)
+acme.invitation_templates.create!(SeedData::SALES_INVITATION_TEMPLATE)

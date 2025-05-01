@@ -1,0 +1,32 @@
+In the file #seeds.rb, you are to create the necessary code to populate the database with seed data useful for development, testing, and demonstration. 
+
+All seed data will be related to a single Company instance (#company.rb) with the following attributes: `{ name: ‘Acme Test’, subdomain: ‘acme-test’, website: ‘https://example.com' }` This company instance will hereafter be referred to as “Acme”.
+
+Seed data is to be generated for the following models: #company.rb, #customer.rb, #success.rb, #contribution.rb, #user.rb, #story_category.rb, #product.rb, #story.rb, #result.rb, and #invitation_template.rb. Data will also need to be created for any `join` tables that exist for associating these models.
+
+All data should belong (directly or indirectly) to Acme. Associations defined in the model files should guide you in creating and/or destroying the data. You should make use of association methods as much as possible.
+
+Acme will have two associated `curators`. These users will already exist in the database and can be found via their `email` attribute: `rycwilson@gmail.com` and `acme-test@customerstories.net`. These users should not be modified in any way beyond being associated with Acme as `curators`.
+
+In the file #seed_data.rb, you will find the `SeedData` module containing constants and methods to assist you.
+
+The names of Acme’s customers can be found in `SeedData::CUSTOMERS`. You may ignore the `industry` key.
+
+Each customer should have 4 `successes` (#success.rb). Of the 4 successes, 3 should have an associated `story` (#story.rb) and 1 should not. You can use `SeedData.generate_success_and_story` to generate the `name` of a success and the `title` of its associated story (if the story exists). Be sure to use a single return value from this method to determine the name of a given success and the title of its associated story, as they are intended to relate to one another.
+
+A story’s publish state is determined via the attributes `logo_published` and `published`. Of a given customer’s 3 associated stories, one should have both of these values set to `false`, one should have `logo_published` set to `true` and `published` set to false, and one should have both `logo_published` and `published` set to true.
+
+Each success should have 3 `contributions`. A contribution should always have a `contributor` (#user.rb) and of the 3 contributions associated with a given success, 1 should also have a `referrer` (#user.rb). Any contributors or referrers associated with a given success should be unique. In order to minimize the number of `User` instances that must be created, you may create a pool of 4 users for a given customer and re-use those users as contributors and referrers for that customer’s associated contributions. User name attributes can be generated from `Faker::Name.unique.first_name` and `Faker::Name.unique.last_name`. Users associated with a given customer can be given an email address with the format first_name@customer_name.com.
+
+Each success with an associated story should have 2 or 3 `results` that may be randomly sampled from `SeedData::RESULTS`. If a success does not have an associated story, it needn’t have associated results.
+
+Acme should have `story_categories` (#story_category.rb) as defined in `SeedData::CATEGORIES` and `products` (#product.rb) as defined in `SeedData::PRODUCTS`. Each success should be associated with one story category and one product. The story category may be chosen at random. `SeedData::PRODUCTS` contains a `category` key that should allow you to sample a correct product for a given story category (note that this category key is not part of product instance attributes).
+
+Acme should have three `invitation_templates` (#invitation_template.rb) as defined in `SeedData::CUSTOMER_INVITATION_TEMPLATE`, `SeedData::CUSTOMER_SUCCESS_INVITATION_TEMPLATE`, and `SeedData::SALES_INVITATION_TEMPLATE`.
+
+IMPORTANT: The first step in seeding is to destroy any and all seed data that was previously created, starting with the Acme instance. This should be straightforward given that most data directly or indirectly belongs to Acme and `dependent: :destroy` is utilized throughout. In the case of `User` instances, you should avoid orphaning users by first deleting any user that is associated (as a contributor or referrer) with one of Acme’s contributions. The idea is that the seeds file can be run repeatedly with each run creating a fresh set of seed data and without any accumulation of orphaned data from previous seed runs.
+
+If I have omitted any detail that you require, please ask for clarification before generating any code.
+
+If you have any suggestions for refactors (e.g. in the way associations have been set up) that might improve the seeding process, please share them.
+
