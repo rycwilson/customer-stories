@@ -22,7 +22,7 @@ class Contribution < ApplicationRecord
 
   # associations
   belongs_to :success, inverse_of: :contributions
-  belongs_to :contributor, class_name: 'User', foreign_key: 'contributor_id', optional: true
+  belongs_to :contributor, class_name: 'User', foreign_key: 'contributor_id'
 
   # this is a handy way to select a limited set of attributes
   belongs_to(
@@ -37,9 +37,9 @@ class Contribution < ApplicationRecord
   has_one :company, through: :success
   has_one :curator, through: :success
   has_one :story, through: :success
+  belongs_to :invitation_template, optional: true
   has_one :contributor_invitation, dependent: :destroy
   alias_attribute :invitation, :contributor_invitation
-  belongs_to :invitation_template, optional: true
   has_many :contributor_questions, through: :invitation_template
   alias_attribute :questions, :contributor_questions
   has_many :contributor_answers, dependent: :destroy do
