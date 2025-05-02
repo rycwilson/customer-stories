@@ -15,7 +15,7 @@ class Success < ApplicationRecord
 
   has_one :story, dependent: :destroy
 
-  has_many :results, dependent: :destroy
+  has_many :results, dependent: :destroy    # leave this in place until production db is migrated!
 
   has_and_belongs_to_many(
     :products, 
