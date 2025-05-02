@@ -33,7 +33,7 @@ class Company < ApplicationRecord
   end
   has_many :contributions, -> { includes(:contributor, :referrer, success: { customer: {} }) }, through: :successes
   has_many :contributors, -> { distinct }, through: :customers
-  has_many :referrers, -> { distinct }, through: :contributions, source: :referrer
+  has_many :referrers, -> { distinct }, through: :contributions
   has_many :stories, through: :successes do
     def select_options
       self.published
