@@ -269,9 +269,9 @@ class StoriesController < ApplicationController
       success_attributes: [
         :id, :name, :customer_id, :curator_id,
         product_ids: [], story_category_ids: [],
-        results_attributes: [:id, :description, :_destroy],
         customer_attributes: [:id, :name, :logo_url, :show_name_with_logo, :company_id]
       ],
+      results_attributes: [:id, :description, :_destroy],
       topic_ad_attributes: [:id, :adwords_ad_group_id, :ad_id, :status, :_destroy],
       retarget_ad_attributes: [:id, :adwords_ad_group_id, :ad_id, :status, :_destroy]
     )

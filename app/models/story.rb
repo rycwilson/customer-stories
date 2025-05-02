@@ -17,7 +17,7 @@ class Story < ApplicationRecord
   has_many :visitors, -> { select('visitors.*, visitor_actions.timestamp, visitor_sessions.clicky_session_id').distinct }, through: :page_views
   has_many :category_tags, through: :success, source: :story_categories
   has_many :product_tags, through: :success, source: :products
-  has_many :results, through: :success
+  has_many :results, dependent: :destroy
   has_many :ctas, through: :success, source: :ctas do
     # for rendering modals
     def forms
@@ -67,6 +67,7 @@ class Story < ApplicationRecord
     is_published: 4
   }
 
+  accepts_nested_attributes_for(:results, allow_destroy: true)
   accepts_nested_attributes_for(:topic_ad, allow_destroy: true)
   accepts_nested_attributes_for(:retarget_ad, allow_destroy: true)
 
