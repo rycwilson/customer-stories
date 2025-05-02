@@ -56,6 +56,21 @@ nav.company-nav.navbar-fixed-top.hidden-xs data-controller="header"
             = button_to(destroy_user_session_path, method: :delete, data: { turbo: 'false' }) do
               i.fa.fa-fw.fa-sign-out
               | Sign out
+          - if true_user.admin?
+            li.divider role="separator"
+            li.dropdown-header.dropdown-header--admin
+              = "Admin:\u00a0\u00a0Impersonate User"
+            li.divider role="separator"
+            - User.imitable.order(:first_name).each do |user|
+                li
+                  / the synchronous approach has a 401 issue when redirecting to the impersonated user's subdomain
+                  /= link_to("#{user.full_name} (#{user.company.name})", impersonate_user_path(user), method: :post)
+                  = link_to( \
+                      "#{user.full_name} (#{user.company.name})", 
+                      impersonate_user_path(user), 
+                      method: :post, 
+                      remote: true, 
+                      format: :js)
         /div
       
       / dropdown disabled when on companies#edit due to:

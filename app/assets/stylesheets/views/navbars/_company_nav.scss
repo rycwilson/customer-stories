@@ -6,6 +6,20 @@
   }
 }
 
+.dropdown-header--admin {
+  margin: -9px 0;
+  padding-top: 9px;
+  padding-bottom: 9px;
+  background-color: $state-warning-bg;
+  font-size: $font-size-base;
+  font-weight: 600;
+  color: $state-warning-text;
+
+  ~ li {
+    font-size: $font-size-small;
+  }
+}
+
 .company-nav {
   border-top: 2px solid transparent;  // leave some space for turbo progress bar
   border-bottom: 1px solid #dfdfdf;

@@ -1,45 +1,6 @@
 = render('shared/navbars/company_nav', { company: current_user.company, workflow_stage: nil })
 
 main.user-profile.container.hidden-xs
-  
-  /.layout-sidebar
-    ul.nav data-controller="nav-list" role="tablist"
-      li class=("active" if action_name == 'edit')
-        a href="#profile-tab" data-toggle="tab" data-nav-list-target="tab"
-          i.fa.fa-fw.fa-user
-          | &nbsp;&nbsp;Profile
-      li class=("active" if action_name == 'update')
-        a href="#password-tab" data-toggle="tab" data-nav-list-target="tab"
-          i.fa.fa-fw.fa-lock
-          | &nbsp;&nbsp;Change Password
-    - if true_user.admin?
-      .admin-sidebar
-        h4.text-danger Admin
-        .text-center
-          #impersonate-user.btn-group
-            button.btn.btn-default.dropdown-toggle {
-              type="button" 
-              data-toggle="dropdown" 
-              aria-haspopup="true" 
-              aria-expanded="false" }
-              | Impersonate&nbsp;&nbsp;
-              span.caret
-            ul.dropdown-menu aria-labelledby="impersonate-user"
-              - User.imitable.order(:first_name).each do |user|
-                li
-                  / the synchronous approach has a 401 issue when redirecting to the impersonated user's subdomain
-                  /= link_to("#{user.full_name} (#{user.company.name})", impersonate_user_path(user), method: :post)
-                  = link_to( \
-                      "#{user.full_name} (#{user.company.name})", 
-                      impersonate_user_path(user), 
-                      method: :post, 
-                      remote: true, 
-                      format: :js)
-                    
-  /.layout-main
-    .tab-content
-
-      /#profile-tab.tab-pane class=('active' if action_name == 'edit')
 
   = form_with( \
       model: current_user,
