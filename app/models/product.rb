@@ -3,6 +3,7 @@ class Product < ApplicationRecord
 
   belongs_to :company
   has_and_belongs_to_many :successes
+  has_and_belongs_to_many :contributor_prompts, dependent: :destroy
   has_many :stories, through: :successes
   has_many :customers, through: :successes
 

@@ -5,6 +5,9 @@ class InvitationTemplate < ApplicationRecord
   has_many :contributions
   has_many :templates_questions, dependent: :destroy
   has_many :contributor_questions, through: :templates_questions
+  
+  has_and_belongs_to_many :contributor_prompts, dependent: :destroy
+  
   alias_attribute :questions, :contributor_questions
   accepts_nested_attributes_for(
     :templates_questions,
