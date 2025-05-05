@@ -57,6 +57,7 @@ export function initDisplayOptions(this: ResourceController, isReset = false) {
       html: true,
       animation: false,
       container: 'body',
+      viewport: { selector: 'body', padding: 70 },
       title: 'Display Preferences',
       placement: 'auto left',
       template: `
