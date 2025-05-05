@@ -1,13 +1,35 @@
+require_relative 'seed_data'
+
 # Destroy existing data
 acme = Company.find_by(subdomain: 'acme-test')
 if acme
-  # Destroy associated data to avoid orphaning
-  User.joins(:contributions).where(contributions: { success: { company_id: acme.id } }).destroy_all
+  # Detach curators to avoid foreign key issues (they will be reinstated below)
+  acme.curators.update_all(company_id: nil)
+
+  # Delete associated users to prevent orphaning
+  (acme.contributors + acme.referrers).uniq.each do |user|
+    is_curator = user.successes.any?
+    contributes_to_others = user.customers.any? { |customer| customer.company != acme}
+    user.destroy unless (is_curator or contributes_to_others)
+  end
+
+  # Destroy the Acme company and its dependent data
   acme.destroy
 end
 
 # Create Acme company
-acme = Company.create!(name: 'Acme Test', subdomain: 'acme-test', website: 'https://example.com')
+acme = Company.new(
+  name: 'Acme Test',
+  subdomain: 'acme-test',
+  website: 'https://example.com',
+  header_color_1: '#FFFFFF',
+  header_color_2: '#FF0000',
+  primary_cta_background_color: '#FF0000',
+  primary_cta_text_color: '#FFFFFF',
+  adwords_short_headline: 'Acme Customer Stories'
+)
+acme.skip_callbacks = true    # Skip callbacks to avoid unnecessary processing during seed
+acme.save!
 
 # Associate curators
 curators = User.where(email: ['rycwilson@gmail.com', 'acme-test@customerstories.net'])
@@ -21,33 +43,64 @@ products = SeedData::PRODUCTS.map { |product| acme.products.create!(name: produc
 
 # Create customers and their associated data
 SeedData::CUSTOMERS.each do |customer_data|
-  customer = acme.customers.create!(name: customer_data[:name])
+  customer = acme.customers.create!(customer_data)
 
   # Create users for the customer
   users = 4.times.map do
     first_name = Faker::Name.unique.first_name
     last_name = Faker::Name.unique.last_name
-    customer.users.create!(
-      first_name: first_name,
-      last_name: last_name,
-      email: "#{first_name.downcase}@#{customer.name.downcase.gsub(/\s+/, '')}.com"
+    email = "#{first_name.downcase}@#{customer.name.downcase.gsub(/\s+/, '')}.com"
+    User.create!(
+      first_name:,
+      last_name:,
+      email:,
+      password: email,
+      sign_up_code: 'csp_beta'
     )
-  end
+  end.shuffle
 
   # Create successes and associated data
   4.times do |i|
-    success_data = SeedData.generate_success_and_story
-    success = customer.successes.create!(name: success_data[:success_name])
+    success_data = nil
+    success = nil
 
+    loop do
+      begin
+        success_data = SeedData.generate_success_and_story
+        success = customer.successes.create!(name: success_data[:success_name], curator_id: curators.sample.id)
+        break
+
+      # The seed data might return a duplicate success name
+      rescue ActiveRecord::RecordInvalid => e
+        puts "Creating a success failed: #{e.message}. Retrying..."
+      end
+    end
+    
     # Associate story with 3 of the 4 successes
     if i < 3
-      story = success.create_story!(title: success_data[:story_title],
-                                    logo_published: i == 1 || i == 2,
-                                    published: i == 2)
+      loop do
+        begin
+          story = success.build_story(
+            title: success_data[:story_title],
+            logo_published: i == 1 || i == 2,
+            published: i == 2
+          )
+    
+          # For the unpublished story, allow for a default narrative and empty results
+          unless i == 0
+            story.narrative = Array.new(rand(10..15)) { SeedData.lorem_paragraph_html }.join
+            SeedData::RESULTS.sample(rand(2..4)).each do |result|
+              story.results.build(description: result)
+            end
+          end
+          
+          story.save!
+          break
 
-      # Add results to the story
-      SeedData::RESULTS.sample(rand(2..3)).each do |result|
-        story.results.create!(description: result)
+        # The seed data might return a duplicate story title
+        rescue ActiveRecord::RecordInvalid => e
+          puts "Creating a story for success failed: #{e.message}. Retrying..."
+        end
       end
     end
 
@@ -55,15 +108,29 @@ SeedData::CUSTOMERS.each do |customer_data|
     3.times do |j|
       contributor = users[j]
       referrer = j == 2 ? users.last : nil
-      success.contributions.create!(contributor: contributor, referrer: referrer)
+      success.contributions.create!(contributor:, referrer:)
     end
 
     # Associate success with a random story category and product
-    success.update!(story_category: story_categories.sample, product: products.sample)
+    product = acme.products.sample
+    product_category_name = SeedData::PRODUCTS.find { |p| p[:name] == product.name }[:category]
+    category = acme.story_categories.where(name: product_category_name)&.first || story_categories.sample
+    success.story_categories << category
+    success.products << product
   end
 end
 
 # Create invitation templates
-acme.invitation_templates.create!(SeedData::CUSTOMER_INVITATION_TEMPLATE)
-acme.invitation_templates.create!(SeedData::CUSTOMER_SUCCESS_INVITATION_TEMPLATE)
-acme.invitation_templates.create!(SeedData::SALES_INVITATION_TEMPLATE)
+begin
+  acme.invitation_templates.create!(SeedData::CUSTOMER_INVITATION_TEMPLATE)
+  acme.invitation_templates.create!(SeedData::CUSTOMER_SUCCESS_INVITATION_TEMPLATE)
+  acme.invitation_templates.create!(SeedData::SALES_INVITATION_TEMPLATE)
+rescue ActiveRecord::RecordInvalid => e
+  puts "Creating invitation templates failed: #{e.message}"
+end
+
+# Create contributor prompts
+SeedData::CONTRIBUTOR_PROMPTS.each do |prompt_data|
+  invitation_template = acme.invitation_templates.find_by(name: prompt_data[:role])
+  invitation_template.contributor_prompts << acme.contributor_prompts.create!(prompt_data.except(:role))
+end
