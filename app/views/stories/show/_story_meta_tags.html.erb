@@ -1,4 +1,3 @@
-
 <meta property="og:type" content="article">
 <meta property="og:site_name" content="<%= company.name %> Customer Stories">
 <meta property="og:title" content="<%= story.og_title || story.title %>">
@@ -63,7 +62,7 @@
     },
     "about": <%= raw story.about_jsonld.to_json %>,
     "headline": "<%= story.title %>",
-    "alternativeHeadline": <%= raw success.results.pluck('description').to_json %>,
+    "alternativeHeadline": <%= raw story.results.pluck('description').to_json %>,
     "articleBody": "<%= story.narrative %>",
     // "url": "<%= story.csp_story_url %>",
     "genre": "<%= success.story_categories.take.try(:name) %>",

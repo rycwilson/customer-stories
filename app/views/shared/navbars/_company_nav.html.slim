@@ -7,7 +7,6 @@ nav.company-nav.navbar-fixed-top.hidden-xs data-controller="header"
       .welcome-mesg
         h4
           = "Complete sign-up by configuring your #{devise_controller? ? '<a href="' + new_company_path + '">account settings</a>' : 'account settings'}.".html_safe
-          / = "Welcome to Customer Stories.\u00A0\u00A0Please #{controller_name == 'profile' ? '<a href="' + new_company_path + '">register</a>' : 'register'} your company.".html_safe
             
     - else
       / https://stackoverflow.com/questions/556153
