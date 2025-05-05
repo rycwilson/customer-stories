@@ -9,7 +9,8 @@ if acme
   # Delete associated users to prevent orphaning
   (acme.contributors + acme.referrers).uniq.each do |user|
     is_curator = user.successes.any?
-    contributes_to_others = user.customers.any? { |customer| customer.company != acme}
+    customers = Customer.joins(:contributions).where('contributions.contributor_id = ? OR contributions.referrer_id = ?', user.id, user.id).distinct
+    contributes_to_others = customers.any? { |customer| customer.company != acme}
     user.destroy unless (is_curator or contributes_to_others)
   end
 
