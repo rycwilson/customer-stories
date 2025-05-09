@@ -347,80 +347,6 @@ class Company < ApplicationRecord
     end
   end
 
-  #
-  # method returns a fragment cache key that looks like this:
-  #
-  #   #{self.subdomain}/stories-gallery-[category-{tag_id}-product-{tag_id}-]memcache-iterator-xx
-  #
-  # category tag and product tag are optional
-  # xx is the memcache iterator
-  #
-  def stories_gallery_cache_key (filter_params)
-    mi = self.stories_gallery_fragments_memcache_iterator
-    category_key = filter_params['category'].present? ? "category-#{filter_params[:category]}-" : ''
-    product_key = filter_params['product'].present? ? "product-#{filter_params[:product]}-" : ''
-    "#{self.subdomain}/stories-gallery-#{category_key}#{product_key}memcache-iterator-#{mi}"
-  end
-
-  #
-  # two methods below return a fragment cache key that looks like this:
-  #
-  #   trunity/category-select-xx-memcache-iterator-yy
-  #
-  #   xx is the selected category id (0 if none selected)
-  #   yy is the memcache iterator
-  #
-  def category_select_cache_key (category_id)
-    "#{self.subdomain}/" +
-    "category-select-#{category_id}-memcache-iterator-" +
-    "#{self.category_select_fragments_memcache_iterator}"
-  end
-
-  def product_select_cache_key (product_id)
-    "#{self.subdomain}/" +
-    "product-select-#{product_id}-memcache-iterator-" +
-    "#{self.product_select_fragments_memcache_iterator}"
-  end
-
-  #
-  # category/product select fragments (all and pre-selected) invalidated by:
-  # -> attach/detach tags IF the story has logo published
-  # -> story publish state IF story is tagged
-  #
-  def category_select_fragments_memcache_iterator
-    Rails.cache.fetch(
-      "#{self.subdomain}/category-select-fragments-memcache-iterator"
-    ) { rand(10) }
-  end
-
-  def increment_category_select_fragments_memcache_iterator
-    Rails.cache.write(
-      "#{self.subdomain}/category-select-fragments-memcache-iterator",
-      self.category_select_fragments_memcache_iterator + 1
-    )
-  end
-
-  def product_select_fragments_memcache_iterator
-    Rails.cache.fetch(
-      "#{self.subdomain}/product-select-fragments-memcache-iterator") { rand(10) }
-  end
-
-  def increment_product_select_fragments_memcache_iterator
-    Rails.cache.write(
-      "#{self.subdomain}/product-select-fragments-memcache-iterator",
-      self.product_select_fragments_memcache_iterator + 1)
-  end
-
-  def expire_ll_cache(*keys)
-    keys.each { |key| Rails.cache.delete("#{self.subdomain}/#{key}") }
-  end
-
-  def expire_fragment_cache(key)
-    if fragment_exist?("#{self.subdomain}/#{key}")
-      self.expire_fragment("#{self.subdomain}/#{key}")
-    end 
-  end
-
   def curator? current_user=nil
     return false if current_user.nil?
     current_user.company_id == self.id
@@ -456,37 +382,6 @@ class Company < ApplicationRecord
 
   def latest_story_modified_date
     self.stories.where(logo_published: true).order(logo_publish_date: :desc).take.try(:logo_publish_date)
-  end
-
-  # changes to company colors expires all gallery fragments
-  def expire_gallery_fragment_cache
-    self.increment_stories_gallery_fragments_memcache_iterator
-    self.increment_story_card_fragments_memcache_iterator
-  end
-
-  # expiration of a story card fragment with logo published expires all stories gallery fragments
-  # rand(10) provides an initial value if none exists
-  def stories_gallery_fragments_memcache_iterator
-    Rails.cache.fetch("#{self.subdomain}/stories-gallery-fragments-memcache-iterator") { rand(10) }
-  end
-
-  def increment_stories_gallery_fragments_memcache_iterator
-    Rails.cache.write(
-      "#{self.subdomain}/stories-gallery-fragments-memcache-iterator",
-      self.stories_gallery_fragments_memcache_iterator + 1
-    )
-  end
-
-  # all story fragments must be expired if these attributes change: header_color_1, header_text_color
-  def story_card_fragments_memcache_iterator
-    Rails.cache.fetch("#{self.subdomain}/stories-card-fragments-memcache-iterator") { rand(10) }
-  end
-
-  def increment_story_card_fragments_memcache_iterator
-    Rails.cache.write(
-      "#{self.subdomain}/stories-card-fragments-memcache-iterator",
-      self.story_card_fragments_memcache_iterator + 1
-    )
   end
 
   def recent_activity days_offset  # today = 0
@@ -827,9 +722,7 @@ class Company < ApplicationRecord
   # when scheduling, make sure this doesn't collide with clicky:update
   # possible to check on run status of rake task?
   def send_analytics_update
-    visitors = Rails.cache.fetch("#{self.subdomain}/visitors-chart-default") do
-                 self.visitors_chart_json
-               end
+    visitors = visitors_chart_json
     total_visitors = 0
     visitors.each { |group| total_visitors += group[1] }
     # columns as days or weeks?
@@ -850,9 +743,7 @@ class Company < ApplicationRecord
     # don't bother applying axes labels if there is no data ...
     # visitors.unshift(axesLabels) if visitors.length > 0
 
-    # referrer_types = Rails.cache.fetch("#{self.subdomain}/referrer-types-default") do
-    #                    self.visitors_chart_json
-    #                  end
+    # referrer_types = visitors_chart_json
     {
       visitors: Gchart.bar({
                   data: visitors

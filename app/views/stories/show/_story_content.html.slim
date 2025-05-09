@@ -16,7 +16,6 @@ div class="#{'cs-' if is_plugin}container"
       .visible-xs-block
         - if story.results.present?
           hr
-          /- cache("#{company.subdomain}/stories/#{story.id}/#{is_plugin ? 'cs-' : ''}results", skip_digest: true) do
           = render('stories/show/results', { company: company, story: story, is_plugin: is_plugin })
 
         - if story.ctas.present?
@@ -38,7 +37,6 @@ div class="#{'cs-' if is_plugin}container"
 
     .story-sidebar.hidden-xs.col-sm-6.col-md-5
       - if story.results.present?
-        /- cache("#{company.subdomain}/stories/#{story.id}/#{is_plugin ? 'cs-' : ''}results", skip_digest: true) do
         = render('stories/show/results', { company: company, story: story, is_plugin: is_plugin })
 
       - if story.ctas.present?
@@ -73,7 +71,6 @@ div class="#{'cs-' if is_plugin}container"
               = render('stories/shared/share_buttons', { story: story, is_plugin: is_plugin })
 
       - if company.subdomain != 'pixlee' && contributors.present? && (window_width.nil? || window_width.to_i >= 768)
-        /- cache("#{company.subdomain}/stories/#{story.id}/contributors", skip_digest: true) do
         = render( \
             'stories/show/contributors',
             { company: company,

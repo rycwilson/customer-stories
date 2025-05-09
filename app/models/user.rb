@@ -24,23 +24,8 @@ class User < ApplicationRecord
     if photo_was_updated
       S3Util.delete_object(S3_BUCKET, previous_changes[:photo_url].first)
     end
-    
-    # expire cache
-    # Company
-      # .joins(:curators)
-      # .joins(:contributions)
-      # .distinct()
-      # .where('users.id = ? OR contributions.contributor_id = ? OR contributions.referrer_id = ?', self.id, self.id, self.id)
-      # .each do |company| 
-        # company.expire_ll_cache('successes-json', 'contributions-json') 
-      # end
   end
   
-  after_commit(on: [:update]) { expire_published_contributor_cache } if Proc.new do |user|
-      trigger_keys = ['first_name', 'last_name', 'linkedin_url', 'linkedin_title', 'linkedin_photo_url', 'linkedin_company', 'linkedin_location']
-      (user.previous_changes.keys & trigger_keys).any?
-    end
-
   # for changing password
   attr_accessor :current_password
 
@@ -74,14 +59,6 @@ class User < ApplicationRecord
 
   def dont_publish_as_contributor
     self.own_contributions.each { |c| c.update(publish_contributor: false) }
-  end
-
-  def expire_published_contributor_cache
-    # self.own_contributions.each do |contribution|
-    #   if contribution.publish_contributor? && contribution.story.present?
-    #     contribution.story.expire_published_contributor_cache(self.id)
-    #   end
-    # end
   end
 
   def missing_info

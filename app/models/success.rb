@@ -19,17 +19,9 @@ class Success < ApplicationRecord
   # but delete it when running bin/rails db:seed
   # has_many :results, dependent: :destroy    
 
-  has_and_belongs_to_many(
-    :products, 
-    after_add: :expire_product_tags_cache, 
-    after_remove: :expire_product_tags_cache
-  )
+  has_and_belongs_to_many :products
 
-  has_and_belongs_to_many(
-    :story_categories, 
-    after_add: :expire_category_tags_cache, 
-    after_remove: [:removed_story_category, :expire_category_tags_cache]
-  )
+  has_and_belongs_to_many :story_categories
 
   has_many :contributions, inverse_of: :success, dependent: :destroy do
     def invitation_sent
@@ -100,17 +92,6 @@ class Success < ApplicationRecord
       remove_excess_newlines_from_win_story_text if self.win_story_text.present?
     end
   end
-
-  after_commit do 
-    # self.company.expire_ll_cache('successes-json') 
-    # self.company.expire_ll_cache('contributions-json') if self.previous_changes.key?('name')
-  end
-
-  # after_commit(on: [:create, :destroy]) do
-  # end
-
-  # after_commit(on: [:update]) do
-  # end
 
   def convert_description_to_win_story_html
     self.win_story_html.sub!(/(\r\n)+$/, '')
@@ -199,16 +180,6 @@ class Success < ApplicationRecord
 
   # this is just here for test illustration
   def removed_story_category story_category
-  end
-
-  def expire_category_tags_cache (category)
-    # category.company.expire_ll_cache('stories-json')
-    # category.company.increment_category_select_fragments_memcache_iterator
-  end
-
-  def expire_product_tags_cache (product)
-    # product.company.expire_ll_cache('stories-json')
-    # product.company.increment_product_select_fragments_memcache_iterator
   end
 
   def referrer

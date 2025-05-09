@@ -3,13 +3,8 @@ ul#stories-gallery.list-unstyled.text-center.hidden {
   data-is-sync-filtered=('true' if filtered_story_ids.present?)
   data-stories-target="gallery" }
 
-  / cache(cache_key, skip_digest: true) do
-
   - stories.each do |story|
 
-    / - cache(
-          "#{company.subdomain}/story-card-#{story.id}-memcache-iterator-#{company.story_card_fragments_memcache_iterator}",
-          { skip_digest: true }) do
     / TODO semantic markup: https://stackoverflow.com/questions/19307443/semantic-html-of-an-articles-list#answer-54258592
     li role="article" class=('hidden' if filtered_story_ids.present? && filtered_story_ids.exclude?(story.id))
 

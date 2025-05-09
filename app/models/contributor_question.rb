@@ -10,7 +10,4 @@ class ContributorQuestion < ApplicationRecord
   alias_attribute :answers, :contributor_answers
 
   default_scope { order(created_at: :asc) }
-
-  after_commit { self.company.expire_fragment_cache('crowdsource') }
-
 end

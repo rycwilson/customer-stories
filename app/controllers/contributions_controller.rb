@@ -225,8 +225,6 @@ class ContributionsController < ApplicationController
     # or contribution card (:publish_contributor OR :notes)
     else
       if @contribution.update contribution_params
-        # @contribution.success.story
-        #   .expire_published_contributor_cache(@contribution.contributor.id)
         respond_to { |format| format.json { render json: true } }  # http://stackoverflow.com/questions/12407328
       else
         # TODO: error

@@ -34,8 +34,6 @@ class AdwordsAd < ApplicationRecord
   before_create :create_gad, if: :promote_enabled?
   before_destroy :remove_gad, if: :promote_enabled?
 
-  # after_commit :clear_promoted_stories_cache, on: [:create, :update, :destroy]
-
   def google_ad
     campaign_type = ad_group.campaign.type.match(/(?<type>Topic|Retarget)/)[:type].downcase
     square_images = (new_record? ? company.ad_images.default.marketing.square : images.marketing.square).to_a
@@ -146,11 +144,4 @@ class AdwordsAd < ApplicationRecord
     else
     end
   end
-
-  # after_add and after_remove callbacks will pass the AdwordsImage object
-  def clear_promoted_stories_cache(image=nil)
-    # reference the company through the story for newly created ads
-    # Rails.cache.clear("#{self.story.company.subdomain}/promoted-stories")
-  end
-
 end

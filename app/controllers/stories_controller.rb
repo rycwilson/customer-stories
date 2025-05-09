@@ -125,9 +125,8 @@ class StoriesController < ApplicationController
       @customer = @story.success.customer
 
       # measure
-      # @recent_activity = Rails.cache.fetch("#{@company.subdomain}/recent-activity") { @company.recent_activity(30) }
-      # @story_views_30_day_count = PageView.joins(:visitor_session)
-      #                               .company_story_views_since(@company.id, 30).count
+      # @recent_activity = @company.recent_activity(30)
+      # @story_views_30_day_count = PageView.joins(:visitor_session).company_story_views_since(@company.id, 30).count
 
       # @workflow_stage = 'curate'
       # @curate_view = 'story'  # instead of 'stories'

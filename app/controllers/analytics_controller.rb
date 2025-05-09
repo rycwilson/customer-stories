@@ -9,18 +9,9 @@ class AnalyticsController < ApplicationController
 
   def charts
     if params[:initial_load] == 'true'
-      default_referrer_types =
-        Rails.cache.fetch("#{@company.subdomain}/referrer-types-default") do
-          @company.referrer_types_chart_json
-        end
-      default_visitors =
-        Rails.cache.fetch("#{@company.subdomain}/visitors-chart-default") do
-          @company.visitors_chart_json
-        end
-      # default_actions =
-      #   Rails.cache.fetch("#{@company.subdomain}/actions-chart-default") do
-      #     @company.actions_chart_json
-      #   end
+      default_referrer_types = @company.referrer_types_chart_json
+      default_visitors = @company.visitors_chart_json
+      # default_actions = @company.actions_chart_json
     else
       default_referrer_types = default_visitors = nil
     end
@@ -42,21 +33,14 @@ class AnalyticsController < ApplicationController
   def stories
     respond_to do |format|
       format.json do
-        render({
-          json: { data: Rails.cache.fetch("#{@company.subdomain}/stories-table") do
-                          @company.stories_table_json
-                        end }
-        })
+        render(json: { data: @company.stories_table_json })
       end
     end
   end
 
   def visitors
     if params[:default_data] == 'true'
-      default_visitors =
-        Rails.cache.fetch("#{@company.subdomain}/visitors-table-default") do
-          @company.visitors_table_json(@story, @start_date, @end_date)
-        end
+      default_visitors = @company.visitors_table_json(@story, @start_date, @end_date)
     else
       default_visitors = nil
     end

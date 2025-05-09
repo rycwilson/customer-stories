@@ -218,7 +218,6 @@ class Story < ApplicationRecord
   end
 
   after_update_commit do
-    # self.expire_fragment("#{self.company.subdomain}/stories/#{self.id}/meta-tags")
     # TODO: pro-actively expire social network cache on changing og-* fields
     # request = Typhoeus::Request.new(
     #   "https://graph.facebook.com",
@@ -241,68 +240,6 @@ class Story < ApplicationRecord
 
   # update timestamps
   before_save(:update_publish_state)
-
-  after_commit(on: [:create, :destroy]) do
-    # self.company.expire_ll_cache('stories-json')
-  end
-
-  # note: the _changed? methods for attributes don't work in the
-  # after_commit callback;
-  # note: the & operator interestects the arrays, returning any values
-  # that exist in both
-
-  # on change of publish state
-  after_update_commit do
-    # expire_story_card_fragment_cache
-    # expire_filter_select_fragment_cache
-    # self.company.increment_stories_gallery_fragments_memcache_iterator
-    # self.company.expire_ll_cache('stories-json', 'contributions-json')
-    # self.company.expire_fragment_cache('plugin-config')
-  end if Proc.new { |story|
-           ( story.previous_changes.keys &
-             ['published', 'preview_published', 'logo_published'] ).any?
-         }
-
-  # for any published (title overlay) or preview-published (summary, quote) stories,
-  # expire stories gallery cache on change of title/summary/quote data;
-  # also json cache
-  after_update_commit do
-    # expire_story_card_fragment_cache
-    # self.company.increment_stories_gallery_fragments_memcache_iterator
-    # self.company.expire_ll_cache('stories-json')
-  end if Proc.new { |story|
-           ( (story.published? || story.preview_published?) &&
-             (story.previous_changes.keys & ['title', 'summary', 'quote']).any? )
-         }
-
-  after_update_commit do
-    # expire_story_video_info_cache
-    # expire_story_video_xs_fragment_cache
-  end if Proc.new { |story| story.previous_changes.key?('video_url') }  
-
-  after_update_commit do
-    # expire_story_testimonial_fragment_cache
-  end if Proc.new { |story|
-            (story.previous_changes.keys &
-            ['video_url', 'quote', 'quote_attr_name', 'quote_attr_title']).any?
-          }
-
-  after_update_commit do
-    # expire_csp_story_path_cache
-    # expire_story_narrative_fragment_cache
-    # self.company.expire_fragment_cache('plugin-config')
-    # self.company.expire_ll_cache('successes-json', 'contributions-json')
-  end if Proc.new { |story| story.previous_changes.key?('title') }
-
-  after_update_commit do
-    # expire_story_narrative_fragment_cache
-  end if Proc.new { |story| (story.previous_changes.keys & ['title', 'narrative']).any? }
-
-  before_destroy do
-    # expire_filter_select_fragment_cache
-    # self.company.increment_stories_gallery_fragments_memcache_iterator
-    # self.company.expire_ll_cache('stories-json')
-  end
 
   # method takes an active record relation
   def self.default_order stories_relation
@@ -365,28 +302,20 @@ class Story < ApplicationRecord
 
   # method returns a friendly id path that either contains or omits a product
   def csp_story_path
-    Rails.cache.fetch("#{self.company.subdomain}/csp-story-#{self.id}-path") do
-      if self.product_tags.present?
-        Rails.application.routes.url_helpers.public_story_path(
-          self.customer.slug,
-          self.product_tags.take.slug,
-          self.slug,
-          subdomain: company.subdomain
-        )
-      else
-        Rails.application.routes.url_helpers.public_story_no_product_path(
-          self.customer.slug,
-          self.slug,
-          subdomain: company.subdomain
-        )
-      end
+    if self.product_tags.present?
+      Rails.application.routes.url_helpers.public_story_path(
+        self.customer.slug,
+        self.product_tags.take.slug,
+        self.slug,
+        subdomain: company.subdomain
+      )
+    else
+      Rails.application.routes.url_helpers.public_story_no_product_path(
+        self.customer.slug,
+        self.slug,
+        subdomain: company.subdomain
+      )
     end
-  end
-
-  def expire_csp_story_path_cache
-    # Rails.cache.delete("#{self.company.subdomain}/csp-story-#{self.id}-path")
-    # self.expire_fragment_cache_on_path_change
-    # self.company.expire_ll_cache('stories-json', 'contributions-json')
   end
 
   # method returns a friendly id url that either contains or omits a product
@@ -470,98 +399,42 @@ class Story < ApplicationRecord
   # adds contributor linkedin data, which is necessary client-side for plugins
   # that fail to load
   def published_contributors
-    # Rails.cache.fetch("#{self.company.subdomain}/story-#{self.id}-published-contributors") do
-      contributors =
-        User.joins(own_contributions: { success: {} })
-            .where.not(linkedin_url: [nil, ''])
-            .where(
-              successes: { id: self.success_id }, 
-              contributions: { publish_contributor: true }
-            )
-            .order(Arel.sql(
-              "CASE contributions.role
-                WHEN 'customer' THEN '1'
-                WHEN 'customer success' THEN '2'
-                WHEN 'sales' THEN '3'
-              END"
-            ))
-            .map do |contributor|
-              { 
-                widget_loaded: false,
-                id: contributor.id,
-                first_name: contributor.first_name,
-                last_name: contributor.last_name,
-                linkedin_url: contributor.linkedin_url,
-                linkedin_photo_url: contributor.linkedin_photo_url,
-                linkedin_title: contributor.linkedin_title,
-                linkedin_company: contributor.linkedin_company,
-                linkedin_location: contributor.linkedin_location 
-              }
-            end
-      contributors.delete_if { |c| c[:id] == self.curator.id }
-      # don't need the id anymore, don't want to send it to client ...
-      contributors.map! { |c| c.except(:id) }
-      if self.curator.linkedin_url.present?
-        contributors.push({ widget_loaded: false }
-                    .merge(self.curator.slice(
-                      :first_name, :last_name, :linkedin_url, :linkedin_photo_url,
-                      :linkedin_title, :linkedin_company, :linkedin_location )))
+    contributors = User.joins(own_contributions: { success: {} })
+      .where.not(linkedin_url: [nil, ''])
+      .where(
+        successes: { id: self.success_id }, 
+        contributions: { publish_contributor: true }
+      )
+      .order(Arel.sql(
+        "CASE contributions.role
+          WHEN 'customer' THEN '1'
+          WHEN 'customer success' THEN '2'
+          WHEN 'sales' THEN '3'
+        END"
+      ))
+      .map do |contributor|
+        { 
+          widget_loaded: false,
+          id: contributor.id,
+          first_name: contributor.first_name,
+          last_name: contributor.last_name,
+          linkedin_url: contributor.linkedin_url,
+          linkedin_photo_url: contributor.linkedin_photo_url,
+          linkedin_title: contributor.linkedin_title,
+          linkedin_company: contributor.linkedin_company,
+          linkedin_location: contributor.linkedin_location 
+        }
       end
-      contributors
-    # end
-  end
-
-  def expire_published_contributor_cache(contributor_id)
-    Rails.cache.delete("#{self.company.subdomain}/story-#{self.id}-published-contributors")
-    self.company.expire_ll_cache('stories-json')
-    self.expire_fragment("#{self.company.subdomain}/story-#{self.id}-contributors")
-    self.expire_fragment("#{self.company.subdomain}/story-#{self.id}-contributor-#{contributor_id}")
-  end
-
-  def expire_story_card_fragment_cache
-    mi = self.company.story_card_fragments_memcache_iterator
-    card_fragment = "#{company.subdomain}/story-card-#{self.id}-memcache-iterator-#{mi}"
-    self.expire_fragment(card_fragment) if fragment_exist?(card_fragment)
-  end
-
-  def expire_filter_select_fragment_cache
-    if self.category_tags.present?
-      self.company.increment_category_select_fragments_memcache_iterator
+    contributors.delete_if { |c| c[:id] == self.curator.id }
+    # don't need the id anymore, don't want to send it to client ...
+    contributors.map! { |c| c.except(:id) }
+    if self.curator.linkedin_url.present?
+      contributors.push({ widget_loaded: false }
+                  .merge(self.curator.slice(
+                    :first_name, :last_name, :linkedin_url, :linkedin_photo_url,
+                    :linkedin_title, :linkedin_company, :linkedin_location )))
     end
-    if self.product_tags.present?
-      self.company.increment_product_select_fragments_memcache_iterator
-    end
-  end
-
-  def expire_fragment_cache_on_path_change
-    if self.logo_published?
-      self.expire_story_card_fragment_cache
-      self.company.increment_stories_gallery_fragments_memcache_iterator
-    end
-  end
-
-  def expire_story_testimonial_fragment_cache
-    self.expire_fragment("#{self.company.subdomain}/stories/#{self.id}/testimonial")
-    self.expire_fragment("#{self.company.subdomain}/stories/#{self.id}/cs-testimonial")
-  end
-
-  def expire_story_video_info_cache
-    Rails.cache.delete("#{self.company.subdomain}/story-#{self.id}-video-info")
-  end
-
-  def expire_story_video_xs_fragment_cache
-    self.expire_fragment("#{self.company.subdomain}/stories/#{self.id}/video-xs")
-    self.expire_fragment("#{self.company.subdomain}/stories/#{self.id}/cs-video-xs")
-  end
-
-  def expire_story_narrative_fragment_cache
-    self.expire_fragment("#{self.company.subdomain}/stories/#{self.id}/narrative")
-    self.expire_fragment("#{self.company.subdomain}/stories/#{self.id}/cs-narrative")
-  end
-
-  def expire_results_fragment_cache
-    self.expire_fragment("#{self.company.subdomain}/stories/#{self.id}/results")
-    self.expire_fragment("#{self.company.subdomain}/stories/#{self.id}/cs-results")
+    contributors
   end
 
   def contributors_jsonld
