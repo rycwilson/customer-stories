@@ -1,5 +1,3 @@
-require 'faker'
-
 module SeedData
   INDUSTRIES = %w(
     Aerospace & Defense

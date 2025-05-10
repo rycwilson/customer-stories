@@ -16,6 +16,7 @@ gem 'jbuilder', '~> 2.7'
 
 # Database and caching
 gem 'pg'
+gem 'faker'
 # gem 'connection_pool'
 # gem 'dalli'
 
@@ -73,7 +74,6 @@ group :development, :test do
   gem 'rspec-rails', '~> 6.0'
   gem 'shoulda-matchers', '~> 5.0'
   gem 'factory_bot_rails'
-  gem 'faker'
   gem 'capybara' 
   gem 'selenium-webdriver', '~> 4.1'
   gem 'pry-byebug'
