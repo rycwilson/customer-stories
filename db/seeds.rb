@@ -60,6 +60,7 @@ SeedData::CUSTOMERS.each do |customer_data|
     )
     user.skip_confirmation_notification!
     user.save!
+    user
   end.shuffle
 
   # Create successes and associated data
