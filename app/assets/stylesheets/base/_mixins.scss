@@ -264,40 +264,6 @@
   }
 }
 
-@mixin LI-profile-badge ($bg-color) {
-  .LI-badge-container {
-    width: 100%;
-    background-color: $bg-color;  // #f2f2f2;
-    margin-bottom: 15px;
-    -webkit-box-shadow: none;
-    box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.16), 0 0 0 1px rgba(0, 0, 0, 0.08);  // matches story cards
-    .LI-name-container {
-      margin-bottom: 15px;
-      .LI-profile-pic-container {
-        padding-bottom: 0;
-        img {
-          width: 65px;
-          height: 65px;
-        }
-      }
-      > .LI-header {
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
-        text-align: left;
-        padding-left: 5px;
-      }
-    }
-    .LI-more-info {
-      display: none;
-    }
-    .LI-footer {
-      display: flex;
-      justify-content: space-between;
-    }
-  }
-}
-
 @mixin spinner($size) {
   > .spinner {
     display: flex;

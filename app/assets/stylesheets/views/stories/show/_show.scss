@@ -15,25 +15,9 @@
   @import 'testimonial';
   @import 'blockquote';
 
-  .LI-profile-badge {
-    @include LI-profile-badge(#fff);
-
-    &:last-child {   // does this apply to contributor view?
-      .LI-badge-container {
-        margin-bottom: 0;
-      }
-    }
-
-    @media screen and (max-width: 767px) {
-      max-width: 400px;
-      margin: 0 auto;
-    }
-  }
-
   &.cs-overlay-container {
     @import 'preview';
   }
-  // @import '../shared/linkedin_widget';  // not using these presently
 
   &.stories.show {
     @import '../shared/cookie_consent';
@@ -100,15 +84,7 @@
     hr {
       border-color: #ccc;
     }
-
-    // .LI-profile-badge {
-    //   @media screen and (max-width: 767px) {
-    //     @include LI-profile-badge(#fff);
-    //   }
-    // }
-
   }
-
 
   .story-content, 
   .cs-story-content {
@@ -264,12 +240,6 @@
 
     .story-contributors {
       visibility: hidden;  // can't use display: none because it will preclude ResizeSensor
-    }
-
-    &.cs-story-content {
-      @media only screen and (max-width: 767px) {
-        // @include LI-profile-badge(#fff);
-      }
     }
   }
 

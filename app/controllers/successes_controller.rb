@@ -252,15 +252,15 @@ class SuccessesController < ApplicationController
   def contribution_params
     params.require(:contribution).permit(
       :contributor_id, :referrer_id, :success_id, :invitation_template_id,
-      :status, :contribution, :feedback, :publish_contributor, :success_contact,
+      :status, :contribution, :feedback, :success_contact,
       :request_subject, :request_body,
-      :contributor_unpublished, :notes, :submitted_at,
+      :notes, :submitted_at,
       success_attributes: [
         :id, :name, :customer_id, :curator_id,
         customer_attributes: [:id, :name, :company_id]
       ],
       contributor_attributes: [
-        :id, :email, :first_name, :last_name, :title, :phone, :linkedin_url, :sign_up_code, :password
+        :id, :email, :first_name, :last_name, :title, :phone, :sign_up_code, :password
       ],
       referrer_attributes: [
         :id, :email, :first_name, :last_name, :title, :phone, :sign_up_code, :password

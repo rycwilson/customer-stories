@@ -17,49 +17,4 @@
       color: #456f59;
     }
   }
-
-  .contributor-child-row {
-    @include LI-profile-badge(#fff);
-
-    .LI-profile__error {
-      display: none;
-    }
-
-    .LI-profile__container {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      min-height: 155px;
-      width: 100%;
-      // border: 1px solid #ccc;
-      background-color: #f9f9f9;
-      box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.16), 0 0 0 1px rgba(0, 0, 0, 0.08);
-
-      i {
-        color: #555;
-        font-size: 18px;
-      }
-
-      &.loaded, &.error {
-        i { display: none; }
-      }
-
-      &.loaded {
-        background: none;
-        box-shadow: none;
-
-        .LI-profile-badge {
-          width: 100%;
-        }
-      }
-
-      &.error {
-        .LI-profile__error {
-          // display: initial;
-          display: revert;
-          color: #c9302c;
-        }
-      }
-    }
-  }
 }

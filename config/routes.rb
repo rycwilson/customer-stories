@@ -93,7 +93,6 @@ Rails.application.routes.draw do
     # see below for route to public story page
     resources(:stories, { only: [:index] }) do
       get '/search', on: :collection, to: 'stories#search'
-      get '/share_on_linkedin', on: :member, to: 'stories#share_on_linkedin'
     end
 
     authenticate(:user) do
@@ -141,9 +140,6 @@ Rails.application.routes.draw do
       devise_scope(:user) do
         post('/impersonate/:imitable_user_id', to: 'users/sessions#impersonate', as: 'impersonate_user')
       end
-
-      # approval PDF
-      get '/stories/:id/approval', to: 'stories#approval', as: 'story_approval'
     end
 
     # token needed for access outside of user-authorized routes

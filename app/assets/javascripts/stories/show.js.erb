@@ -27,10 +27,6 @@ function storiesShow () {
   // story is initially hidden in case video failure prompts removal
   loadVideoThumbnail(function () { $('.story-wrapper').removeClass('hidden'); });
 
-  if (!$('body').hasClass('pixlee')) {
-    // linkedinListener($('.story-wrapper'));
-    LI2Observer();
-  }
   initMoreStories();
 
   setTimeout(function () {
@@ -130,50 +126,3 @@ function clickyListeners () {
     }
   };
 }
-
-function LI2Observer () {
-  var $contributors = $('.story-contributors'),
-      $badges = $contributors.find('.LI-profile-badge'),
-      MutationObserver = window.MutationObserver || window.WebKitMutationObserver || window.MozMutationObserver,
-      badgeAdded = function (mutation) {
-        return mutation.type === 'attributes' && mutation.attributeName === 'data-uid'
-      };
-      observer = new MutationObserver(function (mutations) {
-        mutations.forEach(function (mutation) {
-          if (mutation.type === 'attributes') {
-            // console.log('attributes, attributeName: ', mutation.attributeName, $(mutation.target).data('uid'));
-          } else if (mutation.type === 'childList') {
-            // console.log('childList, addedNodes: ', mutation.addedNodes[0], $(mutation.target).data('uid'));
-            // this would be the last mutation, but it doesn't always happen
-            // if ($(mutation.addedNodes[0]).hasClass('resize-sensor')) {
-          } else {
-            // console.log('other')
-          }
-          if (badgeAdded(mutation)) {
-            // console.log('badge added', $(mutation.target).data('uid'))
-
-            // this is a reliable indicator that the badge has displayed
-            // if at least one displays, show the section, with a brief timeout to allow for other badges and style settings
-            new ResizeSensor($(mutation.target), function() {
-              // console.log('badge rendered', $(mutation.target).data('uid'))
-
-              // give it a brief delay to allow for multiple contributors being rendered,
-              // and for local style changes to take effect
-              setTimeout(function () {
-                $contributors.css({ visibility: 'visible' })
-              }, 200)
-            });
-          }
-        });
-      });
-  $badges.each(function () {
-    observer.observe(this, { attributes: true, childList: true });
-  });
-}
-
-
-
-
-
-
-

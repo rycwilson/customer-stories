@@ -92,7 +92,6 @@ class PluginsController < ApplicationController
         is_external: !request.referer =~ /^(?!.*plugins\/demo).*(lvh\.me|customerstories\.org|customerstories\.net).*$/,
         window_width: params[:window_width],
         preselected_story_id: preselected_story&.id,
-        contributors: preselected_story && set_contributors(preselected_story)
       }
     )
   end

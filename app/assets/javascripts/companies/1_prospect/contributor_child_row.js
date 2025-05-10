@@ -3,18 +3,6 @@ function contributorChildRowListeners () {
 
   var contributionPath = function (contributionId) {
         return '/contributions/' + contributionId;
-      },
-      LI2Observer = function ($badge) {
-        if ($badge.length === 0) return null;
-        var $container = $badge.closest('.LI-profile__container'),
-            timeoutId = setTimeout(function () {
-              $container.addClass('error')
-            }, 3000);
-        new ResizeSensor($badge, function() {
-          clearTimeout(timeoutId);
-          $container.addClass('loaded');
-        });
-        initLinkedIn();
       }
 
   $(document)
@@ -59,9 +47,6 @@ function contributorChildRowListeners () {
 
         // scroll to center
         window.scrollTo(0, $trContribution.offset().top - (window.innerHeight / 2) + (($trContributor.outerHeight() + $trContribution.outerHeight()) / 2));
-
-        // handle LI profile badge
-        LI2Observer($trContributor.find('.LI-profile-badge'));
 
         // enable save button on input or change
         $trContributor.one('input change', function () {

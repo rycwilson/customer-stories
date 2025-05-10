@@ -34,7 +34,6 @@ window.CSP = window.CSP || {
       'profile': function () {
         (({
           'edit': profileEdit,
-          'linkedin_callback': profileEdit
         })[action])();
       },
       // no js for these controllers, but must be listed here ...

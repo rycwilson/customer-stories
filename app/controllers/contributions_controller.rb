@@ -127,7 +127,7 @@ class ContributionsController < ApplicationController
       @contribution.invitation_template_id = params[:data].values[0][:invitation_template][:id]
       @contribution.save
       dt_data = [ JSON.parse(@contribution.to_json({
-        only: [:id, :status, :publish_contributor, :contributor_unpublished],
+        only: [:id, :status],
         methods: [:display_status, :timestamp],
         include: {
           success: {
@@ -170,7 +170,7 @@ class ContributionsController < ApplicationController
 
     elsif params[:contributor]
       @contribution.update(contribution_params)
-      respond_to { |format| format.js { render action: 'update_contributor' } }
+      # respond_to { |format| format.js { render action: 'update_contributor' } }
 
     elsif params[:submission]
       # pp contribution_params.to_h
@@ -178,9 +178,6 @@ class ContributionsController < ApplicationController
       #   params[:contribution][:contribution] = consolidate_answers(params[:answers])
       # end
       if @contribution.update(contribution_params)
-        # if @contribution.publish_contributor?
-        #   redirect_to(linkedin_auth_url(contribution_id: @contribution.id))
-        # else
           redirect_to(confirm_submission_path(@contribution.access_token))
         # end
       else
@@ -220,15 +217,6 @@ class ContributionsController < ApplicationController
       else
         # TODO handle errors
       end
-
-    # contribution update from either profile (:publish_contributor, :contributor_unpublished)
-    # or contribution card (:publish_contributor OR :notes)
-    else
-      if @contribution.update contribution_params
-        respond_to { |format| format.json { render json: true } }  # http://stackoverflow.com/questions/12407328
-      else
-        # TODO: error
-      end
     end
   end
 
@@ -246,15 +234,15 @@ class ContributionsController < ApplicationController
   def contribution_params
     params.require(:contribution).permit(
       :contributor_id, :referrer_id, :success_id, :invitation_template_id,
-      :status, :contribution, :feedback, :publish_contributor, :success_contact,
+      :status, :contribution, :feedback, :success_contact,
       :request_subject, :request_body,
-      :contributor_unpublished, :notes, :submitted_at,
+      :notes, :submitted_at,
       success_attributes: [
         :id, :name, :customer_id, :curator_id,
         customer_attributes: [:id, :name, :company_id]
       ],
       contributor_attributes: [
-        :id, :email, :first_name, :last_name, :title, :phone, :linkedin_url, :sign_up_code, :password
+        :id, :email, :first_name, :last_name, :title, :phone, :sign_up_code, :password
       ],
       referrer_attributes: [
         :id, :email, :first_name, :last_name, :title, :phone, :sign_up_code, :password
@@ -302,18 +290,6 @@ class ContributionsController < ApplicationController
     end
     return contribution
   end
-
-  # def connect_to_linkedin? (contribution)
-  #   contribution.publish_contributor? && contribution.contributor.linkedin_url.blank?
-  # end
-
-  # def connect_to_linkedin_url (contribution)
-  #   url_for({
-  #     subdomain: contribution.company.subdomain,
-  #     controller: 'profile', action: 'linkedin_connect',
-  #     params: { contribution_id: contribution.id }
-  #   })
-  # end
 
   def referrer_included?(contribution)
     contribution.has_key?(:referrer_attributes) &&

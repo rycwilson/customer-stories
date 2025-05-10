@@ -44,50 +44,9 @@
 
     <% end %>
 
-    <div class="form-group linkedin">
-
-      <div class="row visible-xs-block">
-        <div class="text-center">
-          <i class="fa fa-3x fa-linkedin-square"></i>
-        </div>
-      </div>
-
-      <div class="visible-xs-block linkedin-container">
-        <div class="row">
-          <div class="form-group linkedin">
-
-            <div class="col-xs-12">
-              <%= contribution_form.check_box(:publish_contributor, {}, 'true', 'false') %>
-                Leave this box checked to have your LinkedIn profile published as part of the success story. You may return at any point in the future to add or remove your profile.
-            </div>
-
-          </div>
-        </div>
-      </div>
-
-      <div class="hidden-xs linkedin-container">
-        <div class="row">
-          <div class="form-group linkedin">
-
-            <div class='col-sm-1 text-center'>
-              <i class="fa fa-2x fa-linkedin-square"></i>
-            </div>
-
-            <div class='col-sm-11 checkbox'>
-              <%= contribution_form.check_box(:publish_contributor, {}, 'true', 'false') %>
-              Leave this box checked to have your LinkedIn profile published as part of the success story. You may return at any point in the future to add or remove your profile.
-            </div>
-
-          </div>
-        </div>
-      </div>
-
-    </div>
-
   <% else %>
 
     <div class="form-group feedback">
-      <%= contribution_form.hidden_field(:publish_contributor, value: false) %>
       <%= contribution_form.label(:feedback, 'Please tell us about your experience and any actions you recommend.') %>
       <%= contribution_form.text_area(:feedback, rows: 5, class: 'form-control') %>
     </div>

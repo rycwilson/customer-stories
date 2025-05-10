@@ -25,12 +25,6 @@ div class="#{'cs-' if is_plugin}container"
         - if related_stories.present? && related_stories.length >= 2
           = render('stories/show/related_stories', { company: company, related_stories: related_stories })
 
-        - if company.subdomain != 'pixlee' && contributors.present? && (window_width.nil? || window_width.to_i < 768)
-          hr
-          = render( \
-              'stories/show/contributors',
-              { company: company, contributors: contributors, is_plugin: is_plugin, window_width: window_width }) 
-
       .hidden-xs
         - if related_stories.present? && related_stories.length >= 2
           = render('stories/show/related_stories', { company: company, related_stories: related_stories })
@@ -69,11 +63,3 @@ div class="#{'cs-' if is_plugin}container"
               .fa.fa-fw.fa-share style="font-size: 14px;"
             .col-sm-11 style="padding: 0"
               = render('stories/shared/share_buttons', { story: story, is_plugin: is_plugin })
-
-      - if company.subdomain != 'pixlee' && contributors.present? && (window_width.nil? || window_width.to_i >= 768)
-        = render( \
-            'stories/show/contributors',
-            { company: company,
-              contributors: contributors,
-              is_plugin: is_plugin,
-              window_width: window_width })

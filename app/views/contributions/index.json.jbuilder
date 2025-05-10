@@ -1,5 +1,5 @@
 json.array! @contributions do |contribution|
-  json.(contribution, :id, :status, :publish_contributor, :contributor_unpublished)
+  json.(contribution, :id, :status)
   json.display_status contribution.display_status
   json.timestamp contribution.timestamp
   json.path contribution.path
@@ -20,7 +20,7 @@ json.array! @contributions do |contribution|
     end
   end
   json.contributor do
-    json.(contribution.contributor, :id, :email, :first_name, :last_name, :phone, :title, :linkedin_url)
+    json.(contribution.contributor, :id, :email, :first_name, :last_name, :phone, :title)
     json.full_name contribution.contributor.full_name
   end
   if contribution.referrer.present?

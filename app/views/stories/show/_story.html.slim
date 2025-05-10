@@ -1,6 +1,3 @@
-- if is_plugin
-  script type="text/javascript" src="https://platform.linkedin.com/badges/js/profile.js" async="" defer=""
-
 div class="#{'cs-' if is_plugin}story-wrapper #{'hidden' unless is_plugin}"
   article
     - if is_plugin
@@ -45,7 +42,6 @@ div class="#{'cs-' if is_plugin}story-wrapper #{'hidden' unless is_plugin}"
           'stories/show/story_content',
           { company: company,
             story: story,
-            contributors: contributors,
             related_stories: related_stories,
             is_plugin: is_plugin,
             window_width: is_plugin ? window_width : nil })

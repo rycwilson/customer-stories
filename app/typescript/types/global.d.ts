@@ -78,7 +78,6 @@ interface User {
   last_name?: string;
   title?: string;
   email?: string;
-  linkedin_url?: string;
 }
 
 interface CustomerWin {
@@ -149,8 +148,6 @@ interface Contribution {
   contribution?: string;
   feedback?: string;
   submitted_at?: string;
-  publish_contributor?: boolean;
-  contributor_unpublished?: boolean;
   request_subject?: string;
   request_body?: string;
   request_sent_at?: string;

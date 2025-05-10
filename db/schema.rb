@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2025_05_10_161805) do
+ActiveRecord::Schema.define(version: 2025_05_10_170345) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_stat_statements"
@@ -173,9 +173,6 @@ ActiveRecord::Schema.define(version: 2025_05_10_161805) do
     t.text "notes"
     t.datetime "submitted_at"
     t.datetime "request_received_at"
-    t.boolean "publish_contributor", default: true
-    t.boolean "contributor_unpublished", default: false
-    t.boolean "preview_contributor", default: false
     t.integer "invitation_template_id"
     t.string "request_subject"
     t.text "request_body"

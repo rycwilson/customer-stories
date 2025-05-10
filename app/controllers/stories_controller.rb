@@ -7,13 +7,12 @@ class StoriesController < ApplicationController
   skip_before_action(:verify_authenticity_token, only: [:show], if: Proc.new { params[:is_plugin] })
 
   before_action :set_company
-  # before_action :set_story, only: [:edit, :ctas, :tags, :promote, :approval, :destroy]
+  # before_action :set_story, only: [:edit, :ctas, :tags, :promote, :destroy]
   before_action only: [:show] do
     @is_social_share_redirect = true if params[:redirect_uri].present?
     @is_curator = @company.curator?(current_user)
   end
   before_action(only: [:show]) { set_public_story_or_redirect(@company) }
-  before_action(only: [:show, :approval]) { set_contributors(@story) }
   before_action :set_s3_direct_post, only: :edit
 
   def index
@@ -59,7 +58,7 @@ class StoriesController < ApplicationController
       # @is_plugin = @is_external = true
       respond_to do |format|
         format.js do
-          json = { html: render_story_partial_to_string(@story, @contributors, params[:window_width]) }.to_json
+          json = { html: render_story_partial_to_string(@story, params[:window_width]) }.to_json
           jsonp = "#{params[:callback]}(#{json})"
           render(plain: jsonp)
         end
@@ -235,28 +234,6 @@ class StoriesController < ApplicationController
     render(layout: false)
   end
 
-  def share_on_linkedin
-    redirect_to linkedin_auth_path(share_url: request.referer)
-  end
-
-  def approval
-    respond_to do |format|
-      format.pdf do
-        render({
-          pdf: "#{@company.subdomain}-customer-story-#{@story.customer.slug}",
-          template: "stories/edit/approval.pdf.erb",
-          locals: {
-            story: @story,
-            company: @company,
-            customer_name: @story.customer.name,
-            contributors: @contributors
-          },
-          footer: { right: '[page] of [topage]' }
-        })
-      end
-    end
-  end
-
   private
 
   def story_params
@@ -393,14 +370,13 @@ class StoriesController < ApplicationController
   #   @story = Story.find_by_id(params[:id]) || Story.friendly.find(params[:story_slug])
   # end
 
-  def render_story_partial_to_string(story, contributors, window_width)
+  def render_story_partial_to_string(story, window_width)
     render_to_string({
       partial: "stories/show/#{story.published? ? 'story' : 'preview'}",
       locals: {
         company: story.company,
         story: story,
         has_video: story.video[:thumbnail_url].present?,
-        contributors: contributors,
         related_stories: nil,
         is_plugin: true,
         window_width: window_width

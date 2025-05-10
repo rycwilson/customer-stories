@@ -17,7 +17,6 @@ module ContributionsSeed
       submitted_at:         submitted_at,
       access_token:         SecureRandom.hex,
       created_at:           created || Time.now,
-      publish_contributor:  status == 'contribution' # 2/5 published
     )  
     # c.remind_at = Time.now + rand(5).minutes if (status == 'request')
     # c.remind_at = Time.now + rand(5).minutes if (status == 'remind1')
@@ -28,7 +27,7 @@ module ContributionsSeed
   end
 
 
-  def self.create_contributor first_name=nil, last_name=nil, cont_email=nil, linkedin_url=nil
+  def self.create_contributor first_name=nil, last_name=nil, cont_email=nil
     email = FFaker::Internet.email # need to use the same value twice, so store in variable
     contributor = User.new(
       first_name:   first_name || FFaker::Name.first_name,
@@ -36,7 +35,6 @@ module ContributionsSeed
       email:        cont_email || email,
       # password is necessary, so just set it to the email
       password:     'password',
-      linkedin_url: linkedin_url,
       sign_up_code: 'csp_beta'
     )
     puts("create contributor error: " + contributor.errors.full_messages.join(', ')) unless contributor.save

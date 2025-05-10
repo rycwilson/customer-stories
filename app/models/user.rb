@@ -5,10 +5,6 @@ class User < ApplicationRecord
   validates :phone, format: { without: /_/ }
   # validate correct format OR empty string
 
-  # removed to allow for non-linkedin profiles:
-  # validates :linkedin_url, format: { with: /(\Ahttps:\/\/www.linkedin.com\/|\A(?![\s\S]))/,
-  #                                    message: 'must begin with "https://www.linkedin.com/"' }
-
   has_many :own_contributions, class_name: 'Contribution', foreign_key: 'contributor_id', dependent: :destroy
   has_many :referred_contributions, class_name: 'Contribution', foreign_key: 'referrer_id'
 
@@ -18,8 +14,6 @@ class User < ApplicationRecord
   scope :imitable, -> { where(imitable: true) }
 
   after_update_commit do 
-    dont_publish_as_contributor if linkedin_profile_removed?
-
     photo_was_updated = previous_changes.keys.include?('photo_url') && previous_changes[:photo_url].first.present?
     if photo_was_updated
       S3Util.delete_object(S3_BUCKET, previous_changes[:photo_url].first)
@@ -51,16 +45,6 @@ class User < ApplicationRecord
     end
   end
 
-  def linkedin_data_present?
-    self.linkedin_title.present? &&
-    self.linkedin_company.present? &&
-    self.linkedin_photo_url.present?
-  end
-
-  def dont_publish_as_contributor
-    self.own_contributions.each { |c| c.update(publish_contributor: false) }
-  end
-
   def missing_info
     missing = []
     missing << "first name" unless self.first_name.present?
@@ -80,10 +64,6 @@ class User < ApplicationRecord
   #     # user.name = auth["info"]["nickname"]
   #   end
   # end
-
-  def linkedin_profile_removed?
-    self.previous_changes[:linkedin_url].try(:[], 1).blank?
-  end
 
   def curator_name_with_stories_count
     return '' unless self.company 

@@ -77,18 +77,13 @@ body.contributions.edit {
       opacity: 0.2;
     }
     .form-group.feedback
-    .form-group.linkedin, .form-group.submit, .form-group.tos {
+    .form-group.submit, .form-group.tos {
       font-size: 13px;
     }
     .form-group.submit.visible-xs-block {
       margin-bottom: 25px;
     }
     button[type="submit"] {
-    }
-    i.fa-linkedin-square {
-      color: #006fb3;
-      margin-top: -1px;
-      margin-bottom: 15px;
     }
     .checkbox {
       margin: 0;
@@ -192,12 +187,6 @@ body.contributions.edit {
       .form-group.question {
         font-size: 16px;
       }
-      .form-group.linkedin {
-        margin-bottom: 40px;
-        .row.visible-xs-block:nth-of-type(2) {
-          // text-align: justify;
-        }
-      }
       input[type="checkbox"] {
         margin: 6px 6px 0 0;
       }
@@ -216,14 +205,6 @@ body.contributions.edit {
   }
 
   @media only screen and (min-width: 768px) {
-    // for the linkedin icon and checkbox
-    .col-sm-1 {
-      width: 12%;
-    }
-    // for the linkedin icon and checkbox
-    .col-sm-11 {
-      width: 88%
-    }
     .col-sm-10 {
       width: 84%
     }

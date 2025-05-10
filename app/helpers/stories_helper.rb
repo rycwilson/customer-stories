@@ -14,23 +14,6 @@ module StoriesHelper
     staging? || company&.subdomain == 'pixlee'
   end
 
-  def linkedin_widget_width(window_width)
-    case window_width.to_i
-    when 0...370
-      '340'
-    when 370...500
-      (window_width.to_i - 30).to_s  # 30 = padding * 2
-    when 500...768
-      '470'
-    when 768...992
-      '330'
-    when 992...1200
-      '360'
-    else
-      '436'
-    end
-  end
-
   def csp_landing
     if ENV['HOST_NAME'] == 'customerstories.net'
       'https://customerstories.net'

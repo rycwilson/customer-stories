@@ -187,7 +187,7 @@ class Success < ApplicationRecord
        self.contributions.first.try(:contributor_id) &&
        self.contributions.first.referrer_id == self.contributions.first.contributor_id
       self.contributions.first.referrer
-        .slice(:id, :first_name, :last_name, :email, :title, :phone, :linkedin_url)
+        .slice(:id, :first_name, :last_name, :email, :title, :phone)
         .merge(previous_changes: self.contributions.first.referrer.previous_changes)
     else
       nil
@@ -199,7 +199,7 @@ class Success < ApplicationRecord
                            .try(:contributor)
     if customer_contact.present?
       customer_contact
-        .slice(:id, :first_name, :last_name, :email, :title, :phone, :linkedin_url)
+        .slice(:id, :first_name, :last_name, :email, :title, :phone)
         .merge(previous_changes: customer_contact.previous_changes)
     else
       nil

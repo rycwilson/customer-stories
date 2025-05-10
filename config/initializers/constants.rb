@@ -28,47 +28,12 @@ RESPONSIVE_AD_LANDSCAPE_LOGO_ASPECT_RATIO = 4
 RESPONSIVE_AD_LANDSCAPE_LOGO_MIN = '512x128'
 RESPONSIVE_AD_LANDSCAPE_LOGO_PLACEHOLDER = 'placeholders/512x128.png'
 
-# the parameters can be hard-coded here because this will be used in a simple re-direct
-CURATOR_LINKEDIN_AUTH_URL = "https://www.linkedin.com/oauth/v2/authorization?\
-                               client_id=#{ENV['LINKEDIN_KEY']}&\
-                               response_type=code&\
-                               scope=r_basicprofile%20w_member_social&\
-                               state=#{ENV['LINKEDIN_STATE']}".gsub(/\s+/, '')
-                               # redirect_uri=  included by application#linkedin_auth
-
-CONTRIBUTOR_LINKEDIN_AUTH_URL = "https://www.linkedin.com/oauth/v2/authorization?\
-                                  client_id=#{ENV['LINKEDIN_KEY']}&\
-                                  response_type=code&\
-                                  scope=r_liteprofile&\
-                                  state=#{ENV['LINKEDIN_STATE']}".gsub(/\s+/, '')
-
-# LINKEDIN_AUTHORIZE_BASE_URL = "https://www.linkedin.com/oauth/v2/authorization?\
-#                                client_id=#{ENV['LINKEDIN_KEY']}&\
-#                                response_type=code&\
-#                                scope=r_basicprofile%20w_member_social%20rw_company_admin\
-#                                state=#{ENV['LINKEDIN_STATE']}&".gsub(/\s+/, '')
-                               # redirect_uri=  included by profile/contributions controller
-
-# separate url needed for companies because specifics information is displayed
-# "Pixlee would like to access your data..."
-# CONTRIBUTOR_LINKEDIN_AUTH_URL =
-# PIXLEE_LINKEDIN_AUTHORIZE_BASE_URL = "https://www.linkedin.com/oauth/v2/authorization?\
-#                                       client_id=#{ ENV['PIXLEE_LINKEDIN_KEY'] }&\
-#                                       response_type=code&\
-#                                       scope=r_liteprofile%20w_share%20w_member_social&\
-#                                       state=#{ENV['LINKEDIN_STATE']}&".gsub(/\s+/, '')
-
 FACEBOOK_SHARE_WINDOW_WIDTH = 600
 FACEBOOK_SHARE_WINDOW_HEIGHT = 424
 TWITTER_SHARE_WINDOW_WIDTH = 500
 TWITTER_SHARE_WINDOW_HEIGHT = 446
 LINKEDIN_SHARE_WINDOW_WIDTH = 550
 LINKEDIN_SHARE_WINDOW_HEIGHT = 540
-
-# the parameters must be defined in the typhoeus request
-LINKEDIN_TOKEN_BASE_URL = "https://www.linkedin.com/oauth/v2/accessToken"
-LINKEDIN_PROFILES_BASE_URL = "https://api.linkedin.com/v2/me"
-LINKEDIN_PROFILE_JS = "https://platform.linkedin.com/badges/js/profile.js"
 
 LINKEDIN_SHARE_URL = "https://www.linkedin.com/shareArticle?mini=true&url="
 TWITTER_SHARE_URL = "https://twitter.com/share?url="
