@@ -51,13 +51,15 @@ SeedData::CUSTOMERS.each do |customer_data|
     first_name = Faker::Name.unique.first_name
     last_name = Faker::Name.unique.last_name
     email = "#{first_name.downcase}@#{customer.name.downcase.gsub(/\s+/, '')}.com"
-    User.create!(
+    user = User.new(
       first_name:,
       last_name:,
       email:,
       password: email,
       sign_up_code: 'csp_beta'
     )
+    user.skip_confirmation_notification!
+    user.save!
   end.shuffle
 
   # Create successes and associated data
