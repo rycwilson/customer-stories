@@ -90,7 +90,6 @@ class Company < ApplicationRecord
     end
   end
   accepts_nested_attributes_for :products, allow_destroy: true
-  has_many :contributor_prompts, dependent: :destroy
   has_many :contributor_questions, dependent: :destroy do
     def customer
       where(role: 'customer')

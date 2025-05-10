@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2025_05_10_170345) do
+ActiveRecord::Schema.define(version: 2025_05_10_193115) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_stat_statements"
@@ -204,35 +204,6 @@ ActiveRecord::Schema.define(version: 2025_05_10_170345) do
     t.index ["contribution_id"], name: "index_contributor_invitations_on_contribution_id"
   end
 
-  create_table "contributor_prompts", force: :cascade do |t|
-    t.string "prompt"
-    t.bigint "company_id"
-    t.datetime "created_at", precision: 6, null: false
-    t.datetime "updated_at", precision: 6, null: false
-    t.index ["company_id"], name: "index_contributor_prompts_on_company_id"
-  end
-
-  create_table "contributor_prompts_invitation_templates", id: false, force: :cascade do |t|
-    t.bigint "contributor_prompt_id", null: false
-    t.bigint "invitation_template_id", null: false
-    t.index ["contributor_prompt_id", "invitation_template_id"], name: "index_cp_it_on_cp_id_and_it_id"
-    t.index ["invitation_template_id", "contributor_prompt_id"], name: "index_cp_it_on_it_id_and_cp_id"
-  end
-
-  create_table "contributor_prompts_products", id: false, force: :cascade do |t|
-    t.bigint "contributor_prompt_id", null: false
-    t.bigint "product_id", null: false
-    t.index ["contributor_prompt_id", "product_id"], name: "index_cp_product_on_cp_id_and_product_id"
-    t.index ["product_id", "contributor_prompt_id"], name: "index_cp_product_on_product_id_and_cp_id"
-  end
-
-  create_table "contributor_prompts_story_categories", id: false, force: :cascade do |t|
-    t.bigint "contributor_prompt_id", null: false
-    t.bigint "story_category_id", null: false
-    t.index ["contributor_prompt_id", "story_category_id"], name: "index_cp_sc_on_cp_id_and_sc_id"
-    t.index ["story_category_id", "contributor_prompt_id"], name: "index_cp_sc_on_sc_id_and_cp_id"
-  end
-
   create_table "contributor_questions", id: :serial, force: :cascade do |t|
     t.integer "company_id"
     t.string "question"
@@ -240,6 +211,18 @@ ActiveRecord::Schema.define(version: 2025_05_10_170345) do
     t.datetime "updated_at", null: false
     t.string "role"
     t.index ["company_id"], name: "index_contributor_questions_on_company_id"
+  end
+
+  create_table "contributor_questions_products", id: false, force: :cascade do |t|
+    t.bigint "contributor_question_id", null: false
+    t.bigint "product_id", null: false
+    t.index ["contributor_question_id", "product_id"], name: "index_cq_p_on_cq_id_and_p_id"
+  end
+
+  create_table "contributor_questions_story_categories", id: false, force: :cascade do |t|
+    t.bigint "contributor_question_id", null: false
+    t.bigint "story_category_id", null: false
+    t.index ["contributor_question_id", "story_category_id"], name: "index_cq_sc_on_cq_id_and_sc_id"
   end
 
   create_table "ctas_successes", id: :serial, force: :cascade do |t|
@@ -572,7 +555,6 @@ ActiveRecord::Schema.define(version: 2025_05_10_170345) do
   add_foreign_key "contributor_answers", "contributions"
   add_foreign_key "contributor_answers", "contributor_questions"
   add_foreign_key "contributor_invitations", "contributions"
-  add_foreign_key "contributor_prompts", "companies"
   add_foreign_key "contributor_questions", "companies"
   add_foreign_key "ctas_successes", "call_to_actions"
   add_foreign_key "ctas_successes", "successes"

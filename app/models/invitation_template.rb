@@ -1,19 +1,11 @@
 class InvitationTemplate < ApplicationRecord
-  default_scope { order(name: :asc) }
-
   belongs_to :company
   has_many :contributions
-  has_many :templates_questions, dependent: :destroy
-  has_many :contributor_questions, through: :templates_questions
-  
-  has_and_belongs_to_many :contributor_prompts, dependent: :destroy
-  
+  has_and_belongs_to_many :contributor_questions, dependent: :destroy, join_table: :templates_questions
   alias_attribute :questions, :contributor_questions
-  accepts_nested_attributes_for(
-    :templates_questions,
-    # reject_if: Proc.new { |tq| tq['contributor_question_id'].blank? },
-    allow_destroy: true
-  )
+
+  default_scope { order(name: :asc) }
+
   accepts_nested_attributes_for(
     :contributor_questions,
     # reject_if: Proc.new { |tq| tq['contributor_question_id'].present? },
