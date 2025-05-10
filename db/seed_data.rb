@@ -146,19 +146,19 @@ module SeedData
     request_body: "<p style=\"margin-top:0\"><span contenteditable=\"false\">[contributor_first_name]</span>,</p><p style=\"box-sizing: border-box; margin: 0px 0px 10px; line-height: 1.7em; orphans: 2; text-align: start; text-indent: 0px; widows: 2; text-decoration-style: initial; text-decoration-color: initial;\">Congratulations on your win at [customer_name]!</p><p style=\"box-sizing: border-box; margin: 0px 0px 10px; line-height: 1.7em; color: rgb(0, 0, 0); font-family: &quot;Open Sans&quot;, &quot;Trebuchet MS&quot;, arial, sans-serif; font-size: 13px; font-style: normal; font-variant-ligatures: normal; font-variant-caps: normal; font-weight: 400; letter-spacing: normal; orphans: 2; text-align: start; text-indent: 0px; text-transform: none; white-space: normal; widows: 2; word-spacing: 0px; -webkit-text-stroke-width: 0px; text-decoration-style: initial; text-decoration-color: initial;\"></p><p>I will write a win story about this sales success which will be shared within [company_name]. The story will be a great example of the great work you and your team do. It's also an opportunity to give a kudos to the folks that helped you.</p><p>Here is how it works. To start, all I need is ten minutes of your time to answer some questions:</p><p style=\"box-sizing: border-box; margin: 0px 0px 10px; line-height: 1.7em; color: rgb(0, 0, 0); font-family: &quot;Open Sans&quot;, &quot;Trebuchet MS&quot;, arial, sans-serif; font-size: 13px; font-style: normal; font-variant-ligatures: normal; font-variant-caps: normal; font-weight: 400; letter-spacing: normal; orphans: 2; text-align: start; text-indent: 0px; text-transform: none; white-space: normal; widows: 2; word-spacing: 0px; -webkit-text-stroke-width: 0px; text-decoration-style: initial; text-decoration-color: initial;\"><span class=\"cta-wrapper submit-link\">[contribution_submission_button={text:\"Share Your Win\",color:\"#4d8664\"}]</span><br></p><p>Once I get your input, I will draft the win story and I may call for some added context.&nbsp;</p><p>Please call or email with any questions. I am confident you will find the final win story valuable to you, your peers, and [company_name].<br></p><p style=\"box-sizing: border-box; margin: 0px 0px 10px; line-height: 1.7em; color: rgb(0, 0, 0); font-family: &quot;Open Sans&quot;, &quot;Trebuchet MS&quot;, arial, sans-serif; font-size: 13px; font-style: normal; font-variant-ligatures: normal; font-variant-caps: normal; font-weight: 400; letter-spacing: normal; orphans: 2; text-align: start; text-indent: 0px; text-transform: none; white-space: normal; widows: 2; word-spacing: 0px; -webkit-text-stroke-width: 0px; text-decoration-style: initial; text-decoration-color: initial;\">Thank you,</p><p id=\"curator-signature\"><img id=\"curator-img\" src=\"https://d2dy20007nrj5u.cloudfront.net/assets/placeholders/user-photo-missing-93cb05229fb0f63973620d5088ead376682b0a98920e89b486501553fe5909ee.png\" style=\"width:80px;margin-bottom:4px;\" onerror=\"this.style.display='none'>\"><br><span style=\"line-height:1.4\">[curator_full_name]</span><br><span style=\"line-height:1.4\">[curator_title]</span><br><span style=\"line-height:1.4\">[company_name]</span><br><span style=\"line-height:1.4\">[curator_phone]</span></p><p style=\"box-sizing: border-box; margin: 0px 0px 10px; line-height: 1.7em; color: rgb(0, 0, 0); font-family: &quot;Open Sans&quot;, &quot;Trebuchet MS&quot;, arial, sans-serif; font-size: 13px; font-style: normal; font-variant-ligatures: normal; font-variant-caps: normal; font-weight: 400; letter-spacing: normal; orphans: 2; text-align: start; text-indent: 0px; text-transform: none; white-space: normal; widows: 2; word-spacing: 0px; -webkit-text-stroke-width: 0px; text-decoration-style: initial; text-decoration-color: initial;\"></p>"
   }
 
-  CONTRIBUTOR_PROMPTS = [
-    { role: 'Customer', prompt: 'What was the challenge or disruption requiring action?' },
-    { role: 'Customer', prompt: 'What were the hurdles to solving the challenge?' },
-    { role: 'Customer', prompt: 'What was the journey to solving the challenge?' },
-    { role: 'Customer', prompt: 'What were the positive outcomes for you and the company?' },
-    { role: 'Customer Success', prompt: "What was the customer's challenge or disruption requiring action?" },
-    { role: 'Customer Success', prompt: "What were the customer's hurdles to solving the challenge?" },
-    { role: 'Customer Success', prompt: 'What was your joint journey to helping them solve the challenge?' },
-    { role: 'Customer Success', prompt: 'What were the positive outcomes for the stakeholders and the company?' },
-    { role: 'Sales', prompt: "What was the customer's challenge or disruption requiring action?" },
-    { role: 'Sales', prompt: "What were the customer's hurdles to solving the challenge?" },
-    { role: 'Sales', prompt: "What was your joint journey to helping them solve the challenge?" },
-    { role: 'Sales', prompt: 'What were the positive outcomes for the stakeholders and the company?'}
+  CONTRIBUTOR_QUESTIONS = [
+    { role: 'Customer', question: 'What was the challenge or disruption requiring action?' },
+    { role: 'Customer', question: 'What were the hurdles to solving the challenge?' },
+    { role: 'Customer', question: 'What was the journey to solving the challenge?' },
+    { role: 'Customer', question: 'What were the positive outcomes for you and the company?' },
+    { role: 'Customer Success', question: "What was the customer's challenge or disruption requiring action?" },
+    { role: 'Customer Success', question: "What were the customer's hurdles to solving the challenge?" },
+    { role: 'Customer Success', question: 'What was your joint journey to helping them solve the challenge?' },
+    { role: 'Customer Success', question: 'What were the positive outcomes for the stakeholders and the company?' },
+    { role: 'Sales', question: "What was the customer's challenge or disruption requiring action?" },
+    { role: 'Sales', question: "What were the customer's hurdles to solving the challenge?" },
+    { role: 'Sales', question: "What was your joint journey to helping them solve the challenge?" },
+    { role: 'Sales', question: 'What were the positive outcomes for the stakeholders and the company?'}
   ]
 
   def self.lorem_paragraph_html

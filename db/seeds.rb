@@ -122,16 +122,12 @@ SeedData::CUSTOMERS.each do |customer_data|
 end
 
 # Create invitation templates
-begin
-  acme.invitation_templates.create!(SeedData::CUSTOMER_INVITATION_TEMPLATE)
-  acme.invitation_templates.create!(SeedData::CUSTOMER_SUCCESS_INVITATION_TEMPLATE)
-  acme.invitation_templates.create!(SeedData::SALES_INVITATION_TEMPLATE)
-rescue ActiveRecord::RecordInvalid => e
-  puts "Creating invitation templates failed: #{e.message}"
-end
+acme.invitation_templates.create!(SeedData::CUSTOMER_INVITATION_TEMPLATE)
+acme.invitation_templates.create!(SeedData::CUSTOMER_SUCCESS_INVITATION_TEMPLATE)
+acme.invitation_templates.create!(SeedData::SALES_INVITATION_TEMPLATE)
 
-# Create contributor prompts
-SeedData::CONTRIBUTOR_PROMPTS.each do |prompt_data|
-  invitation_template = acme.invitation_templates.find_by(name: prompt_data[:role])
-  invitation_template.contributor_prompts << acme.contributor_prompts.create!(prompt_data.except(:role))
+# Create contributor questions
+SeedData::CONTRIBUTOR_QUESTIONS.each do |question_data|
+  invitation_template = acme.invitation_templates.find_by(name: question_data[:role])
+  invitation_template.contributor_questions << acme.contributor_questions.create!(question_data.except(:role))
 end
