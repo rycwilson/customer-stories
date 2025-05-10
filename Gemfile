@@ -64,7 +64,7 @@ gem 'net-pop', require: false
 # (devise dependency) https://stackoverflow.com/questions/79360526/uninitialized-constant-activesupportloggerthreadsafelevellogger-nameerror
 gem 'concurrent-ruby', '1.3.4' 
 
-# Previously used, currently unused
+# No longer used
 # gem 'browser-timezone-rails'
 # gem 'local_time'
 # gem 'multi_json'

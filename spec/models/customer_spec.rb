@@ -2,7 +2,7 @@ require 'rails_helper'
 
 RSpec.describe Customer, type: :model do
   # let(:company) { build(:company) }
-
+ 
   subject(:customer) { build(:customer) }
 
   describe 'associations' do
@@ -10,9 +10,7 @@ RSpec.describe Customer, type: :model do
     it { is_expected.to have_many(:successes).dependent(:destroy) }
     it { is_expected.to have_many(:stories).through(:successes) }
     it { is_expected.to have_many(:contributions).through(:successes) }
-
-    # TODO test that the contributors association is distinct (users can have multiple contributions)
-    it { is_expected.to have_many(:contributors).through(:contributions).source(:contributor) }
+    it { is_expected.to have_many(:contributors).through(:contributions) }
   end
 
   describe 'validations' do
