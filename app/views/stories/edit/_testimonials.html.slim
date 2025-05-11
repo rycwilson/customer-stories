@@ -2,18 +2,15 @@
     model: story,
     format: :json,
     html: { \
-      id: 'story-supporting-content-form',
+      id: 'story-testimonials-form',
       class: 'form-horizontal',
       autocomplete: 'off' }) do |form|
 
   .form-group 
-    .visible-sm-block.col-sm-offset-1.col-sm-10
+    .visible-sm-block.visible-md-block.col-sm-12.col-md-offset-2.col-md-9
       = form.label(:quote, 'Customer Quote')
-      = form.text_area( \
-          :quote,
-          { rows: 3, class: 'form-control', placeholder: 'Select a Contributor to autofill their Contribution here' })
-    = form.label(:quote, 'Customer Quote', class: 'control-label col-md-3 visible-md-inline-block visible-lg-inline-block')
-    .col-md-7.col-lg-6.visible-md-block.visible-lg-block
+    = form.label(:quote, 'Customer Quote', class: 'control-label visible-lg-inline-block col-lg-3')
+    .col-sm-12.col-md-offset-2.col-md-9.col-lg-offset-0.col-lg-7
       = collection_select( \
           story,
           :featured_contributor_id,
@@ -42,11 +39,10 @@
 
   .form-group 
     = hidden_field_tag('story[formatted_video_url]', story.video_url)
-    .visible-sm-block.col-sm-offset-1.col-sm-10
+    .visible-sm-block.visible-md-block.col-sm-12.col-md-offset-2.col-md-9
       = form.label(:video_url, 'Video URL')
-      = form.text_field(:video_url, class: 'form-control', placeholder: 'YouTube, Vimeo, or Wistia', autocomplete: 'off')
-    = form.label(:video_url, 'Video URL', class: 'control-label col-md-3 visible-md-inline-block visible-lg-inline-block')
-    .col-md-7.col-lg-6.visible-md-block.visible-lg-block
+    = form.label(:video_url, 'Video URL', class: 'control-label visible-lg-inline-block col-lg-3')
+    .col-sm-12.col-md-offset-2.col-md-9.col-lg-offset-0.col-lg-7
       = form.text_field(:video_url, class: 'form-control', placeholder: 'YouTube, Vimeo, or Wistia', autocomplete: 'off')
       #video-container.text-center
         - if story.video_info[:provider] == 'wistia'

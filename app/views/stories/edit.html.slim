@@ -29,14 +29,14 @@ main.dashboard.hidden-xs data-controller="dashboard" data-dashboard-modal-outlet
               role="tab" }
               i.fa.fa-fw.fa-edit 
               |&nbsp;Narrative Content
-          li class=('active' if @active_tab == '#story-supporting-content')
+          li class=('active' if @active_tab == '#story-testimonials')
             a {
-              id="story-supporting-content-tab"
-              href="#story-supporting-content" 
+              id="story-testimonials-tab"
+              href="#story-testimonials" 
               data-toggle="tab" 
               data-action="dashboard#setNavCookie"
-              aria-controls="story-supporting-content"
-              aria-expanded="#{@active_tab == '#story-supporting-content' ? 'true' : 'false'}"
+              aria-controls="story-testimonials"
+              aria-expanded="#{@active_tab == '#story-testimonials' ? 'true' : 'false'}"
               role="tab" }
               i.fa.fa-fw.fa-quote-left
               / i.fa.fa-fw.fa-info-circle
@@ -74,11 +74,11 @@ main.dashboard.hidden-xs data-controller="dashboard" data-dashboard-modal-outlet
             role="tabpanel" }
             = render('/stories/edit/narrative_content', { company: @company, story: @story })
             
-          #story-supporting-content.tab-pane {
-            class=('active in' if @active_tab == '#story-supporting-content')
-            aria-labelledby="story-supporting-content-tab"
+          #story-testimonials.tab-pane {
+            class=('active in' if @active_tab == '#story-testimonials')
+            aria-labelledby="story-testimonials-tab"
             role="tabpanel" }
-            = render('stories/edit/supporting_content', { company: @company, story: @story })
+            = render('stories/edit/testimonials', { company: @company, story: @story })
             
           #story-contributions.tab-pane {
             class=('active' if @active_tab == '#story-contributions') 
