@@ -70,7 +70,7 @@ SeedData::CUSTOMERS.each do |customer_data|
 
     loop do
       begin
-        success_data = SeedData.generate_success_and_story
+        success_data = SeedData.generate_success_and_story customer
         success = customer.successes.create!(name: success_data[:success_name], curator_id: curators.sample.id)
         break
 

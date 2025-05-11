@@ -169,9 +169,7 @@ module SeedData
   end
 
   # Generates a customer win and story using the provided data
-  def self.generate_success_and_story
-    customer = CUSTOMERS.sample
-    customer_name = customer[:name]
+  def self.generate_success_and_story customer
     product = PRODUCTS.sample[:name]
     acme_product = "Acme #{product}"
 
@@ -190,55 +188,55 @@ module SeedData
       -> {
         {
           success_name: "#{product} Implementation Project",
-          story_title: "#{customer_name} #{verb} #{department} Operations with #{acme_product}"
+          story_title: "#{customer.name} #{verb} #{department} Operations with #{acme_product}"
         }
       },
       -> {
         {
           success_name: "#{job_field} Optimization Using #{product}",
-          story_title: "How #{customer_name} #{verb} Results in #{job_field} with #{acme_product}"
+          story_title: "How #{customer.name} #{verb} Results in #{job_field} with #{acme_product}"
         }
       },
       -> {
         {
           success_name: "#{job_title} Enablement via #{product}",
-          story_title: "#{customer_name} #{verb} Its #{job_title.pluralize} with #{acme_product}"
+          story_title: "#{customer.name} #{verb} Its #{job_title.pluralize} with #{acme_product}"
         }
       },
       -> {
         {
           success_name: "#{product} Integration in #{department}",
-          story_title: "#{customer_name} #{verb} #{department} Workflows with #{acme_product}"
+          story_title: "#{customer.name} #{verb} #{department} Workflows with #{acme_product}"
         }
       },
       -> {
         {
           success_name: "#{buzzword} Initiative: #{product} Rollout",
-          story_title: "#{customer_name} #{verb} Business Outcomes with Its #{buzzword} Initiative and #{acme_product}"
+          story_title: "#{customer.name} #{verb} Business Outcomes with Its #{buzzword} Initiative and #{acme_product}"
         }
       },
       -> {
         {
           success_name: "Deployment of #{product} Across #{job_field}",
-          story_title: "#{customer_name} #{verb} #{job_field} Performance by Scaling #{acme_product}"
+          story_title: "#{customer.name} #{verb} #{job_field} Performance by Scaling #{acme_product}"
         }
       },
       -> {
         {
           success_name: "Performance Gains Through #{product} Adoption",
-          story_title: "#{customer_name} #{verb} Efficiency by #{percentage}% Using #{acme_product}"
+          story_title: "#{customer.name} #{verb} Efficiency by #{percentage}% Using #{acme_product}"
         }
       },
       -> {
         {
           success_name: "Modernizing #{department} with #{product}",
-          story_title: "#{customer_name} #{verb} #{department} Productivity by #{percentage}% with #{acme_product}"
+          story_title: "#{customer.name} #{verb} #{department} Productivity by #{percentage}% with #{acme_product}"
         }
       },
       -> {
         {
           success_name: "Revamping #{job_field} Processes with #{product}",
-          story_title: "#{customer_name} #{verb} #{job_field} Throughput by #{percentage}% Thanks to #{acme_product}"
+          story_title: "#{customer.name} #{verb} #{job_field} Throughput by #{percentage}% Thanks to #{acme_product}"
         }
       }
     ]
