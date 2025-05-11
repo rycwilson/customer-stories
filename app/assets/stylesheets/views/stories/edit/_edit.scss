@@ -1,6 +1,8 @@
 // @import 'contributions';
 
 #story-narrative-content {
+  @import 'results';
+  
   [id*="story-narrative"] + .note-editor {
     // .modal.link-dialog {
     // }
@@ -98,8 +100,6 @@
 }
 
 #story-supporting-content {
-  @import 'results';
-
   #story_quote {
     font-style: italic;
   }
@@ -257,19 +257,16 @@
 }
 
 .story-settings__publish {
-  .visible-sm-block,
-  .visible-md-block {
-    > div {
-      display: flex;
-      justify-content: space-around;
+  :last-child > div {
+    display: flex;
+    justify-content: space-around;
 
-      [data-controller*="bootstrap-switch"] {
-        @include flex-row-center;
+    [data-controller*="bootstrap-switch"] {
+      @include flex-row-center;
 
-        label {
-          margin: 0 10px 0 0;
-          font-weight: normal;
-        }
+      label {
+        margin: 0 10px 0 0;
+        font-weight: normal;
       }
     }
   }

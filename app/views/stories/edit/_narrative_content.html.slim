@@ -15,51 +15,51 @@
   input#narrative__img-upload.hidden type="file"
 
   .form-group
-    .visible-sm-block.col-sm-12
-      = form.label(:title, for: 'story-title-sm')
-      = form.text_field(:title, id: 'story-title-sm', class: 'form-control', data: { story_target: 'titleInput' })
-    = form.label( \
-        :title,
-        for: 'story-title-md-lg',
-        class: 'control-label col-md-2 visible-md-inline-block visible-lg-inline-block')
-    .col-md-10.col-lg-9.visible-md-block.visible-lg-block
-      = form.text_field(:title, id: 'story-title-md-lg', class: 'form-control', data: { story_target: 'titleInput' })
-  
-  /.form-group
-    = form.label(:summary, 'Summary')
-    = form.text_area( \
-        :summary,
-        { class: 'form-control',
-          rows: 8,
-          placeholder: 'Provide a brief story summary that will appear in a preview window along with the Customer Quote',
-          data: { 'summary-range': '50-150' } })
-    // bootstrap validator
-      .help-block.with-errors style='height:20px'
-        | Minimum 50 words, Maximum 150 words
+    .visible-sm-block.visible-md-block.col-sm-12.col-md-offset-1.col-md-11
+      = form.label(:title)
+    = form.label(:title, class: 'control-label visible-lg-inline-block col-lg-2')
+    .col-sm-12.col-md-offset-1.col-md-11.col-lg-offset-0.col-lg-9
+      = form.text_field(:title, id: 'story-title-lg', class: 'form-control', data: { story_target: 'titleInput' })
 
   .form-group 
-    .visible-sm-block.col-sm-12 
-      = form.label(:narrative, 'Body', for: 'story-editor-sm')
+    .visible-sm-block.visible-md-block.col-sm-12.col-md-offset-1.col-md-11
+      = form.label(:results)
+    = form.label(:results, class: 'control-label visible-lg-inline-block col-lg-2')
+    .col-sm-12.col-md-offset-1.col-md-11.col-lg-offset-0.col-lg-9
+      .list-group data-story-target="resultsList" data-controller="list-group"
+        = form.fields_for(:results) do |results_form|
+          a.list-group-item href="javascript:;" data-list-group-target="item"
+            i.fa.fa-fw.fa-arrows-v
+            = results_form.text_field( \
+                :description,
+                class: 'form-control',
+                data: { \
+                  list_group_target: 'itemInput',
+                  action: 'input->list-group#onItemInput',
+                  initial_value: results_form.object.description })
+            = results_form.check_box(:_destroy, { class: 'hidden' }, true, false)
+            p.list-group-item-text data-list-group-target="itemText"
+              = results_form.object.description
+            button.btn {
+              type="button" 
+              data-action="list-group#remove"
+              data-controller="tooltip"
+              data-tooltip-options-value={ title: "Delete" }.to_json }
+              i.fa.fa-fw.fa-remove
+            button.btn {
+              type="button" 
+              data-action="list-group#undo"
+              data-list-group-target="undoButton"
+              data-controller="tooltip" }
+              i.fa.fa-fw.fa-undo
+  
+  .form-group 
+    .visible-sm-block.visible-md-block.col-sm-12.col-md-offset-1.col-md-11
+      = form.label(:narrative, 'Body')
+    = form.label(:narrative, 'Body', class: 'control-label visible-lg-inline-block col-lg-2')
+    .col-sm-12.col-md-offset-1.col-md-11.col-lg-offset-0.col-lg-9
       = form.text_area( \
           :narrative,
-          id: 'story-narrative-sm',
-          class: 'form-control',
-          data: { \
-            controller: 'summernote',
-            summernote_enabled_value: true,
-            summernote_config_key_value: 'story',
-            summernote_config_args_value: [nil].to_json,
-            story_target: 'narrativeTextarea',
-            action: 'summernote:init->story#onInitNarrativeEditor' })
-    = form.label( \
-        :narrative,
-        'Body',
-        for: 'story-editor-md-lg',
-        class: 'control-label col-md-2 visible-md-inline-block visible-lg-inline-block')
-    .col-md-10.col-lg-9.visible-md-block.visible-lg-block
-      = form.text_area( \
-          :narrative,
-          id: 'story-narrative-md-lg',
           class: 'form-control',
           data: { \
             controller: 'summernote',
@@ -69,6 +69,6 @@
             story_target: 'narrativeTextarea',
             action: 'summernote:init->story#onInitNarrativeEditor' })
 
-  .form-group.hidden-xs
-    .col-md-offset-2.col-md-10.col-lg-9.text-right
+  .row.hidden-xs
+    .col-sm-12.col-md-offset-1.col-md-11.col-lg-offset-2.col-lg-9
       = form.submit('Save changes', class: 'btn btn-success')
