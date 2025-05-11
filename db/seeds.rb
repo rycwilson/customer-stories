@@ -89,6 +89,15 @@ SeedData::CUSTOMERS.each do |customer_data|
             logo_published: i == 1 || i == 2,
             published: i == 2
           )
+
+          # Changeover from [:logo_published, :preview_published, :published] attributes to :status_new in progress
+          if story.published?
+            story.is_published!
+          elsif story.logo_published?
+            story.listed!
+          else
+            story.draft!
+          end
     
           # For the unpublished story, allow for a default narrative and empty results
           unless i == 0
