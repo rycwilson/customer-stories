@@ -183,13 +183,16 @@ function rowGroupTemplate(rows: Api<any>, group: string) {
   const storyTitle = story?.title;
   const storyPath = `/stories/${storySlug}/edit`;
   return $('<tr/>').append(`
+    <!-- <td><i class="fa fa-${story ? 'bullhorn' : 'rocket'}"></i></td> -->
     <td colspan="5">
-      <span>${customerWin.customer.name}</span>
-      <span class="emdash">&nbsp;&nbsp;&#8211;&nbsp;&nbsp;</span>
-      ${story ? 
-        `<a href="${storyPath}">${storyTitle}</a>` :
-        `<a href="javascript:;" data-action="dashboard#showContributionCustomerWin" data-customer-win-id="${customerWin.id}">${customerWinName}</a>`
-      }
+      <div>
+        <span>${customerWin.customer.name}</span>
+        <span class="emdash">&nbsp;&nbsp;&#8211;&nbsp;&nbsp;</span>
+        ${story ? 
+          `<a href="${storyPath}">${storyTitle}</a>` :
+          `<a href="javascript:;" data-action="dashboard#showContributionCustomerWin" data-customer-win-id="${customerWin.id}">${customerWinName}</a>`
+        }
+      </div>
     </td>
   `);
 }
