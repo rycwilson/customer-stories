@@ -1,5 +1,4 @@
 import { Controller } from '@hotwired/stimulus';
-// import { debounce } from '../utils';
 
 export default class StoryController extends Controller<HTMLDivElement> {
   static targets = [
@@ -17,12 +16,9 @@ export default class StoryController extends Controller<HTMLDivElement> {
   declare readonly contributionsTarget: HTMLDivElement;
   declare readonly resultsListTarget: HTMLUListElement;
 
-  // declare currentScreen: ScreenSize;
-  // resizeHandler = debounce(this.onResize.bind(this), 200);
  
   connect() {
     this.contributionsTarget.setAttribute('data-resource-init-value', 'true');
-    // window.addEventListener('resize', this.resizeHandler);
   }
 
   refreshHiddenLink() {
@@ -37,32 +33,4 @@ export default class StoryController extends Controller<HTMLDivElement> {
     //   .tooltip('fixTitle')
     //   .addClass('disabled')
   }
-
-  // onInitNarrativeEditor({ target: textarea }: { target: HTMLTextAreaElement }) {
-  //   if (textarea.checkVisibility()) {
-  //     this.currentScreen = <ScreenSize>textarea.id.match(/(?<screen>(sm|md-lg)$)/)?.groups?.screen;
-  //   }
-  // }
-
-  // get visibleNarrativeTextarea() {
-  //   return this.narrativeTextareaTargets.find(textarea => {
-  //     const editor = <HTMLElement>textarea.nextElementSibling;
-  //     return editor.checkVisibility();
-  //   });
-  // }
-
-  // onResize() {
-  //   const newNote = this.visibleNarrativeTextarea;
-  //   const newScreen = <ScreenSize>newNote?.id.match(/(?<screen>(sm|md-lg)$)/)?.groups?.screen || 'xs';
-  //   if (newScreen === this.currentScreen || newScreen === 'xs' || this.currentScreen === 'xs') {
-  //     this.currentScreen = newScreen;
-  //     return;
-  //   }
-  //   const oldNote = this.narrativeTextareaTargets.find(textarea => textarea !== newNote);
-  //   const newTitle = <HTMLInputElement>this.titleInputTargets.find(input => input.id.includes(newScreen));
-  //   const oldTitle = <HTMLInputElement>this.titleInputTargets.find(input => input !== newTitle);
-  //   $(newNote).summernote('code', $(oldNote).summernote('code'));
-  //   newTitle.value = oldTitle.value;
-  //   this.currentScreen = newScreen;
-  // }
 }
