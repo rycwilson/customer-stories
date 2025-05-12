@@ -23,7 +23,7 @@
   --ts-pr-clear-button:	0;
   --ts-pr-caret:	0;
   --ts-pr-min:	.75rem;
-  --bs-danger-text: #a94442;
+  --bs-danger-text: #863427;  /* changed to match csp $state-danger-text */
 }
 
 .ts-wrapper.single .ts-control, .ts-wrapper.single .ts-control input {
