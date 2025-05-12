@@ -24,24 +24,6 @@
           data: { new_customer_win_target: 'customerField' })
 
     .form-group
-      = form.label(:curator_id, 'Curator')
-      = form.collection_select( \
-          :curator_id,
-          @company.curators.sort_by { |curator| curator.last_name },
-          :id,
-          :full_name,
-          { include_blank: true,
-            selected: @curator_id || [] },
-          { class: 'form-control',
-            placeholder: 'Select',
-            required: true,
-            data: { \
-              controller: 'tomselect',
-              tomselect_kind_value: 'curator',
-              tomselect_custom_options_value: { plugins: {} } }})
-      .help-block.with-errors
-
-    .form-group
       = form.label(:customer_id, 'Customer', class: 'control-label') 
       = form.collection_select( \
           :customer_id,
@@ -68,7 +50,7 @@
           :name,
           class: 'form-control',
           required: true,
-          placeholder: 'Name of Project / Deal / Opportunity from CRM')
+          placeholder: 'Name of Deal or Opportunity from CRM')
       .help-block.with-errors
 
     .form-group
@@ -77,7 +59,7 @@
           :win_story_html,
           rows: 4,
           class: 'form-control',
-          placeholder: 'Description of Project / Deal / Opportunity from CRM')
+          placeholder: 'Description of Deal or Opportunity from CRM')
       .help-block 
         | Optional
 
@@ -151,6 +133,24 @@
           parent_form_or_fields: contribution_fields,
           controller_id: 'new-customer-win', 
           contact_type: 'contributor')
+
+    .form-group
+      = form.label(:curator_id, 'Curator')
+      = form.collection_select( \
+          :curator_id,
+          @company.curators.sort_by { |curator| curator.last_name },
+          :id,
+          :full_name,
+          { include_blank: true,
+            selected: @curator_id || [] },
+          { class: 'form-control',
+            placeholder: 'Select',
+            required: true,
+            data: { \
+              controller: 'tomselect',
+              tomselect_kind_value: 'curator',
+              tomselect_custom_options_value: { plugins: {} } }})
+      .help-block.with-errors     
 
     /div style="display:flex; align-items:center"
       = form.submit(class: 'btn btn-success', data: { new_customer_win_target: 'submitBtn' })

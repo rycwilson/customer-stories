@@ -14,7 +14,7 @@ div {
 
   / grid__item is for the overlays; not implemented internally
   a.story-card__link.grid__item {
-    href="#{is_dashboard ? edit_story_path(story.slug) : story.csp_story_link(is_dashboard, is_plugin, is_external, plugin_type)}"
+    href="#{is_dashboard ? edit_story_path(story.id) : story.csp_story_link(is_dashboard, is_plugin, is_external, plugin_type)}"
     class="#{story.status}"
     class=('grid__item--carousel' if plugin_type == 'carousel')
     class=("bg-#{background}" if background)
