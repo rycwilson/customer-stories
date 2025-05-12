@@ -44,6 +44,7 @@ class StoriesController < ApplicationController
     render(layout: @is_dashboard ? false : 'stories')
   end
 
+  # GET new_success_story / new_company_story
   def new
     @success = @company.successes.find_by(id: params[:success_id])  # success_id may or may not be present
     @story = @success.present? ? @success.build_story : Story.new
@@ -142,10 +143,11 @@ class StoriesController < ApplicationController
 
   def create
     @story = Story.new(story_params)
-    if @story.save
-      @redirect_path = edit_story_path(story)
-    end
-    respond_to { |format| format.js }
+    binding.pry
+    # if @story.save
+    #   @redirect_path = edit_story_path(story)
+    # end
+    # respond_to { |format| format.js }
   end
 
   def update
@@ -221,8 +223,6 @@ class StoriesController < ApplicationController
       end
     end
   end
-
-  
 
   def destroy
     @story.destroy
