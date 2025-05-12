@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2025_05_10_193115) do
+ActiveRecord::Schema.define(version: 2025_05_12_162331) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_stat_statements"
@@ -462,6 +462,7 @@ ActiveRecord::Schema.define(version: 2025_05_10_193115) do
     t.boolean "win_story_completed", default: false
     t.text "win_story_text"
     t.text "win_story_markdown"
+    t.boolean "placeholder", default: false, null: false
     t.index ["curator_id"], name: "index_successes_on_curator_id"
     t.index ["customer_id"], name: "index_successes_on_customer_id"
   end
