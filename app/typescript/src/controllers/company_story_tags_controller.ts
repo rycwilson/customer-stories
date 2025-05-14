@@ -41,13 +41,18 @@ export default class CompanyStoryTagsController extends FormController<CompanySt
 
     const { formSubmission } = e.detail;
 
-    // we want to identify inputs that are not related to a new or removed tag and disable them => avoids unnecessary updates
+    // we want to identify inputs that are not related to a new or removed tag and disable them, as this avoids unnecessary updates
     const tagInputGroups = this.hiddenFieldTargets.reduce((
       groups: { [key: string]: HTMLInputElement[] }, 
       input: HTMLInputElement
     ) => {
-      const key = input.name.match(/\[(?<key>\d+)\]/)?.groups?.key;
-      if (key) groups[key] = groups[key] ? [...groups[key], input] : [input];
+      const match = input.name.match(/company\[(?<source>\w+)_attributes\]\[(?<key>\d+)\]/);
+      const source = match?.groups?.source;
+      const key = match?.groups?.key;
+      if (source && key) {
+        const inputs = groups[`${source}_${key}`];
+        groups[`${source}_${key}`] = inputs ? [...inputs, input] : [input];
+      }
       return groups;
     }, {});
 
