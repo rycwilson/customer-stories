@@ -5,8 +5,10 @@ export default class CompanyStoryTagsController extends FormController<CompanySt
   static targets = ['hiddenField'];  
   declare hiddenFieldTargets: HTMLInputElement[];
 
-  connect() {
-  }
+  private wasProgrammaticallySubmitted = false;
+
+  // connect() {
+  // }
 
   onAddTag({ detail: { tagName, source, cancel = false} }: { detail: { tagName: string, source: string, cancel?: boolean } }) {
     if (cancel) {
@@ -32,16 +34,38 @@ export default class CompanyStoryTagsController extends FormController<CompanySt
   }
 
   onTurboSubmitStart(e: TurboSubmitStartEvent) {
-    console.log(e.detail)
+    if (this.wasProgrammaticallySubmitted) {
+      this.wasProgrammaticallySubmitted = false;
+      return;
+    }
+
     const { formSubmission } = e.detail;
-    const form = formSubmission.formElement;
-    const formData = new FormData(form);
 
-    console.log(Object.fromEntries(formData.entries()));
+    // we want to identify inputs that are not related to a new or removed tag and disable them => avoids unnecessary updates
+    const tagInputGroups = this.hiddenFieldTargets.reduce((
+      groups: { [key: string]: HTMLInputElement[] }, 
+      input: HTMLInputElement
+    ) => {
+      const key = input.name.match(/\[(?<key>\d+)\]/)?.groups?.key;
+      if (key) groups[key] = groups[key] ? [...groups[key], input] : [input];
+      return groups;
+    }, {});
 
+    for (const [_, inputs] of Object.entries(tagInputGroups)) {
+      const idInput = inputs.find(input => input.name.includes('[id]'));
+      const _destroyInput = inputs.find(input => input.name.includes('[_destroy]'));
+      const isNewTag = idInput?.value === '';
+      const isRemovedTag = _destroyInput?.checked === true;
+      if (!isNewTag && !isRemovedTag) {
+        inputs.forEach(input => input.disabled = true);
+      }
+    }
 
-    e.detail.formSubmission.stop()
-    // const { formSubmission, fetchOptions } = e.detail;
-
+    // stop form submission to allow for dom updates (disabled inputs) to complete, then submit programmatically
+    formSubmission.stop();
+    setTimeout(() => {
+      this.wasProgrammaticallySubmitted = true;
+      this.element.requestSubmit()
+    });
   }
 }
