@@ -120,20 +120,21 @@ export default class extends Controller<TomSelectInput> {
           }
         }
       },
-  
+      
       onChange(newVal: string | number) {
         ctrl.dispatch(`change-${ctrl.kebabKind || 'unknown'}`, { detail: { kind: ctrl.kindValue, id: newVal } });
       },
-  
+      
       onType(this: TomSelect, userInput: string) { 
         if (ctrl.isFilter()) ctrl.dispatchSearchResults(); 
         if (this.settings.create && userInput) {
           const optionExists = Object.values(this.options).find(option => option.text === userInput);
           (this.dropdown_content.querySelector(':scope > .create') as HTMLDivElement)
-            .style.display = optionExists ? 'none' : '';
+          .style.display = optionExists ? 'none' : '';
         } 
       },
-  
+      
+      
       onDropdownOpen(this: TomSelect, dropdown: HTMLDivElement) {
         ctrl.dispatch('dropdown-did-open');
         if (ctrl.isFilter()) {
@@ -145,7 +146,7 @@ export default class extends Controller<TomSelectInput> {
           }
         }
       },
-  
+      
       onDropdownClose(this: TomSelect, dropdown: HTMLDivElement) {
         this.element
         if (ctrl.isFilter()) {
@@ -158,8 +159,31 @@ export default class extends Controller<TomSelectInput> {
           }
         }
       },
-
+      
       onItemAdd(this: TomSelect, value: string, item: TomItem) {
+      },
+
+      // the following two callbacks apply to the company tags inputs
+      onOptionAdd(this: TomSelect, value: string, option: TomOption) {
+        if (this.control_input.id.includes('tags')) {
+          const tagName = value;
+
+          // wait for the option element to render
+          setTimeout(() => {
+            const item = <HTMLElement>this.getItem(value);
+            item.classList.toggle('to-be-added');
+            ctrl.dispatch('add-tag', { detail: { tagName } });
+          });
+        }
+      },
+
+      // TODO: what is `this` inside the onDelete callback? It isn't the TomSelect instance as in other callbacks
+      onDelete(values: string[], e: PointerEvent) {
+        const [tagName] = values;
+        const item = <HTMLElement>(<HTMLAnchorElement>e.target).closest('.item');
+        item.classList.toggle('to-be-removed');
+        ctrl.dispatch('remove-tag', { detail: { tagName } });
+        return false;
       }
     }
   }

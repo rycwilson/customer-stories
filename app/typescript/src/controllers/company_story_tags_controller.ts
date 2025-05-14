@@ -17,7 +17,16 @@ export default class CompanyStoryTagsController extends FormController<CompanySt
   connect() {
   }
 
+  onAddTag({ detail: { tagName } }: { detail: { tagName: string } }) {
+    console.log(tagName)
+  }
+
+  onRemoveTag({ detail: { tagName } }: { detail: { tagName: string } }) {
+    console.log(tagName)
+  }
+
   onChangeTags({ target: input }: { target: HTMLInputElement }) {
+    console.log('changeTags')
     // when focus is lost with new tag(s) entered e.target will be the new item input element instead of the main input element
     // input.tomselect.settings.createOnBlur is false, so in this case we can ignore the change event
     if (input.id.includes('ts-control')) return;

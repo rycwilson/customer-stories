@@ -9,7 +9,9 @@
         data: { \
           controller: 'company-story-tags toast',
           toast_flash_value: (flash.to_h if flash.any? and turbo_frame_request_id == 'company-story-tags'),
-          action: 'change->company-story-tags#onChangeTags' } }) do |form|
+          action: [ \
+            'tomselect:add-tag->company-story-tags#onAddTag', 
+            'tomselect:remove-tag->company-story-tags#onRemoveTag'].join(' ') }}) do |form|
 
     - [{ name: 'category', assoc: :story_categories }, { name: 'product', assoc: :products }].each do |tags|
       = form.fields_for(tags[:assoc]) do |tag_fields|

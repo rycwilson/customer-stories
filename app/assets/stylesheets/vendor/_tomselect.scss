@@ -78,11 +78,21 @@ select.tomselected + .ts-wrapper {
 
 select.tomselected + .ts-wrapper.multi,
 input.tomselected + .ts-wrapper.multi {
-  .ts-control > div {
+  .ts-control > .item {
     background: $blueish-gray-lighter;
 
     &.active {
       background: $brand-primary;
+    }
+
+    &.to-be-added {
+      background: $state-success-bg;
+      color: $state-success-text;
+    }
+
+    &.to-be-removed {
+      background: $state-danger-bg;
+      color: $state-danger-text;
     }
   }
 
