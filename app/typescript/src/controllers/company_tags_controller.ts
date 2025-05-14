@@ -18,8 +18,8 @@ export default class CompanyStoryTagsController extends FormController<CompanySt
       const i = this.hiddenFieldTargets.length;
       this.element.insertAdjacentHTML('beforeend', `
         <div data-new-tag="${source}__${tagName}">
-          <input type="hidden" name="company[${source}_attributes][${i}][id]" value="" data-company-story-tags-target="hiddenField">
-          <input type="hidden" name="company[${source}_attributes][${i}][name]" value="${tagName}" data-company-story-tags-target="hiddenField">
+          <input type="hidden" name="company[${source}_attributes][${i}][id]" value="" data-company-tags-target="hiddenField">
+          <input type="hidden" name="company[${source}_attributes][${i}][name]" value="${tagName}" data-company-tags-target="hiddenField">
         </div>
       `);
     }

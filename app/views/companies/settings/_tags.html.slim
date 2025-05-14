@@ -1,29 +1,29 @@
-= turbo_frame_tag('company-story-tags') do
+= turbo_frame_tag('company-tags') do
 
   = form_with( \
       model: company,
       local: true,
       html: { \
-        id: 'company-story-tags-form',
+        id: 'company-tags-form',
         class: 'form-horizontal',
         data: { \
-          controller: 'company-story-tags toast',
-          toast_flash_value: (flash.to_h if flash.any? and turbo_frame_request_id == 'company-story-tags'),
+          controller: 'company-tags toast',
+          toast_flash_value: (flash.to_h if flash.any? and turbo_frame_request_id == 'company-tags'),
           action: [ \
-            'tomselect:add-tag->company-story-tags#onAddTag', 
-            'tomselect:remove-tag->company-story-tags#onRemoveTag',
-            'turbo:submit-start->company-story-tags#onTurboSubmitStart'].join(' ') }}) do |form|
+            'tomselect:add-tag->company-tags#onAddTag', 
+            'tomselect:remove-tag->company-tags#onRemoveTag',
+            'turbo:submit-start->company-tags#onTurboSubmitStart'].join(' ') }}) do |form|
 
     - ['story_categories', 'products'].each do |source|
       - label_text = source == 'story_categories' ? 'Category' : source.singularize.capitalize
 
       = form.fields_for(source) do |tag_fields|
         / leave the order of inputs in place as the stimulus controller behavior depends on it
-        = tag_fields.hidden_field(:id, data: { source:, company_story_tags_target: 'hiddenField' })
-        = tag_fields.hidden_field(:name, data: { source:, company_story_tags_target: 'hiddenField' })
+        = tag_fields.hidden_field(:id, data: { source:, company_tags_target: 'hiddenField' })
+        = tag_fields.hidden_field(:name, data: { source:, company_tags_target: 'hiddenField' })
         = tag_fields.check_box( \
             :_destroy,
-            { checked: false, hidden: true, data: { source:, company_story_tags_target: 'hiddenField' } },
+            { checked: false, hidden: true, data: { source:, company_tags_target: 'hiddenField' } },
             true,
             false)
 

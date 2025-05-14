@@ -52,9 +52,9 @@ class CompaniesController < ApplicationController
 
   def update
     if @company.update(company_params)
-      if turbo_frame_request_id == 'company-story-tags'
+      if turbo_frame_request_id == 'company-tags'
         flash.now[:notice] = 'Story tags have been updated'
-        render(partial: 'companies/settings/story_tags', locals: { company: @company,  })
+        render(partial: 'companies/settings/tags', locals: { company: @company,  })
       elsif turbo_frame_request_id == 'company-ads-settings'
         image_was_created = company_params[:adwords_images_attributes].to_h.any? { |index, ad| ad[:id].blank? } 
         image_was_destroyed = company_params[:adwords_images_attributes].to_h.any? { |index, ad| ad[:_destroy] == 'true' }

@@ -25,8 +25,8 @@ application.register('company-settings', CompanySettingsController);
 import CompanyProfileController from './company_profile_controller.js';
 application.register('company-profile', CompanyProfileController);
 
-import CompanyStoryTagsController from './company_story_tags_controller.js';
-application.register('company-story-tags', CompanyStoryTagsController);
+import CompanyTagsController from './company_tags_controller.js';
+application.register('company-tags', CompanyTagsController);
 
 import ContributionController from './contribution_controller.js';
 application.register('contribution', ContributionController);
