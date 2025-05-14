@@ -173,24 +173,26 @@ export default class extends Controller<TomSelectInput> {
       // the following two callbacks apply to the company tags inputs
       onOptionAdd(this: TomSelect, value: string, option: TomOption) {
         if (this.control_input.id.includes('tags')) {
-          const tagName = value;
-
-          // wait for the option element to render
+          // wait for the option element to render else getItem() will return null
           setTimeout(() => {
             const item = <HTMLElement>this.getItem(value);
             item.classList.toggle('to-be-added');
-            ctrl.dispatch('add-tag', { detail: { tagName } });
+            ctrl.dispatch('add-tag', { detail: { tagName: value, source: item.dataset.source } });
           });
         }
       },
 
-      // TODO: what is `this` inside the onDelete callback? It isn't the TomSelect instance as in other callbacks
       onDelete(values: string[], e: PointerEvent) {
         const [tagName] = values;
         const item = <HTMLElement>(<HTMLAnchorElement>e.target).closest('.item');
-        item.classList.toggle('to-be-removed');
-        ctrl.dispatch('remove-tag', { detail: { tagName } });
-        return false;
+        if (item.classList.contains('to-be-added')) {
+          ctrl.dispatch('add-tag', { detail: { tagName, source: item.dataset.source, cancel: true } });
+          return true;  // allow the default behavior of removing the item
+        } else {
+          item.classList.toggle('to-be-removed');
+          ctrl.dispatch('remove-tag', { detail: { tagName, source: item.dataset.source, cancel: !item.classList.contains('to-be-removed') } });
+          return false;   // prevent the default behavior of removing the item
+        }
       }
     }
   }
