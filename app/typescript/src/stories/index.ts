@@ -1,6 +1,6 @@
 import Cookies from 'js-cookie';
 import imagesLoaded from 'imagesloaded';
-import TomSelect, { tsBaseOptions, addMultiSelectPlaceholder } from '../tomselect';
+import TomSelect, { tsBaseOptions, addDynamicPlaceholder } from '../tomselect';
 import type { TomOption, TomItem } from 'tom-select/dist/types/types';
 import { type CBOptions } from 'tom-select/dist/types/plugins/clear_button/types';
 import { init as initStoryCard } from './story_card';
@@ -115,7 +115,7 @@ function initFilters() {
   initFilterControls();
   const tsOptions = (select: TomSelectInput, otherSelects: TomSelectInput[]) => ({
     onInitialize(this: TomSelect) {
-      if (select.multiple) addMultiSelectPlaceholder(this);
+      if (select.multiple) addDynamicPlaceholder(this);
     },
     onChange: onChangeFilter.bind(null, select, otherSelects),
     onItemAdd(value: string, item: TomItem) {

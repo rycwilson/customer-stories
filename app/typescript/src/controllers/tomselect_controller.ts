@@ -1,17 +1,19 @@
 import { Controller } from "@hotwired/stimulus";
-import TomSelect, { tsBaseOptions, addMultiSelectPlaceholder } from '../tomselect';
+import TomSelect, { tsBaseOptions, addDynamicPlaceholder } from '../tomselect';
 import type { TomOption, TomItem } from 'tom-select/dist/types/types/core.d.ts';
 import { type CBOptions } from 'tom-select/dist/types/plugins/clear_button/types';
 import { kebabize, capitalize } from "../utils";
 
 export default class extends Controller<TomSelectInput> {
   static values = { 
-    kind: String, 
+    kind: String,
+    source: String,
     customOptions: { type: Object, default: {} },
     preventFocus: { type: Boolean, default: false },
     sortable: { type: Boolean, default: false }
   };
   declare readonly kindValue: SelectInputKind | undefined;
+  declare readonly sourceValue: string | undefined;
   declare readonly customOptionsValue: { [key: string]: any };
   declare readonly preventFocusValue: boolean;
   declare readonly sortableValue: boolean;
@@ -55,14 +57,20 @@ export default class extends Controller<TomSelectInput> {
     this.dispatch('search', { detail: { searchResults }});
   }
 
-  get isMultiSelect() { return this.element.multiple || this.element.tagName === 'INPUT'; }
+  get isMultiSelect() { return this.element.multiple;  }
+
+  get isTagsInput() { return this.element.tagName === 'INPUT'; }
 
   get options() {
-    const ctrl = this;  // "this" will be the TomSelect instance in the context of the options object
+    const ctrl = this;  // `this` will be the TomSelect instance in the context of the options object
     return {
       render: {
         item(data: TomOption, escape: (str: string) => string) {
-          return `<div class="${ctrl.isMultiSelect ? ctrl.kebabKind : ''}">${escape(data.text)}</div>`;
+          return `
+            <div class="${ctrl.isMultiSelect ? ctrl.kebabKind : ''}" data-source="${ctrl.sourceValue}">
+              ${escape(data.text)}
+            </div>
+          `;
         },
         option(data: TomOption, escape: (str: string) => string) {
           return data.value === '0' ?
@@ -82,7 +90,7 @@ export default class extends Controller<TomSelectInput> {
       
       plugins: (() => {
         const _plugins: { [key: string]: object } = {};
-        if (ctrl.isMultiSelect) {
+        if (ctrl.isMultiSelect || ctrl.isTagsInput) {
           _plugins['remove_button'] = { title: 'Clear selection' }
         } else {
           _plugins['clear_button'] = {
@@ -104,7 +112,7 @@ export default class extends Controller<TomSelectInput> {
 
       onInitialize(this: TomSelect) {
         ctrl.dispatch('did-initialize', { detail: ctrl.element });
-        if (ctrl.isMultiSelect) addMultiSelectPlaceholder(this);
+        if (ctrl.isMultiSelect || ctrl.isTagsInput) addDynamicPlaceholder(this);
         // if (ctrl.sortableValue) $(this.control).sortable();
 
         // prevent the user from closing a template without confirmation
@@ -133,7 +141,6 @@ export default class extends Controller<TomSelectInput> {
           .style.display = optionExists ? 'none' : '';
         } 
       },
-      
       
       onDropdownOpen(this: TomSelect, dropdown: HTMLDivElement) {
         ctrl.dispatch('dropdown-did-open');
