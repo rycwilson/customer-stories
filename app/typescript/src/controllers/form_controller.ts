@@ -230,9 +230,7 @@ export default class FormController<Ctrl extends SubclassController> extends Con
   }
 
   filterCustomerWinOptions(this: NewContributionController | NewStoryController) {
-    console.log('ok', this.customerWinsWereFiltered, !this.customerCustomerWinIds)
     if (this.customerWinsWereFiltered || !this.customerCustomerWinIds) return;
-    console.log('ok still')
     const hasExistingCustomer = +this.customerSelectTarget.value;
     const hasNewCustomer = isNaN(+this.customerSelectTarget.value);
     for (const [id, option] of Object.entries(this.customerWinSelectTarget.tomselect.options as TomOptions)) {

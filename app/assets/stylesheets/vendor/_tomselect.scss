@@ -8,6 +8,11 @@ input.tomselected + .ts-wrapper {
 
   > .ts-control {
     height: 100%;
+
+    .item {
+      @include max-lines(1);
+      max-width: 95%;
+    }
   
     [data-value="0"] {
       color: $gray-light;
