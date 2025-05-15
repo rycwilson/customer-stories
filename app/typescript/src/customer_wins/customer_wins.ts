@@ -175,19 +175,25 @@ function actionsDropdownTemplate(row: CustomerWin, type: string, set: any) {
     src: action === 'Add' ? `/successes/${id}/contributions/new` : '' 
   };
   const editStoryPath = story ? `/stories/${story.slug}/edit` : undefined;
-  const editStoryDropdownItems = [['story-settings', 'fa-gear'], ['story-content', 'fa-edit'], ['story-contributions', 'fa-users']]
-    .map(([tab, icon]) => {
-      const section = tab[tab.indexOf('-') + 1].toUpperCase() + tab.slice(tab.indexOf('-') + 2, tab.length);
-      return `
-        <li class="${tab}">
-          <a href="javascript:;" data-action="dashboard#editStory" data-story-path="${editStoryPath}" data-story-tab="${tab}">
-            <i class="fa ${icon} fa-fw action"></i>&nbsp;&nbsp;
-            Customer Story ${section}
-          </a>
-        </li>
-      `;
-    })
-    .join('');
+  const editStoryDropdownItems = (
+    [
+      ['Story Narrative Content', 'story-narrative-content', 'fa-edit'], 
+      ['Story Testimonials', 'story-testimonials', 'fa-quote-left'], 
+      ['Story Contributors', 'story-contributions', 'fa-users'], 
+      ['Story Publication Settings', 'story-settings', 'fa-cloud-upload']
+    ]
+      .map(([text, tab, icon]) => {
+        return `
+          <li>
+            <a href="javascript:;" data-action="dashboard#editStory" data-story-path="${editStoryPath}" data-story-tab="${tab}">
+              <i class="fa ${icon} fa-fw action"></i>&nbsp;&nbsp;
+              ${text}
+            </a>
+          </li>
+        `;
+      })
+      .join('')
+  );
   return `
     <a id="customer-win-actions-dropdown-${id}" 
       href="#" 

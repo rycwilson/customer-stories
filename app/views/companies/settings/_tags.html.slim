@@ -7,7 +7,7 @@
         id: 'company-tags-form',
         class: 'form-horizontal',
         data: { \
-          controller: 'company-tags toast',
+          controller: 'company-tags toast', 
           toast_flash_value: (flash.to_h if flash.any? and turbo_frame_request_id == 'company-tags'),
           action: [ \
             'tomselect:add-tag->company-tags#onAddTag', 
