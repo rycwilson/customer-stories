@@ -64,7 +64,7 @@
                 controller: 'tomselect',
                 new_story_target: 'customerSelect',
                 tomselect_kind_value: 'customer',
-                tomselect_custom_options_value: { create: true, persist: false, plugins: {} },
+                tomselect_custom_options_value: { create: true, persist: false, selectOnTab: true },
                 action: 'new-story#onChangeCustomer',
                 field_name: "#{success_fields.object_name}[customer_id]" } }.compact)
         .help-block.with-errors 
@@ -102,7 +102,7 @@
       / => note that Rails 7 adds the `include_id` option to prevent automatically rendering the id field
       = success_fields.hidden_field(:id, disabled: true)
 
-      .form-group 
+      /.form-group 
         = form.label(:story_category_ids, 'Category Tags')
         = success_fields.collection_select( \
             :story_category_ids,
@@ -119,7 +119,7 @@
         .help-block 
           | Optional
 
-      .form-group 
+      /.form-group 
         = form.label(:product_ids, 'Product Tags')
         = success_fields.collection_select( \
             :product_ids,
