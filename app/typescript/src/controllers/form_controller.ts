@@ -7,7 +7,7 @@ import type UserProfileController from './user_profile_controller';
 import type CompanyProfileController from './company_profile_controller';
 import type InvitationTemplateController from './invitation_template_controller';
 import type ContributorInvitationController from './contributor_invitation_controller';
-import type CompanyStoryTagsController from './company_story_tags_controller';
+import type CompanyTagsController from './company_tags_controller';
 import type CtaController from './cta_controller';
 import type AdsController from './ads_controller';
 import type { TomOptions } from 'tom-select/dist/types/types';
@@ -22,7 +22,7 @@ export type SubclassController = (
   CompanyProfileController |
   InvitationTemplateController |
   ContributorInvitationController |
-  CompanyStoryTagsController |
+  CompanyTagsController |
   CtaController |
   AdsController
 );
@@ -57,6 +57,8 @@ export default class FormController<Ctrl extends SubclassController> extends Con
   declare readonly successNameTarget: HTMLInputElement;
   declare readonly submitBtnTarget: HTMLInputElement | HTMLButtonElement;
   
+
+  declare readonly hasCustomerSelectTarget: boolean;
   declare readonly hasCustomerWinSelectTarget: boolean;
   declare readonly hasContributorSelectTarget: boolean;
   declare readonly hasReferrerSelectTarget: boolean;
@@ -214,7 +216,7 @@ export default class FormController<Ctrl extends SubclassController> extends Con
   setCustomerWinIds(this: NewContributionController | NewStoryController) {
     const customerId = +this.customerSelectTarget.value;
     
-    // the New Story form may not have access to the customer wins table (customerWinsCtrl)
+    // CSP['customerWins'] may be undefined in the case of new story from Curate
     if (CSP['customerWins']) {
       this.customerCustomerWinIds = CSP['customerWins']
         .filter((win: CustomerWin) => win.customer.id === customerId)
@@ -228,7 +230,9 @@ export default class FormController<Ctrl extends SubclassController> extends Con
   }
 
   filterCustomerWinOptions(this: NewContributionController | NewStoryController) {
+    console.log('ok', this.customerWinsWereFiltered, !this.customerCustomerWinIds)
     if (this.customerWinsWereFiltered || !this.customerCustomerWinIds) return;
+    console.log('ok still')
     const hasExistingCustomer = +this.customerSelectTarget.value;
     const hasNewCustomer = isNaN(+this.customerSelectTarget.value);
     for (const [id, option] of Object.entries(this.customerWinSelectTarget.tomselect.options as TomOptions)) {
