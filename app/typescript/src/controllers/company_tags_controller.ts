@@ -1,14 +1,11 @@
-import { TurboSubmitStartEvent } from "@hotwired/turbo";
+import type { TurboSubmitStartEvent, TurboSubmitEndEvent } from "@hotwired/turbo";
 import FormController from "./form_controller";
 
-export default class CompanyStoryTagsController extends FormController<CompanyStoryTagsController> {
+export default class CompanyTagsController extends FormController<CompanyTagsController> {
   static targets = ['hiddenField'];  
   declare hiddenFieldTargets: HTMLInputElement[];
 
-  private wasProgrammaticallySubmitted = false;
-
-  // connect() {
-  // }
+  private didSubmit = false;
 
   onAddTag({ detail: { tagName, source, cancel = false} }: { detail: { tagName: string, source: string, cancel?: boolean } }) {
     if (cancel) {
@@ -30,18 +27,20 @@ export default class CompanyStoryTagsController extends FormController<CompanySt
       input.name.includes(`[${source}_attributes]`) && input.value === tagName
     ));
     const _destroyInput = nameInput?.nextElementSibling;
-    if (_destroyInput instanceof HTMLInputElement) _destroyInput.checked = !cancel;
+    if (_destroyInput instanceof HTMLInputElement) {
+      _destroyInput.checked = !cancel;
+    }
   }
 
   onTurboSubmitStart(e: TurboSubmitStartEvent) {
-    if (this.wasProgrammaticallySubmitted) {
-      this.wasProgrammaticallySubmitted = false;
+    // Without the `didSubmit` flag this callback will always stop the form submission
+    if (this.didSubmit) {
       return;
     }
 
     const { formSubmission } = e.detail;
 
-    // we want to identify inputs that are not related to a new or removed tag and disable them, as this avoids unnecessary updates
+    // Group inputs by tag so they can be disabled if the tag is not being added or removed
     const tagInputGroups = this.hiddenFieldTargets.reduce((
       groups: { [key: string]: HTMLInputElement[] }, 
       input: HTMLInputElement
@@ -55,22 +54,27 @@ export default class CompanyStoryTagsController extends FormController<CompanySt
       }
       return groups;
     }, {});
-
+    
     for (const [_, inputs] of Object.entries(tagInputGroups)) {
       const idInput = inputs.find(input => input.name.includes('[id]'));
       const _destroyInput = inputs.find(input => input.name.includes('[_destroy]'));
       const isNewTag = idInput?.value === '';
-      const isRemovedTag = _destroyInput?.checked === true;
-      if (!isNewTag && !isRemovedTag) {
-        inputs.forEach(input => input.disabled = true);
-      }
+      const isRemovedTag = _destroyInput?.checked;
+      inputs.forEach(input => { input.disabled = !isNewTag && !isRemovedTag });
     }
 
-    // stop form submission to allow for dom updates (disabled inputs) to complete, then submit programmatically
+    // stop form submission to allow dom updates to complete (disabled inputs), then submit if necessary
     formSubmission.stop();
-    setTimeout(() => {
-      this.wasProgrammaticallySubmitted = true;
-      this.element.requestSubmit()
-    });
+    const inputsToSubmit = this.hiddenFieldTargets.filter(input => !input.disabled);
+    if (inputsToSubmit.length) {
+      setTimeout(() => {
+        this.didSubmit = true;
+        this.element.requestSubmit();
+      });
+    }
+  }
+
+  onTurboSubmitEnd(e: TurboSubmitEndEvent) {
+    this.didSubmit = false;
   }
 }
