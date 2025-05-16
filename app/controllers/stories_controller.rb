@@ -243,7 +243,7 @@ class StoriesController < ApplicationController
       :hidden_link, :og_title, :og_description, :og_image_url, :og_image_width, :og_image_height,
       :og_image_alt,
       success_attributes: [
-        :id, :name, :customer_id, :curator_id,
+        :id, :name, :placeholder, :customer_id, :curator_id,
         product_ids: [], story_category_ids: [],
         customer_attributes: [:id, :name, :logo_url, :show_name_with_logo, :company_id]
       ],
