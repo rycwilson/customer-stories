@@ -72,6 +72,7 @@ class Success < ApplicationRecord
   # default_scope { order(name: :asc) }
 
   validates_uniqueness_of(:name, scope: :customer_id)
+  validate :named_or_placeholder
 
   accepts_nested_attributes_for(:customer, allow_destroy: false)
   # contribution must be rejected if its contributor or referrer is missing required attributes
@@ -252,5 +253,12 @@ class Success < ApplicationRecord
     Rails.application.routes.url_helpers.success_path(self)
   end
 
+  def named_or_placeholder
+    if name.nil? and not placeholder?
+      errors.add(:name, 'must be present if object is not a placeholder')
+    elsif name.present? and placeholder?
+      errors.add(:placeholder, 'object cannot have a name')
+    end
+  end
 end
 
