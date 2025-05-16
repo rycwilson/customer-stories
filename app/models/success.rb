@@ -254,7 +254,7 @@ class Success < ApplicationRecord
   end
 
   def named_or_placeholder
-    if name.nil? and not placeholder?
+    if name.blank? and not placeholder?
       errors.add(:name, 'must be present if object is not a placeholder')
     elsif name.present? and placeholder?
       errors.add(:placeholder, 'object cannot have a name')
