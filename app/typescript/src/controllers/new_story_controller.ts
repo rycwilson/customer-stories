@@ -1,10 +1,8 @@
 import FormController from "./form_controller";
 
 export default class NewStoryController extends FormController<NewStoryController> {
+  static targets = [...FormController.targets, 'storyTitle', 'successPlaceholder']
   declare readonly storyTitleTarget: HTMLInputElement;
-  declare readonly customerWinSelectTarget: TomSelectInput;
-  declare customerCustomerWinIds: number[];
-  customerWinsWereFiltered: boolean = false;
 
   handleShownModal = this.onShownModal.bind(this);
 

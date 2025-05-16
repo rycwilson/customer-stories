@@ -33,7 +33,11 @@
       / => note that Rails 7 adds the `include_id` option to prevent automatically rendering the id field
       = success_fields.hidden_field(:id, disabled: @success.present?, data: { new_story_target: 'successField' })
       = success_fields.hidden_field(:name, disabled: @success.present?, data: { new_story_target: 'successName successField' })
-      = success_fields.hidden_field(:placeholder, value: true, disabled: @success.present?, data: { new_story_target: 'successField' })
+      = success_fields.check_box( \
+          :placeholder,
+          { checked: @success.nil?, hidden: true, disabled: @success.present?, data: { new_story_target: 'successPlaceholder successField' } },
+          true,
+          false)
 
       = success_fields.fields_for(:customer, @company.customers.build) do |customer_fields|
         = customer_fields.hidden_field(:id, disabled: @success.present?, data: { new_story_target: 'customerField'})
@@ -83,7 +87,7 @@
               .map { |success| [success.name, success.id, { 'data-customer-id' => success.customer.id }] },
             selected: @success&.id),
           { include_blank: true },
-          { name: ('' if @success.present?),
+          { name: ('' if @success.nil?),
             class: 'form-control',
             placeholder: 'Select or enter the name of a new Customer Win',
             data: { \
@@ -92,7 +96,7 @@
               tomselect_custom_options_value: { create: true, persist: false },
               new_story_target: 'customerWinSelect',
               action: 'new-story#onChangeCustomerWin',
-              field_name: "#{form.object_name}[success_id]" } })
+              field_name: "#{form.object_name}[success_id]" } }.compact)
       .help-block 
         | Optional
 
