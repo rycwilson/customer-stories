@@ -32,6 +32,10 @@ export default class CompanyTagsController extends FormController<CompanyTagsCon
     }
   }
 
+  // TODO confirm
+  // Copilot says: "you can modify the FormData object directly. However, since the FormData object is already passed to 
+  // Turbo's submission process, you cannot directly modify it in place. Instead, you need to update the form itself 
+  // (e.g., by adding or modifying hidden inputs) so that Turbo picks up the changes when it submits the form."
   onTurboSubmitStart(e: TurboSubmitStartEvent) {
     // Without the `didSubmit` flag this callback will always stop the form submission
     if (this.didSubmit) {
