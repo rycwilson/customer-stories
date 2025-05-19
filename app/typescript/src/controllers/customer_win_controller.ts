@@ -37,9 +37,9 @@ export default class CustomerWinController extends DatatableRowController<Custom
   // TODO: should occasionally check for new data? or set up an action cable
   showContributions() {
     const showInModal = () => {
-      this.modalOutlet.titleValue = 'Contributions and Feedback';
-      this.modalOutlet.bodyContentValue = this.contributionsHtml as string;
-      this.modalOutlet.show();
+      // this.modalOutlet.titleValue = 'Contributions and Feedback';
+      // this.modalOutlet.bodyContentValue = this.contributionsHtml as string;
+      // this.modalOutlet.show();
     };
     if (this.contributionsHtml) showInModal();
     else {
