@@ -53,6 +53,12 @@ SeedData::CONTRIBUTOR_QUESTIONS.each do |question_data|
   invitation_template.contributor_questions << acme.contributor_questions.create!(question_data.except(:role))
 end
 
+# Create ad campaigns/groups
+topic_campaign = acme.adwords_campaigns.create!(name: 'Topic Campaign', type: 'TopicCampaign')
+topic_ad_group = topic_campaign.create_adwords_ad_group!(name: 'Topic Ad Group')
+retarget_campaign = acme.adwords_campaigns.create!(name: 'Retarget Campaign', type: 'RetargetCampaign')
+retarget_ad_group = retarget_campaign.create_adwords_ad_group!(name: 'Retarget Ad Group')
+
 # Create customers and their associated data
 SeedData::CUSTOMERS.each do |customer_data|
   customer = acme.customers.create!(customer_data)
@@ -107,6 +113,8 @@ SeedData::CUSTOMERS.each do |customer_data|
           # Changeover from [:logo_published, :preview_published, :published] attributes to :status_new in progress
           if story.published?
             story.is_published!
+            story.create_topic_ad!(adwords_ad_group: topic_ad_group)
+            story.create_retarget_ad!(adwords_ad_group: retarget_ad_group)
           elsif story.logo_published?
             story.listed!
           else
