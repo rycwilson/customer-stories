@@ -127,16 +127,15 @@ export function dataTableConfig(): Config {
         const groupRows = rows;
         const customerName = group;
         const customerId = groupRows.data()[0].customer.id;
-        const turboFrameAttrs = { id: `edit-customer-${customerId}`, src: `/customers/${customerId}/edit` };
         return $('<tr />').append(`
           <td colspan="4"> 
             <a 
-              href="javascript:;" 
+              href="/customers/${customerId}/edit" 
               style="font-weight:600"
+              data-turbo-stream
               data-controller="modal-trigger"
               data-modal-trigger-modal-outlet="#main-modal"
-              data-modal-trigger-title-value="Edit Customer"
-              data-modal-trigger-turbo-frame-attrs-value=${JSON.stringify(turboFrameAttrs)}>
+              data-modal-trigger-params-value='${JSON.stringify({ title: 'Edit Customer', className: 'edit-customer' })}'>
               ${customerName}
             </a>
           </td>
@@ -167,13 +166,13 @@ function actionsDropdownTemplate(row: CustomerWin, type: string, set: any) {
   const { id, display_status: status, new_story_path: newStoryPath, curator, customer, story } = row;
   const noContributorsAdded = status && /0.+Contributors\sadded/.test(status);
   const noContributorsInvited = status && /0.+Contributors\sinvited/.test(status);
-  const contributionsExist = status && /[^0]&nbsp;&nbsp;Contributions\ssubmitted/.test(status);
+  
+  // TODO There are better places to show contributions, i.e. with the contributor or story
+  // TODO Explore separation of Customer Win contributions and Story contributions
+  // const contributionsExist = status && /[^0]&nbsp;&nbsp;Contributions\ssubmitted/.test(status);
+  const contributionsExist = false;
+
   const action = noContributorsAdded ? 'Add' : (noContributorsInvited ? 'Invite' : '');
-  // TODO: add the new invitation path
-  const turboFrameAttrs = /Add|Invite/.test(action) && {
-    id: `new-${action === 'Add' ? 'contribution' : 'invitation'}`,
-    src: action === 'Add' ? `/successes/${id}/contributions/new` : '' 
-  };
   const editStoryPath = story ? `/stories/${story.slug}/edit` : undefined;
   const editStoryDropdownItems = (
     [
@@ -223,8 +222,7 @@ function actionsDropdownTemplate(row: CustomerWin, type: string, set: any) {
           <li>
             <a href="javascript:;" 
               data-action="dashboard#${action.toLowerCase() || 'show'}CustomerWinContributors" 
-              data-customer-win-id="${id}"
-              data-turbo-frame-attrs=${JSON.stringify(turboFrameAttrs) || ''}>
+              data-customer-win-id="${id}">
               <i class="fa fa-users fa-fw action"></i>
               ${action} Contributors
             </a>
@@ -232,13 +230,12 @@ function actionsDropdownTemplate(row: CustomerWin, type: string, set: any) {
           <li role="separator" class="divider"></li>
           <li>
             <a 
-              href="javascript:;"
-              data-controller="modal-trigger"
+              href="${newStoryPath}"
+              aria-label="New Customer Story"
+              data-turbo-stream
+              data-controller="modal-trigger" 
               data-modal-trigger-modal-outlet="#main-modal"
-              data-modal-trigger-title-value="New Customer Story"
-              data-modal-trigger-turbo-frame-attrs-value=${JSON.stringify({ id: 'new-story', src: newStoryPath })}
-              data-modal-trigger-submit-button-text-value="Add Story"
-              aria-label="New Customer Story">
+              data-modal-trigger-params-value='${JSON.stringify({ title: 'New Customer Story', className: 'new-story' })}'>
               <i class="fa fa-play fa-fw action"></i>
               Start Customer Story
             </a>

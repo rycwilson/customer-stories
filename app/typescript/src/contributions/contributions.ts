@@ -205,6 +205,8 @@ function actionsDropdownTemplate(row: Contribution, type: string, set: any) {
   const isPreInvite = status === 'pre_request';
   const didNotRespond = status === 'did_not_respond';
   const wasSubmitted = status && status.includes('submitted');
+  const invitationPath = path + `/contributor_invitation/${invitation ? 'edit' : 'new'}`;
+  console.log(invitationPath)
   const viewStoryDropdownItem = !storyExists ? '' : `
       <li>
         <a href="${customerWin?.story!.csp_story_path}" data-turbo="false" target="_blank" rel="noopener">
@@ -249,19 +251,12 @@ function actionsDropdownTemplate(row: Contribution, type: string, set: any) {
       aria-labelledby="contributions-action-dropdown-${id}">
       <li class="${isPreInvite && !invitationTemplate ? 'disabled' : ''}">
         <a 
-          href="javascript:;" 
+          href="${invitationPath}"
+          data-turbo-stream="true" 
           data-controller="modal-trigger" 
           data-modal-trigger-modal-outlet="#main-modal"
-          data-modal-trigger-title-value="Contributor Invitation"
           data-modal-trigger-enabled-value="${invitation || invitationTemplate ? 'true' : 'false'}"
-          data-modal-trigger-turbo-frame-attrs-value=${
-            invitation || invitationTemplate ? 
-              JSON.stringify({
-                id: `${invitation ? 'edit' : 'new'}-contributor-invitation`, 
-                src: `${path}/contributor_invitation/${invitation ? 'edit' : 'new'}` 
-              }) :
-              {}
-          }>
+          data-modal-trigger-params-value='${JSON.stringify({ title: 'Contributor Invitation', className: 'contributor-invitation' })}'>
           <i class="fa fa-${isPreInvite ? 'envelope-o' : 'search'} fa-fw action"></i>
           ${isPreInvite ? 'Compose Invitation' : 'View Sent Invitation'}
         </a>
@@ -280,6 +275,7 @@ function actionsDropdownTemplate(row: Contribution, type: string, set: any) {
             <a href="javascript:;" data-action="contribution#markAsCompleted">
               <i class="fa fa-check fa-fw action"></i>
               Mark as completed
+
             </a>
           </li>
         ` : ''

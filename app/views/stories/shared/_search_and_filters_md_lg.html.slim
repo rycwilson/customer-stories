@@ -6,17 +6,17 @@
     .search-and-filters__dashboard-header
       a href="/" data-turbo="false"
         | Customer Stories
-      button.btn.btn-secondary {
-        type="button" 
-        data-controller="modal-trigger"
-        data-modal-trigger-modal-outlet="#main-modal"
-        data-modal-trigger-title-value="New Customer Story"
-        data-modal-trigger-turbo-frame-attrs-value={ id: 'new-story', src: new_company_story_path(company) }.to_json
-        data-modal-trigger-submit-button-text-value="Add Customer Story"
-        aria-label="New Customer Story" }
-        /= image_tag('icons/bs_plus_circle.svg', alt: 'caret-right')
-        i.fa.fa-plus
-        |&nbsp;&nbsp;New
+      = link_to( \
+          new_company_story_path(company),
+          class: 'btn btn-secondary', 
+          aria: { label: 'New Customer Story' },
+          data: { \
+            turbo_stream: true,
+            controller: 'modal-trigger',
+            modal_trigger_modal_outlet: '#main-modal', 
+            modal_trigger_params_value: { title: 'New Customer Story', 'className' => 'new-story' } }) do
+          i.fa.fa-plus
+          |&nbsp;&nbsp;New
     hr
 
   = render('stories/shared/search_form', { company:, is_header_search: false })
