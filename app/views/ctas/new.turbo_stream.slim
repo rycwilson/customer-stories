@@ -1,0 +1,88 @@
+= turbo_stream.append 'main-modal-content' do 
+  .modal-footer data-modal-target="footer"
+    button.btn.btn-default type="button" data-dismiss="modal" Cancel
+    = submit_tag('Create CTA', class: 'btn btn-success', form: 'new-cta-form')
+
+= turbo_stream.append 'main-modal-body' do
+
+  / to avoid the fields being named `cta_link` or `cta_form`, provide a scope
+  / (this also means the url needs to be explicitly set)
+  = form_with( \
+      model: @company.ctas.build,
+      url: company_ctas_path(@company),
+      scope: 'cta',
+      id: 'new-cta-form',
+      class: 'form-horizontal hidden-xs',
+      data: { \
+        controller: 'cta',
+        cta_custom_button_background_color_value: @company.primary_cta_background_color,
+        cta_custom_button_text_color_value: @company.primary_cta_text_color }) do |form|
+
+    .form-group 
+      label.control-label.col-sm-3 Type
+      .col-sm-9
+        .btn-group data-action="change->cta#toggleType"
+          = form.label(:type_ctalink, class: 'radio-inline') do
+            = form.radio_button(:type, 'CTALink', checked: true)
+            | Web Link
+          = form.label(:type_ctaform, class: 'radio-inline') do
+            = form.radio_button(:type, 'CTAForm')
+            | Web Form
+    
+    .form-group 
+      = form.label(:description, 'Description', class: 'control-label col-sm-3')
+      .col-sm-9
+        = form.text_field(:description, class: 'form-control', placeholder: 'Description')
+
+    .form-group 
+      = form.label(:display_text, 'Display text', class: 'control-label col-sm-3')
+      .col-sm-9
+        = form.text_field(:display_text, class: 'form-control', placeholder: 'Display text', data: { action: 'cta#updateCustomButtonText' })
+
+    .form-group data-cta-target="typeSpecificField"
+      = form.label(:link_url, 'Website URL', class: 'control-label col-sm-3')
+      .col-sm-9
+        = form.text_field(:link_url, class: 'form-control', placeholder: 'Website URL')
+
+    .form-group.hidden data-cta-target="typeSpecificField"
+      = form.label(:form_html, 'HTML', class: 'control-label col-sm-3')
+      .col-sm-9
+        = form.text_area(:form_html, class: 'form-control', placeholder: 'html, e.g. <script> and <form> tags', rows: 3)
+
+    .form-group
+      .col-sm-offset-3.col-sm-9
+        .checkbox
+          = form.label(:primary) do
+            = form.check_box(:primary, { data: { action: 'cta#togglePrimary' } }, true, false)
+            | Make this the Banner CTA
+
+    .cta__custom-button--new.hidden data-cta-target="customButton"
+      .row
+        label.control-label.col-sm-3 for="cta_company_attributes_primary_cta_background_color" Button
+        .col-sm-9
+          div
+            = form.fields_for(:company) do |company_fields|
+                = company_fields.hidden_field(:id, disabled: true, data: { cta_target: 'companyField' })
+                = company_fields.color_field( \
+                    :primary_cta_background_color,
+                    class: 'form-control',
+                    disabled: true,
+                    data: { cta_target: 'customButtonBackgroundColorInput companyField' })
+                = company_fields.label(:primary_cta_text_color, 'Text')
+                = company_fields.color_field( \
+                    :primary_cta_text_color,
+                    class: 'form-control',
+                    disabled: true,
+                    data: { cta_target: 'customButtonTextColorInput companyField' })
+          div style="background-color:#{@company.header_color_1}"
+            button.btn.btn-lg.btn-custom type="button" data-cta-target="customButtonDemo"
+              = ''
+      .form-group 
+        .col-sm-offset-3.col-sm-9 
+          span.help-block CTA button will appear in the header as shown
+
+    .form-group
+      .col-sm-offset-3.col-sm-9 
+        = form.submit 'Add CTA', class: 'btn btn-success'
+
+        
