@@ -23,6 +23,9 @@ class User < ApplicationRecord
   # for changing password
   attr_accessor :current_password
 
+  # for seeds
+  attr_accessor :role
+
   # Adding signup code for beta control
   attr_accessor :sign_up_code
   validates(:sign_up_code, on: :create, presence: { message: "can't be blank" }, inclusion: { in: ['csp_beta'], message: 'is invalid' })
