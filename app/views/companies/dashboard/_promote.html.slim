@@ -61,8 +61,6 @@
               { company:, 
                 resource_name: 'promotedStories',
                 resource_ctrl_id: 'promoted-stories',
-                row_name: 'Promoted Story',
-                modal_turbo_frame_attrs: {},
                 search_options: { \
                   'Customer' => company.customers.sort_by(&:name).map { |customer| [customer.name, "customer-#{customer.id}"] } }})
 
