@@ -31,8 +31,8 @@ class AdwordsAd < ApplicationRecord
   scope(:retarget, -> { joins(:adwords_campaign).where(adwords_campaign: { type: 'RetargetCampaign' }) })
 
   before_create :assign_defaults
-  before_create :create_gad, if: :promote_enabled?
-  before_destroy :remove_gad, if: :promote_enabled?
+  # before_create :create_gad, if: :promote_enabled?
+  # before_destroy :remove_gad, if: :promote_enabled?
 
   def google_ad
     campaign_type = ad_group.campaign.type.match(/(?<type>Topic|Retarget)/)[:type].downcase
@@ -130,8 +130,8 @@ class AdwordsAd < ApplicationRecord
   end
 
   def assign_defaults
-    self.long_headline = self.story.title.truncate(RESPONSIVE_AD_LONG_HEADLINE_MAX, { omission: '' })
-    self.adwords_images << self.story.company.adwords_images.default
+    long_headline = story.title.truncate(RESPONSIVE_AD_LONG_HEADLINE_MAX, { omission: '' })
+    adwords_images << story.company.adwords_images.default
   end
 
   def google_error(error)
