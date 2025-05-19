@@ -26,7 +26,8 @@
           novalidate: true,
           data: { \
             controller: 'new-story',
-            new_story_modal_outlet: '#main-modal' } }) do |form|
+            new_story_modal_outlet: '#main-modal',
+            action: 'submit->new-story#validate' } }) do |form|
 
       .form-group
         = form.label(:title, 'Story Title', class: 'control-label')
