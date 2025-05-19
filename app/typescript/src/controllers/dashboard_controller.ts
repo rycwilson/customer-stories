@@ -130,12 +130,12 @@ export default class DashboardController extends Controller<HTMLDivElement> {
 
   addCustomerWinContributors({ currentTarget: link }: { currentTarget: HTMLAnchorElement }) {
     const showModal = () => {
-      const turboFrameAttrs: TurboFrameAttributes | null = parseDatasetObject(link, 'turboFrameAttrs', 'id', 'src');
-      if (turboFrameAttrs) {
-        this.modalOutlet.titleValue = 'New Contributor';
-        this.modalOutlet.turboFrameAttrsValue = turboFrameAttrs;
-        this.modalOutlet.show();
-      }
+      // const turboFrameAttrs: TurboFrameAttributes | null = parseDatasetObject(link, 'turboFrameAttrs', 'id', 'src');
+      // if (turboFrameAttrs) {
+      //   this.modalOutlet.titleValue = 'New Contributor';
+      //   this.modalOutlet.turboFrameAttrsValue = turboFrameAttrs;
+      //   this.modalOutlet.show();
+      // }
     };
     if (this.showingCustomerWins) {
       const customerWinId = link.dataset.customerWinId || '';

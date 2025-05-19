@@ -1,19 +1,15 @@
-#main-modal.modal.fade {
-  data-controller="modal"
-  data-action="turbo:frame-render->modal#onFrameRender ajax:success->modal#onAjaxSuccess" 
-  tabindex="-1" 
-  role="dialog" }
-
+#main-modal.modal.fade data-controller="modal" tabindex="-1" role="dialog"
   .modal-dialog role="document"
-    .modal-content
-
+    #main-modal-content.modal-content 
       .modal-header
-        h4.modal-title data-modal-target="title"
+        h4.modal-title data-modal-target="title" [title missing]
         button.close type="button" data-dismiss="modal" aria-label="Close"
           span aria-hidden="true"
             | &times;
+      .modal-body id="main-modal-body" data-modal-target="body"
+        = render('shared/loading_spinner')
 
-      .modal-body data-modal-target="body" data-action="new-customer-win:source-changed->modal#setSubmitBtnText"
+      /.modal-body data-modal-target="body" data-action="new-customer-win:source-changed->modal#setSubmitBtnText"
         / nesting placeholder content won't work correctly when dynamically setting the id ansd src attributes,
         / so have modal_controller.js handle the placeholder content
         = turbo_frame_tag( \
@@ -23,6 +19,3 @@
               modal_target: 'turboFrame', 
               spinner_html: ActionController::Base.new.render_to_string(partial: 'shared/loading_spinner') })
           
-      .modal-footer.hidden data-modal-target="footer"
-        button.btn.btn-default type="button" data-dismiss="modal" data-modal-target="dismissBtn"
-        = submit_tag('Save changes', class: 'btn btn-success', data: { modal_target: 'submitBtn' })

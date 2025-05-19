@@ -6,26 +6,28 @@ export default class extends Controller<HTMLButtonElement> {
   declare readonly modalOutlet: ModalController;
 
   static values = { 
-    title: { type: String, default: 'Title is missing' },
-    turboFrameAttrs: { type: Object, default: {} },
-    enabled: { type: Boolean, default: true }
+    enabled: { type: Boolean, default: true },
+    params: { type: Object, default: { title: '', className: '' } },
   };
-  declare readonly titleValue: string;
-  declare readonly turboFrameAttrsValue: { id: string, src: string };
   declare readonly enabledValue: boolean;
+  declare readonly paramsValue: { title: string, className: string };
+
+  handleClick = this.showModal.bind(this);
 
   connect() {
     if (this.enabledValue) {
-      this.element.addEventListener('click', this.showModal.bind(this));
+      this.element.addEventListener('click', this.handleClick);
     }
   }
 
+  disconnect() {
+    this.element.removeEventListener('click', this.handleClick);
+  }
+
   showModal() {
-    const { id: turboFrameId, src: turboFrameSrc } = this.turboFrameAttrsValue;
-    this.modalOutlet.titleTarget.textContent = this.titleValue;
-    if (turboFrameId && turboFrameSrc && this.modalOutlet.hasTurboFrameTarget) {
-      this.modalOutlet.turboFrameAttrsValue = { ...this.turboFrameAttrsValue };
-    }
+    this.modalOutlet.titleTarget.textContent = this.paramsValue.title;
+    this.modalOutlet.element.classList.add(this.paramsValue.className);
+    
     // alllow style changes to render before showing modal
     setTimeout(() => this.modalOutlet.show());
   }
