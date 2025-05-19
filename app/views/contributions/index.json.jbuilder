@@ -36,7 +36,7 @@ json.array! @contributions do |contribution|
     end
   end
   if contribution.contributor_invitation.present?
-    json.contributor_invitation do 
+    json.invitation do 
       json.(contribution.contributor_invitation, :id)
     end
   end
