@@ -32,7 +32,7 @@
     @include flex-row-center-between;
     // margin: -5px 0;
 
-    a {
+    a:not(.btn) {
       font-size: 16px;    // match dashboard tabs
     }
 

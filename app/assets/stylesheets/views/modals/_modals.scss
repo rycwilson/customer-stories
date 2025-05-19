@@ -2,11 +2,20 @@
   // .modal-content {
     // overflow: hidden;
   // }
+
+  .modal-body {
+    @include spinner('md');
+
+    > :first-child:not(:only-child) {
+      display: none;
+    }
+  }
   
+  // &[class*="edit-customer"]
   &.new-customer-win,
   &.new-contribution,
   &.new-story,
-  &[class*="edit-customer"] {
+  &.edit-customer {
     .modal-content {
       margin: 0 auto;
       width: 75%;

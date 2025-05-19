@@ -89,7 +89,7 @@
     }
   }
 
-  button:not(.clear-button) {
+  a[data-controller="modal-trigger"] {
     &:first-of-type {
       margin-right: 0.75em;
     }

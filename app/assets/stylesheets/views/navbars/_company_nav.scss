@@ -107,6 +107,7 @@
       > li {
         > a,
         > button,
+        > form > button,
         > span {
           font-family: 'Lato';
 
@@ -127,7 +128,8 @@
         
           ~ i,
           ~ span,
-          ~ button {
+          ~ button,
+          ~ form > button {
             margin-right: 1em
           }
         }
