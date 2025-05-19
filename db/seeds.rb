@@ -42,24 +42,38 @@ story_categories = SeedData::CATEGORIES.map { |category| acme.story_categories.c
 # Create products
 products = SeedData::PRODUCTS.map { |product| acme.products.create!(name: product[:name]) }
 
+# Create invitation templates
+customer_template = acme.invitation_templates.create!(SeedData::CUSTOMER_INVITATION_TEMPLATE)
+customer_success_template = acme.invitation_templates.create!(SeedData::CUSTOMER_SUCCESS_INVITATION_TEMPLATE)
+sales_template = acme.invitation_templates.create!(SeedData::SALES_INVITATION_TEMPLATE)
+
+# Create contributor questions
+SeedData::CONTRIBUTOR_QUESTIONS.each do |question_data|
+  invitation_template = acme.invitation_templates.find_by(name: question_data[:role])
+  invitation_template.contributor_questions << acme.contributor_questions.create!(question_data.except(:role))
+end
+
 # Create customers and their associated data
 SeedData::CUSTOMERS.each do |customer_data|
   customer = acme.customers.create!(customer_data)
+  assigned_roles = []
 
   # Create users for the customer
   users = 4.times.map do
     first_name = Faker::Name.unique.first_name
     last_name = Faker::Name.unique.last_name
     email = "#{first_name.downcase}@#{customer.name.downcase.gsub(/\s+/, '')}.com"
-    user = User.new(
-      first_name:,
-      last_name:,
-      email:,
-      password: email,
-      sign_up_code: 'csp_beta'
-    )
+    user = User.new(first_name:, last_name:, email:, password: email, sign_up_code: 'csp_beta')
     user.skip_confirmation_notification!
     user.save!
+    
+    # Assign a random, distinct role to the user 
+    if assigned_roles.length < SeedData::CONTRIBUTOR_ROLES.length
+      role = (SeedData::CONTRIBUTOR_ROLES - assigned_roles).sample
+      user.role = role
+      assigned_roles << role
+    end
+
     user
   end.shuffle
 
@@ -120,8 +134,19 @@ SeedData::CUSTOMERS.each do |customer_data|
     # Add contributions to the success
     3.times do |j|
       contributor = users[j]
-      referrer = j == 2 ? users.last : nil
-      success.contributions.create!(contributor:, referrer:)
+      has_referrer = j == 2
+      referrer = has_referrer ? users.last : nil
+      contribution = success.contributions.create!(contributor:, referrer:)
+      
+      template = case contributor.role
+      when 'Customer'
+        customer_template
+      when 'Customer Success'
+        customer_success_template
+      when 'Sales'
+        sales_template
+      end
+      contribution.update!(invitation_template: template) if template
     end
 
     # Associate success with a random story category and product
@@ -131,15 +156,4 @@ SeedData::CUSTOMERS.each do |customer_data|
     success.story_categories << category
     success.products << product
   end
-end
-
-# Create invitation templates
-acme.invitation_templates.create!(SeedData::CUSTOMER_INVITATION_TEMPLATE)
-acme.invitation_templates.create!(SeedData::CUSTOMER_SUCCESS_INVITATION_TEMPLATE)
-acme.invitation_templates.create!(SeedData::SALES_INVITATION_TEMPLATE)
-
-# Create contributor questions
-SeedData::CONTRIBUTOR_QUESTIONS.each do |question_data|
-  invitation_template = acme.invitation_templates.find_by(name: question_data[:role])
-  invitation_template.contributor_questions << acme.contributor_questions.create!(question_data.except(:role))
 end
