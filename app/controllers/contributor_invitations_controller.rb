@@ -4,8 +4,8 @@ class ContributorInvitationsController < ApplicationController
   def new
     if @contribution.invitation.blank?
       @invitation = @contribution.build_contributor_invitation.populate_template
-      render(:compose)
     end
+    render(:compose)
   end
 
   def show
