@@ -206,7 +206,6 @@ function actionsDropdownTemplate(row: Contribution, type: string, set: any) {
   const didNotRespond = status === 'did_not_respond';
   const wasSubmitted = status && status.includes('submitted');
   const invitationPath = path + `/contributor_invitation/${invitation ? 'edit' : 'new'}`;
-  console.log(invitationPath)
   const viewStoryDropdownItem = !storyExists ? '' : `
       <li>
         <a href="${customerWin?.story!.csp_story_path}" data-turbo="false" target="_blank" rel="noopener">
