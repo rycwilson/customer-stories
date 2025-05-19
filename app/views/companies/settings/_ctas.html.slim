@@ -46,12 +46,15 @@
                 i.fa.fa-fw.fa-chevron-up
             .collapse id="edit-cta-#{cta.id}" data-list-group-target="collapse"
               = render('ctas/edit', company:, cta:)
-        button.btn.btn-secondary {
-          type="button"
-          data-controller="modal-trigger"
-          data-modal-trigger-modal-outlet="#main-modal"
-          data-modal-trigger-title-value="New Call-To-Action"
-          data-modal-trigger-turbo-frame-attrs-value={ id: 'new-company-cta', src: new_company_cta_path(company) }.to_json
-          aria-label="New Call-To-Action" }
+        
+        = link_to( \
+            new_company_cta_path(company),
+            class: 'btn btn-secondary',
+            aria: { label: 'New Call-To-Action' },
+            data: { \ 
+              turbo_stream: true,
+              controller: 'modal-trigger',
+              modal_trigger_modal_outlet: '#main-modal',
+              modal_trigger_params_value: { title: 'New Call-To-Action', className: 'new-cta' } }) do
           i.fa.fa-plus
           |&nbsp;&nbsp;New

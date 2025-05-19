@@ -29,13 +29,16 @@ nav.company-nav.navbar-fixed-top.hidden-xs data-controller="header"
               = tab_name.capitalize
             - if workflow_stage == 'story'
               i.fa.fa-chevron-right
-              button.btn-link {
-                type="button"
-                data-controller="modal-trigger"
-                data-modal-trigger-modal-outlet="#main-modal"
-                data-modal-trigger-title-value="Edit Customer"
-                data-modal-trigger-turbo-frame-attrs-value={ id: "edit-customer-#{@story.customer.id}", src: edit_customer_path(@story.customer) }.to_json }
-                = @story.customer.name
+
+              / use a button instead of a link to avoid style conflicts with nav links
+              form method="get" action="#{edit_customer_path(@story.customer)}" data-turbo="true"
+                button.btn-link {
+                  aria-label="Edit Customer"
+                  data-turbo-stream="true"
+                  data-controller="modal-trigger"
+                  data-modal-trigger-modal-outlet="#main-modal"
+                  data-modal-trigger-params-value={ title: 'Edit Customer', 'className' => 'edit-customer' }.to_json }
+                  = @story.customer.name
               i.fa.fa-chevron-right
               span = @story.title
 
