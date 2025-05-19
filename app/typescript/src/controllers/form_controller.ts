@@ -44,6 +44,7 @@ export default class FormController<Ctrl extends SubclassController> extends Con
     'referrerSelect',
     'referrerFields',
     'referrerField',
+    'curatorSelect',
     'customerContactBoolField',
     'submitBtn'
   ];
@@ -66,6 +67,7 @@ export default class FormController<Ctrl extends SubclassController> extends Con
   declare readonly hasReferrerSelectTarget: boolean;
   declare readonly hasSuccessFieldTargets: boolean;
   declare readonly hasSuccessPlaceholderTarget: boolean;
+  declare readonly hasCuratorSelectTarget: boolean;
 
   declare initialState: string;
 
@@ -118,7 +120,7 @@ export default class FormController<Ctrl extends SubclassController> extends Con
     const isNew = isNaN(+select.value);
     const customerId = +select.value || null;
 
-    // enable/disable select via the [name] attribute => precludes ui changes
+    // Enable/disable select elements via the [name] attribute => precludes ui changes
     select.setAttribute('name', isNew ? '' : select.dataset.fieldName);
 
     // hidden fields for a new customer
@@ -138,19 +140,30 @@ export default class FormController<Ctrl extends SubclassController> extends Con
     const isNew = isNaN(+select.value);
     const winId = +select.value || null;
     const wasCleared = !(isNew || winId);
+    const updateCuratorSelect = function (this: NewStoryController) {
+      this.curatorSelectTarget.setAttribute('name', isNew || wasCleared ? this.curatorSelectTarget.dataset.fieldName : '');
+    };
 
-    // enable/disable select via the [name] attribute => precludes ui changes
+    // Enable/disable select elements via the [name] attribute => precludes ui changes
     select.setAttribute('name', isNew || wasCleared ? '' : select.dataset.fieldName);
-
-    // hidden fields for a new customer win
-    this.successFieldTargets.forEach((field: HTMLInputElement) => field.disabled = !isNew);
-    this.successNameTarget.value = isNew ? select.value.trim() : '';
-
-    // For a new story, `placeholder: true` and `name: nil` for the associated success if none was specified
-    if (this.hasSuccessPlaceholderTarget) {
-      this.successPlaceholderTarget.checked = wasCleared;
-      this.successNameTarget.disabled = wasCleared;
+    if (this.hasCuratorSelectTarget) {
+      updateCuratorSelect.bind(this as NewStoryController)();
     }
+
+    // Hidden fields for a new customer win
+    // For a new story, `placeholder: true` and `name: nil` for the associated success if none was specified
+    // TODO successName and successPlaceholder needn't be targets -- just look for the name
+    this.successFieldTargets.forEach((field: HTMLInputElement) => {
+      if (field === this.successNameTarget) {
+        field.disabled = !isNew;
+        field.value = isNew ? select.value.trim() : '';
+      } else if (field === this.successPlaceholderTarget) {
+        field.checked = wasCleared;
+        field.disabled = !!winId || isNew;
+      } else {
+        field.disabled = !!winId
+      }
+    });
 
     const updateContributorOptions = function (this: NewContributionController, winId: number) {
       const tsOptions = this.contributorSelectTarget.tomselect.options as TomOptions;
@@ -186,7 +199,7 @@ export default class FormController<Ctrl extends SubclassController> extends Con
       }
       this.customerSelectTarget.tomselect.setValue(customerId, true);
 
-      // disable contributor option for any contributors that already have a contribution for this customer win
+      // Disable contributor option for any contributors that already have a contribution for this customer win
       if (this.hasContributorSelectTarget) {
         updateContributorOptions.bind(this as NewContributionController)(winId);
       }
@@ -203,7 +216,7 @@ export default class FormController<Ctrl extends SubclassController> extends Con
     const isNewContact = select.value === '0';
     const isExistingContact = select.value && !isNewContact;
 
-    // enable/disable submission via the [name] attribute => precludes ui changes
+    // Enable/disable select elements via the [name] attribute => precludes ui changes
     select.setAttribute('name', select.value && !isNewContact ? select.dataset.fieldName as string : '');
     this[`${contactType}FieldTargets`].forEach(input => {
       input.value = /success_contact|sign_up_code/.test(input.name) ? input.value : '';
@@ -227,7 +240,7 @@ export default class FormController<Ctrl extends SubclassController> extends Con
     }
   }
 
-  // for newly created contacts, autofill the password with the email
+  // For newly created contacts, autofill the password with the email
   autofillNewContactPasswords(this: NewCustomerWinController | NewContributionController) {
     if (!this.contributorFieldTargets || !this.referrerFieldTargets) return;
     const referrerEmail = <HTMLInputElement>this.referrerFieldTargets.find(input => input.name.includes('email'));
