@@ -1,7 +1,11 @@
-= turbo_frame_tag('edit-ad-images') do
+= turbo_stream.append 'main-modal-content' do 
+  .modal-footer data-modal-target="footer"
+    button.btn.btn-default type="button" data-dismiss="modal" Cancel
+    = submit_tag('Save selections', class: 'btn btn-success', form: 'edit-ad-images-form')
 
+= turbo_stream.append 'main-modal-body' do
   = form_with( \
-      model: ad,
+      model: @ad,
       format: :json,
       html: { \
         id: 'edit-ad-images-form',
@@ -30,22 +34,22 @@
 
       #ad-images__marketing.tab-pane.active
         ul.image-cards data-max="15"
-          - ad.company.ad_images.marketing.sort_by { |image| sort_ad_images(ad, image) }.each.with_index do |ad_image, i|
+          - @ad.company.ad_images.marketing.sort_by { |image| sort_ad_images(@ad, image) }.each.with_index do |ad_image, i|
             = render( \
                 'shared/image_card',
                 model: 'AdwordsAd',
                 _image: ad_image,
                 upload_enabled: false,
-                selected: ad.images.include?(ad_image),
+                selected: @ad.images.include?(ad_image),
                 field_name_prefix: "adwords_ad[adwords_images_attributes][#{i}]")
                   
       #ad-images__logos.tab-pane
         ul.image-cards data-max="5"
-          - ad.company.ad_images.logo.sort_by { |image| sort_ad_images(ad, image) }.each.with_index do |ad_image, i|
+          - @ad.company.ad_images.logo.sort_by { |image| sort_ad_images(@ad, image) }.each.with_index do |ad_image, i|
             = render( \
                 'shared/image_card',
                 model: 'AdwordsAd',
                 _image: ad_image,
                 upload_enabled: false,
-                selected: ad.images.include?(ad_image),
-                field_name_prefix: "adwords_ad[adwords_images_attributes][#{ i + ad.company.ad_images.marketing.count }]")
+                selected: @ad.images.include?(ad_image),
+                field_name_prefix: "adwords_ad[adwords_images_attributes][#{ i + @ad.company.ad_images.marketing.count }]")

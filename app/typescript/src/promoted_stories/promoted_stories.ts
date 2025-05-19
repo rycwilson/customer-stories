@@ -134,11 +134,11 @@ function actionsDropdownTemplate(row: AdwordsAd, type: string, set: any) {
       data-dropdown-target="dropdownMenu">
     <li>
       <a 
-        href="javascript:;"
+        href="${editPath}"
+        data-turbo-stream="true"
         data-controller="modal-trigger" 
         data-modal-trigger-modal-outlet="#main-modal"
-        data-modal-trigger-title-value="Promoted Story Images"
-        data-modal-trigger-turbo-frame-attrs-value=${JSON.stringify({ id: 'edit-ad-images', src: editPath })}
+        data-modal-trigger-params-value='${JSON.stringify({ title: 'Promoted Story Images', className: 'ad-images' })}'
         role="button">
         <i class="fa fa-fw fa-image"></i>
         Assign Images

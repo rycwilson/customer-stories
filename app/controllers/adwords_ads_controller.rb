@@ -43,7 +43,7 @@ class AdwordsAdsController < ApplicationController
 
   def edit 
     @ad = AdwordsAd.find params[:id]
-    render(partial: 'adwords_ads/edit_ad_images', locals: { ad: @ad })
+    render(:edit_ad_images)
   end
 
   def create
