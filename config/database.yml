@@ -14,12 +14,17 @@
 # Configure Using Gemfile
 # gem 'pg'
 #
+
 default: &default
   adapter: postgresql
   encoding: unicode
   # For details on connection pooling, see rails configuration guide
   # http://guides.rubyonrails.org/configuring.html#database-pooling
-  pool: 5
+
+  # The ENV['DATABASE_URL'] connection string will contain details such as protocol, username, password, host, port, db name
+  # Additionally these settings will apply in all environments:
+  pool: 5   # max connections the app will maintain per process
+  # timeout: 5000
 
 development:
   <<: *default
