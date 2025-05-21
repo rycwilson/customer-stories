@@ -33,7 +33,11 @@ acme.skip_callbacks = true    # Skip callbacks to avoid unnecessary processing d
 acme.save!
 
 # Associate curators
-curators = User.where(email: ['rycwilson@gmail.com', 'acme-test@customerstories.net'])
+ryan = User.find_by_email 'rycwilson@gmail.com'
+ralph = User.find_by_email 'ryan@ryanwilson.dev'
+ralph.update!(first_name: 'Ralph', last_name: 'Watson') if ralph.full_name != 'Ralph Watson'
+dan = User.find_by_email 'acme-test@customerstories.net'
+curators = [ryan, ralph, dan].compact
 curators.each { |curator| acme.curators << curator }
 
 # Create story categories
