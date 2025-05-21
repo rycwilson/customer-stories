@@ -192,12 +192,13 @@ class Contribution < ApplicationRecord
 
   # this works because the route in question is aliased to 'edit_contribution'
   # type is in ['contribution', 'feedback', 'opt_out', 'remove']
-  def invitation_link (type)
+  def invitation_link(type)
     Rails.application.routes.url_helpers.url_for({
-      subdomain: self.company.subdomain,
+      subdomain: company.subdomain,
       controller: 'contributions',
       action: ['contribution', 'feedback'].include?(type) ? 'edit' : 'update',
-      token: self.access_token, type: type
+      token: access_token,
+      type:
     })
   end
 

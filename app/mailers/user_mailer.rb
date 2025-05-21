@@ -72,7 +72,7 @@ class UserMailer < ApplicationMailer
       recipient_address = 'Ryan Wilson <ryan@ryanwilson.dev>'
       # sender_address = "#{sender.full_name} <dev-test@customerstories.net>"
       sender_address = 'Ryan Wilson <ryan@lvh.me>'
-    elsif ENV['HOST_NAME'] == 'customerstories.org'  # staging
+    elsif ENV['HOST_NAME'] == 'ryan@ryanwilson.dev'  # staging
       if CSP_EMAILS.include?(sender.email)
         recipient_address = "#{recipient.full_name} <#{sender.email}>"
       else

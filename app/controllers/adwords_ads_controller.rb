@@ -11,7 +11,6 @@ class AdwordsAdsController < ApplicationController
     @story = Story.includes(adwords_ads: { adwords_images: {} }).find(ad.story_id)
     # disable the ad links in production
     @company = @story.company
-    @is_production = ENV['HOST_NAME'] == 'customerstories.net'
     @story_url = @story.csp_story_url
     @short_headline = @company.adwords_short_headline
     @long_headline = @story.ads.long_headline

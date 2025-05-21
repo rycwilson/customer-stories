@@ -54,7 +54,7 @@ module ApplicationHelper
   end
 
   def staging?
-    ENV['HOST_NAME'] == 'customerstories.org'
+    ENV['HOST_NAME'] == 'ryanwilson.dev'
   end
 
   # method determines if title 'Customer Stories' should be displayed as plural

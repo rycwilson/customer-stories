@@ -14,16 +14,6 @@ module StoriesHelper
     staging? || company&.subdomain == 'pixlee'
   end
 
-  def csp_landing
-    if ENV['HOST_NAME'] == 'customerstories.net'
-      'https://customerstories.net'
-    elsif ENV['HOST_NAME'] == 'customerstories.org'
-      'https://customerstories.org'
-    else
-      'http://lvh.me:3000'
-    end
-  end
-
   # this is for PDF generation
   # ref: https://github.com/mileszs/wicked_pdf/issues/36
   def embed_remote_image(url, content_type)

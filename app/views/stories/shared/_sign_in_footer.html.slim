@@ -1,12 +1,12 @@
 #sign-in-footer.container-fluid.hidden-xs style="background-color:white; padding: 0 50px;"
   .row style="display:flex; align-items:center; justify-content:center;"
     .col-sm-6
-      a href="#{csp_landing}"
+      a href="#{root_url(subdomain: nil)}"
         = image_tag('cs_logo.png', alt: 'Powered by Customer Stories', style: 'height: 50px; margin: 15px 0')
       |&nbsp;&nbsp;
       span Powered by
       |&nbsp;
-      a href="#{csp_landing}" customerstories.net
+      a href="#{root_url(subdomain: nil)}" customerstories.net
     .col-sm-6.text-right
       span
         = @company.name

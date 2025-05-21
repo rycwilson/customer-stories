@@ -31,7 +31,7 @@ class ApplicationController < ActionController::Base
   def csp_environment
     if ENV['HOST_NAME'] == 'customerstories.net'
       return 'production'
-    elsif ENV['HOST_NAME'] == 'customerstories.org'
+    elsif ENV['HOST_NAME'] == 'ryanwilson.dev'
       return 'staging'
     else
       return 'development'
