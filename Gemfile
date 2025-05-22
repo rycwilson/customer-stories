@@ -54,7 +54,7 @@ gem 'pry-rails'
 gem 'pry-remote'
 gem 'pry-theme'
 gem 'reverse_markdown'
-gem 'typhoeus'
+# gem 'typhoeus'
 
 # Patches / Fixes 
 # https://stackoverflow.com/questions/70500220
