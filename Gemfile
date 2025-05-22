@@ -35,7 +35,7 @@ gem 'pretender'
 # gem 'oauth2'
 
 # Admin
-gem 'rails_admin', '~> 2.0'
+# gem 'rails_admin', '~> 2.0'
 
 # Services 
 gem 'aws-sdk-ses', '~> 1.6'
