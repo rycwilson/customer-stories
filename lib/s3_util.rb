@@ -8,12 +8,13 @@ module S3Util
 
       # Do not delete from csp-prod-assets bucket unless in .net production environment
       if object_url.match(/csp-(dev-assets|staging-assets)/) or ENV['HOST_NAME'] == 'customerstories.net'
-        bucket.delete_objects({
+        res = bucket.delete_objects({
           delete: { 
             objects: [{ key: }] 
           }
         })
       end
+      puts "\n\n\nDelete response: #{res.to_h}\n\n\n"
     end
   end
 end
