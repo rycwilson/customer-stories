@@ -44,7 +44,7 @@ gem 'aws-sdk-s3', '~> 1.0'
 # gem 'google-adwords-api', '1.5'
 
 # Utilities
-gem 'activerecord-import'
+# gem 'activerecord-import'
 gem 'awesome_print'
 gem 'friendly_id'
 gem 'googlecharts'

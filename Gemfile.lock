@@ -47,8 +47,6 @@ GEM
     activerecord (6.1.7)
       activemodel (= 6.1.7)
       activesupport (= 6.1.7)
-    activerecord-import (1.4.0)
-      activerecord (>= 4.2)
     activestorage (6.1.7)
       actionpack (= 6.1.7)
       activejob (= 6.1.7)
@@ -391,7 +389,6 @@ PLATFORMS
   x86_64-linux
 
 DEPENDENCIES
-  activerecord-import
   awesome_print
   aws-sdk-s3 (~> 1.0)
   aws-sdk-ses (~> 1.6)
