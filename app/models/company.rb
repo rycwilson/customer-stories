@@ -239,8 +239,8 @@ class Company < ApplicationRecord
   accepts_nested_attributes_for :adwords_images, allow_destroy: true
 
   after_update_commit do 
-    square_logo_was_updated = previous_changes.keys.include?('square_logo_url') and previous_changes[:square_logo_url].first.present?
-    landscape_logo_was_updated = previous_changes.keys.include?('landscape_logo_url') and previous_changes[:landscape_logo_url].first.present?
+    square_logo_was_updated = previous_changes.keys.include?('square_logo_url') && previous_changes[:square_logo_url].first.present?
+    landscape_logo_was_updated = previous_changes.keys.include?('landscape_logo_url') && previous_changes[:landscape_logo_url].first.present?
     if square_logo_was_updated
       S3Util.delete_object(S3_BUCKET, previous_changes[:square_logo_url].first)
     end
