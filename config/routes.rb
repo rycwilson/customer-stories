@@ -11,6 +11,9 @@ Rails.application.routes.default_url_options = {
 Rails.application.routes.draw do
   devise_for :admins
 
+  # TODO Do this for each subdomain
+  get '/sitemap', to: 'site#sitemap'
+
   # mount RailsAdmin::Engine => '/admin', as: 'rails_admin'
 
   constraints(DeviseSubdomain) do
@@ -182,18 +185,19 @@ Rails.application.routes.draw do
         hidden_link: true
       )
     end
+
+    get '/:google', to: 'site#google_verify', constraints: { google: /google\w+/ }
   end
 
-  get '*all', to: 'site#not_found', constraints: { subdomain: /.+/ }
-
+  # this route is for the case of a Contributor being logged in (no subdomain)
+  put '/contributions/:token', to: 'contributions#update', constraints: { subdomain: '' }
+  
   # landing pages
-  root 'site#landing'
-  get '/:page', to: 'site#landing', constraints: { page: /product|plans|company|team|terms|privacy|our-story/ }
-  get '/sitemap', to: 'site#sitemap'
+  root 'site#landing', constraints: { subdomain: '' }
+  get '/:page', to: 'site#landing', constraints: { subdomain: '', page: /product|plans|company|team|terms|privacy|our-story/ }
+
   get '/:google', to: 'site#google_verify', constraints: { google: /google\w+/ }
   
-  # this route is for the case of a Contributor being logged in (no subdomain)
-  put '/contributions/:token', to: 'contributions#update'
-  
-  get '/*all', to: 'site#not_found'
+  # not found (parends ensure root path matches)
+  get '(*all)', to: 'site#not_found'
 end
