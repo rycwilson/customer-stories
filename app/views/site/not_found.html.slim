@@ -11,5 +11,8 @@ html lang="en-US"
     .dialog
       h1 404
       p Sorry, we couldn't find that page.
-      a href='/'
-        = (@company ? @company.name + ' ' : '') + 'Customer Stories'
+      = link_to root_url(subdomain: @company&.subdomain) do
+        - if @company
+          | #{@company.name} Customer Stories
+        - else
+          = image_tag('landing/logo_full_med_blue.webp', alt: 'Customer Stories logo', style: 'display: inline-block')

@@ -61,12 +61,14 @@ body {
   }
 
   &.not-found {
+    background-color: white;
+    padding-top: 10rem;
     text-align: center;
 
     .dialog {
       width: 95%;
       max-width: 33em;
-      margin: 4em auto 0;
+      margin: 0 auto;
 
       h1 {
         font-size: 5em;
@@ -75,7 +77,11 @@ body {
 
       p {
         font-size: 1.75em;
-        margin-bottom: 1em;
+        margin-bottom: 1.25em;
+      }
+
+      img {
+        height: 50px;
       }
 
       a {
