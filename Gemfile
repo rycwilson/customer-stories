@@ -8,6 +8,7 @@ gem 'bootsnap', '>= 1.4.4', require: false
 gem 'rack-cors'
 gem 'rack_password'
 gem 'rack-timeout', require: "rack/timeout/base"
+gem 'figaro'
 gem 'turbo-rails', '~> 2.0'
 gem 'stimulus-rails', '~> 1.2'
 gem 'slim-rails', '~> 3.0'
@@ -69,7 +70,6 @@ gem 'concurrent-ruby', '1.3.4'
 # gem 'multi_json'
 
 group :development, :test do
-  gem 'figaro'
   gem 'faker'
   gem 'rspec-rails', '~> 6.0'
   gem 'shoulda-matchers', '~> 5.0'
