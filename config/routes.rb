@@ -184,8 +184,7 @@ Rails.application.routes.draw do
     end
   end
 
-  get '/', to: 'site#not_found', constraints: { subdomain: /.+/ }
-  get '/*all', to: 'site#not_found', constraints: { subdomain: /.+/ }
+  get '*all', to: 'site#not_found', constraints: { subdomain: /.+/ }
 
   # landing pages
   root 'site#landing'
@@ -196,5 +195,5 @@ Rails.application.routes.draw do
   # this route is for the case of a Contributor being logged in (no subdomain)
   put '/contributions/:token', to: 'contributions#update'
   
-  match '*all', via: :all, to: 'site#not_found'
+  get '/*all', to: 'site#not_found'
 end

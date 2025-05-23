@@ -1,14 +1,6 @@
 class SiteController < ApplicationController
   skip_before_action :verify_authenticity_token, only: :esp_notifications
 
-  def not_found
-    if current_user&.company.present?
-      redirect_to root_url(subdomain: current_user.company.subdomain)
-    else
-      redirect_to(user_signed_in? ? new_company_url(subdomain: '') : root_url(subdomain: ''))
-    end
-  end
-
   def landing
     @storefront_page = params[:page] || 'home'
     @feature_partials = %w(crowdsource curate showcase search retarget target_crm target_lookalike measure integrate)
@@ -37,6 +29,17 @@ class SiteController < ApplicationController
     end
     respond_to do |format|
       format.xml { render layout: false }
+    end
+  end
+
+  def not_found
+    if current_user&.company.present?
+      redirect_to root_url(subdomain: current_user.company.subdomain)
+    elsif user_signed_in?
+      redirect_to new_company_url(subdomain: '')
+    else
+      @company = Company.find_by_subdomain request.subdomain
+      render layout: false
     end
   end
 
