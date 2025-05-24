@@ -90,8 +90,8 @@ main.user-profile.container.hidden-xs
                   required: true,
                   disabled: true,
                   data: { user_profile_target: 'emailField' })
-              .input-group-btn 
-                button.btn.btn-default type="button" data-action="user-profile#editEmail"
+              .input-group-btn data-user-profile-target="editBtn"
+                button.btn.btn-default type="button" data-action="user-profile#changeEmail"
                   i.fa.fa-pencil
             .help-block
 
@@ -99,14 +99,19 @@ main.user-profile.container.hidden-xs
         .user-profile__current-password.form-group
           = form.label(:current_password, 'Password', class: 'control-label col-sm-3 col-lg-2')
           .col-sm-9.col-lg-10
-            = form.password_field( \
-                :current_password,
-                class: 'form-control',
-                autocomplete: 'current-password',
-                required: true,
-                disabled: true,
-                data: { user_profile_target: 'currentPasswordField' })
-            a href="javascript:;" data-action="user-profile#changePassword"
+            .input-group
+              = form.password_field( \
+                  :current_password,
+                  value: '**********',
+                  class: 'form-control',
+                  autocomplete: 'current-password',
+                  required: true,
+                  disabled: true,
+                  data: { user_profile_target: 'currentPasswordField' })
+              .input-group-btn data-user-profile-target="editBtn"
+                button.btn.btn-default type="button"  data-action="user-profile#changePassword"
+                  i.fa.fa-pencil
+            /a href="javascript:;" data-action="user-profile#changePassword"
               | Change
             .help-block 
       

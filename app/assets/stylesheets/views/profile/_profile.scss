@@ -33,18 +33,6 @@
     justify-content: flex-end
   }
 
-  input {
-    &[disabled],
-    &[disabled] ~ .help-block,
-    &:not([disabled]) ~ a {
-      display: none;
-
-      &.help-block {
-        margin-top: 0;
-      }
-    }
-  }
-
   form.has-new-password & {
     label::before {
       content: 'Current ';

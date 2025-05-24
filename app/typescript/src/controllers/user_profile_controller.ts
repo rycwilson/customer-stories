@@ -1,12 +1,13 @@
 import FormController from './form_controller';
 
 export default class UserProfileController extends FormController<UserProfileController> {
-  static targets = ['userField', 'emailField', 'currentPasswordField', 'passwordField', 'passwordConfirmationField'];
+  static targets = ['userField', 'emailField', 'currentPasswordField', 'passwordField', 'passwordConfirmationField', 'editBtn'];
   declare readonly userFieldTargets: HTMLInputElement[];
   declare readonly emailFieldTarget: HTMLInputElement;
   declare readonly currentPasswordFieldTarget: HTMLInputElement;
   declare readonly passwordFieldTarget: HTMLInputElement;
   declare readonly passwordConfirmationFieldTarget: HTMLInputElement;
+  declare readonly editBtnTargets: HTMLElement[];
 
   get hasInvalidNewPassword() {
     return !this.passwordFieldTarget.checkValidity();
@@ -15,40 +16,38 @@ export default class UserProfileController extends FormController<UserProfileCon
   get passwordsDoNotMatch() {
     return this.passwordFieldTarget.value !== this.passwordConfirmationFieldTarget.value;
   }
-
-  editEmail({ currentTarget: btn }: { currentTarget: HTMLButtonElement }) {
-    this.enableProtectedField(this.emailFieldTarget, btn);
-  }
-
+  
   resetUserFields() {
     this.userFieldTargets.forEach(input => {
       input.value = <string>input.dataset.initialValue;
       input.disabled = true;
     });
   }
-
-  enableProtectedField(input: HTMLInputElement, btn: HTMLButtonElement) {
+  
+  enableProtectedField(input: HTMLInputElement) {
     this.resetUserFields();
-    input.disabled = false;
-    this.element.classList.add('has-protected-field')
+    this.editBtnTargets.forEach(inputGroupBtn => inputGroupBtn.remove());
+    this.currentPasswordFieldTarget.value = '';
     this.currentPasswordFieldTarget.disabled = false;
-    btn.parentElement!.remove();
+    input.disabled = false;
+  }
+
+  changeEmail(e: Event) {
+    this.enableProtectedField(this.emailFieldTarget);
   }
 
   changePassword(e: Event) {
-    this.resetUserFields();                               // don't allow other updates when changing password
-    this.emailFieldTarget.nextElementSibling!.remove();   // the edit button
+    this.enableProtectedField(this.currentPasswordFieldTarget);
+    [this.passwordFieldTarget, this.passwordConfirmationFieldTarget].forEach(input => input.disabled = false);
     this.element.classList.add('has-new-password');
-    [this.currentPasswordFieldTarget, this.passwordFieldTarget, this.passwordConfirmationFieldTarget].forEach(input => {
-      input.disabled = false;
-    });
     this.submitBtnTarget.value = 'Change password';
+    setTimeout(() => this.currentPasswordFieldTarget.focus()); // focus after the DOM update
   }
 
   validate(e: SubmitEvent) {
     let isValid = super.validate(e);
 
-    // here we are validating the password confirmation separately so as to give it a single help message (.help-block element)
+    // We want to validate the password confirmation separately so as to give it a single help message (.help-block element),
     // i.e. presence and format errors can be flagged on the password input alone, and not repeated for the confirmation input
     if (this.passwordFieldTarget.disabled === false) {
       const formGroup = this.passwordConfirmationFieldTarget.closest('.form-group')!;
