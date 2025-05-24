@@ -2,6 +2,7 @@ class ApplicationController < ActionController::Base
   # Prevent CSRF attacks by raising an exception.
   # For APIs, you may want to use :null_session instead.
   protect_from_forgery(with: :exception)
+  rescue_from(StandardError, with: :render_500)
   add_flash_types(:info, :warning)
   impersonates(:user)
   helper_method(:company_admin_page?)
@@ -74,6 +75,10 @@ class ApplicationController < ActionController::Base
   end
 
   private
+
+  def render_500
+    render 'application/500_server_error', status: :internal_server_error, layout: false
+  end
 
   def skip_subdomain_authorization?
     not user_signed_in? or

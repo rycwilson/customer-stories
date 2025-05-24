@@ -1,0 +1,41 @@
+@import 'base/variables';
+
+body {
+  font-family: $csp-body-font;
+  color: #425961;
+
+  .dialog {
+    margin: 6rem auto 0;
+    width: 95%;
+    max-width: 33em;
+    text-align: center;
+
+    h1 {
+      font-size: 5em;
+      margin-bottom: 0.3em;
+    }
+  
+    p {
+      font-size: 1.5em;
+      margin-bottom: 1.25em;
+    }
+  
+    img {
+      height: 50px;
+    }
+  
+    a {
+      font-size: 1.25em;
+    }
+  }
+
+  &.404-not-found {
+    background-color: white;
+    // padding-top: 10rem;
+
+  }
+
+  &.500-server-error {
+    background-color: $light-gray;
+  }
+}

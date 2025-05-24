@@ -1,0 +1,15 @@
+doctype html
+html lang="en-US"
+  head
+    meta charset="UTF-8"
+    meta name="viewport" content="width=device-width, initial-scale=1.0"
+    title 500 Server Error
+    = stylesheet_link_tag('errors')
+    = favicon_link_tag('favicon.ico')
+  body.500-server-error
+    .dialog
+      h1 500
+      p Oops, there was a server error.
+      
+      - if user_signed_in?
+        = link_to 'Back to Dashboard', dashboard_path('curate')
