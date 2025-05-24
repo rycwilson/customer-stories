@@ -39,7 +39,7 @@ class SiteController < ApplicationController
       redirect_to new_company_url(subdomain: '')
     else
       @company = Company.find_by_subdomain request.subdomain
-      render layout: false
+      render '404_not_found', layout: false
     end
   end
 
