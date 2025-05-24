@@ -9,14 +9,16 @@ Rails.application.routes.default_url_options = {
 }
 
 Rails.application.routes.draw do
-  devise_for :admins
-
+  root 'site#landing', constraints: { subdomain: '' }
+  get '/:page', to: 'site#landing', constraints: { subdomain: '', page: /product|plans|company|team|terms|privacy|our-story/ }
+  
   # TODO Do this for each subdomain
   get '/sitemap', to: 'site#sitemap'
-
+  
   # mount RailsAdmin::Engine => '/admin', as: 'rails_admin'
-
+  
   constraints(DeviseSubdomain) do
+    devise_for :admins
     devise_for(
       :users, 
       controllers: {
@@ -79,7 +81,6 @@ Rails.application.routes.draw do
   # end
 
   constraints(CompanySubdomain) do
-
     get '/', to: 'stories#index', as: 'public_stories'
 
     get '/plugins/:type/cs', to: 'plugins#main'
@@ -100,8 +101,8 @@ Rails.application.routes.draw do
     end
 
     authenticate(:user) do
-      get('/:workflow_stage', to: 'companies#show', workflow_stage: /prospect|curate|promote|measure/, as: 'dashboard')
-      get('/settings', to: 'companies#edit', as: 'edit_company')
+      get '/:workflow_stage', to: 'companies#show', workflow_stage: /prospect|curate|promote|measure/, as: 'dashboard'
+      get '/settings', to: 'companies#edit', as: 'edit_company'
       resources :companies, only: [:show, :update] do
         resources :customers, only: [:edit, :create, :update, :destroy], shallow: true
         resources :successes, except: [:index], shallow: true do
@@ -191,10 +192,6 @@ Rails.application.routes.draw do
 
   # this route is for the case of a Contributor being logged in (no subdomain)
   put '/contributions/:token', to: 'contributions#update', constraints: { subdomain: '' }
-  
-  # landing pages
-  root 'site#landing', constraints: { subdomain: '' }
-  get '/:page', to: 'site#landing', constraints: { subdomain: '', page: /product|plans|company|team|terms|privacy|our-story/ }
 
   get '/:google', to: 'site#google_verify', constraints: { google: /google\w+/ }
   
