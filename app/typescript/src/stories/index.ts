@@ -115,7 +115,7 @@ function initFilters() {
   const useNewFilters = false;
 
   if (useNewFilters) {
-    document.querySelectorAll('.tag-filter__header').forEach(header => {
+    document.querySelectorAll('.stories-filter__tag-header').forEach(header => {
       const group = <HTMLElement>header.nextElementSibling;
       group.style.height = header.getAttribute('aria-expanded') === 'true' ?
         `${group.scrollHeight}px` :

@@ -3,74 +3,6 @@
   padding: 30px 0;
 }
 
-.search-and-filters--new {
-  form.search-stories {
-  }
-
-  .tag-filter {
-
-    // &--open {
-    // }
-  }
-
-  .tag-filter__header {
-    $caret-size: 0.5em;
-
-    display: flex;
-    align-items: center;
-    position: relative;
-    margin-bottom: 1.25rem;
-    height: 1em;
-    color: #333;
-    font-weight: 600;
-    cursor: pointer;
-    
-    .caret {
-      transform-origin: center;
-      border-top: $caret-size solid transparent; 
-      border-right: 0;
-      border-left: $caret-size solid #666;
-      border-bottom: $caret-size solid transparent;
-    }
-
-    span {
-      position: absolute;
-      left: 1.3em;
-    }
-
-    &[aria-expanded="true"] {
-      .caret {
-        transform: rotate(90deg);
-        transition: transform .15s ease-in
-      }
-
-      + .tag-filter__group {
-        opacity: 1;
-        transition: height .15s ease-in, opacity .15s ease-in;
-      }
-    }
-    
-    &[aria-expanded="false"] {
-      .caret {
-        transition: transform .15s ease-out;
-      }
-
-      + .tag-filter__group {
-        opacity: 0;
-        transition: height .15s ease-out, opacity .15s ease-out;
-      }
-    } 
-  }
-
-  .tag-filter__group {
-    opacity: 1;
-    margin-bottom: 1em;
-    padding: 0 1rem;
-    border-top: 1px solid #dedede;
-    overflow: hidden;
-  }
-}
-
 .search-and-filters {
   @include hide-until-init;
 
@@ -258,7 +190,7 @@
   }
 }
 
-.filter-controls {
+.search-and-filters .filter-controls {
   @include flex-row-center-between;
   margin-bottom: 15px;
 
