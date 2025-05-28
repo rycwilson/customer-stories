@@ -1,5 +1,7 @@
 = render('shared/navbars/stories_header', { company: @company, story: nil, is_preview: false })
 
+- use_new_stories = false
+
 - if @is_dashboard
   = turbo_frame_tag('stories')
     = render( \
@@ -10,6 +12,98 @@
           no_filters_present: false,
           is_dashboard: true })
         
+- elsif use_new_stories  
+  .container.hidden-xs style="display: flex;"
+    .search-and-filters--new
+
+      form.search-stories data-action="submit->stories#onSubmitSearch"
+        .input-group
+          = text_field_tag( \
+              :q, 
+              nil, 
+              { type: 'search', 
+                class: 'search-stories__input form-control', 
+                placeholder: 'Search stories', 
+                autocomplete: 'off',
+                data: { stories_target: 'searchInput' }}) 
+          button.btn.search-stories__clear type="button" data-action="stories#clearSearch"
+            | &times;
+          span.input-group-btn
+            button.btn.btn-default type="submit"
+              = image_tag('icons/bs_search.svg', alt: 'search')     
+
+      hr
+
+      - if @company.story_categories.featured.present? or @company.products.featured.present?
+        .filters style="min-width:250px"
+          - if @company.story_categories.featured.present? and @company.products.featured.present? 
+            .filter-controls
+              div data-action="change->stories#onChangeFilterMatchType"
+                | Match:&nbsp;&nbsp;&nbsp;
+                label.radio-inline for="match-all-md-lg"
+                  input {
+                    type="radio" 
+                    name="match-type-md-lg" 
+                    id="match-all-md-lg" 
+                    value="all" 
+                    checked=('true' if @filters_match_type == 'all')
+                    data-stories-target="matchTypeInput" }
+                    | all
+                label.radio-inline for="match-any-md-lg"
+                  input {
+                    type="radio" 
+                    name="match-type-md-lg" 
+                    id="match-any-md-lg" 
+                    value="any" 
+                    checked=('true' if @filters_match_type == 'any') 
+                    data-stories-target="matchTypeInput" }
+                    | any
+              button type="button" class="btn-link" data-action="stories#clearFilters"
+                | Clear all 
+
+            - if @company.story_categories.featured.present?
+              .tag-filter.open
+                .tag-filter__header role="button" aria-expanded="true" aria-controls="category-filters"
+                  .caret
+                  span Topic
+                .tag-filter__group id="category-filters"
+                  - @company.story_categories.featured.each do |category|
+                    .checkbox
+                      label for="category-#{category.id}"
+                        = check_box_tag( \
+                            'category[]',
+                            category.id,
+                            false,
+                            { id: "category-#{category.id}" })
+                        |&nbsp;&nbsp;
+                        = category.name
+
+            - if @company.products.featured.present?
+              .tag-filter.open
+                .tag-filter__header role="button" aria-expanded="true" aria-controls="product-filters"
+                  .caret
+                  span Product
+                .tag-filter__group id="product-filters"
+                  - @company.products.featured.each do |product|
+                    .checkbox
+                      label for="product-#{product.id}"
+                        = check_box_tag( \
+                            'product[]',
+                            product.id,
+                            false,
+                            { id: "product-#{product.id}" })
+                        |&nbsp;&nbsp;
+                        = product.name
+
+    div 
+      = render( \
+          'stories/shared/gallery',
+          { company: @company,
+            stories: @featured_stories,
+            filtered_story_ids: @filtered_story_ids,
+            no_filters_present: @company.story_categories.featured.blank? && @company.products.featured.blank?,
+            is_dashboard: false })
+
 - else
   .container
     = render( \
@@ -17,8 +111,8 @@
         { company: @company,
           filters_match_type: @filters_match_type,
           filters: @tags })
-
     / if no filters, the search input will appear in the header
+    
     - if @company.story_categories.featured.present? || @company.products.featured.present?
       = render( \
           'stories/shared/search_and_filters_md_lg',
@@ -26,7 +120,7 @@
             filters_match_type: @filters_match_type,
             filters: @tags,
             is_dashboard: false })
-
+    
     = render( \
         'stories/shared/gallery',
         { company: @company,

@@ -112,53 +112,69 @@ function clearSearch(isUserInput: boolean = false) {
 }
 
 function initFilters() {
-  initFilterControls();
-  const tsOptions = (select: TomSelectInput, otherSelects: TomSelectInput[]) => ({
-    onInitialize(this: TomSelect) {
-      if (select.multiple) addDynamicPlaceholder(this);
-    },
-    onChange: onChangeFilter.bind(null, select, otherSelects),
-    onItemAdd(value: string, item: TomItem) {
+  const useNewFilters = false;
+
+  if (useNewFilters) {
+    document.querySelectorAll('.tag-filter__header').forEach(header => {
+      const group = <HTMLElement>header.nextElementSibling;
+      group.style.height = header.getAttribute('aria-expanded') === 'true' ?
+        `${group.scrollHeight}px` :
+        '0px';
+      header.addEventListener('click', () => {
+        const shouldCollapse = header.getAttribute('aria-expanded') === 'true';
+        header.setAttribute('aria-expanded', (!shouldCollapse).toString());
+        group.style.height = shouldCollapse ? '0px' : `${group.scrollHeight}px`;
+      });
+    });
+  } else {
+    initFilterControls();
+    const tsOptions = (select: TomSelectInput, otherSelects: TomSelectInput[]) => ({
+      onInitialize(this: TomSelect) {
+        if (select.multiple) addDynamicPlaceholder(this);
+      },
+      onChange: onChangeFilter.bind(null, select, otherSelects),
+      onItemAdd(value: string, item: TomItem) {
+        if (select.multiple) {
+          // disable highlighting of item when clicked
+          const observer = new MutationObserver(mutations => {
+            if (item.classList.contains('active')) item.classList.remove('active');
+          });
+          observer.observe(item, { attributes: true });
+        }
+      },
+      render: {
+        // item(data: TomOption, escape: (str: string) => string) {
+          // if (select.multiple) {
+            // const tagType = (
+            //   data.value[0].toUpperCase() + (data.value.slice(1, data.value.lastIndexOf('-')).split('-').join(' '))
+            // );
+            // return `<div><div><span class="tag-type">${tagType}:</span>&nbsp;<span class="tag-name">${escape(data.text)}</span></div></div>`
+        // }
+      },
+      plugins: select.multiple ? {
+        'remove_button': {
+          title: 'Clear selection'
+        }
+      } : {
+        'clear_button': {
+          title: 'Clear selection',
+          html: (config: CBOptions) => (
+            `<button type="button" class="btn ${config.className}" title="${config.title}">&times;</button>`
+          )
+        }
+      }
+    });
+    filters.forEach(select => {
+      const otherSelects = [...filters].filter(_select => _select !== select);
+      const ts = new TomSelect(select, { ...tsBaseOptions, ...tsOptions(select, otherSelects) });
       if (select.multiple) {
-        // disable highlighting of item when clicked
-        const observer = new MutationObserver(mutations => {
-          if (item.classList.contains('active')) item.classList.remove('active');
-        });
-        observer.observe(item, { attributes: true });
-      }
-    },
-    render: {
-      // item(data: TomOption, escape: (str: string) => string) {
-        // if (select.multiple) {
-          // const tagType = (
-          //   data.value[0].toUpperCase() + (data.value.slice(1, data.value.lastIndexOf('-')).split('-').join(' '))
-          // );
-          // return `<div><div><span class="tag-type">${tagType}:</span>&nbsp;<span class="tag-name">${escape(data.text)}</span></div></div>`
-      // }
-    },
-    plugins: select.multiple ? {
-      'remove_button': {
-        title: 'Clear selection'
-      }
-    } : {
-      'clear_button': {
-        title: 'Clear selection',
-        html: (config: CBOptions) => (
-          `<button type="button" class="btn ${config.className}" title="${config.title}">&times;</button>`
-        )
-      }
-    }
-  });
-  filters.forEach(select => {
-    const otherSelects = [...filters].filter(_select => _select !== select);
-    const ts = new TomSelect(select, { ...tsBaseOptions, ...tsOptions(select, otherSelects) });
-    if (select.multiple) {
-      // add clearing behavior
-      ts.wrapper.querySelectorAll('.item').forEach((item: Element) => onAddMultiSelectItem(ts, item as TomItem));
-      ts.on('item_add', (value: string, item: Element) => onAddMultiSelectItem(ts, item as TomItem));
-    };
-  });
-  setTimeout(() => searchAndFilters.forEach(container => container.setAttribute('data-init', 'true')));
+        // add clearing behavior
+        ts.wrapper.querySelectorAll('.item').forEach((item: Element) => onAddMultiSelectItem(ts, item as TomItem));
+        ts.on('item_add', (value: string, item: Element) => onAddMultiSelectItem(ts, item as TomItem));
+      };
+    });
+    setTimeout(() => searchAndFilters.forEach(container => container.setAttribute('data-init', 'true')));
+  }
 }
 
 function onAddMultiSelectItem(ts: TomSelect, item: TomItem) {
