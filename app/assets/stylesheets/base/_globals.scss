@@ -16,12 +16,21 @@ body {
   // TODO ... or maybe this: https://css-tricks.com/elegant-fix-jumping-scrollbar-issue/
   overflow-y: scroll;
   
+  &.stories.index, &.stories.show {
+    font-family: $company-body-font;
+  }
+
   &:not(.site) {
     background-color: $light-gray;
   }
-  &.stories.index, &.stories.show {
+  
+  &.stories.dhow {
     background-color: $stories-bg-color;
-    font-family: $company-body-font;
+
+  }
+
+  &.stories.index {
+    background-color: #fff;
   }
 }
 
