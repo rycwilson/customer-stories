@@ -76,7 +76,10 @@ class ApplicationController < ActionController::Base
 
   private
 
-  def render_500
+  def render_500 e
+    if Rails.env.development?
+      @error_mesg = e.message.slice(0, e.message.index("\n") || e.message.length)
+    end
     render 'application/500_server_error', status: :internal_server_error, layout: false
   end
 
