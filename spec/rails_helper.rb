@@ -6,8 +6,8 @@ require File.expand_path('../config/environment', __dir__)
 # Prevent database truncation if the environment is production
 abort("The Rails environment is running in production mode!") if Rails.env.production?
 require 'rspec/rails'
+# require 'selenium-webdriver' (capybara will require as needed)
 require 'capybara/rspec'
-require 'selenium-webdriver'
 
 # Add additional requires below this line. Rails is not loaded until this point!
 
@@ -67,11 +67,14 @@ RSpec.configure do |config|
   
 end
 
-
 Capybara.configure do |config|
   # config.server = :puma # Until your setup is working
   # config.server = :puma, { Silent: true } # To clean up your test output
-  config.default_driver = :selenium
+
+  # these are only needed for feature specs (use system specs instead)
+  # config.default_driver = :selenium_firefox_headless
+  # config.javascript_driver = :selenium_firefox_headless
+
   config.server_host = 'lvh.me'
   config.server_port = 5000
 end
