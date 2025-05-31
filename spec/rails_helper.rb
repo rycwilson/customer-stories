@@ -74,7 +74,12 @@ Capybara.configure do |config|
   # these are only needed for feature specs (use system specs instead)
   # config.default_driver = :selenium_firefox_headless
   # config.javascript_driver = :selenium_firefox_headless
+  # puts "CURRENT DRIVER: #{Capybara.current_driver}"
 
+  # Used by the browser driver for visiting pages
+  config.app_host = 'http://lvh.me:3000'
+
+  # The internal server used by Capybara
   config.server_host = 'lvh.me'
-  config.server_port = 5000
+  config.server_port = 3000
 end
