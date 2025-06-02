@@ -84,7 +84,7 @@ export default class DatatableController extends Controller<HTMLTableElement> {
   }
 
   search({ filters, searchVal, tsSearchResults }: SearchParams) {
-    // console.log('searching datatable:', filters, searchVal, tsSearchResults);
+    // console.log(`searching ${(<HTMLElement>this.element.closest('[data-resource-name]')!).dataset.resourceName} table for:`, { filters, searchVal, tsSearchResults });
 
     let dtSearch = this.dt.search('')
     dtSearch.columns().search('') 
@@ -101,7 +101,6 @@ export default class DatatableController extends Controller<HTMLTableElement> {
       });
     } else if (searchVal) {
       const [column, id] = searchVal.split('-');
-      // console.log(`${column}:name`, `^${id}$`)
       dtSearch = dtSearch.column(`${column}:name`).search(`^${id}$`, true, false);
     }
     dtSearch.draw();

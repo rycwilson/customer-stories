@@ -37,19 +37,19 @@ export function dataTableConfig(): Config {
         },
         createdCell: (td) => $(td).addClass('toggle-child')
       },
-      // {
-      //   name: 'success',  // this should match the value of the table's search/select options, e.g. value="success-1"
-      //   data: 'id',
-      //   render: (customerWinId: number, type: string, row: CustomerWin) => {
-      //     return type === 'display' ? '<input type="checkbox">' : customerWinId;
-      //   },
-      // },
       {
-        name: 'name',
+        name: 'success',
         data: {
           _: 'name',
-          sort: 'timestamp' // success.created_at
-        }
+          filter: 'id',
+        },
+
+        // Here the render function is necessary because the filter value (row.id) exists at the top level of the row object,
+        // Note how no render function is necessary for the 'customer' and 'curator' columns, as they are nested objects
+        render: (data: any, type: string, row: CustomerWin) => {
+          if (type === 'filter') return row.id.toString();
+          return data;
+        },
       },
       {
         name: 'customer',
