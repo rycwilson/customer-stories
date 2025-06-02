@@ -66,9 +66,10 @@ export default class ResourceController extends Controller<HTMLElement> {
   }
 
   get dataExists() {
-    return this.resourceName === 'storyContributions' ?
-      CSP[this.resourceName][+(this.element.dataset.storyId as string)] :
-      CSP[this.resourceName];
+    return false;
+    // return this.resourceName === 'storyContributions' ?
+    //   CSP[this.resourceName][+(this.element.dataset.storyId as string)] :
+    //   CSP[this.resourceName];
   }
 
   initValueChanged(shouldInit: boolean) {
