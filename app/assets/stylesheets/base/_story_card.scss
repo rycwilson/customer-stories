@@ -41,10 +41,6 @@
 }
 
 .story-card {
-  #curate-gallery & {
-    margin: 8px;
-  }
-
   // #cs-gallery & {
   //   margin: 15px !important;  // pixlee blog override
   // }
@@ -135,6 +131,10 @@
     #stories-gallery &, 
     .related-stories & {
       margin: 20px;
+    }
+
+    #stories-gallery &--dashboard {
+      margin: 0 5px 10px;;
     }
 
     .related-stories & {
