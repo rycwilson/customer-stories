@@ -29,8 +29,7 @@ RSpec.describe 'User authentication', type: :system do
 
   it "does not allow a user to sign in to another company's subdomain" do
     visit new_csp_user_session_url(subdomain: other_company.subdomain)
-    other_company_host = URI.parse(current_url).host
     sign_in_as user
-    expect(page).to have_content("Not authorized for #{other_company_host}")
+    expect(page).to have_content("Not authorized for #{URI.parse(current_url).host}")
   end
 end
