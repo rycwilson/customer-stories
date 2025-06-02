@@ -203,7 +203,10 @@
   float: left;
   width: 282px;
   padding: 20px 15px;
-  background-color: $blueish-gray-lighter;
+
+  .dashboard & {
+    background-color: $blueish-gray-lighter;
+  }
 
   .form-group:last-of-type {
     margin-bottom: 5px;
