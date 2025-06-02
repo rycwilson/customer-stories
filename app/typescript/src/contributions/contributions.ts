@@ -88,8 +88,8 @@ export function dataTableConfig(invitationTemplateSelectHtml: string, storyId?: 
       {
         name: 'customer',
         data: {
-          _: (row: Contribution, type: string, set: any) => 'success.customer.id',
-          sort: 'success.customer.name'
+          _: 'success.customer.name',
+          filter: 'success.customer.id',
         },
       },
       {
