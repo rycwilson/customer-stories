@@ -21,38 +21,38 @@
 
   = render('stories/shared/search_form', { company:, is_header_search: false })
 
-  - if is_dashboard || (company.story_categories.featured.present? && company.products.featured.present?)
-    hr
+  hr style=('border-color:transparent' unless is_dashboard || (company.story_categories.featured.present? && company.products.featured.present?))
 
   /- if is_dashboard
-  .filter-controls
-    div data-action="change->stories#onChangeFilterMatchType"
-      | Match:&nbsp;&nbsp;&nbsp;
-      label.radio-inline for="match-all-md-lg"
-        input {
-          type="radio" 
-          name="match-type-md-lg" 
-          id="match-all-md-lg" 
-          value="all" 
-          checked=('true' if filters_match_type == 'all')
-          data-stories-target="matchTypeInput" }
-          | all
-      label.radio-inline for="match-any-md-lg"
-        input {
-          type="radio" 
-          name="match-type-md-lg" 
-          id="match-any-md-lg" 
-          value="any" 
-          checked=('true' if filters_match_type == 'any') 
-          data-stories-target="matchTypeInput" }
-          | any
-    button type="button" class="btn-link" data-action="stories#clearFilters"
-      | Clear all 
-      
-  .filter-results.bg-info
-    span 
-      | Applied Filters:
-    span data-stories-target="filterResults"
+  - if company.story_categories.featured.present? && company.products.featured.present?
+    .filter-controls
+      div data-action="change->stories#onChangeFilterMatchType"
+        | Match:&nbsp;&nbsp;&nbsp;
+        label.radio-inline for="match-all-md-lg"
+          input {
+            type="radio" 
+            name="match-type-md-lg" 
+            id="match-all-md-lg" 
+            value="all" 
+            checked=('true' if filters_match_type == 'all')
+            data-stories-target="matchTypeInput" }
+            | all
+        label.radio-inline for="match-any-md-lg"
+          input {
+            type="radio" 
+            name="match-type-md-lg" 
+            id="match-any-md-lg" 
+            value="any" 
+            checked=('true' if filters_match_type == 'any') 
+            data-stories-target="matchTypeInput" }
+            | any
+      button type="button" class="btn-link" data-action="stories#clearFilters"
+        | Clear all 
+        
+    .filter-results.bg-info
+      span 
+        | Applied Filters:
+      span data-stories-target="filterResults"
 
   div data-action="#{%w(curator status customer category product).map do |filter| \
     "tomselect:change-#{filter}->stories#onChangeFilter"; end.join(' ') }"

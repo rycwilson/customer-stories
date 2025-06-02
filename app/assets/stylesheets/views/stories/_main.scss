@@ -14,6 +14,6 @@
 @import 'views/stories/show/show';
 @import 'views/stories/shared/cookie_consent';
 
-.stories.index > .container{
+.stories.index > .container {
   min-height: 100vh;  // accommodate the sign-in footer
 }
