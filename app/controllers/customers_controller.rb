@@ -6,14 +6,11 @@ class CustomersController < ApplicationController
 
   def update
     @customer = Customer.friendly.find(params[:id])
-    unless @customer.update(customer_params)
+    if @customer.update(customer_params)
+      redirect_back(fallback_location: dashboard_path('curate'), flash: { notice: "Customer has been updated" })
+    else 
       @errors = @customer.errors.full_messages
-    end
-    respond_to do |format|
-      format.html { redirect_to('/prospect', flash: { success: "Customer updated" }) }
-      format.json do 
-        render(json: { status: @errors ? :unprocessable_entity : :ok, errors: @errors })
-      end
+      render :edit, status: :unprocessable_entity
     end
   end
 

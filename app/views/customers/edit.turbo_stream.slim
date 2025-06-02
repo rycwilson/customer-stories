@@ -6,14 +6,13 @@
 = turbo_stream.append 'main-modal-body' do 
   = form_with( \
       model: @customer,
-      format: :json,
+      local: true,
       html: { \
         id: 'customer-form',
         autocomplete: 'off',
         data: { \
           controller: 'form',
           modal_target: 'form',
-          turbo_frame: '_top',
           submit_btn_text: 'Save changes',
           asset_host: Rails.application.config.asset_host,
           action: [ \
