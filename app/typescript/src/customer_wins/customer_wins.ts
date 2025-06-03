@@ -173,7 +173,7 @@ function actionsDropdownTemplate(row: CustomerWin, type: string, set: any) {
   const contributionsExist = false;
 
   const action = noContributorsAdded ? 'Add' : (noContributorsInvited ? 'Invite' : '');
-  const editStoryPath = story ? `/stories/${story.slug}/edit` : undefined;
+  const editStoryPath = story ? `/stories/${story.id}/edit` : undefined;
   const editStoryDropdownItems = (
     [
       ['Story Narrative Content', 'story-narrative-content', 'fa-edit'], 
