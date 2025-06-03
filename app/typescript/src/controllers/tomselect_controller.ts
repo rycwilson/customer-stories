@@ -183,15 +183,17 @@ export default class extends Controller<TomSelectInput> {
       },
 
       onDelete(values: string[], e: PointerEvent) {
-        const [tagName] = values;
-        const item = <HTMLElement>(<HTMLAnchorElement>e.target).closest('.item');
-        if (item.classList.contains('to-be-added')) {
-          ctrl.dispatch('add-tag', { detail: { tagName, source: item.dataset.source, cancel: true } });
-          return true;  // allow the default behavior of removing the item
-        } else {
-          item.classList.toggle('to-be-removed');
-          ctrl.dispatch('remove-tag', { detail: { tagName, source: item.dataset.source, cancel: !item.classList.contains('to-be-removed') } });
-          return false;   // prevent the default behavior of removing the item
+        if (e.target instanceof HTMLElement && e.target.closest('#company-tags-form')) {
+          const [tagName] = values;
+          const item = <HTMLElement>(<HTMLAnchorElement>e.target).closest('.item');
+          if (item.classList.contains('to-be-added')) {
+            ctrl.dispatch('add-tag', { detail: { tagName, source: item.dataset.source, cancel: true } });
+            return true;  // allow the default behavior of removing the item
+          } else {
+            item.classList.toggle('to-be-removed');
+            ctrl.dispatch('remove-tag', { detail: { tagName, source: item.dataset.source, cancel: !item.classList.contains('to-be-removed') } });
+            return false;   // prevent the default behavior of removing the item
+          }
         }
       }
     }
