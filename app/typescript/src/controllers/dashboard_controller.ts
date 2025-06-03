@@ -155,7 +155,7 @@ export default class DashboardController extends Controller<HTMLDivElement> {
     // console.log(`showCustomerWinContributors(${customerWinId})`)
     this.contributionsSearchSelectTarget.tomselect.setValue(`success-${customerWinId}`);
     $(this.contributionsTabTarget)
-      .one('shown.bs.tab', () => scrollTo(0, 65))
+      // .one('shown.bs.tab', () => scrollTo(0, 65))
       .tab('show');
       
     // TODO: change filters IF necessary to find customer win
@@ -167,7 +167,7 @@ export default class DashboardController extends Controller<HTMLDivElement> {
     if (!link.dataset.customerWinId) return false;
     this.customerWinsSearchSelectTarget.tomselect.setValue(`success-${link.dataset.customerWinId}`);
     $(this.customerWinsTabTarget)
-      .one('shown.bs.tab', () => scrollTo(0, 65))
+      // .one('shown.bs.tab', () => scrollTo(0, 65))
       .tab('show');
     // TODO: open the customer win child row
   }
