@@ -93,12 +93,14 @@ export default class DatatableController extends Controller<HTMLTableElement> {
       dtSearch = dtSearch.column(`${column}:name`).search(q, isRegEx, useSmartSearch);
     });
     
-    // as the user types, search the table for the found options in the select box
+    // As the user types, search the table for the found options in the select box
     // => this ensures the datatables search matches the tomselect search
     if (tsSearchResults) {
-      Object.keys(tsSearchResults).forEach(column => {
-        dtSearch = dtSearch.column(`${column}:name`).search(`^(${tsSearchResults[column]})$`, true, false);
-      });
+      // TODO This does not work because chaining column searches performs a combinatorial search
+      // => custom filter? check the search plug-in api
+      // Object.keys(tsSearchResults).forEach(column => {
+      //   dtSearch = dtSearch.column(`${column}:name`).search(`^(${tsSearchResults[column]})$`, true, false);
+      // });
     } else if (searchVal) {
       const [column, id] = searchVal.split('-');
       dtSearch = dtSearch.column(`${column}:name`).search(`^${id}$`, true, false);
