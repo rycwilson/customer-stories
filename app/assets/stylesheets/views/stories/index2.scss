@@ -7,6 +7,36 @@
 @import 'views/stories/shared/gallery';
 @import 'views/stories/show/show';
 
+.stories-grid {
+  > div {
+    @include flex-row-center-between;
+    margin-bottom: 1.25rem
+  }
+  // margin: 0 auto;
+  // min-height: 100vh;  // accommodate the sign-in footer
+  // padding-bottom: 20px;
+
+  // > li {
+  //   display: inline-block;
+  //   vertical-align: top;
+  // }
+}
+
+.stories-grid__count::before {
+  content: attr(data-content)
+}
+
+.stories-grid__grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(20rem, 1fr));
+  gap: 1.75rem;
+
+  li {
+    aspect-ratio: 3 / 2;
+    height: auto;
+  }
+}
+
 #stories-gallery {
   background-color: #f9f9f9;
 }
@@ -16,8 +46,8 @@
   min-height: 100vh;
   
   > :last-child {
-    flex: 1;
-    padding: 0 1.5rem;
+    flex-grow: 1;
+    padding: 0 1.5rem;ß
 
     > * {
       width: 100%;
@@ -59,8 +89,16 @@ form.stories-search {
 }
 
 .stories-filter {
-  min-width: 250px;
+  max-width: 250px;
   padding: 6px 1.5rem 0;  
+
+  .checkbox {
+    margin-bottom: 1.25rem;
+  }
+  
+  label {
+    @include max-lines(1);
+  }
 }
 
 .stories-filter__controls {
@@ -69,6 +107,7 @@ form.stories-search {
   
   > div {
     display: flex;
+    flex-wrap: wrap;
     align-items: center;
     margin-bottom: 1rem;
     
@@ -136,20 +175,5 @@ form.stories-search {
   .stories-filter__tag-header[aria-expanded="false"] + & {
     opacity: 0;
     transition: height .15s ease-out, opacity .15s ease-out;
-  }
-}
-
-.stories-grid__count::before {
-  content: attr(data-content)
-}
-
-.stories__grid {
-  margin: 0 auto;
-  min-height: 100vh;  // accommodate the sign-in footer
-  padding-bottom: 20px;
-
-  > li {
-    display: inline-block;
-    vertical-align: top;
   }
 }

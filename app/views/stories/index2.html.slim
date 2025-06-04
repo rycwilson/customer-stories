@@ -6,26 +6,27 @@
     .stories-filter__controls
       div
         /= image_tag('icons/bs_funnel.svg', alt: 'filter icon')
-        span style="font-weight:600" Match Filters:
+        div style="font-weight:600;" Match Filters:
         |&nbsp;&nbsp;&nbsp;&nbsp;
-        label.radio-inline for="match-any-sm-lg"
-          input {
-            type="radio" 
-            name="match-type-sm-lg" 
-            id="match-any-sm-lg" 
-            value="any" 
-            checked=('true' if @filters_match_type == 'any') 
-            data-stories-target="matchTypeInput" }
-            | any
-        label.radio-inline for="match-all-sm-lg"
-          input {
-            type="radio" 
-            name="match-type-sm-lg" 
-            id="match-all-sm-lg" 
-            value="all" 
-            checked=('true' if @filters_match_type == 'all')
-            data-stories-target="matchTypeInput" }
-            | all
+        div style="display:flex"
+          label.radio-inline for="match-any-sm-lg"
+            input {
+              type="radio" 
+              name="match-type-sm-lg" 
+              id="match-any-sm-lg" 
+              value="any" 
+              checked=('true' if @filters_match_type == 'any') 
+              data-stories-target="matchTypeInput" }
+              | any
+          label.radio-inline for="match-all-sm-lg"
+            input {
+              type="radio" 
+              name="match-type-sm-lg" 
+              id="match-all-sm-lg" 
+              value="all" 
+              checked=('true' if @filters_match_type == 'all')
+              data-stories-target="matchTypeInput" }
+              | all
       button type="button" class="btn-link" data-action="stories#clearFilters"
         | Clear all 
 
@@ -43,7 +44,6 @@
                     category.id,
                     false,
                     { id: "category-#{category.id}" })
-                |&nbsp;&nbsp;
                 = category.name
 
     - if @company.products.featured.present?
@@ -60,7 +60,6 @@
                     product.id,
                     false,
                     { id: "product-#{product.id}" })
-                |&nbsp;&nbsp;
                 = product.name
 
   div 
@@ -77,7 +76,7 @@
         | &times;
 
     .stories-grid
-      div style="display:flex; align-items:center; justify-content:space-between; margin-bottom: 10px;"
+      div
         .stories-grid__count data-content="#{@featured_stories.count.to_s + (@featured_stories.count == 1 ? ' story' : ' stories')}"
         .stories-grid__sort.form-inline
           .form-group
@@ -90,18 +89,24 @@
                 | Oldest
               option value="most-viewed"
                 | Most viewed
-
-      ul#stories-gallery.list-unstyled.text-center.hidden {
+      ul.stories-grid__grid.list-unstyled
+        li style="background:peachpuff" 
+        li style="background:lavender"
+        li style="background:pink"
+        li style="background:lightsalmon"
+        li style="background:palegreen"
+        li style="background:powderblue"
+      /ul#stories-gallery.list-unstyled.text-center.hidden {
         class=('no-filters' if @no_filters_present)
         data-is-sync-filtered=('true' if @filtered_story_ids.present?)
         data-stories-target="gallery" }
 
-        - @featured_stories.each do |story|
+        /- @featured_stories.each do |story|
 
           / TODO semantic markup: https://stackoverflow.com/questions/19307443/semantic-html-of-an-articles-list#answer-54258592
-          li role="article" class="#{'hidden' if @filtered_story_ids.present? && @filtered_story_ids.exclude?(story.id)}"
+          /li role="article" class="#{'hidden' if @filtered_story_ids.present? && @filtered_story_ids.exclude?(story.id)}"
 
-            = render( \
+            /= render( \
                 'stories/shared/story_card',
                 { story: story,
                   card_class: story_card_class(story, is_dashboard: false),
