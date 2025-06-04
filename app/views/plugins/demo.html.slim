@@ -14,7 +14,7 @@ html lang="en-US"
   body.plugin-demo class="#{demo_class_name(@company, @plugin)}"
     .cs-plugin id="cs-#{@plugin[:type].sub('_', '-')}"
     script {
-      src="#{root_url}plugins/#{@plugin[:type]}/cs.js" 
+      src="#{root_url(subdomain: @company.subdomain)}plugins/#{@plugin[:type]}/cs.js" 
       data-demo="true" 
       data-stories=@plugin[:stories]
       data-category=@category_slug

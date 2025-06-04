@@ -99,7 +99,7 @@
   function getPlugin ($container, $script, isDemo, env, preSelectedStorySlug) {
     return function () {
       $.ajax({
-        url: "<%= URI.join(root_url, plugin_view_path(@type)) %>",
+        url: "<%= URI.join(root_url(subdomain: @company.subdomain), plugin_view_path(@type)) %>",
         method: 'GET',
         dataType: 'jsonp',
         data: {
@@ -169,7 +169,7 @@
 
     $.when([initOverlays]).done(function () {
         $.ajax({
-          url: "<%= URI.join(root_url, plugin_init_path(@type)) %>",
+          url: "<%= URI.join(root_url(subdomain: @company.subdomain), plugin_init_path(@type)) %>",
           method: 'GET',
           dataType: 'script'
         })

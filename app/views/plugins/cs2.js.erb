@@ -23,7 +23,7 @@
 
   async function getHtml() {
     const response = await fetch(
-      '<%= URI.join(root_url, plugin_view_path(@type)) %>.json?' +
+      '<%= URI.join(root_url(subdomain: @company.subdomain), plugin_view_path(@type)) %>.json?' +
       new URLSearchParams({
         is_demo: isDemo,
         stories: JSON.stringify([1,2,3])
