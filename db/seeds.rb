@@ -93,53 +93,49 @@ SeedData::CUSTOMERS.each do |customer_data|
     success = nil
 
     loop do
-      begin
-        success_data = SeedData.generate_success_and_story customer
-        success = customer.successes.create!(name: success_data[:success_name], curator_id: curators.sample.id)
-        break
+      success_data = SeedData.generate_success_and_story customer
+      success = customer.successes.create!(name: success_data[:success_name], curator_id: curators.sample.id)
+      break
 
-      # The seed data might return a duplicate success name
-      rescue ActiveRecord::RecordInvalid => e
-        puts "Creating a success failed: #{e.message}. Retrying..."
-      end
+    # The seed data might return a duplicate success name
+    rescue ActiveRecord::RecordInvalid => e
+      puts "Creating a success failed: #{e.message}. Retrying..."
     end
     
     # Associate story with 3 of the 4 successes
     if i < 3
       loop do
-        begin
-          story = success.build_story(
-            title: success_data[:story_title],
-            logo_published: i == 1 || i == 2,
-            published: i == 2
-          )
+        story = success.build_story(
+          title: success_data[:story_title],
+          logo_published: i == 1 || i == 2,
+          published: i == 2
+        )
 
-          # Changeover from [:logo_published, :preview_published, :published] attributes to :status_new in progress
-          if story.published?
-            story.is_published!
-            story.create_topic_ad!(adwords_ad_group: topic_ad_group)
-            story.create_retarget_ad!(adwords_ad_group: retarget_ad_group)
-          elsif story.logo_published?
-            story.listed!
-          else
-            story.draft!
-          end
-    
-          # For the unpublished story, allow for a default narrative and empty results
-          unless i == 0
-            story.narrative = Array.new(rand(10..15)) { SeedData.lorem_paragraph_html }.join
-            SeedData::RESULTS.sample(rand(2..4)).each do |result|
-              story.results.build(description: result)
-            end
-          end
-          
-          story.save!
-          break
-
-        # The seed data might return a duplicate story title
-        rescue ActiveRecord::RecordInvalid => e
-          puts "Creating a story for success failed: #{e.message}. Retrying..."
+        # Changeover from [:logo_published, :preview_published, :published] attributes to :status_new in progress
+        if story.published?
+          story.is_published!
+          story.create_topic_ad!(adwords_ad_group: topic_ad_group)
+          story.create_retarget_ad!(adwords_ad_group: retarget_ad_group)
+        elsif story.logo_published?
+          story.listed!
+        else
+          story.draft!
         end
+  
+        # For the unpublished story, allow for a default narrative and empty results
+        unless i == 0
+          story.narrative = Array.new(rand(10..15)) { SeedData.lorem_paragraph_html }.join
+          SeedData::RESULTS.sample(rand(2..4)).each do |result|
+            story.results.build(description: result)
+          end
+        end
+        
+        story.save!
+        break
+
+      # The seed data might return a duplicate story title
+      rescue ActiveRecord::RecordInvalid => e
+        puts "Creating a story for success failed: #{e.message}. Retrying..."
       end
     end
 
