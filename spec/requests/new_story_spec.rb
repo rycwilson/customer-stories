@@ -9,28 +9,33 @@ RSpec.describe 'New Story', type: :request do
   let(:story_category) { create(:story_category, company: company) }
   let(:product) { create(:product, company: company) }
   
+  # the default object within the `before` hook is the example group
+  # in addition to `let` calls (as above), the hook can also access example group instance variables
   before do
     sign_in user
+
+    # the `host!` method resolves to the test session `ActionDispatch::Integration::Session`
     host! "#{company.subdomain}.example.com"
   end
 
-  describe 'GET /stories/new' do
-    context 'when creating a new story without a success' do
-      it 'returns a success response as turbo stream' do
-        get new_company_story_path(company), headers: { 'Accept': 'text/vnd.turbo-stream.html' }
-        expect(response).to be_successful
-        expect(response.media_type).to eq('text/vnd.turbo-stream.html')
-        expect(response.body).to include('turbo-stream')
-      end
+  shared_examples 'a successful turbo stream response' do |path_helper|
+    it 'returns a success response as turbo stream' do
+      puts "company is #{company.subdomain}"
+      puts "user is #{user.email}"
+      get send(path_helper, company), headers: { 'Accept': 'text/vnd.turbo-stream.html' } 
+      expect(response).to be_successful
+      expect(response.media_type).to eq('text/vnd.turbo-stream.html')
+      expect(response.body).to include('turbo-stream')
+    end
+  end
+
+  describe 'GET a new story form' do
+    context 'when creating a new story from the Curate view' do
+      include_examples 'a successful turbo stream response', :new_company_story_path
     end
     
-    context 'when creating a new story from a success' do
-      it 'returns a success response as turbo stream' do
-        get new_success_story_path(success), headers: { 'Accept': 'text/vnd.turbo-stream.html' }
-        expect(response).to be_successful
-        expect(response.media_type).to eq('text/vnd.turbo-stream.html')
-        expect(response.body).to include('turbo-stream')
-      end
+    context 'when creating a new story from a customer win' do
+      include_examples 'a successful turbo stream response', :new_success_story_path
     end
   end
 
@@ -129,16 +134,16 @@ RSpec.describe 'New Story', type: :request do
       end
     end
     
-    context 'when creating from an existing success' do
+    context 'when creating from an existing customer win' do
       let(:valid_success_story_attributes) do
         {
           title: 'Success-based Story',
-          narrative: 'This story was created from an existing success',
+          narrative: 'This story was created from an existing customer win',
           summary: 'A summary of the success-based story'
         }
       end
       
-      it 'creates a new story linked to the existing success' do
+      it 'creates a new story linked to the existing customer win' do
         success_id = success.id  # Store the ID to verify it's used later
         
         expect {
