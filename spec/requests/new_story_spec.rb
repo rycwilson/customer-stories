@@ -20,8 +20,6 @@ RSpec.describe 'New Story', type: :request do
 
   shared_examples 'a successful turbo stream response' do |path_helper|
     it 'returns a success response as turbo stream' do
-      puts "company is #{company.subdomain}"
-      puts "user is #{user.email}"
       get send(path_helper, company), headers: { 'Accept': 'text/vnd.turbo-stream.html' } 
       expect(response).to be_successful
       expect(response.media_type).to eq('text/vnd.turbo-stream.html')
