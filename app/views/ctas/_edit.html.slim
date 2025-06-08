@@ -1,9 +1,8 @@
-/ since distinct id/name attributes are required, use form_tag instead of form_with (which auto-generates id/name attributes)
+/ Since distinct id/name attributes are required, use form_tag instead of form_with (which auto-generates id/name attributes)
 = form_tag( \
-    # company_cta_path(company, cta, format: :json),
     company_cta_path(company, cta),
     method: :patch,
-    remote: true,
+    local: true,
     id: "cta-#{cta.id}-form",
     data: { controller: 'cta' }) do |form|
   
@@ -14,69 +13,62 @@
       data: { cta_target: 'companyField' })
 
   .form-group 
-    .col-sm-12
-      = label_tag("cta_#{cta.id}[description]", 'Description')
-      = text_field_tag("cta_#{cta.id}[description]", cta.description, placeholder: 'Description', class: 'form-control')
+    = label_tag("cta_#{cta.id}[description]", 'Description')
+    = text_field_tag("cta_#{cta.id}[description]", cta.description, placeholder: 'Description', class: 'form-control')
 
   .form-group 
-    .col-sm-12
-      = label_tag("cta_#{cta.id}[display_text]", 'Display text')
-      = text_field_tag( \
-          "cta_#{cta.id}[display_text]", 
-          cta.display_text, 
-          placeholder: 'Display text', 
+    = label_tag("cta_#{cta.id}[display_text]", 'Display text')
+    = text_field_tag( \
+        "cta_#{cta.id}[display_text]", 
+        cta.display_text, 
+        placeholder: 'Display text', 
+        class: 'form-control',
+        data: { action: 'cta#updateCustomButtonText' })
+
+  .form-group 
+    - if cta.type == 'CTALink'
+      = label_tag("cta_#{cta.id}[link_url]", 'Website URL')
+      = text_field_tag("cta_#{cta.id}[link_url]", cta.link_url, placeholder: 'Website URL', class: 'form-control')
+
+    - elsif cta.type == 'CTAForm'
+      = label_tag("cta_#{cta.id}[form_html]", 'HTML')
+        = text_area_tag( \
+            "cta_#{cta.id}[form_html]",
+            cta.form_html,
+            placeholder: '<script> or <form> tags',
+            rows: 3,
+            class: 'form-control')
+
+  .form-group 
+    .checkbox
+      = label_tag("cta_#{cta.id}[primary]") do
+        = check_box_tag("cta_#{cta.id}[primary]", cta.primary? ? false : true, false, data: { action: 'cta#togglePrimary' })
+        = "#{cta.primary? ? 'Remove as' : 'Make this the'} Main CTA"
+
+  .cta__custom-button class=('hidden' if !cta.primary?) data-cta-target="customButton" 
+    div
+      = label_tag("cta_#{cta.id}[company_attributes][primary_cta_background_color]", 'Button')
+      = color_field_tag( \
+          "cta_#{cta.id}[company_attributes][primary_cta_background_color]",
+          company.primary_cta_background_color,
           class: 'form-control',
-          data: { action: 'cta#updateCustomButtonText' })
-
-  .form-group 
-    .col-sm-12
-      - if cta.type == 'CTALink'
-        = label_tag("cta_#{cta.id}[link_url]", 'Website URL')
-        = text_field_tag("cta_#{cta.id}[link_url]", cta.link_url, placeholder: 'Website URL', class: 'form-control')
-
-      - elsif cta.type == 'CTAForm'
-        = label_tag("cta_#{cta.id}[form_html]", 'HTML')
-          = text_area_tag( \
-              "cta_#{cta.id}[form_html]",
-              cta.form_html,
-              placeholder: 'html, e.g. <script> and <form> tags',
-              rows: 3,
-              class: 'form-control')
-
-  .form-group 
-    .col-sm-12
-      .checkbox
-        = label_tag("cta_#{cta.id}[primary]") do
-          = check_box_tag("cta_#{cta.id}[primary]", cta.primary? ? false : true, false, data: { action: 'cta#togglePrimary' })
-          = "#{cta.primary? ? 'Remove as' : 'Make this the'} Main CTA"
-
-  .cta__custom-button--edit class=('hidden' if !cta.primary?) data-cta-target="customButton" 
-    div
-      div
-        = label_tag("cta_#{cta.id}[company_attributes][primary_cta_basackground_color]", 'Button')
-        div
-          = color_field_tag( \
-              "cta_#{cta.id}[company_attributes][primary_cta_background_color]",
-              company.primary_cta_background_color,
-              class: 'form-control',
-              disabled: !cta.primary?,
-              data: { cta_target: 'customButtonBackgroundColorInput companyField' })
-          = label_tag("cta_#{cta.id}[company_attributes][primary_cta_text_color]", 'Text')
-          = color_field_tag( \
-              "cta_#{cta.id}[company_attributes][primary_cta_text_color]",
-              company.primary_cta_text_color,
-              class: 'form-control',
-              disabled: !cta.primary?,
-              data: { cta_target: 'customButtonTextColorInput companyField' })
-      div style="background-color:#{company.header_color_1}"
-        button.btn.btn-lg.btn-custom {
-          type="button" 
-          data-cta-target="customButtonDemo"
-          data-bg-color="#{company.primary_cta_background_color}"
-          data-color="#{company.primary_cta_text_color}" }
-          = cta.display_text
-    div
-      span.help-block CTA button will appear in the header as shown
+          disabled: !cta.primary?,
+          data: { cta_target: 'customButtonBackgroundColorInput companyField' })
+      = label_tag("cta_#{cta.id}[company_attributes][primary_cta_text_color]", 'Text')
+      = color_field_tag( \
+          "cta_#{cta.id}[company_attributes][primary_cta_text_color]",
+          company.primary_cta_text_color,
+          class: 'form-control',
+          disabled: !cta.primary?,
+          data: { cta_target: 'customButtonTextColorInput companyField' })
+    div style="background-color:#{company.header_color_1}"
+      button.btn.btn-lg.btn-custom {
+        type="button" 
+        data-cta-target="customButtonDemo"
+        data-bg-color="#{company.primary_cta_background_color}"
+        data-color="#{company.primary_cta_text_color}" }
+        = cta.display_text
+    .help-block CTA button will appear in the header as shown
 
   hr
 

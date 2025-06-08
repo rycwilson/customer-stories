@@ -25,7 +25,19 @@
             .collapse id="edit-cta-#{company.ctas.primary.id}" data-list-group-target="collapse"
               = render('ctas/edit', company:, cta: company.ctas.primary)
         - else 
-          .list-group style="margin-bottom:10px"
+          = link_to( \
+              new_company_cta_path(company) + '?primary=true',
+              class: 'btn btn-secondary',
+              style: 'margin-bottom:2.25rem',
+              aria: { label: 'New Call to Action' },
+              data: { \ 
+                turbo_stream: true,
+                controller: 'modal-trigger',
+                modal_trigger_modal_outlet: '#main-modal',
+                modal_trigger_params_value: { title: 'New Call to Action', className: 'new-cta' } }) do
+            i.fa.fa-plus
+            |&nbsp;&nbsp;New
+          /.list-group style="margin-bottom:10px"
             a.list-group-item--empty href="" aria-labelled-by="primary-cta-label-md-lg"
               p None
 
@@ -34,27 +46,27 @@
         label Sidebar
       label.col-md-3.control-label.visible-md-inline-block.visible-lg-inline-block Sidebar
       .col-sm-offset-1.col-sm-11.col-md-offset-0.col-md-8.col-lg-6
-        .list-group data-controller="list-group" data-list-group-collapsible-value="true" aria-labelledby="additional-ctas-label-md-lg"
-          - company.ctas.secondary.each do |cta|
-            a.list-group-item data-toggle="collapse" data-list-group-target="item" href="#edit-cta-#{cta.id}" aria-expanded="false"
-              - if company.ctas.secondary.count > 1
-                i.fa.fa-fw.fa-arrows-v
-              p = "#{cta.type == 'CTALink' ? '[LINK]' : '[FORM]'} #{cta.description}"
-              button.btn type="button"
-                i.fa.fa-fw.fa-chevron-down
-              button.btn type="button"
-                i.fa.fa-fw.fa-chevron-up
-            .collapse id="edit-cta-#{cta.id}" data-list-group-target="collapse"
-              = render('ctas/edit', company:, cta:)
-        
+        - if company.ctas.secondary.present?
+          .list-group data-controller="list-group" data-list-group-collapsible-value="true" aria-labelledby="additional-ctas-label-md-lg"
+            - company.ctas.secondary.each do |cta|
+              a.list-group-item data-toggle="collapse" data-list-group-target="item" href="#edit-cta-#{cta.id}" aria-expanded="false"
+                - if company.ctas.secondary.count > 1
+                  i.fa.fa-fw.fa-arrows-v
+                p = "#{cta.type == 'CTALink' ? '[LINK]' : '[FORM]'} #{cta.description}"
+                button.btn type="button"
+                  i.fa.fa-fw.fa-chevron-down
+                button.btn type="button"
+                  i.fa.fa-fw.fa-chevron-up
+              .collapse id="edit-cta-#{cta.id}" data-list-group-target="collapse"
+                = render('ctas/edit', company:, cta:)
         = link_to( \
             new_company_cta_path(company),
             class: 'btn btn-secondary',
-            aria: { label: 'New Call-To-Action' },
+            aria: { label: 'New Call to Action' },
             data: { \ 
               turbo_stream: true,
               controller: 'modal-trigger',
               modal_trigger_modal_outlet: '#main-modal',
-              modal_trigger_params_value: { title: 'New Call-To-Action', className: 'new-cta' } }) do
+              modal_trigger_params_value: { title: 'New Call to Action', className: 'new-cta' } }) do
           i.fa.fa-plus
           |&nbsp;&nbsp;New
