@@ -372,12 +372,16 @@ class Story < ApplicationRecord
   #
   #
   def video_info
-    provider = video_url&.match(/youtube|vimeo|wistia/).try(:[], 0)
+    provider = video_url&.match(/youtu\.be|youtube|vimeo|wistia/).try(:[], 0)
     video_path = provider ? URI(video_url)&.path : nil
     id = video_path ? video_path.slice(video_path.rindex('/') + 1, video_path.length).sub(/\.\w+\z/, '') : nil
     thumbnail = !id ? nil : case provider
     when 'youtube'
-      # "https://img.youtube.com/vi/#{id}/hqdefault.jpg"
+      thumbnail_url = "https://img.youtube.com/vi/#{id}/mqdefault.jpg"
+      # thumbnail_url = "https://i.ytimg.com/vi_webp/#{id}/mqdefault.webp"
+      res = Net::HTTP.get_response(URI(thumbnail_url))
+      res.code == '200' ? thumbnail_url : nil
+    when 'youtu.be'
       thumbnail_url = "https://i.ytimg.com/vi_webp/#{id}/mqdefault.webp"
       res = Net::HTTP.get_response(URI(thumbnail_url))
       res.code == '200' ? thumbnail_url : nil
