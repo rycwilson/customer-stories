@@ -2,6 +2,7 @@ class CtasController < ApplicationController
   before_action(except: :show) { @company = Company.find(params[:company_id]) }
 
   def new
+    @cta = @company.ctas.new(primary: params[:primary].present?)
   end
 
   # return html for cta forms
