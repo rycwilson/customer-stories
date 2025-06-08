@@ -8,7 +8,7 @@ section.story-ctas
           .cta
             = image_tag('icons/bs_chevron_right.svg', alt: 'chevron-right')
             - if cta.type == 'CTALink'
-              a.cta-link href="#{cta.link_url}" target="_blank"
+              a.cta-link href="#{cta.link_url}"
                 = cta.display_text
             - else
               a.cta-form {
