@@ -65,10 +65,10 @@ retarget_campaign = acme.adwords_campaigns.create!(name: 'Retarget Campaign', ty
 retarget_ad_group = retarget_campaign.create_adwords_ad_group!(name: 'Retarget Ad Group')
 
 acme.ctas.create!([
-  { type: 'CTALink', primary: 'true', display_text: 'Request a Demo', link_url: 'https://example.com' },
-  { type: 'CTALink', display_text: 'Acme Press Releases', link_url: 'https://example.com' },
-  { type: 'CTALink', display_text: 'Start a Free Trial', link_url: 'https://example.com' },
-  { type: 'CTALink', display_text: 'Register for a Webinar', link_url: 'https://example.com' }
+  { type: 'CTALink', primary: 'true', description: 'Demo request', display_text: 'Request a Demo', link_url: 'https://example.com' },
+  { type: 'CTALink', description: 'Press releases', display_text: 'Acme Press Releases', link_url: 'https://example.com' },
+  { type: 'CTALink', description: 'Free trial registration', display_text: 'Start a Free Trial', link_url: 'https://example.com' },
+  { type: 'CTALink', description: 'Webinar registration', display_text: 'Register for a Webinar', link_url: 'https://example.com' }
 ])
 
 # Create customers and their associated data
