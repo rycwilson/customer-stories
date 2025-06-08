@@ -64,6 +64,13 @@ topic_ad_group = topic_campaign.create_adwords_ad_group!(name: 'Topic Ad Group')
 retarget_campaign = acme.adwords_campaigns.create!(name: 'Retarget Campaign', type: 'RetargetCampaign')
 retarget_ad_group = retarget_campaign.create_adwords_ad_group!(name: 'Retarget Ad Group')
 
+acme.ctas.create!([
+  { type: 'CTALink', primary: 'true', display_text: 'Request a Demo', link_url: 'https://example.com' },
+  { type: 'CTALink', display_text: 'Acme Press Releases', link_url: 'https://example.com' },
+  { type: 'CTALink', display_text: 'Start a Free Trial', link_url: 'https://example.com' },
+  { type: 'CTALink', display_text: 'Register for a Webinar', link_url: 'https://example.com' }
+])
+
 # Create customers and their associated data
 SeedData::CUSTOMERS.each do |customer_data|
   customer = acme.customers.create!(customer_data.merge(show_name_with_logo: false))
@@ -121,6 +128,7 @@ SeedData::CUSTOMERS.each do |customer_data|
           story.is_published!
           story.create_topic_ad!(adwords_ad_group: topic_ad_group)
           story.create_retarget_ad!(adwords_ad_group: retarget_ad_group)
+          acme.ctas.where.not(primary: true).each { |cta| story.success.ctas << cta}
         elsif story.logo_published?
           story.listed!
         else
