@@ -1,76 +1,35 @@
-@media (min-width: 768px) {
-  .modal-dialog:has(turbo-frame#new-company-cta) {
-    width: 510px;
-
-    .modal-body {
-      padding-right: 32px;
-    }
-  }
-}
-
-@mixin custom-button-demo {
-  @include flex-row-center-center;
-  height: $company-header-height;
-  border-top: 1px solid #ddd;
-  border-bottom: 1px solid #ddd;
-
-  button {
-    min-width: 96px;
-    min-height: ($font-size-large * $line-height-large) + (2 * $padding-large-vertical) + 2px; // 2px for border
+// Prevent the outer .form-horizontal from setting negative margins on the form groups inside the collapsible element
+.collapse[id*="edit-cta-"] {
+  .form-group {
+    margin-right: 0;
+    margin-left: 0;
   }
 }
 
 .cta__custom-button {
-  .help-block {
-    margin-bottom: 0;
-  }
-
-  &--new {
-    @extend .cta__custom-button;
-
-    > .row {
-      > div > div:first-child {
-        @include flex-row-center-between;
-        margin-bottom: $form-group-margin-bottom;
+  > :first-child {
+    @include flex-row-center;
+    margin-bottom: 1.5rem;
+    
+    label {
+      &[for*="background"] {
+        margin: 0 1em 0 0;
       }
-  
-      > div > div:last-child {
-        @include custom-button-demo;
-      }
-  
-      input {
-        max-width: 42%;
+      
+      &[for*="text"] {
+        margin: 0 1em;
       }
     }
   }
-
-  &--edit {
-    @extend .cta__custom-button;
-
-    > div {
-      > div:first-child {
-        @include flex-row-center-between;
-        margin-bottom: $form-group-margin-bottom;
-    
-        label {
-          &[for*="background"] {
-            margin-right: 0.75em;
-          }
   
-          &[for*="text"] {
-            margin: 0 1em;
-          }
-        }
+  > :nth-child(2) {
+    @include flex-row-center-center;
+    height: $company-header-height;
+    border: 1px solid #ddd;
     
-        > div {
-          @include flex-row-center;
-          flex-grow: 1;
-        }
-      }
-      
-      > div:last-child {
-        @include custom-button-demo
-      }
+    button {
+      min-width: 96px;
+      min-height: ($font-size-large * $line-height-large) + (2 * $padding-large-vertical) + 2px; // 2px for border
     }
   }
 }
