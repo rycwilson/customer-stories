@@ -25,6 +25,7 @@ acme = Company.new(
   website: 'https://example.com',
   header_color_1: '#FFFFFF',
   header_color_2: '#FF0000',
+  header_text_color: '#FFFFFF',
   primary_cta_background_color: '#FF0000',
   primary_cta_text_color: '#FFFFFF',
   adwords_short_headline: 'Acme Customer Stories'
@@ -65,7 +66,7 @@ retarget_ad_group = retarget_campaign.create_adwords_ad_group!(name: 'Retarget A
 
 # Create customers and their associated data
 SeedData::CUSTOMERS.each do |customer_data|
-  customer = acme.customers.create!(customer_data)
+  customer = acme.customers.create!(customer_data.merge(show_name_with_logo: false))
   assigned_roles = []
 
   # Create users for the customer
@@ -108,7 +109,11 @@ SeedData::CUSTOMERS.each do |customer_data|
         story = success.build_story(
           title: success_data[:story_title],
           logo_published: i == 1 || i == 2,
-          published: i == 2
+          published: i == 2,
+          video_url: i == 2 ? "https://www.youtube.com/embed/#{SeedData::VIDEO_IDS.sample}" : nil, 
+          quote: i == 2 ? Array.new(2 + rand(0..2)) { Faker::Lorem.sentence(word_count: rand(10..15), supplemental: true) }.join(' ') : nil,
+          quote_attr_name: i == 2 ? Faker::Name.unique.name : nil,
+          quote_attr_title: i == 2 ? Faker::Job.title : nil
         )
 
         # Changeover from [:logo_published, :preview_published, :published] attributes to :status_new in progress
