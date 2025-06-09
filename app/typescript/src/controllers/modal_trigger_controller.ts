@@ -1,5 +1,6 @@
 import { Controller } from '@hotwired/stimulus';
 import type ModalController from './modal_controller.js';
+import { type TurboBeforeFetchRequestEvent } from '@hotwired/turbo';
 
 export default class extends Controller<HTMLButtonElement> {
   static outlets = ['modal'];
@@ -24,11 +25,17 @@ export default class extends Controller<HTMLButtonElement> {
     this.element.removeEventListener('click', this.handleClick);
   }
 
-  showModal() {
+  showModal(e: Event) {
     this.modalOutlet.titleTarget.textContent = this.paramsValue.title;
     this.modalOutlet.element.classList.add(this.paramsValue.className);
     
     // alllow style changes to render before showing modal
     setTimeout(() => this.modalOutlet.show());
+  }
+
+  beforeFetchModalContent(e: MouseEvent) {
+    if (!this.enabledValue) {
+      e.preventDefault();
+    }
   }
 }

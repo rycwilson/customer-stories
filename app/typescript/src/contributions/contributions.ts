@@ -255,7 +255,8 @@ function actionsDropdownTemplate(row: Contribution, type: string, set: any) {
           data-controller="modal-trigger" 
           data-modal-trigger-modal-outlet="#main-modal"
           data-modal-trigger-enabled-value="${invitation || invitationTemplate ? 'true' : 'false'}"
-          data-modal-trigger-params-value='${JSON.stringify({ title: 'Contributor Invitation', className: 'contributor-invitation' })}'>
+          data-modal-trigger-params-value='${JSON.stringify({ title: 'Contributor Invitation', className: 'contributor-invitation' })}'
+          data-action="modal-trigger#beforeFetchModalContent">
           <i class="fa fa-${isPreInvite ? 'envelope-o' : 'search'} fa-fw action"></i>
           ${isPreInvite ? 'Compose Invitation' : 'View Sent Invitation'}
         </a>
