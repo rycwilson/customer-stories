@@ -5,9 +5,10 @@ $linkedin-blue: #0077b5;
 .share-buttons, 
 .cs-share-buttons {
   display: flex;
+  align-items: center;
 
   .stories-header & {
-    float: right;
+    height: 100%;
   }
 
   &.cs-share-buttons {
@@ -36,13 +37,13 @@ $linkedin-blue: #0077b5;
   border-radius: 50%;
   margin: 0 10px;
 
-  .stories-header--light-background & {
+  .stories-header--bg-light & {
     svg {
       fill: #333;
     }
   }
 
-  .stories-header--dark-background & {
+  .stories-header--bg-dark & {
     svg {
       fill: white;
       fill-opacity: 0.9;
@@ -54,7 +55,10 @@ $linkedin-blue: #0077b5;
     }
   }
 
-  &:link, &:visited, &:hover, &:active {
+  &:link, 
+  &:visited, 
+  &:hover, 
+  &:active {
     text-decoration: none;
   }
 

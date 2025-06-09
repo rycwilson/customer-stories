@@ -517,7 +517,8 @@
   }
 
   @media only screen and (min-width: 1200px) {
-    .container:not(.navbar-container), .cs-container {
+    :not(.stories-header) > .container,
+    .cs-container {
       width: 1120px;
     }
     .testimonial, .cs-testimonial {
