@@ -1,0 +1,17 @@
+.stories-footer.hidden-xs
+  .container
+    div
+
+      div
+        = link_to root_url(subdomain: nil) do 
+          = image_tag('cs_logo.png', alt: 'Powered by Customer Stories')
+        |&nbsp;&nbsp;
+        span Powered by
+        |&nbsp;
+        = link_to 'customerstories.net', root_url(subdomain: nil)
+        
+      - unless user_signed_in?
+        div 
+          = company.name
+          |&nbsp;&nbsp;&#8211;&nbsp;&nbsp;
+          = link_to('Sign in', new_csp_user_session_path)

@@ -35,4 +35,4 @@
           no_filters_present: @company.story_categories.featured.blank? && @company.products.featured.blank?,
           is_dashboard: false })
 
-  = render('stories/shared/sign_in_footer')
+  = render('stories/shared/footer', company: @company)

@@ -14,6 +14,26 @@
 @import 'views/stories/show/show';
 @import 'views/stories/shared/cookie_consent';
 
-.stories.index > .container {
-  min-height: 100vh;  // accommodate the sign-in footer
+.stories.index {
+  > .container {
+    padding-bottom: 5rem;
+    min-height: 100vh;  // accommodate the sign-in footer
+  }
+}
+
+.stories-footer {
+  border: 1px solid #e6e6e6;
+
+  .container > div {
+    @include flex-row-center-between;
+  }
+
+  img {
+    margin: 1.75rem 0;
+    height: 50px;
+  }
+
+  .stories.index & {
+    background: #f9f9f9; 
+  }
 }

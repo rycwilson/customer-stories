@@ -3,12 +3,11 @@ nav {
   style="#{stories_header_custom_colors(company)}" }
 
   .container 
-
-    div style="height:100%; display:flex; align-items:center; justify-content:space-between"
+    div
 
       h3.stories-header__title Customer Stories
 
-      - if action_name == 'index' and curator?(company)
+      - if action_name == 'index' and current_user&.company == company
         .hidden-xs
           = link_to dashboard_path('curate'), class: "stories-header__home" do
             svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="#{company.header_text_color}" class="bi bi-gear-fill" viewBox="0 0 16 16"
@@ -16,7 +15,7 @@ nav {
 
       - if action_name == 'show'
       
-        - if curator?(company) && !is_preview
+        - if not is_preview and current_user&.company == company
           .hidden-xs
             = link_to edit_story_path(story), class: "stories-header__home" do
               svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="#{company.header_text_color}" class="bi bi-gear-fill" viewBox="0 0 16 16"

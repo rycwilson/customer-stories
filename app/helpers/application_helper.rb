@@ -64,10 +64,6 @@ module ApplicationHelper
     (controller_name == 'profile' && current_user.company_id.present?)
   end
 
-  def curator?(company)
-    company.present? && user_signed_in? && (current_user.company_id == company.id)
-  end
-
   # def registered_user_without_company?
   #   user_signed_in? && current_user.company_id.blank?
   # end
