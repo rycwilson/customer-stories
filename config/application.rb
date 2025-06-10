@@ -13,7 +13,7 @@ module Csp
     # -- all .rb files in that directory are automatically loaded after loading
     # the framework and any gems in your application.
 
-    config.load_defaults 5.2
+    # config.load_defaults 5.2
 
     config.middleware.use Rack::Deflater
 
