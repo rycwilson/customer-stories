@@ -17,14 +17,9 @@ export default class ModalController extends Controller<HTMLDivElement> {
 
   handleHidden: (this: ModalController, e: any) => void = this.onHidden.bind(this);
 
-  // private observer = new MutationObserver((mutations: MutationRecord[]) => {
-  //   if (this.hasBodyTarget) {
-  //     this.show();
-  //   }
-  // })
-
   connect() {
     this.initialClassName = this.element.className;
+    $(this.element).modal({ show: false })
     $(this.element).on('hidden.bs.modal', this.handleHidden);
   }
 
