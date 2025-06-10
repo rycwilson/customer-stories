@@ -56,6 +56,10 @@
         data: { image_card_target: 'input urlInput' })
 
   - elsif model == 'AdwordsAd'
+    / Include the hidden field to ensure params[:adwords_ad] is always present in the server,
+    / else unchecking all images will result in a missing params[:adwords_ad] and server error
+    = hidden_field_tag('adwords_ad[adwords_image_ids][]', '')
+
     = check_box_tag( \
         'adwords_ad[adwords_image_ids][]',
         _image[:id],
