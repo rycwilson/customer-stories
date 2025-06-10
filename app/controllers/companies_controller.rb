@@ -69,10 +69,7 @@ class CompaniesController < ApplicationController
         respond_to do |format|
           format.turbo_stream do 
             turbo_stream_actions = [
-              turbo_stream.replace(
-                'toaster', 
-                html: "<div id=\"toaster\" data-controller=\"toast\" data-toast-flash-value='#{flash.to_h.to_json}'></div>".html_safe
-              ),
+              turbo_stream.replace('toaster', partial: 'shared/toaster'),
               turbo_stream.replace(
                 'company-profile-form', 
                 partial: 'companies/settings/company_profile', locals: { company: @company }

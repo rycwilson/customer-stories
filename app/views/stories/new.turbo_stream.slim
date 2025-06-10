@@ -1,10 +1,7 @@
 - if @story.errors.any?
 
   = turbo_stream.replace 'toaster' do
-    #toaster {
-      data-controller="toast" 
-      data-toast-flash-value=(flash.to_h.to_json if flash.any?)
-      data-toast-errors-value=(@errors.to_json if @errors.present?) }
+    = render('shared/toaster')
 
 - else
 

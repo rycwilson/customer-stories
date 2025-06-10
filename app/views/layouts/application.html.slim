@@ -38,10 +38,7 @@ html lang="en-US" prefix="og: http://ogp.me/ns# fb: http://ogp.me/ns/fb#"
       .visible-xs-block.text-center style="margin-top: 3rem"
         h4 Sorry, this screen size is not supported
       = render('shared/modal') unless controller_name == 'registrations'
-      #toaster {
-        data-controller="toast"
-        data-toast-flash-value=(flash.to_h.to_json if flash.any?)
-        data-toast-errors-value=(@errors.to_json if @errors.present?) }
+      = render('shared/toaster')
 
     - if @zap_auth_initial_req
       / nothing

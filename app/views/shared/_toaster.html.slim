@@ -1,0 +1,5 @@
+#toaster {
+  data-controller="toast"
+  data-toast-modal-outlet="#main-modal"
+  data-toast-flash-value=(flash.to_h.to_json if flash.any?)
+  data-toast-errors-value=(@errors.to_json if @errors.present?) }
