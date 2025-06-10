@@ -1,5 +1,5 @@
 import DatatableRowController from './datatable_row_controller';
-import type { FrameElement } from '@hotwired/turbo';
+import type { FrameElement, TurboSubmitEndEvent } from '@hotwired/turbo';
 
 export default class PromotedStoryController extends DatatableRowController<PromotedStoryController, AdwordsAdRowData> {
   static targets = ['statusForm', 'statusCheckbox', 'statusLabel'];
@@ -11,7 +11,12 @@ export default class PromotedStoryController extends DatatableRowController<Prom
   declare promotedStoryHtml: HTMLElement;
   declare $statusSwitch: JQuery<HTMLInputElement, any>;
 
+  get childRowContent() {
+    return this.promotedStoryHtml || '<h3>Promoted Story</h3>';
+  }
+  
   connect() {
+    super.connect();
     this.$statusSwitch = $(<HTMLInputElement>this.statusCheckboxTargets.find(checkbox => checkbox.value === 'ENABLED'));
   }
 
@@ -19,24 +24,24 @@ export default class PromotedStoryController extends DatatableRowController<Prom
     this.promotedStoryHtml ??= <HTMLElement>turboFrame.firstElementChild;
   }
 
-  get childRowContent() {
-    return this.promotedStoryHtml || '<h3>Promoted Story</h3>';
+  onUpdatedStatusSuccess(shouldEnable: boolean, e: TurboSubmitEndEvent) {
+    this.$statusSwitch.bootstrapSwitch('disabled', false);
+    this.statusLabelTarget.textContent = shouldEnable ? 'ENABLED' : 'PAUSED';
+    this.updateRow({ status: shouldEnable ? 'ENABLED' : 'PAUSED' });
   }
 
-  onAjaxSuccess({ detail: [data] }: { detail: [data: { changes: { [key: string]: any } }] }) {
-    if (data.changes.status) {
-      const [ , newStatus ] = data.changes.status;
-      this.$statusSwitch.bootstrapSwitch('disabled', false);
-      this.statusLabelTarget.textContent = newStatus;
-    }
-  }
-
-  updateStatus({ detail: { state } }: { detail: { state: boolean } }) {
+  updateStatus({ detail: { state: shouldEnable } }: { detail: { state: boolean } }) {
     this.statusCheckboxTargets.forEach((checkbox: HTMLInputElement) => {
-      checkbox.checked = checkbox.value === 'ENABLED' ? state : !state;
+      if (checkbox.type !== 'checkbox') return;
+      checkbox.checked = shouldEnable;
     });
-    // TODO: Turbo.navigator.submitForm(this.element) would make a polyfill for Safari unecessary
+    this.element.addEventListener(
+      'turbo:submit-end', 
+      this.onUpdatedStatusSuccess.bind(this, shouldEnable), { once: true }
+    );
     this.statusFormTarget.requestSubmit();
+
+    // The switch must be disalbed AFTER the form is submitted, otherwise the switch will toggle back to its previous state
     this.$statusSwitch.bootstrapSwitch('disabled', true);
     this.statusLabelTarget.textContent = '\u00A0';
   }

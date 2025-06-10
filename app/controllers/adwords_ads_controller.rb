@@ -100,92 +100,21 @@ class AdwordsAdsController < ApplicationController
   end
 
   def update
-    topic_ad = AdwordsAd.find(params[:id])
+    topic_ad = AdwordsAd.find params[:id]
     if topic_ad.update(ad_params) and topic_ad.story.retarget_ad.update(ad_params)
-      respond_to do |format|  
-        format.json { render(json: { changes: topic_ad.previous_changes }) } 
+      if ad_params[:status].present?
+        flash.now[:notice] = "Promoted Story has been #{topic_ad.status.downcase}"
+      elsif ad_params[:adwords_image_ids].present?
+        flash.now[:notice] = 'Promoted Story images have been updated'
       end
+      respond_to do |format|
+        format.turbo_stream do
+          render turbo_stream: turbo_stream.replace('toaster', partial: 'shared/toaster')
+        end
+      end
+    else
+      @errors = topic_ad.errors.full_messages
     end
-    # OLD: update the story with topic_ad_attributes and retarget_ad_attributes
-    # story = Story.find(params[:id])
-    # in case there's an error and we need to revert association changes
-    # existing_ads_image_ids = story.ads.first.adwords_image_ids
-    # if story.update(story_params)
-    #   updated_gads = {}
-      # [story.topic_ad, story.retarget_ad].each_with_index do |ad, index|
-
-        # for non-promoted-enabled companies, changing status will be blocked,
-        # but other ad parameters can be changed
-        # => confirm presence of ad_id before updating google
-        # updated_gads = (ad.previous_changes.keys & ['status']).any? ?
-        #   GoogleAds::change_ad_status(ad) :
-        #   (ad.ad_id.present? ? GoogleAds::update_ads([ad]) : nil)
-
-        # revert changes if google errors (update_columns method => no callbacks)
-        # if updated_gads.try(:[], :errors)
-        #   if (ad.previous_changes.keys & ['long_headline', 'status']).any?
-        #     ad.update_columns(
-        #       ad.previous_changes.map { |attr, val| [attr, val.shift] }.to_h
-        #     )
-        #   else
-        #     ad.adwords_image_ids = existing_ads_image_ids  # saves immediately, skips the callback
-        #   end
-        # end
-        # updated_gads[index == 0 ? :topic : :retarget] = updated_gads
-      # end
-    # else
-      # error
-    # end
-
-    # datatables updated row data (mirrors stories#promoted)
-    # dt_data = [
-    #   JSON.parse(
-    #     story.to_json({
-    #       only: [:id, :title, :slug],
-    #       methods: [:ads_status, :ads_long_headline, :ads_images, :csp_story_path],
-    #       include: {
-    #         success: {
-    #           only: [],
-    #           include: {
-    #             customer: { only: [:name, :slug] }
-    #           }
-    #         },
-    #         topic_ad: {
-    #           only: [:id, :status]
-    #         },
-    #         retarget_ad: {
-    #           only: [:id, :status]
-    #         }
-    #       }
-    #     })
-    #   )
-    # ]
-
-    # respond_to do |format|
-    #   format.json do
-    #     render({
-    #       json: {
-    #         data: dt_data,
-    #         error: '',  # datatables will look here for it's own flash message system
-    #         errors: updated_gads.any? { |type, ad| ad.try(:[], :errors) }
-    #       }.to_json
-    #     })
-    #   end
-
-    #   # in most case it's sufficient to get data from a single ad (e.g. topic)),
-    #   # since topic and retarget are supposed to be sync'ed
-    #   format.js do
-    #     @res_data = {}
-    #     @res_data[:promotedStory] = dt_data[0]
-    #     @res_data[:promoteIsDisabled] = !story.company.promote_tr?
-        
-    #     # presently only one attribute will change at a time
-    #     @res_data[:previousChanges] = story.topic_ad.previous_changes.first
-    #     @res_data[:isStatusUpdate] = story.topic_ad.previous_changes.first.try(:first) == :status
-    #     @res_data[:isImagesUpdate] = story_params.to_h[:topic_ad_attributes][:adwords_image_ids].present?
-    #     @res_data[:gadsErrors] = updated_gads.any? { |type, ad| ad.try(:[], :errors) }
-    #   end
-    # end
   end
 
   private

@@ -51,9 +51,7 @@ export function dataTableConfig(): Config {
             <form 
               action="${path}" 
               method="post" 
-              data-remote="true" 
-              data-promoted-story-target="statusForm"
-              data-action="ajax:success->promoted-story#onAjaxSuccess">
+              data-promoted-story-target="statusForm">
               <input type="hidden" name="_method" value="patch">
               <input type="hidden" name="authenticity_token" value="${CSP.authToken}">
               <input 

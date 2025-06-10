@@ -6,10 +6,9 @@
 = turbo_stream.append 'main-modal-body' do
   = form_with( \
       model: @ad,
-      format: :json,
-      html: { \
-        id: 'edit-ad-images-form',
-        data: { modal_target: 'form' } }) do |form|
+      remote: false,
+      id: 'edit-ad-images-form',
+      data: { action: 'turbo:submit-end->modal#hide' }) do |form|
 
     .text-center
       .btn-group data-controller="btn-group"

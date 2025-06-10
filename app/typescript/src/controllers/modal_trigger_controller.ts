@@ -1,6 +1,5 @@
 import { Controller } from '@hotwired/stimulus';
 import type ModalController from './modal_controller.js';
-import { type TurboBeforeFetchRequestEvent } from '@hotwired/turbo';
 
 export default class extends Controller<HTMLButtonElement> {
   static outlets = ['modal'];
