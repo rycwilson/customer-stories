@@ -1,4 +1,5 @@
 import { Controller } from "@hotwired/stimulus";
+import type ModalController from './modal_controller'
 import bootoast from 'bootoast';
 
 const baseOptions = {
@@ -8,6 +9,10 @@ const baseOptions = {
 };
 
 export default class ToastController extends Controller {
+  static outlets = ['modal'];
+  declare readonly modalOutlet: ModalController;
+  declare readonly hasModalOutlet: boolean;
+
   static values = { 
     flash: { type: Object, default: {} },
     errors: { type: Array, default: [] }
@@ -15,9 +20,23 @@ export default class ToastController extends Controller {
   declare flashValue: FlashHash;
   declare errorsValue: string[];
 
+  get container() {
+    return document.body.querySelector(':scope > .bootoast-container')
+  }
+  
+  get isShown() {
+    return this.container ? this.container.children.length > 0 : false;
+  }
+
+  connect() {
+    if (this.hasModalOutlet) {
+      $(this.modalOutlet.element).on('show.bs.modal', () => this.remove());
+    }
+  }
+
   flashValueChanged(flash: FlashHash) {
-    console.log('flash:', flash)
-    let type, message;    // these are bootoast option names and should not be changed
+    // console.log('flash:', flash)
+    let type: string | undefined, message: string | undefined;    // these are bootoast option names and should not be changed
     
     // note that Object.keys will return an array of strings despite FlashHash declaration
     // https://github.com/Microsoft/TypeScript/issues/12870
@@ -36,26 +55,26 @@ export default class ToastController extends Controller {
       message = flash[flashType]?.replace(/\d+$/, '');  
     }
     if (type && message) {
-      bootoast.toast({ 
-        ...baseOptions, 
-        type, 
-        message, 
-        timeout: type === 'danger' ? false : baseOptions.timeout, 
-        position: type === 'danger' ? 'top-center' : 'bottom-center' 
-      });
+      const timeout = type === 'danger' ? false : baseOptions.timeout;
+      const position = type === 'danger' ? 'top-center' : 'bottom-center';
+      if (this.hasModalOutlet && this.modalOutlet.element.checkVisibility()) {
+        $(this.modalOutlet.element).one('hidden.bs.modal', () => {
+          bootoast.toast({ ...baseOptions, type, message, timeout, position });
+        });
+      } else {
+        bootoast.toast({ ...baseOptions, type, message, timeout, position });
+      }
     }
   }
 
   errorsValueChanged(errors: string[]) {
-    console.log('errors:', errors)
+    // console.log('errors:', errors)
     errors.forEach(error => { 
-      bootoast.toast({ 
-        ...baseOptions, 
-        type: 'danger', 
-        message: error, 
-        timeout: false, 
-        position: 'top-center'
-      });
+      bootoast.toast({ ...baseOptions, type: 'danger', message: error, timeout: false, position: 'top-center' });
     });
+  }
+
+  remove() {
+    this.container?.replaceChildren();
   }
 }
