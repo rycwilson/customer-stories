@@ -133,7 +133,7 @@ export function dataTableConfig(invitationTemplateSelectHtml: string, storyId?: 
       { targets: 0, width: '1.75em' },
       { targets: [colIndices.contributor, colIndices.invitationTemplate], width: 'auto' },
       { targets: colIndices.status, width: '10em' },
-      { targets: colIndices.actions, width: '4.5em' }
+      { targets: colIndices.actions, width: '3.5em' }
     ],
 
     rowGroup: storyId ? undefined : { dataSrc: 'success.name', startRender: rowGroupTemplate },

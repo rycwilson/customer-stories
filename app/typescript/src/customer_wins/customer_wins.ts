@@ -118,7 +118,7 @@ export function dataTableConfig(): Config {
       { targets: [0], width: '1.75em' },
       { targets: colIndices.success, width: 'auto' },
       { targets: colIndices.status, width: '12em' },
-      { targets: colIndices.actions, width: '5em' }
+      { targets: colIndices.actions, width: '3.5em' }
     ],
 
     rowGroup: {

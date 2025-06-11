@@ -98,9 +98,9 @@ export function dataTableConfig(): Config {
       { searchable: false, targets: [0, colIndices.status, colIndices.title] },
       { targets: 0, width: '1.75em' },
       { targets: colIndices.customer, width: 'auto' },
-      { targets: colIndices.title, width: 'auto' },
-      { targets: colIndices.status, width: '3.75em' },
-      { targets: colIndices.actions, width: '5em' },
+      { targets: colIndices.title, width: '48%' },
+      { targets: colIndices.status, width: '4em' },
+      { targets: colIndices.actions, width: '3.5em' },
     ],
 
     createdRow: function (tr: Node, data: object | any[], index: number) { 
