@@ -126,8 +126,8 @@ SeedData::CUSTOMERS.each do |customer_data|
         # Changeover from [:logo_published, :preview_published, :published] attributes to :status_new in progress
         if story.published?
           story.is_published!
-          story.create_topic_ad!(adwords_ad_group: topic_ad_group)
-          story.create_retarget_ad!(adwords_ad_group: retarget_ad_group)
+          story.create_topic_ad!(adwords_ad_group: topic_ad_group, long_headline: story.title)
+          story.create_retarget_ad!(adwords_ad_group: retarget_ad_group, long_headline: story.title)
           acme.ctas.where.not(primary: true).each { |cta| story.success.ctas << cta}
         elsif story.logo_published?
           story.listed!
