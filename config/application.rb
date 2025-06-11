@@ -15,6 +15,10 @@ module Csp
 
     # config.load_defaults 5.2
 
+    # In light of disabling the 5.2 defaults (above), 
+    # following are settings that override 6.1.7 defaults in order to preserve current app behavior
+    config.action_view.form_with_generates_ids = true
+
     config.middleware.use Rack::Deflater
 
     # rack-cors
