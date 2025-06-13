@@ -9,10 +9,6 @@ module StoriesHelper
       company.logo_url || LOGO_PLACEHOLDER
     end
   end
-  
-  def disallow_search_indexing?(company=nil)
-    staging? || company&.subdomain == 'pixlee'
-  end
 
   # this is for PDF generation
   # ref: https://github.com/mileszs/wicked_pdf/issues/36

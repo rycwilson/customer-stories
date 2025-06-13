@@ -4,8 +4,7 @@ html lang="en-US" prefix="og: http://ogp.me/ns# fb: http://ogp.me/ns/fb#"
     meta charset="utf-8"
     meta name="viewport" content="width=device-width, initial-scale=1.0"
     = csrf_meta_tags()
-    - if disallow_search_indexing?(@company)
-      meta name="robots" content="noindex"
+    meta name="robots" content="noindex"
     title = page_title(controller_name, action_name, company: @company, story: @story)
     = render( \
         "stories/#{action_name == 'index' ? 'index/seo_meta_tags' : 'show/story_meta_tags'}",

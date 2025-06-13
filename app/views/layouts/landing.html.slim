@@ -4,6 +4,8 @@ html lang="en-US"
     meta charset="utf-8"
     meta name="viewport" content="width=device-width, initial-scale=1.0"
     = csrf_meta_tags()
+    - if ENV['HOST_NAME'] == 'ryanwilson.dev'
+      meta name="robots" content="noindex"
     title Customer Stories
     = javascript_include_tag('landing', defer: true)
     = javascript_include_tag('mvpready_core', defer: true)

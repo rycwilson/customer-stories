@@ -53,10 +53,6 @@ module ApplicationHelper
     ENV['HOST_NAME'] == 'customerstories.net'
   end
 
-  def staging?
-    ENV['HOST_NAME'] == 'ryanwilson.dev'
-  end
-
   # method determines if title 'Customer Stories' should be displayed as plural
   def stories?
     (controller_name == 'companies' && action_name != 'new') ||
