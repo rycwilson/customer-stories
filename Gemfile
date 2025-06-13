@@ -4,7 +4,7 @@ source 'https://rubygems.org'
 # Server and frameworks
 gem 'puma', '~> 5.0'
 gem 'rails', '~> 6.0'
-gem 'bootsnap', '>= 1.4.4', require: false
+# gem 'bootsnap', '>= 1.4.4', require: false
 gem 'rack-cors'
 gem 'rack_password'
 gem 'rack-timeout', require: "rack/timeout/base"
