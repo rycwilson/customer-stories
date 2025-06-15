@@ -2,7 +2,7 @@ ruby '3.1.2'
 source 'https://rubygems.org'
 
 # Server and frameworks
-gem 'puma', '~> 5.0'
+gem 'puma', '~> 6.6'
 gem 'rails', '~> 6.0'
 gem 'bootsnap', '>= 1.4.4', require: false
 gem 'rack-cors'

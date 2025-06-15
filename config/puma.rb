@@ -40,8 +40,10 @@ preload_app! if workers_count > 0
 # or connections that may have been created at application boot, Ruby
 # cannot share connections between processes.
 #
-on_worker_boot do
-  ActiveRecord::Base.establish_connection if defined?(ActiveRecord)
+if workers_count > 0
+  on_worker_boot do
+    ActiveRecord::Base.establish_connection if defined?(ActiveRecord)
+  end
 end
 
 # Allow puma to be restarted by `rails restart` command.
