@@ -103,7 +103,7 @@ class AdwordsAdsController < ApplicationController
     topic_ad = AdwordsAd.find params[:id]
     if topic_ad.update(ad_params) and topic_ad.story.retarget_ad.update(ad_params)
       if ad_params[:status].present?
-        flash.now[:notice] = "Promoted Story has been #{topic_ad.status.downcase}"
+        flash.now[:notice] = "Promoted Story is now #{topic_ad.status.downcase}"
       elsif ad_params[:adwords_image_ids].present?
         flash.now[:notice] = 'Promoted Story images have been updated'
       end
