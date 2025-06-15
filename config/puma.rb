@@ -5,7 +5,7 @@
 # and maximum, this matches the default thread size of Active Record.
 #
 threads_count = ENV.fetch("RAILS_MAX_THREADS") { ENV.fetch("RAILS_ENV") == 'development' ? 1 : 5 }.to_i
-threads threads_count, threads_count
+threads(threads_count, threads_count)
 
 # Specifies the `port` that Puma will listen on to receive requests, default is 3000.
 #
@@ -21,7 +21,7 @@ environment ENV.fetch("RAILS_ENV") { "development" }
 # Workers do not work on JRuby or Windows (both of which do not support
 # processes).
 #
-workers_count = ENV.fetch("WEB_CONCURRENCY") { ENV.fetch("RAILS_ENV") == 'development' ? 0 : 2 }.to_i
+workers_count = ENV.fetch("WEB_CONCURRENCY") { 0 }.to_i
 workers(workers_count) if workers_count > 0
 
 # Use the `preload_app!` method when specifying a `workers` number.
