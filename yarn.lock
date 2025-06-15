@@ -1104,6 +1104,11 @@ bootstrap-jasny@^3.2.0:
   resolved "https://registry.npmjs.org/bootstrap-jasny/-/bootstrap-jasny-3.2.0.tgz"
   integrity sha512-52oRsvWLEqz7nx5Ovsuz9DtT/y4PYjH46g3sbpKJ2JR4EgO4GN5qFJONQKixnG4OPQecoJizZgEjVpfPDJ/nQg==
 
+bootstrap-sass@3.3.6:
+  version "3.3.6"
+  resolved "https://registry.yarnpkg.com/bootstrap-sass/-/bootstrap-sass-3.3.6.tgz#363b0d300e868d3e70134c1a742bb17288444fd1"
+  integrity sha512-0D6KYFJsL7GBGAiKj73AW80PDnJl9dikInjk+UqCfhNPDrU2eRblwIARo+mKetWcVidfFJA3qD3uYonFGfZX5w==
+
 bootstrap-switch@3.3.4:
   version "3.3.4"
   resolved "https://registry.npmjs.org/bootstrap-switch/-/bootstrap-switch-3.3.4.tgz"
@@ -1113,11 +1118,6 @@ bootstrap-validator@^0.11.9:
   version "0.11.9"
   resolved "https://registry.npmjs.org/bootstrap-validator/-/bootstrap-validator-0.11.9.tgz"
   integrity sha512-BJlnaTeFNr5+SNtZ71DNaiFx7qY0X2c7m/KvZE1GiVXbyD8PihJlALvS6TeRGUs8mY8qga/LrhG80N9dw8UWqA==
-
-bootstrap@3.3.6:
-  version "3.3.6"
-  resolved "https://registry.yarnpkg.com/bootstrap/-/bootstrap-3.3.6.tgz#8de8f749dc8a743f2ac5b510d988371e3daa6589"
-  integrity sha512-XC+LTYJoVYHIalmjNcznwlZHY+YLhMJ9NPs8M2aEweugK7wMrto3h79POn7O5Vj/woDU/tjzmjyUbAd1HzSXIw==
 
 brace-expansion@^1.1.7:
   version "1.1.11"
