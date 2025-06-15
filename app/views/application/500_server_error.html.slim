@@ -10,9 +10,6 @@ html lang="en-US"
     .dialog
       h1 500
       p Oops, there was a server error.
-
-      - if Rails.env.development?
-        p = @error_mesg
       
       - if user_signed_in?
         = link_to 'Back to Dashboard', dashboard_path('curate')
