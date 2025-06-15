@@ -15,15 +15,17 @@
 # gem 'pg'
 #
 
+# The ENV['DATABASE_URL'] connection string will contain details such as protocol, username, password, host, port, db name
+# Check Rails.application.config.database_configuration
 default: &default
   adapter: postgresql
   encoding: unicode
-  # For details on connection pooling, see rails configuration guide
-  # http://guides.rubyonrails.org/configuring.html#database-pooling
 
-  # The ENV['DATABASE_URL'] connection string will contain details such as protocol, username, password, host, port, db name
-  # Additionally these settings will apply in all environments:
-  pool: 5   # max connections the app will maintain per process
+  # Pool should be >= max Puma threads. Extra connections allow for console sessions and background jobs
+  # If running Puma in cluster mode, db connections will be workers x pool => make sure db can handle
+  pool: 5
+
+  # ActiveRecord::ConnectionTimeoutError if a connection pool does not become avaiable within 5s
   # timeout: 5000
 
 development:
