@@ -5,7 +5,8 @@
 //= link mvpready_landing.js
 //= link_tree ../builds
 
-//= link_directory ../stylesheets .css
+// SASS compilation now happens in the build step, so we don't need to link stylesheets here.
+/* link_directory ../stylesheets .css */
 
 /*
 This is the same thing that is specified in assets.rb
