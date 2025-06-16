@@ -14,7 +14,7 @@ gem 'irb'
 gem 'bootsnap', '~> 1.18', require: false
 gem 'rack-cors', '~> 2.0'
 gem 'rack_password', '~> 1.3'
-gem 'rack-timeout', '~> 0.7'
+# gem 'rack-timeout', '~> 0.7'
 gem 'figaro', '~> 1.2'    # needs to be in production group for assets precompilation (which runs in production mode)
 gem 'turbo-rails', '~> 2.0'
 gem 'stimulus-rails', '~> 1.3'
