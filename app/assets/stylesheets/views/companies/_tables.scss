@@ -12,28 +12,28 @@
     }
   }
 
-  th.sorting::after {
-    &.customer {
+  th.sorting {
+    &.customer::after {
       left: 85px;
     }
 
-    &.customer-win {
+    &.customer-win::after {
       left: 114px;
     }
 
-    &.contributor {
+    &.contributor::after {
       left: 98px;
     }
 
-    &.invitation-template {
+    &.invitation-template::after {
       left: 152px;
     }
 
-    &.story-title {
+    &.story-title::after {
       left: 87px;
     }
 
-    &.status {
+    &.status::after {
       left: 62px
     }
   }
