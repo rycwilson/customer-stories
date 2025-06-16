@@ -1,9 +1,11 @@
 @import 'base/variables';
 
-@import 'bootstrap-sprockets';
-@import 'bootstrap';
+@import 'bootstrap-sass/assets/stylesheets/bootstrap';
 
-@import 'font-awesome';
+// The font-awesome-rails gem is responsible for placing the font files in public/assets
+// Set the font path here so that compiled stylesheets can find the font files.
+$fa-font-path: '/assets';
+@import 'font-awesome/scss/font-awesome';
 
 @import 'base/mixins';
 @import 'base/globals';
@@ -18,8 +20,8 @@
 // @import '../../../../vendor/assets/jquery-ui-1.12.1.custom/jquery-ui';
 // @import '../../../../vendor/assets/jquery-ui-1.12.1.custom/jquery-ui.structure';
 
-@import 'views/site';
-@import 'views/navbars/navbars';
+// @import 'views/site';
+@import 'views/navbars/company_nav';
 @import 'views/modals/modals';
 @import 'views/companies/admin';
 @import 'views/companies/dashboard';

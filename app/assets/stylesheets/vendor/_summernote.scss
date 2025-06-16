@@ -1,13 +1,14 @@
 @import 'summernote/src/styles/bs3/summernote-bs3';
 
+// These font files must be copied from the summernote package to the assets directory (see build script).
 @font-face {
   font-family: 'summernote';
   font-style: normal;
   font-weight: 400;
   font-display: auto;
-  src: asset-url('summernote/dist/font/summernote.woff2') format('woff2'), 
-       asset-url('summernote/dist/font/summernote.woff') format('woff'), 
-       asset-url('summernote/dist/font/summernote.ttf') format('truetype');
+  src: url('/assets/summernote.woff2') format('woff2'), 
+       url('/assets/summernote.woff') format('woff'), 
+       url('/assets/summernote.ttf') format('truetype');
 }
 
 .note-editor {
