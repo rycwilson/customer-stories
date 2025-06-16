@@ -40,6 +40,8 @@
 !/public/assets/.sprockets-manifest-*
 /dev_assets/**
 
+/.sass-cache
+
 /app/assets/builds/*
 !/app/assets/builds/.keep
 /app/typescript/emit/*
