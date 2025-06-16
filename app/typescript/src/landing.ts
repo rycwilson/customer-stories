@@ -1,6 +1,6 @@
 import './jquery';
-import 'bootstrap-sass-3.3.6/assets/javascripts/bootstrap/transition';
-import 'bootstrap-sass-3.3.6/assets/javascripts/bootstrap/collapse';
+import 'bootstrap-sass/assets/javascripts/bootstrap/transition';
+import 'bootstrap-sass/assets/javascripts/bootstrap/collapse';
 import bootoast from 'bootoast';
 import { toggleHeaderOnScroll, validateForm } from './utils';
 
