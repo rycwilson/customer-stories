@@ -1,3 +1,5 @@
+@use 'sass:color';
+
 $brand-primary: #0372aa;
 $brand-success: #198703; 
 $brand-danger: #e32926; // #e53935; 
@@ -15,11 +17,11 @@ $state-warning-text: #5e541c;
 $state-danger-bg: #ffe9e6;    
 $state-danger-text: #863427;
 
-$light-gray: mix($brand-primary, #f9f9f9, 1%);
+$light-gray: color.mix($brand-primary, #f9f9f9, 1%);
 $gray-lighter: #eee;
-$blueish-gray-lighter: mix($brand-primary, $gray-lighter, 1%);
+$blueish-gray-lighter: color.mix($brand-primary, $gray-lighter, 1%);
 $nav-blue: $brand-primary; 
-$nav-blue-hover: darken($brand-primary, 10%);
+$nav-blue-hover: color.adjust($brand-primary, $lightness: -10%);
 $light-blue: #e8ffff;  // 90% lightened brand-primary
 
 $csp-body-font: 'Open Sans', sans-serif;
