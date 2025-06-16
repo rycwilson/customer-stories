@@ -7,7 +7,7 @@
 // This works, but the file is still processed by sass
 // @import url(asset-url('datatables.net-bs/css/dataTables.bootstrap.css'));
 // ...so import a copy of the file with necessary changes for sass processing: 
-@import 'dataTables.bootstrap.css';   // see vendor/assets/stylesheets/
+@import 'dataTables.bootstrap';   // see vendor/assets/stylesheets/
 
 // @import 'RowGroup-1.0.0/css/rowGroup.bootstrap';
 
