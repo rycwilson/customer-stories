@@ -5,8 +5,6 @@
 //= link mvpready_landing.js
 //= link_tree ../builds
 
-//= link mvpready-animate.css
-
 // SASS compilation now happens in the build step, so we don't need to link stylesheets here.
 /* link_directory ../stylesheets .css */
 

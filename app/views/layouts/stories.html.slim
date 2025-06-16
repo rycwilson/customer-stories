@@ -9,7 +9,6 @@ html lang="en-US" prefix="og: http://ogp.me/ns# fb: http://ogp.me/ns/fb#"
     = render( \
         "stories/#{action_name == 'index' ? 'index/seo_meta_tags' : 'show/story_meta_tags'}",
         { company: @company, success: @story&.success, story: @story })
-    = javascript_include_tag("stories/#{action_name}#{action_name == 'index' && @use_v2 ? '2' : ''}", defer: true)
 
     / Google Fonts - https://developers.google.com/fonts/docs/getting_started
     / https://www.cdnplanet.com/blog/faster-google-webfonts-preconnect/
@@ -20,11 +19,18 @@ html lang="en-US" prefix="og: http://ogp.me/ns# fb: http://ogp.me/ns/fb#"
       href="https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,400;1,500;1,600;1,700;1,800" }
     link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700"
     = custom_google_fonts(@company)
+    
     - if @use_v2 
       = stylesheet_link_tag('stories2')
     - else
       = stylesheet_link_tag( \
           custom_stylesheet?(@company, 'stories') ? "custom/#{@company.subdomain}/stories" : 'stories')
+    
+    - if action_name == 'index' 
+      = javascript_include_tag('stories' + "#{@use_v2 ? '2' : ''}", defer: true)
+    - elsif action_name == 'show'
+      = javascript_include_tag('story', defer: true)
+
     = favicon_link_tag('favicon.ico')
 
   body class="#{@company.subdomain} stories #{action_name}" style=('visibility:hidden' if @is_social_share_redirect)
