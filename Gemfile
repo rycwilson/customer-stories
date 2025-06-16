@@ -22,7 +22,7 @@ gem 'faker', '~> 3.2'
 
 # Assets
 gem 'jsbundling-rails', '~> 1.1'
-gem 'cssbundling-rails', '~> 1.4'
+gem 'cssbundling-rails', '~> 1.4'   # dart-sass is the default compiler
 # gem 'bootstrap-sass', '3.3.6'
 # gem 'sassc-rails', '>= 2.1.0'
 gem 'font-awesome-rails', '~> 4.7'
