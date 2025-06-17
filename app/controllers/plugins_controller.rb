@@ -12,7 +12,7 @@ class PluginsController < ApplicationController
     # set the stylesheet url here, as it's impossible to use the asset path helper in cs.js in a company-specific way
     @stylesheet_url = helpers.custom_stylesheet?(@company, 'plugins') ?
       helpers.asset_url("custom/#{@company.subdomain}/plugins.css").to_s :
-      helpers.asset_url('plugins.css').to_s
+      helpers.asset_url('plugins/main.css').to_s
       
     respond_to do |format|
       format.js { render action: 'cs' }
@@ -89,7 +89,7 @@ class PluginsController < ApplicationController
         is_grayscale: params[:grayscale].present? && params[:grayscale] != 'false',
         is_curator: false,
         is_plugin: true,
-        is_external: !request.referer =~ /^(?!.*plugins\/demo).*(lvh\.me|customerstories\.org|customerstories\.net).*$/,
+        is_external: not request.referer =~ /^(?!.*plugins\/demo).*(lvh\.me|ryanwilson\.dev|customerstories\.net).*$/,
         window_width: params[:window_width],
         preselected_story_id: preselected_story&.id,
       }
