@@ -1,8 +1,9 @@
-@import 'base/variables';
+// TODO https://sass-guidelin.es/#the-7-1-pattern
 
+@import 'base/variables';
 @import 'bootstrap-sass/assets/stylesheets/bootstrap';
 
-// The font-awesome-rails gem is responsible for placing the font files in public/assets
+// The font-awesome-rails gem is responsible for placing the font files in public/assets.
 // Set the font path here so that compiled stylesheets can find the font files.
 $fa-font-path: '/assets';
 @import 'font-awesome/scss/font-awesome';
@@ -11,16 +12,13 @@ $fa-font-path: '/assets';
 @import 'base/globals';
 
 @import 'vendor/bootstrap';
+@import 'vendor/bootstrap_switch';
+@import 'vendor/bootstrap_jasny';
+@import 'vendor/bootoast';
 @import 'vendor/datatables';
 @import 'vendor/tomselect';
 @import 'vendor/summernote';
 
-// TODO: Not sure why custom jquery-ui was necessary. Seems to work fine with latest integration (see app.ts).
-// @import '../../../../../vendor/assets/bower_components/select2.sortable/select2.sortable';
-// @import '../../../../vendor/assets/jquery-ui-1.12.1.custom/jquery-ui';
-// @import '../../../../vendor/assets/jquery-ui-1.12.1.custom/jquery-ui.structure';
-
-// @import 'views/site';
 @import 'views/navbars/company_nav';
 @import 'views/modals/modals';
 @import 'views/companies/admin';
@@ -33,42 +31,5 @@ $fa-font-path: '/assets';
 @import 'views/profile/profile';
 
 .turbo-progress-bar {
-  // height: 2px;
   background: #9cffff;
 }
-
-// good example of file organization
-// also: https://sass-guidelin.es/#the-7-1-pattern
-
-// @import 'base/_reset';
-
-// @import 'helpers/_variables';
-// @import 'helpers/_mixins';
-// @import 'helpers/_functions';
-// @import 'helpers/_helpers';
-// @import 'helpers/_placeholders';
-
-// @import 'base/_typography';
-
-// @import 'pages/_versions';
-// @import 'pages/_recording';
-// @import 'pages/_lists';
-// @import 'pages/_global';
-
-// @import 'forms/_buttons';
-// @import 'forms/_inputs';
-// @import 'forms/_validators';
-// @import 'forms/_fieldsets';
-
-// @import 'sections/_header';
-// @import 'sections/_navigation';
-// @import 'sections/_sidebar-a';
-// @import 'sections/_sidebar-b';
-// @import 'sections/_footer';
-
-// @import 'vendors/_ui-grid';
-
-// @import 'components/_modals';
-// @import 'components/_tooltip';
-// @import 'components/_tables';
-// @import 'components/_datepickers';

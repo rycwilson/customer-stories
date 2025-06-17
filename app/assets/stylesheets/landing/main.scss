@@ -1,13 +1,17 @@
 @import 'base/variables';
-@import 'landing_bootstrap';
+@import './custom_bootstrap';
 
+// The font-awesome-rails gem is responsible for placing the font files in public/assets.
+// Set the font path here so that compiled stylesheets can find the font files.
 $fa-font-path: '/assets';
 @import 'font-awesome/scss/font-awesome';
+@import 'vendor/bootoast';
+@import 'base/mixins';
+@import 'site/cookie_consent';
 
+// For inlining css files, leave off the .css extension and ensure a leading underscore in the file name
 @import 'mvpready-landing-2_1_1';
 @import 'mvpready-animate';
-@import 'base/mixins';
-@import 'views/site';
 
 $mobile-navbar-height: 62px;
 $navbar-height: 85px;   // from mvp-landing
@@ -35,13 +39,13 @@ body {
 
 body {
   font-size: 14px;
-  padding-top: $navbar-height;
   
   @include bs-xs {
     padding-top: $mobile-navbar-height;
   }
   
   @include bs-sm {
+    padding-top: $navbar-height;
   }
 
   // give padded space the right color

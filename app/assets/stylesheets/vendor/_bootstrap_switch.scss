@@ -1,0 +1,21 @@
+// For inlining css files, leave off the .css extension and ensure a leading underscore in the file name
+@import 'bootstrap-switch';
+
+.bootstrap-switch {
+  .bootstrap-switch-handle-on.bootstrap-switch-primary {
+    background: $state-success-bg;
+    color: $state-success-text;
+  }
+  
+  .bootstrap-switch-handle-off.bootstrap-switch-default {
+    color: $gray-light;
+  }
+
+  &.bootstrap-switch-disabled {
+    cursor: not-allowed !important;
+
+    .bootstrap-switch-container {
+      pointer-events: none;
+    }
+  }
+}

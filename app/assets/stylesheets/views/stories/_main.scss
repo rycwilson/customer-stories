@@ -1,8 +1,9 @@
 @import 'base/variables';
-@import './bootstrap';
+@import './custom_bootstrap';
 @import 'base/mixins';
 @import 'base/globals';
 @import 'vendor/tomselect';
+@import 'site/cookie_consent';
 @import 'views/navbars/company_header';
 @import 'views/navbars/stories_header';
 @import 'views/stories/index/search_and_filters';

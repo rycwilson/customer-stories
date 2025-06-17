@@ -2,13 +2,7 @@
 // (https://stackoverflow.com/questions/71805735/error-function-rgb-is-missing-argument-green-in-sass#answer-74262232),
 // so need to import the file without processing (i.e. include .css extension).
 // (https://stackoverflow.com/questions/7111610/import-regular-css-file-in-scss-file)
-// BUT this doesn't work because ruby sass doesn't support @import'ing with the .css extension.
-// @import 'datatables.net-bs/css/dataTables.bootstrap.css';
-// This works, but the file is still processed by sass
-// @import url(asset-url('datatables.net-bs/css/dataTables.bootstrap.css'));
-// ...so import a copy of the file with necessary changes for sass processing: 
-@import 'dataTables.bootstrap';   // see vendor/assets/stylesheets/
-
+@import 'datatables.net-bs/css/dataTables.bootstrap';
 // @import 'RowGroup-1.0.0/css/rowGroup.bootstrap';
 
 table.dataTable {
@@ -100,24 +94,3 @@ table.dataTable {
 .table > tfoot > tr > td {
   vertical-align: middle;
 }
-
-// div.DTE_Inline {
-//   div.DTE_Inline_Field div.DTE_Field > label {
-//     // display: initial;
-//     display: revert;
-//     width: 100%;
-//     padding-left: 0;
-//     margin-bottom: 5px;
-//   }
-//   div.DTE_Inline_Field, div.DTE_Inline_Buttons {
-//     display: block;
-//     width: 100% !important;
-//   }
-//   div.DTE_Inline_Buttons div.DTE_Form_Buttons button {
-//     margin: 0 0 0 8px;
-//   }
-// }
-
-// input.select2-search__field[aria-controls*="DTE_Field"] {
-//   display: none;
-// }

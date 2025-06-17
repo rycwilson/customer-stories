@@ -1,0 +1,7 @@
+@import 'bootstrap-jasny/scss/jasny-bootstrap';
+
+// The overflow: hidden setting from jasny introduces a bit of extra height to the image card, thus making the spinner appear off center.
+// Not sure how that's supposed to work, but this seems to fix it...
+.btn-file {
+  overflow: visible;
+}
