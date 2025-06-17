@@ -26,13 +26,14 @@ body.plugin-demo {
   //@import './font_awesome';
 
   @import './bootstrap'; 
-  @import 'bootstrap-horizon/src/bootstrap-horizon';
+  @import 'bootstrap-horizon';
   @import 'base/globals';
   @import 'overlays/main';
   @import 'views/stories/show/show';
 
   // these are copied from bootstrap source: _grid.scss
-  .cs-container, .cs-container-fluid {
+  .cs-container, 
+  .cs-container-fluid {
     @include container-fixed;
   }
 
