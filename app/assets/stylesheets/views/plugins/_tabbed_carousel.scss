@@ -19,13 +19,13 @@
 
   &--left {
     > button {
-      background: image-url('icons/icon-chevron-left.png') no-repeat 0 0;
+      background: url('/assets/icons/icon-chevron-left.png') no-repeat 0 0;
     }
   }
 
   &--right {
     > button {
-      background: image-url('icons/icon-chevron-right.png') no-repeat 0 0;
+      background: url('/assets/icons/icon-chevron-right.png') no-repeat 0 0;
     }
   } 
 }

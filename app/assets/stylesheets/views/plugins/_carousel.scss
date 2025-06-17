@@ -97,11 +97,11 @@ $carousel-nav-size: 14px !default;
 
     > button {
       .cs-carousel--light-background & {
-        background: image-url('icons/chevron-gray-left.png') no-repeat center / contain content-box;
+        background: url('/assets/chevron-gray-left.png') no-repeat center / contain content-box;
       }
 
       .cs-carousel--dark-background & {
-        background: image-url('icons/chevron-white-left.png') no-repeat center / contain content-box;
+        background: url('/assets/chevron-white-left.png') no-repeat center / contain content-box;
       }
     }
   }
@@ -111,11 +111,11 @@ $carousel-nav-size: 14px !default;
 
     > button {
       .cs-carousel--light-background & {
-        background: image-url('icons/chevron-gray-right.png') no-repeat center / contain content-box;
+        background: url('/assets/chevron-gray-right.png') no-repeat center / contain content-box;
       }
 
       .cs-carousel--dark-background & {
-        background: image-url('icons/chevron-white-right.png') no-repeat center / contain content-box;
+        background: url('/assets/chevron-white-right.png') no-repeat center / contain content-box;
       }
     }
   } 
