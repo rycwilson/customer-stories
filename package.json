@@ -6,7 +6,24 @@
   "type": "module",
   "scripts": {
     "test": "NODE_PATH=/Users/wilson/.rbenv/versions/3.1.2/lib/ruby/gems/3.1.0/gems:$NODE_PATH jest --no-cache",
-    "build": "NODE_PATH=/Users/wilson/.rbenv/versions/3.1.2/lib/ruby/gems/3.1.0/gems:$NODE_PATH esbuild app/typescript/emit/app.js app/typescript/emit/landing.js app/typescript/emit/stories/index.js app/typescript/emit/stories/index2.js app/typescript/emit/stories/show.js --minify --bundle --sourcemap --outdir=app/assets/builds"
+    "build_old": "NODE_PATH=/Users/wilson/.rbenv/versions/3.1.2/lib/ruby/gems/3.1.0/gems:$NODE_PATH esbuild app/typescript/emit/app.js app/typescript/emit/landing.js app/typescript/emit/stories/index.js app/typescript/emit/stories/index2.js app/typescript/emit/stories/show.js --minify --bundle --sourcemap --outdir=app/assets/builds",
+
+    "build:landing-js": "esbuild app/typescript/emit/landing.js --outfile=app/assets/builds/landing/bundle.js --minify --bundle --sourcemap",
+    "build:landing-css": "sass app/assets/stylesheets/landing/main.scss:app/assets/builds/landing/main.css --load-path=node_modules --load-path=app/assets/stylesheets --load-path=vendor/assets/stylesheets --silence-deprecation=import --silence-deprecation=global-builtin --silence-deprecation=color-functions --silence-deprecation=slash-div --silence-deprecation=mixed-decls",
+
+    "_TODO_dont_deploy_source_maps": "Don't deploy source maps to the production asset host. Note that sass generates source maps by default",
+    "build:app-js": "esbuild app/typescript/emit/app.js --outfile=app/assets/builds/app/bundle.js --minify --bundle --sourcemap",
+    "build:app-css": "sass app/assets/stylesheets/app/index.scss:app/assets/builds/app/main.css --load-path=node_modules --load-path=app/assets/stylesheets --load-path=vendor/assets/stylesheets --silence-deprecation=import --silence-deprecation=global-builtin --silence-deprecation=color-functions --silence-deprecation=slash-div --silence-deprecation=mixed-decls",
+    "copy:summernote-fonts": "mkdir -p public/assets && cp node_modules/summernote/src/styles/summernote/font/summernote.woff2 node_modules/summernote/src/styles/summernote/font/summernote.woff node_modules/summernote/src/styles/summernote/font/summernote.ttf public/assets/",
+    
+    "_comment_flat_build": "We need to place all compiled files in the top level of build/ since subdirectories are not included in the search path",
+    "build:stories-js": "esbuild app/typescript/emit/stories/index.js app/typescript/emit/stories/index2.js app/typescript/emit/stories/show.js --outdir=app/assets/builds/stories --minify --bundle --sourcemap",
+    "build:stories-css": "sass app/assets/stylesheets/views/stories/index.scss:app/assets/builds/stories/main.css app/assets/stylesheets/views/stories/index2.scss:app/assets/builds/stories/main2.css --load-path=node_modules --load-path=app/assets/stylesheets --load-path=vendor/assets/stylesheets --silence-deprecation=import --silence-deprecation=global-builtin --silence-deprecation=color-functions --silence-deprecation=slash-div --silence-deprecation=mixed-decls --style=compressed",
+
+    "build:custom-css": "for f in app/assets/stylesheets/custom/*/*main*.scss; do subd=$(basename $(dirname \"$f\")); outname=$(basename \"${f%.scss}\" | sed 's/_main//'); yarn sass \"$f\" \"app/assets/builds/custom/$subd/${outname}.css\" --load-path=node_modules --load-path=app/assets/stylesheets --load-path=vendor/assets/stylesheets --silence-deprecation=import --silence-deprecation=global-builtin --silence-deprecation=color-functions --silence-deprecation=slash-div --silence-deprecation=mixed-decls --style=compressed; done",
+    
+    "build": "npm run build:landing-js && npm run build:landing-css && npm run build:app-js && npm run build:app-css && npm run build:stories-js && npm run build:stories-css && npm run build:stories2-css",
+    "build:css": "sass ./app/assets/stylesheets/application.sass.scss:./app/assets/builds/application.css --no-source-map --load-path=node_modules"
   },
   "repository": {
     "type": "git",
@@ -38,6 +55,7 @@
     "datatables.net-rowgroup-bs": "^1.4.0",
     "flot": "^0.8.3",
     "flot-orderbars": "^1.0.0",
+    "font-awesome": "^4.7.0",
     "html2rtf": "^0.2.1",
     "imagesloaded": "4.1",
     "jquery-csv": "^1.0.21",
@@ -70,6 +88,7 @@
     "esbuild": "0.19.3",
     "jest": "^29.7.0",
     "jest-environment-jsdom": "^29.7.0",
+    "sass": "^1.89.2",
     "ts-jest": "^29.1.2",
     "typescript": "^5.2.2"
   },
