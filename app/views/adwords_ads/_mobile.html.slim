@@ -1,0 +1,43 @@
+.mobile
+
+  .mobile__selector
+
+    a.left.carousel-control href="##{mobile_id}" role="button" data-slide="prev"
+      i.fa.fa-fw.fa-chevron-left
+      span.sr-only Previous
+    
+    button type="button"
+      i.fa.fa-fw.fa-play style="display:none"
+      i.fa.fa-fw.fa-pause
+    /ol.carousel-indicators
+      li.active data-target="##{mobile_id}" data-slide-to="0"
+      li data-target="##{mobile_id}" data-slide-to="1"
+      li data-target="##{mobile_id}" data-slide-to="2"
+    
+    a.right.carousel-control href="##{mobile_id}" role="button" data-slide="next"
+      i.fa.fa-fw.fa-chevron-right
+      span class="sr-only" Next
+    
+  .mobile__button
+
+  .mobile__screen.carousel.slide id="#{mobile_id}" data-ride="carousel" data-interval="3000" data-pause="null"
+
+    .carousel-inner role="listbox"
+
+      - if mobile_id == 'mobile--websites'
+        /.item.active
+          = render('adwords_ads/previews/fancy1', is_mobile: true)
+        .item.active
+          = render('adwords_ads/previews/image1_300x250', is_mobile: true, image_url:, logo_url:)
+        .item
+          = render( \
+              'adwords_ads/previews/native2_300x250', 
+              is_mobile: true, image_url:, logo_url:, short_headline:, long_headline:, company_name:, cta_text:)
+        .item
+          = render('adwords_ads/previews/text1_300x250', is_mobile: true, short_headline:, :long_headline:, company_name:, cta_text:)
+
+      - elsif mobile_id == 'mobile--youtube'
+        .item.active
+          = render('adwords_ads/previews/youtube_home', image_url:, short_headline:, long_headline:, company_name:, cta_text:)
+        .item
+          = render('adwords_ads/previews/youtube_watch', image_url:, short_headline:, company_name:, cta_text:)

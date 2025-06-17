@@ -1,0 +1,40 @@
+
+- if is_mobile
+  .mobile__abstract--navigation
+    .menu-icon
+      i.fa.fa-fw.fa-bars
+    .headline
+    .search-icon
+      i.fa.fa-fw.fa-search
+  .mobile__abstract--paragraph
+    .long-line
+    .long-line
+    .long-line
+    .short-line
+
+.ad.text-ad.text-1 class=('mobile-ad' if is_mobile)
+  = render('adwords_ads/ads_by_google')
+  div
+    .short-headline
+      a href="javascript:;"
+        = short_headline
+    .business-name
+      a href="javascript:;"
+        = company_name
+    .long-headline
+      a href="javascript:;"
+        = long_headline
+  div
+    .call-to-action
+      a href="javascript:;"
+        = cta_text
+
+- if is_mobile
+  .mobile__abstract--paragraph
+    .long-line
+    .long-line
+    .long-line
+    .short-line
+  .mobile__abstract--paragraph
+    .long-line
+    .short-line

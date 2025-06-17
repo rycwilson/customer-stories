@@ -1,0 +1,74 @@
+#websites-desktop.tab-pane.fade style="padding-top: 40px;" role="tabpanel"
+  .ad.image-ad.tower
+    = render('adwords_ads/ads_by_google')
+    .landscape-image style="background-image: url(#{image_url})"
+    .spacer style="height: 30px"
+    div
+      .short-headline
+        span style="font-size:#{ads_params[:tower][:sh_font_size]}" 
+          = short_headline
+      .spacer style="height: 24px"
+      .logo style="background-image: url(#{logo_url})"
+      .spacer style="height: 12px"
+      .long-headline
+        span style="font-size:#{ads_params[:tower][:lh_font_size]}" 
+          = long_headline
+      .spacer style="height: 18px"
+      .button
+        svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"
+          polyline fill="none" points="42,32 60,50 42,68" stroke-width="6" stroke-linecap="round" stroke-linejoin="round" stroke="rgba(0,0,0,1)"
+    .spacer style="height: 60px"
+
+  .ad.image-ad.banner
+    = render('adwords_ads/ads_by_google')
+    .landscape-image style="background-image: url(#{image_url})"
+    .logo style="background-image: url(#{logo_url})"
+    .short-headline
+      span = short_headline
+    .long-headline
+      span = long_headline
+    .button
+      svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"
+        polyline fill="none" points="42,32 60,50 42,68" stroke-width="6" stroke-linecap="round" stroke-linejoin="round" stroke="rgba(0,0,0,1)"
+    .spacer
+
+  = render('adwords_ads/previews/image1_300x250', is_mobile: false)
+
+  = render('adwords_ads/previews/text1_300x250', is_mobile: false)
+
+  .ad.native-ad.native-1
+    = render('adwords_ads/ads_by_google')
+    .landscape-image style="background-image: url(#{image_url})"
+    div
+      .long-headline
+        a 
+          = long_headline
+      .spacer style="height: 11px;"
+      .business-name
+        .ad-box.ad-box-green
+          span Ad
+        a href="javascript:;" 
+          = company_name
+      .spacer style="height: 10px;"
+      .call-to-action
+        a href="javascript:;"
+          = cta_text
+
+  .ad.native-ad.native-sm
+    = render('adwords_ads/ads_by_google')
+    .square-image style="background-image: url(#{square_image_url})"
+    div
+      .long-headline
+        a href="javascript:;" 
+          = long_headline
+      div
+        .business-name
+          .ad-box.ad-box-green
+            span Ad
+          a 
+            = company_name
+        .call-to-action
+          a href="javascript:;" 
+            = cta_text
+
+  = render('adwords_ads/previews/native2_300x250', is_mobile: false)

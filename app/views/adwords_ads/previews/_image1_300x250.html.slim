@@ -1,0 +1,39 @@
+
+- if is_mobile
+  .mobile__abstract--navigation
+    .menu-icon
+      i.fa.fa-fw.fa-bars
+    .headline
+    .search-icon
+      i.fa.fa-fw.fa-search
+  .mobile__abstract--paragraph
+    .long-line
+    .long-line
+    .long-line
+    .short-line
+
+.ad.image-ad.image-1 class=('mobile-ad' if is_mobile)
+  = render('adwords_ads/ads_by_google')
+  .landscape-image style="background-image: url(#{image_url})"
+  .short-headline
+    span 
+      = short_headline
+  div
+    .logo style="background-image: url(#{logo_url})"
+    .long-headline
+      p 
+        = long_headline
+    .button
+      svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"
+        polyline fill="none" points="42,32 60,50 42,68" stroke-width="6" stroke-linecap="round" stroke-linejoin="round" stroke="rgba(0,0,0,1)"
+  .spacer
+
+- if is_mobile
+  .mobile__abstract--paragraph
+    .long-line
+    .long-line
+    .long-line
+    .short-line
+  .mobile__abstract--paragraph
+    .long-line
+    .short-line

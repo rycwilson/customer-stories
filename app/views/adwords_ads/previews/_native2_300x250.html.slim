@@ -1,0 +1,52 @@
+
+- if is_mobile
+
+  .mobile__abstract--navigation
+    .menu-icon
+      i.fa.fa-fw.fa-bars
+    .headline
+    .search-icon
+      i.fa.fa-fw.fa-search
+
+  .mobile__abstract--paragraph
+    .long-line
+    .long-line
+    .long-line
+    .short-line
+
+.ad.native-ad.native-2 class=('mobile-ad' if is_mobile)
+
+  = render('adwords_ads/ads_by_google')
+
+  .landscape-image style="background-image: url(#{image_url})"
+
+  .first-row
+    .logo style="background-image: url(#{logo_url})"
+    .headlines
+      .short-headline
+        span
+          = short_headline
+      .long-headline
+        a = long_headline
+      
+  .second-row
+    .business-name
+      a = company_name
+    .call-to-action
+      a href="javascript:;"
+        = cta_text
+      div
+        svg class="rhsvgpngicon" preserveAspectRatio="xMinYMin meet" version="1.1" xmlns="https://www.w3.org/2000/svg" xmlns:xlink="https://www.w3.org/1999/xlink" x="0px" y="0px" height="13px" width="8px" viewBox="0 0 26 42" enable-background="new 0 0 26 42" xml:space="preserve"
+          polyline fill="none" stroke="#212121" stroke-width="5" stroke-miterlimit="10" points="2.875,2.958 21.166,20.957 2.917,38.916"
+
+- if is_mobile
+
+  .mobile__abstract--paragraph
+    .long-line
+    .long-line
+    .long-line
+    .short-line
+
+  .mobile__abstract--paragraph
+    .long-line
+    .short-line

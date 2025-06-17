@@ -1,0 +1,37 @@
+.mobile__abstract--youtube-home-top
+  .header
+    = render('adwords_ads/youtube_logo')
+    .profile-image
+  
+  .video-info
+    div
+    .mobile__abstract--paragraph
+      .long-line
+      .long-line
+      .short-line
+    div
+      i.fa.fa-fw.fa-ellipsis-v
+
+.ad.youtube--home
+  .landscape-image style="background-image: url(#{image_url})"
+  .short-headline
+    a href="javascript:;"
+      = short_headline
+  
+  .long-headline
+    a href="javascript:;"
+      = long_headline
+  
+  div
+    .business-name
+      a href="javascript:;"
+        = company_name
+      .ad-box.ad-box-yellow 
+        | Ad
+    
+    .call-to-action
+      a href="javascript:;"
+        = cta_text
+
+.mobile__abstract--youtube-home-bottom
+  .video-content

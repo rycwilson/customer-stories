@@ -1,0 +1,70 @@
+.container-fluid
+
+  .hidden style="display: flex; margin: 30px 60px; font-family: 'Open Sans', arial , sans-serif"
+    / label style="font-size: 16px; font-weight: 600; color: #999; margin-right: 20px;" Formats
+    ul class="list-unstyled" style="padding-top: 2px"
+      li style="line-height: 1.8em;"
+        span style="font-weight: 600" 
+          | Image: Standard format used commonly on publishers' sites
+        |&nbsp;&nbsp;Standard format used commonly on publishers' sites
+      li style="line-height: 1.8em;"
+        span style="font-weight: 600" 
+          | Native: Integrates with the look, feel, and content of a publisher's site
+      li style="line-height: 1.8em;"
+        span style="font-weight: 600" 
+          | Text: Displays even when ad-blocking is enabled
+
+  .tab-content 
+    #websites.tab-pane.fade.active.in aria-controls="websites" role="tabpanel"
+
+      .tab-content
+        #websites-mobile.tab-pane.fade.active.in
+          = render( \
+              'adwords_ads/mobile', 
+              mobile_id: 'mobile--websites',
+              image_url: @image_url,
+              short_headline: @short_headline,
+              long_headline: @long_headline,
+              company_name: @company.name,
+              cta_text: @call_to_action)
+        = render( \
+            'adwords_ads/websites_desktop_pane',
+            image_url: @image_url,
+            logo_url: @logo_url,
+            short_headline: @short_headline,
+            long_headline: @long_headline,
+            square_image_url: @square_image_url,
+            ads_params: @ads_params,
+            company_name: @company,
+            cta_text: @call_to_action)
+      
+    #youtube.tab-pane.fade role="tabpanel"
+      .tab-content
+        #youtube-mobile.tab-pane.fade.active.in
+          = render( \
+            'adwords_ads/mobile', 
+            mobile_id: 'mobile--youtube',
+            image_url: @image_url,
+            short_headline: @short_headline,
+            long_headline: @long_headline,
+            company_name: @company.name,
+            cta_text: @call_to_action)
+        = render( \
+            'adwords_ads/youtube_desktop_pane',
+            image_url: @image_url,
+            logo_url: @logo_url,
+            short_headline: @short_headline,
+            long_headline: @long_headline)
+
+    #gmail.tab-pane.fade role="tabpanel"
+      .tab-content
+        #gmail-mobile.tab-pane.fade.active.in
+          h4 Gmail mobile
+
+          ul.list-unstyled.list-inline
+            li
+              /= render('adwords_ads/mobile')
+            li
+              /= render('adwords_ads/mobile')
+        #gmail-desktop.tab-pane.fade
+          h4 Gmail desktop
