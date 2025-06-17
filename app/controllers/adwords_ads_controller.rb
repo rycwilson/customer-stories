@@ -37,7 +37,6 @@ class AdwordsAdsController < ApplicationController
       helpers.asset_url(RESPONSIVE_AD_SQUARE_LOGO_PLACEHOLDER)
     )
     set_ad_parameters(@long_headline)
-    render(layout: false)
   end
 
   def edit 

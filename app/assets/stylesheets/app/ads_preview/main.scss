@@ -1,70 +1,162 @@
+@import 'base/variables';
+@import 'bootstrap-sass/assets/stylesheets/bootstrap';
 
-@import 'font-awesome';
-@import 'image_ads';
-@import 'text_ads';
-@import 'native_ads';
-@import 'mobile';
-@import 'youtube_ads';
+$fa-font-path: '/assets';
+@import 'font-awesome/scss/font-awesome';
+@import 'base/mixins';
+@import 'base/globals';
+@import 'vendor/bootstrap';
+
+@import './image_ads';
+@import './text_ads';
+@import './native_ads';
+@import './mobile';
+@import './youtube_ads';
 // @import 'fancy_ads';
 // @import 'gmail_ads';
 
 body {
+  padding-top: 5rem;
+  background-color: $light-gray;
   font-family: 'Roboto', arial , sans-serif;
   font-size: 13px;
-  .format {
+  // .format {
     // font-family: 'Open Sans', sans-serif;
-  }
+  // }
   overflow-y: scroll;
 }
 
-header, ul.nav-tabs {
-  background: #fff;
+nav {
+  border-top: 2px solid transparent;  // leave some space for turbo progress bar
+  border-bottom: 1px solid #dfdfdf;
+  background-color: #fff;
   font-family: 'Lato', arial , sans-serif;
-}
 
-header {
-  height: 65px;
-  display: flex;
-  align-items: center;
-  margin: 0 30px;
-}
+  .container {
+    display: flex;
+    justify-content: space-between;
+    padding-top: 1px;
+    height: 5rem;
 
-.nav-tabs {
-  // height: 50px;
-  // display: flex;
-  // align-items: center;
-  // display: inline-block;
-  li {
-    a {
-      font-size: 16px;
-      border-color: transparent;
-      color: #666;
-      &:hover, &:active {
-        color: #0095ff;
-        background-color: transparent;
+    &::before,
+    &::after {
+      content: none;
+    }
+  }
+
+  .nav-tabs {
+    display: flex;
+    align-items: stretch;
+    border: 0;
+
+    // this removes space from left and right edge
+    &::before,
+    &::after {
+      content: none;
+    }
+
+    > li {
+      float: none;
+
+      // for Story tab
+      display: flex;
+      align-items: center;
+
+      > a {
+        display: flex;
+        align-items: center;
+        padding: 0 0.75em;
+        height: 100%;
+        font-size: 1.25em;
+        
+        &, 
+        &:hover, 
+        &:focus {
+          border: 0;
+          border-bottom: 2px solid transparent;
+        }
+
+        &.dropdown-toggle {
+          > :first-child {
+            margin-right: 0.35em;
+          }
+        }
+      }
+
+      &:not(.active) {
+        > a {
+          color: #555;
+          font-weight: 400;
+        }
+        
+        > a:hover, 
+        > a:focus,
+        &.open:not(.active) > a {
+          color: #eee;
+        }
+      }
+
+      &.active {
+        > a, 
+        > a:hover, 
+        > a:focus {
+          border-bottom-color: $nav-blue;
+          font-weight: bold;
+          color: $nav-blue; 
+        }
       }
     }
   }
-  border-bottom-color: transparent;
-  &.device a {
-    font-size: 22px;
-    line-height: 16px;
-  }
-}
-.nav-tabs > li.active > a,
-.nav-tabs > li.active > a:focus,
-.nav-tabs > li.active > a:hover {
-  color: #0095ff;
-  border-color: transparent;
-  border-bottom-color: #0095ff;
-}
-.nav-tabs > li:not(.active) > a:hover {
-  border-color: transparent;
-  color: #222;
 }
 
+// ul.nav-tabs {
+//   // background: #fff;
+//   font-family: 'Lato', arial , sans-serif;
+// }
+
+// header {
+//   height: 80px;
+//   display: flex;
+//   align-items: center;
+//   margin: 0 30px;
+// }
+
+// .nav-tabs {
+//   // height: 50px;
+//   // display: flex;
+//   // align-items: center;
+//   // display: inline-block;
+//   li {
+//     a {
+//       font-size: 16px;
+//       border-color: transparent;
+//       color: #666;
+//       &:hover, &:active {
+//         color: #0095ff;
+//         background-color: transparent;
+//       }
+//     }
+//   }
+//   border-bottom-color: transparent;
+//   &.device a {
+//     font-size: 22px;
+//     line-height: 16px;
+//   }
+// }
+// .nav-tabs > li.active > a,
+// .nav-tabs > li.active > a:focus,
+// .nav-tabs > li.active > a:hover {
+//   color: #0095ff;
+//   border-color: transparent;
+//   border-bottom-color: #0095ff;
+// }
+// .nav-tabs > li:not(.active) > a:hover {
+//   border-color: transparent;
+//   color: #222;
+// }
+
 .container-fluid {
-  background: #f9f9f9;
+  // background: #f9f9f9;
   border-top: 1px solid #ddd;
   > .tab-content {
     padding: 0 60px 30px 60px;

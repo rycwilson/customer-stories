@@ -6,30 +6,32 @@ html lang="en-US"
     title Promoted Story Preview
 
     link rel="preconnect" href="https://fonts.googleapis.com"
-    link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="
+    link rel="preconnect" href="https://fonts.gstatic.com" crossorigin=""
     link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,600"
     link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lato:300,400,700"
     link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,500"
 
-    link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" {
-      integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" 
+    /link {
+      rel="stylesheet" 
+      href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"
+      integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u"
       crossorigin="anonymous" }
   
-    link rel="stylesheet" href="app/ads_preview/main"
+    = stylesheet_link_tag('app/ads_preview/main')
     
     script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"
-    script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" {
+    script {
+      src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"
       integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" 
       crossorigin="anonymous" }
     script src="https://unpkg.com/imagesloaded@4.1/imagesloaded.pkgd.min.js"
     script src="https://unpkg.com/masonry-layout@4/dist/masonry.pkgd.min.js"
     script src="https://cdn.jsdelivr.net/npm/jquery-textfill@0.6.0/source/jquery.textfill.min.js"
-    script src="app/ads_preview/bundle"
-
+    = javascript_include_tag('app/ads_preview/bundle')
     = favicon_link_tag('favicon.ico')
 
   body 
-    header 
+    /header 
       h4 Promoted Story Preview
 
     /div
@@ -47,8 +49,8 @@ html lang="en-US"
           strong = "Text: "
           | Displays even when ad-blocking is enabled
 
-    .container
-      div style="display:flex; justify-content:space-between"
+    nav.navbar-fixed-top
+      .container
 
         ul.nav.nav-tabs.domain role="tablist"
           li.active role="presentation"
