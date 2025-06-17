@@ -28,13 +28,13 @@
         /.item.active
           = render('adwords_ads/previews/fancy1', is_mobile: true)
         .item.active
-          = render('adwords_ads/previews/image1_300x250', is_mobile: true, image_url:, logo_url:)
+          = render('adwords_ads/previews/image1_300x250', is_mobile: true, image_url:, logo_url:, short_headline:, long_headline:)
         .item
           = render( \
               'adwords_ads/previews/native2_300x250', 
               is_mobile: true, image_url:, logo_url:, short_headline:, long_headline:, company_name:, cta_text:)
         .item
-          = render('adwords_ads/previews/text1_300x250', is_mobile: true, short_headline:, :long_headline:, company_name:, cta_text:)
+          = render('adwords_ads/previews/text1_300x250', is_mobile: true, short_headline:, long_headline:, company_name:, cta_text:)
 
       - elsif mobile_id == 'mobile--youtube'
         .item.active

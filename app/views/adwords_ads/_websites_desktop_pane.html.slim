@@ -32,9 +32,9 @@
         polyline fill="none" points="42,32 60,50 42,68" stroke-width="6" stroke-linecap="round" stroke-linejoin="round" stroke="rgba(0,0,0,1)"
     .spacer
 
-  = render('adwords_ads/previews/image1_300x250', is_mobile: false)
+  = render('adwords_ads/previews/image1_300x250', is_mobile: false, image_url:, logo_url:, short_headline:, long_headline:)
 
-  = render('adwords_ads/previews/text1_300x250', is_mobile: false)
+  = render('adwords_ads/previews/text1_300x250', is_mobile: false, short_headline:, long_headline:, company_name:, cta_text:)
 
   .ad.native-ad.native-1
     = render('adwords_ads/ads_by_google')
@@ -71,4 +71,6 @@
           a href="javascript:;" 
             = cta_text
 
-  = render('adwords_ads/previews/native2_300x250', is_mobile: false)
+  = render( \
+      'adwords_ads/previews/native2_300x250', 
+      is_mobile: false, image_url:, logo_url:, short_headline:, long_headline:, company_name:, cta_text:)

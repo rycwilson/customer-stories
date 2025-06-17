@@ -23,6 +23,7 @@
               'adwords_ads/mobile', 
               mobile_id: 'mobile--websites',
               image_url: @image_url,
+              logo_url: @logo_url,
               short_headline: @short_headline,
               long_headline: @long_headline,
               company_name: @company.name,
@@ -35,20 +36,21 @@
             long_headline: @long_headline,
             square_image_url: @square_image_url,
             ads_params: @ads_params,
-            company_name: @company,
+            company_name: @company.name,
             cta_text: @call_to_action)
       
     #youtube.tab-pane.fade role="tabpanel"
       .tab-content
         #youtube-mobile.tab-pane.fade.active.in
           = render( \
-            'adwords_ads/mobile', 
-            mobile_id: 'mobile--youtube',
-            image_url: @image_url,
-            short_headline: @short_headline,
-            long_headline: @long_headline,
-            company_name: @company.name,
-            cta_text: @call_to_action)
+              'adwords_ads/mobile', 
+              mobile_id: 'mobile--youtube',
+              image_url: @image_url,
+              logo_url: @logo_url,
+              short_headline: @short_headline,
+              long_headline: @long_headline,
+              company_name: @company.name,
+              cta_text: @call_to_action)
         = render( \
             'adwords_ads/youtube_desktop_pane',
             image_url: @image_url,
@@ -61,10 +63,10 @@
         #gmail-mobile.tab-pane.fade.active.in
           h4 Gmail mobile
 
-          ul.list-unstyled.list-inline
+          /ul.list-unstyled.list-inline
             li
-              /= render('adwords_ads/mobile')
+              = render('adwords_ads/mobile')
             li
-              /= render('adwords_ads/mobile')
+              = render('adwords_ads/mobile')
         #gmail-desktop.tab-pane.fade
           h4 Gmail desktop
