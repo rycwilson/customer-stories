@@ -11,6 +11,7 @@ FLAGS="
   --silence-deprecation=slash-div
   --silence-deprecation=mixed-decls
 "
+# --no-source-map
 
 if [ "$1" = "--custom" ]; then
   shift
