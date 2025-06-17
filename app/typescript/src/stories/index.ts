@@ -1,10 +1,10 @@
 import Cookies from 'js-cookie';
 import imagesLoaded from 'imagesloaded';
-import TomSelect, { tsBaseOptions, addDynamicPlaceholder } from './tomselect';
+import TomSelect, { tsBaseOptions, addDynamicPlaceholder } from '../tomselect';
 import type { TomOption, TomItem } from 'tom-select/dist/types/types';
 import { type CBOptions } from 'tom-select/dist/types/plugins/clear_button/types';
-import { init as initStoryCard } from './stories/story_card';
-import { setCustomButtonProps } from './utils';
+import { init as initStoryCard } from './story_card';
+import { setCustomButtonProps } from '../utils';
 
 export const testExports = { foo }
 

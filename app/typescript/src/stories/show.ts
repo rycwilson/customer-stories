@@ -1,7 +1,7 @@
 import Cookies from 'js-cookie';
 import imagesLoaded from 'imagesloaded';
-import { init as initStoryCard } from './stories/story_card';
-import { setCustomButtonProps } from './utils';
+import { init as initStoryCard } from './story_card';
+import { setCustomButtonProps } from '../utils';
 
 // TODO replace bootstrap modal with native dialog
 import './jquery';
