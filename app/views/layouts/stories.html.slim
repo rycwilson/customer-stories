@@ -21,16 +21,11 @@ html lang="en-US" prefix="og: http://ogp.me/ns# fb: http://ogp.me/ns/fb#"
     = custom_google_fonts(@company)
     
     - if @use_v2 
-      = stylesheet_link_tag('stories2')
+      = stylesheet_link_tag('stories/main2')
     - else
       = stylesheet_link_tag( \
-          custom_stylesheet?(@company, 'stories') ? "custom/#{@company.subdomain}/stories" : 'stories')
-    
-    - if action_name == 'index' 
-      = javascript_include_tag('stories' + "#{@use_v2 ? '2' : ''}", defer: true)
-    - elsif action_name == 'show'
-      = javascript_include_tag('story', defer: true)
-
+          custom_stylesheet?(@company, 'stories') ? "custom/#{@company.subdomain}/stories" : 'stories/main')
+    = javascript_include_tag("stories/#{action_name}" + "#{action_name == 'index' && @use_v2 ? '2' : ''}", defer: true)
     = favicon_link_tag('favicon.ico')
 
   body class="#{@company.subdomain} stories #{action_name}" style=('visibility:hidden' if @is_social_share_redirect)

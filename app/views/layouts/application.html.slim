@@ -22,8 +22,8 @@ html lang="en-US" prefix="og: http://ogp.me/ns# fb: http://ogp.me/ns/fb#"
     link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lato:300,400,700"
     /link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Slabo+27px:400&amp;lang=en" 
     = custom_google_fonts(@company) if @company.present?
-    = stylesheet_link_tag('app', 'data-turbo-track' => 'reload')
-    = javascript_include_tag('app', 'data-turbo-track' => 'reload', defer: true)
+    = stylesheet_link_tag('app/main', 'data-turbo-track' => 'reload')
+    = javascript_include_tag('app/bundle', 'data-turbo-track' => 'reload', defer: true)
     = favicon_link_tag('favicon.ico')
 
   body {
