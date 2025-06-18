@@ -16,7 +16,7 @@ class StoriesController < ApplicationController
   before_action :set_s3_direct_post, only: :edit
 
   def index
-    @use_v2 = params[:v2].present?
+    @v2 = params[:v2].present?
     @is_dashboard = turbo_frame_request? || params[:promoted].present?
     unless params[:promoted].present?
       @filters = set_filters(params) 
@@ -42,7 +42,7 @@ class StoriesController < ApplicationController
         @filtered_story_ids = @featured_stories.filtered(@tags, @filters_match_type).pluck(:id)
       end
     end
-    render(@use_v2 ? 'index2' : 'index', layout: @is_dashboard ? false : 'stories')
+    render(@v2 ? 'index2' : 'index', layout: @is_dashboard ? false : 'stories')
   end
 
   # GET new_success_story / new_company_story
