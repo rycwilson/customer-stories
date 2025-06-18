@@ -4,7 +4,7 @@ import { init as initStoryCard } from './story_card';
 import { setCustomButtonProps } from '../utils';
 
 // TODO replace bootstrap modal with native dialog
-import './jquery';
+import '../jquery';
 import 'bootstrap-sass/assets/javascripts/bootstrap/modal';
 
 const searchParams = new URLSearchParams(location.search);
