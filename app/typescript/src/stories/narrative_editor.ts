@@ -1,8 +1,8 @@
 import type SummernoteController from '../controllers/summernote_controller';
-import { onInit as baseInit } from '../summernote';
+import { baseConfig, onInit as baseInit } from '../summernote';
 
 export function summernoteConfig(ctrl: SummernoteController, height: number): Summernote.Options {
-  return {
+  const config: Summernote.Options = {
     minHeight: 500,
     toolbar: [
       ['style', ['style']],
@@ -67,4 +67,5 @@ export function summernoteConfig(ctrl: SummernoteController, height: number): Su
       }
     }
   }
+  return { ...baseConfig, ...config };
 }

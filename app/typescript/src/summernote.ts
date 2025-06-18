@@ -50,12 +50,21 @@ export type SummernoteKind = 'winStory' | 'story' | 'invitationTemplate' | 'cont
 
 export type CustomSummernoteOptions = Summernote.Options & CustomOptions;
 
+export const baseConfig = {
+  dialogsInBody: true,
+  dialogsFade: true,
+  placeholder: 'Nothing here yet...',
+  // inheritPlaceholder: true (for textarea)
+}
+
 export function onInit(ctrl: SummernoteController, customInit?: VoidFunction) {
   return (components: SummernoteComponents) => {
+    console.log(components)
     for (const [key, component] of Object.entries(components)) {
       ctrl[`$${key}` as keyof $SummernoteComponents] = component;
     }
     ctrl.$editable.on('click', (e) => $(ctrl.$note).summernote('saveRange'));
+    
     ctrl.dispatch('init', { detail: components });
     if (customInit) customInit(); 
   }

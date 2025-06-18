@@ -52,7 +52,8 @@ export default class SummernoteController extends Controller<HTMLDivElement> {
   init() {
     this.config = config[this.configKeyValue];
     if (this.config) {
-      // use contenteditable instead of textarea because html can't be rendered in textarea
+      // Use contenteditable instead of textarea because html can't be rendered in textarea
+      // TODO implications for the editor's content, e.g. saving, validation, etc.
       this.element.contentEditable = 'true';
       $(this.element).summernote(this.config(this, ...this.configArgsValue));
     }  

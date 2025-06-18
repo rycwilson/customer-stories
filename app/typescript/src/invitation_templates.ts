@@ -1,5 +1,5 @@
 import type SummernoteController from './controllers/summernote_controller';
-import { type CustomSummernoteOptions, onInit as baseInit } from './summernote';
+import { type CustomSummernoteOptions, baseConfig, onInit as baseInit } from './summernote';
 
 export function summernoteConfig (
   ctrl: SummernoteController, 
@@ -7,7 +7,7 @@ export function summernoteConfig (
   curatorPhotoUrl: string,
   curatorPhotoPlaceholderUrl: string
 ): CustomSummernoteOptions {
-  return {
+  const config: CustomSummernoteOptions = {
     height,
     toolbar: [
       // ['style', ['style']],
@@ -30,6 +30,7 @@ export function summernoteConfig (
       })
     }
   }
+  return { ...baseConfig, ...config };
 }
 
 function placeholdersDropdown(

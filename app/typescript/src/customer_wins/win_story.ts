@@ -1,6 +1,6 @@
 import { distinctObjects } from '../utils';
 import type SummernoteController from '../controllers/summernote_controller';
-import { type CustomSummernoteOptions, onInit as baseInit } from '../summernote';
+import { type CustomSummernoteOptions, baseConfig, onInit as baseInit } from '../summernote';
 
 // use a skeleton version of the child row template as a placeholder while loading
 // see views/successes/win_story_form
@@ -49,9 +49,8 @@ export function childRowPlaceholderTemplate(curatorName?: string) {
 export function summernoteConfig(
   ctrl: SummernoteController, height: number, contributions: Contribution[], answers: ContributorAnswer[]
 ): CustomSummernoteOptions {
-  return {
+  const config: CustomSummernoteOptions = {
     height,
-    // dialogsInBody: true,
     focus: true,
     toolbar: [
       ['font', ['bold', 'italic', 'underline']], //, 'clear']],
@@ -87,6 +86,7 @@ export function summernoteConfig(
       onChange: function (contents: string) {}
     }
   }
+  return { ...baseConfig, ...config };
 }
 
 export function populatePlaceholders(html: string, contributions: Contribution[], answers: ContributorAnswer[]) {
