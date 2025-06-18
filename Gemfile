@@ -30,7 +30,6 @@ gem 'faker', '~> 3.2'
 # Assets
 gem 'jsbundling-rails', '~> 1.1'
 gem 'cssbundling-rails', '~> 1.4'
-gem 'font-awesome-rails', '~> 4.7'
 
 # Authentication
 gem 'devise', '~> 4.9'
