@@ -283,7 +283,7 @@ class Story < ApplicationRecord
 
   # Returns a friendly id url that may or may not include a product segment
   def csp_story_url
-    Rails.application.routes.url_helpers.published_story_url(path_segments)
+    Rails.application.routes.url_helpers.published_story_url(path_segments.merge(subdomain: company.subdomain))
   end
 
   def path_segments
