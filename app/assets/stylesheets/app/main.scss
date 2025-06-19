@@ -3,9 +3,8 @@
 @import 'base/variables';
 @import 'bootstrap-sass/assets/stylesheets/bootstrap';
 
-// The font-awesome-rails gem is responsible for placing the font files in public/assets.
-// Set the font path here so that compiled stylesheets can find the font files.
-$fa-font-path: '/assets';
+// $fa-font-path: '/assets';
+$fa-font-path: 'font-awesome/fonts'; 
 @import 'font-awesome/scss/font-awesome';
 
 @import 'base/mixins';
