@@ -14,6 +14,7 @@ Rails.application.routes.draw do
   
   # TODO Do this for each subdomain
   get '/sitemap', to: 'site#sitemap'
+  get '/:google', to: 'site#google_verify', constraints: { google: /google\w+/ }
   
   # mount RailsAdmin::Engine => '/admin', as: 'rails_admin'
   
@@ -161,40 +162,19 @@ Rails.application.routes.draw do
     #   get '/:devise/:method', to: 'users/sessions#new', constraints: { devise: 'users', method: 'sign_in' }
     # end
 
-    # public story route moved down here so it doesn't hijack any other routes via dynamic segments.
-    # don't call this route 'story' or it will leave the PUT and DELETE routes (above)
-    # without an alias
-    constraints(StoryPathConstraint) do
-      get(
-        '/:customer/:product/:title',
-        to: 'stories#track',
-        constraints: -> (request) { request.query_parameters[:track].present? }
-      )
-      get(
-        '/:customer/:title',
-        to: 'stories#track',
-          constraints: -> (request) { request.query_parameters[:track].present? }
-      )
-      get '/:customer/:product/:title', to: 'stories#show', as: 'public_story'
-      get '/:customer/:title', to: 'stories#show', as: 'public_story_no_product'
-          
-      # hidden stories
-      get(
-        '/:random_string', 
-        to: 'stories#show',
-        constraints: -> (request) { Story.exists?(hidden_link: request.url) }, 
-        hidden_link: true
-      )
+    constraints(PublishedStoryPathConstraint) do
+      # get(
+      #   '/:customer/:title',
+      #   to: 'stories#track',
+      #   constraints: -> (request) { request.query_parameters[:track].present? }
+      # )
+      get '/:customer/(:product)/:title', to: 'stories#show', as: 'published_story'
+      get '/:random_string', to: 'stories#show', hidden_link: true
     end
-
-    get '/:google', to: 'site#google_verify', constraints: { google: /google\w+/ }
   end
 
-  # this route is for the case of a Contributor being logged in (no subdomain)
   put '/contributions/:token', to: 'contributions#update', constraints: { subdomain: '' }
-
-  get '/:google', to: 'site#google_verify', constraints: { google: /google\w+/ }
   
-  # not found (parends ensure root path matches)
+  # Not found (parends ensure root path matches)
   get '(*all)', to: 'site#not_found'
 end

@@ -41,7 +41,7 @@ class Story < ApplicationRecord
       self.each { |ad| ad.adwords_image = adwords_image }
     end
   end
-  alias_attribute :ads, :adwords_ads
+  alias_method :ads, :adwords_ads
   has_one(
     :topic_ad,
     -> (ad) { where(adwords_ad_group_id: ad.company.topic_campaign.ad_group.id) },
@@ -276,76 +276,32 @@ class Story < ApplicationRecord
     # self.narrative = white_list_sanitizer.sanitize(content, tags: %w(a p span div strong i u em section blockquote cite br pre font h1 h2 h3 h4 h5 h6 table tr td ol ul li hr img), attributes: %w(id class style face href src))
   end
 
-  def assign_tags new_story
-    if new_story[:category_tags]
-      new_story[:category_tags].each do |selection|
-        if selection.to_i == 0   # if it's a generic tag
-          # create a new company category category based on the generic tag
-          self.success.story_categories << StoryCategory.create(
-              name: selection, company_id: current_user.company.id)
-        else  # selection is the id of an existing company story category
-          self.success.story_categories << StoryCategory.find(selection)
-        end
-      end
-    end
-    if new_story[:product_tags]
-      new_story[:product_tags].each do |selection|
-        self.success.products << Product.find(selection)
-      end
-    end
-  end
-
-  def featured_cotributor_id
-    # TODO story has one featured contributor from whose contribution the quote is taken
-    nil
-  end
-
-  # method returns a friendly id path that either contains or omits a product
+  # Returns a friendly id path that may or may not include a product segment
   def csp_story_path
-    if self.product_tags.present?
-      Rails.application.routes.url_helpers.public_story_path(
-        self.customer.slug,
-        self.product_tags.take.slug,
-        self.slug,
-        subdomain: company.subdomain
-      )
-    else
-      Rails.application.routes.url_helpers.public_story_no_product_path(
-        self.customer.slug,
-        self.slug,
-        subdomain: company.subdomain
-      )
-    end
+    Rails.application.routes.url_helpers.published_story_path(path_segments)
   end
 
-  # method returns a friendly id url that either contains or omits a product
+  # Returns a friendly id url that may or may not include a product segment
   def csp_story_url
-    if self.product_tags.present?
-      Rails.application.routes.url_helpers.public_story_url(
-        self.customer.slug,
-        self.product_tags.take.slug,
-        self.slug,
-        subdomain: company.subdomain
-      )
-    else
-      Rails.application.routes.url_helpers.public_story_no_product_url(
-        self.customer.slug,
-        self.slug,
-        subdomain: company.subdomain
-      )
-    end
+    Rails.application.routes.url_helpers.published_story_url(path_segments)
   end
 
-  def csp_story_link(is_curator, is_plugin, is_external, plugin_type)
+  def path_segments
+    segments = { customer: customer.slug, title: slug }
+    segments.merge(product: product_tags.take.slug) if product_tags.present?
+    segments
+  end
+
+  def csp_story_link is_curator, is_plugin, is_external, plugin_type
     if is_curator
-      Rails.application.routes.url_helpers.edit_story_path(self.id)
-    elsif self.published?
-      is_external ? self.csp_story_url : self.csp_story_path
-    elsif self.preview_published?
+      Rails.application.routes.url_helpers.edit_story_path(id)
+    elsif published?
+      is_external ? csp_story_url : csp_story_path
+    elsif preview_published?
       if is_plugin && (plugin_type == 'gallery' || plugin_type == 'carousel')
-        self.csp_story_url
+        csp_story_url
       elsif is_plugin && plugin_type == 'tabbed_carousel'
-        is_external ? Rails.application.routes.url_helpers.root_url(subdomain: self.company.subdomain) + "?preview=#{self.slug}" : "/?preview=#{self.slug}"
+        is_external ? Rails.application.routes.url_helpers.root_url(subdomain: self.company.subdomain) + "?preview=#{slug}" : "/?preview=#{slug}"
       else
         'javascript:;'
       end
