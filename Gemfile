@@ -3,12 +3,12 @@ source 'https://rubygems.org'
 
 # Server and frameworks
 gem 'puma', '~> 6.6'
-gem 'rails', '7.0.1'
+gem 'rails', '7.2.2.1'
 
 # These are necessary for rails 6 to work with ruby 3.4, can be removed once upgraded to rails 7
-gem 'bigdecimal' 
-gem 'mutex_m' 
-gem 'reline'
+# gem 'bigdecimal' 
+# gem 'mutex_m' 
+# gem 'reline'
 # gem 'irb'
 
 gem 'bootsnap', '~> 1.18', require: false
@@ -55,21 +55,8 @@ gem 'friendly_id', '~> 5.4'
 # gem 'googlecharts'
 gem 'html_to_plain_text', '~> 1.0'
 gem 'order_as_specified', '~> 1.0'
-gem 'pry-rails', '~> 0.3' 
-# gem 'pry-remote', '~> 0.1'
-# gem 'pry-theme'
 gem 'reverse_markdown', '~> 2.0'
 # gem 'typhoeus'
-
-# Patches / Fixes 
-# https://stackoverflow.com/questions/70500220
-gem 'net-smtp', require: false    
-gem 'net-imap', require: false
-gem 'net-pop', require: false
-
-# (devise dependency) https://stackoverflow.com/questions/79360526/uninitialized-constant-activesupportloggerthreadsafelevellogger-nameerror
-# => can remove after upgrade to 7.1
-gem 'concurrent-ruby', '1.3.4' 
 
 # No longer used
 # gem 'browser-timezone-rails'
@@ -83,6 +70,9 @@ group :development, :test do
   gem 'capybara', '~> 3.37' 
   gem 'selenium-webdriver', '~> 4.1'
   gem 'pry-byebug', '~> 3.9'
+  gem 'pry-rails', '~> 0.3'
+  gem 'pry-remote'
+  # gem 'pry-theme'
 end
 
 # all gems provided by default in rails 6
