@@ -11,7 +11,7 @@
     "build:landing-css": "./sass-build.sh app/assets/stylesheets/landing/main.scss:app/assets/builds/landing/main.css",
     "build:app-js": "esbuild app/typescript/emit/app.js --outfile=app/assets/builds/app/bundle.js --minify --bundle --sourcemap",
     "build:app-ads-js": "esbuild app/typescript/emit/adwords_ads/preview.js --outfile=app/assets/builds/app/ads_preview/bundle.js --minify --bundle --sourcemap",
-    "build:app-css": "./sass-build.sh app/assets/stylesheets/app/main.scss:app/assets/builds/app/main.css app/assets/stylesheets/app/ads_preview/main.scss:app/assets/builds/app/ads_preview/main.css",
+    "build:app-css": "./sass-build.sh app/assets/stylesheets/app/main.scss:app/assets/builds/app/main.css app/assets/stylesheets/app/ads_preview/main.scss:app/assets/builds/app/ads_preview/main.css app/assets/stylesheets/app/errors.scss:app/assets/builds/app/errors.css",
     "build:stories-js": "esbuild app/typescript/emit/stories/index.js app/typescript/emit/stories/index2.js app/typescript/emit/stories/show.js --outdir=app/assets/builds/stories --minify --bundle --sourcemap",
     "build:stories-css": "./sass-build.sh app/assets/stylesheets/views/stories/index.scss:app/assets/builds/stories/main.css app/assets/stylesheets/views/stories/index2.scss:app/assets/builds/stories/main2.css",
     "build:plugins-css": "./sass-build.sh app/assets/stylesheets/views/plugins/index.scss:app/assets/builds/plugins/main.css",
