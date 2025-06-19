@@ -7,7 +7,7 @@ section.story-ctas
         li
           .cta
             = image_tag('icons/bs_chevron_right.svg', alt: 'chevron-right')
-            - if cta.type == 'CTALink'
+            - if cta.type == 'CtaLink'
               a.cta-link href="#{cta.link_url}"
                 = cta.display_text
             - else

@@ -419,9 +419,9 @@ namespace :temp do
     # OutboundAction -> CallToAction
     OutboundAction.all.each do |action|
       if action.type == 'OutboundLink'
-        type = 'CTALink'
+        type = 'CtaLink'
       elsif action.type == 'OutboundForm'
-        type = 'CTAForm'
+        type = 'CtaForm'
       else
         puts "No type: #{action}"
       end
@@ -433,8 +433,8 @@ namespace :temp do
     OutboundActionsStory.all.each do |entry|
       success_id = Story.find(entry.story_id).success.id
       action = OutboundAction.find(entry.outbound_action_id)
-      type = 'CTALink' if action.type == 'OutboundLink'
-      type = 'CTAForm' if action.type == 'OutboundForm'
+      type = 'CtaLink' if action.type == 'OutboundLink'
+      type = 'CtaForm' if action.type == 'OutboundForm'
       if action.description.present?
         description = action.description
       else
@@ -452,7 +452,7 @@ namespace :temp do
     CtaButton.all.each do |button|
       CallToAction.create({
         company_primary: true,
-        type: 'CTALink',
+        type: 'CtaLink',
         company_id: button.company_id,
         description: button.btn_text,
         link_url: button.url,

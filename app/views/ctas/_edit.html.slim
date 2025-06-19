@@ -26,11 +26,11 @@
         data: { action: 'cta#updateCustomButtonText' })
 
   .form-group 
-    - if cta.type == 'CTALink'
+    - if cta.type == 'CtaLink'
       = label_tag("cta_#{cta.id}[link_url]", 'Website URL')
       = text_field_tag("cta_#{cta.id}[link_url]", cta.link_url, placeholder: 'Website URL', class: 'form-control')
 
-    - elsif cta.type == 'CTAForm'
+    - elsif cta.type == 'CtaForm'
       = label_tag("cta_#{cta.id}[form_html]", 'HTML')
         = text_area_tag( \
             "cta_#{cta.id}[form_html]",

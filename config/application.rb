@@ -13,10 +13,9 @@ module Csp
     # -- all .rb files in that directory are automatically loaded after loading
     # the framework and any gems in your application.
 
-    # config.load_defaults 5.2
+    config.load_defaults 6.1
 
-    # In light of disabling the 5.2 defaults (above), 
-    # following are settings that override 6.1.7 defaults in order to preserve current app behavior
+    # Following are settings that override 6.1 defaults in order to preserve current app behavior
     config.action_view.form_with_generates_ids = true
 
     config.middleware.use Rack::Deflater
@@ -36,8 +35,7 @@ module Csp
     # Precompile Bootstrap fonts
     # config.assets.precompile << %r(bootstrap-sass/assets/fonts/bootstrap/[\w-]+\.(?:eot|svg|ttf|woff2?)$)
 
-    # load custom classes
-    # this is from rails4, but autoload behavior changed in rails5: config.autoload_paths += Dir["#{config.root}/lib/**/"]
+    # Route constraints such as DeviseSubdomain and CompanySubdomain require this:
     config.eager_load_paths << Rails.root.join('lib')
 
     # config.active_job.queue_adapter = :delayed_job

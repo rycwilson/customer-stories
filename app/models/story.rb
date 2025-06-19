@@ -21,7 +21,7 @@ class Story < ApplicationRecord
   has_many :ctas, through: :success, source: :ctas do
     # for rendering modals
     def forms
-      self.where(type: 'CTAForm')
+      self.where(type: 'CtaForm')
     end
   end
   has_many :adwords_ads, dependent: :destroy do  # topic and retarget

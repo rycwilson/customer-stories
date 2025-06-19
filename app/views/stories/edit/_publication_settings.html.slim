@@ -1,9 +1,9 @@
+/ format: :json,
 = form_with( \
     model: story,
-    format: :json,
     html: { \
       id: 'story-settings-form',
-      class: 'form-horizontal directUpload', 
+      class: 'form-horizontal', 
       autocomplete: 'off',
       data: { \
         url: @s3_direct_post.url,

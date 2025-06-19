@@ -17,7 +17,7 @@ nav.company-header {
 
       .primary-cta.hidden-xs.hidden
 
-        - if @company.ctas.primary.type == 'CTALink'
+        - if @company.ctas.primary.type == 'CtaLink'
           = link_to( \
               @company.ctas.primary.display_text,
               @company.ctas.primary.link_url,
@@ -27,5 +27,5 @@ nav.company-header {
                 bg_color: @company.primary_cta_background_color,
                 color: @company.primary_cta_text_color })
 
-        - elsif @company.ctas.primary.type == 'CTAForm'
+        - elsif @company.ctas.primary.type == 'CtaForm'
           // open a modeal with the form

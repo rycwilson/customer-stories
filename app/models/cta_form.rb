@@ -1,2 +1,2 @@
-class CTAForm < CallToAction
+class CtaForm < CallToAction
 end

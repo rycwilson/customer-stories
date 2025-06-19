@@ -17,7 +17,7 @@
               href="#edit-cta-#{company.ctas.primary.id}"
               aria-expanded="false" 
               aria-labelledby="primary-cta-label-md-lg" }
-              p = "#{company.ctas.primary.type == 'CTALink' ? '[LINK]' : '[FORM]'} #{company.ctas.primary.description}"
+              p = "#{company.ctas.primary.type == 'CtaLink' ? '[LINK]' : '[FORM]'} #{company.ctas.primary.description}"
               button.btn type="button"
                 i.fa.fa-fw.fa-chevron-down
               button.btn type="button"
@@ -52,7 +52,7 @@
               a.list-group-item data-toggle="collapse" data-list-group-target="item" href="#edit-cta-#{cta.id}" aria-expanded="false"
                 - if company.ctas.secondary.count > 1
                   i.fa.fa-fw.fa-arrows-v
-                p = "#{cta.type == 'CTALink' ? '[LINK]' : '[FORM]'} #{cta.description}"
+                p = "#{cta.type == 'CtaLink' ? '[LINK]' : '[FORM]'} #{cta.description}"
                 button.btn type="button"
                   i.fa.fa-fw.fa-chevron-down
                 button.btn type="button"

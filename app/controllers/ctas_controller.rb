@@ -7,7 +7,7 @@ class CtasController < ApplicationController
 
   # return html for cta forms
   def show
-    @form = CTAForm.find(params[:id])
+    @form = CtaForm.find(params[:id])
     render layout: false
   end
 
