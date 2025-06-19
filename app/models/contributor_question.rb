@@ -7,7 +7,7 @@ class ContributorQuestion < ApplicationRecord
   has_many :contributors, through: :contributions
   has_many :win_story_contributors, through: :contributions
   has_many :contributor_answers, dependent: :destroy
-  alias_attribute :answers, :contributor_answers
+  alias_method :answers, :contributor_answers
 
   default_scope { order(created_at: :asc) }
 end

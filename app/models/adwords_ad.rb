@@ -2,14 +2,14 @@
 class AdwordsAd < ApplicationRecord
   belongs_to :story
   belongs_to :adwords_ad_group
-  alias_attribute :ad_group, :adwords_ad_group
+  alias_method :ad_group, :adwords_ad_group
   has_one :adwords_campaign, through: :adwords_ad_group
-  alias_attribute :campaign, :adwords_campaign
+  alias_method :campaign, :adwords_campaign
   has_one :company, through: :adwords_campaign
   has_one :curator, through: :story
   has_one :customer, through: :story
   has_and_belongs_to_many :adwords_images
-  alias_attribute :images, :adwords_images
+  alias_method :images, :adwords_images
 
   validates_presence_of :story
   validates_presence_of :ad_group

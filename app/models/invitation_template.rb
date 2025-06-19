@@ -2,7 +2,7 @@ class InvitationTemplate < ApplicationRecord
   belongs_to :company
   has_many :contributions
   has_and_belongs_to_many :contributor_questions, dependent: :destroy, join_table: :templates_questions
-  alias_attribute :questions, :contributor_questions
+  alias_method :questions, :contributor_questions
 
   default_scope { order(name: :asc) }
 

@@ -4,7 +4,7 @@ class AdwordsImage < ApplicationRecord
 
   belongs_to :company
   has_and_belongs_to_many :adwords_ads
-  alias_attribute :ads, :adwords_ads
+  alias_method :ads, :adwords_ads
   has_many :stories, through: :adwords_ads
 
   default_scope { order(updated_at: :desc) }

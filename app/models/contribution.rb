@@ -39,15 +39,15 @@ class Contribution < ApplicationRecord
   has_one :story, through: :success
   belongs_to :invitation_template, optional: true
   has_one :contributor_invitation, dependent: :destroy
-  alias_attribute :invitation, :contributor_invitation
+  alias_method :invitation, :contributor_invitation
   has_many :contributor_questions, through: :invitation_template
-  alias_attribute :questions, :contributor_questions
+  alias_method :questions, :contributor_questions
   has_many :contributor_answers, dependent: :destroy do
     def to_question (question_id)
       where(contributor_question_id: question_id)
     end
   end
-  alias_attribute :answers, :contributor_answers
+  alias_method :answers, :contributor_answers
 
   accepts_nested_attributes_for(:success, allow_destroy: false)
   accepts_nested_attributes_for(:referrer, allow_destroy: false, reject_if: :missing_referrer_attributes?)

@@ -168,7 +168,7 @@ class Company < ApplicationRecord
       ]
     end
   end
-  alias_attribute :questions, :contributor_questions
+  alias_method :questions, :contributor_questions
   has_many :invitation_templates, dependent: :destroy do
     def customer
       where(name: 'Customer').take
@@ -208,7 +208,7 @@ class Company < ApplicationRecord
       ]
     end
   end
-  alias_attribute :templates, :invitation_templates
+  alias_method :templates, :invitation_templates
   has_many :outbound_actions, dependent: :destroy
   has_many(:ctas, class_name: 'CallToAction', dependent: :destroy) do
     def primary
@@ -218,12 +218,12 @@ class Company < ApplicationRecord
   accepts_nested_attributes_for :ctas
   has_one :plugin, dependent: :destroy
   has_many :adwords_campaigns, dependent: :destroy
-  alias_attribute :campaigns, :adwords_campaigns
+  alias_method :campaigns, :adwords_campaigns
   has_one :topic_campaign, dependent: :destroy
   has_one :retarget_campaign, dependent: :destroy
 
   has_many :adwords_ad_groups, through: :adwords_campaigns
-  alias_attribute :ad_groups, :adwords_ad_groups
+  alias_method :ad_groups, :adwords_ad_groups
   has_one :topic_ad_group, through: :topic_campaign, source: :adwords_ad_group
   has_one :retarget_ad_group, through: :retarget_campaign, source: :adwords_ad_group
 
@@ -232,10 +232,10 @@ class Company < ApplicationRecord
       where.not(ad_id: [nil])  # don't include emptry string or it won't work! (because type is number?)
     end
   end
-  alias_attribute :ads, :adwords_ads
+  alias_method :ads, :adwords_ads
 
   has_many :adwords_images, dependent: :destroy
-  alias_attribute :ad_images, :adwords_images
+  alias_method :ad_images, :adwords_images
   accepts_nested_attributes_for :adwords_images, allow_destroy: true
 
   after_update_commit do 

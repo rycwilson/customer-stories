@@ -5,5 +5,5 @@ class ContributorAnswer < ApplicationRecord
   has_one :success, through: :contribution
   has_one :contributor, through: :contribution
   has_one :invitation_template, through: :contribution
-  alias_attribute :question, :contributor_question
+  alias_method :question, :contributor_question
 end

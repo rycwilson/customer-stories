@@ -22,7 +22,7 @@ class Success < ApplicationRecord
   has_and_belongs_to_many :products
 
   has_and_belongs_to_many :story_categories
-  alias_attribute :categories, :story_categories
+  alias_method :categories, :story_categories
 
   has_many :contributions, inverse_of: :success, dependent: :destroy do
     def invitation_sent
@@ -60,9 +60,9 @@ class Success < ApplicationRecord
     -> { select('invitation_templates.name, templates_questions.created_at, contributor_questions.created_at').distinct }, 
     through: :invitation_templates
   )
-  alias_attribute :questions, :contributor_questions
+  alias_method :questions, :contributor_questions
   has_many :contributor_answers, through: :contributions
-  alias_attribute :answers, :contributor_answers
+  alias_method :answers, :contributor_answers
   has_many :page_views, class_name: 'PageView'
   has_many :story_shares, class_name: 'StoryShare'
   has_many :visitor_actions

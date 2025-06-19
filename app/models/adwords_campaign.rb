@@ -2,9 +2,9 @@ class AdwordsCampaign < ApplicationRecord
 
   belongs_to :company
   has_one :adwords_ad_group, dependent: :destroy
-  alias_attribute :ad_group, :adwords_ad_group
+  alias_method :ad_group, :adwords_ad_group
   has_many :adwords_ads, through: :adwords_ad_group
-  alias_attribute :ads, :adwords_ads
+  alias_method :ads, :adwords_ads
 
   # https://stackoverflow.com/questions/3808782/
   before_create :build_default_ad_group
