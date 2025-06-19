@@ -113,7 +113,7 @@ Rails.application.configure do
   # config.active_support.deprecation = :notify
   
   # Don't log any deprecations.
-  config.acitve_support.report_deprecations = false
+  config.active_support.report_deprecations = false
 
   # Use default logging formatter so that PID and timestamp are not suppressed.
   config.log_formatter = ::Logger::Formatter.new
