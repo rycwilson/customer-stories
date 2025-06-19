@@ -17,15 +17,11 @@
     "build:plugins-css": "./sass-build.sh app/assets/stylesheets/views/plugins/index.scss:app/assets/builds/plugins/main.css",
     "build:custom-css": "./sass-build.sh --custom",
     
-    "copy:summernote-fonts": "mkdir -p public/assets && cp node_modules/summernote/src/styles/summernote/font/summernote.woff2 node_modules/summernote/src/styles/summernote/font/summernote.woff node_modules/summernote/src/styles/summernote/font/summernote.ttf public/assets/",
-    "copy:fa-fonts": "mkdir -p public/assets && cp node_modules/font-awesome/fonts/* public/assets/",
-    "copy:fonts": "yarn copy:summernote-fonts && yarn copy:fa-fonts",
-
     "_comment_jsbundling_rails": "Running bin/rails assets:precompile will call \"yarn build\"",
     "build": "npx tsc && yarn build:landing-js && yarn build:app-js && yarn build:app-ads-js && yarn build:stories-js",
 
     "_comment_cssbundling_rails": "Running bin/rails assets:precompile will call \"yarn build:css\"",
-    "build:css": "yarn build:landing-css && yarn build:app-css && yarn build:stories-css && yarn build:plugins-css && yarn build:custom-css && yarn copy:fonts",
+    "build:css": "yarn build:landing-css && yarn build:app-css && yarn build:stories-css && yarn build:plugins-css && yarn build:custom-css",
 
     "_comment_develop_in_watch_mode": "Procfile.dev will call these commands",
     "watch:js": "concurrently \"npx tsc --watch\" \"yarn build:landing-js --watch\" \"yarn build:app-js --watch\" \"yarn build:app-ads-js --watch\" \"yarn build:stories-js --watch\"",
