@@ -4,7 +4,7 @@ import type { TomOption, TomItem } from 'tom-select/dist/types/types/core.d.ts';
 import { type CBOptions } from 'tom-select/dist/types/plugins/clear_button/types';
 import { kebabize, capitalize } from "../utils";
 
-export default class extends Controller<TomSelectInput> {
+export default class TomselectController extends Controller<TomSelectInput> {
   static values = { 
     kind: String,
     source: String,
