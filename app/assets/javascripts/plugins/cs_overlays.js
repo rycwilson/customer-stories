@@ -1,6 +1,6 @@
 //= require modernizr/widget_modernizr
 //= require js/classie
-//= require vendor/grid_overlays
+//= require ./grid_overlays
 //= require css-element-queries/src/ResizeSensor
 
 function cspInitOverlays ($, $container, subdomain, isDemo, env) {
