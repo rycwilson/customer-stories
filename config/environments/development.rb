@@ -4,14 +4,15 @@ Rails.application.configure do
   # Settings specified here will take precedence over those in config/application.rb.
 
   config.hosts << '.lvh.me'
+  # config.hosts += ['.lvh.me', /.*\.nip\.io/]
 
   # for viewing via mobile on local network:
   # get localhost IP from system preferences => network (here it's 192.168.1.3)
   # point mobile browser to [subdomain].192.168.1.3.xip.io:3000  
   # config.action_dispatch.tld_length = 5
 
-  # In the development environment your application's code is reloaded on
-  # every request. This slows down response time but is perfect for development
+  # In the development environment your application's code is reloaded any time
+  # it changes. This slows down response time but is perfect for development
   # since you don't have to restart the web server when you make code changes.
   config.cache_classes = false
 
@@ -21,13 +22,15 @@ Rails.application.configure do
   # Show full error reports.
   config.consider_all_requests_local = true
 
+  # Enable server timing
+  config.server_timing = true
+
   # Enable/disable caching. By default caching is disabled.
   # Run rails dev:cache to toggle caching.
   if Rails.root.join('tmp', 'caching-dev.txt').exist?
     config.action_controller.perform_caching = true
     config.action_controller.enable_fragment_cache_logging = true
 
-    # Rails 4:
     # config.cache_store = dalli_store,
     #                      'localhost:11211',
     #                      {
@@ -36,10 +39,9 @@ Rails.application.configure do
     #                         :socket_failure_delay => 0.2,
     #                         :down_retry_delay => 60,
     #                         :pool_size => 5  # server threads/concurrency
-    # 
+    # config.cache_store = :mem_cache_store
+    config.cache_store = :memory_store
 
-    # config.cache_store = :memory_store
-    config.cache_store = :mem_cache_store
     config.public_file_server.headers = {
       'Cache-Control' => "public, max-age=#{2.days.to_i}"
     }
@@ -53,6 +55,8 @@ Rails.application.configure do
 
   config.action_mailer.default_url_options = { protocol: 'http', host: 'lvh.me', port: 3000 }
   config.action_mailer.perform_deliveries = false
+  config.action_mailer.raise_delivery_errors = false
+  config.action_mailer.perform_caching = false
 
   # Print deprecation notices to the Rails logger.
   config.active_support.deprecation = :log
@@ -82,7 +86,7 @@ Rails.application.configure do
   config.assets.quiet = true
 
   # Raises error for missing translations
-  # config.action_view.raise_on_missing_translations = true
+  # config.i18n.raise_on_missing_translations = true
 
   # Annotate rendered view with file names.
   # config.action_view.annotate_rendered_view_with_filenames = true

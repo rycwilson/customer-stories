@@ -3,17 +3,18 @@ source 'https://rubygems.org'
 
 # Server and frameworks
 gem 'puma', '~> 6.6'
-gem 'rails', '6.1.7.10'
+gem 'rails', '7.0.1'
 
 # These are necessary for rails 6 to work with ruby 3.4, can be removed once upgraded to rails 7
 gem 'bigdecimal' 
 gem 'mutex_m' 
 gem 'reline'
-gem 'irb'
+# gem 'irb'
 
 gem 'bootsnap', '~> 1.18', require: false
 gem 'rack-cors', '~> 2.0'
 gem 'rack_password', '~> 1.3'
+gem "sprockets-rails", '~> 3.5', :require => 'sprockets/railtie'
 # gem 'rack-timeout', '~> 0.7'
 gem 'figaro', '~> 1.2'    # needs to be in production group for assets precompilation (which runs in production mode)
 gem 'turbo-rails', '~> 2.0'
