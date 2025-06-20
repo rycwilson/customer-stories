@@ -14,8 +14,8 @@ class PublishedStoryPathConstraint
     if request.params[:random_string].present?
       company.stories.exists? hidden_link: request.params[:random_string]
     else 
-      customer = company.customers&.friendly.find request.params[:customer]
-      story = customer&.stories&.friendly.find request.params[:title]
+      customer = company.customers&.friendly.find request.params[:customer] rescue nil
+      story = customer&.stories&.friendly.find request.params[:title] rescue nil
       product = company.products&.friendly.find(request.params[:product]) rescue nil
       if customer and story&.published?
         product ? story.product_tags.include?(product) : request.params[:product].nil?
