@@ -77,14 +77,11 @@ end
 
 # all gems provided by default in rails 6
 group :development do
-  gem 'web-console', '~> 4.2'
-  gem 'spring', '~> 4.0'
-  gem 'solargraph', '~> 0.44'
-  gem 'better_errors', '~> 2.9'
-  gem 'binding_of_caller', '~> 1.0'   # needed for better_errors advanced features
-
-  # Can be configured to work on production as well, see: 
-  # https://github.com/MiniProfiler/rack-mini-profiler/blob/master/README.md
+  gem 'web-console'
+  gem 'spring', '>= 3.0'
+  gem 'ruby-lsp'
+  gem 'rubocop', require: false
+  gem 'better_errors'
+  gem 'binding_of_caller'   # needed for better_errors advanced features
   # gem 'rack-mini-profiler', '~> 2.0'
-  gem 'listen', '~> 3.3'
 end
