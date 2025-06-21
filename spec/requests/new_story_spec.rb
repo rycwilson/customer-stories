@@ -28,16 +28,16 @@ RSpec.describe 'New Story', type: :request do
   end
 
   describe 'GET a new story form' do
-    context 'when creating a new story from the Curate view' do
+    context 'when creating a new story without an existing customer win' do
       include_examples 'a successful turbo stream response', :new_company_story_path
     end
     
-    context 'when creating a new story from a customer win' do
+    context 'when creating a new story from an existing customer win' do
       include_examples 'a successful turbo stream response', :new_success_story_path
     end
   end
 
-  describe 'POST /companies/:company_id/stories' do
+  describe 'POST a new story' do
     context 'with required fields only' do
       let(:valid_attributes) do
         {
