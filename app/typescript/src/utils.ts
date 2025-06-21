@@ -1,4 +1,5 @@
 import tinycolor from 'tinycolor2';
+import { FetchRequest } from '@rails/request.js';
 
 // Using css variables to capture style allows for use of the custom-button-variant mixin,
 // which itself is just a copy of bootstrap's button-variant mixin that has been modified to use css variables.
@@ -27,26 +28,10 @@ export function parseDatasetObject<Type>(element: HTMLElement, prop: string, ...
 }
 
 export async function getJSON(dataPath: string, params: string) {
-  const csrfTokenMeta = document.querySelector<HTMLMetaElement>('[name="csrf-token" ]');
-  const csrfToken = csrfTokenMeta?.content;
-  if (csrfToken) {
-    const options: RequestInit = {
-      headers: {
-        'Content-Type': 'application/json', 
-        'X-CSRF-Token': csrfToken
-      }
-    };
-    try {
-      // return await Promise.all([
-      //   fetch('/successes', headers).then(res => res.json()), 
-      //   fetch('/companies/0/contributions', headers).then(res => res.json())
-      // ]);
-      return await fetch(`${dataPath}.json${params ? '?' + params : ''}` , options).then(res => res.json());
-    } catch(err) {
-      console.error(err);
-    }
-  } else {
-    console.error(`No CSRF token found for fetch(${dataPath}.json)`)
+  const request = new FetchRequest('get', `${dataPath}.json${params ? '?' + params : ''}`);
+  const response = await request.perform();
+  if (response.ok) {
+    return await response.json;
   }
 }
 

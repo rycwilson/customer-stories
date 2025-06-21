@@ -5,6 +5,7 @@ import type { TomOption, TomItem } from 'tom-select/dist/types/types';
 import { type CBOptions } from 'tom-select/dist/types/plugins/clear_button/types';
 import { init as initStoryCard } from './story_card';
 import { setCustomButtonProps } from '../utils';
+import { FetchRequest } from '@rails/request.js';
 
 export const testExports = { foo }
 
@@ -253,7 +254,7 @@ function onChangeFilter(changedSelect: TomSelectInput, otherSelects: TomSelectIn
   showResults();
 }
 
-function beforeSubmitSearch(e: Event) {
+async function beforeSubmitSearch(e: Event) {
   e.preventDefault();
   const form = <HTMLFormElement>e.currentTarget;
   const searchInput = <HTMLInputElement>form.querySelector('.search-stories__input');
@@ -264,24 +265,36 @@ function beforeSubmitSearch(e: Event) {
     renderStories([]);
     clearFilters();
 
+    const request = new FetchRequest('get', '/stories.json', { query: { q: searchString } });
+    const response = await request.perform();
+    if (response.ok) {
+      const storyIds = await response.json;
+      const searchResults = [...featuredStories].filter(card => {
+        const { dataset: { storyId } } = card;
+        return storyId && storyIds.includes(+storyId);
+      });
+      renderStories(searchResults, `Sorry, we couldn't find any stories matching \"${searchString}\"`); 
+      showResults(searchString);
+    }
+
     // setting X-Requested-With allows the js request without an InvalidCrossOriginRequest error  
     // https://api.rubyonrails.org/classes/ActionController/RequestForgeryProtection.html
     // see bottom answer: https://stackoverflow.com/questions/29310187/rails-invalidcrossoriginrequest
-    fetch('/stories?' + new URLSearchParams({ q: searchString }), {
-      headers: {
-        'Content-Type': 'application/json',
-        'X-Requested-With': 'XMLHttpRequest',   // to identify as an ajax request
-        'X-CSRF-Token': (<HTMLMetaElement>document.querySelector('[name="csrf-token"]')).content
-      }
-    }).then(res => res.json())
-      .then((storyIds) => {
-        const searchResults = [...featuredStories].filter(card => {
-          const storyId = +<string>card.dataset.storyId;
-          return storyIds.includes(storyId);
-        });
-        renderStories(searchResults, `Sorry, we couldn't find any stories matching \"${searchString}\"`); 
-        showResults(searchString)
-      })
+    // fetch('/stories?' + new URLSearchParams({ q: searchString }), {
+    //   headers: {
+    //     'Content-Type': 'application/json',
+    //     'X-Requested-With': 'XMLHttpRequest',   // to identify as an ajax request
+    //     'X-CSRF-Token': (<HTMLMetaElement>document.querySelector('[name="csrf-token"]')).content
+    //   }
+    // }).then(res => res.json())
+    //   .then((storyIds) => {
+    //     const searchResults = [...featuredStories].filter(card => {
+    //       const storyId = +<string>card.dataset.storyId;
+    //       return storyIds.includes(storyId);
+    //     });
+    //     renderStories(searchResults, `Sorry, we couldn't find any stories matching \"${searchString}\"`); 
+    //     showResults(searchString)
+    //   })
   }
 }
 

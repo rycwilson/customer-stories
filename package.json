@@ -6,7 +6,7 @@
   "type": "module",
   "scripts": {
     "test": "NODE_PATH=/Users/wilson/.rbenv/versions/3.1.2/lib/ruby/gems/3.1.0/gems:$NODE_PATH jest --no-cache",
-    
+
     "build:landing-js": "esbuild app/typescript/emit/landing.js --outfile=app/assets/builds/landing/bundle.js --minify --bundle",
     "build:landing-css": "./sass-build.sh app/assets/stylesheets/landing/main.scss:app/assets/builds/landing/main.css",
     "build:app-js": "esbuild app/typescript/emit/app.js --outfile=app/assets/builds/app/bundle.js --minify --bundle",
@@ -19,10 +19,10 @@
     
     "_comment_jsbundling_rails": "Running bin/rails assets:precompile will call \"yarn build\"",
     "build": "npx tsc && yarn build:landing-js && yarn build:app-js && yarn build:app-ads-js && yarn build:stories-js",
-
+    
     "_comment_cssbundling_rails": "Running bin/rails assets:precompile will call \"yarn build:css\"",
     "build:css": "yarn build:landing-css --no-source-map && yarn build:app-css --no-source-map && yarn build:stories-css --no-source-map && yarn build:plugins-css --no-source-map && yarn build:custom-css --no-source-map",
-
+    
     "_comment_develop_in_watch_mode": "Procfile.dev will call these commands",
     "watch:js": "concurrently \"npx tsc --watch\" \"yarn build:landing-js --watch --sourcemap\" \"yarn build:app-js --watch --sourcemap\" \"yarn build:app-ads-js --watch --sourcemap\" \"yarn build:stories-js --watch --sourcemap\"",
     "watch:css": "concurrently \"yarn build:landing-css --watch\" \"yarn build:app-css --watch\" \"yarn build:stories-css --watch\" \"yarn build:plugins-css --watch\" \"yarn build:custom-css --watch\""
@@ -40,6 +40,7 @@
   "dependencies": {
     "@hotwired/stimulus": "^3.2.2",
     "@hotwired/turbo-rails": "^8.0.12",
+    "@rails/request.js": "^0.0.12",
     "@rails/ujs": "^7.0.8",
     "animate.css": "^4.1.1",
     "blueimp-file-upload": "^10.32.0",
@@ -84,6 +85,7 @@
     "@types/jquery.fileupload": "^9.22.6",
     "@types/jqueryui": "^1.12.23",
     "@types/js-cookie": "^3.0.4",
+    "@types/rails__request.js": "^0.0.0",
     "@types/rails__ujs": "^6.0.2",
     "@types/summernote": "^0.8.8",
     "@types/tinycolor2": "^1.4.6",

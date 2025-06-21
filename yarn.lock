@@ -771,6 +771,11 @@
   resolved "https://registry.npmjs.org/@rails/actioncable/-/actioncable-7.0.5.tgz"
   integrity sha512-SOBA2heB9lTw0VYIx8M/ed7inSf4I9sR8OIlJprhgkfQ3WJtrxPJ6DDATR1Z3RYaIR7HlT2Olj08v1lfGIGuHA==
 
+"@rails/request.js@^0.0.12":
+  version "0.0.12"
+  resolved "https://registry.yarnpkg.com/@rails/request.js/-/request.js-0.0.12.tgz#3d1f73e7585141d9c4c2149a34476d128eb900bc"
+  integrity sha512-g3//JBja1s04Zflj7IoMLQuXza9i4ZvtLmm0r0dMwh1QQUs6rL2iKUOGGyERfLsd81SnXC5ucfVV//rtsDlEEA==
+
 "@rails/ujs@^7.0.8":
   version "7.0.8"
   resolved "https://registry.npmjs.org/@rails/ujs/-/ujs-7.0.8.tgz"
@@ -938,6 +943,11 @@
   integrity sha512-Vac8H+NlRNNlAmDfGUP7b5h/KA+AtWIzuXy0E6OyP8f1tCLYAtPvKRRDJjAPqhpCb0t6U2j7/xqAuLEebW2kiw==
   dependencies:
     undici-types "~5.26.4"
+
+"@types/rails__request.js@^0.0.0":
+  version "0.0.0"
+  resolved "https://registry.yarnpkg.com/@types/rails__request.js/-/rails__request.js-0.0.0.tgz#e41ae92ca8fb1354ef8f56dba3f87ed6994a70bb"
+  integrity sha512-5QE45w3Isu6bGbK9+3duaMo66trVz6i2FAz4O//Lnk9n6w9Tnf6ofXydn2ANKoDFfTSdjdHl8h0jKuXHswubCg==
 
 "@types/rails__ujs@^6.0.2":
   version "6.0.2"
