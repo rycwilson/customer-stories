@@ -1,7 +1,7 @@
 
 class User < ApplicationRecord
   belongs_to :company, optional: true
-  # validates :first_name, :last_name, :email, presence: true
+  validates :first_name, :email, presence: true
   validates :phone, format: { without: /_/ }
   # validate correct format OR empty string
 
@@ -20,9 +20,6 @@ class User < ApplicationRecord
     end
   end
   
-  # for changing password
-  attr_accessor :current_password
-
   # for seeds
   attr_accessor :role
 
@@ -46,16 +43,6 @@ class User < ApplicationRecord
     else 
       nil
     end
-  end
-
-  def missing_info
-    missing = []
-    missing << "first name" unless self.first_name.present?
-    missing << "last name" unless self.last_name.present?
-    missing << "photo" unless self.photo_url.present?
-    missing << "phone" unless self.phone.present?
-    missing << "title" unless self.title.present?
-    missing
   end
 
   # This is for users signing up via Oauth
