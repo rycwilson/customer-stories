@@ -31,16 +31,18 @@
 
 en:
   hello: "Hello world"
+  errors: 
+    messages:
+      taken: 'is not available'
   doorkeeper:
     scopes:
       curator: 'Create and read Customer Win data, Create Story Contributor data'
   activerecord:
     errors:
       messages:
-        # blank: "can't be blank"
-        blank: "is required"
-        # invalid: "is invalid"
-        # taken: "has already been taken"
+        blank: 'is required'
+        invalid_format: 'is not in a valid format'
+        not_allowed: 'is not allowed'
     attributes:
       story:
         title: "Story Title"
