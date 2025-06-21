@@ -14,35 +14,51 @@
 
   .form-group 
     = label_tag("cta_#{cta.id}[description]", 'Description')
-    = text_field_tag("cta_#{cta.id}[description]", cta.description, placeholder: 'Description', class: 'form-control')
+    = text_field_tag( \
+        "cta_#{cta.id}[description]", 
+        cta.description, 
+        class: 'form-control',
+        placeholder: 'Description',
+        autocomplete: 'off')
 
   .form-group 
     = label_tag("cta_#{cta.id}[display_text]", 'Display text')
     = text_field_tag( \
         "cta_#{cta.id}[display_text]", 
         cta.display_text, 
-        placeholder: 'Display text', 
         class: 'form-control',
+        placeholder: 'Display text',
+        autocomplete: 'off', 
         data: { action: 'cta#updateCustomButtonText' })
 
   .form-group 
     - if cta.type == 'CtaLink'
       = label_tag("cta_#{cta.id}[link_url]", 'Website URL')
-      = text_field_tag("cta_#{cta.id}[link_url]", cta.link_url, placeholder: 'Website URL', class: 'form-control')
+      = text_field_tag( \
+          "cta_#{cta.id}[link_url]", 
+          cta.link_url,
+          class: 'form-control',
+          placeholder: 'Website URL',
+          autocomplete: 'off')
 
     - elsif cta.type == 'CtaForm'
       = label_tag("cta_#{cta.id}[form_html]", 'HTML')
-        = text_area_tag( \
-            "cta_#{cta.id}[form_html]",
-            cta.form_html,
-            placeholder: '<script> or <form> tags',
-            rows: 3,
-            class: 'form-control')
+      = text_area_tag( \
+          "cta_#{cta.id}[form_html]",
+          cta.form_html,
+          class: 'form-control',
+          placeholder: '<script> or <form> tags',
+          autocomplete: 'off',
+          rows: 3)
 
   .form-group 
     .checkbox
       = label_tag("cta_#{cta.id}[primary]") do
-        = check_box_tag("cta_#{cta.id}[primary]", cta.primary? ? false : true, false, data: { action: 'cta#togglePrimary' })
+        = check_box_tag( \
+            "cta_#{cta.id}[primary]",
+            not cta.primary?, 
+            false,
+            data: { action: 'cta#togglePrimary' })
         = "#{cta.primary? ? 'Remove as' : 'Make this the'} Main CTA"
 
   .cta__custom-button class=('hidden' if !cta.primary?) data-cta-target="customButton" 
@@ -74,10 +90,10 @@
 
   div style="display:flex; justify-content:#{cta.primary? ? 'flex-end' : 'space-between'}"
     - unless cta.primary?
+      / TODO button_to would be better here, but first need to position the button outside of the form (no nested forms)
       = link_to( \
           'Delete',
           company_cta_path(company, cta),
-          remote: false,
           class: 'btn btn-sm btn-danger',
           data: { turbo_method: 'delete' })
     = submit_tag('Save changes', class: 'btn btn-sm btn-success')
