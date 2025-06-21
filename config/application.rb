@@ -13,17 +13,17 @@ module Csp
     # in config/environments, which are processed later.
 
     config.load_defaults 6.1
-    
+
     # Following are settings that override 6.1 defaults in order to preserve current app behavior
     config.action_view.form_with_generates_ids = true
-    
+
     config.middleware.use Rack::Deflater
 
     # rack-cors
     config.middleware.insert_before 0, Rack::Cors do
       allow do
         origins '*'
-        resource '*', headers: :any, methods: [:get, :post, :options]
+        resource '*', headers: :any, methods: %i[get post options]
       end
     end
 

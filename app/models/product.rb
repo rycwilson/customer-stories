@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Product < ApplicationRecord
   include FriendlyId
 
@@ -7,13 +9,11 @@ class Product < ApplicationRecord
   has_many :stories, through: :successes
   has_many :customers, through: :successes
 
-  validates :name, presence: true
-  validates_uniqueness_of :name, scope: :company_id
-  # validates :description, presence: true
+  validates :name, presence: true, uniqueness: { scope: :company }
 
-  friendly_id :name, use: [:slugged, :scoped], scope: :company_id
+  friendly_id :name, use: %i[slugged scoped], scope: :company_id
 
-  scope(:featured, -> { joins(:stories).merge(Story.featured).distinct })
+  scope :featured, -> { joins(:stories).merge(Story.featured).distinct }
 
   def should_generate_new_friendly_id?
     new_record? || name_changed? || slug.blank?

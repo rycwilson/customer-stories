@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 FactoryBot.define do
   # the class argument can be left out and will be inferred from the factory name
   factory :company, class: 'Company' do
@@ -9,7 +11,7 @@ FactoryBot.define do
         break candidate if company.valid?
       end
     end
-    website { "https://example.com?q=#{Faker::Internet.slug}" }    # needs to be real site, but also unique
+    website { "https://example.com?q=#{Faker::Internet.slug}" } # needs to be real site, but also unique
     skip_callbacks { true }
 
     factory :company_with_tags do

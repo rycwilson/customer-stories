@@ -8,58 +8,59 @@ class Story < ApplicationRecord
   has_one :curator, through: :success, class_name: 'User'
   has_many :contributions, through: :success do
     def submissions
-      where("contributions.contribution IS NOT NULL")
+      where('contributions.contribution IS NOT NULL')
     end
   end
   has_many :contributors, through: :success
   has_many :visitor_actions, through: :success
   has_many :page_views, through: :success, class_name: 'PageView'
-  has_many :visitors, -> { select('visitors.*, visitor_actions.timestamp, visitor_sessions.clicky_session_id').distinct }, through: :page_views
+  has_many :visitors, lambda {
+    select('visitors.*, visitor_actions.timestamp, visitor_sessions.clicky_session_id').distinct
+  }, through: :page_views
   has_many :category_tags, through: :success, source: :story_categories
   has_many :product_tags, through: :success, source: :products
   has_many :results, dependent: :destroy
-  has_many :ctas, through: :success, source: :ctas do
-    # for rendering modals
-    def forms
-      self.where(type: 'CtaForm')
-    end
-  end
-  has_many :adwords_ads, dependent: :destroy do  # topic and retarget
+  has_many :ctas, through: :success, source: :ctas
+  has_many :adwords_ads, dependent: :destroy do # topic and retarget
     def enabled?
-      self.all? { |ad| ad.status == 'ENABLED' }
+      all? { |ad| ad.status == 'ENABLED' }
     end
+
     def status
-      self.first.status  # same for each ad
+      first.status # same for each ad
     end
+
     def long_headline
-      self.first.long_headline  # same for each ad
+      first.long_headline  # same for each ad
     end
+
     def adwords_image
-      self.first.adwords_image  # same for each ad
+      first.adwords_image  # same for each ad
     end
-    def adwords_image= (adwords_image)
-      self.each { |ad| ad.adwords_image = adwords_image }
+
+    def adwords_image=(adwords_image)
+      each { |ad| ad.adwords_image = adwords_image }
     end
   end
-  alias_method :ads, :adwords_ads
+  alias ads adwords_ads
   has_one(
     :topic_ad,
-    -> (ad) { where(adwords_ad_group_id: ad.company.topic_campaign.ad_group.id) },
-    class_name: 'AdwordsAd',
+    ->(ad) { where(adwords_ad_group_id: ad.company.topic_campaign.ad_group.id) },
+    class_name: 'AdwordsAd'
     # dependent: :destroy
   )
   has_one(
     :retarget_ad,
-    -> (ad) { where(adwords_ad_group_id: ad.company.retarget_campaign.ad_group.id) },
-    class_name: 'AdwordsAd',
+    ->(ad) { where(adwords_ad_group_id: ad.company.retarget_campaign.ad_group.id) },
+    class_name: 'AdwordsAd'
     # dependent: :destroy
   )
 
   # TODO: remove '*published' columns and status helper
-  # while the original 'status' helper and 'published' column still exist, 
+  # while the original 'status' helper and 'published' column still exist,
   # the name of the enum and keys here must be distinct,
   # otherwise there is a conflict with the enum method 'published?'
-  # NOTE: Don't use 0 for the first value as this will have unintended consequences in the select UI 
+  # NOTE: Don't use 0 for the first value as this will have unintended consequences in the select UI
   enum status_new: {
     draft: 1,
     listed: 2,
@@ -78,40 +79,31 @@ class Story < ApplicationRecord
   # presence of video is determined by a valid thumbnail url which must be fetched and confirmed
   # => ensure the fetch only happens once by assigning to a virtual attribute
   # => story.video = story.video_info() on :show and :edit actions only
-  attribute(:video)   
+  attribute(:video)
 
-  # Note: no explicit association to friendly_id_slugs, but it's there
+  # NOTE: no explicit association to friendly_id_slugs, but it's there
   # Story has many friendly_id_slugs -> captures history of slug changes
 
   # Story title should be unique, even across companies
   # This because friendly_id allows us to search based on the title slug
   validates :title, presence: true, uniqueness: true
 
-  friendly_id :title, use: [:slugged, :finders, :history]
+  friendly_id :title, use: %i[slugged finders history]
 
   scope :published, -> { where(published: true) }
 
-  # TODO for scopes taking arguments, class methods are preferred, see Rails Guides
-  scope :company_all, ->(company_id) {
-    joins(success: { customer: {} })
-    .where(customers: { company_id: company_id })
-  }
-  scope :company_all_created_since, ->(company_id, days_ago) {
-    company_all(company_id)
-    .where('stories.created_at >= ?', days_ago.days.ago)
-  }
-  
-  scope :featured, -> {
+  scope :featured, lambda {
     joins(:customer)
-    .where.not(customers: { logo_url: [nil, ''] })
-    .where('logo_published IS TRUE OR preview_published IS TRUE')
+      .where.not(customers: { logo_url: [nil, ''] })
+      .where('logo_published IS TRUE OR preview_published IS TRUE')
   }
 
-  scope :filtered, ->(filters, match_type='all') {
+  scope :filtered, lambda { |filters, match_type = 'all'|
     return all if filters.blank?
+
     stories = self
     query = nil
-    build_query = ->(filter_query) do
+    build_query = lambda do |filter_query|
       if query.nil?
         filter_query.call(stories)
       else
@@ -129,130 +121,92 @@ class Story < ApplicationRecord
 
     filters.each do |type, id|
       query = case type
-      when :curator
-        curator_query = ->(relation) { relation.where(successes: { curator_id: id }) }
-        build_query.call(curator_query)
-      when :status
-        status_query = ->(relation) { relation.where(status_new: id) }
-        build_query.call(status_query)
-      when :customer
-        customer_query = ->(relation) { relation.where(successes: { customer_id: id }) }
-        build_query.call(customer_query)
-      when :category
-        category_query = ->(relation) { relation.where(story_categories: { id: id }) }
-        build_query.call(category_query)
-      when :product
-        product_query = ->(relation) { relation.where(products: { id: id }) }
-        build_query.call(product_query)
-      end
+              when :curator
+                curator_query = ->(relation) { relation.where(successes: { curator_id: id }) }
+                build_query.call(curator_query)
+              when :status
+                status_query = ->(relation) { relation.where(status_new: id) }
+                build_query.call(status_query)
+              when :customer
+                customer_query = ->(relation) { relation.where(successes: { customer_id: id }) }
+                build_query.call(customer_query)
+              when :category
+                category_query = ->(relation) { relation.where(story_categories: { id: id }) }
+                build_query.call(category_query)
+              when :product
+                product_query = ->(relation) { relation.where(products: { id: id }) }
+                build_query.call(product_query)
+              end
     end
     query
   }
-  scope :content_like, ->(query) {
+  scope :content_like, lambda { |query|
     where('lower(title) LIKE ? OR lower(narrative) LIKE ?', "%#{query.downcase}%", "%#{query.downcase}%")
   }
-  scope :customer_like, ->(query) {
+  scope :customer_like, lambda { |query|
     joins(:customer)
-    .where('lower(customers.name) LIKE ?', "%#{query.downcase}%")
+      .where('lower(customers.name) LIKE ?', "%#{query.downcase}%")
   }
-  scope :tags_like, ->(query) {
+  scope :tags_like, lambda { |query|
     joins(:category_tags, :product_tags)
-    .where(
-      'lower(story_categories.name) LIKE ? OR lower(products.name) LIKE ?', 
-      "%#{query.downcase}%", "%#{query.downcase}%"
-    )
+      .where(
+        'lower(story_categories.name) LIKE ? OR lower(products.name) LIKE ?',
+        "%#{query.downcase}%", "%#{query.downcase}%"
+      )
   }
-  scope :results_like, ->(query) {
+  scope :results_like, lambda { |query|
     joins(:results).where('lower(results.description) LIKE ?', "%#{query.downcase}%")
   }
-
-  scope :company_published, ->(company_id) {
-    company_public(company_id).where(published: true)
-  }
-  scope :company_published_since, ->(company_id, days_ago) {
-    company_published(company_id)
-    .where('stories.publish_date >= ?', days_ago.days.ago)
-  }
-  scope :company_published_filter_category, ->(company_id, category_id) {
-    joins(success: { customer: {}, story_categories: {} })
-    .where(published: true,
-           customers: { company_id: company_id },
-           story_categories: { id: category_id })
-  }
-  scope :company_published_filter_product, ->(company_id, product_id) {
-    joins(success: { customer: {}, products: {} })
-    .where(published: true,
-           customers: { company_id: company_id },
-           products: { id: product_id })
-  }
-  scope :company_public, ->(company_id) {
+  scope :shown, lambda {
     joins(:customer)
-    .where(customers: { company_id: company_id })
-    .where.not(customers: { logo_url: [nil, ''] })
-    .where('logo_published IS TRUE OR preview_published IS TRUE')
-  }
-  scope :company_public_since, ->(company_id, days_ago) {
-    company_public(company_id)
-    .where('stories.logo_publish_date >= ?', days_ago.days.ago)
-  }
-  scope :company_public_filter_category, ->(company_id, category_id) {
-    joins(:customer, :category_tags)
-    .where(customers: { company_id: company_id }, story_categories: { id: category_id })
-    .where.not(customers: { logo_url: [nil, ''] })
-    .where('logo_published IS TRUE OR preview_published IS TRUE')
-  }
-  scope :company_public_filter_product, ->(company_id, product_id) {
-    joins(:customer, :product_tags)
-    .where(customers: { company_id: company_id }, products: { id: product_id })
-    .where.not(customers: { logo_url: [nil, ''] })
-    .where('logo_published IS TRUE OR preview_published IS TRUE')
+      .where.not(customers: { logo_url: [nil, ''] })
+      .where('logo_published IS TRUE OR preview_published IS TRUE')
   }
 
-  before_create { self.og_title = self.title }
+  before_create { self.og_title = title }
 
-  after_update_commit do 
+  after_update_commit do
     og_image_was_updated = previous_changes.keys.include?('og_image_url') && previous_changes[:og_image_url].first.present?
-    if og_image_was_updated
-      S3Util.delete_object(S3_BUCKET, previous_changes[:og_image_url].first)
+    S3Util.delete_object(S3_BUCKET, previous_changes[:og_image_url].first) if og_image_was_updated
+  end
+
+  if proc do |story|
+    (story.previous_changes.keys &
+      %w[og_title og_description og_image_url og_image_alt]).any?
+  end
+    after_update_commit do
+      # TODO: pro-actively expire social network cache on changing og-* fields
+      # request = Typhoeus::Request.new(
+      #   "https://graph.facebook.com",
+      #   method: :POST,
+      #   headers: { Authorization: "Bearer <facebook_app_id>|<facebook_access_token>" },
+      #   params: {
+      #     id: 'https%3A%2F%2Facme-test.customerstories.org%2Fcurate%2Ftestwowin%2Ftestwowin',
+      #     scrape: true
+      #   }
+      # )
+      # request.run
+      # awesome_print(request.response.response_body)
     end
   end
 
-  after_update_commit do
-    # TODO: pro-actively expire social network cache on changing og-* fields
-    # request = Typhoeus::Request.new(
-    #   "https://graph.facebook.com",
-    #   method: :POST,
-    #   headers: { Authorization: "Bearer <facebook_app_id>|<facebook_access_token>" },
-    #   params: {
-    #     id: 'https%3A%2F%2Facme-test.customerstories.org%2Fcurate%2Ftestwowin%2Ftestwowin',
-    #     scrape: true
-    #   }
-    # )
-    # request.run
-    # awesome_print(request.response.response_body)
-  end if Proc.new { |story|
-      ( story.previous_changes.keys & 
-        ['og_title', 'og_description', 'og_image_url', 'og_image_alt'] ).any?
-    }
-  
   # scrub user-supplied html input using whitelist
-  before_save(:scrub_html_input, if: Proc.new { narrative.present? && narrative_changed? })
+  before_save(:scrub_html_input, if: proc { narrative.present? && narrative_changed? })
 
   # update timestamps
   before_save(:update_publish_state)
 
-  # method takes an active record relation
-  def self.default_order stories_relation
+  def self.default_order(stories_relation)
     stories_relation
-      .order("stories.published DESC, stories.preview_published DESC, stories.updated_at DESC")
+      .order('stories.published DESC, stories.preview_published DESC, stories.updated_at DESC')
   end
 
   def was_published?
-    self.previous_changes.try(:[], :published).try(:[], 1)
+    previous_changes.try(:[], :published).try(:[], 1)
   end
 
   def was_unpublished?
-    self.previous_changes.try(:[], :published).try(:[], 0)
+    previous_changes.try(:[], :published).try(:[], 0)
   end
 
   def should_generate_new_friendly_id?
@@ -260,11 +214,11 @@ class Story < ApplicationRecord
   end
 
   def status
-    if self.published?
+    if published?
       'published'
-    elsif self.preview_published?
+    elsif preview_published?
       'preview-published'
-    elsif self.logo_published?
+    elsif logo_published?
       'logo-published'
     else
       'not-published'
@@ -292,16 +246,16 @@ class Story < ApplicationRecord
     segments
   end
 
-  def csp_story_link is_curator, is_plugin, is_external, plugin_type
+  def csp_story_link(is_curator, is_plugin, is_external, plugin_type)
     if is_curator
       Rails.application.routes.url_helpers.edit_story_path(id)
     elsif published?
       is_external ? csp_story_url : csp_story_path
     elsif preview_published?
-      if is_plugin && (plugin_type == 'gallery' || plugin_type == 'carousel')
+      if is_plugin && %w[gallery carousel].include?(plugin_type)
         csp_story_url
       elsif is_plugin && plugin_type == 'tabbed_carousel'
-        is_external ? Rails.application.routes.url_helpers.root_url(subdomain: self.company.subdomain) + "?preview=#{slug}" : "/?preview=#{slug}"
+        is_external ? Rails.application.routes.url_helpers.root_url(subdomain: company.subdomain) + "?preview=#{slug}" : "/?preview=#{slug}"
       else
         'javascript:;'
       end
@@ -312,7 +266,7 @@ class Story < ApplicationRecord
   # with activity feed response (contributions_submitted and contribution_requests_received)
   def csp_edit_story_path
     url_helpers = Rails.application.routes.url_helpers
-    url_helpers.edit_story_path(self.id)
+    url_helpers.edit_story_path(id)
   end
 
   ##
@@ -331,84 +285,84 @@ class Story < ApplicationRecord
     provider = video_url&.match(/youtu\.be|youtube|vimeo|wistia/).try(:[], 0)
     video_path = provider ? URI(video_url)&.path : nil
     id = video_path ? video_path.slice(video_path.rindex('/') + 1, video_path.length).sub(/\.\w+\z/, '') : nil
-    thumbnail = !id ? nil : case provider
-    when 'youtube'
-      thumbnail_url = "https://img.youtube.com/vi/#{id}/mqdefault.jpg"
-      # thumbnail_url = "https://i.ytimg.com/vi_webp/#{id}/mqdefault.webp"
-      res = Net::HTTP.get_response(URI(thumbnail_url))
-      res.code == '200' ? thumbnail_url : nil
-    when 'youtu.be'
-      thumbnail_url = "https://i.ytimg.com/vi_webp/#{id}/mqdefault.webp"
-      res = Net::HTTP.get_response(URI(thumbnail_url))
-      res.code == '200' ? thumbnail_url : nil
-    when 'vimeo'
-      video_data_url = "https://vimeo.com/api/oembed.json?url=https%3A//vimeo.com/#{id}"
-      res = Net::HTTP.get_response(URI(video_data_url))
-      JSON.parse(res.body).try(:[], 'thumbnail_url') rescue nil
+    thumbnail = if !id
+                  nil
+                else
+                  case provider
+                  when 'youtube'
+                    thumbnail_url = "https://img.youtube.com/vi/#{id}/mqdefault.jpg"
+                    # thumbnail_url = "https://i.ytimg.com/vi_webp/#{id}/mqdefault.webp"
+                    res = Net::HTTP.get_response(URI(thumbnail_url))
+                    res.code == '200' ? thumbnail_url : nil
+                  when 'youtu.be'
+                    thumbnail_url = "https://i.ytimg.com/vi_webp/#{id}/mqdefault.webp"
+                    res = Net::HTTP.get_response(URI(thumbnail_url))
+                    res.code == '200' ? thumbnail_url : nil
+                  when 'vimeo'
+                    video_data_url = "https://vimeo.com/api/oembed.json?url=https%3A//vimeo.com/#{id}"
+                    res = Net::HTTP.get_response(URI(video_data_url))
+                    begin
+                      JSON.parse(res.body).try(:[], 'thumbnail_url')
+                    rescue StandardError
+                      nil
+                    end
 
-    # in this case it's the actual video url instead of a thumbnail or data url; fetching cofirms its availability
-    # wistia videos are self-contained and won't reference video_info[:thumnbanil_url]
-    when 'wistia'
-      res = Net::HTTP.get_response(URI(video_url))
-      res.code == '200' ? true : nil 
-    end
+                  # in this case it's the actual video url instead of a thumbnail or data url; fetching cofirms its availability
+                  # wistia videos are self-contained and won't reference video_info[:thumnbanil_url]
+                  when 'wistia'
+                    res = Net::HTTP.get_response(URI(video_url))
+                    res.code == '200' ? true : nil
+                  end
+                end
     { provider: provider, id: id, thumbnail_url: thumbnail }.compact
   end
 
   def contributors_jsonld
-    self.contributors.map do |contributor|
-                                { "@type" => "Person",
-                                  "name" => contributor.full_name }
-                              end
+    contributors.map do |contributor|
+      { '@type' => 'Person',
+        'name' => contributor.full_name }
+    end
   end
 
   def edit_ad_images_path
-    return '' if self.topic_ad.nil?
-    Rails.application.routes.url_helpers.edit_story_adwords_ad_path(self, self.topic_ad)
+    return '' if topic_ad.nil?
+
+    Rails.application.routes.url_helpers.edit_story_adwords_ad_path(self, topic_ad)
   end
 
   def about_jsonld
-    customer = self.success.customer
-    [{ "@type" => "Corporation",
-       "name" => customer.name,
-       "logo" => { "@type" => "ImageObject",
-       "url" => customer.logo_url }}] +
-      self.success.products.map do |product|
-                              { "@type" => "Product",
-                                "name" => product.name }
-                            end
+    customer = success.customer
+    [{ '@type' => 'Corporation',
+       'name' => customer.name,
+       'logo' => { '@type' => 'ImageObject',
+                   'url' => customer.logo_url } }] +
+      success.products.map do |product|
+        { '@type' => 'Product',
+          'name' => product.name }
+      end
   end
 
   def related_stories
-    related_stories = []
     same_product_stories = []
     same_category_stories = []
-    success = self.success
-    company = success.customer.company
-    published_stories =
-      company.published_stories.delete_if { |story_id| story_id == self.id }
-    success.products.each do |product|
-      same_product_stories += company.published_stories_filter_product(product.id)
-                                     .delete_if { |story_id| story_id == self.id }
+    published_stories = company.stories.published - [self]
+    product_tags.each do |product|
+      same_product_stories += published_stories.joins(:product_tags).where(products: { id: product.id })
     end
-    success.story_categories.each do |category|
-      same_category_stories += company.published_stories_filter_category(category.id)
-                                      .delete_if { |story_id| story_id == self.id }
+    category_tags.each do |category|
+      same_category_stories += published_stories.joins(:category_tags).where(story_categories: { id: category.id })
     end
     same_tag_stories = (same_product_stories + same_category_stories).uniq
-    if same_product_stories.length >= 2
-      related_stories = same_product_stories.sample(2)
-    elsif same_tag_stories.length >= 2
-      related_stories = same_tag_stories.sample(2)
-    elsif same_tag_stories.length == 0
-      related_stories = published_stories.sample(2)
-    else
-      related_stories = same_tag_stories +
-                        published_stories.delete_if do |story_id|
-                          same_tag_stories.include?(story_id)
-                        end.sample(2 - same_tag_stories.length)
-    end
-    Story.find(related_stories)
+    related_stories = if same_product_stories.length >= 2
+                        same_product_stories.sample(2)
+                      elsif same_tag_stories.length >= 2
+                        same_tag_stories.sample(2)
+                      elsif same_tag_stories.empty?
+                        published_stories.sample(2)
+                      else
+                        same_tag_stories + published_stories.sample(2 - same_tag_stories.length)
+                      end
+    default_order(related_stories)
   end
 
   #
@@ -416,7 +370,7 @@ class Story < ApplicationRecord
   #
   def unique_visitors_count
     unique_visitors = Set.new
-    story_views = PageView.includes(:visitor).where(success_id: self.success_id)
+    story_views = PageView.includes(:visitor).where(success_id: success_id)
     story_views.each do |story_view|
       unique_visitors << story_view.visitor.clicky_uid
     end
@@ -427,39 +381,38 @@ class Story < ApplicationRecord
   # so supplement with this for now and revisit later. Consider jbuilder or something similar
   # (these methods so far only used in stories#promoted)
   def ads_enabled?
-    self.ads.all? { |ad| ad.status == 'ENABLED' }
+    ads.all? { |ad| ad.status == 'ENABLED' }
   end
 
   def ads_status
-    self.ads.first.status  # same for each ad
+    ads.first.status # same for each ad
   end
 
   def ads_long_headline
-    self.ads.first.long_headline  # same for each ad
+    ads.first.long_headline # same for each ad
   end
 
   def ads_images
-    self.ads.first.adwords_images.map do |ad_image|   # same for each ad
+    ads.first.adwords_images.map do |ad_image| # same for each ad
       { id: ad_image.id, image_url: ad_image.image_url, type: ad_image.type }
     end
   end
 
   def update_publish_state
-    if self.logo_published? && self.logo_published_was == false
+    if logo_published? && logo_published_was == false
       self.logo_publish_date = Time.now
-    elsif !self.logo_published? && self.logo_published_was == true
+    elsif !logo_published? && logo_published_was == true
       self.logo_publish_date = nil
     end
-    if self.preview_published? && self.preview_published_was == false
+    if preview_published? && preview_published_was == false
       self.preview_publish_date = Time.now
-    elsif !self.preview_published? && self.preview_published_was == true
+    elsif !preview_published? && preview_published_was == true
       self.preview_publish_date = nil
     end
-    if self.published? && self.published_was == false
+    if published? && published_was == false
       self.publish_date = Time.now
-    elsif !self.published? && self.published_was == true
+    elsif !published? && published_was == true
       self.publish_date = nil
     end
   end
-
 end

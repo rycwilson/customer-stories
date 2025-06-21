@@ -46,11 +46,11 @@
         label Sidebar
       label.col-md-3.control-label.visible-md-inline-block.visible-lg-inline-block Sidebar
       .col-sm-offset-1.col-sm-11.col-md-offset-0.col-md-8.col-lg-6
-        - if company.ctas.secondary.present?
+        - if company.ctas.sidebar.present?
           .list-group data-controller="list-group" data-list-group-collapsible-value="true" aria-labelledby="additional-ctas-label-md-lg"
-            - company.ctas.secondary.each do |cta|
+            - company.ctas.sidebar.each do |cta|
               a.list-group-item data-toggle="collapse" data-list-group-target="item" href="#edit-cta-#{cta.id}" aria-expanded="false"
-                - if company.ctas.secondary.count > 1
+                - if company.ctas.sidebar.count > 1
                   i.fa.fa-fw.fa-arrows-v
                 p = "#{cta.type == 'CtaLink' ? '[LINK]' : '[FORM]'} #{cta.description}"
                 button.btn type="button"

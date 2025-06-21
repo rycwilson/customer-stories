@@ -1,34 +1,17 @@
 class Contribution < ApplicationRecord
-
   # the default_scope introduces difficulty to, e.g., this:
   # has_many :contributors, -> { distinct }, through: :contributions, source: :contributor
   # => #<ActiveRecord::StatementInvalid: PG::InvalidColumnReference: ERROR:  for SELECT DISTINCT, ORDER BY expressions must appear in select list
   # default_scope { order(created_at: :desc) }
-  scope :company, -> (company_id) {
-    includes(:contributor, success: { story: {}, customer: {} })
-    .joins(success: { customer: {} })
-    .where(customers: { company_id: company_id })
-  }
-  scope :company_submissions_since, ->( company_id, days_ago) {
-    company(company_id).where('submitted_at >= ?', days_ago.days.ago)
-  }
-  scope :company_requests_received_since, -> (company_id, days_ago) {
-    company(company_id).where('request_received_at >= ?', days_ago.days.ago)
-  }
-  scope :story_all, -> (story_id) {
-    joins(success: { story: {} })
-    .where(stories: { id: story_id })
-  }
 
-  # associations
   belongs_to :success, inverse_of: :contributions
   belongs_to :contributor, class_name: 'User', foreign_key: 'contributor_id'
 
   # this is a handy way to select a limited set of attributes
   belongs_to(
-    :win_story_contributor, 
-    -> { select('users.id, users.first_name, users.last_name, users.email') }, 
-    class_name: 'User', 
+    :win_story_contributor,
+    -> { select('users.id, users.first_name, users.last_name, users.email') },
+    class_name: 'User',
     foreign_key: 'contributor_id',
     optional: true
   )
@@ -39,15 +22,15 @@ class Contribution < ApplicationRecord
   has_one :story, through: :success
   belongs_to :invitation_template, optional: true
   has_one :contributor_invitation, dependent: :destroy
-  alias_method :invitation, :contributor_invitation
+  alias invitation contributor_invitation
   has_many :contributor_questions, through: :invitation_template
-  alias_method :questions, :contributor_questions
+  alias questions contributor_questions
   has_many :contributor_answers, dependent: :destroy do
-    def to_question (question_id)
+    def to_question(question_id)
       where(contributor_question_id: question_id)
     end
   end
-  alias_method :answers, :contributor_answers
+  alias answers contributor_answers
 
   accepts_nested_attributes_for(:success, allow_destroy: false)
   accepts_nested_attributes_for(:referrer, allow_destroy: false, reject_if: :missing_referrer_attributes?)
@@ -60,35 +43,28 @@ class Contribution < ApplicationRecord
 
   # # when creating a new success with referrer, a contribution is created
   # # with referrer_id == contributor_id (i.e. contributor and referrer are same)
-  before_create(:set_contributor_id_for_new_success_referrer, if: Proc.new do
+  before_create(
+    :set_contributor_id_for_new_success_referrer,
+    if: proc do
       # use a success virtual attribute so we can see from here if it's a new record
       # also note that the inverse_of setting is necessary for the success -> contributions relationship
       # (so self and self.success are related to each other in memory)
-      self.success.is_new_record? &&
-      self.referrer_id.present? &&
-      self.contributor_id.blank?
+      success.is_new_record? and referrer_id.present? and contributor_id.blank?
     end
   )
-  before_create(:set_referrer_id_for_new_success_contact, if: Proc.new do
-      self.success.is_new_record? &&
-      self.success.referrer.present?
-    end
+  before_create(
+    :set_referrer_id_for_new_success_contact,
+    if: -> { success.is_new_record? and success.referrer.present? }
   )
-  before_update(:set_request_sent_at, if: Proc.new do
-      self.status_changed? && (self.status == 'request_sent' || self.status == 'request_re_sent')
-    end
+  before_update(:set_request_sent_at, if: -> { status_changed? && %w[request_sent request_re_sent].include?(status) })
+  before_update(
+    :set_request_remind_at,
+    if: -> { status_changed? and %w[request_sent first_reminder_sent second_reminder_sent].include?(status) }
   )
-  before_update(:set_request_remind_at, if: Proc.new do
-      self.status_changed? &&
-      ['request_sent', 'first_reminder_sent', 'second_reminder_sent'].include?(self.status)
-    end
+  before_update(
+    %i[set_submitted_at send_alert],
+    if: -> { status_changed? and %w[contribution_submitted feedback_submitted].include?(status) }
   )
-  before_update(:set_submitted_at, :send_alert, if: Proc.new do
-      self.status_changed? &&
-      ['contribution_submitted', 'feedback_submitted'].include?(self.status)
-    end
-  )
-
 
   # validates :contributor_id, presence: true
   # validates :success_id, presence: true
@@ -105,33 +81,32 @@ class Contribution < ApplicationRecord
   validates :first_reminder_wait, numericality: { only_integer: true }
   validates :second_reminder_wait, numericality: { only_integer: true }
 
-
   def display_status
-    case self.status
-      when 'pre_request'
-        return "waiting for invitation\n(added #{self.created_at.strftime('%-m/%-d/%y')})"
-      when 'request_sent'
-        return "invitation sent #{(self.request_sent_at).strftime('%-m/%-d/%y')}\n(email #{self.request_received_at.present? ? '' : 'not' } opened)"
-      when 'first_reminder_sent'
-        return "reminder sent #{(self.request_sent_at + self.first_reminder_wait.days).strftime('%-m/%-d/%y')}\n(email #{self.request_received_at.present? ? '' : 'not' } opened)"
-      when 'second_reminder_sent'
-        return "reminder sent #{(self.request_sent_at + self.second_reminder_wait.days).strftime('%-m/%-d/%y')}\n(email #{self.request_received_at.present? ? '' : 'not' } opened)"
-      when 'did_not_respond'
-        return "did not respond\n(email #{self.request_received_at.present? ? '' : 'not' } opened)"
-      when 'contribution_submitted'
-        return "<span><a href=\"javascript:;\" id=\"show-contribution-#{self.id}\">Contribution</a> submitted</span>".html_safe
-      when 'feedback_submitted'
-        return "<span><a href=\"javascript:;\" id=\"show-contribution-#{self.id}\">Feedback</a> submitted</span>".html_safe
-      when 'contribution_completed'
-        return "<span><a href=\"javascript:;\" id=\"show-contribution-#{self.id}\">Contribution</a> completed<i class=\"fa fa-check pull-right\"></i></span>".html_safe
-      when 'feedback_completed'
-        return "<span><a href=\"javascript:;\" id=\"show-contribution-#{self.id}\">Feedback</a> completed<i class=\"fa fa-check pull-right\"></i></span>".html_safe
-      when 'opted_out'
-        return "opted out&nbsp;&nbsp;<i data-toggle='tooltip' data-placement='top' title='Contributor has opted out of participating in this Customer Win/Story' style='font-size:16px;color:#666' class='fa fa-question-circle-o'></i>".html_safe
-      when 'removed'
-        return "removed&nbsp;&nbsp;<i data-toggle='tooltip' data-placement='top' title='Contributor has removed himself from all future invitations' style='font-size:16px;color:#666' class='fa fa-question-circle-o'></i>".html_safe
-      when 'request_re_sent'
-        return "request re-sent #{self.request_sent_at.strftime('%-m/%-d/%y')}"
+    case status
+    when 'pre_request'
+      "waiting for invitation\n(added #{created_at.strftime('%-m/%-d/%y')})"
+    when 'request_sent'
+      "invitation sent #{request_sent_at.strftime('%-m/%-d/%y')}\n(email #{request_received_at.present? ? '' : 'not'} opened)"
+    when 'first_reminder_sent'
+      "reminder sent #{(request_sent_at + first_reminder_wait.days).strftime('%-m/%-d/%y')}\n(email #{request_received_at.present? ? '' : 'not'} opened)"
+    when 'second_reminder_sent'
+      "reminder sent #{(request_sent_at + second_reminder_wait.days).strftime('%-m/%-d/%y')}\n(email #{request_received_at.present? ? '' : 'not'} opened)"
+    when 'did_not_respond'
+      "did not respond\n(email #{request_received_at.present? ? '' : 'not'} opened)"
+    when 'contribution_submitted'
+      "<span><a href=\"javascript:;\" id=\"show-contribution-#{id}\">Contribution</a> submitted</span>".html_safe
+    when 'feedback_submitted'
+      "<span><a href=\"javascript:;\" id=\"show-contribution-#{id}\">Feedback</a> submitted</span>".html_safe
+    when 'contribution_completed'
+      "<span><a href=\"javascript:;\" id=\"show-contribution-#{id}\">Contribution</a> completed<i class=\"fa fa-check pull-right\"></i></span>".html_safe
+    when 'feedback_completed'
+      "<span><a href=\"javascript:;\" id=\"show-contribution-#{id}\">Feedback</a> completed<i class=\"fa fa-check pull-right\"></i></span>".html_safe
+    when 'opted_out'
+      "opted out&nbsp;&nbsp;<i data-toggle='tooltip' data-placement='top' title='Contributor has opted out of participating in this Customer Win/Story' style='font-size:16px;color:#666' class='fa fa-question-circle-o'></i>".html_safe
+    when 'removed'
+      "removed&nbsp;&nbsp;<i data-toggle='tooltip' data-placement='top' title='Contributor has removed himself from all future invitations' style='font-size:16px;color:#666' class='fa fa-question-circle-o'></i>".html_safe
+    when 'request_re_sent'
+      "request re-sent #{request_sent_at.strftime('%-m/%-d/%y')}"
     end
   end
 
@@ -150,12 +125,11 @@ class Contribution < ApplicationRecord
         else
           # should not be here!
         end
-      elsif
-          ( contribution.status == 'second_reminder_sent' &&
+      elsif (contribution.status == 'second_reminder_sent' &&
             Time.now > contribution.request_sent_at + contribution.first_reminder_wait.days +
-            (2 * contribution.second_reminder_wait.days) ) ||
-          ( contribution.status == 'request_re_sent' &&
-            Time.now > contribution.request_sent_at + contribution.second_reminder_wait.days )
+            (2 * contribution.second_reminder_wait.days)) ||
+            (contribution.status == 'request_re_sent' &&
+              Time.now > contribution.request_sent_at + contribution.second_reminder_wait.days)
         contribution.update(status: 'did_not_respond')
       end
     end
@@ -165,41 +139,37 @@ class Contribution < ApplicationRecord
   # "Fetch all Contributions where the Contributor has this email and update them"
   # note: need to use the actual table name (users) instead of the alias (contributors)
   #
-  def self.update_opt_out_status (opt_out_email)
+  def self.update_opt_out_status(opt_out_email)
     Contribution.joins(:contributor)
                 .where(users: { email: opt_out_email })
                 .each { |c| c.update status: 'removed' }
   end
 
   def timestamp
-    self.created_at.to_i
+    created_at.to_i
   end
 
   # ref: https://stackoverflow.com/questions/6346134
   def contributor_attributes=(attrs)
-    if attrs['id'].present?
-      self.contributor = User.find(attrs['id'])
-    end
+    self.contributor = User.find(attrs['id']) if attrs['id'].present?
     super
   end
 
   def referrer_attributes=(attrs)
-    if attrs['id'].present?
-      self.referrer = User.find(attrs['id'])
-    end
+    self.referrer = User.find(attrs['id']) if attrs['id'].present?
     super
   end
 
   # this works because the route in question is aliased to 'edit_contribution'
   # type is in ['contribution', 'feedback', 'opt_out', 'remove']
   def invitation_link(type)
-    Rails.application.routes.url_helpers.url_for({
+    Rails.application.routes.url_helpers.url_for(
       subdomain: company.subdomain,
       controller: 'contributions',
-      action: ['contribution', 'feedback'].include?(type) ? 'edit' : 'update',
+      action: %w[contribution feedback].include?(type) ? 'edit' : 'update',
       token: access_token,
       type:
-    })
+    )
   end
 
   def path
@@ -211,26 +181,26 @@ class Contribution < ApplicationRecord
   def generate_access_token
     self.access_token = SecureRandom.urlsafe_base64
     # recursive call to ensure uniqueness
-    generate_access_token if Contribution.exists?(access_token: self.access_token)
+    generate_access_token if Contribution.exists?(access_token:)
   end
 
-
   def set_request_sent_at
-    self.request_sent_at = Time.now;
+    self.request_sent_at = Time.now
   end
 
   def set_request_remind_at
-    if self.status == 'request_sent'
-      self.request_remind_at = Time.now + self.first_reminder_wait.days
-    elsif self.status == 'first_reminder_sent'
-      self.request_remind_at = Time.now + self.second_reminder_wait.days
-    elsif self.status == 'second_reminder_sent'
+    case status
+    when 'request_sent'
+      self.request_remind_at = Time.now + first_reminder_wait.days
+    when 'first_reminder_sent'
+      self.request_remind_at = Time.now + second_reminder_wait.days
+    when 'second_reminder_sent'
       self.request_remind_at = nil
     end
   end
 
   def set_submitted_at
-    self.submitted_at = Time.now;
+    self.submitted_at = Time.now
   end
 
   def send_alert
@@ -238,16 +208,15 @@ class Contribution < ApplicationRecord
   end
 
   def set_contributor_id_for_new_success_referrer
-    self.contributor_id = self.referrer_id
+    self.contributor_id = referrer_id
   end
 
   def set_referrer_id_for_new_success_contact
-    self.referrer_id = self.success.referrer[:id]
+    self.referrer_id = success.referrer[:id]
   end
 
-  def missing_referrer_attributes? (attrs)
+  def missing_referrer_attributes?(attrs)
     # !User.exists?(attrs[:id]) &&
     # (attrs[:email].blank? || attrs[:first_name].blank? || attrs[:last_name].blank?)
   end
-
 end

@@ -1,5 +1,4 @@
 class Customer < ApplicationRecord
-
   include FriendlyId
 
   belongs_to :company
@@ -10,7 +9,7 @@ class Customer < ApplicationRecord
 
   validates :name, presence: true, uniqueness: { scope: :company_id }
 
-  friendly_id :name, use: [:slugged, :scoped], scope: :company_id
+  friendly_id :name, use: %i[slugged scoped], scope: :company_id
 
   after_update_commit(unless: -> { skip_callbacks }) do
     logo_was_updated = previous_changes.keys.include?('logo_url') && previous_changes[:logo_url].first.present?
@@ -29,5 +28,4 @@ class Customer < ApplicationRecord
   def name_with_stories_count
     "#{name} (#{stories.count})"
   end
-
 end
