@@ -45,34 +45,20 @@ export function dataTableConfig(): Config {
         data: 'status',
         createdCell: (td: Node) => $(td).addClass('status'),
         render: (status, type, row: AdwordsAd) => {
-          const { id, path } = row;
           return type !== 'display' ?
             status : `
-            <form 
-              action="${path}" 
-              method="post" 
-              data-promoted-story-target="statusForm">
-              <input type="hidden" name="_method" value="patch">
-              <input type="hidden" name="authenticity_token" value="${CSP.authToken}">
-              <input 
-                type="hidden" 
-                name="adwords_ad[status]" 
-                value="PAUSED" 
-                data-promoted-story-target="statusCheckbox"
-                ${status === 'PAUSED' ? 'checked' : ''}>
-              <div data-controller="bootstrap-switch" data-bootstrap-switch-size-value="small">
-                <input 
-                  type="checkbox"
-                  name="adwords_ad[status]"
-                  value="ENABLED"
-                  data-bootstrap-switch-target="switch"
-                  data-promoted-story-target="statusCheckbox"
-                  data-on-text="<i class='fa fa-fw fa-play'></i>"
-                  data-off-text="<i class='fa fa-fw fa-pause'></i>"
-                  ${status === 'ENABLED' ? 'checked' : ''}>
+              <div class="switch-wrapper">
+                <div data-controller="bootstrap-switch" data-bootstrap-switch-size-value="small">
+                  <input 
+                    type="checkbox"
+                    data-bootstrap-switch-target="switch"
+                    data-on-text="<i class='fa fa-fw fa-play'></i>"
+                    data-off-text="<i class='fa fa-fw fa-pause'></i>"
+                    ${status === 'ENABLED' ? 'checked' : ''}>
+                </div>
+                <span class="help-block" data-promoted-story-target="statusLabel">${status}</span>
               </div>
-              <span class="help-block" data-promoted-story-target="statusLabel">${status}</span>
-            </form>`;
+            `;
         }
       },
       {

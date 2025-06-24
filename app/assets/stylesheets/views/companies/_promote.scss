@@ -39,18 +39,18 @@
   td.status {
     text-align: center;
 
-    form {
+    .switch-wrapper {
       margin-bottom: -4px;
-
-      .help-block {
-        margin: 0;
-        font-size: 10px;
-      }
     }
 
     .bootstrap-switch {
       background: #fff;
       margin-bottom: 5px;
+    }
+
+    .help-block {
+      margin: 0;
+      font-size: 10px;
     }
   }
 }

@@ -1,48 +1,46 @@
 import DatatableRowController from './datatable_row_controller';
 import type { FrameElement, TurboSubmitEndEvent } from '@hotwired/turbo';
+import { FetchRequest } from '@rails/request.js';
 
 export default class PromotedStoryController extends DatatableRowController<PromotedStoryController, AdwordsAdRowData> {
-  static targets = ['statusForm', 'statusCheckbox', 'statusLabel'];
-  declare readonly statusFormTarget: HTMLFormElement;
-  declare readonly statusCheckboxTargets: HTMLInputElement[];
+  static targets = ['statusLabel'];
   declare readonly statusLabelTarget: HTMLElement;
 
   declare path: string;
   declare promotedStoryHtml: HTMLElement;
-  declare $statusSwitch: JQuery<HTMLInputElement, any>;
 
   get childRowContent() {
     return this.promotedStoryHtml || '<h3>Promoted Story</h3>';
   }
-  
-  connect() {
-    super.connect();
-    this.$statusSwitch = $(<HTMLInputElement>this.statusCheckboxTargets.find(checkbox => checkbox.value === 'ENABLED'));
+
+  // Since the row will be re-drawn upon updating the status, do not rely on a stimulus target for the switch.
+  get $statusSwitch() {
+    const switchContainer = this.element.querySelector('.bootstrap-switch-container');
+    const checkbox = switchContainer?.querySelector('input[type="checkbox"]');
+    return $(checkbox);
   }
 
+  // Child row content is loaded via turbo frame
+  // TODO: update the cached reference (this.promotedStoryHtml) as necessary 
   onFrameRendered({ target: turboFrame }: {target: FrameElement}) {
     this.promotedStoryHtml ??= <HTMLElement>turboFrame.firstElementChild;
   }
 
-  onUpdatedStatusSuccess(shouldEnable: boolean, e: TurboSubmitEndEvent) {
-    this.$statusSwitch.bootstrapSwitch('disabled', false);
-    this.statusLabelTarget.textContent = shouldEnable ? 'ENABLED' : 'PAUSED';
-    this.updateRow({ status: shouldEnable ? 'ENABLED' : 'PAUSED' });
-  }
-
-  updateStatus({ detail: { state: shouldEnable } }: { detail: { state: boolean } }) {
-    this.statusCheckboxTargets.forEach((checkbox: HTMLInputElement) => {
-      if (checkbox.type !== 'checkbox') return;
-      checkbox.checked = shouldEnable;
-    });
-    this.element.addEventListener(
-      'turbo:submit-end', 
-      this.onUpdatedStatusSuccess.bind(this, shouldEnable), { once: true }
-    );
-    this.statusFormTarget.requestSubmit();
-
-    // The switch must be disalbed AFTER the form is submitted, otherwise the switch will toggle back to its previous state
+  async updateStatus({ detail: { state: shouldEnable } }: { detail: { state: boolean } }) {
     this.$statusSwitch.bootstrapSwitch('disabled', true);
     this.statusLabelTarget.textContent = '\u00A0';
+    const request = new FetchRequest('patch', this.path, {
+      body: { adwords_ad: { status: shouldEnable ? 'ENABLED' : 'PAUSED' } },
+      responseKind: 'turbo-stream'
+    });
+    const response = await request.perform();
+    this.$statusSwitch.bootstrapSwitch('disabled', false);
+    if (response.ok) {
+      this.statusLabelTarget.textContent = shouldEnable ? 'ENABLED' : 'PAUSED';
+      this.updateRow({ status: shouldEnable ? 'ENABLED' : 'PAUSED' });
+    } else {
+      this.$statusSwitch.bootstrapSwitch('state', !shouldEnable, true);
+      this.statusLabelTarget.textContent = 'ERROR';
+    }
   }
 }
