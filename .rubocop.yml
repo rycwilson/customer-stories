@@ -12,6 +12,9 @@
 Documentation:
   Enabled: false
 
+Layout/LineLength:
+  Max: 120
+
 # Rubocop crashed on analyzing app/controllers/stories_controller.rb for this rule
 Lint/LiteralAsCondition:
   Enabled: false
