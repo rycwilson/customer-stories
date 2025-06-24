@@ -104,17 +104,17 @@ Rails.application.routes.draw do
     authenticate(:user) do
       get '/:workflow_stage', to: 'companies#show', workflow_stage: /prospect|curate|promote|measure/, as: 'dashboard'
       get '/settings', to: 'companies#edit', as: 'edit_company'
-      resources :companies, only: [:show, :update] do
-        resources :customers, only: [:edit, :create, :update, :destroy], shallow: true
+      resources :companies, only: %i[show update] do
+        resources :customers, only: %i[edit create update destroy], shallow: true
         resources :successes, except: [:index], shallow: true do
-          resource :story, only: [:new, :create]
-          resources :contributions, only: [:index, :new, :create]
-          resources :results, only: [:create, :destroy]
+          resource :story, only: %i[new create]
+          resources :contributions, only: %i[index new create]
+          resources :results, only: %i[create destroy]
           collection { post '/import', to: 'successes#import' }
         end
-        resources :stories, only: [:new, :edit, :create, :update, :destroy], shallow: true
+        resources :stories, only: %i[new edit create update destroy], shallow: true
         # resources :stories, only: [:create]
-        resources :contributions, except: [:new, :edit, :update], shallow: true do
+        resources :contributions, except: %i[new edit update], shallow: true do
           # need to distinguish '/contributions/:id' routes from '/contributions/:token' routes;
           # hence :update is excluded above and added below
           # (note :edit always uses '/contributions/:token/:type' route
@@ -124,15 +124,14 @@ Rails.application.routes.draw do
           end
           resource :contributor_invitation, except: [:destroy]
         end
-        resources :ctas, only: [:new, :show, :create, :update, :destroy]
+        resources :ctas, only: %i[new show create update destroy]
         resources :invitation_templates
         member { get :set_reset_gads }
         member { put :widget }
         # need :get for the sync. response (redirect_to)
         # and :put for the async. response (see companies/promote.js.erb)
         member { put '/adwords/reset', to: 'adwords#sync_company', as: 'adwords_sync' }
-        
-        resources :adwords_ads, only: [:index, :show, :edit, :update], shallow: true
+        resources :adwords_ads, only: %i[index show edit update], shallow: true
       end
 
       get '/successes', to: 'successes#index'

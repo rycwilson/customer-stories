@@ -2,21 +2,20 @@ require 'stories_and_plugins'
 class PluginsController < ApplicationController
   include StoriesAndPlugins
 
-  skip_before_action :verify_authenticity_token, only: [:main, :show, :init]
+  skip_before_action :verify_authenticity_token, only: %i[main show init]
   before_action(except: [:track]) { @company = Company.find_by(subdomain: request.subdomain) }
 
   def main
-    @type = params[:type] || 'tabbed_carousel'  # trunity still using old tabbed carousel
+    @type = params[:type] || 'tabbed_carousel' # trunity still using old tabbed carousel
     @uid = params[:uid]
 
     # set the stylesheet url here, as it's impossible to use the asset path helper in cs.js in a company-specific way
-    @stylesheet_url = helpers.custom_stylesheet?(@company, 'plugins') ?
-      helpers.asset_url("custom/#{@company.subdomain}/plugins.css").to_s :
-      helpers.asset_url('plugins/main.css').to_s
-      
-    respond_to do |format|
-      format.js { render action: 'cs' }
-    end
+    @stylesheet_url = if helpers.custom_stylesheet?(@company, 'plugins')
+                        helpers.asset_url("custom/#{@company.subdomain}/plugins.css").to_s
+                      else
+                        helpers.asset_url('plugins/main.css').to_s
+                      end
+    respond_to { |format| format.js { render action: 'cs' } }
   end
 
   def show
@@ -77,7 +76,7 @@ class PluginsController < ApplicationController
       layout: false,
       locals: {
         company: company,
-        stories: stories,  #.first(16),
+        stories: stories, # .first(16),
         title: params[:title] || 'Customer Stories',
         is_demo: params[:is_demo].present?,
         max_rows: params[:max_rows].to_i,
@@ -89,37 +88,36 @@ class PluginsController < ApplicationController
         is_grayscale: params[:grayscale].present? && params[:grayscale] != 'false',
         is_curator: false,
         is_plugin: true,
-        is_external: not request.referer =~ /^(?!.*plugins\/demo).*(lvh\.me|ryanwilson\.dev|customerstories\.net).*$/,
+        is_external: request.referer !~ %r{^(?!.*plugins/demo).*(lvh\.me|ryanwilson\.dev|customerstories\.net).*$},
         window_width: params[:window_width],
-        preselected_story_id: preselected_story&.id,
+        preselected_story_id: preselected_story&.id
       }
     )
   end
 
   def get_preselected_story(company, params)
     story = (
-      params[:preselected_story].present? &&
-      Story.friendly.exists?(params[:preselected_story]) &&
+      params[:preselected_story].present? and
+      Story.friendly.exists?(params[:preselected_story]) and
       Story.friendly.find(params[:preselected_story])
     ) || nil
-    if (story&.company&.id == company.id) && (story&.published? || story&.preview_published?)
-      story.video = story.video_info()
-      return story
-    end
+    return unless (story&.company&.id == company.id) && (story&.published? || story&.preview_published?)
+
+    story.video = story.video_info
+    story
   end
 
   def plugin_stories(company, params)
     if params[:stories].present?
       # remove any that don't exist or aren't published, or if not authorized
-      story_ids = params[:stories]
-                   .delete_if { |story_id| !Story.exists?(story_id) }
-                   .delete_if do |story_id|
-                      story = Story.find(story_id)
-                      (story.company.id != company.id) ||
-                      !story.logo_published? ||
-                      story.customer.logo_url.blank?
-                    end
-      stories = Story.where(id: story_ids).order_as_specified(id: story_ids)  # preserve original order
+      story_ids =
+        params[:stories].delete_if do |story_id|
+          return true unless Story.exists?(story_id)
+
+          story = Story.find(story_id)
+          story.company.id != company.id or !story.logo_published? or story.customer.logo_url.blank?
+        end
+      stories = Story.find(story_ids).order_as_specified(id: story_ids) # preserve original order
     elsif params[:category].present? || params[:product].present?
       filter_params = get_filters_from_query_or_plugin(company, params, true)
       stories = company.filter_stories(filter_params)
@@ -128,11 +126,4 @@ class PluginsController < ApplicationController
     end
     params[:skip].present? ? stories.where.not(slug: params[:skip]) : stories
   end
-
 end
-
-
-
-
-
-

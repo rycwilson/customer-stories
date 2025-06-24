@@ -3,37 +3,27 @@ class SuccessesController < ApplicationController
 
   respond_to(:html, :js, :json)
 
-  before_action({ except: [:zapier_trigger, :index, :new, :create, :import] }) do
-    @success = Success.find(params[:id])
-  end
-  skip_before_action(
-    :verify_authenticity_token, 
-    only: [:create], 
-    if: -> { params[:zapier_create].present? }
-  )
+  before_action({ except: %i[zapier_trigger index new create import] }) { @success = Success.find(params[:id]) }
+  skip_before_action(:verify_authenticity_token, only: [:create], if: -> { params[:zapier_create].present? })
 
   def zapier_trigger
     company = current_user.company
     data = company.successes
-      .select { |s| s.win_story_completed? && s.curator_id == params['curator_id'].to_i }
-      .to_json({
-        only: [:id, :name, :win_story_html, :win_story_text, :win_story_markdown],
-        include: {
-          customer: {
-            only: [:name, :description, :logo_url]
-          }
-        }
-      })
-    respond_to { |format| format.json { render({ json: data }) } }
+                  .select { |s| s.win_story_completed? && s.curator_id == params['curator_id'].to_i }
+                  .to_json(
+                    only: %i[id name win_story_html win_story_text win_story_markdown],
+                    include: { customer: { only: %i[name description logo_url] } }
+                  )
+    respond_to { |format| format.json { render(json: data) } }
   end
 
   def index
     company = Company.find_by(subdomain: request.subdomain) || current_user.company
     @successes = company.successes.includes(:curator, :customer, :story)
-    respond_to { |format| format.json }
+    respond_to(&:json)
   end
 
-  def new 
+  def new
     @company = Company.find_by(id: params[:company_id]) || Company.find_by(subdomain: params[:company_id])
     @customer_id = params[:customer_id]
     @curator_id = params[:curator_id]
@@ -44,25 +34,21 @@ class SuccessesController < ApplicationController
     success = Success.includes(:customer).find(params[:id])
     respond_with(
       success,
-      only: [:id, :win_story_html, :win_story_text, :win_story_markdown, :win_story_completed],
+      only: %i[id win_story_html win_story_text win_story_markdown win_story_completed],
       methods: [:win_story_recipients_select_options],
-      include: {
-        customer: {
-          only: [:id, :name, :description, :logo_url, :show_name_with_logo]
-        }
-      }
+      include: { customer: { only: %i[id name description logo_url show_name_with_logo] } }
     )
   end
 
   def edit
     @success = Success.includes(
-        :invitation_template_identifiers, 
-        contributions_for_win_story: [:contributor], 
-        contributor_answers: [:contributor_question]
-      )
-      .find(params[:id])
-    @win_story_contributions = @success.contributions_for_win_story.to_json(include: { contributor: { only: [:title], methods: [:full_name] } })
-    @win_story_answers = @success.answers.to_json(include: { question: { only: [:id, :question] } })
+      :invitation_template_identifiers,
+      contributions_for_win_story: [:contributor],
+      contributor_answers: [:contributor_question]
+    ).find(params[:id])
+    @win_story_contributions =
+      @success.contributions_for_win_story.to_json(include: { contributor: { only: [:title], methods: [:full_name] } })
+    @win_story_answers = @success.answers.to_json(include: { question: { only: %i[id question] } })
   end
 
   def create
@@ -215,8 +201,8 @@ class SuccessesController < ApplicationController
     params[:success][:win_story_completed] = ActiveRecord::Type::Boolean.new.cast(success_params[:win_story_completed])
     respond_to do |format|
       if @success.update(success_params)
-        format.json do 
-          render(json: @success, only: [:id, :win_story_completed], methods: [:display_status, :previous_changes])
+        format.json do
+          render(json: @success, only: %i[id win_story_completed], methods: %i[display_status previous_changes])
         end
       else
         format.json { render(json: { errors: @success.errors.full_messages }) }
@@ -226,7 +212,7 @@ class SuccessesController < ApplicationController
 
   def destroy
     @success.destroy
-    head(:ok)   
+    head(:ok)
   end
 
   private
@@ -235,72 +221,52 @@ class SuccessesController < ApplicationController
   def success_params
     params.require(:success).permit(
       :name, :win_story_html, :win_story_text, :win_story_markdown, :win_story_completed, :customer_id, :curator_id,
-      customer_attributes: [:id, :name, :company_id],
+      customer_attributes: %i[id name company_id],
       contributions_attributes: [
         :contributor_id, :referrer_id, :invitation_template_id, :success_contact,
-        contributor_attributes: [
-          :id, :email, :first_name, :last_name, :title, :phone, :sign_up_code, :password
-        ],
-        referrer_attributes: [
-          :id, :email, :first_name, :last_name, :title, :phone, :sign_up_code, :password
-        ],
-        invitation_template_attributes: [:name, :company_id]
+        {
+          contributor_attributes: %i[id email first_name last_name title phone sign_up_code password],
+          referrer_attributes: %i[id email first_name last_name title phone sign_up_code password],
+          invitation_template_attributes: %i[name company_id]
+        }
       ]
     )
   end
 
   def contribution_params
     params.require(:contribution).permit(
-      :contributor_id, :referrer_id, :success_id, :invitation_template_id,
-      :status, :contribution, :feedback, :success_contact,
-      :request_subject, :request_body,
-      :notes, :submitted_at,
-      success_attributes: [
-        :id, :name, :customer_id, :curator_id,
-        customer_attributes: [:id, :name, :company_id]
-      ],
-      contributor_attributes: [
-        :id, :email, :first_name, :last_name, :title, :phone, :sign_up_code, :password
-      ],
-      referrer_attributes: [
-        :id, :email, :first_name, :last_name, :title, :phone, :sign_up_code, :password
-      ],
-      invitation_template_attributes: [:name, :company_id]
+      :contributor_id, :referrer_id, :success_id, :invitation_template_id, :status, :contribution, :feedback,
+      :success_contact, :request_subject, :request_body, :notes, :submitted_at,
+      success_attributes: [:id, :name, :customer_id, :curator_id, { customer_attributes: %i[id name company_id] }],
+      contributor_attributes: %i[id email first_name last_name title phone sign_up_code password],
+      referrer_attributes: %i[id email first_name last_name title phone sign_up_code password],
+      invitation_template_attributes: %i[name company_id]
     )
   end
 
   # find a success previously created in this import (or in db) and return id
-  def find_dup_success (success, success_lookup=nil)
-    if success[:customer_id].present? &&
-        success[:customer_id] == success_lookup.dig(success[:name], :customer_id)
+  def find_dup_success(success, success_lookup = nil)
+    if success[:customer_id].present? && success[:customer_id] == success_lookup.dig(success[:name], :customer_id)
       success_lookup[success[:name]][:id]
-    elsif success_id = Success.where({
-                                name: success[:name],
-                                customer_id: success[:customer_id]
-                              })
-                              .take.try(:id)
+    elsif (success_id = Success.where({ name: success[:name], customer_id: success[:customer_id]}).take.try(:id))
       success_id
-    else
-      nil
     end
   end
 
   # find a customer previously created in this import and return id;
   # customers existing prior to the import are id'ed in the client
-  def find_dup_imported_customer (success, customer_lookup)
-    if success[:customer_id].present?  # dup customer id'ed in the client
+  def find_dup_imported_customer(success, customer_lookup)
+    if success[:customer_id].present? # dup customer id'ed in the client
       success[:customer_id]
     else
-      success.dig(:customer_attributes, :name) &&
-      customer_lookup[success.dig(:customer_attributes, :name)]
+      success.dig(:customer_attributes, :name) && customer_lookup[success.dig(:customer_attributes, :name)]
     end
   end
 
   # fill in the id of an existing user, and removes the referrer/contributor_attributes hash
-  def add_dup_contact (success, contact_type, user_id)
-    contribution_index = success[:contributions_attributes].select do |index, contribution|
-      contribution.has_key?("#{contact_type}_id") ||
-      contribution.has_key?("#{contact_type}_attributes")
+  def add_dup_contact(success, contact_type, user_id)
+    contribution_index = success[:contributions_attributes].select do |_index, contribution|
+      contribution.key?("#{contact_type}_id") or contribution.key?("#{contact_type}_attributes")
     end.keys[0]
     success[:contributions_attributes][contribution_index]["#{contact_type}_id"] = user_id
     success[:contributions_attributes][contribution_index].except!("#{contact_type}_attributes")
@@ -308,17 +274,16 @@ class SuccessesController < ApplicationController
   end
 
   # fill in the id of an existing template, and remove invitation_template_attributes hash
-  def add_dup_template (success, contact_type, template_id)
-    contribution_index = success[:contributions_attributes].select do |index, contribution|
-      contribution.has_key?("#{contact_type}_id") ||
-      contribution.has_key?("#{contact_type}_attributes")
+  def add_dup_template(success, contact_type, template_id)
+    contribution_index = success[:contributions_attributes].select do |_index, contribution|
+      contribution.key?("#{contact_type}_id") or contribution.key?("#{contact_type}_attributes")
     end.keys[0]
     success[:contributions_attributes][contribution_index][:invitation_template_id] = template_id
     success[:contributions_attributes][contribution_index].except!(:invitation_template_attributes)
     success
   end
 
-  def find_dup_imported_users_and_templates (success, user_lookup, template_lookup, referrer_email, contact_email, referrer_template, contact_template)
+  def find_dup_imported_users_and_templates(success, user_lookup, template_lookup, referrer_email, contact_email, referrer_template, contact_template)
     ['referrer', 'contributor'].each do |contact_type|
       email = contact_type == 'referrer' ? referrer_email : contact_email
       template = contact_type == 'referrer' ? referrer_template : contact_template
@@ -336,26 +301,18 @@ class SuccessesController < ApplicationController
   end
 
   # takes an imported success and extracts referrer/contributor email (if it exists)
-  def dig_contact_email (success, contact_type)
-    success.dig(:contributions_attributes, '0', "#{contact_type}_attributes", :email) ||
-    success.dig(:contributions_attributes, '1', "#{contact_type}_attributes", :email)
+  def dig_contact_email(success, contact_type)
+    success.dig(:contributions_attributes, '0', "#{contact_type}_attributes", :email) or
+      success.dig(:contributions_attributes, '1', "#{contact_type}_attributes", :email)
   end
 
-  def dig_contact_template (success, contact_type)
-    if success[:contributions_attributes].present?
-      contribution_index = success[:contributions_attributes].select do |index, contribution|
-        contribution.has_key?("#{contact_type}_id") ||
-        contribution.has_key?("#{contact_type}_attributes")
-      end.keys[0]
-      success.dig(
-        :contributions_attributes,
-        contribution_index,
-        :invitation_template_attributes,
-        :name
-      )
-    else
-      nil
-    end
+  def dig_contact_template(success, contact_type)
+    return unless success[:contributions_attributes].present?
+
+    contribution_index = success[:contributions_attributes].select do |_index, contribution|
+      contribution.key?("#{contact_type}_id") or contribution.key?("#{contact_type}_attributes")
+    end.keys[0]
+    success.dig(:contributions_attributes, contribution_index, :invitation_template_attributes, :name)
   end
 
   # duplicate successes are allowed for a zap; they will contain new contributors

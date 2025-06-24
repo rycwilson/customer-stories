@@ -7,7 +7,7 @@
   .pricing-table-amount = amount
 
   ul.pricing-table-content
-    - @feature_names.each_with_index do |name, i|
+    - SITE_FEATURES.each_with_index do |name, i|
       li 
         i.fa class="#{included[i] ? 'fa-check text-success' : 'fa-times text-danger'}"
         span.hidden-md.hidden-lg 

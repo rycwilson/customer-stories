@@ -49,3 +49,18 @@ WISTIA_BASE_URL = "https://fast.wistia.com/embed/medias/"
 
 # CS_FULL_LOGO_URL = "https://s3-us-west-1.amazonaws.com/csp-production-assets/cs_logo_full_1200x630.png"
 CSP_FULL_LOGO = 'cs_logo_full_1200x630.png'
+
+SITE_FEATURES = [
+  'Crowdsource Automation',
+  'Curate Control',
+  'SEO Optimization',
+  'CRM Integration',
+  'Corporate Subdomain',
+  'Website Integration',
+  'Reporting and Analytics',
+  'Media Retargeting',
+  'CRM Database Retargeting',
+  'Lookalike Targeting',
+  'High Volume Targeting',
+  'Custom Billing'
+].freeze

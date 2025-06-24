@@ -6,10 +6,7 @@
       class: 'form-horizontal',
       autocomplete: 'off',
       data: { \
-        url: @s3_direct_post.url,
-        host: URI.parse(@s3_direct_post.url).host,
-        asset_host: Rails.application.config.asset_host,
-        s3_data: @s3_direct_post.fields }}) do |form|
+        asset_host: Rails.application.config.asset_host }}) do |form|
 
   // a buffer input for uploading story images to AWS; see the summernote onImageUpload callback
   input#narrative__img-upload.hidden type="file"

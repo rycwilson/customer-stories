@@ -1,13 +1,12 @@
 class AdwordsAdsController < ApplicationController
-
   def index
     company = Company.find params[:company_id]
     @ads = company.adwords_ads.topic
-    respond_to { |format| format.json }
+    respond_to(&:json)
   end
 
-  def show 
-    ad = AdwordsAd.find params[:id]   # this will be the topic ad
+  def show
+    ad = AdwordsAd.find params[:id] # this will be the topic ad
     @story = Story.includes(adwords_ads: { adwords_images: {} }).find(ad.story_id)
     # disable the ad links in production
     @company = @story.company
@@ -21,25 +20,22 @@ class AdwordsAdsController < ApplicationController
     # @image_dominant_color = Miro::DominantColors.new(@image_url).to_hex[0]
   
     # same for the logo
-    @image_url = (
-      @story.ads.first&.images&.marketing&.landscape&.take&.image_url || 
-      @company.ad_images.default.marketing.landscape.take&.image_url ||
+    @image_url =
+      @story.ads.first&.images&.marketing&.landscape&.take&.image_url or
+      @company.ad_images.default.marketing.landscape.take&.image_url or
       helpers.asset_url(RESPONSIVE_AD_LANDSCAPE_IMAGE_PLACEHOLDER)
-    )
-    @square_image_url = (
-      @story.ads.first&.images&.marketing&.square&.take&.image_url || 
-      @company.ad_images.default.marketing.square.take&.image_url ||
+    @square_image_url =
+      @story.ads.first&.images&.marketing&.square&.take&.image_url or
+      @company.ad_images.default.marketing.square.take&.image_url or
       helpers.asset_url(RESPONSIVE_AD_SQUARE_IMAGE_PLACEHOLDER)
-    )
-    @logo_url = (
-      @story.ads.first&.images&.logo&.square&.take&.image_url || 
-      @company.ad_images.default.logo.square.take&.image_url ||
+    @logo_url =
+      @story.ads.first&.images&.logo&.square&.take&.image_url or
+      @company.ad_images.default.logo.square.take&.image_url or
       helpers.asset_url(RESPONSIVE_AD_SQUARE_LOGO_PLACEHOLDER)
-    )
     set_ad_parameters(@long_headline)
   end
 
-  def edit 
+  def edit
     @ad = AdwordsAd.find params[:id]
     render(:edit_ad_images)
   end
@@ -75,7 +71,7 @@ class AdwordsAdsController < ApplicationController
       # new_gads[:retarget] = story.retarget_ad.slice(:ad_id, :long_headline)
 
     else
-      add_missing_default_images(story)
+      story.ads.each(&:add_missing_default_images)
       # new_gads = GoogleAds::create_story_ads(story)
       # if new_gads[:errors]
       #   new_gads[:errors] = customize_gads_errors(new_gads)
@@ -118,46 +114,8 @@ class AdwordsAdsController < ApplicationController
 
   private
 
-  def ad_params 
+  def ad_params
     params.require(:adwords_ad).permit(:status, :long_headline, :main_color, :accent_color, adwords_image_ids: [])
-  end
-
-  # def story_params
-  #   params.require(:story).permit(
-  #     topic_ad_attributes: [:id, :status, :long_headline, adwords_image_ids: []],
-  #     retarget_ad_attributes: [:id, :status, :long_headline, adwords_image_ids: []]
-  #   )
-  # end
-
-  def add_missing_default_images(story)
-    default_images = story.company.ad_images.default
-    story.ads.each do |ad|
-      ad.images << default_images.marketing.square unless ad.images.marketing.square.present?
-      ad.images << default_images.marketing.landscape unless ad.images.marketing.landscape.present?
-      ad.images << default_images.logo.square unless ad.images.logo.square.present?
-      ad.images << default_images.logo.landscape unless ad.images.logo.landscape.present?
-      ad.save
-    end
-  end
-
-  def customize_gads_errors(new_gads)
-    errors = []
-    new_gads[:errors].each do |error|
-      case error[:type]
-      when 'INVALID_ID'
-        errors << "Not found: #{ error[:field].underscore.humanize.downcase.singularize }"
-      when 'REQUIRED'
-        errors << "Required: #{ error[:field].underscore.humanize.downcase.singularize }"
-      # when something else
-      else
-      end
-    end
-    errors
-  end
-
-  def gads_errors?(story, checklist)
-    return false unless story.company.promote_tr?
-    return story.ads.all? { |ad| ad.ad_id.present? } ? false : true
   end
 
   # padding for the lower half is 25px 11px
@@ -197,5 +155,4 @@ class AdwordsAdsController < ApplicationController
       }
     }
   end
-
 end

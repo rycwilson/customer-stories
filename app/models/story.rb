@@ -140,23 +140,7 @@ class Story < ApplicationRecord
     end
     query
   }
-  scope :content_like, lambda { |query|
-    where('lower(title) LIKE ? OR lower(narrative) LIKE ?', "%#{query.downcase}%", "%#{query.downcase}%")
-  }
-  scope :customer_like, lambda { |query|
-    joins(:customer)
-      .where('lower(customers.name) LIKE ?', "%#{query.downcase}%")
-  }
-  scope :tags_like, lambda { |query|
-    joins(:category_tags, :product_tags)
-      .where(
-        'lower(story_categories.name) LIKE ? OR lower(products.name) LIKE ?',
-        "%#{query.downcase}%", "%#{query.downcase}%"
-      )
-  }
-  scope :results_like, lambda { |query|
-    joins(:results).where('lower(results.description) LIKE ?', "%#{query.downcase}%")
-  }
+
   scope :shown, lambda {
     joins(:customer)
       .where.not(customers: { logo_url: [nil, ''] })
@@ -284,7 +268,7 @@ class Story < ApplicationRecord
   def video_info
     provider = video_url&.match(/youtu\.be|youtube|vimeo|wistia/).try(:[], 0)
     video_path = provider ? URI(video_url)&.path : nil
-    id = video_path ? video_path.slice(video_path.rindex('/') + 1, video_path.length).sub(/\.\w+\z/, '') : nil
+    id = video_path&.slice(video_path.rindex('/') + 1, video_path.length)&.sub(/\.\w+\z/, '')
     thumbnail = if !id
                   nil
                 else
@@ -375,27 +359,6 @@ class Story < ApplicationRecord
       unique_visitors << story_view.visitor.clicky_uid
     end
     unique_visitors.length
-  end
-
-  # TODO: (following four methods): the assoiation extensions don't work well with to_json,
-  # so supplement with this for now and revisit later. Consider jbuilder or something similar
-  # (these methods so far only used in stories#promoted)
-  def ads_enabled?
-    ads.all? { |ad| ad.status == 'ENABLED' }
-  end
-
-  def ads_status
-    ads.first.status # same for each ad
-  end
-
-  def ads_long_headline
-    ads.first.long_headline # same for each ad
-  end
-
-  def ads_images
-    ads.first.adwords_images.map do |ad_image| # same for each ad
-      { id: ad_image.id, image_url: ad_image.image_url, type: ad_image.type }
-    end
   end
 
   def update_publish_state

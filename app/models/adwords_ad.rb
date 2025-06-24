@@ -124,7 +124,6 @@ class AdwordsAd < ApplicationRecord
     #     ).length == ?
   end
 
-
   def remove_gad
     # GoogleAds::remove_ads([ { ad_group_id: self.ad_group.ad_group_id, ad_id: self.ad_id } ])
   end
@@ -143,5 +142,12 @@ class AdwordsAd < ApplicationRecord
     # when something else
     else
     end
+  end
+
+  def add_missing_default_images
+    images << company.ad_images.default.marketing.square unless images.marketing.square.present?
+    images << company.ad_images.default.marketing.landscape unless images.marketing.landscape.present?
+    images << company.ad_images.default.logo.square unless images.logo.square.present?
+    images << company.ad_images.default.logo.landscape unless images.logo.landscape.present?
   end
 end

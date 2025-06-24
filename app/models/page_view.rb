@@ -1,19 +1,8 @@
 class PageView < VisitorAction
-
+  belongs_to :visitor_session
   has_one :visitor, through: :visitor_session
+  belongs_to :success, optional: true
 
-  scope :company_story_views, ->(company_id) {
-    joins(:success)  # story views only, not index views
-    .where(company_id: company_id)
-  }
-
-  scope :company_story_views_since, ->(company_id, days_offset) {
-    company_story_views(company_id)
-    .where('visitor_sessions.timestamp > ?', days_offset.days.ago)
-  }
-
-  scope :company_index_views, ->(company_id) {
-    where(company_id: company_id, success_id: nil)
-  }
-
+  scope :story, -> { joins(:success) } # excludes index page views
+  scope :since, ->(date) { joins(:visitor_session).where(visitor_sessions: { timestamp: date... }) }
 end

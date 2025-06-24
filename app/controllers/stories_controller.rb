@@ -7,27 +7,14 @@ class StoriesController < ApplicationController
   skip_before_action(:verify_authenticity_token, only: [:show], if: proc { params[:is_plugin] })
 
   before_action :set_company
-  # before_action :set_story, only: [:edit, :ctas, :tags, :promote, :destroy]
-  before_action only: [:show] do
-    @is_social_share_redirect = true if params[:redirect_uri].present?
-    @is_curator = @company.curator?(current_user)
-  end
-  before_action(only: [:show]) { set_public_story_or_redirect(@company) }
-  before_action :set_s3_direct_post, only: :edit
 
   def index
     @v2 = params[:v2].present?
-    @is_dashboard = turbo_frame_request? || params[:promoted].present?
-    unless params[:promoted].present?
-      @filters = set_filters(params)
-      @filters_match_type = cookies["csp-#{'dashboard-' if @is_dashboard}filters-match-type"] || 'all'
-    end
+    @is_dashboard = turbo_frame_request?
+    @filters = set_filters(params)
+    @filters_match_type = cookies["csp-#{'dashboard-' if @is_dashboard}filters-match-type"] || 'all'
     if @is_dashboard
       # @filters[:curator] ||= current_user.id
-      if params[:promoted].present?
-        respond_to { |format| format.json { render(json: promoted_stories_json) } } and return
-      end
-
       @stories = if params[:q].present?
                    search(@company.stories, params[:q])
                  else
@@ -36,7 +23,8 @@ class StoriesController < ApplicationController
     else
       # set_or_redirect_to_story_preview(params[:preview], session[:preview_story_slug])
       # @tags_filter = get_filters_from_query_or_plugin(@company, params)
-      @featured_stories = @company.stories.featured.order([published: :desc, preview_published: :desc, updated_at: :desc])
+      @featured_stories =
+        @company.stories.featured.order([published: :desc, preview_published: :desc, updated_at: :desc])
       if request.xhr? and params[:q].present?
         respond_to do |format|
           format.json { render(json: search(@featured_stories, params[:q]).pluck(:id).uniq) }
@@ -55,7 +43,8 @@ class StoriesController < ApplicationController
   end
 
   def show
-    sleep 3 if params[:sleep]
+    set_public_story_or_redirect(@company)
+    @is_social_share_redirect = true if params[:redirect_uri].present?
     # response.set_header('Cache-Control', 'max-age=0, no-cache, no-store, must-revalidate, private')
     @story.video = @story.video_info
 
@@ -130,7 +119,7 @@ class StoriesController < ApplicationController
 
       # measure
       # @recent_activity = @company.recent_activity(30)
-      # @story_views_30_day_count = PageView.joins(:visitor_session).company_story_views_since(@company.id, 30).count
+      # @story_views_30_day_count = page_views.since(30.days.ago).count
 
       # @workflow_stage = 'curate'
       # @curate_view = 'story'  # instead of 'stories'
@@ -181,6 +170,7 @@ class StoriesController < ApplicationController
       end
       respond_to do |format|
         format.js do
+          # 's3DirectPostFields' => @story.previous_changes[:og_image_url] && set_s3_direct_post.fields,
           @res_data = {
             'story' => @story.as_json({
                                         only: %i[id title slug logo_published preview_published published],
@@ -195,7 +185,6 @@ class StoriesController < ApplicationController
                                         }
                                       }),
             'storyErrors' => @story.errors.full_messages,
-            's3DirectPostFields' => @story.previous_changes[:og_image_url] && set_s3_direct_post.fields,
             'storyWasPublished' => @story.previous_changes[:published].try(:[], 1) && 'Story published',
             'previewStateChanged' => (@story.previous_changes[:logo_published].try(:[], 1) && 'Logo published') ||
                                      (@story.previous_changes[:logo_published].try(:[], 0) && 'Logo unpublished') ||
@@ -225,8 +214,9 @@ class StoriesController < ApplicationController
   end
 
   def destroy
+    @story = Story.friendly.find params[:id]
     @story.destroy
-    respond_to { |format| format.js }
+    respond_to(&:js)
   end
 
   def track
@@ -253,8 +243,14 @@ class StoriesController < ApplicationController
     )
   end
 
-  def search(stories, q)
-    results = stories.content_like(q) + stories.customer_like(q) + stories.tags_like(q) + stories.results_like(q)
+  def search(stories, query)
+    q = Story.sanitize_sql_like(query.strip.downcase)
+    results =
+      stories.where('LOWER(title) LIKE ? OR LOWER(narrative) LIKE ?', "%#{q}%", "%#{q}%") +
+      stories.joins(:customer).where('LOWER(customers.name) LIKE ?', "%#{q}%") +
+      stories.joins(:category_tags, :product_tags)
+             .where('LOWER(story_categories.name) LIKE ? OR LOWER(products.name) LIKE ?', "%#{q}%", "%#{q}%") +
+      stories.joins(:results).where('LOWER(results.description) LIKE ?', "%#{q}%")
     results.uniq
   end
 
@@ -272,28 +268,6 @@ class StoriesController < ApplicationController
         end
       end
     end.to_h.compact
-  end
-
-  def promoted_stories_json
-    @company.stories.with_ads.to_json({
-                                        only: %i[id title slug],
-                                        methods: %i[ads_status ads_long_headline ads_images csp_story_path
-                                                    edit_ad_images_path],
-                                        include: {
-                                          success: {
-                                            only: [:curator_id],
-                                            include: {
-                                              customer: { only: %i[name slug] }
-                                            }
-                                          },
-                                          topic_ad: {
-                                            only: %i[id status]
-                                          },
-                                          retarget_ad: {
-                                            only: %i[id status]
-                                          }
-                                        }
-                                      })
   end
 
   def new_ads(story, story_params)
@@ -348,9 +322,9 @@ class StoriesController < ApplicationController
   end
 
   def set_company
-    @company = Company.find_by(id: params[:company_id]) ||
-               Company.find_by(subdomain: params[:company_id]) ||
-               Company.find_by(subdomain: request.subdomain)
+    @company = Company.find_by(id: params[:company_id]) or
+      Company.find_by(subdomain: params[:company_id]) or
+      Company.find_by(subdomain: request.subdomain)
   end
 
   def set_or_redirect_to_story_preview(params_story_slug, session_story_slug)
@@ -365,10 +339,6 @@ class StoriesController < ApplicationController
       session.delete(:preview_story_slug)
     end
   end
-
-  # def set_story
-  #   @story = Story.find_by_id(params[:id]) || Story.friendly.find(params[:story_slug])
-  # end
 
   def render_story_partial_to_string(story, window_width)
     render_to_string({

@@ -39,24 +39,12 @@ class Company < ApplicationRecord
 
   has_many :story_categories, dependent: :destroy
   accepts_nested_attributes_for :story_categories, allow_destroy: true
-  alias categories story_categories
+  alias_method :categories, :story_categories
 
   has_many :products, dependent: :destroy
   accepts_nested_attributes_for :products, allow_destroy: true
 
   has_many :contributor_questions, dependent: :destroy do
-    def customer
-      where(role: 'customer')
-    end
-
-    def customer_success
-      where(role: 'customer_success')
-    end
-
-    def sales
-      where(role: 'sales')
-    end
-
     def grouped_select_options
       {
         'Custom' => self.select { |q| q.role.nil? }
@@ -70,109 +58,10 @@ class Company < ApplicationRecord
                        .map { |q| [q.question, q.id] }
       }
     end
-
-    # method formats grouped options for js select2 initialization
-    def grouped_select2_options(template)
-      [
-        {
-          text: 'Custom',
-          children: self.select { |q| q.role.nil? }
-                        .map do |q|
-                          {
-                            id: q.id, text: q.question,
-                            disabled: template.contributor_questions.any? do |ques|
-                                        ques.id == q.id
-                                      end
-                          }
-                        end
-                        .unshift({ id: 0, text: '- New question -' })
-        },
-        {
-          text: 'Customer',
-          children: self.select { |q| q.role == 'customer' }
-                        .map do |q|
-                          {
-                            id: q.id, text: q.question,
-                            disabled: template.contributor_questions.any? do |ques|
-                                        ques.id == q.id
-                                      end
-                          }
-                        end
-        },
-        {
-          text: 'Customer Success',
-          children: self.select { |q| q.role == 'customer success' }
-                        .map do |q|
-                          {
-                            id: q.id, text: q.question,
-                            disabled: template.contributor_questions.any? do |ques|
-                                        ques.id == q.id
-                                      end
-                          }
-                        end
-        },
-        {
-          text: 'Sales',
-          children: self.select { |q| q.role == 'sales' }
-                        .map do |q|
-                          {
-                            id: q.id, text: q.question,
-                            disabled: template.contributor_questions.any? do |ques|
-                                        ques.id == q.id
-                                      end
-                          }
-                        end
-        }
-      ]
-    end
   end
-  alias questions contributor_questions
-  has_many :invitation_templates, dependent: :destroy do
-    def customer
-      where(name: 'Customer').take
-    end
-
-    def customer_success
-      where(name: 'Customer Success').take
-    end
-
-    def sales
-      where(name: 'Sales').take
-    end
-
-    def select_options
-      sort_by { |t| t.name }.map { |template| [template.name, template.id] }
-    end
-
-    def grouped_select_options
-      {
-        'Custom' => where.not("name IN ('Customer', 'Customer Success', 'Sales')")
-                         .map { |template| [template.name, template.id] }
-                         .unshift(['- New template -', '0']),
-        'Defaults' => where("name IN ('Customer', 'Customer Success', 'Sales')")
-          .map { |template| [template.name, template.id] }
-      }
-    end
-
-    def grouped_select2_options
-      [
-        {
-          text: 'Custom',
-          children: where.not("name IN ('Customer', 'Customer Success', 'Sales')")
-                         .map do |template|
-            { id: template.id, text: template.name }
-          end
-                        .unshift({ id: 0, text: '- New template -' })
-        },
-        {
-          text: 'Defaults',
-          children: where("name IN ('Customer', 'Customer Success', 'Sales')")
-            .map { |template| { id: template.id, text: template.name } }
-        }
-      ]
-    end
-  end
-  alias templates invitation_templates
+  alias_method :questions, :contributor_questions
+  has_many :invitation_templates, dependent: :destroy
+  alias_method :templates, :invitation_templates
   has_many :outbound_actions, dependent: :destroy
   has_many(:ctas, class_name: 'CallToAction', dependent: :destroy) do
     def primary
@@ -182,12 +71,12 @@ class Company < ApplicationRecord
   accepts_nested_attributes_for :ctas
   has_one :plugin, dependent: :destroy
   has_many :adwords_campaigns, dependent: :destroy
-  alias campaigns adwords_campaigns
+  alias_method :campaigns, :adwords_campaigns
   has_one :topic_campaign, dependent: :destroy
   has_one :retarget_campaign, dependent: :destroy
 
   has_many :adwords_ad_groups, through: :adwords_campaigns
-  alias ad_groups adwords_ad_groups
+  alias_method :ad_groups, :adwords_ad_groups
   has_one :topic_ad_group, through: :topic_campaign, source: :adwords_ad_group
   has_one :retarget_ad_group, through: :retarget_campaign, source: :adwords_ad_group
 
@@ -196,10 +85,10 @@ class Company < ApplicationRecord
       where.not(ad_id: [nil]) # don't include emptry string or it won't work! (because type is number?)
     end
   end
-  alias ads adwords_ads
+  alias_method :ads, :adwords_ads
 
   has_many :adwords_images, dependent: :destroy
-  alias ad_images adwords_images
+  alias_method :ad_images, :adwords_images
   accepts_nested_attributes_for :adwords_images, allow_destroy: true
 
   after_update_commit do
@@ -291,12 +180,6 @@ class Company < ApplicationRecord
     end
   end
 
-  def curator?(current_user = nil)
-    return false if current_user.nil?
-
-    current_user.company_id == id
-  end
-
   # this is used for validating the company's website address
   # see lib/website_validator.rb
   def smart_add_url_protocol
@@ -349,7 +232,7 @@ class Company < ApplicationRecord
 
   def stories_created_activity(days_offset)
     stories
-      .where('stories.created_at >= ?', days_offset.days.ago)
+      .where(created_at: days_offset.days.ago..)
       .order(created_at: :desc)
       .map do |story|
         { type: 'Stories created',
@@ -373,7 +256,7 @@ class Company < ApplicationRecord
   def stories_logo_published_activity(days_offset)
     stories
       .shown
-      .where('stories.logo_publish_date >= ?', days_offset.days.ago)
+      .where(logo_publish_date: days_offset.days.ago..)
       .order(logo_publish_date: :desc)
       .map do |story|
         { type: 'Logos published',
@@ -397,7 +280,7 @@ class Company < ApplicationRecord
 
   def contribution_requests_received_activity(days_offset)
     contributions
-      .where('request_received_at >= ?', days_offset.days.ago)
+      .where(request_received_at: days_offset.days.ago..)
       .order(request_received_at: :desc)
       .map do |contribution|
         { type: 'Contribution requests received',
@@ -424,7 +307,7 @@ class Company < ApplicationRecord
 
   def contribution_submissions_activity(days_offset)
     contributions
-      .where('submitted_at >= ?', days_offset.days.ago)
+      .where(submitted_at: days_offset.days.ago..)
       .order(submitted_at: :desc)
       .map do |contribution|
         { type: 'Contributions submitted',
@@ -447,7 +330,7 @@ class Company < ApplicationRecord
 
   def stories_published_activity(days_offset)
     stories.published
-           .where('stories.publish_date >= ?', days_offset.days.ago)
+           .where(publish_date: days_offset.days.ago..)
            .order(publish_date: :desc)
            .map do |story|
              { type: 'Stories published',
@@ -463,10 +346,9 @@ class Company < ApplicationRecord
   end
 
   def story_views_activity(days_offset)
-    PageView
-      .joins(:visitor_session)
-      .company_story_views_since(id, days_offset)
-      .order('visitor_sessions.timestamp desc')
+    page_views
+      .since(days_offset.days.ago)
+      .order(visitor_sessions: { timestamp: :desc })
       .map do |story_view|
         { type: 'Story views',
           story_view: JSON.parse(
@@ -495,8 +377,7 @@ class Company < ApplicationRecord
       end
   end
 
-  def story_shares_activity(days_offset)
-  end
+  def story_shares_activity(days_offset); end
 
   def stories_table_json
     company_page_views = page_views.count
@@ -505,9 +386,13 @@ class Company < ApplicationRecord
     logo_page_visitors = PageView.joins(:visitor)
                                  .where(company_id: id, success_id: nil)
                                  .group('visitor_actions.timestamp, visitors.id').count
-    logo_page =
-      ['', 'Logo Page', '', logo_page_visitors.length,
-       ((PageView.company_index_views(id).count.to_f / company_page_views.to_f) * 100).round(1).to_s + '%']
+    logo_page = [
+      '',
+      'Logo Page',
+      '',
+      logo_page_visitors.length,
+      "#{((page_views.where(success_id: nil).count.to_f / company_page_views) * 100).round(1)}%"
+    ]
     PageView.distinct
             .joins(:story, :visitor, success: { customer: {} })
             .where(company_id: id, stories: { published: true })
@@ -538,60 +423,40 @@ class Company < ApplicationRecord
                                  end
     num_days = (start_date..end_date).count
     if num_days < 21
-      visitors = VisitorSession.distinct
-                               .includes(:visitor)
-                               .joins(:visitor_actions)
-                               .where(visitor_actions: visitor_actions_conditions)
-                               .where('visitor_sessions.timestamp > ? AND visitor_sessions.timestamp < ?',
-                                      start_date.beginning_of_day, end_date.end_of_day)
-                               .group_by { |session| session.timestamp.to_date }
-                               .sort_by { |date, sessions| date }.to_h
-                               .map do |date, sessions|
-        [date.strftime('%-m/%-d/%y'), sessions.map { |session| session.visitor }.uniq.count]
-      end
-      if start_date == end_date || visitors.empty?
-        visitors
-      else
-        visitors = fill_daily_gaps(visitors, start_date, end_date)
-      end
+      visitors =
+        VisitorSession.distinct
+                      .includes(:visitor)
+                      .joins(:visitor_actions)
+                      .where(visitor_actions: visitor_actions_conditions)
+                      .where(timestamp: start_date.beginning_of_day...end_date.end_of_day)
+                      .group_by { |session| session.timestamp.to_date }
+                      .sort_by { |date, _sessions| date }.to_h
+                      .map { |date, sessions| [date.strftime('%-m/%-d/%y'), sessions.map(&:visitor).uniq.count] }
+      start_date == end_date || visitors.empty? ? visitors : fill_daily_gaps(visitors, start_date, end_date)
     elsif num_days < 120
       # TODO: Perform the count without actually loading any objects
-      visitors = VisitorSession.distinct
-                               .includes(:visitor)
-                               .joins(:visitor_actions)
-                               .where(visitor_actions: visitor_actions_conditions)
-                               .where('visitor_sessions.timestamp > ? AND visitor_sessions.timestamp < ?',
-                                      start_date.beginning_of_week.beginning_of_day, end_date.end_of_week.end_of_day)
-                               .group_by { |session| session.timestamp.to_date.beginning_of_week }
-                               .sort_by { |date, sessions| date }.to_h
-                               .map do |date, sessions|
-        [date.strftime('%-m/%-d/%y'),
-         sessions.map { |session| session.visitor }.uniq.count]
-      end
-      if visitors.empty?
-        visitors
-      else
-        visitors = fill_weekly_gaps(visitors, start_date, end_date)
-      end
+      visitors =
+        VisitorSession.distinct
+                      .includes(:visitor)
+                      .joins(:visitor_actions)
+                      .where(visitor_actions: visitor_actions_conditions)
+                      .where(
+                        timestamp: start_date.beginning_of_week.beginning_of_day...end_date.end_of_week.end_of_day
+                      )
+                      .group_by { |session| session.timestamp.to_date.beginning_of_week }
+                      .sort_by { |date, _sessions| date }.to_h
+                      .map { |date, sessions| [date.strftime('%-m/%-d/%y'), sessions.map(&:visitor).uniq.count] }
+      visitors.empty? ? visitors : fill_weekly_gaps(visitors, start_date, end_date)
     else
       VisitorSession.distinct
                     .includes(:visitor)
                     .joins(:visitor_actions)
                     .where(visitor_actions: visitor_actions_conditions)
-                    .where('visitor_sessions.timestamp >= ? AND visitor_sessions.timestamp <= ?',
-                           start_date.beginning_of_month.beginning_of_day, end_date.end_of_month.end_of_day)
+                    .where(timestamp: start_date.beginning_of_month.beginning_of_day..end_date.end_of_month.end_of_day)
                     .group_by { |session| session.timestamp.to_date.beginning_of_month }
-                    .sort_by { |date, sessions| date }.to_h
-                    .map do |date, sessions|
-        [date.strftime('%-m/%y'),
-         sessions.map { |session| session.visitor }.uniq.count]
-      end
-
-      # if visitors.empty?
-      #   visitors
-      # else
-      #   visitors = fill_monthly_gaps(visitors, start_date, end_date)
-      # end
+                    .sort_by { |date, _sessions| date }.to_h
+                    .map { |date, sessions| [date.strftime('%-m/%y'), sessions.map(&:visitor).uniq.count] }
+      # visitors.empty? ? visitors : fill_monthly_gaps(visitors, start_date, end_date)
     end
   end
 
@@ -607,33 +472,33 @@ class Company < ApplicationRecord
     # in the group clause because of the default scope (order) on these tables
     # by including these in a single string argument,
     # only the organization, visitors.id, and visitor_actions.success_id are returned
-    visitors = VisitorSession.distinct.joins(:visitor, :visitor_actions)
-                             .where('visitor_sessions.timestamp >= ? AND visitor_sessions.timestamp <= ?',
-                                    start_date.beginning_of_day, end_date.end_of_day)
-                             .where(visitor_actions: visitor_actions_conditions)
-                             .group('visitor_sessions.clicky_session_id, visitor_actions.timestamp, organization', 'visitors.id', 'visitor_actions.success_id')
-                             .count
-                             .group_by { |org_visitor_success, count| org_visitor_success[0] }
-                             .to_a.map do |org|
-      org_visitors = Set.new
-      org_successes = [] # => [ [ success_id, unique visitors = [] ] ]
-      org[1].each do |org_visitor_success|
-        visitor_id = org_visitor_success[0][1]
-        success_id = org_visitor_success[0][2]
-        org_visitors << visitor_id
-        if (index = org_successes.find_index { |success| success[0] == success_id })
-          org_successes[index][1] << visitor_id
-        else
-          success_list << success_id
-          org_successes << [success_id, [visitor_id]]
-        end
-      end
-      org_successes.map! { |success| [success[0], success[1].count] }
-      ['', org[0] || '', org_visitors.count, org_successes]
-    end
-      .sort_by { |org| org[1] } # sort by org name
+    visitors =
+      VisitorSession.distinct.joins(:visitor, :visitor_actions)
+                    .where(timestamp: start_date.beginning_of_day..end_date.end_of_day)
+                    .where(visitor_actions: visitor_actions_conditions)
+                    .group('visitor_sessions.clicky_session_id, visitor_actions.timestamp, organization', 'visitors.id', 'visitor_actions.success_id')
+                    .count
+                    .group_by { |org_visitor_success, _count| org_visitor_success[0] }
+                    .to_a.map do |org|
+                      org_visitors = Set.new
+                      org_successes = [] # => [ [ success_id, unique visitors = [] ] ]
+                      org[1].each do |org_visitor_success|
+                        visitor_id = org_visitor_success[0][1]
+                        success_id = org_visitor_success[0][2]
+                        org_visitors << visitor_id
+                        if (index = org_successes.find_index { |success| success[0] == success_id })
+                          org_successes[index][1] << visitor_id
+                        else
+                          success_list << success_id
+                          org_successes << [success_id, [visitor_id]]
+                        end
+                      end
+                      org_successes.map! { |success| [success[0], success[1].count] }
+                      ['', org[0] || '', org_visitors.count, org_successes]
+                    end
+                    .sort_by { |org| org[1] } # sort by org name
     # create a lookup table { success_id: story title }
-    success_list.delete_if { |success_id| success_id.nil? }
+    success_list.delete_if(&:nil?)
     success_story_titles =
       Success.find(success_list.to_a).map { |success| [success.id, success.story.try(:title)] }.to_h
     visitors.each do |org|
@@ -652,9 +517,8 @@ class Company < ApplicationRecord
       .select(:referrer_type)
       .joins(:visitor_actions)
       .where(visitor_actions: visitor_actions_conditions)
-      .where('visitor_sessions.timestamp > ? AND visitor_sessions.timestamp < ?',
-             start_date.beginning_of_day, end_date.end_of_day)
-      .group_by { |session| session.referrer_type }
+      .where(timestamp: start_date.beginning_of_day...end_date.end_of_day)
+      .group_by(&:referrer_type)
       .map { |type, records| [type, records.count] }
   end
 
@@ -667,8 +531,7 @@ class Company < ApplicationRecord
     VisitorAction.distinct
                  .joins(:visitor_session, :visitor)
                  .where(visitor_actions_conditions)
-                 .where('visitor_actions.timestamp > ? AND visitor_actions.timestamp < ?',
-                        start_date.beginning_of_day, end_date.end_of_day)
+                 .where(timestamp: start_date.beginning_of_day...end_date.end_of_day)
                  .group_by('visitor_actions.timestamp, visitor_actions.description', 'visitors.id')
                  .count
   end
@@ -680,30 +543,30 @@ class Company < ApplicationRecord
     total_visitors = 0
     visitors.each { |group| total_visitors += group[1] }
     # columns as days or weeks?
-    # xDelta is the difference in days between adjacent columns
+    # x_delta is the difference in days between adjacent columns
     if visitors.length == 1 # 1 day
-      xDelta = 0
+      x_delta = 0
     elsif visitors.length > 1
-      xDelta = (visitors[1][0].to_date - visitors[0][0].to_date).to_i
-      xDelta += 365 if xDelta < 0 # account for ranges that span new year
+      x_delta = (visitors[1][0].to_date - visitors[0][0].to_date).to_i
+      x_delta += 365 if x_delta.negative? # account for ranges that span new year
     end
-    axesLabels = if xDelta <= 1
-                   %w[Day Visitors]
-                 elsif xDelta === 7
-                   ['Week starting', 'Visitors']
-                 else
-                   %w[Month Visitors]
-                 end
+    axes_labels = if x_delta <= 1
+                    %w[Day Visitors]
+                  elsif x_delta == 7
+                    ['Week starting', 'Visitors']
+                  else
+                    %w[Month Visitors]
+                  end
     # don't bother applying axes labels if there is no data ...
-    # visitors.unshift(axesLabels) if visitors.length > 0
+    # visitors.unshift(axes_labels) if visitors.length > 0
 
     # referrer_types = visitors_chart_json
     {
       visitors: Gchart.bar({
                              data: visitors
                              # title: "Unique Visitors - #{total_visitors}"
-                             # hAxis: { title: axesLabels[0] }
-                             # vAxis: { title: axesLabels[1], minValue: 0 }
+                             # hAxis: { title: axes_labels[0] }
+                             # vAxis: { title: axes_labels[1], minValue: 0 }
                              # legend: { position: 'none' }
                            }),
       referrer_types: nil

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class ApplicationController < ActionController::Base
   # Prevent CSRF attacks by raising an exception.
   # For APIs, you may want to use :null_session instead.
@@ -55,11 +57,6 @@ class ApplicationController < ActionController::Base
     else
       new_csp_user_session_url(subdomain: '')
     end
-  end
-
-  def set_s3_direct_post
-    @s3_direct_post = S3_BUCKET.presigned_post(key: "uploads/#{SecureRandom.uuid}/${filename}",
-                                               success_action_status: '201')
   end
 
   private

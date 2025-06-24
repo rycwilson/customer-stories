@@ -1,7 +1,7 @@
 class ContributionsController < ApplicationController
   include SchemaConformable
 
-  before_action :set_contribution, except: [:index, :new, :create]
+  before_action :set_contribution, except: %i[index new create]
   # before_action :check_opt_out_list, only: [:confirm_request]
   skip_before_action(
     :verify_authenticity_token,
@@ -14,10 +14,11 @@ class ContributionsController < ApplicationController
   def index
     company = Company.find(params[:company_id]) if params[:company_id].present?
     @success = Success.find(params[:success_id]) if params[:success_id].present?
-    @contributions = @success.present? ? 
-      @success.contributions.includes({ success: [:curator, :customer, :story] }, :contributor, :referrer, :invitation_template, :contributor_invitation) : 
-      company.contributions.includes({ success: [:curator, :customer, :story] }, :contributor, :referrer, :invitation_template, :contributor_invitation)
-    respond_to { |format| format.json }
+    contributions = @success.present? ? @success.contributions : company.contributions
+    @contributions = contributions.includes(
+      { success: %i[curator customer story] }, :contributor, :referrer, :invitation_template, :contributor_invitation
+    )
+    respond_to(&:json)
   end
 
   def new
@@ -33,13 +34,14 @@ class ContributionsController < ApplicationController
   def show
     if params[:get_submission]
       respond_with(
-        @contribution, only: [:id, :status, :contribution, :feedback, :submitted_at],
+        @contribution,
+        only: %i[id status contribution feedback submitted_at],
         include: {
           customer: { only: [:name] },
           contributor: { only: [:title], methods: [:full_name] },
           invitation_template: { only: [:name] },
           answers: {
-            only: [:answer, :contributor_question_id],
+            only: %i[answer contributor_question_id],
             include: {
               question: { only: [:question] }
             }
@@ -47,15 +49,14 @@ class ContributionsController < ApplicationController
         }
       )
     else
-      respond_with @contribution, include: {
-            contributor: {}, referrer: {}, success: { include: :customer } }
+      respond_with @contribution, include: { contributor: {}, referrer: {}, success: { include: :customer } }
     end
   end
 
   # GET '/contributions/:token/:type'
   def edit
     @company = Company.find_by(subdomain: request.subdomain)
-    @submission_type = params[:type]  # type IN ('contribution', 'feedback')
+    @submission_type = params[:type] # type IN ('contribution', 'feedback')
   end
 
   def create
@@ -186,7 +187,7 @@ class ContributionsController < ApplicationController
         render :edit
       end
 
-    elsif ['opt_out', 'remove'].include?(params[:type])
+    elsif %w[opt_out remove].include?(params[:type])
       if params[:type] == 'remove'
         @contribution.update(status: 'removed')
         # NOTE: OptOut is the old model name, original term used for removal

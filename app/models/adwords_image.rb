@@ -1,6 +1,5 @@
 class AdwordsImage < ApplicationRecord
-
-  attr_accessor :is_default_card  # for distinguishing default (static) image cards from dynamic
+  attr_accessor :is_default_card # for distinguishing default (static) image cards from dynamic
 
   belongs_to :company
   has_and_belongs_to_many :adwords_ads
@@ -9,13 +8,13 @@ class AdwordsImage < ApplicationRecord
 
   default_scope { order(updated_at: :desc) }
   scope :default, -> { where(default: true) }
-  scope :marketing, -> { where(type: ['SquareImage', 'LandscapeImage']) }
-  scope :logo, -> { where(type: ['SquareLogo', 'LandscapeLogo']) }
-  scope :square, -> { where(type: ['SquareImage', 'SquareLogo']) }
-  scope :landscape, -> { where(type: ['LandscapeImage', 'LandscapeLogo']) }
+  scope :marketing, -> { where(type: %w[SquareImage LandscapeImage]) }
+  scope :logo, -> { where(type: %w[SquareLogo LandscapeLogo]) }
+  scope :square, -> { where(type: %w[SquareImage SquareLogo]) }
+  scope :landscape, -> { where(type: %w[LandscapeImage LandscapeLogo]) }
 
-  validates_presence_of :company, :type, :image_url  # https://launchacademy.com/blog/validating-associations-in-rails
-  
+  validates_presence_of :company, :type, :image_url # https://launchacademy.com/blog/validating-associations-in-rails
+
   # upload to gads regardless of company.promote_tr
   # validates_presence_of :asset_id
   # before_validation :upload_to_google, on: :create
@@ -28,7 +27,7 @@ class AdwordsImage < ApplicationRecord
   private
 
   def promote_enabled?
-    self.company.promote_tr?
+    company.promote_tr?
   end
 
   def upload_to_google
@@ -41,14 +40,9 @@ class AdwordsImage < ApplicationRecord
     # empty once images have been disassociated
     ads.each do |ad|
       ad.images.delete(self)
-      if ad.images.marketing.square.blank?
-        ad.images << company.ad_images.default.marketing.square.take
-      end
-      if ad.images.marketing.landscape.blank?
-        ad.images << company.ad_images.default.marketing.landscape.take
-      end
+      ad.images << company.ad_images.default.marketing.square.take if ad.images.marketing.square.blank?
+      ad.images << company.ad_images.default.marketing.landscape.take if ad.images.marketing.landscape.blank?
     end
     # GoogleAds::update_ads(ads)
   end
-
 end
