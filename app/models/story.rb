@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Story < ApplicationRecord
   extend OrderAsSpecified
   include FriendlyId
@@ -42,7 +44,7 @@ class Story < ApplicationRecord
       each { |ad| ad.adwords_image = adwords_image }
     end
   end
-  alias ads adwords_ads
+  alias_method :ads, :adwords_ads
   has_one(
     :topic_ad,
     ->(ad) { where(adwords_ad_group_id: ad.company.topic_campaign.ad_group.id) },
@@ -99,46 +101,19 @@ class Story < ApplicationRecord
   }
 
   scope :filtered, lambda { |filters, match_type = 'all'|
+    # The default object here is the relation that called the scope (i.e. company.stories)
     return all if filters.blank?
 
-    stories = self
-    query = nil
-    build_query = lambda do |filter_query|
-      if query.nil?
-        filter_query.call(stories)
-      else
-        match_type == 'all' ? filter_query.call(query) : query.or(filter_query.call(stories))
-      end
-    end
+    # Preload associations to avoid N+1 queries and ensure consistent query structure
+    # Uses .includes (LEFT JOIN) instead of .joins (INNER JOIN) to prevent excluding
+    # records that lack certain associations, which is critical for "match any" logic
+    # (e.g. a story with a given product tag will not be included in results if it has no category tags,
+    # which is an error in the case of a "match any" query involving both category and product tags)
+    base_relation = includes_for_filters(filters)
+    queries = build_filter_queries(base_relation, filters) # an array of ActiveRecord::Relation objects
+    return base_relation if queries.empty?
 
-    # ensure similar query structures for .or by preemptively joining tables
-    # use .includes instead of .joins because the latter will result in missing entries when associations don't exist,
-    # e.g a story with a given product tag will not be included in results if it has no category tags,
-    # which is an error in the case of a "match any" query involving both category and product tags
-    stories = stories.includes(:success) if filters[:curator].present? || filters[:customer].present?
-    stories = stories.includes(:category_tags) if filters[:category].present?
-    stories = stories.includes(:product_tags) if filters[:product].present?
-
-    filters.each do |type, id|
-      query = case type
-              when :curator
-                curator_query = ->(relation) { relation.where(successes: { curator_id: id }) }
-                build_query.call(curator_query)
-              when :status
-                status_query = ->(relation) { relation.where(status_new: id) }
-                build_query.call(status_query)
-              when :customer
-                customer_query = ->(relation) { relation.where(successes: { customer_id: id }) }
-                build_query.call(customer_query)
-              when :category
-                category_query = ->(relation) { relation.where(story_categories: { id: id }) }
-                build_query.call(category_query)
-              when :product
-                product_query = ->(relation) { relation.where(products: { id: id }) }
-                build_query.call(product_query)
-              end
-    end
-    query
+    match_type == 'all' ? queries.reduce(&:merge) : queries.reduce(&:or)
   }
 
   scope :shown, lambda {
@@ -150,7 +125,8 @@ class Story < ApplicationRecord
   before_create { self.og_title = title }
 
   after_update_commit do
-    og_image_was_updated = previous_changes.keys.include?('og_image_url') && previous_changes[:og_image_url].first.present?
+    og_image_was_updated =
+      previous_changes.keys.include?('og_image_url') && previous_changes[:og_image_url].first.present?
     S3Util.delete_object(S3_BUCKET, previous_changes[:og_image_url].first) if og_image_was_updated
   end
 
@@ -376,6 +352,37 @@ class Story < ApplicationRecord
       self.publish_date = Time.now
     elsif !published? && published_was == true
       self.publish_date = nil
+    end
+  end
+
+  class << self
+    private
+
+    def includes_for_filters(filters)
+      relation = all # company.stories
+      relation = relation.includes(:success) if filters[:curator].present? || filters[:customer].present?
+      relation = relation.includes(:category_tags) if filters[:category].present?
+      relation = relation.includes(:product_tags) if filters[:product].present?
+      relation
+    end
+
+    def build_filter_queries(base_relation, filters)
+      filters.filter_map do |type, id|
+        next if id.blank?
+
+        case type
+        when :curator
+          base_relation.where(successes: { curator_id: id })
+        when :status
+          base_relation.where(status_new: id)
+        when :customer
+          base_relation.where(successes: { customer_id: id })
+        when :category
+          base_relation.where(story_categories: { id: id })
+        when :product
+          base_relation.where(products: { id: id })
+        end
+      end
     end
   end
 end
