@@ -181,10 +181,6 @@ class CompaniesController < ApplicationController
           .permit(:tab_color, :text_color, :show, :show_delay, :show_freq, :hide, :hide_delay)
   end
 
-  def set_company
-    @company = Company.find_by_id(params[:id]) || Company.find_by_subdomain(request.subdomain)
-  end
-
   def user_authorized?
     if current_user.company_id == params[:id].to_i
       true

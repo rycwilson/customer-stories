@@ -1,8 +1,8 @@
+# frozen_string_literal: true
 
 class InvitationTemplatesController < ApplicationController
-
   before_action(:set_company)
-  before_action({ except: [:index, :new, :create] }) do
+  before_action({ except: %i[index new create] }) do
     unless params[:restore].present?
       @template = params[:id] == '0' ? nil : InvitationTemplate.find(params[:id])
     end
@@ -10,8 +10,8 @@ class InvitationTemplatesController < ApplicationController
 
   def index
     respond_to do |format|
-      format.json do 
-        render(json: @company.invitation_templates.to_json(only: [:id, :name])) 
+      format.json do
+        render(json: @company.invitation_templates.to_json(only: %i[id name]))
       end
     end
   end
@@ -20,7 +20,7 @@ class InvitationTemplatesController < ApplicationController
     if params[:source_template_id].present?
       source_template = @company.invitation_templates.find_by(id: params[:source_template_id])
       @template = source_template.dup
-      @template.name = 'Copy: ' + source_template.name
+      @template.name = "Copy: #{source_template.name}"
     else
       @template = @company.invitation_templates.build(name: params[:template_name])
     end
@@ -28,8 +28,7 @@ class InvitationTemplatesController < ApplicationController
     render('invitation_templates/template_form')
   end
 
-  def show
-  end
+  def show; end
 
   def edit
     @template = @company.invitation_templates.find(params[:id])&.format_for_editor(current_user)
@@ -59,30 +58,23 @@ class InvitationTemplatesController < ApplicationController
   private
 
   def template_params
-    params.require(:invitation_template)
+    params
+      .require(:invitation_template)
       .permit(
         :name, :request_subject, :request_body, :company_id, :contribution_page_title, :feedback_page_title,
-        { templates_questions_attributes: [:id, :invitation_template_id, :contributor_question_id, :_destroy] },
-        { contributor_questions_attributes: [:id, :company_id, :question] }
+        { templates_questions_attributes: %i[id invitation_template_id contributor_question_id _destroy] },
+        { contributor_questions_attributes: %i[id company_id question] }
       )
   end
 
-  def set_company 
-    @company = Company.find_by_id(params[:company_id]) || Company.find_by_subdomain(request.subdomain)
-  end
-
-  def restore_templates (template_ids)
-    factory_defaults = Company.find_by(name:'CSP').invitation_templates
-    template_ids.each() do |template_id|
+  def restore_templates(template_ids)
+    factory_defaults = Company.find_by(name: 'CSP').invitation_templates
+    template_ids.each do |template_id|
       template = InvitationTemplate.find(template_id)
-      default = factory_defaults.find() { |t| t.name == template.name }
-      template.update({
-        request_subject: default.request_subject,
-        request_body: default.request_body
-      })
-      template.contributor_questions.delete_all()
-      default.contributor_questions.each() { |q| template.contributor_questions << q }
+      default = factory_defaults.find { |t| t.name == template.name }
+      template.update(request_subject: default.request_subject, request_body: default.request_body)
+      template.contributor_questions.delete_all
+      default.contributor_questions.each { |q| template.contributor_questions << q }
     end
   end
-
 end

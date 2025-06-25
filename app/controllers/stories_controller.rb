@@ -18,14 +18,14 @@ class StoriesController < ApplicationController
       @stories = if params[:q].present?
                    search(@company.stories, params[:q])
                  else
-                   Story.default_order(@company.stories.filtered(@filters, @filters_match_type))
+                   Story.default_order @company.stories.filtered(@filters, @filters_match_type)
                  end
     else
       # set_or_redirect_to_story_preview(params[:preview], session[:preview_story_slug])
       # @tags_filter = get_filters_from_query_or_plugin(@company, params)
       @featured_stories =
         @company.stories.featured.order([published: :desc, preview_published: :desc, updated_at: :desc])
-      if request.xhr? and params[:q].present?
+      if request.xhr? && params[:q].present?
         respond_to do |format|
           format.json { render(json: search(@featured_stories, params[:q]).pluck(:id).uniq) }
         end and return
@@ -319,12 +319,6 @@ class StoriesController < ApplicationController
       #        ]
       #          .any? { |ad_id| ad_id.present? ? GoogleAds::get_ad(ad_id) : false }
     end
-  end
-
-  def set_company
-    @company = Company.find_by(id: params[:company_id]) or
-      Company.find_by(subdomain: params[:company_id]) or
-      Company.find_by(subdomain: request.subdomain)
   end
 
   def set_or_redirect_to_story_preview(params_story_slug, session_story_slug)

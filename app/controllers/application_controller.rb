@@ -33,6 +33,12 @@ class ApplicationController < ActionController::Base
 
   protected
 
+  def set_company
+    @company = Company.find_by(id: params[:company_id]) ||
+               Company.find_by(subdomain: params[:company_id]) ||
+               Company.find_by(subdomain: request.subdomain)
+  end
+
   def after_sign_in_path_for(current_resource)
     if session[:user_return_to].present?
       session[:user_return_to]
