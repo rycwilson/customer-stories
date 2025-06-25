@@ -46,7 +46,7 @@ gem 'pretender', '~> 0.4'
 gem 'aws-sdk-s3', '~> 1.0'
 gem 'aws-sdk-ses', '~> 1.6'
 # gem 'aws-sdk-rails', '~> 3.0'
-# gem 'google-adwords-api', '1.5'
+gem 'google-ads-googleads', '~> 34.0'
 
 # Utilities
 # gem 'activerecord-import'
