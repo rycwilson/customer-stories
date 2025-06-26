@@ -9,7 +9,7 @@ class StoryCategory < ApplicationRecord
 
   validates :name, presence: true, uniqueness: { scope: :company }
 
-  friendly_id :name, use: [:slugged, :scoped], scope: :company_id
+  friendly_id :name, use: %i[slugged scoped], scope: :company_id
 
   scope :featured, -> { joins(:stories).merge(Story.featured).distinct }
 

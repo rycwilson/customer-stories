@@ -109,7 +109,6 @@ class Company < ApplicationRecord
   end
 
   # virtual attributes
-  attr_writer :default_ad_image_url
   attr_accessor :skip_callbacks
 
   def tag_select_options(tag_type, with_stories_count: true, only_featured: false, for_multi_select: false)
