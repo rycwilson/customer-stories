@@ -27,7 +27,8 @@
             modal_trigger_params_value: { title: "New #{new_item[:name]}", 'className' => new_item[:modal_class_name] } }) do
           i.fa.fa-plus
           |&nbsp;&nbsp;New
-
+    
+    / Use a button_tag here so that we may interpolate the data attribute
     = button_tag( \
         type: 'button', 
         class: 'btn btn-default', 

@@ -2,7 +2,6 @@
 = form_tag( \
     company_cta_path(company, cta),
     method: :patch,
-    local: true,
     id: "cta-#{cta.id}-form",
     data: { controller: 'cta' }) do |form|
   

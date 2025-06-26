@@ -16,7 +16,6 @@
     = form_with( \
         model: @story,  
         url: @success ? success_story_path(@success) : company_stories_path(@company),
-        local: true,
         html: { \
           id: 'new-story-form',
           autocomplete: 'off',
