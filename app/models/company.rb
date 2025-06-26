@@ -14,7 +14,7 @@ class Company < ApplicationRecord
   has_many :successes, -> { includes(:story) }, through: :customers
   has_many :contributions, -> { includes(:contributor, :referrer, success: { customer: {} }) }, through: :successes
   has_many :contributors, -> { distinct }, through: :customers
-  has_many :referrers, -> { distinct }, through: :contributions
+  has_many :referrers, -> { unscope(:order).distinct.order(:last_name) }, through: :contributions
   has_many :stories, through: :successes do
     def with_ads
       select { |story| story.published? and story.topic_ad.present? and story.retarget_ad.present? }

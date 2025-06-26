@@ -1,9 +1,6 @@
-class Contribution < ApplicationRecord
-  # the default_scope introduces difficulty to, e.g., this:
-  # has_many :contributors, -> { distinct }, through: :contributions, source: :contributor
-  # => #<ActiveRecord::StatementInvalid: PG::InvalidColumnReference: ERROR:  for SELECT DISTINCT, ORDER BY expressions must appear in select list
-  # default_scope { order(created_at: :desc) }
+# frozen_string_literal: true
 
+class Contribution < ApplicationRecord
   belongs_to :success, inverse_of: :contributions
   belongs_to :contributor, class_name: 'User', foreign_key: 'contributor_id'
 
@@ -22,15 +19,17 @@ class Contribution < ApplicationRecord
   has_one :story, through: :success
   belongs_to :invitation_template, optional: true
   has_one :contributor_invitation, dependent: :destroy
-  alias invitation contributor_invitation
+  alias_method :invitation, :contributor_invitation
   has_many :contributor_questions, through: :invitation_template
-  alias questions contributor_questions
+  alias_method :questions, :contributor_questions
   has_many :contributor_answers, dependent: :destroy do
     def to_question(question_id)
       where(contributor_question_id: question_id)
     end
   end
-  alias answers contributor_answers
+  alias_method :answers, :contributor_answers
+
+  default_scope { order(created_at: :desc) }
 
   accepts_nested_attributes_for(:success, allow_destroy: false)
   accepts_nested_attributes_for(:referrer, allow_destroy: false, reject_if: :missing_referrer_attributes?)

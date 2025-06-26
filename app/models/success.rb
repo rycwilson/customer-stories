@@ -42,10 +42,8 @@ class Success < ApplicationRecord
     class_name: 'Contribution'
   )
 
-  # alias the association to user -> Success.find(id).contributors
-  # note: contributor is an alias - see contribution.rb
-  has_many :contributors, through: :contributions, source: :contributor
-  has_many :invitation_templates, -> { distinct }, through: :contributions
+  has_many :contributors, through: :contributions
+  has_many :invitation_templates, -> { unscope(:order).distinct }, through: :contributions
   has_many(
     :invitation_template_identifiers,
     -> { select(:id, :name).distinct },
