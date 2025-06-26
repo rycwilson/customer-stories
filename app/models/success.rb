@@ -38,7 +38,7 @@ class Success < ApplicationRecord
     lambda {
       joins(:contributor_answers)
       .where.not(contributions: { contributor_answers: { id: nil } })
-      .select(:id, :success_id, :contributor_id, :invitation_template_id)
+      .select(:id, :success_id, :contributor_id, :invitation_template_id, :created_at)
       .distinct
     },
     class_name: 'Contribution'
@@ -74,6 +74,14 @@ class Success < ApplicationRecord
 
   validates_uniqueness_of(:name, scope: :customer_id)
   validate :named_or_placeholder
+
+  validate :tag_has_same_company
+
+  def tag_has_same_company
+    if story_categories.present?
+
+    end
+  end
 
   accepts_nested_attributes_for(:customer, allow_destroy: false)
   # contribution must be rejected if its contributor or referrer is missing required attributes
