@@ -1,3 +1,7 @@
+# frozen_string_literal: true
+
+# NOTE: this file is ignored because the relationship is defined with `has_and_belongs_to_many`
+# TODO: Add a custom validation to the Success model to ensure any tags belong to the same company
 class StoryCategoriesSuccess < ApplicationRecord
   belongs_to :story_category
   belongs_to :success
@@ -11,8 +15,8 @@ class StoryCategoriesSuccess < ApplicationRecord
   private
 
   def same_company
-    unless story_category.company == success.company
-      errors.add(:base, "Story Category and Success must belong to the same Company")
-    end
+    return if story_category.company == success.company
+
+    errors.add(:base, 'Customer Win and Category Tag must belong to the same Company')
   end
 end
