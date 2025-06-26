@@ -3,35 +3,33 @@ class SuccessesController < ApplicationController
 
   respond_to(:html, :js, :json)
 
-  before_action({ except: %i[zapier_trigger index new create import] }) { @success = Success.find(params[:id]) }
+  before_action(:set_company, except: %i[update destroy])
+  before_action({ except: %i[zapier_trigger index show new create import] }) { @success = Success.find(params[:id]) }
   skip_before_action(:verify_authenticity_token, only: [:create], if: -> { params[:zapier_create].present? })
 
   def zapier_trigger
-    company = current_user.company
-    data = company.successes
-                  .select { |s| s.win_story_completed? && s.curator_id == params['curator_id'].to_i }
-                  .to_json(
-                    only: %i[id name win_story_html win_story_text win_story_markdown],
-                    include: { customer: { only: %i[name description logo_url] } }
-                  )
+    data = @company.successes
+                   .select { |s| s.win_story_completed? && s.curator_id == params['curator_id'].to_i }
+                   .to_json(
+                     only: %i[id name win_story_html win_story_text win_story_markdown],
+                     include: { customer: { only: %i[name description logo_url] } }
+                   )
     respond_to { |format| format.json { render(json: data) } }
   end
 
   def index
-    company = Company.find_by(subdomain: request.subdomain) || current_user.company
-    @successes = company.successes.includes(:curator, :customer, :story)
+    @successes = @company.successes.includes(:curator, :customer, :story)
     respond_to(&:json)
   end
 
   def new
-    @company = Company.find_by(id: params[:company_id]) || Company.find_by(subdomain: params[:company_id])
     @customer_id = params[:customer_id]
     @curator_id = params[:curator_id]
     @success = Success.new
   end
 
   def show
-    success = Success.includes(:customer).find(params[:id])
+    success = @company.successes.includes(:customer).find(params[:id])
     respond_with(
       success,
       only: %i[id win_story_html win_story_text win_story_markdown win_story_completed],
@@ -41,7 +39,7 @@ class SuccessesController < ApplicationController
   end
 
   def edit
-    @success = Success.includes(
+    @success = @company.successes.includes(
       :invitation_template_identifiers,
       contributions_for_win_story: [:contributor],
       contributor_answers: [:contributor_question]
@@ -52,8 +50,6 @@ class SuccessesController < ApplicationController
   end
 
   def create
-    @company = Company.find_by(subdomain: request.subdomain) || current_user.company
-
     puts JSON.pretty_generate(success_params.to_h)
 
     # if params[:success].dig(:customer_attributes).present?
@@ -114,7 +110,6 @@ class SuccessesController < ApplicationController
 
   def import
     # awesome_print params[:imported_successes]
-    @company = Company.find(params[:company_id])
     @successes = []
     success_lookup = {}   # { name: { id: 1, customer_id: 1 } }
     customer_lookup = {}  # { name: id }

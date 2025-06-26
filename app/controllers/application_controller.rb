@@ -35,8 +35,8 @@ class ApplicationController < ActionController::Base
 
   def set_company
     @company = Company.find_by(id: params[:company_id]) ||
-               Company.find_by(subdomain: params[:company_id]) ||
-               Company.find_by(subdomain: request.subdomain)
+               Company.where('subdomain = ? OR subdomain = ?', params[:company_id], request.subdomain).take ||
+               current_user&.company
   end
 
   def after_sign_in_path_for(current_resource)
