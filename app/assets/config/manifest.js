@@ -3,6 +3,7 @@
 //= link_tree ../builds
 
 //= link_directory ../fonts
+// = link_directory ../../../node_modules/bootstrap-sass/assets/fonts/bootstrap
 //= link_directory ../../../node_modules/font-awesome/fonts
 //= link_directory ../../../node_modules/summernote/src/styles/summernote/font
 

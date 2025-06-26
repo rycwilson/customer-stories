@@ -61,9 +61,9 @@ class Success < ApplicationRecord
     },
     through: :invitation_templates
   )
-  alias questions contributor_questions
+  alias_method :questions, :contributor_questions
   has_many :contributor_answers, through: :contributions
-  alias answers contributor_answers
+  alias_method :answers, :contributor_answers
   has_many :page_views, class_name: 'PageView'
   has_many :story_shares, class_name: 'StoryShare'
   has_many :visitor_actions
@@ -76,12 +76,6 @@ class Success < ApplicationRecord
   validate :named_or_placeholder
 
   validate :tag_has_same_company
-
-  def tag_has_same_company
-    if story_categories.present?
-
-    end
-  end
 
   accepts_nested_attributes_for(:customer, allow_destroy: false)
   # contribution must be rejected if its contributor or referrer is missing required attributes
