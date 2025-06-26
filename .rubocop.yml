@@ -15,9 +15,22 @@ Documentation:
 Layout/LineLength:
   Max: 120
 
+Metrics/BlockLength:
+  Exclude:
+    - 'db/schema.rb'
+
 # Rubocop crashed on analyzing app/controllers/stories_controller.rb for this rule
 Lint/LiteralAsCondition:
   Enabled: false
 
 Style/Alias:
   EnforcedStyle: prefer_alias_method
+Style/StringLiterals:
+  Exclude:
+    - 'db/schema.rb'
+Style/WordArray:
+  Exclude:
+    - 'db/schema.rb'
+Style/NumericLiterals:
+  Exclude:
+    - 'db/schema.rb'
