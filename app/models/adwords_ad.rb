@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 
 class AdwordsAd < ApplicationRecord
   belongs_to :story
@@ -13,26 +14,24 @@ class AdwordsAd < ApplicationRecord
 
   validates_presence_of :story
   validates_presence_of :ad_group
-  # validates_presence_of :square_images, if: :promote_enabled?
-  # validates_presence_of :landscape_images, if: :promote_enabled?
+  # validates_presence_of :square_images, if: ->(ad) { ad.company.promote_tr? }
+  # validates_presence_of :landscape_images, if: ->(ad) { ad.company.promote_tr? }
 
-  #
-  # don't want to do this because we want the ad even if gads doesn't work
+  # We don't want to do this because we want the ad even if gads doesn't work.
+  # Raise an exception if the ad is created without an ad_id
   # validates_presence_of(
   #   :ad_id,
   #   on: :create,
   #   if: Proc.new { |ad| ad.ad_group.campaign.company.promote_tr? }
   # )
-  #
-  # => throw an exception for this case
-  #
 
   scope(:topic, -> { joins(:adwords_campaign).where(adwords_campaign: { type: 'TopicCampaign' }) })
   scope(:retarget, -> { joins(:adwords_campaign).where(adwords_campaign: { type: 'RetargetCampaign' }) })
+  scope(:with_google_id, -> { where.not(ad_id: [nil]) })
 
   before_create :assign_defaults
-  # before_create :create_gad, if: :promote_enabled?
-  # before_destroy :remove_gad, if: :promote_enabled?
+  # before_create :create_gad, if: ->(ad) { ad.company.promote_tr? }
+  # before_destroy :remove_gad, if: ->(ad) { ad.company.promote_tr? }
 
   def google_ad
     campaign_type = ad_group.campaign.type.match(/(?<type>Topic|Retarget)/)[:type].downcase
@@ -97,51 +96,30 @@ class AdwordsAd < ApplicationRecord
 
   private
 
-  def promote_enabled?
-    self.campaign.company.promote_tr?
-  end
-
   def create_gad
-    # new_gad = GoogleAds::create_ad(self)
-    # if new_gad[:id].present?
-    #   self[:ad_id] = new_gad[:id]
-    # else
-      # don't want to trigger invalidation because we want the model even if the ad fails
-      # the failure can be ignored when updating the story (publishing, unpublishing),
-      # and flagged in the promoted stories table
-
-      # this doesn't seem to work
-    #   new_gad[:errors].each { |error| self.story.errors[:base] << google_error(error) }
-    # end
-  end
-
-  def validate_images
-    # TODO: How best to do this?
-    # => an ad can have up to 20 images
-    # => scheduled maintenance
-    # GoogleAds::get_image_assets(
-    #       self.adwords_images.default.map { |image| image.asset_id }
-    #     ).length == ?
+    new_gad = GoogleAds.create_ad(self)
+    if new_gad[:id].present?
+      self.ad_id = new_gad[:id]
+    else
+      new_gad[:errors].each do |error|
+        errors[:ad_id].add <<
+          case error[:type]
+          when 'INVALID_ID'
+            "Not found: #{error[:field].underscore.humanize.downcase.singularize}"
+          when 'REQUIRED'
+            "Required: #{error[:field].underscore.humanize.downcase.singularize}"
+          end
+      end
+    end
   end
 
   def remove_gad
-    # GoogleAds::remove_ads([ { ad_group_id: self.ad_group.ad_group_id, ad_id: self.ad_id } ])
+    GoogleAds.remove_ads([{ ad_group_id: ad_group.ad_group_id, ad_id: ad_id }])
   end
 
   def assign_defaults
-    long_headline = story.title.truncate(RESPONSIVE_AD_LONG_HEADLINE_MAX, { omission: '' })
+    self.long_headline = story.title.truncate(RESPONSIVE_AD_LONG_HEADLINE_MAX, omission: '')
     adwords_images << story.company.adwords_images.default
-  end
-
-  def google_error(error)
-    case error[:type]
-    when 'INVALID_ID'
-      "Not found: #{ error[:field].underscore.humanize.downcase.singularize }"
-    when 'REQUIRED'
-      "Required: #{ error[:field].underscore.humanize.downcase.singularize }"
-    # when something else
-    else
-    end
   end
 
   def add_missing_default_images

@@ -81,7 +81,6 @@ class StoriesController < ApplicationController
     #     status: :moved_permanently
     #   )
     # end
-    # user_authorized?(@story, current_user)
 
     if params[:edit_story_partial]
       respond_to do |format|
@@ -348,17 +347,6 @@ class StoriesController < ApplicationController
                      })
   end
 
-  # new customers can be created on new story creation
-  # the customer field's value will be either a number (db id of existing customer),
-  # or a string (new customer)
-  # this method ensures that a number is treated as a number and a string is
-  # treated as a string, e.g. "3M" is treated as a string
-  def new_customer?(customer)
-    !Float(customer) # if a number then customer already exists -> return false
-  rescue ArgumentError # if error then customer is a string -> return true
-    true
-  end
-
   # if we're here, it means the router allowed through a valid path:
   # /:customer/:product/:title OR /:customer/:title OR /:customer/:random_string
   # (valid => these resources exist AND exist together)
@@ -378,31 +366,6 @@ class StoriesController < ApplicationController
       @story
     elsif !@story.published? and !company.curators.include?(current_user)
       redirect_to(root_url(subdomain: request.subdomain, host: request.domain)) and return
-    end
-  end
-
-  def user_authorized?(story, current_user)
-    if current_user.try(:company_id) == story.success.customer.company.id
-      true
-    else
-      render file: 'public/403', status: 403, layout: false
-      false
-    end
-  end
-
-  # async filter requests may contain either the tag's numeric id or its slug
-  # if id, look up the slug and return.  if slug, just return
-  def get_filter_slug(filter_params)
-    if filter_params[:id] == '0' # all -> query string to be removed, no slug needed
-      nil
-    elsif filter_params[:id].to_i == 0 # params already contain slug (instead of numeric id)
-      filter_params[:id]
-    elsif filter_params[:tag] == 'category'
-      StoryCategory.find(filter_params[:id]).slug
-    elsif filter_params[:tag] == 'product'
-      Product.find(filter_params[:id]).slug
-    else
-      # error
     end
   end
 end

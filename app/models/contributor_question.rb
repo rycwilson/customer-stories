@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class ContributorQuestion < ApplicationRecord
   belongs_to :company
   has_and_belongs_to_many :invitation_templates, dependent: :destroy, join_table: :templates_questions

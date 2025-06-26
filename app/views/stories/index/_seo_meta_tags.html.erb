@@ -23,8 +23,8 @@
     },
     "keywords": "<%= company.name %>, customer stories, customer success stories, customer case studies",
     "dateCreated": "<%= company.created_at %>",
-    "dateModified": "<%= company.latest_story_modified_date %>",
-    "datePublished": "<%= company.latest_story_publish_date %>",
+    "dateModified": "<%= company.stories.last_logo_published.take.try(:logo_publish_date) %>",
+    "datePublished": "<%= company.stories.last_published.take.try(:publish_date) %>",
     "isFamilyFriendly": "true"
   }
 </script>

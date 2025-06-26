@@ -10,7 +10,7 @@ FactoryBot.define do
     skip_callbacks { true }
 
     factory :curator do
-      association :company
+      company
     end
   end
 end

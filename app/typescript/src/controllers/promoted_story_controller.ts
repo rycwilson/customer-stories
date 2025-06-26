@@ -29,7 +29,7 @@ export default class PromotedStoryController extends DatatableRowController<Prom
   async updateStatus({ detail: { state: shouldEnable } }: { detail: { state: boolean } }) {
     const newStatus = shouldEnable ? 'ENABLED' : 'PAUSED';
     this.$statusSwitch.bootstrapSwitch('disabled', true);
-    this.statusLabelTarget.textContent = '\u00A0';
+    this.statusLabelTarget.textContent = '\u00A0'; // unbreakable space prevents the elment from collapsing
     const request = new FetchRequest('patch', this.path, {
       body: { adwords_ad: { status: newStatus } },
       responseKind: 'turbo-stream'

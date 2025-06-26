@@ -93,13 +93,13 @@ class Story < ApplicationRecord
   friendly_id :title, use: %i[slugged finders history]
 
   scope :published, -> { where(published: true) }
-
+  scope :last_published, -> { where(published: true).order(publish_date: :desc).limit(1) }
+  scope :last_logo_published, -> { where(logo_published: true).order(logo_publish_date: :desc).limit(1) }
   scope :featured, lambda {
     joins(:customer)
       .where.not(customers: { logo_url: [nil, ''] })
       .where('logo_published IS TRUE OR preview_published IS TRUE')
   }
-
   scope :filtered, lambda { |filters, match_type = 'all'|
     # The default object here is the relation that called the scope (i.e. company.stories)
     return all if filters.blank?
@@ -115,7 +115,6 @@ class Story < ApplicationRecord
 
     match_type == 'all' ? queries.reduce(&:merge) : queries.reduce(&:or)
   }
-
   scope :shown, lambda {
     joins(:customer)
       .where.not(customers: { logo_url: [nil, ''] })

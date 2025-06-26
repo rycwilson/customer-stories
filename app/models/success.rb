@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Success < ApplicationRecord
   # virtual attribute for keeping track of a new Success that is also created with
   # new contribution (as when a referrer is specified);
@@ -20,7 +22,7 @@ class Success < ApplicationRecord
 
   has_and_belongs_to_many :products
   has_and_belongs_to_many :story_categories
-  alias categories story_categories
+  alias_method :categories, :story_categories
 
   has_many :contributions, inverse_of: :success, dependent: :destroy do
     def invitation_sent

@@ -1,9 +1,6 @@
+# frozen_string_literal: true
+
 class CompaniesController < ApplicationController
-  before_action :authenticate_user!, only: [:show]
-
-  # application#check_subdomain takes care of this...
-  # before_action :user_authorized?, only: [:edit, :show]
-
   before_action :set_company, except: %i[new create promote get_curators get_invitation_templates]
 
   def new
@@ -45,8 +42,8 @@ class CompaniesController < ApplicationController
         flash.now[:notice] = 'Story tags have been updated'
         render(partial: 'companies/settings/tags', locals: { company: @company })
       elsif turbo_frame_request_id == 'company-ads-settings'
-        image_was_created = company_params[:adwords_images_attributes].to_h.any? { |index, ad| ad[:id].blank? }
-        image_was_destroyed = company_params[:adwords_images_attributes].to_h.any? do |index, ad|
+        image_was_created = company_params[:adwords_images_attributes].to_h.any? { |_index, ad| ad[:id].blank? }
+        image_was_destroyed = company_params[:adwords_images_attributes].to_h.any? do |_index, ad|
           ad[:_destroy] == 'true'
         end
         flash.now[:notice] = if image_was_created
@@ -73,10 +70,13 @@ class CompaniesController < ApplicationController
             if @company.previous_changes[:square_logo_url].present?
               turbo_stream_actions << turbo_stream.update(
                 'company-admin-logo',
-                html: "<img src=\"#{@company.square_logo_url}\" alt=\"#{@company.name} logo\"><i class=\"fa fa-caret-down\"></i>".html_safe
+                html: " \
+                  <img src=\"#{@company.square_logo_url}\" alt=\"#{@company.name} logo\" />
+                  <i class=\"fa fa-caret-down\"></i> \
+                ".html_safe
               )
             end
-            if @company.previous_changes[:header_color_1].present? and @company.ctas.primary.present?
+            if @company.previous_changes[:header_color_1].present? && @company.ctas.primary.present?
               turbo_stream_actions << turbo_stream.update(
                 "edit-cta-#{@company.ctas.primary.id}",
                 partial: 'ctas/edit', locals: { company: @company, cta: @company.ctas.primary }
@@ -96,7 +96,7 @@ class CompaniesController < ApplicationController
 
   def set_reset_gads
     company = Company.find(params[:id])
-    if company.ready_for_gads?
+    if company.gads_requirements_checklist.values.all?(&:present?)
 
       # force to get campaigns by name => because staging won't match production
       # campaigns = GoogleAds::get_campaigns([ nil, nil ], company.subdomain)
@@ -179,15 +179,6 @@ class CompaniesController < ApplicationController
   def plugin_params
     params.require(:plugin)
           .permit(:tab_color, :text_color, :show, :show_delay, :show_freq, :hide, :hide_delay)
-  end
-
-  def user_authorized?
-    if current_user.company_id == params[:id].to_i
-      true
-    else
-      render file: 'public/403', status: 403, layout: false
-      false
-    end
   end
 
   def filters_from_cookies

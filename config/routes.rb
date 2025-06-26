@@ -1,8 +1,7 @@
+# frozen_string_literal: true
 
-#
-# this comes in handy if the current_user is needed
-# request.env['warden'].user(:user)
-#
+# request.env['warden'].user(:user) # handy if the current_user is needed
+
 Rails.application.routes.default_url_options = {
   protocol: Rails.env.production? ? 'https' : 'http',
   host: ENV['HOST_NAME']
@@ -10,18 +9,20 @@ Rails.application.routes.default_url_options = {
 
 Rails.application.routes.draw do
   root 'site#landing', constraints: { subdomain: '' }
-  get '/:page', to: 'site#landing', constraints: { subdomain: '', page: /product|plans|company|team|terms|privacy|our-story/ }
-  
-  # TODO Do this for each subdomain
+  get(
+    '/:page',
+    to: 'site#landing',
+    constraints: { subdomain: '', page: /product|plans|company|team|terms|privacy|our-story/ }
+  )
+
+  # TODO: Do this for each subdomain
   get '/sitemap', to: 'site#sitemap'
   get '/:google', to: 'site#google_verify', constraints: { google: /google\w+/ }
-  
-  # mount RailsAdmin::Engine => '/admin', as: 'rails_admin'
-  
+
   constraints(DeviseSubdomain) do
     devise_for :admins
     devise_for(
-      :users, 
+      :users,
       controllers: {
         sessions: 'users/sessions',
         registrations: 'users/registrations',
@@ -56,7 +57,7 @@ Rails.application.routes.draw do
     # registered user, unregistered company
     get('/settings', to: 'companies#new', as: 'new_company', constraints: { subdomain: '' })
     post('/settings', to: 'companies#create', as: 'companies', constraints: { subdomain: '' })
-    
+
     # zapier
     get '/auth-test', to: 'application#auth_test'
     get '/curators', to: 'companies#get_curators'
@@ -86,7 +87,7 @@ Rails.application.routes.draw do
 
     get '/plugins/:type/cs', to: 'plugins#main'
     # get '/widgets/:type/cs', to: 'plugins#main'  # legacy (was varmour)
-    get '/widget/cs', to: 'plugins#main'  # legacy (trunity)
+    get '/widget/cs', to: 'plugins#main' # legacy (trunity)
 
     # specifying a default format for plugins#show because (for unknown reason) ajax jsonp
     # request sent from IE11 was resulting in request interpreted as html
@@ -118,7 +119,7 @@ Rails.application.routes.draw do
           # need to distinguish '/contributions/:id' routes from '/contributions/:token' routes;
           # hence :update is excluded above and added below
           # (note :edit always uses '/contributions/:token/:type' route
-          member do 
+          member do
             put :update, constraints: { id: /\d+/ }
             patch :update, constraints: { id: /\d+/ }
           end
@@ -150,16 +151,19 @@ Rails.application.routes.draw do
     # token needed for access outside of user-authorized routes
     # type IN ('contribution', 'feedback', 'opt_out', 'remove')
     get '/contributions/:token/confirm', to: 'contributions#confirm_submission', as: 'confirm_submission'
-    get '/contributions/:token/:type', to: 'contributions#edit', as: 'edit_contribution', constraints: { type: /(contribution|feedback)/ }
+    get(
+      '/contributions/:token/:type',
+      to: 'contributions#edit',
+      as: 'edit_contribution',
+      constraints: { type: /(contribution|feedback)/ }
+    )
     get '/contributions/:token/:type', to: 'contributions#update', constraints: { type: /(opt_out|remove)/ }
-    put '/contributions/:token', to: 'contributions#update', as: 'contributor_submission', constraints: { submission: true }
-
-    # need to pick up on devise sign-in route here, without doing so explicitly
-    # as that will conflict with devise routes declared below
-    # 'method' instead of 'action' - latter is keyword with its own params entry
-    # devise_scope :user do
-    #   get '/:devise/:method', to: 'users/sessions#new', constraints: { devise: 'users', method: 'sign_in' }
-    # end
+    put(
+      '/contributions/:token',
+      to: 'contributions#update',
+      as: 'contributor_submission',
+      constraints: { submission: true }
+    )
 
     constraints(PublishedStoryPathConstraint) do
       # get(
@@ -173,7 +177,7 @@ Rails.application.routes.draw do
   end
 
   put '/contributions/:token', to: 'contributions#update', constraints: { subdomain: '' }
-  
+
   # Not found (parends ensure root path matches)
   get '(*all)', to: 'site#not_found'
 end

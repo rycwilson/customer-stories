@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Company < ApplicationRecord
   # include GoogleAds
 
@@ -44,24 +46,12 @@ class Company < ApplicationRecord
   has_many :products, dependent: :destroy
   accepts_nested_attributes_for :products, allow_destroy: true
 
-  has_many :contributor_questions, dependent: :destroy do
-    def grouped_select_options
-      {
-        'Custom' => self.select { |q| q.role.nil? }
-                        .map { |q| [q.question, q.id] }
-                        .unshift(['- New Question -', '0']),
-        'Customer' => self.select { |q| q.role == 'customer' }
-                          .map { |q| [q.question, q.id] },
-        'Customer Success' => self.select { |q| q.role == 'customer success' }
-                                  .map { |q| [q.question, q.id] },
-        'Sales' => self.select { |q| q.role == 'sales' }
-                       .map { |q| [q.question, q.id] }
-      }
-    end
-  end
+  has_many :contributor_questions, dependent: :destroy
   alias_method :questions, :contributor_questions
+
   has_many :invitation_templates, dependent: :destroy
   alias_method :templates, :invitation_templates
+
   has_many :outbound_actions, dependent: :destroy
   has_many(:ctas, class_name: 'CallToAction', dependent: :destroy) do
     def primary
@@ -80,11 +70,7 @@ class Company < ApplicationRecord
   has_one :topic_ad_group, through: :topic_campaign, source: :adwords_ad_group
   has_one :retarget_ad_group, through: :retarget_campaign, source: :adwords_ad_group
 
-  has_many :adwords_ads, through: :adwords_campaigns do
-    def with_google_id
-      where.not(ad_id: [nil]) # don't include emptry string or it won't work! (because type is number?)
-    end
-  end
+  has_many :adwords_ads, through: :adwords_campaigns
   alias_method :ads, :adwords_ads
 
   has_many :adwords_images, dependent: :destroy
@@ -195,14 +181,6 @@ class Company < ApplicationRecord
       { '@type' => 'Product',
         'name' => product.name }
     end
-  end
-
-  def latest_story_publish_date
-    stories.where(published: true).order(:publish_date).take.try(:publish_date)
-  end
-
-  def latest_story_modified_date
-    stories.where(logo_published: true).order(logo_publish_date: :desc).take.try(:logo_publish_date)
   end
 
   def recent_activity(days_offset) # today = 0
