@@ -10,7 +10,8 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2025_06_19_024660) do
+ActiveRecord::Schema[7.2].define(version: 2025_06_26_182228) do
+  create_schema "heroku_ext"
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_stat_statements"
@@ -21,7 +22,7 @@ ActiveRecord::Schema.define(version: 2025_06_19_024660) do
     t.string "record_type", null: false
     t.bigint "record_id", null: false
     t.bigint "blob_id", null: false
-    t.datetime "created_at", null: false
+    t.datetime "created_at", precision: nil, null: false
     t.index ["blob_id"], name: "index_active_storage_attachments_on_blob_id"
     t.index ["record_type", "record_id", "name", "blob_id"], name: "index_active_storage_attachments_uniqueness", unique: true
   end
@@ -34,7 +35,7 @@ ActiveRecord::Schema.define(version: 2025_06_19_024660) do
     t.string "service_name", null: false
     t.bigint "byte_size", null: false
     t.string "checksum"
-    t.datetime "created_at", null: false
+    t.datetime "created_at", precision: nil, null: false
     t.index ["key"], name: "index_active_storage_blobs_on_key", unique: true
   end
 
@@ -48,17 +49,17 @@ ActiveRecord::Schema.define(version: 2025_06_19_024660) do
     t.string "email"
     t.string "encrypted_password", default: "", null: false
     t.string "reset_password_token"
-    t.datetime "reset_password_sent_at"
-    t.datetime "remember_created_at"
+    t.datetime "reset_password_sent_at", precision: nil
+    t.datetime "remember_created_at", precision: nil
     t.integer "sign_in_count", default: 0, null: false
-    t.datetime "current_sign_in_at"
-    t.datetime "last_sign_in_at"
+    t.datetime "current_sign_in_at", precision: nil
+    t.datetime "last_sign_in_at", precision: nil
     t.inet "current_sign_in_ip"
     t.inet "last_sign_in_ip"
     t.string "first_name"
     t.string "last_name"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
+    t.datetime "created_at", precision: nil, null: false
+    t.datetime "updated_at", precision: nil, null: false
     t.index ["email"], name: "index_admins_on_email", unique: true
   end
 
@@ -67,8 +68,8 @@ ActiveRecord::Schema.define(version: 2025_06_19_024660) do
     t.bigint "ad_group_id"
     t.string "name"
     t.string "status", default: "PAUSED"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
+    t.datetime "created_at", precision: nil, null: false
+    t.datetime "updated_at", precision: nil, null: false
     t.index ["adwords_campaign_id"], name: "index_adwords_ad_groups_on_adwords_campaign_id"
   end
 
@@ -79,8 +80,8 @@ ActiveRecord::Schema.define(version: 2025_06_19_024660) do
     t.string "status", default: "PAUSED"
     t.string "approval_status", default: "UNCHECKED"
     t.string "long_headline"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
+    t.datetime "created_at", precision: nil, null: false
+    t.datetime "updated_at", precision: nil, null: false
     t.string "main_color", default: "#ffffff"
     t.string "accent_color", default: "#ffffff"
     t.index ["adwords_ad_group_id"], name: "index_adwords_ads_on_adwords_ad_group_id"
@@ -99,16 +100,16 @@ ActiveRecord::Schema.define(version: 2025_06_19_024660) do
     t.string "type"
     t.string "name"
     t.string "status", default: "PAUSED"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
+    t.datetime "created_at", precision: nil, null: false
+    t.datetime "updated_at", precision: nil, null: false
     t.index ["company_id"], name: "index_adwords_campaigns_on_company_id"
   end
 
   create_table "adwords_images", id: :serial, force: :cascade do |t|
     t.integer "company_id"
     t.string "image_url"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
+    t.datetime "created_at", precision: nil, null: false
+    t.datetime "updated_at", precision: nil, null: false
     t.boolean "default", default: false
     t.bigint "media_id"
     t.string "type"
@@ -124,16 +125,22 @@ ActiveRecord::Schema.define(version: 2025_06_19_024660) do
     t.string "description"
     t.text "form_html"
     t.string "display_text"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
+    t.datetime "created_at", precision: nil, null: false
+    t.datetime "updated_at", precision: nil, null: false
     t.boolean "primary", default: false
     t.index ["company_id"], name: "index_call_to_actions_on_company_id"
   end
 
+  create_table "call_to_actions_stories", id: false, force: :cascade do |t|
+    t.bigint "story_id", null: false
+    t.bigint "call_to_action_id", null: false
+    t.index ["story_id", "call_to_action_id"], name: "idx_on_story_id_call_to_action_id_d9d6b6f3f2"
+  end
+
   create_table "companies", id: :serial, force: :cascade do |t|
     t.string "name"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
+    t.datetime "created_at", precision: nil, null: false
+    t.datetime "updated_at", precision: nil, null: false
     t.string "logo_url"
     t.string "subdomain"
     t.string "feature_flag", default: "beta"
@@ -163,20 +170,20 @@ ActiveRecord::Schema.define(version: 2025_06_19_024660) do
     t.text "feedback"
     t.string "status", default: "pre_request"
     t.boolean "linkedin", default: false
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.datetime "request_remind_at"
+    t.datetime "created_at", precision: nil, null: false
+    t.datetime "updated_at", precision: nil, null: false
+    t.datetime "request_remind_at", precision: nil
     t.integer "first_reminder_wait", default: 2
     t.integer "second_reminder_wait", default: 3
     t.string "access_token"
     t.integer "referrer_id"
     t.text "notes"
-    t.datetime "submitted_at"
-    t.datetime "request_received_at"
+    t.datetime "submitted_at", precision: nil
+    t.datetime "request_received_at", precision: nil
     t.integer "invitation_template_id"
     t.string "request_subject"
     t.text "request_body"
-    t.datetime "request_sent_at"
+    t.datetime "request_sent_at", precision: nil
     t.boolean "success_contact", default: false
     t.index ["contributor_id"], name: "index_contributions_on_contributor_id"
     t.index ["invitation_template_id"], name: "index_contributions_on_invitation_template_id"
@@ -187,8 +194,8 @@ ActiveRecord::Schema.define(version: 2025_06_19_024660) do
     t.text "answer"
     t.integer "contribution_id"
     t.integer "contributor_question_id"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
+    t.datetime "created_at", precision: nil, null: false
+    t.datetime "updated_at", precision: nil, null: false
     t.index ["contribution_id"], name: "index_contributor_answers_on_contribution_id"
     t.index ["contributor_question_id"], name: "index_contributor_answers_on_contributor_question_id"
   end
@@ -197,18 +204,18 @@ ActiveRecord::Schema.define(version: 2025_06_19_024660) do
     t.text "email_subject"
     t.text "email_body"
     t.integer "status", default: 0
-    t.datetime "sent_at"
+    t.datetime "sent_at", precision: nil
     t.bigint "contribution_id"
-    t.datetime "created_at", precision: 6, null: false
-    t.datetime "updated_at", precision: 6, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
     t.index ["contribution_id"], name: "index_contributor_invitations_on_contribution_id"
   end
 
   create_table "contributor_questions", id: :serial, force: :cascade do |t|
     t.integer "company_id"
     t.string "question"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
+    t.datetime "created_at", precision: nil, null: false
+    t.datetime "updated_at", precision: nil, null: false
     t.string "role"
     t.index ["company_id"], name: "index_contributor_questions_on_company_id"
   end
@@ -228,8 +235,8 @@ ActiveRecord::Schema.define(version: 2025_06_19_024660) do
   create_table "ctas_successes", id: :serial, force: :cascade do |t|
     t.integer "call_to_action_id"
     t.integer "success_id"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
+    t.datetime "created_at", precision: nil, null: false
+    t.datetime "updated_at", precision: nil, null: false
     t.index ["call_to_action_id"], name: "index_ctas_successes_on_call_to_action_id"
     t.index ["success_id"], name: "index_ctas_successes_on_success_id"
   end
@@ -238,8 +245,8 @@ ActiveRecord::Schema.define(version: 2025_06_19_024660) do
     t.string "name", null: false
     t.string "logo_url"
     t.integer "company_id"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
+    t.datetime "created_at", precision: nil, null: false
+    t.datetime "updated_at", precision: nil, null: false
     t.string "slug"
     t.boolean "show_name_with_logo", default: true
     t.string "description"
@@ -252,13 +259,13 @@ ActiveRecord::Schema.define(version: 2025_06_19_024660) do
     t.integer "attempts", default: 0, null: false
     t.text "handler", null: false
     t.text "last_error"
-    t.datetime "run_at"
-    t.datetime "locked_at"
-    t.datetime "failed_at"
+    t.datetime "run_at", precision: nil
+    t.datetime "locked_at", precision: nil
+    t.datetime "failed_at", precision: nil
     t.string "locked_by"
     t.string "queue"
-    t.datetime "created_at"
-    t.datetime "updated_at"
+    t.datetime "created_at", precision: nil
+    t.datetime "updated_at", precision: nil
     t.index ["priority", "run_at"], name: "delayed_jobs_priority"
   end
 
@@ -267,7 +274,7 @@ ActiveRecord::Schema.define(version: 2025_06_19_024660) do
     t.integer "sluggable_id", null: false
     t.string "sluggable_type", limit: 50
     t.string "scope"
-    t.datetime "created_at"
+    t.datetime "created_at", precision: nil
     t.index ["slug", "sluggable_type", "scope"], name: "index_friendly_id_slugs_on_slug_and_sluggable_type_and_scope", unique: true
     t.index ["slug", "sluggable_type"], name: "index_friendly_id_slugs_on_slug_and_sluggable_type"
     t.index ["sluggable_id"], name: "index_friendly_id_slugs_on_sluggable_id"
@@ -279,8 +286,8 @@ ActiveRecord::Schema.define(version: 2025_06_19_024660) do
     t.string "name"
     t.string "request_subject"
     t.string "request_body"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
+    t.datetime "created_at", precision: nil, null: false
+    t.datetime "updated_at", precision: nil, null: false
     t.string "contribution_page_title", default: "Thank you for contributing your insights"
     t.string "feedback_page_title", default: "Thank you for your feedback"
     t.index ["company_id"], name: "index_invitation_templates_on_company_id"
@@ -292,8 +299,8 @@ ActiveRecord::Schema.define(version: 2025_06_19_024660) do
     t.string "token", null: false
     t.integer "expires_in", null: false
     t.text "redirect_uri", null: false
-    t.datetime "created_at", null: false
-    t.datetime "revoked_at"
+    t.datetime "created_at", precision: nil, null: false
+    t.datetime "revoked_at", precision: nil
     t.string "scopes"
     t.index ["token"], name: "index_oauth_access_grants_on_token", unique: true
   end
@@ -304,8 +311,8 @@ ActiveRecord::Schema.define(version: 2025_06_19_024660) do
     t.string "token", null: false
     t.string "refresh_token"
     t.integer "expires_in"
-    t.datetime "revoked_at"
-    t.datetime "created_at", null: false
+    t.datetime "revoked_at", precision: nil
+    t.datetime "created_at", precision: nil, null: false
     t.string "scopes"
     t.string "previous_refresh_token", default: "", null: false
     t.index ["refresh_token"], name: "index_oauth_access_tokens_on_refresh_token", unique: true
@@ -319,22 +326,22 @@ ActiveRecord::Schema.define(version: 2025_06_19_024660) do
     t.string "secret", null: false
     t.text "redirect_uri", null: false
     t.string "scopes", default: "", null: false
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
+    t.datetime "created_at", precision: nil, null: false
+    t.datetime "updated_at", precision: nil, null: false
     t.index ["uid"], name: "index_oauth_applications_on_uid", unique: true
   end
 
   create_table "opt_outs", id: :serial, force: :cascade do |t|
     t.string "email"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
+    t.datetime "created_at", precision: nil, null: false
+    t.datetime "updated_at", precision: nil, null: false
   end
 
   create_table "outbound_actions", id: :serial, force: :cascade do |t|
     t.string "link_url"
     t.integer "company_id"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
+    t.datetime "created_at", precision: nil, null: false
+    t.datetime "updated_at", precision: nil, null: false
     t.string "type"
     t.text "form_html"
     t.string "display_text"
@@ -345,8 +352,8 @@ ActiveRecord::Schema.define(version: 2025_06_19_024660) do
   create_table "outbound_actions_stories", id: :serial, force: :cascade do |t|
     t.integer "outbound_action_id"
     t.integer "story_id"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
+    t.datetime "created_at", precision: nil, null: false
+    t.datetime "updated_at", precision: nil, null: false
     t.index ["outbound_action_id"], name: "index_outbound_actions_stories_on_outbound_action_id"
     t.index ["story_id"], name: "index_outbound_actions_stories_on_story_id"
   end
@@ -359,8 +366,8 @@ ActiveRecord::Schema.define(version: 2025_06_19_024660) do
     t.integer "hide_delay", default: 5000
     t.string "tab_color", default: "#ddd"
     t.string "text_color", default: "#333"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
+    t.datetime "created_at", precision: nil, null: false
+    t.datetime "updated_at", precision: nil, null: false
     t.integer "show_freq", default: 7
     t.index ["company_id"], name: "index_plugins_on_company_id"
   end
@@ -369,8 +376,8 @@ ActiveRecord::Schema.define(version: 2025_06_19_024660) do
     t.string "name", null: false
     t.text "description"
     t.integer "company_id"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
+    t.datetime "created_at", precision: nil, null: false
+    t.datetime "updated_at", precision: nil, null: false
     t.string "slug"
     t.index ["company_id"], name: "index_products_on_company_id"
     t.index ["name", "company_id"], name: "index_products_on_name_and_company_id", unique: true
@@ -379,8 +386,8 @@ ActiveRecord::Schema.define(version: 2025_06_19_024660) do
   create_table "products_successes", id: :serial, force: :cascade do |t|
     t.integer "success_id"
     t.integer "product_id"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
+    t.datetime "created_at", precision: nil, null: false
+    t.datetime "updated_at", precision: nil, null: false
     t.index ["product_id"], name: "index_products_successes_on_product_id"
     t.index ["success_id"], name: "index_products_successes_on_success_id"
   end
@@ -388,15 +395,15 @@ ActiveRecord::Schema.define(version: 2025_06_19_024660) do
   create_table "prompts", id: :serial, force: :cascade do |t|
     t.string "description"
     t.integer "success_id"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
+    t.datetime "created_at", precision: nil, null: false
+    t.datetime "updated_at", precision: nil, null: false
     t.index ["success_id"], name: "index_prompts_on_success_id"
   end
 
   create_table "results", id: :serial, force: :cascade do |t|
     t.string "description"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
+    t.datetime "created_at", precision: nil, null: false
+    t.datetime "updated_at", precision: nil, null: false
     t.bigint "story_id"
     t.index ["story_id"], name: "index_results_on_story_id"
   end
@@ -407,20 +414,20 @@ ActiveRecord::Schema.define(version: 2025_06_19_024660) do
     t.text "quote_attr"
     t.string "video_url"
     t.integer "success_id"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
+    t.datetime "created_at", precision: nil, null: false
+    t.datetime "updated_at", precision: nil, null: false
     t.boolean "approved", default: false
     t.boolean "published", default: false
     t.boolean "logo_published", default: false
-    t.datetime "publish_date"
-    t.datetime "logo_publish_date"
+    t.datetime "publish_date", precision: nil
+    t.datetime "logo_publish_date", precision: nil
     t.string "slug"
     t.text "narrative", default: "<p><strong>Situation</strong></p><p>Situation description</p><p><strong>Challenge</strong></p><p>Challenge description</p><p><strong>Solution</strong></p><p>Solution description</p><p><strong>Benefits</strong></p><p>Benefits description</p>"
     t.string "quote_attr_name"
     t.string "quote_attr_title"
     t.boolean "preview_published", default: false
     t.text "summary"
-    t.datetime "preview_publish_date"
+    t.datetime "preview_publish_date", precision: nil
     t.string "hidden_link"
     t.string "og_title"
     t.string "og_description"
@@ -437,8 +444,8 @@ ActiveRecord::Schema.define(version: 2025_06_19_024660) do
     t.string "name"
     t.string "slug"
     t.integer "company_id"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
+    t.datetime "created_at", precision: nil, null: false
+    t.datetime "updated_at", precision: nil, null: false
     t.index ["company_id"], name: "index_story_categories_on_company_id"
     t.index ["name", "company_id"], name: "index_story_categories_on_name_and_company_id", unique: true
   end
@@ -446,16 +453,16 @@ ActiveRecord::Schema.define(version: 2025_06_19_024660) do
   create_table "story_categories_successes", id: :serial, force: :cascade do |t|
     t.integer "story_category_id"
     t.integer "success_id"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
+    t.datetime "created_at", precision: nil, null: false
+    t.datetime "updated_at", precision: nil, null: false
     t.index ["story_category_id"], name: "index_story_categories_successes_on_story_category_id"
     t.index ["success_id"], name: "index_story_categories_successes_on_success_id"
   end
 
   create_table "successes", id: :serial, force: :cascade do |t|
     t.integer "customer_id"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
+    t.datetime "created_at", precision: nil, null: false
+    t.datetime "updated_at", precision: nil, null: false
     t.integer "curator_id"
     t.string "name"
     t.text "win_story_html"
@@ -470,8 +477,8 @@ ActiveRecord::Schema.define(version: 2025_06_19_024660) do
   create_table "templates_questions", id: :serial, force: :cascade do |t|
     t.integer "invitation_template_id"
     t.integer "contributor_question_id"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
+    t.datetime "created_at", precision: nil, null: false
+    t.datetime "updated_at", precision: nil, null: false
   end
 
   create_table "users", id: :serial, force: :cascade do |t|
@@ -480,22 +487,22 @@ ActiveRecord::Schema.define(version: 2025_06_19_024660) do
     t.string "first_name"
     t.string "last_name"
     t.string "reset_password_token"
-    t.datetime "reset_password_sent_at"
-    t.datetime "remember_created_at"
+    t.datetime "reset_password_sent_at", precision: nil
+    t.datetime "remember_created_at", precision: nil
     t.integer "sign_in_count", default: 0, null: false
-    t.datetime "current_sign_in_at"
-    t.datetime "last_sign_in_at"
+    t.datetime "current_sign_in_at", precision: nil
+    t.datetime "last_sign_in_at", precision: nil
     t.inet "current_sign_in_ip"
     t.inet "last_sign_in_ip"
     t.string "confirmation_token"
-    t.datetime "confirmed_at"
-    t.datetime "confirmation_sent_at"
+    t.datetime "confirmed_at", precision: nil
+    t.datetime "confirmation_sent_at", precision: nil
     t.string "unconfirmed_email"
     t.integer "failed_attempts", default: 0, null: false
     t.string "unlock_token"
-    t.datetime "locked_at"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
+    t.datetime "locked_at", precision: nil
+    t.datetime "created_at", precision: nil, null: false
+    t.datetime "updated_at", precision: nil, null: false
     t.integer "company_id"
     t.string "photo_url"
     t.string "phone"
@@ -510,23 +517,23 @@ ActiveRecord::Schema.define(version: 2025_06_19_024660) do
     t.string "type"
     t.integer "success_id"
     t.integer "visitor_session_id"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
+    t.datetime "created_at", precision: nil, null: false
+    t.datetime "updated_at", precision: nil, null: false
     t.boolean "landing", default: false
     t.string "description"
     t.integer "company_id"
-    t.datetime "timestamp"
+    t.datetime "timestamp", precision: nil
     t.index ["company_id"], name: "index_visitor_actions_on_company_id"
     t.index ["success_id"], name: "index_visitor_actions_on_success_id"
     t.index ["visitor_session_id"], name: "index_visitor_actions_on_visitor_session_id"
   end
 
   create_table "visitor_sessions", id: :serial, force: :cascade do |t|
-    t.datetime "timestamp"
+    t.datetime "timestamp", precision: nil
     t.string "referrer_type"
     t.integer "visitor_id"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
+    t.datetime "created_at", precision: nil, null: false
+    t.datetime "updated_at", precision: nil, null: false
     t.string "clicky_session_id"
     t.string "ip_address"
     t.string "organization"
@@ -536,8 +543,8 @@ ActiveRecord::Schema.define(version: 2025_06_19_024660) do
   end
 
   create_table "visitors", id: :serial, force: :cascade do |t|
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
+    t.datetime "created_at", precision: nil, null: false
+    t.datetime "updated_at", precision: nil, null: false
     t.string "clicky_uid"
     t.integer "visitor_sessions_count", default: 0
     t.index ["clicky_uid"], name: "index_visitors_on_clicky_uid", unique: true
