@@ -143,11 +143,7 @@
           .plugin-config__stories
             = select_tag( \
                 'plugin[stories][]',
-                grouped_options_for_select( \
-                  company \
-                    .customers \
-                    .map { |customer| [customer.name, customer.stories.featured.map { |story| [story.title, story.id] }] } \
-                    .keep_if { |(_, featured_stories)| featured_stories.present? }.to_h),
+                grouped_options_for_select(featured_stories_grouped_by_customer(company)),
                 { multiple: true,
                   class: 'form-control',
                   data: { \
