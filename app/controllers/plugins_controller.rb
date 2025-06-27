@@ -1,4 +1,5 @@
-require 'stories_and_plugins'
+# frozen_string_literal: true
+
 class PluginsController < ApplicationController
   include StoriesAndPlugins
 
@@ -27,7 +28,7 @@ class PluginsController < ApplicationController
       #   }
       # }
       format.js do
-        json = { html: plugin_view(@company, params) }.to_json
+        json = { html: plugin_view(@company) }.to_json
         jsonp = "#{params[:callback]}(#{json})"
 
         # DEPRECATION WARNING: `render :text` is deprecated because it does not actually render a `text/plain` response.
@@ -46,15 +47,14 @@ class PluginsController < ApplicationController
   end
 
   def track
-    response.headers.delete('X-Frame-Options')  # allows the tracking iframe to be rendered on host site
+    response.headers.delete('X-Frame-Options') # allows the tracking iframe to be rendered on host site
     render(layout: false)
   end
 
   def demo
-    @plugin = plugin_params
+    @plugin = plugin_params.to_h
     @category_slug = StoryCategory.find_by_id(@plugin[:category])&.slug
-    @product_slug = StoryCategory.find_by_id(@plugin[:product])&.slug
-    # awesome_print(@plugin)
+    @product_slug = Product.find_by_id(@plugin[:product])&.slug
     render(layout: false)
   end
 
@@ -66,17 +66,14 @@ class PluginsController < ApplicationController
     )
   end
 
-  # if invalid category or product filters, return all stories
-  def plugin_view (company, params)
-    # puts params.permit(params.keys).to_h
-    stories = plugin_stories(company, params)
-    preselected_story = get_preselected_story(company, params)
+  def plugin_view(company)
+    preselected_story = get_preselected_story(company)
     render_to_string(
       partial: params[:type] || 'tabbed_carousel',
       layout: false,
       locals: {
         company: company,
-        stories: stories, # .first(16),
+        stories: featured_stories(company), # TODO: put a limit on this
         title: params[:title] || 'Customer Stories',
         is_demo: params[:is_demo].present?,
         max_rows: params[:max_rows].to_i,
@@ -95,7 +92,7 @@ class PluginsController < ApplicationController
     )
   end
 
-  def get_preselected_story(company, params)
+  def get_preselected_story(company)
     story = (
       params[:preselected_story].present? and
       Story.friendly.exists?(params[:preselected_story]) and
@@ -107,22 +104,14 @@ class PluginsController < ApplicationController
     story
   end
 
-  def plugin_stories(company, params)
+  def featured_stories(company)
     if params[:stories].present?
-      # remove any that don't exist or aren't published, or if not authorized
-      story_ids =
-        params[:stories].delete_if do |story_id|
-          return true unless Story.exists?(story_id)
-
-          story = Story.find(story_id)
-          story.company.id != company.id or !story.logo_published? or story.customer.logo_url.blank?
-        end
-      stories = Story.find(story_ids).order_as_specified(id: story_ids) # preserve original order
+      story_ids = params[:stories].map(&:to_i).keep_if { |story_id| story_id.in? company.stories.featured.map(&:id) }
+      stories = Story.where(id: story_ids).order_as_specified(id: story_ids) # preserve custom order
     elsif params[:category].present? || params[:product].present?
-      filter_params = get_filters_from_query_or_plugin(company, params, true)
-      stories = company.filter_stories(filter_params)
+      stories = company.stories.featured.filtered story_filters(company)
     else
-      stories = company.public_stories
+      stories = company.stories.featured
     end
     params[:skip].present? ? stories.where.not(slug: params[:skip]) : stories
   end

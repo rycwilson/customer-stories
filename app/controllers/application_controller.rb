@@ -39,6 +39,22 @@ class ApplicationController < ActionController::Base
                current_user&.company
   end
 
+  def story_filters(company, is_dashboard: false)
+    params.permit(params.keys).to_h.filter_map do |param, value|
+      next unless param.in?(%w[curator status customer category product])
+
+      if is_dashboard
+        [param.to_sym, value&.to_i]
+      elsif param == 'category'
+        category_tag = company.categories.where(slug: value).take
+        [param.to_sym, category_tag.id] if category_tag
+      elsif param == 'product'
+        product_tag = company.products.where(slug: value).take
+        [param.to_sym, product_tag.id] if product_tag
+      end
+    end.to_h
+  end
+
   def after_sign_in_path_for(current_resource)
     if session[:user_return_to].present?
       session[:user_return_to]

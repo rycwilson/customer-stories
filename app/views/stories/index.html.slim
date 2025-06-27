@@ -16,7 +16,7 @@
         'stories/shared/search_and_filters_xs_sm',
         { company: @company,
           filters_match_type: @filters_match_type,
-          filters: @tags })
+          filters: @filters })
     / if no filters, the search input will appear in the header
     
     - if @company.story_categories.featured.present? || @company.products.featured.present?
@@ -24,7 +24,7 @@
           'stories/shared/search_and_filters_md_lg',
           { company: @company,
             filters_match_type: @filters_match_type,
-            filters: @tags,
+            filters: @filters,
             is_dashboard: false })
     
     = render( \

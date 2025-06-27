@@ -101,7 +101,7 @@ class Story < ApplicationRecord
       .where('logo_published IS TRUE OR preview_published IS TRUE')
   }
   scope :filtered, lambda { |filters, match_type = 'all'|
-    # The default object here is the relation that called the scope (i.e. company.stories)
+    # The default object here is the relation that called the scope (typically company.stories)
     return all if filters.blank?
 
     # Preload associations to avoid N+1 queries and ensure consistent query structure
@@ -109,19 +109,14 @@ class Story < ApplicationRecord
     # records that lack certain associations, which is critical for "match any" logic
     # (e.g. a story with a given product tag will not be included in results if it has no category tags,
     # which is an error in the case of a "match any" query involving both category and product tags)
-    base_relation = includes_for_filters(filters)
-    queries = build_filter_queries(base_relation, filters) # an array of ActiveRecord::Relation objects
+    base_relation = Story.includes_for_filters(self, filters)
+    queries = Story.build_filter_queries(base_relation, filters) # an array of ActiveRecord::Relation objects
     return base_relation if queries.empty?
 
     match_type == 'all' ? queries.reduce(&:merge) : queries.reduce(&:or)
   }
-  scope :shown, lambda {
-    joins(:customer)
-      .where.not(customers: { logo_url: [nil, ''] })
-      .where('logo_published IS TRUE OR preview_published IS TRUE')
-  }
 
-  before_create { self.og_title = title }
+  before_create { self.og_title = title } 
 
   after_update_commit do
     og_image_was_updated =
@@ -355,10 +350,9 @@ class Story < ApplicationRecord
   end
 
   class << self
-    private
 
-    def includes_for_filters(filters)
-      relation = all # company.stories
+    def includes_for_filters(base_relation, filters)
+      relation = base_relation # typically company.stories
       relation = relation.includes(:success) if filters[:curator].present? || filters[:customer].present?
       relation = relation.includes(:category_tags) if filters[:category].present?
       relation = relation.includes(:product_tags) if filters[:product].present?

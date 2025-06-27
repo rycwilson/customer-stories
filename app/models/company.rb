@@ -132,15 +132,15 @@ class Company < ApplicationRecord
   end
 
   def public_stories
-    Story.default_order(stories.shown)
+    Story.default_order(stories.featured)
   end
 
   def public_stories_filter_category(category_id)
-    Story.default_order(stories.shown.joins(:category_tags).where(story_categories: { id: category_id }))
+    Story.default_order(stories.featured.joins(:category_tags).where(story_categories: { id: category_id }))
   end
 
   def public_stories_filter_product(product_id)
-    Story.default_order(stories.shown.joins(:product_tags).where(products: { id: product_id }))
+    Story.default_order(stories.featured.joins(:product_tags).where(products: { id: product_id }))
   end
 
   # def get_gads(campaign=nil)

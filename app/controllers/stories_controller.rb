@@ -1,7 +1,7 @@
-require 'stories_and_plugins'
+# frozen_string_literal: true
+
 class StoriesController < ApplicationController
   include StoriesHelper
-  include StoriesAndPlugins
 
   # jsonp request for plugins
   skip_before_action(:verify_authenticity_token, only: [:show], if: proc { params[:is_plugin] })
@@ -11,7 +11,7 @@ class StoriesController < ApplicationController
   def index
     @v2 = params[:v2].present?
     @is_dashboard = turbo_frame_request?
-    @filters = set_filters(params)
+    @filters = story_filters(@company, is_dashboard: @is_dashboard)
     @filters_match_type = cookies["csp-#{'dashboard-' if @is_dashboard}filters-match-type"] || 'all'
     if @is_dashboard
       # @filters[:curator] ||= current_user.id
@@ -22,15 +22,15 @@ class StoriesController < ApplicationController
                  end
     else
       # set_or_redirect_to_story_preview(params[:preview], session[:preview_story_slug])
-      # @tags_filter = get_filters_from_query_or_plugin(@company, params)
       @featured_stories =
         @company.stories.featured.order([published: :desc, preview_published: :desc, updated_at: :desc])
       if request.xhr? && params[:q].present?
         respond_to do |format|
           format.json { render(json: search(@featured_stories, params[:q]).pluck(:id).uniq) }
-        end and return
-      elsif (@tags = @filters.slice(:category, :product)).present?
-        @filtered_story_ids = @featured_stories.filtered(@tags, @filters_match_type).pluck(:id)
+        end
+        return
+      elsif @filters.present?
+        @filtered_story_ids = @featured_stories.filtered(@filters, @filters_match_type).pluck(:id)
       end
     end
     render(@v2 ? 'index2' : 'index', layout: @is_dashboard ? false : 'stories')
@@ -251,22 +251,6 @@ class StoriesController < ApplicationController
              .where('LOWER(story_categories.name) LIKE ? OR LOWER(products.name) LIKE ?', "%#{q}%", "%#{q}%") +
       stories.joins(:results).where('LOWER(results.description) LIKE ?', "%#{q}%")
     results.uniq
-  end
-
-  def set_filters(params)
-    %i[curator status customer category product].map do |type|
-      if params[type].blank?
-        [type, nil]
-      elsif @is_dashboard
-        [type, params[type]&.to_i]
-      else
-        case type
-        when :category then [type, StoryCategory.friendly.find(params[type])&.id]
-        when :product then [type, Product.friendly.find(params[type])&.id]
-        else [type, nil] # public stories don't have curator, status, or customer filters
-        end
-      end
-    end.to_h.compact
   end
 
   def new_ads(story, story_params)
