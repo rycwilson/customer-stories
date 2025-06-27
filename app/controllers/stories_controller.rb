@@ -1,17 +1,15 @@
 # frozen_string_literal: true
 
 class StoriesController < ApplicationController
-  include StoriesHelper
+  before_action :set_company
 
   # jsonp request for plugins
   skip_before_action(:verify_authenticity_token, only: [:show], if: proc { params[:is_plugin] })
 
-  before_action :set_company
-
   def index
     @v2 = params[:v2].present?
     @is_dashboard = turbo_frame_request?
-    @filters = story_filters(@company, is_dashboard: @is_dashboard)
+    @filters = story_filters_from_params(@company, is_dashboard: @is_dashboard)
     @filters_match_type = cookies["csp-#{'dashboard-' if @is_dashboard}filters-match-type"] || 'all'
     if @is_dashboard
       # @filters[:curator] ||= current_user.id
@@ -312,7 +310,7 @@ class StoriesController < ApplicationController
       redirect_to(root_url(subdomain: @company.subdomain))
     elsif was_redirected
       story = Story.friendly.exists?(session_story_slug) && Story.friendly.find(session_story_slug)
-      gon.push({ preview_story: story.id }) if story && story.preview_published?
+      # gon.push({ preview_story: story.id }) if story&.preview_published?
       session.delete(:preview_story_slug)
     end
   end
@@ -331,25 +329,18 @@ class StoriesController < ApplicationController
                      })
   end
 
-  # if we're here, it means the router allowed through a valid path:
-  # /:customer/:product/:title OR /:customer/:title OR /:customer/:random_string
-  # (valid => these resources exist AND exist together)
-  # => @story can't be nil
-  #
-  # method will set the public story if published or if curator,
-  # else it will redirect to ...
-  #   - the correct link if outdated slug is used
-  #   - company's story index if not published or not curator
+  # Request satisfied the StoryPathConstraint (story is not nil):
+  # /:customer/:product/:title OR /:customer/:title OR /:random_string
   def set_public_story_or_redirect(company)
     @story = Story.find_by(hidden_link: request.url) || Story.friendly.find(params[:title])
-    if params[:hidden_link].present?
-      redirect_to(@story.csp_story_path, status: :moved_permanently) and return if @story.published?
+    if params[:hidden_link]
+      redirect_to(@story.csp_story_path, status: :moved_permanently) if @story.published?
     elsif request.path != @story.csp_story_path # friendly path changed
-      redirect_to(@story.csp_story_path, status: :moved_permanently) and return
-    elsif request.format == 'application/pdf' || params[:is_plugin]
+      redirect_to(@story.csp_story_path, status: :moved_permanently)
+    elsif params[:is_plugin]
       @story
-    elsif !@story.published? and !company.curators.include?(current_user)
-      redirect_to(root_url(subdomain: request.subdomain, host: request.domain)) and return
+    elsif !@story.published? && !company.curators.include?(current_user)
+      redirect_to root_url(subdomain: request.subdomain, host: request.domain)
     end
   end
 end

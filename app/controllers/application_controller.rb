@@ -11,13 +11,18 @@ class ApplicationController < ActionController::Base
 
   before_action(unless: :skip_subdomain_authorization?) do
     if unauthorized_subdomain?
-      redirect_to(current_user.company.blank? ? new_company_url(subdomain: '') : public_stories_url(subdomain: current_user.company.subdomain))
+      redirect_to(
+        if current_user.company.blank?
+          new_company_url(subdomain: '')
+        else
+          public_stories_url(subdomain: current_user.company.subdomain)
+        end
+      )
     end
   end
   before_action(if: %i[company_admin_page? impersonating_user?]) do
     flash.now[:warning] = "Impersonating user: #{current_user.full_name}"
   end
-  before_action(:set_footer_links, if: -> { (controller_name == 'site') || :devise_controller? })
 
   def auth_test
     respond_to do |format|
@@ -39,9 +44,9 @@ class ApplicationController < ActionController::Base
                current_user&.company
   end
 
-  def story_filters(company, is_dashboard: false)
+  def story_filters_from_params(company, is_dashboard: false)
     params.permit(params.keys).to_h.filter_map do |param, value|
-      next unless param.in?(%w[curator status customer category product])
+      next unless param.in? %w[curator status customer category product]
 
       if is_dashboard
         [param.to_sym, value&.to_i]
@@ -117,11 +122,5 @@ class ApplicationController < ActionController::Base
 
   def unauthorized_subdomain?
     session['authorized_subdomains']&.exclude?(request.subdomain)
-  end
-
-  def set_footer_links
-    @footer_links = %w[terms privacy company our-story].map do |path|
-      [path, File.join(root_url(subdomain: nil), path)]
-    end.to_h
   end
 end

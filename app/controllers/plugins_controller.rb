@@ -1,8 +1,6 @@
 # frozen_string_literal: true
 
 class PluginsController < ApplicationController
-  include StoriesAndPlugins
-
   skip_before_action :verify_authenticity_token, only: %i[main show init]
   before_action(except: [:track]) { @company = Company.find_by(subdomain: request.subdomain) }
 
@@ -72,8 +70,8 @@ class PluginsController < ApplicationController
       partial: params[:type] || 'tabbed_carousel',
       layout: false,
       locals: {
-        company: company,
-        stories: featured_stories(company), # TODO: put a limit on this
+        company:,
+        stories: Story.default_order(featured_stories(company)), # TODO: put a limit on this
         title: params[:title] || 'Customer Stories',
         is_demo: params[:is_demo].present?,
         max_rows: params[:max_rows].to_i,
@@ -109,7 +107,7 @@ class PluginsController < ApplicationController
       story_ids = params[:stories].map(&:to_i).keep_if { |story_id| story_id.in? company.stories.featured.map(&:id) }
       stories = Story.where(id: story_ids).order_as_specified(id: story_ids) # preserve custom order
     elsif params[:category].present? || params[:product].present?
-      stories = company.stories.featured.filtered story_filters(company)
+      stories = company.stories.featured.filtered story_filters_from_params(company)
     else
       stories = company.stories.featured
     end

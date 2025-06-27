@@ -297,26 +297,21 @@ class Story < ApplicationRecord
   end
 
   def related_stories
-    same_product_stories = []
-    same_category_stories = []
-    published_stories = company.stories.published - [self]
-    product_tags.each do |product|
-      same_product_stories += published_stories.joins(:product_tags).where(products: { id: product.id })
+    published_stories = company.stories.published
+    same_product_stories =
+      published_stories.joins(:product_tags).where(products: { id: product_tags.pluck(:id) })
+    same_category_stories =
+      published_stories.joins(:category_tags).where(story_categories: { id: category_tags.pluck(:id) })
+    same_tag_stories = (same_product_stories | same_category_stories) - [self]
+    if same_product_stories.length >= 2
+      same_product_stories.sample(2)
+    elsif same_tag_stories.length >= 2
+      same_tag_stories.sample(2)
+    elsif same_tag_stories.empty?
+      published_stories.sample(2)
+    else
+      same_tag_stories + published_stories.sample(2 - same_tag_stories.length)
     end
-    category_tags.each do |category|
-      same_category_stories += published_stories.joins(:category_tags).where(story_categories: { id: category.id })
-    end
-    same_tag_stories = (same_product_stories + same_category_stories).uniq
-    related_stories = if same_product_stories.length >= 2
-                        same_product_stories.sample(2)
-                      elsif same_tag_stories.length >= 2
-                        same_tag_stories.sample(2)
-                      elsif same_tag_stories.empty?
-                        published_stories.sample(2)
-                      else
-                        same_tag_stories + published_stories.sample(2 - same_tag_stories.length)
-                      end
-    default_order(related_stories)
   end
 
   #
