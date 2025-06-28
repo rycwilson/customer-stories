@@ -71,7 +71,7 @@ group :development, :test do
   gem 'pry-remote'
   gem 'rspec-rails', '~> 6.0'
   gem 'selenium-webdriver', '~> 4.1'
-  gem 'shoulda-matchers', '~> 5.0'
+  # gem 'shoulda-matchers', '~> 5.0'
   # gem 'pry-theme'
 end
 
