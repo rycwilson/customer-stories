@@ -118,9 +118,6 @@ application.register('summernote', SummernoteController);
 import TableDisplayOptionsController from './table_display_options_controller.js';
 application.register('table-display-options', TableDisplayOptionsController);
 
-import TagsController from './tags_controller.js';
-application.register('tags', TagsController);
-
 import ToastController from './toast_controller.js';
 application.register('toast', ToastController);
 
