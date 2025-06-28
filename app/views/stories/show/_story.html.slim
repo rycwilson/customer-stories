@@ -50,5 +50,5 @@ div class="#{'cs-' if is_plugin}story-wrapper #{'hidden' unless is_plugin}"
       = render('stories/shared/footer', company: @company)
 
   / web form not presently supported for mobile view 
-  - if is_plugin and company.ctas&.primary and company.ctas.primary.type == 'CtaLink'
+  - if is_plugin and company.ctas.primary.take&.type == 'CtaLink'
     = render('stories/shared/cta_footer', { company: company, is_plugin: is_plugin })

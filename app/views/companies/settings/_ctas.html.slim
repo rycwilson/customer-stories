@@ -9,21 +9,21 @@
         label Main
       label.col-md-3.control-label.visible-md-inline-block.visible-lg-inline-block Main
       .col-sm-offset-1.col-sm-11.col-md-offset-0.col-md-8.col-lg-6
-        - if company.ctas.primary.present?
+        - if primary_cta = company.ctas.primary.take
           .list-group data-controller="list-group" data-list-group-collapsible-value="true"
             a.list-group-item {
               data-toggle="collapse"
               data-list-group-target="item"
-              href="#edit-cta-#{company.ctas.primary.id}"
+              href="#edit-cta-#{primary_cta.id}"
               aria-expanded="false" 
               aria-labelledby="primary-cta-label-md-lg" }
-              p = "#{company.ctas.primary.type == 'CtaLink' ? '[LINK]' : '[FORM]'} #{company.ctas.primary.description}"
+              p = "#{primary_cta.type == 'CtaLink' ? '[LINK]' : '[FORM]'} #{primary_cta.description}"
               button.btn type="button"
                 i.fa.fa-fw.fa-chevron-down
               button.btn type="button"
                 i.fa.fa-fw.fa-chevron-up
-            .collapse id="edit-cta-#{company.ctas.primary.id}" data-list-group-target="collapse"
-              = render('ctas/edit', company:, cta: company.ctas.primary)
+            .collapse id="edit-cta-#{primary_cta.id}" data-list-group-target="collapse"
+              = render('ctas/edit', company:, cta: primary_cta)
         - else 
           = link_to( \
               new_company_cta_path(company) + '?primary=true',

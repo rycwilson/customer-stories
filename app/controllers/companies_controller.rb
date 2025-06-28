@@ -78,8 +78,8 @@ class CompaniesController < ApplicationController
             end
             if @company.previous_changes[:header_color_1].present? && @company.ctas.primary.present?
               turbo_stream_actions << turbo_stream.update(
-                "edit-cta-#{@company.ctas.primary.id}",
-                partial: 'ctas/edit', locals: { company: @company, cta: @company.ctas.primary }
+                "edit-cta-#{@company.ctas.primary.take.id}",
+                partial: 'ctas/edit', locals: { company: @company, cta: @company.ctas.primary.take }
               )
             end
             render(turbo_stream: turbo_stream_actions)
