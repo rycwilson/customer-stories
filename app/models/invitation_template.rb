@@ -1,5 +1,9 @@
+# frozen_string_literal: true
+
 class InvitationTemplate < ApplicationRecord
   belongs_to :company
+  validates :name, :company, presence: true
+
   has_many :contributions
   has_and_belongs_to_many :contributor_questions, dependent: :destroy, join_table: :templates_questions
   alias_method :questions, :contributor_questions
@@ -38,18 +42,21 @@ class InvitationTemplate < ApplicationRecord
   end
 
   def format_for_editor(curator)
-    if curator.photo_url.present?
-      request_body.sub!('[curator_img_url]', curator.photo_url)
-    else
-      request_body.sub!('[curator_img_url]', ActionController::Base.helpers.asset_path('placeholders/user-photo-missing.png'))
-    end
+    request_body.sub!(
+      '[curator_img_url]',
+      curator.photo_url ||
+        ActionController::Base.helpers.asset_path('placeholders/user-photo-missing.png')
+    )
     # give anchor links a format that allows for editing text of the link
     # don't want to include actual links, as they'll be broken (placeholders instead of actual urls)
     # binding.remote_pry
-    request_body.gsub!(%r{<a href=('|")\[(\w+)_url\]('|") target=('|")_blank('|")>(.+?)</a>}, '[\2_link="\4"]')
-    request_body.gsub!(%r{<a href=('\[(\w+)_url\]') target='_blank'\sclass='csp-cta' style='background-color:(#\w{6}+);border-color:#\w{6};color:#\w{6};#{Regexp.quote(button_style_settings)}'>(.+)</a>}) do |match|
-      "[#{$2}_button={text:\"#{$4}\",color:\"#{$3}\"}]"
-    end
+    request_body.gsub!(
+      %r{<a href=('|")\[(\w+)_url\]('|") target=('|")_blank('|")>(.+?)</a>},
+      '[\2_link="\4"]'
+    )
+    request_body.gsub!(
+      %r{<a href=('\[(\w+)_url\]') target='_blank' class='csp-cta' style='background-color:(#\w{6}+);border-color:#\w{6};color:#\w{6};#{Regexp.quote(button_style_settings)}'>(.+)</a>}
+    ) { |_match| "[#{$2}_button={text:\"#{$4}\",color:\"#{$3}\"}]" }
     self
   end
 

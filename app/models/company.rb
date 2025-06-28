@@ -3,12 +3,7 @@
 class Company < ApplicationRecord
   # include GoogleAds
 
-  before_validation :smart_add_url_protocol
-
-  validates :name, presence: true, uniqueness: true
-  validates :subdomain, presence: true, uniqueness: true, subdomain: true
-  validates :website, presence: true, uniqueness: true, website: true
-  validates_associated :adwords_images
+  attr_accessor :skip_callbacks
 
   has_many :users # no dependent: :destroy users, handle more gracefully
   has_many :curators, class_name: 'User'
@@ -82,6 +77,14 @@ class Company < ApplicationRecord
   alias_method :ad_images, :adwords_images
   accepts_nested_attributes_for :adwords_images, allow_destroy: true
 
+  validates :name, presence: true, uniqueness: true
+  validates :subdomain, presence: true, uniqueness: true, subdomain: true
+  validates :website, presence: true, uniqueness: true, website: true
+  validates_associated :adwords_images
+  validates_associated :ctas
+
+  before_validation :smart_add_url_protocol
+
   after_update_commit do
     square_logo_was_updated =
       previous_changes.keys.include?('square_logo_url') &&
@@ -122,8 +125,6 @@ class Company < ApplicationRecord
     end
   end
 
-  # virtual attributes
-  attr_accessor :skip_callbacks
 
   def tag_select_options(
     tag_type, with_stories_count: true, only_featured: false, for_multi_select: false
