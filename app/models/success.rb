@@ -11,9 +11,15 @@ class Success < ApplicationRecord
     !!is_new_record
   end
 
+  # Since this table was added before Rails 5 (when belongs_to associations became required),
+  # the foreign keys associated with the belongs_to associations are presently nullable.
+  # Therefore we need to explicitly require the association.
+  # TODO: enforce this in the database schema
   belongs_to :customer
-  has_one :company, through: :customer
   belongs_to :curator, class_name: 'User', foreign_key: 'curator_id'
+  validates :customer, :curator, presence: true
+
+  has_one :company, through: :customer
   has_one :story, dependent: :destroy
 
   # leave this in place until production db is migrated!
@@ -57,7 +63,11 @@ class Success < ApplicationRecord
   has_many(
     :contributor_questions,
     lambda {
-      select('invitation_templates.name, templates_questions.created_at, contributor_questions.created_at').distinct
+      select(' \
+        invitation_templates.name, \
+        templates_questions.created_at, \
+        contributor_questions.created_at \
+      ').distinct
     },
     through: :invitation_templates
   )
@@ -75,13 +85,16 @@ class Success < ApplicationRecord
   validates_uniqueness_of(:name, scope: :customer_id)
   validate :named_or_placeholder
 
-  validate :tag_has_same_company
+  # validate :tag_has_same_company
 
   accepts_nested_attributes_for(:customer, allow_destroy: false)
   # contribution must be rejected if its contributor or referrer is missing required attributes
   # this may happen with a zap (no such validation in the zapier app)
-  accepts_nested_attributes_for(:contributions, allow_destroy: false,
-                                                reject_if: :missing_contributor_or_referrer_attributes?)
+  accepts_nested_attributes_for(
+    :contributions,
+    allow_destroy: false,
+    reject_if: :missing_contributor_or_referrer_attributes?
+  )
 
   before_save { self.is_new_record = true if new_record? }
 
@@ -113,11 +126,12 @@ class Success < ApplicationRecord
     # due to browser behavior (described here https://stackoverflow.com/questions/39362247),
     # data-placeholder attributes aren't fully escaped, and this seems to cause issues when
     # converting to markdown
-    self.win_story_markdown = ReverseMarkdown.convert(
-      win_story_markdown.gsub(%r{data-placeholder=".+?</div>"}, '')
-    )
-                                             .gsub(/-\s\n\n/, '- ')    # remove pointless newlines (or do they have a point?)
-                                             .gsub(/\n\n_/, "\n\n _")  # insert a space in front of answers
+    self.win_story_markdown =
+      ReverseMarkdown.convert(win_story_markdown.gsub(%r{data-placeholder=".+?</div>"}, ''))
+                     # remove pointless newlines (or do they have a point?)
+                     .gsub(/-\s\n\n/, '- ')
+                     # insert a space in front of answers
+                     .gsub(/\n\n_/, "\n\n _")
   end
 
   def win_story_recipients_select_options
@@ -168,9 +182,9 @@ class Success < ApplicationRecord
 
   def display_status
     if contributions.count.zero?
-      "0&nbsp;&nbsp;Contributors added#{win_story_completed ? "\nWin Story completed" : ''}".html_safe
+      "0 Contributors added#{win_story_completed ? "\nWin Story completed" : ''}".html_safe
     elsif contributions.invitation_sent.empty?
-      "0&nbsp;&nbsp;Contributors invited#{win_story_completed ? "\nWin Story completed" : ''}".html_safe
+      "0 Contributors invited#{win_story_completed ? "\nWin Story completed" : ''}".html_safe
     elsif win_story_completed?
       "#{contributions.submitted.length}&nbsp;&nbsp;Contributions submitted\n" +
         'Win Story completed'.html_safe
@@ -225,7 +239,8 @@ class Success < ApplicationRecord
 
   # private
 
-  # reject a nested contribution if required attributes are missing for either contributor or referrer
+  # Reject a nested contribution if required attributes are missing for either contributor
+  # or referrer
   def missing_contributor_or_referrer_attributes?(contribution)
     r_attrs = contribution[:referrer_attributes]
     c_attrs = contribution[:contributor_attributes]

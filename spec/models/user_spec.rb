@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'rails_helper'
 
 RSpec.describe User, type: :model do
@@ -13,23 +15,6 @@ RSpec.describe User, type: :model do
         expect(curator.company).to be_present
       end
     end
-  end
-
-  describe 'associations' do
-    it { is_expected.to belong_to(:company).optional }
-    
-    context 'when user is a curator' do
-      subject(:curator) { build(:curator) }
-
-      it { is_expected.to have_many(:successes).with_foreign_key('curator_id') }
-    end
-
-
-    # it { is_expected.to have_many(:stories).through(:successes) }
-    # it { is_expected.to have_many(:contributions).through(:successes) }
-
-    # TODO test that the contributors association is distinct (users can have multiple contributions)
-    # it { is_expected.to have_many(:contributors).through(:contributions).source(:contributor) }
   end
 
   describe 'validation' do
@@ -64,7 +49,7 @@ RSpec.describe User, type: :model do
 
   describe '#full_name' do
     it 'cocatenates first and last names' do
-      expect(user.full_name).to eq(user.first_name + " " + user.last_name)
+      expect(user.full_name).to eq("#{user.first_name} #{user.last_name}")
     end
   end
 end

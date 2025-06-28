@@ -1,6 +1,8 @@
+# frozen_string_literal: true
+
 FactoryBot.define do
   factory :contribution do
     success
-    association :contributor, factory: :user
+    contributor
   end
 end

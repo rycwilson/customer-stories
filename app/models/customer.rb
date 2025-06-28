@@ -3,7 +3,12 @@
 class Customer < ApplicationRecord
   include FriendlyId
 
+  # Since this table was added before Rails 5 (when belongs_to associations became required),
+  # the company_id column is presently nullable and so we need to explicitly require the association
+  # TODO: enforce this in the database schema
   belongs_to :company
+  validates :company, presence: true
+
   has_many :successes, dependent: :destroy
   has_many :stories, through: :successes
   has_many :contributions, through: :successes

@@ -14,7 +14,11 @@ class Company < ApplicationRecord
   has_many :curators, class_name: 'User'
   has_many :customers, dependent: :destroy
   has_many :successes, -> { includes(:story) }, through: :customers
-  has_many :contributions, -> { includes(:contributor, :referrer, success: { customer: {} }) }, through: :successes
+  has_many(
+    :contributions,
+    -> { includes(:contributor, :referrer, success: { customer: {} }) },
+    through: :successes
+  )
   has_many :contributors, -> { distinct }, through: :customers
   has_many :referrers, -> { unscope(:order).distinct.order(:last_name) }, through: :contributions
   has_many :stories, through: :successes do
@@ -23,18 +27,23 @@ class Company < ApplicationRecord
         .sort_by { |story| story.publish_date || DateTime.now }.reverse
     end
   end
+
   has_many :visitor_actions
   has_many :page_views, class_name: 'PageView'
   has_many :story_shares, class_name: 'StoryShare'
   has_many :cta_clicks, class_name: 'CtaClick'
   has_many :profile_clicks, class_name: 'ProfileClick'
   has_many :logo_clicks, class_name: 'LogoClick'
-  # include the select clause with extra fields,
-  # because these models have a default search order on those fields,
-  # so must be included in the select clause
-  has_many :visitor_sessions, lambda {
-    select('visitor_sessions.*, visitor_sessions.clicky_session_id, visitor_actions.timestamp').distinct
-  }, through: :visitor_actions
+
+  # Include in the select clause any fields which are used in specifying order in a default scope
+  has_many(
+    :visitor_sessions,
+    lambda {
+      select('visitor_sessions.*, visitor_sessions.clicky_session_id, visitor_actions.timestamp')
+        .distinct
+    },
+    through: :visitor_actions
+  )
   has_many :visitors, lambda {
     select('visitors.*, visitor_sessions.clicky_session_id, visitor_actions.timestamp').distinct
   }, through: :visitor_sessions
@@ -42,7 +51,6 @@ class Company < ApplicationRecord
   has_many :story_categories, dependent: :destroy
   accepts_nested_attributes_for :story_categories, allow_destroy: true
   alias_method :categories, :story_categories
-
   has_many :products, dependent: :destroy
   accepts_nested_attributes_for :products, allow_destroy: true
 
@@ -53,13 +61,10 @@ class Company < ApplicationRecord
   alias_method :templates, :invitation_templates
 
   has_many :outbound_actions, dependent: :destroy
-  has_many(:ctas, class_name: 'CallToAction', dependent: :destroy) do
-    def primary
-      where(primary: true).take
-    end
-  end
+  has_many :ctas, class_name: 'CallToAction', dependent: :destroy
   accepts_nested_attributes_for :ctas
   has_one :plugin, dependent: :destroy
+
   has_many :adwords_campaigns, dependent: :destroy
   alias_method :campaigns, :adwords_campaigns
   has_one :topic_campaign, dependent: :destroy
@@ -78,11 +83,20 @@ class Company < ApplicationRecord
   accepts_nested_attributes_for :adwords_images, allow_destroy: true
 
   after_update_commit do
-    square_logo_was_updated = previous_changes.keys.include?('square_logo_url') && previous_changes[:square_logo_url].first.present?
-    landscape_logo_was_updated = previous_changes.keys.include?('landscape_logo_url') && previous_changes[:landscape_logo_url].first.present?
-    S3Util.delete_object(S3_BUCKET, previous_changes[:square_logo_url].first) if square_logo_was_updated
-    S3Util.delete_object(S3_BUCKET, previous_changes[:landscape_logo_url].first) if landscape_logo_was_updated
-    # adwords_logo_was_updated = previous_changes.keys.include?('adwords_logo_url') && previous_changes[:adwords_logo_url].first.present?
+    square_logo_was_updated =
+      previous_changes.keys.include?('square_logo_url') &&
+      previous_changes[:square_logo_url].first.present?
+    landscape_logo_was_updated =
+      previous_changes.keys.include?('landscape_logo_url') &&
+      previous_changes[:landscape_logo_url].first.present?
+    if square_logo_was_updated
+      S3Util.delete_object(S3_BUCKET, previous_changes[:square_logo_url].first)
+    end
+    if landscape_logo_was_updated
+      S3Util.delete_object(S3_BUCKET, previous_changes[:landscape_logo_url].first)
+    end
+    # adwords_logo_was_updated = previous_changes.keys.include?('adwords_logo_url') &&
+    #                            previous_changes[:adwords_logo_url].first.present?
     # if adwords_logo_was_updated
     #   S3Util.delete_object(S3_BUCKET, previous_changes[:adwords_logo_url].first)
     # end
@@ -111,11 +125,13 @@ class Company < ApplicationRecord
   # virtual attributes
   attr_accessor :skip_callbacks
 
-  def tag_select_options(tag_type, with_stories_count: true, only_featured: false, for_multi_select: false)
+  def tag_select_options(
+    tag_type, with_stories_count: true, only_featured: false, for_multi_select: false
+  )
     tags = send(tag_type.to_s.pluralize) if %i[category product].include?(tag_type)
     return [] if tags.blank?
 
-    (only_featured ? tags.featured : tags).map do |tag|
+    options = (only_featured ? tags.featured : tags).map do |tag|
       [
         if with_stories_count
           "#{tag.name} (#{(only_featured ? tag.stories.featured : tag.stories).count})"
@@ -125,10 +141,10 @@ class Company < ApplicationRecord
         for_multi_select ? "#{tag_type}-#{tag.id}" : tag.id,
         { data: { slug: tag.slug } }
       ]
-    end.sort_by do |(text, id)|
-      with_stories_count ? text.match(/\((?<count>\d+)\)/)[:count].to_i : text
     end
-    .send(with_stories_count ? :reverse : :itself)
+    options.sort_by do |(text, _id)|
+      with_stories_count ? text.match(/\((?<count>\d+)\)/)[:count].to_i : text
+    end.send(with_stories_count ? :reverse : :itself)
   end
 
   def public_stories
@@ -136,7 +152,9 @@ class Company < ApplicationRecord
   end
 
   def public_stories_filter_category(category_id)
-    Story.default_order(stories.featured.joins(:category_tags).where(story_categories: { id: category_id }))
+    Story.default_order(
+      stories.featured.joins(:category_tags).where(story_categories: { id: category_id })
+    )
   end
 
   def public_stories_filter_product(product_id)

@@ -7,7 +7,9 @@ FactoryBot.define do
     subdomain do
       loop do
         candidate = Faker::Internet.domain_word.downcase
-        company = Company.new(subdomain: candidate, name: 'Test', website: 'https://example.com', skip_callbacks: true)
+        company = Company.new(
+          subdomain: candidate, name: 'Test', website: 'https://example.com', skip_callbacks: true
+        )
         break candidate if company.valid?
       end
     end
@@ -16,8 +18,8 @@ FactoryBot.define do
 
     factory :company_with_tags do
       after(:create) do |company|
-        create_list(:story_category, 3, company: company)
-        create_list(:product, 3, company: company)
+        create_list(:story_category, 3, company:)
+        create_list(:product, 3, company:)
       end
     end
   end
