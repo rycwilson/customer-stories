@@ -1,12 +1,14 @@
 # frozen_string_literal: true
 
 class Contribution < ApplicationRecord
+  belongs_to :success, inverse_of: :contributions
+  belongs_to :contributor, class_name: 'User', foreign_key: 'contributor_id'
+  belongs_to :referrer, class_name: 'User', foreign_key: 'referrer_id', optional: true
+
   # Since this table was added before Rails 5 (when belongs_to associations became required),
   # the foreign keys associated with the belongs_to associations are presently nullable.
   # Therefore we need to explicitly require the association.
   # TODO: enforce this in the database schema
-  belongs_to :success, inverse_of: :contributions
-  belongs_to :contributor, class_name: 'User', foreign_key: 'contributor_id'
   validates :success, :contributor, presence: true
 
   # this is a handy way to select a limited set of attributes
@@ -17,7 +19,6 @@ class Contribution < ApplicationRecord
     foreign_key: 'contributor_id',
     optional: true
   )
-  belongs_to :referrer, class_name: 'User', foreign_key: 'referrer_id', optional: true
   has_one :customer, through: :success
   has_one :company, through: :success
   has_one :curator, through: :success
