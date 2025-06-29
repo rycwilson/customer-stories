@@ -1,5 +1,4 @@
-// For inlining css files, leave off the .css extension and ensure a leading underscore in the file name
-@import 'bootstrap-switch';
+@import 'bootstrap-switch/dist/css/bootstrap3/bootstrap-switch';
 
 .bootstrap-switch {
   .bootstrap-switch-handle-on.bootstrap-switch-primary {
