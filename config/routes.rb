@@ -106,6 +106,10 @@ Rails.application.routes.draw do
       get '/:workflow_stage', to: 'companies#show', workflow_stage: /prospect|curate|promote|measure/, as: 'dashboard'
       get '/settings', to: 'companies#edit', as: 'edit_company'
       resources :companies, only: %i[show update] do
+        member do
+          patch 'tags', to: 'companies#update_tags', as: 'update_tags'
+          patch 'ads', to: 'companies#update_ads', as: 'update_ads'
+        end
         resources :customers, only: %i[edit create update destroy], shallow: true
         resources :successes, except: [:index], shallow: true do
           resource :story, only: %i[new create]

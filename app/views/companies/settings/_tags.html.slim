@@ -2,14 +2,16 @@
 
   = form_with( \
       model: company,
+      url: update_tags_company_path(company),
       html: { \
         id: 'company-tags-form',
         class: 'form-horizontal',
         data: { \
-          controller: 'company-tags toast', 
+          controller: 'company-tags toast',
           toast_flash_value: (flash.to_h if flash.any? and turbo_frame_request_id == 'company-tags'),
+          toast_errors_value: (@errors if @errors and turbo_frame_request_id == 'company-tags'),
           action: [ \
-            'tomselect:add-tag->company-tags#onAddTag', 
+            'tomselect:add-tag->company-tags#onAddTag',
             'tomselect:remove-tag->company-tags#onRemoveTag',
             'turbo:submit-start->company-tags#onTurboSubmitStart'].join(' ') }}) do |form|
 

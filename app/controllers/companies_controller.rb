@@ -36,66 +36,87 @@ class CompaniesController < ApplicationController
     end
   end
 
-  def update
+  def update_tags
     if @company.update(company_params)
-      if turbo_frame_request_id == 'company-tags'
-        flash.now[:notice] = 'Story tags have been updated'
-        render(partial: 'companies/settings/tags', locals: { company: @company })
-      elsif turbo_frame_request_id == 'company-ads-settings'
-        image_was_created = company_params[:adwords_images_attributes].to_h.any? { |_index, ad| ad[:id].blank? }
-        image_was_destroyed = company_params[:adwords_images_attributes].to_h.any? do |_index, ad|
-          ad[:_destroy] == 'true'
+      flash.now[:notice] = 'Story tags have been updated'
+    else
+      # TODO: What about tags errors?
+      @errors = @company.errors.full_messages
+    end
+    render(partial: 'companies/settings/tags', locals: { company: @company, errors: @errors })
+  end
+
+  def update_ads
+    if @company.update company_params
+      # "Adwords images media can't be blank" => error uploading to s3
+      # "Adwords images image_url can't be blank" => error uploading to browser
+
+      flash.now[:notice] =
+        if company_params[:adwords_short_headline].present?
+          'Headline has been updated'
+        elsif company_params[:adwords_images_attributes].values.any? { |ad| ad[:id].blank? }
+          'Image has been added'
+        elsif company_params[:adwords_images_attributes].values.any? { |ad| ad[:_destroy] == 'true' }
+          'Image was deleted'
+        else
+          'Default image has been updated'
         end
-        flash.now[:notice] = if image_was_created
-                               'Image has been added'
-                             else
-                               (image_was_destroyed ? 'Image was deleted' : 'Default image has been updated')
-                             end
-        render(
-          partial: 'companies/dashboard/gads_form',
-          locals: { company: @company, active_collection: params[:company][:active_collection] || 'images' }
-        )
-      else
-        # TODO: handle case of absent primary CTA
-        flash.now[:notice] = 'Account settings have been updated'
-        respond_to do |format|
-          format.turbo_stream do
-            turbo_stream_actions = [
-              turbo_stream.replace('toaster', partial: 'shared/toaster'),
-              turbo_stream.replace(
-                'company-profile-form',
-                partial: 'companies/settings/company_profile', locals: { company: @company }
-              )
-            ]
-            if @company.previous_changes[:square_logo_url].present?
-              turbo_stream_actions << turbo_stream.update(
-                'company-admin-logo',
-                html: " \
-                  <img src=\"#{@company.square_logo_url}\" alt=\"#{@company.name} logo\" />
-                  <i class=\"fa fa-caret-down\"></i> \
-                ".html_safe
-              )
-            end
-            if @company.previous_changes[:header_color_1].present? && @company.ctas.primary.present?
-              turbo_stream_actions << turbo_stream.update(
-                "edit-cta-#{@company.ctas.primary.take.id}",
-                partial: 'ctas/edit', locals: { company: @company, cta: @company.ctas.primary.take }
-              )
-            end
-            render(turbo_stream: turbo_stream_actions)
+    else
+      @errors = @company.errors.full_messages
+    end
+    render(
+      partial: 'companies/dashboard/gads_form',
+      locals: {
+        company: @company,
+        errors: @errors,
+        active_collection: params[:company][:active_collection] || 'images'
+      }
+    )
+  end
+
+  def update
+    # TODO: handle case of absent primary CTA
+    # if turbo_frame_request_id == 'company-tags'
+    #   flash.now[:notice] = 'Story tags have been updated'
+    #   render(partial: 'companies/settings/tags', locals: { company: @company })
+    # if turbo_frame_request_id == 'company-ads-settings'
+    # else
+    if @company.update company_params
+      flash.now[:notice] = 'Account settings have been updated'
+      respond_to do |format|
+        format.turbo_stream do
+          turbo_stream_actions = [
+            turbo_stream.replace('toaster', partial: 'shared/toaster'),
+            turbo_stream.replace(
+              'company-profile-form',
+              partial: 'companies/settings/company_profile', locals: { company: @company }
+            )
+          ]
+          if @company.previous_changes[:square_logo_url].present?
+            turbo_stream_actions << turbo_stream.update(
+              'company-admin-logo',
+              html: " \
+                <img src=\"#{@company.square_logo_url}\" alt=\"#{@company.name} logo\" />
+                <i class=\"fa fa-caret-down\"></i> \
+              ".html_safe
+            )
           end
+          if @company.previous_changes[:header_color_1].present? && @company.ctas.primary.present?
+            turbo_stream_actions << turbo_stream.update(
+              "edit-cta-#{@company.ctas.primary.take.id}",
+              partial: 'ctas/edit', locals: { company: @company, cta: @company.ctas.primary.take }
+            )
+          end
+          render(turbo_stream: turbo_stream_actions)
         end
       end
     else
-      # "Adwords images media can't be blank" => error uploading to s3
-      # "Adwords images image_url can't be blank" => error uploading to browser
-      puts @company.errors.full_messages
-      # @flash = { mesg: @company.errors.full_messages.join(', '), status: 'danger' }
+      @errors = @company.errors.full_messages
     end
   end
 
   def set_reset_gads
-    company = Company.find(params[:id])
+    company = Company.find params[:id]
     if company.gads_requirements_checklist.values.all?(&:present?)
 
       # force to get campaigns by name => because staging won't match production
@@ -158,17 +179,8 @@ class CompaniesController < ApplicationController
 
   def company_params
     params.require(:company).permit(
-      :name,
-      :subdomain,
-      :website,
-      :logo_url,
-      :square_logo_url,
-      :landscape_logo_url,
-      :gtm_id,
-      :header_logo_type,
-      :header_color_1,
-      :header_color_2,
-      :header_text_color,
+      :name, :subdomain, :website, :logo_url, :square_logo_url, :landscape_logo_url, :gtm_id,
+      :header_logo_type, :header_color_1, :header_color_2, :header_text_color,
       :adwords_short_headline,
       story_categories_attributes: %i[id name _destroy],
       products_attributes: %i[id name _destroy],

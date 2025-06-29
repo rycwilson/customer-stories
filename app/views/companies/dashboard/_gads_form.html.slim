@@ -2,12 +2,16 @@
 
   = form_with( \
       model: company,
+      url: update_ads_company_path(company),
       html: { \
         id: 'gads-form',
         class: 'form-horizontal',
         data: { \
           controller: 'ads toast',
-          toast_flash_value: (flash.to_h if flash.present? and turbo_frame_request_id == 'company-ads-settings'),
+          toast_flash_value: \
+            (flash.to_h if flash.present? && turbo_frame_request_id == 'company-ads-settings'),
+          toast_errors_value: \
+            (@errors if @errors && turbo_frame_request_id == 'company-ads-settings'),
           asset_host: Rails.application.config.asset_host,
           action: [ \
             'image-card:make-default->ads#setNewDefault',
@@ -16,7 +20,10 @@
             'image-card:replace-default->ads#keepPreviousDefault',
             'image-card:upload-ready->ads#submitForm'].join(' ') }}) do |form|
     
-    = form.hidden_field(:active_collection, value: active_collection, data: { ads_target: 'activeCollectionInput' })
+    = form.hidden_field( \
+        :active_collection,
+        value: active_collection,
+        data: { ads_target: 'activeCollectionInput' })
           
     .form-group.short-headline
       = form.label(:adwords_short_headline, 'Headline', class: 'col-sm-3 control-label')
@@ -28,8 +35,12 @@
               autocomplete: 'off',
               maxlength: RESPONSIVE_AD_SHORT_HEADLINE_MAX.to_s,
               required: true,
-              data: { validate: true, 'required-error': 'Required', initial_value: company.adwords_short_headline })
-          button.btn.btn-success.hidden type="submit" data-ads-target="shortHeadlineSubmitBtn" Save
+              data: { \
+                validate: true,
+                'required-error': 'Required',
+                initial_value: company.adwords_short_headline })
+          button.btn.btn-success.hidden type="submit" data-ads-target="shortHeadlineSubmitBtn"
+            | Save
         span.help-block.with-errors
           | Max 30 characters
 
@@ -60,7 +71,9 @@
             | &nbsp;&nbsp;
             | Logos
       .col-sm-offset-3.col-sm-9.col-md-8.col-lg-6 
-        span.help-block data-ads-target="requirementsHelpBlock" class=('hidden' if active_collection != 'images')
+        span.help-block {
+          data-ads-target="requirementsHelpBlock"
+          class=('hidden' if active_collection != 'images') }
           a {
             href="javascript:;"
             role="button"
@@ -74,7 +87,9 @@
             data-landscape-ratio="1.91:1"
             data-ads-target="imageRequirements" }
             | Requirements
-        span.help-block.pull-right data-ads-target="requirementsHelpBlock" class=('hidden' if active_collection != 'logos')
+        span.help-block.pull-right {
+          data-ads-target="requirementsHelpBlock"
+          class=('hidden' if active_collection != 'logos') }
           a {
             href="javascript:;" 
             role="button"
@@ -102,7 +117,9 @@
               = render( \
                   'shared/image_card',
                   { model: 'AdwordsImage',
-                    _image: company.ad_images.default.marketing.square.take || { type: 'SquareImage', default: true },
+                    _image: \
+                      company.ad_images.default.marketing.square.take || \
+                      { type: 'SquareImage', default: true },
                     field_name_prefix: 'company[adwords_images_attributes][0]' })
               = render( \
                   'shared/image_card',
