@@ -38,12 +38,6 @@
     }
   }
 
-  &:not(#promoted-stories-table) td.status {
-    // this ensures newlines will be respected
-    // ref: https://stackoverflow.com/questions/10937218
-    white-space: pre;
-  }
-
   // child rows (must be nested under table id selectors to override datatables)
   td.child-row,
   td.contributor-child-row {

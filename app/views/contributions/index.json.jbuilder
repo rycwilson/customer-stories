@@ -1,6 +1,6 @@
 json.array! @contributions do |contribution|
   json.(contribution, :id, :status)
-  json.display_status contribution.display_status
+  json.display_status status_html(contribution)
   json.timestamp contribution.timestamp
   json.path contribution.path
   json.success do

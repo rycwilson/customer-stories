@@ -5,16 +5,10 @@
   }
 
   td.status {
-    position: relative;
     line-height: 1.6;
 
-    i {
-      position: absolute;
-      display: none;
-      right: 10px;
-      top: 50%;
-      transform: translate(0, -50%);
-      color: #456f59;
+    p {
+      margin: 0;
     }
   }
 }
