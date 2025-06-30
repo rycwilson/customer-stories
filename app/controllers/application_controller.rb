@@ -15,7 +15,7 @@ class ApplicationController < ActionController::Base
         if current_user.company.blank?
           new_company_url(subdomain: '')
         else
-          public_stories_url(subdomain: current_user.company.subdomain)
+          root_url(subdomain: current_user.company.subdomain)
         end
       )
     end
@@ -79,7 +79,7 @@ class ApplicationController < ActionController::Base
       if @not_authorized_for_subdomain
         new_csp_user_session_url(subdomain: '')
       else
-        public_stories_url(subdomain: request.subdomain)
+        root_url(subdomain: request.subdomain)
       end
     else
       new_csp_user_session_url(subdomain: '')

@@ -2,7 +2,7 @@
 
   = form_with( \
       model: company,
-      url: update_tags_company_path(company),
+      url: tags_company_path(company),
       html: { \
         id: 'company-tags-form',
         class: 'form-horizontal',
@@ -46,4 +46,4 @@
 
     .row
       .col-sm-offset-1.col-sm-11.col-md-10.col-lg-offset-2.col-lg-8
-        = form.submit('Save changes', class: 'btn btn-success')
+        = render('shared/form_submit', form_ctrl_id: 'company-tags', content: 'Save changes')

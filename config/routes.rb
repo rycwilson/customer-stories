@@ -83,7 +83,9 @@ Rails.application.routes.draw do
   # end
 
   constraints(CompanySubdomain) do
-    get '/', to: 'stories#index', as: 'public_stories'
+    # See StoryPathConstraint below for route to published story page
+    get '/', to: 'stories#index'
+    get '/stories', to: 'stories#index', defaults: { format: :json }
 
     get '/plugins/:type/cs', to: 'plugins#main'
     # get '/widgets/:type/cs', to: 'plugins#main'  # legacy (was varmour)
@@ -97,18 +99,18 @@ Rails.application.routes.draw do
     get '/plugins/track', to: 'plugins#track'
     get '/plugins/demo', to: 'plugins#demo'
 
-    # see below for route to public story page
-    resources(:stories, { only: [:index] }) do
-      get '/search', on: :collection, to: 'stories#search'
-    end
-
     authenticate(:user) do
-      get '/:workflow_stage', to: 'companies#show', workflow_stage: /prospect|curate|promote|measure/, as: 'dashboard'
+      get(
+        '/:workflow_stage',
+        to: 'companies#show',
+        workflow_stage: /prospect|curate|promote|measure/,
+        as: 'dashboard'
+      )
       get '/settings', to: 'companies#edit', as: 'edit_company'
       resources :companies, only: %i[show update] do
         member do
-          patch 'tags', to: 'companies#update_tags', as: 'update_tags'
-          patch 'ads', to: 'companies#update_ads', as: 'update_ads'
+          patch 'tags'
+          patch 'ads'
         end
         resources :customers, only: %i[edit create update destroy], shallow: true
         resources :successes, except: [:index], shallow: true do
@@ -148,20 +150,32 @@ Rails.application.routes.draw do
 
       # impersonate another user
       devise_scope(:user) do
-        post('/impersonate/:imitable_user_id', to: 'users/sessions#impersonate', as: 'impersonate_user')
+        post(
+          '/impersonate/:imitable_user_id',
+          to: 'users/sessions#impersonate',
+          as: 'impersonate_user'
+        )
       end
     end
 
     # token needed for access outside of user-authorized routes
     # type IN ('contribution', 'feedback', 'opt_out', 'remove')
-    get '/contributions/:token/confirm', to: 'contributions#confirm_submission', as: 'confirm_submission'
+    get(
+      '/contributions/:token/confirm',
+      to: 'contributions#confirm_submission',
+      as: 'confirm_submission'
+    )
     get(
       '/contributions/:token/:type',
       to: 'contributions#edit',
       as: 'edit_contribution',
       constraints: { type: /(contribution|feedback)/ }
     )
-    get '/contributions/:token/:type', to: 'contributions#update', constraints: { type: /(opt_out|remove)/ }
+    get(
+      '/contributions/:token/:type',
+      to: 'contributions#update',
+      constraints: { type: /(opt_out|remove)/ }
+    )
     put(
       '/contributions/:token',
       to: 'contributions#update',
@@ -182,6 +196,6 @@ Rails.application.routes.draw do
 
   put '/contributions/:token', to: 'contributions#update', constraints: { subdomain: '' }
 
-  # Not found (parends ensure root path matches)
-  get '(*all)', to: 'site#not_found'
+  # Not found (parends ensure root path matches for unfound subdomains)
+  get '(*all)', to: 'site#not_found', via: :all
 end

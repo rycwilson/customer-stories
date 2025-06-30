@@ -36,51 +36,9 @@ class CompaniesController < ApplicationController
     end
   end
 
-  def update_tags
-    if @company.update(company_params)
-      flash.now[:notice] = 'Story tags have been updated'
-    else
-      # TODO: What about tags errors?
-      @errors = @company.errors.full_messages
-    end
-    render(partial: 'companies/settings/tags', locals: { company: @company, errors: @errors })
-  end
-
-  def update_ads
-    if @company.update company_params
-      # "Adwords images media can't be blank" => error uploading to s3
-      # "Adwords images image_url can't be blank" => error uploading to browser
-
-      flash.now[:notice] =
-        if company_params[:adwords_short_headline].present?
-          'Headline has been updated'
-        elsif company_params[:adwords_images_attributes].values.any? { |ad| ad[:id].blank? }
-          'Image has been added'
-        elsif company_params[:adwords_images_attributes].values.any? { |ad| ad[:_destroy] == 'true' }
-          'Image was deleted'
-        else
-          'Default image has been updated'
-        end
-    else
-      @errors = @company.errors.full_messages
-    end
-    render(
-      partial: 'companies/dashboard/gads_form',
-      locals: {
-        company: @company,
-        errors: @errors,
-        active_collection: params[:company][:active_collection] || 'images'
-      }
-    )
-  end
-
   def update
+    sleep 4
     # TODO: handle case of absent primary CTA
-    # if turbo_frame_request_id == 'company-tags'
-    #   flash.now[:notice] = 'Story tags have been updated'
-    #   render(partial: 'companies/settings/tags', locals: { company: @company })
-    # if turbo_frame_request_id == 'company-ads-settings'
-    # else
     if @company.update company_params
       flash.now[:notice] = 'Account settings have been updated'
       respond_to do |format|
@@ -113,6 +71,41 @@ class CompaniesController < ApplicationController
     else
       @errors = @company.errors.full_messages
     end
+  end
+
+  def tags
+    if @company.update company_params
+      flash.now[:notice] = 'Story tags have been updated'
+    else
+      # TODO: What about tags errors?
+      @errors = @company.errors.full_messages
+    end
+    render(partial: 'companies/settings/tags', locals: { company: @company, errors: @errors })
+  end
+
+  def ads
+    active_collection = params[:company][:active_collection] || 'images'
+    if @company.update company_params
+      # "Adwords images media can't be blank" => error uploading to s3
+      # "Adwords images image_url can't be blank" => error uploading to browser
+
+      flash.now[:notice] =
+        if company_params[:adwords_short_headline].present?
+          'Headline has been updated'
+        elsif company_params[:adwords_images_attributes].values.any? { |ad| ad[:id].blank? }
+          'Image has been added'
+        elsif company_params[:adwords_images_attributes].values.any? { |ad| ad[:_destroy] == 'true' }
+          'Image was deleted'
+        else
+          'Default image has been updated'
+        end
+    else
+      @errors = @company.errors.full_messages
+    end
+    render(
+      partial: 'companies/dashboard/gads_form',
+      locals: { company: @company, errors: @errors, active_collection: }
+    )
   end
 
   def set_reset_gads
