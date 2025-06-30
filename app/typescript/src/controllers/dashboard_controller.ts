@@ -90,6 +90,7 @@ export default class DashboardController extends Controller<HTMLDivElement> {
   }
 
   onResourceReady({ detail: { resourceName } }: { detail: { resourceName: ResourceName }}) {
+    console.log('resource ready', resourceName)
     this.readyState[resourceName] = true;
   }
 
@@ -100,7 +101,7 @@ export default class DashboardController extends Controller<HTMLDivElement> {
       container.classList.remove('loading');
       container.classList.add('ready');
     };
-    if (resources[resourceName] === isReady) return false;  // no change => ignore
+    if (resources[resourceName] === isReady) return true;  // no change => ignore
     resources[resourceName] = isReady;
     if (/customerWins|contributions/.test(resourceName) && resources.customerWins && resources.contributions) {
       setReady(DashboardTab.Prospect);
