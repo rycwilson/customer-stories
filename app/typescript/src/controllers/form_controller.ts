@@ -69,6 +69,10 @@ export default class FormController<Ctrl extends SubclassController> extends Con
   declare readonly hasSuccessPlaceholderTarget: boolean;
   declare readonly hasCuratorSelectTarget: boolean;
 
+  // static values = {
+  //   disableSubmitWith: { type: String, default: null },
+  // }
+
   declare initialState: string;
 
   get isDirty() {
@@ -111,6 +115,20 @@ export default class FormController<Ctrl extends SubclassController> extends Con
     if (eventType === 'image-card:ready-to-validate') {
       $(this.element).validator('validate');
     }
+  }
+
+  animateSubmitBtn(e: SubmitEvent) {
+    if (!this.submitBtnTarget.dataset.content || !this.submitBtnTarget.dataset.disableWithHtml) {
+      return;
+    }
+    console.log('animate')
+    const submitBtnText = this.submitBtnTarget.dataset.content;
+    const submitBtnDisableWith = document.createElement('div');
+    submitBtnDisableWith.innerHTML = this.submitBtnTarget.dataset.disableWithHtml;
+    const contentEl = <HTMLElement>submitBtnDisableWith.querySelector(':scope > .btn__content');
+    contentEl.textContent = submitBtnText;
+    this.submitBtnTarget.innerHTML = submitBtnDisableWith.innerHTML;
+    setTimeout(() => this.submitBtnTarget.classList.add('btn--working'), 1000);
   }
 
   onChangeCustomer(

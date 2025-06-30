@@ -31,3 +31,7 @@ $fa-font-path: 'font-awesome/fonts';
 .turbo-progress-bar {
   background: #9cffff;
 }
+
+[type="submit"] {
+  @include submitting;
+}

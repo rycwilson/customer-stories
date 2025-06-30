@@ -75,4 +75,15 @@ module ApplicationHelper
     o = (((rgb[:r] * 299) + (rgb[:g] * 587) + (rgb[:b] * 114)) / 1000).round
     o > 125 ? 'light' : 'dark'
   end
+
+  def disabled_submit_button_html
+    <<~HTML
+      <div class="btn__content"><!-- will be filled in by form controller --></div>
+      <div class="btn__dots">
+        <i class="fa fa-fw fa-circle"></i>
+        <i class="fa fa-fw fa-circle"></i>
+        <i class="fa fa-fw fa-circle"></i>
+      </div>
+    HTML
+  end
 end
