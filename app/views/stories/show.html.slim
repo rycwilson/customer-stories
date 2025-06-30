@@ -15,5 +15,5 @@
       is_external: false })
 
 / web form not presently supported for mobile view
-- if @company.ctas&.primary && @company.ctas.primary.type == 'CtaLink'
+- if @company.ctas.primary.take and @company.ctas.primary.take.type == 'CtaLink'
   = render('stories/shared/cta_footer', { company: @company, is_plugin: @is_plugin })
