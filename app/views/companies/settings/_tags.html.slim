@@ -12,7 +12,7 @@
         action: [ \
           'tomselect:add-tag->company-tags#onAddTag',
           'tomselect:remove-tag->company-tags#onRemoveTag',
-          'turbo:submit-start->company-tags#onTurboSubmitStart'].join(' ') }}) do |form|
+          'turbo:submit-start->company-tags#onTurboSubmitStart'].join(' ') }) do |form|
 
     - ['story_categories', 'products'].each do |source|
       - label_text = source == 'story_categories' ? 'Category' : source.singularize.capitalize
