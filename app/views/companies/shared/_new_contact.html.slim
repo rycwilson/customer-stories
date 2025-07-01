@@ -21,7 +21,7 @@
         data: { "#{controller_id}-target" => "#{contact_type}Field" })
 
     .form-group
-      = user_fields.label(:first_name, 'First Name', class: 'control-label')
+      = user_fields.label(:first_name, 'First Name')
       / tabindex: '-1' allows manual focus
       = user_fields.text_field( \
           :first_name,
@@ -33,7 +33,7 @@
       .help-block.with-errors
 
     .form-group
-      = user_fields.label(:last_name, 'Last Name', class: 'control-label')
+      = user_fields.label(:last_name, 'Last Name')
       = user_fields.text_field( \
           :last_name,
           class: 'form-control',
@@ -43,7 +43,7 @@
       .help-block.with-errors
 
     .form-group
-      = user_fields.label(:email, 'Email', class: 'control-label')
+      = user_fields.label(:email, 'Email')
       = user_fields.email_field( \
           :email,
           class: 'form-control',

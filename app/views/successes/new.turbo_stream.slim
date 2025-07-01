@@ -22,10 +22,10 @@
           data: { new_customer_win_target: 'customerField' })
 
     .form-group
-      = form.label(:customer_id, 'Customer', class: 'control-label') 
+      = form.label(:customer_id, 'Customer') 
       = form.collection_select( \
           :customer_id,
-          @company.customers.sort_by(&:name),
+          @company.customers.order(:name),
           :id,
           :name,
           { include_blank: true,
@@ -43,7 +43,7 @@
       .help-block.with-errors
 
     .form-group
-      = form.label(:name, class: 'control-label') 
+      = form.label(:name) 
       = form.text_field( \
           :name,
           class: 'form-control',
@@ -52,7 +52,7 @@
       .help-block.with-errors
 
     .form-group
-      = form.label(:win_story_html, 'Description', class: 'control-label')
+      = form.label(:win_story_html, 'Description')
       = form.text_area( \
           :win_story_html,
           rows: 4,
@@ -68,7 +68,7 @@
           value: ...)
 
       .form-group
-        = contribution_fields.label(:referrer_id, 'Referred by', class: 'control-label')
+        = contribution_fields.label(:referrer_id, 'Referred by')
         = contribution_fields.collection_select( \
             :referrer_id,
             @company.referrers \
@@ -105,7 +105,7 @@
           true,
           false)
       .form-group
-        = contribution_fields.label(:contributor_id, 'Customer Contact', class: 'control-label')
+        = contribution_fields.label(:contributor_id, 'Customer Contact')
         = contribution_fields.collection_select( \
             :contributor_id,
             (@company.contributors + @company.referrers).uniq \

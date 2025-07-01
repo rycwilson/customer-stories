@@ -27,7 +27,7 @@
         = customer_fields.hidden_field(:company_id, value: @company.id, disabled: true, data: { new_contribution_target: 'customerField' })
 
       .form-group
-        = success_fields.label(:customer_id, 'Customer', class: 'control-label', style: "#{@story ? 'pointer-events:none' : ''}")
+        = success_fields.label(:customer_id, 'Customer', style: "#{@story ? 'pointer-events:none' : ''}")
         = success_fields.collection_select( \
             :customer_id,
             @company.customers.sort_by { |customer| customer.name.downcase },
@@ -49,7 +49,7 @@
 
     - if @story.present?
       .form-group
-        = label_tag("story-#{@story.id}-title", 'Customer Story', class: 'control-label', style: 'pointer-events:none')
+        = label_tag("story-#{@story.id}-title", 'Customer Story', style: 'pointer-events:none')
         = select_tag( \
             nil,
             options_for_select([[@story.title, "1"]], selected: 1),
@@ -61,14 +61,13 @@
 
     - else
       .form-group data-action="tomselect:dropdown-did-open->new-contribution#filterCustomerWinOptions"
-        = form.label(:success_id, 'Customer Win', class: 'control-label')
-        = form.collection_select( \
+        = form.label(:success_id, 'Customer Win')
+        = form.select( \
             :success_id,
-            @company.successes.sort_by { |success| success.name },
-            :id,
-            :name,
-            { include_blank: true,
-              selected: @success&.id || [] },
+            options_for_select( \
+              @company.successes.where.not(placeholder: true).order(:name).map(&:select_option),
+              selected: @success&.id),
+            { include_blank: true },
             { class: 'form-control',
               placeholder: 'Select or enter the name of a new Customer Win',
               required: true,
@@ -82,7 +81,7 @@
         .help-block.with-errors
 
     .form-group
-      = form.label(:contributor_id, 'Contributor', class: 'control-label')
+      = form.label(:contributor_id, 'Contributor')
       = form.collection_select( \
           :contributor_id,
           (@company.contributors + @company.referrers).uniq \
@@ -111,7 +110,7 @@
         contact_type: 'contributor')
 
     .form-group
-      = form.label(:invitation_template_id, 'Invitation Template', class: 'control-label')
+      = form.label(:invitation_template_id, 'Invitation Template')
       = form.collection_select( \
           :invitation_template_id,
           @company.invitation_templates.sort_by { |t| t.name },
@@ -127,7 +126,7 @@
         | Optional
 
     .form-group
-      = form.label(:referrer_id, 'Referred by', class: 'control-label')
+      = form.label(:referrer_id, 'Referred by')
       = form.collection_select( \
           :referrer_id,
           (@company.contributors + @company.referrers).uniq \

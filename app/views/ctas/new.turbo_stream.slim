@@ -35,7 +35,7 @@
           | Web Form
 
     .form-group 
-      = form.label(:display_text, 'Display Text', class: 'control-label')
+      = form.label(:display_text, 'Display Text')
       = form.text_field( \
           :display_text,
           class: 'form-control',
@@ -46,35 +46,35 @@
 
     / TODO: the `required` attribute of these tags must be toggleable
     .form-group data-cta-target="typeSpecificField"
-      = form.label(:link_url, 'Website URL', class: 'control-label')
+      = form.label(:link_url, 'Website URL')
       = form.text_field(:link_url, class: 'form-control', placeholder: 'Website URL')
 
     .form-group.hidden data-cta-target="typeSpecificField"
-      = form.label(:form_html, 'HTML', class: 'control-label')
+      = form.label(:form_html, 'HTML')
       = form.text_area(:form_html, class: 'form-control', placeholder: '<script> or <form> tags', rows: 3)
 
     .form-group 
-      = form.label(:description, 'Description', class: 'control-label')
+      = form.label(:description, 'Description')
       = form.text_field(:description, class: 'form-control', placeholder: 'Description')
       .help-block 
         | Optional
 
     .form-group
       .checkbox
-        = form.label(:primary, class: 'control-label') do
+        = form.label(:primary) do
           = form.check_box(:primary, { data: { action: 'cta#togglePrimary' } }, true, false)
           | Make this the Main CTA
 
     .cta__custom-button class=('hidden' unless @cta.primary?) data-cta-target="customButton"
       div
         = form.fields_for(:company) do |company_fields|
-          = company_fields.label(:primary_cta_background_color, 'Button', class: 'control-label')
+          = company_fields.label(:primary_cta_background_color, 'Button')
           = company_fields.color_field( \
               :primary_cta_background_color,
               class: 'form-control',
               disabled: !@cta.primary?,
               data: { cta_target: 'customButtonBackgroundColorInput companyField' })
-          = company_fields.label(:primary_cta_text_color, 'Text', class: 'control-label')
+          = company_fields.label(:primary_cta_text_color, 'Text')
           = company_fields.color_field( \
               :primary_cta_text_color,
               class: 'form-control',

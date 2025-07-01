@@ -23,7 +23,7 @@
           autocomplete: 'off' }) do |form|
 
       .form-group
-        = form.label(:title, 'Story Title', class: 'control-label')
+        = form.label(:title, 'Story Title')
         / tabindex: '-1' allows manual focus
         / TODO but it prevents the field from being focused when cycling with tab
         = form.text_field( \
@@ -60,7 +60,7 @@
         / tomselect_prevent_focus_value: @success.present?,
         / call compact on the options hash to ensure element receives the default name attribute if @success.present? == false
         .form-group
-          = success_fields.label(:customer_id, 'Customer', class: 'control-label')
+          = success_fields.label(:customer_id, 'Customer')
           = success_fields.collection_select( \
               :customer_id,
               @company.customers.where.not(name: nil).sort_by { |customer| customer.name.downcase },
@@ -89,9 +89,7 @@
         = form.select( \
             :success_id,
             options_for_select( \
-              @company.successes \
-                .sort_by(&:name) \
-                .map { |success| [success.name, success.id, { 'data-customer-id' => success.customer.id }] },
+              @company.successes.where.not(placeholder: true).order(:name).map(&:select_option),
               selected: @success&.id),
             { include_blank: true },
             { name: ('' if @success.nil?),
@@ -148,7 +146,7 @@
             | Optional
 
         .form-group
-          = success_fields.label(:curator_id, 'Curator', class: 'control-label')
+          = success_fields.label(:curator_id, 'Curator')
           = success_fields.collection_select( \
               :curator_id,
               @company.curators.sort_by { |curator| curator.last_name },

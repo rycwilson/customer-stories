@@ -14,12 +14,12 @@
         autocomplete: 'off' }) do |form|
 
     .form-group
-      = form.label(:name, class: 'control-label')
+      = form.label(:name)
       = form.text_field(:name, class: 'form-control', required: true)
       .help-block.with-errors
 
     .form-group
-      = form.label(:description, class: 'control-label')
+      = form.label(:description)
       = form.text_area(:description, class: 'form-control', style: 'width: 100%', rows: 4) 
 
     .form-group.logo
