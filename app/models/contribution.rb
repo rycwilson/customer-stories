@@ -1,24 +1,11 @@
 # frozen_string_literal: true
 
 class Contribution < ApplicationRecord
+  default_scope { order(created_at: :desc) }
+
   belongs_to :success, inverse_of: :contributions
   belongs_to :contributor, class_name: 'User', foreign_key: 'contributor_id'
   belongs_to :referrer, class_name: 'User', foreign_key: 'referrer_id', optional: true
-
-  # Since this table was added before Rails 5 (when belongs_to associations became required),
-  # the foreign keys associated with the belongs_to associations are presently nullable.
-  # Therefore we need to explicitly require the association.
-  # TODO: enforce this in the database schema
-  validates :success, :contributor, presence: true
-
-  # this is a handy way to select a limited set of attributes
-  belongs_to(
-    :win_story_contributor,
-    -> { select('users.id, users.first_name, users.last_name, users.email') },
-    class_name: 'User',
-    foreign_key: 'contributor_id',
-    optional: true
-  )
   has_one :customer, through: :success
   has_one :company, through: :success
   has_one :curator, through: :success
@@ -34,8 +21,13 @@ class Contribution < ApplicationRecord
     end
   end
   alias_method :answers, :contributor_answers
-
-  default_scope { order(created_at: :desc) }
+  belongs_to(
+    :win_story_contributor,
+    -> { select('users.id, users.first_name, users.last_name, users.email') },
+    class_name: 'User',
+    foreign_key: 'contributor_id',
+    optional: true
+  )
 
   accepts_nested_attributes_for(:success, allow_destroy: false)
   accepts_nested_attributes_for(:referrer, allow_destroy: false, reject_if: :missing_referrer_attributes?)
@@ -43,6 +35,26 @@ class Contribution < ApplicationRecord
   accepts_nested_attributes_for(:contributor, allow_destroy: false)
   accepts_nested_attributes_for(:invitation_template)
   accepts_nested_attributes_for(:contributor_answers)
+
+  # Since this table was added before Rails 5 (when belongs_to associations became required),
+  # the foreign keys associated with the belongs_to associations are presently nullable.
+  # Therefore we need to explicitly require the association.
+  # TODO: enforce this in the database schema
+  validates :success, :contributor, presence: true
+
+  # validates :contributor_id, presence: true
+  # validates :success_id, presence: true
+  # validates :role, presence: true
+  # validates :contribution, presence: true,
+  #               if: Proc.new { |contribution| contribution.status == 'contribution'}
+  # validates :feedback, presence: true,
+  #               if: Proc.new { |contribution| contribution.status == 'feedback'}
+
+  # contributor may have only one contribution per success
+  validates_uniqueness_of(:contributor_id, scope: :success_id)
+
+  validates :first_reminder_wait, numericality: { only_integer: true }
+  validates :second_reminder_wait, numericality: { only_integer: true }
 
   before_create(:generate_access_token)
 
@@ -61,58 +73,23 @@ class Contribution < ApplicationRecord
     :set_referrer_id_for_new_success_contact,
     if: -> { success.is_new_record? and success.referrer.present? }
   )
-  before_update(:set_request_sent_at, if: -> { status_changed? && %w[request_sent request_re_sent].include?(status) })
+  before_update(
+    :set_request_sent_at,
+    if: -> { status_changed? && %w[request_sent request_re_sent].include?(status) }
+  )
   before_update(
     :set_request_remind_at,
-    if: -> { status_changed? and %w[request_sent first_reminder_sent second_reminder_sent].include?(status) }
+    if: lambda {
+      status_changed? and %w[request_sent first_reminder_sent second_reminder_sent].include?(status)
+    }
   )
   before_update(
     %i[set_submitted_at send_alert],
     if: -> { status_changed? and %w[contribution_submitted feedback_submitted].include?(status) }
   )
 
-  # validates :contributor_id, presence: true
-  # validates :success_id, presence: true
-  # validates :role, presence: true
-  # validates :contribution, presence: true,
-  #               if: Proc.new { |contribution| contribution.status == 'contribution'}
-  # validates :feedback, presence: true,
-  #               if: Proc.new { |contribution| contribution.status == 'feedback'}
-
-  # contributor may have only one contribution per success
-  validates_uniqueness_of(:contributor_id, scope: :success_id)
-
-  # represents number of days between reminder emails
-  validates :first_reminder_wait, numericality: { only_integer: true }
-  validates :second_reminder_wait, numericality: { only_integer: true }
-
   def display_status
-    case status
-    when 'pre_request'
-      "waiting for invitation\n(added #{created_at.strftime('%-m/%-d/%y')})"
-    when 'request_sent'
-      "invitation sent #{request_sent_at.strftime('%-m/%-d/%y')}\n(email #{request_received_at.present? ? '' : 'not'} opened)"
-    when 'first_reminder_sent'
-      "reminder sent #{(request_sent_at + first_reminder_wait.days).strftime('%-m/%-d/%y')}\n(email #{request_received_at.present? ? '' : 'not'} opened)"
-    when 'second_reminder_sent'
-      "reminder sent #{(request_sent_at + second_reminder_wait.days).strftime('%-m/%-d/%y')}\n(email #{request_received_at.present? ? '' : 'not'} opened)"
-    when 'did_not_respond'
-      "did not respond\n(email #{request_received_at.present? ? '' : 'not'} opened)"
-    when 'contribution_submitted'
-      "<span><a href=\"javascript:;\" id=\"show-contribution-#{id}\">Contribution</a> submitted</span>".html_safe
-    when 'feedback_submitted'
-      "<span><a href=\"javascript:;\" id=\"show-contribution-#{id}\">Feedback</a> submitted</span>".html_safe
-    when 'contribution_completed'
-      "<span><a href=\"javascript:;\" id=\"show-contribution-#{id}\">Contribution</a> completed<i class=\"fa fa-check pull-right\"></i></span>".html_safe
-    when 'feedback_completed'
-      "<span><a href=\"javascript:;\" id=\"show-contribution-#{id}\">Feedback</a> completed<i class=\"fa fa-check pull-right\"></i></span>".html_safe
-    when 'opted_out'
-      "opted out&nbsp;&nbsp;<i data-toggle='tooltip' data-placement='top' title='Contributor has opted out of participating in this Customer Win/Story' style='font-size:16px;color:#666' class='fa fa-question-circle-o'></i>".html_safe
-    when 'removed'
-      "removed&nbsp;&nbsp;<i data-toggle='tooltip' data-placement='top' title='Contributor has removed himself from all future invitations' style='font-size:16px;color:#666' class='fa fa-question-circle-o'></i>".html_safe
-    when 'request_re_sent'
-      "request re-sent #{request_sent_at.strftime('%-m/%-d/%y')}"
-    end
+    'moved to view helper'
   end
 
   def self.send_reminders

@@ -76,9 +76,10 @@ module ApplicationHelper
     o > 125 ? 'light' : 'dark'
   end
 
+  # Using HEREDOC: https://blog.saeloun.com/2020/04/08/heredoc-in-ruby-and-rails/
   def disabled_submit_button_html
-    <<~HTML
-      <div class="btn__content"><!-- will be filled in by form controller --></div>
+    <<~HTML.squish
+      <div class="btn__content"></div>
       <div class="btn__dots">
         <i class="fa fa-fw fa-circle"></i>
         <i class="fa fa-fw fa-circle"></i>

@@ -1,4 +1,4 @@
-# http://stackoverflow.com/questions/6234045/how-do-you-access-devise-controllers
+# frozen_string_literal: true
 
 class Users::RegistrationsController < Devise::RegistrationsController
   # this does not work (see below)
@@ -9,13 +9,15 @@ class Users::RegistrationsController < Devise::RegistrationsController
   # calls to layout in this file (as above) notwithstanding
   # => this is why the above approach does not work
   # => set the layout dynamically by passing a lamda
-  layout(-> controller { %w(new create).include?(controller.action_name) ? 'landing' : 'application' })
+  layout(
+    ->(controller) { %w[new create].include?(controller.action_name) ? 'landing' : 'application' }
+  )
   before_action(:configure_sign_up_params, only: [:create])
   before_action(:configure_account_update_params, only: [:update])
 
   # GET /create-account
   def new
-    if request.subdomain.present? or request.path == new_user_registration_path
+    if request.subdomain.present? || request.path == new_user_registration_path
       flash.keep
       redirect_to(new_csp_user_registration_url(subdomain: nil), status: :moved_permanently)
       return
@@ -24,9 +26,9 @@ class Users::RegistrationsController < Devise::RegistrationsController
   end
 
   # POST /create-account
-  def create
-    super
-  end
+  # def create
+  #   super
+  # end
 
   # GET /user-profile
   def edit
@@ -34,11 +36,10 @@ class Users::RegistrationsController < Devise::RegistrationsController
     if request.path == edit_user_registration_path
       flash.keep
       redirect_to(edit_csp_user_registration_path, status: :moved_permanently)
-      return 
     end
     # render(layout: 'application')
   end
-  
+
   # PATCH /user-profile
   # devise should work with turbo since v4.9: 
   # https://discuss.hotwired.dev/t/forms-without-redirect/1606/22
@@ -59,7 +60,7 @@ class Users::RegistrationsController < Devise::RegistrationsController
       bypass_sign_in resource, scope: resource_name if sign_in_after_change_password?
       respond_with resource, location: after_update_path_for(resource)
     else
-      @errors = resource.errors.full_messages   # must be set before the response
+      @errors = resource.errors.full_messages # must be set before the response
       clean_up_passwords resource
       set_minimum_password_length
       respond_with resource
@@ -67,49 +68,63 @@ class Users::RegistrationsController < Devise::RegistrationsController
   end
 
   # DELETE /resource
-  def destroy
-    super
-  end
+  # def destroy
+  #   super
+  # end
 
   # GET /resource/cancel
   # Forces the session data which is usually expired after sign
   # in to be expired now. This is useful if the user wants to
   # cancel oauth signing in/up in the middle of the process,
   # removing all OAuth session data.
-  def cancel
-    super
-  end
+  # def cancel
+  #   super
+  # end
 
   protected
 
   # user, @user, resource are all the same thing
-  def update_resource resource, params
-    resource.send(params[:current_password].present? ? :update_with_password : :update_without_password, params)
+  def update_resource(resource, params)
+    resource.send(
+      if params[:current_password].present?
+        :update_with_password
+      else
+        :update_without_password
+      end,
+      params
+    )
   end
 
-  def after_update_path_for resource
+  def after_update_path_for(_resource)
     edit_csp_user_registration_path
   end
 
-  
   # The path used after sign up.
-  def after_sign_up_path_for resource
+  def after_sign_up_path_for(_resource)
     # a page to direct them to check their email
     new_company_path
   end
-  
+
   # The path used after sign up for inactive accounts.
   # def after_inactive_sign_up_path_for(resource)
   #   super(resource)
   # end
-  
+
   private
-  
+
   def configure_sign_up_params
-    devise_parameter_sanitizer.permit(:sign_up, keys: [:first_name, :last_name, :sign_up_code, :admin_access_code])
+    devise_parameter_sanitizer.permit(
+      :sign_up,
+      keys: %i[first_name last_name sign_up_code admin_access_code]
+    )
   end
-  
+
   def configure_account_update_params
-    devise_parameter_sanitizer.permit(:account_update, keys: [:email, :first_name, :last_name, :photo_url, :title, :phone, :password, :password_confirmation, :current_password])
+    devise_parameter_sanitizer.permit(
+      :account_update,
+      keys: %i[
+        email first_name last_name photo_url title phone password password_confirmation current_password
+      ]
+    )
   end
 end

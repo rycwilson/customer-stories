@@ -1,5 +1,6 @@
-class CustomersController < ApplicationController
+# frozen_string_literal: true
 
+class CustomersController < ApplicationController
   def edit
     @customer = Customer.friendly.find(params[:id])
   end
@@ -7,8 +8,11 @@ class CustomersController < ApplicationController
   def update
     @customer = Customer.friendly.find(params[:id])
     if @customer.update(customer_params)
-      redirect_back(fallback_location: dashboard_path('curate'), flash: { notice: "Customer has been updated" })
-    else 
+      redirect_back(
+        fallback_location: dashboard_path('curate'),
+        flash: { notice: 'Customer has been updated' }
+      )
+    else
       @errors = @customer.errors.full_messages
       render :edit, status: :unprocessable_entity
     end
@@ -19,5 +23,4 @@ class CustomersController < ApplicationController
   def customer_params
     params.require(:customer).permit(:name, :description, :logo_url, :show_name_with_logo)
   end
-
 end

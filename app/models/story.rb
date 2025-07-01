@@ -4,6 +4,26 @@ class Story < ApplicationRecord
   extend OrderAsSpecified
   include FriendlyId
 
+  # virtual attribute for accepting a standard format video url
+  attr_accessor :formatted_video_url
+
+  # presence of video is determined by a valid thumbnail url which must be fetched and confirmed
+  # => ensure the fetch only happens once by assigning to a virtual attribute
+  # => story.video = story.video_info() on :show and :edit actions only
+  attribute(:video)
+
+  # TODO: remove '*published' columns and status helper
+  # while the original 'status' helper and 'published' column still exist,
+  # the name of the enum and keys here must be distinct,
+  # otherwise there is a conflict with the enum method 'published?'
+  # NOTE: Don't use 0 for the first value as this will have unintended consequences in the select UI
+  enum status_new: {
+    draft: 1,
+    listed: 2,
+    previewed: 3,
+    is_published: 4
+  }
+
   belongs_to :success
   has_one :company, through: :success
   has_one :customer, through: :success
@@ -58,43 +78,20 @@ class Story < ApplicationRecord
     # dependent: :destroy
   )
 
-  # TODO: remove '*published' columns and status helper
-  # while the original 'status' helper and 'published' column still exist,
-  # the name of the enum and keys here must be distinct,
-  # otherwise there is a conflict with the enum method 'published?'
-  # NOTE: Don't use 0 for the first value as this will have unintended consequences in the select UI
-  enum status_new: {
-    draft: 1,
-    listed: 2,
-    previewed: 3,
-    is_published: 4
-  }
+  # NOTE: no explicit association to friendly_id_slugs, but it's there
+  # Story has many friendly_id_slugs -> captures history of slug changes
 
   accepts_nested_attributes_for(:results, allow_destroy: true)
   accepts_nested_attributes_for(:topic_ad, allow_destroy: true)
   accepts_nested_attributes_for(:retarget_ad, allow_destroy: true)
-
   accepts_nested_attributes_for(:success)
-  # virtual attribute for accepting a standard format video url
-  attr_accessor :formatted_video_url
-
-  # presence of video is determined by a valid thumbnail url which must be fetched and confirmed
-  # => ensure the fetch only happens once by assigning to a virtual attribute
-  # => story.video = story.video_info() on :show and :edit actions only
-  attribute(:video)
-
-  # NOTE: no explicit association to friendly_id_slugs, but it's there
-  # Story has many friendly_id_slugs -> captures history of slug changes
-
-  # Story title should be unique, even across companies
-  # This because friendly_id allows us to search based on the title slug
-  validates :title, presence: true, uniqueness: true
-
-  friendly_id :title, use: %i[slugged finders history]
 
   scope :published, -> { where(published: true) }
   scope :last_published, -> { where(published: true).order(publish_date: :desc).limit(1) }
-  scope :last_logo_published, -> { where(logo_published: true).order(logo_publish_date: :desc).limit(1) }
+  scope(
+    :last_logo_published, 
+    -> { where(logo_published: true).order(logo_publish_date: :desc).limit(1) }
+  )
   scope :featured, lambda {
     joins(:customer)
       .where.not(customers: { logo_url: [nil, ''] })
@@ -107,16 +104,22 @@ class Story < ApplicationRecord
     # Preload associations to avoid N+1 queries and ensure consistent query structure
     # Uses .includes (LEFT JOIN) instead of .joins (INNER JOIN) to prevent excluding
     # records that lack certain associations, which is critical for "match any" logic
-    # (e.g. a story with a given product tag will not be included in results if it has no category tags,
-    # which is an error in the case of a "match any" query involving both category and product tags)
+    # (e.g. a story with a product tag will not be included in results if it has no category tags,
+    # which is an error in the case of a "match any" query for both category and product tags)
     base_relation = Story.includes_for_filters(self, filters)
-    queries = Story.build_filter_queries(base_relation, filters) # an array of ActiveRecord::Relation objects
+
+    # an array of ActiveRecord::Relation objects
+    queries = Story.build_filter_queries(base_relation, filters)
     return base_relation if queries.empty?
 
     match_type == 'all' ? queries.reduce(&:merge) : queries.reduce(&:or)
   }
 
-  before_create { self.og_title = title } 
+  # Story title should be unique, even across companies
+  # This because friendly_id allows us to search based on the title slug
+  validates :title, presence: true, uniqueness: true
+
+  before_create { self.og_title = title }
 
   after_update_commit do
     og_image_was_updated =
@@ -124,24 +127,21 @@ class Story < ApplicationRecord
     S3Util.delete_object(S3_BUCKET, previous_changes[:og_image_url].first) if og_image_was_updated
   end
 
-  if proc do |story|
-    (story.previous_changes.keys &
-      %w[og_title og_description og_image_url og_image_alt]).any?
-  end
-    after_update_commit do
-      # TODO: pro-actively expire social network cache on changing og-* fields
-      # request = Typhoeus::Request.new(
-      #   "https://graph.facebook.com",
-      #   method: :POST,
-      #   headers: { Authorization: "Bearer <facebook_app_id>|<facebook_access_token>" },
-      #   params: {
-      #     id: 'https%3A%2F%2Facme-test.customerstories.org%2Fcurate%2Ftestwowin%2Ftestwowin',
-      #     scrape: true
-      #   }
-      # )
-      # request.run
-      # awesome_print(request.response.response_body)
-    end
+  after_update_commit do
+    # TODO: pro-actively expire social network cache on changing og-* fields
+    # request = Typhoeus::Request.new(
+    #   "https://graph.facebook.com",
+    #   method: :POST,
+    #   headers: { Authorization: "Bearer <facebook_app_id>|<facebook_access_token>" },
+    #   params: {
+    #     id: 'https%3A%2F%2Facme-test.customerstories.org%2Fcurate%2Ftestwowin%2Ftestwowin',
+    #     scrape: true
+    #   }
+    # )
+    # request.run
+    # awesome_print(request.response.response_body)
+  end if proc do |story|
+    (story.previous_changes.keys & %w[og_title og_description og_image_url og_image_alt]).any?
   end
 
   # scrub user-supplied html input using whitelist
@@ -150,9 +150,38 @@ class Story < ApplicationRecord
   # update timestamps
   before_save(:update_publish_state)
 
+  friendly_id :title, use: %i[slugged finders history]
+
   def self.default_order(stories_relation)
     stories_relation
       .order('stories.published DESC, stories.preview_published DESC, stories.updated_at DESC')
+  end
+
+  def self.includes_for_filters(base_relation, filters)
+    relation = base_relation # typically company.stories
+    relation = relation.includes(:success) if filters[:curator].present? || filters[:customer].present?
+    relation = relation.includes(:category_tags) if filters[:category].present?
+    relation = relation.includes(:product_tags) if filters[:product].present?
+    relation
+  end
+
+  def self.build_filter_queries(base_relation, filters)
+    filters.filter_map do |type, id|
+      next if id.blank?
+
+      case type
+      when :curator
+        base_relation.where(successes: { curator_id: id })
+      when :status
+        base_relation.where(status_new: id)
+      when :customer
+        base_relation.where(successes: { customer_id: id })
+      when :category
+        base_relation.where(story_categories: { id: id })
+      when :product
+        base_relation.where(products: { id: id })
+      end
+    end
   end
 
   def was_published?
@@ -341,36 +370,6 @@ class Story < ApplicationRecord
       self.publish_date = Time.now
     elsif !published? && published_was == true
       self.publish_date = nil
-    end
-  end
-
-  class << self
-
-    def includes_for_filters(base_relation, filters)
-      relation = base_relation # typically company.stories
-      relation = relation.includes(:success) if filters[:curator].present? || filters[:customer].present?
-      relation = relation.includes(:category_tags) if filters[:category].present?
-      relation = relation.includes(:product_tags) if filters[:product].present?
-      relation
-    end
-
-    def build_filter_queries(base_relation, filters)
-      filters.filter_map do |type, id|
-        next if id.blank?
-
-        case type
-        when :curator
-          base_relation.where(successes: { curator_id: id })
-        when :status
-          base_relation.where(status_new: id)
-        when :customer
-          base_relation.where(successes: { customer_id: id })
-        when :category
-          base_relation.where(story_categories: { id: id })
-        when :product
-          base_relation.where(products: { id: id })
-        end
-      end
     end
   end
 end
