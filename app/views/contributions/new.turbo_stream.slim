@@ -1,23 +1,16 @@
-= turbo_stream.append 'main-modal-content' do 
-  .modal-footer data-modal-target="footer"
-    button.btn.btn-default type="button" data-dismiss="modal" Cancel
-    = submit_tag('Create Story', class: 'btn btn-success', form: 'new-contribution-form')
-
 = turbo_stream.append 'main-modal-body' do
   = form_with( \
       model: @success&.contributions&.build || Contribution.new,
-      url: "#{company_contributions_path(@company)}.js",
-      format: :js,
+      url: company_contributions_path(@company),
+      id: 'new-contribution-form',
+      data: { \
+        controller: 'new-contribution',
+        action: [ \
+          'submit->new-contribution#validate',
+          'turbo:submit-start->new-contribution#animateSubmitBtn'].join(' ') },
       html: { \
-        id: 'new-contribution-form',
-        autocomplete: 'off',
         novalidate: true,
-        data: { \
-          controller: 'new-contribution',
-          new_contribution_modal_outlet: '#main-modal',
-          modal_target: 'form',
-          action: 'submit->new-contribution#validate',
-          submit_btn_text: 'Add Contributor' } }) do |form|
+        autocomplete: 'off' }) do |form|
 
     = form.fields_for(:success, @success || form.object.build_success) do |success_fields|
       = success_fields.hidden_field(:id, value: '', disabled: true, data: { new_contribution_target: 'successField' })
@@ -160,3 +153,13 @@
         parent_form_or_fields: form,
         controller_id: 'new-contribution',
         contact_type: 'referrer')
+
+= turbo_stream.append 'main-modal-content' do 
+  .modal-footer data-modal-target="footer"
+    button.btn.btn-default type="button" data-dismiss="modal" Cancel
+    = button_tag( \
+        '',
+        type: 'submit',
+        class: 'btn btn-success',
+        form: 'new-contribution-form',
+        data: { content: 'Add Contributor', disable_with_html: disabled_submit_button_html })

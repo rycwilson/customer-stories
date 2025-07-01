@@ -1,22 +1,17 @@
-= turbo_stream.append 'main-modal-content' do 
-  .modal-footer data-modal-target="footer"
-    button.btn.btn-default type="button" data-dismiss="modal" Cancel
-    = submit_tag('Save changes', class: 'btn btn-success', form: 'customer-form')
-
 = turbo_stream.append 'main-modal-body' do 
   = form_with( \
       model: @customer,
+      id: 'customer-form',
+      data: { \
+        controller: 'form',
+        asset_host: Rails.application.config.asset_host,
+        action: [ \
+          'image-card:ready-to-validate->form#updateValidator',
+          'submit->form#validate',
+          'turbo:submit-start->form#animateSubmitBtn'].join(' ') },
       html: { \
-        id: 'customer-form',
-        autocomplete: 'off',
-        data: { \
-          controller: 'form',
-          modal_target: 'form',
-          submit_btn_text: 'Save changes',
-          asset_host: Rails.application.config.asset_host,
-          action: [ \
-            'submit->form#validate',
-            'image-card:ready-to-validate->form#updateValidator' ].join(' ') }}) do |form|
+        novalidate: true,
+        autocomplete: 'off' }) do |form|
 
     .form-group
       = form.label(:name, class: 'control-label')
@@ -35,3 +30,13 @@
             = form.check_box(:show_name_with_logo)
             = 'Show name'
       = render('shared/image_card', model: 'Customer', _image: { url: @customer.logo_url }, customer_name: @customer.name)
+
+= turbo_stream.append 'main-modal-content' do 
+  .modal-footer data-modal-target="footer"
+    button.btn.btn-default type="button" data-dismiss="modal" Cancel
+    = button_tag( \
+        '',
+        type: 'submit',
+        class: 'btn btn-success',
+        form: 'customer-form',
+        data: { content: 'Save changes', disable_with_html: disabled_submit_button_html })

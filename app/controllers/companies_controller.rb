@@ -37,7 +37,6 @@ class CompaniesController < ApplicationController
   end
 
   def update
-    sleep 4
     # TODO: handle case of absent primary CTA
     if @company.update company_params
       flash.now[:notice] = 'Account settings have been updated'

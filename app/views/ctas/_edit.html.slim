@@ -3,22 +3,20 @@
     company_cta_path(company, cta),
     method: :patch,
     id: "cta-#{cta.id}-form",
-    data: { controller: 'cta' }) do |form|
+    data: { \
+      controller: 'cta',
+      action: [ \
+        'submit->cta#validate',
+        'turbo:submit-start->cta#animateSubmitBtn'].join(' ') },
+    html: { \
+      novalidate: true,
+      autocomplete: 'off' }) do |form| 
   
   = hidden_field_tag( \
       "cta_#{cta.id}[company_attributes][id]",
       company.id,
       disabled: !cta.primary?,
       data: { cta_target: 'companyField' })
-
-  .form-group 
-    = label_tag("cta_#{cta.id}[description]", 'Description')
-    = text_field_tag( \
-        "cta_#{cta.id}[description]", 
-        cta.description, 
-        class: 'form-control',
-        placeholder: 'Description',
-        autocomplete: 'off')
 
   .form-group 
     = label_tag("cta_#{cta.id}[display_text]", 'Display text')
@@ -49,6 +47,15 @@
           placeholder: '<script> or <form> tags',
           autocomplete: 'off',
           rows: 3)
+
+  .form-group 
+    = label_tag("cta_#{cta.id}[description]", 'Description')
+    = text_field_tag( \
+        "cta_#{cta.id}[description]", 
+        cta.description, 
+        class: 'form-control',
+        placeholder: 'Description',
+        autocomplete: 'off')
 
   .form-group 
     .checkbox
@@ -95,4 +102,12 @@
           company_cta_path(company, cta),
           class: 'btn btn-sm btn-danger',
           data: { turbo_method: 'delete' })
-    = submit_tag('Save changes', class: 'btn btn-sm btn-success')
+    = button_tag( \
+        '',
+        type: 'submit',
+        class: 'btn btn-sm btn-success',
+        form: "cta-#{cta.id}-form",
+        data: { \
+          content: 'Save changes',
+          cta_target: 'submitBtn',
+          disable_with_html: disabled_submit_button_html })

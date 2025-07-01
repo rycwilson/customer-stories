@@ -1,8 +1,4 @@
-= turbo_stream.append 'main-modal-content' do 
-  .modal-footer data-modal-target="footer"
-    button.btn.btn-default type="button" data-dismiss="modal" Cancel
-    = submit_tag('Create CTA', class: 'btn btn-success', form: 'new-cta-form')
-
+/ TODO: If the description is optional, what to show as the list item heading?
 = turbo_stream.append 'main-modal-body' do
 
   / To avoid the fields being named `cta_link` or `cta_form`, provide a scope. (This means the url needs to be explicitly set.)
@@ -11,24 +7,32 @@
       url: company_ctas_path(@company),
       scope: 'cta',
       id: 'new-cta-form',
-      data: { controller: 'cta' }) do |form|
+      data: { \
+        controller: 'cta',
+        action: [ \
+          'submit->cta#validate',
+          'turbo:submit-start->cta#animateSubmitBtn'].join(' ') },
+      html: { \
+        novalidate: true,
+        autocomplete: 'off' }) do |form|
 
     .form-group data-action="change->cta#toggleType"
-      label.control-label Type
-      .radio style="margin-top:0"
+      label Type
+      div
+        = form.label(:type_ctalink, class: 'radio-inline') do
+          = form.radio_button(:type, 'CtaLink', checked: true)
+          | Link
+        = form.label(:type_ctaform, class: 'radio-inline') do
+          = form.radio_button(:type, 'CtaForm')
+          | Web Form
+      /.radio style="margin-top:0"
         = form.label(:type_ctalink) do
           = form.radio_button(:type, 'CtaLink', checked: true)
           | Link
-      .radio
+      /.radio
         = form.label(:type_ctaform) do
           = form.radio_button(:type, 'CtaForm')
           | Web Form
-    
-    .form-group 
-      = form.label(:description, 'Description', class: 'control-label')
-      = form.text_field(:description, class: 'form-control', placeholder: 'Description')
-      .help-block 
-        | Optional
 
     .form-group 
       = form.label(:display_text, 'Display Text', class: 'control-label')
@@ -36,9 +40,11 @@
           :display_text,
           class: 'form-control',
           placeholder: 'Display Text',
+          required: true,
           data: { action: 'cta#updateCustomButtonText' })
       .help-block 
 
+    / TODO: the `required` attribute of these tags must be toggleable
     .form-group data-cta-target="typeSpecificField"
       = form.label(:link_url, 'Website URL', class: 'control-label')
       = form.text_field(:link_url, class: 'form-control', placeholder: 'Website URL')
@@ -46,6 +52,12 @@
     .form-group.hidden data-cta-target="typeSpecificField"
       = form.label(:form_html, 'HTML', class: 'control-label')
       = form.text_area(:form_html, class: 'form-control', placeholder: '<script> or <form> tags', rows: 3)
+
+    .form-group 
+      = form.label(:description, 'Description', class: 'control-label')
+      = form.text_field(:description, class: 'form-control', placeholder: 'Description')
+      .help-block 
+        | Optional
 
     .form-group
       .checkbox
@@ -76,3 +88,16 @@
           data-color="#{@company.primary_cta_text_color}" }
           | Display Text
       .help-block CTA button will appear in the header as shown
+
+= turbo_stream.append 'main-modal-content' do 
+  .modal-footer data-modal-target="footer"
+    button.btn.btn-default type="button" data-dismiss="modal" Cancel
+    = button_tag( \
+        '',
+        type: 'submit',
+        class: 'btn btn-success',
+        form: 'new-cta-form',
+        data: { \
+          content: 'Create CTA',
+          cta_target: 'submitBtn',
+          disable_with_html: disabled_submit_button_html })

@@ -30,6 +30,7 @@ export type SubclassController = (
 export default class FormController<Ctrl extends SubclassController> extends Controller<HTMLFormElement> {
   static outlets = ['modal'];
   declare readonly modalOutlet: ModalController;
+  declare readonly hasModalOutlet: boolean;
 
   static targets = [    
     'customerSelect',
@@ -60,6 +61,7 @@ export default class FormController<Ctrl extends SubclassController> extends Con
   declare readonly successPlaceholderTarget: HTMLInputElement;
 
   declare readonly submitBtnTarget: HTMLInputElement | HTMLButtonElement;
+  declare readonly hasSubmitBtnTarget: boolean;
 
   declare readonly hasCustomerSelectTarget: boolean;
   declare readonly hasCustomerWinSelectTarget: boolean;
@@ -69,14 +71,24 @@ export default class FormController<Ctrl extends SubclassController> extends Con
   declare readonly hasSuccessPlaceholderTarget: boolean;
   declare readonly hasCuratorSelectTarget: boolean;
 
-  // static values = {
-  //   disableSubmitWith: { type: String, default: null },
-  // }
-
   declare initialState: string;
 
   get isDirty() {
     return serializeForm(this.element) !== this.initialState;
+  }
+
+  get submitBtn(): HTMLInputElement | HTMLButtonElement | undefined {
+    if (this.hasSubmitBtnTarget) {
+      return this.submitBtnTarget;
+    } else if (document.getElementById('main-modal')?.contains(this.element)) {
+      // Forms in modals have a submit button that is not in the form's render tree,
+      // can be identified by their form attribute
+      return (
+        document.getElementById('main-modal')?.querySelector(`[form="${this.element.id}"]`)
+      ) as HTMLButtonElement;
+    } else {
+      console.error('FormController: No submit button found');
+    }
   }
 
   connect() {
@@ -118,17 +130,16 @@ export default class FormController<Ctrl extends SubclassController> extends Con
   }
 
   animateSubmitBtn(e: SubmitEvent) {
-    if (!this.submitBtnTarget.dataset.content || !this.submitBtnTarget.dataset.disableWithHtml) {
-      return;
-    }
-    console.log('animate')
-    const submitBtnText = this.submitBtnTarget.dataset.content;
+    // console.log('animate')
+    const submitBtn = this.submitBtn;
+    if (!submitBtn?.dataset.content || !submitBtn?.dataset.disableWithHtml) return;
+    const submitBtnText = submitBtn.dataset.content;
     const submitBtnDisableWith = document.createElement('div');
-    submitBtnDisableWith.innerHTML = this.submitBtnTarget.dataset.disableWithHtml;
+    submitBtnDisableWith.innerHTML = submitBtn.dataset.disableWithHtml;
     const contentEl = <HTMLElement>submitBtnDisableWith.querySelector(':scope > .btn__content');
     contentEl.textContent = submitBtnText;
-    this.submitBtnTarget.innerHTML = submitBtnDisableWith.innerHTML;
-    setTimeout(() => this.submitBtnTarget.classList.add('btn--working'), 1000);
+    submitBtn.innerHTML = submitBtnDisableWith.innerHTML;
+    setTimeout(() => submitBtn.classList.add('btn--working'), 1000);
   }
 
   onChangeCustomer(

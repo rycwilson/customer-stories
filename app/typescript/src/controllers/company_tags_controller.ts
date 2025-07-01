@@ -2,10 +2,13 @@ import type { TurboSubmitStartEvent, TurboSubmitEndEvent } from "@hotwired/turbo
 import FormController from "./form_controller";
 
 export default class CompanyTagsController extends FormController<CompanyTagsController> {
-  static targets = ['hiddenField'];  
+  static targets = [...FormController.targets, 'hiddenField'];  
   declare hiddenFieldTargets: HTMLInputElement[];
 
   private didSubmit = false;
+
+  // connect() {
+  // }
 
   onAddTag({ detail: { tagName, source, cancel = false} }: { detail: { tagName: string, source: string, cancel?: boolean } }) {
     if (cancel) {
@@ -67,12 +70,20 @@ export default class CompanyTagsController extends FormController<CompanyTagsCon
       inputs.forEach(input => { input.disabled = !isNewTag && !isRemovedTag });
     }
 
-    // stop form submission to allow dom updates to complete (disabled inputs), then submit if necessary
+    // Stop form submission while DOM updates complete (disabled inputs), then submit if necessary
     formSubmission.stop();
     const inputsToSubmit = this.hiddenFieldTargets.filter(input => !input.disabled);
     if (inputsToSubmit.length) {
       setTimeout(() => {
         this.didSubmit = true;
+
+        // Since we've hijacked form submission, we need to manually disable and animate the button
+        this.submitBtnTarget.disabled = true;
+        this.element.addEventListener(
+          'submit', 
+          (e: SubmitEvent) => super.animateSubmitBtn(e),
+          { once: true }
+        );
         this.element.requestSubmit();
       });
     }

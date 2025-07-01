@@ -3,17 +3,16 @@
   = form_with( \
       model: company,
       url: tags_company_path(company),
-      html: { \
-        id: 'company-tags-form',
-        class: 'form-horizontal',
-        data: { \
-          controller: 'company-tags toast',
-          toast_flash_value: (flash.to_h if flash.any? and turbo_frame_request_id == 'company-tags'),
-          toast_errors_value: (@errors if @errors and turbo_frame_request_id == 'company-tags'),
-          action: [ \
-            'tomselect:add-tag->company-tags#onAddTag',
-            'tomselect:remove-tag->company-tags#onRemoveTag',
-            'turbo:submit-start->company-tags#onTurboSubmitStart'].join(' ') }}) do |form|
+      id: 'company-tags-form',
+      class: 'form-horizontal',
+      data: { \
+        controller: 'company-tags toast',
+        toast_flash_value: (flash.to_h if flash.any? and turbo_frame_request_id == 'company-tags'),
+        toast_errors_value: (@errors if @errors and turbo_frame_request_id == 'company-tags'),
+        action: [ \
+          'tomselect:add-tag->company-tags#onAddTag',
+          'tomselect:remove-tag->company-tags#onRemoveTag',
+          'turbo:submit-start->company-tags#onTurboSubmitStart'].join(' ') }}) do |form|
 
     - ['story_categories', 'products'].each do |source|
       - label_text = source == 'story_categories' ? 'Category' : source.singularize.capitalize
@@ -46,4 +45,12 @@
 
     .row
       .col-sm-offset-1.col-sm-11.col-md-10.col-lg-offset-2.col-lg-8
-        = render('shared/form_submit', form_ctrl_id: 'company-tags', content: 'Save changes')
+        = button_tag( \
+            '',
+            type: 'submit',
+            class: 'btn btn-success',
+            form: 'company-tags-form',
+            data: { \
+              content: 'Save changes',
+              company_tags_target: 'submitBtn',
+              disable_with_html: disabled_submit_button_html })

@@ -1,22 +1,16 @@
-= turbo_stream.append 'main-modal-content' do 
-  .modal-footer data-modal-target="footer"
-    button.btn.btn-default type="button" data-dismiss="modal" Cancel
-    = submit_tag('Create Customer Win', class: 'btn btn-success', form: 'new-success-form')
-
 = turbo_stream.append 'main-modal-body' do
   = form_with( \
       model: [@company, @success],
       format: :js,
+      id: 'new-customer-win-form',
+      data: { \
+        controller: 'new-customer-win',
+        action: [ \
+          'submit->new-customer-win#validate',
+          'turbo:submit-start->new-customer-win#animateSubmitBtn'].join(' ') },
       html: { \
-        id: 'new-success-form',
-        autocomplete: 'off',
         novalidate: true,
-        data: { \
-          controller: 'new-customer-win',
-          modal_target: 'form',
-          new_customer_win_modal_outlet: '#main-modal',
-          action: 'submit->new-customer-win#validate',
-          submit_btn_text: 'Add Customer Win' } }) do |form|
+        autocomplete: 'off' }) do |form|
 
     = form.fields_for(:customer, form.object.customer || form.object.build_customer) do |customer_fields|
       = customer_fields.hidden_field(:id, value: '', disabled: true, data: { new_customer_win_target: 'customerField' })
@@ -156,42 +150,54 @@
               tomselect_custom_options_value: { plugins: {} } }})
       .help-block.with-errors     
 
-    /div style="display:flex; align-items:center"
-      = form.submit(class: 'btn btn-success', data: { new_customer_win_target: 'submitBtn' })
-    /.form-group.source
-      label.control-label Source
-      div
-        .btn-group data-action="change->new-customer-win#onChangeSource" role="tablist"
-          = label_tag('source_create', class: 'radio-inline') do
-            = radio_button_tag( \
-                'source', 
-                'create', 
-                true, 
-                aria_controls: 'customer-win-fields', 
-                data: { target: '#customer-win-fields' })
-            | Create manually
-          = label_tag('source_import', class: 'radio-inline') do
-            = radio_button_tag( \
-                'source', 
-                'import',
-                false,
-                aria_controls: 'csv-file-upload',
-                data: { target: '#csv-file-upload' })
-            | Import CSV
-    /.tab-content
-      .tab-pane id="csv-file-upload" role="tabpanel"
-        .form-group.csv-file.required-input
-          label.control-label File
-          .col-sm-8
-            .fileinput.fileinput-new.input-group data-provides="fileinput"
-              .form-control data-trigger="fileinput"
-                i.glyphicon.glyphicon-file.fileinput-exists
-                .fileinput-filename.placeholder Upload
-              .input-group-addon.btn.btn-default.btn-file
-                label for="csv-file-input"
-                  i.fa.fa-fw.fa-upload
-                  input type="file" id="csv-file-input" style="display:none"
-            span.help-block
+= turbo_stream.append 'main-modal-content' do 
+  .modal-footer data-modal-target="footer"
+    button.btn.btn-default type="button" data-dismiss="modal" Cancel
+    = button_tag( \
+        '',
+        type: 'submit',
+        class: 'btn btn-success',
+        form: 'new-customer-win-form',
+        data: { content: 'Create Customer Win', disable_with_html: disabled_submit_button_html })
+
+  /div style="display:flex; align-items:center"
+    = form.submit(class: 'btn btn-success', data: { new_customer_win_target: 'submitBtn' })
+  /.form-group.source
+    label.control-label Source
+    div
+      .btn-group data-action="change->new-customer-win#onChangeSource" role="tablist"
+        = label_tag('source_create', class: 'radio-inline') do
+          = radio_button_tag( \
+              'source', 
+              'create', 
+              true, 
+              aria_controls: 'customer-win-fields', 
+              data: { target: '#customer-win-fields' })
+          | Create manually
+        = label_tag('source_import', class: 'radio-inline') do
+          = radio_button_tag( \
+              'source', 
+              'import',
+              false,
+              aria_controls: 'csv-file-upload',
+              data: { target: '#csv-file-upload' })
+          | Import CSV
+  /.tab-content
+    .tab-pane id="csv-file-upload" role="tabpanel"
+      .form-group.csv-file.required-input
+        label.control-label File
+        .col-sm-8
+          .fileinput.fileinput-new.input-group data-provides="fileinput"
+            .form-control data-trigger="fileinput"
+              i.glyphicon.glyphicon-file.fileinput-exists
+              .fileinput-filename.placeholder Upload
+            .input-group-addon.btn.btn-default.btn-file
+              label for="csv-file-input"
+                i.fa.fa-fw.fa-upload
+                input type="file" id="csv-file-input" style="display:none"
+          span.help-block
 
 /      .tab-pane.active role="tabpanel"
+
+
 

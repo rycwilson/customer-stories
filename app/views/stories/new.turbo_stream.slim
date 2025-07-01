@@ -5,25 +5,22 @@
 
 - else
 
-  = turbo_stream.append 'main-modal-content' do 
-    .modal-footer data-modal-target="footer"
-      button.btn.btn-default type="button" data-dismiss="modal" Cancel
-      = submit_tag('Create Story', class: 'btn btn-success', form: 'new-story-form')
-
   = turbo_stream.append 'main-modal-body' do
 
     / Note `model: [@success, @story]` does not work as it will infer a collection => must specify url
     = form_with( \
         model: @story,  
         url: @success ? success_story_path(@success) : company_stories_path(@company),
+        id: 'new-story-form',
+        data: { \
+          controller: 'new-story',
+          new_story_modal_outlet: '#main-modal',
+          action: [ \
+            'submit->new-story#validate',
+            'turbo:submit-start->new-story#animateSubmitBtn'].join(' ') },
         html: { \
-          id: 'new-story-form',
-          autocomplete: 'off',
           novalidate: true,
-          data: { \
-            controller: 'new-story',
-            new_story_modal_outlet: '#main-modal',
-            action: 'submit->new-story#validate' } }) do |form|
+          autocomplete: 'off' }) do |form|
 
       .form-group
         = form.label(:title, 'Story Title', class: 'control-label')
@@ -168,3 +165,18 @@
                   tomselect_custom_options_value: { plugins: {} },
                   field_name: "#{success_fields.object_name}[curator_id]" } }.compact)
           .help-block
+
+  = turbo_stream.append 'main-modal-content' do 
+    .modal-footer data-modal-target="footer"
+      button.btn.btn-default type="button" data-dismiss="modal" Cancel
+      
+      // `form.submit` or `submit_tag` will result in an input element with a value attribute
+      // that can't be html. So use a button instead. Also we need button_tag so we can interpolate.
+      // Button text content is set via data attribute / css.
+      // Don't omit type="submit" as it is a css selector.
+      = button_tag( \
+          '',
+          type: 'submit',
+          class: 'btn btn-success',
+          form: 'new-story-form',
+          data: { content: 'Create Story', disable_with_html: disabled_submit_button_html })

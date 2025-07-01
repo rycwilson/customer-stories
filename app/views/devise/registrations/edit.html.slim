@@ -5,18 +5,19 @@ main.user-profile.container.hidden-xs
   = form_with( \
       model: current_user,
       url: update_csp_user_registration_path,
+      id: 'user-profile-form',
+      class: 'form-horizontal',
+      data: { \
+        controller: 'user-profile',
+        asset_host: Rails.application.config.asset_host,
+        action: [ \
+          'image-card:ready-to-validate->user-profile#updateValidator',
+          'image-card:validated->user-profile#updateValidator',
+          'submit->user-profile#validate',
+          'turbo:submit-start->user-profile#animateSubmitBtn'].join(' ') },
       html: { \
-        id: 'user-profile-form',
-        class: 'form-horizontal',
-        autocomplete: 'off',
         novalidate: true,
-        data: { \
-          controller: 'user-profile',
-          asset_host: Rails.application.config.asset_host,
-          action: [ \
-            'image-card:ready-to-validate->user-profile#updateValidator',
-            'image-card:validated->user-profile#updateValidator',
-            'submit->user-profile#validate'].join(' ') }}) do |form|
+        autocomplete: 'off' }) do |form|
 
     .row
 
@@ -140,4 +141,12 @@ main.user-profile.container.hidden-xs
       .col-sm-offset-4.col-sm-8
         .form-group
           .col-sm-offset-3.col-sm-9.col-lg-offset-2.col-lg-10
-            = form.submit('Save changes', class: 'btn btn-success', data: { user_profile_target: 'submitBtn' })    
+            = button_tag( \
+                '',
+                type: 'submit',
+                class: 'btn btn-success',
+                form: 'user-profile-form',
+                data: { \
+                  content: 'Save changes',
+                  user_profile_target: 'submitBtn',
+                  disable_with_html: disabled_submit_button_html })

@@ -327,7 +327,7 @@
   &.btn--working {
     .btn__content,
     .btn__dots {
-      transition: visibility 0.15s ease-in, opacity 0.15s ease-in;
+      transition: visibility 0.15s step-end, opacity 0.15s step-end;
     }
 
     .btn__content {
