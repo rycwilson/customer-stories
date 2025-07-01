@@ -85,7 +85,7 @@ Rails.application.routes.draw do
   constraints(CompanySubdomain) do
     # See StoryPathConstraint below for route to published story page
     get '/', to: 'stories#index'
-    get '/stories', to: 'stories#index', defaults: { format: :json }
+    get '/stories', to: 'stories#index', constraints: { format: :json }
 
     get '/plugins/:type/cs', to: 'plugins#main'
     # get '/widgets/:type/cs', to: 'plugins#main'  # legacy (was varmour)
