@@ -10,7 +10,7 @@
       label.col-md-3.control-label.visible-md-inline-block.visible-lg-inline-block Main
       .col-sm-offset-1.col-sm-11.col-md-offset-0.col-md-8.col-lg-6
         - if primary_cta = company.ctas.primary.take
-          .list-group data-controller="list-group" data-list-group-collapsible-value="true"
+          .list-group data-controller="list-group" data-list-group-collapsible-value="true" style="margin-bottom:0"
             a.list-group-item {
               data-toggle="collapse"
               data-list-group-target="item"
@@ -29,12 +29,12 @@
               new_company_cta_path(company) + '?primary=true',
               class: 'btn btn-secondary',
               style: 'margin-bottom:2.25rem',
-              aria: { label: 'New Call to Action' },
+              aria: { label: 'New Call-to-Action' },
               data: { \ 
                 turbo_stream: true,
                 controller: 'modal-trigger',
                 modal_trigger_modal_outlet: '#main-modal',
-                modal_trigger_params_value: { title: 'New Call to Action', className: 'new-cta' } }) do
+                modal_trigger_params_value: { title: 'New Call-to-Action', className: 'new-cta' } }) do
             i.fa.fa-plus
             |&nbsp;&nbsp;New
           /.list-group style="margin-bottom:10px"
@@ -62,11 +62,11 @@
         = link_to( \
             new_company_cta_path(company),
             class: 'btn btn-secondary',
-            aria: { label: 'New Call to Action' },
+            aria: { label: 'New Call-to-Action' },
             data: { \ 
               turbo_stream: true,
               controller: 'modal-trigger',
               modal_trigger_modal_outlet: '#main-modal',
-              modal_trigger_params_value: { title: 'New Call to Action', className: 'new-cta' } }) do
+              modal_trigger_params_value: { title: 'New Call-to-Action', className: 'new-cta' } }) do
           i.fa.fa-plus
           |&nbsp;&nbsp;New
