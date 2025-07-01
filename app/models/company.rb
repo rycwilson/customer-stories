@@ -81,7 +81,7 @@ class Company < ApplicationRecord
   validates :subdomain, presence: true, uniqueness: true, subdomain: true
   validates :website, presence: true, uniqueness: true, website: true
   validates_associated :adwords_images
-  validates_associated :ctas
+  # validates_associated :ctas
 
   before_validation :smart_add_url_protocol
 
@@ -124,7 +124,6 @@ class Company < ApplicationRecord
       company_template.save
     end
   end
-
 
   def tag_select_options(
     tag_type, with_stories_count: true, only_featured: false, for_multi_select: false
