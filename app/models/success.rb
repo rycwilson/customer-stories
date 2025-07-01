@@ -82,8 +82,11 @@ class Success < ApplicationRecord
   has_and_belongs_to_many :ctas, class_name: 'CallToAction', join_table: 'ctas_successes'
   # default_scope { order(name: :asc) }
 
-  validates_uniqueness_of(:name, scope: :customer_id)
+  # Stories can be created without a customer win, in which case a placeholder customer win is 
+  # created with name = '' and placeholder = true.
+  # TODO: modify associations so that stories can exist independently
   validate :named_or_placeholder
+  validates_uniqueness_of(:name, scope: :customer_id, unless: -> { placeholder })
 
   # validate :tag_has_same_company
 
