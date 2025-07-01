@@ -81,8 +81,8 @@ export default class FormController<Ctrl extends SubclassController> extends Con
     if (this.hasSubmitBtnTarget) {
       return this.submitBtnTarget;
     } else if (document.getElementById('main-modal')?.contains(this.element)) {
-      // Forms in modals have a submit button that is not in the form's render tree,
-      // can be identified by their form attribute
+      // Forms in modals have a submit button that is outside the form's render tree,
+      // can be identified by the `form=` attribute
       return (
         document.getElementById('main-modal')?.querySelector(`[form="${this.element.id}"]`)
       ) as HTMLButtonElement;
