@@ -265,7 +265,7 @@ async function beforeSubmitSearch(e: Event) {
     renderStories([]);
     clearFilters();
 
-    const request = new FetchRequest('get', '/stories', { query: { q: searchString } });
+    const request = new FetchRequest('get', '/stories.json', { query: { q: searchString } });
     const response = await request.perform();
     if (response.ok) {
       const storyIds = await response.json;
