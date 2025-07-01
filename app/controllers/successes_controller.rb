@@ -18,7 +18,8 @@ class SuccessesController < ApplicationController
   end
 
   def index
-    @successes = @company.successes.includes(:curator, :customer, :story)
+    @successes =
+      @company.successes.includes(:curator, :customer, :story).where.not(placeholder: true)
     respond_to(&:json)
   end
 
