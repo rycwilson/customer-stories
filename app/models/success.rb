@@ -224,6 +224,10 @@ class Success < ApplicationRecord
     created_at.to_i
   end
 
+  def select_option
+    [name, id, { 'data-customer-id' => customer.id }]
+  end
+
   # ref: https://stackoverflow.com/questions/6346134
   def customer_attributes=(attrs)
     self.customer = Customer.find(attrs['id']) if attrs['id'].present?
