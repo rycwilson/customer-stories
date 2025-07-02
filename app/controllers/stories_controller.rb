@@ -16,19 +16,17 @@ class StoriesController < ApplicationController
       @stories = if params[:q].present?
                    search(@company.stories, params[:q])
                  else
-                   Story.default_order @company.stories.filtered(@filters, @filters_match_type)
+                   @company.stories.filtered(@filters, @filters_match_type)
                  end
     else
       # set_or_redirect_to_story_preview(params[:preview], session[:preview_story_slug])
-      @featured_stories =
-        @company.stories.featured.order([published: :desc, preview_published: :desc, updated_at: :desc])
       if request.xhr? && params[:q].present?
         respond_to do |format|
-          format.json { render(json: search(@featured_stories, params[:q]).pluck(:id).uniq) }
+          format.json { render(json: search(@company.stories.featured, params[:q]).pluck(:id).uniq) }
         end
         return
       elsif @filters.present?
-        @filtered_story_ids = @featured_stories.filtered(@filters, @filters_match_type).pluck(:id)
+        @filtered_story_ids = @company.stories.featured.filtered(@filters, @filters_match_type).pluck(:id)
       end
     end
     render(@v2 ? 'index2' : 'index', layout: @is_dashboard ? false : 'stories')
@@ -61,7 +59,6 @@ class StoriesController < ApplicationController
     # convert the story narrative to plain text (for SEO tags)
     # @story_narrative = HtmlToPlainText.plain_text(@story.narrative)
     @related_stories = @story.related_stories
-    @more_stories = @company.public_stories
     render(layout: 'stories')
   end
 

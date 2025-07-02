@@ -63,7 +63,7 @@
           = success_fields.label(:customer_id, 'Customer')
           = success_fields.collection_select( \
               :customer_id,
-              @company.customers.where.not(name: nil).sort_by { |customer| customer.name.downcase },
+              @company.customers,
               :id,
               :name,
               { include_blank: true },
@@ -149,7 +149,7 @@
           = success_fields.label(:curator_id, 'Curator')
           = success_fields.collection_select( \
               :curator_id,
-              @company.curators.sort_by { |curator| curator.last_name },
+              @company.curators,
               :id,
               :full_name,
               { include_blank: true },

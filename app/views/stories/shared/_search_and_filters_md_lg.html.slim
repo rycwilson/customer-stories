@@ -96,7 +96,7 @@
         = select_tag( \
             nil,
             options_from_collection_for_select( \
-              company.customers.order(:name), :id, :name_with_stories_count, filters[:customer]),
+              company.customers, :id, :name_with_stories_count, filters[:customer]),
             { id: 'select-customer--stories',
               include_blank: true,
               placeholder: 'Select customer',

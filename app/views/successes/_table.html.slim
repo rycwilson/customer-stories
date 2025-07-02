@@ -10,7 +10,7 @@
         path: new_company_success_path(company) + "?curator_id=#{current_user.id}",
         modal_class_name: 'new-customer-win' },
       search_options: { \
-        'Customer' => company.customers.sort_by(&:name).map { |customer| [customer.name, "customer-#{customer.id}"] },
+        'Customer' => company.customers.map(&:select_option),
         'Customer Win' => company.successes.sort_by(&:updated_at).reverse.map { |success| [success.name, "success-#{success.id}"] } }})  
 
 table#successes-table.table {

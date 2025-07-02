@@ -25,7 +25,7 @@
       = form.label(:customer_id, 'Customer') 
       = form.collection_select( \
           :customer_id,
-          @company.customers.order(:name),
+          @company.customers,
           :id,
           :name,
           { include_blank: true,
@@ -71,9 +71,7 @@
         = contribution_fields.label(:referrer_id, 'Referred by')
         = contribution_fields.collection_select( \
             :referrer_id,
-            @company.referrers \
-              .sort_by { |referrer| referrer.last_name } \
-              .unshift(User.new(id: 0, first_name: 'New', last_name: 'Contact')),
+            @company.contacts(as_select_options: true),
             :id,
             :full_name,
             { include_blank: true },
@@ -108,9 +106,7 @@
         = contribution_fields.label(:contributor_id, 'Customer Contact')
         = contribution_fields.collection_select( \
             :contributor_id,
-            (@company.contributors + @company.referrers).uniq \
-              .sort_by { |contact| contact.last_name } \
-              .unshift(User.new(id: 0, first_name: 'New', last_name: 'Contact')),
+            @company.contacts(as_select_options: true),
             :id,
             :full_name,
             { include_blank: true },
@@ -136,7 +132,7 @@
       = form.label(:curator_id, 'Curator')
       = form.collection_select( \
           :curator_id,
-          @company.curators.sort_by { |curator| curator.last_name },
+          @company.curators,
           :id,
           :full_name,
           { include_blank: true,

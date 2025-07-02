@@ -30,7 +30,7 @@
     = render( \
         'stories/shared/gallery',
         { company: @company,
-          stories: @featured_stories,
+          stories: @company.stories.featured,
           filtered_story_ids: @filtered_story_ids,
           no_filters_present: @company.story_categories.featured.blank? && @company.products.featured.blank?,
           is_dashboard: false })

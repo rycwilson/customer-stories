@@ -61,8 +61,7 @@
               { company:, 
                 resource_name: 'promotedStories',
                 resource_ctrl_id: 'promoted-stories',
-                search_options: { \
-                  'Customer' => company.customers.sort_by(&:name).map { |customer| [customer.name, "customer-#{customer.id}"] } }})
+                search_options: { 'Customer' => company.customers.map(&:select_option) } })
 
           table#promoted-stories-table.table {
             data-promoted-stories-target="datatable"

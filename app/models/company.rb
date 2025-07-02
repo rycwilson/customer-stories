@@ -6,17 +6,19 @@ class Company < ApplicationRecord
   attr_accessor :skip_callbacks
 
   has_many :users # no dependent: :destroy users, handle more gracefully
-  has_many :curators, class_name: 'User'
-  has_many :customers, dependent: :destroy
+  has_many :curators, -> { order(:last_name) }, class_name: 'User'
+  has_many :customers, -> { order(:name) }, dependent: :destroy
   has_many :successes, -> { includes(:story) }, through: :customers
   has_many(
     :contributions,
     -> { includes(:contributor, :referrer, success: { customer: {} }) },
     through: :successes
   )
-  has_many :contributors, -> { distinct }, through: :customers
-  has_many :referrers, -> { unscope(:order).distinct.order(:last_name) }, through: :contributions
-  has_many :stories, through: :successes do
+  has_many :contributors, through: :customers
+  has_many :referrers, -> { distinct.reorder(:last_name) }, through: :contributions
+
+  # Reordering necessary due to ordering inherited from Customer association
+  has_many :stories, -> { reorder(updated_at: :desc) }, through: :successes do
     def with_ads
       select { |story| story.published? and story.topic_ad.present? and story.retarget_ad.present? }
         .sort_by { |story| story.publish_date || DateTime.now }.reverse
@@ -147,18 +149,14 @@ class Company < ApplicationRecord
     end.send(with_stories_count ? :reverse : :itself)
   end
 
-  def public_stories
-    Story.default_order(stories.featured)
-  end
-
-  def public_stories_filter_category(category_id)
-    Story.default_order(
-      stories.featured.joins(:category_tags).where(story_categories: { id: category_id })
-    )
-  end
-
-  def public_stories_filter_product(product_id)
-    Story.default_order(stories.featured.joins(:product_tags).where(products: { id: product_id }))
+  def contacts(as_select_options: false)
+    user_ids = contributors.reorder(nil).pluck(:id) + referrers.reorder(nil).pluck(:id)
+    users = User.where(id: user_ids.uniq).order(:last_name)
+    if as_select_options
+      users.to_a.unshift User.new(id: 0, first_name: 'New', last_name: 'Contact')
+    else
+      users
+    end
   end
 
   # def get_gads(campaign=nil)
@@ -170,18 +168,6 @@ class Company < ApplicationRecord
   #     GoogleAds::get_ads(self.ad_groups.pluck(:id))
   #   end
   # end
-
-  # TODO: faster? http://stackoverflow.com/questions/20014292
-  def filter_stories(filter_params)
-    story_ids = []
-    if filter_params.empty?
-      public_stories
-    else
-      story_ids.concat(public_stories_filter_category(filter_params['category'])) if filter_params['category'].present?
-      story_ids.concat(public_stories_filter_product(filter_params['product'])) if filter_params['product'].present?
-      Story.where(id: story_ids).order_as_specified(id: story_ids)
-    end
-  end
 
   # this is used for validating the company's website address
   # see lib/website_validator.rb

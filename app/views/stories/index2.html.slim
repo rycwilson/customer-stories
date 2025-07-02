@@ -77,7 +77,7 @@
 
     .stories-grid
       div
-        .stories-grid__count data-content="#{@featured_stories.count.to_s + (@featured_stories.count == 1 ? ' story' : ' stories')}"
+        .stories-grid__count data-content="#{@company.stories.featured.count.to_s + (@company.stories.featured.count == 1 ? ' story' : ' stories')}"
         .stories-grid__sort.form-inline
           .form-group
             label for="sort-stories" 
@@ -101,7 +101,7 @@
         data-is-sync-filtered=('true' if @filtered_story_ids.present?)
         data-stories-target="gallery" }
 
-        /- @featured_stories.each do |story|
+        /- @company.stories.featured.each do |story|
 
           / TODO semantic markup: https://stackoverflow.com/questions/19307443/semantic-html-of-an-articles-list#answer-54258592
           /li role="article" class="#{'hidden' if @filtered_story_ids.present? && @filtered_story_ids.exclude?(story.id)}"

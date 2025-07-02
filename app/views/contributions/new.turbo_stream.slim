@@ -30,7 +30,7 @@
         = success_fields.label(:customer_id, 'Customer', style: "#{@story ? 'pointer-events:none' : ''}")
         = success_fields.collection_select( \
             :customer_id,
-            @company.customers.sort_by { |customer| customer.name.downcase },
+            @company.customers,
             :id,
             :name,
             { include_blank: true }.merge(@customer_id ? { selected: @customer_id } : {}),
@@ -84,14 +84,12 @@
       = form.label(:contributor_id, 'Contributor')
       = form.collection_select( \
           :contributor_id,
-          (@company.contributors + @company.referrers).uniq \
-            .sort_by { |contact| contact.last_name } \
-            .unshift(User.new(id: 0, first_name: 'New', last_name: 'Contact')),
+          @company.contacts(as_select_options: true),
           :id,
           :full_name,
           { include_blank: true,
             selected: @contributor_id || [],
-            disabled: @success ? @success.contributors.map { |contributor| contributor.id } : [] },
+            disabled: @success ? @success.contributors.reorder(nil).pluck(:id) : [] },
           { class: 'form-control',
             placeholder: 'Select or add a new Contact',
             required: true,
@@ -129,9 +127,7 @@
       = form.label(:referrer_id, 'Referred by')
       = form.collection_select( \
           :referrer_id,
-          (@company.contributors + @company.referrers).uniq \
-            .sort_by { |contact| contact.last_name } \
-            .unshift(User.new(id: 0, first_name: 'New', last_name: 'Contact')),
+          @company.contacts(as_select_options: true),
           :id,
           :full_name,
           { include_blank: true },

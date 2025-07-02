@@ -12,11 +12,7 @@ class Customer < ApplicationRecord
   has_many :successes, dependent: :destroy
   has_many :stories, through: :successes
   has_many :contributions, through: :successes
-
-  # For `distinct` to work, we must either unscope from the Contribution default_scope
-  # or include the necessary fields in the select clause
-  # -> { select('users.*, contributions.created_at AS "contribution_created_at"').distinct }
-  has_many(:contributors, -> { unscope(:order).distinct.order(:last_name) }, through: :contributions)
+  has_many(:contributors, -> { distinct.reorder(:last_name) }, through: :contributions)
 
   validates :name, presence: true, uniqueness: { scope: :company_id }
 
@@ -38,5 +34,9 @@ class Customer < ApplicationRecord
 
   def name_with_stories_count
     "#{name} (#{stories.count})"
+  end
+
+  def select_option
+    [name, "customer-#{id}"]
   end
 end

@@ -89,13 +89,32 @@ class Story < ApplicationRecord
   scope :published, -> { where(published: true) }
   scope :last_published, -> { where(published: true).order(publish_date: :desc).limit(1) }
   scope(
-    :last_logo_published, 
+    :last_logo_published,
     -> { where(logo_published: true).order(logo_publish_date: :desc).limit(1) }
   )
+
+  # Raw SQL in an `order` clause will be flagged as an error due to potential for SQL injection.
+  # Use Arel.sql to mark the SQL as safe, assuming we're not interpolating any user input.
+  # (The SQL is necessary here to selectively apply sorting based on the publish state.)
   scope :featured, lambda {
     joins(:customer)
       .where.not(customers: { logo_url: [nil, ''] })
       .where('logo_published IS TRUE OR preview_published IS TRUE')
+      .reorder(
+        Arel.sql('published DESC'),
+        Arel.sql('CASE WHEN published THEN publish_date ELSE NULL END DESC'),
+        Arel.sql('CASE WHEN NOT published THEN preview_published ELSE NULL END DESC'),
+        Arel.sql([
+          'CASE WHEN NOT published AND preview_published',
+          'THEN preview_publish_date',
+          'ELSE NULL END DESC'
+        ].join(' ')),
+        Arel.sql([
+          'CASE WHEN NOT published AND NOT preview_published',
+          'THEN logo_publish_date',
+          'ELSE NULL END DESC'
+        ].join(' '))
+      )
   }
   scope :filtered, lambda { |filters, match_type = 'all'|
     # The default object here is the relation that called the scope (typically company.stories)
