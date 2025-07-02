@@ -11,9 +11,9 @@ class StoryCategory < ApplicationRecord
 
   validates :name, presence: true, uniqueness: { scope: :company }
 
-  friendly_id :name, use: %i[slugged scoped], scope: :company_id
-
   scope :featured, -> { joins(:stories).merge(Story.featured.reorder(nil)).distinct }
+
+  friendly_id :name, use: %i[slugged scoped], scope: :company_id
 
   def should_generate_new_friendly_id?
     new_record? || name_changed? || slug.blank?

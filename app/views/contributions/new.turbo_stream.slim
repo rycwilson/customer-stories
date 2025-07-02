@@ -65,7 +65,7 @@
         = form.select( \
             :success_id,
             options_for_select( \
-              @company.successes.where.not(placeholder: true).order(:name).map(&:select_option),
+              @company.successes.real.map(&:select_option),
               selected: @success&.id),
             { include_blank: true },
             { class: 'form-control',
