@@ -133,12 +133,8 @@ export default class FormController<Ctrl extends SubclassController> extends Con
     // console.log('animate')
     const submitBtn = this.submitBtn;
     if (!submitBtn?.dataset.content || !submitBtn?.dataset.disableWithHtml) return;
-    const submitBtnText = submitBtn.dataset.content;
-    const submitBtnDisableWith = document.createElement('div');
-    submitBtnDisableWith.innerHTML = submitBtn.dataset.disableWithHtml;
-    const contentEl = <HTMLElement>submitBtnDisableWith.querySelector(':scope > .btn__content');
-    contentEl.textContent = submitBtnText;
-    submitBtn.innerHTML = submitBtnDisableWith.innerHTML;
+    submitBtn.innerHTML = 
+      submitBtn.dataset.disableWithHtml.replace('[content]', submitBtn.dataset.content);  
     setTimeout(() => submitBtn.classList.add('btn--working'), 1000);
   }
 

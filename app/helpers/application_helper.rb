@@ -79,7 +79,7 @@ module ApplicationHelper
   # Using HEREDOC: https://blog.saeloun.com/2020/04/08/heredoc-in-ruby-and-rails/
   def disabled_submit_button_html
     <<~HTML.squish
-      <div class="btn__content"></div>
+      <div class="btn__content">[content]</div>
       <div class="btn__dots">
         <i class="fa fa-fw fa-circle"></i>
         <i class="fa fa-fw fa-circle"></i>
