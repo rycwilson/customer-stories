@@ -166,10 +166,10 @@ export function dataTableConfig(invitationTemplateSelectHtml: string, storyId?: 
           'dropdown:dropdown-is-shown->contribution#onShownDropdown dropdown:dropdown-is-hidden->contribution#onHiddenDropdown'
         )
         .attr('data-controller', 'contribution')
-        // .attr(
-        //   'data-contribution-child-row-turbo-frame-attrs-value', 
-        //   JSON.stringify({ id: 'edit-contribution', src: editContributionPath(id) })
-        // );
+        .attr(
+          'data-contribution-child-row-turbo-frame-attrs-value', 
+          JSON.stringify({ id: 'show-contribution', src: path })
+        );
     }
   }
 }

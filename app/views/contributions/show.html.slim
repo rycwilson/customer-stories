@@ -1,0 +1,24 @@
+= turbo_frame_tag('show-contribution') do
+    
+  section.contribution
+
+    .contribution__contributor
+      p = @contribution.contributor.full_name
+      p = @contribution.contributor.title || '<em>No job title specified</em>'.html_safe
+      p = @contribution.customer.name
+
+    - if @contribution.answers.present?
+      ul
+        - @contribution.answers.each do |answer|
+          li
+            p = answer.question.question
+            p
+              em = answer.answer
+
+    - elsif @contribution.contribution 
+      p 
+        em = @contribution.contribution
+
+    - elsif @contribution.feedback
+      p 
+        em = @contribution.feedback

@@ -32,24 +32,25 @@ class ContributionsController < ApplicationController
   end
 
   def show
-    if params[:get_submission]
-      respond_with(
-        @contribution,
-        only: %i[id status contribution feedback submitted_at],
-        include: {
-          customer: { only: [:name] },
-          contributor: { only: [:title], methods: [:full_name] },
-          invitation_template: { only: [:name] },
-          answers: {
-            only: %i[answer contributor_question_id],
-            include: {
-              question: { only: [:question] }
+    respond_to do |format|
+      format.html {}
+      format.json do
+        respond_with(
+          @contribution,
+          only: %i[id status contribution feedback submitted_at],
+          include: {
+            customer: { only: [:name] },
+            contributor: { only: [:title], methods: [:full_name] },
+            invitation_template: { only: [:name] },
+            answers: {
+              only: %i[answer contributor_question_id],
+              include: {
+                question: { only: [:question] }
+              }
             }
           }
-        }
-      )
-    else
-      respond_with @contribution, include: { contributor: {}, referrer: {}, success: { include: :customer } }
+        )
+      end
     end
   end
 
@@ -60,7 +61,7 @@ class ContributionsController < ApplicationController
   end
 
   def create
-    @company = Company.find_by(subdomain: request.subdomain) || current_user.company
+    # @company = Company.find_by(subdomain: request.subdomain) || current_user.company
 
     # if contribution_params[:success_attributes].to_h.has_key?(:customer_attributes)
     #   params[:contribution][:success_attributes][:customer_attributes] = find_dup_customer(
@@ -118,7 +119,11 @@ class ContributionsController < ApplicationController
     # else
     #   respond_to { |format| format.js {} }
     # end
-    respond_to { |format| format.js {} }
+    # respond_to { |format| format.js {} }
+    redirect_back(
+      fallback_location: dashboard_path('prospect'),
+      flash: { notice: 'Contributor was added successfully' }
+    )
   end
 
   def update

@@ -18,21 +18,17 @@ export default class ContributionController extends DatatableRowController<Contr
 
   declare contributionHtml: HTMLElement;
 
-  static connectCount: { [id: string]: number } = {};
-
-  connect() {
-    super.connect();
-    
-    ContributionController.connectCount[this.element.id] = ContributionController.connectCount[this.element.id] ?
-      ++ContributionController.connectCount[this.element.id] : 
-      1;
-    // console.log(
-    //   ContributionController.connectCount[this.element.id], 
-    //   'connect', 
-    //   this.element.id, 
-    //   Object.keys(ContributionController.connectCount).length
-    // )
+  get childRowContent() {
+    return this.contributionHtml || `
+      <turbo-frame id="${this.childRowTurboFrameAttrsValue.id}" src="${this.childRowTurboFrameAttrsValue.src}">
+        <p>Loading...</p>
+      </turbo-frame>
+    `;
   }
+
+  // connect() {
+  //   super.connect();
+  // }
   
   onFrameRendered({ target: turboFrame }: {target: FrameElement}) {
     this.contributionHtml ??= <HTMLElement>turboFrame.firstElementChild;
@@ -95,9 +91,5 @@ export default class ContributionController extends DatatableRowController<Contr
       //   contribution?.contributor?.id === this.contributor.id
       // ));
     });
-  }
-  
-  get childRowContent() {
-    return this.contributionHtml || '<h3>Contribution</h3>';
   }
 }
