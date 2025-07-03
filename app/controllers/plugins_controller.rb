@@ -71,7 +71,7 @@ class PluginsController < ApplicationController
       layout: false,
       locals: {
         company:,
-        stories: Story.default_order(featured_stories(company)), # TODO: put a limit on this
+        stories: featured_stories(company).first(40), # limit stories for performance
         title: params[:title] || 'Customer Stories',
         is_demo: params[:is_demo].present?,
         max_rows: params[:max_rows].to_i,
