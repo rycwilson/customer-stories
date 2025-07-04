@@ -18,9 +18,12 @@ class CompaniesController < ApplicationController
     # @story_views_30_day_count = @company.page_views.story.since(30.days.ago).count
     @filters = filters_from_cookies
     @filters_match_type = cookies['csp-dashboard-filters-match-type'] || 'all'
+    render :dashboard
   end
 
-  def edit; end
+  def edit
+    render :settings
+  end
 
   def create
     @company = Company.new(company_params)
