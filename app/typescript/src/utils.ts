@@ -158,6 +158,30 @@ export function kebabize(str: string) {
 //   document.removeEventListener("copy", onCopy);
 // }
 
+export async function copyToClipboard(text: string) {
+  try {
+    if (navigator.clipboard && window.isSecureContext) {
+      await navigator.clipboard.writeText(text);
+    } else {
+      // Create a temporary textarea outside the viewport
+      const temp = document.createElement('textarea');
+      temp.style.position = 'absolute';
+      temp.style.left = '-999999px';
+      temp.value = text;
+      document.body.prepend(temp);
+      temp.select();
+      try {
+        document.execCommand('copy');
+      } finally {
+        temp.remove();
+      }
+    }
+  } catch (err) {
+    console.error('Failed to copy text: ', err);
+    throw err; // rethrow to allow caller to handle the error
+  }
+}
+
 export function distinctItems(items: string[] | number[]) {
   return items.filter((item, i, _items) => i === _items.indexOf(item));
 }

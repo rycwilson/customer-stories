@@ -35,3 +35,22 @@ $fa-font-path: 'font-awesome/fonts';
 [type="submit"] {
   @include submitting;
 }
+
+.btn--copy {
+  i:last-child {
+    display: none;
+  }
+
+  &.did-copy {
+    pointer-events: none;
+
+    i:first-child,
+    span {
+      display: none;
+    }
+
+    i:last-child {
+      display: inline-block;
+    }
+  }
+}

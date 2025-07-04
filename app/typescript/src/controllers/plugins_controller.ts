@@ -1,5 +1,6 @@
 import { Controller } from '@hotwired/stimulus';
 import tinycolor from 'tinycolor2';
+import { copyToClipboard } from '../utils';
 
 export default class PluginsController extends Controller<HTMLFormElement> {
   static targets = [
@@ -170,18 +171,10 @@ export default class PluginsController extends Controller<HTMLFormElement> {
   }
 
   copyCode({ currentTarget: btn }: { currentTarget: HTMLButtonElement }) {
-    const temp = <HTMLTextAreaElement>document.createElement('textarea');
-    const toggleBtn = (didCopy: boolean) => {
-      [...btn.children].forEach(child => child.classList.toggle('hidden'));
-      btn.disabled = didCopy;
-      btn.style.cursor = didCopy ? 'default' : 'pointer';
-    };
-    temp.innerText = this.codeTextAreaTarget.textContent!;
-    document.body.appendChild(temp);
-    temp.select();
-    document.execCommand('copy');
-    temp.remove();
-    toggleBtn(true);
-    setTimeout(() => toggleBtn(false), 1500); 
+    const text = this.codeTextAreaTarget.textContent!;
+    copyToClipboard(text).then(() => {
+      btn.classList.add('did-copy');
+      setTimeout(() => btn.classList.remove('did-copy'), 1500);
+    });
   }
 }
