@@ -133,6 +133,32 @@ export default class extends Controller<HTMLFormElement> {
     }
   }
 
+  copy() {
+    const text = this.isEditableValue ?
+      $(this.noteTarget).summernote('code') :
+      this.noteTarget.innerHTML;
+
+    // We want to manually set the clipboard data so that we can specify it as both HTML and plain text.
+    // This ensures it will be pasted correctly depending on the context (e.g., WYSIWYG vs plain text).
+    document.addEventListener(
+      'copy', 
+      (e: ClipboardEvent) => {
+        e.clipboardData?.setData('text/html', text);
+        e.clipboardData?.setData('text/plain', text);
+        e.preventDefault(); // prevent default copy action
+      },
+      { once: true }
+    )
+
+    // We need to copy with the legacy approach instead of the Clipboard API since the Clipboard API
+    // does not dispatch the `copy` event which we listen to for manually setting the clipboard data.
+    try {
+      document.execCommand('copy');
+    } catch (err) {
+      console.error('Failed to copy editor html: ', err);
+    }
+  }
+
   get calcHeight() {
     const chromeHeight = this.isEditableValue ? summernoteToolbarHeight + summernoteResizebarHeight : 0;
     if (this.isExpandedValue) {
