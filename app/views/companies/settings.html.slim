@@ -1,6 +1,6 @@
 = render('shared/navbars/company_nav', company: @company, workflow_stage: @workflow_stage)
 
-main.container.hidden-xs {
+main.container-fluid.hidden-xs {
   data-controller="company-settings" 
   data-company-settings-modal-outlet="#main-modal" 
   data-action="company-ctas:did-render->company-settings#onCtasFrameLoad" }

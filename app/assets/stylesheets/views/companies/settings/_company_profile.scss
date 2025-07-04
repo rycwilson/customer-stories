@@ -1,0 +1,73 @@
+#company-profile-form {
+  position: relative;
+  margin: 0 auto;
+
+  @media (min-width: 768px) and (max-width: 991px) {
+    max-width: 42rem;
+  }
+
+  @media (min-width: 992px) {
+    left: -6%;
+    max-width: 62rem;
+  }
+}
+
+.custom-header-colors {
+  > div {
+    display: flex; 
+    justify-content: space-between;
+
+    > div {
+      @include flex-row-center;
+      flex-grow: 0.25;
+      
+      label {
+        margin-right: 0.75em;
+        // font-size: $font-size-small;
+        font-weight: normal;
+      }
+    }
+  }
+}
+
+.company-header-demo,
+.stories-header-demo {
+  border: 1px solid #ddd;
+}
+
+.company-header-demo {
+  @include flex-row-center;
+  border-bottom: 0;
+  padding: 0 5px;
+  height: $company-header-height;
+
+  img {
+    max-height: $company-logo-max-height;
+
+    &.generic {
+      max-height: 50px;
+    }
+  }
+}
+
+.stories-header-demo {
+  @include flex-row-center;
+  border-top: 0;
+  height: $stories-header-height;
+  padding: 0 20px;
+
+  &--bg-light {
+    @extend .stories-header-demo;
+    color: rgba(51, 51, 51, 0.9)
+  }
+  
+  &--bg-dark {
+    @extend .stories-header-demo;
+    color: rgba(255, 255, 255, 0.9);
+  }
+
+  h3 {
+    margin: 0;
+    font-family: $company-title-font;
+  }
+}

@@ -5,10 +5,10 @@
     data-toast-flash-value=(flash.to_h.to_json if flash.any? and turbo_frame_request_id == 'company-ctas') }
 
     .form-group
-      .visible-sm-block.col-sm-offset-1.col-sm-11
+      .visible-sm-block.col-sm-12
         label Main
-      label.col-md-3.control-label.visible-md-inline-block.visible-lg-inline-block Main
-      .col-sm-offset-1.col-sm-11.col-md-offset-0.col-md-8.col-lg-6
+      label.col-md-2.control-label.visible-md-inline-block.visible-lg-inline-block Main
+      .col-sm-12.col-md-10
         - if primary_cta = company.ctas.primary.take
           .list-group data-controller="list-group" data-list-group-collapsible-value="true" style="margin-bottom:0"
             a.list-group-item {
@@ -42,10 +42,10 @@
               p None
 
     .form-group
-      .visible-sm-block.col-sm-offset-1.col-sm-11
+      .visible-sm-block.col-sm-12
         label Sidebar
-      label.col-md-3.control-label.visible-md-inline-block.visible-lg-inline-block Sidebar
-      .col-sm-offset-1.col-sm-11.col-md-offset-0.col-md-8.col-lg-6
+      label.col-md-2.control-label.visible-md-inline-block.visible-lg-inline-block Sidebar
+      .col-sm-12.col-md-10
         - if company.ctas.sidebar.present?
           .list-group data-controller="list-group" data-list-group-collapsible-value="true" aria-labelledby="additional-ctas-label-md-lg"
             - company.ctas.sidebar.each do |cta|

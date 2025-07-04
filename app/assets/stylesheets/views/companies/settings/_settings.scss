@@ -1,72 +1,9 @@
-@import 'invitation_templates';
-@import 'ctas';
+@import './invitation_templates';
+@import './ctas';
 @import '../../plugins/config';
+@import './company_profile';
 
-p.lead {
-  margin-bottom: 25px;
-}
-
-.custom-header-colors {
-  > div {
-    display: flex; 
-    justify-content: space-between;
-
-    > div {
-      @include flex-row-center;
-      flex-grow: 0.25;
-      
-      label {
-        margin-right: 0.75em;
-        // font-size: $font-size-small;
-        font-weight: normal;
-      }
-    }
-  }
-}
-
-.company-header-demo,
-.stories-header-demo {
-  border: 1px solid #ddd;
-}
-
-.company-header-demo {
-  @include flex-row-center;
-  border-bottom: 0;
-  padding: 0 5px;
-  height: $company-header-height;
-
-  img {
-    max-height: $company-logo-max-height;
-
-    &.generic {
-      max-height: 50px;
-    }
-  }
-}
-
-.stories-header-demo {
-  @include flex-row-center;
-  border-top: 0;
-  height: $stories-header-height;
-  padding: 0 20px;
-
-  &--bg-light {
-    @extend .stories-header-demo;
-    color: rgba(51, 51, 51, 0.9)
-  }
-  
-  &--bg-dark {
-    @extend .stories-header-demo;
-    color: rgba(255, 255, 255, 0.9);
-  }
-
-  h3 {
-    margin: 0;
-    font-family: $company-title-font;
-  }
-}
-
-.companies.edit {
+body.companies.edit {
   // for safari
   input::-webkit-contacts-auto-fill-button {
     visibility: hidden;
@@ -75,13 +12,40 @@ p.lead {
     position: absolute;
     right: 0;
   }
+
+  main.container-fluid {
+    padding: 0 2.5rem;
+    max-width: 1200px;
+  
+    display: flex;
+    align-items: flex-start;;
+  }
 }
 
-// don't show until active tab is selected based on location hash
+// Don't show until active tab is selected based on location hash
 [data-controller="company-settings"] {
   visibility: hidden;
 
   &.has-active-tab {
     visibility: visible;
+  }
+}
+
+.plugin-config,
+#cta-links-forms-panel .form-horizontal,
+#company-tags-form,
+#company-profile-form {
+  position: relative;
+  margin: 0 auto;
+}
+
+#company-tags-form {
+  @media (min-width: 768px) and (max-width: 991px) {
+    max-width: 55rem;
+  }
+
+  @media (min-width: 992px) {
+    left: -2%;
+    max-width: 65rem;
   }
 }

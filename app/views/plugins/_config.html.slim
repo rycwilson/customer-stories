@@ -1,219 +1,216 @@
-.row 
-  .col-md-12.col-lg-offset-1.col-lg-10
-  
-    form.plugin-config.form-horizontal name="pluginConfig" data-controller="plugins"
+form.plugin-config.form-horizontal name="pluginConfig" data-controller="plugins"
 
-      .plugin-config__type.form-group data-action="change->plugins#onChangePluginType change->plugins#toggleSettingsDisplay"
-        .visible-sm-block.col-sm-offset-1.col-sm-11
-          label Type
-        label.col-md-3.col-lg-2.control-label.visible-md-inline-block.visible-lg-inline-block Type
-        .col-sm-offset-1.col-sm-11.col-md-offset-0.col-md-8
-          .btn-group 
-            = label_tag('plugin_type_gallery', class: 'radio-inline') do
-              = radio_button_tag('plugin[type]', 'gallery', true)
-              | Gallery
-            = label_tag('plugin_type_carousel', class: 'radio-inline') do
-              = radio_button_tag('plugin[type]', 'carousel', false)
-              | Carousel
-            = label_tag('plugin_type_tabbed_carousel', class: 'radio-inline') do
-              = radio_button_tag('plugin[type]', 'tabbed_carousel', false)
-              | Tabbed Carousel
+  .plugin-config__type.form-group data-action="change->plugins#onChangePluginType change->plugins#toggleSettingsDisplay"
+    .visible-sm-block.col-sm-12
+      label Type
+    label.col-md-3.control-label.visible-md-inline-block.visible-lg-inline-block Type
+    .col-sm-12.col-md-9
+      .btn-group 
+        = label_tag('plugin_type_gallery', class: 'radio-inline') do
+          = radio_button_tag('plugin[type]', 'gallery', true)
+          | Gallery
+        = label_tag('plugin_type_carousel', class: 'radio-inline') do
+          = radio_button_tag('plugin[type]', 'carousel', false)
+          | Carousel
+        = label_tag('plugin_type_tabbed_carousel', class: 'radio-inline') do
+          = radio_button_tag('plugin[type]', 'tabbed_carousel', false)
+          | Tabbed Carousel
 
-      .form-group
-        .col-sm-offset-1.col-sm-11.col-md-offset-3.col-md-8.col-lg-offset-2
-          
-          .plugin-config__gallery
-            .form-inline
-              .form-group
-                = label_tag('gallery_max_rows', 'Max Rows')
-                .spinner.input-group {
-                  data-controller="input-spinner" 
-                  data-input-spinner-initial-value="4"  # any changes should also be reflected in the input field below
-                  data-plugins-target="maxGalleryRowsSpinner" }
-                  / text instead of number field as we want to override the native spinner
-                  = text_field_tag( \
-                      'plugin[gallery][max_rows]', 
-                      '4', 
-                      min: '1', 
-                      max: '10', 
-                      class: 'form-control',
-                      data: { \
-                        plugins_target: 'maxGalleryRowsInput',
-                        input_spinner_target: 'input', 
-                        action: 'keypress->input-spinner#onKeypress change->plugins#updateSetting' })
-                  = render('shared/input_spinner_buttons')
-              .form-group
-                = label_tag('plugin_gallery_no_max_rows', class: 'checkbox-inline')
-                  = check_box_tag( \
-                      'plugin[gallery][no_max_rows]', 
-                      true, 
-                      false, 
-                      data: { \
-                        plugins_target: 'maxRowsInput',
-                        action: 'plugins#toggleMaxGalleryRows' })
-                  | No Max
-            .help-block
-              | As device size decreases, limit the number of items displayed. This allows you to maintain a consistent vertical space for your gallery.
-
-          .plugin-config__carousel.hidden
-            .form-inline
-              .form-group
-                label.control-label Page Background
-                .btn-group
-                  = label_tag('plugin_carousel_background_light', class: 'radio-inline') do
-                    = radio_button_tag( \
-                        'plugin[carousel][background]', 
-                        'light', 
-                        true, 
-                        data: { \
-                          plugins_target: 'carouselBackgroundRadio',
-                          action: 'plugins#updateSetting' })
-                    | Light
-                  = label_tag('plugin_carousel_background_dark', class: 'radio-inline') do
-                    = radio_button_tag( \
-                        'plugin[carousel][background]', 
-                        'dark', 
-                        false,  
-                        data: { \
-                          plugins_target: 'carouselBackgroundRadio',
-                          action: 'plugins#updateSetting' })
-                    | Dark
-                p.help-block
-                  | The carousel has a transparent background in order to match the page it lives on. Selecting 'Light' background will result in dark scroll buttons, and vice versa.
-          
-          .plugin-config__tabbed-carousel.hidden
-            .form-inline
-              .form-group
-                = label_tag('plugin_tabbed_carousel_tab_color', 'Tab')
-                = color_field_tag( \
-                    'plugin[tabbed_carousel][tab_color]', 
-                    '#333333', 
-                    class: 'form-control',
-                    data: { \
-                      plugins_target: 'tabbedCarouselTabColorInput', 
-                      action: 'change->plugins#updateSetting input->plugins#checkTabContrast' })
-              .form-group
-                = label_tag('plugin_tabbed_carousel_text_color', 'Text')
-                = color_field_tag( \
-                    'plugin[tabbed_carousel][text_color]', 
-                    '#ffffff', 
-                    class: 'form-control',
-                    data: { \
-                      plugins_target: 'tabbedCarouselTextColorInput', 
-                      action: 'change->plugins#updateSetting' })
-              .help-block.color-contrast 
-                | Text color will auto-adjust to ensure sufficient contrast 
-            .form-inline
-              .form-group.delay
-                = label_tag('plugin_tabbed_carousel_delay', 'Delay')
-                .spinner.input-group data-controller="input-spinner" data-input-spinner-initial-value="5"
-                  = text_field_tag( \
-                      'plugin[tabbed_carousel][delay]', 
-                      '5', 
-                      min: '0', 
-                      max: '10', 
-                      class: 'form-control',
-                      data: { \
-                        input_spinner_target: 'input',
-                        plugins_target: 'tabbedCarouselDelayInput',
-                        action: 'keypress->input-spinner#onKeypress change->plugins#updateSetting' }) 
-                  = render('shared/input_spinner_buttons')
-                .help-block
-                  | Seconds from page load to appearance of the carousel tab
-
-      .plugin-config__content.form-group data-action="change->plugins#toggleSettingsDisplay"
-        .visible-sm-block.col-sm-offset-1.col-sm-11
-          label Content 
-        label.col-md-3.col-lg-2.control-label.visible-md-inline-block.visible-lg-inline-block Content
-        .col-sm-offset-1.col-sm-11.col-md-offset-0.col-md-8
-          .btn-group
-            = label_tag('plugin_content_stories', class: 'radio-inline') do
-              = radio_button_tag('plugin[content]', 'stories', true)
-              | Select Stories
-            = label_tag('plugin_content_category', class: 'radio-inline') do
-              = radio_button_tag('plugin[content]', 'category', false)
-              | Filter Category
-            = label_tag('plugin_content_product', class: 'radio-inline') do
-              = radio_button_tag('plugin[content]', 'product', false)
-              | Filter Product
-
-      .form-group
-        .col-sm-offset-1.col-sm-11.col-md-offset-3.col-md-8.col-lg-offset-2
-
-          .plugin-config__stories
-            = select_tag( \
-                'plugin[stories][]',
-                grouped_options_for_select(featured_stories_grouped_by_customer(company)),
-                { multiple: true,
+  .form-group
+    .col-sm-12.col-md-offset-3.col-md-9
+      
+      .plugin-config__gallery
+        .form-inline
+          .form-group
+            = label_tag('gallery_max_rows', 'Max Rows')
+            .spinner.input-group {
+              data-controller="input-spinner" 
+              data-input-spinner-initial-value="4"  # any changes should also be reflected in the input field below
+              data-plugins-target="maxGalleryRowsSpinner" }
+              / text instead of number field as we want to override the native spinner
+              = text_field_tag( \
+                  'plugin[gallery][max_rows]', 
+                  '4', 
+                  min: '1', 
+                  max: '10', 
                   class: 'form-control',
                   data: { \
-                    controller: 'tomselect',
-                    tomselect_kind_value: 'story',
-                    tomselect_sortable_value: true,
-                    dynamic_placeholder: 'Select stories',
-                    action: 'plugins#onChangeStories' } })
-
-          .plugin-config__category.hidden data-action="change->plugins#onChangeFilter"
-            = render( \
-                'stories/shared/select_story_tag', 
-                { company:, 
-                  tag: :category,
-                  name: 'plugin[category]',
-                  select_id: nil,
-                  preselected_id: nil,
-                  is_dashboard: false })
-
-          .plugin-config__product.hidden data-action="change->plugins#onChangeFilter"
-            = render( \
-                'stories/shared/select_story_tag', 
-                { company:, 
-                  tag: :product,
-                  name: 'plugin[product]',
-                  select_id: nil, 
-                  preselected_id: nil,
-                  is_dashboard: false })
-
-      .plugin-config__appearance.form-group
-        .visible-sm-block.col-sm-offset-1.col-sm-11
-          label Appearance
-        label.col-md-3.col-lg-2.control-label.visible-md-inline-block.visible-lg-inline-block Appearance
-        .col-sm-offset-1.col-sm-11.col-md-offset-0.col-md-8
-          .btn-group
-            = label_tag('plugin_logos_only', class: 'checkbox-inline') do
+                    plugins_target: 'maxGalleryRowsInput',
+                    input_spinner_target: 'input', 
+                    action: 'keypress->input-spinner#onKeypress change->plugins#updateSetting' })
+              = render('shared/input_spinner_buttons')
+          .form-group
+            = label_tag('plugin_gallery_no_max_rows', class: 'checkbox-inline')
               = check_box_tag( \
-                  'plugin[logos_only]', 
+                  'plugin[gallery][no_max_rows]', 
                   true, 
                   false, 
                   data: { \
-                    plugins_target: 'logosOnlyCheckbox',
-                    action: 'plugins#updateSetting' })
-              | Logos Only
-            = label_tag('plugin_grayscale', class: 'checkbox-inline') do
-              = check_box_tag( \
-                  'plugin[grayscale]', 
-                  true, 
-                  false, 
-                  data: { action: 'plugins#updateSetting' })
-              | Grayscale
+                    plugins_target: 'maxRowsInput',
+                    action: 'plugins#toggleMaxGalleryRows' })
+              | No Max
+        .help-block
+          | As device size decreases, limit the number of items displayed. This allows you to maintain a consistent vertical space for your gallery.
 
-      .plugin-config__code-actions.form-group
-        .visible-sm-block.col-sm-offset-1.col-sm-11
-          label Code
-        label.col-md-3.col-lg-2.control-label.visible-md-inline-block.visible-lg-inline-block Code
-        .col-sm-offset-1.col-sm-11.col-md-offset-0.col-md-8
-          / a.btn.btn-secondary href="/plugins/demo" disabled=('true' if company.stories.featured.blank?)
-          a.btn.btn-default href="" data-action="plugins#openDemo"
-            i.fa.fa-external-link
-            |&nbsp;&nbsp;Demo
-          button.btn.btn-default.btn--copy type="button" data-action="plugins#copyCode"
-            i.fa.fa-clipboard
-            span = "\u00A0\u00A0Copy"
-            i.fa.fa-check
+      .plugin-config__carousel.hidden
+        .form-inline
+          .form-group
+            label.control-label Page Background
+            .btn-group
+              = label_tag('plugin_carousel_background_light', class: 'radio-inline') do
+                = radio_button_tag( \
+                    'plugin[carousel][background]', 
+                    'light', 
+                    true, 
+                    data: { \
+                      plugins_target: 'carouselBackgroundRadio',
+                      action: 'plugins#updateSetting' })
+                | Light
+              = label_tag('plugin_carousel_background_dark', class: 'radio-inline') do
+                = radio_button_tag( \
+                    'plugin[carousel][background]', 
+                    'dark', 
+                    false,  
+                    data: { \
+                      plugins_target: 'carouselBackgroundRadio',
+                      action: 'plugins#updateSetting' })
+                | Dark
+            p.help-block
+              | The carousel has a transparent background in order to match the page it lives on. Selecting 'Light' background will result in dark scroll buttons, and vice versa.
+      
+      .plugin-config__tabbed-carousel.hidden
+        .form-inline
+          .form-group
+            = label_tag('plugin_tabbed_carousel_tab_color', 'Tab')
+            = color_field_tag( \
+                'plugin[tabbed_carousel][tab_color]', 
+                '#333333', 
+                class: 'form-control',
+                data: { \
+                  plugins_target: 'tabbedCarouselTabColorInput', 
+                  action: 'change->plugins#updateSetting input->plugins#checkTabContrast' })
+          .form-group
+            = label_tag('plugin_tabbed_carousel_text_color', 'Text')
+            = color_field_tag( \
+                'plugin[tabbed_carousel][text_color]', 
+                '#ffffff', 
+                class: 'form-control',
+                data: { \
+                  plugins_target: 'tabbedCarouselTextColorInput', 
+                  action: 'change->plugins#updateSetting' })
+          .help-block.color-contrast 
+            | Text color will auto-adjust to ensure sufficient contrast 
+        .form-inline
+          .form-group.delay
+            = label_tag('plugin_tabbed_carousel_delay', 'Delay')
+            .spinner.input-group data-controller="input-spinner" data-input-spinner-initial-value="5"
+              = text_field_tag( \
+                  'plugin[tabbed_carousel][delay]', 
+                  '5', 
+                  min: '0', 
+                  max: '10', 
+                  class: 'form-control',
+                  data: { \
+                    input_spinner_target: 'input',
+                    plugins_target: 'tabbedCarouselDelayInput',
+                    action: 'keypress->input-spinner#onKeypress change->plugins#updateSetting' }) 
+              = render('shared/input_spinner_buttons')
+            .help-block
+              | Seconds from page load to appearance of the carousel tab
 
-      .plugin-config__code.form-group
-        .col-sm-offset-1.col-sm-11.col-md-offset-3.col-md-8.col-lg-offset-2
-          textarea.form-control style="width:100%;" rows="6" readonly="" data-plugins-target="codeTextArea"
-            = "<div id=\"cs-gallery\" class=\"cs-plugin\"></div>\
-                \n<script src=\"#{Rails.env.development? ? 'http' : 'https'}://\
-                #{company.subdomain}.#{ENV['HOST_NAME']}\/plugins/gallery/cs.js\" \
-                data-max-rows=\"4\"></script>"
+  .plugin-config__content.form-group data-action="change->plugins#toggleSettingsDisplay"
+    .visible-sm-block.col-sm-12
+      label Content 
+    label.col-md-3.control-label.visible-md-inline-block.visible-lg-inline-block Content
+    .col-sm-12.col-md-9
+      .btn-group
+        = label_tag('plugin_content_stories', class: 'radio-inline') do
+          = radio_button_tag('plugin[content]', 'stories', true)
+          | Select Stories
+        = label_tag('plugin_content_category', class: 'radio-inline') do
+          = radio_button_tag('plugin[content]', 'category', false)
+          | Filter Category
+        = label_tag('plugin_content_product', class: 'radio-inline') do
+          = radio_button_tag('plugin[content]', 'product', false)
+          | Filter Product
+
+  .form-group
+    .col-sm-12.col-md-offset-3.col-md-9
+
+      .plugin-config__stories
+        = select_tag( \
+            'plugin[stories][]',
+            grouped_options_for_select(featured_stories_grouped_by_customer(company)),
+            { multiple: true,
+              class: 'form-control',
+              data: { \
+                controller: 'tomselect',
+                tomselect_kind_value: 'story',
+                tomselect_sortable_value: true,
+                dynamic_placeholder: 'Select stories',
+                action: 'plugins#onChangeStories' } })
+
+      .plugin-config__category.hidden data-action="change->plugins#onChangeFilter"
+        = render( \
+            'stories/shared/select_story_tag', 
+            { company:, 
+              tag: :category,
+              name: 'plugin[category]',
+              select_id: nil,
+              preselected_id: nil,
+              is_dashboard: false })
+
+      .plugin-config__product.hidden data-action="change->plugins#onChangeFilter"
+        = render( \
+            'stories/shared/select_story_tag', 
+            { company:, 
+              tag: :product,
+              name: 'plugin[product]',
+              select_id: nil, 
+              preselected_id: nil,
+              is_dashboard: false })
+
+  .plugin-config__appearance.form-group
+    .visible-sm-block.col-sm-12
+      label Appearance
+    label.col-md-3.control-label.visible-md-inline-block.visible-lg-inline-block Appearance
+    .col-sm-12.col-md-9
+      .btn-group
+        = label_tag('plugin_logos_only', class: 'checkbox-inline') do
+          = check_box_tag( \
+              'plugin[logos_only]', 
+              true, 
+              false, 
+              data: { \
+                plugins_target: 'logosOnlyCheckbox',
+                action: 'plugins#updateSetting' })
+          | Logos Only
+        = label_tag('plugin_grayscale', class: 'checkbox-inline') do
+          = check_box_tag( \
+              'plugin[grayscale]', 
+              true, 
+              false, 
+              data: { action: 'plugins#updateSetting' })
+          | Grayscale
+
+  .plugin-config__code-actions.form-group
+    .visible-sm-block.col-sm-12
+      label Code
+    label.col-md-3.control-label.visible-md-inline-block.visible-lg-inline-block Code
+    .col-sm-12.col-md-9
+      / a.btn.btn-secondary href="/plugins/demo" disabled=('true' if company.stories.featured.blank?)
+      a.btn.btn-default href="" data-action="plugins#openDemo"
+        i.fa.fa-external-link
+        |&nbsp;&nbsp;Demo
+      button.btn.btn-default.btn--copy type="button" data-action="plugins#copyCode"
+        i.fa.fa-clipboard
+        span = "\u00A0\u00A0Copy"
+        i.fa.fa-check
+
+  .plugin-config__code.form-group
+    .col-sm-12.col-md-offset-3.col-md-9
+      textarea.form-control style="width:100%;" rows="6" readonly="" data-plugins-target="codeTextArea"
+        = "<div id=\"cs-gallery\" class=\"cs-plugin\"></div>\
+            \n<script src=\"#{Rails.env.development? ? 'http' : 'https'}://\
+            #{company.subdomain}.#{ENV['HOST_NAME']}\/plugins/gallery/cs.js\" \
+            data-max-rows=\"4\"></script>"

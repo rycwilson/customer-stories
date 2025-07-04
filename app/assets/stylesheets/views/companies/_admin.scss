@@ -1,3 +1,6 @@
+@import '../navbars/company_nav';
+@import './dashboard';
+@import './settings/settings';
 @import '../image_card';
 
 body {
@@ -7,7 +10,7 @@ body {
 .dashboard > .tab-content > .tab-pane:not(#curate),
 .companies.new,
 .companies.edit,
-.registrations.edit,
+// .registrations.edit,
 .registrations.update,    // when there is an error and 422 response
 .stories.edit #story {
   > .container {

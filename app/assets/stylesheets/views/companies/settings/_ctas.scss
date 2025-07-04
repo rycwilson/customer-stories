@@ -35,6 +35,17 @@
 }
 
 #cta-links-forms-panel {
+  .form-horizontal {
+    @media (min-width: 768px) and (max-width: 991px) {
+      max-width: 42rem;
+    }
+
+    @media (min-width: 992px) {
+      left: -2%;
+      max-width: 50rem;
+    }
+  }
+
   .list-group {
     position: relative;
 

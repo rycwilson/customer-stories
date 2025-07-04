@@ -28,12 +28,12 @@
             false)
 
       .form-group
-        .visible-sm-block.visible-md-block.col-sm-offset-1.col-sm-11
+        .visible-sm-block.col-sm-12
           label for="company-#{source}-tags"
             = label_text
-        label.col-lg-2.control-label.visible-lg-inline-block for="company-#{source}-tags"
+        label.col-md-2.control-label.visible-md-inline-block.visible-lg-inline-block for="company-#{source}-tags"
           = label_text
-        .col-sm-offset-1.col-sm-11.col-md-10.col-lg-offset-0.col-lg-8
+        .col-sm-12.col-md-10
           input.form-control {
             id="company-#{source}-tags"
             value=company.send(source).map(&:name).join(',')
@@ -44,7 +44,7 @@
             data-dynamic-placeholder="Add tags" }
 
     .row
-      .col-sm-offset-1.col-sm-11.col-md-10.col-lg-offset-2.col-lg-8
+      .col-sm-12.col-md-offset-2.col-md-10
         = button_tag( \
             '',
             type: 'submit',

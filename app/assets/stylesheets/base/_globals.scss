@@ -108,20 +108,6 @@ form {
   &.form-horizontal [type="submit"]:not(.btn-sm) {
     margin-top: 0.75rem;
   }
-
-  &#user-profile-form,
-  &#company-profile-form {
-    @media (min-width: 1200px)  {
-      position: relative;
-      left: 4rem;
-    }
-  }
-  &#change-password-form {
-    @media (min-width: 992px)  {
-      position: relative;
-      left: 4rem;
-    }
-  }
 }
 
 /**
