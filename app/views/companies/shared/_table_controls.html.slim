@@ -1,7 +1,36 @@
 .table-controls 
   div
-    .search-select data-action="tomselect:change-filter->#{resource_ctrl_id}#onChangeSearchSelect tomselect:search->#{resource_ctrl_id}#onTomselectSearch"
-      label
+    div
+      h4.caption id="#{resource_ctrl_id}-table-caption"
+        = caption
+                
+    div
+      - if defined?(new_item)
+        = link_to( \
+            new_item[:path],
+            class: 'btn btn-secondary', 
+            aria: { label: "New #{new_item[:name]}" },
+            data: { \
+              turbo_stream: true,
+              controller: 'modal-trigger',
+              modal_trigger_modal_outlet: '#main-modal', 
+              modal_trigger_params_value: { \
+                title: "New #{new_item[:name]}", 'className' => new_item[:modal_class_name] } }) do
+            i.fa.fa-plus
+            |&nbsp;&nbsp;New
+
+      / Use a button_tag here so that we may interpolate the data attribute
+      = button_tag( \
+          type: 'button', 
+          class: 'btn btn-default', 
+          aria: { label: 'Table Display Settings' }, 
+          data: { "#{resource_ctrl_id}_target" => 'displayOptionsBtn' }) do
+          i.fa.fa-gear
+          |&nbsp;&nbsp;Preferences
+
+  div
+    .search-table data-action="tomselect:change-filter->#{resource_ctrl_id}#onChangeSearchSelect tomselect:search->#{resource_ctrl_id}#onTomselectSearch"
+      /label
         i.fa.fa-search
       = select_tag( \
           nil,
@@ -14,28 +43,4 @@
               tomselect_kind_value: 'filter', 
               "#{resource_ctrl_id}_target" => 'searchSelect',
               dashboard_target: "#{resource_name}SearchSelect" } })
-              
-    - if defined?(new_item)
-      = link_to( \
-          new_item[:path],
-          class: 'btn btn-secondary', 
-          aria: { label: "New #{new_item[:name]}" },
-          data: { \
-            turbo_stream: true,
-            controller: 'modal-trigger',
-            modal_trigger_modal_outlet: '#main-modal', 
-            modal_trigger_params_value: { title: "New #{new_item[:name]}", 'className' => new_item[:modal_class_name] } }) do
-          i.fa.fa-plus
-          |&nbsp;&nbsp;New
-    
-    / Use a button_tag here so that we may interpolate the data attribute
-    = button_tag( \
-        type: 'button', 
-        class: 'btn btn-default', 
-        aria: { label: 'Table Display Settings' }, 
-        data: { "#{resource_ctrl_id}_target" => 'displayOptionsBtn' }) do
-        i.fa.fa-gear
-        |&nbsp;&nbsp;Preferences
-
-  div style="display:flex; justify-content:flex-end"
     = content_tag(:div, '', class: 'help-block text-right', data: { "#{resource_ctrl_id}_target" => 'filterResults' })

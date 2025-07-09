@@ -4,48 +4,35 @@
 @import '../image_card';
 
 body {
-  padding-top: 8.5rem;
-}
+  padding-top: 8rem;
 
-.dashboard > .tab-content > .tab-pane:not(#curate),
-.companies.new,
-.companies.edit,
-// .registrations.edit,
-.registrations.update,    // when there is an error and 422 response
-.stories.edit #story {
-  > .container {
-    display: flex;
-    align-items: flex-start;
-    // min-height: 100vh;
-    transition: opacity .15s ease-out;
+  &,
+  .dashboard > .tab-content > .tab-pane,
+  #story {
+    > .container-fluid {
+      padding: 0 2.75rem;
+      max-width: 1200px;
+    }
   }
+  
+  .dashboard > .tab-content > .tab-pane:not(#curate),
+  .companies.new,
+  .registrations.update,    // when there is an error and 422 response
+  #story,
+  &.companies.edit {
+    > .container-fluid {
+      display: flex;
+      align-items: flex-start;
+      transition: opacity .15s ease-out;
+    }
+  } 
 }
 
-.layout-sidebar,
-.layout-main {
+.sidebar {
   position: sticky;
-  // top: 1rem;
-  // top: 8.5rem;
-  transition: top 0.15s ease-out, opacity .15s ease-out;
-
-  // &.layout-sidebar.collapse-header {
-  //   top: 1rem;
-  //   transition: top 0.2s ease-in;
-  // }
-}
-
-.layout-main {
-  top: 1rem;
-  flex-grow: 1;
-  margin-left: 1.5rem;
-  padding-bottom: 10rem;
-}
-
-.layout-sidebar {
-  // top: calc(#{1rem} + 54px);
-  top: 8.5rem;
-  flex: 0 0 260px;
-  margin-right: 1.5rem;
+  top: 8rem;
+  flex: 0 0 24rem;
+  margin-right: 1.25rem;
 
   .nav {
     > li {
@@ -55,22 +42,20 @@ body {
         display: flex;
         align-items: center;
         height: 3.75em;
-        border-left: 2px solid transparent;
-        padding: 10px 20px;
-        // font-family: 'Lato';
+        border: 2px solid transparent;
+        padding: 1rem 2rem;
         font-size: 14px;
         color: $gray;
 
         i {
           font-size: 1.25em;
-          margin-right: 13px;
+          margin-right: 1.25rem;
         }
 
         &:hover, 
         &:focus {
           background-color: darken($blueish-gray-lighter, 4%);
-          border-left: 2px solid darken($blueish-gray-lighter, 4%);
-          color: $gray-darker; //darken($gray, 10%);
+          color: $gray-darker;
         }
       }
       
@@ -78,7 +63,7 @@ body {
         > a, 
         > a:hover, 
         > a:focus {
-          border-left: 2px solid $brand-primary;
+          border-left-color: $brand-primary;
           color: $brand-primary;
           font-weight: 600;
           background-color: $blueish-gray-lighter;
@@ -86,6 +71,23 @@ body {
       }
     }
   }
+
+  &--sans-text {
+    @extend .sidebar;
+    flex: 0 0 6.75rem;
+
+    .nav > li > a {
+      i {
+        margin-right: 0;
+      }
+    }
+  }
+}
+
+.layout-main {
+  flex-grow: 1;
+  margin-left: 1.25rem;
+  padding-bottom: 10rem;
 }
 
 .form-horizontal {
@@ -100,4 +102,17 @@ body {
   h4 {
     margin-top: 0;
   }
+}
+
+#gads-form,
+#story-narrative-content-form,
+#story-testimonials-form,
+#story-settings-form,
+#contributor-invitations-panel .form-horizontal,
+.plugin-config,
+#cta-links-forms-panel .form-horizontal,
+#company-tags-form,
+#company-profile-form {
+  position: relative;
+  margin: 0 auto;
 }

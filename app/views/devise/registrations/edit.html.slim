@@ -1,6 +1,6 @@
 = render('shared/navbars/company_nav', { company: current_user.company, workflow_stage: nil })
 
-main.user-profile.container.hidden-xs
+main.user-profile.container-fluid.hidden-xs
 
   = form_with( \
       model: current_user,
@@ -27,8 +27,8 @@ main.user-profile.container.hidden-xs
 
       .col-sm-8
         .form-group
-          = form.label(:first_name, 'First Name', class: 'control-label col-sm-3 col-lg-2')
-          .col-sm-9.col-lg-10
+          = form.label(:first_name, 'First Name', class: 'control-label col-sm-3')
+          .col-sm-9
             = form.text_field( \
                 :first_name,
                 class: 'form-control',
@@ -40,8 +40,8 @@ main.user-profile.container.hidden-xs
 
       .col-sm-8
         .form-group
-          = form.label(:last_name, 'Last Name', class: 'control-label col-sm-3 col-lg-2')
-          .col-sm-9.col-lg-10
+          = form.label(:last_name, 'Last Name', class: 'control-label col-sm-3')
+          .col-sm-9
             = form.text_field( \
                 :last_name,
                 class: 'form-control',
@@ -52,8 +52,8 @@ main.user-profile.container.hidden-xs
 
       .col-sm-8
         .form-group
-          = form.label(:title, 'Job Title', class: 'control-label col-sm-3 col-lg-2')
-          .col-sm-9.col-lg-10 
+          = form.label(:title, 'Job Title', class: 'control-label col-sm-3')
+          .col-sm-9 
             = form.text_field( \
                 :title,
                 class: 'form-control',
@@ -62,8 +62,8 @@ main.user-profile.container.hidden-xs
 
       .col-sm-offset-4.col-sm-8
         .form-group
-          = form.label(:phone, class: 'control-label col-sm-3 col-lg-2')
-          .col-sm-9.col-lg-10 
+          = form.label(:phone, class: 'control-label col-sm-3')
+          .col-sm-9 
             / autocomplete is off to avoid browser interpreting this as the username field and offering to save the password
             / (but it's not working?)
             = form.telephone_field( \
@@ -76,8 +76,8 @@ main.user-profile.container.hidden-xs
 
       .col-sm-offset-4.col-sm-8
         .form-group
-          = form.label(:email, class: 'control-label col-sm-3 col-lg-2')
-          .col-sm-9.col-lg-10 
+          = form.label(:email, class: 'control-label col-sm-3')
+          .col-sm-9 
             .input-group
               = form.email_field( \
                   :email,
@@ -93,8 +93,8 @@ main.user-profile.container.hidden-xs
 
       .col-sm-offset-4.col-sm-8
         .user-profile__current-password.form-group
-          = form.label(:current_password, 'Password', class: 'control-label col-sm-3 col-lg-2')
-          .col-sm-9.col-lg-10
+          = form.label(:current_password, 'Password', class: 'control-label col-sm-3')
+          .col-sm-9
             .input-group
               = form.password_field( \
                   :current_password,
@@ -111,8 +111,8 @@ main.user-profile.container.hidden-xs
       
       .col-sm-offset-4.col-sm-8
         .user-profile__password.form-group
-          = form.label(:password, 'New Password', class: 'control-label col-sm-3 col-lg-2')
-          .col-sm-9.col-lg-10
+          = form.label(:password, 'New Password', class: 'control-label col-sm-3')
+          .col-sm-9
             = form.password_field( \
                 :password,
                 class: 'form-control',
@@ -126,8 +126,8 @@ main.user-profile.container.hidden-xs
 
       .col-sm-offset-4.col-sm-8
         .user-profile__password-confirmation.form-group
-          = form.label(:password_confirmation, 'Confirm New Password', class: 'control-label col-sm-3 col-lg-2')
-          .col-sm-9.col-lg-10
+          = form.label(:password_confirmation, 'Confirm New Password', class: 'control-label col-sm-3')
+          .col-sm-9
             = form.password_field( \
                 :password_confirmation,
                 class: 'form-control',
@@ -140,7 +140,7 @@ main.user-profile.container.hidden-xs
 
       .col-sm-offset-4.col-sm-8
         .form-group
-          .col-sm-offset-3.col-sm-9.col-lg-offset-2.col-lg-10
+          .col-sm-offset-3.col-sm-9
             = button_tag( \
                 '',
                 type: 'submit',

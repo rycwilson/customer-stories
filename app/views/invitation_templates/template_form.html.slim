@@ -14,12 +14,15 @@
           action: 'ajax:beforeSend->invitation-template#validate ajax:complete->invitation-template#onAjaxComplete' }}) do |form|
 
     .row
-      .col-sm-12.col-md-offset-1.col-md-10.col-lg-offset-2.col-lg-8 
+      .col-sm-12.col-lg-offset-3.col-lg-9
         hr
 
-    .form-group.required
-      .col-sm-12.col-md-offset-1.col-md-10.col-lg-offset-2.col-lg-8 
+    .form-group
+      .visible-sm-block.visible-md-block.col-sm-12
         = form.label(:name)
+      .col-lg-3.visible-lg-inline-block.control-label
+        = form.label(:name)
+      .col-sm-12.col-lg-9
         = form.text_field( \
             :name,
             class: 'form-control',
@@ -27,9 +30,11 @@
             data: { invitation_template_target: 'nameField'})
 
     .form-group 
-      .col-sm-12.col-md-offset-1.col-md-10.col-lg-offset-2.col-lg-8
+      .visible-sm-block.visible-md-block.col-sm-12
         = form.label(:request_subject, 'Subject')
-      .col-sm-12.col-md-offset-1.col-md-10.col-lg-offset-2.col-lg-8
+      .col-lg-3.visible-lg-inline-block.control-label
+        = form.label(:request_subject)
+      .col-sm-12.col-lg-9
         .input-group
           = form.text_field(:request_subject, class: 'form-control')
           .input-group-btn
@@ -45,9 +50,11 @@
                 a href="javascript:;" Contributor full name
 
     .form-group
-      .col-sm-12.col-md-offset-1.col-md-10.col-lg-offset-2.col-lg-8
+      .visible-sm-block.visible-md-block.col-sm-12
         = form.label(:request_body, 'Body')
-      .col-sm-12.col-md-offset-1.col-md-10.col-lg-offset-2.col-lg-8
+      .col-lg-3.visible-lg-inline-block.control-label
+        = form.label(:request_subject)
+      .col-sm-12.col-lg-9
         .invitation-template__summernote {
           contenteditable="false"
           data-controller="summernote"

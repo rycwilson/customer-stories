@@ -12,17 +12,17 @@
   input#narrative__img-upload.hidden type="file"
 
   .form-group
-    .visible-sm-block.visible-md-block.col-sm-12.col-md-offset-1.col-md-11
+    .visible-sm-block.visible-md-block.col-sm-12
       = form.label(:title)
     = form.label(:title, class: 'control-label visible-lg-inline-block col-lg-2')
-    .col-sm-12.col-md-offset-1.col-md-11.col-lg-offset-0.col-lg-9
+    .col-sm-12.col-lg-10
       = form.text_field(:title, id: 'story-title-lg', class: 'form-control', data: { story_target: 'titleInput' })
 
   .form-group 
-    .visible-sm-block.visible-md-block.col-sm-12.col-md-offset-1.col-md-11
+    .visible-sm-block.visible-md-block.col-sm-12
       = form.label(:results)
     = form.label(:results, class: 'control-label visible-lg-inline-block col-lg-2')
-    .col-sm-12.col-md-offset-1.col-md-11.col-lg-offset-0.col-lg-9
+    .col-sm-12.col-lg-10
       .list-group data-story-target="resultsList" data-controller="list-group"
         = form.fields_for(:results) do |results_form|
           a.list-group-item href="javascript:;" data-list-group-target="item"
@@ -51,10 +51,10 @@
               i.fa.fa-fw.fa-undo
   
   .form-group 
-    .visible-sm-block.visible-md-block.col-sm-12.col-md-offset-1.col-md-11
+    .visible-sm-block.visible-md-block.col-sm-12
       = form.label(:narrative, 'Story body')
     = form.label(:narrative, 'Story body', class: 'control-label visible-lg-inline-block col-lg-2')
-    .col-sm-12.col-md-offset-1.col-md-11.col-lg-offset-0.col-lg-9
+    .col-sm-12.col-lg-10
       = form.text_area( \
           :narrative,
           class: 'form-control',
@@ -66,5 +66,5 @@
             story_target: 'narrativeTextarea' })
 
   .row.hidden-xs
-    .col-sm-12.col-md-offset-1.col-md-11.col-lg-offset-2.col-lg-9
+    .col-sm-12.col-lg-offset-2.col-lg-10
       = form.submit('Save changes', class: 'btn btn-success')

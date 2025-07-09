@@ -4,7 +4,8 @@ main.container-fluid.hidden-xs {
   data-controller="company-settings" 
   data-company-settings-modal-outlet="#main-modal" 
   data-action="company-ctas:did-render->company-settings#onCtasFrameLoad" }
-  .layout-sidebar
+
+  .sidebar
     / no active tab set here; it will be set by the client based on page fragment identifier
     ul.nav.nav--company {
       class=('nav--new-company' if action_name == 'new')

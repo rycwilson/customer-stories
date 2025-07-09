@@ -1,8 +1,17 @@
 - story ||= nil
 
-= render( \
+table.table {
+  id="#{story ? 'story-contributions-table' : 'contributions-table'}"
+  class=('has-row-groups' if enable_row_groups && story.nil?)
+  data-contributions-target="datatable"
+  data-controller="datatable"
+  data-datatable-enable-row-groups-value="#{enable_row_groups && story.nil? ? 'true' : 'false'}"
+  data-datatable-contributions-outlet="#{story ? '#story-contributions' : '#contributions'}" }
+
+  = render( \
     'companies/shared/table_controls',
     { company:, 
+      caption: story ? 'Story Contributors' : 'Contributors',
       resource_name: 'contributions',
       resource_ctrl_id: 'contributions',
       new_item: { \
@@ -13,14 +22,6 @@
         'Customer' => company.customers.map(&:select_option),
         'Customer Win' => company.successes.real.map(&:select_option),
         'Contributor' => company.contributors.sort_by(&:last_name).map { |user| [user.full_name, "contributor-#{user.id}"] } } })
-
-table.table {
-  id="#{story ? 'story-contributions-table' : 'contributions-table'}"
-  class=('has-row-groups' if enable_row_groups && story.nil?)
-  data-contributions-target="datatable"
-  data-controller="datatable"
-  data-datatable-enable-row-groups-value="#{enable_row_groups && story.nil? ? 'true' : 'false'}"
-  data-datatable-contributions-outlet="#{story ? '#story-contributions' : '#contributions'}" }
 
   thead
     tr

@@ -33,7 +33,12 @@
 
     .form-group.required
       /= form.label(:email_subject, 'Subject', class: 'control-label')
-      = form.text_field(:email_subject, class: 'form-control', placeholder: 'Subject', required: true)
+      = form.text_field( \
+          :email_subject,
+          class: 'form-control',
+          placeholder: 'Subject',
+          required: true,
+          onkeydown: "return event.key != 'Enter';" )
 
     .contributor-invitation__summernote { 
       contenteditable="false" 

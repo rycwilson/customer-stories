@@ -11,61 +11,66 @@
   = story_form.fields_for(:success) do |success_form|
 
     .form-group
-      .visible-sm-block.visible-md-block.col-sm-12.col-md-offset-2.col-md-9
+      .visible-sm-block.col-sm-12
         = success_form.label(:cta_ids, 'CTAs')
-      = success_form.label(:cta_ids, 'CTAs', class: 'control-label visible-lg-inline-block col-lg-3')
-      .col-sm-12.col-md-offset-2.col-md-9.col-lg-offset-0.col-lg-7
+      = success_form.label( \
+          :cta_ids, 'CTAs',
+          class: 'control-label visible-md-inline-block visible-lg-inline-block col-md-4')
+      .col-sm-12.col-md-8
         = render('stories/edit/select_cta_ids', { company:, form: success_form })
         
     .form-group
-      .visible-sm-block.visible-md-block.col-sm-12.col-md-offset-2.col-md-9
+      .visible-sm-block.col-sm-12
         = success_form.label(:story_category_ids, 'Category Tags')
       = success_form.label( \
           :story_category_ids,
           'Category Tags',
-          class: 'control-label visible-lg-inline-block col-lg-3')
-      .col-sm-12.col-md-offset-2.col-md-9.col-lg-offset-0.col-lg-7
+          class: 'control-label visible-md-inline-block visible-lg-inline-block col-md-4')
+      .col-sm-12.col-md-8
         = render( \
             'stories/shared/select_story_tags', 
             { company:, success_form:, tag_ids: :story_category_ids, company_tags: company.story_categories })
 
     .form-group
-      .visible-sm-block.visible-md-block.col-sm-12.col-md-offset-2.col-md-9
+      .visible-sm-block.col-sm-12
         = success_form.label(:product_ids, 'Product Tags')
       = success_form.label( \
           :product_ids,
           'Product Tags',
-          class: 'control-label visible-lg-inline-block col-lg-3')
-      .col-sm-12.col-md-offset-2.col-md-9.col-lg-offset-0.col-lg-7
+          class: 'control-label visible-md-inline-block visible-lg-inline-block col-md-4')
+      .col-sm-12.col-md-8
         = render( \
             'stories/shared/select_story_tags', 
             { company:, success_form:, tag_ids: :product_ids, company_tags: company.products })
 
   .og-tags.row
-    .visible-sm-block.visible-md-block.col-sm-12.col-md-offset-2.col-md-9
+    .visible-sm-block.col-sm-12
       label Open Graph Tags
-    label.control-label.visible-lg-inline-block.col-lg-3 Open Graph Tags
-    .col-sm-12.col-md-offset-2.col-md-9.col-lg-offset-0.col-lg-7
+    label.control-label.visible-md-inline-block.visible-lg-inline-block.col-md-4 Open Graph Tags
+    .col-sm-12.col-md-8
       = render('stories/edit/og_meta_tags', { story:, story_form: })
 
   .hidden-link.form-group
-    .visible-sm-block.visible-md-block.col-sm-12.col-md-offset-2.col-md-9
+    .visible-sm-block.col-sm-12
       = story_form.label(:hidden_link, 'Hidden Link')
-    = story_form.label(:hidden_link, 'Hidden Link', class: 'control-label visible-lg-inline-block col-lg-3')
-    .col-sm-12.col-md-offset-2.col-md-9.col-lg-offset-0.col-lg-7
+    = story_form.label( \
+        :hidden_link,
+        'Hidden Link',
+        class: 'control-label visible-md-inline-block visible-lg-inline-block col-md-4')
+    .col-sm-12.col-md-8
       = render('stories/edit/hidden_link', { story:, form: story_form })
 
   .story-settings__publish.form-group
-    .visible-sm-block.visible-md-block.col-sm-12.col-md-offset-2.col-md-9
-      label Publish 
-    label.control-label.visible-lg-inline-block.col-lg-3 Publish 
-    .col-sm-12.col-md-offset-2.col-md-9.col-lg-offset-0.col-lg-7
+    .visible-sm-block.col-sm-12
+      label Publish
+    label.control-label.visible-md-inline-block.visible-lg-inline-block.col-md-4 Publish
+    .col-sm-12.col-md-8
       div
         - [:logo_published, :preview_published, :published].each do |field|
           = render('stories/edit/publish_switch', { story_form:, field: })
 
   .row.hidden-xs
-    .col-sm-12.col-md-offset-2.col-md-9.col-lg-offset-3.col-lg-7
+    .col-sm-12.col-md-offset-4.col-md-8
       = story_form.submit('Save changes', class: 'btn btn-success')
 
 / #story-settings__ads-inputs

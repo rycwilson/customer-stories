@@ -20,7 +20,10 @@
     top: -53px;   // 50 + 2 (top border) + 1 (bottom border)
   }
 
-  .container {
+  .container-fluid {
+    padding: 0 2.75rem;
+    max-width: 1200px;
+    
     display: flex;
     justify-content: space-between;
     padding-top: 1px;

@@ -6,18 +6,16 @@
 
   = render('shared/loading_spinner')
 
-  .container
-    .layout-sidebar
+  .container-fluid
+    .sidebar--sans-text
       ul.nav data-controller="nav-list"
         li class=('active' if active_tab == '#promoted-stories')
           a href="#promoted-stories" data-toggle="tab" data-action="dashboard#setNavCookie" data-nav-list-target="tab"
             i.fa.fa-fw.fa-bullhorn
-            |&nbsp;Promoted Stories
         li class=('active' if active_tab == '#promote-settings')
           a href="#promote-settings" data-toggle="tab" data-action="dashboard#setNavCookie" data-nav-list-target="tab"
             i.fa.fa-fw.fa-gear
-            |&nbsp;Settings
-      - if current_user.admin?
+      /- if current_user.admin?
         .admin-sidebar
           h4.text-danger Admin
           p The connection to Google Ads is presently disabled.
@@ -55,19 +53,21 @@
           data-promoted-stories-filters-value={ 'curator-id': curator_id }.to_json
           data-promoted-stories-display-options-html-value=promoted_stories_display_options_escaped_html(company, curator_id)
           data-action="datatable:init->promoted-stories#onTableInitComplete" }
-          
-          = render( \
-              'companies/shared/table_controls',
-              { company:, 
-                resource_name: 'promotedStories',
-                resource_ctrl_id: 'promoted-stories',
-                search_options: { 'Customer' => company.customers.map(&:select_option) } })
 
           table#promoted-stories-table.table {
             data-promoted-stories-target="datatable"
             data-controller="datatable"
             data-datatable-promoted-stories-outlet="#promoted-stories"
             data-promote-tr="#{company.promote_tr}" }
+
+            = render( \
+                'companies/shared/table_controls',
+                { company:, 
+                  caption: 'Promoted Stories',
+                  resource_name: 'promotedStories',
+                  resource_ctrl_id: 'promoted-stories',
+                  search_options: { 'Customer' => company.customers.map(&:select_option) } })
+
             thead
               tr
                 th

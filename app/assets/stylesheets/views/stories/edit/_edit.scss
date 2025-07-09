@@ -62,6 +62,39 @@
   }
 }
 
+#story-narrative-content-form {
+  @media (min-width: 768px) and (max-width: 1999px) {
+    max-width: 62rem;
+  }
+
+  @media (min-width: 1200px) {
+    left: -2%;
+    max-width: 75rem;
+  }
+}
+
+#story-testimonials-form {
+  @media (min-width: 768px) and (max-width: 991px) {
+    max-width: 42rem;
+  }
+
+  @media (min-width: 992px) {
+    left: -6%;
+    max-width: 62rem;
+  }
+}
+
+#story-settings-form {
+  @media (min-width: 768px) and (max-width: 991px) {
+    max-width: 45rem;
+  }
+
+  @media (min-width: 992px) {
+    left: -6%;
+    max-width: 68rem;
+  }
+}
+
 #show-contributions {
   background-color: $blueish-gray-lighter;
 

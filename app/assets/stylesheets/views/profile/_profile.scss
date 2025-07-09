@@ -1,13 +1,8 @@
-.user-profile__photo {
-  margin-bottom: 2.25rem;
-  
-  .image-card {
-    display: inline-block;
-  }
-}
-
-.user-profile form {
-  width: 100%;
+main.user-profile form {
+  position: relative;
+  left: -2.5%;
+  margin: 0 auto;
+  width: 70rem;
   
   .input-group,
   input {
@@ -16,11 +11,17 @@
   
   .input-group:not(:has(.input-group-btn)) {
     width: 100%;
-      
+    
     input {
       border-top-right-radius: $input-border-radius;
       border-bottom-left-radius: $input-border-radius;
     }
+  }
+}
+
+.user-profile__photo {
+  .image-card {
+    display: inline-block;
   }
 }
 

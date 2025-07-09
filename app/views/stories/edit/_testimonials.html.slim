@@ -7,10 +7,10 @@
       autocomplete: 'off' }) do |form|
 
   .form-group 
-    .visible-sm-block.visible-md-block.col-sm-12.col-md-offset-2.col-md-9
+    .visible-sm-block.col-sm-12
       = form.label(:quote, 'Customer Quote')
-    = form.label(:quote, 'Customer Quote', class: 'control-label visible-lg-inline-block col-lg-3')
-    .col-sm-12.col-md-offset-2.col-md-9.col-lg-offset-0.col-lg-7
+    = form.label(:quote, 'Customer Quote', class: 'control-label visible-md-inline-block visible-lg-inline-block col-md-4')
+    .col-sm-12.col-md-8
       = collection_select( \
           story,
           :featured_contributor_id,
@@ -39,10 +39,10 @@
 
   .form-group 
     = hidden_field_tag('story[formatted_video_url]', story.video_url)
-    .visible-sm-block.visible-md-block.col-sm-12.col-md-offset-2.col-md-9
+    .visible-sm-block.col-sm-12
       = form.label(:video_url, 'Video URL')
-    = form.label(:video_url, 'Video URL', class: 'control-label visible-lg-inline-block col-lg-3')
-    .col-sm-12.col-md-offset-2.col-md-9.col-lg-offset-0.col-lg-7
+    = form.label(:video_url, 'Video URL', class: 'control-label visible-md-inline-block visible-lg-inline-block col-md-4')
+    .col-sm-12.col-md-8
       = form.text_field(:video_url, class: 'form-control', placeholder: 'YouTube, Vimeo, or Wistia', autocomplete: 'off')
       #video-container.text-center
         - if story.video_info[:provider] == 'wistia'

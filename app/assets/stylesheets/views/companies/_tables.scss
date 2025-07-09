@@ -38,6 +38,16 @@
     }
   }
 
+  &:not(#promoted-stories-table) {
+    td.status {
+      line-height: 1.6;
+
+      p {
+        margin: 0;
+      }
+    }
+  }
+
   // child rows (must be nested under table id selectors to override datatables)
   td.child-row,
   td.contributor-child-row {
@@ -72,14 +82,25 @@
 }
 
 .table-controls {
-  padding: 1.5em 1.5em 0.5em 1.5em;
+  padding: 1.75rem;
   background-color: $blueish-gray-lighter;
 
-  > div {
-    @include flex-row-center-between;
+  .caption {
+    margin: 0;
+    font-family: 'Lato';
+    color: $gray;
+  }
 
-    &:not(:last-child) {
-      margin-bottom: 1em;
+  > div {
+    display: flex;
+    justify-content: space-between;
+
+    &:first-child {
+      margin-bottom: 1.25rem;
+    }
+    
+    &:last-child {
+      align-items: center;
     }
   }
 
@@ -90,20 +111,33 @@
   }
 
   label:has(i.fa) {
-    margin: 0 0.75em 0 0;;
+    margin: 0 0.75em 0 0;
   }
 
-  .search-select {
-    @include flex-row-center;
-    flex-grow: 1;
+  .help-block {
+    margin: 0;
+  }
+}
 
-    i {
-      font-size: 1.25em;
-      color: $gray;
-    }
+.search-table {
+  @include flex-row-center;
+  flex-grow: 1;
 
-    > .ts-wrapper {
-      width: 20em;
+  
+  // i {
+    //   font-size: 1.25em;
+    //   color: $gray;
+    // }
+    
+  > .ts-wrapper {
+    width: 20em;
+    
+    input {
+      background-image: url('icons/bs_search.svg');
+      background-repeat: no-repeat;
+      background-size: 16px 16px;
+      background-position: 0.5em center;
+      text-indent: 1.5em;
     }
   }
 }

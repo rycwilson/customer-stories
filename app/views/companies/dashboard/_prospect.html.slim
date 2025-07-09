@@ -10,8 +10,8 @@
 
   = render('shared/loading_spinner')
 
-  .container
-    .layout-sidebar
+  .container-fluid
+    .sidebar--sans-text
       ul.nav data-controller="nav-list" role="tablist"
         li class=('active' if active_tab == '#customer-wins')
           a {
@@ -25,7 +25,7 @@
             aria-expanded="#{active_tab == '#customer-wins' ? 'true' : 'false'}"
             role="tab" }
             i.fa.fa-fw.fa-rocket
-            |&nbsp;Customer Wins
+            /|&nbsp;Customer Wins
             
         li class=('active' if active_tab == '#contributions')
           a {
@@ -39,7 +39,7 @@
             aria-expanded="#{active_tab == '#{contributions}' ? 'true' : 'false'}"
             role="tab" }
             i.fa.fa-fw.fa-users
-            |&nbsp;Contributors
+            /|&nbsp;Contributors
 
     .layout-main
       .tab-content

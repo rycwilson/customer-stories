@@ -75,13 +75,13 @@ turbo-frame[data-modal-target="turboFrame"] {
   }
 
   > .spinner,
-  > .container {
+  > .container-fluid {
     visibility: hidden;
     opacity: 0;
   }
 
   &.loading > .spinner,
-  &.ready > .container {
+  &.ready > .container-fluid {
     visibility: visible;
     opacity: 1;
   }

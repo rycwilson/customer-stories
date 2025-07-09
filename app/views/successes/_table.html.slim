@@ -1,24 +1,26 @@
-/ note that the current user is the curator for a new Customer Win, not the curator_id filter
-
-= render( \
-    'companies/shared/table_controls',
-    { company:, 
-      resource_name: 'customerWins',
-      resource_ctrl_id: 'customer-wins',
-      new_item: { \
-        name: 'Customer Win',
-        path: new_company_success_path(company) + "?curator_id=#{current_user.id}",
-        modal_class_name: 'new-customer-win' },
-      search_options: { \
-        'Customer' => company.customers.map(&:select_option),
-        'Customer Win' => company.successes.real.map(&:select_option) }})  
-
 table#successes-table.table {
   class=('has-row-groups' if enable_row_groups)
   data-controller="datatable"
   data-customer-wins-target="datatable"
   data-datatable-customer-wins-outlet="#customer-wins"
-  data-datatable-enable-row-groups-value=('true' if enable_row_groups) }
+  data-datatable-enable-row-groups-value=('true' if enable_row_groups) 
+  aria-labelledby="customer-wins-table-caption"}
+  
+  / NOTE: The current user is the curator for a new Customer Win, not the curator_id filter
+  = render( \
+      'companies/shared/table_controls',
+      { company:,
+        caption: 'Customer Wins',
+        resource_name: 'customerWins',
+        resource_ctrl_id: 'customer-wins',
+        new_item: { \
+          name: 'Customer Win',
+          path: new_company_success_path(company) + "?curator_id=#{current_user.id}",
+          modal_class_name: 'new-customer-win' },
+        search_options: { \
+          'Customer' => company.customers.map(&:select_option),
+          'Customer Win' => company.successes.real.map(&:select_option) }})  
+
   thead
     tr
       th

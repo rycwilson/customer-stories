@@ -12,14 +12,6 @@ body.companies.edit {
     position: absolute;
     right: 0;
   }
-
-  main.container-fluid {
-    padding: 0 2.5rem;
-    max-width: 1200px;
-  
-    display: flex;
-    align-items: flex-start;;
-  }
 }
 
 // Don't show until active tab is selected based on location hash
@@ -29,14 +21,6 @@ body.companies.edit {
   &.has-active-tab {
     visibility: visible;
   }
-}
-
-.plugin-config,
-#cta-links-forms-panel .form-horizontal,
-#company-tags-form,
-#company-profile-form {
-  position: relative;
-  margin: 0 auto;
 }
 
 #company-tags-form {

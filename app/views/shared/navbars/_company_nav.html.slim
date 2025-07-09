@@ -1,7 +1,7 @@
 - is_dashboard = workflow_stage.present?
 
-nav.company-nav.navbar-fixed-top.hidden-xs data-controller="header"
-  .container
+nav.company-nav.navbar-fixed-top.hidden-xs 
+  .container-fluid
     
     - if current_user.company.blank?
       .welcome-mesg

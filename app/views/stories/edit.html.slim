@@ -9,9 +9,9 @@ main.dashboard.hidden-xs data-controller="dashboard" data-dashboard-modal-outlet
 
     = render('shared/loading_spinner')
 
-    .container
+    .container-fluid
     
-      .layout-sidebar
+      .sidebar
         ul.nav
           li
             = link_to dashboard_path('curate') do 

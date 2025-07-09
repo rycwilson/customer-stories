@@ -26,8 +26,13 @@
         data: { ads_target: 'activeCollectionInput' })
           
     .form-group.short-headline
-      = form.label(:adwords_short_headline, 'Headline', class: 'col-sm-3 control-label')
-      .col-sm-9.col-md-8.col-lg-6
+      .visible-sm-block.col-sm-12 
+        = form.label(:adwords_short_headline, 'Headline')
+      = form.label( \
+          :adwords_short_headline,
+          'Headline',
+          class: 'visible-md-inline-block visible-lg-inline-block col-md-4 control-label')
+      .col-sm-12.col-md-8
         div
           = form.text_field( \
               :adwords_short_headline,
@@ -45,8 +50,11 @@
           | Max 30 characters
 
     .form-group.image-collection
-      label.col-sm-3.control-label Image Collection
-      .col-sm-9.col-md-8.col-lg-6
+      .visible-sm-block.col-sm-12
+        label Image Collection
+      label.col-md-4.visible-md-inline-block.visible-lg-inline-block.control-label 
+        | Image Collection
+      .col-sm-12.col-md-8
         .btn-group data-controller="btn-group"
           a.btn.btn-secondary {
             href="#image-library__marketing"
@@ -70,7 +78,7 @@
             i.fa.fa-fw.fa-flag
             | &nbsp;&nbsp;
             | Logos
-      .col-sm-offset-3.col-sm-9.col-md-8.col-lg-6 
+      .col-sm-12.col-md-offset-4.col-md-8
         span.help-block {
           data-ads-target="requirementsHelpBlock"
           class=('hidden' if active_collection != 'images') }
@@ -111,8 +119,11 @@
       #image-library__marketing.tab-pane class=('active' if active_collection == 'images')
 
         .form-group
-          label.col-sm-3.control-label Default Images
-          .col-sm-9.col-md-8.col-lg-6
+          .visible-sm-block.col-sm-12
+            label Default Images
+          label.col-md-4.visible-md-inline-block.visible-lg-inline-block.control-label
+            | Default Images
+          .col-sm-12.col-md-8
             ul.image-cards.list-unstyled
               = render( \
                   'shared/image_card',
@@ -128,7 +139,10 @@
                     field_name_prefix: 'company[adwords_images_attributes][1]' })
 
         .row
-          .col-sm-offset-3.col-sm-9.col-md-8.col-lg-6.text-center
+          .visible-sm-block.col-sm-12
+            label All Images
+          label.col-md-4.visible-md-inline-block.visible-lg-inline-block.control-label All Images
+          .col-sm-12.col-md-8
             /disabled=('true' if company.missing_default_ad_images?('marketing'))
             button.btn.btn-secondary.btn-upload type="button" data-action="ads#uploadImage"
               i.fa.fa-fw.fa-upload
@@ -151,8 +165,10 @@
       #image-library__logos.tab-pane class=('active' if active_collection == 'logos')
 
         .form-group
-          label.col-sm-3.control-label Default Logos
-          .col-sm-9.col-md-8.col-lg-6
+          .visible-sm-block.col-sm-12 
+            label Default Logos
+          label.col-md-4.visible-md-inline-block.visible-lg-inline-block.control-label Default Logos
+          .col-sm-12.col-md-8
             ul.image-cards
               = render( \
                   'shared/image_card',
@@ -168,8 +184,10 @@
                       "company[adwords_images_attributes][#{ 4 + company.ad_images.marketing.where.not(default: true).count }]") })
 
         .row
-          / label.col-sm-3.control-label All Logos
-          .col-sm-offset-3.col-sm-9.col-md-8.col-lg-6.text-center
+          .visible-sm-block.col-sm-12
+            label All Logos
+          label.col-md-4.visible-md-inline-block.visible-lg-inline-block.control-label All Logos
+          .col-sm-12.col-md-8
             / disabled=('true' if company.missing_default_ad_images?('logo'))
             button.btn.btn-secondary.btn-upload type="button" data-action="ads#uploadLogo"
               i.fa.fa-fw.fa-upload
