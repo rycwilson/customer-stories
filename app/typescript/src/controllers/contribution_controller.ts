@@ -10,10 +10,8 @@ export default class ContributionController extends DatatableRowController<Contr
 
   declare id: number;
   declare status: string;
-  declare contributor: User;
   declare invitationTemplate: InvitationTemplate;
-  declare invitation: ContributorInvitation;
-  declare customerWin: CustomerWin;
+  declare story: Story;
   declare path: string;
 
   declare contributionHtml: HTMLElement;
@@ -82,14 +80,10 @@ export default class ContributionController extends DatatableRowController<Contr
   deleteRow() {
     return super.deleteRow().then(() => {
       CSP.contributions = CSP.contributions!.filter(contribution => contribution.id !== this.id);
-      let storyContributions = this.customerWin.story ? CSP.storyContributions[this.customerWin.story.id] : undefined;
+      let storyContributions = this.story ? CSP.storyContributions[this.story.id] : undefined;
       if (storyContributions) {
         storyContributions = storyContributions.filter(contribution => contribution.id !== this.id);
       }
-      // TODO remove contributor from search box?
-      // const contributorContributions = CSP.contributions.filter(contribution => (
-      //   contribution?.contributor?.id === this.contributor.id
-      // ));
     });
   }
 }

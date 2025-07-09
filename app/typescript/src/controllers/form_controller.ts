@@ -196,7 +196,7 @@ export default class FormController<Ctrl extends SubclassController> extends Con
       // new story form can't presently have a contributor select, because it may not have access to the contributions data
       if (!CSP['contributions']) throw new Error('updateContributorOptions should only be called from Prospect section');
       const winContributorIds: number[] = CSP['contributions']
-        .filter((contribution: Contribution) => contribution.success!.id === winId)
+        .filter((contribution: Contribution) => contribution.customer_win!.id === winId)
         .map((contribution: Contribution) => contribution.contributor!.id);
       winContributorIds.forEach(contributorId => {
         const newOptionSettings = { value: contributorId, text: tsOptions[contributorId].text, disabled: true  };

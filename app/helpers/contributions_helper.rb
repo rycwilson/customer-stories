@@ -1,12 +1,12 @@
 # frozen_string_literal: true
 
 module ContributionsHelper
-  def status_html(contribution)
+  def self.status_html(contribution)
     date_format = '%-m/%-d/%y'
     invitation_sent_at = contribution.request_sent_at
     case contribution.status
     when 'pre_request'
-      <<~HTML
+      <<~HTML.squish
         <div>
           <p>waiting for invitation</p>
           <p>(added #{contribution.created_at.strftime(date_format)})</p>
@@ -29,23 +29,33 @@ module ContributionsHelper
     end
   end
 
-  def contributions_table_filters curator_id
-    { 
+  def contributions_table_filters(curator_id)
+    {
       'curator-id': curator_id,
-      'show-completed': cookies['csp-show-completed'] ? cookies['csp-show-completed'] == 'true' : true, 
-      'show-published': cookies['csp-show-published'] ? cookies['csp-show-published'] == 'true' : true
+      'show-completed': if cookies['csp-show-completed'].present?
+                          cookies['csp-show-completed'] == 'true'
+                        else
+                          true
+                        end,
+      'show-published': if cookies['csp-show-published'].present?
+                          cookies['csp-show-published'] == 'true'
+                        else
+                          true
+                        end
     }
   end
 
-  def contributions_display_options_escaped_html company, curator_id
+  def contributions_display_options_escaped_html(company, curator_id)
     html = render(
       'contributions/display_options',
-      { 
-        company:, 
-        curator_id:,
-        enable_row_groups: cookies['csp-contributions-row-groups'].present? ? 
-          cookies['csp-contributions-row-groups'] == 'true' :
-          true, 
+      {
+        company: company,
+        curator_id: curator_id,
+        enable_row_groups: if cookies['csp-contributions-row-groups'].present?
+                             cookies['csp-contributions-row-groups'] == 'true'
+                           else
+                             true
+                           end
       }
     )
     escape_once(html)

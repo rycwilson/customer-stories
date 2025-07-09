@@ -86,8 +86,8 @@ interface CustomerWin {
   customer_id?: number; 
   curator_id?: number; 
   display_status?: string;
-  referrer?: User | null;
-  contact?: User | null;
+  // referrer?: User | null;
+  // contact?: User | null;
   timestamp?: number;
   new_story_path?: string;
   curator: User; 
@@ -109,17 +109,17 @@ interface CustomerWinRowData {
 }
 
 interface Customer {
-  id?: number;
-  name?: string;
-  slug?: string;
+  id: number;
+  name: string;
 }
 
 interface Story {
   id: number;
   title: string;
-  published: boolean;
-  slug: string;
-  csp_story_path: string;
+  published?: boolean;
+  slug?: string;
+  csp_story_path?: string;
+  edit_path?: string;
 }
 
 interface AdwordsAd {
@@ -147,7 +147,7 @@ interface Contribution {
   status?: string;
   contribution?: string;
   feedback?: string;
-  submitted_at?: string;
+  submittedAt?: string;
   request_subject?: string;
   request_body?: string;
   request_sent_at?: string;
@@ -159,11 +159,12 @@ interface Contribution {
 
   // associations
   customer?: Customer
-  success?: CustomerWin;
+  customer_win?: CustomerWin;
+  story?: Story;
   contributor?: User;
   referrer?: User;
   invitation_template?: InvitationTemplate;
-  invitation?: { id: number }
+  invitation?: { path: string };
   answers?: ContributorAnswer[];
 }
 
@@ -172,7 +173,6 @@ interface ContributionRowData {
   status: string;
   contributor: User;
   invitationTemplate: InvitationTemplate;
-  invitation: ContributorInvitaiton;
   customerWin: CustomerWin;
   path: string;
 }
@@ -181,10 +181,6 @@ interface InvitationTemplate {
   id: number;
   name: string;
   path?: string;
-}
-
-interface ContributorInvitation {
-  id: number;
 }
 
 interface ContributorQuestion {

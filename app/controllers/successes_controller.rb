@@ -18,7 +18,7 @@ class SuccessesController < ApplicationController
   end
 
   def index
-    @successes = @company.successes.includes(:curator, :customer, :story).real
+    @wins = @company.successes.for_datatable
     respond_to(&:json)
   end
 

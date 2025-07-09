@@ -1,43 +1,46 @@
+# frozen_string_literal: true
+
 json.array! @contributions do |contribution|
-  json.(contribution, :id, :status)
-  json.display_status status_html(contribution)
-  json.timestamp contribution.timestamp
-  json.path contribution.path
-  json.success do
-    json.(contribution.success, :id, :customer_id, :curator_id, :name)
-    json.curator do
-      json.(contribution.curator, :id)
-      json.full_name contribution.curator.full_name
-    end
-    json.customer do
-      json.(contribution.customer, :id, :name, :slug)
-    end
-    if contribution.success.story.present?
-      json.story do
-        json.(contribution.story, :id, :title, :published, :slug)
-        json.csp_story_path contribution.story.csp_story_path
-      end
-    end
+  json.call(contribution, :id, :status)
+  json.display_status ContributionsHelper.status_html(contribution)
+  json.timestamp contribution.created_at.to_i
+  json.path contribution_path(contribution)
+  json.customer do
+    json.id contribution.customer_id
+    json.name contribution.customer_name
+  end
+  json.curator do
+    json.id contribution.curator_id
+  end
+  json.customer_win do
+    json.id contribution.success_id
+    json.name contribution.success_name
   end
   json.contributor do
-    json.(contribution.contributor, :id, :email, :first_name, :last_name, :phone, :title)
-    json.full_name contribution.contributor.full_name
+    json.id contribution.contributor_id
+    json.full_name "#{contribution.contributor_first} #{contribution.contributor_last}"
+    json.last_name contribution.contributor_last
   end
-  if contribution.referrer.present?
-    json.referrer do
-      json.(contribution.referrer, :id, :email, :first_name, :last_name, :title)
-      json.full_name contribution.referrer.full_name
-    end
+  json.invitation do
+    json.path(
+      if contribution.invitation_contribution_id
+        edit_contribution_contributor_invitation_path(contribution.id)
+      else
+        new_contribution_contributor_invitation_path(contribution.id)
+      end
+    )
   end
-  if contribution.invitation_template.present?
+  if contribution.invitation_template_id
     json.invitation_template do
-      json.(contribution.invitation_template, :id, :name)
-      json.path contribution.invitation_template.path
+      json.id contribution.invitation_template_id
+      json.name contribution.invitation_template_name
     end
   end
-  if contribution.contributor_invitation.present?
-    json.invitation do 
-      json.(contribution.contributor_invitation, :id)
+  if contribution.story_id
+    json.story do
+      json.title contribution.story_title
+      json.published contribution.story_published
+      json.edit_path edit_story_path(contribution.story_id)
     end
   end
 end

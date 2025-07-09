@@ -8,10 +8,8 @@ export default class CustomerWinController extends DatatableRowController<Custom
 
   declare id: number;
   declare status: string;
-  declare newStoryPath: string;
-  declare curator: User;
   declare customer: Customer;
-  declare story?: Story;      
+  declare curator: User;
   declare path: string;
 
   declare contributionsHtml: string;          
@@ -46,7 +44,7 @@ export default class CustomerWinController extends DatatableRowController<Custom
       // const contributionIds = this.contributionsCtrl.dt.data().toArray()
       const contributionIds = (CSP['contributions'] as Contribution[])
         .filter((contribution: Contribution) => (
-          (contribution.success?.id == this.id) && contribution.status && /(contribution|feedback)/.test(contribution.status)
+          (contribution.customer_win?.id == this.id) && contribution.status && /(contribution|feedback)/.test(contribution.status)
         ))
         .map((contribution: Contribution) => contribution.id);
       Promise

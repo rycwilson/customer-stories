@@ -16,7 +16,12 @@ class Success < ApplicationRecord
   # Therefore we need to explicitly require the association.
   # TODO: enforce this in the database schema
   belongs_to :customer
-  belongs_to :curator, class_name: 'User', foreign_key: 'curator_id'
+  belongs_to(
+    :curator,
+    -> { select(:id, :first_name, :last_name, :email, :title, :phone) },
+    class_name: 'User',
+    foreign_key: 'curator_id'
+  )
   validates :customer, :curator, presence: true
 
   has_one :company, through: :customer
@@ -30,15 +35,7 @@ class Success < ApplicationRecord
   has_and_belongs_to_many :story_categories
   alias_method :categories, :story_categories
 
-  has_many :contributions, inverse_of: :success, dependent: :destroy do
-    def invitation_sent
-      where.not(status: 'pre_request')
-    end
-
-    def submitted
-      where(status: 'contribution_submitted')
-    end
-  end
+  has_many :contributions, inverse_of: :success, dependent: :destroy
   has_many(
     :contributions_for_win_story,
     lambda {
@@ -98,6 +95,19 @@ class Success < ApplicationRecord
     allow_destroy: false,
     reject_if: :missing_contributor_or_referrer_attributes?
   )
+
+  scope :real, -> { where(placeholder: false) }
+  scope :for_datatable, lambda {
+    real
+      .joins(:customer, :curator)
+      .left_outer_joins(:story)
+      .select(
+        :id, :name, :created_at, :win_story_completed,
+        customers: { id: :customer_id, name: :customer_name },
+        users: { id: :curator_id, first_name: :curator_first, last_name: :curator_last },
+        stories: { id: :story_id, title: :story_title }
+      )
+  }
 
   before_save { self.is_new_record = true if new_record? }
 
@@ -177,30 +187,15 @@ class Success < ApplicationRecord
     ]
   end
 
-  # method is used for passing the contributions count to datatables / successes dropdown
-  # see successes#index
-  def contributions_count
-    contributions.count
-  end
-
   def display_status
-    if contributions.count.zero?
-      "0 Contributors added#{win_story_completed ? "\nWin Story completed" : ''}".html_safe
-    elsif contributions.invitation_sent.empty?
-      "0 Contributors invited#{win_story_completed ? "\nWin Story completed" : ''}".html_safe
-    elsif win_story_completed?
-      "#{contributions.submitted.length}&nbsp;&nbsp;Contributions submitted\n" +
-        'Win Story completed'.html_safe
-    else
-      "#{contributions.invitation_sent.length}&nbsp;&nbsp;Contributors invited\n" +
-        "#{contributions.submitted.length}&nbsp;&nbsp;Contributions submitted".html_safe
-    end
+    'moved to view helper'
   end
 
   # this is just here for test illustration
   def removed_story_category(story_category); end
 
   def referrer
+    _contributions = contributions.select(:referrer_id, :contributor_id)
     if contributions.first.try(:referrer_id) &&
        contributions.first.try(:contributor_id) &&
        contributions.first.referrer_id == contributions.first.contributor_id
@@ -220,12 +215,8 @@ class Success < ApplicationRecord
       .merge(previous_changes: customer_contact.previous_changes)
   end
 
-  def timestamp
-    created_at.to_i
-  end
-
   def select_option
-    [name, id, { 'data-customer-id' => customer.id }]
+    [name, "success-#{id}", { 'data-customer-id' => customer.id }]
   end
 
   # ref: https://stackoverflow.com/questions/6346134
@@ -264,10 +255,6 @@ class Success < ApplicationRecord
 
   def new_story_path
     Rails.application.routes.url_helpers.new_success_story_path(self)
-  end
-
-  def path
-    Rails.application.routes.url_helpers.success_path(self)
   end
 
   def named_or_placeholder

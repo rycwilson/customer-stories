@@ -2,6 +2,8 @@
 
 class Customer < ApplicationRecord
   include FriendlyId
+  
+  attr_accessor :skip_callbacks
 
   # Since this table was added before Rails 5 (when belongs_to associations became required),
   # the company_id column is presently nullable and so we need to explicitly require the association
@@ -26,7 +28,6 @@ class Customer < ApplicationRecord
     end
   end
 
-  attr_accessor :skip_callbacks
 
   def should_generate_new_friendly_id?
     new_record? || name_changed? || slug.blank?

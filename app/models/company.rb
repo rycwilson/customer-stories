@@ -8,17 +8,13 @@ class Company < ApplicationRecord
   has_many :users # no dependent: :destroy users, handle more gracefully
   has_many :curators, -> { order(:last_name) }, class_name: 'User'
   has_many :customers, -> { order(:name) }, dependent: :destroy
-  has_many(:successes, -> { order(:name) }, through: :customers) do
-    def real
-      where(placeholder: false)
-    end
-  end
+  has_many(:successes, -> { order(:name) }, through: :customers)
   has_many(
     :contributions,
     -> { includes(:contributor, :referrer, success: { customer: {} }) },
     through: :successes
   )
-  has_many :contributors, through: :customers
+  has_many :contributors, -> { distinct.reorder(:last_name) }, through: :customers
   has_many :referrers, -> { distinct.reorder(:last_name) }, through: :contributions
 
   # Reordering necessary due to ordering inherited from Customer association

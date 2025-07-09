@@ -14,10 +14,7 @@ class ContributionsController < ApplicationController
   def index
     company = Company.find(params[:company_id]) if params[:company_id].present?
     @success = Success.find(params[:success_id]) if params[:success_id].present?
-    contributions = @success.present? ? @success.contributions : company.contributions
-    @contributions = contributions.includes(
-      { success: %i[curator customer story] }, :contributor, :referrer, :invitation_template, :contributor_invitation
-    )
+    @contributions = (@success ? @success.contributions : company.contributions).for_datatable
     respond_to(&:json)
   end
 
@@ -257,6 +254,11 @@ class ContributionsController < ApplicationController
         :id, :answer, :contribution_id, :contributor_question_id
       ]
     )
+  end
+
+  # NOTE: include all foreign keys even if they're unused, e.g. contributions.referrer_id
+  def fields_for_datatable
+    
   end
 
   def set_contribution

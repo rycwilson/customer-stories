@@ -1,16 +1,7 @@
 import type { Config, Api } from 'datatables.net-bs';
 
-export function newCustomerWinPath(params: URLSearchParams) {
-  const subdomain = location.host.split('.')[0];
-  return `/companies/${subdomain}/successes/new${params.size > 0 ? `?${params}` : ''}`;
-}
-
-export function editCustomerWinPath(successId: string | number) {
-  return `/successes/${successId}/edit`;
-}
-
 export function dataTableConfig(): Config {
-  const colIndices = { success: 1, customer: 2, curator: 3, status: 4, story: 5, actions: 6 };
+  const colIndices = { win: 1, customer: 2, curator: 3, status: 4, story: 5, actions: 6 };
   return {
     data: CSP.customerWins,
     
@@ -20,7 +11,7 @@ export function dataTableConfig(): Config {
     },
 
     orderFixed: [colIndices.customer, 'asc'], // the row grouping column (all sorting will happen secondarily to this)
-    order: [[colIndices.success, 'desc']],
+    order: [[colIndices.win, 'desc']],
 
     columns: [
       {
@@ -116,7 +107,7 @@ export function dataTableConfig(): Config {
       },
       { targets: [colIndices.curator, colIndices.story],  width: '0' },  // hidden
       { targets: [0], width: '1.75em' },
-      { targets: colIndices.success, width: 'auto' },
+      { targets: colIndices.win, width: 'auto' },
       { targets: colIndices.status, width: '12em' },
       { targets: colIndices.actions, width: '3.5em' }
     ],
@@ -144,26 +135,35 @@ export function dataTableConfig(): Config {
     },
 
     createdRow(tr: Node, data: object | any[], index: number) {
-      const { id, display_status: status, new_story_path: newStoryPath, curator, customer, story, path } = data as CustomerWin;
+      const { 
+        id,
+        display_status: status,
+        customer,
+        curator,
+        path
+      } = data as CustomerWin;
       $(tr)
         .attr('data-customer-win-datatable-outlet', '#successes-table')
         .attr('data-customer-win-modal-outlet', '#main-modal')
-        .attr('data-customer-win-row-data-value', JSON.stringify({ id, status, newStoryPath, curator, customer, story, path }))
+        .attr(
+          'data-customer-win-row-data-value',
+          JSON.stringify({ id, status, customer, curator, path })
+        )
         .attr(
           'data-customer-win-child-row-turbo-frame-attrs-value', 
-          JSON.stringify({ id: 'edit-customer-win', src: editCustomerWinPath(id) })
+          JSON.stringify({ id: 'edit-customer-win', src: path })
         )
-        .attr(
-          'data-action', 
-          'dropdown:dropdown-is-shown->customer-win#onShownDropdown dropdown:dropdown-is-hidden->customer-win#onHiddenDropdown'
-        )
-        .attr('data-controller', 'customer-win')
+        .attr('data-action', [
+          'dropdown:dropdown-is-shown->customer-win#onShownDropdown',
+          'dropdown:dropdown-is-hidden->customer-win#onHiddenDropdown'
+        ].join(' '))
+        .attr('data-controller', 'customer-win');
     }
   }
 }
 
 function actionsDropdownTemplate(row: CustomerWin, type: string, set: any) {
-  const { id, display_status: status, new_story_path: newStoryPath, curator, customer, story } = row;
+  const { id, display_status: status, new_story_path: newStoryPath, story } = row;
   const noContributorsAdded = status && /0.+Contributors\sadded/.test(status);
   const noContributorsInvited = status && /0.+Contributors\sinvited/.test(status);
   
@@ -173,7 +173,6 @@ function actionsDropdownTemplate(row: CustomerWin, type: string, set: any) {
   const contributionsExist = false;
 
   const action = noContributorsAdded ? 'Add' : (noContributorsInvited ? 'Invite' : '');
-  const editStoryPath = story ? `/stories/${story.id}/edit` : undefined;
   const editStoryDropdownItems = (
     [
       ['Story Narrative Content', 'story-narrative-content', 'fa-edit'], 
@@ -184,7 +183,7 @@ function actionsDropdownTemplate(row: CustomerWin, type: string, set: any) {
       .map(([text, tab, icon]) => {
         return `
           <li>
-            <a href="javascript:;" data-action="dashboard#editStory" data-story-path="${editStoryPath}" data-story-tab="${tab}">
+            <a href="javascript:;" data-action="dashboard#editStory" data-story-path="${story?.edit_path}" data-story-tab="${tab}">
               <i class="fa ${icon} fa-fw action"></i>&nbsp;&nbsp;
               ${text}
             </a>

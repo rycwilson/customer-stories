@@ -56,6 +56,42 @@ class Contribution < ApplicationRecord
   validates :first_reminder_wait, numericality: { only_integer: true }
   validates :second_reminder_wait, numericality: { only_integer: true }
 
+  scope :invitation_sent, -> { where.not(status: 'pre_request') }
+  scope :submitted, -> { where(status: 'contribution_submitted') }
+  scope :for_datatable, lambda {
+    joins(success: %i[customer curator])
+      .left_outer_joins(success: :story, invitation_template: {}, contributor_invitation: {})
+      .joins('INNER JOIN users AS contributors ON contributors.id = contributions.contributor_id')
+      .joins('INNER JOIN users AS curators ON curators.id = successes.curator_id')
+      .select <<~FIELDS.squish
+        contributions.id,
+        contributions.status,
+        contributions.created_at,
+        contributions.request_sent_at,
+        contributions.first_reminder_wait,
+        contributions.second_reminder_wait,
+        contributions.contributor_id,
+        contributions.referrer_id,
+        contributions.success_id,
+        contributions.invitation_template_id,
+        successes.id AS success_id,
+        successes.name AS success_name,
+        successes.curator_id,
+        customers.id AS customer_id,
+        customers.name AS customer_name,
+        contributors.id AS contributor_id,
+        contributors.first_name AS contributor_first,
+        contributors.last_name AS contributor_last,
+        curators.id AS curator_id,
+        invitation_templates.name AS invitation_template_name,
+        contributor_invitations.contribution_id AS invitation_contribution_id,
+        stories.id AS story_id,
+        stories.success_id AS story_success_id,
+        stories.title AS story_title,
+        stories.published AS story_published
+      FIELDS
+  }
+
   before_create(:generate_access_token)
 
   # # when creating a new success with referrer, a contribution is created
@@ -127,10 +163,6 @@ class Contribution < ApplicationRecord
                 .each { |c| c.update status: 'removed' }
   end
 
-  def timestamp
-    created_at.to_i
-  end
-
   # ref: https://stackoverflow.com/questions/6346134
   def contributor_attributes=(attrs)
     self.contributor = User.find(attrs['id']) if attrs['id'].present?
@@ -152,10 +184,6 @@ class Contribution < ApplicationRecord
       token: access_token,
       type:
     )
-  end
-
-  def path
-    Rails.application.routes.url_helpers.contribution_path(self)
   end
 
   protected
