@@ -86,20 +86,24 @@ export default class DashboardController extends Controller<HTMLDivElement> {
   }
 
   onResourceLoading({ currentTarget: tabPanel }: { currentTarget: HTMLDivElement }) {
-    this.spinnerTimers[tabPanel.id] = window.setTimeout(() => tabPanel.classList.add('loading'), 1000);
+    this.spinnerTimers[tabPanel.id] = window.setTimeout(() => {
+      if (!tabPanel.classList.contains('ready')) {
+        tabPanel.classList.add('loading');
+      };
+    }, 1000);
   }
 
   onResourceReady({ detail: { resourceName } }: { detail: { resourceName: ResourceName }}) {
-    console.log('resource ready', resourceName)
+    // console.log('resource ready', resourceName)
     this.readyState[resourceName] = true;
   }
 
   onReadyStateChange(resources: { [key in ResourceName]: boolean }, resourceName: ResourceName, isReady: boolean) {
     const setReady = (containerId: DashboardTab.Prospect | DashboardTab.Curate | 'story' | DashboardTab.Promote) => {
       const container = containerId === 'story' ? this.storyTarget : this.getTabPanel(containerId);
+      container.classList.add('ready');
       window.clearTimeout(this.spinnerTimers[containerId]);
       container.classList.remove('loading');
-      container.classList.add('ready');
     };
     if (resources[resourceName] === isReady) return true;  // no change => ignore
     resources[resourceName] = isReady;
