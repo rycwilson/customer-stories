@@ -27,6 +27,8 @@ authenticate(:user) do
     member do
       patch 'tags'
       patch 'ads'
+      get 'visitors', constraints: ->(req) { req.format == :json }
+      get 'activity', constraints: ->(req) { req.format == :json }
     end
     resources :customers, only: %i[edit create update destroy], shallow: true
     resources :successes, except: [:index], shallow: true do
@@ -60,9 +62,10 @@ authenticate(:user) do
   get '/successes', to: 'successes#index'
 
   # analytics
-  get '/analytics/charts', to: 'analytics#charts', as: 'charts'
-  get '/analytics/visitors', to: 'analytics#visitors', as: 'measure_visitors'
-  get '/analytics/stories', to: 'analytics#stories', as: 'measure_stories'
+
+  # get '/analytics/charts', to: 'analytics#charts', as: 'charts'
+  # get '/analytics/visitors', to: 'analytics#visitors', as: 'measure_visitors'
+  # get '/analytics/stories', to: 'analytics#stories', as: 'measure_stories'
 
   # impersonate another user
   devise_scope(:user) do
