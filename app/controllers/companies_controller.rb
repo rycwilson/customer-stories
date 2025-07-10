@@ -13,7 +13,7 @@ class CompaniesController < ApplicationController
     @workflow_stage = params[:workflow_stage]
     @prospect_tab = cookies['csp-prospect-tab'] || '#customer-wins'
     @promote_tab = cookies['csp-promote-tab'] || '#promoted-stories'
-    @measure_tab = cookies['csp-measure-tab'] || '#story-visitors'
+    @measure_tab = cookies['csp-measure-tab'] || '#visitors'
     # @recent_activity = @company.recent_activity(30)
     # @story_views_30_day_count = @company.page_views.story.since(30.days.ago).count
     @filters = filters_from_cookies
@@ -108,6 +108,28 @@ class CompaniesController < ApplicationController
       partial: 'companies/dashboard/gads_form',
       locals: { company: @company, errors: @errors, active_collection: }
     )
+  end
+
+  def visitors
+    # company = Company.find(params[:id])
+    company = Company.find_by_subdomain 'varmour'
+    visitors_by_story = company.page_views.visitors_by_story.map do |story|
+      [
+        story.customer || 'All',
+        story.title || "#{company.subdomain}.#{ENV['HOST_NAME']}",
+        story.visitors,
+        "#{((story.visitors.to_f / company.visitors.count) * 100).round(1)}%",
+      ]
+    end
+    respond_to do |format|
+      format.json do
+        render json: { visitors: visitors_by_story }
+      end
+    end
+  end
+
+  def activity
+    # @recent_activity = @company.recent_activity(30)
   end
 
   def set_reset_gads

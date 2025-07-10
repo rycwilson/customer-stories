@@ -32,18 +32,8 @@ class Company < ApplicationRecord
   has_many :profile_clicks, class_name: 'ProfileClick'
   has_many :logo_clicks, class_name: 'LogoClick'
 
-  # Include in the select clause any fields which are used in specifying order in a default scope
-  has_many(
-    :visitor_sessions,
-    lambda {
-      select('visitor_sessions.*, visitor_sessions.clicky_session_id, visitor_actions.timestamp')
-        .distinct
-    },
-    through: :visitor_actions
-  )
-  has_many :visitors, lambda {
-    select('visitors.*, visitor_sessions.clicky_session_id, visitor_actions.timestamp').distinct
-  }, through: :visitor_sessions
+  has_many :visitor_sessions, -> { distinct }, through: :visitor_actions
+  has_many :visitors, -> { distinct }, through: :visitor_sessions
 
   has_many :story_categories, dependent: :destroy
   accepts_nested_attributes_for :story_categories, allow_destroy: true
@@ -360,41 +350,9 @@ class Company < ApplicationRecord
 
   def story_shares_activity(days_offset); end
 
-  def stories_table_json
-    company_page_views = page_views.count
-    # timestamp must be included since there's a default scope that orders on timestamp
-    # note that it doesn't actually appear in the output
-    logo_page_visitors = PageView.joins(:visitor)
-                                 .where(company_id: id, success_id: nil)
-                                 .group('visitor_actions.timestamp, visitors.id').count
-    logo_page = [
-      '',
-      'Logo Page',
-      '',
-      logo_page_visitors.length,
-      "#{((page_views.where(success_id: nil).count.to_f / company_page_views) * 100).round(1)}%"
-    ]
-    PageView.distinct
-            .joins(:story, :visitor, success: { customer: {} })
-            .where(company_id: id, stories: { published: true })
-            .group('visitor_actions.timestamp, stories.title', 'stories.publish_date', 'visitors.id', 'customers.name')
-            .count
-            .group_by { |story_visitor_timestamp, visits| story_visitor_timestamp[0] }
-            .to_a.map do |story|
-      visitors = Set.new
-      publish_date = nil
-      customer = nil
-      story[1].each do |visitor|
-        visitors << visitor[0][2]
-        publish_date ||= visitor[0][1]
-        customer ||= visitor[0][3]
-      end
-      [customer, story[0], publish_date.strftime('%-m/%-d/%y'), visitors.count,
-       ((Story.find_by(title: story[0]).page_views.count.to_f / company_page_views.to_f) * 100).round(1).to_s + '%']
-    end
-      .push(logo_page)
-      .sort_by { |story| story[3] || 0 }.reverse
-  end
+  # replaced by companies#visitors
+  # def stories_table_json
+  # end
 
   def visitors_chart_json(story = nil, start_date = 30.days.ago.to_date, end_date = Date.today)
     visitor_actions_conditions = if story.nil?
