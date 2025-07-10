@@ -18,6 +18,8 @@ interface ReadyState {
   contributions: boolean;
   storyContributions: boolean;
   promotedStories: boolean;
+  visitors: boolean;
+  activity: boolean;
 };
 
 export default class DashboardController extends Controller<HTMLDivElement> {
@@ -38,10 +40,8 @@ export default class DashboardController extends Controller<HTMLDivElement> {
     'promotedStoriesTab', 
     'promotedStoriesSearchSelect',
     'story',
-    'storyVisitors',
-    'storyVisitorsTab',
-    'recentActivity',
-    'recentActivityTab'
+    'visitors',
+    'activity',
   ];
   declare readonly tabTargets: HTMLAnchorElement[];
   declare readonly tabContentTarget: HTMLDivElement;
@@ -56,6 +56,8 @@ export default class DashboardController extends Controller<HTMLDivElement> {
   declare readonly promotedStoriesTarget: HTMLDivElement;
   declare readonly promotedStoriesTabTarget: HTMLAnchorElement;
   declare readonly promotedStoriesSearchSelectTarget: TomSelectInput;
+  declare readonly visitorsTarget: HTMLDivElement;
+  declare readonly activityTarget: HTMLDivElement;
 
   static values = { activeTab: { type: String, default: '' } };    
   declare activeTabValue: DashboardTab | null;
@@ -65,10 +67,19 @@ export default class DashboardController extends Controller<HTMLDivElement> {
     prospect: 0,
     curate: 0,
     story: 0, 
-    promote: 0 
+    promote: 0,
+    measure: 0 
   };
   readyState: ReadyState = new Proxy(
-    { customerWins: false, contributions: false, stories: false, storyContributions: false, promotedStories: false },
+    {
+      customerWins: false,
+      contributions: false,
+      storyContributions: false,
+      stories: false,
+      promotedStories: false,
+      visitors: false,
+      activity: false
+    },
     { set: this.onReadyStateChange.bind(this) }
   )
 
@@ -98,8 +109,18 @@ export default class DashboardController extends Controller<HTMLDivElement> {
     this.readyState[resourceName] = true;
   }
 
-  onReadyStateChange(resources: { [key in ResourceName]: boolean }, resourceName: ResourceName, isReady: boolean) {
-    const setReady = (containerId: DashboardTab.Prospect | DashboardTab.Curate | 'story' | DashboardTab.Promote) => {
+  onReadyStateChange(
+    resources: { [key in ResourceName]: boolean }, resourceName: ResourceName, isReady: boolean
+  ) {
+    const setReady = (
+      containerId: (
+        DashboardTab.Prospect | 
+        DashboardTab.Curate | 
+        'story' | 
+        DashboardTab.Promote | 
+        DashboardTab.Measure
+      )
+    ) => {
       const container = containerId === 'story' ? this.storyTarget : this.getTabPanel(containerId);
       container.classList.add('ready');
       window.clearTimeout(this.spinnerTimers[containerId]);
@@ -113,8 +134,11 @@ export default class DashboardController extends Controller<HTMLDivElement> {
       setReady(DashboardTab.Curate);
     } else if (resourceName === 'storyContributions') {
       setReady('story');
-    } else if (resources.promotedStories) {
+    } else if (resourceName === 'promotedStories') {
       setReady(DashboardTab.Promote);
+    } else if (resourceName === 'visitors') {
+      console.log('visitors ready')
+      setReady(DashboardTab.Measure);
     }
     return true;
   }
@@ -206,6 +230,8 @@ export default class DashboardController extends Controller<HTMLDivElement> {
       this.contributionsTarget.setAttribute('data-contributions-init-value', 'true');
     } else if (tab === DashboardTab.Promote) {
       this.promotedStoriesTarget.setAttribute('data-promoted-stories-init-value', 'true');
+    } else if (tab === DashboardTab.Measure) {
+      this.visitorsTarget.setAttribute('data-visitors-init-value', 'true');
     }
   }
 

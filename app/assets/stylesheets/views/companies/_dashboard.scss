@@ -54,7 +54,8 @@ turbo-frame[data-modal-target="turboFrame"] {
 #prospect,
 #curate,
 #story,
-#promote {
+#promote,
+#measure {
   @include spinner('lg');
 
   > .spinner {

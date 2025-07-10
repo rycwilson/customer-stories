@@ -29,6 +29,8 @@ interface CustomerStoriesApp {
   stories: Story[] | undefined;
   storyContributions: { [key: number]: Contribution[] };
   promotedStories: PromotedStory[] | undefined;
+  visitors: any;
+  activity: any;
   currentUser: User | null;
   authToken: string;
   // screenSize: string;
@@ -36,7 +38,7 @@ interface CustomerStoriesApp {
 }
 
 type ScreenSize = 'xs' | 'sm' | 'md-lg';
-type ResourceName = 'customerWins' | 'contributions' | 'storyContributions' | 'stories' | 'promotedStories';
+type ResourceName = 'customerWins' | 'contributions' | 'storyContributions' | 'stories' | 'promotedStories' | 'visitors' | 'activity';
 type TomSelectInput = HTMLSelectElement & TomInput;
 type SelectInputKind = 'filter' | 'curator' | 'status' | 'customer' | 'category' | 'product' | 'storyTag' | 'contributor' | 'referrer' | 'invitationTemplate' | 'story';
 type AdImage = 'SquareImage' | 'LandscapeImage' | 'SquareLogo' | 'LandscapeLogo';

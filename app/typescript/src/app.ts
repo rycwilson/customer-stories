@@ -33,6 +33,8 @@ function appFactory(): CustomerStoriesApp {
     stories: undefined,
     storyContributions: {},
     promotedStories: undefined,
+    visitors: undefined,
+    activity: undefined,
     currentUser: parseDatasetObject(document.body, 'currentUser', 'id', 'full_name'),
     // screenSize: null,
     authToken: <string>(<HTMLMetaElement>document.head.querySelector('meta[name="csrf-token"]')).getAttribute('content'),

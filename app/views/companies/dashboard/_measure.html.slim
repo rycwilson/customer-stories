@@ -1,7 +1,11 @@
 #measure.tab-pane {
   class=('active' if workflow_stage == 'measure')
   data-dashboard-target="tabPanel"
-  data-action="stories:loading->dashboard#onResourceLoading stories:ready->dashboard#onResourceReady"
+  data-action=[ \
+    'visitors:loading->dashboard#onResourceLoading',
+    'visitors:ready->dashboard#onResourceReady',
+    'activity:loading->dashboard#onResourceLoading',
+    'activity:ready->dashboard#onResourceReady'].join(' ')
   role="tabpanel" }
 
   = render('shared/loading_spinner')
@@ -9,30 +13,28 @@
   .container-fluid
     .sidebar
       ul.nav data-controller="nav-list" role="tablist"
-        li class=('active' if active_tab == '#story-visitors')
+        li class=('active' if active_tab == '#visitors')
           a {
-            id="story-visitors-tab" 
-            href="#story-visitors" 
+            id="visitors-tab" 
+            href="#visitors" 
             data-toggle="tab"
-            data-dashboard-target="storyVisitorsTab"
             data-nav-list-target="tab"
             data-action="dashboard#setNavCookie"
-            aria-controls="story-visitors"
-            aria-expanded="#{active_tab == '#story-visitors' ? 'true' : 'false'}"
+            aria-controls="visitors"
+            aria-expanded="#{active_tab == '#visitors' ? 'true' : 'false'}"
             role="tab" }
             i.fa.fa-fw.fa-bar-chart
-            |&nbsp;Story Visitors
+            |&nbsp;Visitors
             
-        li class=('active' if active_tab == '#recent-activity')
+        li class=('active' if active_tab == '#activity')
           a {
-            id="recent-activity-tab" 
-            href="#recent-activity" 
+            id="activity-tab" 
+            href="#activity" 
             data-toggle="tab"
-            data-dashboard-target="recentActivityTab"
             data-nav-list-target="tab"
             data-action="dashboard#setNavCookie"
-            aria-controls="recent-activity"
-            aria-expanded="#{active_tab == '#contributions' ? 'true' : 'false'}"
+            aria-controls="activity"
+            aria-expanded="#{active_tab == '#activity' ? 'true' : 'false'}"
             role="tab" }
             i.fa.fa-fw.fa-line-chart
             |&nbsp;Recent Activity
@@ -44,16 +46,18 @@
         / data-resource-dashboard-outlet=".dashboard"
         / data-resource-resource-outlet=".resource-ctrl:not(#story-visitors)"
         / data-resource-data-path-value="/successes"
-        / data-resource-name="storyVisitors"
-        #story-visitors.tab-pane {
-          class=('active in' if active_tab == '#story-visitors') 
-          data-dashboard-target="storyVisitors"
-          data-resource-checkbox-filters-value={ \
-            'show-wins-with-story': { checked: true, label: 'Customer Wins with Story started'} }.to_json
-          aria-labelledby="story-visitors-tab"
+        / data-resource-name="visitors"
+        #visitors.tab-pane {
+          class=('active in' if active_tab == '#visitors') 
+          data-dashboard-target="visitors"
+          data-resource-name="visitors"
+          data-controller="visitors"
+          data-visitors-data-path-value=visitors_company_path(company)
+          data-visitors-filters-value={ }.to_json
+          aria-labelledby="visitors-tab"
           role="tabpanel" }
 
-          = render('companies/measure/story_visitors')
+          = render('companies/measure/visitors')
 
         / data-controller="resource"
         / data-resource-dashboard-outlet=".dashboard"
@@ -63,10 +67,13 @@
         /   'show-completed': { checked: true, label: 'Contributors with a completed Contribution' },
         /   'show-published': { checked: true, label: 'Contributors to published Customer Stories' } }.to_json
         / data-resource-name="contributions"
-        #recent-activity.tab-pane {
-          class=('active in' if active_tab == '#recent-activity')
-          data-dashboard-target="recentActivity"
-          aria-labelledby="recent-activity"
+        #activity.tab-pane {
+          class=('active in' if active_tab == '#activity')
+          data-dashboard-target="activity"
+          data-resource-name="activity"
+          data-controller="activity"
+          data-activity-filters-value={ }.to_json
+          aria-labelledby="activity-tab"
           role="tabpanel" }
 
-          = render('companies/measure/recent_activity')
+          = render('companies/measure/activity')

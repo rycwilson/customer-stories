@@ -2,6 +2,8 @@ import { Controller } from "@hotwired/stimulus";
 import type CustomerWinsController from "./customer_wins_controller";
 import type ContributionsController from "./contributions_controller";
 import type PromotedStoriesController from "./promoted_stories_controller";
+// import type VisitorsController from "./visitors_controller";
+// import type ActivityController from "./activity_controller";
 import { getJSON, kebabize } from '../utils';
 import { init as initTable, initDisplayOptions as initTableDisplayOptions, search as searchTable } from '../tables.js';
 import type { Api, Config } from "datatables.net-bs";
@@ -79,14 +81,21 @@ export default class ResourceController extends Controller<HTMLElement> {
         initTable.call(this);
       } else {
         this.dispatch('loading');
+        console.log('getting data:', this.dataPathValue, this.searchParamsValue || 'no params')
         getJSON(this.dataPathValue, this.searchParamsValue).then(data => {
           if (this.resourceName === 'storyContributions') {
             CSP[this.resourceName][+(this.element.dataset.storyId as string)] = data;
           } else {
             CSP[this.resourceName] = data;
           }
+
           // console.log('init table (data was fetched): ', this.resourceName)
-          initTable.call(this);
+          if (this.resourceName !== 'visitors') {
+            initTable.call(this);
+          } else {
+            this.dispatch('ready', { detail: { resourceName: this.resourceName } });
+            console.log(data)
+          }
         })
       }
     }
