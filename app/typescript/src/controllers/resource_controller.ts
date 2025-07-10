@@ -77,25 +77,17 @@ export default class ResourceController extends Controller<HTMLElement> {
   initValueChanged(shouldInit: boolean) {
     if (shouldInit) {
       if (this.dataExists) {
-        // console.log('init table (data exists): ', this.resourceName)
         initTable.call(this);
       } else {
         this.dispatch('loading');
-        console.log('getting data:', this.dataPathValue, this.searchParamsValue || 'no params')
+        // console.log('getting data:', this.dataPathValue, this.searchParamsValue || 'no params')
         getJSON(this.dataPathValue, this.searchParamsValue).then(data => {
           if (this.resourceName === 'storyContributions') {
             CSP[this.resourceName][+(this.element.dataset.storyId as string)] = data;
           } else {
             CSP[this.resourceName] = data;
           }
-
-          // console.log('init table (data was fetched): ', this.resourceName)
-          if (this.resourceName !== 'visitors') {
-            initTable.call(this);
-          } else {
-            this.dispatch('ready', { detail: { resourceName: this.resourceName } });
-            console.log(data)
-          }
+          initTable.call(this);
         })
       }
     }
