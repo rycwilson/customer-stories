@@ -35,7 +35,7 @@ class Story < ApplicationRecord
   end
   has_many :contributors, through: :success
   has_many :visitor_actions, through: :success
-  has_many :page_views, through: :success, class_name: 'PageView'
+  has_many :page_views, through: :success
   has_many :visitors, lambda {
     select('visitors.*, visitor_actions.timestamp, visitor_sessions.clicky_session_id').distinct
   }, through: :page_views
