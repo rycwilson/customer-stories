@@ -4,6 +4,9 @@
 
 import { application } from "./application.js"
 
+import ActivityController from './activity_controller.js';
+application.register('activity', ActivityController);
+
 import AdsController from './ads_controller.js';
 application.register('ads', AdsController);
 
@@ -129,6 +132,9 @@ application.register('tooltip', TooltipController);
 
 import UserProfileController from "./user_profile_controller.js";
 application.register("user-profile", UserProfileController);
+
+import VisitorsController from './visitors_controller.js';
+application.register('visitors', VisitorsController);
 
 import WinStoryController from './win_story_controller.js';
 application.register('win-story', WinStoryController);
