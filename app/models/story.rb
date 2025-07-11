@@ -207,11 +207,6 @@ class Story < ApplicationRecord
 
   friendly_id :title, use: %i[slugged finders history]
 
-  def self.default_order(stories_relation)
-    stories_relation
-      .order('stories.published DESC, stories.preview_published DESC, stories.updated_at DESC')
-  end
-
   def self.includes_for_filters(base_relation, filters)
     relation = base_relation # typically company.stories
     relation = relation.includes(:success) if filters[:curator].present? || filters[:customer].present?
