@@ -92,6 +92,22 @@ class Contribution < ApplicationRecord
       FIELDS
   }
 
+  scope :submitted_since, lambda { |days_ago|
+    select([
+      'contributions.id',
+      'contributions.status',
+      'contributions.submitted_at',
+      'contributions.contributor_id',
+      'contributions.success_id',
+      'customers.name AS customer',
+      'contributor_invitations.sent_at AS invitation_sent_at',
+      "TRIM(users.first_name || ' ' || COALESCE(users.last_name, '')) AS contributor"
+    ].join(', '))
+      .left_outer_joins(:contributor_invitation)
+      .joins(:contributor, success: :customer)
+      .where(submitted_at: days_ago.days.ago..)
+  }
+
   before_create(:generate_access_token)
 
   # # when creating a new success with referrer, a contribution is created

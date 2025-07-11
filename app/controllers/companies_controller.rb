@@ -111,8 +111,8 @@ class CompaniesController < ApplicationController
   end
 
   def visitors
-    # company = Company.find(params[:id])
-    company = Company.find_by_subdomain 'varmour'
+    company = Company.find(params[:id])
+    # company = Company.find_by_subdomain 'varmour'
     visitors_by_story = company.page_views.visitors_by_story.map do |story|
       [
         story.customer || 'All',
@@ -129,7 +129,13 @@ class CompaniesController < ApplicationController
   end
 
   def activity
-    # @recent_activity = @company.recent_activity(30)
+    company = Company.find(params[:id])
+    # company = Company.find_by_subdomain 'varmour'
+    respond_to do |format|
+      format.json do
+        render json: { recent: company.recent_activity(30) }
+      end
+    end
   end
 
   def set_reset_gads

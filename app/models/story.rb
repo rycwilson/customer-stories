@@ -10,7 +10,7 @@ class Story < ApplicationRecord
   # presence of video is determined by a valid thumbnail url which must be fetched and confirmed
   # => ensure the fetch only happens once by assigning to a virtual attribute
   # => story.video = story.video_info() on :show and :edit actions only
-  attribute(:video)
+  attr_accessor(:video)
 
   # TODO: remove '*published' columns and status helper
   # while the original 'status' helper and 'published' column still exist,
@@ -92,6 +92,42 @@ class Story < ApplicationRecord
     :last_logo_published,
     -> { where(logo_published: true).order(logo_publish_date: :desc).limit(1) }
   )
+
+  scope :with_base_fields, lambda {
+    select([
+      'stories.id',
+      'stories.title',
+      'stories.created_at',
+      'stories.logo_published AS listed',
+      'stories.logo_publish_date AS listed_at',
+      'stories.published',
+      'stories.publish_date AS published_at',
+      'customers.name AS customer',
+      "TRIM(users.first_name || ' ' || COALESCE(users.last_name, '')) AS curator",
+      'CAST(EXTRACT(EPOCH FROM stories.created_at) AS BIGINT) AS timestamp'
+    ].join(', '))
+      .joins(success: %i[customer curator])
+  }
+
+  scope :created_since, lambda { |days_ago|
+    with_base_fields
+      .where(created_at: days_ago.days.ago..)
+      .order(created_at: :desc)
+  }
+
+  scope :listed_since, lambda { |days_ago|
+    with_base_fields
+      .where(logo_publish_date: days_ago.days.ago..)
+      .where.not(published: true)
+      .order(logo_publish_date: :desc)
+  }
+
+  scope :published_since, lambda { |days_ago|
+    with_base_fields
+      .where(publish_date: days_ago.days.ago..)
+      .order(publish_date: :desc)
+  }
+
 
   # Raw SQL in an `order` clause will be flagged as an error due to potential for SQL injection.
   # Use Arel.sql to mark the SQL as safe, assuming we're not interpolating any user input.
