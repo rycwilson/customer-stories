@@ -110,20 +110,23 @@ class CompaniesController < ApplicationController
     )
   end
 
+  # TODO: Why was this called "Landing"? It's just a % of overall visitors
+  # "#{((story.visitors.to_f / company.visitors.count) * 100).round(1)}%",
   def visitors
     company = Company.find(params[:id])
     # company = Company.find_by_subdomain 'varmour'
-    visitors_by_story = company.page_views.visitors_by_story.map do |story|
-      [
-        story.customer || 'All',
-        story.title || "#{company.subdomain}.#{ENV['HOST_NAME']}",
-        story.visitors,
-        "#{((story.visitors.to_f / company.visitors.count) * 100).round(1)}%",
-      ]
+    by_story = Visitor.to_company_by_story(company.id).map do |result|
+      [result.customer, result.story, result.visitors]
     end
+    by_date = Visitor.to_company_by_date(
+      company.id,
+      story: params[:story_id],
+      start_date: params[:start_date],
+      end_date: params[:end_date]
+    )
     respond_to do |format|
       format.json do
-        render json: { visitors: visitors_by_story }
+        render json: { by_story:, by_date: }
       end
     end
   end

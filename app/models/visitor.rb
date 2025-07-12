@@ -15,10 +15,12 @@ class Visitor < ApplicationRecord
   scope :top_to_company, ->(company_id, top) { to_company(company_id).order(visitor_sessions_count: :desc).limit(top) }
 
   scope :to_company_by_date, lambda { |company_id, **options|
-    story = options[:story]
-    start_date = options[:start_date] || 30.days.ago
-    end_date = options[:end_date] || Date.today
-    days_between = (end_date.to_date - start_date.to_date).to_i
+    story_id = options[:story_id]
+    start_date = options[:start_date]&.to_date || 30.days.ago.to_date
+    # start_date = options[:start_date]&.to_date || 90.months.ago.to_date
+    end_date = options[:end_date]&.to_date || Date.today
+    # end_date = options[:end_date]&.to_date || 80.months.ago.to_date
+    days_between = (end_date - start_date).to_i
     group_by, group_range =
       case days_between
       when 0...21
@@ -33,7 +35,7 @@ class Visitor < ApplicationRecord
       visitor_sessions: { timestamp: group_range },
       visitor_actions: { company_id: }
     }
-    where_conditions[:stories] = { id: story.id } if story.present?
+    where_conditions[:stories] = { id: story_id } if story_id.present?
     select("#{date_trunc} AS date, COUNT(DISTINCT visitors.id) AS visitors")
       .joins(visitor_sessions: { visitor_actions: { success: :story } })
       .where(where_conditions)
@@ -47,7 +49,7 @@ class Visitor < ApplicationRecord
       .group('customers.name, stories.title, visitor_actions.company_id')
       .select([
         'customers.name AS customer',
-        'stories.title',
+        'stories.title AS story',
         'visitor_actions.company_id',
         'COUNT(DISTINCT visitors.id) AS visitors'
       ].join(', '))

@@ -9,7 +9,7 @@ export default class VisitorsController extends ResourceController {
     const dataPromise = getJSON(this.dataPathValue, this.searchParamsValue);
     const chartsPromise = this.getCharts();
     const [data] = await Promise.all([dataPromise, chartsPromise]);
-    CSP.visitors = data.visitors;
+    CSP.visitors = data;
     this.dispatch('ready', { detail: { resourceName: 'visitors' } });
   }
 
