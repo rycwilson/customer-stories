@@ -27,8 +27,11 @@ export function parseDatasetObject<Type>(element: HTMLElement, prop: string, ...
   return null;
 }
 
-export async function getJSON(dataPath: string, params: string) {
-  const request = new FetchRequest('get', `${dataPath}.json${params ? '?' + params : ''}`);
+export async function getJSON(dataPath: string, params?: URLSearchParams) {
+  const request = new FetchRequest(
+    'get', 
+    `${dataPath}.json${params ? `?${params.toString()}` : ''}`
+  );
   const response = await request.perform();
   if (response.ok) {
     return await response.json;

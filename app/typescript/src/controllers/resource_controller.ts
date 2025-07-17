@@ -35,13 +35,11 @@ export default class ResourceController extends Controller<HTMLElement> {
   
   static values = {
     dataPath: String,
-    searchParams: { type: String, default: '' },
     init: { type: Boolean, default: false },
     filters: { type: Object, default: {} },
     displayOptionsHtml: String
   }
   declare readonly dataPathValue: string;
-  declare readonly searchParamsValue: string;
   declare readonly initValue: boolean;
   declare filtersValue: FiltersValue;
   declare readonly displayOptionsHtmlValue: string;
@@ -80,8 +78,8 @@ export default class ResourceController extends Controller<HTMLElement> {
         initTable.call(this);
       } else {
         this.dispatch('loading');
-        // console.log('getting data:', this.dataPathValue, this.searchParamsValue || 'no params')
-        getJSON(this.dataPathValue, this.searchParamsValue).then(data => {
+        // console.log('getting data:', this.dataPathValue)
+        getJSON(this.dataPathValue).then(data => {
           if (this.resourceName === 'storyContributions') {
             CSP[this.resourceName][+(this.element.dataset.storyId as string)] = data;
           } else {
