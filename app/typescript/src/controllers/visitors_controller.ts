@@ -6,10 +6,12 @@ export default class VisitorsController extends ResourceController {
     if (!shouldInit) return;
     this.dispatch('loading');
     // console.log('getting visitors:', this.dataPathValue, this.searchParamsValue || 'no params')
-    const dataPromise = getJSON(this.dataPathValue, this.searchParamsValue);
+    const searchParams = new URLSearchParams({ 'time_zone': Intl.DateTimeFormat().resolvedOptions().timeZone });
+    const dataPromise = getJSON(this.dataPathValue, searchParams);
     const chartsPromise = this.getCharts();
-    const [data] = await Promise.all([dataPromise, chartsPromise]);
-    CSP.visitors = data;
+    const [visitors] = await Promise.all([dataPromise, chartsPromise]);
+    CSP.visitors = visitors;
+    // this.drawBarGraph(visitors.by_date);
     this.dispatch('ready', { detail: { resourceName: 'visitors' } });
   }
 
@@ -25,4 +27,16 @@ export default class VisitorsController extends ResourceController {
       document.head.appendChild(script);
     });
   }
+
+  // drawBarGraph(data: ) {
+  //   const data = new google.visualization.DataTable();
+  //   data.addColumn('date', 'Date');
+  //   data.addColumn('number', 'Visitors');
+  //   CSP.visitors.by_date.forEach((row: any) => {
+  //     data.addRow([new Date(row.date), row.visitors]);
+  //   });
+  //   const options = { title: 'Visitors by Date', legend: { position: 'none' }, height: 300 };
+  //   const chart = new google.visualization.ColumnChart(document.getElementById('visitors-bar-graph')!);
+  //   chart.draw(data, options);
+  // }
 }

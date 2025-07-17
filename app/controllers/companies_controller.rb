@@ -2,6 +2,7 @@
 
 class CompaniesController < ApplicationController
   before_action :set_company, except: %i[new create promote get_curators get_invitation_templates]
+  before_action(only: %i[visitors activity]) { Time.zone = params[:time_zone] || 'UTC' }
 
   def new
     @company = Company.new

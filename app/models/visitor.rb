@@ -16,13 +16,12 @@ class Visitor < ApplicationRecord
 
   scope :to_company_by_date, lambda { |company_id, **options|
     story_id = options[:story_id]
-    start_date = options[:start_date]&.to_date || 30.days.ago.to_date
-    # start_date = options[:start_date]&.to_date || 90.months.ago.to_date
-    end_date = options[:end_date]&.to_date || Date.today
-    # end_date = options[:end_date]&.to_date || 80.months.ago.to_date
-    days_between = (end_date - start_date).to_i
+    # start_date = options[:start_date]&.to_date || 30.days.ago.to_date
+    start_date = options[:start_date]&.to_date || 90.months.ago.to_date
+    # end_date = options[:end_date]&.to_date || Date.today
+    end_date = options[:end_date]&.to_date || 80.months.ago.to_date
     group_by, group_range =
-      case days_between
+      case (end_date - start_date).to_i
       when 0...21
         ['day', start_date.beginning_of_day..end_date.end_of_day]
       when 21...120
@@ -30,16 +29,29 @@ class Visitor < ApplicationRecord
       else
         ['month', start_date.beginning_of_month.beginning_of_day...end_date.end_of_month.end_of_day]
       end
-    date_trunc = "DATE_TRUNC('#{group_by}', visitor_sessions.timestamp)"
+
+    # Group based on the user's time zone
+    date_trunc = [
+      'DATE_TRUNC(',
+        "'#{group_by}', ", # rubocop:disable Layout/ArrayAlignment
+        "visitor_sessions.timestamp AT TIME ZONE 'UTC' AT TIME ZONE '#{Time.zone.tzinfo.name}'", # rubocop:disable Layout/ArrayAlignment
+      ')'
+    ].join('')
+
+    # Format the date as a string so that it is not interpreted by ActiveRecord as UTC
+    # (as it will be if `date_trunc` is used directly in GROUP BY)
+    formatted_date = "TO_CHAR(#{date_trunc}, 'YYYY-MM-DD')"
+
+    # Convert to UTC since VisitorSession timestamps are stored in UTC
     where_conditions = {
-      visitor_sessions: { timestamp: group_range },
-      visitor_actions: { company_id: }
+      visitor_sessions: { timestamp: (group_range.first.utc..group_range.last.utc) },
+      visitor_actions: { type: 'PageView', company_id: }
     }
     where_conditions[:stories] = { id: story_id } if story_id.present?
-    select("#{date_trunc} AS date, COUNT(DISTINCT visitors.id) AS visitors")
+    select("#{formatted_date} AS date, COUNT(DISTINCT visitors.id) AS visitors")
       .joins(visitor_sessions: { visitor_actions: { success: :story } })
       .where(where_conditions)
-      .group(date_trunc)
+      .group(formatted_date)
       .order('date ASC')
   }
 
