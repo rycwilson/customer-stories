@@ -11,8 +11,8 @@
   = render('shared/loading_spinner')
 
   .container-fluid
-    .sidebar
-      ul.nav data-controller="nav-list" role="tablist"
+    .sidebar--sans-text
+      ul.nav role="tablist"
         li class=('active' if active_tab == '#visitors')
           a {
             id="visitors-tab" 
@@ -20,12 +20,12 @@
             data-toggle="tab"
             data-nav-list-target="tab"
             data-action="dashboard#setNavCookie"
+            data-controller="tooltip"
+            data-tooltip-options-value=nav_link_tooltip_options('Visitors').to_json
             aria-controls="visitors"
             aria-expanded="#{active_tab == '#visitors' ? 'true' : 'false'}"
             role="tab" }
             i.fa.fa-fw.fa-bar-chart
-            |&nbsp;Visitors
-            
         li class=('active' if active_tab == '#activity')
           a {
             id="activity-tab" 
@@ -33,11 +33,13 @@
             data-toggle="tab"
             data-nav-list-target="tab"
             data-action="dashboard#setNavCookie"
+            data-controller="tooltip"
+            data-tooltip-options-value=nav_link_tooltip_options('Recent Activity').to_json
             aria-controls="activity"
             aria-expanded="#{active_tab == '#activity' ? 'true' : 'false'}"
             role="tab" }
             i.fa.fa-fw.fa-line-chart
-            |&nbsp;Recent Activity
+            
 
     .layout-main
       .tab-content
@@ -57,7 +59,7 @@
           aria-labelledby="visitors-tab"
           role="tabpanel" }
 
-          = render('companies/measure/visitors')
+          = render('companies/measure/visitors', company:)
 
         / data-controller="resource"
         / data-resource-dashboard-outlet=".dashboard"

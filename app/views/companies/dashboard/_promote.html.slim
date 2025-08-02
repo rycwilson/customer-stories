@@ -10,10 +10,26 @@
     .sidebar--sans-text
       ul.nav data-controller="nav-list"
         li class=('active' if active_tab == '#promoted-stories')
-          a href="#promoted-stories" data-toggle="tab" data-action="dashboard#setNavCookie" data-nav-list-target="tab"
+          a {
+            href="#promoted-stories"
+            data-toggle="tab"
+            data-action="dashboard#setNavCookie"
+            data-controller="tooltip"
+            data-tooltip-options-value=nav_link_tooltip_options('Promoted Stories').to_json
+            aria-controls="promoted-stories"
+            aria-expanded="#{active_tab == '#promoted-stories' ? 'true' : 'false'}"
+            role="tab" }
             i.fa.fa-fw.fa-bullhorn
         li class=('active' if active_tab == '#promote-settings')
-          a href="#promote-settings" data-toggle="tab" data-action="dashboard#setNavCookie" data-nav-list-target="tab"
+          a {
+            href="#promote-settings"
+            data-toggle="tab"
+            data-action="dashboard#setNavCookie"
+            data-controller="tooltip"
+            data-tooltip-options-value=nav_link_tooltip_options('Promoted Stories Settings').to_json
+            aria-controls="promote-settings"
+            aria-expanded="#{active_tab == '#promote-settings' ? 'true' : 'false'}"
+            role="tab" }
             i.fa.fa-fw.fa-gear
       /- if current_user.admin?
         .admin-sidebar

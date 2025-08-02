@@ -21,11 +21,12 @@
             data-dashboard-target="customerWinsTab"
             data-nav-list-target="tab"
             data-action="dashboard#setNavCookie"
+            data-controller="tooltip"
+            data-tooltip-options-value=nav_link_tooltip_options('Customer Wins').to_json
             aria-controls="customer-wins"
             aria-expanded="#{active_tab == '#customer-wins' ? 'true' : 'false'}"
             role="tab" }
             i.fa.fa-fw.fa-rocket
-            /|&nbsp;Customer Wins
             
         li class=('active' if active_tab == '#contributions')
           a {
@@ -35,11 +36,12 @@
             data-dashboard-target="contributionsTab"
             data-nav-list-target="tab"
             data-action="dashboard#setNavCookie"
+            data-controller="tooltip"
+            data-tooltip-options-value=nav_link_tooltip_options('Contributors').to_json
             aria-controls="contributions"
-            aria-expanded="#{active_tab == '#{contributions}' ? 'true' : 'false'}"
+            aria-expanded="#{active_tab == '#contributions' ? 'true' : 'false'}"
             role="tab" }
             i.fa.fa-fw.fa-users
-            /|&nbsp;Contributors
 
     .layout-main
       .tab-content
