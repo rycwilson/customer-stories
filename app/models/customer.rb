@@ -28,7 +28,6 @@ class Customer < ApplicationRecord
     end
   end
 
-
   def should_generate_new_friendly_id?
     new_record? || name_changed? || slug.blank?
   end
