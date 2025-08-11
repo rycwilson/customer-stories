@@ -1,5 +1,5 @@
 import type SummernoteController from './controllers/summernote_controller';
-import { type CustomSummernoteOptions, baseConfig, onInit as baseInit } from './summernote';
+import { type CustomSummernoteOptions, type SummernoteComponents, baseConfig, baseCallbacks } from './summernote';
 
 export function summernoteConfig (
   ctrl: SummernoteController, 
@@ -25,9 +25,12 @@ export function summernoteConfig (
     ] as Summernote.toolbarDef,
     buttons: { placeholdersDropdown: placeholdersDropdown.bind(null, curatorPhotoUrl, curatorPhotoPlaceholderUrl) },
     callbacks: {
-      onInit: baseInit(ctrl, () => {
-        // custom inititialization
-      })
+      ...baseCallbacks,
+      ...{ 
+        onInit: function(this: JQuery<HTMLElement, any>, context: SummernoteComponents) {
+          baseCallbacks.onInit.call(this, context, ctrl);
+        }
+      }
     }
   }
   return { ...baseConfig, ...config };

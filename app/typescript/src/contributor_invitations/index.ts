@@ -1,7 +1,7 @@
 import type SummernoteController from '../controllers/summernote_controller';
-import { baseConfig, onInit as baseInit } from '../summernote';
+import { type SummernoteComponents, baseConfig, baseCallbacks } from '../summernote';
 
-export function summernoteConfig (ctrl: SummernoteController, height: number): Summernote.Options {
+export function summernoteConfig(ctrl: SummernoteController, height: number): Summernote.Options {
   const config: Summernote.Options = {
     height,
     toolbar: [
@@ -18,8 +18,12 @@ export function summernoteConfig (ctrl: SummernoteController, height: number): S
       // ['help', ['help']]
     ],
     callbacks: {
-      onInit: baseInit(ctrl, () => {
-      })
+      ...baseCallbacks,
+      ...{
+        onInit: function (this: JQuery<HTMLElement, any>, context: SummernoteComponents) {
+          baseCallbacks.onInit.call(this, context, ctrl);
+        }
+      }
     }
   }
   return { ...baseConfig, ...config };

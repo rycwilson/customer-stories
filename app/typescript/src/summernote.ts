@@ -57,15 +57,33 @@ export const baseConfig = {
   // inheritPlaceholder: true (for textarea)
 }
 
-export function onInit(ctrl: SummernoteController, customInit?: VoidFunction) {
-  return (components: SummernoteComponents) => {
-    console.log(components)
-    for (const [key, component] of Object.entries(components)) {
+export const baseCallbacks = {
+  onInit: function (this: JQuery<HTMLElement, any>, context: SummernoteComponents, ctrl: SummernoteController) {
+    for (const [key, component] of Object.entries(context)) {
       ctrl[`$${key}` as keyof $SummernoteComponents] = component;
     }
-    ctrl.$editable.on('click', (e) => $(ctrl.$note).summernote('saveRange'));
-    
-    ctrl.dispatch('init', { detail: components });
-    if (customInit) customInit(); 
-  }
-}
+    // ctrl.$editable.on('click', (e) => $(ctrl.$note).summernote('saveRange'));
+    ctrl.dispatch('init', { detail: context });
+
+    // console.log('this in base:', this);
+    // console.log('context in base:', context);
+    // console.log('ctrl in base:', ctrl);
+  },
+  // onEnter: function(this: JQuery<HTMLElement>, e: KeyboardEvent) {},
+  // onFocus: function(this: JQuery<HTMLElement>, e: FocusEvent) {},
+  // onBlur: function(this: JQuery<HTMLElement>, e: FocusEvent) {},
+  // onKeyup: function(this: JQuery<HTMLElement>, e: KeyboardEvent) {},
+  // onKeydown: function(this: JQuery<HTMLElement>, e: KeyboardEvent) {},
+  // onPaste: function(this: JQuery<HTMLElement>, e: ClipboardEvent) {},
+  onChange: function(this: JQuery<HTMLElement, any>, contents: string, $editable: JQuery<HTMLElement, any>) {},
+  onImageUpload: function(this: JQuery<HTMLElement, any>, files: File[]) {},
+  // onImageUploadError: function(this: JQuery<HTMLElement>, msg: string, jqXHR: JQuery.jqXHR) {},
+  // onMediaDelete: function(this: JQuery<HTMLElement>, target: JQuery<HTMLElement>) {},
+  // onDialogShown: function(this: JQuery<HTMLElement>, dialog: HTMLElement) {},
+  // onDialogHidden: function(this: JQuery<HTMLElement>, dialog: HTMLElement) {},
+  // onInitCodeview: function(this: JQuery<HTMLElement>) {},
+  // onChangeCodeview: function(this: JQuery<HTMLElement>) {},
+  // onPopoverShown: function(this: JQuery<HTMLElement>, popover: HTMLElement) {},
+  // onPopoverHidden: function(this: JQuery<HTMLElement>, popover: HTMLElement) {},
+  // onToolbarClick: function(this: JQuery<HTMLElement>, event: JQuery.Event) {},
+};

@@ -1,6 +1,6 @@
 import { distinctObjects } from '../utils';
 import type SummernoteController from '../controllers/summernote_controller';
-import { type CustomSummernoteOptions, baseConfig, onInit as baseInit } from '../summernote';
+import { type CustomSummernoteOptions, SummernoteComponents, baseConfig, baseCallbacks } from '../summernote';
 
 // use a skeleton version of the child row template as a placeholder while loading
 // see views/successes/win_story_form
@@ -64,26 +64,21 @@ export function summernoteConfig(
       placeholdersDropdown: initDropdown.bind(null, 'placeholders', contributions, answers)
     },
     callbacks: {
-      // without this, insertion of a new line doesn't trigger input; critical for inserting placeholders
-      onInit: baseInit(ctrl, () => {
-        // console.log('win story editor init', ctrl.$note, ctrl.$codable, ctrl.$editable, ctrl.$editingArea, ctrl.$editor, ctrl.$statusbar, ctrl.$toolbar)
-        // const setMaxDropdownHeight = () => {
-        //   const dropdownMenus = toolbar.querySelectorAll('.dropdown-menu.summernote-custom');
-        //   for (ul of dropdownMenus) ul.style.maxHeight = `${0.95 * editable.clientHeight}px`;
+      ...baseCallbacks,
+      ...{ 
+        onInit: function(this: JQuery<HTMLElement, any>, context: SummernoteComponents) {
+          baseCallbacks.onInit.call(this, context, ctrl);
+          depopulatePlaceholders(ctrl.$editable[0]);
+          const customButtonsEl = ctrl.$toolbar[0].querySelector<HTMLElement>('.note-customButton');
+          if (customButtonsEl) initCustomToolbar(customButtonsEl, contributions.length);
+        },
+
+        // without this, insertion of a new line doesn't trigger input; critical for inserting placeholders
+        // onEnter: function (e: Event) {
+          // $(this).summernote('pasteHTML', '<br></br>');
+          // e.preventDefault();
         // }
-        // setMaxDropdownHeight();
-        // observeEditor(note, editable, setMaxDropdownHeight);
-        depopulatePlaceholders(ctrl.$editable[0]);
-        const customButtonsEl = ctrl.$toolbar[0].querySelector<HTMLElement>('.note-customButton');
-        if (customButtonsEl) initCustomToolbar(customButtonsEl, contributions.length);
-      }),
-      onEnter: function (e: Event) {
-        // $(this).summernote('pasteHTML', '<br></br>');
-        // e.preventDefault();
-      },
-      onFocus: function (e: Event) {},
-      onPaste: function () {},
-      onChange: function (contents: string) {}
+      }
     }
   }
   return { ...baseConfig, ...config };
