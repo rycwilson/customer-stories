@@ -1,7 +1,7 @@
 - template ||= nil
 - is_default = template&.name.in? ['Customer', 'Customer Success', 'Sales']
 
-/ a dynamic select element will ensure focus is not retained when element is replaced 
+/ a dynamic select element id will ensure focus is not retained when element is replaced 
 / (initializing tomselect when focused will result in an auto-opened dropdown)
 - template_select_id = "template-select-#{DateTime.now.to_i}"
 
@@ -14,6 +14,7 @@
   .col-sm-12.col-lg-9
     .invitation-template__toolbar
       
+      / Do not include the clear button plugin initially, else it will flicker when loading
       = select_tag( \
           nil,
           invitation_template_select_options(company, template),
@@ -26,7 +27,7 @@
               tomselect_kind_value: 'invitationTemplate',
               tomselect_custom_options_value: template&.persisted? ? {} : { plugins: {} },
               invitation_template_target: 'templateSelect',
-              action: 'company-settings#onChangeInvitationTemplate' }})
+              action: 'invitation-template#onChangeTemplate' }})
 
       - if template.present?
         .btn-group data-invitation-template-target="btnGroup"
@@ -38,12 +39,15 @@
               data-tooltip-options-value={ title: 'Restore to factory default' }.to_json }
               i.fa.fa-fw.fa-rotate-left
           - if template&.persisted?
-            button.invitation-template__copy.btn.btn-default {
-              type="button"
-              data-action="company-settings#copyInvitationTemplate"
-              data-controller="tooltip"
-              data-tooltip-options-value={ title: 'Duplicate' }.to_json }
-              i.fa.fa-fw.fa-copy
+            = link_to( \
+                new_company_invitation_template_path(company) + "?source_template_id=#{template.id}",
+                class: 'btn btn-default', 
+                aria: { label: 'Duplicate Template' },
+                data: { \
+                  turbo_stream: true,
+                  controller: 'tooltip',
+                  tooltip_options_value: { title: 'Duplicate' }.to_json }) do
+                i.fa.fa-fw.fa-copy
           - unless is_default
             button.invitation-template__delete.btn.btn-default {
               type="button" 
@@ -51,8 +55,6 @@
               data-controller="tooltip"
               data-tooltip-options-value={ title: template.persisted? ? 'Delete' : 'Discard' }.to_json }
               i.fa.fa-fw.fa-remove
-
-      - if template.present?
         button.btn.btn-success type="submit" data-invitation-template-target="submitBtn"
           = template.new_record? ? 'Create' : 'Save changes'
 

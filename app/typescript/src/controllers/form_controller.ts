@@ -91,10 +91,18 @@ export default class FormController<Ctrl extends SubclassController> extends Con
     }
   }
 
+  // onInput(e: InputEvent) {
+  //   console.log(e)
+  //   console.log(this.isDirty)
+  // }
+
   connect() {
+    // For invitation templates the controller is temporarily attached to a non-form element
+    if (this.element.tagName !== 'FORM') return;
+    
     this.initialState = serializeForm(this.element);
 
-    // validator will only run for file inputs (app/typescript/src/bootstrap.ts)
+    // validator will only run for file inputs (see app/typescript/src/bootstrap.ts)
     $(this.element).validator({
       focus: false,
       disable: false,

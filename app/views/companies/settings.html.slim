@@ -76,7 +76,7 @@ main.container-fluid.hidden-xs {
       - unless action_name == 'new'
           
         #contributor-invitations-panel.tab-pane role="tabpanel"
-          #invitation-template-form.form-horizontal
+          #invitation-template-form.form-horizontal data-controller="invitation-template"
             = render('invitation_templates/template_toolbar', company: @company)
 
         #contributor-prompts-panel.tab-pane role="tabpanel"
