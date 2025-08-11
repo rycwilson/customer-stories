@@ -10,7 +10,7 @@ body {
   .dashboard > .tab-content > .tab-pane,
   #story {
     > .container-fluid {
-      padding: 0 2.75rem;
+      padding: 0 2.5rem;
       max-width: 1200px;
     }
   }
@@ -28,10 +28,16 @@ body {
   } 
 }
 
+// .tooltip {
+  // .tooltip-inner {
+  //   max-width: none;
+  // }
+// }
+
 .sidebar {
   position: sticky;
   top: 8rem;
-  flex: 0 0 24rem;
+  flex: 0 0 24.5rem;
   margin-right: 1.25rem;
 
   .nav {
@@ -105,16 +111,6 @@ body {
 
 .form-horizontal {
   padding-top: 2rem;
-}
-
-.admin-sidebar {
-  background-color: $blueish-gray-lighter;
-  padding: 15px;
-  margin-top: 30px;
-
-  h4 {
-    margin-top: 0;
-  }
 }
 
 #gads-form,
