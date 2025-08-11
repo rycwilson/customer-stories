@@ -105,7 +105,7 @@ form {
     margin-bottom: 1.25rem;
   }
   
-  &.form-horizontal [type="submit"]:not(.btn-sm) {
+  &.form-horizontal:not(#invitation-template-form) [type="submit"]:not(.btn-sm) {
     margin-top: 0.75rem;
   }
 }

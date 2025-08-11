@@ -1,11 +1,21 @@
 #contributor-invitations-panel .form-horizontal {
+  > .form-group:has(.invitation-template__toolbar) {
+    margin-bottom: 1.25rem;
+  }
+
   @media (min-width: 768px) and (max-width: 1199px) {
     max-width: 60rem;
   }
 
   @media (min-width: 1200px) {
-    left: -4%;
+    left: -5%;
     max-width: 80rem;
+  }
+}
+
+#invitation-template-form {
+  hr {
+    margin: 1.5rem;
   }
 }
 
@@ -17,7 +27,18 @@
     flex-grow: 1;
   }
 
-  > :last-child {
+  .btn-group {
+    margin-left: 1rem;
+
+    // specificity needed to override bootstrap
+    > .btn:not(:first-child):not(:last-child):not(.dropdown-toggle):has(+ .hidden) {
+      border-top-right-radius: $border-radius-base;
+      border-bottom-right-radius: $border-radius-base;
+    }
+  }
+
+  [data-invitation-template-target="newTemplateBtn"],
+  [data-invitation-template-target="submitBtn"] {
     margin-left: 1rem;
   }
 }
