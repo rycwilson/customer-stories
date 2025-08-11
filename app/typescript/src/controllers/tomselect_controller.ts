@@ -10,13 +10,15 @@ export default class TomselectController extends Controller<TomSelectInput> {
     source: String,
     customOptions: { type: Object, default: {} },
     preventFocus: { type: Boolean, default: false },
-    sortable: { type: Boolean, default: false }
+    sortable: { type: Boolean, default: false },
+    reset: { type: Boolean, default: false }
   };
   declare readonly kindValue: SelectInputKind | undefined;
   declare readonly sourceValue: string | undefined;
   declare readonly customOptionsValue: { [key: string]: any };
   declare readonly preventFocusValue: boolean;
   declare readonly sortableValue: boolean;
+  declare readonly resetValue: boolean;
 
   declare ts: TomSelect;
   declare currentSearchResults: any[];
@@ -27,8 +29,7 @@ export default class TomselectController extends Controller<TomSelectInput> {
       // console.log('ts already initialized ', this.element.closest('tr').id)
       return;    
     }
-    this.ts = new TomSelect(this.element, {...tsBaseOptions, ...this.options, ...this.customOptionsValue });
-    if (this.preventFocusValue) this.ts.control_input.setAttribute('tabindex', '-1');
+    this.init();
   }
 
   isFilter() { return this.kindValue === 'filter'; }
@@ -39,6 +40,17 @@ export default class TomselectController extends Controller<TomSelectInput> {
 
   get kebabKind() { 
     return !this.kindValue ? '' : kebabize(this.kindValue as string); 
+  }
+
+  init() {
+    this.ts = new TomSelect(this.element, {...tsBaseOptions, ...this.options, ...this.customOptionsValue });
+  }
+
+  resetValueChanged(shouldReset: boolean) {
+    if (shouldReset) {
+      this.ts.destroy();
+      this.init();
+    }
   }
 
   dispatchSearchResults() {
@@ -93,11 +105,28 @@ export default class TomselectController extends Controller<TomSelectInput> {
         if (ctrl.isMultiSelect || ctrl.isTagsInput) {
           _plugins['remove_button'] = { title: 'Clear selection' }
         } else {
+          const tooltipOptions = {
+            title: ctrl.kindValue == 'invitationTemplate' ? 
+              'Discard changes and close' : 
+              'Clear selection',
+            template: `
+              <div class="tooltip ${ctrl.kebabKind}" role="tooltip">
+                <div class="tooltip-arrow"></div>
+                <div class="tooltip-inner"></div>
+              </div>
+            `
+          };
           _plugins['clear_button'] = {
             title: 'Clear selection',
-            html: (config: CBOptions) => (
-              `<button type="button" class="btn ${config.className}" title="${config.title}">&times;</button>`
-            ) 
+            html: (config: CBOptions) => `
+              <button 
+                type="button"
+                class="btn ${config.className}"
+                data-controller="tooltip"
+                data-tooltip-options-value='${ JSON.stringify(tooltipOptions) }'>
+                &times;
+              </button>
+            `
           }
         }
         if (ctrl.sortableValue) _plugins['drag_drop'] = {};        
@@ -115,22 +144,29 @@ export default class TomselectController extends Controller<TomSelectInput> {
         if (ctrl.isMultiSelect || ctrl.isTagsInput) addDynamicPlaceholder(this);
         // if (ctrl.sortableValue) $(this.control).sortable();
 
-        // prevent the user from closing a template without confirmation
+        if (this.preventFocusValue) this.ts.control_input.setAttribute('tabindex', '-1');
+
         if (ctrl.kindValue === 'invitationTemplate') {
-          const originalDeleteSelection = this.deleteSelection;
-          this.deleteSelection = (e) => {
-            if (window.confirm('Close this template? Unsaved changes will be lost.')) {
-              originalDeleteSelection.call(this, e);
-              return true;
-            } else {
-              return false;
-            }
-          }
+          this.control_input.setAttribute('readonly', 'true');
+          // prevent the user from closing a template without confirmation
+          // const originalDeleteSelection = this.deleteSelection;
+          // this.deleteSelection = (e) => {
+          //   if (window.confirm('Close this template? Unsaved changes will be lost.')) {
+          //     originalDeleteSelection.call(this, e);
+          //     return true;
+          //   } else {
+          //     return false;
+          //   }
+          // }
         }
       },
       
       onChange(newVal: string | number) {
         ctrl.dispatch(`change-${ctrl.kebabKind || 'unknown'}`, { detail: { kind: ctrl.kindValue, id: newVal } });
+      },
+
+      onClear() {
+        ctrl.dispatch(`clear-${ctrl.kebabKind}`);
       },
       
       onType(this: TomSelect, userInput: string) { 
