@@ -17,30 +17,20 @@ export default class InvitationTemplateController extends FormController<Invitat
   }
 
   connect() {
+    if (this.element.tagName !== 'FORM') return;  // initial view
     super.connect();
-    if (this.element.tagName !== 'FORM') return;
     if (this.isNewTemplate) this.nameFieldTarget.focus();
   }
 
   // disconnect() {
   // }
 
-  onChangeTemplate({ target: select }: { target: TomSelectInput }) {
+  async onChangeTemplate({ target: select }: { target: TomSelectInput }) {
     if (!select.value) return;
-    const path = select.options[select.selectedIndex].dataset.path;
-    if (!path) {
-      console.error('No path found for the selected template');
-      return;
-    }
-    this.getTemplate(path)
-  }
-  
-  async getTemplate(path: string) {
-    const request = new FetchRequest('get', path, { 
+    const request = new FetchRequest('get', select.options[select.selectedIndex].dataset.path, { 
       headers: { Accept: 'text/vnd.turbo-stream.html' } 
     });
-    await request.perform();
-    // const response = await request.perform();
+    const response = await request.perform();
     // if (response.ok) {}
   }
 
@@ -74,10 +64,17 @@ export default class InvitationTemplateController extends FormController<Invitat
     this.newTemplateBtnTarget.classList.remove('hidden');
   }
 
-  onInitTemplateBody({ detail: { components } }: { detail: { components: SummernoteComponents } }) {
-    console.log('invitation template body initialized', components);
-    // 1 - update the hidden field
-    // 2 - set initial state
+  // Set initial state here instead of in connect(), since the initial view is not a form element
+  onInitTemplateBody({ detail: components }: { detail: SummernoteComponents }) {
     this.initialState = serializeForm(this.element);
   } 
+
+  updateState(e: InputEvent | CustomEvent) {
+    // Summernote will emit both 'input' and 'change' events; ignore the former.
+    // The change event is needed because 'input' event is not always emitted, e.g. adding a newline
+    if (e.type === 'input' && (e.target as HTMLElement).tagName !== 'INPUT') return;
+
+    // Allow summernote to update the textarea before inspecting the form data
+    setTimeout(super.updateState.bind(this, e));
+  }
 }

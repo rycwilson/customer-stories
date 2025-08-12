@@ -97,9 +97,6 @@ export default class FormController<Ctrl extends SubclassController> extends Con
   // }
 
   connect() {
-    // For invitation templates the controller is temporarily attached to a non-form element
-    if (this.element.tagName !== 'FORM') return;
-    
     this.initialState = serializeForm(this.element);
 
     // validator will only run for file inputs (see app/typescript/src/bootstrap.ts)
@@ -124,12 +121,21 @@ export default class FormController<Ctrl extends SubclassController> extends Con
     return validateForm(e);
   }
 
+  updateState(e: Event) {
+    const isDirty = serializeForm(this.element) !== this.initialState;
+    // this.element.classList.toggle('is-dirty', isDirty);
+    if (this.submitBtn) {
+      this.submitBtn.classList.toggle('disabled', !isDirty);
+      this.submitBtn.disabled = !isDirty;
+    }
+  }
+
   // onAjaxComplete(this: Ctrl, { detail: [xhr, status] }: { detail: [xhr: XMLHttpRequest, status: string] }) {
     // console.log('superclass', xhr, status)
   // }
 
   updateValidator(this: Ctrl, { type: eventType, detail: { fileInput } }: { type: string, detail: { fileInput: HTMLInputElement } }) {
-    console.log('updating validator', eventType)
+    // console.log('updating validator', eventType)
     fileInput.setAttribute('data-validate', eventType === 'image-card:ready-to-validate' ? 'true' : 'false');
     $(this.element).validator('update');
     if (eventType === 'image-card:ready-to-validate') {
@@ -138,7 +144,6 @@ export default class FormController<Ctrl extends SubclassController> extends Con
   }
 
   animateSubmitBtn(e: SubmitEvent) {
-    // console.log('animate')
     const submitBtn = this.submitBtn;
     if (!submitBtn?.dataset.content || !submitBtn?.dataset.disableWithHtml) return;
     submitBtn.innerHTML = 
