@@ -166,7 +166,7 @@ export default class TomselectController extends Controller<TomSelectInput> {
       },
 
       onClear() {
-        ctrl.dispatch(`clear-${ctrl.kebabKind}`);
+        ctrl.dispatch('clear');
       },
       
       onType(this: TomSelect, userInput: string) { 
