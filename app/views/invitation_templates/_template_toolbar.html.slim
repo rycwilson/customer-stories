@@ -1,5 +1,5 @@
 - template ||= nil
-- is_default = template&.name.in? ['Customer', 'Customer Success', 'Sales']
+- is_default = company.invitation_templates.default.include?(template)
 
 / a dynamic select element id will ensure focus is not retained when element is replaced 
 / (initializing tomselect when focused will result in an auto-opened dropdown)
@@ -9,7 +9,7 @@
   .visible-sm-block.visible-md-block.col-sm-12
     label for=template_select_id
       | Email Template
-  .col-lg-3.control-label.visible-lg-inline-block for=template_select_id
+  label.control-label.col-lg-3.visible-lg-inline-block for=template_select_id
     | Email Template
   .col-sm-12.col-lg-9
     .invitation-template__toolbar
@@ -55,7 +55,7 @@
               data-controller="tooltip"
               data-tooltip-options-value={ title: template.persisted? ? 'Delete' : 'Discard' }.to_json }
               i.fa.fa-fw.fa-remove
-        button.btn.btn-success type="submit" data-invitation-template-target="submitBtn"
+        button.btn.btn-success.disabled type="submit" data-invitation-template-target="submitBtn"
           = template.new_record? ? 'Create' : 'Save changes'
 
       = link_to( \
