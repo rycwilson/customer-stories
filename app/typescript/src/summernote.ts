@@ -58,7 +58,11 @@ export const baseConfig = {
 }
 
 export const baseCallbacks = {
-  onInit: function (this: JQuery<HTMLElement, any>, context: SummernoteComponents, ctrl: SummernoteController) {
+  onInit: function (
+    this: JQuery<HTMLElement, any>,
+    context: SummernoteComponents,
+    ctrl: SummernoteController
+  ) {
     for (const [key, component] of Object.entries(context)) {
       ctrl[`$${key}` as keyof $SummernoteComponents] = component;
     }
@@ -75,7 +79,14 @@ export const baseCallbacks = {
   // onKeyup: function(this: JQuery<HTMLElement>, e: KeyboardEvent) {},
   // onKeydown: function(this: JQuery<HTMLElement>, e: KeyboardEvent) {},
   // onPaste: function(this: JQuery<HTMLElement>, e: ClipboardEvent) {},
-  onChange: function(this: JQuery<HTMLElement, any>, contents: string, $editable: JQuery<HTMLElement, any>) {},
+  onChange: function (
+    this: JQuery<HTMLElement, any>,
+    contents: string,
+    $editable: JQuery<HTMLElement, any>,
+    ctrl: SummernoteController
+  ) {
+    ctrl.dispatch('change', { detail: { contents } });
+  },
   onImageUpload: function(this: JQuery<HTMLElement, any>, files: File[]) {},
   // onImageUploadError: function(this: JQuery<HTMLElement>, msg: string, jqXHR: JQuery.jqXHR) {},
   // onMediaDelete: function(this: JQuery<HTMLElement>, target: JQuery<HTMLElement>) {},

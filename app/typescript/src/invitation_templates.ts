@@ -27,8 +27,15 @@ export function summernoteConfig (
     callbacks: {
       ...baseCallbacks,
       ...{ 
-        onInit: function(this: JQuery<HTMLElement, any>, context: SummernoteComponents) {
+        onInit: function (this: JQuery<HTMLElement, any>, context: SummernoteComponents) {
           baseCallbacks.onInit.call(this, context, ctrl);
+        },
+        onChange: function (
+          this: JQuery<HTMLElement, any>,
+          contents: string,
+          $editable: JQuery<HTMLElement, any>,
+        ) {
+          baseCallbacks.onChange.call(this, contents, $editable, ctrl);
         }
       }
     }
