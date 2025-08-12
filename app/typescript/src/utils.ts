@@ -116,6 +116,7 @@ export function validateForm(e: SubmitEvent): boolean {
 
 export function serializeForm(form: HTMLFormElement) {
   const formData = new FormData(form);
+  // console.log('form data:', Array.from(formData.entries()));
   return Array
     .from(formData.entries())
     .map(([field, value]) => encodeURIComponent(field) + '=' + encodeURIComponent(value as string | number | boolean))
