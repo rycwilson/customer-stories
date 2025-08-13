@@ -273,7 +273,7 @@
     content: attr(data-content);
   }
 
-  &[disabled]::before {
+  &.submitting::before {
     visibility: hidden;
   }
 

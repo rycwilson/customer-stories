@@ -121,7 +121,7 @@ export default class FormController<Ctrl extends SubclassController> extends Con
     return validateForm(e);
   }
 
-  updateState(e: Event) {
+  updateState(e?: Event) {
     const isDirty = serializeForm(this.element) !== this.initialState;
     // this.element.classList.toggle('is-dirty', isDirty);
     if (this.submitBtn) {
@@ -146,6 +146,7 @@ export default class FormController<Ctrl extends SubclassController> extends Con
   animateSubmitBtn(e: SubmitEvent) {
     const submitBtn = this.submitBtn;
     if (!submitBtn?.dataset.content || !submitBtn?.dataset.disableWithHtml) return;
+    submitBtn.classList.add('submitting');
     submitBtn.innerHTML = 
       submitBtn.dataset.disableWithHtml.replace('[content]', submitBtn.dataset.content);  
     setTimeout(() => submitBtn.classList.add('btn--working'), 1000);
