@@ -29,6 +29,7 @@ class CtasController < ApplicationController
     @cta = CallToAction.find params[:id]
     if primary_replacement? @company
       update_company(@company)
+      flash.now[:notice] = 'Primary CTA was changed'
     else
       @cta.update cta_params
       @company.reload if cta_params[:company_attributes].present? # if primary cta colors changed
