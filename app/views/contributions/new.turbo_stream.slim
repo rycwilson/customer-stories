@@ -6,6 +6,7 @@
       data: { \
         controller: 'new-contribution',
         action: [ \
+          'input->new-contribution#updateState',
           'submit->new-contribution#validate',
           'turbo:submit-start->new-contribution#animateSubmitBtn'].join(' ') },
       html: { \
@@ -155,6 +156,7 @@
     = button_tag( \
         '',
         type: 'submit',
-        class: 'btn btn-success',
+        class: 'btn btn-success disabled',
         form: 'new-contribution-form',
+        disabled: true,
         data: { content: 'Add Contributor', disable_with_html: disabled_submit_button_html })

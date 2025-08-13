@@ -23,6 +23,7 @@ export default class CompanyTagsController extends FormController<CompanyTagsCon
         </div>
       `);
     }
+    this.updateState();
   }
 
   onRemoveTag({ detail: { tagName, source, cancel } }: { detail: { tagName: string, source: string, cancel: boolean } }) {
@@ -33,6 +34,7 @@ export default class CompanyTagsController extends FormController<CompanyTagsCon
     if (_destroyInput instanceof HTMLInputElement) {
       _destroyInput.checked = !cancel;
     }
+    this.updateState();
   }
 
   // TODO confirm

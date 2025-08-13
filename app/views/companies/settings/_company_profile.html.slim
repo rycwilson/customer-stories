@@ -7,9 +7,11 @@
       controller: 'company-profile',
       asset_host: Rails.application.config.asset_host,
       action: [ \
+        'input->company-profile#updateState',
+        'change->company-profile#updateState',
         'image-card:ready-to-validate->company-profile#updateValidator',
-        'image-card:upload-ready->company-profile#onUploadReady',
         'image-card:validated->company-profile#updateValidator',
+        'image-card:upload-ready->company-profile#onUploadReady',
         'submit->company-profile#validate',
         'turbo:submit-start->company-profile#animateSubmitBtn'].join(' ') },
     html: { \
@@ -132,8 +134,9 @@
       = button_tag( \
           '',
           type: 'submit',
-          class: 'btn btn-success',
+          class: 'btn btn-success disabled',
           form: 'company-profile-form',
+          disabled: true,
           data: { \
             content: 'Save changes',
             company_profile_target: 'submitBtn',

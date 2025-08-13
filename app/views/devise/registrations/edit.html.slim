@@ -13,6 +13,8 @@ main.user-profile.container-fluid.hidden-xs
         action: [ \
           'image-card:ready-to-validate->user-profile#updateValidator',
           'image-card:validated->user-profile#updateValidator',
+          'image-card:upload-ready->user-profile#updateState',
+          'input->user-profile#updateState',
           'submit->user-profile#validate',
           'turbo:submit-start->user-profile#animateSubmitBtn'].join(' ') },
       html: { \
@@ -144,8 +146,9 @@ main.user-profile.container-fluid.hidden-xs
             = button_tag( \
                 '',
                 type: 'submit',
-                class: 'btn btn-success',
+                class: 'btn btn-success disabled',
                 form: 'user-profile-form',
+                disabled: true,
                 data: { \
                   content: 'Save changes',
                   user_profile_target: 'submitBtn',

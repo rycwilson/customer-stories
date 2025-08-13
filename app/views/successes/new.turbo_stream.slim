@@ -6,6 +6,7 @@
       data: { \
         controller: 'new-customer-win',
         action: [ \
+          'input->new-customer-win#updateState',
           'submit->new-customer-win#validate',
           'turbo:submit-start->new-customer-win#animateSubmitBtn'].join(' ') },
       html: { \
@@ -152,8 +153,9 @@
     = button_tag( \
         '',
         type: 'submit',
-        class: 'btn btn-success',
+        class: 'btn btn-success disabled',
         form: 'new-customer-win-form',
+        disabled: true,
         data: { content: 'Create Customer Win', disable_with_html: disabled_submit_button_html })
 
   /div style="display:flex; align-items:center"

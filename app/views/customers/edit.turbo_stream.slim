@@ -6,7 +6,9 @@
         controller: 'form',
         asset_host: Rails.application.config.asset_host,
         action: [ \
+          'input->form#updateState',
           'image-card:ready-to-validate->form#updateValidator',
+          'image-card:upload-ready->form#updateState',
           'submit->form#validate',
           'turbo:submit-start->form#animateSubmitBtn'].join(' ') },
       html: { \
@@ -37,6 +39,7 @@
     = button_tag( \
         '',
         type: 'submit',
-        class: 'btn btn-success',
+        class: 'btn btn-success disabled',
         form: 'customer-form',
+        disabled: true,
         data: { content: 'Save changes', disable_with_html: disabled_submit_button_html })
