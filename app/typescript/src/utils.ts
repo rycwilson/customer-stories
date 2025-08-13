@@ -116,11 +116,14 @@ export function validateForm(e: SubmitEvent): boolean {
 
 export function serializeForm(form: HTMLFormElement) {
   const formData = new FormData(form);
-  // console.log('form data:', Array.from(formData.entries()));
-  return Array
-    .from(formData.entries())
-    .map(([field, value]) => encodeURIComponent(field) + '=' + encodeURIComponent(value as string | number | boolean))
-    .join('&');
+
+  // Turbo / Rails UJS may refresh the authenticity token, leading to false comparisons, so exclude it
+  const params = new URLSearchParams(
+    [...formData.entries()]
+      .filter(([k, v]) => k !== 'authenticity_token')
+      .map(([k, v]) => [k, String(v)])
+  );
+  return params.toString();
 }
 
 export function debounce(callback: VoidFunction, wait: number, immediate = false) {
