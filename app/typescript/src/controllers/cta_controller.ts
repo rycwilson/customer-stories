@@ -25,6 +25,7 @@ export default class CtaController extends FormController<CtaController> {
   textColorInputHandler = debounce(this.onInputCustomButtonColor.bind(this), 200);
 
   connect() {
+    super.connect();
     this.customButtonBackgroundColorInputTarget.addEventListener('input', this.bgColorInputHandler);
     this.customButtonTextColorInputTarget.addEventListener('input', this.textColorInputHandler);
     setCustomButtonProps(this.customButtonDemoTarget);
