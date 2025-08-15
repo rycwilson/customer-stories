@@ -91,11 +91,6 @@ export default class FormController<Ctrl extends SubclassController> extends Con
     }
   }
 
-  // onInput(e: InputEvent) {
-  //   console.log(e)
-  //   console.log(this.isDirty)
-  // }
-
   connect() {
     this.initialState = serializeForm(this.element);
 
@@ -122,11 +117,10 @@ export default class FormController<Ctrl extends SubclassController> extends Con
   }
 
   updateState(e?: Event) {
-    const isDirty = serializeForm(this.element) !== this.initialState;
-    // this.element.classList.toggle('is-dirty', isDirty);
+    this.element.classList.toggle('is-dirty', this.isDirty);
     if (this.submitBtn) {
-      this.submitBtn.classList.toggle('disabled', !isDirty);
-      this.submitBtn.disabled = !isDirty;
+      this.submitBtn.classList.toggle('disabled', !this.isDirty);
+      this.submitBtn.disabled = !this.isDirty;
     }
   }
 

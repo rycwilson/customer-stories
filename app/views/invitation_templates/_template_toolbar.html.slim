@@ -24,6 +24,7 @@
             placeholder: template&.new_record? ? "– New Template –" : 'Select template',
             data: { \
               controller: 'tomselect',
+              tomselect_invitation_template_outlet: '#invitation-template-form',
               tomselect_kind_value: 'invitationTemplate',
               tomselect_custom_options_value: template&.persisted? ? {} : { plugins: {} },
               invitation_template_target: 'templateSelect',

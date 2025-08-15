@@ -1,10 +1,15 @@
 import { Controller } from "@hotwired/stimulus";
+import type InvitationTemplateController from "./invitation_template_controller";
 import TomSelect, { tsBaseOptions, addDynamicPlaceholder } from '../tomselect';
 import type { TomOption, TomItem } from 'tom-select/dist/types/types/core.d.ts';
 import { type CBOptions } from 'tom-select/dist/types/plugins/clear_button/types';
 import { kebabize, capitalize } from "../utils";
 
 export default class TomselectController extends Controller<TomSelectInput> {
+  static outlets = ['invitation-template']
+  declare readonly invitationTemplateOutlet: InvitationTemplateController;
+  declare readonly hasInvitationTemplateOutlet: boolean;
+
   static values = { 
     kind: String,
     source: String,
@@ -30,6 +35,7 @@ export default class TomselectController extends Controller<TomSelectInput> {
       return;    
     }
     this.init();
+
   }
 
   isFilter() { return this.kindValue === 'filter'; }
@@ -106,9 +112,7 @@ export default class TomselectController extends Controller<TomSelectInput> {
           _plugins['remove_button'] = { title: 'Clear selection' }
         } else {
           const tooltipOptions = {
-            title: ctrl.kindValue == 'invitationTemplate' ? 
-              'Discard changes and close' : 
-              'Clear selection',
+            title: 'Clear selection',
             template: `
               <div class="tooltip ${ctrl.kebabKind}" role="tooltip">
                 <div class="tooltip-arrow"></div>
@@ -122,6 +126,7 @@ export default class TomselectController extends Controller<TomSelectInput> {
               <button 
                 type="button"
                 class="btn ${config.className}"
+                data-action="tomselect#onManualClear"
                 data-controller="tooltip"
                 data-tooltip-options-value='${ JSON.stringify(tooltipOptions) }'>
                 &times;
@@ -148,25 +153,64 @@ export default class TomselectController extends Controller<TomSelectInput> {
 
         if (ctrl.kindValue === 'invitationTemplate') {
           this.control_input.setAttribute('readonly', 'true');
-          // prevent the user from closing a template without confirmation
-          // const originalDeleteSelection = this.deleteSelection;
-          // this.deleteSelection = (e) => {
-          //   if (window.confirm('Close this template? Unsaved changes will be lost.')) {
-          //     originalDeleteSelection.call(this, e);
-          //     return true;
-          //   } else {
-          //     return false;
-          //   }
-          // }
+
+          if (ctrl.hasInvitationTemplateOutlet) {
+            const formCtrl = ctrl.invitationTemplateOutlet;
+            const shouldConfirmClose = () => formCtrl.hasFormFieldsTarget && formCtrl.isDirty;
+            const confirmClose = () => (
+              window.confirm('Close this template? Unsaved changes will be lost.')
+            );
+
+            // Intercept a changed selection if the form is dirty
+            const originalAddItem = this.addItem;
+            this.addItem = function (value: string, silent?: boolean) {
+              if (shouldConfirmClose() && !confirmClose()) {
+                this.control_input.blur();
+                return false;
+              } else {
+                return originalAddItem.call(this, value, silent);
+              }
+            }
+
+            // Intercepting a clear...
+            // Overriding `clear` is not reliable since it executes on both clearing and changing
+            // Overriding `removeItem` is not reliable since it doesn't prevent `onChange`
+            // => intercept clear button clicks
+            const clearButton = this.wrapper.querySelector('.clear-button');
+            if (clearButton) {
+              clearButton.addEventListener('click', (e) => {
+                if (shouldConfirmClose() && !confirmClose()) {
+                  e.preventDefault();
+                  e.stopImmediatePropagation();
+                  return false;
+                }
+              }, { capture: true });
+            }
+          }
         }
       },
+
+      onItemRemove() {},
       
       onChange(newVal: string | number) {
         ctrl.dispatch(`change-${ctrl.kebabKind || 'unknown'}`, { detail: { kind: ctrl.kindValue, id: newVal } });
       },
 
+      // According to docs, this callback executes when `.clear()` is called on the instance.
+      // The native plugin code appears to trigger the callback when changing selections,
+      // as if the existing selection must be cleared before the new selection is made. 
+      // This is unexpected and must be worked around, since we need to know when the element 
+      // is actually being cleared. 
+      // Within the callback, the value will always be blank. By using a timeout, we can get 
+      // the updated value after the change. If the value is still blank, then we know the
+      // element was actually cleared.
       onClear() {
-        ctrl.dispatch('clear');
+        setTimeout(() => {
+          if (ctrl.ts.getValue() === '') {
+            console.log('onClear')
+            ctrl.dispatch('clear');
+          }
+        });
       },
       
       onType(this: TomSelect, userInput: string) { 
@@ -191,7 +235,6 @@ export default class TomselectController extends Controller<TomSelectInput> {
       },
       
       onDropdownClose(this: TomSelect, dropdown: HTMLDivElement) {
-        this.element
         if (ctrl.isFilter()) {
           // default behavior is that text input is cleared when the dropdown closes, 
           // but we want to keep it since the search results are reflected in the table
@@ -204,6 +247,7 @@ export default class TomselectController extends Controller<TomSelectInput> {
       },
       
       onItemAdd(this: TomSelect, value: string, item: TomItem) {
+        console.log(`onItemAdd(${value}, ${item})`);
       },
 
       // the following two callbacks apply to the company tags inputs
@@ -219,6 +263,7 @@ export default class TomselectController extends Controller<TomSelectInput> {
       },
 
       onDelete(values: string[], e: PointerEvent) {
+        console.log('onDelete')
         if (e.target instanceof HTMLElement && e.target.closest('#company-tags-form')) {
           const [tagName] = values;
           const item = <HTMLElement>(<HTMLAnchorElement>e.target).closest('.item');

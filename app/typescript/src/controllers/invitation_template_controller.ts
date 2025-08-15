@@ -11,13 +11,14 @@ export default class InvitationTemplateController extends FormController<Invitat
   declare readonly submitBtnTarget: HTMLButtonElement;
   declare readonly newTemplateBtnTarget: HTMLButtonElement;
   declare readonly formFieldsTarget: HTMLDivElement;
+  declare readonly hasFormFieldsTarget: boolean;
 
   get isNewTemplate() {
-    return this.templateSelectTarget.value === '';
+    return this.hasFormFieldsTarget && this.templateSelectTarget.value === '';
   }
 
   connect() {
-    if (this.element.tagName !== 'FORM') return;  // initial view
+    if (this.element.tagName !== 'FORM') return;  // initial view => do nothing
     super.connect();
     if (this.isNewTemplate) this.nameFieldTarget.focus();
   }
@@ -25,13 +26,19 @@ export default class InvitationTemplateController extends FormController<Invitat
   // disconnect() {
   // }
 
-  async onChangeTemplate({ target: select }: { target: TomSelectInput }) {
-    if (!select.value) return;
-    const request = new FetchRequest('get', select.options[select.selectedIndex].dataset.path, { 
-      headers: { Accept: 'text/vnd.turbo-stream.html' } 
+  onChangeTemplate(e: Event) {
+    if (this.templateSelectTarget.value) this.fetchTemplate();
+  }
+    
+  async fetchTemplate() {
+    const select = this.templateSelectTarget;
+    const path = select.options[select.selectedIndex].dataset.path;
+    if (!path) return;
+    const request = new FetchRequest('get', path, {
+      headers: { Accept: 'text/vnd.turbo-stream.html' }
     });
     const response = await request.perform();
-    // if (response.ok) {}
+    if (response.ok) {}
   }
 
   restore() {
@@ -58,7 +65,7 @@ export default class InvitationTemplateController extends FormController<Invitat
     this.onClearTemplateSelect();
   }
 
-  onClearTemplateSelect() {
+  onClearTemplateSelect(e?: Event) {
     this.templateSelectTarget.tomselect.wrapper.querySelector('.clear-button')?.remove();
     [this.btnGroupTarget, this.submitBtnTarget, this.formFieldsTarget].forEach(el => el.remove());
     this.newTemplateBtnTarget.classList.remove('hidden');
