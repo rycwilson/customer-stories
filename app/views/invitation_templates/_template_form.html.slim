@@ -1,68 +1,71 @@
-= form_with( \
-    model: [@company, @template],
-    html: { \
-      id: 'invitation-template-form',
-      class: 'form-horizontal',
-      autocomplete: 'off',
-      novalidate: true,
-      data: { \
-        controller: 'invitation-template',
-        company_settings_target: 'invitationTemplateForm',
-        action: [ \
-          'ajax:beforeSend->invitation-template#validate',
-          'summernote:init->invitation-template#onInitTemplateBody',
-          'tomselect:clear-invitation-template->invitation-template#onClearTemplateSelect'].join(' ') }}) do |form|
+= turbo_frame_tag('invitation-templates') do
 
-  = render('invitation_templates/template_toolbar', company: @company, template: @template)
+  = form_with( \
+      model: [@company, @template],
+      html: { \
+        id: 'invitation-template-form',
+        class: 'form-horizontal',
+        autocomplete: 'off',
+        novalidate: true,
+        data: { \
+          controller: 'invitation-template',
+          company_settings_target: 'invitationTemplateForm',
+          action: [ \
+            'input->invitation-template#updateState',
+            'summernote:init->invitation-template#onInitTemplateBody',
+            'summernote:change->invitation-template#updateState',
+            'tomselect:clear->invitation-template#onClearTemplateSelect'].join(' ') }}) do |form|
 
-  div data-invitation-template-target="formFields"
-    .row
-      .col-sm-12.col-lg-offset-3.col-lg-9
-        hr
+    = render('invitation_templates/template_toolbar', company: @company, template: @template)
 
-    .form-group
-      .visible-sm-block.visible-md-block.col-sm-12
-        = form.label(:name)
-      .col-lg-3.visible-lg-inline-block.control-label
-        = form.label(:name)
-      .col-sm-12.col-lg-9
-        = form.text_field( \
-            :name,
-            class: 'form-control',
-            readonly: @company.invitation_templates.default.include?(@template),
-            data: { invitation_template_target: 'nameField'})
+    div data-invitation-template-target="formFields"
+      .row
+        .col-sm-12.col-lg-offset-3.col-lg-9
+          hr
 
-    .form-group 
-      .visible-sm-block.visible-md-block.col-sm-12
-        = form.label(:request_subject, 'Subject')
-      .col-lg-3.visible-lg-inline-block.control-label
-        = form.label(:request_subject, 'Subject')
-      .col-sm-12.col-lg-9
-        .input-group
-          = form.text_field(:request_subject, class: 'form-control')
-          .input-group-btn
-            button.btn.btn-default.dropdown-toggle type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"
-              | Insert&nbsp;&nbsp;
-              span.caret
-            ul.dropdown-menu.dropdown-menu-right.data-placeholders
-              li data-placeholder='[customer_name]'
-                a href="javascript:;" Customer name
-              li data-placeholder='[contributor_first_name]'
-                a href="javascript:;" Contributor first name
-              li data-placeholder='[contributor_full_name]'
-                a href="javascript:;" Contributor full name
+      .form-group
+        .visible-sm-block.visible-md-block.col-sm-12
+          = form.label(:name)
+        = form.label(:name, class: 'col-lg-3 visible-lg-inline-block control-label')
+        .col-sm-12.col-lg-9
+          = form.text_field( \
+              :name,
+              class: 'form-control',
+              readonly: @company.invitation_templates.default.include?(@template),
+              data: { invitation_template_target: 'nameField'})
 
-    .form-group
-      .visible-sm-block.visible-md-block.col-sm-12
-        = form.label(:request_body, 'Body')
-      .col-lg-3.visible-lg-inline-block.control-label
-        = form.label(:request_subject, 'Body')
-      .col-sm-12.col-lg-9
-        .invitation-template__summernote {
-          contenteditable="false"
-          data-controller="summernote"
-          data-summernote-enabled-value="true"
-          data-summernote-config-key-value="invitationTemplate"
-          data-summernote-config-args-value=[nil, current_user.photo_url, asset_path('placeholders/user-photo-missing.png')].to_json
-          data-invitation-template-target="note" }
-          = @template.request_body&.html_safe
+      .form-group 
+        .visible-sm-block.visible-md-block.col-sm-12
+          = form.label(:request_subject, 'Subject')
+        = form.label(:request_subject, 'Subject', class: 'col-lg-3 visible-lg-inline-block control-label')
+        .col-sm-12.col-lg-9
+          .input-group
+            = form.text_field(:request_subject, class: 'form-control')
+            .input-group-btn
+              button.btn.btn-default.dropdown-toggle type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"
+                | Insert&nbsp;&nbsp;
+                span.caret
+              ul.dropdown-menu.dropdown-menu-right.data-placeholders
+                li data-placeholder='[customer_name]'
+                  a href="javascript:;" Customer name
+                li data-placeholder='[contributor_first_name]'
+                  a href="javascript:;" Contributor first name
+                li data-placeholder='[contributor_full_name]'
+                  a href="javascript:;" Contributor full name
+
+      .form-group
+        .visible-sm-block.visible-md-block.col-sm-12
+          = form.label(:request_body, 'Body')
+        = form.label(:request_subject, 'Body', class: 'col-lg-3 visible-lg-inline-block control-label')
+        .col-sm-12.col-lg-9
+          = form.text_area( \
+              :request_body,
+              data: { \
+                controller: 'summernote',
+                summernote_enabled_value: 'true',
+                summernote_config_key_value: 'invitationTemplate',
+                summernote_config_args_value: [ \
+                  nil,
+                  current_user.photo_url,
+                  asset_path('placeholders/user-photo-missing.png')] })
+            = @template.request_body&.html_safe
