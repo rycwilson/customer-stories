@@ -53,8 +53,14 @@ export default class InvitationTemplateController extends FormController<Invitat
     }
   }
 
-  delete() {
-
+  async delete() {
+    if (window.confirm('Delete this template?')) {
+      const request = new FetchRequest('delete', this.element.action, {
+        headers: { Accept: 'text/vnd.turbo-stream.html' }
+      });
+      const response = await request.perform();
+      if (response.ok) {}
+    }
   }
 
   discard() {

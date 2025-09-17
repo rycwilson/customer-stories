@@ -1,2 +1,9 @@
+- if action_name =~ /create|update/
+  = turbo_stream.replace('toaster', partial: 'shared/toaster')
+
+/ TODO: Prompts will likely reference templates and thus will need to be re-rendered
+/ - if action_name == 'update'
+  / = turbo_stream.replace('contributor-prompts')
+
 = turbo_stream.replace 'invitation-template-form' do 
-  = render('invitation_templates/template_form', company: @company, template: @template)
+  = render('invitation_templates/template_form', company: @company, template: @template)  
