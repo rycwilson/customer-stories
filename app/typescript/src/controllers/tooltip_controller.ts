@@ -54,6 +54,7 @@ export default class TooltipController extends Controller {
     // }
 
     // Instead:
+    // NOTE using a dom node for `container` is more reliable than using a string selector
     $(this.element).tooltip('destroy');
     if (navItem.classList.contains('active')) return;
     $(this.element).tooltip({ 
