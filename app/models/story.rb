@@ -422,4 +422,8 @@ class Story < ApplicationRecord
       self.publish_date = nil
     end
   end
+
+  def select_option
+    [title, "story-#{id}"]
+  end
 end
