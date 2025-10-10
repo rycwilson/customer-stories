@@ -5,7 +5,7 @@ import type PromotedStoriesController from "./promoted_stories_controller";
 // import type VisitorsController from "./visitors_controller";
 // import type ActivityController from "./activity_controller";
 import { getJSON, kebabize } from '../utils';
-import { init as initTable, initDisplayOptions as initTableDisplayOptions, search as searchTable } from '../tables.js';
+import { init as initTable, initDisplayOptions, search as searchTable } from '../tables.js';
 import type { Api, Config } from "datatables.net-bs";
 
 // type SubclassController = CustomerWinsController | ContributionsController | PromotedStoriesController;
@@ -93,7 +93,7 @@ export default class ResourceController extends Controller<HTMLElement> {
 
   onTableInitComplete(e: CustomEvent) {
     this.dt = e.detail.dt;
-    initTableDisplayOptions.call(this);
+    initDisplayOptions.call(this);
     setTimeout(() => {
       this.dt.one('draw', () => {
         // console.log('draw after init:', this.resourceName)
