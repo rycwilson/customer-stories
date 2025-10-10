@@ -29,7 +29,15 @@
           |&nbsp;&nbsp;Preferences
 
   div
-    .search-table data-action="tomselect:change-filter->#{resource_ctrl_id}#onChangeSearchSelect tomselect:search->#{resource_ctrl_id}#onTomselectSearch"
+    / .search-table {
+    /   data-action="tomselect:change-filter->#{resource_ctrl_id}#onChangeSearchSelect tomselect:search->#{resource_ctrl_id}#onTomselectSearch"
+    = content_tag( \
+        :div, 
+        class: 'search-table', 
+        data: { \
+          action: [ \
+            "tomselect:change-filter->#{resource_ctrl_id}#onChangeSearchSelect",
+            "tomselect:search->#{resource_ctrl_id}#onTomselectSearch"].join(' ') }) do
       /label
         i.fa.fa-search
       = select_tag( \
