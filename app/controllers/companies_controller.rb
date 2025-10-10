@@ -124,7 +124,7 @@ class CompaniesController < ApplicationController
       story: params[:story_id],
       start_date: params[:start_date],
       end_date: params[:end_date]
-    )
+    ).map { |visitor| visitor.attributes.compact }
     respond_to do |format|
       format.json do
         render json: { by_story:, by_date: }
