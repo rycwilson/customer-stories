@@ -2,6 +2,8 @@
 
 ## Project Context
 <!-- Goals, Motivation, Scope, Audience, Key Deliverables, Functional Requirements -->
+<!-- Architectural patterns and conventions, naming conventions, code org principles -->
+<!-- Important gem dependencies that shape architectural patterns -->
 <!-- refers to files, folders, other projects -->
 - SaaS application built with Ruby/Rails and TypeScript
 
