@@ -32,6 +32,7 @@ export default class ResourceController extends Controller<HTMLElement> {
   declare readonly datatableTarget: HTMLDivElement;
   declare readonly newItemBtnTarget: HTMLButtonElement;
   declare readonly displayOptionsBtnTarget: HTMLButtonElement;
+  declare readonly hasDisplayOptionsBtnTarget: boolean;
   
   static values = {
     dataPath: String,
@@ -51,6 +52,9 @@ export default class ResourceController extends Controller<HTMLElement> {
   
   connect() {
     // console.log('connect resource', this.identifier)
+    if (this.hasDisplayOptionsBtnTarget) {
+      initDisplayOptions.call(this);
+    }
   }
 
   get resourceName() {
@@ -93,7 +97,6 @@ export default class ResourceController extends Controller<HTMLElement> {
 
   onTableInitComplete(e: CustomEvent) {
     this.dt = e.detail.dt;
-    initDisplayOptions.call(this);
     setTimeout(() => {
       this.dt.one('draw', () => {
         // console.log('draw after init:', this.resourceName)
