@@ -1,0 +1,31 @@
+.form-horizontal 
+
+  .form-group
+    label.control-label Curator
+    div
+      = render('companies/shared/curator_select', { company:, curator_id:, ctrl_id: 'table-display-options' })
+
+  .form-group 
+    label.control-label Date Range 
+    div
+      select.form-control data-controller="tomselect" data-tom-select-kind-value="dateRange" data-table-display-options-target="dateRangeSelect" 
+        option value="" All Time
+        option value="last_30_days" Last 30 Days
+        option value="last_60_days" Last 60 Days
+        option value="last_90_days" Last 90 Days
+        option value="last_6_months" Last 6 Months
+        option value="last_12_months" Last 12 Months
+        option value="this_month" This Month
+        option value="this_quarter" This Quarter
+        option value="this_year" This Year
+        option value="previous_month" Previous Month
+        option value="previous_quarter" Previous Quarter
+        option value="previous_year" Previous Year
+  
+  .form-group 
+    label.control-label Show
+    div
+      .checkbox 
+        label for="show-visitor-source"
+          input#show-visitor-source type="checkbox" data-action="table-display-options#toggleFilter" checked="true" 
+          | Visitor source

@@ -205,44 +205,37 @@ td.toggle-child {
     margin-left: 0;
     margin-right: 0;
 
-    // curator
-    &:first-child > label {
-      padding-top: 5px;
-    }
-
     > :last-child {
-      flex-grow: 1;
+      width: 30rem;
 
       .checkbox + .checkbox {
         margin-top: 0.25em;
       }
     }
+
+    select + .ts-wrapper {
+      width: 100%;
+    }
   }
     
   .control-label {
+    flex-grow: 1;
     margin-right: 1.25em;
-    width: 15%;
   }
 
   .popover-content {
-    padding: 1.25em 1.75em;
+    padding: 1em 1.75em;
   }
 
-  &.customer-wins {
-    .popover-content {
-      width: 28em;
-    }
-  }
+  // &.customer-wins {
+  // }
 
-  &.contributions {
-    .popover-content {
-      width: 30em;
-    }
-  }
+  // &.contributions {
+  // }
 
-  &.promoted-stories {
-    .popover-content {
-      width: 28em;
-    }
-  }
+  // &.promoted-stories {
+  // }
+
+  // &.visitors {
+  // }
 }
