@@ -1,20 +1,17 @@
 import Cookies from 'js-cookie';
 import { Controller } from '@hotwired/stimulus';
-import type CustomerWinsController from "./customer_wins_controller";
-import type ContributionsController from "./contributions_controller";
-import type PromotedStoriesController from "./promoted_stories_controller";
-import type VisitorsController from "./visitors_controller";
-import { toggleRowGroups as toggleTableRowGroups, initDisplayOptions as resetDisplayOptions } from '../tables';
+import type ResourceController from "./resource_controller";
+import { toggleRowGroups as toggleTableRowGroups } from '../tables';
 
 export default class TableDisplayOptionsController extends Controller<HTMLDivElement> {
   static outlets = ['customer-wins', 'contributions', 'promoted-stories', 'visitors'];
-  declare readonly customerWinsOutlet: CustomerWinsController;
+  declare readonly customerWinsOutlet: ResourceController;
   declare readonly hasCustomerWinsOutlet: boolean;
-  declare readonly contributionsOutlet: ContributionsController;
+  declare readonly contributionsOutlet: ResourceController;
   declare readonly hasContributionsOutlet: boolean;
-  declare readonly promotedStoriesOutlet: PromotedStoriesController;
+  declare readonly promotedStoriesOutlet: ResourceController;
   declare readonly hasPromotedStoriesOutlet: boolean;
-  declare readonly visitorsOutlet: VisitorsController;
+  declare readonly visitorsOutlet: ResourceController;
   declare readonly hasVisitorsOutlet: boolean;
 
   static targets = ['curatorSelect'];
@@ -49,7 +46,7 @@ export default class TableDisplayOptionsController extends Controller<HTMLDivEle
     document.removeEventListener('click', this.clickAwayHandler);
   }
 
-  get resourceOutlet(): CustomerWinsController | ContributionsController | PromotedStoriesController | VisitorsController {
+  get resourceOutlet(): ResourceController {
     if (this.hasCustomerWinsOutlet) return this.customerWinsOutlet;
     if (this.hasContributionsOutlet) return this.contributionsOutlet;
     if (this.hasPromotedStoriesOutlet) return this.promotedStoriesOutlet;
