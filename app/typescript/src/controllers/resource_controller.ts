@@ -110,22 +110,8 @@ export default class ResourceController extends Controller<HTMLElement> {
     searchTable.call(this, e.detail.searchResults);
   }
 
-  // onChangeCurator(e: CustomEvent) {
-  //   if (this.resourceName && /customerWins|contributions/.test(this.resourceName)) {
-  //     // this.updateNewItemPath();
-  //   }
-  //   searchTable.call(this, e);
-  // }
-
   onChangeSearchSelect(e: CustomEvent) {
-    // if (this.resourceName && /customerWins|contributions/.test(this.resourceName)) {
-    //   this.updateNewItemPath();
-    //   this.resourceOutlets.forEach(outlet => {
-    //     if (/storyContributions|promotedStories/.test(outlet.resourceName)) return;
-    //     outlet.updateNewItemPath();
-    //   });
-    // } 
-    this.addSyncListener((ctrl) => ctrl.searchSelectTarget.tomselect.setValue(this.searchSelectTarget.value));
+    // this.addSyncListener((ctrl) => ctrl.searchSelectTarget.tomselect.setValue(this.searchSelectTarget.value));
     searchTable.call(this);
   }
   
@@ -149,31 +135,4 @@ export default class ResourceController extends Controller<HTMLElement> {
       });
     }, { once: true });
   }
-
-  // updateNewItemPath() {
-  //   const filterVal = this.searchSelectTarget.value;
-  //   const type = filterVal && filterVal.slice(0, filterVal.lastIndexOf('-'));
-  //   const id = filterVal && filterVal.slice(filterVal.lastIndexOf('-') + 1, filterVal.length);
-  //   const customerWinId = type === 'success' ? id : '';
-  //   const params = new URLSearchParams();
-  //   params.set('curator_id', this.curatorSelectTarget.value);
-  //   if (filterVal) params.set(`${type}_id`, id);
-  //   this.newItemBtnTarget.setAttribute(
-  //     'data-modal-trigger-turbo-frame-attrs-value',
-  //     JSON.stringify({ 
-  //       id: `new-${kebabize(this.resourceName)}`.slice(0, -1),  // remove the trailing 's' 
-  //       src: (() => {
-  //         switch (this.resourceName) {
-  //           case 'customerWins':
-  //             return newCustomerWinPath(params);
-  //           case 'contributions':
-  //             return newContributionPath(customerWinId, params);
-  //           default: 
-  //             return '';
-  //         }
-  //       })()
-  //     })
-  //   );
-  // }
-
 }
