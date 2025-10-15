@@ -49,6 +49,7 @@ export function search(this: ResourceController, tsSearchResults?: { [key: strin
 
 export function initDisplayOptions(this: ResourceController, isReset = false) {
   const btn = this.displayOptionsBtnTarget;
+  const controller = this.identifier === 'visitors' ? 'visitors-display-options' : 'table-display-options';
   if (isReset) {
     $(btn).data()['bs.popover'].options.content = this.displayOptionsHtmlValue;
   } else {
@@ -61,11 +62,12 @@ export function initDisplayOptions(this: ResourceController, isReset = false) {
       title: 'Display Preferences',
       placement: 'auto left',
       template: `
-        <div 
+        <div
           class="popover ${this.identifier}" 
-          data-controller="table-display-options" 
-          data-table-display-options-${this.identifier}-outlet="#${this.identifier}"
-          data-action="tomselect:change-curator->table-display-options#onChangeCurator"
+          data-controller="${controller}" 
+          data-${controller}-${this.identifier}-outlet="#${this.identifier}"
+          data-${controller}-dashboard-outlet=".dashboard"
+          data-action="tomselect:change-curator->${controller}#onChangeCurator"
           role="tooltip">
           <div class="arrow"></div>
           <h3 class="popover-title label-secondary"></h3>

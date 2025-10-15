@@ -136,6 +136,9 @@ application.register("user-profile", UserProfileController);
 import VisitorsController from './visitors_controller.js';
 application.register('visitors', VisitorsController);
 
+import VisitorsDisplayOptionsController from './visitors_display_options_controller.js';
+application.register('visitors-display-options', VisitorsDisplayOptionsController);
+
 import WinStoryController from './win_story_controller.js';
 application.register('win-story', WinStoryController);
 

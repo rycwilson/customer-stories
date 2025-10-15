@@ -3,12 +3,16 @@
   .form-group
     label.control-label Curator
     div
-      = render('companies/shared/curator_select', { company:, curator_id:, ctrl_id: 'table-display-options' })
+      = render('companies/shared/curator_select', { company:, curator_id:, ctrl_id: 'visitors-display-options' })
 
   .form-group 
     label.control-label Date Range 
     div
-      select.form-control data-controller="tomselect" data-tom-select-kind-value="dateRange" data-table-display-options-target="dateRangeSelect" 
+      select.form-control {
+        data-controller="tomselect"
+        data-tomselect-kind-value="dateRange"
+        data-visitors-display-options-target="dateRangeSelect"
+        data-action="visitors-display-options#onChangeDateRange" }
         option value="" All Time
         option value="last_30_days" Last 30 Days
         option value="last_60_days" Last 60 Days
@@ -27,5 +31,5 @@
     div
       .checkbox 
         label for="show-visitor-source"
-          input#show-visitor-source type="checkbox" data-action="table-display-options#toggleFilter" checked="true" 
+          input#show-visitor-source type="checkbox" data-action="visitors-display-options#toggleFilter" checked="true" 
           | Visitor source
