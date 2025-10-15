@@ -82,7 +82,9 @@ export default class ResourceController extends Controller<HTMLElement> {
   }
 
   onTomselectSearch(e: CustomEvent) {
-    searchTable.call(this, e.detail.searchResults);
+    if (this.dt) {
+      searchTable.call(this, e.detail.searchResults);
+    }
   }
 
   onChangeSearchSelect(e: CustomEvent) {
@@ -93,8 +95,8 @@ export default class ResourceController extends Controller<HTMLElement> {
   }
   
   filtersValueChanged(newVal: FiltersValue, oldVal: FiltersValue) {
-    console.log(`old ${this.identifier} filtersValue:`, oldVal)
-    console.log(`new ${this.identifier} filtersValue:`, newVal)
+    // console.log(`old ${this.identifier} filtersValue:`, oldVal)
+    // console.log(`new ${this.identifier} filtersValue:`, newVal)
     if (Object.keys(oldVal).length === 0) return false;
     // if (newVal['curator-id'] !== oldVal['curator-id']) {
     //   this.addSyncListener((ctrl) => (

@@ -191,7 +191,8 @@ td.toggle-child {
   }
 }
 
-.popover[data-controller="table-display-options"] {
+.popover[data-controller="table-display-options"],
+.popover[data-controller="visitors-display-options"]  {
   max-width: revert;
   padding: 0;
 
@@ -206,7 +207,7 @@ td.toggle-child {
     margin-right: 0;
 
     > :last-child {
-      width: 30rem;
+      width: 27rem;
 
       .checkbox + .checkbox {
         margin-top: 0.25em;
