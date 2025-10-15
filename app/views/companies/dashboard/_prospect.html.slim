@@ -51,8 +51,7 @@
           data-dashboard-target="customerWins"
           data-resource-name="customerWins"
           data-controller="customer-wins"
-          data-customer-wins-contributions-outlet="#contributions"
-          data-customer-wins-promoted-stories-outlet="#promoted-stories"
+          data-customer-wins-dashboard-outlet =".dashboard"
           data-customer-wins-data-path-value="/successes"
           data-customer-wins-filters-value=customer_wins_table_filters(curator_id).to_json
           data-customer-wins-display-options-html-value=customer_wins_display_options_escaped_html(company, curator_id)
@@ -66,9 +65,8 @@
           class=('active' if active_tab == '#contributions')
           data-dashboard-target="contributions"
           data-resource-name="contributions"
-          data-controller="contributions"
-          data-contributions-customer-wins-outlet="#customer-wins"
-          data-contributions-promoted-stories-outlet="#promoted-stories"
+          data-controller="contributions"          
+          data-contributions-dashboard-outlet=".dashboard"
           data-contributions-data-path-value=company_contributions_path(company)
           data-contributions-filters-value=contributions_table_filters(curator_id).to_json
           data-contributions-display-options-html-value=contributions_display_options_escaped_html(company, curator_id)

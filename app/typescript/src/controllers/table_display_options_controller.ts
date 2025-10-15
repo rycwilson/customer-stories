@@ -1,10 +1,12 @@
 import Cookies from 'js-cookie';
 import { Controller } from '@hotwired/stimulus';
+import type DashboardController from "./dashboard_controller";
 import type ResourceController from "./resource_controller";
 import { toggleRowGroups as toggleTableRowGroups } from '../tables';
 
-export default class TableDisplayOptionsController extends Controller<HTMLDivElement> {
-  static outlets = ['customer-wins', 'contributions', 'promoted-stories', 'visitors'];
+export default class TableDisplayOptionsController extends Controller {
+  static outlets = ['dashboard', 'customer-wins', 'contributions', 'promoted-stories', 'visitors'];
+  declare readonly dashboardOutlet: DashboardController;
   declare readonly customerWinsOutlet: ResourceController;
   declare readonly hasCustomerWinsOutlet: boolean;
   declare readonly contributionsOutlet: ResourceController;
@@ -25,21 +27,20 @@ export default class TableDisplayOptionsController extends Controller<HTMLDivEle
   connect() {
     document.addEventListener('click', this.clickAwayHandler);
 
-    if (this.hasVisitorsOutlet) {
-    } else {
-      const groupByCheckbox = <HTMLInputElement>this.element.querySelector('[id*="group-by"]');
-      const rowGroupsEnabled = this.resourceOutlet.datatableTarget.classList.contains('has-row-groups');
-      if (groupByCheckbox) groupByCheckbox.checked = rowGroupsEnabled;
-  
-      Object.entries(this.resourceOutlet.filtersValue).forEach(([key, value]) => {
-        if (key === 'curator-id') {
-          this.curatorSelectTarget.value = value ? String(value) : '';
-        } else if (typeof value === 'boolean') {
-          const checkbox = <HTMLInputElement>this.element.querySelector(`#${key}`);
-          if (checkbox) checkbox.checked = value;
-        }
-      });
-    }
+    Object.entries(this.resourceOutlet.filtersValue).forEach(([key, value]) => {
+      if (key === 'curator-id') {
+        this.curatorSelectTarget.value = value ? String(value) : '';
+      } else if (typeof value === 'boolean') {
+        const checkbox = <HTMLInputElement>this.element.querySelector(`#${key}`);
+        if (checkbox) checkbox.checked = value;
+      }
+    });
+
+    if (this.hasVisitorsOutlet) return;
+    
+    const groupByCheckbox = <HTMLInputElement>this.element.querySelector('[id*="group-by"]');
+    const rowGroupsEnabled = this.resourceOutlet.datatableTarget.classList.contains('has-row-groups');
+    if (groupByCheckbox) groupByCheckbox.checked = rowGroupsEnabled;
   }
 
   disconnect() {
@@ -55,15 +56,19 @@ export default class TableDisplayOptionsController extends Controller<HTMLDivEle
   }
 
   onChangeCurator({ target: select }: { target: TomSelectInput }) {
-    this.resourceOutlet.filtersValue = { ...this.resourceOutlet.filtersValue, 'curator-id': +select.value || null };
+    const curatorId = +select.value || null;
+    this.resourceOutlet.filtersValue = { ...this.resourceOutlet.filtersValue, 'curator-id': curatorId };
+    setTimeout(() => {
+      this.dashboardOutlet.filtersValue = { 'curator-id': curatorId };
+    })
     Cookies.set('csp-curator-id', select.value);
   }
   
   onClickAway(e: Event) {
     const target = e.target as HTMLElement;
-    if (!this.element || this.element.contains(target) || this.resourceOutlet.displayOptionsBtnTarget.contains(target))
+    if (!this.element || this.element.contains(target) || this.resourceOutlet.displayOptionsBtnTarget.contains(target)) {
       return false;
-    console.log('click away')
+    }
     // $(this.element).popover('hide')
     this.resourceOutlet.displayOptionsBtnTarget.click();
   }
