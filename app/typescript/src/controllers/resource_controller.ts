@@ -1,6 +1,6 @@
 import { Controller } from "@hotwired/stimulus";
 import { getJSON } from '../utils';
-import { init as initTable, initDisplayOptions, search as searchTable } from '../tables.js';
+import { init as initTable, initDisplayOptions, search as searchTable } from '../tables';
 import type { Api } from "datatables.net-bs";
 
 type FiltersValue = { [key: string]: boolean | number | null };

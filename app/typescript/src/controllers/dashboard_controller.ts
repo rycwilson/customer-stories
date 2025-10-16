@@ -39,6 +39,7 @@ export default class DashboardController extends Controller {
     'promotedStories', 
     'promotedStoriesTab', 
     'promotedStoriesSearchSelect',
+    'stories',
     'story',
     'visitors',
     'activity',
@@ -52,6 +53,7 @@ export default class DashboardController extends Controller {
   declare readonly contributionsTarget: HTMLDivElement;
   declare readonly contributionsTabTarget: HTMLAnchorElement;
   declare readonly contributionsSearchSelectTarget: TomSelectInput;
+  declare readonly storiesTarget: HTMLDivElement;
   declare readonly storyTarget: HTMLDivElement;
   declare readonly promotedStoriesTarget: HTMLDivElement;
   declare readonly promotedStoriesTabTarget: HTMLAnchorElement;
@@ -64,7 +66,7 @@ export default class DashboardController extends Controller {
     filters: { type: Object }
   };    
   declare activeTabValue: DashboardTab | null;
-  declare filtersValue: { 'curator-id': number | null };
+  declare filtersValue: { 'curator-id': number | null } | undefined;
   
   tabRestorationListener = this.onTabRestoration.bind(this);
   spinnerTimers: { [key: string]: number } = { 
@@ -157,6 +159,10 @@ export default class DashboardController extends Controller {
     );
   }
 
+  onChangeStoriesCurator({ detail: { 'curator-id': curatorId } }: { detail: { 'curator-id': number | null }}) {
+    this.filtersValue = { 'curator-id': curatorId };
+  }
+
   activeTabValueChanged(activeTab: DashboardTab) {
     if (activeTab) this.initTabPanel(activeTab);
   }
@@ -166,11 +172,18 @@ export default class DashboardController extends Controller {
     oldVal: { 'curator-id': number | null } | undefined
   ) {
     if (oldVal === undefined || JSON.stringify(newVal) === JSON.stringify(oldVal)) return;
-    [this.customerWinsTarget, this.contributionsTarget, this.promotedStoriesTarget, this.visitorsTarget]
+    [
+      this.customerWinsTarget,
+      this.contributionsTarget,
+      this.storiesTarget,
+      this.promotedStoriesTarget,
+      this.visitorsTarget
+    ]
       .forEach(target => {
-        const oldFilters = JSON.parse(<string>target.getAttribute(`data-${target.id}-filters-value`));
+        const oldFilters =
+          JSON.parse(<string>target.getAttribute(`data-${target.dataset.controller}-filters-value`));
         const newFilters = { ...oldFilters, ...newVal };
-        target.setAttribute(`data-${target.id}-filters-value`, JSON.stringify(newFilters));
+        target.setAttribute(`data-${target.dataset.controller}-filters-value`, JSON.stringify(newFilters));
       });
   }
 

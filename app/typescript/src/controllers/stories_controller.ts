@@ -18,6 +18,7 @@ export default class extends Controller<HTMLDivElement> {
   ];
   declare readonly turboFrameTarget: FrameElement;
   declare readonly galleryTarget: HTMLUListElement;
+  declare readonly hasGalleryTarget: boolean;
   declare readonly cardTargets: HTMLDivElement[];
   declare readonly searchAndFiltersTarget: HTMLDivElement;
   declare readonly searchInputTarget: HTMLInputElement;
@@ -26,6 +27,9 @@ export default class extends Controller<HTMLDivElement> {
   declare readonly filterResultsTarget: HTMLSpanElement;
   declare readonly matchTypeInputTargets: HTMLInputElement[];
   declare readonly filterSelectTargets: TomSelectInput[];
+
+  static values = { filters: Object };
+  declare filtersValue: { 'curator-id': string | null };
   
   readyFilters = 0;
   frameObserver = new MutationObserver((mutations) => {
@@ -129,6 +133,9 @@ export default class extends Controller<HTMLDivElement> {
         turboFrameSrc.searchParams.set('match_type', this.matchTypeInputTargets.find(input => input.checked)!.value);
       }
     });
+    if (kind === 'curator') {
+      this.dispatch('change-curator', { detail: { 'curator-id': id ? +id : null } });
+    }
     if (!id && kind !== 'curator') {
       Cookies.remove(`csp-${kind}-filter`);
     } else {
@@ -161,6 +168,30 @@ export default class extends Controller<HTMLDivElement> {
       this.searchAndFiltersTarget.classList.add('has-combined-results');
     } else {
       this.searchAndFiltersTarget.classList.remove('has-search-results', 'has-combined-results');
+    }
+  }
+
+  filtersValueChanged(
+    newVal: { 'curator-id': number | null },
+    oldVal: { 'curator-id': number | null } | undefined
+  ) {
+    if (oldVal === undefined || JSON.stringify(newVal) === JSON.stringify(oldVal)) return;
+    const curatorSelect = this.filterSelectTargets.find(select => (
+      select.dataset.tomselectKindValue === 'curator'
+    ));
+    curatorSelect.tomselect.setValue(
+      newVal['curator-id'] ? String(newVal['curator-id']) : '',
+      !this.hasGalleryTarget
+    );
+    if (!this.hasGalleryTarget) {
+      // The turbo frame src attribute will be a path only prior to the frame loading
+      const newSrc = new URL(location.origin + this.turboFrameTarget.src);
+      if (newVal['curator-id']) {
+        newSrc.searchParams.set('curator', String(newVal['curator-id']));
+      } else {
+        newSrc.searchParams.delete('curator');
+      }
+      this.turboFrameTarget.src = newSrc.toString();
     }
   }
 }

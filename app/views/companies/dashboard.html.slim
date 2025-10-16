@@ -1,7 +1,8 @@
 main.dashboard.hidden-xs {
   data-controller="dashboard" 
   data-dashboard-active-tab-value=@workflow_stage
-  data-dashboard-modal-outlet="#main-modal" }
+  data-dashboard-modal-outlet="#main-modal"
+  data-action="stories:change-curator->dashboard#onChangeStoriesCurator" }
 
   = render('shared/navbars/company_nav', { company: @company, workflow_stage: @workflow_stage })
   
