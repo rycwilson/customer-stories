@@ -72,7 +72,7 @@ export function initDisplayOptions(this: ResourceController, isReset = false) {
           <div class="arrow"></div>
           <div class="popover-title__wrapper">
             <h3 class="popover-title label-secondary"></h3>
-            <button type="button" class="close" data-action="table-display-options#hide" aria-label="Close">
+            <button type="button" class="close" data-action="${controller}#hide" aria-label="Close">
               <span aria-hidden="true">&times;</span>
             </button>
           </div>
