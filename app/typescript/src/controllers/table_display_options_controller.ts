@@ -70,6 +70,10 @@ export default class TableDisplayOptionsController extends Controller {
       return false;
     }
     // $(this.element).popover('hide')
+    this.hide();
+  }
+
+  hide() {
     this.resourceOutlet.displayOptionsBtnTarget.click();
   }
 

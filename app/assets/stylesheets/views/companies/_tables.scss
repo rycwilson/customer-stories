@@ -196,9 +196,33 @@ td.toggle-child {
   max-width: revert;
   padding: 0;
 
+  .popover-title__wrapper {
+    position: relative;
+  }
+
+  button.close {
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    padding: 0 14px;
+    color: white;
+    opacity: 0.4;
+
+    &:hover,
+    &:focus {
+      opacity: 0.8;
+    }
+
+    span {
+      position: relative;
+      top: -0.15em;
+    }
+  }
+
   h3 {
     background-color: $brand-primary;
-    color: #fff;
+    color: white;
   }
 
   .form-group {
