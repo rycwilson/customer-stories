@@ -61,7 +61,7 @@ export default class TableDisplayOptionsController extends Controller {
     setTimeout(() => {
       this.dashboardOutlet.filtersValue = { 'curator-id': curatorId };
     })
-    Cookies.set('csp-curator-id', select.value);
+    Cookies.set('csp-curator-filter', select.value);
   }
   
   onClickAway(e: Event) {

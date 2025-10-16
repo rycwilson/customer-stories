@@ -234,11 +234,14 @@ class CompaniesController < ApplicationController
   end
 
   def preselected_curator_id(company)
-    if cookies['csp-curator-id']
-      if cookies['csp-curator-id'].blank?
+    cookie_val = cookies['csp-curator-filter']
+    if cookie_val
+      if cookie_val.blank?
         nil
+      elsif company.curators.exists?(cookie_val.to_i)
+        cookie_val.to_i
       else
-        company.curators.exists?(cookies['csp-curator-id']) ? cookies['csp-curator-id'].to_i : current_user.id
+        current_user.id
       end
     else
       current_user.id
