@@ -8,7 +8,7 @@ module VisitorsHelper
 
   def visitors_filters(curator_id)
     {
-      'curator-id': curator_id
+      'curator': curator_id
     }
   end
 end

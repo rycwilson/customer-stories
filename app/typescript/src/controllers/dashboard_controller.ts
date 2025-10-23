@@ -66,7 +66,7 @@ export default class DashboardController extends Controller {
     filters: { type: Object }
   };    
   declare activeTabValue: DashboardTab | null;
-  declare filtersValue: { 'curator-id': number | null } | undefined;
+  declare filtersValue: ResourceFilters | undefined;
   
   tabRestorationListener = this.onTabRestoration.bind(this);
   spinnerTimers: { [key: string]: number } = { 
@@ -159,18 +159,17 @@ export default class DashboardController extends Controller {
     );
   }
 
-  onChangeStoriesCurator({ detail: { 'curator-id': curatorId } }: { detail: { 'curator-id': number | null }}) {
-    this.filtersValue = { 'curator-id': curatorId };
+  onChangeStoriesCurator({ detail: { 'curator': curatorId } }: { detail: { 'curator': number | null }}) {
+    this.filtersValue = { 'curator': curatorId };
   }
 
   activeTabValueChanged(activeTab: DashboardTab) {
     if (activeTab) this.initTabPanel(activeTab);
   }
 
-  filtersValueChanged(
-    newVal: { 'curator-id': number | null },
-    oldVal: { 'curator-id': number | null } | undefined
-  ) {
+  filtersValueChanged(newVal: ResourceFilters, oldVal: ResourceFilters | undefined) {
+    console.log('old dashboard filtersValue:', oldVal)
+    console.log('new dashboard filtersValue:', newVal)
     if (oldVal === undefined || JSON.stringify(newVal) === JSON.stringify(oldVal)) return;
     [
       this.customerWinsTarget,

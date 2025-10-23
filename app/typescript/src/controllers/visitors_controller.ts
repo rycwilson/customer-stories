@@ -28,6 +28,9 @@ export default class VisitorsController extends ResourceController {
     });
   }
 
+  filtersValueChanged(newVal: ResourceFilters, oldVal: ResourceFilters) {
+
+  }
   // drawBarGraph(data: ) {
   //   const data = new google.visualization.DataTable();
   //   data.addColumn('date', 'Date');

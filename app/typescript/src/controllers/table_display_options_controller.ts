@@ -28,7 +28,7 @@ export default class TableDisplayOptionsController extends Controller {
     document.addEventListener('click', this.clickAwayHandler);
 
     Object.entries(this.resourceOutlet.filtersValue).forEach(([key, value]) => {
-      if (key === 'curator-id') {
+      if (key === 'curator') {
         this.curatorSelectTarget.value = value ? String(value) : '';
       } else if (typeof value === 'boolean') {
         const checkbox = <HTMLInputElement>this.element.querySelector(`#${key}`);
@@ -57,9 +57,9 @@ export default class TableDisplayOptionsController extends Controller {
 
   onChangeCurator({ target: select }: { target: TomSelectInput }) {
     const curatorId = +select.value || null;
-    this.resourceOutlet.filtersValue = { ...this.resourceOutlet.filtersValue, 'curator-id': curatorId };
+    this.resourceOutlet.filtersValue = { ...this.resourceOutlet.filtersValue, 'curator': curatorId };
     setTimeout(() => {
-      this.dashboardOutlet.filtersValue = { 'curator-id': curatorId };
+      this.dashboardOutlet.filtersValue = { 'curator': curatorId };
     })
     Cookies.set('csp-curator-filter', select.value);
   }

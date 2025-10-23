@@ -3,8 +3,6 @@ import { getJSON } from '../utils';
 import { init as initTable, initDisplayOptions, search as searchTable } from '../tables';
 import type { Api } from "datatables.net-bs";
 
-type FiltersValue = { [key: string]: boolean | number | null };
-
 export default class ResourceController extends Controller<HTMLElement> {
   static outlets = ['dashboard'];
 
@@ -23,12 +21,12 @@ export default class ResourceController extends Controller<HTMLElement> {
   static values = {
     dataPath: String,
     init: { type: Boolean, default: false },
-    filters: { type: Object, default: {} },
+    filters: { type: Object },
     displayOptionsHtml: String
   }
   declare readonly dataPathValue: string;
   declare readonly initValue: boolean;
-  declare filtersValue: FiltersValue;
+  declare filtersValue: ResourceFilters;
   declare readonly displayOptionsHtmlValue: string;
 
   declare dt: Api<any> | undefined;
@@ -94,13 +92,13 @@ export default class ResourceController extends Controller<HTMLElement> {
     }
   }
   
-  filtersValueChanged(newVal: FiltersValue, oldVal: FiltersValue) {
-    // console.log(`old ${this.identifier} filtersValue:`, oldVal)
-    // console.log(`new ${this.identifier} filtersValue:`, newVal)
-    if (Object.keys(oldVal).length === 0) return false;
-    // if (newVal['curator-id'] !== oldVal['curator-id']) {
+  filtersValueChanged(newVal: ResourceFilters, oldVal: ResourceFilters | undefined) {
+    console.log(`old ${this.identifier} filtersValue:`, oldVal)
+    console.log(`new ${this.identifier} filtersValue:`, newVal)
+    // if (Object.keys(oldVal).length === 0) return false;
+    // if (newVal['curator'] !== oldVal['curator']) {
     //   this.addSyncListener((ctrl) => (
-    //     ctrl.filtersValue = { ...ctrl.filtersValue, ...{ 'curator-id': this.filtersValue['curator-id'] } }
+    //     ctrl.filtersValue = { ...ctrl.filtersValue, ...{ 'curator': this.filtersValue['curator'] } }
     //   ));
     // }
     if (this.dt) {

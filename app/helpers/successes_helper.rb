@@ -28,9 +28,9 @@ module SuccessesHelper
     end
   end
 
-  def customer_wins_table_filters(curator_id)
+  def customer_wins_filters(curator_id)
     {
-      'curator-id': curator_id,
+      'curator': curator_id,
       'show-wins-with-story': if cookies['csp-show-wins-with-story']
                                 cookies['csp-show-wins-with-story'] == 'true'
                               else

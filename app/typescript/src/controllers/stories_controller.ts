@@ -29,7 +29,7 @@ export default class extends Controller<HTMLDivElement> {
   declare readonly filterSelectTargets: TomSelectInput[];
 
   static values = { filters: Object };
-  declare filtersValue: { 'curator-id': string | null };
+  declare filtersValue: ResourceFilters | undefined;
   
   readyFilters = 0;
   frameObserver = new MutationObserver((mutations) => {
@@ -134,7 +134,7 @@ export default class extends Controller<HTMLDivElement> {
       }
     });
     if (kind === 'curator') {
-      this.dispatch('change-curator', { detail: { 'curator-id': id ? +id : null } });
+      this.dispatch('change-curator', { detail: { 'curator': id ? +id : null } });
     }
     if (!id && kind !== 'curator') {
       Cookies.remove(`csp-${kind}-filter`);
@@ -171,22 +171,19 @@ export default class extends Controller<HTMLDivElement> {
     }
   }
 
-  filtersValueChanged(
-    newVal: { 'curator-id': number | null },
-    oldVal: { 'curator-id': number | null } | undefined
-  ) {
+  filtersValueChanged(newVal: ResourceFilters, oldVal: ResourceFilters | undefined) {
     if (oldVal === undefined || JSON.stringify(newVal) === JSON.stringify(oldVal)) return;
     const curatorSelect = this.filterSelectTargets.find(select => (
       select.dataset.tomselectKindValue === 'curator'
     ));
     curatorSelect.tomselect.setValue(
-      newVal['curator-id'] ? String(newVal['curator-id']) : '',
+      newVal['curator'] ? String(newVal['curator']) : '',
       !this.hasGalleryTarget
     );
     if (!this.hasGalleryTarget) {
       const newSrc = new URL(location.origin + this.turboFrameTarget.src);
-      if (newVal['curator-id']) {
-        newSrc.searchParams.set('curator', String(newVal['curator-id']));
+      if (newVal['curator']) {
+        newSrc.searchParams.set('curator', String(newVal['curator']));
       } else {
         newSrc.searchParams.delete('curator');
       }

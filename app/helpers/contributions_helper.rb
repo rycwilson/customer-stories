@@ -29,9 +29,9 @@ module ContributionsHelper
     end
   end
 
-  def contributions_table_filters(curator_id)
+  def contributions_filters(curator_id)
     {
-      'curator-id': curator_id,
+      'curator': curator_id,
       'show-completed': if cookies['csp-show-completed'].present?
                           cookies['csp-show-completed'] == 'true'
                         else

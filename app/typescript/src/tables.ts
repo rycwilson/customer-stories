@@ -13,9 +13,9 @@ export function toggleRowGroups(this: ResourceController, shouldEnable: boolean)
 export function search(this: ResourceController, tsSearchResults?: { [key: string]: string }) {
   const filters = Object.entries(this.filtersValue)
     .map(([filterId, filterVal]) => {
-      const checked = filterId !== 'curator-id' && filterVal;
+      const checked = filterId !== 'curator' && filterVal;
       switch (filterId) {
-        case 'curator-id': {
+        case 'curator': {
           const curatorId = filterVal;
           return { column: 'curator', q: curatorId ? `^${curatorId}$` : '', regEx: true, smartSearch: false };
         }

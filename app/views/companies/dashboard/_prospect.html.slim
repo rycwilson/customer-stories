@@ -53,7 +53,7 @@
           data-controller="customer-wins"
           data-customer-wins-dashboard-outlet =".dashboard"
           data-customer-wins-data-path-value="/successes"
-          data-customer-wins-filters-value=customer_wins_table_filters(curator_id).to_json
+          data-customer-wins-filters-value=customer_wins_filters(curator_id).to_json
           data-customer-wins-display-options-html-value=customer_wins_display_options_escaped_html(company, curator_id)
           data-action="datatable:init->customer-wins#onTableInitComplete"
           aria-labelledby="customer-wins-tab"
@@ -68,7 +68,7 @@
           data-controller="contributions"          
           data-contributions-dashboard-outlet=".dashboard"
           data-contributions-data-path-value=company_contributions_path(company)
-          data-contributions-filters-value=contributions_table_filters(curator_id).to_json
+          data-contributions-filters-value=contributions_filters(curator_id).to_json
           data-contributions-display-options-html-value=contributions_display_options_escaped_html(company, curator_id)
           data-contributions-invitation-template-select-html-value=invitation_template_select_escaped_html(company)
           data-action="datatable:init->contributions#onTableInitComplete"

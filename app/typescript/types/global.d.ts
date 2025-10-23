@@ -39,6 +39,7 @@ interface CustomerStoriesApp {
 
 type ScreenSize = 'xs' | 'sm' | 'md-lg';
 type ResourceName = 'customerWins' | 'contributions' | 'storyContributions' | 'stories' | 'promotedStories' | 'visitors' | 'activity';
+type ResourceFilters = { [key: string]: boolean | number | null };
 type TomSelectInput = HTMLSelectElement & TomInput;
 type SelectInputKind = 'filter' | 'curator' | 'status' | 'customer' | 'category' | 'product' | 'storyTag' | 'contributor' | 'referrer' | 'invitationTemplate' | 'story' | 'dateRange';
 type AdImage = 'SquareImage' | 'LandscapeImage' | 'SquareLogo' | 'LandscapeLogo';
