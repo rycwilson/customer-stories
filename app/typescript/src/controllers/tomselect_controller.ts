@@ -207,7 +207,6 @@ export default class TomselectController extends Controller<TomSelectInput> {
       onClear() {
         setTimeout(() => {
           if (ctrl.ts.getValue() === '') {
-            console.log('onClear')
             ctrl.dispatch('clear');
           }
         });
@@ -247,7 +246,7 @@ export default class TomselectController extends Controller<TomSelectInput> {
       },
       
       onItemAdd(this: TomSelect, value: string, item: TomItem) {
-        console.log(`onItemAdd(${value}, ${item})`);
+        // console.log(`onItemAdd(${value}, ${item})`);
       },
 
       // the following two callbacks apply to the company tags inputs
@@ -263,7 +262,7 @@ export default class TomselectController extends Controller<TomSelectInput> {
       },
 
       onDelete(values: string[], e: PointerEvent) {
-        console.log('onDelete')
+        // console.log('onDelete')
         if (e.target instanceof HTMLElement && e.target.closest('#company-tags-form')) {
           const [tagName] = values;
           const item = <HTMLElement>(<HTMLAnchorElement>e.target).closest('.item');
