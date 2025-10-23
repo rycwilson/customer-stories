@@ -184,14 +184,13 @@ export default class extends Controller<HTMLDivElement> {
       !this.hasGalleryTarget
     );
     if (!this.hasGalleryTarget) {
-      // The turbo frame src attribute will be a path only prior to the frame loading
       const newSrc = new URL(location.origin + this.turboFrameTarget.src);
       if (newVal['curator-id']) {
         newSrc.searchParams.set('curator', String(newVal['curator-id']));
       } else {
         newSrc.searchParams.delete('curator');
       }
-      this.turboFrameTarget.src = newSrc.toString();
+      this.turboFrameTarget.src = '/?' + newSrc.searchParams.toString();
     }
   }
 }
