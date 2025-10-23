@@ -180,4 +180,8 @@ input.tomselected + .ts-wrapper.multi {
     font-size: 1.75rem;
     color: #6c757d;
   }
+
+  &.ts-wrapper:not(.has-items) .clear-button {
+    pointer-events: none;
+  }
 }
