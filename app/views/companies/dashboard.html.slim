@@ -9,16 +9,16 @@ main.dashboard.hidden-xs {
   .tab-content data-dashboard-target="tabContent"
     = render( \
         'companies/dashboard/prospect',
-        { company: @company, curator_id: @curator_id, workflow_stage: @workflow_stage, active_tab: @prospect_tab })
+        { company: @company, curator: @curator, workflow_stage: @workflow_stage, active_tab: @prospect_tab })
 
     = render( \
         'companies/dashboard/curate',
-        { company: @company, curator_id: @curator_id, workflow_stage: @workflow_stage, story: @story})
+        { company: @company, workflow_stage: @workflow_stage, story: @story})
 
     = render( \
         'companies/dashboard/promote',
-        { company: @company, curator_id: @curator_id, workflow_stage: @workflow_stage, active_tab: @promote_tab })
+        { company: @company, curator: @curator, workflow_stage: @workflow_stage, active_tab: @promote_tab })
 
     = render( \
         'companies/dashboard/measure',
-        { company: @company, curator_id: @curator_id, workflow_stage: @workflow_stage, active_tab: @measure_tab })
+        { company: @company, curator: @curator, workflow_stage: @workflow_stage, active_tab: @measure_tab })

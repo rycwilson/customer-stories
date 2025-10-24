@@ -50,8 +50,8 @@
           data-controller="visitors"
           data-visitors-dashboard-outlet=".dashboard"
           data-visitors-data-path-value=visitors_company_path(company)
-          data-visitors-filters-value=visitors_filters(curator_id).to_json
-          data-visitors-display-options-html-value=visitors_display_options_escaped_html(company, curator_id)
+          data-visitors-filters-value=visitors_filters(curator.id).to_json
+          data-visitors-display-options-html-value=visitors_display_options_escaped_html(company, curator.id)
           aria-labelledby="visitors-tab"
           role="tabpanel" }
 
@@ -63,7 +63,7 @@
           data-resource-name="activity"
           data-controller="activity"
           data-activity-dashboard-outlet=".dashboard"
-          data-activity-filters-value={ 'curator': curator_id }.to_json
+          data-activity-filters-value={ 'curator': curator.id }.to_json
           aria-labelledby="activity-tab"
           role="tabpanel" }
 

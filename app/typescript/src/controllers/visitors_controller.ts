@@ -6,16 +6,18 @@ export default class VisitorsController extends ResourceController {
     if (!shouldInit) return;
     this.dispatch('loading');
     // console.log('getting visitors:', this.dataPathValue, this.searchParamsValue || 'no params')
-    const searchParams = new URLSearchParams({ 'time_zone': Intl.DateTimeFormat().resolvedOptions().timeZone });
+    const searchParams = new URLSearchParams({ 
+      'time_zone': Intl.DateTimeFormat().resolvedOptions().timeZone 
+    });
     const dataPromise = getJSON(this.dataPathValue, searchParams);
-    const chartsPromise = this.getCharts();
+    const chartsPromise = this.getChartsLibrary();
     const [visitors] = await Promise.all([dataPromise, chartsPromise]);
     CSP.visitors = visitors;
     // this.drawBarGraph(visitors.by_date);
     this.dispatch('ready', { detail: { resourceName: 'visitors' } });
   }
 
-  getCharts(): Promise<void> {
+  getChartsLibrary(): Promise<void> {
     return new Promise(resolve => {
       const script = document.createElement('script');
       script.src = 'https://www.gstatic.com/charts/loader.js';
@@ -31,6 +33,7 @@ export default class VisitorsController extends ResourceController {
   filtersValueChanged(newVal: ResourceFilters, oldVal: ResourceFilters) {
 
   }
+
   // drawBarGraph(data: ) {
   //   const data = new google.visualization.DataTable();
   //   data.addColumn('date', 'Date');

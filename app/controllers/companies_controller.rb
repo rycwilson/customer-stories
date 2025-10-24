@@ -2,6 +2,7 @@
 
 class CompaniesController < ApplicationController
   before_action :set_company, except: %i[new create promote get_curators get_invitation_templates]
+  before_action :set_curator, only: %i[show visitors]
   before_action(only: %i[visitors activity]) { Time.zone = params[:time_zone] || 'UTC' }
 
   def new
@@ -10,7 +11,7 @@ class CompaniesController < ApplicationController
   end
 
   def show
-    @curator_id = preselected_curator_id(@company)
+    @curator = set_curator
     @workflow_stage = params[:workflow_stage]
     @prospect_tab = cookies['csp-prospect-tab'] || '#customer-wins'
     @promote_tab = cookies['csp-promote-tab'] || '#promoted-stories'
@@ -114,13 +115,12 @@ class CompaniesController < ApplicationController
   # TODO: Why was this called "Landing"? It's just a % of overall visitors
   # "#{((story.visitors.to_f / company.visitors.count) * 100).round(1)}%",
   def visitors
-    company = Company.find(params[:id])
-    # company = Company.find_by_subdomain 'varmour'
-    by_story = Visitor.to_company_by_story(company.id).map do |result|
+    # @company = Company.find_by_subdomain 'varmour'
+    by_story = Visitor.to_company_by_story(@company.id).map do |result|
       [result.customer, result.story, result.visitors]
     end
     by_date = Visitor.to_company_by_date(
-      company.id,
+      @company.id,
       story: params[:story_id],
       start_date: params[:start_date],
       end_date: params[:end_date]
@@ -233,18 +233,16 @@ class CompaniesController < ApplicationController
     end.to_h.compact
   end
 
-  def preselected_curator_id(company)
+  def set_curator
     cookie_val = cookies['csp-curator-filter']
-    if cookie_val
-      if cookie_val.blank?
-        nil
-      elsif company.curators.exists?(cookie_val.to_i)
-        cookie_val.to_i
-      else
-        current_user.id
-      end
+    return current_user unless cookie_val
+
+    if cookie_val.blank?
+      nil
+    elsif @company.curators.exists?(cookie_val.to_i)
+      @company.curators.find(cookie_val.to_i)
     else
-      current_user.id
+      current_user
     end
   end
 

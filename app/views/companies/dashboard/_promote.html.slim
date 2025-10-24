@@ -65,8 +65,8 @@
           data-controller="promoted-stories"
           data-promoted-stories-dashboard-outlet=".dashboard"
           data-promoted-stories-data-path-value=company_adwords_ads_path(company)
-          data-promoted-stories-filters-value={ 'curator': curator_id }.to_json
-          data-promoted-stories-display-options-html-value=promoted_stories_display_options_escaped_html(company, curator_id)
+          data-promoted-stories-filters-value={ 'curator': curator.id }.to_json
+          data-promoted-stories-display-options-html-value=promoted_stories_display_options_escaped_html(company, curator.id)
           data-action="datatable:init->promoted-stories#onTableInitComplete" }
 
           table#promoted-stories-table.table {
