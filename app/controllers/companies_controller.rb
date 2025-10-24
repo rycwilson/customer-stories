@@ -116,11 +116,13 @@ class CompaniesController < ApplicationController
   # "#{((story.visitors.to_f / company.visitors.count) * 100).round(1)}%",
   def visitors
     # @company = Company.find_by_subdomain 'varmour'
-    by_story = Visitor.to_company_by_story(@company.id).map do |result|
+    # @curator = User.find_by_email 'kturner@varmour.com'
+    by_story = Visitor.to_company_by_story(@company.id, @curator&.id).map do |result|
       [result.customer, result.story, result.visitors]
     end
     by_date = Visitor.to_company_by_date(
       @company.id,
+      curator: @curator&.id,
       story: params[:story_id],
       start_date: params[:start_date],
       end_date: params[:end_date]

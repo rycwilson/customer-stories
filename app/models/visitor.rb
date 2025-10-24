@@ -43,28 +43,30 @@ class Visitor < ApplicationRecord
     formatted_date = "TO_CHAR(#{date_trunc}, 'YYYY-MM-DD')"
 
     # Convert to UTC since VisitorSession timestamps are stored in UTC
-    where_conditions = {
+    conditions = {
       visitor_sessions: { timestamp: (group_range.first.utc..group_range.last.utc) },
       visitor_actions: { type: 'PageView', company_id: }
     }
-    where_conditions[:stories] = { id: story_id } if story_id.present?
+    conditions[:stories] = { id: story_id } if story_id.present?
+    conditions[:successes] = { curator_id: options[:curator] } if options[:curator].present?
     select("#{formatted_date} AS date, COUNT(DISTINCT visitors.id) AS visitors")
       .joins(visitor_sessions: { visitor_actions: { success: :story } })
-      .where(where_conditions)
+      .where(conditions)
       .group(formatted_date)
       .order('date ASC')
   }
 
-  scope :to_company_by_story, lambda { |company_id|
-    joins(visitor_sessions: { visitor_actions: { success: %i[customer story] } })
-      .where(visitor_actions: { company_id: })
-      .group('customers.name, stories.title, visitor_actions.company_id')
-      .select([
-        'customers.name AS customer',
-        'stories.title AS story',
-        'visitor_actions.company_id',
-        'COUNT(DISTINCT visitors.id) AS visitors'
-      ].join(', '))
-      .order('visitors DESC')
+  scope :to_company_by_story, lambda { |company_id, curator_id|
+    query = joins(visitor_sessions: { visitor_actions: { success: %i[customer story] } })
+            .where(visitor_actions: { company_id: })
+    query = query.where(successes: { curator_id: }) if curator_id.present?
+    query.group('customers.name, stories.title, visitor_actions.company_id')
+         .select([
+           'customers.name AS customer',
+           'stories.title AS story',
+           'visitor_actions.company_id',
+           'COUNT(DISTINCT visitors.id) AS visitors'
+         ].join(', '))
+         .order('visitors DESC')
   }
 end
