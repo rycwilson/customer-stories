@@ -115,18 +115,25 @@ class CompaniesController < ApplicationController
   # TODO: Why was this called "Landing"? It's just a % of overall visitors
   # "#{((story.visitors.to_f / company.visitors.count) * 100).round(1)}%",
   def visitors
-    # @company = Company.find_by_subdomain 'varmour'
-    # @curator = User.find_by_email 'kturner@varmour.com'
+    if @company.subdomain == 'acme-test'
+      @company = Company.find_by_subdomain 'varmour'
+      @curator = User.find_by_email 'kturner@varmour.com'
+      start_date = params[:start_date] || '2018-01-01'
+      end_date = params[:end_date] || '2018-12-31'
+    else
+      start_date = params[:start_date] || 30.days.ago
+      end_date = params[:end_date] || Date.today
+    end
     by_story = Visitor.to_company_by_story(@company.id, @curator&.id).map do |result|
       [result.customer, result.story, result.visitors]
     end
     by_date = Visitor.to_company_by_date(
       @company.id,
-      curator: @curator&.id,
-      story: params[:story_id],
-      start_date: params[:start_date],
-      end_date: params[:end_date]
-    ).map { |visitor| visitor.attributes.compact }
+      curator_id: @curator&.id,
+      story_id: params[:story_id],
+      start_date: start_date.to_date,
+      end_date: end_date.to_date
+    ).map { |visitor| visitor.attributes.values.compact }
     respond_to do |format|
       format.json do
         render json: { by_story:, by_date: }

@@ -11,8 +11,10 @@ export default class VisitorsController extends ResourceController {
     });
     const dataPromise = getJSON(this.dataPathValue, searchParams);
     const chartsPromise = this.getChartsLibrary();
-    const [visitors] = await Promise.all([dataPromise, chartsPromise]);
+    const [visitors,] = await Promise.all([dataPromise, chartsPromise]);
     CSP.visitors = visitors;
+    this.drawVisitorsChart(visitors.by_date);
+    // this.drawStoriesChart(visitors.by_story);
     // this.drawBarGraph(visitors.by_date);
     this.dispatch('ready', { detail: { resourceName: 'visitors' } });
   }
@@ -34,15 +36,37 @@ export default class VisitorsController extends ResourceController {
 
   }
 
-  // drawBarGraph(data: ) {
-  //   const data = new google.visualization.DataTable();
-  //   data.addColumn('date', 'Date');
-  //   data.addColumn('number', 'Visitors');
-  //   CSP.visitors.by_date.forEach((row: any) => {
-  //     data.addRow([new Date(row.date), row.visitors]);
-  //   });
-  //   const options = { title: 'Visitors by Date', legend: { position: 'none' }, height: 300 };
-  //   const chart = new google.visualization.ColumnChart(document.getElementById('visitors-bar-graph')!);
-  //   chart.draw(data, options);
+  drawVisitorsChart(data: any[]) {
+    // Preprocess data: ensure first column is a Date object and add header row
+    const formattedData = [
+      ['Period', 'Visitors'],
+      ...data.map(([period, visitors]) => [new Date(period), visitors])
+    ];
+    const chartData = google.visualization.arrayToDataTable(formattedData);
+    const options: google.visualization.ColumnChartOptions = { 
+      title: 'Unique Visitors', 
+      hAxis: { 
+        title: 'Month',
+        format: "MMM ''yy",
+        slantedText: true,
+        slantedTextAngle: 45
+      },
+      vAxis: { title: 'Visitors', minValue: 0 },
+      legend: 'none',
+      height: 350,
+      backgroundColor: 'transparent',
+      chartArea: {
+        backgroundColor: 'white',
+        top: 75,
+        bottom: 100
+      }
+    };
+    const container = document.getElementById('visitors-column-chart');
+    if (!container) return;
+    const chart = new google.visualization.ColumnChart(container);
+    chart.draw(chartData, options);
+  }
+
+  // drawStoriesChart(data: any[]) {
   // }
 }
