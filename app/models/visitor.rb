@@ -15,11 +15,10 @@ class Visitor < ApplicationRecord
   scope :top_to_company, ->(company_id, top) { to_company(company_id).order(visitor_sessions_count: :desc).limit(top) }
 
   scope :to_company_by_date, lambda { |company_id, **options|
+    curator_id = options[:curator_id]
     story_id = options[:story_id]
-    # start_date = options[:start_date]&.to_date || 30.days.ago.to_date
-    start_date = options[:start_date]&.to_date || 90.months.ago.to_date
-    # end_date = options[:end_date]&.to_date || Date.today
-    end_date = options[:end_date]&.to_date || 80.months.ago.to_date
+    start_date = options[:start_date]
+    end_date = options[:end_date]
     group_by, group_range =
       case (end_date - start_date).to_i
       when 0...21
@@ -48,7 +47,7 @@ class Visitor < ApplicationRecord
       visitor_actions: { type: 'PageView', company_id: }
     }
     conditions[:stories] = { id: story_id } if story_id.present?
-    conditions[:successes] = { curator_id: options[:curator] } if options[:curator].present?
+    conditions[:successes] = { curator_id: } if curator_id.present?
     select("#{formatted_date} AS date, COUNT(DISTINCT visitors.id) AS visitors")
       .joins(visitor_sessions: { visitor_actions: { success: :story } })
       .where(conditions)
