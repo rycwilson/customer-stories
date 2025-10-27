@@ -154,6 +154,16 @@ export function kebabize(str: string) {
   return str.replace(/[A-Z]+(?![a-z])|[A-Z]/g, ($, ofs) => (ofs ? "-" : "") + $.toLowerCase());
 }
 
+// Converts PascalCase, camelCase, or kebab-case to snake_case
+export function toSnakeCase(str: string): string {
+  // Convert kebab-case to snake_case
+  let snake = str.replace(/-/g, '_');
+  
+  // Convert PascalCase or camelCase to snake_case
+  snake = snake.replace(/([a-z0-9])([A-Z])/g, '$1_$2');
+  return snake.toLowerCase();
+}
+
 // export function copyToClipboard(str) {
 //   const onCopy = (e) => {
 //     e.clipboardData.setData("text/html", str);
