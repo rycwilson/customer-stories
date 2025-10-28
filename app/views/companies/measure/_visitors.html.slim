@@ -9,6 +9,9 @@
         'Category' => company.tag_select_options(:category),
         'Product' => company.tag_select_options(:product) }})
 
-#visitors-column-chart 
+h4.text-center.hidden style="margin: 5rem 0;" data-visitors-target="noDataMesg" 
+  | No data available
 
-#stories-bar-chart
+#visitors-column-chart data-visitors-target="columnChart"
+
+#stories-bar-chart data-visitors-target="barChart"

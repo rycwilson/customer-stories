@@ -134,12 +134,12 @@ export default class extends Controller<HTMLDivElement> {
       }
     });
     if (kind === 'curator') {
-      this.dispatch('change-curator', { detail: { 'curator': id ? +id : null } });
+      this.dispatch('change-curator', { detail: { [kind]: +id || null } });
     }
     if (!id && kind !== 'curator') {
       Cookies.remove(`csp-${kind}-filter`);
     } else {
-      Cookies.set(`csp-${kind}-filter`, id);
+      Cookies.set(`csp-${kind}-filter`, String(id));
     }
   }
   

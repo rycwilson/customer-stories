@@ -49,7 +49,6 @@ export function search(this: ResourceController, tsSearchResults?: { [key: strin
 
 export function initDisplayOptions(this: ResourceController, isReset = false) {
   const btn = this.displayOptionsBtnTarget;
-  const controller = this.identifier === 'visitors' ? 'visitors-display-options' : 'table-display-options';
   if (isReset) {
     $(btn).data()['bs.popover'].options.content = this.displayOptionsHtmlValue;
   } else {
@@ -64,15 +63,15 @@ export function initDisplayOptions(this: ResourceController, isReset = false) {
       template: `
         <div
           class="popover ${this.identifier}" 
-          data-controller="${controller}" 
-          data-${controller}-${this.identifier}-outlet="#${this.identifier}"
-          data-${controller}-dashboard-outlet=".dashboard"
-          data-action="tomselect:change-curator->${controller}#onChangeCurator"
+          data-controller="table-display-options" 
+          data-table-display-options-${this.identifier}-outlet="#${this.identifier}"
+          data-table-display-options-dashboard-outlet=".dashboard"
+          data-action="change->table-display-options#onChange"
           role="tooltip">
           <div class="arrow"></div>
           <div class="popover-title__wrapper">
             <h3 class="popover-title label-secondary"></h3>
-            <button type="button" class="close" data-action="${controller}#hide" aria-label="Close">
+            <button type="button" class="close" data-action="table-display-options#hide" aria-label="Close">
               <span aria-hidden="true">&times;</span>
             </button>
           </div>

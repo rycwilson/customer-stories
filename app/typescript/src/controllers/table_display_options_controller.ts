@@ -3,6 +3,7 @@ import { Controller } from '@hotwired/stimulus';
 import type DashboardController from "./dashboard_controller";
 import type ResourceController from "./resource_controller";
 import { toggleRowGroups as toggleTableRowGroups } from '../tables';
+import { kebabize } from '../utils';
 
 export default class TableDisplayOptionsController extends Controller {
   static outlets = ['dashboard', 'customer-wins', 'contributions', 'promoted-stories', 'visitors'];
@@ -21,8 +22,8 @@ export default class TableDisplayOptionsController extends Controller {
 
   clickAwayHandler: (e: Event) => void = this.onClickAway.bind(this);
 
-  initialize() {
-  }
+  // initialize() {
+  // }
 
   connect() {
     document.addEventListener('click', this.clickAwayHandler);
@@ -55,13 +56,24 @@ export default class TableDisplayOptionsController extends Controller {
     throw new Error(`No valid resource outlet found for ${this.identifier} controller.`)
   }
 
-  onChangeCurator({ target: select }: { target: TomSelectInput }) {
-    const curatorId = +select.value || null;
-    this.resourceOutlet.filtersValue = { ...this.resourceOutlet.filtersValue, 'curator': curatorId };
-    setTimeout(() => {
-      this.dashboardOutlet.filtersValue = { 'curator': curatorId };
-    })
-    Cookies.set('csp-curator-filter', select.value);
+  // Filter keys are kebab-cased due to:
+  // 1 - For checkboxees, the key is derived from the element id
+  // 2 - The key is used in cookies which use kebab-case
+  onChange({ target }: { target: TomSelectInput | HTMLInputElement }) {
+    const filterId = target.type === 'checkbox' ? 
+      target.id : 
+      kebabize(target.dataset.tomselectKindValue);
+    const filterVal = target.type === 'checkbox' ? 
+      target.checked : 
+      (filterId === 'curator' ? +target.value || null : target.value);
+    const changedFilter = { [filterId]: filterVal };
+    this.resourceOutlet.filtersValue = { ...this.resourceOutlet.filtersValue, ...changedFilter };
+
+    // The curator filter is the only one shared across the dashboard
+    if (filterId === 'curator') {
+      setTimeout(() => { this.dashboardOutlet.filtersValue = changedFilter; });
+    }
+    Cookies.set(`csp-${filterId}-filter`, String(filterVal || ''));
   }
   
   onClickAway(e: Event) {
