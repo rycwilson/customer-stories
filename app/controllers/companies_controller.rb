@@ -11,7 +11,6 @@ class CompaniesController < ApplicationController
   end
 
   def show
-    @curator = set_curator
     @workflow_stage = params[:workflow_stage]
     @prospect_tab = cookies['csp-prospect-tab'] || '#customer-wins'
     @promote_tab = cookies['csp-promote-tab'] || '#promoted-stories'
@@ -115,7 +114,7 @@ class CompaniesController < ApplicationController
   # TODO: Why was this called "Landing"? It's just a % of overall visitors
   # "#{((story.visitors.to_f / company.visitors.count) * 100).round(1)}%",
   def visitors
-    if @company.subdomain == 'acme-test'
+    if use_demo_visitors_data?
       @company = Company.find_by_subdomain 'varmour'
       @curator = User.find_by_email 'kturner@varmour.com'
       start_date = params[:start_date] || '2018-01-01'
@@ -124,6 +123,7 @@ class CompaniesController < ApplicationController
       start_date = params[:start_date] || 30.days.ago
       end_date = params[:end_date] || Date.today
     end
+    # @show_visitor_source = params.key?(:show_visitor_source) ? params[:show_visitor_source] == 'true' : true
     by_story = Visitor.to_company_by_story(@company.id, @curator&.id).map do |result|
       [result.customer, result.story, result.visitors]
     end
@@ -246,13 +246,13 @@ class CompaniesController < ApplicationController
     cookie_val = cookies['csp-curator-filter']
     return current_user unless cookie_val
 
-    if cookie_val.blank?
-      nil
-    elsif @company.curators.exists?(cookie_val.to_i)
-      @company.curators.find(cookie_val.to_i)
-    else
-      current_user
-    end
+    @curator = if cookie_val.blank?
+                 nil
+               elsif @company.curators.exists?(cookie_val.to_i)
+                 @company.curators.find(cookie_val.to_i)
+               else
+                 current_user
+               end
   end
 
   def ad_images_removed?(company_params)
@@ -282,5 +282,10 @@ class CompaniesController < ApplicationController
         }
       end
       .delete_if { |image_ads| image_ads[:ads_params].empty? } # no affected ads
+  end
+
+  def use_demo_visitors_data?
+    @company.subdomain == 'acme-test' &&
+      @curator&.email.in?([nil, 'rycwilson@gmail.com', 'acme-test@customerstories.net'])
   end
 end

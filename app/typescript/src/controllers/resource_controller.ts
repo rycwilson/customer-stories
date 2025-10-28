@@ -92,16 +92,16 @@ export default class ResourceController extends Controller<HTMLElement> {
     }
   }
   
-  filtersValueChanged(newVal: ResourceFilters, oldVal: ResourceFilters | undefined) {
+  filtersValueChanged(newVal: ResourceFilters, oldVal: ResourceFilters) {
     // console.log(`old ${this.identifier} filtersValue:`, oldVal)
     // console.log(`new ${this.identifier} filtersValue:`, newVal)
-    // if (Object.keys(oldVal).length === 0) return false;
     // if (newVal['curator'] !== oldVal['curator']) {
     //   this.addSyncListener((ctrl) => (
     //     ctrl.filtersValue = { ...ctrl.filtersValue, ...{ 'curator': this.filtersValue['curator'] } }
     //   ));
     // }
     if (this.dt) {
+      if (Object.keys(oldVal).length === 0) return;
       searchTable.call(this);
     }
   }
