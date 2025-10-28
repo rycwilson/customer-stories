@@ -143,7 +143,6 @@ export default class DashboardController extends Controller {
     } else if (resourceName === 'promotedStories') {
       setReady(DashboardTab.Promote);
     } else if (resourceName === 'visitors') {
-      console.log('visitors ready')
       setReady(DashboardTab.Measure);
     }
     return true;
@@ -168,8 +167,8 @@ export default class DashboardController extends Controller {
   }
 
   filtersValueChanged(newVal: ResourceFilters, oldVal: ResourceFilters | undefined) {
-    console.log('old dashboard filtersValue:', oldVal)
-    console.log('new dashboard filtersValue:', newVal)
+    // console.log('old dashboard filtersValue:', oldVal)
+    // console.log('new dashboard filtersValue:', newVal)
     if (oldVal === undefined || JSON.stringify(newVal) === JSON.stringify(oldVal)) return;
     [
       this.customerWinsTarget,
