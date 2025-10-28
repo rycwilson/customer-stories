@@ -61,7 +61,6 @@ export default class VisitorsController extends ResourceController {
     if (this.element.checkVisibility()) {
       this.drawCharts();
     } else {
-      console.log('setting observer...')
       this.onPanelVisible(this.drawCharts.bind(this));
     }
   }
@@ -72,7 +71,6 @@ export default class VisitorsController extends ResourceController {
       entries.forEach(entry => {
         if (entry.isIntersecting) {
           callback();
-          console.log('disconnecting observer...')
           this.visibilityObserver.disconnect();
         }   
       });
@@ -81,7 +79,6 @@ export default class VisitorsController extends ResourceController {
   }
 
   drawCharts() {
-    console.log('drawing...')
     this.noDataMesgTarget.classList.toggle('hidden', this.hasData);
     if (!this.hasData) {
       [this.columnChartTarget, this.barChartTarget].forEach(chart => chart.replaceChildren());
