@@ -19,6 +19,8 @@ class CompaniesController < ApplicationController
     # @story_views_30_day_count = @company.page_views.story.since(30.days.ago).count
     @filters = filters_from_cookies
     @filters_match_type = cookies['csp-dashboard-filters-match-type'] || 'all'
+
+    @visitors_filters = visitors_filters
     render :dashboard
   end
 
@@ -114,26 +116,48 @@ class CompaniesController < ApplicationController
   # TODO: Why was this called "Landing"? It's just a % of overall visitors
   # "#{((story.visitors.to_f / company.visitors.count) * 100).round(1)}%",
   def visitors
+    filters = visitors_filters
     if use_demo_visitors_data?
       @company = Company.find_by_subdomain 'varmour'
-      @curator = User.find_by_email 'kturner@varmour.com'
-      start_date = params[:start_date] || '2018-01-01'
-      end_date = params[:end_date] || '2018-12-31'
+      curator = User.find_by_email 'kturner@varmour.com'
+      start_date = '2018-01-01'
+      end_date = '2018-12-31'
     else
-      start_date = params[:start_date] || 30.days.ago
-      end_date = params[:end_date] || Date.today
+      curator = @curator
+      start_date = case filters['date-range']
+                   when 'last-7' then 7.days.ago
+                   when 'last-30' then 30.days.ago
+                   when 'last-90' then 90.days.ago
+                   else 30.days.ago
+                   end
+      end_date = case filters['date-range']
+                 when 'previous-quarter' then Date.today
+                 when 'previous-year' then Date.today
+                 else Date.today
+                 end
     end
-    # @show_visitor_source = params.key?(:show_visitor_source) ? params[:show_visitor_source] == 'true' : true
-    by_story = Visitor.to_company_by_story(@company.id, @curator&.id).map do |result|
-      [result.customer, result.story, result.visitors]
+
+    if filters['show-visitor-source']
+      by_date = Visitor.to_company_by_date_v2(
+        @company.id,
+        curator_id: curator&.id,
+        start_date:,
+        end_date:,
+        show_visitor_source: filters['show-visitor-source']
+      ).map { |visitor| visitor.attributes.values.compact }
+    else
+      by_date = Visitor.to_company_by_date(
+        @company.id,
+        curator_id: curator&.id,
+        start_date:,
+        end_date:,
+        show_visitor_source: filters['show-visitor-source']
+      ).map { |visitor| visitor.attributes.values.compact }
     end
-    by_date = Visitor.to_company_by_date(
-      @company.id,
-      curator_id: @curator&.id,
-      story_id: params[:story_id],
-      start_date: start_date.to_date,
-      end_date: end_date.to_date
-    ).map { |visitor| visitor.attributes.values.compact }
+
+    by_story = Visitor.to_company_by_story(@company.id, curator&.id)
+                      .map { |result| [result.customer, result.story, result.visitors] }
+
     respond_to do |format|
       format.json do
         render json: { by_story:, by_date: }
@@ -229,6 +253,16 @@ class CompaniesController < ApplicationController
           .permit(:tab_color, :text_color, :show, :show_delay, :show_freq, :hide, :hide_delay)
   end
 
+  def set_curator
+    @curator = if params[:curator] || cookies['csp-curator-filter']
+                 @company.curators.find_by(
+                   id: (params[:curator] || cookies['csp-curator-filter']).to_i
+                 )
+               else
+                 current_user
+               end
+  end
+
   def filters_from_cookies
     %i[curator status customer category product].map do |type|
       cookie_val = cookies["csp-#{type}-filter"]
@@ -242,18 +276,26 @@ class CompaniesController < ApplicationController
     end.to_h.compact
   end
 
-  def set_curator
-    cookie_val = cookies['csp-curator-filter']
-    return current_user unless cookie_val
+  def visitors_filters(story_id = nil, category_id = nil, product_id = nil)
+    {
+      'curator' => @curator&.id,
+      'story' => params[:visitors_story] || story_id,
+      'category' => params[:visitors_category] || category_id,
+      'product' => params[:visitors_product] || product_id,
 
-    @curator = if cookie_val.blank?
-                 nil
-               elsif @company.curators.exists?(cookie_val.to_i)
-                 @company.curators.find(cookie_val.to_i)
-               else
-                 current_user
-               end
+      # Preferences are potentially stored in cookies
+      'date-range' => params[:visitors_date_range] || cookies['csp-date-range-filter'] || 'last-30',
+      'show-visitor-source' =>
+        if params['show_visitor_source'] || cookies['csp-show-visitor-source-filter']
+          ActiveRecord::Type::Boolean.new.cast(
+            params['show_visitor_source'] || cookies['csp-show-visitor-source-filter']
+          )
+        else
+          true
+        end
+    }.compact
   end
+
 
   def ad_images_removed?(company_params)
     return false if company_params[:adwords_images_attributes].blank?
@@ -285,7 +327,6 @@ class CompaniesController < ApplicationController
   end
 
   def use_demo_visitors_data?
-    @company.subdomain == 'acme-test' &&
-      @curator&.email.in?([nil, 'rycwilson@gmail.com', 'acme-test@customerstories.net'])
+    @company.subdomain == 'acme-test' and @curator&.email.in?([nil, 'rycwilson@gmail.com'])
   end
 end

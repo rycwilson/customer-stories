@@ -3,31 +3,33 @@
   .form-group
     label.control-label Curator
     div
-      = render('companies/shared/curator_select', { company:, curator_id:, ctrl_id: 'table-display-options' })
+      = render( \
+          'companies/shared/curator_select', 
+          { company:, curator_id: filters[:curator], ctrl_id: 'table-display-options' })
 
   .form-group 
     label.control-label Date Range 
     div
-      select.form-control {
-        data-controller="tomselect"
-        data-tomselect-kind-value="dateRange"
-        data-tomselect-custom-options-value='{ &quot;plugins&quot;: {} }' }
-        option value="last_30_days" selected="true" Last 30 Days
-        option value="last_60_days" Last 60 Days
-        option value="last_90_days" Last 90 Days
-        option value="last_6_months" Last 6 Months
-        option value="last_12_months" Last 12 Months
-        option value="this_month" This Month
-        option value="this_quarter" This Quarter
-        option value="this_year" This Year
-        option value="previous_month" Previous Month
-        option value="previous_quarter" Previous Quarter
-        option value="previous_year" Previous Year
+      = select_tag( \
+          nil,
+          options_for_select([ \
+            ['Last 7 Days', 'last-7'],
+            ['Last 30 Days', 'last-30'],
+            ['Last 90 Days', 'last-90'],
+            ['This Quarter', 'this-quarter'],
+            ['Last Quarter', 'previous-quarter'],
+            ['This Year', 'this-year'],
+            ['Last Year', 'previous-year'] ],
+          selected: filters[:visitors_date_range]),
+          data: { \
+            controller: 'tomselect',
+            tomselect_kind_value: 'dateRange',
+            tomselect_custom_options_value: '{ &quot;plugins&quot;: {} }' })
   
   .form-group 
     label.control-label Show
     div
       .checkbox 
         label for="show-visitor-source"
-          input#show-visitor-source type="checkbox" checked="true" 
+          input#show-visitor-source type="checkbox" checked="#{filters[:show_visitor_source]}"
           | Visitor source
