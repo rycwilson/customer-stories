@@ -34,7 +34,7 @@ class Visitor < ApplicationRecord
         else
           ['month', start_date.beginning_of_month.beginning_of_day...end_date.end_of_month.end_of_day]
         end
-  
+
       # Group based on the user's time zone
       date_trunc = [
         'DATE_TRUNC(',
@@ -42,11 +42,11 @@ class Visitor < ApplicationRecord
           "visitor_sessions.timestamp AT TIME ZONE 'UTC' AT TIME ZONE '#{Time.zone.tzinfo.name}'", # rubocop:disable Layout/ArrayAlignment
         ')'
       ].join('')
-  
+
       # Format the date as a string so that it is not interpreted by ActiveRecord as UTC
       # (as it will be if `date_trunc` is used directly in GROUP BY)
       formatted_date = "TO_CHAR(#{date_trunc}, 'YYYY-MM-DD')"
-  
+
       # Convert to UTC since VisitorSession timestamps are stored in UTC
       conditions = {
         visitor_sessions: { timestamp: (group_range.first.utc..group_range.last.utc) },
@@ -54,8 +54,8 @@ class Visitor < ApplicationRecord
       }
       conditions[:stories] = { id: story_id } if story_id.present?
       conditions[:successes] = { curator_id: } if curator_id.present?
-  
-      select("#{formatted_date} AS date, COUNT(DISTINCT visitors.id) AS visitors")
+
+      select("'#{group_by}' AS group_by, #{formatted_date} AS date, COUNT(DISTINCT visitors.id) AS visitors")
       .joins(visitor_sessions: { visitor_actions: { success: :story } })
       .where(conditions)
       .group(formatted_date)
@@ -76,9 +76,9 @@ class Visitor < ApplicationRecord
       end_date = end_date.to_date unless end_date.is_a?(Date)
       group_by, group_range =
         case (end_date - start_date).to_i
-        when 0...21
+        when 0...14
           ['day', start_date.beginning_of_day..end_date.end_of_day]
-        when 21...120
+        when 14...80
           ['week', start_date.beginning_of_week.beginning_of_day...end_date.end_of_week.end_of_day]
         else
           ['month', start_date.beginning_of_month.beginning_of_day...end_date.end_of_month.end_of_day]
@@ -116,8 +116,9 @@ class Visitor < ApplicationRecord
         subquery = subquery.joins(visitor_actions: { success: :story }).where(stories: { id: story_id }) if story_id.present?
         subquery = subquery.joins(visitor_actions: { success: :curator }).where(successes: { curator_id: }) if curator_id.present?
 
-        from("(SELECT visitor_id, date, referrer_type, MIN(min_timestamp) AS min_timestamp FROM (#{subquery.to_sql}) AS sub GROUP BY visitor_id, date, referrer_type) AS visitor_referrers")
+        from("(SELECT visitor_id, date, referrer_type, MIN(min_timestamp) AS min_timestamp, '#{group_by}' AS group_by FROM (#{subquery.to_sql}) AS sub GROUP BY visitor_id, date, referrer_type) AS visitor_referrers")
           .select([
+            'group_by',
             'date',
             "COUNT(DISTINCT CASE WHEN referrer_type = 'promote' THEN visitor_id END) AS promote",
             "COUNT(DISTINCT CASE WHEN referrer_type = 'link' THEN visitor_id END) AS link",
@@ -125,10 +126,10 @@ class Visitor < ApplicationRecord
             # "COUNT(DISTINCT CASE WHEN referrer_type = 'direct' THEN visitor_id END) AS direct",
             "COUNT(DISTINCT CASE WHEN referrer_type NOT IN ('promote','link','search') OR referrer_type IS NULL THEN visitor_id END) AS other"
           ].join(', '))
-          .group('date')
+          .group('group_by, date')
           .order('date ASC')
       else
-        select("#{formatted_date} AS date, COUNT(DISTINCT visitors.id) AS visitors")
+        select("'#{group_by}' AS group_by, #{formatted_date} AS date, COUNT(DISTINCT visitors.id) AS visitors")
         .joins(visitor_sessions: { visitor_actions: { success: :story } })
         .where(conditions)
         .group(formatted_date)
