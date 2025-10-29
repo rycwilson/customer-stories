@@ -24,7 +24,9 @@ export default class VisitorsController extends ResourceController {
     return new URLSearchParams({
       'time_zone': Intl.DateTimeFormat().resolvedOptions().timeZone,
       ...Object.fromEntries(
-        Object.entries(this.filtersValue).map(([key, value]) => [toSnakeCase(key), value || ''])
+        Object.entries(this.filtersValue).map(([key, value]) => (
+          [toSnakeCase(key), value === null ? '' : String(value)]
+        ))
       ) 
     });
   }
@@ -50,8 +52,8 @@ export default class VisitorsController extends ResourceController {
   async filtersValueChanged(newVal: ResourceFilters, oldVal: ResourceFilters) {
     if (this.initialized === false) return;
     
-    console.log('old visitors filtersValue:', oldVal)
-    console.log('new visitors filtersValue:', newVal)
+    // console.log('old visitors filtersValue:', oldVal)
+    // console.log('new visitors filtersValue:', newVal)
 
     const data = await getJSON(this.dataPathValue, this.searchParams);
     CSP.visitors = data;
@@ -96,7 +98,7 @@ export default class VisitorsController extends ResourceController {
     ];
     const chartData = google.visualization.arrayToDataTable(formattedData);
     const options: google.visualization.ColumnChartOptions = { 
-      title: 'Unique Visitors', 
+      title: `Total Visitors: ${this.visitors.by_date.reduce((sum, [, visitors]) => sum + visitors, 0)}`, 
       hAxis: { 
         title: 'Month',
         format: "MMM ''yy",
@@ -113,6 +115,10 @@ export default class VisitorsController extends ResourceController {
         bottom: 100
       }
     };
+    // if (this.filtersValue.showVisitorSource) {
+    //   options.isStacked = true;
+    //   options.legend = { position: 'top' };
+    // }
     const chart = new google.visualization.ColumnChart(this.columnChartTarget);
     chart.draw(chartData, options);
   }
