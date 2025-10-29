@@ -136,10 +136,18 @@ export default class VisitorsController extends ResourceController {
       hAxis: { 
         title: 'Month',
         format: "MMM ''yy",
+        titleTextStyle: { fontSize: 14 },
+        textStyle: { fontSize: 14 },
         slantedText: true,
         slantedTextAngle: 45
       },
-      vAxis: { title: 'Visitors', minValue: 0 },
+      vAxis: { 
+        title: 
+        'Visitors', 
+        minValue: 0,
+        titleTextStyle: { fontSize: 14 },
+        textStyle: { fontSize: 14 }
+      },
       isStacked,
       legend: isStacked ? { 
           position: 'top' ,
