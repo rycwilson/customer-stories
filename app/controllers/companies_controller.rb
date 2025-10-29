@@ -2,7 +2,10 @@
 
 class CompaniesController < ApplicationController
   before_action :set_company, except: %i[new create promote get_curators get_invitation_templates]
-  before_action :set_curator, only: %i[show visitors]
+  before_action(only: %i[show visitors]) do
+    set_curator
+    set_visitors_filters
+  end
   before_action(only: %i[visitors activity]) { Time.zone = params[:time_zone] || 'UTC' }
 
   def new
@@ -19,8 +22,6 @@ class CompaniesController < ApplicationController
     # @story_views_30_day_count = @company.page_views.story.since(30.days.ago).count
     @filters = filters_from_cookies
     @filters_match_type = cookies['csp-dashboard-filters-match-type'] || 'all'
-
-    @visitors_filters = visitors_filters
     render :dashboard
   end
 
@@ -116,7 +117,6 @@ class CompaniesController < ApplicationController
   # TODO: Why was this called "Landing"? It's just a % of overall visitors
   # "#{((story.visitors.to_f / company.visitors.count) * 100).round(1)}%",
   def visitors
-    filters = visitors_filters
     if use_demo_visitors_data?
       @company = Company.find_by_subdomain 'varmour'
       curator = User.find_by_email 'kturner@varmour.com'
@@ -124,26 +124,26 @@ class CompaniesController < ApplicationController
       end_date = '2018-12-31'
     else
       curator = @curator
-      start_date = case filters['date-range']
+      start_date = case @visitors_filters['date-range']
                    when 'last-7' then 7.days.ago
                    when 'last-30' then 30.days.ago
                    when 'last-90' then 90.days.ago
                    else 30.days.ago
                    end
-      end_date = case filters['date-range']
+      end_date = case @visitors_filters['date-range']
                  when 'previous-quarter' then Date.today
                  when 'previous-year' then Date.today
                  else Date.today
                  end
     end
 
-    if filters['show-visitor-source']
+    if @visitors_filters['show-visitor-source']
       by_date = Visitor.to_company_by_date_v2(
         @company.id,
         curator_id: curator&.id,
         start_date:,
         end_date:,
-        show_visitor_source: filters['show-visitor-source']
+        show_visitor_source: @visitors_filters['show-visitor-source']
       ).map { |visitor| visitor.attributes.values.compact }
     else
       by_date = Visitor.to_company_by_date(
@@ -151,7 +151,7 @@ class CompaniesController < ApplicationController
         curator_id: curator&.id,
         start_date:,
         end_date:,
-        show_visitor_source: filters['show-visitor-source']
+        show_visitor_source: @visitors_filters['show-visitor-source']
       ).map { |visitor| visitor.attributes.values.compact }
     end
 
@@ -160,7 +160,7 @@ class CompaniesController < ApplicationController
 
     respond_to do |format|
       format.json do
-        render json: { by_story:, by_date: }
+        render json: { by_date:, by_story: }
       end
     end
   end
@@ -276,8 +276,8 @@ class CompaniesController < ApplicationController
     end.to_h.compact
   end
 
-  def visitors_filters(story_id = nil, category_id = nil, product_id = nil)
-    {
+  def set_visitors_filters(story_id = nil, category_id = nil, product_id = nil)
+    @visitors_filters = {
       'curator' => @curator&.id,
       'story' => params[:visitors_story] || story_id,
       'category' => params[:visitors_category] || category_id,
