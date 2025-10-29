@@ -60,20 +60,20 @@ export default class TableDisplayOptionsController extends Controller {
   // 1 - For checkboxees, the key is derived from the element id
   // 2 - The key is used in cookies which use kebab-case
   onChange({ target }: { target: TomSelectInput | HTMLInputElement }) {
-    const filterId = target.type === 'checkbox' ? 
+    const filterKey = target.type === 'checkbox' ? 
       target.id : 
       kebabize(target.dataset.tomselectKindValue);
     const filterVal = target.type === 'checkbox' ? 
       target.checked : 
-      (filterId === 'curator' ? +target.value || null : target.value);
-    const changedFilter = { [filterId]: filterVal };
+      (filterKey === 'curator' ? +target.value || null : target.value);
+    const changedFilter = { [filterKey]: filterVal };
     this.resourceOutlet.filtersValue = { ...this.resourceOutlet.filtersValue, ...changedFilter };
 
     // The curator filter is the only one shared across the dashboard
-    if (filterId === 'curator') {
+    if (filterKey === 'curator') {
       setTimeout(() => { this.dashboardOutlet.filtersValue = changedFilter; });
     }
-    Cookies.set(`csp-${filterId}-filter`, String(filterVal || ''));
+    Cookies.set(`csp-${filterKey}-filter`, String(filterVal === null ? '' : filterVal));
   }
   
   onClickAway(e: Event) {
