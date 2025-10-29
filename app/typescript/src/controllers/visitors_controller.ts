@@ -130,6 +130,9 @@ export default class VisitorsController extends ResourceController {
       total.toString();
     const options: google.visualization.ColumnChartOptions = { 
       title: `Total Visitors: ${formattedTotal}`, 
+      titleTextStyle: {
+        fontSize: 14,
+      },
       hAxis: { 
         title: 'Month',
         format: "MMM ''yy",
@@ -138,7 +141,11 @@ export default class VisitorsController extends ResourceController {
       },
       vAxis: { title: 'Visitors', minValue: 0 },
       isStacked,
-      legend: isStacked ? { position: 'top' } : 'none',
+      legend: isStacked ? { 
+          position: 'top' ,
+          textStyle: { fontSize: 14 },
+        } : 
+        'none',
       height: 350,
       backgroundColor: 'transparent',
       chartArea: {
