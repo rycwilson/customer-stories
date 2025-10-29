@@ -119,20 +119,20 @@ class Visitor < ApplicationRecord
         from("(SELECT visitor_id, date, referrer_type, MIN(min_timestamp) AS min_timestamp FROM (#{subquery.to_sql}) AS sub GROUP BY visitor_id, date, referrer_type) AS visitor_referrers")
           .select([
             'date',
-            "COUNT(DISTINCT CASE WHEN referrer_type = 'direct' THEN visitor_id END) AS direct",
             "COUNT(DISTINCT CASE WHEN referrer_type = 'promote' THEN visitor_id END) AS promote",
             "COUNT(DISTINCT CASE WHEN referrer_type = 'link' THEN visitor_id END) AS link",
             "COUNT(DISTINCT CASE WHEN referrer_type = 'search' THEN visitor_id END) AS search",
-            "COUNT(DISTINCT CASE WHEN referrer_type NOT IN ('direct','promote','link','search') OR referrer_type IS NULL THEN visitor_id END) AS other"
+            # "COUNT(DISTINCT CASE WHEN referrer_type = 'direct' THEN visitor_id END) AS direct",
+            "COUNT(DISTINCT CASE WHEN referrer_type NOT IN ('promote','link','search') OR referrer_type IS NULL THEN visitor_id END) AS other"
           ].join(', '))
           .group('date')
           .order('date ASC')
       else
         select("#{formatted_date} AS date, COUNT(DISTINCT visitors.id) AS visitors")
-          .joins(visitor_sessions: { visitor_actions: { success: :story } })
-          .where(conditions)
-          .group(formatted_date)
-          .order('date ASC')
+        .joins(visitor_sessions: { visitor_actions: { success: :story } })
+        .where(conditions)
+        .group(formatted_date)
+        .order('date ASC')
       end
     end
   )

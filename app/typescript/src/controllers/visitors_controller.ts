@@ -2,18 +2,18 @@ import ResourceController from './resource_controller';
 import { getJSON, toSnakeCase } from '../utils';
 import { fromRatio } from 'tinycolor2';
 
+type DateRow = [period: string, visitors: number] | [period: string, promote: number, link: number, search: number, other: number];
+type StoryRow = [customer: string, title: string, visitors: number];
+
 export default class VisitorsController extends ResourceController {
   static targets = ['columnChart', 'barChart', 'noDataMesg'];
   declare readonly columnChartTarget: HTMLDivElement;
   declare readonly barChartTarget: HTMLDivElement;
   declare readonly noDataMesgTarget: HTMLHeadingElement;
-  
-  declare visitors: { 
-    by_date: [period: string, visitors: number][],
-    by_story: [customer: string, title: string, visitors: number][] 
-  };
+
+  declare visitors: { by_date: DateRow[], by_story: StoryRow[] };
   declare visibilityObserver: IntersectionObserver;
-  
+
   initialized = false;
 
   get hasData() {
@@ -92,13 +92,44 @@ export default class VisitorsController extends ResourceController {
   }
 
   drawColumnChart() {
+    const isStacked = <boolean>this.filtersValue['show-visitor-source'];
+    const total = isStacked ?
+      this.visitors.by_date.reduce((sum, [, ...visitors]: DateRow) => (
+        sum + visitors.reduce((a, b) => a + b)
+      ), 0) :
+      this.visitors.by_date.reduce((sum, [, visitors]: DateRow) => sum + visitors, 0);
+    const countSource = (nthSource: number) => {
+      if (!isStacked || nthSource < 1 || nthSource > 4) return;
+
+      return this.visitors.by_date.reduce((sum, row: DateRow) => {
+        if (typeof row[nthSource] !== 'number') return sum;
+        return sum + row[nthSource];
+      }, 0);
+    };
+    const pctTotal = (count: number) => Number(((count / total) * 100).toFixed(1));
+    const promoteVisitors = isStacked && countSource(1);
+    const promoteLabel = promoteVisitors && `Promote (${pctTotal(promoteVisitors)}%)`;
+    const linkVisitors = isStacked && countSource(2);
+    const linkLabel = linkVisitors && `Link (${pctTotal(linkVisitors)}%)`;
+    const searchVisitors = isStacked && countSource(3);
+    const searchLabel = searchVisitors && `Search (${pctTotal(searchVisitors)}%)`;
+    const otherVisitors = isStacked && countSource(4);
+    const otherLabel = otherVisitors && `Other (${pctTotal(otherVisitors)}%)`;
     const formattedData = [
-      ['Period', 'Visitors'],
-      ...this.visitors.by_date.map(([period, visitors]) => [new Date(period), visitors])
+      isStacked ?
+        ['Visitor Source', promoteLabel, linkLabel, searchLabel, otherLabel] :
+        ['Period', 'Visitors'],
+      ...this.visitors.by_date.map(([period, ...visitors]) => ([
+        new Date(period), 
+        ...visitors
+      ]))
     ];
     const chartData = google.visualization.arrayToDataTable(formattedData);
+    const formattedTotal = total >= 1000 ?
+      (Math.round(total / 100) / 10).toFixed(1).replace(/\.0$/, '') + 'K' :
+      total.toString();
     const options: google.visualization.ColumnChartOptions = { 
-      title: `Total Visitors: ${this.visitors.by_date.reduce((sum, [, visitors]) => sum + visitors, 0)}`, 
+      title: `Total Visitors: ${formattedTotal}`, 
       hAxis: { 
         title: 'Month',
         format: "MMM ''yy",
@@ -106,19 +137,16 @@ export default class VisitorsController extends ResourceController {
         slantedTextAngle: 45
       },
       vAxis: { title: 'Visitors', minValue: 0 },
-      legend: 'none',
+      isStacked,
+      legend: isStacked ? { position: 'top' } : 'none',
       height: 350,
       backgroundColor: 'transparent',
       chartArea: {
         backgroundColor: 'white',
-        top: 75,
+        top: 100,
         bottom: 100
       }
     };
-    // if (this.filtersValue.showVisitorSource) {
-    //   options.isStacked = true;
-    //   options.legend = { position: 'top' };
-    // }
     const chart = new google.visualization.ColumnChart(this.columnChartTarget);
     chart.draw(chartData, options);
   }
