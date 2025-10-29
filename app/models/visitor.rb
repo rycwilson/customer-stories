@@ -14,7 +14,6 @@ class Visitor < ApplicationRecord
   scope :to_company, ->(company_id) { joins(:page_views).where(visitor_actions: { company_id: }).distinct }
   scope :top_to_company, ->(company_id, top) { to_company(company_id).order(visitor_sessions_count: :desc).limit(top) }
 
-  # Old implementation of :to_company_by_date
   scope(
     :to_company_by_date,
     lambda do |company_id,
@@ -25,11 +24,12 @@ class Visitor < ApplicationRecord
                story_id: nil|
       start_date = start_date.to_date unless start_date.is_a?(Date)
       end_date = end_date.to_date unless end_date.is_a?(Date)
+
       group_by, group_range =
         case (end_date - start_date).to_i
-        when 0...21
+        when 0...14
           ['day', start_date.beginning_of_day..end_date.end_of_day]
-        when 21...120
+        when 14...80
           ['week', start_date.beginning_of_week.beginning_of_day...end_date.end_of_week.end_of_day]
         else
           ['month', start_date.beginning_of_month.beginning_of_day...end_date.end_of_month.end_of_day]
@@ -48,50 +48,6 @@ class Visitor < ApplicationRecord
       formatted_date = "TO_CHAR(#{date_trunc}, 'YYYY-MM-DD')"
 
       # Convert to UTC since VisitorSession timestamps are stored in UTC
-      conditions = {
-        visitor_sessions: { timestamp: (group_range.first.utc..group_range.last.utc) },
-        visitor_actions: { type: 'PageView', company_id: }
-      }
-      conditions[:stories] = { id: story_id } if story_id.present?
-      conditions[:successes] = { curator_id: } if curator_id.present?
-
-      select("'#{group_by}' AS group_by, #{formatted_date} AS date, COUNT(DISTINCT visitors.id) AS visitors")
-      .joins(visitor_sessions: { visitor_actions: { success: :story } })
-      .where(conditions)
-      .group(formatted_date)
-      .order('date ASC')
-    end
-  )
-
-  # New implementation: supports show_visitor_source breakdown by referrer type
-  scope(
-    :to_company_by_date_v2,
-    lambda do |company_id,
-               curator_id: nil,
-               start_date: 30.days.ago.to_date,
-               end_date: Date.today,
-               show_visitor_source: true,
-               story_id: nil|
-      start_date = start_date.to_date unless start_date.is_a?(Date)
-      end_date = end_date.to_date unless end_date.is_a?(Date)
-      group_by, group_range =
-        case (end_date - start_date).to_i
-        when 0...14
-          ['day', start_date.beginning_of_day..end_date.end_of_day]
-        when 14...80
-          ['week', start_date.beginning_of_week.beginning_of_day...end_date.end_of_week.end_of_day]
-        else
-          ['month', start_date.beginning_of_month.beginning_of_day...end_date.end_of_month.end_of_day]
-        end
-
-      date_trunc = [
-        'DATE_TRUNC(',
-          "'#{group_by}', ",
-          "visitor_sessions.timestamp AT TIME ZONE 'UTC' AT TIME ZONE '#{Time.zone.tzinfo.name}'",
-        ')'
-      ].join('')
-      formatted_date = "TO_CHAR(#{date_trunc}, 'YYYY-MM-DD')"
-
       conditions = {
         visitor_sessions: { timestamp: (group_range.first.utc..group_range.last.utc) },
         visitor_actions: { type: 'PageView', company_id: }
