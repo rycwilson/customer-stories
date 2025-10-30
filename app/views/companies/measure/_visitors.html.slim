@@ -6,8 +6,8 @@
       resource_ctrl_id: 'visitors',
       search_options: { \
         'Story' => company.stories.published.map(&:select_option),
-        'Category' => company.tag_select_options(:category),
-        'Product' => company.tag_select_options(:product) }})
+        'Category' => company.tag_select_options(:category, for_multi_select: true),
+        'Product' => company.tag_select_options(:product, for_multi_select: true) }})
 
 h4.text-center.hidden style="margin: 5rem 0;" data-visitors-target="noDataMesg" 
   | No data available
