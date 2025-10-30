@@ -137,13 +137,16 @@ class CompaniesController < ApplicationController
                  end
     end
 
-    by_date = Visitor.to_company_by_date(
-      @company.id,
-      curator_id: curator&.id,
-      start_date:,
-      end_date:,
-      show_visitor_source: @visitors_filters['show-visitor-source']
-    ).map { |visitor| visitor.attributes.values.compact }
+    by_date =
+      Visitor.to_company_by_date(@company.id, curator_id: curator&.id, start_date:, end_date:)
+             .map { |group| group.attributes.values.compact }
+             .map do |(group_unit, group_start_date, promote, link, search, other)|
+               if @visitors_filters['show-visitor-source']
+                 [group_unit, group_start_date, promote, link, search, other]
+               else
+                 [group_unit, group_start_date, promote + link + search + other]
+               end
+             end
 
     by_story = Visitor.to_company_by_story(@company.id, curator&.id)
                       .map { |result| [result.customer, result.story, result.visitors] }

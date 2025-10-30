@@ -4,7 +4,14 @@ import { fromRatio } from 'tinycolor2';
 
 type DateRow = (
   [group: 'day' | 'week' | 'month', period: string, visitors: number] | 
-  [group: 'day' | 'week' | 'month', period: string, promote: number, link: number, search: number, other: number]
+  [
+    group: 'day' | 'week' | 'month', 
+    period: string, 
+    promote: number, 
+    link: number, 
+    search: number,
+    other: number
+  ]
 );
 type StoryRow = [customer: string, title: string, visitors: number];
 

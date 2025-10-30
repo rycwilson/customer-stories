@@ -20,12 +20,11 @@ class Visitor < ApplicationRecord
                curator_id: nil,
                start_date: 30.days.ago.to_date,
                end_date: Date.today,
-               show_visitor_source: true,
                story_id: nil|
       start_date = start_date.to_date unless start_date.is_a?(Date)
       end_date = end_date.to_date unless end_date.is_a?(Date)
 
-      group_by, group_range =
+      group_unit, group_range =
         case (end_date - start_date).to_i
         when 0...14
           ['day', start_date.beginning_of_day..end_date.end_of_day]
@@ -38,7 +37,7 @@ class Visitor < ApplicationRecord
       # Group based on the user's time zone
       date_trunc = [
         'DATE_TRUNC(',
-          "'#{group_by}', ", # rubocop:disable Layout/ArrayAlignment
+          "'#{group_unit}', ", # rubocop:disable Layout/ArrayAlignment
           "visitor_sessions.timestamp AT TIME ZONE 'UTC' AT TIME ZONE '#{Time.zone.tzinfo.name}'", # rubocop:disable Layout/ArrayAlignment
         ')'
       ].join('')
@@ -47,50 +46,49 @@ class Visitor < ApplicationRecord
       # (as it will be if `date_trunc` is used directly in GROUP BY)
       formatted_date = "TO_CHAR(#{date_trunc}, 'YYYY-MM-DD')"
 
-      # Convert to UTC since VisitorSession timestamps are stored in UTC
-      conditions = {
-        visitor_sessions: { timestamp: (group_range.first.utc..group_range.last.utc) },
-        visitor_actions: { type: 'PageView', company_id: }
-      }
-      conditions[:stories] = { id: story_id } if story_id.present?
-      conditions[:successes] = { curator_id: } if curator_id.present?
+      # For each visitor, date, get the referrer type from their earliest session in the group
+      subquery = VisitorSession
+        .select([
+          'visitor_sessions.visitor_id',
+          "#{formatted_date} AS group_start_date",
+          'visitor_sessions.referrer_type',
+          'MIN(visitor_sessions.timestamp) AS min_timestamp'
+        ].join(','))
+        .joins(:visitor_actions)
+        .where(visitor_actions: { type: 'PageView', company_id: })
+        .where(visitor_sessions: { timestamp: (group_range.first.utc..group_range.last.utc) })
+        .group('visitor_sessions.visitor_id', formatted_date, 'visitor_sessions.referrer_type')
+      if curator_id.present?
+        subquery = subquery.joins(visitor_actions: { success: :curator })
+                            .where(successes: { curator_id: })
+      end
+      if story_id.present?
+        subquery = subquery.joins(visitor_actions: { success: :story })
+                            .where(stories: { id: story_id })
+      end
 
-      if show_visitor_source
-        # Subquery: for each visitor, date, get the referrer type from their earliest session in the group
-        subquery = VisitorSession
-          .select([
-            'visitor_sessions.visitor_id',
-            "#{formatted_date} AS date",
-            'visitor_sessions.referrer_type',
-            'MIN(visitor_sessions.timestamp) AS min_timestamp'
-          ])
-          .joins(:visitor_actions)
-          .where(visitor_actions: { type: 'PageView', company_id: })
-          .where(visitor_sessions: { timestamp: (group_range.first.utc..group_range.last.utc) })
-          .group('visitor_sessions.visitor_id', formatted_date, 'visitor_sessions.referrer_type')
-
-        subquery = subquery.joins(visitor_actions: { success: :story }).where(stories: { id: story_id }) if story_id.present?
-        subquery = subquery.joins(visitor_actions: { success: :curator }).where(successes: { curator_id: }) if curator_id.present?
-
-        from("(SELECT visitor_id, date, referrer_type, MIN(min_timestamp) AS min_timestamp, '#{group_by}' AS group_by FROM (#{subquery.to_sql}) AS sub GROUP BY visitor_id, date, referrer_type) AS visitor_referrers")
-          .select([
-            'group_by',
-            'date',
+      from(<<-SQL.gsub(/^\s+/, '')
+        (
+          SELECT
+            visitor_id,
+            group_start_date,
+            referrer_type,
+            MIN(min_timestamp) AS min_timestamp,
+            '#{group_unit}' AS group_unit
+          FROM (#{subquery.to_sql}) AS sub
+          GROUP BY visitor_id, group_start_date, referrer_type
+        ) AS visitor_referrers
+      SQL
+          ).select([
+            'group_unit',
+            'group_start_date',
             "COUNT(DISTINCT CASE WHEN referrer_type = 'promote' THEN visitor_id END) AS promote",
             "COUNT(DISTINCT CASE WHEN referrer_type = 'link' THEN visitor_id END) AS link",
             "COUNT(DISTINCT CASE WHEN referrer_type = 'search' THEN visitor_id END) AS search",
-            # "COUNT(DISTINCT CASE WHEN referrer_type = 'direct' THEN visitor_id END) AS direct",
-            "COUNT(DISTINCT CASE WHEN referrer_type NOT IN ('promote','link','search') OR referrer_type IS NULL THEN visitor_id END) AS other"
+            "COUNT(DISTINCT CASE WHEN referrer_type NOT IN ('promote','link','search') THEN visitor_id END) AS other"
           ].join(', '))
-          .group('group_by, date')
-          .order('date ASC')
-      else
-        select("'#{group_by}' AS group_by, #{formatted_date} AS date, COUNT(DISTINCT visitors.id) AS visitors")
-        .joins(visitor_sessions: { visitor_actions: { success: :story } })
-        .where(conditions)
-        .group(formatted_date)
-        .order('date ASC')
-      end
+          .group('group_unit, group_start_date')
+          .order('group_start_date ASC')
     end
   )
 
