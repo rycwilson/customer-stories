@@ -151,6 +151,7 @@ export default class VisitorsController extends ResourceController {
       title: `Total Visitors: ${formattedTotal}`, 
       titleTextStyle: {
         fontSize: 14,
+        color: '#333'
       },
       hAxis: { 
         title: 'Month',
