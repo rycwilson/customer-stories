@@ -1,0 +1,19 @@
+if Rails.env.development?
+  module DevRequestNipIoPatch
+    # Return only the intended subdomain for nip.io requests
+    def subdomains(tld_length = nil)
+      h = super()
+      if self.host =~ /\A([a-z0-9\-]+)\.\d+\.\d+\.\d+\.\d+\.nip\.io\z/i
+        [$1]
+      else
+        h
+      end
+    end
+
+    def subdomain(tld_length = nil)
+      subdomains(tld_length).first
+    end
+  end
+
+  ActionDispatch::Request.prepend(DevRequestNipIoPatch)
+end
