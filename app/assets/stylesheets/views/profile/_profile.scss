@@ -52,6 +52,7 @@ main.user-profile form {
 
 // allow these labels to overflow to the left
 .user-profile__current-password,
+.user-profile__password,
 .user-profile__password-confirmation {
   label {
     direction: rtl;
