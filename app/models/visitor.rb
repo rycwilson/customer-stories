@@ -20,7 +20,9 @@ class Visitor < ApplicationRecord
                curator_id: nil,
                start_date: 30.days.ago.to_date,
                end_date: Date.today,
-               story_id: nil|
+               story_id: nil,
+               category_id: nil,
+               product_id: nil|
       start_date = start_date.to_date unless start_date.is_a?(Date)
       end_date = end_date.to_date unless end_date.is_a?(Date)
 

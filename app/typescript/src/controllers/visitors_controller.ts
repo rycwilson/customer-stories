@@ -35,7 +35,7 @@ export default class VisitorsController extends ResourceController {
       'time_zone': Intl.DateTimeFormat().resolvedOptions().timeZone,
       ...Object.fromEntries(
         Object.entries(this.filtersValue).map(([key, value]) => (
-          [toSnakeCase(key), value === null ? '' : String(value)]
+          [`visitors_${toSnakeCase(key)}`, value === null ? '' : String(value)]
         ))
       ) 
     });
@@ -62,8 +62,8 @@ export default class VisitorsController extends ResourceController {
   async filtersValueChanged(newVal: ResourceFilters, oldVal: ResourceFilters) {
     if (this.initialized === false) return;
     
-    // console.log('old visitors filtersValue:', oldVal)
-    // console.log('new visitors filtersValue:', newVal)
+    console.log('old visitors filtersValue:', oldVal)
+    console.log('new visitors filtersValue:', newVal)
 
     const data = await getJSON(this.dataPathValue, this.searchParams);
     CSP.visitors = data;
@@ -74,6 +74,18 @@ export default class VisitorsController extends ResourceController {
       this.drawCharts();
     } else {
       this.onPanelVisible(this.drawCharts.bind(this));
+    }
+  }
+
+  onChangeSearchSelect(e: CustomEvent) {
+    console.log(e.detail)
+    const { id: filter } = e.detail;
+    if (filter) {
+      const [filterKey, filterVal] = filter.split('-');
+      this.filtersValue = { ...this.filtersValue, ...{ [filterKey]: +filterVal } };
+    } else {
+      const { story, category, product, ...rest } = this.filtersValue;
+      this.filtersValue = rest;
     }
   }
 

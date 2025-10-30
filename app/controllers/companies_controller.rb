@@ -122,6 +122,7 @@ class CompaniesController < ApplicationController
       curator = User.find_by_email 'kturner@varmour.com'
       start_date = '2018-01-01'
       end_date = '2018-12-31'
+      story = @visitors_filters['story'] && @company.stories.published.sample
     else
       curator = @curator
       start_date = case @visitors_filters['date-range']
@@ -136,9 +137,16 @@ class CompaniesController < ApplicationController
                  else Date.today
                  end
     end
-
     by_date =
-      Visitor.to_company_by_date(@company.id, curator_id: curator&.id, start_date:, end_date:)
+      Visitor.to_company_by_date(
+        @company.id,
+        curator_id: curator&.id,
+        start_date:,
+        end_date:,
+        story_id: story&.id,
+        category_id: @visitors_filters['category'],
+        product_id: @visitors_filters['product']
+      )
              .map { |group| group.attributes.values.compact }
              .map do |(group_unit, group_start_date, promote, link, search, other)|
                if @visitors_filters['show-visitor-source']
@@ -269,19 +277,19 @@ class CompaniesController < ApplicationController
     end.to_h.compact
   end
 
-  def set_visitors_filters(story_id = nil, category_id = nil, product_id = nil)
+  def set_visitors_filters
     @visitors_filters = {
       'curator' => @curator&.id,
-      'story' => params[:visitors_story] || story_id,
-      'category' => params[:visitors_category] || category_id,
-      'product' => params[:visitors_product] || product_id,
+      'story' => params[:visitors_story]&.to_i,
+      'category' => params[:visitors_category]&.to_i,
+      'product' => params[:visitors_product]&.to_i,
 
       # Preferences are potentially stored in cookies
       'date-range' => params[:visitors_date_range] || cookies['csp-date-range-filter'] || 'last-30',
       'show-visitor-source' =>
-        if params['show_visitor_source'] || cookies['csp-show-visitor-source-filter']
+        if params['visitors_show_visitor_source'] || cookies['csp-show-visitor-source-filter']
           ActiveRecord::Type::Boolean.new.cast(
-            params['show_visitor_source'] || cookies['csp-show-visitor-source-filter']
+            params['visitors_show_visitor_source'] || cookies['csp-show-visitor-source-filter']
           )
         else
           true
