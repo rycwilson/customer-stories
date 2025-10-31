@@ -79,7 +79,6 @@ export default class VisitorsController extends ResourceController {
   }
 
   onChangeSearchSelect(e: CustomEvent) {
-    console.log(e.detail)
     const { id: filter } = e.detail;
     if (filter) {
       const [filterKey, filterVal] = filter.split('-');
@@ -110,7 +109,11 @@ export default class VisitorsController extends ResourceController {
       return;
     }
     this.drawColumnChart();
-    this.drawTableChart();
+    if (this.filtersValue['story'] {
+      this.tableChartTarget.replaceChildren();
+    } else {
+      this.drawTableChart();
+    } 
   }
 
   drawColumnChart() {

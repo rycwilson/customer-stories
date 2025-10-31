@@ -164,25 +164,27 @@ class CompaniesController < ApplicationController
                end
              end
 
-    by_story =
-      Visitor.to_company_by_story(
-        @company.id,
-        curator_id: curator&.id,
-        start_date:,
-        end_date:
-      )
-             .map { |result| result.attributes.values.compact }
-             .map do |(customer, story_title, promote, link, search, other)|
-               if @visitors_filters['show-visitor-source']
-                 [customer, story_title, promote, link, search, other]
-               else
-                 [customer, story_title, promote + link + search + other]
+    if story.nil?
+      by_story =
+        Visitor.to_company_by_story(
+          @company.id,
+          curator_id: curator&.id,
+          start_date:,
+          end_date:
+        )
+               .map { |result| result.attributes.values.compact }
+               .map do |(customer, story_title, promote, link, search, other)|
+                 if @visitors_filters['show-visitor-source']
+                   [customer, story_title, promote, link, search, other]
+                 else
+                   [customer, story_title, promote + link + search + other]
+                 end
                end
-             end
+    end
 
     respond_to do |format|
       format.json do
-        render json: { by_date:, by_story: }
+        render json: { by_date: }.merge(story.present? ? {} : { by_story: })
       end
     end
   end
