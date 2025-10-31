@@ -20,7 +20,7 @@
             ['Last Quarter', 'previous-quarter'],
             ['This Year', 'this-year'],
             ['Last Year', 'previous-year'] ],
-          selected: filters[:visitors_date_range]),
+          selected: filters['date-range']),
           data: { \
             controller: 'tomselect',
             tomselect_kind_value: 'dateRange',
@@ -31,5 +31,5 @@
     div
       .checkbox 
         label for="show-visitor-source"
-          input#show-visitor-source type="checkbox" checked="#{filters[:show_visitor_source]}"
+          input#show-visitor-source type="checkbox" checked="#{filters['show-visitor-source']}"
           | Visitor source
