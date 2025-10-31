@@ -142,6 +142,16 @@ export function debounce(callback: VoidFunction, wait: number, immediate = false
   };
 }
 
+export function formatPercent(value: number, total: number, decimals = 1) {
+  if (total === 0) return '0%';
+  const percent = (value / total) * 100;
+  if (Number.isInteger(percent)) {
+    return `${percent}%`;
+  } else {
+    return `${percent.toFixed(decimals)}%`;
+  }
+}
+
 export function capitalize(word: string) {
   return word.charAt(0).toUpperCase() + word.slice(1);
 }
