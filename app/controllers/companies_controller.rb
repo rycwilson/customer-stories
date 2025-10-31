@@ -144,10 +144,10 @@ class CompaniesController < ApplicationController
         start_date:,
         end_date:,
         story_id: story&.id,
-        category_id: @visitors_filters['category'],
-        product_id: @visitors_filters['product']
+        # category_id: @visitors_filters['category'],
+        # product_id: @visitors_filters['product']
       )
-             .map { |group| group.attributes.values.compact }
+             .map { |result| result.attributes.values.compact }
              .map do |(group_unit, group_start_date, promote, link, search, other)|
                if @visitors_filters['show-visitor-source']
                  [group_unit, group_start_date, promote, link, search, other]
@@ -156,8 +156,21 @@ class CompaniesController < ApplicationController
                end
              end
 
-    by_story = Visitor.to_company_by_story(@company.id, curator&.id)
-                      .map { |result| [result.customer, result.story, result.visitors] }
+    by_story =
+      Visitor.to_company_by_story(
+        @company.id,
+        curator_id: curator&.id,
+        start_date:,
+        end_date:
+      )
+             .map { |result| result.attributes.values.compact }
+             .map do |(customer, story_title, promote, link, search, other)|
+               if @visitors_filters['show-visitor-source']
+                 [customer, story_title, promote, link, search, other]
+               else
+                 [customer, story_title, promote + link + search + other]
+               end
+             end
 
     respond_to do |format|
       format.json do

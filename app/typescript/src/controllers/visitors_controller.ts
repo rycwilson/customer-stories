@@ -1,25 +1,22 @@
 import ResourceController from './resource_controller';
 import { getJSON, toSnakeCase } from '../utils';
 import { fromRatio } from 'tinycolor2';
+import { formatPercent } from '../utils';
 
+type SourceCount = [promote: number, link: number, search: number, other: number];
 type DateRow = (
   [group: 'day' | 'week' | 'month', period: string, visitors: number] | 
-  [
-    group: 'day' | 'week' | 'month', 
-    period: string, 
-    promote: number, 
-    link: number, 
-    search: number,
-    other: number
-  ]
+  [group: 'day' | 'week' | 'month', period: string, ...SourceCount]
 );
-type StoryRow = [customer: string, title: string, visitors: number];
+type StoryRow = (
+  [customer: string, title: string, visitors: number] |
+  [customer: string, title: string, ...SourceCount]
+);
 
 export default class VisitorsController extends ResourceController {
-  static targets = ['columnChart', 'barChart', 'noDataMesg'];
+  static targets = ['columnChart', 'tableChart'];
   declare readonly columnChartTarget: HTMLDivElement;
-  declare readonly barChartTarget: HTMLDivElement;
-  declare readonly noDataMesgTarget: HTMLHeadingElement;
+  declare readonly tableChartTarget: HTMLDivElement;
 
   declare visitors: { by_date: DateRow[], by_story: StoryRow[] };
   declare visibilityObserver: IntersectionObserver;
@@ -39,6 +36,10 @@ export default class VisitorsController extends ResourceController {
         ))
       ) 
     });
+  }
+
+  get isStacked() {
+    return <boolean>this.filtersValue['show-visitor-source'];
   }
 
   // connect() {
@@ -103,25 +104,22 @@ export default class VisitorsController extends ResourceController {
   }
 
   drawCharts() {
-    this.noDataMesgTarget.classList.toggle('hidden', this.hasData);
+    this.element.classList.toggle('has-no-data', !this.hasData);
     if (!this.hasData) {
-      [this.columnChartTarget, this.barChartTarget].forEach(chart => chart.replaceChildren());
+      [this.columnChartTarget, this.tableChartTarget].forEach(chart => chart.replaceChildren());
       return;
     }
-
     this.drawColumnChart();
-    this.drawBarChart();
+    this.drawTableChart();
   }
 
   drawColumnChart() {
-    const isStacked = <boolean>this.filtersValue['show-visitor-source'];
-    const total = isStacked ?
-      this.visitors.by_date.reduce((sum, [,, ...visitors]: DateRow) => (
-        sum + visitors.reduce((a, b) => a + b)
-      ), 0) :
-      this.visitors.by_date.reduce((sum, [,, visitors]: DateRow) => sum + visitors, 0);
+    const chart = new google.visualization.ColumnChart(this.columnChartTarget);
+    const total = this.visitors.by_date.reduce((sum, [,, ...visitors]: DateRow) => (
+      sum + visitors.reduce((a, b) => a + b)
+    ), 0);
     const countSource = (nthSource: number) => {
-      if (!isStacked || nthSource < 1 || nthSource > 4) return 0;
+      if (!this.isStacked || nthSource < 1 || nthSource > 4) return 0;
 
       const index = nthSource + 1;
       return this.visitors.by_date.reduce((sum, row: DateRow) => {
@@ -129,12 +127,12 @@ export default class VisitorsController extends ResourceController {
       }, 0);
     };
     const pctTotal = (count: number) => Number(((count / total) * 100).toFixed(1));
-    const promoteLabel = isStacked && `Promote (${pctTotal(countSource(1))}%)`;
-    const linkLabel = isStacked && `Link (${pctTotal(countSource(2))}%)`;
-    const searchLabel = isStacked && `Search (${pctTotal(countSource(3))}%)`;
-    const otherLabel = isStacked && `Other (${pctTotal(countSource(4))}%)`;
-    const formattedData = [
-      isStacked ?
+    const promoteLabel = this.isStacked && `Promote (${pctTotal(countSource(1))}%)`;
+    const linkLabel = this.isStacked && `Link (${pctTotal(countSource(2))}%)`;
+    const searchLabel = this.isStacked && `Search (${pctTotal(countSource(3))}%)`;
+    const otherLabel = this.isStacked && `Other (${pctTotal(countSource(4))}%)`;
+    const data = [
+      this.isStacked ?
         ['Visitor Source', promoteLabel, linkLabel, searchLabel, otherLabel] :
         ['Period', 'Visitors'],
       ...this.visitors.by_date.map(([group, period, ...visitors]) => {
@@ -143,12 +141,9 @@ export default class VisitorsController extends ResourceController {
         return [new Date(date[0], date[1] - 1, date[2]), ...visitors]
       })
     ];
-    const chartData = google.visualization.arrayToDataTable(formattedData);
-    const formattedTotal = total >= 1000 ?
-      (Math.round(total / 100) / 10).toFixed(1).replace(/\.0$/, '') + 'K' :
-      total.toString();
+    const chartData = google.visualization.arrayToDataTable(data);
     const options: google.visualization.ColumnChartOptions = { 
-      title: `Total Visitors: ${formattedTotal}`, 
+      title: `Total Visitors: ${this.roundVisitors(total)}`, 
       titleTextStyle: {
         fontSize: 14,
         color: '#333'
@@ -162,14 +157,13 @@ export default class VisitorsController extends ResourceController {
         slantedTextAngle: 45
       },
       vAxis: { 
-        title: 
-        'Visitors', 
+        title: 'Visitors', 
         minValue: 0,
         titleTextStyle: { fontSize: 14 },
         textStyle: { fontSize: 14 }
       },
-      isStacked,
-      legend: isStacked ? { 
+      isStacked: this.isStacked,
+      legend: this.isStacked ? { 
           position: 'top' ,
           textStyle: { fontSize: 14 },
         } : 
@@ -182,11 +176,57 @@ export default class VisitorsController extends ResourceController {
         bottom: 100
       }
     };
-    const chart = new google.visualization.ColumnChart(this.columnChartTarget);
     chart.draw(chartData, options);
   }
 
-  drawBarChart() {
+  drawTableChart() {
+    const table = new google.visualization.Table(this.tableChartTarget);
+    const data = new google.visualization.DataTable()
+    data.addColumn('string', 'Customer');
+    data.addColumn('string', 'Story');
+    data.addColumn('number', 'Visitors');
+    if (this.isStacked) {
+      data.addColumn('number', 'Promote');
+      data.addColumn('number', 'Link');
+      data.addColumn('number', 'Search');
+      data.addColumn('number', 'Other');
+    }
+    data.addRows(
+      this.visitors.by_story.map(([customer, title, ...visitors]: StoryRow) => {
+        const row: (string | number | { v: number, f: string })[] = [customer, title];
+        if (this.isStacked) {
+          const total = visitors.reduce((sum, count) => sum + count);
+          row.push(
+            total,
+            ...visitors.map(count => ({
+              v: total === 0 ? 0 : (count / total),
+              f: formatPercent(count, total)
+            }))
+          );
+        } else {
+          row.push(visitors[0]);
+        }
+        return row;
+      })
+    );  
+    const options: google.visualization.TableOptions = {
+      showRowNumber: false,
+      width: '100%',
+      height: '100%',
+      allowHtml: true,
+      cssClassNames: {
+        // headerCell: 'visitors-table-header',
+        // tableCell: 'visitors-table-cell',
+        // oddTableRow: 'visitors-table-row-odd',
+      }
+    };
+    table.draw(data, options);
+  }
+
+  roundVisitors(visitors: number): string {
+    return visitors >= 1000 ?
+      (Math.round(visitors / 100) / 10).toFixed(1).replace(/\.0$/, '') + 'K' :
+      visitors.toString();
   }
 
   getChartsLibrary(): Promise<void> {
@@ -195,7 +235,7 @@ export default class VisitorsController extends ResourceController {
       script.src = 'https://www.gstatic.com/charts/loader.js';
       script.async = true;
       script.onload = () => {
-        google.charts.load('current', { 'packages': ['corechart'] });
+        google.charts.load('current', { 'packages': ['corechart', 'table'] });
         google.charts.setOnLoadCallback(resolve);
       };
       document.head.appendChild(script);
