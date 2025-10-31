@@ -174,10 +174,12 @@ class CompaniesController < ApplicationController
         )
                .map { |result| result.attributes.values.compact }
                .map do |(customer, story_title, promote, link, search, other)|
+                 story_record = @company.stories.find_by_title(story_title)
+                 story_link = "<a href='#{story_record.csp_story_url}'>#{story_record.title}</a>"
                  if @visitors_filters['show-visitor-source']
-                   [customer, story_title, promote, link, search, other]
+                   [customer, story_link, promote, link, search, other]
                  else
-                   [customer, story_title, promote + link + search + other]
+                   [customer, story_link, promote + link + search + other]
                  end
                end
     end

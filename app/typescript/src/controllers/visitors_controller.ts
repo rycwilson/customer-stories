@@ -227,7 +227,7 @@ export default class VisitorsController extends ResourceController {
       // showRowNumber: false,
       // width: '100%',
       // height: '100%',
-      // allowHtml: true,
+      allowHtml: true,
       sortColumn: 2, // 'Visitors' column
       sortAscending: false, // descending
       // cssClassNames: {
