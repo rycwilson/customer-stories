@@ -117,26 +117,34 @@ class CompaniesController < ApplicationController
   # TODO: Why was this called "Landing"? It's just a % of overall visitors
   # "#{((story.visitors.to_f / company.visitors.count) * 100).round(1)}%",
   def visitors
-    if use_demo_visitors_data?
+    if is_demo?
       @company = Company.find_by_subdomain 'varmour'
       curator = User.find_by_email 'kturner@varmour.com'
-      start_date = '2018-01-01'
-      end_date = '2018-12-31'
       story = @visitors_filters['story'] && @company.stories.published.sample
+      today = Date.today.change(year: 2018)
     else
       curator = @curator
-      start_date = case @visitors_filters['date-range']
-                   when 'last-7' then 7.days.ago
-                   when 'last-30' then 30.days.ago
-                   when 'last-90' then 90.days.ago
-                   else 30.days.ago
-                   end
-      end_date = case @visitors_filters['date-range']
-                 when 'previous-quarter' then Date.today
-                 when 'previous-year' then Date.today
-                 else Date.today
-                 end
+      today = Date.today
     end
+
+    start_date, end_date =
+      case @visitors_filters['date-range']
+      when 'last-7'
+        [today - 7.days, today]
+      when 'last-30'
+        [today - 30.days, today]
+      when 'last-90'
+        [today - 90.days, today]
+      when 'this-quarter'
+        [today.beginning_of_quarter, today]
+      when 'previous-quarter'
+        [today.beginning_of_quarter - 3.months, today.beginning_of_quarter - 1.day]
+      when 'this-year'
+        [today.beginning_of_year, today]
+      when 'previous-year'
+        [today.beginning_of_year - 1.year, today.beginning_of_year - 1.day]
+      end
+
     by_date =
       Visitor.to_company_by_date(
         @company.id,
@@ -340,7 +348,8 @@ class CompaniesController < ApplicationController
       .delete_if { |image_ads| image_ads[:ads_params].empty? } # no affected ads
   end
 
-  def use_demo_visitors_data?
-    @company.subdomain == 'acme-test' and @curator&.email.in?([nil, 'rycwilson@gmail.com'])
+  def is_demo?
+    @company.subdomain == 'acme-test' and
+      @curator&.email.in?([nil, 'rycwilson@gmail.com', 'acme-test@customerstories.net'])
   end
 end
