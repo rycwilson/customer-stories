@@ -30,7 +30,7 @@ class Visitor < ApplicationRecord
         case (end_date - start_date).to_i
         when 0...14
           ['day', start_date.beginning_of_day..end_date.end_of_day]
-        when 14...80
+        when 14...100
           ['week', start_date.beginning_of_week.beginning_of_day...end_date.end_of_week.end_of_day]
         else
           ['month', start_date.beginning_of_month.beginning_of_day...end_date.end_of_month.end_of_day]
