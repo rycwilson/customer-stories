@@ -109,7 +109,7 @@ export default class VisitorsController extends ResourceController {
       return;
     }
     this.drawColumnChart();
-    if (this.filtersValue['story'] {
+    if (this.filtersValue['story']) {
       this.tableChartTarget.replaceChildren();
     } else {
       this.drawTableChart();
@@ -224,15 +224,17 @@ export default class VisitorsController extends ResourceController {
       })
     );  
     const options: google.visualization.TableOptions = {
-      showRowNumber: false,
-      width: '100%',
-      height: '100%',
-      allowHtml: true,
-      cssClassNames: {
+      // showRowNumber: false,
+      // width: '100%',
+      // height: '100%',
+      // allowHtml: true,
+      sortColumn: 2, // 'Visitors' column
+      sortAscending: false, // descending
+      // cssClassNames: {
         // headerCell: 'visitors-table-header',
         // tableCell: 'visitors-table-cell',
         // oddTableRow: 'visitors-table-row-odd',
-      }
+      // }
     };
     table.draw(data, options);
   }
