@@ -94,17 +94,41 @@ class Visitor < ApplicationRecord
     end
   )
 
-  scope :to_company_by_story, lambda { |company_id, curator_id|
-    query = joins(visitor_sessions: { visitor_actions: { success: %i[customer story] } })
-            .where(visitor_actions: { company_id: })
-    query = query.where(successes: { curator_id: }) if curator_id.present?
-    query.group('customers.name, stories.title, visitor_actions.company_id')
-         .select([
-           'customers.name AS customer',
-           'stories.title AS story',
-           'visitor_actions.company_id',
-           'COUNT(DISTINCT visitors.id) AS visitors'
-         ].join(', '))
-         .order('visitors DESC')
-  }
+  scope(
+    :to_company_by_story,
+    lambda do |company_id, curator_id: nil, start_date: 30.days.ago.to_date, end_date: Date.today|
+      start_date = start_date.to_date unless start_date.is_a?(Date)
+      end_date = end_date.to_date unless end_date.is_a?(Date)
+
+      # Build the subquery: for each visitor, customer, story, company, get their referrer_type
+      inner_subquery = Visitor
+        .joins(visitor_sessions: { visitor_actions: { success: %i[customer story] } })
+        .where(visitor_actions: { type: 'PageView', company_id: })
+        .where(visitor_sessions: { timestamp: (start_date.beginning_of_day.utc..end_date.end_of_day.utc) })
+        .select([
+          'customers.name AS customer',
+          'stories.title AS story',
+          'visitor_actions.company_id',
+          'visitors.id AS visitor_id',
+          'visitor_sessions.referrer_type'
+        ].join(', '))
+      inner_subquery = inner_subquery.where(successes: { curator_id: }) if curator_id.present?
+
+      # Outer subquery: group and count by referrer type
+      outer_select = [
+        'customer',
+        'story',
+        "COUNT(DISTINCT CASE WHEN referrer_type = 'promote' THEN visitor_id END) AS promote",
+        "COUNT(DISTINCT CASE WHEN referrer_type = 'link' THEN visitor_id END) AS link",
+        "COUNT(DISTINCT CASE WHEN referrer_type = 'search' THEN visitor_id END) AS search",
+        "COUNT(DISTINCT CASE WHEN referrer_type NOT IN ('promote','link','search') OR referrer_type IS NULL THEN visitor_id END) AS other"
+      ].join(', ')
+
+      outer_query = "(SELECT #{outer_select} FROM (#{inner_subquery.to_sql}) AS visitor_referrers GROUP BY customer, story) AS visitor_story_counts"
+
+      from(outer_query)
+        .select('customer, story, promote, link, search, other')
+        .order(Arel.sql('promote + link + search + other DESC'))
+    end
+  )
 end
