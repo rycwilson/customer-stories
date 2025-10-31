@@ -1,7 +1,7 @@
 import ResourceController from './resource_controller';
 import { getJSON, toSnakeCase } from '../utils';
 import { fromRatio } from 'tinycolor2';
-import { formatPercent } from '../utils';
+import { capitalize, formatPercent } from '../utils';
 
 type SourceCount = [promote: number, link: number, search: number, other: number];
 type DateRow = (
@@ -115,6 +115,7 @@ export default class VisitorsController extends ResourceController {
 
   drawColumnChart() {
     const chart = new google.visualization.ColumnChart(this.columnChartTarget);
+    const groupUnit = this.visitors.by_date[0][0];
     const total = this.visitors.by_date.reduce((sum, [,, ...visitors]: DateRow) => (
       sum + visitors.reduce((a, b) => a + b)
     ), 0);
@@ -126,19 +127,20 @@ export default class VisitorsController extends ResourceController {
         return (typeof row[index] === 'number') ? sum + row[index] : sum;
       }, 0);
     };
-    const pctTotal = (count: number) => Number(((count / total) * 100).toFixed(1));
-    const promoteLabel = this.isStacked && `Promote (${pctTotal(countSource(1))}%)`;
-    const linkLabel = this.isStacked && `Link (${pctTotal(countSource(2))}%)`;
-    const searchLabel = this.isStacked && `Search (${pctTotal(countSource(3))}%)`;
-    const otherLabel = this.isStacked && `Other (${pctTotal(countSource(4))}%)`;
+    const promoteLabel = this.isStacked && `Promote (${formatPercent(countSource(1), total)})`;
+    const linkLabel = this.isStacked && `Link (${formatPercent(countSource(2), total)})`;
+    const searchLabel = this.isStacked && `Search (${formatPercent(countSource(3), total)})`;
+    const otherLabel = this.isStacked && `Other (${formatPercent(countSource(4), total)})`;
+    const ticks: Date[] = [];
     const data = [
       this.isStacked ?
         ['Visitor Source', promoteLabel, linkLabel, searchLabel, otherLabel] :
-        ['Period', 'Visitors'],
-      ...this.visitors.by_date.map(([group, period, ...visitors]) => {
-        // The `Date(year: number, monthIndex: number, day: number)` signature ensures local time
-        const date = period.split('-').map(Number);
-        return [new Date(date[0], date[1] - 1, date[2]), ...visitors]
+        ['Group Start Date', 'Visitors'],
+      ...this.visitors.by_date.map(([groupUnit, groupStartDate, ...visitors]) => {
+        const [year, month, day] = groupStartDate.split('-').map(Number);
+        const date = new Date(year, month - 1, day);
+        ticks.push(date);
+        return [date, ...visitors];
       })
     ];
     const chartData = google.visualization.arrayToDataTable(data);
@@ -149,11 +151,20 @@ export default class VisitorsController extends ResourceController {
         color: '#333'
       },
       hAxis: { 
-        title: 'Month',
-        format: "MMM ''yy",
+        title: capitalize(groupUnit),
+        format: (() => {
+          switch (groupUnit) {
+            case 'day':
+            case 'week':
+              return "d MMM ''yy";
+            case 'month':
+              return "MMM ''yy";
+          }
+        })(),
+        ticks,
         titleTextStyle: { fontSize: 14 },
         textStyle: { fontSize: 14 },
-        slantedText: true,
+        slantedText: data.length > 10,
         slantedTextAngle: 45
       },
       vAxis: { 
