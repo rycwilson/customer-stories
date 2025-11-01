@@ -27,7 +27,6 @@ authenticate(:user) do
     member do
       patch 'tags'
       patch 'ads'
-      get 'visitors', constraints: ->(req) { req.format == :json }
       get 'activity', constraints: ->(req) { req.format == :json }
     end
     resources :customers, only: %i[edit create update destroy], shallow: true
@@ -51,6 +50,7 @@ authenticate(:user) do
     end
     resources :ctas, only: %i[new show create update destroy]
     resources :invitation_templates
+    resources :visitors, only: [:index], constraints: ->(req) { req.format == :json }
     member { get :set_reset_gads }
     member { put :widget }
     # need :get for the sync. response (redirect_to)
@@ -60,12 +60,6 @@ authenticate(:user) do
   end
 
   get '/successes', to: 'successes#index'
-
-  # analytics
-
-  # get '/analytics/charts', to: 'analytics#charts', as: 'charts'
-  # get '/analytics/visitors', to: 'analytics#visitors', as: 'measure_visitors'
-  # get '/analytics/stories', to: 'analytics#stories', as: 'measure_stories'
 
   # impersonate another user
   devise_scope(:user) do

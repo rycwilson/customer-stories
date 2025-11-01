@@ -45,6 +45,36 @@ class ApplicationController < ActionController::Base
       current_user&.company
   end
 
+  def set_curator
+    @curator = if params[:curator] || cookies['csp-curator-filter']
+                 @company.curators.find_by(
+                   id: (params[:curator] || cookies['csp-curator-filter']).to_i
+                 )
+               else
+                 current_user
+               end
+  end
+
+  def set_visitors_filters
+    @visitors_filters = {
+      'curator' => @curator&.id,
+      'story' => params[:visitors_story]&.to_i,
+      'category' => params[:visitors_category]&.to_i,
+      'product' => params[:visitors_product]&.to_i,
+
+      # Preferences are potentially stored in cookies
+      'date-range' => params[:visitors_date_range] || cookies['csp-date-range-filter'] || 'last-30',
+      'show-visitor-source' =>
+        if params['visitors_show_visitor_source'] || cookies['csp-show-visitor-source-filter']
+          ActiveRecord::Type::Boolean.new.cast(
+            params['visitors_show_visitor_source'] || cookies['csp-show-visitor-source-filter']
+          )
+        else
+          true
+        end
+    }.compact
+  end
+
   def story_filters_from_params(company, is_dashboard: false)
     params.permit(params.keys).to_h.filter_map do |param, value|
       next unless param.in? %w[curator status customer category product]

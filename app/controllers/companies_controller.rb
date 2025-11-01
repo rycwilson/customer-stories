@@ -2,11 +2,6 @@
 
 class CompaniesController < ApplicationController
   before_action :set_company, except: %i[new create promote get_curators get_invitation_templates]
-  before_action(only: %i[show visitors]) do
-    set_curator
-    set_visitors_filters
-  end
-  before_action(only: %i[visitors activity]) { Time.zone = params[:time_zone] || 'UTC' }
 
   def new
     @company = Company.new
@@ -14,6 +9,7 @@ class CompaniesController < ApplicationController
   end
 
   def show
+    set_curator
     @workflow_stage = params[:workflow_stage]
     @prospect_tab = cookies['csp-prospect-tab'] || '#customer-wins'
     @promote_tab = cookies['csp-promote-tab'] || '#promoted-stories'
@@ -21,6 +17,7 @@ class CompaniesController < ApplicationController
     # @recent_activity = @company.recent_activity(30)
     # @story_views_30_day_count = @company.page_views.story.since(30.days.ago).count
     @filters = filters_from_cookies
+    set_visitors_filters
     @filters_match_type = cookies['csp-dashboard-filters-match-type'] || 'all'
     render :dashboard
   end
@@ -114,86 +111,9 @@ class CompaniesController < ApplicationController
     )
   end
 
-  # TODO: Why was this called "Landing"? It's just a % of overall visitors
-  # "#{((story.visitors.to_f / company.visitors.count) * 100).round(1)}%",
-  def visitors
-    if is_demo?
-      @company = Company.find_by_subdomain 'varmour'
-      curator = User.find_by_email 'kturner@varmour.com'
-      story = @visitors_filters['story'] && @company.stories.published.sample
-      today = Date.today.change(year: 2018)
-    else
-      curator = @curator
-      today = Date.today
-    end
-
-    start_date, end_date =
-      case @visitors_filters['date-range']
-      when 'last-7'
-        [today - 7.days, today]
-      when 'last-30'
-        [today - 30.days, today]
-      when 'last-90'
-        [today - 90.days, today]
-      when 'this-quarter'
-        [today.beginning_of_quarter, today]
-      when 'previous-quarter'
-        [today.beginning_of_quarter - 3.months, today.beginning_of_quarter - 1.day]
-      when 'this-year'
-        [today.beginning_of_year, today]
-      when 'previous-year'
-        [today.beginning_of_year - 1.year, today.beginning_of_year - 1.day]
-      end
-
-    by_date =
-      Visitor.to_company_by_date(
-        @company.id,
-        curator_id: curator&.id,
-        start_date:,
-        end_date:,
-        story_id: story&.id,
-        # category_id: @visitors_filters['category'],
-        # product_id: @visitors_filters['product']
-      )
-             .map { |result| result.attributes.values.compact }
-             .map do |(group_unit, group_start_date, promote, link, search, other)|
-               if @visitors_filters['show-visitor-source']
-                 [group_unit, group_start_date, promote, link, search, other]
-               else
-                 [group_unit, group_start_date, promote + link + search + other]
-               end
-             end
-
-    if story.nil?
-      by_story =
-        Visitor.to_company_by_story(
-          @company.id,
-          curator_id: curator&.id,
-          start_date:,
-          end_date:
-        )
-               .map { |result| result.attributes.values.compact }
-               .map do |(customer, story_title, promote, link, search, other)|
-                 story_record = @company.stories.find_by_title(story_title)
-                 story_link = "<a href='#{story_record.csp_story_url}'>#{story_record.title}</a>"
-                 if @visitors_filters['show-visitor-source']
-                   [customer, story_link, promote, link, search, other]
-                 else
-                   [customer, story_link, promote + link + search + other]
-                 end
-               end
-    end
-
-    respond_to do |format|
-      format.json do
-        render json: { by_date: }.merge(story.present? ? {} : { by_story: })
-      end
-    end
-  end
-
   def activity
     company = Company.find(params[:id])
-    # company = Company.find_by_subdomain 'varmour'
+    Time.zone = params[:time_zone] || 'UTC'
     respond_to do |format|
       format.json do
         render json: { recent: company.recent_activity(30) }
@@ -279,16 +199,6 @@ class CompaniesController < ApplicationController
           .permit(:tab_color, :text_color, :show, :show_delay, :show_freq, :hide, :hide_delay)
   end
 
-  def set_curator
-    @curator = if params[:curator] || cookies['csp-curator-filter']
-                 @company.curators.find_by(
-                   id: (params[:curator] || cookies['csp-curator-filter']).to_i
-                 )
-               else
-                 current_user
-               end
-  end
-
   def filters_from_cookies
     %i[curator status customer category product].map do |type|
       cookie_val = cookies["csp-#{type}-filter"]
@@ -301,27 +211,6 @@ class CompaniesController < ApplicationController
       end
     end.to_h.compact
   end
-
-  def set_visitors_filters
-    @visitors_filters = {
-      'curator' => @curator&.id,
-      'story' => params[:visitors_story]&.to_i,
-      'category' => params[:visitors_category]&.to_i,
-      'product' => params[:visitors_product]&.to_i,
-
-      # Preferences are potentially stored in cookies
-      'date-range' => params[:visitors_date_range] || cookies['csp-date-range-filter'] || 'last-30',
-      'show-visitor-source' =>
-        if params['visitors_show_visitor_source'] || cookies['csp-show-visitor-source-filter']
-          ActiveRecord::Type::Boolean.new.cast(
-            params['visitors_show_visitor_source'] || cookies['csp-show-visitor-source-filter']
-          )
-        else
-          true
-        end
-    }.compact
-  end
-
 
   def ad_images_removed?(company_params)
     return false if company_params[:adwords_images_attributes].blank?
@@ -350,10 +239,5 @@ class CompaniesController < ApplicationController
         }
       end
       .delete_if { |image_ads| image_ads[:ads_params].empty? } # no affected ads
-  end
-
-  def is_demo?
-    @company.subdomain == 'acme-test' and
-      @curator&.email.in?([nil, 'rycwilson@gmail.com', 'acme-test@customerstories.net'])
   end
 end
