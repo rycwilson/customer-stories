@@ -69,9 +69,8 @@ class Visitor < ApplicationRecord
                             .where(stories: { id: story_id })
       end
 
-      from(<<-SQL.gsub(/^\s+/, '')
-        (
-          SELECT
+      outer_query = <<-SQL.gsub(/^\s+/, '')
+        ( SELECT
             visitor_id,
             group_start_date,
             referrer_type,
@@ -81,50 +80,61 @@ class Visitor < ApplicationRecord
           GROUP BY visitor_id, group_start_date, referrer_type
         ) AS visitor_referrers
       SQL
-          ).select([
-            'group_unit',
-            'group_start_date',
-            "COUNT(DISTINCT CASE WHEN referrer_type = 'promote' THEN visitor_id END) AS promote",
-            "COUNT(DISTINCT CASE WHEN referrer_type = 'link' THEN visitor_id END) AS link",
-            "COUNT(DISTINCT CASE WHEN referrer_type = 'search' THEN visitor_id END) AS search",
-            "COUNT(DISTINCT CASE WHEN referrer_type NOT IN ('promote','link','search') THEN visitor_id END) AS other"
-          ].join(', '))
-          .group('group_unit, group_start_date')
-          .order('group_start_date ASC')
+
+      from(outer_query)
+        .select([
+          'group_unit',
+          'group_start_date',
+          "COUNT(DISTINCT CASE WHEN referrer_type = 'promote' THEN visitor_id END) AS promote",
+          "COUNT(DISTINCT CASE WHEN referrer_type = 'link' THEN visitor_id END) AS link",
+          "COUNT(DISTINCT CASE WHEN referrer_type = 'search' THEN visitor_id END) AS search",
+          "COUNT(DISTINCT CASE WHEN referrer_type NOT IN ('promote','link','search') THEN visitor_id END) AS other"
+        ].join(', '))
+        .group('group_unit, group_start_date')
+        .order('group_start_date ASC')
     end
   )
 
   scope(
     :to_company_by_story,
-    lambda do |company_id, curator_id: nil, start_date: 30.days.ago.to_date, end_date: Date.today|
+    lambda do |company_id, curator_id: nil, start_date: 30.days.ago, end_date: Date.today|
       start_date = start_date.to_date unless start_date.is_a?(Date)
       end_date = end_date.to_date unless end_date.is_a?(Date)
 
       # Build the subquery: for each visitor, customer, story, company, get their referrer_type
-      inner_subquery = Visitor
-        .joins(visitor_sessions: { visitor_actions: { success: %i[customer story] } })
-        .where(visitor_actions: { type: 'PageView', company_id: })
-        .where(visitor_sessions: { timestamp: (start_date.beginning_of_day.utc..end_date.end_of_day.utc) })
-        .select([
-          'customers.name AS customer',
-          'stories.title AS story',
-          'visitor_actions.company_id',
-          'visitors.id AS visitor_id',
-          'visitor_sessions.referrer_type'
-        ].join(', '))
-      inner_subquery = inner_subquery.where(successes: { curator_id: }) if curator_id.present?
+      visits =
+        Visitor.select([
+                         'customers.name AS customer',
+                         'stories.title AS story',
+                         'visitors.id AS visitor_id',
+                         'visitor_sessions.referrer_type'
+                       ])
+              .joins(visitor_sessions: { visitor_actions: { success: %i[customer story] } })
+              .where(visitor_actions: { type: 'PageView', company_id: })
+              .where(
+                visitor_sessions: {
+                  timestamp: (start_date.beginning_of_day.utc..end_date.end_of_day.utc)
+                }
+              )
+      visits = visits.where(successes: { curator_id: }) if curator_id.present?
 
       # Outer subquery: group and count by referrer type
-      outer_select = [
+      columns = [
         'customer',
         'story',
         "COUNT(DISTINCT CASE WHEN referrer_type = 'promote' THEN visitor_id END) AS promote",
         "COUNT(DISTINCT CASE WHEN referrer_type = 'link' THEN visitor_id END) AS link",
         "COUNT(DISTINCT CASE WHEN referrer_type = 'search' THEN visitor_id END) AS search",
-        "COUNT(DISTINCT CASE WHEN referrer_type NOT IN ('promote','link','search') OR referrer_type IS NULL THEN visitor_id END) AS other"
+        "COUNT(DISTINCT CASE WHEN referrer_type NOT IN ('promote','link','search') THEN visitor_id END) AS other"
       ].join(', ')
 
-      outer_query = "(SELECT #{outer_select} FROM (#{inner_subquery.to_sql}) AS visitor_referrers GROUP BY customer, story) AS visitor_story_counts"
+      # outer_query = "(SELECT #{columns} FROM (#{visits.to_sql}) AS visits GROUP BY customer, story) AS visitor_story_counts"
+      outer_query = <<-SQL.gsub(/^\s+/, '')
+        ( SELECT #{columns}
+          FROM (#{visits.to_sql}) AS visits
+          GROUP BY customer, story
+        ) AS visitor_counts
+      SQL
 
       from(outer_query)
         .select('customer, story, promote, link, search, other')
