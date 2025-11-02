@@ -3,14 +3,14 @@ import { getJSON, toSnakeCase } from '../utils';
 import { fromRatio } from 'tinycolor2';
 import { capitalize, formatPercent } from '../utils';
 
-type SourceCount = [promote: number, link: number, search: number, other: number];
+type VisitorsBySource = [promote: number, link: number, search: number, other: number];
 type DateRow = (
   [group: 'day' | 'week' | 'month', period: string, visitors: number] | 
-  [group: 'day' | 'week' | 'month', period: string, ...SourceCount]
+  [group: 'day' | 'week' | 'month', period: string, ...VisitorsBySource]
 );
 type StoryRow = (
   [customer: string, title: string, visitors: number] |
-  [customer: string, title: string, ...SourceCount]
+  [customer: string, title: string, ...VisitorsBySource]
 );
 
 export default class VisitorsController extends ResourceController {
@@ -214,7 +214,7 @@ export default class VisitorsController extends ResourceController {
             total,
             ...visitors.map(count => ({
               v: total === 0 ? 0 : (count / total),
-              f: formatPercent(count, total)
+              f: formatPercent(count, total) === '0%' ? '<span style="color: #ccc">\u2014</span>' : formatPercent(count, total)
             }))
           );
         } else {
