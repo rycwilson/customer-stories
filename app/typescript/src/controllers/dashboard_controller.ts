@@ -22,7 +22,7 @@ interface ReadyState {
   activity: boolean;
 };
 
-export default class DashboardController extends Controller<HTMLDivElement> {
+export default class DashboardController extends Controller {
   static outlets = ['modal'];
   declare readonly modalOutlet: ModalController;
 
@@ -39,6 +39,7 @@ export default class DashboardController extends Controller<HTMLDivElement> {
     'promotedStories', 
     'promotedStoriesTab', 
     'promotedStoriesSearchSelect',
+    'stories',
     'story',
     'visitors',
     'activity',
@@ -52,6 +53,7 @@ export default class DashboardController extends Controller<HTMLDivElement> {
   declare readonly contributionsTarget: HTMLDivElement;
   declare readonly contributionsTabTarget: HTMLAnchorElement;
   declare readonly contributionsSearchSelectTarget: TomSelectInput;
+  declare readonly storiesTarget: HTMLDivElement;
   declare readonly storyTarget: HTMLDivElement;
   declare readonly promotedStoriesTarget: HTMLDivElement;
   declare readonly promotedStoriesTabTarget: HTMLAnchorElement;
@@ -59,8 +61,12 @@ export default class DashboardController extends Controller<HTMLDivElement> {
   declare readonly visitorsTarget: HTMLDivElement;
   declare readonly activityTarget: HTMLDivElement;
 
-  static values = { activeTab: { type: String, default: '' } };    
+  static values = { 
+    activeTab: { type: String, default: '' },
+    filters: { type: Object }
+  };    
   declare activeTabValue: DashboardTab | null;
+  declare filtersValue: ResourceFilters | undefined;
   
   tabRestorationListener = this.onTabRestoration.bind(this);
   spinnerTimers: { [key: string]: number } = { 
@@ -137,7 +143,6 @@ export default class DashboardController extends Controller<HTMLDivElement> {
     } else if (resourceName === 'promotedStories') {
       setReady(DashboardTab.Promote);
     } else if (resourceName === 'visitors') {
-      console.log('visitors ready')
       setReady(DashboardTab.Measure);
     }
     return true;
@@ -153,8 +158,31 @@ export default class DashboardController extends Controller<HTMLDivElement> {
     );
   }
 
+  onChangeStoriesCurator({ detail: { 'curator': curatorId } }: { detail: { 'curator': number | null }}) {
+    this.filtersValue = { 'curator': curatorId };
+  }
+
   activeTabValueChanged(activeTab: DashboardTab) {
     if (activeTab) this.initTabPanel(activeTab);
+  }
+
+  filtersValueChanged(newVal: ResourceFilters, oldVal: ResourceFilters | undefined) {
+    // console.log('old dashboard filtersValue:', oldVal)
+    // console.log('new dashboard filtersValue:', newVal)
+    if (oldVal === undefined || JSON.stringify(newVal) === JSON.stringify(oldVal)) return;
+    [
+      this.customerWinsTarget,
+      this.contributionsTarget,
+      this.storiesTarget,
+      this.promotedStoriesTarget,
+      this.visitorsTarget
+    ]
+      .forEach(target => {
+        const oldFilters =
+          JSON.parse(<string>target.getAttribute(`data-${target.dataset.controller}-filters-value`));
+        const newFilters = { ...oldFilters, ...newVal };
+        target.setAttribute(`data-${target.dataset.controller}-filters-value`, JSON.stringify(newFilters));
+      });
   }
 
   addCustomerWinContributors({ currentTarget: link }: { currentTarget: HTMLAnchorElement }) {

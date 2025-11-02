@@ -23,13 +23,21 @@
       = button_tag( \
           type: 'button', 
           class: 'btn btn-default', 
-          aria: { label: 'Table Display Settings' }, 
+          aria: { label: 'Display Options' }, 
           data: { "#{resource_ctrl_id}_target" => 'displayOptionsBtn' }) do
           i.fa.fa-gear
           |&nbsp;&nbsp;Preferences
 
   div
-    .search-table data-action="tomselect:change-filter->#{resource_ctrl_id}#onChangeSearchSelect tomselect:search->#{resource_ctrl_id}#onTomselectSearch"
+    / .search-table {
+    /   data-action="tomselect:change-search->#{resource_ctrl_id}#onChangeSearchSelect tomselect:search->#{resource_ctrl_id}#onTomselectSearch"
+    = content_tag( \
+        :div, 
+        class: 'search-table', 
+        data: { \
+          action: [ \
+            "tomselect:change-search->#{resource_ctrl_id}#onChangeSearchSelect",
+            "tomselect:search->#{resource_ctrl_id}#onTomselectSearch"].join(' ') }) do
       /label
         i.fa.fa-search
       = select_tag( \
@@ -40,7 +48,8 @@
             class: 'form-control',
             data: { \
               controller: 'tomselect', 
-              tomselect_kind_value: 'filter', 
+              tomselect_kind_value: 'search', 
               "#{resource_ctrl_id}_target" => 'searchSelect',
               dashboard_target: "#{resource_name}SearchSelect" } })
+              
     = content_tag(:div, '', class: 'help-block text-right', data: { "#{resource_ctrl_id}_target" => 'filterResults' })

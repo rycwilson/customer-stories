@@ -18,7 +18,7 @@ export default class TomselectController extends Controller<TomSelectInput> {
     sortable: { type: Boolean, default: false },
     reset: { type: Boolean, default: false }
   };
-  declare readonly kindValue: SelectInputKind | undefined;
+  declare readonly kindValue: TomSelectKind | undefined;
   declare readonly sourceValue: string | undefined;
   declare readonly customOptionsValue: { [key: string]: any };
   declare readonly preventFocusValue: boolean;
@@ -38,7 +38,7 @@ export default class TomselectController extends Controller<TomSelectInput> {
 
   }
 
-  isFilter() { return this.kindValue === 'filter'; }
+  get isSearch() { return this.kindValue === 'search'; }
 
   get readableKind() {
     return !this.kindValue ? '' : this.kindValue.split(/(?=[A-Z])/).map(word => capitalize(word)).join(' ');
@@ -207,14 +207,13 @@ export default class TomselectController extends Controller<TomSelectInput> {
       onClear() {
         setTimeout(() => {
           if (ctrl.ts.getValue() === '') {
-            console.log('onClear')
             ctrl.dispatch('clear');
           }
         });
       },
       
       onType(this: TomSelect, userInput: string) { 
-        if (ctrl.isFilter()) ctrl.dispatchSearchResults(); 
+        if (ctrl.isSearch) ctrl.dispatchSearchResults(); 
         if (this.settings.create && userInput) {
           const optionExists = Object.values(this.options).find(option => option.text === userInput);
           (this.dropdown_content.querySelector(':scope > .create') as HTMLDivElement)
@@ -224,7 +223,7 @@ export default class TomselectController extends Controller<TomSelectInput> {
       
       onDropdownOpen(this: TomSelect, dropdown: HTMLDivElement) {
         ctrl.dispatch('dropdown-did-open');
-        if (ctrl.isFilter()) {
+        if (ctrl.isSearch) {
           // if a search string exists, manually set the current results
           if (this.getValue() === '0') {
             if (ctrl.currentSearchResults) {
@@ -235,7 +234,7 @@ export default class TomselectController extends Controller<TomSelectInput> {
       },
       
       onDropdownClose(this: TomSelect, dropdown: HTMLDivElement) {
-        if (ctrl.isFilter()) {
+        if (ctrl.isSearch) {
           // default behavior is that text input is cleared when the dropdown closes, 
           // but we want to keep it since the search results are reflected in the table
           // => accomplished by adding and selecting an option to match the search text
@@ -247,7 +246,7 @@ export default class TomselectController extends Controller<TomSelectInput> {
       },
       
       onItemAdd(this: TomSelect, value: string, item: TomItem) {
-        console.log(`onItemAdd(${value}, ${item})`);
+        // console.log(`onItemAdd(${value}, ${item})`);
       },
 
       // the following two callbacks apply to the company tags inputs
@@ -263,7 +262,7 @@ export default class TomselectController extends Controller<TomSelectInput> {
       },
 
       onDelete(values: string[], e: PointerEvent) {
-        console.log('onDelete')
+        // console.log('onDelete')
         if (e.target instanceof HTMLElement && e.target.closest('#company-tags-form')) {
           const [tagName] = values;
           const item = <HTMLElement>(<HTMLAnchorElement>e.target).closest('.item');

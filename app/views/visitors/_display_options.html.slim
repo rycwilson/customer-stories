@@ -1,0 +1,35 @@
+.form-horizontal 
+
+  .form-group
+    label.control-label Curator
+    div
+      = render( \
+          'companies/shared/curator_select', 
+          { company:, curator_id: filters[:curator], ctrl_id: 'table-display-options' })
+
+  .form-group 
+    label.control-label Date Range 
+    div
+      = select_tag( \
+          nil,
+          options_for_select([ \
+            ['Last 7 Days', 'last-7'],
+            ['Last 30 Days', 'last-30'],
+            ['Last 90 Days', 'last-90'],
+            ['This Quarter', 'this-quarter'],
+            ['Last Quarter', 'previous-quarter'],
+            ['This Year', 'this-year'],
+            ['Last Year', 'previous-year'] ],
+          selected: filters['date-range']),
+          data: { \
+            controller: 'tomselect',
+            tomselect_kind_value: 'dateRange',
+            tomselect_custom_options_value: '{ &quot;plugins&quot;: {} }' })
+  
+  .form-group 
+    label.control-label Show
+    div
+      .checkbox 
+        label for="show-visitor-source"
+          input#show-visitor-source type="checkbox" checked="#{filters['show-visitor-source']}"
+          | Visitor source

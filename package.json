@@ -5,7 +5,7 @@
   "main": "index.js",
   "type": "module",
   "scripts": {
-    "test": "NODE_PATH=/Users/wilson/.rbenv/versions/3.1.2/lib/ruby/gems/3.1.0/gems:$NODE_PATH jest --no-cache",
+    "test": "vitest",
     "build:landing-js": "esbuild app/typescript/emit/landing.js --outfile=app/assets/builds/landing/bundle.js --minify --bundle",
     "build:landing-css": "./sass-build.sh app/assets/stylesheets/landing/main.scss:app/assets/builds/landing/main.css",
     "build:app-js": "esbuild app/typescript/emit/app.js --outfile=app/assets/builds/app/bundle.js --minify --bundle",
@@ -71,8 +71,10 @@
     "tom-select": "^2.3.1"
   },
   "devDependencies": {
-    "@jest/globals": "^29.7.0",
     "@stimulus/test": "^2.0.0",
+    "@testing-library/dom": "^10.4.1",
+    "@testing-library/jest-dom": "^6.7.0",
+    "@testing-library/user-event": "^14.6.1",
     "@types/bootstrap-switch": "^0.0.36",
     "@types/bootstrap-validator": "^0.11.6",
     "@types/google.visualization": "^0.0.74",
@@ -82,17 +84,18 @@
     "@types/jquery.fileupload": "^9.22.6",
     "@types/jqueryui": "^1.12.23",
     "@types/js-cookie": "^3.0.4",
+    "@types/node": "^24.3.0",
     "@types/rails__request.js": "^0.0.0",
     "@types/rails__ujs": "^6.0.2",
     "@types/summernote": "^0.8.8",
     "@types/tinycolor2": "^1.4.6",
+    "@vitest/ui": "^3.2.4",
     "concurrently": "^9.1.2",
     "esbuild": "0.19.3",
-    "jest": "^29.7.0",
-    "jest-environment-jsdom": "^29.7.0",
+    "jsdom": "^26.1.0",
     "sass": "^1.89.2",
-    "ts-jest": "^29.1.2",
-    "typescript": "^5.2.2"
+    "typescript": "^5.2.2",
+    "vitest": "^3.2.4"
   },
   "notes": {
     "bootstrap-switch": "3.3.4 is the last version that works with bootstrap 3: https://github.com/Bttstrp/bootstrap-switch/issues/717"

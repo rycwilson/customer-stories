@@ -1,1 +1,17 @@
-h3 Story Visitors
+= render( \
+    'companies/shared/table_controls',
+    { company:,
+      caption: 'Visitors',
+      resource_name: 'visitors',
+      resource_ctrl_id: 'visitors',
+      search_options: { \
+        'Story' => company.stories.published.map(&:select_option),
+        'Category' => company.tag_select_options(:category, for_multi_select: true),
+        'Product' => company.tag_select_options(:product, for_multi_select: true) }})
+
+h4.text-center.no-data-mesg
+  | No data available
+
+#visitors-column-chart data-visitors-target="columnChart"
+
+#stories-table-chart data-visitors-target="tableChart"

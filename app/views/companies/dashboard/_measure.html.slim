@@ -40,41 +40,30 @@
             role="tab" }
             i.fa.fa-fw.fa-line-chart
             
-
     .layout-main
       .tab-content
 
-        / data-controller="resource"
-        / data-resource-dashboard-outlet=".dashboard"
-        / data-resource-resource-outlet=".resource-ctrl:not(#story-visitors)"
-        / data-resource-data-path-value="/successes"
-        / data-resource-name="visitors"
         #visitors.tab-pane {
           class=('active in' if active_tab == '#visitors') 
           data-dashboard-target="visitors"
           data-resource-name="visitors"
           data-controller="visitors"
+          data-visitors-dashboard-outlet=".dashboard"
           data-visitors-data-path-value=visitors_company_path(company)
-          data-visitors-filters-value={ }.to_json
+          data-visitors-filters-value=@visitors_filters.to_json
+          data-visitors-display-options-html-value=visitors_display_options_html(company, @visitors_filters)
           aria-labelledby="visitors-tab"
           role="tabpanel" }
 
           = render('companies/measure/visitors', company:)
 
-        / data-controller="resource"
-        / data-resource-dashboard-outlet=".dashboard"
-        / data-resource-resource-outlet=".resource-ctrl:not(#contributions)"
-        / data-resource-data-path-value=company_contributions_path(company)
-        / data-resource-checkbox-filters-value={ \
-        /   'show-completed': { checked: true, label: 'Contributors with a completed Contribution' },
-        /   'show-published': { checked: true, label: 'Contributors to published Customer Stories' } }.to_json
-        / data-resource-name="contributions"
         #activity.tab-pane {
           class=('active in' if active_tab == '#activity')
           data-dashboard-target="activity"
           data-resource-name="activity"
           data-controller="activity"
-          data-activity-filters-value={ }.to_json
+          data-activity-dashboard-outlet=".dashboard"
+          data-activity-filters-value={ 'curator': curator&.id }.to_json
           aria-labelledby="activity-tab"
           role="tabpanel" }
 

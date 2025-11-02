@@ -22,22 +22,26 @@ class InvitationTemplatesController < ApplicationController
       @template = source_template.dup
       @template.name = "Copy: #{source_template.name}"
     else
-      @template = @company.invitation_templates.build(name: params[:template_name])
+      @template = @company.invitation_templates.build
     end
-    # render('invitation_templates/template_turbo_frame')
-    render('invitation_templates/template_form')
   end
 
   def show; end
 
   def edit
     @template = @company.invitation_templates.find(params[:id])&.format_for_editor(current_user)
-    # render('invitation_templates/template_turbo_frame')
-    render('invitation_templates/template_form')
   end
 
   def create
-    @template = InvitationTemplate.create(template_params)
+    @template = @company.invitation_templates.new template_params
+    if @template.save
+      flash.now[:notice] =
+        "Template &nbsp;<strong>#{@template.name}</strong>&nbsp; was created".html_safe
+      render :edit
+    else
+      @errors = @template.errors.full_messages
+      render :new
+    end
   end
 
   def update
@@ -46,13 +50,27 @@ class InvitationTemplatesController < ApplicationController
       @needs_refresh = params[:needs_refresh]
       @selected_or_all = JSON.parse(params[:id]).length == 1 ? 'selected' : 'all'
       respond_to { |format| format.js { render action: 'restore' } }
+    elsif @template.update template_params
+      flash.now[:notice] =
+        "Template &nbsp;<strong>#{@template.name}</strong>&nbsp; was updated".html_safe
     else
-      @template.update(template_params)
+      @errors = @template.errors.full_messages
     end
+    render :edit
   end
 
   def destroy
     @template.destroy
+    flash.now[:notice] =
+      "Template &nbsp;<strong>#{@template.name}</strong>&nbsp; was deleted".html_safe
+    render turbo_stream: [
+      turbo_stream.replace('toaster', partial: 'shared/toaster'),
+      turbo_stream.update(
+        'invitation-template-form',
+        partial: 'invitation_templates/template_toolbar',
+        locals: { company: @company }
+      )
+    ]
   end
 
   private

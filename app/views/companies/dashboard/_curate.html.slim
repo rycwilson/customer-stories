@@ -7,7 +7,8 @@
   = render('shared/loading_spinner')
 
   .container-fluid {
-    data-controller="stories" 
+    data-controller="stories"
+    data-dashboard-target="stories"
     data-action="tomselect:did-initialize->stories#onInitFilter" }
 
     = render( \

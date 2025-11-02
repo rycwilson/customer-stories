@@ -12,10 +12,10 @@ export function toggleRowGroups(this: ResourceController, shouldEnable: boolean)
 
 export function search(this: ResourceController, tsSearchResults?: { [key: string]: string }) {
   const filters = Object.entries(this.filtersValue)
-    .map(([filterId, filterVal]) => {
-      const checked = filterId !== 'curator-id' && filterVal;
-      switch (filterId) {
-        case 'curator-id': {
+    .map(([filterKey, filterVal]) => {
+      const checked = filterKey !== 'curator' && filterVal;
+      switch (filterKey) {
+        case 'curator': {
           const curatorId = filterVal;
           return { column: 'curator', q: curatorId ? `^${curatorId}$` : '', regEx: true, smartSearch: false };
         }
@@ -61,14 +61,20 @@ export function initDisplayOptions(this: ResourceController, isReset = false) {
       title: 'Display Preferences',
       placement: 'auto left',
       template: `
-        <div 
+        <div
           class="popover ${this.identifier}" 
           data-controller="table-display-options" 
           data-table-display-options-${this.identifier}-outlet="#${this.identifier}"
-          data-action="tomselect:change-curator->table-display-options#onChangeCurator"
+          data-table-display-options-dashboard-outlet=".dashboard"
+          data-action="change->table-display-options#onChange"
           role="tooltip">
           <div class="arrow"></div>
-          <h3 class="popover-title label-secondary"></h3>
+          <div class="popover-title__wrapper">
+            <h3 class="popover-title label-secondary"></h3>
+            <button type="button" class="close" data-action="table-display-options#hide" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
           <div class="popover-content">
             <!-- content goes here (setting above) -->
           </div>

@@ -28,7 +28,7 @@
         = customer_fields.hidden_field(:company_id, value: @company.id, disabled: true, data: { new_contribution_target: 'customerField' })
 
       .form-group
-        = success_fields.label(:customer_id, 'Customer', style: "#{@story ? 'pointer-events:none' : ''}")
+        = success_fields.label(:customer_id, 'Customer', style: "#{@story ? 'pointer-events:none' : ''}", class: 'control-label')
         = success_fields.collection_select( \
             :customer_id,
             @company.customers,
@@ -62,7 +62,7 @@
 
     - else
       .form-group data-action="tomselect:dropdown-did-open->new-contribution#filterCustomerWinOptions"
-        = form.label(:success_id, 'Customer Win')
+        = form.label(:success_id, 'Customer Win', class: 'control-label')
         = form.select( \
             :success_id,
             options_for_select( \
@@ -82,7 +82,7 @@
         .help-block.with-errors
 
     .form-group
-      = form.label(:contributor_id, 'Contributor')
+      = form.label(:contributor_id, 'Contributor', class: 'control-label')
       = form.collection_select( \
           :contributor_id,
           @company.contacts(as_select_options: true),

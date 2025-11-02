@@ -23,7 +23,7 @@
           data: { new_customer_win_target: 'customerField' })
 
     .form-group
-      = form.label(:customer_id, 'Customer') 
+      = form.label(:customer_id, 'Customer', class: 'control-label') 
       = form.collection_select( \
           :customer_id,
           @company.customers,
@@ -44,7 +44,7 @@
       .help-block.with-errors
 
     .form-group
-      = form.label(:name) 
+      = form.label(:name, class: 'control-label') 
       = form.text_field( \
           :name,
           class: 'form-control',

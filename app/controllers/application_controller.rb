@@ -39,9 +39,10 @@ class ApplicationController < ActionController::Base
   protected
 
   def set_company
-    @company = Company.find_by(id: params[:company_id]) ||
-               Company.where('subdomain = ? OR subdomain = ?', params[:company_id], request.subdomain).take ||
-               current_user&.company
+    @company =
+      Company.find_by(id: params[:company_id]) ||
+      Company.where('subdomain = ? OR subdomain = ?', params[:company_id], request.subdomain).take ||
+      current_user&.company
   end
 
   def story_filters_from_params(company, is_dashboard: false)
