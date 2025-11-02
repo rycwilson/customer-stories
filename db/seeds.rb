@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require_relative 'seed_data'
 
 # Destroy existing data
@@ -34,11 +36,25 @@ acme.skip_callbacks = true    # Skip callbacks to avoid unnecessary processing d
 acme.save!
 
 # Associate curators
-ryan = User.find_by_email 'rycwilson@gmail.com'
-ralph = User.find_by_email 'ryan@ryanwilson.dev'
-ralph.update!(first_name: 'Ralph', last_name: 'Watson') if ralph.full_name != 'Ralph Watson'
-dan = User.find_by_email 'acme-test@customerstories.net'
-curators = [ryan, ralph, dan].compact
+ryan = User.find_by_email('rycwilson@gmail.com') || User.create(
+  first_name: 'Ryan', 
+  last_name: 'Wilson', 
+  email: 'rycwilson@gmail.com', 
+  password: 'password', 
+  sign_up_code: 'csp_beta',
+  confirmed_at: DateTime.now
+)
+ralph = User.find_by_email('ryan@ryanwilson.dev') || User.create(
+  first_name: 'Ralph',
+  last_name: 'Watson',
+  email: 'ryan@ryanwilson.dev',
+  password: 'password',
+  sign_up_code: 'csp_beta',
+  confirmed_at: DateTime.now
+)
+# dan = User.find_by_email('acme-test@customerstories.net')
+
+curators = [ryan, ralph].compact
 curators.each { |curator| acme.curators << curator }
 
 # Create story categories
