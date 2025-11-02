@@ -127,7 +127,9 @@ export default class VisitorsController extends ResourceController {
 
       const index = nthSource + 1;
       return this.visitors.by_date.reduce((sum, row: DateRow) => {
-        return (typeof row[index] === 'number') ? sum + row[index] : sum;
+        const element = row[index];
+        if (typeof element !== 'number') return sum;
+        return sum + element;
       }, 0);
     };
     const promoteLabel = this.isStacked && `Promote (${formatPercent(countSource(1), total)})`;
