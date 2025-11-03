@@ -28,9 +28,9 @@ class Visitor < ApplicationRecord
 
       group_unit, group_range =
         case (end_date - start_date).to_i
-        when 0...14
+        when 0..30
           ['day', start_date.beginning_of_day..end_date.end_of_day]
-        when 14...100
+        when 31...100
           ['week', start_date.beginning_of_week.beginning_of_day...end_date.end_of_week.end_of_day]
         else
           ['month', start_date.beginning_of_month.beginning_of_day...end_date.end_of_month.end_of_day]

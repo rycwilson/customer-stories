@@ -75,11 +75,11 @@ class VisitorsController < ApplicationController
   def set_date_range(today)
     case @visitors_filters['date-range']
     when 'last-7'
-      [today - 7.days, today]
+      [today - 6.days, today]
     when 'last-30'
-      [today - 30.days, today]
+      [today - 29.days, today]
     when 'last-90'
-      [today - 90.days, today]
+      [today - 89.days, today]
     when 'this-quarter'
       [today.beginning_of_quarter, today]
     when 'previous-quarter'
