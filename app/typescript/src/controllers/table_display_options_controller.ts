@@ -29,8 +29,11 @@ export default class TableDisplayOptionsController extends Controller {
     document.addEventListener('click', this.clickAwayHandler);
 
     Object.entries(this.resourceOutlet.filtersValue).forEach(([key, value]) => {
-      if (key === 'curator') {
-        this.curatorSelectTarget.value = value ? String(value) : '';
+      if (key.match(/curator|date-range/)) {
+        const select = this.element.querySelector(`#${this.resourceOutlet.identifier}-${key}`);
+        if (select instanceof HTMLSelectElement) { 
+          select.value = value ? String(value) : ''; 
+        }
       } else if (typeof value === 'boolean') {
         const checkbox = <HTMLInputElement>this.element.querySelector(`#${key}`);
         if (checkbox) checkbox.checked = value;
@@ -60,6 +63,9 @@ export default class TableDisplayOptionsController extends Controller {
   // 1 - For checkboxees, the key is derived from the element id
   // 2 - The key is used in cookies which use kebab-case
   onChange({ target }: { target: TomSelectInput | HTMLInputElement }) {
+    // This is a table row grouping operation, not a searching/filtering operation
+    if (target.id.includes('group-by')) return;
+    
     const filterKey = target.type === 'checkbox' ? 
       target.id : 
       kebabize(target.dataset.tomselectKindValue);

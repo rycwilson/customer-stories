@@ -1,17 +1,19 @@
 .form-horizontal 
 
   .form-group
-    label.control-label Curator
+    label.control-label for="visitors-curator" Curator
     div
       = render( \
           'companies/shared/curator_select', 
-          { company:, curator_id: filters[:curator], ctrl_id: 'table-display-options' })
+          company:,
+          ctrl_id: 'table-display-options',
+          select_id: 'visitors-curator' )
 
   .form-group 
-    label.control-label Date Range 
+    label.control-label for="visitors-date-range" Date Range
     div
       = select_tag( \
-          nil,
+          'visitors-date-range',
           options_for_select([ \
             ['Last 7 Days', 'last-7'],
             ['Last 30 Days', 'last-30'],
@@ -19,8 +21,7 @@
             ['This Quarter', 'this-quarter'],
             ['Last Quarter', 'previous-quarter'],
             ['This Year', 'this-year'],
-            ['Last Year', 'previous-year'] ],
-          selected: filters['date-range']),
+            ['Last Year', 'previous-year'] ]),
           data: { \
             controller: 'tomselect',
             tomselect_kind_value: 'dateRange',
@@ -31,5 +32,5 @@
     div
       .checkbox 
         label for="show-visitor-source"
-          input#show-visitor-source type="checkbox" checked="#{filters['show-visitor-source']}"
+          input#show-visitor-source type="checkbox"
           | Visitor source

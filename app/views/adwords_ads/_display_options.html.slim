@@ -1,6 +1,10 @@
 .form-horizontal 
   
   .form-group 
-    label.control-label Curator
+    label.control-label for="promoted-stories-curator" Curator
     div 
-      = render('companies/shared/curator_select', { company:, curator_id:, ctrl_id: 'table-display-options' })
+      = render( \
+          'companies/shared/curator_select',
+          company:,
+          ctrl_id: 'table-display-options',
+          select_id: 'promoted-stories-curator' )

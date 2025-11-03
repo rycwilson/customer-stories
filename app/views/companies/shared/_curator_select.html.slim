@@ -1,5 +1,8 @@
+- select_id ||= nil
+- curator_id ||= nil
+
 = select_tag( \
-    nil,
+    select_id,
     options_from_collection_for_select(company.curators, :id, :full_name, curator_id),
     { include_blank: true,
       placeholder: 'Select',
