@@ -79,9 +79,10 @@ export default class extends Controller<HTMLDivElement> {
   clearFilters(e: CustomEvent | undefined = undefined) {
     if (this.activeFilters.length === 0) return;
     const isUserInput = Boolean(e);
-    this.filterSelectTargets.forEach(select => (
-      select.tomselect.clear(select.dataset.tomselectKindValue !== 'curator')
-    ));
+    this.filterSelectTargets.forEach(select => {
+      const isSilentChange = select.dataset.tomselectKindValue !== 'curator';
+      select.tomselect.clear(isSilentChange);
+    });
     if (isUserInput) {
       this.fetchStories((turboFrameSrc: URL) => {
         this.filterTypes.forEach(param => turboFrameSrc.searchParams.delete(param || ''));
