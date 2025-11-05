@@ -91,6 +91,9 @@ Rails.application.configure do
   # Annotate rendered view with file names.
   # config.action_view.annotate_rendered_view_with_filenames = true
 
+  # https://stackoverflow.com/questions/72753525/rails-turbo-link-preload-but-not-used-within-a-few-seconds-from-the-windows
+  config.action_view.preload_links_header = false
+
   # Use an evented file watcher to asynchronously detect changes in source code,
   # routes, locales, etc. This feature depends on the listen gem.
   # config.file_watcher = ActiveSupport::EventedFileUpdateChecker
