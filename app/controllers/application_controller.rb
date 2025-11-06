@@ -91,6 +91,31 @@ class ApplicationController < ActionController::Base
     end.to_h
   end
 
+  def contribution_params
+    params.require(:contribution).permit(
+      :contributor_id,
+      :referrer_id,
+      :success_id,
+      :invitation_template_id,
+      :status,
+      :contribution,
+      :feedback,
+      :success_contact,
+      :request_subject,
+      :request_body,
+      :notes,
+      :submitted_at,
+      success_attributes:
+        [:id, :name, :customer_id, :curator_id, { customer_attributes: %i[id name company_id] }],
+      contributor_attributes:
+        %i[id email first_name last_name title phone sign_up_code password],
+      referrer_attributes:
+        %i[id email first_name last_name title phone sign_up_code password],
+      invitation_template_attributes: %i[name company_id],
+      contributor_answers_attributes: %i[id answer contribution_id contributor_question_id]
+    )
+  end
+
   def after_sign_in_path_for(current_resource)
     if session[:user_return_to].present?
       session[:user_return_to]

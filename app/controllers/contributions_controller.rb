@@ -58,15 +58,9 @@ class ContributionsController < ApplicationController
   end
 
   def create
-    # @company = Company.find_by(subdomain: request.subdomain) || current_user.company
+    puts JSON.pretty_generate(success_params.to_h)
 
-    # if contribution_params[:success_attributes].to_h.has_key?(:customer_attributes)
-    #   params[:contribution][:success_attributes][:customer_attributes] = find_dup_customer(
-    #     contribution_params.to_h[:success_attributes],
-    #     params[:zapier_create].present?,
-    #     current_user
-    #   )
-    # end
+    attrs = find_dup_customer(contribution_params.to_h.deep_dup, @company)
 
     # # find an existing sucess
     # if params[:zapier_create] && (success = Success.where(name: contribution_params.to_h[:success_attributes][:name]).take)
@@ -232,34 +226,6 @@ class ContributionsController < ApplicationController
   end
 
   private
-
-  # NOTE these are in the successes controller also
-  def contribution_params
-    params.require(:contribution).permit(
-      :contributor_id, :referrer_id, :success_id, :invitation_template_id,
-      :status, :contribution, :feedback, :success_contact,
-      :request_subject, :request_body,
-      :notes, :submitted_at,
-      success_attributes: [
-        :id, :name, :customer_id, :curator_id,
-        customer_attributes: [:id, :name, :company_id]
-      ],
-      contributor_attributes: [
-        :id, :email, :first_name, :last_name, :title, :phone, :sign_up_code, :password
-      ],
-      referrer_attributes: [
-        :id, :email, :first_name, :last_name, :title, :phone, :sign_up_code, :password
-      ],
-      contributor_answers_attributes: [
-        :id, :answer, :contribution_id, :contributor_question_id
-      ]
-    )
-  end
-
-  # NOTE: include all foreign keys even if they're unused, e.g. contributions.referrer_id
-  def fields_for_datatable
-    
-  end
 
   def set_contribution
     # contributor
