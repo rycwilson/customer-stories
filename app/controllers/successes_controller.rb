@@ -51,7 +51,6 @@ class SuccessesController < ApplicationController
 
   def create
     puts JSON.pretty_generate(success_params.to_h)
-    binding.pry
     attrs = find_dup_customer(success_params.to_h.deep_dup, @company)
 
     # if params[:success].dig(:contributions_attributes, '0', :referrer_attributes).present?
