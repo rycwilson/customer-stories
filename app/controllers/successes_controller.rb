@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class SuccessesController < ApplicationController
   include SchemaConformable
 
@@ -50,24 +52,19 @@ class SuccessesController < ApplicationController
   end
 
   def create
-    puts JSON.pretty_generate(success_params.to_h)
-    attrs = find_dup_customer(success_params.to_h.deep_dup, @company)
+    # puts JSON.pretty_generate(success_params.to_h)
+    win_attrs = find_dup_customer(success_params.to_h.deep_dup, @company)
 
-    # if params[:success].dig(:contributions_attributes, '0', :referrer_attributes).present?
-    #   params[:success][:contributions_attributes]['0'][:referrer_attributes] = find_dup_user_and_split_full_name(
-    #       success_params.to_h.dig(:contributions_attributes, '0', :referrer_attributes),
-    #       params[:zapier_create].present?
-    #     )
-    #   params[:success][:contributions_attributes].except!('0') if params[:success][:contributions_attributes]['0'][:referrer_attributes].blank?
-    # end
+    %i[referrer_attributes contributor_attributes].each_with_index do |new_user_key, index|
+      new_user_attrs = win_attrs.dig(:contributions_attributes, index.to_s, new_user_key)
+      next unless new_user_attrs.present?
 
-    # if params[:success].dig(:contributions_attributes, '1', :contributor_attributes).present?
-    #   params[:success][:contributions_attributes]['1'][:contributor_attributes] = find_dup_user_and_split_full_name(
-    #       success_params.to_h.dig(:contributions_attributes, '1', :contributor_attributes),
-    #       params[:zapier_create].present?
-    #     )
-    #   params[:success][:contributions_attributes].except!('1') if params[:success][:contributions_attributes]['1'][:contributor_attributes].blank?
-    # end
+      if (new_user_attrs = find_dup_user(new_user_attrs)).present?
+        win_attrs[:contributions_attributes][index.to_s][new_user_key] = new_user_attrs
+      else
+        win_attrs[:contributions_attributes].delete(index.to_s)
+      end
+    end
 
     # if params[:zapier_create].present? && (@success = Success.find_by_id(find_dup_success(success_params.to_h)))
     #   # a new success entails two contributions, one for the contact and one for the referrer;

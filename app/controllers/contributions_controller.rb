@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class ContributionsController < ApplicationController
   include SchemaConformable
 
@@ -58,31 +60,24 @@ class ContributionsController < ApplicationController
   end
 
   def create
-    puts JSON.pretty_generate(success_params.to_h)
+    # puts JSON.pretty_generate(contribution_params.to_h)
+    contribution_attrs = find_dup_customer(contribution_params.to_h.deep_dup, @company)
 
-    attrs = find_dup_customer(contribution_params.to_h.deep_dup, @company)
+    %i[referrer_attributes contributor_attributes].each_with_index do |new_user_key, index|
+      new_user_attrs = contribution_attrs[new_user_key]
+      next unless new_user_attrs.present?
+
+      if (new_user_attrs = find_dup_user(new_user_attrs)).present?
+        contribution_attrs[new_user_key] = new_user_attrs
+      else
+        contribution_attrs.delete(index.to_s)
+      end
+    end
 
     # # find an existing sucess
     # if params[:zapier_create] && (success = Success.where(name: contribution_params.to_h[:success_attributes][:name]).take)
     #   params[:contribution][:success_id] = success.id
     #   params[:contribution].delete(:success_attributes)
-    # end
-
-    # if referrer_included?(contribution_params.to_h)
-    #   params[:contribution][:referrer_attributes] = find_dup_user_and_split_full_name(
-    #     contribution_params.to_h[:referrer_attributes],
-    #     params[:zap].present?
-    #   )
-    # else
-    #   # remove empty data else validations will fail
-    #   params[:contribution].delete(:referrer_attributes)
-    # end
-
-    # if contribution_params.to_h.has_key?(:contributor_attributes)
-    #   params[:contribution][:contributor_attributes] = find_dup_user_and_split_full_name(
-    #     contribution_params.to_h[:contributor_attributes],
-    #     params[:zapier_create].present?
-    #   )
     # end
 
     # @contribution = Contribution.new(contribution_params)
@@ -264,13 +259,4 @@ class ContributionsController < ApplicationController
     end
     return contribution
   end
-
-  def referrer_included?(contribution)
-    contribution.has_key?(:referrer_attributes) &&
-    # if given no data, zapier will still include this:
-    # "referrer_attributes" => { "id" => "", "sign_up_code" => "csp_beta"}
-    contribution[:referrer_attributes][:email].present? &&
-    contribution[:referrer_attributes][:first_name].present?
-  end
-
 end
