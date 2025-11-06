@@ -156,11 +156,11 @@ export default class FormController<Ctrl extends SubclassController> extends Con
     // Enable/disable select elements via the [name] attribute => precludes ui changes
     select.setAttribute('name', isNew ? '' : select.dataset.fieldName);
 
-    // hidden fields for a new customer
+    // Hidden fields for a new customer
     this.customerFieldTargets.forEach((field: HTMLInputElement) => field.disabled = !isNew);
     this.customerNameTarget.value = isNew ? select.value.trim() : '';
 
-    // reset customer win select options
+    // Reset customer win select options
     if (this.hasCustomerWinSelectTarget) {
       this.customerWinSelectTarget.tomselect.clear(true);
     } 

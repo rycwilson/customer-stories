@@ -51,14 +51,8 @@ class SuccessesController < ApplicationController
 
   def create
     puts JSON.pretty_generate(success_params.to_h)
-
-    # if params[:success].dig(:customer_attributes).present?
-    #   params[:success][:customer_attributes] = find_dup_customer(
-    #     success_params.to_h.dig(:customer_attributes),
-    #     params[:zapier_create].present?,
-    #     current_user
-    #   )
-    # end
+    binding.pry
+    attrs = find_dup_customer(success_params.to_h.deep_dup, @company)
 
     # if params[:success].dig(:contributions_attributes, '0', :referrer_attributes).present?
     #   params[:success][:contributions_attributes]['0'][:referrer_attributes] = find_dup_user_and_split_full_name(
@@ -105,7 +99,10 @@ class SuccessesController < ApplicationController
     # else
     #   respond_to { |format| format.js {} }
     # end
-    respond_to { |format| format.js {} }
+    redirect_back(
+      fallback_location: dashboard_path('prospect'),
+      flash: { notice: 'Customer Win was added successfully' }
+    )
   end
 
   def import
@@ -215,27 +212,24 @@ class SuccessesController < ApplicationController
   # status will be present in case of csv upload
   def success_params
     params.require(:success).permit(
-      :name, :win_story_html, :win_story_text, :win_story_markdown, :win_story_completed, :customer_id, :curator_id,
+      :name,
+      :win_story_html,
+      :win_story_text,
+      :win_story_markdown,
+      :win_story_completed,
+      :customer_id,
+      :curator_id,
       customer_attributes: %i[id name company_id],
       contributions_attributes: [
         :contributor_id, :referrer_id, :invitation_template_id, :success_contact,
         {
-          contributor_attributes: %i[id email first_name last_name title phone sign_up_code password],
-          referrer_attributes: %i[id email first_name last_name title phone sign_up_code password],
+          contributor_attributes:
+            %i[id email first_name last_name title phone sign_up_code password],
+          referrer_attributes:
+            %i[id email first_name last_name title phone sign_up_code password],
           invitation_template_attributes: %i[name company_id]
         }
       ]
-    )
-  end
-
-  def contribution_params
-    params.require(:contribution).permit(
-      :contributor_id, :referrer_id, :success_id, :invitation_template_id, :status, :contribution, :feedback,
-      :success_contact, :request_subject, :request_body, :notes, :submitted_at,
-      success_attributes: [:id, :name, :customer_id, :curator_id, { customer_attributes: %i[id name company_id] }],
-      contributor_attributes: %i[id email first_name last_name title phone sign_up_code password],
-      referrer_attributes: %i[id email first_name last_name title phone sign_up_code password],
-      invitation_template_attributes: %i[name company_id]
     )
   end
 

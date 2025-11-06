@@ -11,19 +11,17 @@ module SchemaConformable
     user_params
   end
 
-  def find_dup_customer (customer_params, is_zap, current_user)
-    if is_zap || !is_zap  # works for either
-      if (customer = Customer.where('lower(name) = ?', customer_params.try(:[], :name).downcase, company_id: current_user.company_id).take)
-        # puts existing customer
-        customer_params[:id] = customer.id
-        customer_params.delete_if { |k, v| k != 'id' }
-      else
-        # puts 'new customer'
-        customer_params[:company_id] = current_user.company_id
-        customer_params
-      end
-    else
+  def find_dup_customer(params, company)
+    customer_attrs = params[:customer_attributes] ||
+                     params.dig(:success_attributes, :customer_attributes)
+    return unless customer_attrs.present?
+
+    existing_customer = company.customers.find_by(name: customer_attrs[:name])
+    if existing_customer
+      params[:customer_id] = existing_customer.id
+      params.delete(:customer_attributes)
     end
+    params
   end
 
   def find_dup_user_and_split_full_name (user_params, is_zap)
