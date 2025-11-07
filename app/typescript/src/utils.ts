@@ -66,6 +66,18 @@ export function toggleHeaderOnScroll(header: HTMLElement) {
   }
 }
 
+const correctionHandlers = new WeakMap<HTMLInputElement | TomSelectInput, (e: Event) => void>();
+
+const handleValidationCorrection = (formGroup: HTMLElement | null, helpBlock: HTMLElement | null) => {
+  return ({ target: control }: { target: HTMLInputElement | TomSelectInput }) => {
+    if (formControlIsValid(control)) {
+      formGroup?.classList.remove('has-error');
+      if (helpBlock) helpBlock.textContent = '';
+      correctionHandlers.delete(control);
+    }
+  };
+};
+
 function formControlIsValid(control: HTMLInputElement | TomSelectInput) {
   const validityState = control.validity;
   if (validityState.valueMissing) {
@@ -81,18 +93,20 @@ function formControlIsValid(control: HTMLInputElement | TomSelectInput) {
   if (!isValid) {
     const formGroup = control.closest('.form-group');
     const helpBlock = formGroup.querySelector('.help-block');
-    formGroup.classList.add('has-error');
+    formGroup?.classList.add('has-error');
     if (helpBlock) helpBlock.textContent = control.validationMessage;
-    control.removeEventListener(control instanceof HTMLSelectElement ? 'change' : 'input', clearValidationError);
-    control.addEventListener(control instanceof HTMLSelectElement ? 'change' : 'input', clearValidationError, { once: true })
+
+    const eventName = control instanceof HTMLSelectElement ? 'change' : 'input';
+
+    // Avoid stacking multiple listeners for this control
+    const existing = correctionHandlers.get(control);
+    if (existing) control.removeEventListener(eventName, existing);
+    
+    const handler = handleValidationCorrection(formGroup, helpBlock);
+    correctionHandlers.set(control, handler);
+    control.addEventListener(eventName, handler, { once: true });
   }
   return isValid;
-}
-
-function clearValidationError({ target: control }: { target: HTMLInputElement | TomSelectInput }) {
-  if (formControlIsValid(control)) {
-    control.closest('.form-group').classList.remove('has-error');
-  }
 }
 
 export function validateForm(e: SubmitEvent): boolean {
@@ -100,7 +114,7 @@ export function validateForm(e: SubmitEvent): boolean {
   const requiredFields: (HTMLInputElement | TomSelectInput)[] = [...form.querySelectorAll('input[required], select[required]')];
   let isValid = true;
   requiredFields.forEach(control => {
-    // some select controls are disabled by toggling the [name] attribute, as this precludes ui (style) changes
+    // Some select controls are disabled by toggling the [name] attribute, precludes ui (style) changes
     // inputs that are disabled via the [disabled] attribute are always valid
     if (control.disabled || !control.name || control.name === 'user[password_confirmation]') return;
     isValid = formControlIsValid(control) && isValid;
@@ -109,6 +123,7 @@ export function validateForm(e: SubmitEvent): boolean {
   // The "was-validated" class comes from tomselect and is necessary because tomselect 
   // will add the "invalid" class for blank required fields whether or not validation has occurred
   form.classList.add('was-validated');
+
   if (!isValid) {
     e.preventDefault();
     e.stopPropagation();  // stops rails-ujs from disabling the submit button
