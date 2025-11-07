@@ -88,13 +88,7 @@ class Success < ApplicationRecord
   # validate :tag_has_same_company
 
   accepts_nested_attributes_for(:customer, allow_destroy: false)
-  # contribution must be rejected if its contributor or referrer is missing required attributes
-  # this may happen with a zap (no such validation in the zapier app)
-  accepts_nested_attributes_for(
-    :contributions,
-    allow_destroy: false,
-    reject_if: :missing_contributor_or_referrer_attributes?
-  )
+  accepts_nested_attributes_for(:contributions, allow_destroy: false)
 
   scope :real, -> { where(placeholder: false) }
   scope :for_datatable, lambda {
@@ -236,22 +230,6 @@ class Success < ApplicationRecord
   # end
 
   # private
-
-  # Reject a nested contribution if required attributes are missing for either contributor
-  # or referrer
-  def missing_contributor_or_referrer_attributes?(contribution)
-    r_attrs = contribution[:referrer_attributes]
-    c_attrs = contribution[:contributor_attributes]
-    (
-      r_attrs.present? and
-      !User.exists?(r_attrs[:id]) and
-      r_attrs[:email].blank? or r_attrs[:first_name].blank? or r_attrs[:last_name].blank?
-    ) or (
-      c_attrs.present? and
-      !User.exists?(c_attrs[:id]) and
-      c_attrs[:email].blank? or c_attrs[:first_name].blank? or c_attrs[:last_name].blank?
-    )
-  end
 
   def new_story_path
     Rails.application.routes.url_helpers.new_success_story_path(self)
