@@ -1,4 +1,4 @@
-= turbo_stream.append 'main-modal-body' do
+= turbo_stream.update 'main-modal-body' do
   = form_with( \
       model: [@company, @success],
       id: 'new-customer-win-form',
@@ -10,6 +10,7 @@
           'turbo:submit-start->new-customer-win#animateSubmitBtn'].join(' ') },
       html: { \
         novalidate: true,
+        class: ('was-validated' if @success.errors.any?),
         autocomplete: 'off' }) do |form|
 
     = form.fields_for(:customer, form.object.customer || form.object.build_customer) do |customer_fields|
@@ -21,7 +22,7 @@
           disabled: true,
           data: { new_customer_win_target: 'customerField' })
 
-    .form-group
+    .form-group class="#{'has-error' if @success.errors.any? { |e| e.attribute == :customer }}"
       = form.label(:customer_id, 'Customer', class: 'control-label') 
       = form.collection_select( \
           :customer_id,
@@ -39,16 +40,16 @@
               tomselect_custom_options_value: { create: true, persist: false, plugins: {} },
               action: 'new-customer-win#onChangeCustomer',
               field_name: "#{form.object_name}[customer_id]" } })
-      .help-block.with-errors
+      .help-block
 
-    .form-group
+    .form-group class="#{'has-error' if @success.errors.any? { |e| e.attribute == :name }}"
       = form.label(:name, class: 'control-label') 
       = form.text_field( \
           :name,
           class: 'form-control',
           required: true,
           placeholder: 'Name of Deal or Opportunity from CRM')
-      .help-block.with-errors
+      .help-block
 
     .form-group
       = form.label(:win_story_html, 'Description')
@@ -127,7 +128,7 @@
           controller_id: 'new-customer-win', 
           contact_type: 'contributor')
 
-    .form-group
+    .form-group class="#{'has-error' if @success.errors.any? { |e| e.attribute == :curator }}"
       = form.label(:curator_id, 'Curator')
       = form.collection_select( \
           :curator_id,
@@ -142,10 +143,11 @@
               controller: 'tomselect',
               tomselect_kind_value: 'curator',
               tomselect_custom_options_value: { plugins: {} } }})
-      .help-block.with-errors     
+      .help-block   
 
+/ NOTE: Footer must have an id so that subsequent appends replace it correctly
 = turbo_stream.append 'main-modal-content' do 
-  .modal-footer data-modal-target="footer"
+  .modal-footer data-modal-target="footer" id="main-modal-footer"
     button.btn.btn-default type="button" data-dismiss="modal" Cancel
     = button_tag( \
         '',
