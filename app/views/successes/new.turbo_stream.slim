@@ -40,7 +40,8 @@
               tomselect_custom_options_value: { create: true, persist: false, plugins: {} },
               action: 'new-customer-win#onChangeCustomer',
               field_name: "#{form.object_name}[customer_id]" } })
-      .help-block
+      .help-block 
+        = 'Required' if @success.errors.any? { |e| e.attribute == :customer }
 
     .form-group class="#{'has-error' if @success.errors.any? { |e| e.attribute == :name }}"
       = form.label(:name, class: 'control-label') 
@@ -50,6 +51,7 @@
           required: true,
           placeholder: 'Name of Deal or Opportunity from CRM')
       .help-block
+        = 'Required' if @success.errors.any? { |e| e.attribute == :name }
 
     .form-group
       = form.label(:win_story_html, 'Description')
@@ -144,6 +146,7 @@
               tomselect_kind_value: 'curator',
               tomselect_custom_options_value: { plugins: {} } }})
       .help-block   
+        = 'Required' if @success.errors.any? { |e| e.attribute == :curator }
 
 / NOTE: Footer must have an id so that subsequent appends replace it correctly
 = turbo_stream.append 'main-modal-content' do 
