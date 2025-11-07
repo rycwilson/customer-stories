@@ -25,6 +25,7 @@ class SuccessesController < ApplicationController
   end
 
   def new
+    # NOTE: customer param not presently used but useful e.g. when table is filtered by customer
     @success = Success.new(customer_id: params[:customer_id], curator_id: current_user.id)
   end
 
@@ -64,6 +65,14 @@ class SuccessesController < ApplicationController
       end
     end
 
+    @success = Success.new(win_attrs)
+    if @success.save
+      redirect_to('/prospect', status: :see_other, notice: 'Customer Win was created successfully.')
+    else
+      @errors = @success.errors.full_messages
+      render :new
+    end
+
     # if params[:zapier_create].present? && (@success = Success.find_by_id(find_dup_success(success_params.to_h)))
     #   # a new success entails two contributions, one for the contact and one for the referrer;
     #   # a duplicate success means a new contributor, i.e. one contribution only;
@@ -93,10 +102,6 @@ class SuccessesController < ApplicationController
     # else
     #   respond_to { |format| format.js {} }
     # end
-    redirect_back(
-      fallback_location: dashboard_path('prospect'),
-      flash: { notice: 'Customer Win was added successfully' }
-    )
   end
 
   def import
