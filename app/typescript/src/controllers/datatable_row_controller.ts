@@ -1,4 +1,5 @@
 import { Controller } from '@hotwired/stimulus';
+import { FetchRequest } from '@rails/request.js';
 import type DatatableController from './datatable_controller';
 import type CustomerWinController from './customer_win_controller';
 import type ContributionController from './contribution_controller';
@@ -27,9 +28,9 @@ export default class DatatableRowController<Ctrl extends RowController, Data ext
     this.element.id = `${this.identifier}-${this.rowDataValue.id}`;
   }
 
-  connect() {
+  // connect() {
     
-  }
+  // }
 
   get row() {
     return this.datatableOutlet.dt.row(this.element); 
@@ -63,19 +64,25 @@ export default class DatatableRowController<Ctrl extends RowController, Data ext
     // TODO update CSP.promotedStories
   }
 
-  deleteRow(this: Ctrl) {
-    return fetch(this.path, { 
-      method: 'DELETE',
-      headers: {
-        'X-CSRF-Token': (<HTMLMetaElement>document.querySelector('[name="csrf-token"]')).content
-      },
+  async deleteRow(this: Ctrl) {
+    // return fetch(this.path, { 
+    //   method: 'DELETE',
+    //   headers: {
+    //     'X-CSRF-Token': (<HTMLMetaElement>document.querySelector('[name="csrf-token"]')).content
+    //   },
 
-    // read the response (even though it's empty) lest the fetch method interpret the empty response as failure
-    }).then(res => res.text())
-      .then((body) => {
-        // body is empty
-        this.row.remove().draw();
-      });
+    // // read the response (even though it's empty) lest the fetch method interpret the empty response as failure
+    // }).then(res => res.text())
+    //   .then((body) => {
+    //     // body is empty
+    //     this.row.remove().draw();
+    //   });
+    console.log(this.path)
+    const request = new FetchRequest('DELETE', this.path);
+    const response = await request.perform();
+    if (response.ok) {
+      this.row.remove().draw();
+    }
   }
 
   onShownDropdown(e: CustomEvent) {

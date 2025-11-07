@@ -97,6 +97,7 @@ interface CustomerWin {
   customer: Customer; 
   story?: Story;
   path?: string;
+  edit_path?: string;
 }
 
 // CustomerWin data from server is transformed to CustomerWinRowData for datatables

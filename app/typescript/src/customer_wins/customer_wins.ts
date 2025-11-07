@@ -140,18 +140,19 @@ export function dataTableConfig(): Config {
         display_status: status,
         customer,
         curator,
-        path
+        path,
+        edit_path: editPath
       } = data as CustomerWin;
       $(tr)
         .attr('data-customer-win-datatable-outlet', '#successes-table')
         .attr('data-customer-win-modal-outlet', '#main-modal')
         .attr(
           'data-customer-win-row-data-value',
-          JSON.stringify({ id, status, customer, curator, path })
+          JSON.stringify({ id, status, customer, curator, path, editPath })
         )
         .attr(
           'data-customer-win-child-row-turbo-frame-attrs-value', 
-          JSON.stringify({ id: 'edit-customer-win', src: path })
+          JSON.stringify({ id: 'edit-customer-win', src: editPath })
         )
         .attr('data-action', [
           'dropdown:dropdown-is-shown->customer-win#onShownDropdown',

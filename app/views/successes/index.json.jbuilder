@@ -4,7 +4,8 @@ json.array! @wins do |win|
   json.call(win, :id, :name)
   json.display_status SuccessesHelper.status_html(win)
   json.timestamp win.created_at.to_i
-  json.path edit_success_path(win)
+  json.path success_path(win)
+  json.edit_path edit_success_path(win)
   json.customer do
     json.id win.customer_id
     json.name win.customer_name
