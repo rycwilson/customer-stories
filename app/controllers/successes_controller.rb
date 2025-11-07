@@ -25,9 +25,7 @@ class SuccessesController < ApplicationController
   end
 
   def new
-    @customer_id = params[:customer_id]
-    @curator_id = params[:curator_id]
-    @success = Success.new
+    @success = Success.new(customer_id: params[:customer_id], curator_id: current_user.id)
   end
 
   def show

@@ -15,7 +15,7 @@ table#successes-table.table {
         resource_ctrl_id: 'customer-wins',
         new_item: { \
           name: 'Customer Win',
-          path: new_company_success_path(company) + "?curator_id=#{current_user.id}",
+          path: new_company_success_path(company),
           modal_class_name: 'new-customer-win' },
         search_options: { \
           'Customer' => company.customers.map(&:select_option),
