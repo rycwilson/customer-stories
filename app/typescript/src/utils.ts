@@ -105,6 +105,9 @@ export function validateForm(e: SubmitEvent): boolean {
     if (control.disabled || !control.name || control.name === 'user[password_confirmation]') return;
     isValid = formControlIsValid(control) && isValid;
   });
+
+  // The "was-validated" class comes from tomselect and is necessary because tomselect 
+  // will add the "invalid" class for blank required fields whether or not validation has occurred
   form.classList.add('was-validated');
   if (!isValid) {
     e.preventDefault();
