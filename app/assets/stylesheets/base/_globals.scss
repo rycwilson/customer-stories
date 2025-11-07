@@ -67,12 +67,17 @@ hr {
   border-top: 1px solid #dfdfdf;
 }
 
-// ovverride bootstrap 3 to match tom-select (see tom-select.bootstrap4.css
-.form-control:focus {
-  box-shadow: 0 0 0 0.2rem rgba(3, 155, 229, 0.25);   // matches $nav-blue
-
-  .has-error & {
+.form-control {
+  // ovverride bootstrap 3 to match tom-select (see tom-select.bootstrap4.css)
+  &:focus {
+    box-shadow: 0 0 0 0.2rem rgba(3, 155, 229, 0.25);   // matches $nav-blue
+  }
+  .form-group.has-error &:focus {
     box-shadow: 0 0 0 0.2rem rgba(169, 68, 66, 0.25);  // matches $state-danger-text
+  }
+
+  .form-group.has-error &::placeholder {
+    color: $state-danger-text;
   }
 }
 

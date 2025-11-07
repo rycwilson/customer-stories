@@ -52,18 +52,14 @@ select.tomselected + .ts-wrapper {
     border-color: $brand-primary;
   }
 
+  // caret color
   > .ts-control {
-    // change the caret color
     &::after {
       border-color: #6c757d transparent transparent transparent;
-    } 
+    }
   }
 
-  form.was-validated &.invalid.focus .ts-control {
-    box-shadow: 0 0 0 0.2rem rgba(169, 68, 66, 0.25);  // matches $state-danger-text
-    border-color: $state-danger-text;
-  }
-
+  // upside down caret color
   &.dropdown-active .ts-control::after {
     border-color: transparent transparent #6c757d transparent;
   }
@@ -79,7 +75,51 @@ select.tomselected + .ts-wrapper {
       pointer-events: none;
     }
   }
+
+  form.was-validated & {
+    &.invalid > .ts-control {
+      border-color: $state-danger-text;
+
+      > input::placeholder {
+        color: $state-danger-text;
+      }
+
+      &::after {
+        border-color: $state-danger-text transparent transparent transparent;
+      }
+    }
+
+    &.invalid.focus > .ts-control {
+      box-shadow: 0 0 0 0.2rem rgba(169, 68, 66, 0.25);  // matches $state-danger-text
+    }
+
+    &.dropdown-active.invalid > .ts-control::after {
+      border-color: transparent transparent $state-danger-text transparent;
+    }
+  }
 }
+  
+// form.was-validated select.tomselected + .ts-wrapper {
+//   &.invalid > .ts-control {
+//     border-color: $state-danger-text;
+
+//     > input::placeholder {
+//       color: $state-danger-text;
+//     }
+
+//     &::after {
+//       border-color: $state-danger-text transparent transparent transparent;
+//     }
+//   }
+
+//   &.invalid.focus > .ts-control {
+//     box-shadow: 0 0 0 0.2rem rgba(169, 68, 66, 0.25);  // matches $state-danger-text
+//   }
+
+//   &.dropdown-active.invalid > .ts-control::after {
+//     border-color: transparent transparent $state-danger-text transparent;
+//   }
+// }
 
 select.tomselected + .ts-wrapper.multi,
 input.tomselected + .ts-wrapper.multi {
