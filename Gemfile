@@ -50,7 +50,6 @@ gem 'google-ads-googleads', '~> 34.0'
 
 # Utilities
 # gem 'activerecord-import'
-gem 'awesome_print', '~> 1.9'
 gem 'friendly_id', '~> 5.4'
 # gem 'googlecharts'
 gem 'html_to_plain_text', '~> 1.0'
@@ -64,6 +63,7 @@ gem 'reverse_markdown', '~> 2.0'
 # gem 'multi_json'
 
 group :development, :test do
+  gem 'amazing_print', '~> 2.0'
   gem 'capybara', '~> 3.37'
   gem 'factory_bot_rails', '~> 6.2'
   gem 'pry-byebug', '~> 3.9'

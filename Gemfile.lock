@@ -74,8 +74,8 @@ GEM
       tzinfo (~> 2.0, >= 2.0.5)
     addressable (2.8.7)
       public_suffix (>= 2.0.2, < 7.0)
+    amazing_print (2.0.0)
     ast (2.4.3)
-    awesome_print (1.9.2)
     aws-eventstream (1.4.0)
     aws-partitions (1.1116.0)
     aws-sdk-core (3.225.2)
@@ -480,7 +480,7 @@ PLATFORMS
   x86_64-linux-musl
 
 DEPENDENCIES
-  awesome_print (~> 1.9)
+  amazing_print (~> 2.0)
   aws-sdk-s3 (~> 1.0)
   aws-sdk-ses (~> 1.6)
   better_errors
