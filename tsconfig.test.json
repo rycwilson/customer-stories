@@ -1,0 +1,9 @@
+{
+  "extends": "./tsconfig.json",
+  "include": ["app/typescript/test/**/*.ts"],
+  "exclude": [],
+  "compilerOptions": {
+    "noEmit": true,
+    "types": ["vitest/globals", "node", "@testing-library/jest-dom"]
+  }
+}

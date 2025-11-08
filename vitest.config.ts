@@ -6,5 +6,8 @@ export default defineConfig({
     setupFiles: ['app/typescript/test/setup.ts'],
     environment: 'jsdom',
     // reporters: ['default'],
+    typecheck: {
+      tsconfig: 'tsconfig.test.json',
+    },
   },
 });
