@@ -9,11 +9,10 @@ export function dataTableConfig(
     contributor: 1,
     customerWin: 2,
     role: 3,
-    curator: 4,
-    customer: 5,
-    status: 6,
-    actions: 7,
-    story: 8
+    customer: 4,
+    status: 5,
+    actions: 6,
+    story: 7
   };
   return {
     data: storyId ? CSP['storyContributions'][storyId] : CSP.contributions,
@@ -92,11 +91,6 @@ export function dataTableConfig(
         //     .css('height', '0')   // does not change height, but allows for 100% height of the td's child element
         // }
       },
-
-      { 
-        name: 'curator',
-        data: 'curator.id'
-      },
       {
         name: 'customer',
         data: {
@@ -133,13 +127,13 @@ export function dataTableConfig(
     columnDefs: [
       {
         targets: [
-          colIndices.customerWin, colIndices.curator, colIndices.customer, colIndices.story
+          colIndices.customerWin, colIndices.customer, colIndices.story
         ],
         visible: false
       },
       {
         targets: [
-          0, colIndices.customerWin, colIndices.curator, colIndices.customer, colIndices.actions, colIndices.story
+          0, colIndices.customerWin, colIndices.customer, colIndices.actions, colIndices.story
         ],
         orderable: false,
       },
@@ -147,7 +141,7 @@ export function dataTableConfig(
         targets: [0, colIndices.role, colIndices.status, colIndices.actions],
         searchable: false,
       },
-      // { targets: [colIndices.customerWin, colIndices.curator, colIndices.customer, colIndices.story], width: '0%' },
+      // { targets: [colIndices.customerWin, colIndices.customer, colIndices.story], width: '0%' },
       { targets: 0, width: '1.75em' },
       { targets: [colIndices.contributor, colIndices.role], width: 'auto' },
       { targets: colIndices.status, width: '10em' },
@@ -167,7 +161,7 @@ export function dataTableConfig(
             const { customer, customer_win: win, story } = firstRowData;
             html = `
               <span>${customer!.name}</span>
-              <span>&nbsp;&nbsp;&mdash;&nbsp;&nbsp;</span>
+              <span>&nbsp;&nbsp;&ndash;&nbsp;&nbsp;</span>
               ${story ? 
                 `<a href="${story.edit_path}">${story.title}</a>` :
                 `<a 
