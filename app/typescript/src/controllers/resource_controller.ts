@@ -58,12 +58,12 @@ export default class ResourceController extends Controller<HTMLElement> {
       this.dispatch('loading');
       // console.log('getting data:', this.dataPathValue)
       getJSON(this.dataPathValue).then(data => {
-        console.log('data:', this.resourceName)
+        // console.log('data:', this.resourceName)
         if (this.resourceName === 'storyContributions') {
           CSP[this.resourceName][+(this.element.dataset.storyId as string)] = data;
         } else {
           CSP[this.resourceName] = data;
-        }
+        } 
         initTable.call(this);
       })
     }
