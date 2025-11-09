@@ -5,6 +5,7 @@ json.array! @contributions do |contribution|
   json.display_status ContributionsHelper.status_html(contribution)
   json.timestamp contribution.created_at.to_i
   json.path contribution_path(contribution)
+  json.edit_path edit_contribution_path(contribution)
   json.customer do
     json.id contribution.customer_id
     json.name contribution.customer_name

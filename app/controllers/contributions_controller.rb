@@ -3,6 +3,7 @@
 class ContributionsController < ApplicationController
   include SchemaConformable
 
+  before_action :set_company, only: %i[new create edit]
   before_action :set_contribution, except: %i[index new create]
   # before_action :check_opt_out_list, only: [:confirm_request]
   skip_before_action(
@@ -21,42 +22,11 @@ class ContributionsController < ApplicationController
   end
 
   def new
-    @company = Company.find_by(subdomain: request.subdomain)
-
     # success_id will be 0 if customer win isn't specified in the client
     @success = Success.find_by(id: params[:success_id])
     @customer_id = @success&.customer_id || params[:customer_id]
     @contributor_id = params[:contributor_id]
     @story = @success.story if request.referrer.include?('/stories')
-  end
-
-  def show
-    respond_to do |format|
-      format.html {}
-      format.json do
-        respond_with(
-          @contribution,
-          only: %i[id status contribution feedback submitted_at],
-          include: {
-            customer: { only: [:name] },
-            contributor: { only: [:title], methods: [:full_name] },
-            invitation_template: { only: [:name] },
-            answers: {
-              only: %i[answer contributor_question_id],
-              include: {
-                question: { only: [:question] }
-              }
-            }
-          }
-        )
-      end
-    end
-  end
-
-  # GET '/contributions/:token/:type'
-  def edit
-    @company = Company.find_by(subdomain: request.subdomain)
-    @submission_type = params[:type] # type IN ('contribution', 'feedback')
   end
 
   def create
@@ -110,6 +80,35 @@ class ContributionsController < ApplicationController
       fallback_location: dashboard_path('prospect'),
       flash: { notice: 'Contributor was added successfully' }
     )
+  end
+
+  def show
+    respond_to do |format|
+      format.html {}
+      format.json do
+        respond_with(
+          @contribution,
+          only: %i[id status contribution feedback submitted_at],
+          include: {
+            customer: { only: [:name] },
+            contributor: { only: [:title], methods: [:full_name] },
+            invitation_template: { only: [:name] },
+            answers: {
+              only: %i[answer contributor_question_id],
+              include: {
+                question: { only: [:question] }
+              }
+            }
+          }
+        )
+      end
+    end
+  end
+
+  # GET '/contributions/:id/edit'
+  # GET '/contributions/:token/:type'
+  def edit
+    @contribution = Contribution.find(params[:id])
   end
 
   def update

@@ -38,7 +38,7 @@ authenticate(:user) do
     end
     resources :stories, only: %i[new edit create update destroy], shallow: true
     # resources :stories, only: [:create]
-    resources :contributions, except: %i[new edit update], shallow: true do
+    resources :contributions, except: %i[new update], shallow: true do
       # need to distinguish '/contributions/:id' routes from '/contributions/:token' routes;
       # hence :update is excluded above and added below
       # (note :edit always uses '/contributions/:token/:type' route
@@ -81,7 +81,7 @@ get(
 get(
   '/contributions/:token/:type',
   to: 'contributions#edit',
-  as: 'edit_contribution',
+  as: 'contributor_edit_contribution',
   constraints: { type: /(contribution|feedback)/ }
 )
 get(

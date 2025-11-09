@@ -159,7 +159,9 @@ interface Contribution {
   // methods
   display_status?: string;
   timestamp?: number;
+  
   path?: string;
+  edit_path?: string;
 
   // associations
   customer?: Customer
