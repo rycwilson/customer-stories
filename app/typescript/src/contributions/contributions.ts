@@ -1,10 +1,14 @@
 import type { Config, Api } from 'datatables.net-bs';
 
-export function dataTableConfig(invitationTemplateSelectHtml: string, storyId?: number): Config {
+export function dataTableConfig(
+  invitationTemplateSelectHtml: string,
+  rowGroupDataSrc?: string,
+  storyId?: number
+): Config {
   const colIndices = {
     contributor: 1,
     customerWin: 2,
-    invitationTemplate: 3,
+    role: 3,
     curator: 4,
     customer: 5,
     status: 6,
@@ -43,7 +47,7 @@ export function dataTableConfig(invitationTemplateSelectHtml: string, storyId?: 
         data: {
           _: 'contributor.full_name',
           // display: 'contributor.full_name',
-          // sort: 'contributor.last_name'
+          sort: 'contributor.last_name',
           filter: 'contributor.id'
         },
       },
@@ -55,12 +59,18 @@ export function dataTableConfig(invitationTemplateSelectHtml: string, storyId?: 
         }
       },
       {
-        name: 'invitationTemplate',
+        name: 'role',
         data: {
-          _: (row: Contribution, type: string, set: any) => row.invitation_template?.id || '',
+          _: (row: Contribution, type: string, set: any) => {
+            return row.invitation_template?.name?.match(/Customer|Customer Success|Sales/) ?
+              row.invitation_template.name : 
+              '';
+          },
           // display: 'invitationTemplate.name' || '',
           display: (row: Contribution) => {
-            return row.invitation_template ? row.invitation_template.name : '';
+            return row.invitation_template?.name?.match(/Customer|Customer Success|Sales/) ?
+              row.invitation_template.name :
+              '<span style="color:#ccc">\u2014</span>';
             // return row.invitation_template ? 
             //   invitationTemplateSelectHtml.replace(
             //     `<option value="${row.invitation_template.id}">`, 
@@ -68,7 +78,12 @@ export function dataTableConfig(invitationTemplateSelectHtml: string, storyId?: 
             //   ) :
             //   invitationTemplateSelectHtml;
           },
-          sort: (row: Contribution, type: string, set: any) => row.invitation_template?.name || ''
+
+          // NOTE: This may not work when a function is used to define default data (_ property)
+          // sort: (row: Contribution, type: string, set: any) => {
+          //   console.log(row)
+          //   return row.invitation_template?.name || 'zzz'
+          // }
         },
         // defaultContent: '<span class="placeholder">Select</span>',
         // createdCell: function (this: JQuery<HTMLTableElement, any>, td: Node) {
@@ -129,17 +144,49 @@ export function dataTableConfig(invitationTemplateSelectHtml: string, storyId?: 
         orderable: false,
       },
       {
-        targets: [0, colIndices.invitationTemplate, colIndices.status, colIndices.actions],
+        targets: [0, colIndices.role, colIndices.status, colIndices.actions],
         searchable: false,
       },
       // { targets: [colIndices.customerWin, colIndices.curator, colIndices.customer, colIndices.story], width: '0%' },
       { targets: 0, width: '1.75em' },
-      { targets: [colIndices.contributor, colIndices.invitationTemplate], width: 'auto' },
+      { targets: [colIndices.contributor, colIndices.role], width: 'auto' },
       { targets: colIndices.status, width: '10em' },
       { targets: colIndices.actions, width: '3.5em' }
     ],
 
-    rowGroup: storyId ? undefined : { dataSrc: 'customer_win.name', startRender: rowGroupTemplate },
+    rowGroup: storyId || (rowGroupDataSrc === undefined) ? 
+      undefined : 
+      { 
+        dataSrc: rowGroupDataSrc, 
+        startRender: (rows: Api<any>, groupValue: string) => {
+          let html;
+          if (rowGroupDataSrc === 'customer.name') {
+            html = `<span>${groupValue}</span>`
+          } else if (rowGroupDataSrc === 'customer_win.name') {
+            const firstRowData: Contribution = rows.data()[0];
+            const { customer, customer_win: win, story } = firstRowData;
+            html = `
+              <span>${customer!.name}</span>
+              <span>&nbsp;&nbsp;&mdash;&nbsp;&nbsp;</span>
+              ${story ? 
+                `<a href="${story.edit_path}">${story.title}</a>` :
+                `<a 
+                  href="javascript:;" 
+                  data-action="dashboard#showContributionCustomerWin"
+                  data-customer-win-id="${win!.id}">${win!.name}</a>`
+              }
+            `
+          } else if (rowGroupDataSrc === 'invitation_template.name') {
+            html = `Role: ${groupValue || '<em>None specified</em>'}`;
+            if (!groupValue) {
+              html = '<span>No Template Selected</span>';
+            } else {
+              html = `<span>Template: ${groupValue}</span>`;
+            }
+          }
+          return $('<tr />').append(`<td colspan="5"><div>${html}</div></td>`);
+        } 
+      },
 
     rowCallback(tr: Node, data: object) {
       const { id } = data as Contribution;
@@ -152,7 +199,8 @@ export function dataTableConfig(invitationTemplateSelectHtml: string, storyId?: 
         status, 
         invitation_template: invitationTemplate, 
         story, 
-        path 
+        path,
+        edit_path: editPath 
       } = data as Contribution;
       $(tr)
       // .attr('data-datatable-target', 'row')
@@ -163,7 +211,7 @@ export function dataTableConfig(invitationTemplateSelectHtml: string, storyId?: 
         .attr('data-contribution-resource-outlet', '#customer-wins')
         .attr(
           'data-contribution-row-data-value', 
-          JSON.stringify({ id, status, invitationTemplate, story, path })
+          JSON.stringify({ id, status, invitationTemplate, story, path, editPath })
         )
         .attr('data-action', [
           'dropdown:dropdown-is-shown->contribution#onShownDropdown',
@@ -172,31 +220,10 @@ export function dataTableConfig(invitationTemplateSelectHtml: string, storyId?: 
         .attr('data-controller', 'contribution')
         .attr(
           'data-contribution-child-row-turbo-frame-attrs-value', 
-          JSON.stringify({ id: 'show-contribution', src: path })
+          JSON.stringify({ id: 'edit-contribution', src: editPath })
         );
     }
   }
-}
-
-function rowGroupTemplate(rows: Api<any>, group: string) {
-  const customerWinName = group;
-  const { customer, customer_win: win, story } = rows.data()[0]; // all rows will share these values, can sample first
-  return $('<tr/>').append(`
-    <!-- <td><i class="fa fa-${story ? 'bullhorn' : 'rocket'}"></i></td> -->
-    <td colspan="5">
-      <div>
-        <span>${customer.name}</span>
-        <span class="emdash">&nbsp;&nbsp;&#8211;&nbsp;&nbsp;</span>
-        ${story ? 
-          `<a href="${story.edit_path}">${story.title}</a>` :
-          `<a 
-             href="javascript:;" 
-             data-action="dashboard#showContributionCustomerWin"
-             data-customer-win-id="${win.id}">${win.name}</a>`
-        }
-      </div>
-    </td>
-  `);
 }
 
 function actionsDropdownTemplate(row: Contribution, type: string, set: any) {
