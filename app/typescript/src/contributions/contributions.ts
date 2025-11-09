@@ -2,18 +2,32 @@ import type { Config, Api } from 'datatables.net-bs';
 
 export function dataTableConfig(
   invitationTemplateSelectHtml: string,
-  rowGroupDataSrc?: string,
+  rowGroupDataSrc: string,
   storyId?: number
 ): Config {
   const colIndices = {
     contributor: 1,
-    customerWin: 2,
-    role: 3,
-    customer: 4,
+    customer: 2,
+    customerWin: 3,
+    role: 4,
     status: 5,
     actions: 6,
     story: 7
   };
+  const rowGroupColumn = storyId ? undefined : (() => {
+    switch (rowGroupDataSrc) {
+      case 'contributor.full_name':
+        return colIndices.contributor;
+      case 'customer.name':
+        return colIndices.customer;
+      case 'customer_win.name':
+        return colIndices.customerWin;
+      case 'invitation_template.name':
+        return colIndices.role;
+      default:
+        return undefined; 
+    }
+  })();
   return {
     data: storyId ? CSP['storyContributions'][storyId] : CSP.contributions,
     // select: true,  // https://datatables.net/extensions/select/
@@ -22,8 +36,8 @@ export function dataTableConfig(
       emptyTable: 'No Contributors found',
       zeroRecords: 'No Contributors found'
     },
-    
-    orderFixed: [colIndices.customerWin, 'asc'],  // the row grouping column (all sorting will happen secondarily to this)
+
+    orderFixed: [rowGroupColumn, 'asc'],  // the row grouping column (all sorting will happen secondarily to this)
     order: [[colIndices.status, 'asc']],
 
     columns: [
@@ -48,6 +62,13 @@ export function dataTableConfig(
           // display: 'contributor.full_name',
           sort: 'contributor.last_name',
           filter: 'contributor.id'
+        },
+      },
+      {
+        name: 'customer',
+        data: {
+          _: 'customer.name',
+          filter: 'customer.id',
         },
       },
       {
@@ -92,13 +113,6 @@ export function dataTableConfig(
         // }
       },
       {
-        name: 'customer',
-        data: {
-          _: 'customer.name',
-          filter: 'customer.id',
-        },
-      },
-      {
         name: 'status',
         data: {
           _: 'status',
@@ -126,24 +140,32 @@ export function dataTableConfig(
 
     columnDefs: [
       {
-        targets: [
-          colIndices.customerWin, colIndices.customer, colIndices.story
-        ],
-        visible: false
+        visible: false,
+        targets: (() => {
+          const targets = [colIndices.story, rowGroupColumn].filter(col => col !== undefined);
+          if (storyId || rowGroupColumn === colIndices.customerWin) {
+            return [...targets, colIndices.customer];
+          }
+          return targets;
+        })(),
       },
       {
-        targets: [
-          0, colIndices.customerWin, colIndices.customer, colIndices.actions, colIndices.story
-        ],
         orderable: false,
+        targets: [0, colIndices.actions, colIndices.story]
       },
       {
-        targets: [0, colIndices.role, colIndices.status, colIndices.actions],
         searchable: false,
+        targets: [0, colIndices.role, colIndices.status, colIndices.actions],
       },
       // { targets: [colIndices.customerWin, colIndices.customer, colIndices.story], width: '0%' },
       { targets: 0, width: '1.75em' },
-      { targets: [colIndices.contributor, colIndices.role], width: 'auto' },
+      { 
+        targets: [
+          colIndices.contributor, colIndices.customerWin, colIndices.customer
+        ], 
+        width: 'auto' 
+      },
+      { targets: colIndices.role, width: '8em' },
       { targets: colIndices.status, width: '10em' },
       { targets: colIndices.actions, width: '3.5em' }
     ],
@@ -153,13 +175,15 @@ export function dataTableConfig(
       { 
         dataSrc: rowGroupDataSrc, 
         startRender: (rows: Api<any>, groupValue: string) => {
-          let html;
-          if (rowGroupDataSrc === 'customer.name') {
-            html = `<span>${groupValue}</span>`
+          const wrapper = (colspan: number, content: string) => (
+            $('<tr />').append(`<td colspan="${colspan}"><div>${content}</div></td>`)
+          );
+          if (rowGroupDataSrc.match(/contributor\.full_name|customer\.name/)) {
+            return wrapper(6, `<span>${groupValue}</span>`);
           } else if (rowGroupDataSrc === 'customer_win.name') {
             const firstRowData: Contribution = rows.data()[0];
             const { customer, customer_win: win, story } = firstRowData;
-            html = `
+            return wrapper(5, `
               <span>${customer!.name}</span>
               <span>&nbsp;&nbsp;&ndash;&nbsp;&nbsp;</span>
               ${story ? 
@@ -169,16 +193,13 @@ export function dataTableConfig(
                   data-action="dashboard#showContributionCustomerWin"
                   data-customer-win-id="${win!.id}">${win!.name}</a>`
               }
-            `
+            `);
           } else if (rowGroupDataSrc === 'invitation_template.name') {
-            html = `Role: ${groupValue || '<em>None specified</em>'}`;
-            if (!groupValue) {
-              html = '<span>No Template Selected</span>';
-            } else {
-              html = `<span>Template: ${groupValue}</span>`;
-            }
+            return wrapper(
+              6, 
+              `Role: ${groupValue === 'No group' ? '<em>None specified</em>' : groupValue}`
+            );
           }
-          return $('<tr />').append(`<td colspan="5"><div>${html}</div></td>`);
         } 
       },
 
