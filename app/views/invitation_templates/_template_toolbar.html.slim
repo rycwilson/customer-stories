@@ -1,4 +1,4 @@
-- template ||= nil
+- template = local_assigns.fetch(:template, nil)
 - is_default = company.invitation_templates.default.include?(template)
 
 / a dynamic select element id will ensure focus is not retained when element is replaced 

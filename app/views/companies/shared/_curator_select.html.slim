@@ -1,13 +1,17 @@
-- select_id ||= nil
-- curator_id ||= nil
+- select_id = local_assigns.fetch(:select_id, nil) 
+- curator_id = local_assigns.fetch(:curator_id, nil)
 
 = select_tag( \
-    select_id,
-    options_from_collection_for_select(company.curators, :id, :full_name, curator_id),
+    local_assigns.fetch(:select_id, nil),
+    options_from_collection_for_select( \
+      company.curators,
+      :id,
+      :full_name,
+      local_assigns.fetch(:curator_id, nil) ),
     { include_blank: true,
       placeholder: 'Select',
       class: 'form-control',
       data: { \
-        controller: 'tomselect', 
+        controller: 'tomselect',
         "#{ctrl_id}-target": 'curatorSelect',
         tomselect_kind_value: 'curator' } })

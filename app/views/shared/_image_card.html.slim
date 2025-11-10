@@ -1,7 +1,9 @@
-- _image ||= {}
-- selected ||= false
-- required ||= false
-- collection ||= _image[:type]&.split(/(?=[A-Z])/)&.last&.downcase&.pluralize
+- _image = local_assigns.fetch(:_image, {})
+- selected = local_assigns.fetch(:selected, false)
+- required = local_assigns.fetch(:required, false)
+- collection = local_assigns.fetch( \
+    :collection,
+    _image[:type]&.split(/(?=[A-Z])/)&.last&.downcase&.pluralize)
 - is_default_ad_image = model == 'AdwordsImage' && _image[:default]
 - upload_enabled = local_assigns.fetch(:upload_enabled, true)
 - size_validation_enabled = upload_enabled && model != 'Customer'
