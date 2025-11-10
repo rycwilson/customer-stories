@@ -1,4 +1,4 @@
-- story = nil if not defined?(story)
+- story = local_assigns.fetch(:story, nil)
 
 table.table {
   id="#{story ? 'story-contributions-table' : 'contributions-table'}"
