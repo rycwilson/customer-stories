@@ -53,13 +53,14 @@
           data-controller="customer-wins"
           data-customer-wins-dashboard-outlet =".dashboard"
           data-customer-wins-data-path-value="/successes"
+          data-customer-wins-row-group-data-source-value=@row_group_data_source[:customer_wins]
           data-customer-wins-filters-value=customer_wins_filters(curator&.id).to_json
-          data-customer-wins-display-options-html-value=customer_wins_display_options_escaped_html(company, curator&.id)
+          data-customer-wins-display-options-html-value=customer_wins_display_options_html(company)
           data-action="datatable:init->customer-wins#onTableInitComplete"
           aria-labelledby="customer-wins-tab"
           role="tabpanel" }
 
-          = render('successes/table', { company:, curator_id: curator&.id, enable_row_groups: true })
+          = render('successes/table', company:)
 
         #contributions.resource-ctrl.tab-pane {
           class=('active' if active_tab == '#contributions')
@@ -68,11 +69,12 @@
           data-controller="contributions"          
           data-contributions-dashboard-outlet=".dashboard"
           data-contributions-data-path-value=company_contributions_path(company)
+          data-contributions-row-group-data-source-value=@row_group_data_source[:contributions]
           data-contributions-filters-value=contributions_filters(curator&.id).to_json
-          data-contributions-display-options-html-value=contributions_display_options_escaped_html(company, curator&.id)
-          data-contributions-invitation-template-select-html-value=invitation_template_select_escaped_html(company)
+          data-contributions-display-options-html-value=contributions_display_options_html(company)
+          data-contributions-invitation-template-select-html-value=invitation_template_select_html(company)
           data-action="datatable:init->contributions#onTableInitComplete"
           aria-labelledby="contributions-tab"
           role="tabpanel" }
 
-          = render('contributions/table', { company:, curator_id: curator&.id, enable_row_groups: true })
+          = render('contributions/table', company:)

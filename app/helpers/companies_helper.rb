@@ -1,5 +1,7 @@
+# frozen_string_literal: true
+
 module CompaniesHelper
-  def invitation_template_select_escaped_html company
+  def invitation_template_select_html(company)
     escape_once(render('invitation_templates/inline_select', { company: }))
   end
 
