@@ -1,4 +1,6 @@
-.table-controls 
+- has_preferences = true if not defined?(has_preferences)
+
+.table-controls
   div
     div
       h4.caption id="#{resource_ctrl_id}-table-caption"
@@ -19,14 +21,15 @@
             i.fa.fa-plus
             |&nbsp;&nbsp;New
 
-      / Use a button_tag here so that we may interpolate the data attribute
-      = button_tag( \
-          type: 'button', 
-          class: 'btn btn-default', 
-          aria: { label: 'Display Options' }, 
-          data: { "#{resource_ctrl_id}_target" => 'displayOptionsBtn' }) do
-          i.fa.fa-gear
-          |&nbsp;&nbsp;Preferences
+      - if has_preferences
+        / Use a button_tag here so that we may interpolate the data attribute
+        = button_tag( \
+            type: 'button', 
+            class: 'btn btn-default', 
+            aria: { label: 'Display Options' }, 
+            data: { "#{resource_ctrl_id}_target" => 'displayOptionsBtn' }) do
+            i.fa.fa-gear
+            |&nbsp;&nbsp;Preferences
 
   div
     / .search-table {

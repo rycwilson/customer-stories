@@ -1,4 +1,4 @@
-- story ||= nil
+- story = nil if not defined?(story)
 
 table.table {
   id="#{story ? 'story-contributions-table' : 'contributions-table'}"
@@ -7,11 +7,12 @@ table.table {
   data-datatable-contributions-outlet="#{story ? '#story-contributions' : '#contributions'}" }
 
   = render( \
-    'companies/shared/table_controls',
-    { company:, 
+      'companies/shared/table_controls',
+      company:, 
       caption: story ? 'Story Contributors' : 'Contributors',
       resource_name: 'contributions',
       resource_ctrl_id: 'contributions',
+      has_preferences: story.nil?,
       new_item: { \
         name: 'Contributor',
         path: new_success_contribution_path(story ? story.success_id : 0),
@@ -19,7 +20,7 @@ table.table {
       search_options: story ? {} : { \
         'Customer' => company.customers.map(&:select_option),
         'Customer Win' => company.successes.real.map(&:select_option),
-        'Contributor' => company.contributors.sort_by(&:last_name).map { |user| [user.full_name, "contributor-#{user.id}"] } } })
+        'Contributor' => company.contributors.sort_by(&:last_name).map { |user| [user.full_name, "contributor-#{user.id}"] }})
 
   thead
     tr
