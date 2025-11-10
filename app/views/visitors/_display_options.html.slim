@@ -1,6 +1,6 @@
 .form-horizontal 
 
-  .form-group
+  .form-group data-action="change->table-display-options#onChangeCurator"
     label.control-label for="visitors-curator" Curator
     div
       = render( \
@@ -9,7 +9,7 @@
           ctrl_id: 'table-display-options',
           select_id: 'visitors-curator' )
 
-  .form-group 
+  .form-group data-action="change->table-display-options#onChangeFilter"
     label.control-label for="visitors-date-range" Date Range
     div
       = select_tag( \
@@ -27,7 +27,7 @@
             tomselect_kind_value: 'dateRange',
             tomselect_custom_options_value: '{ &quot;plugins&quot;: {} }' })
   
-  .form-group 
+  .form-group data-action="change->table-display-options#onChangeFilter"
     label.control-label Show
     div
       .checkbox 

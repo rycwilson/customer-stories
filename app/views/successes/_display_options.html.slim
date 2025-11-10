@@ -1,6 +1,6 @@
 .form-horizontal 
 
-  .form-group
+  .form-group data-action="change->table-display-options#onChangeCurator"
     label.control-label for="customer-wins-curator" Curator
     div
       = render( \
@@ -9,21 +9,23 @@
           ctrl_id: 'table-display-options',
           select_id: 'customer-wins-curator' )
 
-  .form-group 
+  .form-group data-action="change->table-display-options#onChangeRowGroupDataSource"
     label.control-label Group 
     div
-      .checkbox 
-        label for="group-by-customer"
-          input#group-by-customer {
-            type="checkbox" 
-            data-action="table-display-options#toggleRowGroups" 
-            checked=('true' if enable_row_groups) }
-          | by Customer 
-  
-  .form-group 
-    label.control-label Show 
+      - [['customer.name', 'Customer'], ['none', 'None']].each do |(data_source, label_text)|
+        .radio 
+          label
+            input {
+              type="radio"
+              name="customer-wins-row-group-data-source"
+              value=data_source
+              data-table-display-options-target="rowGroupDataSourceInput" }
+            = label_text
+
+  .form-group data-action="change->table-display-options#onChangeFilter"
+    label.control-label Show
     div
       .checkbox 
         label for="show-wins-with-story"
-          input#show-wins-with-story type="checkbox" data-action="table-display-options#toggleFilter" checked="true" 
+          input#show-wins-with-story type="checkbox" checked="true" 
           | Customer Wins with Story started

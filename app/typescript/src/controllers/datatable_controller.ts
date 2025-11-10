@@ -26,11 +26,11 @@ export default class DatatableController extends Controller<HTMLTableElement> {
 
   static values = { 
     ready: { type: Boolean, default: false },
-    enableRowGroups: { type: Boolean, default: false },
+    rowGroupDataSource: { type: String },
     searchParams: Object
   };
   declare readyValue: boolean;
-  declare enableRowGroupsValue: boolean;
+  declare rowGroupDataSourceValue: { type: String, default: 'none' };
   declare searchParamsValue: SearchParams | undefined;
 
   declare dt: Api<any>
@@ -110,35 +110,36 @@ export default class DatatableController extends Controller<HTMLTableElement> {
 
   // toggle table stripes when alternating between row grouping and no row grouping
   // the Datatables table-striped class does not take row groups into account, hence this approach
-  enableRowGroupsValueChanged(shouldEnable: boolean) {
+  rowGroupDataSourceValueChanged(dataSource: string) {
     if (this.didInitialize) {
+      console.log('row group data source:', dataSource)
       // this.element.classList.toggle('has-row-groups');
       // this.rowTargets.forEach(tr => tr.classList.remove('even', 'odd'));
       // if (!shouldEnable) this.rowTargets.forEach((tr, i) => tr.classList.add(i % 2 === 0 ? 'even' : 'odd'));
 
-      if (this.resourceOutlet.resourceName === 'customerWins') {
-        if (shouldEnable) {
-          this.dt.order([[2, 'asc'], [1, 'desc']]).draw();
-        } else {
-          this.dt.order([1, 'desc']).draw();
-        }
-      } else {
-        this.dt.draw();
-      }
+      // if (this.resourceOutlet.resourceName === 'customerWins') {
+      //   if (shouldEnable) {
+      //     this.dt.order([[2, 'asc'], [1, 'desc']]).draw();
+      //   } else {
+      //     this.dt.order([1, 'desc']).draw();
+      //   }
+      // } else {
+      //   this.dt.draw();
+      // }
     }
   }
 
   redrawRowGroups() {
-    const rowGroups = this.dt.rowGroup();
-    const shouldEnable = this.enableRowGroupsValue;
-    const shouldRedraw = (!shouldEnable && rowGroups.enabled()) || (shouldEnable && !rowGroups.enabled());
+    // const rowGroups = this.dt.rowGroup();
+    // const shouldEnable = this.enableRowGroupsValue;
+    // const shouldRedraw = (!shouldEnable && rowGroups.enabled()) || (shouldEnable && !rowGroups.enabled());
     
-    // without a timeout, the row groups get duplicated
-    setTimeout(() => {
-      if (shouldEnable && shouldRedraw) rowGroups.enable().draw();
-      if (!shouldEnable && shouldRedraw) rowGroups.disable().draw();
-      if (shouldRedraw) this.element.classList.toggle('has-row-groups');
-    })
+    // // without a timeout, the row groups get duplicated
+    // setTimeout(() => {
+    //   if (shouldEnable && shouldRedraw) rowGroups.enable().draw();
+    //   if (!shouldEnable && shouldRedraw) rowGroups.disable().draw();
+    //   if (shouldRedraw) this.element.classList.toggle('has-row-groups');
+    // })
   }
 
   cloneFilterResults() {

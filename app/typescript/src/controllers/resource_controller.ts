@@ -15,6 +15,7 @@ export default class ResourceController extends Controller<HTMLElement> {
   declare readonly searchSelectTarget: TomSelectInput;
   declare readonly filterResultsTarget: HTMLDivElement;
   declare readonly datatableTarget: HTMLDivElement;
+  declare readonly hasDatatableTarget: boolean;
   declare readonly displayOptionsBtnTarget: HTMLButtonElement;
   declare readonly hasDisplayOptionsBtnTarget: boolean;
   
@@ -102,11 +103,17 @@ export default class ResourceController extends Controller<HTMLElement> {
     //   ));
     // }
     if (this.dt) {
-      if (Object.keys(oldVal).length === 0) return;
+      const isConnecting = Object.keys(oldVal).length === 0;
+      if (isConnecting) return;
+
       searchTable.call(this);
     }
   }
-  
+
+  rowGroupDataSourceValueChanged(source: string) {
+    this.datatableTarget.setAttribute('data-datatable-row-group-data-source-value', source);
+  }
+
   // addSyncListener(syncResource: (ctrl: ResourceController) => void) {
   //   this.element.addEventListener('datatable:drawn', () => {
   //     this.resourceOutlets.forEach(ctrl => {

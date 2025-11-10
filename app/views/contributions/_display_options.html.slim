@@ -1,6 +1,6 @@
 .form-horizontal 
 
-  .form-group 
+  .form-group data-action="change->table-display-options#onChangeCurator"
     label.control-label for="contributions-curator" Curator
     div 
       = render( \
@@ -9,26 +9,29 @@
           ctrl_id: 'table-display-options',
           select_id: 'contributions-curator' )
 
-  .form-group 
+  .form-group data-action="change->table-display-options#onChangeRowGroupDataSource"
     label.control-label Group 
     div 
-      .checkbox 
-        label for="group-by-customer"
-          input#group-by-customer {
-            type="checkbox" 
-            data-action="table-display-options#toggleRowGroups" 
-            checked=('true' if enable_row_groups)
-            disabled="true" } 
-          | by Customer Win
+      - [['contributor.full_name', 'Contributor'],
+         ['customer.name', 'Customer'],
+         ['customer_win.name', 'Customer Win']].each do |(data_source, label_text)|
+        .radio 
+          label
+            input {
+              type="radio"
+              name="contributions-row-group-data-source"
+              value=data_source
+              data-table-display-options-target="rowGroupDataSourceInput" }
+            = label_text
 
-  .form-group 
+  .form-group data-action="change->table-display-options#onChangeFilter"
     label.control-label Show 
     div 
       .checkbox 
         label for="show-completed"
-          input#show-completed type="checkbox" data-action="table-display-options#toggleFilter" checked="true" 
+          input#show-completed type="checkbox" checked="true" 
           | Contributors with a completed Contribution
       .checkbox 
         label for="show-published"
-          input#show-published type="checkbox" data-action="table-display-options#toggleFilter" checked="true" 
+          input#show-published type="checkbox" checked="true" 
           | Contributors to published Customer Stories

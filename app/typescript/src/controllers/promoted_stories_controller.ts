@@ -2,7 +2,13 @@ import ResourceController from './resource_controller';
 import { dataTableConfig } from '../promoted_stories/promoted_stories';
 
 export default class PromotedStoriesController extends ResourceController {
+  static values = {
+    ... super.values, 
+    rowGroupDataSource: { type: String, default: 'customer.name' }
+  };
+  declare rowGroupDataSourceValue: string;
+
   get tableConfig() {
-    return dataTableConfig();
+    return dataTableConfig(this.rowGroupDataSourceValue);
   }
 }
