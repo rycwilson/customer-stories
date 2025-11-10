@@ -45,19 +45,8 @@ module ContributionsHelper
     }
   end
 
-  def contributions_display_options_escaped_html(company, curator_id)
-    html = render(
-      'contributions/display_options',
-      {
-        company: company,
-        curator_id: curator_id,
-        enable_row_groups: if cookies['csp-contributions-row-groups'].present?
-                             cookies['csp-contributions-row-groups'] == 'true'
-                           else
-                             true
-                           end
-      }
-    )
+  def contributions_display_options_html(company)
+    html = render('contributions/display_options', company:)
     escape_once(html)
   end
 end

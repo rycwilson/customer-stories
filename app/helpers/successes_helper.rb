@@ -39,19 +39,8 @@ module SuccessesHelper
     }
   end
 
-  def customer_wins_display_options_escaped_html(company, curator_id = nil)
-    html = render(
-      'successes/display_options',
-      {
-        company:,
-        curator_id:,
-        enable_row_groups: if cookies['csp-customer-wins-row-groups'].present?
-                             cookies['csp-customer-wins-row-groups'] == 'true'
-                           else
-                             true
-                           end
-      }
-    )
+  def customer_wins_display_options_html(company)
+    html = render('successes/display_options', company:)
     escape_once(html)
   end
 end
