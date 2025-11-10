@@ -93,7 +93,7 @@ main.dashboard.hidden-xs data-controller="dashboard" data-dashboard-modal-outlet
             aria-labelledby="story-contributions-tab"
             role="tabpanel" }
             
-            = render('contributions/table', { company: @company, story: @story, enable_row_groups: false })
+            = render('contributions/table', company: @company, story: @story)
 
           #story-settings.tab-pane {
             class=('active' if @active_tab == '#story-settings')

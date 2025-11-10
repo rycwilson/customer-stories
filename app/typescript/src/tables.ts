@@ -6,10 +6,6 @@ export function init(this: ResourceController) {
   this.datatableTarget.setAttribute('data-datatable-ready-value', 'true');
 }
 
-export function toggleRowGroups(this: ResourceController, shouldEnable: boolean) {
-  this.datatableTarget.setAttribute('data-datatable-enable-row-groups-value', shouldEnable.toString());
-}
-
 export function search(this: ResourceController, tsSearchResults?: { [key: string]: string }) {
   const filters = Object.entries(this.filtersValue)
     .map(([filterKey, filterVal]) => {
@@ -66,7 +62,6 @@ export function initDisplayOptions(this: ResourceController, isReset = false) {
           data-controller="table-display-options" 
           data-table-display-options-${this.identifier}-outlet="#${this.identifier}"
           data-table-display-options-dashboard-outlet=".dashboard"
-          data-action="change->table-display-options#onChange"
           role="tooltip">
           <div class="arrow"></div>
           <div class="popover-title__wrapper">

@@ -63,8 +63,8 @@ export default class VisitorsController extends ResourceController {
   async filtersValueChanged(newVal: ResourceFilters, oldVal: ResourceFilters) {
     if (this.initialized === false) return;
     
-    console.log('old visitors filtersValue:', oldVal)
-    console.log('new visitors filtersValue:', newVal)
+    // console.log('old visitors filtersValue:', oldVal)
+    // console.log('new visitors filtersValue:', newVal)
 
     const data = await getJSON(this.dataPathValue, this.searchParams);
     CSP.visitors = data;

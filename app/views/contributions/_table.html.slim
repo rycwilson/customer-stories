@@ -2,10 +2,8 @@
 
 table.table {
   id="#{story ? 'story-contributions-table' : 'contributions-table'}"
-  class=('has-row-groups' if enable_row_groups && story.nil?)
   data-contributions-target="datatable"
   data-controller="datatable"
-  data-datatable-enable-row-groups-value="#{enable_row_groups && story.nil? ? 'true' : 'false'}"
   data-datatable-contributions-outlet="#{story ? '#story-contributions' : '#contributions'}" }
 
   = render( \
@@ -31,6 +29,7 @@ table.table {
       th Customer
       th Customer Win
       th.invitation-template Role
+      th Curator
       th.status Status
       th.actions
 

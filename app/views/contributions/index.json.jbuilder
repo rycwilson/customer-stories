@@ -10,6 +10,9 @@ json.array! @contributions do |contribution|
     json.id contribution.customer_id
     json.name contribution.customer_name
   end
+  json.curator do
+    json.id contribution.curator_id
+  end
   json.customer_win do
     json.id contribution.success_id
     json.name contribution.success_name
