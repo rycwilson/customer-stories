@@ -166,6 +166,7 @@ interface Contribution {
   // associations
   customer?: Customer
   customer_win?: CustomerWin;
+  curator?: User;
   story?: Story;
   contributor?: User;
   referrer?: User;
