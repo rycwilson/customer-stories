@@ -89,7 +89,7 @@ main.dashboard.hidden-xs data-controller="dashboard" data-dashboard-modal-outlet
             data-contributions-init-value="true"
             data-contributions-data-path-value=success_contributions_path(@story.success)
             data-contributions-filters-value=contributions_filters(@story.curator.id).to_json
-            data-action="datatable:init->contributions#onTableInitComplete"
+            data-action="datatable:init->contributions#onTableInitialized"
             aria-labelledby="story-contributions-tab"
             role="tabpanel" }
             

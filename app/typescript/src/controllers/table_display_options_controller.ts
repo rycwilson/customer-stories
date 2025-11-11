@@ -7,7 +7,7 @@ import type ContributionsController from "./contributions_controller";
 import type PromotedStoriesController from "./promoted_stories_controller";
 import { kebabize } from '../utils';
 
-type TableResourceController = (
+type ResourceControllerWithDatatable = (
   CustomerWinsController | ContributionsController | PromotedStoriesController
 );
 
@@ -54,7 +54,7 @@ export default class TableDisplayOptionsController extends Controller {
   }
 
   onChangeRowGroupDataSource({ target }: { target: HTMLInputElement }) {
-    (this.resourceOutlet as TableResourceController).rowGroupDataSourceValue = target.value;
+    (this.resourceOutlet as ResourceControllerWithDatatable).rowGroupDataSourceValue = target.value;
   }
 
   // Filter keys are kebab-cased due to:
@@ -100,7 +100,7 @@ export default class TableDisplayOptionsController extends Controller {
   }
 
   setRowGroupDataSource() {
-    const source = (this.resourceOutlet as TableResourceController).rowGroupDataSourceValue;
+    const source = (this.resourceOutlet as ResourceControllerWithDatatable).rowGroupDataSourceValue;
     this.rowGroupDataSourceInputTargets.forEach(input => {
       input.checked = (input.value === source);
     });

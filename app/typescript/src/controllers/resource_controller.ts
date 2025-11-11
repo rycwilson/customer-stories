@@ -1,6 +1,6 @@
 import { Controller } from "@hotwired/stimulus";
 import { getJSON } from '../utils';
-import { init as initTable, initDisplayOptions, search as searchTable } from '../tables';
+import { initDisplayOptions, search as searchTable } from '../tables';
 import type { Api } from "datatables.net-bs";
 
 export default class ResourceController extends Controller<HTMLElement> {
@@ -30,13 +30,8 @@ export default class ResourceController extends Controller<HTMLElement> {
   declare filtersValue: ResourceFilters;
   declare readonly displayOptionsHtmlValue: string;
 
-  declare dt: Api<any> | undefined;
-  
   connect() {
-    // console.log('connect resource', this.identifier)
-    if (this.hasDisplayOptionsBtnTarget) {
-      initDisplayOptions.call(this);
-    }
+    if (this.hasDisplayOptionsBtnTarget) initDisplayOptions.call(this);
   }
 
   get resourceName() {
@@ -50,11 +45,15 @@ export default class ResourceController extends Controller<HTMLElement> {
     //   CSP[this.resourceName];
   }
 
+  get tableInitialized() {
+    return this.hasDatatableTarget && $.fn.dataTable.isDataTable(this.datatableTarget);
+  }
+
   initValueChanged(shouldInit: boolean) {
     if (!shouldInit) return;
 
     if (this.dataExists) {
-      initTable.call(this);
+      this.initTable();
     } else {
       this.dispatch('loading');
       // console.log('getting data:', this.dataPathValue)
@@ -65,16 +64,20 @@ export default class ResourceController extends Controller<HTMLElement> {
         } else {
           CSP[this.resourceName] = data;
         } 
-        initTable.call(this);
+        this.initTable();
       })
     }
   }
 
-  onTableInitComplete(e: CustomEvent) {
-    this.dt = e.detail.dt;
+  initTable() {
+    if (this.hasDatatableTarget) {
+      this.datatableTarget.setAttribute('data-datatable-init-value', 'true');
+    }
+  }
+
+  onTableInitialized(e: CustomEvent) {
     setTimeout(() => {
-      (this.dt as Api<any>).one('draw', () => {
-        // console.log('draw after init:', this.resourceName)
+      e.detail.dt.one('draw', () => {
         this.dispatch('ready', { detail: { resourceName: this.resourceName } });
       })
       searchTable.call(this);
@@ -82,14 +85,14 @@ export default class ResourceController extends Controller<HTMLElement> {
   }
 
   onTomselectSearch(e: CustomEvent) {
-    if (this.dt) {
+    if (this.hasDatatableTarget) {
       searchTable.call(this, e.detail.searchResults);
     }
   }
 
   onChangeSearchSelect(e: CustomEvent) {
     // this.addSyncListener((ctrl) => ctrl.searchSelectTarget.tomselect.setValue(this.searchSelectTarget.value));
-    if (this.dt) {
+    if (this.hasDatatableTarget) {
       searchTable.call(this);
     }
   }
@@ -102,10 +105,7 @@ export default class ResourceController extends Controller<HTMLElement> {
     //     ctrl.filtersValue = { ...ctrl.filtersValue, ...{ 'curator': this.filtersValue['curator'] } }
     //   ));
     // }
-    if (this.dt) {
-      const isConnecting = Object.keys(oldVal).length === 0;
-      if (isConnecting) return;
-
+    if (this.tableInitialized) {
       searchTable.call(this);
     }
   }

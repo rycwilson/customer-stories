@@ -56,7 +56,7 @@
           data-customer-wins-row-group-data-source-value=@row_group_data_source[:customer_wins]
           data-customer-wins-filters-value=customer_wins_filters(curator&.id).to_json
           data-customer-wins-display-options-html-value=customer_wins_display_options_html(company)
-          data-action="datatable:init->customer-wins#onTableInitComplete"
+          data-action="datatable:init->customer-wins#onTableInitialized"
           aria-labelledby="customer-wins-tab"
           role="tabpanel" }
 
@@ -73,7 +73,7 @@
           data-contributions-filters-value=contributions_filters(curator&.id).to_json
           data-contributions-display-options-html-value=contributions_display_options_html(company)
           data-contributions-invitation-template-select-html-value=invitation_template_select_html(company)
-          data-action="datatable:init->contributions#onTableInitComplete"
+          data-action="datatable:init->contributions#onTableInitialized"
           aria-labelledby="contributions-tab"
           role="tabpanel" }
 

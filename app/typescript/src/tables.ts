@@ -2,10 +2,6 @@
 import type ResourceController from './controllers/resource_controller';
 // import { type Api as DataTableApi } from 'datatables.net-bs';
 
-export function init(this: ResourceController) {
-  this.datatableTarget.setAttribute('data-datatable-ready-value', 'true');
-}
-
 export function search(this: ResourceController, tsSearchResults?: { [key: string]: string }) {
   const filters = Object.entries(this.filtersValue)
     .map(([filterKey, filterVal]) => {
