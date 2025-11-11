@@ -98,6 +98,8 @@ export default class DatatableController extends Controller<HTMLTableElement> {
     let columnName = newVal?.split('.')[0];
     if (columnName === 'customer_win') columnName = 'success';
 
+    // TODO: Upgrade to datatables v2
+    // https://stackoverflow.com/questions/76804086
     const columnNumber = columnName ?
       this.dt.columns(`${columnName}:name`).indexes()[0] :
       undefined;
