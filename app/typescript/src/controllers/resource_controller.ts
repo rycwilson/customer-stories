@@ -56,9 +56,8 @@ export default class ResourceController extends Controller<HTMLElement> {
       this.initTable();
     } else {
       this.dispatch('loading');
-      // console.log('getting data:', this.dataPathValue)
       getJSON(this.dataPathValue).then(data => {
-        // console.log('data:', this.resourceName)
+        // console.log(`${this.identifier} data:`, data)
         if (this.resourceName === 'storyContributions') {
           CSP[this.resourceName][+(this.element.dataset.storyId as string)] = data;
         } else {
@@ -96,6 +95,16 @@ export default class ResourceController extends Controller<HTMLElement> {
       searchTable.call(this);
     }
   }
+
+  rowGroupDataSourceValueChanged(newVal: string, oldVal: string) {
+    if (!this.tableInitialized) return;
+
+    if (newVal === 'none') {
+      this.datatableTarget.removeAttribute('data-datatable-row-group-data-source-value');
+    } else {
+      this.datatableTarget.setAttribute('data-datatable-row-group-data-source-value', newVal);
+    }
+  }
   
   filtersValueChanged(newVal: ResourceFilters, oldVal: ResourceFilters) {
     // console.log(`old ${this.identifier} filtersValue:`, oldVal)
@@ -108,10 +117,6 @@ export default class ResourceController extends Controller<HTMLElement> {
     if (this.tableInitialized) {
       searchTable.call(this);
     }
-  }
-
-  rowGroupDataSourceValueChanged(source: string) {
-    this.datatableTarget.setAttribute('data-datatable-row-group-data-source-value', source);
   }
 
   // addSyncListener(syncResource: (ctrl: ResourceController) => void) {

@@ -25,20 +25,17 @@ export default class DatatableController extends Controller<HTMLTableElement> {
   // declare readonly rowTargets: HTMLTableRowElement[];
 
   static values = { 
-    ready: { type: Boolean, default: false },
-    rowGroupDataSource: { type: String },
-    searchParams: Object
+    init: { type: Boolean, default: false },
+    searchParams: Object,
+    rowGroupDataSource: { type: String }
   };
-  declare readyValue: boolean;
-  declare rowGroupDataSourceValue: { type: String, default: 'none' };
-  declare searchParamsValue: SearchParams | undefined;
+  declare initValue: boolean;
+  declare searchParamsValue: SearchParams;
+  declare rowGroupDataSourceValue: string | undefined;
 
-  declare dt: Api<any>
-  didInitialize = false;
+  declare dt: Api<any>;
+  // didInitialize = false;
   declare searchDebounceTimer: number;
-
-  connect() {
-  }
   
   get resourceOutlet(): CustomerWinsController | ContributionsController | PromotedStoriesController {
     if (this.hasCustomerWinsOutlet) return this.customerWinsOutlet;
@@ -56,19 +53,28 @@ export default class DatatableController extends Controller<HTMLTableElement> {
       pageLength: 50,
       drawCallback(this: JQuery<HTMLTableElement, any>, settings: object) {
         // console.log('drawCallback', this[0].id)
-        if (ctrl.didInitialize) ctrl.redrawRowGroups();
+        // if (ctrl.didInitialize) ctrl.redrawRowGroups();
         ctrl.dispatch('drawn');
       },
       initComplete(this: any, settings: object) {
+        if (ctrl.resourceOutlet.identifier === 'customer-wins') {
+          console.log('init complete')
+        }
         ctrl.cloneFilterResults();
-        ctrl.didInitialize = true;
+        // ctrl.didInitialize = true;
+        this.api().on('order.dt', (e: any, settings: any) => {
+          if (ctrl.resourceOutlet.identifier === 'customer-wins') {
+            console.log('row groups:', this.api().rowGroup().enabled())
+            console.log('order:', this.api().order())
+          }
+        });
         ctrl.dispatch('init', { detail: { dt: this.api() } });
       }
     }
   };
 
-  readyValueChanged(dataIsReady: boolean) {
-    if (dataIsReady) {
+  initValueChanged(shouldInit: boolean) {
+    if (shouldInit) {
       this.dt = new DataTable(
         this.element, 
         { ...this.baseConfig, ...this.resourceOutlet.tableConfig }
@@ -77,10 +83,52 @@ export default class DatatableController extends Controller<HTMLTableElement> {
   }
 
   searchParamsValueChanged(newVal: SearchParams, oldVal: SearchParams | undefined) {
-    if (oldVal !== undefined) {
-      clearTimeout(this.searchDebounceTimer);
-      this.searchDebounceTimer = window.setTimeout(() => this.search(newVal), 200);
-    }
+    if (oldVal === undefined) return; // skip on initial connect
+
+    clearTimeout(this.searchDebounceTimer);
+    this.searchDebounceTimer = window.setTimeout(() => this.search(newVal), 200);
+  }
+
+  rowGroupDataSourceValueChanged(newVal: string, oldVal: string | undefined) {
+    if (oldVal === undefined) return; // skip on initial connect
+
+    // NOTE: rowGroupDataSource needs to align with row data poperties
+    // For looking up the column index, we must reference column names, not data properties,
+    // and the customer win column is still named 'success' due to select options e.g. 'success-1'
+    let columnName = newVal?.split('.')[0];
+    if (columnName === 'customer_win') columnName = 'success';
+
+    const columnNumber = columnName ?
+      this.dt.columns(`${columnName}:name`).indexes()[0] :
+      undefined;
+
+    // Switch back
+    if (columnName === 'success') columnName = 'customer_win';
+
+    console.log('dt row group column:', columnNumber)
+
+    // if (this.resourceOutlet.resourceName === 'customerWins') {
+    //   if (shouldEnable) {
+    //     this.dt.order([[2, 'asc'], [1, 'desc']]).draw(); // row group column asc, created at desc
+    //   } else {
+    //     this.dt.order([1, 'desc']).draw();
+    //   }
+    // } else {
+    //   this.dt.draw();
+    // }
+  }
+
+  redrawRowGroups() {
+    // const rowGroups = this.dt.rowGroup();
+    // const shouldEnable = this.enableRowGroupsValue;
+    // const shouldRedraw = (!shouldEnable && rowGroups.enabled()) || (shouldEnable && !rowGroups.enabled());
+    
+    // // without a timeout, the row groups get duplicated
+    // setTimeout(() => {
+    //   if (shouldEnable && shouldRedraw) rowGroups.enable().draw();
+    //   if (!shouldEnable && shouldRedraw) rowGroups.disable().draw();
+    //   if (shouldRedraw) this.element.classList.toggle('has-row-groups');
+    // })
   }
 
   search({ filters, searchVal, tsSearchResults }: SearchParams) {
@@ -106,40 +154,6 @@ export default class DatatableController extends Controller<HTMLTableElement> {
       dtSearch = dtSearch.column(`${column}:name`).search(`^${id}$`, true, false);
     }
     dtSearch.draw();
-  }
-
-  // toggle table stripes when alternating between row grouping and no row grouping
-  // the Datatables table-striped class does not take row groups into account, hence this approach
-  rowGroupDataSourceValueChanged(dataSource: string) {
-    if (this.didInitialize) {
-      console.log('row group data source:', dataSource)
-      // this.element.classList.toggle('has-row-groups');
-      // this.rowTargets.forEach(tr => tr.classList.remove('even', 'odd'));
-      // if (!shouldEnable) this.rowTargets.forEach((tr, i) => tr.classList.add(i % 2 === 0 ? 'even' : 'odd'));
-
-      // if (this.resourceOutlet.resourceName === 'customerWins') {
-      //   if (shouldEnable) {
-      //     this.dt.order([[2, 'asc'], [1, 'desc']]).draw();
-      //   } else {
-      //     this.dt.order([1, 'desc']).draw();
-      //   }
-      // } else {
-      //   this.dt.draw();
-      // }
-    }
-  }
-
-  redrawRowGroups() {
-    // const rowGroups = this.dt.rowGroup();
-    // const shouldEnable = this.enableRowGroupsValue;
-    // const shouldRedraw = (!shouldEnable && rowGroups.enabled()) || (shouldEnable && !rowGroups.enabled());
-    
-    // // without a timeout, the row groups get duplicated
-    // setTimeout(() => {
-    //   if (shouldEnable && shouldRedraw) rowGroups.enable().draw();
-    //   if (!shouldEnable && shouldRedraw) rowGroups.disable().draw();
-    //   if (shouldRedraw) this.element.classList.toggle('has-row-groups');
-    // })
   }
 
   cloneFilterResults() {

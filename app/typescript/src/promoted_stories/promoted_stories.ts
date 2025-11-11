@@ -1,6 +1,6 @@
 import type { Config } from 'datatables.net-bs';
 
-export function dataTableConfig(): Config {
+export function dataTableConfig(rowGroupDataSource: string): Config {
   const colIndices = { customer: 1, title: 2, status: 3, curator: 4, actions: 5 };
   return {
     data: CSP.promotedStories,

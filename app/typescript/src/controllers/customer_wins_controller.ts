@@ -6,7 +6,7 @@ export default class CustomerWinsController extends ResourceController {
     ... super.values, 
     rowGroupDataSource: { type: String, default: 'customer.name' }
   };
-  declare rowGroupDataSourceValue: string;
+  declare rowGroupDataSourceValue: 'customer.name' | 'none';
 
   get tableConfig() {
     return dataTableConfig(this.rowGroupDataSourceValue);

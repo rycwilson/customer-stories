@@ -1,5 +1,5 @@
 import ResourceController from './resource_controller';
-import { colIndices, dataTableConfig } from '../contributions/contributions';
+import { dataTableConfig } from '../contributions/contributions';
 
 export default class ContributionsController extends ResourceController {
   static values = {
@@ -19,5 +19,5 @@ export default class ContributionsController extends ResourceController {
       this.rowGroupDataSourceValue,
       storyId
     );
-  } 
+  }
 }

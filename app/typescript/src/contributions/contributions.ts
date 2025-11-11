@@ -1,21 +1,23 @@
 import type { Config, Api } from 'datatables.net-bs';
 
+export const colIndices: { [col: string]: number } = {
+  contributor: 1,
+  customer: 2,
+  customerWin: 3,
+  role: 4,
+  curator: 5,
+  status: 6,
+  actions: 7,
+  story: 8
+};
+
 export function dataTableConfig(
   invitationTemplateSelectHtml: string,
-  rowGroupDataSrc: string,
+  rowGroupDataSource: string,
   storyId?: number
 ): Config {
-  const colIndices = {
-    contributor: 1,
-    customer: 2,
-    customerWin: 3,
-    role: 4,
-    status: 5,
-    actions: 6,
-    story: 7
-  };
   const rowGroupColumn = storyId ? undefined : (() => {
-    switch (rowGroupDataSrc) {
+    switch (rowGroupDataSource) {
       case 'contributor.full_name':
         return colIndices.contributor;
       case 'customer.name':
@@ -37,7 +39,7 @@ export function dataTableConfig(
       zeroRecords: 'No Contributors found'
     },
 
-    orderFixed: [rowGroupColumn, 'asc'],  // the row grouping column (all sorting will happen secondarily to this)
+    orderFixed: rowGroupColumn ? [rowGroupColumn, 'asc'] : [],  // the row grouping column (all sorting will happen secondarily to this)
     order: [[colIndices.status, 'asc']],
 
     columns: [
@@ -72,7 +74,7 @@ export function dataTableConfig(
         },
       },
       {
-        name: 'win',
+        name: 'success',
         data: {
           _: 'customer_win.name',
           filter: 'customer_win.id',
@@ -82,13 +84,13 @@ export function dataTableConfig(
         name: 'role',
         data: {
           _: (row: Contribution, type: string, set: any) => {
-            return row.invitation_template?.name?.match(/Customer|Customer Success|Sales/) ?
+            return row.invitation_template?.name?.match(/Customer|Customer\sSuccess|Sales/) ?
               row.invitation_template.name : 
               '';
           },
           // display: 'invitationTemplate.name' || '',
           display: (row: Contribution) => {
-            return row.invitation_template?.name?.match(/Customer|Customer Success|Sales/) ?
+            return row.invitation_template?.name?.match(/Customer|Customer\sSuccess|Sales/) ?
               row.invitation_template.name :
               '<span style="color:#ccc">\u2014</span>';
             // return row.invitation_template ? 
@@ -111,6 +113,10 @@ export function dataTableConfig(
         //     .addClass('invitation-template')
         //     .css('height', '0')   // does not change height, but allows for 100% height of the td's child element
         // }
+      },
+      {
+        name: 'curator',
+        data: 'curator.id'
       },
       {
         name: 'status',
@@ -140,24 +146,27 @@ export function dataTableConfig(
 
     columnDefs: [
       {
-        visible: false,
         targets: (() => {
-          const targets = [colIndices.story, rowGroupColumn].filter(col => col !== undefined);
-          if (storyId || rowGroupColumn === colIndices.customerWin) {
+          console.log(rowGroupColumn)
+          const targets = [colIndices.curator, colIndices.story, rowGroupColumn].filter(col => col);  
+          if (storyId) {
+            return [...targets, colIndices.customer, colIndices.customerWin];
+          } else if (rowGroupColumn === colIndices.customerWin) {
             return [...targets, colIndices.customer];
           }
           return targets;
-        })(),
+        })() as number[],
+        visible: false,
       },
       {
+        targets: [0, colIndices.curator, colIndices.actions, colIndices.story],
         orderable: false,
-        targets: [0, colIndices.actions, colIndices.story]
       },
       {
-        searchable: false,
         targets: [0, colIndices.role, colIndices.status, colIndices.actions],
+        searchable: false,
       },
-      // { targets: [colIndices.customerWin, colIndices.customer, colIndices.story], width: '0%' },
+      // { targets: [colIndices.customerWin, colIndices.customer, colIndices.curator,colIndices.story], width: '0%' },
       { targets: 0, width: '1.75em' },
       { 
         targets: [
@@ -165,22 +174,22 @@ export function dataTableConfig(
         ], 
         width: 'auto' 
       },
-      { targets: colIndices.role, width: '8em' },
+      { targets: colIndices.role, width: '9em' },
       { targets: colIndices.status, width: '10em' },
       { targets: colIndices.actions, width: '3.5em' }
     ],
 
-    rowGroup: storyId || (rowGroupDataSrc === undefined) ? 
+    rowGroup: storyId || (rowGroupDataSource === undefined) ? 
       undefined : 
       { 
-        dataSrc: rowGroupDataSrc, 
+        dataSrc: rowGroupDataSource, 
         startRender: (rows: Api<any>, groupValue: string) => {
           const wrapper = (colspan: number, content: string) => (
             $('<tr />').append(`<td colspan="${colspan}"><div>${content}</div></td>`)
           );
-          if (rowGroupDataSrc.match(/contributor\.full_name|customer\.name/)) {
+          if (rowGroupDataSource.match(/contributor\.full_name|customer\.name/)) {
             return wrapper(6, `<span>${groupValue}</span>`);
-          } else if (rowGroupDataSrc === 'customer_win.name') {
+          } else if (rowGroupDataSource === 'customer_win.name') {
             const firstRowData: Contribution = rows.data()[0];
             const { customer, customer_win: win, story } = firstRowData;
             return wrapper(5, `
@@ -194,7 +203,7 @@ export function dataTableConfig(
                   data-customer-win-id="${win!.id}">${win!.name}</a>`
               }
             `);
-          } else if (rowGroupDataSrc === 'invitation_template.name') {
+          } else if (rowGroupDataSource === 'invitation_template.name') {
             return wrapper(
               6, 
               `Role: ${groupValue === 'No group' ? '<em>None specified</em>' : groupValue}`

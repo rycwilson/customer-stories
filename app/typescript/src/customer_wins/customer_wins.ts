@@ -1,7 +1,23 @@
 import type { Config, Api } from 'datatables.net-bs';
 
-export function dataTableConfig(): Config {
-  const colIndices = { win: 1, customer: 2, curator: 3, status: 4, story: 5, actions: 6 };
+export const colIndices = {
+  customer: 1,
+  customerWin: 2,
+  curator: 3,
+  status: 4,
+  story: 5,
+  actions: 6
+}
+
+export function dataTableConfig(rowGroupDataSource: 'customer.name' | 'none'): Config {
+  const rowGroupColumn = (() => {
+    switch (rowGroupDataSource) {
+      case 'customer.name':
+        return colIndices.customer;
+      default:
+        return undefined; 
+    }
+  })();
   return {
     data: CSP.customerWins,
     
@@ -10,8 +26,15 @@ export function dataTableConfig(): Config {
       zeroRecords: 'No Customer Wins found'
     },
 
-    orderFixed: [colIndices.customer, 'asc'], // the row grouping column (all sorting will happen secondarily to this)
-    order: [[colIndices.win, 'desc']],
+    // orderFixed: rowGroupColumn ? [rowGroupColumn, 'asc'] : [], // the row grouping column (all sorting will happen secondarily to this)
+    // order: [[colIndices.customerWin, 'asc']],
+    order: (() => {
+      if (rowGroupColumn) {
+        return [[rowGroupColumn, 'asc'], [colIndices.customerWin, 'asc']];
+      } else {
+        return [[colIndices.customerWin, 'asc']];
+      }
+    })(),
 
     columns: [
       {
@@ -29,6 +52,13 @@ export function dataTableConfig(): Config {
         createdCell: (td) => $(td).addClass('toggle-child')
       },
       {
+        name: 'customer',
+        data: {
+          _: 'customer.name',
+          filter: 'customer.id',
+        }
+      },
+      {
         name: 'success',
         data: {
           _: 'name',
@@ -41,13 +71,6 @@ export function dataTableConfig(): Config {
           if (type === 'filter') return row.id.toString();
           return data;
         },
-      },
-      {
-        name: 'customer',
-        data: {
-          _: 'customer.name',
-          filter: 'customer.id',
-        }
       },
       {
         name: 'curator',
@@ -94,7 +117,10 @@ export function dataTableConfig(): Config {
 
     columnDefs: [
       { 
-        targets: [colIndices.customer, colIndices.curator, colIndices.story], 
+        targets: (() => {
+          const alwaysHidden = [colIndices.curator, colIndices.story]
+          return [...alwaysHidden, ...(rowGroupColumn ? [rowGroupColumn] : [])];
+        })() as number[],
         visible: false 
       },
       { 
@@ -105,29 +131,27 @@ export function dataTableConfig(): Config {
         targets: [0, colIndices.story, colIndices.actions],
         searchable: false,
       },
-      { targets: [colIndices.curator, colIndices.story],  width: '0' },  // hidden
+      // { targets: [colIndices.curator, colIndices.story],  width: '0' },  // hidden
       { targets: [0], width: '1.75em' },
-      { targets: colIndices.win, width: 'auto' },
+      { targets: colIndices.customerWin, width: 'auto' },
       { targets: colIndices.status, width: '12em' },
       { targets: colIndices.actions, width: '3.5em' }
     ],
 
-    rowGroup: {
-      dataSrc: 'customer.name',
-      startRender(rows: Api<any>, group: string) {
-        const groupRows = rows;
-        const customerName = group;
-        const customerId = groupRows.data()[0].customer.id;
+    rowGroup: !!rowGroupDataSource && {
+      dataSrc: rowGroupDataSource,
+      startRender(rows: Api<any>, groupValue: string) {
+        const { customer } = rows.data()[0];
         return $('<tr />').append(`
           <td colspan="4"> 
             <a 
-              href="/customers/${customerId}/edit" 
+              href="/customers/${customer.id}/edit" 
               style="font-weight:600"
               data-turbo-stream
               data-controller="modal-trigger"
               data-modal-trigger-modal-outlet="#main-modal"
               data-modal-trigger-params-value='${JSON.stringify({ title: 'Edit Customer', className: 'edit-customer' })}'>
-              ${customerName}
+              ${customer.name}
             </a>
           </td>
         `);
