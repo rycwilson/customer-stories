@@ -215,15 +215,15 @@ class CompaniesController < ApplicationController
 
   def set_row_group_data_sources
     customer_wins = cookies['csp-customer-wins-row-group-data-source']
-                    .try(:match, /\A(?<source>customer\.name|none)\Z/)
-                    .try(:[], :source)
+                    &.match(/\A(?<source>customer\.name|)\z/)
+                    &.[](:source)
     contributions =
       cookies['csp-contributions-row-group-data-source']
-      .try(:match, /\A(?<source>contributor\.full_name|customer\.name|customer_win\.name|invitation_template\.name)\Z/)
-      .try(:[], :source)
+      &.match(/\A(?<source>contributor\.full_name|customer\.name|customer_win\.name|invitation_template\.name|)\z/)
+      &.[](:source)
     promoted_stories = cookies['csp-promoted-stories-row-group-data-source']
-                       .try(:match, /\A(?<source>customer\.name|none)\Z/)
-                       .try(:[], :source)
+                       &.match(/\A(?<source>customer\.name|)\z/)
+                       &.[](:source)
     @row_group_data_source = { customer_wins:, contributions:, promoted_stories: }
   end
 
