@@ -34,11 +34,14 @@ export default class TableDisplayOptionsController extends Controller {
   connect() {
     this.setFilters();
     if (this.hasRowGroupDataSourceInputTarget) this.setRowGroupDataSource();
-    document.addEventListener('click', this.clickAwayHandler);
+
+    // Use capture to ensure that any other event handlers that may stop propagation
+    // (e.g. column sorting on datatables) do not prevent this from firing.
+    document.addEventListener('click', this.clickAwayHandler, true);
   }
 
   disconnect() {
-    document.removeEventListener('click', this.clickAwayHandler);
+    document.removeEventListener('click', this.clickAwayHandler, true);
   }
 
   onChangeCurator({ target }: { target: TomSelectInput }) {
