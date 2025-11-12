@@ -56,7 +56,6 @@ export default class ResourceController extends Controller<HTMLElement> {
     } else {
       this.dispatch('loading');
       getJSON(this.dataPathValue).then(data => {
-        // console.log(`${this.identifier} data:`, data)
         if (this.resourceName === 'storyContributions') {
           CSP[this.resourceName][+(this.element.dataset.storyId as string)] = data;
         } else {
@@ -96,19 +95,12 @@ export default class ResourceController extends Controller<HTMLElement> {
   }
 
   rowGroupDataSourceValueChanged(source: string) {
-    // if (!this.tableInitialized) return;
-
     this.datatableTarget.setAttribute('data-datatable-row-group-data-source-value', source);
   }
   
   filtersValueChanged(newVal: ResourceFilters, oldVal: ResourceFilters) {
     // console.log(`old ${this.identifier} filtersValue:`, oldVal)
     // console.log(`new ${this.identifier} filtersValue:`, newVal)
-    // if (newVal['curator'] !== oldVal['curator']) {
-    //   this.addSyncListener((ctrl) => (
-    //     ctrl.filtersValue = { ...ctrl.filtersValue, ...{ 'curator': this.filtersValue['curator'] } }
-    //   ));
-    // }
     if (this.tableInitialized) {
       searchTable.call(this);
     }
