@@ -1,7 +1,6 @@
 import { Controller } from "@hotwired/stimulus";
 import { getJSON } from '../utils';
 import { initDisplayOptions, search as searchTable } from '../tables';
-import type { Api } from "datatables.net-bs";
 
 export default class ResourceController extends Controller<HTMLElement> {
   static outlets = ['dashboard'];
