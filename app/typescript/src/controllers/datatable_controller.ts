@@ -37,7 +37,7 @@ export default class DatatableController extends Controller<HTMLTableElement> {
   // didInitialize = false;
   declare searchDebounceTimer: number;
   
-  get resourceOutlet(): CustomerWinsController | ContributionsController | PromotedStoriesController {
+  get resourceOutlet(): ResourceControllerWithDatatable {
     if (this.hasCustomerWinsOutlet) return this.customerWinsOutlet;
     if (this.hasContributionsOutlet) return this.contributionsOutlet;
     if (this.hasPromotedStoriesOutlet) return this.promotedStoriesOutlet;

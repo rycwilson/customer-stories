@@ -2,14 +2,7 @@ import Cookies from 'js-cookie';
 import { Controller } from '@hotwired/stimulus';
 import type DashboardController from "./dashboard_controller";
 import type ResourceController from "./resource_controller";
-import type CustomerWinsController from "./customer_wins_controller";
-import type ContributionsController from "./contributions_controller";
-import type PromotedStoriesController from "./promoted_stories_controller";
 import { kebabize } from '../utils';
-
-type ResourceControllerWithDatatable = (
-  CustomerWinsController | ContributionsController | PromotedStoriesController
-);
 
 export default class TableDisplayOptionsController extends Controller {
   static outlets = ['dashboard', 'customer-wins', 'contributions', 'promoted-stories', 'visitors'];
