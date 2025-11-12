@@ -53,6 +53,8 @@ export function dataTableConfig(
       switch (rowGroupDataSource) {
         case 'customer_win.name':
           return [[colIndices.customer, 'asc'], [colIndices.status, 'asc']];
+        case '':
+          return [[colIndices.status, 'asc']];
         default:
           return [[rowGroupColumn!, 'asc'], [colIndices.status, 'asc']]
       }
