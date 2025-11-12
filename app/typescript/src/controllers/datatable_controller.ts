@@ -34,7 +34,6 @@ export default class DatatableController extends Controller<HTMLTableElement> {
   declare rowGroupDataSourceValue: string | undefined;
 
   declare dt: Api<any>;
-  // didInitialize = false;
   declare searchDebounceTimer: number;
   
   handleColumnSort = this.onColumnSort.bind(this);
