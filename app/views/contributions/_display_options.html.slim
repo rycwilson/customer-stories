@@ -14,7 +14,8 @@
     div 
       - [['contributor.full_name', 'Contributor'],
          ['customer.name', 'Customer'],
-         ['customer_win.name', 'Customer Win']].each do |(data_source, label_text)|
+         ['customer_win.name', 'Customer Win'],
+         ['', 'None']].each do |(data_source, label_text)|
         .radio 
           label
             input {

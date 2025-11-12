@@ -12,7 +12,7 @@
   .form-group data-action="change->table-display-options#onChangeRowGroupDataSource"
     label.control-label Group 
     div
-      - [['customer.name', 'Customer'], ['none', 'None']].each do |(data_source, label_text)|
+      - [['customer.name', 'Customer'], ['', 'None']].each do |(data_source, label_text)|
         .radio 
           label
             input {
