@@ -1,5 +1,9 @@
 import type { Config } from 'datatables.net-bs';
 
+// export function toggleColumnVisibility(dt: Api<any>, rowGroupDataSource: string) {
+//   dt.column(colIndices.customer).visible(!rowGroupDataSource);
+// }
+
 export function dataTableConfig(rowGroupDataSource: string): Config {
   const colIndices = { customer: 1, title: 2, status: 3, curator: 4, actions: 5 };
   return {

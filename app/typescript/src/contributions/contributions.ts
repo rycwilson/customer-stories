@@ -1,6 +1,6 @@
 import type { Config, Api } from 'datatables.net-bs';
 
-export const colIndices: { [col: string]: number } = {
+const colIndices = {
   contributor: 1,
   customer: 2,
   customerWin: 3,
@@ -10,6 +10,17 @@ export const colIndices: { [col: string]: number } = {
   actions: 7,
   story: 8
 };
+
+export function toggleColumnVisibility(dt: Api<any>, rowGroupDataSource: string) {
+  dt.column(colIndices.contributor)
+    .visible(rowGroupDataSource !== 'contributor.full_name');
+  dt.column(colIndices.customer)
+    .visible(rowGroupDataSource !== 'customer.name' && rowGroupDataSource !== 'customer_win.name');
+  dt.column(colIndices.customerWin)
+    .visible(rowGroupDataSource !== 'customer_win.name');
+  dt.column(colIndices.role)
+    .visible(rowGroupDataSource !== 'invitation_template.name');
+}
 
 export function dataTableConfig(
   invitationTemplateSelectHtml: string,
@@ -27,20 +38,25 @@ export function dataTableConfig(
       case 'invitation_template.name':
         return colIndices.role;
       default:
-        return undefined; 
+        return undefined; // should not happen
     }
   })();
   return {
     data: storyId ? CSP['storyContributions'][storyId] : CSP.contributions,
-    // select: true,  // https://datatables.net/extensions/select/
     
     language: {
       emptyTable: 'No Contributors found',
       zeroRecords: 'No Contributors found'
     },
 
-    orderFixed: rowGroupColumn ? [rowGroupColumn, 'asc'] : [],  // the row grouping column (all sorting will happen secondarily to this)
-    order: [[colIndices.status, 'asc']],
+    order: (() => {
+      switch (rowGroupDataSource) {
+        case 'customer_win.name':
+          return [[colIndices.customer, 'asc'], [colIndices.status, 'asc']];
+        default:
+          return [[rowGroupColumn!, 'asc'], [colIndices.status, 'asc']]
+      }
+    })(),
 
     columns: [
       {
@@ -147,7 +163,6 @@ export function dataTableConfig(
     columnDefs: [
       {
         targets: (() => {
-          console.log(rowGroupColumn)
           const targets = [colIndices.curator, colIndices.story, rowGroupColumn].filter(col => col);  
           if (storyId) {
             return [...targets, colIndices.customer, colIndices.customerWin];
@@ -166,7 +181,6 @@ export function dataTableConfig(
         targets: [0, colIndices.role, colIndices.status, colIndices.actions],
         searchable: false,
       },
-      // { targets: [colIndices.customerWin, colIndices.customer, colIndices.curator,colIndices.story], width: '0%' },
       { targets: 0, width: '1.75em' },
       { 
         targets: [
@@ -179,17 +193,27 @@ export function dataTableConfig(
       { targets: colIndices.actions, width: '3.5em' }
     ],
 
-    rowGroup: storyId || (rowGroupDataSource === undefined) ? 
-      undefined : 
-      { 
-        dataSrc: rowGroupDataSource, 
-        startRender: (rows: Api<any>, groupValue: string) => {
-          const wrapper = (colspan: number, content: string) => (
-            $('<tr />').append(`<td colspan="${colspan}"><div>${content}</div></td>`)
-          );
-          if (rowGroupDataSource.match(/contributor\.full_name|customer\.name/)) {
+    rowGroup: { 
+      enable: !!rowGroupDataSource,
+      dataSrc: rowGroupDataSource,
+
+      // This function will run whenever the data source changes
+      startRender: function (
+        this: { dataSrc: () => string, s: { dt: Api<any> } },
+        rows: Api<any>, 
+        groupValue: string
+      ) {
+        const { dt } = this.s;
+        const dataSource = this.dataSrc();
+        const wrapper = (colspan: number, content: string) => (
+          $('<tr />').append(`<td colspan="${colspan}"><div>${content}</div></td>`)
+        );
+        switch(dataSource) {
+          case 'contributor.full_name': 
+          case 'customer.name': {
             return wrapper(6, `<span>${groupValue}</span>`);
-          } else if (rowGroupDataSource === 'customer_win.name') {
+          }
+          case 'customer_win.name': {
             const firstRowData: Contribution = rows.data()[0];
             const { customer, customer_win: win, story } = firstRowData;
             return wrapper(5, `
@@ -198,19 +222,20 @@ export function dataTableConfig(
               ${story ? 
                 `<a href="${story.edit_path}">${story.title}</a>` :
                 `<a 
-                  href="javascript:;" 
+                  href="javascript:;"
                   data-action="dashboard#showContributionCustomerWin"
                   data-customer-win-id="${win!.id}">${win!.name}</a>`
               }
             `);
-          } else if (rowGroupDataSource === 'invitation_template.name') {
+          }
+          case 'invitation_template.name':
             return wrapper(
               6, 
               `Role: ${groupValue === 'No group' ? '<em>None specified</em>' : groupValue}`
             );
-          }
-        } 
-      },
+        }
+      } 
+    },
 
     rowCallback(tr: Node, data: object) {
       const { id } = data as Contribution;

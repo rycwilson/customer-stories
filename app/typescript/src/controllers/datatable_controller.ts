@@ -37,6 +37,8 @@ export default class DatatableController extends Controller<HTMLTableElement> {
   // didInitialize = false;
   declare searchDebounceTimer: number;
   
+  handleColumnSort = this.onColumnSort.bind(this);
+
   get resourceOutlet(): ResourceControllerWithDatatable {
     if (this.hasCustomerWinsOutlet) return this.customerWinsOutlet;
     if (this.hasContributionsOutlet) return this.contributionsOutlet;
@@ -52,26 +54,32 @@ export default class DatatableController extends Controller<HTMLTableElement> {
       dom: 'tip',
       pageLength: 50,
       drawCallback(this: JQuery<HTMLTableElement, any>, settings: object) {
-        // console.log('drawCallback', this[0].id)
-        // if (ctrl.didInitialize) ctrl.redrawRowGroups();
+        this.find('th.sorting').each((i: number, th: HTMLTableCellElement) => {
+          th.removeEventListener('click', ctrl.handleColumnSort, true);
+          th.addEventListener('click', ctrl.handleColumnSort, true);
+        });
         ctrl.dispatch('drawn');
       },
       initComplete(this: any, settings: object) {
-        if (ctrl.resourceOutlet.identifier === 'customer-wins') {
-          console.log('init complete')
-        }
         ctrl.cloneFilterResults();
-        // ctrl.didInitialize = true;
-        this.api().on('order.dt', (e: any, settings: any) => {
-          if (ctrl.resourceOutlet.identifier === 'customer-wins') {
-            console.log('row groups:', this.api().rowGroup().enabled())
-            console.log('order:', this.api().order())
-          }
-        });
         ctrl.dispatch('init', { detail: { dt: this.api() } });
       }
     }
   };
+
+  get rowGroupColumnIndex(): number | undefined {
+    if (!this.rowGroupDataSourceValue) return;
+    
+    let columnName = this.rowGroupDataSourceValue.split('.')[0];
+    
+    // For looking up the column index, we must reference column names, not data properties,
+    // and the customer win column is still named 'success' due to select options e.g. 'success-1'
+    if (columnName === 'customer_win') columnName = 'success';
+
+    // TODO: Upgrade to datatables v2
+    // https://stackoverflow.com/questions/76804086
+    return this.dt.columns(`${columnName}:name`).indexes()[0];
+  }
 
   initValueChanged(shouldInit: boolean) {
     if (shouldInit) {
@@ -89,48 +97,45 @@ export default class DatatableController extends Controller<HTMLTableElement> {
     this.searchDebounceTimer = window.setTimeout(() => this.search(newVal), 200);
   }
 
-  rowGroupDataSourceValueChanged(newVal: string, oldVal: string | undefined) {
-    if (oldVal === undefined) return; // skip on initial connect
+  rowGroupDataSourceValueChanged(source: string) {
+    // ResourceController will pass down the value when it connects.
+    // Don't handle the change unless the table is initialized.
+    if (!this.dt) return;
 
-    // NOTE: rowGroupDataSource needs to align with row data poperties
-    // For looking up the column index, we must reference column names, not data properties,
-    // and the customer win column is still named 'success' due to select options e.g. 'success-1'
-    let columnName = newVal?.split('.')[0];
-    if (columnName === 'customer_win') columnName = 'success';
+    // Get either the only current sort (row group disabled), 
+    // or the current secondary sort (row groups enabled)
+    const [sortColumnIndex, sortDirection] = this.dt.order().pop() as [number, 'asc' | 'desc'];
 
-    // TODO: Upgrade to datatables v2
-    // https://stackoverflow.com/questions/76804086
-    const columnNumber = columnName ?
-      this.dt.columns(`${columnName}:name`).indexes()[0] :
-      undefined;
+    this.resourceOutlet.toggleColumns(this.dt, source);
 
-    // Switch back
-    if (columnName === 'success') columnName = 'customer_win';
-
-    console.log('dt row group column:', columnNumber)
-
-    // if (this.resourceOutlet.resourceName === 'customerWins') {
-    //   if (shouldEnable) {
-    //     this.dt.order([[2, 'asc'], [1, 'desc']]).draw(); // row group column asc, created at desc
-    //   } else {
-    //     this.dt.order([1, 'desc']).draw();
-    //   }
-    // } else {
-    //   this.dt.draw();
-    // }
+    if (this.rowGroupColumnIndex) {
+      this.dt.rowGroup().enable();
+      this.dt.rowGroup().dataSrc(source);
+      this.dt.order([[this.rowGroupColumnIndex, 'asc'], [sortColumnIndex, sortDirection]]); 
+    } else {
+      this.dt.rowGroup().disable();
+      this.dt.order([[sortColumnIndex, sortDirection]]); // current sort
+    }
+    this.dt.draw();
   }
 
-  redrawRowGroups() {
-    // const rowGroups = this.dt.rowGroup();
-    // const shouldEnable = this.enableRowGroupsValue;
-    // const shouldRedraw = (!shouldEnable && rowGroups.enabled()) || (shouldEnable && !rowGroups.enabled());
-    
-    // // without a timeout, the row groups get duplicated
-    // setTimeout(() => {
-    //   if (shouldEnable && shouldRedraw) rowGroups.enable().draw();
-    //   if (!shouldEnable && shouldRedraw) rowGroups.disable().draw();
-    //   if (shouldRedraw) this.element.classList.toggle('has-row-groups');
-    // })
+  // We want to preserve row group sorting (if present) when the user sorts a column.
+  // Intercept th clicks and manually execute the sort.
+  onColumnSort(e: Event) {
+    e.stopPropagation();
+    const th = e.currentTarget as HTMLTableCellElement;
+    const columnIndex = this.dt.column(th).index();
+    const isDefaultSort = (
+      !th.classList.contains('sorting_asc') && !th.classList.contains('sorting_desc')
+    );
+    const direction = isDefaultSort || th.classList.contains('sorting_desc') ? 'asc' : 'desc';
+    const userSort = [columnIndex, direction];
+    if (this.dt.rowGroup().enabled()) {
+      const [rowGroupSort,] = this.dt.order();
+      this.dt.order([rowGroupSort, userSort]).draw();
+    } else {
+      this.dt.order([userSort]).draw();
+    }
   }
 
   search({ filters, searchVal, tsSearchResults }: SearchParams) {

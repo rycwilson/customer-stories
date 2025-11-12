@@ -8,6 +8,8 @@ export default class PromotedStoriesController extends ResourceController {
   };
   declare rowGroupDataSourceValue: string;
 
+  // toggleColumns = toggleColumnVisibility;
+
   get tableConfig() {
     return dataTableConfig(this.rowGroupDataSourceValue);
   }

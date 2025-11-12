@@ -1,6 +1,6 @@
 import type { Config, Api } from 'datatables.net-bs';
 
-export const colIndices = {
+const colIndices = {
   customer: 1,
   customerWin: 2,
   curator: 3,
@@ -9,7 +9,11 @@ export const colIndices = {
   actions: 6
 }
 
-export function dataTableConfig(rowGroupDataSource: 'customer.name' | 'none'): Config {
+export function toggleColumnVisibility(dt: Api<any>, rowGroupDataSource: string) {
+  dt.column(colIndices.customer).visible(!rowGroupDataSource);
+}
+
+export function dataTableConfig(rowGroupDataSource: string): Config {
   const rowGroupColumn = (() => {
     switch (rowGroupDataSource) {
       case 'customer.name':
@@ -26,15 +30,9 @@ export function dataTableConfig(rowGroupDataSource: 'customer.name' | 'none'): C
       zeroRecords: 'No Customer Wins found'
     },
 
-    // orderFixed: rowGroupColumn ? [rowGroupColumn, 'asc'] : [], // the row grouping column (all sorting will happen secondarily to this)
-    // order: [[colIndices.customerWin, 'asc']],
-    order: (() => {
-      if (rowGroupColumn) {
-        return [[rowGroupColumn, 'asc'], [colIndices.customerWin, 'asc']];
-      } else {
-        return [[colIndices.customerWin, 'asc']];
-      }
-    })(),
+    order: rowGroupColumn ?
+      [[rowGroupColumn, 'asc'], [colIndices.customerWin, 'asc']] :
+      [[colIndices.customer, 'asc']],
 
     columns: [
       {
@@ -124,23 +122,27 @@ export function dataTableConfig(rowGroupDataSource: 'customer.name' | 'none'): C
         visible: false 
       },
       { 
-        targets: [0, colIndices.customer, colIndices.story, colIndices.actions], 
+        targets: [0, colIndices.story, colIndices.actions], 
         orderable: false 
       },
       {
         targets: [0, colIndices.story, colIndices.actions],
         searchable: false,
       },
-      // { targets: [colIndices.curator, colIndices.story],  width: '0' },  // hidden
       { targets: [0], width: '1.75em' },
       { targets: colIndices.customerWin, width: 'auto' },
       { targets: colIndices.status, width: '12em' },
       { targets: colIndices.actions, width: '3.5em' }
     ],
 
-    rowGroup: !!rowGroupDataSource && {
+    rowGroup: {
+      enable: !!rowGroupDataSource,
       dataSrc: rowGroupDataSource,
-      startRender(rows: Api<any>, groupValue: string) {
+      startRender: function (
+        this: { dataSrc: () => string, s: { dt: Api<any> } },
+        rows: Api<any>, 
+        groupValue: string
+      ) {
         const { customer } = rows.data()[0];
         return $('<tr />').append(`
           <td colspan="4"> 

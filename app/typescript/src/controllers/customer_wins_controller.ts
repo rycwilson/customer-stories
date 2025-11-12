@@ -1,12 +1,14 @@
 import ResourceController from "./resource_controller";
-import { dataTableConfig } from '../customer_wins/customer_wins';
+import { dataTableConfig, toggleColumnVisibility } from '../customer_wins/customer_wins';
 
 export default class CustomerWinsController extends ResourceController {
   static values = {
     ... super.values, 
-    rowGroupDataSource: { type: String, default: 'customer.name' }
+    rowGroupDataSource: { type: String }
   };
-  declare rowGroupDataSourceValue: 'customer.name' | 'none';
+  declare rowGroupDataSourceValue: 'customer.name' | '';
+
+  toggleColumns = toggleColumnVisibility;
 
   get tableConfig() {
     return dataTableConfig(this.rowGroupDataSourceValue);

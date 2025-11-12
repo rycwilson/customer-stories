@@ -95,14 +95,10 @@ export default class ResourceController extends Controller<HTMLElement> {
     }
   }
 
-  rowGroupDataSourceValueChanged(newVal: string, oldVal: string) {
-    if (!this.tableInitialized) return;
+  rowGroupDataSourceValueChanged(source: string) {
+    // if (!this.tableInitialized) return;
 
-    if (newVal === 'none') {
-      this.datatableTarget.removeAttribute('data-datatable-row-group-data-source-value');
-    } else {
-      this.datatableTarget.setAttribute('data-datatable-row-group-data-source-value', newVal);
-    }
+    this.datatableTarget.setAttribute('data-datatable-row-group-data-source-value', source);
   }
   
   filtersValueChanged(newVal: ResourceFilters, oldVal: ResourceFilters) {
