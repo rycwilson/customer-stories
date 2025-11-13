@@ -51,6 +51,7 @@ export default class TableDisplayOptionsController extends Controller {
 
   onChangeRowGroupDataSource({ target }: { target: HTMLInputElement }) {
     (this.resourceOutlet as ResourceControllerWithDatatable).rowGroupDataSourceValue = target.value;
+    Cookies.set(`csp-${this.resourceOutlet.identifier}-row-group-data-source`, target.value);
   }
 
   // Filter keys are kebab-cased due to:
