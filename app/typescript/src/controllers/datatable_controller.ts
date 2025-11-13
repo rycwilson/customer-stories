@@ -110,7 +110,10 @@ export default class DatatableController extends Controller<HTMLTableElement> {
     if (this.rowGroupColumnIndex) {
       this.dt.rowGroup().enable();
       this.dt.rowGroup().dataSrc(source);
-      this.dt.order([[this.rowGroupColumnIndex, 'asc'], [sortColumnIndex, sortDirection]]); 
+      this.dt.order([
+        [this.rowGroupColumnIndex, sortColumnIndex === this.rowGroupColumnIndex ? sortDirection : 'asc'], 
+        [sortColumnIndex, sortDirection]
+      ]); 
     } else {
       this.dt.rowGroup().disable();
       this.dt.order([[sortColumnIndex, sortDirection]]); // current sort
