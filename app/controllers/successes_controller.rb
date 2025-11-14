@@ -68,6 +68,7 @@ class SuccessesController < ApplicationController
     @success = Success.new(win_attrs)
     if @success.save
       # redirect_to('/prospect', status: :see_other, notice: 'Customer Win was created successfully.')
+      flash.now[:notice] = 'Customer Win was created successfully.'
 
       # TODO: We also need to pass any newly created customer or contributions to the response
       @row_data = render_to_string( \
