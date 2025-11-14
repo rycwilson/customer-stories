@@ -1,11 +1,20 @@
-= select_tag( \
-    nil,
-    grouped_options_for_select(search_options),
-    include_blank: true,
-    placeholder: 'Search',
-    class: 'form-control',
-    data: { \
-      controller: 'tomselect', 
-      tomselect_kind_value: 'search', 
-      "#{resource_ctrl_id}_target" => 'searchSelect',
-      dashboard_target: "#{resource_name}SearchSelect" })
+= content_tag( \
+        :div,
+        id: "#{resource_ctrl_id}-search",
+        class: 'search-table', 
+        data: { \
+          action: [ \
+            "tomselect:change-search->#{resource_ctrl_id}#onChangeSearchSelect",
+            "tomselect:search->#{resource_ctrl_id}#onTomselectSearch"].join(' ') }) do
+  
+  = select_tag( \
+      nil,
+      grouped_options_for_select(search_options),
+      include_blank: true,
+      placeholder: 'Search',
+      class: 'form-control',
+      data: { \
+        controller: 'tomselect', 
+        tomselect_kind_value: 'search', 
+        "#{resource_ctrl_id}_target" => 'searchSelect',
+        dashboard_target: "#{resource_name}SearchSelect" })

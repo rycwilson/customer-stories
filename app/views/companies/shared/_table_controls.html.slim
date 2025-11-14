@@ -32,18 +32,6 @@
             |&nbsp;&nbsp;Preferences
 
   div
-    / .search-table {
-    /   data-action="tomselect:change-search->#{resource_ctrl_id}#onChangeSearchSelect tomselect:search->#{resource_ctrl_id}#onTomselectSearch"
-    = content_tag( \
-        :div,
-        id: "#{resource_ctrl_id}-search",
-        class: 'search-table', 
-        data: { \
-          action: [ \
-            "tomselect:change-search->#{resource_ctrl_id}#onChangeSearchSelect",
-            "tomselect:search->#{resource_ctrl_id}#onTomselectSearch"].join(' ') }) do
-      /label
-        i.fa.fa-search
-      = render('companies/shared/search_select', search_options:, resource_ctrl_id:, resource_name:)
-
+    = render('companies/shared/search_select', resource_ctrl_id:, resource_name:, search_options:)
+    
     = content_tag(:div, '', class: 'help-block text-right', data: { "#{resource_ctrl_id}_target" => 'filterResults' })
