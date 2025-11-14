@@ -91,16 +91,18 @@ class Success < ApplicationRecord
   accepts_nested_attributes_for(:contributions, allow_destroy: false)
 
   scope :real, -> { where(placeholder: false) }
-  scope :for_datatable, lambda {
-    real
-      .joins(:customer, :curator)
-      .left_outer_joins(:story)
+  scope :for_datatable, lambda { |success_id = nil|
+    query =
+      real
       .select(
         :id, :name, :created_at, :win_story_completed,
         customers: { id: :customer_id, name: :customer_name },
         users: { id: :curator_id, first_name: :curator_first, last_name: :curator_last },
         stories: { id: :story_id, title: :story_title }
       )
+      .joins(:customer, :curator)
+      .left_outer_joins(:story)
+    success_id ? query.where(id: success_id) : query
   }
 
   before_save { self.is_new_record = true if new_record? }
