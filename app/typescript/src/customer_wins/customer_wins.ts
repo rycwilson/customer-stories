@@ -14,6 +14,7 @@ export function toggleColumnVisibility(dt: Api<any>, rowGroupDataSource: string)
 }
 
 export function dataTableConfig(rowGroupDataSource: string): Config {
+  console.log('configuring customer wins')
   const rowGroupColumn = (() => {
     switch (rowGroupDataSource) {
       case 'customer.name':

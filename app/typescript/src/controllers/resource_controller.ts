@@ -1,9 +1,11 @@
+import type DashboardController from "./dashboard_controller";
 import { Controller } from "@hotwired/stimulus";
 import { getJSON } from '../utils';
 import { initDisplayOptions, search as searchTable } from '../tables';
 
 export default class ResourceController extends Controller<HTMLElement> {
   static outlets = ['dashboard'];
+  declare readonly dashboardOutlet: DashboardController;
 
   static targets = [
     'searchSelect', 
@@ -22,15 +24,22 @@ export default class ResourceController extends Controller<HTMLElement> {
     dataPath: String,
     init: { type: Boolean, default: false },
     filters: { type: Object },
-    displayOptionsHtml: String
+    displayOptionsHtml: String,
+    newRecord: { type: Object, default: undefined }
   }
   declare readonly dataPathValue: string;
   declare readonly initValue: boolean;
   declare filtersValue: ResourceFilters;
   declare readonly displayOptionsHtmlValue: string;
+  declare newRecordValue: CustomerWin | Contribution | undefined;
 
   connect() {
     if (this.hasDisplayOptionsBtnTarget) initDisplayOptions.call(this);
+  }
+
+  newRecordValueChanged(record: CustomerWin | Contribution) {
+    CSP[this.resourceName].push(record);
+    this.datatableTarget.setAttribute('data-datatable-reload-value', 'true');
   }
 
   get resourceName() {
@@ -73,6 +82,9 @@ export default class ResourceController extends Controller<HTMLElement> {
   }
 
   onTableInitialized(e: CustomEvent) {
+    if (this.identifier === 'customer-wins') {
+      (window as any).dt = e.detail.dt; 
+    }
     setTimeout(() => {
       e.detail.dt.one('draw', () => {
         this.dispatch('ready', { detail: { resourceName: this.resourceName } });

@@ -1,6 +1,16 @@
+import type { TurboSubmitStartEvent, TurboFrameLoadEvent } from '@hotwired/turbo';
+import type ResourceController from './resource_controller';
 import FormController from './form_controller';
+// import { FetchRequest } from '@rails/request.js';
 
 export default class NewCustomerWinController extends FormController<NewCustomerWinController> {
+  static outlets = ['customer-wins'];
+  declare customerWinsOutlet: ResourceController;
+
+  static targets = [...super.targets, 'response'];
+  declare readonly responseTarget: HTMLDivElement;
+  declare readonly hasResponseTarget: boolean;
+
   // Any shared targets can be defined through `static targets` in the parent controller
   // When narrowing the `this` context (as in FormController.prototype.onChangeContact), declarations must appear in each subclass 
   declare readonly contributorSelectTarget: TomSelectInput;
@@ -11,9 +21,26 @@ export default class NewCustomerWinController extends FormController<NewCustomer
   declare readonly referrerFieldTargets: HTMLInputElement[];
   declare readonly customerContactBoolFieldTarget: HTMLInputElement;
 
+  declare responseObserver: MutationObserver;
+
   connect() {
     super.connect();
     this.autofillNewContactPasswords();
+
+    this.responseObserver = new MutationObserver(_ => {
+      if (this.hasResponseTarget) {
+        const rowData = JSON.parse(this.responseTarget.dataset.rowData as string);
+        this.customerWinsOutlet.newRecordValue = rowData;
+
+        // Wait for table to draw
+        setTimeout(() => this.customerWinsOutlet.dashboardOutlet.modalOutlet.hide());
+      }
+    })
+    this.responseObserver.observe(this.element, { childList: true, subtree: false });
+  }
+
+  disconnect() {
+    this.responseObserver.disconnect();
   }
   
   // onChangeSource({ target: input }: { target: EventTarget }) {

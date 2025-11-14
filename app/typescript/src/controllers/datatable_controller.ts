@@ -27,11 +27,13 @@ export default class DatatableController extends Controller<HTMLTableElement> {
   static values = { 
     init: { type: Boolean, default: false },
     searchParams: Object,
-    rowGroupDataSource: { type: String }
+    rowGroupDataSource: { type: String },
+    reload: { type: Boolean, default: false }
   };
   declare initValue: boolean;
   declare searchParamsValue: SearchParams;
-  declare rowGroupDataSourceValue: string | undefined;
+  declare rowGroupDataSourceValue: string;
+  declare reloadValue: boolean;
 
   declare dt: Api<any>;
   declare searchDebounceTimer: number;
@@ -121,6 +123,14 @@ export default class DatatableController extends Controller<HTMLTableElement> {
     this.dt.draw();
   }
 
+  reloadValueChanged(shouldReload: boolean) {
+    if (shouldReload) {
+      const data = CSP[this.resourceOutlet.resourceName as ResourceName];
+      this.dt.clear().rows.add(data).draw();
+      this.reloadValue = false;
+    }
+  }
+
   // We want to preserve row group sorting (if present) when the user sorts a column.
   // Intercept th clicks and manually execute the sort.
   onColumnSort(e: Event) {
@@ -176,3 +186,5 @@ export default class DatatableController extends Controller<HTMLTableElement> {
     $(this.element).on('draw.dt', formatText);
   }
 }
+
+// Contains AI-generated edits.

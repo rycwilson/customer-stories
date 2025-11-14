@@ -67,8 +67,27 @@ class SuccessesController < ApplicationController
 
     @success = Success.new(win_attrs)
     if @success.save
-      redirect_to('/prospect', status: :see_other, notice: 'Customer Win was created successfully.')
+      # redirect_to('/prospect', status: :see_other, notice: 'Customer Win was created successfully.')
+
+      # TODO: We also need to pass any newly created customer or contributions to the response
+      @row_data = render_to_string( \
+        partial: 'successes/show',
+        formats: [:json],
+        locals: { win: Success.for_datatable(@success.id).take }
+      )
+      # TODO: if @success.contributions.present?
+      # If any contributions were created, pass them to the response so the table is reloaded
+      # end
+      respond_to do |format|
+        format.turbo_stream {}
+
+        # What a pure json response utilizing jbuilder would look like:
+        # format.json do
+        #   render(partial: 'successes/show', locals: { win: Success.for_datatable(@success.id).take })
+        # end
+      end
     else
+      # TODO: test that server side validation works when there is a duplicate name
       @errors = @success.errors.full_messages
       render :new
     end
