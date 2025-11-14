@@ -1,0 +1,11 @@
+= select_tag( \
+    nil,
+    grouped_options_for_select(search_options),
+    include_blank: true,
+    placeholder: 'Search',
+    class: 'form-control',
+    data: { \
+      controller: 'tomselect', 
+      tomselect_kind_value: 'search', 
+      "#{resource_ctrl_id}_target" => 'searchSelect',
+      dashboard_target: "#{resource_name}SearchSelect" })
