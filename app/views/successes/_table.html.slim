@@ -7,17 +7,15 @@ table#successes-table.table {
   / NOTE: The current user is the curator for a new Customer Win, not the curator_id filter
   = render( \
       'companies/shared/table_controls',
-      { company:,
-        caption: 'Customer Wins',
-        resource_name: 'customerWins',
-        resource_ctrl_id: 'customer-wins',
-        new_item: { \
-          name: 'Customer Win',
-          path: new_company_success_path(company),
-          modal_class_name: 'new-customer-win' },
-        search_options: { \
-          'Customer' => company.customers.map(&:select_option),
-          'Customer Win' => company.successes.real.map(&:select_option) }})  
+      company:,
+      caption: 'Customer Wins',
+      resource_name: 'customerWins',
+      resource_ctrl_id: 'customer-wins',
+      new_item: { \
+        name: 'Customer Win',
+        path: new_company_success_path(company),
+        modal_class_name: 'new-customer-win' },
+      search_options: company.successes.search_options)  
 
   thead
     tr

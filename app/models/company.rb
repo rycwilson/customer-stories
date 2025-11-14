@@ -8,12 +8,31 @@ class Company < ApplicationRecord
   has_many :users # no dependent: :destroy users, handle more gracefully
   has_many :curators, -> { order(:last_name) }, class_name: 'User'
   has_many :customers, -> { order(:name) }, dependent: :destroy
-  has_many(:successes, -> { order(:name) }, through: :customers)
+  has_many(:successes, -> { order(:name) }, through: :customers) do
+    def search_options
+      company = proxy_association.owner
+      {
+        'Customer' => company.customers.map(&:select_option),
+        'Customer Win' => company.successes.real.map(&:select_option)
+      }
+    end
+  end
   has_many(
     :contributions,
     -> { includes(:contributor, :referrer, success: { customer: {} }) },
     through: :successes
-  )
+  ) do
+    def search_options
+      company = proxy_association.owner
+      {
+        'Customer' => company.customers.map(&:select_option),
+        'Customer Win' => company.successes.real.map(&:select_option),
+        'Contributor' => company.contributors.sort_by(&:last_name).map do |user|
+          [user.full_name, "contributor-#{user.id}"]
+        end
+      }
+    end
+  end
   has_many :contributors, -> { distinct.reorder(:last_name) }, through: :customers
   has_many :referrers, -> { distinct.reorder(:last_name) }, through: :contributions
 

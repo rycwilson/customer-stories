@@ -17,10 +17,7 @@ table.table {
         name: 'Contributor',
         path: new_success_contribution_path(story ? story.success_id : 0),
         modal_class_name: 'new-contribution' },
-      search_options: story ? {} : { \
-        'Customer' => company.customers.map(&:select_option),
-        'Customer Win' => company.successes.real.map(&:select_option),
-        'Contributor' => company.contributors.sort_by(&:last_name).map { |user| [user.full_name, "contributor-#{user.id}"] }})
+      search_options: story ? {} : company.contributions.search_options)
 
   thead
     tr
