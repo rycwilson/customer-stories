@@ -1,7 +1,5 @@
-import type { TurboSubmitStartEvent, TurboFrameLoadEvent } from '@hotwired/turbo';
 import type ResourceController from './resource_controller';
 import FormController from './form_controller';
-// import { FetchRequest } from '@rails/request.js';
 
 export default class NewCustomerWinController extends FormController<NewCustomerWinController> {
   static outlets = ['customer-wins'];
