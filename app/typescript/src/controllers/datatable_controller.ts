@@ -1,4 +1,5 @@
 import { Controller } from '@hotwired/stimulus';
+import { debounce } from '../utils';
 import type CustomerWinsController from './customer_wins_controller';
 import type ContributionsController from './contributions_controller';
 import type PromotedStoriesController from './promoted_stories_controller';
@@ -39,6 +40,7 @@ export default class DatatableController extends Controller<HTMLTableElement> {
   declare searchDebounceTimer: number;
   
   handleColumnSort = this.onColumnSort.bind(this);
+  debouncedUpdateComponents = debounce(this.updateComponents.bind(this), 75);
 
   get resourceOutlet(): ResourceControllerWithDatatable {
     if (this.hasCustomerWinsOutlet) return this.customerWinsOutlet;
@@ -59,10 +61,10 @@ export default class DatatableController extends Controller<HTMLTableElement> {
           th.removeEventListener('click', ctrl.handleColumnSort, true);
           th.addEventListener('click', ctrl.handleColumnSort, true);
         });
+        ctrl.debouncedUpdateComponents();
         ctrl.dispatch('drawn');
       },
       initComplete(this: any, settings: object) {
-        ctrl.cloneFilterResults();
         ctrl.dispatch('init', { detail: { dt: this.api() } });
       }
     }
@@ -175,16 +177,34 @@ export default class DatatableController extends Controller<HTMLTableElement> {
     dtSearch.draw();
   }
 
-  cloneFilterResults() {
-    const originalResults = this.element.nextElementSibling;
-    if (!originalResults) return;
-    const clone = originalResults.cloneNode() as HTMLElement;
-    const formatText = () => clone.textContent = originalResults.textContent?.replace(/\sentries/g, '') || null;
-    clone.id = `${originalResults.id}--clone`;
-    formatText();
-    this.resourceOutlet.filterResultsTarget.appendChild(clone);
-    $(this.element).on('draw.dt', formatText);
+  updateComponents() {
+    const info = this.element.parentElement?.querySelector(':scope > .dataTables_info');
+    const paginate = this.element.parentElement?.querySelector(':scope > .dataTables_paginate');
+    if (info instanceof HTMLElement) {
+      const infoClone = info.cloneNode() as HTMLElement;
+      infoClone.id = `${info.id}--clone`;
+      infoClone.textContent = (
+        info.textContent?.match(/(?<entries>\d+ to \d+ of \d+)/)?.groups?.entries || null
+      );
+      this.resourceOutlet.infoTarget.replaceChildren(infoClone);
+    }
+    if (paginate instanceof HTMLElement) {
+      const paginateClone = paginate.cloneNode(true) as HTMLElement;
+      paginateClone.id = `${paginate.id}--clone`;
+      const prevBtn = <HTMLAnchorElement>paginate.querySelector('.paginate_button.previous > a');
+      const prevBtnClone = <HTMLAnchorElement>paginateClone.querySelector('.paginate_button.previous > a');
+      prevBtnClone.href = "javascript:;"
+      const nextBtn = <HTMLAnchorElement>paginate.querySelector('.paginate_button.next > a');
+      const nextBtnClone = <HTMLAnchorElement>paginateClone.querySelector('.paginate_button.next > a');
+      nextBtnClone.href = "javascript:;"
+      const pageBtnClones = [...paginateClone.querySelectorAll('.paginate_button > a')]
+        .filter(btn => btn !== prevBtnClone && btn !== nextBtnClone);
+      prevBtnClone.innerHTML = '<i class="fa fa-chevron-left"></i>';
+      nextBtnClone.innerHTML = '<i class="fa fa-chevron-right"></i>';
+      pageBtnClones.forEach(btn => btn.remove());
+      this.resourceOutlet.paginateTarget.replaceChildren(paginateClone);
+      prevBtnClone.addEventListener('click', (e) => prevBtn.click());
+      nextBtnClone.addEventListener('click', (e) => nextBtn.click());
+    }
   }
 }
-
-// Contains AI-generated edits.

@@ -71,6 +71,11 @@ table.dataTable {
       @include max-lines(1);
     }
   }
+
+  & ~ .dataTables_info,
+  & ~ .dataTables_paginate {
+    display: none;
+  }
 }
 
 .table-bordered > thead > tr > th, 
@@ -93,4 +98,10 @@ table.dataTable {
 .table > tfoot > tr > th, 
 .table > tfoot > tr > td {
   vertical-align: middle;
+}
+
+.dataTables_paginate {
+  .pagination > li > a {
+    @include button-variant(darken($btn-default-color, 2%), $light-gray, darken($btn-default-border, 2%));
+  }
 }
