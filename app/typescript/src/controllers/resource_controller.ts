@@ -9,12 +9,14 @@ export default class ResourceController extends Controller<HTMLElement> {
 
   static targets = [
     'searchSelect', 
-    'filterResults',
+    'info',
+    'paginate',
     'displayOptionsBtn',
     'datatable'
   ];
   declare readonly searchSelectTarget: TomSelectInput;
-  declare readonly filterResultsTarget: HTMLDivElement;
+  declare readonly infoTarget: HTMLElement;
+  declare readonly paginateTarget: HTMLElement;
   declare readonly datatableTarget: HTMLDivElement;
   declare readonly hasDatatableTarget: boolean;
   declare readonly displayOptionsBtnTarget: HTMLButtonElement;
