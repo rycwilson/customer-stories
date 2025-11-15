@@ -37,13 +37,14 @@ interface CustomerStoriesApp {
   init(): void;
 }
 
-type AdImage = 'SquareImage' | 'LandscapeImage' | 'SquareLogo' | 'LandscapeLogo';
 type FlashHash = Partial<{ readonly [key in 'notice' | 'alert' | 'info' | 'warning']: string }>;
+type Toast = { flash?: FlashHash, errors?: string[] }
 type ResourceName = 'customerWins' | 'contributions' | 'storyContributions' | 'stories' | 'promotedStories' | 'visitors' | 'activity';
 type ResourceFilters = { [key: string]: boolean | number | null };
 type ResourceControllerWithDatatable = (
   CustomerWinsController | ContributionsController | PromotedStoriesController
 );
+type AdImage = 'SquareImage' | 'LandscapeImage' | 'SquareLogo' | 'LandscapeLogo';
 type ScreenSize = 'xs' | 'sm' | 'md-lg';
 type TomSelectInput = HTMLSelectElement & TomInput;
 type TomSelectKind = 'search' | 'curator' | 'status' | 'customer' | 'category' | 'product' | 'story' | 'storyTag' | 'contributor' | 'referrer' | 'invitationTemplate' | 'dateRange';
