@@ -136,7 +136,7 @@
 .search-table {
   @include flex-row-center;
   flex-grow: 1;
-  max-width: 20em;
+  max-width: 22em;
 
   
   // i {
@@ -265,6 +265,7 @@ td.toggle-child {
 
   .popover-content {
     padding: 1em 1.75em;
+    // background-color: $light-gray;
   }
 
   // &.customer-wins {
