@@ -69,7 +69,6 @@ export default class ToastController extends Controller {
   }
 
   errorsValueChanged(errors: string[]) {
-    console.log('errors:', errors)
     errors.forEach(error => { 
       bootoast.toast({ ...baseOptions, type: 'danger', message: error, timeout: false, position: 'top-center' });
     });
