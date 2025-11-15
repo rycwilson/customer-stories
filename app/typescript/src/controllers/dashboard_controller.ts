@@ -1,6 +1,7 @@
 import { Controller } from "@hotwired/stimulus";
 import Cookies from 'js-cookie';
 import type ModalController from './modal_controller';
+import type ToastController from './toast_controller';
 import { parseDatasetObject } from '../utils';
 import { visit as turboVisit, type TurboVisitEvent } from '@hotwired/turbo';
 
@@ -23,8 +24,9 @@ interface ReadyState {
 };
 
 export default class DashboardController extends Controller {
-  static outlets = ['modal'];
+  static outlets = ['modal', 'toast'];
   declare readonly modalOutlet: ModalController;
+  declare readonly toastOutlet: ToastController;
 
   static targets = [
     'tab', 
@@ -281,6 +283,11 @@ export default class DashboardController extends Controller {
     );
   }
 
+  showToast({ detail }: { detail: Toast }) {
+    if (detail.flash) this.toastOutlet.flashValue = detail.flash;
+    if (detail.errors?.length) this.toastOutlet.errorsValue = detail.errors;
+  }
+  
   setNavCookie({ currentTarget: link }: { currentTarget: HTMLAnchorElement }) {
     const href = link.getAttribute('href') as string; 
     Cookies.set(`csp-${this.activeTabValue || 'edit-story'}-tab`, href);

@@ -1,8 +1,14 @@
-main.dashboard.hidden-xs {
-  data-controller="dashboard" 
-  data-dashboard-active-tab-value=@workflow_stage
-  data-dashboard-modal-outlet="#main-modal"
-  data-action="stories:change-curator->dashboard#onChangeStoriesCurator" }
+= content_tag( \
+    :div,
+    class: 'dashboard hidden-xs',
+    data: { \
+      controller: 'dashboard', 
+      dashboard_active_tab_value: @workflow_stage,
+      dashboard_modal_outlet: '#main-modal',
+      dashboard_toast_outlet: '#toaster',
+      action: [ \
+        'stories:change-curator->dashboard#onChangeStoriesCurator',
+        'toast->dashboard#showToast'].join(' ') }) do
 
   = render('shared/navbars/company_nav', { company: @company, workflow_stage: @workflow_stage })
   
