@@ -169,4 +169,15 @@ export default class ResourceController extends Controller<HTMLElement> {
   //     });
   //   }, { once: true });
   // }
+
+  validateNewItem(e: Event) {
+    if (this.filtersValue.curator && this.filtersValue.curator !== CSP.currentUser!.id) {
+      const mesg = "Can't add a new item with Curator preference set to another user";
+      e.preventDefault();
+      e.stopImmediatePropagation();
+      this.element.dispatchEvent(
+        new CustomEvent('toast', { detail: { errors: [mesg] }, bubbles: true })
+      );
+    }
+  }
 }
