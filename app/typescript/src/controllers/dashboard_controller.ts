@@ -283,9 +283,9 @@ export default class DashboardController extends Controller {
     );
   }
 
-  showToast({ detail }: { detail: Toast }) {
-    if (detail.flash) this.toastOutlet.flashValue = detail.flash;
-    if (detail.errors?.length) this.toastOutlet.errorsValue = detail.errors;
+  showToast({ detail: toast }: { detail: Toast }) {
+    if (toast.flash) this.toastOutlet.flashValue = toast.flash;
+    if (toast.errors?.length) this.toastOutlet.errorsValue = toast.errors;
   }
   
   setNavCookie({ currentTarget: link }: { currentTarget: HTMLAnchorElement }) {
