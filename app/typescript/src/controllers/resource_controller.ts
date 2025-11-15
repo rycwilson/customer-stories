@@ -121,7 +121,7 @@ export default class ResourceController extends Controller<HTMLElement> {
       switch (this.resourceName) {
         case 'customerWins': return 'success';
         case 'contributions': return 'contribution';
-        default: return '';
+        default: return undefined;
       }
     })();
     if (!columnName) throw new Error('Unrecognized resource name for new record handling.');
@@ -135,7 +135,7 @@ export default class ResourceController extends Controller<HTMLElement> {
           `tr[data-customer-win-row-data-value*='"id":${record.id}'] td.toggle-child button`
           );
           toggleChildBtn.click();
-        })
+        });
       },
       { once: true }
     );
