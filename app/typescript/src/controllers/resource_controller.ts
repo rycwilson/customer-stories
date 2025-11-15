@@ -39,11 +39,6 @@ export default class ResourceController extends Controller<HTMLElement> {
     if (this.hasDisplayOptionsBtnTarget) initDisplayOptions.call(this);
   }
 
-  newRecordValueChanged(record: CustomerWin | Contribution) {
-    CSP[this.resourceName].push(record);
-    this.datatableTarget.setAttribute('data-datatable-reload-value', 'true');
-  }
-
   get resourceName() {
     return this.element.dataset.resourceName as ResourceName;
   }
@@ -118,6 +113,52 @@ export default class ResourceController extends Controller<HTMLElement> {
     if (this.tableInitialized) {
       searchTable.call(this);
     }
+  }
+
+  newRecordValueChanged(record: CustomerWin | Contribution) {
+    CSP[this.resourceName].push(record);
+    const columnName = (() => {
+      switch (this.resourceName) {
+        case 'customerWins': return 'success';
+        case 'contributions': return 'contribution';
+        default: return '';
+      }
+    })();
+    if (!columnName) throw new Error('Unrecognized resource name for new record handling.');
+    
+    // Reload will not cause a redraw, but changing searchSelect will
+    this.element.addEventListener(
+      'datatable:drawn', 
+      () => {
+        setTimeout(() => {
+          const toggleChildBtn = <HTMLButtonElement>this.element.querySelector(
+          `tr[data-customer-win-row-data-value*='"id":${record.id}'] td.toggle-child button`
+          );
+          toggleChildBtn.click();
+        })
+      },
+      { once: true }
+    );
+    this.datatableTarget.setAttribute('data-datatable-reload-value', this.resourceName);
+    setTimeout(() => this.searchSelectTarget.tomselect.setValue(`${columnName}-${record.id}`));
+    
+    // TODO: The above approach is working reasonable well, but it may be better to search the
+    // table directly instead of changing searchSelect.
+    // 1. Change this.filterValue as necessary to ensure the search results include the record
+    // 2. Set the curator field in the form to readonly, else we may need to change curator 
+    // preference to another user and that will be weird given that curator applies across 
+    // the dashboard
+    // 3. For contributions, changing searchSelect won't even work because contributions
+    // are not among the options (perhaps they should be, even if hidden)
+
+    // TODO: Show the new record via table search
+    // this.datatableTarget.setAttribute(
+    //   'data-datatable-search-params-value',
+    //   JSON.stringify(...)
+    // )
+
+    // TODO: After searching, redraw
+    // this.datatableTarget.setAttribute('data-datatable-redraw-value', 'true');
   }
 
   // addSyncListener(syncResource: (ctrl: ResourceController) => void) {

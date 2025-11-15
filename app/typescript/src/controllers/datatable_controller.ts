@@ -28,13 +28,15 @@ export default class DatatableController extends Controller<HTMLTableElement> {
   static values = { 
     init: { type: Boolean, default: false },
     searchParams: Object,
-    rowGroupDataSource: { type: String },
-    reload: { type: Boolean, default: false }
+    rowGroupDataSource: String,
+    reload: String,
+    redraw: Boolean
   };
   declare initValue: boolean;
   declare searchParamsValue: SearchParams;
   declare rowGroupDataSourceValue: string;
-  declare reloadValue: boolean;
+  declare reloadValue: string;
+  declare redrawValue: boolean;
 
   declare dt: Api<any>;
   declare searchDebounceTimer: number;
@@ -125,11 +127,18 @@ export default class DatatableController extends Controller<HTMLTableElement> {
     this.dt.draw();
   }
 
-  reloadValueChanged(shouldReload: boolean) {
-    if (shouldReload) {
-      const data = CSP[this.resourceOutlet.resourceName as ResourceName];
-      this.dt.clear().rows.add(data).draw();
-      this.reloadValue = false;
+  reloadValueChanged(resourceName: ResourceName | '') {
+    if (!resourceName) return;
+
+    const data = CSP[resourceName];
+    this.dt.clear().rows.add(data); //.draw();
+    this.reloadValue = '';
+  }
+
+  redrawValueChanged(shouldRedraw: boolean) {
+    if (shouldRedraw) {
+      this.dt.draw(false); // false => hold current paging
+      this.redrawValue = false;
     }
   }
 
