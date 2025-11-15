@@ -18,5 +18,10 @@
 /- TODO: if customer was created 
   = replace the customer filter under Curate
 
-= turbo_stream.append 'new-customer-win-form' do
-  = content_tag(:div, '', data: { new_customer_win_target: 'response', row_data: @row_data })
+= turbo_stream.append('new-customer-win-form') do
+  = content_tag( \
+      :div,
+      '',
+      data: { \
+        new_customer_win_target: 'response', 
+        row_data: @row_data })
