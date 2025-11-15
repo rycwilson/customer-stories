@@ -67,18 +67,19 @@ class SuccessesController < ApplicationController
 
     @success = Success.new(win_attrs)
     if @success.save
-      # redirect_to('/prospect', status: :see_other, notice: 'Customer Win was created successfully.')
-      flash.now[:notice] = 'Customer Win was created successfully.'
-
-      # TODO: We also need to pass any newly created customer or contributions to the response
+      flash.now[:notice] = 'Customer Win was created successfully'
       @row_data = render_to_string( \
         partial: 'successes/show',
         formats: [:json],
         locals: { win: Success.for_datatable(@success.id).take }
       )
-      # TODO: if @success.contributions.present?
-      # If any contributions were created, pass them to the response so the table is reloaded
-      # end
+
+      # TODO: We also need to pass any newly created customer or contributions to the response
+      # @contributions_row_data = @success.contributions.present? && render_to_string( \
+      #   partial: 'contributions/show',
+      #   formats: [:json],
+      #   locals: { contributions: @success.contributions }
+      # )
       respond_to do |format|
         format.turbo_stream {}
 
