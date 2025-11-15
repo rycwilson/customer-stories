@@ -1,11 +1,11 @@
 = content_tag( \
-        :div,
-        id: "#{resource_ctrl_id}-search",
-        class: 'search-table', 
-        data: { \
-          action: [ \
-            "tomselect:change-search->#{resource_ctrl_id}#onChangeSearchSelect",
-            "tomselect:search->#{resource_ctrl_id}#onTomselectSearch"].join(' ') }) do
+    :div,
+    id: "#{resource_ctrl_id}-search",
+    class: 'search-table', 
+    data: { \
+      action: [ \
+        "tomselect:change-search->#{resource_ctrl_id}#onChangeSearchSelect",
+        "tomselect:search->#{resource_ctrl_id}#onTomselectSearch"].join(' ') }) do
   
   = select_tag( \
       nil,

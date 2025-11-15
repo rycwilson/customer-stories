@@ -7,6 +7,8 @@
         = caption
                 
     div
+      = render('companies/shared/search_select', resource_ctrl_id:, resource_name:, search_options:)
+
       - if defined?(new_item)
         = link_to( \
             new_item[:path],
@@ -32,6 +34,5 @@
             |&nbsp;&nbsp;Preferences
 
   div
-    = render('companies/shared/search_select', resource_ctrl_id:, resource_name:, search_options:)
-    
-    = content_tag(:div, '', class: 'help-block text-right', data: { "#{resource_ctrl_id}_target" => 'filterResults' })
+    = content_tag(:div, '', class: 'help-block', data: { "#{resource_ctrl_id}_target" => 'info' })
+    = content_tag(:div, '', data: { "#{resource_ctrl_id}_target" => 'paginate' })
