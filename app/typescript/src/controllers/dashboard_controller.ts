@@ -13,16 +13,6 @@ enum DashboardTab {
   Measure = 'measure'
 }
 
-interface ReadyState {
-  [key: string]: boolean;
-  customerWins: boolean;
-  contributions: boolean;
-  storyContributions: boolean;
-  promotedStories: boolean;
-  visitors: boolean;
-  activity: boolean;
-};
-
 export default class DashboardController extends Controller {
   static outlets = ['modal', 'toast'];
   declare readonly modalOutlet: ModalController;
@@ -78,7 +68,7 @@ export default class DashboardController extends Controller {
     promote: 0,
     measure: 0 
   };
-  readyState: ReadyState = new Proxy(
+  readyState = new Proxy(
     {
       customerWins: false,
       contributions: false,
@@ -88,7 +78,7 @@ export default class DashboardController extends Controller {
       visitors: false,
       activity: false
     },
-    { set: this.onReadyStateChange.bind(this) }
+    { set: this.onChangeReadyState.bind(this) }
   )
 
   initialize() {
@@ -117,7 +107,7 @@ export default class DashboardController extends Controller {
     this.readyState[resourceName] = true;
   }
 
-  onReadyStateChange(
+  onChangeReadyState(
     resources: { [key in ResourceName]: boolean }, resourceName: ResourceName, isReady: boolean
   ) {
     const setReady = (

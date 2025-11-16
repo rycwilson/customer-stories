@@ -171,8 +171,10 @@ export default class ResourceController extends Controller<HTMLElement> {
   // }
 
   validateNewItem(e: Event) {
+    const btn = <HTMLButtonElement>e.currentTarget;
     if (this.filtersValue.curator && this.filtersValue.curator !== CSP.currentUser!.id) {
-      const mesg = "Can't add a new item with Curator preference set to another user";
+      const label = btn?.ariaLabel?.match(/^New (?<label>.+)$/)?.groups?.label;
+      const mesg = `Can't add a new ${label || 'item'} when Curator preference is set to another user`;
       e.preventDefault();
       e.stopImmediatePropagation();
       this.element.dispatchEvent(
