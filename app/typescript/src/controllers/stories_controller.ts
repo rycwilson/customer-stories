@@ -3,6 +3,13 @@ import { type FrameElement } from '@hotwired/turbo';
 import Cookies from 'js-cookie';
 import imagesLoaded from 'imagesloaded';
 
+type StoriesFilters = DashboardFilters & { 
+  status?: string,
+  customer?: string,
+  category?: string,
+  product?: string,
+};
+
 export default class extends Controller<HTMLDivElement> {
   static targets = [
     'turboFrame',
@@ -28,8 +35,10 @@ export default class extends Controller<HTMLDivElement> {
   declare readonly matchTypeInputTargets: HTMLInputElement[];
   declare readonly filterSelectTargets: TomSelectInput[];
 
-  static values = { filters: Object };
-  declare filtersValue: ResourceFilters | undefined;
+  static values = { 
+    filters: { type: Object, default: undefined } 
+  };
+  declare filtersValue: StoriesFilters;
   
   readyFilters = 0;
   frameObserver = new MutationObserver((mutations) => {
@@ -174,8 +183,8 @@ export default class extends Controller<HTMLDivElement> {
     }
   }
 
-  filtersValueChanged(newVal: ResourceFilters, oldVal: ResourceFilters | undefined) {
-    if (oldVal === undefined || JSON.stringify(newVal) === JSON.stringify(oldVal)) return;
+  filtersValueChanged(newVal: StoriesFilters, oldVal: StoriesFilters) {
+    if (JSON.stringify(newVal) === JSON.stringify(oldVal)) return;
     const curatorSelect = this.filterSelectTargets.find(select => (
       select.dataset.tomselectKindValue === 'curator'
     ));

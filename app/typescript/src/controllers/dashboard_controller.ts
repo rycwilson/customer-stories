@@ -2,7 +2,6 @@ import { Controller } from "@hotwired/stimulus";
 import Cookies from 'js-cookie';
 import type ModalController from './modal_controller';
 import type ToastController from './toast_controller';
-import { parseDatasetObject } from '../utils';
 import { visit as turboVisit, type TurboVisitEvent } from '@hotwired/turbo';
 
 // excludes stories#edit, which also renders the dashboard
@@ -55,10 +54,10 @@ export default class DashboardController extends Controller {
 
   static values = { 
     activeTab: { type: String, default: '' },
-    filters: { type: Object }
+    filters: { type: Object, default: undefined }
   };    
   declare activeTabValue: DashboardTab | null;
-  declare filtersValue: ResourceFilters | undefined;
+  declare filtersValue: DashboardFilters | undefined;
   
   tabRestorationListener = this.onTabRestoration.bind(this);
   spinnerTimers: { [key: string]: number } = { 
@@ -158,10 +157,9 @@ export default class DashboardController extends Controller {
     if (activeTab) this.initTabPanel(activeTab);
   }
 
-  filtersValueChanged(newVal: ResourceFilters, oldVal: ResourceFilters | undefined) {
-    // console.log('old dashboard filtersValue:', oldVal)
-    // console.log('new dashboard filtersValue:', newVal)
-    if (oldVal === undefined || JSON.stringify(newVal) === JSON.stringify(oldVal)) return;
+  filtersValueChanged(newFilters: DashboardFilters, oldVal: DashboardFilters) {
+    if (JSON.stringify(newFilters) === JSON.stringify(oldVal)) return;
+
     [
       this.customerWinsTarget,
       this.contributionsTarget,
@@ -170,10 +168,15 @@ export default class DashboardController extends Controller {
       this.visitorsTarget
     ]
       .forEach(target => {
-        const oldFilters =
-          JSON.parse(<string>target.getAttribute(`data-${target.dataset.controller}-filters-value`));
-        const newFilters = { ...oldFilters, ...newVal };
-        target.setAttribute(`data-${target.dataset.controller}-filters-value`, JSON.stringify(newFilters));
+        const oldFilters = (
+          JSON.parse(
+            <string>target.getAttribute(`data-${target.dataset.controller}-filters-value`)
+          )
+        );
+        target.setAttribute(
+          `data-${target.dataset.controller}-filters-value`,
+          JSON.stringify({ ...oldFilters, ...newFilters })
+        );
       });
   }
 

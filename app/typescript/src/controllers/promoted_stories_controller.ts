@@ -6,6 +6,7 @@ export default class PromotedStoriesController extends ResourceController {
     ... super.values, 
     rowGroupDataSource: { type: String, default: 'customer.name' }
   };
+  declare filtersValue: PromotedStoriesFilters;
   declare rowGroupDataSourceValue: string;
 
   // toggleColumns = toggleColumnVisibility;

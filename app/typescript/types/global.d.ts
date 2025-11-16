@@ -37,10 +37,34 @@ interface CustomerStoriesApp {
   init(): void;
 }
 
+type ResourceName = (
+  'customerWins' |
+  'contributions' |
+  'storyContributions' |
+  'stories' |
+  'promotedStories' |
+  'visitors' |
+  'activity'
+)
+
 type FlashHash = Partial<{ readonly [key in 'notice' | 'alert' | 'info' | 'warning']: string }>;
 type Toast = { flash?: FlashHash, errors?: string[] }
-type ResourceName = 'customerWins' | 'contributions' | 'storyContributions' | 'stories' | 'promotedStories' | 'visitors' | 'activity';
-type ResourceFilters = { [key: string]: boolean | number | null };
+
+type DashboardFilters = { curator?: number | null };
+type CustomerWinsFilters = DashboardFilters & { 'show-wins-with-story': boolean };
+type ContributionsFilters = DashboardFilters & { 
+  'show-completed': boolean, 
+  'show-published': boolean 
+};
+type PromotedStoriesFilters = DashboardFilters & {};
+type VisitorsFilters = DashboardFilters & {
+  story?: number,
+  category?: number,
+  product?: number, 
+  'date-range': string, 
+  'show-visitor-source': boolean 
+};
+
 type ResourceControllerWithDatatable = (
   CustomerWinsController | ContributionsController | PromotedStoriesController
 );

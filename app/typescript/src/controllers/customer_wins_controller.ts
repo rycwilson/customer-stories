@@ -7,10 +7,11 @@ export default class CustomerWinsController extends ResourceController {
     rowGroupDataSource: { type: String }
   };
   declare rowGroupDataSourceValue: 'customer.name' | '';
+  declare filtersValue: CustomerWinsFilters;
 
   toggleColumns = toggleColumnVisibility;
 
   get tableConfig() {
-    return dataTableConfig(this.rowGroupDataSourceValue);
+    return dataTableConfig(this.filtersValue, this.rowGroupDataSourceValue);
   }
 }

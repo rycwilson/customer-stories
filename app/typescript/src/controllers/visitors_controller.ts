@@ -21,6 +21,8 @@ export default class VisitorsController extends ResourceController {
   declare visitors: { by_date: DateRow[], by_story: StoryRow[] };
   declare visibilityObserver: IntersectionObserver;
 
+  declare filtersValue: VisitorsFilters;
+
   initialized = false;
 
   get hasData() {
@@ -60,11 +62,11 @@ export default class VisitorsController extends ResourceController {
     this.initialized = true;
   }
 
-  async filtersValueChanged(newVal: ResourceFilters, oldVal: ResourceFilters) {
+  async filtersValueChanged(newFilters: VisitorsFilters, oldFilters: VisitorsFilters) {
     if (this.initialized === false) return;
-    
-    // console.log('old visitors filtersValue:', oldVal)
-    // console.log('new visitors filtersValue:', newVal)
+
+    // console.log('old visitors filtersValue:', oldFilters)
+    // console.log('new visitors filtersValue:', newFilters)
 
     const data = await getJSON(this.dataPathValue, this.searchParams);
     CSP.visitors = data;

@@ -1,7 +1,14 @@
 import type DashboardController from "./dashboard_controller";
 import { Controller } from "@hotwired/stimulus";
 import { getJSON } from '../utils';
-import { initDisplayOptions, search as searchTable } from '../tables';
+import { initDisplayOptions } from '../tables';
+
+type ResourceFilters = (
+  CustomerWinsFilters |
+  ContributionsFilters |
+  PromotedStoriesFilters |
+  VisitorsFilters
+);
 
 export default class ResourceController extends Controller<HTMLElement> {
   static outlets = ['dashboard'];
@@ -107,11 +114,11 @@ export default class ResourceController extends Controller<HTMLElement> {
     this.datatableTarget.setAttribute('data-datatable-row-group-data-source-value', source);
   }
   
-  filtersValueChanged(newVal: ResourceFilters, oldVal: ResourceFilters) {
-    // console.log(`old ${this.identifier} filtersValue:`, oldVal)
-    // console.log(`new ${this.identifier} filtersValue:`, newVal)
+  filtersValueChanged(newFilters: ResourceFilters, oldFilters: ResourceFilters) {
+    // console.log(`old ${this.identifier} filtersValue:`, oldFilters)
+    // console.log(`new ${this.identifier} filtersValue:`, newFilters)
     if (this.tableInitialized) {
-      searchTable.call(this);
+      this.searchTable();
     }
   }
 

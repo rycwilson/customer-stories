@@ -9,6 +9,7 @@ export default class ContributionsController extends ResourceController {
     // For including an inline select in the table row (currently unused)
     invitationTemplateSelectHtml: { type: String, default: '' },
   };
+  declare filtersValue: ContributionsFilters;
   declare rowGroupDataSourceValue: (
     'contributor.full_name' | 
     'customer.name' | 

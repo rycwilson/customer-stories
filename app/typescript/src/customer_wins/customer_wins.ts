@@ -13,8 +13,7 @@ export function toggleColumnVisibility(dt: Api<any>, rowGroupDataSource: string)
   dt.column(colIndices.customer).visible(!rowGroupDataSource);
 }
 
-export function dataTableConfig(rowGroupDataSource: string): Config {
-  console.log('configuring customer wins')
+export function dataTableConfig(filters: CustomerWinsFilters, rowGroupDataSource: string): Config {
   const rowGroupColumn = (() => {
     switch (rowGroupDataSource) {
       case 'customer.name':
