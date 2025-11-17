@@ -77,6 +77,16 @@
 }
 
 #new-customer-win-form {
+  // Since tomselect does not support readonly, .disabled is added to the form group
+  .form-group.disabled {
+    pointer-events: none;
+
+    .ts-control {
+      opacity: 1;
+      background-color: rgb(235.65, 236.76, 237.32);
+    }
+  }
+
   .form-group.source {
     margin-bottom: 15px;
 

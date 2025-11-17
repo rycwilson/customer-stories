@@ -131,7 +131,7 @@
           controller_id: 'new-customer-win', 
           contact_type: 'contributor')
 
-    .form-group class="#{'has-error' if @success.errors.any? { |e| e.attribute == :curator }}"
+    .form-group.disabled class="#{'has-error' if @success.errors.any? { |e| e.attribute == :curator }}"
       = form.label(:curator_id, 'Curator')
       = form.collection_select( \
           :curator_id,
