@@ -1,9 +1,13 @@
-table#successes-table.table {
-  data-controller="datatable"
-  data-customer-wins-target="datatable"
-  data-datatable-customer-wins-outlet="#customer-wins"
-  aria-labelledby="customer-wins-table-caption"}
-  
+= content_tag( \
+    :table,
+    id: 'successes-table',
+    class: 'table',
+    data: { \
+      controller: 'datatable',
+      customer_wins_target: 'datatable',
+      datatable_customer_wins_outlet: '#customer-wins',
+      aria_labelledby: 'customer-wins-table-caption' }) do
+
   / NOTE: The current user is the curator for a new Customer Win, not the curator_id filter
   = render( \
       'companies/shared/table_controls',

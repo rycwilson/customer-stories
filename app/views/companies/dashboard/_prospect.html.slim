@@ -46,35 +46,48 @@
     .layout-main
       .tab-content
       
-        #customer-wins.resource-ctrl.tab-pane {
-          class=('active' if active_tab == '#customer-wins')
-          data-dashboard-target="customerWins"
-          data-resource-name="customerWins"
-          data-controller="customer-wins"
-          data-customer-wins-dashboard-outlet =".dashboard"
-          data-customer-wins-data-path-value="/successes"
-          data-customer-wins-row-group-data-source-value=@row_group_data_source[:customer_wins]
-          data-customer-wins-filters-value=customer_wins_filters(curator&.id).to_json
-          data-customer-wins-display-options-html-value=customer_wins_display_options_html(company)
-          data-action="datatable:init->customer-wins#onTableInitialized"
-          aria-labelledby="customer-wins-tab"
-          role="tabpanel" }
+        = content_tag( \
+            :div,
+            id: 'customer-wins',
+            class: "tab-pane resource-ctrl #{'active' if active_tab == '#customer-wins'}",
+            aria_labelledby: 'customer-wins-tab',
+            role: 'tabpanel', 
+            data: { \
+              dashboard_target: 'customerWins',
+              resource_name: 'customerWins',
+              controller: 'customer-wins',
+              customer_wins_dashboard_outlet: '.dashboard',
+              customer_wins_data_path_value: '/successes',
+              customer_wins_row_group_data_source_value: @row_group_data_source[:customer_wins],
+              customer_wins_filters_value: customer_wins_filters(curator&.id),
+              customer_wins_display_options_html_value: \
+                customer_wins_display_options_html(company),
+              action: [ \
+                'datatable:init->customer-wins#onTableInitialized',
+                'customer-win:open-details->customer-wins#openRowDetails'].join(' ') }) do
 
           = render('successes/table', company:)
 
-        #contributions.resource-ctrl.tab-pane {
-          class=('active' if active_tab == '#contributions')
-          data-dashboard-target="contributions"
-          data-resource-name="contributions"
-          data-controller="contributions"          
-          data-contributions-dashboard-outlet=".dashboard"
-          data-contributions-data-path-value=company_contributions_path(company)
-          data-contributions-row-group-data-source-value=@row_group_data_source[:contributions]
-          data-contributions-filters-value=contributions_filters(curator&.id).to_json
-          data-contributions-display-options-html-value=contributions_display_options_html(company)
-          data-contributions-invitation-template-select-html-value=invitation_template_select_html(company)
-          data-action="datatable:init->contributions#onTableInitialized"
-          aria-labelledby="contributions-tab"
-          role="tabpanel" }
+        = content_tag( \
+            :div,
+            id: 'contributions',
+            class: "tab-pane resource-ctrl #{'active' if active_tab == '#contributions'}",
+            aria_labelledby: 'contributions-tab',
+            role: 'tabpanel',
+            data: { \
+              dashboard_target: 'contributions',
+              resource_name: 'contributions',
+              controller: 'contributions',
+              contributions_dashboard_outlet: '.dashboard',
+              contributions_data_path_value: company_contributions_path(company),
+              contributions_row_group_data_source_value: @row_group_data_source[:contributions],
+              contributions_filters_value: contributions_filters(curator&.id),
+              contributions_display_options_html_value: \
+                contributions_display_options_html(company),
+              contributions_invitation_template_select_html_value: \
+                invitation_template_select_html(company),
+              action: [ \
+                'datatable:init->contributions#onTableInitialized',
+                'contribution:open-details->contributions#openRowDetails'].join(' ') }) do
 
           = render('contributions/table', company:)
