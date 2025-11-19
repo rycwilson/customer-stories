@@ -15,6 +15,20 @@ export default class CustomerWinsController extends ResourceController {
     return dataTableConfig(this.rowGroupDataSourceValue);
   }
 
+  filtersValueChanged(newFilters: CustomerWinsFilters, oldFilters: CustomerWinsFilters) {
+    const addedNewRecord = !oldFilters.success && newFilters.success;
+    const removedNewRecord = oldFilters.success && !newFilters.success;
+    if (addedNewRecord) {
+      setTimeout(() => {
+        const { ['success']: _, ...rest } = this.filtersValue;
+        this.filtersValue = rest;
+      })
+    } else if (removedNewRecord) {
+      return;
+    }
+    super.filtersValueChanged(newFilters, oldFilters);
+  }
+
   get filtersToSearchObjects() {
     return [
       ...this.sharedSearchObjects,

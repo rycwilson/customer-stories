@@ -31,7 +31,7 @@ export default class NewCustomerWinController extends FormController<NewCustomer
         this.customerWinsOutlet.element.addEventListener('datatable:drawn', () => {
           setTimeout(() => this.customerWinsOutlet.dashboardOutlet.modalOutlet.hide());
         }, { once: true });
-        this.customerWinsOutlet.newRecordValue = rowData;
+        this.customerWinsOutlet.newResourceValue = rowData;
         this.responseTarget.remove();
       }
     })

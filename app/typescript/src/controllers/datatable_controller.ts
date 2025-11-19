@@ -27,14 +27,16 @@ export default class DatatableController extends Controller<HTMLTableElement> {
 
   static values = { 
     init: { type: Boolean, default: false },
-    searchParams: Object,
+    searchParams: { type: Object, default: undefined },
+    rowGroupEnabled: { type: Boolean, default: true },
     rowGroupDataSource: String,
-    reload: String,
-    redraw: Boolean
+    reload: { type: String, default: undefined },
+    redraw: { type: Boolean, default: undefined }
   };
   declare initValue: boolean;
   declare searchParamsValue: SearchParams;
   declare rowGroupDataSourceValue: string;
+  declare rowGroupEnabledValue: boolean;
   declare reloadValue: string;
   declare redrawValue: boolean;
 
@@ -123,22 +125,33 @@ export default class DatatableController extends Controller<HTMLTableElement> {
       this.dt.rowGroup().disable();
       this.dt.order([[sortColumnIndex, sortDirection]]); // current sort
     }
-    this.dt.draw();
+    // this.dt.draw();
   }
 
-  reloadValueChanged(resourceName: ResourceName | '') {
+  reloadValueChanged(resourceName: ResourceName) {
     if (!resourceName) return;
-
+    
     const data = CSP[resourceName];
     this.dt.clear().rows.add(data); //.draw();
     this.reloadValue = '';
   }
 
   redrawValueChanged(shouldRedraw: boolean) {
-    if (shouldRedraw) {
+    if (this.dt && shouldRedraw) {
       this.dt.draw(false); // false => hold current paging
-      this.redrawValue = false;
     }
+    this.redrawValue = false;
+  }
+
+  rowGroupEnabledValueChanged(shouldEnable: boolean) {
+    if (!this.dt) return;
+
+    if (shouldEnable && this.rowGroupColumnIndex !== undefined) {
+      this.dt.rowGroup().enable();
+    } else {
+      this.dt.rowGroup().disable();
+    }
+    // NOTE: do not draw here
   }
 
   // We want to preserve row group sorting (if present) when the user sorts a column.

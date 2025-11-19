@@ -5,6 +5,8 @@ import {
   init as initTable,
   onInitialized as onTableInitialized,
   search as searchTable,
+  addRow as addTableRow,
+  showRow as showTableRow,
   initDisplayOptions } from '../tables';
 
 type ResourceFilters = (
@@ -80,6 +82,8 @@ export default class ResourceController extends Controller<HTMLElement> {
   initTable = initTable.bind(this);
   onTableInitialized = onTableInitialized.bind(this);
   searchTable = searchTable.bind(this);
+  addTableRow = addTableRow.bind(this);
+  showTableRow = showTableRow.bind(this);
 
   connect() {
     if (this.hasDisplayOptionsBtnTarget) initDisplayOptions.call(this);
@@ -135,72 +139,28 @@ export default class ResourceController extends Controller<HTMLElement> {
   }
 
   rowGroupDataSourceValueChanged(source: string) {
+    // Both will be ignored by the datatables controller if the table is not yet initialized
     this.datatableTarget.setAttribute('data-datatable-row-group-data-source-value', source);
+    this.datatableTarget.setAttribute('data-datatable-redraw-value', 'true');
   }
   
   filtersValueChanged(newFilters: ResourceFilters, oldFilters: ResourceFilters) {
-    // console.log(`old ${this.identifier} filtersValue:`, oldFilters)
-    // console.log(`new ${this.identifier} filtersValue:`, newFilters)
+    // if (this.identifier === 'customer-wins') {
+      // console.log(`old ${this.identifier} filtersValue:`, oldFilters)
+      // console.log(`new ${this.identifier} filtersValue:`, newFilters)
+    // }
     if (this.tableInitialized) {
       this.searchTable();
     }
   }
 
-  newRecordValueChanged(record: CustomerWin | Contribution) {
-    CSP[this.resourceName].push(record);
-    const columnName = (() => {
-      switch (this.resourceName) {
-        case 'customerWins': return 'success';
-        case 'contributions': return 'contribution';
-        default: return undefined;
-      }
-    })();
-    if (!columnName) throw new Error('Unrecognized resource name for new record handling.');
-    
-    // Reload will not cause a redraw, but changing searchSelect will
-    this.element.addEventListener(
-      'datatable:drawn', 
-      () => {
-        setTimeout(() => {
-          const toggleChildBtn = <HTMLButtonElement>this.element.querySelector(
-          `tr[data-customer-win-row-data-value*='"id":${record.id}'] td.toggle-child button`
-          );
-          toggleChildBtn.click();
-        });
-      },
-      { once: true }
-    );
-    this.datatableTarget.setAttribute('data-datatable-reload-value', this.resourceName);
-    setTimeout(() => this.searchSelectTarget.tomselect.setValue(`${columnName}-${record.id}`));
-    
-    // TODO: The above approach is working reasonable well, but it may be better to search the
-    // table directly instead of changing searchSelect.
-    // 1. Change this.filterValue as necessary to ensure the search results include the record
-    // 2. Set the curator field in the form to readonly, else we may need to change curator 
-    // preference to another user and that will be weird given that curator applies across 
-    // the dashboard
-    // 3. For contributions, changing searchSelect won't even work because contributions
-    // are not among the options (perhaps they should be, even if hidden)
+  newResourceValueChanged(record: CustomerWin | Contribution) {
+    this.addTableRow(record, true);
 
-    // TODO: Show the new record via table search
-    // this.datatableTarget.setAttribute(
-    //   'data-datatable-search-params-value',
-    //   JSON.stringify(...)
-    // )
-
-    // TODO: After searching, redraw
-    // this.datatableTarget.setAttribute('data-datatable-redraw-value', 'true');
+    // Searches for the row and expands its child row
+    // this.showTableRow(record.id);
   }
-
-  // addSyncListener(syncResource: (ctrl: ResourceController) => void) {
-  //   this.element.addEventListener('datatable:drawn', () => {
-  //     this.resourceOutlets.forEach(ctrl => {
-  //       // console.log('syncing:', ctrl.resourceName);
-  //       if (ctrl['dt']) setTimeout(() => syncResource(ctrl));   // dt exists if the table has loaded
-  //     });
-  //   }, { once: true });
-  // }
-
+  
   validateNewItem(e: Event) {
     const btn = <HTMLButtonElement>e.currentTarget;
     if (this.filtersValue.curator && this.filtersValue.curator !== CSP.currentUser!.id) {

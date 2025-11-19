@@ -37,6 +37,47 @@ export function search(this: ResourceController, searchSelectResults?: { [key: s
   );
 }
 
+export function addRow(this: ResourceController, data: CustomerWin | Contribution, draw = false) {
+  if (!this.hasDatatableTarget) return;
+
+  CSP[this.resourceName].push(data);
+  this.datatableTarget.setAttribute('data-datatable-reload-value', this.resourceName);
+  if (draw) { 
+    this.datatableTarget.setAttribute('data-datatable-redraw-value', 'true'); 
+  }
+}
+
+export function showRow(this: ResourceController, id: number) {
+  if (!this.hasDatatableTarget) return;
+
+  const columnName = (() => {
+    switch (this.resourceName) {
+      case 'customerWins': return 'success';
+      case 'contributions': return 'contribution';
+      default: return undefined;
+    }
+  })();
+  if (!columnName) throw new Error('Unrecognized resource name for new record handling.');
+
+  this.element.addEventListener(
+    'datatable:drawn', 
+    () => {
+      setTimeout(() => {
+        this.element.classList.add('has-open-row');
+        const toggleChildBtn = <HTMLButtonElement>this.element.querySelector(
+        `tr[data-customer-win-row-data-value*='"id":${id}'] td.toggle-child button`
+        );
+        toggleChildBtn.click();
+      });
+    },
+    { once: true }
+  );
+
+  this.searchSelectTarget.tomselect.clear(true);
+  this.datatableTarget.setAttribute('data-datatable-row-group-data-source-value', '');
+  this.filtersValue = { ...this.filtersValue, [columnName]: id };
+}
+
 export function initDisplayOptions(this: ResourceController, isReset = false) {
   const btn = this.displayOptionsBtnTarget;
   if (isReset) {
