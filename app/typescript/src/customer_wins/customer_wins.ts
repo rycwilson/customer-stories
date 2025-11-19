@@ -13,7 +13,7 @@ export function toggleColumnVisibility(dt: Api<any>, rowGroupDataSource: string)
   dt.column(colIndices.customer).visible(!rowGroupDataSource);
 }
 
-export function dataTableConfig(filters: CustomerWinsFilters, rowGroupDataSource: string): Config {
+export function dataTableConfig(rowGroupDataSource: string): Config {
   const rowGroupColumn = (() => {
     switch (rowGroupDataSource) {
       case 'customer.name': return colIndices.customer;
@@ -180,7 +180,8 @@ export function dataTableConfig(filters: CustomerWinsFilters, rowGroupDataSource
         )
         .attr('data-action', [
           'dropdown:dropdown-is-shown->customer-win#onShownDropdown',
-          'dropdown:dropdown-is-hidden->customer-win#onHiddenDropdown'
+          'dropdown:dropdown-is-hidden->customer-win#onHiddenDropdown',
+          'click->customer-win#openDetails'
         ].join(' '))
         .attr('data-controller', 'customer-win');
     }
