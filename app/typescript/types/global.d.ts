@@ -142,6 +142,7 @@ interface CustomerWinRowData {
   customer: Customer;
   story?: Story;
   path: string;
+  edit_path: string;
 }
 
 interface Customer {
@@ -214,6 +215,7 @@ interface ContributionRowData {
   invitationTemplate: InvitationTemplate;
   customerWin: CustomerWin;
   path: string;
+  edit_path: string;
 }
 
 interface InvitationTemplate {
