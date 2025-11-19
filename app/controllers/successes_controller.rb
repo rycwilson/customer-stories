@@ -45,9 +45,7 @@ class SuccessesController < ApplicationController
       contributions_for_win_story: [:contributor],
       contributor_answers: [:contributor_question]
     ).find(params[:id])
-    @win_story_contributions =
-      @success.contributions_for_win_story.to_json(include: { contributor: { only: [:title], methods: [:full_name] } })
-    @win_story_answers = @success.answers.to_json(include: { question: { only: %i[id question] } })
+    render(partial: 'edit', locals: { success: @success })
   end
 
   def create
