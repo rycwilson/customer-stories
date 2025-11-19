@@ -29,4 +29,24 @@ export default class ContributionsController extends ResourceController {
       storyId
     );
   }
+
+  get filtersToSearchObjects() {
+    return [
+      ...this.sharedSearchObjects,
+      ...Object.entries(this.filtersValue).flatMap(([key, value]) => {
+        switch (key) {
+          case 'show-completed': {
+            const checked = value;
+            return { column: 'status', q: checked ? '' : '^((?!completed).)*$', regEx: true, smartSearch: false };
+          }
+          case 'show-published': {
+            const checked = value;
+            return { column: 'storyPublished', q: checked ? '' : 'false', regEx: false, smartSearch: false };
+          }
+          default:
+            return [];
+        }
+      })
+    ]
+  }
 }

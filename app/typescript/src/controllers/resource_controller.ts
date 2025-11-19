@@ -1,7 +1,11 @@
 import type DashboardController from "./dashboard_controller";
 import { Controller } from "@hotwired/stimulus";
 import { getJSON } from '../utils';
-import { initDisplayOptions } from '../tables';
+import { 
+  init as initTable,
+  onInitialized as onTableInitialized,
+  search as searchTable,
+  initDisplayOptions } from '../tables';
 
 type ResourceFilters = (
   CustomerWinsFilters |
@@ -9,6 +13,8 @@ type ResourceFilters = (
   PromotedStoriesFilters |
   VisitorsFilters
 );
+
+type SearchObject = { column: string, q: string, regEx: boolean, smartSearch: boolean }
 
 export default class ResourceController extends Controller<HTMLElement> {
   static outlets = ['dashboard'];
@@ -49,16 +55,34 @@ export default class ResourceController extends Controller<HTMLElement> {
   get resourceName() {
     return this.element.dataset.resourceName as ResourceName;
   }
-
+  
   get dataExists() {
     return false;
     // return this.resourceName === 'storyContributions' ?
     //   CSP[this.resourceName][+(this.element.dataset.storyId as string)] :
     //   CSP[this.resourceName];
   }
-
+  
   get tableInitialized() {
     return this.hasDatatableTarget && $.fn.dataTable.isDataTable(this.datatableTarget);
+  }
+
+  get sharedSearchObjects(): SearchObject[] {
+    const curatorId = this.filtersValue.curator;
+    return [{ 
+      column: 'curator',
+      q: curatorId ? `^${curatorId}$` : '',
+      regEx: true,
+      smartSearch: false
+    }];
+  }
+
+  initTable = initTable.bind(this);
+  onTableInitialized = onTableInitialized.bind(this);
+  searchTable = searchTable.bind(this);
+
+  connect() {
+    if (this.hasDisplayOptionsBtnTarget) initDisplayOptions.call(this);
   }
 
   initValueChanged(shouldInit: boolean) {
@@ -99,14 +123,14 @@ export default class ResourceController extends Controller<HTMLElement> {
 
   onTomselectSearch(e: CustomEvent) {
     if (this.hasDatatableTarget) {
-      searchTable.call(this, e.detail.searchResults);
+      this.searchTable(e.detail.searchSelectResults);
     }
   }
 
   onChangeSearchSelect(e: CustomEvent) {
     // this.addSyncListener((ctrl) => ctrl.searchSelectTarget.tomselect.setValue(this.searchSelectTarget.value));
     if (this.hasDatatableTarget) {
-      searchTable.call(this);
+      this.searchTable();
     }
   }
 
@@ -189,4 +213,13 @@ export default class ResourceController extends Controller<HTMLElement> {
       );
     }
   }
+
+  // addSyncListener(syncResource: (ctrl: ResourceController) => void) {
+  //   this.element.addEventListener('datatable:drawn', () => {
+  //     this.resourceOutlets.forEach(ctrl => {
+  //       // console.log('syncing:', ctrl.resourceName);
+  //       if (ctrl['dt']) setTimeout(() => syncResource(ctrl));   // dt exists if the table has loaded
+  //     });
+  //   }, { once: true });
+  // }
 }

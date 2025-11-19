@@ -2,39 +2,37 @@
 import type ResourceController from './controllers/resource_controller';
 // import { type Api as DataTableApi } from 'datatables.net-bs';
 
-export function search(this: ResourceController, tsSearchResults?: { [key: string]: string }) {
-  const filters = Object.entries(this.filtersValue)
-    .map(([filterKey, filterVal]) => {
-      const checked = filterKey !== 'curator' && filterVal;
-      switch (filterKey) {
-        case 'curator': {
-          const curatorId = filterVal;
-          return { column: 'curator', q: curatorId ? `^${curatorId}$` : '', regEx: true, smartSearch: false };
-        }
-        case 'show-wins-with-story':
-          return { column: 'story', q: checked ? '' : '^false$', regEx: true, smartSearch: false };
-        case 'show-completed':
-          return { column: 'status', q: checked ? '' : '^((?!completed).)*$', regEx: true, smartSearch: false };
-        case 'show-published':
-          return { column: 'storyPublished', q: checked ? '' : 'false', regEx: false, smartSearch: false };
-        default: 
-          throw new Error('Unrecognized column filter');        
-      }
+export function init(this: ResourceController) {
+  if (!this.hasDatatableTarget) return;
+
+  this.datatableTarget.setAttribute('data-datatable-init-value', 'true');
+}
+
+export function onInitialized(this: ResourceController, e: CustomEvent) {
+  if (this.identifier === 'customer-wins') {
+    (window as any).dt = e.detail.dt; 
+  }
+  setTimeout(() => {
+    e.detail.dt.one('draw', () => {
+      this.dispatch('ready', { detail: { resourceName: this.resourceName } })
     });
+    this.searchTable();
+  });
+}
 
-  // console.log(
-  //   `searching ${this.resourceName}:`, 
-  //   JSON.stringify({
-  //     ...{ filters },
-  //     ...tsSearchResults ? { tsSearchResults } : { searchVal: this.searchSelectTarget.value }
-  //   })
-  // )
+export function search(this: ResourceController, searchSelectResults?: { [key: string]: string }) {
+  if (!this.hasDatatableTarget) return;
 
+  // console.log(this.resourceName + ' filtersValue:', this.filtersValue)
   this.datatableTarget.setAttribute(
     'data-datatable-search-params-value', 
     JSON.stringify({
-      ...{ filters },
-      ...tsSearchResults ? { tsSearchResults } : { searchVal: this.searchSelectTarget.value }
+      ...{ filters: (this as ResourceControllerWithDatatable).filtersToSearchObjects },
+      ...(
+        searchSelectResults ? 
+          { searchSelectResults } :
+          { searchVal: this.searchSelectTarget.value }
+      )
     })
   );
 }

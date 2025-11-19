@@ -9,7 +9,7 @@ import 'datatables.net-rowgroup-bs';
 
 interface SearchParams {
   filters: { column: string, q: string, regEx: boolean, smartSearch: boolean }[],
-  tsSearchResults?: { [column: string]: string },
+  searchSelectResults?: { [column: string]: string },
   searchVal?: string
 }
 
@@ -95,11 +95,10 @@ export default class DatatableController extends Controller<HTMLTableElement> {
     }
   }
 
-  searchParamsValueChanged(newVal: SearchParams, oldVal: SearchParams | undefined) {
-    if (oldVal === undefined) return; // skip on initial connect
-
+  searchParamsValueChanged(params: SearchParams) {
+    // console.log(this.resourceOutlet.identifier, params)
     clearTimeout(this.searchDebounceTimer);
-    this.searchDebounceTimer = window.setTimeout(() => this.search(newVal), 200);
+    this.searchDebounceTimer = window.setTimeout(() => this.search(params), 200);
   }
 
   rowGroupDataSourceValueChanged(source: string) {
@@ -161,8 +160,8 @@ export default class DatatableController extends Controller<HTMLTableElement> {
     }
   }
 
-  search({ filters, searchVal, tsSearchResults }: SearchParams) {
-    // console.log(`searching ${(<HTMLElement>this.element.closest('[data-resource-name]')!).dataset.resourceName} table for:`, { filters, searchVal, tsSearchResults });
+  search({ filters, searchVal, searchSelectResults }: SearchParams) {
+    console.log(`searching ${(<HTMLElement>this.element.closest('[data-resource-name]')!).dataset.resourceName} table for:`, { filters, searchVal, searchSelectResults });
 
     let dtSearch = this.dt.search('')
     dtSearch.columns().search('') 
@@ -171,13 +170,17 @@ export default class DatatableController extends Controller<HTMLTableElement> {
       dtSearch = dtSearch.column(`${column}:name`).search(q, isRegEx, useSmartSearch);
     });
     
+    if (searchVal) {
+      const [column, id] = searchVal.split('-');
+      dtSearch = dtSearch.column(`${column}:name`).search(`^${id}$`, true, false);
+    
     // As the user types, search the table for the found options in the select box
     // => this ensures the datatables search matches the tomselect search
-    if (tsSearchResults) {
+    } else if (searchSelectResults) {
       // TODO This does not work because chaining column searches performs a combinatorial search
       // => custom filter? check the search plug-in api
-      // Object.keys(tsSearchResults).forEach(column => {
-      //   dtSearch = dtSearch.column(`${column}:name`).search(`^(${tsSearchResults[column]})$`, true, false);
+      // Object.keys(searchSelectResults).forEach(column => {
+      //   dtSearch = dtSearch.column(`${column}:name`).search(`^(${searchSelectResults[column]})$`, true, false);
       // });
     } else if (searchVal) {
       const [column, id] = searchVal.split('-');

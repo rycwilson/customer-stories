@@ -14,4 +14,16 @@ export default class PromotedStoriesController extends ResourceController {
   get tableConfig() {
     return dataTableConfig(this.rowGroupDataSourceValue);
   }
+
+  get filtersToSearchObjects() {
+    return [
+      ...this.sharedSearchObjects,
+      // ...Object.entries(this.filtersValue).flatMap(([key, value]) => {
+      //   switch (key) {
+      //     default:
+      //       return [];
+      //   }
+      // })
+    ];
+  }
 }
