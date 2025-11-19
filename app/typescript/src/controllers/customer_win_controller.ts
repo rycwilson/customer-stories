@@ -15,10 +15,6 @@ export default class CustomerWinController extends DatatableRowController<Custom
   declare contributionsHtml: string;          
   declare winStoryFormEl: HTMLFormElement;
 
-  // connect() {
-  //   super.connect();
-  // }
-
   get childRowContent() {
     return this.winStoryFormEl || `
       <turbo-frame id="${this.childRowTurboFrameAttrsValue.id}" src="${this.childRowTurboFrameAttrsValue.src}">

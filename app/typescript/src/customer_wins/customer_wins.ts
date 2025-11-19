@@ -16,10 +16,8 @@ export function toggleColumnVisibility(dt: Api<any>, rowGroupDataSource: string)
 export function dataTableConfig(filters: CustomerWinsFilters, rowGroupDataSource: string): Config {
   const rowGroupColumn = (() => {
     switch (rowGroupDataSource) {
-      case 'customer.name':
-        return colIndices.customer;
-      default:
-        return undefined; 
+      case 'customer.name': return colIndices.customer;
+      default: return undefined;
     }
   })();
   return {
