@@ -51,18 +51,22 @@ type FlashHash = Partial<{ readonly [key in 'notice' | 'alert' | 'info' | 'warni
 type Toast = { flash?: FlashHash, errors?: string[] }
 
 type DashboardFilters = { curator?: number | null };
-type CustomerWinsFilters = DashboardFilters & { 'show-wins-with-story': boolean };
+type CustomerWinsFilters = DashboardFilters & {
+  'show-wins-with-story': boolean,
+  success?: number
+};
 type ContributionsFilters = DashboardFilters & { 
   'show-completed': boolean, 
-  'show-published': boolean 
+  'show-published': boolean,
+  contribution?: number
 };
 type PromotedStoriesFilters = DashboardFilters & {};
 type VisitorsFilters = DashboardFilters & {
+  'date-range': string, 
+  'show-visitor-source': boolean,
   story?: number,
   category?: number,
-  product?: number, 
-  'date-range': string, 
-  'show-visitor-source': boolean 
+  product?: number
 };
 
 type ResourceControllerWithDatatable = (
