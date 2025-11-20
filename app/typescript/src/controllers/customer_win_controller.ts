@@ -13,18 +13,13 @@ export default class CustomerWinController extends DatatableRowController<Custom
   declare path: string;
 
   declare contributionsHtml: string;          
-  declare winStoryFormEl: HTMLFormElement;
 
   get childRowContent() {
-    return this.winStoryFormEl || `
+    return this.childRowElement || `
       <turbo-frame id="${this.childRowTurboFrameAttrsValue.id}" src="${this.childRowTurboFrameAttrsValue.src}">
         ${childRowPlaceholderTemplate(this.curator?.full_name)}
       </turbo-frame>
     `;
-  }
-
-  onFrameRendered({ target: turboFrame }: {target: FrameElement}) {
-    this.winStoryFormEl ??= <HTMLFormElement>turboFrame.firstElementChild;
   }
 
   // TODO: move template to the server

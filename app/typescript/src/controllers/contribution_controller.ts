@@ -14,25 +14,15 @@ export default class ContributionController extends DatatableRowController<Contr
   declare story: Story;
   declare path: string;
 
-  declare contributionHtml: HTMLElement;
-
   get childRowContent() {
-    return this.contributionHtml || `
+    return this.childRowElement || `
       <turbo-frame id="${this.childRowTurboFrameAttrsValue.id}" src="${this.childRowTurboFrameAttrsValue.src}">
         <p>Loading...</p>
       </turbo-frame>
     `;
   }
-
-  // connect() {
-  //   super.connect();
-  // }
   
-  onFrameRendered({ target: turboFrame }: {target: FrameElement}) {
-    this.contributionHtml ??= <HTMLElement>turboFrame.firstElementChild;
-  }
-  
-  initInvitationTemplateSelect() {  
+  // initInvitationTemplateSelect() {  
     // new MutationObserver(mutations => {
     //   // mutation is the addition of the tom-select wrapper => the select has been initialized
     //   this.invitationTemplateSelectTarget.tomselect.setValue(this.invitationTemplate.id, true);
@@ -41,7 +31,7 @@ export default class ContributionController extends DatatableRowController<Contr
     //   <HTMLTableCellElement>this.element.querySelector(':scope > td.invitation-template'), 
     //   { childList: true }
     // );
-  }
+  // }
 
   onChangeInvitationTemplate({ target: select }: { target: TomSelectInput }) {
     const templateId = +select.value || null;

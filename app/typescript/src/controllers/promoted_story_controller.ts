@@ -7,23 +7,12 @@ export default class PromotedStoryController extends DatatableRowController<Prom
   declare readonly statusLabelTarget: HTMLElement;
 
   declare path: string;
-  declare promotedStoryHtml: HTMLElement;
-
-  get childRowContent() {
-    return this.promotedStoryHtml || '<h3>Promoted Story</h3>';
-  }
-
+  
   // Since the row will be re-drawn upon updating the status, do not rely on a stimulus target for the switch.
   get $statusSwitch() {
     const switchContainer = this.element.querySelector('.bootstrap-switch-container');
     const checkbox = switchContainer?.querySelector('input[type="checkbox"]');
     return $(checkbox);
-  }
-
-  // Child row content is loaded via turbo frame
-  // TODO: update the cached reference (this.promotedStoryHtml) as necessary 
-  onFrameRendered({ target: turboFrame }: {target: FrameElement}) {
-    this.promotedStoryHtml ??= <HTMLElement>turboFrame.firstElementChild;
   }
 
   async updateStatus({ detail: { state: shouldEnable } }: { detail: { state: boolean } }) {
