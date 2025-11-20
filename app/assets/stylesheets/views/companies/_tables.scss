@@ -1,9 +1,40 @@
+.row-partial {
+  display: none;
+
+  .row-partial-open & {
+    display: block;
+  }
+}
+
+.row-partial__heading,
+.row-partial__body {
+  padding: 1.5rem;
+}
+
+.row-partial__heading {
+  margin: 0;
+  background-color: $light-blue;
+  font-size: 1.1em;
+}
+
 #successes-table,
 #contributions-table,
 #story-contributions-table,
 #promoted-stories-table {
   @include row-hover-highlight;
   table-layout: fixed;
+
+  .row-partial-open & {
+    display: none;
+  }
+
+  // .row-partial-open & th.sorting {
+  //   pointer-events: none;
+    
+  //   &::after {
+  //     display: none;
+  //   }
+  // }
 
   th,
   td {

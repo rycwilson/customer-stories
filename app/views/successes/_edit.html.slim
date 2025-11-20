@@ -1,8 +1,12 @@
 = turbo_frame_tag('edit-customer-win')
 
-  = render( \
-      'win_story_form', 
-      success:,
-      win_story_contributions: success.contributions_for_win_story.to_json( \
-        include: { contributor: { only: [:title], methods: [:full_name] }}),
-      win_story_answers: success.answers.to_json(include: { question: { only: %i[id question] }}))
+  h4.row-partial__heading 
+    = "#{success.customer.name}  \u2013 #{success.name}" 
+
+  .row-partial__body
+    = render( \
+        'win_story_form', 
+        success:,
+        win_story_contributions: success.contributions_for_win_story.to_json( \
+          include: { contributor: { only: [:title], methods: [:full_name] }}),
+        win_story_answers: success.answers.to_json(include: { question: { only: %i[id question] }}))

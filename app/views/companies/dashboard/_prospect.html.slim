@@ -64,7 +64,7 @@
                 customer_wins_display_options_html(company),
               action: [ \
                 'datatable:init->customer-wins#onTableInitialized',
-                'customer-win:open-details->customer-wins#openRowDetails'].join(' ') }) do
+                'customer-win:open-row-partial->customer-wins#openRowPartial'].join(' ') }) do
 
           = render('successes/table', company:)
 
@@ -88,6 +88,6 @@
                 invitation_template_select_html(company),
               action: [ \
                 'datatable:init->contributions#onTableInitialized',
-                'contribution:open-details->contributions#openRowDetails'].join(' ') }) do
+                'contribution:open-row-partial->contributions#openRowPartial'].join(' ') }) do
 
           = render('contributions/table', company:)

@@ -27,7 +27,8 @@ export default class ResourceController extends Controller<HTMLElement> {
     'info',
     'paginate',
     'displayOptionsBtn',
-    'datatable'
+    'datatable',
+    'rowPartial'
   ];
   declare readonly searchSelectTarget: TomSelectInput;
   declare readonly infoTarget: HTMLElement;
@@ -36,7 +37,8 @@ export default class ResourceController extends Controller<HTMLElement> {
   declare readonly hasDatatableTarget: boolean;
   declare readonly displayOptionsBtnTarget: HTMLButtonElement;
   declare readonly hasDisplayOptionsBtnTarget: boolean;
-  
+  declare readonly rowPartialTarget: HTMLElement;
+
   static values = {
     dataPath: String,
     init: { type: Boolean, default: false },
@@ -48,12 +50,9 @@ export default class ResourceController extends Controller<HTMLElement> {
   declare readonly initValue: boolean;
   declare filtersValue: ResourceFilters;
   declare readonly displayOptionsHtmlValue: string;
-  declare newRecordValue: CustomerWin | Contribution | undefined;
-
-  connect() {
-    if (this.hasDisplayOptionsBtnTarget) initDisplayOptions.call(this);
-  }
-
+  declare newRowValue: (
+    { rowData: CustomerWinRowData | ContributionRowData, rowPartial: string } | undefined
+  );
   get resourceName() {
     return this.element.dataset.resourceName as ResourceName;
   }
@@ -87,6 +86,29 @@ export default class ResourceController extends Controller<HTMLElement> {
 
   connect() {
     if (this.hasDisplayOptionsBtnTarget) initDisplayOptions.call(this);
+  }
+
+  openRowPartial(
+    { detail: { ctrl, turboFrame } }: 
+    { 
+      detail: { 
+        turboFrame: { id: string, src: string } 
+        ctrl?: DatatableRowController<any, any>, 
+      } 
+    }
+  ) {
+    this.element.classList.add('row-partial-open');
+    this.rowPartialTarget.innerHTML = `
+      <turbo-frame id="${turboFrame.id}" src="${turboFrame.src}">
+        <div class="spinner">
+          <div class="lds-ring">
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+          </div>
+      </turbo-frame>
+    `;
   }
 
   initValueChanged(shouldInit: boolean) {
@@ -154,11 +176,14 @@ export default class ResourceController extends Controller<HTMLElement> {
     }
   }
 
-  newResourceValueChanged(record: CustomerWin | Contribution) {
-    this.addTableRow(record, true);
+  newRowValueChanged(
+    { rowData, rowPartial } :
+    { rowData: CustomerWinRowData | ContributionRowData, rowPartial: string }
+  ) {
+    this.addTableRow(rowData, true);
 
-    // Searches for the row and expands its child row
-    // this.showTableRow(record.id);
+    this.rowPartialTarget.innerHTML = rowPartial;
+    this.element.classList.add('row-partial-open');
   }
   
   validateNewItem(e: Event) {
