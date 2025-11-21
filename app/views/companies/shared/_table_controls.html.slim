@@ -36,7 +36,6 @@
 
   div
     div
-
       = content_tag( \
           :button,
           type: 'button',
@@ -57,8 +56,15 @@
 
       div data-table-nav-target="paginate"
       
-      .table-controls__row-partial-nav.btn-group data-table-nav-target="rowPartialNav"
-        button type="button" class="btn btn-default" data-action="table-nav#toPrevPartial"
-          i.fa.fa-chevron-left
-        button type="button" class="btn btn-default" data-action="table-nav#toNextPartial"
-          i.fa.fa-chevron-right
+      .table-controls__row-partial-nav.btn-group
+        - %w[prevPartialBtn nextPartialBtn].each do |btn|
+          = content_tag( \
+              :button,
+              type: 'button',
+              class: 'btn btn-default',
+              role: 'link',
+              data: { \
+                table_nav_target: btn,
+                action: 'table-nav#stepPartial',
+                step: (btn == 'prevPartialBtn' ? '-1' : '1') }) do
+            i.fa class="fa-chevron-#{btn == 'prevPartialBtn' ? 'left' : 'right'}"

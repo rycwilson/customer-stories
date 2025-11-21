@@ -1,8 +1,39 @@
 .row-partial {
+  @include spinner('md');
+  position: relative;
   display: none;
 
   .row-partial-open & {
     display: block;
+  }
+
+  > .spinner {
+    position: absolute;
+    top: 2rem;
+    right: 0;
+    left: 0;
+  }
+
+  .loading > & {
+    transition: opacity .15s ease-out;
+  }
+
+  .ready > & {
+    visibility: hidden;
+    opacity: 0;
+    transition: opacity 0s step-end;
+  }
+
+  > .spinner,
+  > turbo-frame {
+    visibility: hidden;
+    opacity: 0;
+  }
+
+  &.loading > .spinner,
+  &.ready > turbo-frame{
+    visibility: visible;
+    opacity: 1;
   }
 }
 
@@ -175,7 +206,7 @@
   .row-partial-open & {
     &__back-to-table,
     &__row-partial-nav {
-      display: inline-flex;
+      display: block;
     }
     
     [data-table-nav-target="paginate"] {

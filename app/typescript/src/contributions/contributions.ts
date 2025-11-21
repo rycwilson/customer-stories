@@ -259,20 +259,20 @@ export function dataTableConfig(
           'data-contribution-datatable-outlet',
           storyId ? '#story-contributions-table' : '#contributions-table'
         )
-        .attr('data-contribution-resource-outlet', '#customer-wins')
         .attr(
           'data-contribution-row-data-value', 
           JSON.stringify({ id, status, invitationTemplate, story, path, editPath })
         )
-        .attr('data-action', [
-          'dropdown:dropdown-is-shown->contribution#onShownDropdown',
-          'dropdown:dropdown-is-hidden->contribution#onHiddenDropdown'
-        ].join(' '))
-        .attr('data-controller', 'contribution')
         .attr(
           'data-contribution-child-row-turbo-frame-attrs-value', 
           JSON.stringify({ id: 'edit-contribution', src: editPath })
-        );
+        )
+        .attr('data-action', [
+          'dropdown:dropdown-is-shown->contribution#onShownDropdown',
+          'dropdown:dropdown-is-hidden->contribution#onHiddenDropdown',
+          'click->contribution#openPartial'
+        ].join(' '))
+        .attr('data-controller', 'contribution');
     }
   }
 }

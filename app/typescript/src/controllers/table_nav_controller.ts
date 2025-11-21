@@ -1,13 +1,17 @@
 import { Controller } from '@hotwired/stimulus';
 
 export default class TableNavController extends Controller<HTMLElement> {
-  static targets = ['info', 'paginate'];
-  declare readonly infoTarget: HTMLElement;
-  declare readonly paginateTarget: HTMLElement;
+  // These targets' children are replaced by the ResourceController when a table is drawn
+  static targets = ['info', 'paginate', 'prevPartialBtn', 'nextPartialBtn'];
+  declare readonly infoTarget: HTMLElement; // "x to y of z" 
+  declare readonly paginateTarget: HTMLElement; // previous/next buttons
+  declare readonly prevPartialBtnTarget: HTMLButtonElement;
+  declare readonly nextPartialBtnTarget: HTMLButtonElement;
 
   static values = {
-    currentRow: { type: Number, default: undefined }
+    rowPosition: { type: Number, default: undefined }
   }
+  declare rowPositionValue: number | undefined;
 
   declare observer: MutationObserver;
   declare currentRangeStart: number;
@@ -15,12 +19,18 @@ export default class TableNavController extends Controller<HTMLElement> {
   declare totalRows: number;
   
   connect() {
+    // When the table draws, the `.dataTables_info` and `.dataTables_paginate` elements are
+    // cloned into the info and paginate targets respectively. (see drawCallback in table config)
+    // When this happens, keep track of the current page range
+    // Ignore the change when a row partial is displayed.
     this.observer = new MutationObserver(mutations => {
+      // Ignore the change to the info target when it reflects the current opened row partial
+      if (this.rowPositionValue) return;
+
       const currentRange = <string>(
         mutations[0].addedNodes[0].textContent!.match(/^(?<range>\d+ to \d+)/)!.groups!.range
       );
-      this.currentRangeStart = +currentRange.split(' to ')[0];
-      this.currentRangeEnd = +currentRange.split(' to ')[1];
+      [this.currentRangeStart, this.currentRangeEnd] = currentRange.split(' to ').map(Number);
     });
     this.observer.observe(this.infoTarget, { childList: true, subtree: false });
   }
@@ -29,13 +39,52 @@ export default class TableNavController extends Controller<HTMLElement> {
     this.observer.disconnect();
   }
 
-  currentRowValueChanged(position: number) {
-    if (position) {
-      this.infoTarget.innerText = this.infoTarget.innerText
-        .replace(/^\d+ to \d+/, position.toString());
+  rowPositionValueChanged(currentPosition: number, previousPosition: number) {
+    const tableToRowPartial = currentPosition && !previousPosition;
+    const rowPartialToTable = !currentPosition && previousPosition;
+
+    // If moving from table to row partial, update info text to show only the current row
+    // If moving from row partial to table, restore info text to show current page range
+    if (tableToRowPartial) {
+      this.infoTarget.innerText = this.infoTarget.innerText.replace(/^\d+ to \d+/, currentPosition.toString())
+      
+    } else if (rowPartialToTable) {
+      this.infoTarget.innerText = this.infoTarget.innerText.replace(/^\d+/, `${this.currentRangeStart} to ${this.currentRangeEnd}`);
     } else {
-      this.infoTarget.innerText = this.infoTarget.innerText
-        .replace(/^\d+/, `${this.currentRangeStart} to ${this.currentRangeEnd}`);
+      this.infoTarget.innerText = this.infoTarget.innerText.replace(/^\d+/, currentPosition.toString())
     }
+
+    // We don't want to disable the buttons because this will result in styling
+    // that is not consistent with datatables styling of the pagination buttons 
+    // (which are actually links and thus can't be disabled)
+    if (currentPosition === this.currentRangeStart) {
+      this.prevPartialBtnTarget.setAttribute('aria-disabled', 'true');
+      this.prevPartialBtnTarget.style.cursor = 'not-allowed';
+    } else {
+      this.prevPartialBtnTarget.removeAttribute('aria-disabled');
+      this.prevPartialBtnTarget.style.cursor = 'pointer';
+    }
+    if (currentPosition === this.currentRangeEnd) {
+      this.nextPartialBtnTarget.setAttribute('aria-disabled', 'true');
+      this.nextPartialBtnTarget.style.cursor = 'not-allowed';
+    } else {
+      this.nextPartialBtnTarget.removeAttribute('aria-disabled');
+      this.nextPartialBtnTarget.style.cursor = 'pointer';
+    }
+  }
+
+  // TODO: if a boundary is reached, turn the table page if possible
+  stepPartial({ currentTarget: btn }: { currentTarget: HTMLButtonElement }) {
+    if (!this.rowPositionValue) return;
+    if (btn.ariaDisabled === 'true') return;
+
+    // This logic can instead be a part of the disabling logic in rowPositionValueChanged
+    // const atStart = this.rowPositionValue === this.currentRangeStart;
+    // const atEnd = this.rowPositionValue === this.currentRangeEnd;
+    // if (atStart || atEnd) return;
+    
+    const step = +(<string>btn.dataset.step);
+    // this.rowPositionValue += step;
+    this.dispatch('step-partial', { detail: { position: this.rowPositionValue + step } });
   }
 }

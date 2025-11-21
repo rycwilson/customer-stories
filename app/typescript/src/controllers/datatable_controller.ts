@@ -31,7 +31,8 @@ export default class DatatableController extends Controller<HTMLTableElement> {
     rowGroupEnabled: { type: Boolean, default: true },
     rowGroupDataSource: String,
     reload: { type: String, default: undefined },
-    redraw: { type: Boolean, default: undefined }
+    redraw: { type: Boolean, default: undefined },
+    rowPartialAtPosition: { type: Number, default: undefined }
   };
   declare initValue: boolean;
   declare searchParamsValue: SearchParams;
@@ -39,6 +40,7 @@ export default class DatatableController extends Controller<HTMLTableElement> {
   declare rowGroupEnabledValue: boolean;
   declare reloadValue: string;
   declare redrawValue: boolean;
+  declare rowPartialAtPositionValue: number;
 
   declare dt: Api<any>;
   declare searchDebounceTimer: number;
@@ -176,7 +178,7 @@ export default class DatatableController extends Controller<HTMLTableElement> {
   }
 
   search({ filters, searchVal, searchSelectResults }: SearchParams) {
-    console.log(`searching ${(<HTMLElement>this.element.closest('[data-resource-name]')!).dataset.resourceName} table for:`, { filters, searchVal, searchSelectResults });
+    // console.log(`searching ${(<HTMLElement>this.element.closest('[data-resource-name]')!).dataset.resourceName} table for:`, { filters, searchVal, searchSelectResults });
 
     let dtSearch = this.dt.search('')
     dtSearch.columns().search('') 
@@ -230,5 +232,17 @@ export default class DatatableController extends Controller<HTMLTableElement> {
       nextBtnClone.addEventListener('click', (e) => nextBtn.click());
       this.dispatch('paginate-cloned', { detail: { clone: paginateClone } });
     }
+  }
+
+  rowPartialAtPositionValueChanged(position: number) {
+    const rowData = this.dt.rows({ search: 'applied' }).data().toArray()[position - 1];
+    this.dispatch('row-partial', { 
+      detail: { 
+        turboFrame: { 
+          id: `edit-${this.resourceOutlet.identifier.slice(0, -1)}`, 
+          src: rowData.edit_path
+        }
+      }
+    });
   }
 }

@@ -52,6 +52,7 @@ export default class ResourceController extends Controller<HTMLElement> {
   declare newRowValue: (
     { rowData: CustomerWinRowData | ContributionRowData, rowPartial: string } | undefined
   );
+
   get resourceName() {
     return this.element.dataset.resourceName as ResourceName;
   }
@@ -92,29 +93,58 @@ export default class ResourceController extends Controller<HTMLElement> {
     { 
       detail: {
         position: number; 
-        turboFrame: { id: string, src: string } 
+        turboFrame?: { id: string, src: string } 
         ctrl?: DatatableRowController<any, any>, 
       } 
     }
   ) {
-    this.tableNavTarget.setAttribute('data-table-nav-current-row-value', position.toString());
-    this.rowPartialTarget.innerHTML = `
-      <turbo-frame id="${turboFrame.id}" src="${turboFrame.src}">
-        <div class="spinner">
-          <div class="lds-ring">
-            <div></div>
-            <div></div>
-            <div></div>
-            <div></div>
-          </div>
+    const partialTemplate = ({ id, src }: { id: string, src: string }) => `
+      <div class="spinner">
+        <div class="lds-ring">
+          <div></div>
+          <div></div>
+          <div></div>
+          <div></div>
         </div>
-      </turbo-frame>
+      </div>
+      <turbo-frame id="${id}" src="${src}"></turbo-frame>
     `;
+    const renderPartial = (turboFrame: { id: string, src: string }) => {
+      const spinnerTimer = setTimeout(() => this.rowPartialTarget.classList.add('loading'), 1000);
+      this.rowPartialTarget.addEventListener(
+        'turbo:frame-render',
+        (e: Event) => {
+          this.rowPartialTarget.classList.add('ready');
+          clearTimeout(spinnerTimer);
+          this.rowPartialTarget.classList.remove('loading');
+        },
+        { once: true }
+      );
+      this.rowPartialTarget.innerHTML = partialTemplate(turboFrame);
+    }
+    this.tableNavTarget.setAttribute('data-table-nav-row-position-value', position.toString());
     this.element.classList.add('row-partial-open');
+    if (turboFrame) {
+      renderPartial(turboFrame);
+    } else {
+      this.element.addEventListener(
+        'datatable:row-partial',
+        (e: Event) => {
+          const { detail: { turboFrame } } = e as CustomEvent;
+          renderPartial(turboFrame);
+        },
+        { once: true }
+      )
+      this.datatableTarget.setAttribute(
+        'data-datatable-row-partial-at-position-value',
+        position.toString()
+      );
+    }
+    
   }
 
   backToTable() {
-    this.tableNavTarget.setAttribute('data-table-nav-current-row-value', '');
+    this.tableNavTarget.setAttribute('data-table-nav-row-position-value', '');
     this.element.classList.remove('row-partial-open');
   }
 
@@ -188,7 +218,8 @@ export default class ResourceController extends Controller<HTMLElement> {
     }
   }
 
-  // Pass the clone via an outlet since it is a complex object with attached event listeners
+  // Pass the clone via an outlet since it is a complex object with attached event listeners,
+  // thus can't be passed by data attribute
   onTableInfoCloned(this: ResourceControllerWithDatatable, e: CustomEvent) {
     const { clone } = e.detail;
     this.tableNavOutlet.infoTarget.replaceChildren(clone);

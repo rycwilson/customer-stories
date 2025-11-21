@@ -51,6 +51,7 @@ export default class DatatableRowController<Ctrl extends RowController, Data ext
 
   openPartial({ target }: { target: Element }) {
     if (target.closest('.toggle-child') || target.closest('[data-controller="dropdown"]')) return;
+    
     const index = this.datatableOutlet.dt
       .rows({ search: 'applied' })
       .data()
@@ -59,8 +60,8 @@ export default class DatatableRowController<Ctrl extends RowController, Data ext
     const position = index + 1;
 
     this.dispatch(
-      'open-row-partial',
-      { detail: { ctrl: this, turboFrame: this.childRowTurboFrameAttrsValue, position } }
+      'row-clicked',
+      { detail: { position, turboFrame: this.childRowTurboFrameAttrsValue, ctrl: this } }
     );
   }
 
