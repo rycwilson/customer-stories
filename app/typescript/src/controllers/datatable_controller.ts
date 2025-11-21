@@ -42,9 +42,10 @@ export default class DatatableController extends Controller<HTMLTableElement> {
 
   declare dt: Api<any>;
   declare searchDebounceTimer: number;
-  
-  handleColumnSort = this.onColumnSort.bind(this);
-  debouncedUpdateComponents = debounce(this.updateComponents.bind(this), 75);
+
+  // NOTE: This may trigger multiple times, presumably due to datatables manipulation
+  // connect() {
+  // }
 
   get resourceOutlet(): ResourceControllerWithDatatable {
     if (this.hasCustomerWinsOutlet) return this.customerWinsOutlet;
@@ -65,7 +66,7 @@ export default class DatatableController extends Controller<HTMLTableElement> {
           th.removeEventListener('click', ctrl.handleColumnSort, true);
           th.addEventListener('click', ctrl.handleColumnSort, true);
         });
-        ctrl.debouncedUpdateComponents();
+        debounce(ctrl.clonePaginationComponents.bind(ctrl), 75)();
         ctrl.dispatch('drawn');
       },
       initComplete(this: any, settings: object) {
@@ -156,6 +157,7 @@ export default class DatatableController extends Controller<HTMLTableElement> {
 
   // We want to preserve row group sorting (if present) when the user sorts a column.
   // Intercept th clicks and manually execute the sort.
+  handleColumnSort = this.onColumnSort.bind(this);
   onColumnSort(e: Event) {
     e.stopPropagation();
     const th = e.currentTarget as HTMLTableCellElement;
@@ -195,14 +197,11 @@ export default class DatatableController extends Controller<HTMLTableElement> {
       // Object.keys(searchSelectResults).forEach(column => {
       //   dtSearch = dtSearch.column(`${column}:name`).search(`^(${searchSelectResults[column]})$`, true, false);
       // });
-    } else if (searchVal) {
-      const [column, id] = searchVal.split('-');
-      dtSearch = dtSearch.column(`${column}:name`).search(`^${id}$`, true, false);
     }
     dtSearch.draw();
   }
 
-  updateComponents() {
+  clonePaginationComponents() {
     const info = this.element.parentElement?.querySelector(':scope > .dataTables_info');
     const paginate = this.element.parentElement?.querySelector(':scope > .dataTables_paginate');
     if (info instanceof HTMLElement) {
@@ -211,7 +210,7 @@ export default class DatatableController extends Controller<HTMLTableElement> {
       infoClone.textContent = (
         info.textContent?.match(/(?<entries>\d+ to \d+ of \d+)/)?.groups?.entries || null
       );
-      this.resourceOutlet.infoTarget.replaceChildren(infoClone);
+      this.dispatch('info-cloned', { detail: { clone: infoClone } });
     }
     if (paginate instanceof HTMLElement) {
       const paginateClone = paginate.cloneNode(true) as HTMLElement;
@@ -227,9 +226,9 @@ export default class DatatableController extends Controller<HTMLTableElement> {
       prevBtnClone.innerHTML = '<i class="fa fa-chevron-left"></i>';
       nextBtnClone.innerHTML = '<i class="fa fa-chevron-right"></i>';
       pageBtnClones.forEach(btn => btn.remove());
-      this.resourceOutlet.paginateTarget.replaceChildren(paginateClone);
       prevBtnClone.addEventListener('click', (e) => prevBtn.click());
       nextBtnClone.addEventListener('click', (e) => nextBtn.click());
+      this.dispatch('paginate-cloned', { detail: { clone: paginateClone } });
     }
   }
 }

@@ -35,5 +35,30 @@
             |&nbsp;&nbsp;Preferences
 
   div
-    = content_tag(:div, '', class: 'help-block', data: { "#{resource_ctrl_id}_target" => 'info' })
-    = content_tag(:div, '', data: { "#{resource_ctrl_id}_target" => 'paginate' })
+    div
+
+      = content_tag( \
+          :button,
+          type: 'button',
+          class: 'table-controls__back-to-table btn btn-default',
+          data: { \
+            "#{resource_ctrl_id}_target" => 'backToTableBtn',
+            action: "#{resource_ctrl_id}#backToTable" }) do
+        i.fa.fa-arrow-left
+    
+    = content_tag( \
+        :div,
+        class: "#{resource_ctrl_id}__table-nav",
+        data: { \
+          controller: 'table-nav',
+          "#{resource_ctrl_id}_target" => 'tableNav' }) do   
+
+      .help-block data-table-nav-target="info"
+
+      div data-table-nav-target="paginate"
+      
+      .table-controls__row-partial-nav.btn-group data-table-nav-target="rowPartialNav"
+        button type="button" class="btn btn-default" data-action="table-nav#toPrevPartial"
+          i.fa.fa-chevron-left
+        button type="button" class="btn btn-default" data-action="table-nav#toNextPartial"
+          i.fa.fa-chevron-right

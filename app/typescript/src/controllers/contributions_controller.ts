@@ -1,7 +1,11 @@
+import type TableNavController from "./table_nav_controller";
 import ResourceController from './resource_controller';
 import { dataTableConfig, toggleColumnVisibility } from '../contributions/contributions';
 
 export default class ContributionsController extends ResourceController {
+  static outlets = [...super.outlets, 'table-nav'];
+  declare readonly tableNavOutlet: TableNavController;
+
   static values = {
     ... super.values, 
     rowGroupDataSource: { type: String, default: 'customer.name' },

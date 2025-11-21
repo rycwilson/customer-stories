@@ -51,12 +51,11 @@ export default class DatatableRowController<Ctrl extends RowController, Data ext
 
   openPartial({ target }: { target: Element }) {
     if (target.closest('.toggle-child') || target.closest('[data-controller="dropdown"]')) return;
-    
     const index = this.datatableOutlet.dt
       .rows({ search: 'applied' })
       .data()
       .toArray()
-      .findIndex(row => { console.log(row.id, this.rowDataValue.id); return row.id === this.rowDataValue.id; });
+      .findIndex(row => row.id === this.rowDataValue.id);
     const position = index + 1;
 
     this.dispatch(
@@ -102,7 +101,6 @@ export default class DatatableRowController<Ctrl extends RowController, Data ext
     //     // body is empty
     //     this.row.remove().draw();
     //   });
-    console.log(this.path)
     const request = new FetchRequest('DELETE', this.path);
     const response = await request.perform();
     if (response.ok) {

@@ -57,6 +57,7 @@
               resource_name: 'customerWins',
               controller: 'customer-wins',
               customer_wins_dashboard_outlet: '.dashboard',
+              customer_wins_table_nav_outlet: '.customer-wins__table-nav',
               customer_wins_data_path_value: '/successes',
               customer_wins_row_group_data_source_value: @row_group_data_source[:customer_wins],
               customer_wins_filters_value: customer_wins_filters(curator&.id),
@@ -64,6 +65,8 @@
                 customer_wins_display_options_html(company),
               action: [ \
                 'datatable:init->customer-wins#onTableInitialized',
+                'datatable:info-cloned->customer-wins#onTableInfoCloned',
+                'datatable:paginate-cloned->customer-wins#onTablePaginateCloned',
                 'customer-win:open-row-partial->customer-wins#openRowPartial'].join(' ') }) do
 
           = render('successes/table', company:)
@@ -79,6 +82,7 @@
               resource_name: 'contributions',
               controller: 'contributions',
               contributions_dashboard_outlet: '.dashboard',
+              contributions_table_nav_outlet: '.contributions__table-nav',
               contributions_data_path_value: company_contributions_path(company),
               contributions_row_group_data_source_value: @row_group_data_source[:contributions],
               contributions_filters_value: contributions_filters(curator&.id),
@@ -88,6 +92,8 @@
                 invitation_template_select_html(company),
               action: [ \
                 'datatable:init->contributions#onTableInitialized',
+                'datatable:info-cloned->contributions#onTableInfoCloned',
+                'datatable:paginate-cloned->contributions#onTablePaginateCloned',
                 'contribution:open-row-partial->contributions#openRowPartial'].join(' ') }) do
 
           = render('contributions/table', company:)

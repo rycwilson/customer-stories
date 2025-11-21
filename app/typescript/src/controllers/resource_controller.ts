@@ -1,4 +1,5 @@
 import type DashboardController from "./dashboard_controller";
+import type DatatableRowController from "./datatable_row_controller";
 import { Controller } from "@hotwired/stimulus";
 import { getJSON } from '../utils';
 import { 
@@ -24,30 +25,28 @@ export default class ResourceController extends Controller<HTMLElement> {
 
   static targets = [
     'searchSelect', 
-    'info',
-    'paginate',
     'displayOptionsBtn',
     'datatable',
+    'tableNav',
     'rowPartial'
   ];
   declare readonly searchSelectTarget: TomSelectInput;
-  declare readonly infoTarget: HTMLElement;
-  declare readonly paginateTarget: HTMLElement;
   declare readonly datatableTarget: HTMLDivElement;
   declare readonly hasDatatableTarget: boolean;
+  declare readonly tableNavTarget: HTMLDivElement;
   declare readonly displayOptionsBtnTarget: HTMLButtonElement;
   declare readonly hasDisplayOptionsBtnTarget: boolean;
   declare readonly rowPartialTarget: HTMLElement;
 
   static values = {
-    dataPath: String,
     init: { type: Boolean, default: false },
+    dataPath: String,
     filters: { type: Object },
     displayOptionsHtml: String,
-    newRecord: { type: Object, default: undefined }
+    newRow: { type: Object, default: undefined },
   }
-  declare readonly dataPathValue: string;
   declare readonly initValue: boolean;
+  declare readonly dataPathValue: string;
   declare filtersValue: ResourceFilters;
   declare readonly displayOptionsHtmlValue: string;
   declare newRowValue: (
@@ -89,15 +88,16 @@ export default class ResourceController extends Controller<HTMLElement> {
   }
 
   openRowPartial(
-    { detail: { ctrl, turboFrame } }: 
+    { detail: { position, turboFrame, ctrl } }: 
     { 
-      detail: { 
+      detail: {
+        position: number; 
         turboFrame: { id: string, src: string } 
         ctrl?: DatatableRowController<any, any>, 
       } 
     }
   ) {
-    this.element.classList.add('row-partial-open');
+    this.tableNavTarget.setAttribute('data-table-nav-current-row-value', position.toString());
     this.rowPartialTarget.innerHTML = `
       <turbo-frame id="${turboFrame.id}" src="${turboFrame.src}">
         <div class="spinner">
@@ -107,8 +107,15 @@ export default class ResourceController extends Controller<HTMLElement> {
             <div></div>
             <div></div>
           </div>
+        </div>
       </turbo-frame>
     `;
+    this.element.classList.add('row-partial-open');
+  }
+
+  backToTable() {
+    this.tableNavTarget.setAttribute('data-table-nav-current-row-value', '');
+    this.element.classList.remove('row-partial-open');
   }
 
   initValueChanged(shouldInit: boolean) {
@@ -127,24 +134,6 @@ export default class ResourceController extends Controller<HTMLElement> {
         this.initTable();
       })
     }
-  }
-
-  initTable() {
-    if (this.hasDatatableTarget) {
-      this.datatableTarget.setAttribute('data-datatable-init-value', 'true');
-    }
-  }
-
-  onTableInitialized(e: CustomEvent) {
-    if (this.identifier === 'customer-wins') {
-      (window as any).dt = e.detail.dt; 
-    }
-    setTimeout(() => {
-      e.detail.dt.one('draw', () => {
-        this.dispatch('ready', { detail: { resourceName: this.resourceName } });
-      })
-      searchTable.call(this);
-    });
   }
 
   onTomselectSearch(e: CustomEvent) {
@@ -198,6 +187,40 @@ export default class ResourceController extends Controller<HTMLElement> {
       );
     }
   }
+
+  // Pass the clone via an outlet since it is a complex object with attached event listeners
+  onTableInfoCloned(this: ResourceControllerWithDatatable, e: CustomEvent) {
+    const { clone } = e.detail;
+    this.tableNavOutlet.infoTarget.replaceChildren(clone);
+  }
+
+  onTablePaginateCloned(this: ResourceControllerWithDatatable, e: CustomEvent) {
+    const { clone } = e.detail;
+    this.tableNavOutlet.paginateTarget.replaceChildren(clone);
+  }
+
+  // toPrevPartial({ currentTarget: btn }: { currentTarget: HTMLButtonElement }) {
+  //   const current = +this.infoTarget.innerText.match(/^(?<current>\d+)/)!.groups!.current;
+  //   if (current === 1) {
+  //     return;
+  //   } else if (current === 2) {
+  //     btn.style.cursor = 'not-allowed';
+  //   }
+  //   this.infoTarget.innerText = this.infoTarget.innerText
+  //     .replace(/^(\d+)/, (match, n) => `${+n - 1}`); 
+  // }
+
+  // toNextPartial({ currentTarget: btn }: { currentTarget: HTMLButtonElement }) {
+  //   const current = +this.infoTarget.innerText.match(/^(?<current>\d+)/)!.groups!.current;
+  //   const last = +this.infoTarget.innerText.match(/of (?<last>\d+)$/)!.groups!.last;
+  //   if (current === last) {
+  //     return;
+  //   } else if (current === last - 1) {
+  //     btn.style.cursor = 'not-allowed';
+  //   }
+  //   this.infoTarget.innerText = this.infoTarget.innerText
+  //     .replace(/^(\d+)/, (match, n) => `${+n + 1}`);  
+  // }
 
   // addSyncListener(syncResource: (ctrl: ResourceController) => void) {
   //   this.element.addEventListener('datatable:drawn', () => {

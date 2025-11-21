@@ -94,6 +94,9 @@ application.register('new-contribution', NewContributionController);
 import NewStoryController from './new_story_controller.js';
 application.register('new-story', NewStoryController);
 
+import TableNavController from './table_nav_controller.js';
+application.register('table-nav', TableNavController);
+
 import PluginsController from "./plugins_controller.js";
 application.register("plugins", PluginsController);
 
