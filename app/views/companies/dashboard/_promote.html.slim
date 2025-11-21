@@ -58,17 +58,22 @@
     .layout-main
       .tab-content
       
-        #promoted-stories.resource-ctrl.tab-pane {
-          class=('active in' if active_tab == '#promoted-stories')
-          data-dashboard-target="promotedStories"
-          data-resource-name="promotedStories"
-          data-controller="promoted-stories"
-          data-promoted-stories-dashboard-outlet=".dashboard"
-          data-promoted-stories-data-path-value=company_adwords_ads_path(company)
-          data-promoted-stories-row-group-data-source-value=@row_group_data_source[:promoted_stories]
-          data-promoted-stories-filters-value={ 'curator': curator&.id }.to_json
-          data-promoted-stories-display-options-html-value=promoted_stories_display_options_html(company)
-          data-action="datatable:init->promoted-stories#onTableInitialized" }
+        = content_tag( \
+            :div,
+            id: 'promoted-stories',
+            class: "tab-pane resource-ctrl #{'active' if active_tab == '#promoted-stories'}",
+            aria_labelledby: 'promoted-stories-tab',
+            role: 'tabpanel',
+            data: { \
+              dashboard_target: 'promotedStories',
+              resource_name: 'promotedStories',
+              controller: 'promoted-stories',
+              promoted_stories_dashboard_outlet: '.dashboard',
+              promoted_stories_data_path_value: company_adwords_ads_path(company),
+              promoted_stories_row_group_data_source_value: @row_group_data_source[:promoted_stories],
+              promoted_stories_filters_value: { 'curator': curator&.id },
+              promoted_stories_display_options_html_value: promoted_stories_display_options_html(company),
+              action: 'datatable:init->promoted-stories#onTableInitialized' }) do
 
           table#promoted-stories-table.table {
             data-promoted-stories-target="datatable"
