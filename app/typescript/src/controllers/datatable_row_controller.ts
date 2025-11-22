@@ -61,7 +61,7 @@ export default class DatatableRowController<Ctrl extends RowController, Data ext
 
     this.dispatch(
       'row-clicked',
-      { detail: { position, turboFrame: this.childRowTurboFrameAttrsValue, ctrl: this } }
+      { detail: { position, turboFrame: this.childRowTurboFrameAttrsValue } }
     );
   }
 

@@ -46,8 +46,7 @@ export default class TableNavController extends Controller<HTMLElement> {
     // If moving from table to row partial, update info text to show only the current row
     // If moving from row partial to table, restore info text to show current page range
     if (tableToRowPartial) {
-      this.infoTarget.innerText = this.infoTarget.innerText.replace(/^\d+ to \d+/, currentPosition.toString())
-      
+      this.infoTarget.innerText = this.infoTarget.innerText.replace(/^\d+ to \d+/, currentPosition.toString());
     } else if (rowPartialToTable) {
       this.infoTarget.innerText = this.infoTarget.innerText.replace(/^\d+/, `${this.currentRangeStart} to ${this.currentRangeEnd}`);
     } else {
@@ -74,17 +73,11 @@ export default class TableNavController extends Controller<HTMLElement> {
   }
 
   // TODO: if a boundary is reached, turn the table page if possible
-  stepPartial({ currentTarget: btn }: { currentTarget: HTMLButtonElement }) {
+  stepRowPartial({ currentTarget: btn }: { currentTarget: HTMLButtonElement }) {
     if (!this.rowPositionValue) return;
     if (btn.ariaDisabled === 'true') return;
-
-    // This logic can instead be a part of the disabling logic in rowPositionValueChanged
-    // const atStart = this.rowPositionValue === this.currentRangeStart;
-    // const atEnd = this.rowPositionValue === this.currentRangeEnd;
-    // if (atStart || atEnd) return;
     
     const step = +(<string>btn.dataset.step);
-    // this.rowPositionValue += step;
-    this.dispatch('step-partial', { detail: { position: this.rowPositionValue + step } });
+    this.dispatch('step-row-partial', { detail: { position: this.rowPositionValue + step } });
   }
 }

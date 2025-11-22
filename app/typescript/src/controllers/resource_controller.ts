@@ -44,14 +44,20 @@ export default class ResourceController extends Controller<HTMLElement> {
     filters: { type: Object },
     displayOptionsHtml: String,
     newRow: { type: Object, default: undefined },
+    rowPartial: { type: Object, default: undefined }
   }
   declare readonly initValue: boolean;
   declare readonly dataPathValue: string;
   declare filtersValue: ResourceFilters;
   declare readonly displayOptionsHtmlValue: string;
   declare newRowValue: (
-    { rowData: CustomerWinRowData | ContributionRowData, rowPartial: string } | undefined
+    { rowData: CustomerWinRowData | ContributionRowData, rowPartialHtml: string } | undefined
   );
+  declare rowPartialValue: { 
+    position: number;
+    turboFrame?: { id: string, src: string };
+    html?: string;
+  };
 
   get resourceName() {
     return this.element.dataset.resourceName as ResourceName;
@@ -86,66 +92,6 @@ export default class ResourceController extends Controller<HTMLElement> {
 
   connect() {
     if (this.hasDisplayOptionsBtnTarget) initDisplayOptions.call(this);
-  }
-
-  openRowPartial(
-    { detail: { position, turboFrame, ctrl } }: 
-    { 
-      detail: {
-        position: number; 
-        turboFrame?: { id: string, src: string } 
-        ctrl?: DatatableRowController<any, any>, 
-      } 
-    }
-  ) {
-    const partialTemplate = ({ id, src }: { id: string, src: string }) => `
-      <div class="spinner">
-        <div class="lds-ring">
-          <div></div>
-          <div></div>
-          <div></div>
-          <div></div>
-        </div>
-      </div>
-      <turbo-frame id="${id}" src="${src}"></turbo-frame>
-    `;
-    const renderPartial = (turboFrame: { id: string, src: string }) => {
-      const spinnerTimer = setTimeout(() => this.rowPartialTarget.classList.add('loading'), 1000);
-      this.rowPartialTarget.addEventListener(
-        'turbo:frame-render',
-        (e: Event) => {
-          this.rowPartialTarget.classList.add('ready');
-          clearTimeout(spinnerTimer);
-          this.rowPartialTarget.classList.remove('loading');
-        },
-        { once: true }
-      );
-      this.rowPartialTarget.innerHTML = partialTemplate(turboFrame);
-    }
-    this.tableNavTarget.setAttribute('data-table-nav-row-position-value', position.toString());
-    this.element.classList.add('row-partial-open');
-    if (turboFrame) {
-      renderPartial(turboFrame);
-    } else {
-      this.element.addEventListener(
-        'datatable:row-partial',
-        (e: Event) => {
-          const { detail: { turboFrame } } = e as CustomEvent;
-          renderPartial(turboFrame);
-        },
-        { once: true }
-      )
-      this.datatableTarget.setAttribute(
-        'data-datatable-row-partial-at-position-value',
-        position.toString()
-      );
-    }
-    
-  }
-
-  backToTable() {
-    this.tableNavTarget.setAttribute('data-table-nav-row-position-value', '');
-    this.element.classList.remove('row-partial-open');
   }
 
   initValueChanged(shouldInit: boolean) {
@@ -195,14 +141,83 @@ export default class ResourceController extends Controller<HTMLElement> {
     }
   }
 
+  rowPartialValueChanged(
+    { position, turboFrame, html }: 
+    { position: number, turboFrame?: { id: string, src: string }, html?: string }
+  ) {
+    if (position === 0) {
+      this.tableNavTarget.setAttribute('data-table-nav-row-position-value', '');
+      this.element.classList.remove('row-partial-open');
+    } else {
+      this.tableNavTarget.setAttribute('data-table-nav-row-position-value', position.toString());
+      this.element.classList.add('row-partial-open');
+      if (html) {
+        this.rowPartialTarget.innerHTML = html;
+        this.rowPartialTarget.classList.add('ready');
+      } else if (turboFrame) {
+        const spinnerTimer = setTimeout(() => this.rowPartialTarget.classList.add('loading'), 1000);
+        this.rowPartialTarget.addEventListener(
+          'turbo:frame-render',
+          (e: Event) => {
+            this.rowPartialTarget.classList.add('ready');
+            clearTimeout(spinnerTimer);
+            this.rowPartialTarget.classList.remove('loading');
+          },
+          { once: true }
+        );
+        this.rowPartialTarget.innerHTML = `
+          <div class="spinner">
+            <div class="lds-ring">
+              <div></div>
+              <div></div>
+              <div></div>
+              <div></div>
+            </div>
+          </div>
+          <turbo-frame id="${turboFrame.id}" src="${turboFrame.src}"></turbo-frame>
+        `
+      }
+    }
+  }
+
+  openRowPartial(e: CustomEvent) {
+    const { detail: { position, turboFrame } } = e;
+    this.rowPartialValue = { position, turboFrame };
+  }
+  
+  stepRowPartial(e: CustomEvent) {
+    const { detail: { position } } = e;
+    this.element.addEventListener(
+      'datatable:row-lookup',
+      (e: Event) => {
+        const { detail: { turboFrame } } = e as CustomEvent;
+        this.rowPartialValue = { position, turboFrame };
+      },
+      { once: true }
+    )
+    this.datatableTarget
+      .setAttribute('data-datatable-row-lookup-value', JSON.stringify({ position }));
+  }
+
   newRowValueChanged(
-    { rowData, rowPartial } :
-    { rowData: CustomerWinRowData | ContributionRowData, rowPartial: string }
+    { rowData, rowPartialHtml } :
+    { rowData: CustomerWinRowData | ContributionRowData, rowPartialHtml: string }
   ) {
     this.addTableRow(rowData, true);
+    this.element.addEventListener(
+      'datatable:row-lookup', 
+      (e: Event) => {
+        const { detail: { position } } = e as CustomEvent;
+        this.rowPartialValue = { position, html: rowPartialHtml };
+      },
+      { once: true }
+    );
+    this.datatableTarget
+      .setAttribute('data-datatable-row-lookup-value', JSON.stringify({ id: rowData.id }));
+  }
 
-    this.rowPartialTarget.innerHTML = rowPartial;
-    this.element.classList.add('row-partial-open');
+  backToTable() {
+    this.rowPartialValue = { position: 0 };
   }
   
   validateNewItem(e: Event) {
@@ -229,29 +244,6 @@ export default class ResourceController extends Controller<HTMLElement> {
     const { clone } = e.detail;
     this.tableNavOutlet.paginateTarget.replaceChildren(clone);
   }
-
-  // toPrevPartial({ currentTarget: btn }: { currentTarget: HTMLButtonElement }) {
-  //   const current = +this.infoTarget.innerText.match(/^(?<current>\d+)/)!.groups!.current;
-  //   if (current === 1) {
-  //     return;
-  //   } else if (current === 2) {
-  //     btn.style.cursor = 'not-allowed';
-  //   }
-  //   this.infoTarget.innerText = this.infoTarget.innerText
-  //     .replace(/^(\d+)/, (match, n) => `${+n - 1}`); 
-  // }
-
-  // toNextPartial({ currentTarget: btn }: { currentTarget: HTMLButtonElement }) {
-  //   const current = +this.infoTarget.innerText.match(/^(?<current>\d+)/)!.groups!.current;
-  //   const last = +this.infoTarget.innerText.match(/of (?<last>\d+)$/)!.groups!.last;
-  //   if (current === last) {
-  //     return;
-  //   } else if (current === last - 1) {
-  //     btn.style.cursor = 'not-allowed';
-  //   }
-  //   this.infoTarget.innerText = this.infoTarget.innerText
-  //     .replace(/^(\d+)/, (match, n) => `${+n + 1}`);  
-  // }
 
   // addSyncListener(syncResource: (ctrl: ResourceController) => void) {
   //   this.element.addEventListener('datatable:drawn', () => {

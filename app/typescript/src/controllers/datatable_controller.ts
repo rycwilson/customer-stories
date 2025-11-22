@@ -32,7 +32,7 @@ export default class DatatableController extends Controller<HTMLTableElement> {
     rowGroupDataSource: String,
     reload: { type: String, default: undefined },
     redraw: { type: Boolean, default: undefined },
-    rowPartialAtPosition: { type: Number, default: undefined }
+    rowLookup: { type: Object, default: undefined }
   };
   declare initValue: boolean;
   declare searchParamsValue: SearchParams;
@@ -40,7 +40,7 @@ export default class DatatableController extends Controller<HTMLTableElement> {
   declare rowGroupEnabledValue: boolean;
   declare reloadValue: string;
   declare redrawValue: boolean;
-  declare rowPartialAtPositionValue: number;
+  declare rowLookupValue: { id?: number, position?: number };
 
   declare dt: Api<any>;
   declare searchDebounceTimer: number;
@@ -234,15 +234,28 @@ export default class DatatableController extends Controller<HTMLTableElement> {
     }
   }
 
-  rowPartialAtPositionValueChanged(position: number) {
-    const rowData = this.dt.rows({ search: 'applied' }).data().toArray()[position - 1];
-    this.dispatch('row-partial', { 
-      detail: { 
-        turboFrame: { 
-          id: `edit-${this.resourceOutlet.identifier.slice(0, -1)}`, 
+  /**
+   * Accepts a row id, finds the row in the filtered data, and dispatches turboFrame and position.
+   * @param rowId - The id of the row to look up
+   */
+  rowLookupValueChanged({ id, position }: { id?: number, position?: number }) {
+    const data = this.dt.rows({ search: 'applied' }).data().toArray();
+    let returnValue;
+
+    if (id) {
+      const index = data.findIndex(row => row.id === id);
+      returnValue = { position: index + 1 };
+    } else if (position) {
+      const rowData = data[position - 1];
+      returnValue = {
+        turboFrame: {
+          id: `edit-${this.resourceOutlet.identifier.slice(0, -1)}`,
           src: rowData.edit_path
-        }
-      }
-    });
+        },
+      };
+    } else {
+      return;
+    }
+    this.dispatch('row-lookup', { detail: returnValue });
   }
 }
