@@ -71,7 +71,7 @@ class SuccessesController < ApplicationController
         formats: [:json],
         locals: { win: Success.for_datatable(@success.id).take }
       )
-      @row_partial_html = render_to_string(partial: 'successes/edit', locals: { success: @success })
+      @row_view_html = render_to_string(partial: 'successes/edit', locals: { success: @success })
 
       # TODO: We also need to pass any newly created customer or contributions to the response
       # @contributions_row_data = @success.contributions.present? && render_to_string( \

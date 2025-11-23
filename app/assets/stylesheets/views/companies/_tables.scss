@@ -1,9 +1,9 @@
-.row-partial {
+.row-view {
   @include spinner('md');
   position: relative;
   display: none;
 
-  .row-partial-open & {
+  .row-view-shown & {
     display: block;
   }
 
@@ -37,12 +37,12 @@
   }
 }
 
-.row-partial__heading,
-.row-partial__body {
+.row-view__heading,
+.row-view__body {
   padding: 1.5rem;
 }
 
-.row-partial__heading {
+.row-view__heading {
   margin: 0;
   background-color: $light-blue;
   // font-size: $font-size-base;
@@ -57,11 +57,11 @@
   @include row-hover-highlight;
   table-layout: fixed;
 
-  .row-partial-open & {
+  .row-view-shown & {
     display: none;
   }
 
-  // .row-partial-open & th.sorting {
+  // .row-view-shown & th.sorting {
   //   pointer-events: none;
     
   //   &::after {
@@ -199,16 +199,16 @@
   }
 
   &__back-to-table,
-  &__row-partial-nav {
+  &__row-view-nav {
     display: none;
   }
 
-  .row-partial-open & {
+  .row-view-shown & {
     &__back-to-table {
       display: block;
     }
 
-    &__row-partial-nav {
+    &__row-view-nav {
       @include flex-row-center;;
       gap: 1em;
     }

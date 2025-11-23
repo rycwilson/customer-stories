@@ -28,7 +28,7 @@ export default class ResourceController extends Controller<HTMLElement> {
     'displayOptionsBtn',
     'datatable',
     'tableNav',
-    'rowPartial'
+    'rowView'
   ];
   declare readonly searchSelectTarget: TomSelectInput;
   declare readonly datatableTarget: HTMLDivElement;
@@ -36,7 +36,7 @@ export default class ResourceController extends Controller<HTMLElement> {
   declare readonly tableNavTarget: HTMLDivElement;
   declare readonly displayOptionsBtnTarget: HTMLButtonElement;
   declare readonly hasDisplayOptionsBtnTarget: boolean;
-  declare readonly rowPartialTarget: HTMLElement;
+  declare readonly rowViewTarget: HTMLElement;
 
   static values = {
     init: { type: Boolean, default: false },
@@ -44,16 +44,16 @@ export default class ResourceController extends Controller<HTMLElement> {
     filters: { type: Object },
     displayOptionsHtml: String,
     newRow: { type: Object, default: undefined },
-    rowPartial: { type: Object, default: undefined }
+    rowView: { type: Object, default: undefined }
   }
   declare readonly initValue: boolean;
   declare readonly dataPathValue: string;
   declare filtersValue: ResourceFilters;
   declare readonly displayOptionsHtmlValue: string;
   declare newRowValue: (
-    { rowData: CustomerWinRowData | ContributionRowData, rowPartialHtml: string } | undefined
+    { rowData: CustomerWinRowData | ContributionRowData, rowViewHtml: string } | undefined
   );
-  declare rowPartialValue: { 
+  declare rowViewValue: { 
     position: number;
     turboFrame?: { id: string, src: string };
     html?: string;
@@ -141,31 +141,31 @@ export default class ResourceController extends Controller<HTMLElement> {
     }
   }
 
-  rowPartialValueChanged(
+  rowViewValueChanged(
     { position, turboFrame, html }: 
     { position: number, turboFrame?: { id: string, src: string }, html?: string }
   ) {
     if (position === 0) {
       this.tableNavTarget.setAttribute('data-table-nav-row-position-value', '');
-      this.element.classList.remove('row-partial-open');
+      this.element.classList.remove('row-view-shown');
     } else {
       this.tableNavTarget.setAttribute('data-table-nav-row-position-value', position.toString());
-      this.element.classList.add('row-partial-open');
+      this.element.classList.add('row-view-shown');
       if (html) {
-        this.rowPartialTarget.innerHTML = html;
-        this.rowPartialTarget.classList.add('ready');
+        this.rowViewTarget.innerHTML = html;
+        this.rowViewTarget.classList.add('ready');
       } else if (turboFrame) {
-        const spinnerTimer = setTimeout(() => this.rowPartialTarget.classList.add('loading'), 1000);
-        this.rowPartialTarget.addEventListener(
+        const spinnerTimer = setTimeout(() => this.rowViewTarget.classList.add('loading'), 1000);
+        this.rowViewTarget.addEventListener(
           'turbo:frame-render',
           (e: Event) => {
-            this.rowPartialTarget.classList.add('ready');
+            this.rowViewTarget.classList.add('ready');
             clearTimeout(spinnerTimer);
-            this.rowPartialTarget.classList.remove('loading');
+            this.rowViewTarget.classList.remove('loading');
           },
           { once: true }
         );
-        this.rowPartialTarget.innerHTML = `
+        this.rowViewTarget.innerHTML = `
           <div class="spinner">
             <div class="lds-ring">
               <div></div>
@@ -180,18 +180,18 @@ export default class ResourceController extends Controller<HTMLElement> {
     }
   }
 
-  openRowPartial(e: CustomEvent) {
+  openRowView(e: CustomEvent) {
     const { detail: { position, turboFrame } } = e;
-    this.rowPartialValue = { position, turboFrame };
+    this.rowViewValue = { position, turboFrame };
   }
   
-  stepRowPartial(e: CustomEvent) {
+  stepRowView(e: CustomEvent) {
     const { detail: { position } } = e;
     this.element.addEventListener(
       'datatable:row-lookup',
       (e: Event) => {
         const { detail: { turboFrame } } = e as CustomEvent;
-        this.rowPartialValue = { position, turboFrame };
+        this.rowViewValue = { position, turboFrame };
       },
       { once: true }
     )
@@ -200,15 +200,15 @@ export default class ResourceController extends Controller<HTMLElement> {
   }
 
   newRowValueChanged(
-    { rowData, rowPartialHtml } :
-    { rowData: CustomerWinRowData | ContributionRowData, rowPartialHtml: string }
+    { rowData, rowViewHtml } :
+    { rowData: CustomerWinRowData | ContributionRowData, rowViewHtml: string }
   ) {
     this.addTableRow(rowData, true);
     this.element.addEventListener(
       'datatable:row-lookup', 
       (e: Event) => {
         const { detail: { position } } = e as CustomEvent;
-        this.rowPartialValue = { position, html: rowPartialHtml };
+        this.rowViewValue = { position, html: rowViewHtml };
       },
       { once: true }
     );
@@ -217,7 +217,7 @@ export default class ResourceController extends Controller<HTMLElement> {
   }
 
   backToTable() {
-    this.rowPartialValue = { position: 0 };
+    this.rowViewValue = { position: 0 };
   }
   
   validateNewItem(e: Event) {

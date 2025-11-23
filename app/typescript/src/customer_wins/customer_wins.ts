@@ -181,7 +181,7 @@ export function dataTableConfig(rowGroupDataSource: string): Config {
         .attr('data-action', [
           'dropdown:dropdown-is-shown->customer-win#onShownDropdown',
           'dropdown:dropdown-is-hidden->customer-win#onHiddenDropdown',
-          'click->customer-win#openPartial'
+          'click->customer-win#openView'
         ].join(' '))
         .attr('data-controller', 'customer-win');
     }

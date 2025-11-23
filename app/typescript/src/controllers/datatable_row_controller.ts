@@ -49,7 +49,7 @@ export default class DatatableRowController<Ctrl extends RowController, Data ext
     // console.log('disconnecting', this.element.id)
   // }
 
-  openPartial({ target }: { target: Element }) {
+  openView({ target }: { target: Element }) {
     if (target.closest('.toggle-child') || target.closest('[data-controller="dropdown"]')) return;
     
     const index = this.datatableOutlet.dt

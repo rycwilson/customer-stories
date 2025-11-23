@@ -28,11 +28,11 @@ export default class NewCustomerWinController extends FormController<NewCustomer
     this.responseObserver = new MutationObserver(_ => {
       if (this.hasResponseTarget) {
         const rowData = JSON.parse(this.responseTarget.dataset.rowData as string);
-        const rowPartialHtml = this.responseTarget.dataset.rowPartialHtml as string;
+        const rowViewHtml = this.responseTarget.dataset.rowViewHtml as string;
         this.customerWinsOutlet.element.addEventListener('datatable:drawn', () => {
           setTimeout(() => this.customerWinsOutlet.dashboardOutlet.modalOutlet.hide());
         }, { once: true });
-        this.customerWinsOutlet.newRowValue = { rowData, rowPartialHtml }
+        this.customerWinsOutlet.newRowValue = { rowData, rowViewHtml }
         this.responseTarget.remove();
       }
     })

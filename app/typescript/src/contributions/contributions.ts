@@ -270,7 +270,7 @@ export function dataTableConfig(
         .attr('data-action', [
           'dropdown:dropdown-is-shown->contribution#onShownDropdown',
           'dropdown:dropdown-is-hidden->contribution#onHiddenDropdown',
-          'click->contribution#openPartial'
+          'click->contribution#openView'
         ].join(' '))
         .attr('data-controller', 'contribution');
     }

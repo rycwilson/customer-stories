@@ -55,11 +55,11 @@
       .help-block data-table-nav-target="info"
 
       div data-table-nav-target="paginate"
-      
-      .table-controls__row-partial-nav
+
+      .table-controls__row-view-nav
         .help-block data-table-nav-target="position"
         .btn-group
-          - %w[prevPartialBtn nextPartialBtn].each do |btn|
+          - %w[prevRowViewBtn nextRowViewBtn].each do |btn|
             = content_tag( \
                 :button,
                 type: 'button',
@@ -67,6 +67,6 @@
                 role: 'link',
                 data: { \
                   table_nav_target: btn,
-                  action: 'table-nav#stepRowPartial',
-                  step: (btn == 'prevPartialBtn' ? '-1' : '1') }) do
-              i.fa class="fa-chevron-#{btn == 'prevPartialBtn' ? 'left' : 'right'}"
+                  action: 'table-nav#stepRowView',
+                  step: (btn == 'prevRowViewBtn' ? '-1' : '1') }) do
+              i.fa class="fa-chevron-#{btn == 'prevRowViewBtn' ? 'left' : 'right'}"
