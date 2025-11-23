@@ -31,7 +31,7 @@
   }
 
   &.loading > .spinner,
-  &.ready > turbo-frame{
+  &.ready > turbo-frame {
     visibility: visible;
     opacity: 1;
   }
@@ -204,11 +204,16 @@
   }
 
   .row-partial-open & {
-    &__back-to-table,
-    &__row-partial-nav {
+    &__back-to-table {
       display: block;
     }
+
+    &__row-partial-nav {
+      @include flex-row-center;;
+      gap: 1em;
+    }
     
+    [data-table-nav-target="info"],
     [data-table-nav-target="paginate"] {
       display: none;
     }

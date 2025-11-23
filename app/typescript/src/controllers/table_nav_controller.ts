@@ -2,9 +2,10 @@ import { Controller } from '@hotwired/stimulus';
 
 export default class TableNavController extends Controller<HTMLElement> {
   // These targets' children are replaced by the ResourceController when a table is drawn
-  static targets = ['info', 'paginate', 'prevPartialBtn', 'nextPartialBtn'];
+  static targets = ['info', 'paginate', 'position', 'prevPartialBtn', 'nextPartialBtn'];
   declare readonly infoTarget: HTMLElement; // "x to y of z" 
   declare readonly paginateTarget: HTMLElement; // previous/next buttons
+  declare readonly positionTarget: HTMLElement; // current position
   declare readonly prevPartialBtnTarget: HTMLButtonElement;
   declare readonly nextPartialBtnTarget: HTMLButtonElement;
 
@@ -39,37 +40,18 @@ export default class TableNavController extends Controller<HTMLElement> {
     this.observer.disconnect();
   }
 
-  rowPositionValueChanged(currentPosition: number, previousPosition: number) {
-    const tableToRowPartial = currentPosition && !previousPosition;
-    const rowPartialToTable = !currentPosition && previousPosition;
-
-    // If moving from table to row partial, update info text to show only the current row
-    // If moving from row partial to table, restore info text to show current page range
-    if (tableToRowPartial) {
-      this.infoTarget.innerText = this.infoTarget.innerText.replace(/^\d+ to \d+/, currentPosition.toString());
-    } else if (rowPartialToTable) {
-      this.infoTarget.innerText = this.infoTarget.innerText.replace(/^\d+/, `${this.currentRangeStart} to ${this.currentRangeEnd}`);
-    } else {
-      this.infoTarget.innerText = this.infoTarget.innerText.replace(/^\d+/, currentPosition.toString())
-    }
+  rowPositionValueChanged(newVal: number, oldVal: number) {
+    this.positionTarget.textContent = newVal ?
+      `${newVal} ` + this.infoTarget.innerText.match(/(?<substr>of \d+)$/)!.groups!.substr :
+      '';
 
     // We don't want to disable the buttons because this will result in styling
     // that is not consistent with datatables styling of the pagination buttons 
     // (which are actually links and thus can't be disabled)
-    if (currentPosition === this.currentRangeStart) {
-      this.prevPartialBtnTarget.setAttribute('aria-disabled', 'true');
-      this.prevPartialBtnTarget.style.cursor = 'not-allowed';
-    } else {
-      this.prevPartialBtnTarget.removeAttribute('aria-disabled');
-      this.prevPartialBtnTarget.style.cursor = 'pointer';
-    }
-    if (currentPosition === this.currentRangeEnd) {
-      this.nextPartialBtnTarget.setAttribute('aria-disabled', 'true');
-      this.nextPartialBtnTarget.style.cursor = 'not-allowed';
-    } else {
-      this.nextPartialBtnTarget.removeAttribute('aria-disabled');
-      this.nextPartialBtnTarget.style.cursor = 'pointer';
-    }
+    this.prevPartialBtnTarget.setAttribute('aria-disabled', newVal === this.currentRangeStart ? 'true' : 'false');
+    this.prevPartialBtnTarget.style.cursor = newVal === this.currentRangeStart ? 'not-allowed' : 'pointer';
+    this.nextPartialBtnTarget.setAttribute('aria-disabled', newVal === this.currentRangeEnd ? 'true' : 'false');
+    this.nextPartialBtnTarget.style.cursor = newVal === this.currentRangeEnd ? 'not-allowed' : 'pointer';
   }
 
   // TODO: if a boundary is reached, turn the table page if possible
