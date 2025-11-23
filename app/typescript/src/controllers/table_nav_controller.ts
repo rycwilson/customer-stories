@@ -40,23 +40,23 @@ export default class TableNavController extends Controller<HTMLElement> {
     this.observer.disconnect();
   }
 
-  rowPositionValueChanged(newVal: number, oldVal: number) {
-    this.positionTarget.textContent = newVal ?
-      `${newVal} ` + this.infoTarget.innerText.match(/(?<substr>of \d+)$/)!.groups!.substr :
+  rowPositionValueChanged(position: number) {
+    this.positionTarget.textContent = position ?
+      `${position} ` + this.infoTarget.textContent.match(/(?<substr>of \d+)$/)!.groups!.substr :
       '';
 
     // We don't want to disable the buttons because this will result in styling
     // that is not consistent with datatables styling of the pagination buttons 
     // (which are actually links and thus can't be disabled)
     this.prevRowViewBtnTarget
-      .setAttribute('aria-disabled', newVal === this.currentRangeStart ? 'true' : 'false');
+      .setAttribute('aria-disabled', position === this.currentRangeStart ? 'true' : 'false');
     this.prevRowViewBtnTarget.style.cursor = (
-      newVal === this.currentRangeStart ? 'not-allowed' : 'pointer'
+      position === this.currentRangeStart ? 'not-allowed' : 'pointer'
     );
     this.nextRowViewBtnTarget
-      .setAttribute('aria-disabled', newVal === this.currentRangeEnd ? 'true' : 'false');
+      .setAttribute('aria-disabled', position === this.currentRangeEnd ? 'true' : 'false');
     this.nextRowViewBtnTarget.style.cursor = (
-      newVal === this.currentRangeEnd ? 'not-allowed' : 'pointer'
+      position === this.currentRangeEnd ? 'not-allowed' : 'pointer'
     );
   }
 

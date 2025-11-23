@@ -141,6 +141,10 @@ export default class ResourceController extends Controller<HTMLElement> {
     }
   }
 
+  backToTable() {
+    this.rowViewValue = { position: 0 };
+  }
+
   rowViewValueChanged(
     { position, turboFrame, html }: 
     { position: number, turboFrame?: { id: string, src: string }, html?: string }
@@ -180,6 +184,26 @@ export default class ResourceController extends Controller<HTMLElement> {
     }
   }
 
+  newRowValueChanged(
+    { rowData, rowViewHtml } :
+    { rowData: CustomerWinRowData | ContributionRowData, rowViewHtml: string }
+  ) {
+    this.addTableRow(rowData, true);
+    setTimeout(() => {
+      this.element.addEventListener(
+        'datatable:row-lookup', 
+        (e: Event) => {
+          const { detail: { position } } = e as CustomEvent;
+          this.rowViewValue = { position, html: rowViewHtml };
+        },
+        { once: true }
+      );
+      this.datatableTarget
+        .setAttribute('data-datatable-row-lookup-value', JSON.stringify({ id: rowData.id }));
+
+    })
+  }
+
   openRowView(e: CustomEvent) {
     const { detail: { position, turboFrame } } = e;
     this.rowViewValue = { position, turboFrame };
@@ -197,27 +221,6 @@ export default class ResourceController extends Controller<HTMLElement> {
     )
     this.datatableTarget
       .setAttribute('data-datatable-row-lookup-value', JSON.stringify({ position }));
-  }
-
-  newRowValueChanged(
-    { rowData, rowViewHtml } :
-    { rowData: CustomerWinRowData | ContributionRowData, rowViewHtml: string }
-  ) {
-    this.addTableRow(rowData, true);
-    this.element.addEventListener(
-      'datatable:row-lookup', 
-      (e: Event) => {
-        const { detail: { position } } = e as CustomEvent;
-        this.rowViewValue = { position, html: rowViewHtml };
-      },
-      { once: true }
-    );
-    this.datatableTarget
-      .setAttribute('data-datatable-row-lookup-value', JSON.stringify({ id: rowData.id }));
-  }
-
-  backToTable() {
-    this.rowViewValue = { position: 0 };
   }
   
   validateNewItem(e: Event) {
