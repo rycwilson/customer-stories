@@ -25,9 +25,13 @@ export default class TableNavController extends Controller<HTMLElement> {
     // When this happens, keep track of the current page range
     // Ignore the change when a row view is displayed.
     this.observer = new MutationObserver(mutations => {
-      // Ignore the change to the info target when it reflects the current opened row view
-      if (this.rowPositionValue) return;
-
+      // This resolves a timing issue that arises when info is updated after a row view is opened
+      const total = this.infoTarget.textContent.match(/of (?<total>\d+)$/)!.groups!.total;
+      if (this.positionTarget.textContent) {
+        this.positionTarget.textContent = (
+          this.positionTarget.textContent.replace(/of \d+$/, `of ${total}`)
+        );
+      }
       const currentRange = <string>(
         mutations[0].addedNodes[0].textContent!.match(/^(?<range>\d+ to \d+)/)!.groups!.range
       );
