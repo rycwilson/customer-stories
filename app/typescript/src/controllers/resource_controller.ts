@@ -1,5 +1,4 @@
 import type DashboardController from "./dashboard_controller";
-import type DatatableRowController from "./datatable_row_controller";
 import { Controller } from "@hotwired/stimulus";
 import { getJSON } from '../utils';
 import { 

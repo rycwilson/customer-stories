@@ -1,7 +1,6 @@
 import DatatableRowController from './datatable_row_controller.js';
 import type ModalController from './modal_controller.js';
 import type { FrameElement } from '@hotwired/turbo';
-import { childRowPlaceholderTemplate } from '../customer_wins/win_story.js';
 
 export default class CustomerWinController extends DatatableRowController<CustomerWinController, CustomerWinRowData> {
   declare readonly modalOutlet: ModalController;
@@ -17,7 +16,6 @@ export default class CustomerWinController extends DatatableRowController<Custom
   get childRowContent() {
     return this.childRowElement || `
       <turbo-frame id="${this.childRowTurboFrameAttrsValue.id}" src="${this.childRowTurboFrameAttrsValue.src}">
-        ${childRowPlaceholderTemplate(this.curator?.full_name)}
       </turbo-frame>
     `;
   }
