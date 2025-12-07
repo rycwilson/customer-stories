@@ -1,22 +1,86 @@
 = form_with( \
-    model: success,
-    remote: true,
+    model: win,
     format: :json,
-    html: { \
-      id: "success-form-#{success.id}",
-      class: "success-form #{'win-story-completed' if success.win_story_completed?}",
-      data: { \
-        controller: 'win-story',
-        win_story_customer_win_outlet: "#customer-win-#{success.id}",
-        win_story_contributions_value: @win_story_contributions,
-        win_story_answers_value: @win_story_answers } }) do |form|
+    id: 'win-story-form',
+    class: "form-horizontal #{'win-story-completed' if win.win_story_completed?}",
+    data: { \
+      controller: 'win-story',
+      win_story_customer_win_outlet: "#customer-win-#{win.id}",
+      win_story_contributions_value: @win_story_contributions,
+      win_story_answers_value: @win_story_answers }) do |form|
   
   - %i(win_story_html win_story_text win_story_markdown win_story_completed).each do |field|
     = form.hidden_field(field)
+
+  - if win.referrer.present?
+    .form-group.referrer
+      .visible-sm-block.col-sm-12
+        label Referred by 
+      label.control-label.visible-md-inline-block.visible-lg-inline-block.col-md-3 Referred by
+      .col-sm-12.col-md-9
+        = content_tag( \
+            :a,
+            href: "javascript:;",
+            data: { \
+              action: 'win-story#showContributor', 
+              contribution_id: win.referrer_contribution.id }) do
+            = win.referrer.full_name
+
+  - if win.customer_contact.present?
+    .form-group.customer-contact
+      .visible-sm-block.col-sm-12
+        label Customer Contact 
+      label.control-label.visible-md-inline-block.visible-lg-inline-block.col-md-3 Customer Contact
+      .col-sm-12.col-md-9
+        = content_tag( \
+            :a,
+            href: "javascript:;",
+            data: { \
+              action: 'win-story#showContributor', 
+              contribution_id: win.customer_contact_contribution.id }) do
+            = win.customer_contact.full_name
+
+  .form-group
+    .visible-sm-block.col-sm-12
+      = form.label(:curator_id, 'Curator')
+    = form.label(:curator_id, 'Curator', class: 'control-label visible-md-inline-block visible-lg-inline-block col-md-3')
+    .col-sm-12.col-md-9
+      = render( \
+          'companies/shared/curator_select',
+          company:,
+          ctrl_id: 'win-story',
+          select_id: 'win-story-curator',
+          curator_id: win.curator_id )
   
-  .win-story
+  .form-group 
+    .visible-sm-block.col-sm-12
+      label for="win-story" Win Story
+    label.control-label.visible-md-inline-block.visible-lg-inline-block.col-md-3 for="win-story" Win Story
+    .col-sm-12.col-md-9
+      .win-story__summernote.form-control {
+        contenteditable="false" 
+        data-controller="summernote"
+        data-summernote-config-key-value="winStory"
+        data-win-story-target="note"
+        data-action="summernote:init->win-story#onInitWinStoryEditor" }
+        = win.win_story_html&.html_safe
+
+  .row.win-story__footer data-win-story-target="footer"
+    .col-sm-12.col-md-offset-3.col-md-9
+      - ['Mark as Completed', 'Save changes'].each do |button_content|
+        = button_tag( \
+            '',
+            type: 'submit',
+            class: "btn btn-success disabled #{button_content.include?('Mark') ? 'btn-mark-completed' : 'btn-save'}",
+            disabled: true,
+            data: { \
+              content: button_content,
+              win_story_target: button_content.include?('Mark') ? 'markCompletedBtn' : 'saveBtn',
+              disable_with_html: disabled_submit_button_html })
+
+  /.win-story
     .win-story__header data-win-story-target="header"
-      label for="win-story__summernote--#{success.id}" Win Story
+      label for="win-story__summernote--#{win.id}" Win Story
       div 
         button.btn-expand type="button" data-action="win-story#resize"
           i.fa.fa-expand
@@ -33,10 +97,10 @@
         button.btn-copy type="button" data-win-story-target="copyBtn" data-action="win-story#copy"
           i.fa.fa-clipboard
           span Copy
-        /button.btn-email type="button"
+        button.btn-email type="button"
           i.fa.fa-envelope-o 
           span Email
-        /- if Rails.env.development?
+        - if Rails.env.development?
           button.win-story__pdf type="button" disabled=""
             i class="fa fa-fw fa-file-pdf-o"
             span PDF
@@ -44,37 +108,13 @@
             type="button" data-toggle="modal" data-target="#win-story-zapier-modal" style="position:relative" }
             = image_tag('zapier-brand.png', alt: 'Zapier')
             span Zapier
-    .win-story__summernote.form-control {
-      contenteditable="false" 
-      data-controller="summernote"
-      data-summernote-config-key-value="winStory"
-      data-win-story-target="note"
-      data-action="summernote:init->win-story#onInitWinStoryEditor" }
-      = success.win_story_html&.html_safe
-    .win-story__footer data-win-story-target="footer"
-      - ['Mark as Completed', 'Save changes'].each do |button_content|
-        = button_tag( \
-            button_content,
-            class: "btn btn-sm btn-success #{button_content.include?('Mark') ? 'btn-mark-completed' : 'btn-save'}",
-            disabled: button_content.include?('Save'),
-            data: { \
-              content: button_content,
-              disable_with: "\
-                <div class=\"btn__content\">#{button_content}</div>\
-                <div class=\"btn__dots\">\
-                  <i class=\"fa fa-fw fa-circle\"></i>\
-                  <i class=\"fa fa-fw fa-circle\"></i>\
-                  <i class=\"fa fa-fw fa-circle\"></i>\
-                </div>".html_safe })
 
-  .success-form__contacts 
+  /.success-form__contacts 
     label for="curator_name" Curator
     p = success.curator.full_name
-
     - if success.referrer
       label Referrer
       p = "#{success.referrer['first_name']} #{success.referrer['last_name']}"
-
     - if success.contact
       label Customer Contact
       p = "#{success.contact['first_name']} #{success.contact['last_name']}"
