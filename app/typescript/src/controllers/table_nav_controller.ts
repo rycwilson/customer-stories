@@ -26,7 +26,7 @@ export default class TableNavController extends Controller<HTMLElement> {
     // Ignore the change when a row view is displayed.
     this.observer = new MutationObserver(mutations => {
       // This resolves a timing issue that arises when info is updated after a row view is opened
-      const total = this.infoTarget.textContent.match(/of (?<total>\d+)$/)!.groups!.total;
+      const total = this.infoTarget.textContent!.match(/of (?<total>\d+)$/)!.groups!.total;
       if (this.positionTarget.textContent) {
         this.positionTarget.textContent = (
           this.positionTarget.textContent.replace(/of \d+$/, `of ${total}`)
@@ -46,7 +46,7 @@ export default class TableNavController extends Controller<HTMLElement> {
 
   rowPositionValueChanged(position: number) {
     this.positionTarget.textContent = position ?
-      `${position} ` + this.infoTarget.textContent.match(/(?<substr>of \d+)$/)!.groups!.substr :
+      `${position} ` + this.infoTarget.textContent!.match(/(?<substr>of \d+)$/)!.groups!.substr :
       '';
 
     // We don't want to disable the buttons because this will result in styling
