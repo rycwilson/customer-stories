@@ -1,13 +1,13 @@
 = form_with( \
     model: story,
     format: :json,
+    id: 'story-narrative-content-form',
+    class: 'form-horizontal',
+    data: { \
+      asset_host: Rails.application.config.asset_host },
     html: { \
-      id: 'story-narrative-content-form',
-      class: 'form-horizontal',
-      autocomplete: 'off',
-      data: { \
-        asset_host: Rails.application.config.asset_host }}) do |form|
-
+      autocomplete: 'off' }) do |form|
+  
   // a buffer input for uploading story images to AWS; see the summernote onImageUpload callback
   input#narrative__img-upload.hidden type="file"
 

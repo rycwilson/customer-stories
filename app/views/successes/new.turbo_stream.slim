@@ -1,7 +1,9 @@
 = turbo_stream.update 'main-modal-body' do
+
   = form_with( \
       model: [@company, @success],
       id: 'new-customer-win-form',
+      class: ('was-validated' if @success.errors.any?),
       data: { \
         controller: 'new-customer-win',
         new_customer_win_customer_wins_outlet: "#customer-wins",
@@ -11,7 +13,6 @@
           'turbo:submit-start->new-customer-win#animateSubmitBtn'].join(' ') },
       html: { \
         novalidate: true,
-        class: ('was-validated' if @success.errors.any?),
         autocomplete: 'off' }) do |form|
 
     = form.fields_for(:customer, form.object.customer || form.object.build_customer) do |customer_fields|
