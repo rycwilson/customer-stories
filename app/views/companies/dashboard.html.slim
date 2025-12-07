@@ -8,6 +8,7 @@
       dashboard_toast_outlet: '#toaster',
       action: [ \
         'stories:change-curator->dashboard#onChangeStoriesCurator',
+        'win-story:show-contributor->dashboard#showContributor',
         'toast->dashboard#showToast'].join(' ') }) do
 
   = render('shared/navbars/company_nav', { company: @company, workflow_stage: @workflow_stage })

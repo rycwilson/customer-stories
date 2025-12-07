@@ -66,6 +66,11 @@ export default class extends Controller<HTMLFormElement> {
     this.scrollToWinStory();
   }
 
+  showContributor({ target: link }: { target: HTMLAnchorElement }) {
+    if (!link.dataset?.contributionId) return;
+    this.dispatch('show-contributor', { detail: { contributionId: +link.dataset.contributionId } });
+  }
+
   resize(e?: Event) {
     const isAutoResize = !e;
     this.isExpandedValue = !this.isExpandedValue;

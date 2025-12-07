@@ -42,6 +42,7 @@ export default class ResourceController extends Controller<HTMLElement> {
     dataPath: String,
     filters: { type: Object },
     displayOptionsHtml: String,
+    rowId: { type: Number, default: undefined },
     newRow: { type: Object, default: undefined },
     rowView: { type: Object, default: undefined }
   }
@@ -49,6 +50,7 @@ export default class ResourceController extends Controller<HTMLElement> {
   declare readonly dataPathValue: string;
   declare filtersValue: ResourceFilters;
   declare readonly displayOptionsHtmlValue: string;
+  declare rowIdValue: number;
   declare newRowValue: (
     { rowData: CustomerWinRowData | ContributionRowData, rowViewHtml: string } | undefined
   );
@@ -183,23 +185,34 @@ export default class ResourceController extends Controller<HTMLElement> {
     }
   }
 
+  rowIdValueChanged(newId: number, oldId: number) {
+    if (!newId || newId === oldId) return;
+
+    const onLookupResponse = (e: Event) => {
+      const { detail: { position, turboFrame } } = e as CustomEvent;
+      this.rowIdValue = 0;
+      this.rowViewValue = { position, turboFrame };
+    }
+    this.element.addEventListener('datatable:row-lookup', onLookupResponse, { once: true });
+    this.datatableTarget
+      .setAttribute('data-datatable-row-lookup-value', JSON.stringify({ id: newId }));
+  }
+  
   newRowValueChanged(
     { rowData, rowViewHtml } :
     { rowData: CustomerWinRowData | ContributionRowData, rowViewHtml: string }
   ) {
     this.addTableRow(rowData, true);
+    const onLookupResponse = (e: Event) => {
+      const { detail: { position } } = e as CustomEvent;
+      this.rowViewValue = { position, html: rowViewHtml };
+    }
+
+    // Wait for table to draw after adding row
     setTimeout(() => {
-      this.element.addEventListener(
-        'datatable:row-lookup', 
-        (e: Event) => {
-          const { detail: { position } } = e as CustomEvent;
-          this.rowViewValue = { position, html: rowViewHtml };
-        },
-        { once: true }
-      );
+      this.element.addEventListener('datatable:row-lookup', onLookupResponse, { once: true });
       this.datatableTarget
         .setAttribute('data-datatable-row-lookup-value', JSON.stringify({ id: rowData.id }));
-
     })
   }
 
@@ -210,14 +223,11 @@ export default class ResourceController extends Controller<HTMLElement> {
   
   stepRowView(e: CustomEvent) {
     const { detail: { position } } = e;
-    this.element.addEventListener(
-      'datatable:row-lookup',
-      (e: Event) => {
-        const { detail: { turboFrame } } = e as CustomEvent;
-        this.rowViewValue = { position, turboFrame };
-      },
-      { once: true }
-    )
+    const onLookupResponse = (e: Event) => {
+      const { detail: { turboFrame } } = e as CustomEvent;
+      this.rowViewValue = { position, turboFrame };
+    }
+    this.element.addEventListener('datatable:row-lookup', onLookupResponse, { once: true });
     this.datatableTarget
       .setAttribute('data-datatable-row-lookup-value', JSON.stringify({ position }));
   }

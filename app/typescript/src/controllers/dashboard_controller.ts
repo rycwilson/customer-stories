@@ -215,6 +215,12 @@ export default class DashboardController extends Controller {
     // $('.contributors .checkbox-filter').prop('checked', true).trigger('change');
   }
 
+  showContributor({ detail: { contributionId } }: { detail: { contributionId: number } }) {
+    this.contributionsTarget
+      .setAttribute('data-contributions-row-id-value', contributionId.toString());
+    $(this.contributionsTabTarget).tab('show');
+  }
+
   showContributionCustomerWin({ currentTarget: link }: { currentTarget: HTMLAnchorElement }) {
     if (!link.dataset.customerWinId) return false;
     this.customerWinsSearchSelectTarget.tomselect.setValue(`success-${link.dataset.customerWinId}`);
