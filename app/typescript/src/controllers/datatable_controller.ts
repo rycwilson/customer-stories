@@ -240,22 +240,17 @@ export default class DatatableController extends Controller<HTMLTableElement> {
    */
   rowLookupValueChanged({ id, position }: { id?: number, position?: number }) {
     const data = this.dt.rows({ search: 'applied' }).data().toArray();
-    let returnValue;
+    const index = id ? data.findIndex(row => row.id === id) : (position ? position - 1 : -1);
+    if (index === -1) return;
 
-    if (id) {
-      const index = data.findIndex(row => row.id === id);
-      returnValue = { position: index + 1 };
-    } else if (position) {
-      const rowData = data[position - 1];
-      returnValue = {
-        turboFrame: {
-          id: `edit-${this.resourceOutlet.identifier.slice(0, -1)}`,
-          src: rowData.edit_path
-        },
-      };
-    } else {
-      return;
-    }
-    this.dispatch('row-lookup', { detail: returnValue });
+    const rowData = data[index];
+    const returnValue = { 
+      position: position || index + 1,
+      turboFrame: { 
+        id: `edit-${this.resourceOutlet.identifier.slice(0, -1)}`,
+        src: rowData.edit_path 
+      } 
+    };
+    this.dispatch('row-lookup', { detail: { ...returnValue } });
   }
 }
