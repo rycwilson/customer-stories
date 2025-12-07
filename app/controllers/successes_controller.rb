@@ -40,12 +40,12 @@ class SuccessesController < ApplicationController
   end
 
   def edit
-    @success = @company.successes.includes(
+    win = @company.successes.includes(
       :invitation_template_identifiers,
       contributions_for_win_story: [:contributor],
       contributor_answers: [:contributor_question]
     ).find(params[:id])
-    render(partial: 'edit', locals: { success: @success })
+    render(partial: 'edit', locals: { win: })
   end
 
   def create
