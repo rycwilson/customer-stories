@@ -240,7 +240,7 @@ class Contribution < ApplicationRecord
   end
 
   def set_referrer_id_for_new_success_contact
-    self.referrer_id = success.referrer[:id]
+    self.referrer_id = success.referrer.id
   end
 
   def missing_referrer_attributes?(attrs)

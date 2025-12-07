@@ -193,7 +193,7 @@ class SuccessesController < ApplicationController
 
       [referrer_email, contact_email].each_with_index do |email, index|
         if success.present? && email.present?
-          user_lookup[email] ||= (index == 0 ? success.referrer[:id] : success.contact[:id])
+          user_lookup[email] ||= (index == 0 ? success.referrer.id : success.customer_contact.id)
         elsif email.present?
           user_lookup[email] ||= User.find_by_email(email).id
         end

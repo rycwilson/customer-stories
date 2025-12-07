@@ -191,24 +191,19 @@ class Success < ApplicationRecord
   def removed_story_category(story_category); end
 
   def referrer
-    _contributions = contributions.select(:referrer_id, :contributor_id)
-    if contributions.first.try(:referrer_id) &&
-       contributions.first.try(:contributor_id) &&
-       contributions.first.referrer_id == contributions.first.contributor_id
-      contributions.first
-                   .referrer
-                   .slice(:id, :first_name, :last_name, :email, :title, :phone)
-                   .merge(previous_changes: contributions.first.referrer.previous_changes)
-    end
+    referrer_contribution&.contributor
   end
 
-  def contact
-    customer_contact = contributions.find(&:success_contact?)&.contributor
-    return unless customer_contact.present?
+  def referrer_contribution
+    contributions.where('referrer_id = contributor_id')&.take
+  end
 
-    customer_contact
-      .slice(:id, :first_name, :last_name, :email, :title, :phone)
-      .merge(previous_changes: customer_contact.previous_changes)
+  def customer_contact
+    customer_contact_contribution&.contributor
+  end
+
+  def customer_contact_contribution
+    contributions.find(&:success_contact?)
   end
 
   def select_option
