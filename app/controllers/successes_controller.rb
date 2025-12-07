@@ -49,7 +49,7 @@ class SuccessesController < ApplicationController
   end
 
   def create
-    # puts JSON.pretty_generate(success_params.to_h)
+    puts JSON.pretty_generate(success_params.to_h)
     win_attrs = find_dup_customer(success_params.to_h.deep_dup, @company)
 
     %i[referrer_attributes contributor_attributes].each_with_index do |new_user_key, index|
@@ -209,6 +209,8 @@ class SuccessesController < ApplicationController
   end
 
   def update
+    puts JSON.pretty_generate(success_params.to_h)
+
     params[:success][:win_story_completed] = ActiveRecord::Type::Boolean.new.cast(success_params[:win_story_completed])
     respond_to do |format|
       if @success.update(success_params)
