@@ -1,6 +1,6 @@
 import DatatableRowController from "./datatable_row_controller";
 import type ModalController from './modal_controller';
-import type { FrameElement } from '@hotwired/turbo';
+import { actionsDropdownTemplate } from '../contributions/contributions';
 
 export default class ContributionController extends DatatableRowController<ContributionController, ContributionRowData> {
   declare readonly modalOutlet: ModalController;
