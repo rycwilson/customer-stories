@@ -90,7 +90,7 @@
             :success_id,
             options_for_select( \
               @company.successes.real.map(&:select_option),
-              selected: @success&.id),
+              @success ? "success-#{@success.id}" : nil ),
             { include_blank: true },
             { name: ('' if @success.nil?),
               class: 'form-control',
