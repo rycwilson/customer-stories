@@ -9,7 +9,9 @@ import type PromotedStoryController from './promoted_story_controller';
 type RowController = CustomerWinController | ContributionController | PromotedStoryController;
 type RowData = CustomerWinRowData | ContributionRowData | AdwordsAdRowData;
 
-export default class DatatableRowController<Ctrl extends RowController, Data extends RowData> extends Controller<HTMLTableRowElement> {
+export default 
+abstract class DatatableRowController<Ctrl extends RowController, Data extends RowData>
+extends Controller<HTMLTableRowElement> {
   static outlets = ['datatable'];
   declare readonly datatableOutlet: DatatableController;
 
@@ -20,6 +22,8 @@ export default class DatatableRowController<Ctrl extends RowController, Data ext
   declare readonly rowDataValue: Data;
   declare readonly childRowTurboFrameAttrsValue: { id: string, src: string };
   declare childRowElement: HTMLElement;
+
+  abstract get actionsDropdownHtml(): string;
 
   // The datatables .child method will take a HTMLElement or string
   // Subclasses will provide their own content, else default content may be defined here

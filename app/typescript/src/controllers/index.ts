@@ -58,8 +58,8 @@ application.register('dashboard', DashboardController);
 import DatatableController from './datatable_controller.js';
 application.register('datatable', DatatableController);
 
-import DatatableRowController from './datatable_row_controller.js';
-application.register('datatable-row', DatatableRowController);
+// import DatatableRowController from './datatable_row_controller.js';
+// application.register('datatable-row', DatatableRowController);
 
 import FormController from './form_controller.js';
 application.register('form', FormController);
