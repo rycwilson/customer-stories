@@ -7,7 +7,7 @@ import type ContributionController from './contribution_controller';
 import type PromotedStoryController from './promoted_story_controller';
 
 type RowController = CustomerWinController | ContributionController | PromotedStoryController;
-type RowData = (CustomerWinRowData | ContributionRowData | AdwordsAdRowData) & StringIndexable;
+type RowData = CustomerWinRowData | ContributionRowData | AdwordsAdRowData;
 
 export default class DatatableRowController<Ctrl extends RowController, Data extends RowData> extends Controller<HTMLTableRowElement> {
   static outlets = ['datatable'];
