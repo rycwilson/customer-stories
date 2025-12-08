@@ -1,6 +1,7 @@
 import DatatableRowController from './datatable_row_controller';
 import type { FrameElement, TurboSubmitEndEvent } from '@hotwired/turbo';
 import { FetchRequest } from '@rails/request.js';
+import { actionsDropdownTemplate } from '../promoted_stories/promoted_stories';
 
 export default class PromotedStoryController extends DatatableRowController<PromotedStoryController, AdwordsAdRowData> {
   static targets = ['statusLabel'];
@@ -11,6 +12,10 @@ export default class PromotedStoryController extends DatatableRowController<Prom
     const switchContainer = this.element.querySelector('.bootstrap-switch-container');
     const checkbox = switchContainer?.querySelector('input[type="checkbox"]');
     return $(checkbox);
+  }
+
+  get actionsDropdownHtml() {
+    return actionsDropdownTemplate(this.rowDataValue);
   }
 
   async updateStatus({ detail: { state: shouldEnable } }: { detail: { state: boolean } }) {

@@ -15,7 +15,11 @@ export default class ContributionController extends DatatableRowController<Contr
       </turbo-frame>
     `;
   }
-  
+
+  get actionsDropdownHtml() {
+    return actionsDropdownTemplate(this.rowDataValue);
+  }
+
   // initInvitationTemplateSelect() {  
     // new MutationObserver(mutations => {
     //   // mutation is the addition of the tom-select wrapper => the select has been initialized

@@ -1,6 +1,6 @@
-import DatatableRowController from './datatable_row_controller.js';
-import type ModalController from './modal_controller.js';
-import type { FrameElement } from '@hotwired/turbo';
+import DatatableRowController from './datatable_row_controller';
+import type ModalController from './modal_controller';
+import { actionsDropdownTemplate } from '../customer_wins/customer_wins';
 
 export default class CustomerWinController extends DatatableRowController<CustomerWinController, CustomerWinRowData> {
   declare readonly modalOutlet: ModalController;
@@ -12,6 +12,10 @@ export default class CustomerWinController extends DatatableRowController<Custom
       <turbo-frame id="${this.childRowTurboFrameAttrsValue.id}" src="${this.childRowTurboFrameAttrsValue.src}">
       </turbo-frame>
     `;
+  }
+
+  get actionsDropdownHtml() {
+    return actionsDropdownTemplate(this.rowDataValue);
   }
 
   // TODO: move template to the server
