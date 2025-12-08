@@ -6,8 +6,6 @@ export default class PromotedStoryController extends DatatableRowController<Prom
   static targets = ['statusLabel'];
   declare readonly statusLabelTarget: HTMLElement;
 
-  declare path: string;
-  
   // Since the row will be re-drawn upon updating the status, do not rely on a stimulus target for the switch.
   get $statusSwitch() {
     const switchContainer = this.element.querySelector('.bootstrap-switch-container');
@@ -19,7 +17,7 @@ export default class PromotedStoryController extends DatatableRowController<Prom
     const newStatus = shouldEnable ? 'ENABLED' : 'PAUSED';
     this.$statusSwitch.bootstrapSwitch('disabled', true);
     this.statusLabelTarget.textContent = '\u00A0'; // unbreakable space prevents the elment from collapsing
-    const request = new FetchRequest('patch', this.path, {
+    const request = new FetchRequest('patch', this.rowDataValue.path, {
       body: { adwords_ad: { status: newStatus } },
       responseKind: 'turbo-stream'
     });

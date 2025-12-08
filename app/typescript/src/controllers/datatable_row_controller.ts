@@ -36,12 +36,6 @@ extends Controller<HTMLTableRowElement> {
   }
 
   initialize() {
-    Object.keys(this.rowDataValue).forEach(key => {
-      // when accessing a property from outside the class (here we are accessing the subclass from the superclass), 
-      // typescript is unaware of string index signature 
-      // => use `as any`
-      (this as any)[key] = this.rowDataValue[key];
-    });
     this.element.id = `${this.identifier}-${this.rowDataValue.id}`;
   }
 
@@ -106,7 +100,7 @@ extends Controller<HTMLTableRowElement> {
     //     // body is empty
     //     this.row.remove().draw();
     //   });
-    const request = new FetchRequest('DELETE', this.path);
+    const request = new FetchRequest('DELETE', this.rowDataValue.path);
     const response = await request.perform();
     if (response.ok) {
       this.row.remove().draw();

@@ -8,12 +8,6 @@ export default class ContributionController extends DatatableRowController<Contr
   static targets = [...DatatableRowController.targets, 'invitationTemplateSelect'];
   declare readonly invitationTemplateSelectTarget: TomSelectInput;
 
-  declare id: number;
-  declare status: string;
-  declare invitationTemplate: InvitationTemplate;
-  declare story: Story;
-  declare path: string;
-
   get childRowContent() {
     return this.childRowElement || `
       <turbo-frame id="${this.childRowTurboFrameAttrsValue.id}" src="${this.childRowTurboFrameAttrsValue.src}">
@@ -35,7 +29,7 @@ export default class ContributionController extends DatatableRowController<Contr
 
   onChangeInvitationTemplate({ target: select }: { target: TomSelectInput }) {
     const templateId = +select.value || null;
-    fetch(this.path, {
+    fetch(this.rowDataValue.path, {
       method: 'PATCH',
       headers: {
         'Content-Type': 'application/json',
@@ -44,14 +38,14 @@ export default class ContributionController extends DatatableRowController<Contr
       body: JSON.stringify({ contribution: { invitation_template_id: templateId } }) 
     }).then(res => res.json())
       .then((template) => {
-        this.invitationTemplate = template;
+        this.rowDataValue.invitationTemplate = template;
         super.updateRow({ invitation_template: template });
       });
   }
 
   markAsCompleted() {
-    const newStatus = `${this.status.includes('contribution') ? 'contribution' : 'feedback'}_completed`;
-    fetch(`/contributions/${this.id}`, { 
+    const newStatus = `${this.rowDataValue.status.includes('contribution') ? 'contribution' : 'feedback'}_completed`;
+    fetch(`/contributions/${this.rowDataValue.id}`, { 
       method: 'PATCH',
       headers: {
         'Content-Type': 'application/json',
@@ -60,7 +54,7 @@ export default class ContributionController extends DatatableRowController<Contr
       body: JSON.stringify({ contribution: { status: newStatus } }) 
     }).then(res => res.json())
       .then(contribution => {
-        this.status = contribution.status;
+        this.rowDataValue.status = contribution.status;
         super.updateRow({ status: contribution.status, display_status: contribution.display_status });
 
         // TODO Per display options for the table, hide this row if completed contributions are to be hidden
@@ -69,10 +63,16 @@ export default class ContributionController extends DatatableRowController<Contr
 
   deleteRow() {
     return super.deleteRow().then(() => {
-      CSP.contributions = CSP.contributions!.filter(contribution => contribution.id !== this.id);
-      let storyContributions = this.story ? CSP.storyContributions[this.story.id] : undefined;
+      CSP.contributions = CSP.contributions!.filter(contribution => (
+        contribution.id !== this.rowDataValue.id
+      ));
+      let storyContributions = this.rowDataValue.story ? 
+        CSP.storyContributions[this.rowDataValue.story.id] : 
+        undefined;
       if (storyContributions) {
-        storyContributions = storyContributions.filter(contribution => contribution.id !== this.id);
+        storyContributions = storyContributions.filter(contribution => (
+          contribution.id !== this.rowDataValue.id
+        ));
       }
     });
   }

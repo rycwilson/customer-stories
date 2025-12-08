@@ -5,12 +5,6 @@ import type { FrameElement } from '@hotwired/turbo';
 export default class CustomerWinController extends DatatableRowController<CustomerWinController, CustomerWinRowData> {
   declare readonly modalOutlet: ModalController;
 
-  declare id: number;
-  declare status: string;
-  declare customer: Customer;
-  declare curator: User;
-  declare path: string;
-
   declare contributionsHtml: string;          
 
   get childRowContent() {
@@ -33,7 +27,7 @@ export default class CustomerWinController extends DatatableRowController<Custom
       // const contributionIds = this.contributionsCtrl.dt.data().toArray()
       const contributionIds = (CSP['contributions'] as Contribution[])
         .filter((contribution: Contribution) => (
-          (contribution.customer_win?.id == this.id) && contribution.status && /(contribution|feedback)/.test(contribution.status)
+          (contribution.customer_win?.id == this.rowDataValue.id) && contribution.status && /(contribution|feedback)/.test(contribution.status)
         ))
         .map((contribution: Contribution) => contribution.id);
       Promise
