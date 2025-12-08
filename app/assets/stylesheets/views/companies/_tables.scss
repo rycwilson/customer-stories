@@ -37,17 +37,46 @@
   }
 }
 
-.row-view__heading,
+.row-view__header,
 .row-view__body {
   padding: 1.5rem;
 }
 
-.row-view__heading {
-  margin: 0;
+.row-view__header {
+  @include flex-row-center-between;
+  position: relative;
   background-color: $light-blue;
-  // font-size: $font-size-base;
-  // font-weight: 600;
-  font-size: 1.1em;
+  
+  h4 {
+    @include max-lines(1);
+    margin: 0;
+    padding-right: 5rem;
+    // font-size: $font-size-base;
+    // font-weight: 600;
+    font-size: 1.1em;
+  }
+
+  [data-controller="dropdown"] {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    right: 0;
+    
+    > a {
+      @include flex-row-center-center;
+      width: 6.5rem;
+      height:100%;
+      font-size: 1.15em;
+      color: $gray-light;
+      text-decoration: none;
+
+      &:hover,
+      &:focus,
+      &:active {
+        color: $gray-dark;
+      }
+    }
+  }
 }
 
 #successes-table,

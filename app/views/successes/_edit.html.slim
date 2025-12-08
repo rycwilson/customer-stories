@@ -1,7 +1,20 @@
 = turbo_frame_tag('edit-customer-win')
 
-  h4.row-view__heading 
-    = "#{win.customer.name} \u2013 #{win.name}" 
+  .row-view__header 
+    h4 
+      = link_to( \
+          win.customer.name,
+          edit_customer_path(win.customer),
+          data: { \
+            turbo_stream: true,
+            controller: 'modal-trigger',
+            modal_trigger_modal_outlet: '#main-modal', 
+            modal_trigger_params_value: { \
+              title: 'Edit Customer', 'className' => 'edit-customer' }})
+      |&nbsp;&ndash;&nbsp;
+      = win.name
+      
+    div data-controller="dropdown" 
 
   .row-view__body
     = render( \
