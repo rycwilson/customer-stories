@@ -149,7 +149,7 @@ export function dataTableConfig(
         name: 'actions',
         data: {
           _: 'status',
-          display: actionsDropdownTemplate
+          display: (row: Contribution) => actionsDropdownTemplate(transformSourceData(row))
         },
         createdCell: (td: Node) => $(td).attr('data-controller', 'dropdown')
       },
@@ -245,14 +245,7 @@ export function dataTableConfig(
     },
 
     createdRow: (tr: Node, data: object | any[], index: number) => {
-      const { 
-        id, 
-        status, 
-        invitation_template: invitationTemplate, 
-        story, 
-        path,
-        edit_path: editPath 
-      } = data as Contribution;
+      const rowData = transformSourceData(data as Contribution);
       $(tr)
       // .attr('data-datatable-target', 'row')
         .attr(
@@ -261,11 +254,11 @@ export function dataTableConfig(
         )
         .attr(
           'data-contribution-row-data-value', 
-          JSON.stringify({ id, status, invitationTemplate, story, path, editPath })
+          JSON.stringify(rowData)
         )
         .attr(
           'data-contribution-child-row-turbo-frame-attrs-value', 
-          JSON.stringify({ id: 'edit-contribution', src: editPath })
+          JSON.stringify({ id: 'edit-contribution', src: rowData.editPath })
         )
         .attr('data-action', [
           'dropdown:dropdown-is-shown->contribution#onShownDropdown',
@@ -277,8 +270,22 @@ export function dataTableConfig(
   }
 }
 
-function actionsDropdownTemplate(row: Contribution, type: string, set: any) {
-  const { id, status, invitation_template: invitationTemplate, invitation } = row;
+// Transform source row data to `rowData` used by ContributionController
+// This involves transformation to cameCase and filtering out unneeded fields
+function transformSourceData(row: Contribution) {
+  const rowData: ContributionRowData = {
+    id: row.id,
+    status: row.display_status!,
+    path: row.path!,
+    editPath: row.edit_path!,
+  };
+  if (row.invitation_template) rowData.invitationTemplate = row.invitation_template;
+  if (row.invitation) rowData.invitation = row.invitation;
+  return rowData;
+}
+
+export function actionsDropdownTemplate(rowData: ContributionRowData): string {
+  const { id, status, invitationTemplate, invitation } = rowData;
   const isPreInvite = status === 'pre_request';
   const didNotRespond = status === 'did_not_respond';
   const wasSubmitted = status && status.includes('submitted');

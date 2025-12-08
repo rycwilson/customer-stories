@@ -76,7 +76,7 @@ export function dataTableConfig(rowGroupDataSource: string): Config {
         name: 'actions',
         data: {
           _: 'status',
-          display: actionsDropdownTemplate
+          display: (row: AdwordsAd) => actionsDropdownTemplate(transformSourceData(row)),
         },
         createdCell: (td: Node) => $(td).attr('data-controller', 'dropdown')
       }
@@ -105,8 +105,19 @@ export function dataTableConfig(rowGroupDataSource: string): Config {
   };
 }
 
-function actionsDropdownTemplate(row: AdwordsAd, type: string, set: any) {
-  const { id, path, editPath } = row;
+// Transform source row data to `rowData` used by ContributionController
+// This involves transformation to cameCase and filtering out unneeded fields
+function transformSourceData(row: AdwordsAd) {
+  const rowData: AdwordsAdRowData = {
+    id: row.id,
+    path: row.path,
+    editPath: row.editPath,
+  };
+  return rowData;
+}
+
+export function actionsDropdownTemplate(rowData: AdwordsAdRowData): string {
+  const { id, path, editPath } = rowData;
   return `
     <a id="promoted-story-actions-dropdown-${id}" 
       href="#" 

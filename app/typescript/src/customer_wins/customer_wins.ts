@@ -98,7 +98,14 @@ export function dataTableConfig(rowGroupDataSource: string): Config {
         name: 'actions',
         data: {
           _: 'display_status',
-          display: actionsDropdownTemplate
+
+          // function accepts `FunctionColumnData` interface
+          display: (
+            row: CustomerWin, 
+            type: string,
+            s: undefined,
+            meta: { row: number, col: number, settings: object }
+          ) => actionsDropdownTemplate(transformSourceData(row)),
         },
         createdCell: (td: Node) => {
           $(td)
@@ -159,24 +166,17 @@ export function dataTableConfig(rowGroupDataSource: string): Config {
     },
 
     createdRow(tr: Node, data: object | any[], index: number) {
-      const { 
-        id,
-        display_status: status,
-        customer,
-        curator,
-        path,
-        edit_path: editPath
-      } = data as CustomerWin;
+      const rowData = transformSourceData(data as CustomerWin);
       $(tr)
         .attr('data-customer-win-datatable-outlet', '#successes-table')
         .attr('data-customer-win-modal-outlet', '#main-modal')
         .attr(
           'data-customer-win-row-data-value',
-          JSON.stringify({ id, status, customer, curator, path, editPath })
+          JSON.stringify(rowData)
         )
         .attr(
           'data-customer-win-child-row-turbo-frame-attrs-value', 
-          JSON.stringify({ id: 'edit-customer-win', src: editPath })
+          JSON.stringify({ id: 'edit-customer-win', src: rowData.editPath })
         )
         .attr('data-action', [
           'dropdown:dropdown-is-shown->customer-win#onShownDropdown',
@@ -188,8 +188,24 @@ export function dataTableConfig(rowGroupDataSource: string): Config {
   }
 }
 
-function actionsDropdownTemplate(row: CustomerWin, type: string, set: any) {
-  const { id, display_status: status, new_story_path: newStoryPath, story } = row;
+// Transform source row data to `rowData` used by CustomerWinController
+// This involves transformation to cameCase and filtering out unneeded fields
+function transformSourceData(row: CustomerWin) {
+  const rowData: CustomerWinRowData = {
+    id: row.id,
+    curator: row.curator,
+    customer: row.customer,
+    status: row.display_status,
+    path: row.path,
+    editPath: row.edit_path,
+  };
+  if (row.story) rowData.story = row.story;
+  if (row.new_story_path) rowData.newStoryPath = row.new_story_path;
+  return rowData;
+}
+
+export function actionsDropdownTemplate(rowData: CustomerWinRowData): string {
+  const { id, status, story, newStoryPath } = rowData;
   const noContributorsAdded = status && /0.+Contributors\sadded/.test(status);
   const noContributorsInvited = status && /0.+Contributors\sinvited/.test(status);
   
