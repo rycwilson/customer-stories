@@ -12,6 +12,13 @@
   - %i(win_story_html win_story_text win_story_markdown win_story_completed).each do |field|
     = form.hidden_field(field)
 
+  .form-group 
+    .visible-sm-block.col-sm-12
+      = form.label(:name)
+    = form.label(:name, class: 'control-label visible-md-inline-block visible-lg-inline-block col-md-3')
+    .col-sm-12.col-md-9
+      = form.text_field(:name, class: 'form-control')
+
   - if win.referrer.present?
     .form-group.referrer
       .visible-sm-block.col-sm-12
