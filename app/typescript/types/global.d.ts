@@ -20,7 +20,7 @@ declare var CSP: CustomerStoriesApp;
 interface Window {
   $: object;
   jQuery: object;
-  Stimulus: object;
+  Stimulus: import("@hotwired/stimulus").Application;
 }
 
 interface CustomerStoriesApp {
@@ -118,31 +118,26 @@ interface User {
 interface CustomerWin {
   id: number;
   name: string;
-  customer_id?: number; 
-  curator_id?: number; 
-  display_status?: string;
-  // referrer?: User | null;
-  // contact?: User | null;
-  timestamp?: number;
-  new_story_path?: string;
   curator: User; 
   customer: Customer; 
-  story?: Story;
-  path?: string;
-  edit_path?: string;
-}
-
-// CustomerWin data from server is transformed to CustomerWinRowData for datatables
-interface CustomerWinRowData {
-  [key: string]: any;
-  id: number;
-  status: string;
-  newStoryPath: string;
-  curator: User;
-  customer: Customer;
-  story?: Story;
+  display_status: string;
+  timestamp: number;
   path: string;
   edit_path: string;
+  story?: Story;
+  new_story_path?: string;
+}
+
+// CustomerWin data from server is transformed to CustomerWinRowData for DatatableRowController
+interface CustomerWinRowData {
+  id: number;
+  curator: User;
+  customer: Customer;
+  status: string;
+  path: string;
+  editPath: string;
+  story?: Story;
+  newStoryPath?: string;
 }
 
 interface Customer {
@@ -165,9 +160,9 @@ interface AdwordsAd {
   approvalStatus: string;
   longHeadline: string;
   mainColor: string;
-  accentcolor: string;
+  accentColor: string;
   storyId: number;
-  customer: { id: number, name: string };
+  customer: Customer;
   story: { id: number, title: string };
   curator: { id: number, name: string };
   path: string;
@@ -175,7 +170,9 @@ interface AdwordsAd {
 }
 
 interface AdwordsAdRowData {
+  id: number;
   path: string;
+  editPath: string;
 }
 
 interface Contribution {
@@ -211,11 +208,11 @@ interface Contribution {
 interface ContributionRowData {
   id: number;
   status: string;
-  contributor: User;
-  invitationTemplate: InvitationTemplate;
-  customerWin: CustomerWin;
   path: string;
-  edit_path: string;
+  editPath: string;
+  invitationTemplate?: InvitationTemplate;
+  invitation?: { path: string };
+  story?: Story;
 }
 
 interface InvitationTemplate {
