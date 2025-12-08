@@ -58,7 +58,10 @@ export default class ResourceController extends Controller<HTMLElement> {
     position: number;
     turboFrame?: { id: string, src: string };
     html?: string;
+    actionsDropdownHtml?: string;
   };
+
+  // declare actionsDropdownTemplate: (row: any, type: string, set: any) => string;
 
   get resourceName() {
     return this.element.dataset.resourceName as ResourceName;
@@ -147,8 +150,13 @@ export default class ResourceController extends Controller<HTMLElement> {
   }
 
   rowViewValueChanged(
-    { position, turboFrame, html }: 
-    { position: number, turboFrame?: { id: string, src: string }, html?: string }
+    { position, turboFrame, html, actionsDropdownHtml }: 
+    { 
+      position: number,
+      turboFrame?: { id: string, src: string },
+      html?: string,
+      actionsDropdownHtml?: string
+    }
   ) {
     if (position === 0) {
       this.tableNavTarget.setAttribute('data-table-nav-row-position-value', '');
@@ -167,6 +175,10 @@ export default class ResourceController extends Controller<HTMLElement> {
             this.rowViewTarget.classList.add('ready');
             clearTimeout(spinnerTimer);
             this.rowViewTarget.classList.remove('loading');
+            const actionsDropdownWrapper = this.rowViewTarget.querySelector('[data-controller="dropdown"]');
+            if (actionsDropdownWrapper && actionsDropdownHtml) {
+              actionsDropdownWrapper.innerHTML = actionsDropdownHtml;
+            }
           },
           { once: true }
         );
@@ -217,15 +229,15 @@ export default class ResourceController extends Controller<HTMLElement> {
   }
 
   openRowView(e: CustomEvent) {
-    const { detail: { position, turboFrame } } = e;
-    this.rowViewValue = { position, turboFrame };
+    const { detail: { position, turboFrame, actionsDropdownHtml } } = e;
+    this.rowViewValue = { position, turboFrame, actionsDropdownHtml };
   }
   
   stepRowView(e: CustomEvent) {
     const { detail: { position } } = e;
     const onLookupResponse = (e: Event) => {
-      const { detail: { turboFrame } } = e as CustomEvent;
-      this.rowViewValue = { position, turboFrame };
+      const { detail: { turboFrame, actionsDropdownHtml } } = e as CustomEvent;
+      this.rowViewValue = { position, turboFrame, actionsDropdownHtml };
     }
     this.element.addEventListener('datatable:row-lookup', onLookupResponse, { once: true });
     this.datatableTarget

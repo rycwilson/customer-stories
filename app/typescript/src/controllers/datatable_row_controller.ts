@@ -55,12 +55,12 @@ extends Controller<HTMLTableRowElement> {
       .data()
       .toArray()
       .findIndex(row => row.id === this.rowDataValue.id);
-    const position = index + 1;
-
-    this.dispatch(
-      'row-clicked',
-      { detail: { position, turboFrame: this.childRowTurboFrameAttrsValue } }
-    );
+    const dispatchData = {
+      position: index + 1,
+      turboFrame: this.childRowTurboFrameAttrsValue,
+      actionsDropdownHtml: this.actionsDropdownHtml
+    }
+    this.dispatch('row-clicked', { detail: dispatchData });
   }
 
   toggleChildRow() {
