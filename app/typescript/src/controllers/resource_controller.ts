@@ -234,14 +234,42 @@ export default class ResourceController extends Controller<HTMLElement> {
   }
   
   stepRowView(e: CustomEvent) {
-    const { detail: { position } } = e;
-    const onLookupResponse = (e: Event) => {
-      const { detail: { turboFrame, actionsDropdownHtml } } = e as CustomEvent;
-      this.rowViewValue = { position, turboFrame, actionsDropdownHtml };
+    const { detail: { position, newPage } } = e;
+    const turnPage = (newPage: number) => {
+      return new Promise<void>(resolve => {
+        this.element.addEventListener('datatable:drawn', () => resolve(), { once: true });
+        this.datatableTarget.setAttribute('data-datatable-page-value', newPage.toString());
+      });
     }
-    this.element.addEventListener('datatable:row-lookup', onLookupResponse, { once: true });
-    this.datatableTarget
-      .setAttribute('data-datatable-row-lookup-value', JSON.stringify({ position }));
+    const getView = this.getRowView(position);
+    const showView = (
+      { turboFrame, actionsDropdownHtml }:
+      { turboFrame: { id: string, src: string }, actionsDropdownHtml: string }
+    ) => this.rowViewValue = { position, turboFrame, actionsDropdownHtml };
+    if (typeof newPage === 'number') {
+      turnPage(newPage).then(getView).then(showView)
+    } else {
+      getView().then(showView);
+    }
+  }
+
+  getRowView(position: number) {
+    return () => {
+      return new Promise<{ turboFrame: { id: string, src: string }, actionsDropdownHtml: string }>(
+        (resolve) => {
+          this.element.addEventListener(
+            'datatable:row-lookup',
+            (e: Event) => {
+              const { detail: { turboFrame, actionsDropdownHtml } } = e as CustomEvent;
+              resolve({ turboFrame, actionsDropdownHtml });
+            },
+            { once: true }
+          );
+          this.datatableTarget
+            .setAttribute('data-datatable-row-lookup-value', JSON.stringify({ position }));
+        }
+      );
+    }
   }
   
   validateNewItem(e: Event) {

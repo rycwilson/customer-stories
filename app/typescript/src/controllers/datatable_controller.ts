@@ -37,6 +37,7 @@ export default class DatatableController extends Controller<HTMLTableElement> {
     rowGroupDataSource: String,
     reload: { type: String, default: undefined },
     redraw: { type: Boolean, default: undefined },
+    page: { type: Number, default: undefined },
     rowLookup: { type: Object, default: undefined }
   };
   declare initValue: boolean;
@@ -45,6 +46,7 @@ export default class DatatableController extends Controller<HTMLTableElement> {
   declare rowGroupEnabledValue: boolean;
   declare reloadValue: string;
   declare redrawValue: boolean;
+  declare pageValue: number;
   declare rowLookupValue: { id?: number, position?: number };
 
   declare dt: Api<any>;
@@ -149,6 +151,11 @@ export default class DatatableController extends Controller<HTMLTableElement> {
       this.dt.draw(false); // false => hold current paging
     }
     this.redrawValue = false;
+  }
+
+  pageValueChanged(page: number) {
+    if (!this.dt) return;
+    this.dt.page(page).draw(false);
   }
 
   rowGroupEnabledValueChanged(shouldEnable: boolean) {

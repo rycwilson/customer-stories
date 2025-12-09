@@ -61,8 +61,14 @@ export default class TableNavController extends Controller<HTMLElement> {
   stepRowView({ currentTarget: btn }: { currentTarget: HTMLButtonElement }) {
     if (!this.rowPositionValue) return;
     if (btn.ariaDisabled === 'true') return;
-    
+
     const step = +(<string>btn.dataset.step);
-    this.dispatch('step-row-view', { detail: { position: this.rowPositionValue + step } });
+    const newRowPosition = this.rowPositionValue + step;
+    
+    // Note that pages are 0-based while position is 1-based
+    const isPrevPage = (newRowPosition - 1) < this.pageInfoValue.start;
+    const isNextPage = (newRowPosition - 1) > this.pageInfoValue.end;
+    const newPage = isPrevPage || isNextPage ? this.pageInfoValue.page + step : undefined;
+    this.dispatch('step-row-view', { detail: { position: newRowPosition, newPage } });
   }
 }
