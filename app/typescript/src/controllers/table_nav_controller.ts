@@ -47,14 +47,14 @@ export default class TableNavController extends Controller<HTMLElement> {
     // that is not consistent with datatables styling of the pagination buttons 
     // (which are actually links and thus can't be disabled)
     this.prevRowViewBtnTarget
-      .setAttribute('aria-disabled', position === this.currentRangeStart ? 'true' : 'false');
+      .setAttribute('aria-disabled', position === 1 ? 'true' : 'false');
     this.prevRowViewBtnTarget.style.cursor = (
-      position === this.currentRangeStart ? 'not-allowed' : 'pointer'
+      position === 1 ? 'not-allowed' : 'pointer'
     );
     this.nextRowViewBtnTarget
-      .setAttribute('aria-disabled', position === this.currentRangeEnd ? 'true' : 'false');
+      .setAttribute('aria-disabled', position === this.pageInfoValue.recordsDisplay ? 'true' : 'false');
     this.nextRowViewBtnTarget.style.cursor = (
-      position === this.currentRangeEnd ? 'not-allowed' : 'pointer'
+      position === this.pageInfoValue.recordsDisplay ? 'not-allowed' : 'pointer'
     );
   }
 
