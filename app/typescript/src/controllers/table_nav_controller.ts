@@ -1,4 +1,5 @@
 import { Controller } from '@hotwired/stimulus';
+import type { ApiPageInfo } from 'datatables.net';
 
 export default class TableNavController extends Controller<HTMLElement> {
   // These targets' children are replaced by the ResourceController when a table is drawn
