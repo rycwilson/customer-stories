@@ -259,6 +259,7 @@ export default class DatatableController extends Controller<HTMLTableElement> {
     const index = id ? data.findIndex(row => row.id === id) : (position ? position - 1 : -1);
     if (index === -1) return;
 
+    // NOTE: Rows (tr elements) not on the current page can not be reliably found
     const tr = rows.nodes()[index];
     const rowCtrl = <RowController>window.Stimulus
       .getControllerForElementAndIdentifier(tr, tr.dataset.controller);
