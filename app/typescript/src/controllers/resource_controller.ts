@@ -155,7 +155,7 @@ export default class ResourceController extends Controller<HTMLElement> {
       position: number,
       turboFrame?: { id: string, src: string },
       html?: string,
-      actionsDropdownHtml?: string
+      actionsDropdownHtml: string,
     }
   ) {
     this.element.classList.toggle('row-view-shown', position !== 0);
