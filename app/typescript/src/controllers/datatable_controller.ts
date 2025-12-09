@@ -265,7 +265,7 @@ export default class DatatableController extends Controller<HTMLTableElement> {
       .getControllerForElementAndIdentifier(tr, tr.dataset.controller);
 
     const rowData = data[index];
-    const returnValue = { 
+    const rowView = { 
       position: position || index + 1,
       turboFrame: { 
         id: `edit-${this.resourceOutlet.identifier.slice(0, -1)}`,
@@ -273,6 +273,6 @@ export default class DatatableController extends Controller<HTMLTableElement> {
       },
       actionsDropdownHtml: rowCtrl.actionsDropdownHtml 
     };
-    this.dispatch('row-lookup', { detail: { ...returnValue } });
+    this.dispatch('row-lookup', { detail: rowView });
   }
 }

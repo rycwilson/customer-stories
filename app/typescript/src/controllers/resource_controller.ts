@@ -158,12 +158,12 @@ export default class ResourceController extends Controller<HTMLElement> {
       actionsDropdownHtml?: string
     }
   ) {
-    if (position === 0) {
-      this.tableNavTarget.setAttribute('data-table-nav-row-position-value', '');
-      this.element.classList.remove('row-view-shown');
-    } else {
-      this.tableNavTarget.setAttribute('data-table-nav-row-position-value', position.toString());
-      this.element.classList.add('row-view-shown');
+    this.element.classList.toggle('row-view-shown', position !== 0);
+    this.tableNavTarget.setAttribute(
+      'data-table-nav-row-position-value',
+      position ? position.toString() : ''
+    );
+    if (position) {
       if (html) {
         this.rowViewTarget.innerHTML = html;
         this.rowViewTarget.classList.add('ready');
@@ -175,7 +175,8 @@ export default class ResourceController extends Controller<HTMLElement> {
             this.rowViewTarget.classList.add('ready');
             clearTimeout(spinnerTimer);
             this.rowViewTarget.classList.remove('loading');
-            const actionsDropdownWrapper = this.rowViewTarget.querySelector('[data-controller="dropdown"]');
+            const actionsDropdownWrapper = 
+              this.rowViewTarget.querySelector('[data-controller="dropdown"]');
             if (actionsDropdownWrapper && actionsDropdownHtml) {
               actionsDropdownWrapper.innerHTML = actionsDropdownHtml;
             }
