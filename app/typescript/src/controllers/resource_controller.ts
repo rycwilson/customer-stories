@@ -286,8 +286,6 @@ export default class ResourceController extends Controller<HTMLElement> {
     }
   }
 
-  // Pass the clone via an outlet since it is a complex object with attached event listeners,
-  // thus can't be passed by data attribute
   onTableInfoCloned(this: ResourceControllerWithDatatable, e: CustomEvent) {
     const { clone, pageInfo } = e.detail;
     // NOTE: The page end value from datatables is exclusive,
