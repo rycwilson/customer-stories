@@ -260,7 +260,17 @@ export default class ResourceController extends Controller<HTMLElement> {
   // Pass the clone via an outlet since it is a complex object with attached event listeners,
   // thus can't be passed by data attribute
   onTableInfoCloned(this: ResourceControllerWithDatatable, e: CustomEvent) {
-    const { clone } = e.detail;
+    const { clone, pageInfo } = e.detail;
+    // NOTE: The page end value from datatables is exclusive,
+    // so it is the index of the last row on the page + 1.
+    // => Transform this before passing to table nav controller
+    this.tableNavTarget.setAttribute(
+      'data-table-nav-page-info-value',
+      JSON.stringify({ ...pageInfo, end: pageInfo.end - 1 })
+    );
+    
+    // Pass the clone via an outlet since it is a complex object with attached event listeners,
+    // thus can't be passed by data attribute
     this.tableNavOutlet.infoTarget.replaceChildren(clone);
   }
 

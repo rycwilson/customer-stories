@@ -10,32 +10,25 @@ export default class TableNavController extends Controller<HTMLElement> {
   declare readonly nextRowViewBtnTarget: HTMLButtonElement;
 
   static values = {
-    rowPosition: { type: Number, default: undefined }
+    rowPosition: { type: Number, default: undefined },
+    pageInfo: { type: Object, default: undefined }
   }
   declare rowPositionValue: number | undefined;
+  declare pageInfoValue: ApiPageInfo;
 
   declare observer: MutationObserver;
-  declare currentRangeStart: number;
-  declare currentRangeEnd: number;
-  declare totalRows: number;
   
   connect() {
     // When the table draws, the `.dataTables_info` and `.dataTables_paginate` elements are
     // cloned into the info and paginate targets respectively. (see drawCallback in table config)
-    // When this happens, keep track of the current page range
-    // Ignore the change when a row view is displayed.
     this.observer = new MutationObserver(mutations => {
       // This resolves a timing issue that arises when info is updated after a row view is opened
-      const total = this.infoTarget.textContent!.match(/of (?<total>\d+)$/)!.groups!.total;
       if (this.positionTarget.textContent) {
-        this.positionTarget.textContent = (
-          this.positionTarget.textContent.replace(/of \d+$/, `of ${total}`)
-        );
+        this.positionTarget.textContent = this.positionTarget.textContent.replace(
+          /of \d+$/,
+          `of ${this.pageInfoValue.recordsDisplay}`
+        )
       }
-      const currentRange = <string>(
-        mutations[0].addedNodes[0].textContent!.match(/^(?<range>\d+ to \d+)/)!.groups!.range
-      );
-      [this.currentRangeStart, this.currentRangeEnd] = currentRange.split(' to ').map(Number);
     });
     this.observer.observe(this.infoTarget, { childList: true, subtree: false });
   }
@@ -45,8 +38,8 @@ export default class TableNavController extends Controller<HTMLElement> {
   }
 
   rowPositionValueChanged(position: number) {
-    this.positionTarget.textContent = position ?
-      `${position} ` + this.infoTarget.textContent!.match(/(?<substr>of \d+)$/)!.groups!.substr :
+    this.positionTarget.textContent = position ? 
+      `${position} of ${this.pageInfoValue.recordsDisplay}` : 
       '';
 
     // We don't want to disable the buttons because this will result in styling

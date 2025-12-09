@@ -217,7 +217,10 @@ export default class DatatableController extends Controller<HTMLTableElement> {
       infoClone.textContent = (
         info.textContent?.match(/(?<entries>\d+ to \d+ of \d+)/)?.groups?.entries || null
       );
-      this.dispatch('info-cloned', { detail: { clone: infoClone } });
+      this.dispatch(
+        'info-cloned',
+        { detail: { clone: infoClone, pageInfo: this.dt.page.info() } }
+      );
     }
     if (paginate instanceof HTMLElement) {
       const paginateClone = paginate.cloneNode(true) as HTMLElement;
