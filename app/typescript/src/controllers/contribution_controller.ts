@@ -1,6 +1,5 @@
 import DatatableRowController from "./datatable_row_controller";
 import type ModalController from './modal_controller';
-import { actionsDropdownTemplate } from '../contributions/contributions';
 
 export default class ContributionController extends DatatableRowController<ContributionController, ContributionRowData> {
   declare readonly modalOutlet: ModalController;
@@ -14,10 +13,6 @@ export default class ContributionController extends DatatableRowController<Contr
         <p>Loading...</p>
       </turbo-frame>
     `;
-  }
-
-  get actionsDropdownHtml() {
-    return actionsDropdownTemplate(this.rowDataValue);
   }
 
   // initInvitationTemplateSelect() {  

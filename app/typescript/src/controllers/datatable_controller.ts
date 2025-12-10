@@ -6,11 +6,6 @@ import type PromotedStoriesController from './promoted_stories_controller';
 import DataTable from 'datatables.net-bs';
 import type { Api, Config } from 'datatables.net-bs';
 import 'datatables.net-rowgroup-bs';
-import type CustomerWinController from './customer_win_controller';
-import type ContributionController from './contribution_controller';
-import type PromotedStoryController from './promoted_story_controller';
-
-type RowController = CustomerWinController | ContributionController | PromotedStoryController;
 
 interface SearchParams {
   filters: { column: string, q: string, regEx: boolean, smartSearch: boolean }[],
@@ -249,29 +244,20 @@ export default class DatatableController extends Controller<HTMLTableElement> {
     }
   }
 
-  /**
-   * Accepts a row id, finds the row in the filtered data, and dispatches turboFrame and position.
-   * @param rowId - The id of the row to look up
-   */
   rowLookupValueChanged({ id, position }: { id?: number, position?: number }) {
     const rows = this.dt.rows({ search: 'applied' });
     const data = rows.data().toArray();
     const index = id ? data.findIndex(row => row.id === id) : (position ? position - 1 : -1);
     if (index === -1) return;
 
-    // NOTE: Rows (tr elements) not on the current page can not be reliably found
-    const tr = rows.nodes()[index];
-    const rowCtrl = <RowController>window.Stimulus
-      .getControllerForElementAndIdentifier(tr, tr.dataset.controller);
-
-    const rowData = data[index];
-    const rowView = { 
+    const rowView = {
+      page: Math.floor(index / this.dt.page.len()), 
       position: position || index + 1,
       turboFrame: { 
         id: `edit-${this.resourceOutlet.identifier.slice(0, -1)}`,
-        src: rowData.edit_path 
+        src: data[index].edit_path 
       },
-      actionsDropdownHtml: rowCtrl.actionsDropdownHtml 
+      actionsDropdownHtml: data[index].actionsDropdownHtml
     };
     this.dispatch('row-lookup', { detail: rowView });
   }

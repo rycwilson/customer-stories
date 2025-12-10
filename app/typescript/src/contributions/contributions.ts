@@ -45,7 +45,12 @@ export function dataTableConfig(
     }
   })();
   return {
-    data: storyId ? CSP['storyContributions'][storyId] : CSP.contributions,
+    data: storyId ? 
+      CSP['storyContributions'][storyId] :
+      CSP.contributions?.map(contribution => ({ 
+        ...contribution,
+        actionsDropdownHtml: actionsDropdownTemplate(transformSourceData(contribution)) 
+      })) || [],
     
     language: {
       emptyTable: 'No Contributors found',

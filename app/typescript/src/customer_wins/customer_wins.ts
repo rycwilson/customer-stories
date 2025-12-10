@@ -24,7 +24,10 @@ export function dataTableConfig(rowGroupDataSource: string): Config {
     }
   })();
   return {
-    data: CSP.customerWins,
+    data: CSP.customerWins?.map(win => ({ 
+      ...win,
+      actionsDropdownHtml: actionsDropdownTemplate(transformSourceData(win)) 
+    })) || [],
     
     language: { 
       emptyTable: 'No Customer Wins found',

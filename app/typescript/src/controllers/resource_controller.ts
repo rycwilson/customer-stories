@@ -56,7 +56,7 @@ export default class ResourceController extends Controller<HTMLElement> {
   );
   declare rowViewValue: RowView;
 
-  // declare actionsDropdownTemplate: (row: any, type: string, set: any) => string;
+  declare currentPage: number;
 
   get resourceName() {
     return this.element.dataset.resourceName as ResourceName;
@@ -197,10 +197,27 @@ export default class ResourceController extends Controller<HTMLElement> {
     if (!newId || newId === oldId) return;
 
     const onLookupResponse = (e: Event) => {
-      const { detail: { position, turboFrame } } = e as CustomEvent;
       this.rowIdValue = 0;
-      this.rowViewValue = { position, turboFrame };
+      const { detail: { page, position, turboFrame, actionsDropdownHtml } } = e as CustomEvent;
+      if (page !== this.currentPage) {
+        this.element.addEventListener(
+          'datatable:drawn',
+          () => {
+            this.currentPage = page;
+            this.rowViewValue = { 
+              position,
+              turboFrame,
+              actionsDropdownHtml
+            };
+          },
+          { once: true }
+        );
+        this.datatableTarget.setAttribute('data-datatable-page-value', page.toString());
+      } else {
+        this.rowViewValue = { position, turboFrame };
+      }
     }
+
     this.element.addEventListener('datatable:row-lookup', onLookupResponse, { once: true });
     this.datatableTarget
       .setAttribute('data-datatable-row-lookup-value', JSON.stringify({ id: newId }));
@@ -289,6 +306,7 @@ export default class ResourceController extends Controller<HTMLElement> {
       'data-table-nav-page-info-value',
       JSON.stringify({ ...pageInfo, end: pageInfo.end - 1 })
     );
+    this.currentPage = pageInfo.page;
     
     // Pass the clone via an outlet since it is a complex object with attached event listeners,
     // thus can't be passed by data attribute

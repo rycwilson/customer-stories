@@ -9,8 +9,7 @@ import type PromotedStoryController from './promoted_story_controller';
 type RowController = CustomerWinController | ContributionController | PromotedStoryController;
 type RowData = CustomerWinRowData | ContributionRowData | AdwordsAdRowData;
 
-export default 
-abstract class DatatableRowController<Ctrl extends RowController, Data extends RowData>
+export default class DatatableRowController<Ctrl extends RowController, Data extends RowData>
 extends Controller<HTMLTableRowElement> {
   static outlets = ['datatable'];
   declare readonly datatableOutlet: DatatableController;
@@ -22,8 +21,6 @@ extends Controller<HTMLTableRowElement> {
   declare readonly rowDataValue: Data;
   declare readonly childRowTurboFrameAttrsValue: { id: string, src: string };
   declare childRowElement: HTMLElement;
-
-  abstract get actionsDropdownHtml(): string;
 
   // The datatables .child method will take a HTMLElement or string
   // Subclasses will provide their own content, else default content may be defined here
@@ -49,16 +46,14 @@ extends Controller<HTMLTableRowElement> {
 
   openView({ target }: { target: Element }) {
     if (target.closest('.toggle-child') || target.closest('[data-controller="dropdown"]')) return;
-    
-    const index = this.datatableOutlet.dt
-      .rows({ search: 'applied' })
-      .data()
-      .toArray()
-      .findIndex(row => row.id === this.rowDataValue.id);
+
+    const rows = this.datatableOutlet.dt.rows({ search: 'applied' });
+    const data = rows.data().toArray();
+    const index = data.findIndex(row => row.id === this.rowDataValue.id);
     const rowView = {
       position: index + 1,
       turboFrame: this.childRowTurboFrameAttrsValue,
-      actionsDropdownHtml: this.actionsDropdownHtml
+      actionsDropdownHtml: data[index].actionsDropdownHtml
     }
     this.dispatch('row-clicked', { detail: rowView });
   }
