@@ -1,4 +1,5 @@
 import type { Config, Api } from 'datatables.net-bs';
+import { minifyHtml } from '../utils';
 
 const colIndices = {
   customer: 1,
@@ -234,7 +235,7 @@ export function actionsDropdownTemplate(rowData: CustomerWinRowData): string {
       })
       .join('')
   );
-  return `
+  return minifyHtml(`
     <a id="customer-win-actions-dropdown-${id}" 
       href="#" 
       class="dropdown-toggle" 
@@ -291,5 +292,5 @@ export function actionsDropdownTemplate(rowData: CustomerWinRowData): string {
         </a>
       </li>
     </ul>
-  `;
+  `);
 }

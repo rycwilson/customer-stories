@@ -192,6 +192,14 @@ export function toSnakeCase(str: string): string {
   return snake.toLowerCase();
 }
 
+export function minifyHtml(str: string): string {
+  return str
+    .replace(/>\s+</g, '><')         // Remove whitespace between tags
+    .replace(/\s{2,}/g, ' ')         // Collapse multiple spaces into one
+    .replace(/[\r\n]+/g, '')         // Remove all newlines
+    .trim();                         // Trim leading/trailing whitespace
+}
+
 // export function copyToClipboard(str) {
 //   const onCopy = (e) => {
 //     e.clipboardData.setData("text/html", str);

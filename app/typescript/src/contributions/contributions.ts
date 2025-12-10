@@ -1,4 +1,5 @@
 import type { Config, Api } from 'datatables.net-bs';
+import { minifyHtml } from '../utils';
 
 const colIndices = {
   contributor: 1,
@@ -289,7 +290,7 @@ export function actionsDropdownTemplate(rowData: ContributionRowData): string {
   const isPreInvite = status === 'pre_request';
   const didNotRespond = status === 'did_not_respond';
   const wasSubmitted = status && status.includes('submitted');
-  return `
+  return minifyHtml(`
     <a id="contributions-action-dropdown-${id}" 
       href="#" 
       class="dropdown-toggle" 
@@ -343,5 +344,5 @@ export function actionsDropdownTemplate(rowData: ContributionRowData): string {
         </a>
       </li>
     </ul>
-  `;
+  `);
 }
