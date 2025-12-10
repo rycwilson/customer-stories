@@ -42,9 +42,14 @@ export function addRow(this: ResourceController, data: CustomerWin | Contributio
 
   CSP[this.resourceName].push(data);
   this.datatableTarget.setAttribute('data-datatable-reload-value', this.resourceName);
-  if (draw) { 
-    this.datatableTarget.setAttribute('data-datatable-redraw-value', 'true'); 
-  }
+  return new Promise<void>((resolve: () => void) => {
+    if (!draw) {
+      resolve();
+    } else {
+      this.datatableTarget.addEventListener('datatable:drawn', resolve, { once: true });
+      this.datatableTarget.setAttribute('data-datatable-redraw-value', 'true'); 
+    }
+  });
 }
 
 export function showRow(this: ResourceController, id: number) {

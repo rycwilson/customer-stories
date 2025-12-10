@@ -48,24 +48,21 @@ export default class TableNavController extends Controller<HTMLElement> {
     // (which are actually links and thus can't be disabled)
     this.prevRowViewBtnTarget
       .setAttribute('aria-disabled', position === 1 ? 'true' : 'false');
-    this.prevRowViewBtnTarget.style.cursor = (
-      position === 1 ? 'not-allowed' : 'pointer'
-    );
+    this.prevRowViewBtnTarget.style.cursor = position === 1 ? 'not-allowed' : 'pointer';
     this.nextRowViewBtnTarget
       .setAttribute('aria-disabled', position === this.pageInfoValue.recordsDisplay ? 'true' : 'false');
     this.nextRowViewBtnTarget.style.cursor = (
       position === this.pageInfoValue.recordsDisplay ? 'not-allowed' : 'pointer'
     );
   }
-
-  // TODO: if a boundary is reached, turn the table page if possible
+  
   stepRowView({ currentTarget: btn }: { currentTarget: HTMLButtonElement }) {
     if (!this.rowPositionValue) return;
     if (btn.ariaDisabled === 'true') return;
 
     const step = +(<string>btn.dataset.step);
     const newRowPosition = this.rowPositionValue + step;
-    
+
     // Note that pages are 0-based while position is 1-based
     const isPrevPage = (newRowPosition - 1) < this.pageInfoValue.start;
     const isNextPage = (newRowPosition - 1) > this.pageInfoValue.end;

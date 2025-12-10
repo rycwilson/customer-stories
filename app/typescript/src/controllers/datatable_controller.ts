@@ -134,10 +134,10 @@ export default class DatatableController extends Controller<HTMLTableElement> {
   }
 
   reloadValueChanged(resourceName: ResourceName) {
-    if (!resourceName) return;
-    
-    const data = CSP[resourceName];
-    this.dt.clear().rows.add(data); //.draw();
+    if (this.dt && resourceName) {
+      const data = CSP[resourceName];
+      this.dt.clear().rows.add(data);
+    }
     this.reloadValue = '';
   }
 

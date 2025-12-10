@@ -194,47 +194,25 @@ export default class ResourceController extends Controller<HTMLElement> {
   }
 
   rowIdValueChanged(newId: number, oldId: number) {
-    if (Number.isNaN(newId) || newId === oldId) return;
+    if (!newId || newId === oldId) return;
 
-    const onLookupResponse = (e: Event) => {
-      this.rowIdValue = 0;
-      const { detail: { page, position, turboFrame, actionsDropdownHtml } } = e as CustomEvent;
-      if (page !== this.currentPage) {
-        this.element.addEventListener(
-          'datatable:drawn',
-          () => {
-            this.currentPage = page;
-            this.rowViewValue = { position, turboFrame, actionsDropdownHtml };
-          },
-          { once: true }
-        );
-        this.datatableTarget.setAttribute('data-datatable-page-value', page.toString());
-      } else {
-        this.rowViewValue = { position, turboFrame };
-      }
-    }
-
-    this.element.addEventListener('datatable:row-lookup', onLookupResponse, { once: true });
-    this.datatableTarget
-      .setAttribute('data-datatable-row-lookup-value', JSON.stringify({ id: newId }));
+    this.getRowView({ id: newId }).then(async (rowView) => {
+      const page = <number>rowView.page;
+      if (page !== this.currentPage) await this.turnToPage(page);
+      this.rowViewValue = rowView;
+    });
   }
   
   newRowValueChanged(
     { rowData, rowViewHtml } :
     { rowData: CustomerWinRowData | ContributionRowData, rowViewHtml: string }
   ) {
-    this.addTableRow(rowData, true);
-    const onLookupResponse = (e: Event) => {
-      const { detail: { position } } = e as CustomEvent;
-      this.rowViewValue = { position, html: rowViewHtml };
-    }
-
-    // Wait for table to draw after adding row
-    setTimeout(() => {
-      this.element.addEventListener('datatable:row-lookup', onLookupResponse, { once: true });
-      this.datatableTarget
-        .setAttribute('data-datatable-row-lookup-value', JSON.stringify({ id: rowData.id }));
-    })
+    const getView = () => this.getRowView({ id: rowData.id });
+    this.addTableRow(rowData, true)?.then(getView).then(async (rowView) => {
+      const page = <number>rowView.page;
+      if (page !== this.currentPage) await this.turnToPage(page);
+      this.rowViewValue = { position: rowView.position, html: rowViewHtml };
+    });
   }
 
   openRowView(e: CustomEvent) {
@@ -244,40 +222,37 @@ export default class ResourceController extends Controller<HTMLElement> {
   
   stepRowView(e: CustomEvent) {
     const { detail: { position, newPage } } = e;
-    const turnPage = (newPage: number) => {
-      return new Promise<void>(resolve => {
-        this.element.addEventListener('datatable:drawn', () => resolve(), { once: true });
-        this.datatableTarget.setAttribute('data-datatable-page-value', newPage.toString());
-      });
-    }
-    const getView = this.getRowView(position);
-    const showView = ({ turboFrame, actionsDropdownHtml }: RowView) => {
-      this.rowViewValue = { position, turboFrame, actionsDropdownHtml };
-    };
-    if (typeof newPage === 'number') {
-      turnPage(newPage).then(getView).then(showView)
-    } else {
-      getView().then(showView);
-    }
+    this.getRowView({ position }).then(async (rowView) => {
+      if (typeof newPage === 'number') await this.turnToPage(newPage);
+      this.rowViewValue = rowView;
+    });
   }
 
-  getRowView(position: number) {
-    return () => {
-      return new Promise<RowView>(
-        (resolve) => {
-          this.element.addEventListener(
-            'datatable:row-lookup',
-            (e: Event) => {
-              const { detail: { turboFrame, actionsDropdownHtml } } = e as CustomEvent;
-              resolve({ turboFrame, actionsDropdownHtml });
-            },
-            { once: true }
-          );
-          this.datatableTarget
-            .setAttribute('data-datatable-row-lookup-value', JSON.stringify({ position }));
-        }
+  turnToPage(page: number) {
+    return new Promise<void>(resolve => {
+      this.datatableTarget.addEventListener(
+        'datatable:drawn',
+        () => { this.currentPage = page; resolve(); }, { once: true }
       );
-    }
+      this.datatableTarget.setAttribute('data-datatable-page-value', page.toString());
+    });
+  }
+
+  getRowView({ id, position }: { id?: number, position?: number }) {
+    return new Promise<RowView>(
+      (resolve) => {
+        this.element.addEventListener(
+          'datatable:row-lookup',
+          (e: Event) => {
+            const { detail: rowView } = e as CustomEvent;
+            resolve(rowView);
+          },
+          { once: true }
+        );
+        this.datatableTarget
+          .setAttribute('data-datatable-row-lookup-value', JSON.stringify({ id, position }) );
+      }
+    );
   }
   
   validateNewItem(e: Event) {
