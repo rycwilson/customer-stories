@@ -252,6 +252,8 @@ export default class DatatableController extends Controller<HTMLTableElement> {
     const index = id ? data.findIndex(row => row.id === id) : (position ? position - 1 : -1);
     if (index === -1) return;
 
+    // NOTE: The tr element for the row may not be currently displayed,
+    // thus there is no access to the row controller and rowData
     const rowView = {
       page: Math.floor(index / this.dt.page.len()), 
       position: position || index + 1,
