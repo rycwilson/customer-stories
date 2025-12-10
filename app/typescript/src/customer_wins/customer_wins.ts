@@ -15,6 +15,8 @@ export function toggleColumnVisibility(dt: Api<any>, rowGroupDataSource: string)
 }
 
 export function dataTableConfig(rowGroupDataSource: string): Config {
+  if (!CSP.customerWins) console.error('Customer Wins data is not defined');
+
   const rowGroupColumn = (() => {
     switch (rowGroupDataSource) {
       case 'customer.name': return colIndices.customer;

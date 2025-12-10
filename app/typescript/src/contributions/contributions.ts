@@ -28,6 +28,8 @@ export function dataTableConfig(
   rowGroupDataSource: string,
   storyId?: number
 ): Config {
+  if (!CSP.contributions) console.error('Contributions data is not defined');
+  
   const rowGroupColumn = storyId ? undefined : (() => {
     switch (rowGroupDataSource) {
       case 'contributor.full_name':
