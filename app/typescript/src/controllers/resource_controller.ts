@@ -194,7 +194,7 @@ export default class ResourceController extends Controller<HTMLElement> {
   }
 
   rowIdValueChanged(newId: number, oldId: number) {
-    if (!newId || newId === oldId) return;
+    if (Number.isNaN(newId) || newId === oldId) return;
 
     const onLookupResponse = (e: Event) => {
       this.rowIdValue = 0;
@@ -204,11 +204,7 @@ export default class ResourceController extends Controller<HTMLElement> {
           'datatable:drawn',
           () => {
             this.currentPage = page;
-            this.rowViewValue = { 
-              position,
-              turboFrame,
-              actionsDropdownHtml
-            };
+            this.rowViewValue = { position, turboFrame, actionsDropdownHtml };
           },
           { once: true }
         );
@@ -242,8 +238,8 @@ export default class ResourceController extends Controller<HTMLElement> {
   }
 
   openRowView(e: CustomEvent) {
-    const { detail: { position, turboFrame, actionsDropdownHtml } } = e;
-    this.rowViewValue = { position, turboFrame, actionsDropdownHtml };
+    const { detail: rowView }: { detail: RowView } = e;
+    this.rowViewValue = rowView;
   }
   
   stepRowView(e: CustomEvent) {

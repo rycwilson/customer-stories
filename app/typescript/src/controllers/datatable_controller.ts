@@ -149,8 +149,10 @@ export default class DatatableController extends Controller<HTMLTableElement> {
   }
 
   pageValueChanged(page: number) {
-    if (!this.dt) return;
+    if (!this.dt || Number.isNaN(page) || page < 0) return;
+
     this.dt.page(page).draw(false);
+    this.element.removeAttribute('data-datatable-page-value');
   }
 
   rowGroupEnabledValueChanged(shouldEnable: boolean) {
