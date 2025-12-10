@@ -49,7 +49,13 @@ type ResourceName = (
 
 type FlashHash = Partial<{ readonly [key in 'notice' | 'alert' | 'info' | 'warning']: string }>;
 type Toast = { flash?: FlashHash, errors?: string[] }
-
+type RowView = {
+  page?: number;
+  position?: number;
+  turboFrame?: { id: string, src: string };
+  html?: string;
+  actionsDropdownHtml?: string;
+}
 type DashboardFilters = { curator?: number | null };
 type CustomerWinsFilters = DashboardFilters & {
   'show-wins-with-story': boolean,

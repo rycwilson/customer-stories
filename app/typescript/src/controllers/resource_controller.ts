@@ -54,12 +54,7 @@ export default class ResourceController extends Controller<HTMLElement> {
   declare newRowValue: (
     { rowData: CustomerWinRowData | ContributionRowData, rowViewHtml: string } | undefined
   );
-  declare rowViewValue: { 
-    position: number;
-    turboFrame?: { id: string, src: string };
-    html?: string;
-    actionsDropdownHtml?: string;
-  };
+  declare rowViewValue: RowView;
 
   // declare actionsDropdownTemplate: (row: any, type: string, set: any) => string;
 
@@ -243,10 +238,9 @@ export default class ResourceController extends Controller<HTMLElement> {
       });
     }
     const getView = this.getRowView(position);
-    const showView = (
-      { turboFrame, actionsDropdownHtml }:
-      { turboFrame: { id: string, src: string }, actionsDropdownHtml: string }
-    ) => this.rowViewValue = { position, turboFrame, actionsDropdownHtml };
+    const showView = ({ turboFrame, actionsDropdownHtml }: RowView) => {
+      this.rowViewValue = { position, turboFrame, actionsDropdownHtml };
+    };
     if (typeof newPage === 'number') {
       turnPage(newPage).then(getView).then(showView)
     } else {
@@ -256,7 +250,7 @@ export default class ResourceController extends Controller<HTMLElement> {
 
   getRowView(position: number) {
     return () => {
-      return new Promise<{ turboFrame: { id: string, src: string }, actionsDropdownHtml: string }>(
+      return new Promise<RowView>(
         (resolve) => {
           this.element.addEventListener(
             'datatable:row-lookup',
