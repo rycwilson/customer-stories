@@ -1,21 +1,36 @@
 import type { Config } from 'datatables.net-bs';
+import { minifyHtml } from '../utils';
 
 // export function toggleColumnVisibility(dt: Api<any>, rowGroupDataSource: string) {
-//   dt.column(colIndices.customer).visible(!rowGroupDataSource);
+//   dt.column(Cols.Customer).visible(!rowGroupDataSource);
 // }
 
+enum Cols {
+  Customer = 1,
+  Title,
+  Status,
+  Curator,
+  Actions
+}
+
 export function dataTableConfig(rowGroupDataSource: string): Config {
-  const colIndices = { customer: 1, title: 2, status: 3, curator: 4, actions: 5 };
+  if (!CSP.promotedStories) console.error('Promoted Stories data is not defined');
+
   return {
-    data: CSP.promotedStories,
+    data: CSP.promotedStories?.map(ad => ({ 
+      ...ad,
+      actions_dropdown_html: actionsDropdownTemplate(ad)
+    })) || [],
+
     // autoWidth: false,
     // dom: 'tp',
+
     language: {
       emptyTable: 'No Promoted Stories found',
       zeroRecords: 'No Promoted Stories found'
     },
     
-    order: [[ colIndices.status, 'asc' ], [colIndices.customer, 'asc']],
+    order: [[ Cols.Status, 'asc' ], [Cols.Customer, 'asc']],
 
     columns: [
       {
@@ -76,21 +91,21 @@ export function dataTableConfig(rowGroupDataSource: string): Config {
         name: 'actions',
         data: {
           _: 'status',
-          display: (row: AdwordsAd) => actionsDropdownTemplate(transformSourceData(row)),
+          display: actionsDropdownTemplate,
         },
         createdCell: (td: Node) => $(td).attr('data-controller', 'dropdown')
       }
     ],
 
     columnDefs: [
-      { visible: false , targets: [colIndices.curator], },
-      { orderable: false, targets: [0, colIndices.actions] },
-      { searchable: false, targets: [0, colIndices.status, colIndices.title] },
+      { visible: false , targets: [Cols.Curator], },
+      { orderable: false, targets: [0, Cols.Actions] },
+      { searchable: false, targets: [0, Cols.Status, Cols.Title] },
       { targets: 0, width: '1.75em' },
-      { targets: colIndices.customer, width: 'auto' },
-      { targets: colIndices.title, width: '48%' },
-      { targets: colIndices.status, width: '4em' },
-      { targets: colIndices.actions, width: '3.5em' },
+      { targets: Cols.Customer, width: 'auto' },
+      { targets: Cols.Title, width: '48%' },
+      { targets: Cols.Status, width: '4em' },
+      { targets: Cols.Actions, width: '3.5em' },
     ],
 
     createdRow: function (tr: Node, data: object | any[], index: number) { 
@@ -116,9 +131,14 @@ function transformSourceData(row: AdwordsAd) {
   return rowData;
 }
 
-export function actionsDropdownTemplate(rowData: AdwordsAdRowData): string {
-  const { id, path, editPath } = rowData;
-  return `
+export function actionsDropdownTemplate(
+  ad: AdwordsAd, 
+  type?: string,
+  s?: undefined,
+  meta?: { row: number, col: number, settings: object }
+): string {
+  const { id, path, editPath } = ad;
+  return minifyHtml(`
     <a id="promoted-story-actions-dropdown-${id}" 
       href="#" 
       class="dropdown-toggle" 
@@ -149,5 +169,5 @@ export function actionsDropdownTemplate(rowData: AdwordsAdRowData): string {
         Preview
       </a>
     </li>
-  `
+  `);
 }

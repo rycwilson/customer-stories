@@ -130,6 +130,7 @@ interface CustomerWin {
   timestamp: number;
   path: string;
   edit_path: string;
+  actions_dropdown_html: string; // added during table config
   story?: Story;
   new_story_path?: string;
 }

@@ -259,7 +259,7 @@ export default class DatatableController extends Controller<HTMLTableElement> {
         id: `edit-${this.resourceOutlet.identifier.slice(0, -1)}`,
         src: data[index].edit_path 
       },
-      actionsDropdownHtml: data[index].actionsDropdownHtml
+      actionsDropdownHtml: data[index].actions_dropdown_html
     };
     this.dispatch('row-lookup', { detail: rowView });
   }

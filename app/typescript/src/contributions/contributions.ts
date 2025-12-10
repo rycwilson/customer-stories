@@ -1,25 +1,25 @@
 import type { Config, Api } from 'datatables.net-bs';
 import { minifyHtml } from '../utils';
 
-const colIndices = {
-  contributor: 1,
-  customer: 2,
-  customerWin: 3,
-  role: 4,
-  curator: 5,
-  status: 6,
-  actions: 7,
-  story: 8
-};
+enum Cols {
+  Contributor = 1,
+  Customer,
+  Win,
+  Role,
+  Curator,
+  Status,
+  Actions,
+  Story
+}
 
 export function toggleColumnVisibility(dt: Api<any>, rowGroupDataSource: string) {
-  dt.column(colIndices.contributor)
+  dt.column(Cols.Contributor)
     .visible(rowGroupDataSource !== 'contributor.full_name');
-  dt.column(colIndices.customer)
+  dt.column(Cols.Customer)
     .visible(rowGroupDataSource !== 'customer.name' && rowGroupDataSource !== 'customer_win.name');
-  dt.column(colIndices.customerWin)
+  dt.column(Cols.Win)
     .visible(rowGroupDataSource !== 'customer_win.name');
-  dt.column(colIndices.role)
+  dt.column(Cols.Role)
     .visible(rowGroupDataSource !== 'invitation_template.name');
 }
 
@@ -29,27 +29,34 @@ export function dataTableConfig(
   storyId?: number
 ): Config {
   if (!CSP.contributions) console.error('Contributions data is not defined');
-  
+
   const rowGroupColumn = storyId ? undefined : (() => {
     switch (rowGroupDataSource) {
       case 'contributor.full_name':
-        return colIndices.contributor;
+        return Cols.Contributor;
       case 'customer.name':
-        return colIndices.customer;
+        return Cols.Customer;
       case 'customer_win.name':
-        return colIndices.customerWin;
+        return Cols.Win;
       case 'invitation_template.name':
-        return colIndices.role;
+        return Cols.Role;
       default:
         return undefined; // should not happen
     }
   })();
+
   return {
     data: storyId ? 
       CSP['storyContributions'][storyId] :
+
+      // Since table rows are generated dynamically and their associated actions dropdown
+      // is derived from the row's status, the actions dropdown template is provided in this file.
+      // To avoid repetition in the server and increased payload, and because the dropdown html
+      // will also be required when rendering row views, merge with the server data here.
+      // Use snake case to alisgn with server data convention.
       CSP.contributions?.map(contribution => ({ 
         ...contribution,
-        actionsDropdownHtml: actionsDropdownTemplate(transformSourceData(contribution)) 
+        actions_dropdown_html: actionsDropdownTemplate(contribution) 
       })) || [],
     
     language: {
@@ -60,11 +67,11 @@ export function dataTableConfig(
     order: (() => {
       switch (rowGroupDataSource) {
         case 'customer_win.name':
-          return [[colIndices.customer, 'asc'], [colIndices.status, 'asc']];
+          return [[Cols.Customer, 'asc'], [Cols.Status, 'asc']];
         case '':
-          return [[colIndices.status, 'asc']];
+          return [[Cols.Status, 'asc']];
         default:
-          return [[rowGroupColumn!, 'asc'], [colIndices.status, 'asc']]
+          return [[rowGroupColumn!, 'asc'], [Cols.Status, 'asc']]
       }
     })(),
 
@@ -157,7 +164,7 @@ export function dataTableConfig(
         name: 'actions',
         data: {
           _: 'status',
-          display: (row: Contribution) => actionsDropdownTemplate(transformSourceData(row))
+          display: actionsDropdownTemplate
         },
         createdCell: (td: Node) => $(td).attr('data-controller', 'dropdown')
       },
@@ -173,34 +180,34 @@ export function dataTableConfig(
     columnDefs: [
       {
         targets: (() => {
-          const targets = [colIndices.curator, colIndices.story, rowGroupColumn].filter(col => col);  
+          const targets = [Cols.Curator, Cols.Story, rowGroupColumn].filter(col => col);  
           if (storyId) {
-            return [...targets, colIndices.customer, colIndices.customerWin];
-          } else if (rowGroupColumn === colIndices.customerWin) {
-            return [...targets, colIndices.customer];
+            return [...targets, Cols.Customer, Cols.Win];
+          } else if (rowGroupColumn === Cols.Win) {
+            return [...targets, Cols.Customer];
           }
           return targets;
         })() as number[],
         visible: false,
       },
       {
-        targets: [0, colIndices.curator, colIndices.actions, colIndices.story],
+        targets: [0, Cols.Curator, Cols.Actions, Cols.Story],
         orderable: false,
       },
       {
-        targets: [0, colIndices.role, colIndices.status, colIndices.actions],
+        targets: [0, Cols.Role, Cols.Status, Cols.Actions],
         searchable: false,
       },
       { targets: 0, width: '1.75em' },
       { 
         targets: [
-          colIndices.contributor, colIndices.customerWin, colIndices.customer
+          Cols.Contributor, Cols.Win, Cols.Customer
         ], 
         width: 'auto' 
       },
-      { targets: colIndices.role, width: '9em' },
-      { targets: colIndices.status, width: '10em' },
-      { targets: colIndices.actions, width: '3.5em' }
+      { targets: Cols.Role, width: '9em' },
+      { targets: Cols.Status, width: '10em' },
+      { targets: Cols.Actions, width: '3.5em' }
     ],
 
     rowGroup: { 
@@ -292,8 +299,14 @@ function transformSourceData(row: Contribution) {
   return rowData;
 }
 
-export function actionsDropdownTemplate(rowData: ContributionRowData): string {
-  const { id, status, invitationTemplate, invitation } = rowData;
+export function actionsDropdownTemplate(
+  contribution: Contribution, 
+  type?: string,
+  s?: undefined,
+  meta?: { row: number, col: number, settings: object }
+): string {
+  const { id, display_status: status, invitation_template: invitationTemplate, invitation } 
+    = contribution;
   const isPreInvite = status === 'pre_request';
   const didNotRespond = status === 'did_not_respond';
   const wasSubmitted = status && status.includes('submitted');

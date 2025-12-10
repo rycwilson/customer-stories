@@ -53,7 +53,7 @@ extends Controller<HTMLTableRowElement> {
     const rowView = {
       position: index + 1,
       turboFrame: this.childRowTurboFrameAttrsValue,
-      actionsDropdownHtml: data[index].actionsDropdownHtml
+      actionsDropdownHtml: data[index].actions_dropdown_html
     }
     this.dispatch('row-clicked', { detail: rowView });
   }

@@ -1,17 +1,17 @@
 import type { Config, Api } from 'datatables.net-bs';
 import { minifyHtml } from '../utils';
 
-const colIndices = {
-  customer: 1,
-  customerWin: 2,
-  curator: 3,
-  status: 4,
-  story: 5,
-  actions: 6
+enum Cols {
+  Customer = 1,
+  Win,
+  Curator,
+  Status,
+  Story,
+  Actions
 }
 
 export function toggleColumnVisibility(dt: Api<any>, rowGroupDataSource: string) {
-  dt.column(colIndices.customer).visible(!rowGroupDataSource);
+  dt.column(Cols.Customer).visible(!rowGroupDataSource);
 }
 
 export function dataTableConfig(rowGroupDataSource: string): Config {
@@ -19,14 +19,20 @@ export function dataTableConfig(rowGroupDataSource: string): Config {
 
   const rowGroupColumn = (() => {
     switch (rowGroupDataSource) {
-      case 'customer.name': return colIndices.customer;
+      case 'customer.name': return Cols.Customer;
       default: return undefined;
     }
   })();
+
   return {
+    // Since table rows are generated dynamically and their associated actions dropdown
+    // is derived from the row's status, the actions dropdown template is provided in this file.
+    // To avoid repetition in the server and increased payload, and because the dropdown html
+    // will also be required when rendering row views, merge with the server data here.
+    // Use snake case to alisgn with server data convention.
     data: CSP.customerWins?.map(win => ({ 
       ...win,
-      actionsDropdownHtml: actionsDropdownTemplate(transformSourceData(win)) 
+      actions_dropdown_html: actionsDropdownTemplate(win) 
     })) || [],
     
     language: { 
@@ -35,8 +41,8 @@ export function dataTableConfig(rowGroupDataSource: string): Config {
     },
 
     order: rowGroupColumn ?
-      [[rowGroupColumn, 'asc'], [colIndices.customerWin, 'asc']] :
-      [[colIndices.customer, 'asc']],
+      [[rowGroupColumn, 'asc'], [Cols.Win, 'asc']] :
+      [[Cols.Customer, 'asc']],
 
     columns: [
       {
@@ -106,16 +112,10 @@ export function dataTableConfig(rowGroupDataSource: string): Config {
           _: 'display_status',
 
           // function accepts `FunctionColumnData` interface
-          display: (
-            row: CustomerWin, 
-            type: string,
-            s: undefined,
-            meta: { row: number, col: number, settings: object }
-          ) => actionsDropdownTemplate(transformSourceData(row)),
+          display: actionsDropdownTemplate
         },
         createdCell: (td: Node) => {
-          $(td)
-            .attr('data-controller', 'dropdown');
+          $(td).attr('data-controller', 'dropdown');
 
           // ['add', 'invite', 'show'].forEach(action => (
           //   $(td).attr(`customer-win:${action}-contributors`, `dashboard#${action}CustomerWinContributors`)
@@ -127,23 +127,23 @@ export function dataTableConfig(rowGroupDataSource: string): Config {
     columnDefs: [
       { 
         targets: (() => {
-          const alwaysHidden = [colIndices.curator, colIndices.story]
+          const alwaysHidden = [Cols.Curator, Cols.Story]
           return [...alwaysHidden, ...(rowGroupColumn ? [rowGroupColumn] : [])];
         })() as number[],
         visible: false 
       },
       { 
-        targets: [0, colIndices.story, colIndices.actions], 
+        targets: [0, Cols.Story, Cols.Actions], 
         orderable: false 
       },
       {
-        targets: [0, colIndices.story, colIndices.actions],
+        targets: [0, Cols.Story, Cols.Actions],
         searchable: false,
       },
       { targets: [0], width: '1.75em' },
-      { targets: colIndices.customerWin, width: 'auto' },
-      { targets: colIndices.status, width: '12em' },
-      { targets: colIndices.actions, width: '3.5em' }
+      { targets: Cols.Win, width: 'auto' },
+      { targets: Cols.Status, width: '12em' },
+      { targets: Cols.Actions, width: '3.5em' }
     ],
 
     rowGroup: {
@@ -210,8 +210,13 @@ function transformSourceData(row: CustomerWin) {
   return rowData;
 }
 
-export function actionsDropdownTemplate(rowData: CustomerWinRowData): string {
-  const { id, status, story, newStoryPath } = rowData;
+export function actionsDropdownTemplate(
+  row: CustomerWin, 
+  type?: string,
+  s?: undefined,
+  meta?: { row: number, col: number, settings: object }
+): string {
+  const { id, display_status: status, story, new_story_path: newStoryPath } = row;
   const noContributorsAdded = status && /0.+Contributors\sadded/.test(status);
   const noContributorsInvited = status && /0.+Contributors\sinvited/.test(status);
   
