@@ -144,38 +144,37 @@ export default class ResourceController extends Controller<HTMLElement> {
     this.rowViewValue = { position: 0 };
   }
 
-  rowViewValueChanged(
-    { position, turboFrame, html, actionsDropdownHtml }: 
-    { 
-      position: number,
-      turboFrame?: TurboFrameAttributes,
-      html?: string,
-      actionsDropdownHtml: string,
-    }
-  ) {
+  rowViewValueChanged(rowView: RowView) {
+    const { position, turboFrame, html, actionsDropdownHtml } = rowView;
     this.element.classList.toggle('row-view-shown', position !== 0);
-    this.tableNavTarget.setAttribute(
-      'data-table-nav-row-position-value',
-      position ? position.toString() : ''
-    );
+    this.tableNavTarget
+      .setAttribute('data-table-nav-row-position-value', (position || '').toString());
     if (position) {
+      this.renderRowView({ html, turboFrame }).then((timer: number) => {
+        this.rowViewTarget.classList.add('ready');
+        if (timer) clearTimeout(timer);
+        this.rowViewTarget.classList.remove('loading');
+        const actionsDropdownWrapper = 
+          this.rowViewTarget.querySelector('[data-controller="dropdown"]');
+        if (actionsDropdownWrapper && actionsDropdownHtml) {
+          actionsDropdownWrapper.innerHTML = actionsDropdownHtml;
+        }
+      });
+    }
+  }
+
+  renderRowView({ html, turboFrame }: { html?: string, turboFrame?: TurboFrameAttributes }) {
+    return new Promise<number>(resolve => {
       if (html) {
         this.rowViewTarget.innerHTML = html;
-        this.rowViewTarget.classList.add('ready');
-      } else if (turboFrame) {
-        const spinnerTimer = setTimeout(() => this.rowViewTarget.classList.add('loading'), 1000);
+        resolve(0);
+      } else {
+        const { id, src } = turboFrame!; // either html or turboFrame is provided
+        const spinnerTimer = 
+          window.setTimeout(() => this.rowViewTarget.classList.add('loading'), 1000);
         this.rowViewTarget.addEventListener(
-          'turbo:frame-render',
-          (e: Event) => {
-            this.rowViewTarget.classList.add('ready');
-            clearTimeout(spinnerTimer);
-            this.rowViewTarget.classList.remove('loading');
-            const actionsDropdownWrapper = 
-              this.rowViewTarget.querySelector('[data-controller="dropdown"]');
-            if (actionsDropdownWrapper && actionsDropdownHtml) {
-              actionsDropdownWrapper.innerHTML = actionsDropdownHtml;
-            }
-          },
+          'turbo:frame-render', 
+          () => resolve(spinnerTimer),
           { once: true }
         );
         this.rowViewTarget.innerHTML = `
@@ -187,10 +186,10 @@ export default class ResourceController extends Controller<HTMLElement> {
               <div></div>
             </div>
           </div>
-          <turbo-frame id="${turboFrame.id}" src="${turboFrame.src}"></turbo-frame>
-        `
+          <turbo-frame id="${id}" src="${src}"></turbo-frame>
+        `;
       }
-    }
+    });
   }
 
   rowIdValueChanged(newId: number, oldId: number) {
@@ -270,6 +269,7 @@ export default class ResourceController extends Controller<HTMLElement> {
 
   onTableInfoCloned(this: ResourceControllerWithDatatable, e: CustomEvent) {
     const { clone, pageInfo } = e.detail;
+    
     // NOTE: The page end value from datatables is exclusive,
     // so it is the index of the last row on the page + 1.
     // => Transform this before passing to table nav controller
