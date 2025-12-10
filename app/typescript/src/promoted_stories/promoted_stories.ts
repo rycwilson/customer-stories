@@ -127,6 +127,7 @@ function transformSourceData(row: AdwordsAd) {
     id: row.id,
     path: row.path,
     editPath: row.editPath,
+    turboFrame: { id: 'edit-promoted-story', src: row.editPath }
   };
   return rowData;
 }

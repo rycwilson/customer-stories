@@ -204,6 +204,7 @@ function transformSourceData(row: CustomerWin) {
     status: row.display_status,
     path: row.path,
     editPath: row.edit_path,
+    turboFrame: { id: 'edit-customer-win', src: row.edit_path }
   };
   if (row.story) rowData.story = row.story;
   if (row.new_story_path) rowData.newStoryPath = row.new_story_path;

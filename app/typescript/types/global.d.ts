@@ -51,8 +51,8 @@ type FlashHash = Partial<{ readonly [key in 'notice' | 'alert' | 'info' | 'warni
 type Toast = { flash?: FlashHash, errors?: string[] }
 type RowView = {
   page?: number;
-  position?: number;
-  turboFrame?: { id: string, src: string };
+  position: number;
+  turboFrame?: TurboFrameAttributes;
   html?: string;
   actionsDropdownHtml?: string;
 }
@@ -103,11 +103,11 @@ interface JQueryStatic {
 
 interface TurboFrameAttributes {
   id: string;
-  src?: string;
+  src: string;
   loading?: string;
   target?: string;
   disable?: boolean;  
-  dataset: {
+  dataset?: {
     placeholder?: string;
   }
 }
@@ -143,6 +143,7 @@ interface CustomerWinRowData {
   status: string;
   path: string;
   editPath: string;
+  turboFrame: TurboFrameAttributes;
   story?: Story;
   newStoryPath?: string;
 }
@@ -180,6 +181,7 @@ interface AdwordsAdRowData {
   id: number;
   path: string;
   editPath: string;
+  turboFrame: TurboFrameAttributes;
 }
 
 interface Contribution {
@@ -217,6 +219,7 @@ interface ContributionRowData {
   status: string;
   path: string;
   editPath: string;
+  turboFrame: TurboFrameAttributes;
   invitationTemplate?: InvitationTemplate;
   invitation?: { path: string };
   story?: Story;

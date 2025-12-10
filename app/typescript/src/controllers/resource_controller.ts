@@ -148,7 +148,7 @@ export default class ResourceController extends Controller<HTMLElement> {
     { position, turboFrame, html, actionsDropdownHtml }: 
     { 
       position: number,
-      turboFrame?: { id: string, src: string },
+      turboFrame?: TurboFrameAttributes,
       html?: string,
       actionsDropdownHtml: string,
     }

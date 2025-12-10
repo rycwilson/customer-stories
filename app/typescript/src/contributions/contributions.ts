@@ -293,6 +293,7 @@ function transformSourceData(row: Contribution) {
     status: row.display_status!,
     path: row.path!,
     editPath: row.edit_path!,
+    turboFrame: { id: 'edit-contribution', src: row.edit_path! }
   };
   if (row.invitation_template) rowData.invitationTemplate = row.invitation_template;
   if (row.invitation) rowData.invitation = row.invitation;

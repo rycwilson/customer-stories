@@ -52,7 +52,7 @@ extends Controller<HTMLTableRowElement> {
     const index = data.findIndex(row => row.id === this.rowDataValue.id);
     const rowView = {
       position: index + 1,
-      turboFrame: this.childRowTurboFrameAttrsValue,
+      turboFrame: this.rowDataValue.turboFrame,
       actionsDropdownHtml: data[index].actions_dropdown_html
     }
     this.dispatch('row-clicked', { detail: rowView });
