@@ -16,16 +16,15 @@ extends Controller<HTMLTableRowElement> {
 
   static values = { 
     rowData: Object,
-    childRowTurboFrameAttrs: { type: Object, default: {} }
+    // childRowTurboFrameAttrs: { type: Object, default: {} }
   };
   declare readonly rowDataValue: Data;
-  declare readonly childRowTurboFrameAttrsValue: { id: string, src: string };
   declare childRowElement: HTMLElement;
 
   // The datatables .child method will take a HTMLElement or string
-  // Subclasses will provide their own content, else default content may be defined here
+  // Subclasses may provide their own content, else default content may be defined here
   get childRowContent(): HTMLElement | string {
-    return '<p>Child row content goes here</p>';
+    return '<p>Child row content</p>';
   }
 
   get row() {

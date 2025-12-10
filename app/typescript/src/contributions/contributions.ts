@@ -259,22 +259,14 @@ export function dataTableConfig(
       // console.log('rowCallback ', id)
     },
 
-    createdRow: (tr: Node, data: object | any[], index: number) => {
+    createdRow: (tr: Node, data: any[] | object, index: number, cells: Node[]) => {
       const rowData = transformSourceData(data as Contribution);
       $(tr)
-      // .attr('data-datatable-target', 'row')
         .attr(
           'data-contribution-datatable-outlet',
           storyId ? '#story-contributions-table' : '#contributions-table'
         )
-        .attr(
-          'data-contribution-row-data-value', 
-          JSON.stringify(rowData)
-        )
-        .attr(
-          'data-contribution-child-row-turbo-frame-attrs-value', 
-          JSON.stringify({ id: 'edit-contribution', src: rowData.editPath })
-        )
+        .attr('data-contribution-row-data-value', JSON.stringify(rowData))
         .attr('data-action', [
           'dropdown:dropdown-is-shown->contribution#onShownDropdown',
           'dropdown:dropdown-is-hidden->contribution#onHiddenDropdown',
@@ -306,8 +298,7 @@ export function actionsDropdownTemplate(
   s?: undefined,
   meta?: { row: number, col: number, settings: object }
 ): string {
-  const { id, display_status: status, invitation_template: invitationTemplate, invitation } 
-    = contribution;
+  const { id, status, invitationTemplate, invitation } = transformSourceData(contribution);
   const isPreInvite = status === 'pre_request';
   const didNotRespond = status === 'did_not_respond';
   const wasSubmitted = status && status.includes('submitted');

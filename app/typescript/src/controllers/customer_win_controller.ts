@@ -6,12 +6,9 @@ export default class CustomerWinController extends DatatableRowController<Custom
 
   declare contributionsHtml: string;          
 
-  get childRowContent() {
-    return this.childRowElement || `
-      <turbo-frame id="${this.childRowTurboFrameAttrsValue.id}" src="${this.childRowTurboFrameAttrsValue.src}">
-      </turbo-frame>
-    `;
-  }
+  // get childRowContent() {
+  //   return this.childRowElement || [some html string];
+  // }
 
   // TODO: move template to the server
   // TODO: should occasionally check for new data? or set up an action cable

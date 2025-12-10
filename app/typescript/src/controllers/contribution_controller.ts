@@ -7,13 +7,9 @@ export default class ContributionController extends DatatableRowController<Contr
   static targets = [...DatatableRowController.targets, 'invitationTemplateSelect'];
   declare readonly invitationTemplateSelectTarget: TomSelectInput;
 
-  get childRowContent() {
-    return this.childRowElement || `
-      <turbo-frame id="${this.childRowTurboFrameAttrsValue.id}" src="${this.childRowTurboFrameAttrsValue.src}">
-        <p>Loading...</p>
-      </turbo-frame>
-    `;
-  }
+  // get childRowContent() {
+  //   return this.childRowElement || [some html string];
+  // }
 
   // initInvitationTemplateSelect() {  
     // new MutationObserver(mutations => {

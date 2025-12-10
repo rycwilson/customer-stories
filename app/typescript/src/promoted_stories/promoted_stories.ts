@@ -108,14 +108,13 @@ export function dataTableConfig(rowGroupDataSource: string): Config {
       { targets: Cols.Actions, width: '3.5em' },
     ],
 
-    createdRow: function (tr: Node, data: object | any[], index: number) { 
-      // datatable_row_controller expects this property
-      const { path } = data as AdwordsAd;
+    createdRow: function (tr: Node, data: any[] | object, index: number) { 
+      const rowData = transformSourceData(data as AdwordsAd);
       $(tr)
-        .attr('data-controller', 'promoted-story')
         .attr('data-action', 'bootstrap-switch:switch->promoted-story#updateStatus')
         .attr('data-promoted-story-datatable-outlet', '#promoted-stories-table')
-        .attr('data-promoted-story-row-data-value', JSON.stringify({ path }))
+        .attr('data-promoted-story-row-data-value', JSON.stringify(rowData))
+        .attr('data-controller', 'promoted-story');
     }
   };
 }

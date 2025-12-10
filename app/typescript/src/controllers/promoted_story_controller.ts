@@ -5,6 +5,10 @@ export default class PromotedStoryController extends DatatableRowController<Prom
   static targets = ['statusLabel'];
   declare readonly statusLabelTarget: HTMLElement;
 
+  // get childRowContent() {
+  //   return this.childRowElement || [some html string];
+  // }
+
   // Since the row will be re-drawn upon updating the status, do not rely on a stimulus target for the switch.
   get $statusSwitch() {
     const switchContainer = this.element.querySelector('.bootstrap-switch-container');
