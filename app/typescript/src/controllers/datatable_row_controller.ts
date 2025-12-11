@@ -1,6 +1,4 @@
 import { Controller } from '@hotwired/stimulus';
-import type { FrameElement } from '@hotwired/turbo';
-import { FetchRequest } from '@rails/request.js';
 import type DatatableController from './datatable_controller';
 import type CustomerWinController from './customer_win_controller';
 import type ContributionController from './contribution_controller';
@@ -16,7 +14,6 @@ extends Controller<HTMLTableRowElement> {
 
   static values = { 
     rowData: Object,
-    // childRowTurboFrameAttrs: { type: Object, default: {} }
   };
   declare readonly rowDataValue: Data;
   declare childRowElement: HTMLElement;
@@ -57,6 +54,11 @@ extends Controller<HTMLTableRowElement> {
     this.dispatch('row-clicked', { detail: rowView });
   }
 
+  delete(this: CustomerWinController | ContributionController) {
+    const { path, story } = this.rowDataValue;
+    this.dispatch('delete-row', { detail: { tr: this.element, path, storyId: story?.id } });
+  }
+
   toggleChildRow() {
     if (this.row.child.isShown()) {
       this.row.child.hide();
@@ -64,41 +66,14 @@ extends Controller<HTMLTableRowElement> {
       this.row.child(this.childRowContent, 'child-row');
       this.row.child.show();
       const childRow = this.element.nextElementSibling as HTMLTableRowElement;
-      if (this.onFrameRendered) {
-        childRow.addEventListener('turbo:frame-render', this.onFrameRendered.bind(this), { once: true });
-      }
       childRow && childRow.scrollIntoView({ block: 'center' });
     }
-  }
-
-  onFrameRendered({ target: turboFrame }: {target: FrameElement}) {
-    this.childRowElement ??= <HTMLElement>turboFrame.firstElementChild;
   }
 
   updateRow(data: object) {
     this.row.data({ ...this.row.data(), ...data });
     this.row.invalidate();
     // TODO update CSP.promotedStories
-  }
-
-  async deleteRow(this: Ctrl) {
-    // return fetch(this.path, { 
-    //   method: 'DELETE',
-    //   headers: {
-    //     'X-CSRF-Token': (<HTMLMetaElement>document.querySelector('[name="csrf-token"]')).content
-    //   },
-
-    // // read the response (even though it's empty) lest the fetch method interpret the empty response as failure
-    // }).then(res => res.text())
-    //   .then((body) => {
-    //     // body is empty
-    //     this.row.remove().draw();
-    //   });
-    const request = new FetchRequest('DELETE', this.rowDataValue.path);
-    const response = await request.perform();
-    if (response.ok) {
-      this.row.remove().draw();
-    }
   }
 
   onShownDropdown(e: CustomEvent) {

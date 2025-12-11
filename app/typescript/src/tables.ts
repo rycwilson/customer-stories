@@ -1,6 +1,6 @@
-// import { kebabize } from './utils';
 import type ResourceController from './controllers/resource_controller';
-// import { type Api as DataTableApi } from 'datatables.net-bs';
+import type DatatableController from './controllers/datatable_controller';
+import { FetchRequest } from '@rails/request.js';
 
 export function init(this: ResourceController) {
   if (!this.hasDatatableTarget) return Promise.reject('No table found');
@@ -72,6 +72,7 @@ export function turnToPage(this: ResourceController, page: number) {
 export function addRow(this: ResourceController, data: CustomerWin | Contribution, draw = false) {
   if (!this.hasDatatableTarget) return Promise.reject('No table found');
 
+  console.log(`addRow(${JSON.stringify(data)}, ${draw})`);
   const table = this.datatableTarget;
   CSP[this.resourceName].push(data);
   table.setAttribute('data-datatable-reload-value', this.resourceName);
@@ -81,6 +82,23 @@ export function addRow(this: ResourceController, data: CustomerWin | Contributio
     } else {
       table.addEventListener('datatable:drawn', resolve, { once: true });
       table.setAttribute('data-datatable-redraw-value', 'true'); 
+    }
+  });
+}
+
+export function deleteRow(this: DatatableController, tr: HTMLTableRowElement, path: string) {
+  return new Promise<number>(async (resolve) => {
+    const req = new FetchRequest('DELETE', path);
+    const res = await req.perform();
+    if (res.ok) {
+      const row = this.dt.row(tr);
+      const id = row.data().id;
+      if (row.child.isShown()) row.child.hide();
+      row.remove();
+      this.dt.draw(false);
+      resolve(id);
+    } else {
+      // reject(`Failed to delete row at ${path}: ${response.status} ${response.statusText}`);
     }
   });
 }

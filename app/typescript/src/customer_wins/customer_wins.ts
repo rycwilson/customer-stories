@@ -290,7 +290,7 @@ export function actionsDropdownTemplate(
       }
       <li role="separator" class="divider"></li>
       <li>
-        <a href="javascript:;" data-action="customer-win#deleteRow">
+        <a href="javascript:;" data-action="customer-win#delete">
           <i class="fa fa-remove fa-fw action"></i>
           Delete
         </a>

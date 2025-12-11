@@ -67,6 +67,7 @@
                 'datatable:info-cloned->customer-wins#onTableInfoCloned',
                 'datatable:paginate-cloned->customer-wins#onTablePaginateCloned',
                 'customer-win:row-clicked->customer-wins#openRowView',
+                'datatable:row-deleted->customer-wins#onRowDeleted',
                 'table-nav:step-row-view->customer-wins#stepRowView'].join(' ') }) do
 
           = render('successes/table', company:)
@@ -94,6 +95,7 @@
                 'datatable:info-cloned->contributions#onTableInfoCloned',
                 'datatable:paginate-cloned->contributions#onTablePaginateCloned',
                 'contribution:row-clicked->contributions#openRowView',
+                'datatable:row-deleted->contributions#onRowDeleted',
                 'table-nav:step-row-view->contributions#stepRowView'].join(' ') }) do
 
           = render('contributions/table', company:)

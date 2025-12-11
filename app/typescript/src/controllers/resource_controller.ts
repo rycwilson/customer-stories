@@ -275,6 +275,17 @@ export default class ResourceController extends Controller<HTMLElement> {
     this.tableNavOutlet.paginateTarget.replaceChildren(clone);
   }
 
+  onRowDeleted({ detail: { id, storyId } }: { detail: { id: number, storyId?: number } }) {
+    CSP[this.resourceName] = CSP[this.resourceName].filter(
+      (item: CustomerWin | Contribution) => item.id !== id
+    );
+    if (storyId && this.resourceName === 'contributions') {
+      CSP.storyContributions[storyId] = CSP.storyContributions[storyId].filter(
+        (contribution: Contribution) => contribution.id !== id
+      );
+    }
+  }
+
   // addSyncListener(syncResource: (ctrl: ResourceController) => void) {
   //   this.element.addEventListener('datatable:drawn', () => {
   //     this.resourceOutlets.forEach(ctrl => {

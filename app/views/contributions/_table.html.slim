@@ -1,10 +1,15 @@
 - story = local_assigns.fetch(:story, nil)
 
-table.table {
-  id="#{story ? 'story-contributions-table' : 'contributions-table'}"
-  data-contributions-target="datatable"
-  data-controller="datatable"
-  data-datatable-contributions-outlet="#{story ? '#story-contributions' : '#contributions'}" }
+= content_tag( \
+    :table,
+    id: "#{story ? 'story-contributions-table' : 'contributions-table'}",
+    class: 'table',
+    data: { \
+      contributions_target: 'datatable',
+      controller: 'datatable',
+      datatable_contributions_outlet: "#{story ? '#story-contributions' : '#contributions'}",
+      action: [ \
+        'contribution:delete-row->datatable#deleteRow'].join(' ') }) do
 
   = render( \
       'companies/shared/table_controls',

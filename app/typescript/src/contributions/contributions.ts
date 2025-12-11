@@ -342,7 +342,6 @@ export function actionsDropdownTemplate(
             <a href="javascript:;" data-action="contribution#markAsCompleted">
               <i class="fa fa-check fa-fw action"></i>
               Mark as completed
-
             </a>
           </li>
         ` : ''
@@ -350,7 +349,7 @@ export function actionsDropdownTemplate(
       <li role="separator" class="divider"></li>
       <!-- TODO: link to stories#edit with contributor shown> -->
       <li>
-        <a href="javascript:;" data-action="contribution#deleteRow">
+        <a href="javascript:;" data-action="contribution#delete">
           <i class="fa fa-remove fa-fw action"></i>
           Delete
         </a>

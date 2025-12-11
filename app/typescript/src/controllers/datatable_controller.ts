@@ -6,6 +6,7 @@ import type PromotedStoriesController from './promoted_stories_controller';
 import DataTable from 'datatables.net-bs';
 import type { Api, Config } from 'datatables.net-bs';
 import 'datatables.net-rowgroup-bs';
+import { deleteRow } from '../tables';
 
 interface SearchParams {
   filters: { column: string, q: string, regEx: boolean, smartSearch: boolean }[],
@@ -64,8 +65,10 @@ export default class DatatableController extends Controller<HTMLTableElement> {
       deferRender: true,
       autoWidth: false,
       dom: 'tip',
-      pageLength: 50,
+      pageLength: 20,
       drawCallback(this: JQuery<HTMLTableElement, any>, settings: object) {
+        // console.log(ctrl.resourceOutlet.identifier, 'draw')
+
         this.find('th.sorting').each((i: number, th: HTMLTableCellElement) => {
           th.removeEventListener('click', ctrl.handleColumnSort, true);
           th.addEventListener('click', ctrl.handleColumnSort, true);
@@ -74,6 +77,8 @@ export default class DatatableController extends Controller<HTMLTableElement> {
         ctrl.dispatch('drawn');
       },
       initComplete(this: any, settings: object) {
+        // console.log(ctrl.resourceOutlet.identifier, 'init')
+
         ctrl.dispatch('init', { detail: { dt: this.api() } });
       }
     }
@@ -210,6 +215,14 @@ export default class DatatableController extends Controller<HTMLTableElement> {
       // });
     }
     dtSearch.draw();
+  }
+
+  deleteRow(
+    { detail: { tr, path, storyId } }: 
+    { detail: { tr: HTMLTableRowElement, path: string, storyId?: number } }
+  ) {
+    deleteRow.call(this, tr, path)
+      .then(id => this.dispatch('row-deleted', { detail: { id, storyId } }));
   }
 
   clonePaginationComponents() {

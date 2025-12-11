@@ -55,20 +55,4 @@ export default class ContributionController extends DatatableRowController<Contr
         // TODO Per display options for the table, hide this row if completed contributions are to be hidden
       });
   }
-
-  deleteRow() {
-    return super.deleteRow().then(() => {
-      CSP.contributions = CSP.contributions!.filter(contribution => (
-        contribution.id !== this.rowDataValue.id
-      ));
-      let storyContributions = this.rowDataValue.story ? 
-        CSP.storyContributions[this.rowDataValue.story.id] : 
-        undefined;
-      if (storyContributions) {
-        storyContributions = storyContributions.filter(contribution => (
-          contribution.id !== this.rowDataValue.id
-        ));
-      }
-    });
-  }
 }

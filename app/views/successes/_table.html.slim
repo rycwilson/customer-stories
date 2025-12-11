@@ -6,6 +6,8 @@
       controller: 'datatable',
       customer_wins_target: 'datatable',
       datatable_customer_wins_outlet: '#customer-wins',
+      action: [ \
+        'customer-win:delete-row->datatable#deleteRow'].join(' '),
       aria_labelledby: 'customer-wins-table-caption' }) do
 
   / NOTE: The current user is the curator for a new Customer Win, not the curator_id filter
