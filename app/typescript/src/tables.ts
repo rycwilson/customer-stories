@@ -3,20 +3,11 @@ import type ResourceController from './controllers/resource_controller';
 // import { type Api as DataTableApi } from 'datatables.net-bs';
 
 export function init(this: ResourceController) {
-  if (!this.hasDatatableTarget) return;
+  if (!this.hasDatatableTarget) return Promise.reject('No table found');
 
-  this.datatableTarget.setAttribute('data-datatable-init-value', 'true');
-}
-
-export function onInitialized(this: ResourceController, e: CustomEvent) {
-  if (this.identifier === 'customer-wins') {
-    (window as any).dt = e.detail.dt; 
-  }
-  setTimeout(() => {
-    e.detail.dt.one('draw', () => {
-      this.dispatch('ready', { detail: { resourceName: this.resourceName } })
-    });
-    this.searchTable();
+  return new Promise<void>((resolve: () => void) => {
+    this.datatableTarget.addEventListener('datatable:init', resolve, { once: true });
+    this.datatableTarget.setAttribute('data-datatable-init-value', 'true');
   });
 }
 
@@ -50,37 +41,6 @@ export function addRow(this: ResourceController, data: CustomerWin | Contributio
       this.datatableTarget.setAttribute('data-datatable-redraw-value', 'true'); 
     }
   });
-}
-
-export function showRow(this: ResourceController, id: number) {
-  if (!this.hasDatatableTarget) return;
-
-  const columnName = (() => {
-    switch (this.resourceName) {
-      case 'customerWins': return 'success';
-      case 'contributions': return 'contribution';
-      default: return undefined;
-    }
-  })();
-  if (!columnName) throw new Error('Unrecognized resource name for new record handling.');
-
-  this.element.addEventListener(
-    'datatable:drawn', 
-    () => {
-      setTimeout(() => {
-        this.element.classList.add('has-open-row');
-        const toggleChildBtn = <HTMLButtonElement>this.element.querySelector(
-        `tr[data-customer-win-row-data-value*='"id":${id}'] td.toggle-child button`
-        );
-        toggleChildBtn.click();
-      });
-    },
-    { once: true }
-  );
-
-  this.searchSelectTarget.tomselect.clear(true);
-  this.datatableTarget.setAttribute('data-datatable-row-group-data-source-value', '');
-  this.filtersValue = { ...this.filtersValue, [columnName]: id };
 }
 
 export function initDisplayOptions(this: ResourceController, isReset = false) {

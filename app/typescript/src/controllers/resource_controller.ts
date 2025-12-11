@@ -3,10 +3,8 @@ import { Controller } from "@hotwired/stimulus";
 import { getJSON } from '../utils';
 import { 
   init as initTable,
-  onInitialized as onTableInitialized,
   search as searchTable,
   addRow as addTableRow,
-  showRow as showTableRow,
   initDisplayOptions } from '../tables';
 
 type ResourceFilters = (
@@ -84,7 +82,6 @@ export default class ResourceController extends Controller<HTMLElement> {
   }
 
   initTable = initTable.bind(this);
-  onTableInitialized = onTableInitialized.bind(this);
   searchTable = searchTable.bind(this);
   addTableRow = addTableRow.bind(this);
   showTableRow = showTableRow.bind(this);
@@ -97,7 +94,7 @@ export default class ResourceController extends Controller<HTMLElement> {
     if (!shouldInit) return;
 
     if (this.dataExists) {
-      this.initTable();
+      this.initTable().then(() => this.searchTable());
     } else {
       this.dispatch('loading');
       getJSON(this.dataPathValue).then(data => {
@@ -106,7 +103,7 @@ export default class ResourceController extends Controller<HTMLElement> {
         } else {
           CSP[this.resourceName] = data;
         } 
-        this.initTable();
+        this.initTable().then(() => this.searchTable());
       })
     }
   }
