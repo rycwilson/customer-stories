@@ -4,6 +4,8 @@ import { getJSON } from '../utils';
 import { 
   init as initTable,
   search as searchTable,
+  getRowView,
+  turnToPage,
   addRow as addTableRow,
   initDisplayOptions } from '../tables';
 
@@ -81,43 +83,47 @@ export default class ResourceController extends Controller<HTMLElement> {
     }];
   }
 
-  initTable = initTable.bind(this);
-  searchTable = searchTable.bind(this);
-  addTableRow = addTableRow.bind(this);
-  showTableRow = showTableRow.bind(this);
-
   connect() {
     if (this.hasDisplayOptionsBtnTarget) initDisplayOptions.call(this);
   }
 
   initValueChanged(shouldInit: boolean) {
     if (!shouldInit) return;
-
+    
+    const initialize = () => {
+      initTable.call(this)
+        .then(() => searchTable.call(this))
+        .then(() => this.dispatch('ready', { detail: { resourceName: this.resourceName } }))
+        .catch(err => console.error(`Error initializing ${this.resourceName} table:`, err));
+    };
+    const setAppData = (data: any) => {
+      if (this.resourceName === 'storyContributions') {
+        CSP[this.resourceName][+(this.element.dataset.storyId as string)] = data;
+      } else {
+        CSP[this.resourceName] = data;
+      } 
+    };
     if (this.dataExists) {
-      this.initTable().then(() => this.searchTable());
+      initialize();
     } else {
       this.dispatch('loading');
       getJSON(this.dataPathValue).then(data => {
-        if (this.resourceName === 'storyContributions') {
-          CSP[this.resourceName][+(this.element.dataset.storyId as string)] = data;
-        } else {
-          CSP[this.resourceName] = data;
-        } 
-        this.initTable().then(() => this.searchTable());
+        setAppData(data);
+        initialize();
       })
     }
   }
 
   onTomselectSearch(e: CustomEvent) {
     if (this.hasDatatableTarget) {
-      this.searchTable(e.detail.searchSelectResults);
+      searchTable.call(this, e.detail.searchSelectResults);
     }
   }
 
   onChangeSearchSelect(e: CustomEvent) {
     // this.addSyncListener((ctrl) => ctrl.searchSelectTarget.tomselect.setValue(this.searchSelectTarget.value));
     if (this.hasDatatableTarget) {
-      this.searchTable();
+      searchTable.call(this);
     }
   }
 
@@ -133,7 +139,7 @@ export default class ResourceController extends Controller<HTMLElement> {
       // console.log(`new ${this.identifier} filtersValue:`, newFilters)
     // }
     if (this.tableInitialized) {
-      this.searchTable();
+      searchTable.call(this);
     }
   }
 
@@ -192,23 +198,30 @@ export default class ResourceController extends Controller<HTMLElement> {
   rowIdValueChanged(newId: number, oldId: number) {
     if (!newId || newId === oldId) return;
 
-    this.getRowView({ id: newId }).then(async (rowView) => {
+    const showView = async (rowView: RowView) => {
       const page = <number>rowView.page;
-      if (page !== this.currentPage) await this.turnToPage(page);
+      if (page !== this.currentPage) await turnToPage.call(this, page);
       this.rowViewValue = rowView;
-    });
+    }
+    getRowView.call(this, { id: newId })
+      .then(showView)
+      .catch(err => { console.error('Error showing row view by id:', err); });
   }
   
   newRowValueChanged(
     { rowData, rowViewHtml } :
     { rowData: CustomerWinRowData | ContributionRowData, rowViewHtml: string }
   ) {
-    const getView = () => this.getRowView({ id: rowData.id });
-    this.addTableRow(rowData, true)?.then(getView).then(async (rowView) => {
+    const getView = () => getRowView.call(this, { id: rowData.id });
+    const showView = async (rowView: RowView) => {
       const page = <number>rowView.page;
-      if (page !== this.currentPage) await this.turnToPage(page);
+      if (page !== this.currentPage) await turnToPage.call(this, page);
       this.rowViewValue = { position: rowView.position, html: rowViewHtml };
-    });
+    }
+    addTableRow.call(this, rowData, true)
+      .then(getView)
+      .then(showView)
+      .catch(err => { console.error('Error showing new row view:', err); });
   }
 
   openRowView(e: CustomEvent) {
@@ -217,38 +230,14 @@ export default class ResourceController extends Controller<HTMLElement> {
   }
   
   stepRowView(e: CustomEvent) {
-    const { detail: { position, newPage } } = e;
-    this.getRowView({ position }).then(async (rowView) => {
-      if (typeof newPage === 'number') await this.turnToPage(newPage);
+    let { detail: { position, newPage } } = e;
+    const showView = async (rowView: RowView) => {
+      if (typeof newPage === 'number') await turnToPage.call(this, newPage);
       this.rowViewValue = rowView;
-    });
-  }
-
-  turnToPage(page: number) {
-    return new Promise<void>(resolve => {
-      this.datatableTarget.addEventListener(
-        'datatable:drawn',
-        () => { this.currentPage = page; resolve(); }, { once: true }
-      );
-      this.datatableTarget.setAttribute('data-datatable-page-value', page.toString());
-    });
-  }
-
-  getRowView({ id, position }: { id?: number, position?: number }) {
-    return new Promise<RowView>(
-      (resolve) => {
-        this.element.addEventListener(
-          'datatable:row-lookup',
-          (e: Event) => {
-            const { detail: rowView } = e as CustomEvent;
-            resolve(rowView);
-          },
-          { once: true }
-        );
-        this.datatableTarget
-          .setAttribute('data-datatable-row-lookup-value', JSON.stringify({ id, position }) );
-      }
-    );
+    };
+    getRowView.call(this, { position })
+      .then(showView)
+      .catch(err => { console.error('Error stepping row view:', err); });
   }
   
   validateNewItem(e: Event) {

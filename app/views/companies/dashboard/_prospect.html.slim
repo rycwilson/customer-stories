@@ -64,7 +64,6 @@
               customer_wins_display_options_html_value: \
                 customer_wins_display_options_html(company),
               action: [ \
-                'datatable:init->customer-wins#onTableInitialized',
                 'datatable:info-cloned->customer-wins#onTableInfoCloned',
                 'datatable:paginate-cloned->customer-wins#onTablePaginateCloned',
                 'customer-win:row-clicked->customer-wins#openRowView',
@@ -92,7 +91,6 @@
               contributions_invitation_template_select_html_value: \
                 invitation_template_select_html(company),
               action: [ \
-                'datatable:init->contributions#onTableInitialized',
                 'datatable:info-cloned->contributions#onTableInfoCloned',
                 'datatable:paginate-cloned->contributions#onTablePaginateCloned',
                 'contribution:row-clicked->contributions#openRowView',

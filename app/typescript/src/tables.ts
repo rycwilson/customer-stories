@@ -5,40 +5,82 @@ import type ResourceController from './controllers/resource_controller';
 export function init(this: ResourceController) {
   if (!this.hasDatatableTarget) return Promise.reject('No table found');
 
+  const table = this.datatableTarget;
   return new Promise<void>((resolve: () => void) => {
-    this.datatableTarget.addEventListener('datatable:init', resolve, { once: true });
-    this.datatableTarget.setAttribute('data-datatable-init-value', 'true');
+    table.addEventListener('datatable:init', resolve, { once: true });
+    table.setAttribute('data-datatable-init-value', 'true');
   });
 }
 
 export function search(this: ResourceController, searchSelectResults?: { [key: string]: string }) {
-  if (!this.hasDatatableTarget) return;
+  if (!this.hasDatatableTarget) return Promise.reject('No table found');
 
   // console.log(this.resourceName + ' filtersValue:', this.filtersValue)
-  this.datatableTarget.setAttribute(
-    'data-datatable-search-params-value', 
-    JSON.stringify({
-      ...{ filters: (this as ResourceControllerWithDatatable).filtersToSearchObjects },
-      ...(
-        searchSelectResults ? 
+  const table = this.datatableTarget;
+  return new Promise<void>((resolve: () => void) => {
+    table.addEventListener('datatable:drawn', resolve, { once: true });
+    table.setAttribute(
+      'data-datatable-search-params-value', 
+      JSON.stringify({
+        ...{ filters: (this as ResourceControllerWithDatatable).filtersToSearchObjects },
+        ...(
+          searchSelectResults ? 
           { searchSelectResults } :
           { searchVal: this.searchSelectTarget.value }
-      )
-    })
+        )
+      })
+    );
+  });
+}
+
+export function getRowView(
+  this: ResourceController, 
+  { id, position }: { id?: number, position?: number }
+) {
+  if (!this.hasDatatableTarget) return Promise.reject('No table found');
+  if (!id && !position) return Promise.reject('Either id or position must be provided');
+  
+  return new Promise<RowView>(
+    (resolve) => {
+      this.element.addEventListener(
+        'datatable:row-lookup',
+        (e: Event) => {
+          const { detail: rowView } = e as CustomEvent;
+          resolve(rowView);
+        },
+        { once: true }
+      );
+      this.datatableTarget
+        .setAttribute('data-datatable-row-lookup-value', JSON.stringify({ id, position }) );
+    }
   );
 }
 
-export function addRow(this: ResourceController, data: CustomerWin | Contribution, draw = false) {
-  if (!this.hasDatatableTarget) return;
+export function turnToPage(this: ResourceController, page: number) {
+  if (!this.hasDatatableTarget) return Promise.reject('No table found');
 
+  const table = this.datatableTarget;
+  return new Promise<void>(resolve => {
+    table.addEventListener(
+      'datatable:drawn',
+      () => { this.currentPage = page; resolve(); }, { once: true }
+    );
+    table.setAttribute('data-datatable-page-value', page.toString());
+  });
+}
+
+export function addRow(this: ResourceController, data: CustomerWin | Contribution, draw = false) {
+  if (!this.hasDatatableTarget) return Promise.reject('No table found');
+
+  const table = this.datatableTarget;
   CSP[this.resourceName].push(data);
-  this.datatableTarget.setAttribute('data-datatable-reload-value', this.resourceName);
+  table.setAttribute('data-datatable-reload-value', this.resourceName);
   return new Promise<void>((resolve: () => void) => {
     if (!draw) {
       resolve();
     } else {
-      this.datatableTarget.addEventListener('datatable:drawn', resolve, { once: true });
-      this.datatableTarget.setAttribute('data-datatable-redraw-value', 'true'); 
+      table.addEventListener('datatable:drawn', resolve, { once: true });
+      table.setAttribute('data-datatable-redraw-value', 'true'); 
     }
   });
 }
