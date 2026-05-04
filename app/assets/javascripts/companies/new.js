@@ -1,7 +1,0 @@
-
-function companiesNew () {
-}
-
-function companiesNewListeners () {
-
-}
