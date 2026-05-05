@@ -25,7 +25,7 @@ main.user-profile.container-fluid.hidden-xs
 
       .col-sm-4.text-right
         .user-profile__photo
-          = render('shared/image_card', { model: 'User', _image: { type: 'SquareLogo', url: @user.photo_url } })
+          = render('shared/image_card', { model: 'User', image_data: { type: 'SquareLogo', url: @user.photo_url } })
 
       .col-sm-8
         .form-group

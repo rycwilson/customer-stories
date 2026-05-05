@@ -128,14 +128,14 @@
               = render( \
                   'shared/image_card',
                   { model: 'AdwordsImage',
-                    _image: \
+                    image_data: \
                       company.ad_images.default.marketing.square.take || \
                       { type: 'SquareImage', default: true },
                     field_name_prefix: 'company[adwords_images_attributes][0]' })
               = render( \
                   'shared/image_card',
                   { model: 'AdwordsImage',
-                    _image: company.ad_images.default.marketing.landscape.take || { type: 'LandscapeImage', default: true },
+                    image_data: company.ad_images.default.marketing.landscape.take || { type: 'LandscapeImage', default: true },
                     field_name_prefix: 'company[adwords_images_attributes][1]' })
 
         .row
@@ -158,7 +158,7 @@
             = render( \
                 'shared/image_card',
                 { model: 'AdwordsImage',
-                  _image: ad_image,
+                  image_data: ad_image,
                   upload_enabled: false,
                   field_name_prefix: "company[adwords_images_attributes][#{ 3 + i }]" })
 
@@ -173,13 +173,13 @@
               = render( \
                   'shared/image_card',
                   { model: 'AdwordsImage',
-                    _image: company.ad_images.default.logo.square.take || { type: 'SquareLogo', default: true },
+                    image_data: company.ad_images.default.logo.square.take || { type: 'SquareLogo', default: true },
                     field_name_prefix: ( \
                       "company[adwords_images_attributes][#{ 3 + company.ad_images.marketing.where.not(default: true).count }]") })
               = render( \
                   'shared/image_card',
                   { model: 'AdwordsImage',
-                    _image: company.ad_images.default.logo.landscape.take || { type: 'LandscapeLogo', default: true },
+                    image_data: company.ad_images.default.logo.landscape.take || { type: 'LandscapeLogo', default: true },
                     field_name_prefix: ( \
                       "company[adwords_images_attributes][#{ 4 + company.ad_images.marketing.where.not(default: true).count }]") })
 
@@ -204,7 +204,7 @@
             = render( \
                 'shared/image_card',
                 { model: 'AdwordsImage',
-                  _image: ad_image,
+                  image_data: ad_image,
                   upload_enabled: false,
                   field_name_prefix: ( \
                     "company[adwords_images_attributes][#{ 6 + company.ad_images.marketing.where.not(default: true).count }]") })

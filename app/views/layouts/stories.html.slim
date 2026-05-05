@@ -35,6 +35,10 @@ html lang="en-US" prefix="og: http://ogp.me/ns# fb: http://ogp.me/ns/fb#"
       = yield 
     - else
       = render('shared/navbars/company_header', { company: @company })
+
+      = render(ImageCardComponent.new) do
+        span = "This is a test of the ImageCardComponent"
+        
       = yield
       /= yield(:underscore_templates)
       /- if production? && !user_signed_in?

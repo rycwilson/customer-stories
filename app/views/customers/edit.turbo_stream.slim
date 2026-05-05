@@ -31,7 +31,7 @@
           = form.label(:show_name_with_logo)
             = form.check_box(:show_name_with_logo)
             = 'Show name'
-      = render('shared/image_card', model: 'Customer', _image: { url: @customer.logo_url }, customer_name: @customer.name)
+      = render('shared/image_card', model: 'Customer', image_data: { url: @customer.logo_url }, customer_name: @customer.name)
 
 = turbo_stream.append 'main-modal-content' do 
   .modal-footer data-modal-target="footer"

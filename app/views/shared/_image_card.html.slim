@@ -1,33 +1,33 @@
-- _image = local_assigns.fetch(:_image, {})
+- image_data = local_assigns.fetch(:image_data, {})
 - selected = local_assigns.fetch(:selected, false)
 - required = local_assigns.fetch(:required, false)
 - collection = local_assigns.fetch( \
     :collection,
-    _image[:type]&.split(/(?=[A-Z])/)&.last&.downcase&.pluralize)
-- is_default_ad_image = model == 'AdwordsImage' && _image[:default]
+    image_data[:type]&.split(/(?=[A-Z])/)&.last&.downcase&.pluralize)
+- is_default_ad_image = model == 'AdwordsImage' && image_data[:default]
 - upload_enabled = local_assigns.fetch(:upload_enabled, true)
 - size_validation_enabled = upload_enabled && model != 'Customer'
 - image_replaceable = model.in?(['User', 'Company', 'Customer']) || is_default_ad_image
-- image_exists = _image[:image_url].present? || _image[:url].present? 
+- image_exists = image_data[:image_url].present? || image_data[:url].present? 
 
 = content_tag( \
     model.in?(['User', 'Customer']) ? :div : :li,
     class: [ \
       'image-card',
-      { "image-card--#{_image[:type]}" => _image[:type].present? },
+      { "image-card--#{image_data[:type]}" => image_data[:type].present? },
       { 'gads-default' => is_default_ad_image },
-      { hidden: (model == 'AdwordsImage' and _image.blank?) },
+      { hidden: (model == 'AdwordsImage' and image_data.blank?) },
       { selected: }],
     data: { \
-      image_id: _image[:id],
+      image_id: image_data[:id],
       controller: 'image-card',
       image_card_form_outlet: model == 'User' ? '#user-profile-form' : (model == 'Customer' ? '#customer-form' : nil),
       image_card_ads_outlet: ('#gads-form' if model == 'AdwordsImage'),
       image_card_company_profile_outlet: ('#company-profile-form' if model == 'Company'),
       ads_target: (( \
-        _image[:default] ? \
+        image_data[:default] ? \
           'defaultImageCard' : \
-          (_image[:id] ? 'imageCard' : "new#{collection.singularize.capitalize}Card")) if model == 'AdwordsImage'),
+          (image_data[:id] ? 'imageCard' : "new#{collection.singularize.capitalize}Card")) if model == 'AdwordsImage'),
       action: ('click->image-card#toggleSelected' if model == 'AdwordsAd') }) do
 
   = render('shared/loading_spinner') if upload_enabled
@@ -38,22 +38,22 @@
 
   - if model == 'Company' 
     = hidden_field_tag( \
-        "company[#{_image[:type].split(/(?=[A-Z])/)&.join('_').downcase}_url]",
-        _image[:url],
+        "company[#{image_data[:type].split(/(?=[A-Z])/)&.join('_').downcase}_url]",
+        image_data[:url],
         disabled: true,
         data: { image_card_target: 'input urlInput' })
   
   - elsif model == 'User'
     = hidden_field_tag( \
         "user[photo_url]",
-        _image[:url],
+        image_data[:url],
         disabled: true,
         data: { image_card_target: 'input urlInput' })
 
   - elsif model == 'Customer'
     = hidden_field_tag( \
         "customer[logo_url]",
-        _image[:url],
+        image_data[:url],
         disabled: true,
         data: { image_card_target: 'input urlInput' })
 
@@ -64,12 +64,12 @@
 
     = check_box_tag( \
         'adwords_ad[adwords_image_ids][]',
-        _image[:id],
+        image_data[:id],
         selected,
         { class: 'hidden', data: { image_card_target: 'adImageCheckbox' } })
     .image-card__frame
       .thumbnail
-        img src=_image[:image_url] alt="#{_image[:type].split(/(?=[A-Z])/)&.join(' ')}"
+        img src=image_data[:image_url] alt="#{image_data[:type].split(/(?=[A-Z])/)&.join(' ')}"
         .check
           div
             div
@@ -80,10 +80,10 @@
   - elsif model == 'AdwordsImage'
 
     // new image
-    - if _image[:id].blank?
+    - if image_data[:id].blank?
       = hidden_field_tag( \
           "#{field_name_prefix}[type]",
-          is_default_ad_image ? _image[:type] : '',
+          is_default_ad_image ? image_data[:type] : '',
           disabled: true,
           data: { image_card_target: 'input typeInput' })
       = hidden_field_tag( \
@@ -102,23 +102,23 @@
     - else
       = hidden_field_tag( \
           "#{field_name_prefix}[id]",
-          _image[:id],
+          image_data[:id],
           disabled: true,
           data: { image_card_target: 'input idInput' })
       = hidden_field_tag( \
           "#{field_name_prefix}[default]",
-          _image[:default],
+          image_data[:default],
           disabled: true,
           data: { image_card_target: 'input defaultInput' })
       - if is_default_ad_image
         = hidden_field_tag( \
             "#{field_name_prefix}[type]",
-            _image[:type],
+            image_data[:type],
             disabled: true,
             data: { image_card_target: 'input' })
         = hidden_field_tag( \
             "#{field_name_prefix}[image_url]",
-            _image[:image_url],
+            image_data[:image_url],
             disabled: true,
             data: { image_card_target: 'input urlInput' })
       - else
@@ -140,7 +140,7 @@
           / attaching data-trigger attribute to .fileinput-preview does not work
           button type="button" data-trigger="fileinput"
             i.fa.fa-fw class="fa-#{model == 'User' ? 'camera' : 'upload'}"
-        - elsif model == 'AdwordsImage' and _image[:id].present? and not _image[:default]
+        - elsif model == 'AdwordsImage' and image_data[:id].present? and not image_data[:default]
           button.make-default type="button" data-action="image-card#makeDefault"
             i.fa.fa-fw.fa-refresh
           |&nbsp;
@@ -157,16 +157,16 @@
         - if image_replaceable
           .fileinput-new.thumbnail
             img {
-              src="#{_image[:type].present? ? sized_image_placeholder(_image[:type]) : (model == 'User' ? asset_url('placeholders/user-photo-missing.png') : asset_url(LOGO_PLACEHOLDER))}" 
-              alt="#{_image[:type]&.split(/(?=[A-Z])/)&.join(' ')}" }
+              src="#{image_data[:type].present? ? sized_image_placeholder(image_data[:type]) : (model == 'User' ? asset_url('placeholders/user-photo-missing.png') : asset_url(LOGO_PLACEHOLDER))}" 
+              alt="#{image_data[:type]&.split(/(?=[A-Z])/)&.join(' ')}" }
           .fileinput-preview.fileinput-exists.thumbnail data-image-card-target="preview"
             - if image_exists
-              img src="#{_image[:image_url] || _image[:url]}" alt="#{_image[:type]&.split(/(?=[A-Z])/)&.join(' ')}"
+              img src="#{image_data[:image_url] || image_data[:url]}" alt="#{image_data[:type]&.split(/(?=[A-Z])/)&.join(' ')}"
         
         / only non-default company ad images are not replaceable
-        - elsif _image[:image_url].present?
+        - elsif image_data[:image_url].present?
           .thumbnail
-            img src=_image[:image_url] alt="#{_image[:type]&.split(/(?=[A-Z])/)&.join(' ')}"
+            img src=image_data[:image_url] alt="#{image_data[:type]&.split(/(?=[A-Z])/)&.join(' ')}"
         - else
           .fileinput-preview.fileinput-exists.thumbnail data-image-card-target="preview"
         .btn-file
@@ -177,15 +177,15 @@
             data-s3=(s3_direct_post.to_json if upload_enabled)
             data-validate="false"
             data-collection=collection
-            data-image-type=(_image[:type] if _image[:type].present?)
+            data-image-type=(image_data[:type] if image_data[:type].present?)
             data-max-file-size="5242880" 
             data-min-dimensions=(uploaded_image_min_dimensions.to_json unless model == 'Customer')
-            data-min-width=(uploaded_image_min_dimensions(_image[:type])[:width] if _image[:type].present?)
-            data-min-height=(uploaded_image_min_dimensions(_image[:type])[:height] if _image[:type].present?)
+            data-min-width=(uploaded_image_min_dimensions(image_data[:type])[:width] if image_data[:type].present?)
+            data-min-height=(uploaded_image_min_dimensions(image_data[:type])[:height] if image_data[:type].present?)
             data-aspect-ratio-tolerance=RESPONSIVE_AD_ASPECT_RATIO_TOLERANCE
             data-required-image=('true' if required) }
 
-      - if model == 'AdwordsImage' and _image[:id].present? and not _image[:default]
+      - if model == 'AdwordsImage' and image_data[:id].present? and not image_data[:default]
         .image-card__footer
           button.btn.btn-sm.btn-default type="button" data-action="image-card#cancelChanges"
             | Cancel
@@ -195,5 +195,5 @@
             | Make default
     /- if is_default_ad_image or model.in?(['User', 'Company'])
       .help-block.text-left
-        = "\u2265 #{uploaded_image_min_dimensions(_image[:type])[:width]} x #{uploaded_image_min_dimensions(_image[:type])[:height]}"
+        = "\u2265 #{uploaded_image_min_dimensions(image_data[:type])[:width]} x #{uploaded_image_min_dimensions(image_data[:type])[:height]}"
 
