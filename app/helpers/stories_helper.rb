@@ -18,7 +18,7 @@ module StoriesHelper
     "data:#{content_type};base64,#{Rack::Utils.escape(base64)}"
   end
 
-  def meta_keywords success
+  def meta_keywords(success)
     keywords = success.story_categories.pluck('name').push << success.products.pluck('name')
     keywords.present? ? keywords.join(', ') : ''
   end

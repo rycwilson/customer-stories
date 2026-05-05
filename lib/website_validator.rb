@@ -1,6 +1,6 @@
 class WebsiteValidator < ActiveModel::EachValidator
   
-  def validate_each record, attribute, value
+  def validate_each(record, attribute, value)
     if value == 'http://'
       record.errors.add(attribute, :invalid, message: "is required")
       return 

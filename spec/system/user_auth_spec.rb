@@ -2,7 +2,7 @@ require 'rails_helper'
 
 PASSWORD = SecureRandom.alphanumeric(8)
 
-def sign_in_as user, password = PASSWORD
+def sign_in_as(user, password = PASSWORD)
   fill_in 'Email', with: user.email
   fill_in 'Password', with: password
   click_button 'Sign in'

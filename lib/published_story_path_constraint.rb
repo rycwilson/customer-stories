@@ -1,5 +1,5 @@
 class PublishedStoryPathConstraint
-  def self.matches? request
+  def self.matches?(request)
     company = Company.find_by subdomain: request.subdomain
     
     # Just check the story

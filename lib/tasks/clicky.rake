@@ -100,7 +100,7 @@ namespace :clicky do
     end
   end
 
-  def create_sessions visitors_list
+  def create_sessions(visitors_list)
     visitor_sessions = []
     visitors_list.each do |session|
       unless (
@@ -197,7 +197,7 @@ namespace :clicky do
   end
 
 
-  def create_action visitor_session_id, action, is_demo=false
+  def create_action(visitor_session_id, action, is_demo=false)
     return nil if (
       visitor_session_id.nil? ||
       !['pageview', 'outbound'].include?(action['action_type']) ||
@@ -276,7 +276,7 @@ namespace :clicky do
     end
   end
 
-  def get_visitors_range range
+  def get_visitors_range(range)
     request = Typhoeus::Request.new(
       GETCLICKY_API_BASE_URL,
       method: :get,
@@ -295,7 +295,7 @@ namespace :clicky do
     JSON.parse(request.response.response_body)[0]['dates'][0]['items']
   end
 
-  def get_data_since type, time_offset  # seconds ago
+  def get_data_since(type, time_offset)  # seconds ago
     request = Typhoeus::Request.new(
       GETCLICKY_API_BASE_URL,
       method: :get,
