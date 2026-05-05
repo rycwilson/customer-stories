@@ -1,3 +1,5 @@
+inherit_from: .rubocop_todo.yml
+
 # The behavior of RuboCop can be controlled via the .rubocop.yml
 # configuration file. It makes it possible to enable/disable
 # certain cops (checks) and to alter their behavior if they accept
@@ -9,28 +11,19 @@
 #
 # See https://docs.rubocop.org/rubocop/configuration
 
-Documentation:
-  Enabled: false
+AllCops:
+  TargetRubyVersion: 3.4
+  NewCops: enable
+  Exclude:
+    - 'app/assets/**/*'
+    - 'app/typescript/**/*'
+    - 'bin/*'
+    - 'db/schema.rb'
+    - 'db/migrate/**/*'
+    - 'node_modules/**/*'
+    - 'public/**/*'
+    - 'tmp/**/*'
+    - 'vendor/**/*'
 
 Layout/LineLength:
   Max: 100
-
-Metrics/BlockLength:
-  Exclude:
-    - 'db/schema.rb'
-
-# Rubocop crashed on analyzing app/controllers/stories_controller.rb for this rule
-Lint/LiteralAsCondition:
-  Enabled: false
-
-Style/Alias:
-  EnforcedStyle: prefer_alias_method
-Style/StringLiterals:
-  Exclude:
-    - 'db/schema.rb'
-Style/WordArray:
-  Exclude:
-    - 'db/schema.rb'
-Style/NumericLiterals:
-  Exclude:
-    - 'db/schema.rb'
