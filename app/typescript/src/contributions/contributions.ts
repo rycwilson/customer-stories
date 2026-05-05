@@ -28,7 +28,11 @@ export function dataTableConfig(
   rowGroupDataSource: string,
   storyId?: number
 ): Config {
-  if (!CSP.contributions) console.error('Contributions data is not defined');
+  if (storyId && !CSP['storyContributions']?.[storyId]) {
+    console.error(`Contributions data for story id ${storyId} is not defined`);
+  } else if (!storyId && !CSP.contributions) {
+    console.error('Contributions data is not defined');
+  }
 
   const rowGroupColumn = storyId ? undefined : (() => {
     switch (rowGroupDataSource) {
