@@ -77,17 +77,7 @@ class StoriesController < ApplicationController
     #   )
     # end
 
-    if params[:edit_story_partial]
-      respond_to do |format|
-        format.html do
-          render(
-            partial: 'stories/edit/edit',
-            locals: { company: @company, story: @story, workflow_stage: 'curate', tab: '#story-settings' }
-          )
-        end
-      end
-
-    elsif params[:contributions]
+    if params[:contributions]
       respond_to do |format|
         format.js { render(action: 'edit/content/contributions') }
         # format.json do
@@ -106,21 +96,6 @@ class StoriesController < ApplicationController
         #   })
         # end
       end
-
-    elsif false
-      # provide data for both stories#edit and companies#show views
-      @customer = @story.success.customer
-
-      # measure
-      # @recent_activity = @company.recent_activity(30)
-      # @story_views_30_day_count = page_views.since(30.days.ago).count
-
-      # @workflow_stage = 'curate'
-      # @curate_view = 'story'  # instead of 'stories'
-      @edit_story_tab = request.cookies['csp-edit-story-tab'] || '#story-settings'
-      @workflow_stage = 'story'
-      # render('companies/show')
-      render(layout: 'application')
     end
 
     # since a stories layout exists and will be used here by default,
