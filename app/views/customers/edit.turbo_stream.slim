@@ -39,13 +39,6 @@
             :logo_url,
             disabled: true,
             data: { image_card_target: 'input urlInput' })
-        /= hidden_field_tag( \
-            'customer[logo_url]',
-            @customer.logo_url,
-            disabled: true,
-            data: { image_card_target: 'input urlInput' })
-        
-      /= render('shared/image_card', model: 'Customer', image_data: { url: @customer.logo_url }, customer_name: @customer.name)
 
 = turbo_stream.append 'main-modal-content' do 
   .modal-footer data-modal-target="footer"
