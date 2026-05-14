@@ -83,15 +83,6 @@ export default class ImageCardController extends Controller<HTMLDivElement | HTM
         .on('change.bs.fileinput', this.changeFileInputHandler)
         // .on('reseted.bs.fileinput', this.resetFileInputHandler);
         // .on('clear.bs.fileinput', this.clearFileInputHandler);
-
-      // bootstrap validator events trigger on the form 
-      if (this.parentFormOutlet) {
-        $(this.parentFormOutlet.element)
-          .on('validate.bs.validator', this.validateFileInputHandler)
-          .on('valid.bs.validator', this.validFileInputHandler)
-          .on('invalid.bs.validator', this.invalidFileInputHandler)
-          .on('validated.bs.validator', this.validatedFileInputHandler);
-      }
   
       if (this.fileInputTarget.hasAttribute('data-s3')) {
         initS3FileInput(this.fileInputTarget, onS3Done.bind(this));
@@ -105,13 +96,6 @@ export default class ImageCardController extends Controller<HTMLDivElement | HTM
         .off('change.bs.fileinput', this.changeFileInputHandler)
         // .off('reseted.bs.fileinput', this.resetFileInputHandler)
         // .off('clear.bs.fileinput', this.clearFileInputHandler)
-        
-      // after disconnect, any outlets (e.g. the parent form) will be null
-      $(this.element.closest('form'))
-        .off('validate.bs.validator', this.validateFileInputHandler)
-        .off('valid.bs.validator', this.validFileInputHandler)
-        .off('invalid.bs.validator', this.invalidFileInputHandler)
-        .off('validated.bs.validator', this.validatedFileInputHandler);
     }
   }
 
@@ -230,4 +214,52 @@ export default class ImageCardController extends Controller<HTMLDivElement | HTM
     }
   } 
 
+  formOutletConnected(_: SubclassController, form: HTMLFormElement) {
+    this.addValidationListeners(form);
+  }
+
+  formOutletDisconnected(_: SubclassController, form: HTMLFormElement) {
+    this.removeValidationListeners(form);
+  }
+
+  adsOutletConnected(_: SubclassController, form: HTMLFormElement) {
+    this.addValidationListeners(form);
+  }
+
+  adsOutletDisconnected(_: SubclassController, form: HTMLFormElement) {
+    this.removeValidationListeners(form);
+  }
+
+  userProfileOutletConnected(_: SubclassController, form: HTMLFormElement) {
+    this.addValidationListeners(form);
+  }
+
+  userProfileOutletDisconnected(_: SubclassController, form: HTMLFormElement) {
+    this.removeValidationListeners(form);
+  }
+
+  companyProfileOutletConnected(_: SubclassController, form: HTMLFormElement) {
+    this.addValidationListeners(form);
+  }
+
+  companyProfileOutletDisconnected(_: SubclassController, form: HTMLFormElement) {
+    this.removeValidationListeners(form);
+  }
+
+  // Bootstrap Validator events trigger on the form
+  private addValidationListeners(formElement: HTMLFormElement) {
+    $(formElement)
+      .on('validate.bs.validator', this.validateFileInputHandler)
+      .on('valid.bs.validator', this.validFileInputHandler)
+      .on('invalid.bs.validator', this.invalidFileInputHandler)
+      .on('validated.bs.validator', this.validatedFileInputHandler);
+  }
+
+  private removeValidationListeners(formElement: HTMLFormElement) {
+    $(formElement)
+      .off('validate.bs.validator', this.validateFileInputHandler)
+      .off('valid.bs.validator', this.validFileInputHandler)
+      .off('invalid.bs.validator', this.invalidFileInputHandler)
+      .off('validated.bs.validator', this.validatedFileInputHandler);
+  }
 }

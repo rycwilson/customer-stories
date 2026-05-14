@@ -131,9 +131,10 @@ export default class FormController<Ctrl extends SubclassController> extends Con
 
   updateValidator(this: Ctrl, { type: eventType, detail: { fileInput } }: { type: string, detail: { fileInput: HTMLInputElement } }) {
     // console.log('updating validator', eventType)
-    fileInput.setAttribute('data-validate', eventType === 'image-card:ready-to-validate' ? 'true' : 'false');
+    const readyToValidate = eventType === 'image-card:ready-to-validate';
+    fileInput.setAttribute('data-validate', readyToValidate.toString());
     $(this.element).validator('update');
-    if (eventType === 'image-card:ready-to-validate') {
+    if (readyToValidate) {
       $(this.element).validator('validate');
     }
   }
