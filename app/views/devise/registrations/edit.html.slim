@@ -8,7 +8,7 @@ main.user-profile.container-fluid.hidden-xs
       id: 'user-profile-form',
       class: 'form-horizontal',
       data: { \
-        controller: 'user-profile',
+        controller: 'user-profile toast',
         asset_host: Rails.application.config.asset_host,
         action: [ \
           'image-card:ready-to-validate->user-profile#updateValidator',
@@ -25,7 +25,17 @@ main.user-profile.container-fluid.hidden-xs
 
       .col-sm-4.text-right
         .user-profile__photo
-          = render('shared/image_card', { model: 'User', image_data: { type: 'SquareLogo', url: @user.photo_url } })
+          = render(ImageCardComponent.new('User', image_data: { type: 'SquareLogo', url: current_user.photo_url })) do 
+            = form.hidden_field( \
+                :photo_url,
+                disabled: true,
+                data: { image_card_target: 'input urlInput' })
+            /= hidden_field_tag( \
+                "user[photo_url]",
+                current_user.photo_url,
+                disabled: true,
+                data: { image_card_target: 'input urlInput' })
+          /= render('shared/image_card', { model: 'User', image_data: { type: 'SquareLogo', url: @user.photo_url } })
 
       .col-sm-8
         .form-group

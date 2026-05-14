@@ -1,0 +1,14 @@
+- image_data = local_assigns.fetch(:image_data, {})
+
+= render( \
+    ImageCardComponent.new( \
+      'AdwordsImage', 
+      image_data:,
+      collection: local_assigns.fetch(:collection, nil),
+      upload_enabled: image_data.blank?)) do
+
+  = render( \
+      'adwords_images/hidden_field_tags',
+      image_data:,
+      field_name_prefix: "company[adwords_images_attributes][#{i}]",
+      is_default: false)

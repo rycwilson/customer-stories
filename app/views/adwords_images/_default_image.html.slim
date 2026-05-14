@@ -1,0 +1,11 @@
+- defaults = company.ad_images.default.marketing
+- ad_image = type == 'SquareImage' ? defaults.square.take : defaults.landscape.take
+- image_data = ad_image || { type:, default: true }
+
+= render(ImageCardComponent.new('AdwordsImage', image_data:)) do
+
+  = render( \
+      'adwords_images/hidden_field_tags', \
+      field_name_prefix: "company[adwords_images_attributes][#{i}]",
+      image_data:,
+      is_default: true)

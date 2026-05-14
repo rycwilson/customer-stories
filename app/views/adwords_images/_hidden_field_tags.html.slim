@@ -1,0 +1,48 @@
+// new image
+- if image_data[:id].blank?
+  = hidden_field_tag( \
+      "#{field_name_prefix}[type]",
+      is_default ? image_data[:type] : '',
+      disabled: true,
+      data: { image_card_target: 'input typeInput' })
+  = hidden_field_tag( \
+      "#{field_name_prefix}[image_url]",
+      '',
+      disabled: true,
+      data: { image_card_target: 'input urlInput' })
+  - if is_default
+    = hidden_field_tag( \
+        "#{field_name_prefix}[default]",
+        true,
+        disabled: true,
+        data: { image_card_target: 'input defaultInput' })
+
+// existing image
+- else
+  = hidden_field_tag( \
+      "#{field_name_prefix}[id]",
+      image_data[:id],
+      disabled: true,
+      data: { image_card_target: 'input idInput' })
+  = hidden_field_tag( \
+      "#{field_name_prefix}[default]",
+      image_data[:default],
+      disabled: true,
+      data: { image_card_target: 'input defaultInput' })
+  - if is_default
+    = hidden_field_tag( \
+        "#{field_name_prefix}[type]",
+        image_data[:type],
+        disabled: true,
+        data: { image_card_target: 'input' })
+    = hidden_field_tag( \
+        "#{field_name_prefix}[image_url]",
+        image_data[:image_url],
+        disabled: true,
+        data: { image_card_target: 'input urlInput' })
+  - else
+    = hidden_field_tag( \
+        "#{field_name_prefix}[_destroy]",
+        false,
+        disabled: true,
+        data: { image_card_target: 'input _destroyInput' })

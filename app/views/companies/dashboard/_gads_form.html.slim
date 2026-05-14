@@ -1,24 +1,26 @@
+/ index of the first logo (default square), varies with the number of non-default marketing images
+- logos_offset = 3 + company.ad_images.marketing.where.not(default: true).count
+
 = turbo_frame_tag('company-ads-settings') do
 
   = form_with( \
       model: company,
       url: ads_company_path(company),
-      html: { \
-        id: 'gads-form',
-        class: 'form-horizontal',
-        data: { \
-          controller: 'ads toast',
-          toast_flash_value: \
-            (flash.to_h if flash.present? && turbo_frame_request_id == 'company-ads-settings'),
-          toast_errors_value: \
-            (@errors if @errors && turbo_frame_request_id == 'company-ads-settings'),
-          asset_host: Rails.application.config.asset_host,
-          action: [ \
-            'image-card:make-default->ads#setNewDefault',
-            'image-card:ready-to-validate->ads#updateValidator',
-            'image-card:validated->ads#updateValidator',
-            'image-card:replace-default->ads#keepPreviousDefault',
-            'image-card:upload-ready->ads#submitForm'].join(' ') }}) do |form|
+      id: 'gads-form',
+      class: 'form-horizontal',
+      data: { \
+        controller: 'ads toast',
+        toast_flash_value: \
+          (flash.to_h if flash.present? && turbo_frame_request_id == 'company-ads-settings'),
+        toast_errors_value: \
+          (@errors if @errors && turbo_frame_request_id == 'company-ads-settings'),
+        asset_host: Rails.application.config.asset_host,
+        action: [ \
+          'image-card:make-default->ads#setNewDefault',
+          'image-card:ready-to-validate->ads#updateValidator',
+          'image-card:validated->ads#updateValidator',
+          'image-card:replace-default->ads#keepPreviousDefault',
+          'image-card:upload-ready->ads#submitForm'].join(' ') }) do |form|
     
     = form.hidden_field( \
         :active_collection,
@@ -65,8 +67,7 @@
             data-collection="images" 
             role="tab" }
             i.fa.fa-fw.fa-image
-            | &nbsp;&nbsp;
-            | Marketing Images
+            | &nbsp;&nbsp;Marketing Images
           a.btn.btn-secondary {
             href="#image-library__logos"
             class=('active' if active_collection == 'logos')
@@ -76,8 +77,7 @@
             data-collection="logos"
             role="tab" }
             i.fa.fa-fw.fa-flag
-            | &nbsp;&nbsp;
-            | Logos
+            | &nbsp;&nbsp;Logos
       .col-sm-offset-3.col-sm-9.col-md-offset-4.col-md-8
         span.help-block {
           data-ads-target="requirementsHelpBlock"
@@ -125,18 +125,8 @@
             | Default Images
           .col-sm-9.col-md-8
             ul.image-cards.list-unstyled
-              = render( \
-                  'shared/image_card',
-                  { model: 'AdwordsImage',
-                    image_data: \
-                      company.ad_images.default.marketing.square.take || \
-                      { type: 'SquareImage', default: true },
-                    field_name_prefix: 'company[adwords_images_attributes][0]' })
-              = render( \
-                  'shared/image_card',
-                  { model: 'AdwordsImage',
-                    image_data: company.ad_images.default.marketing.landscape.take || { type: 'LandscapeImage', default: true },
-                    field_name_prefix: 'company[adwords_images_attributes][1]' })
+              = render('adwords_images/default_image', company:, type: 'SquareImage', i: 0)
+              = render('adwords_images/default_image', company:, type: 'LandscapeImage', i: 1)
 
         .row
           /.visible-sm-block.col-sm-12
@@ -149,18 +139,10 @@
               |&nbsp;&nbsp;Upload an image
 
         ul.image-cards.list-unstyled
-          = render( \
-              'shared/image_card',
-              { model: 'AdwordsImage',
-                collection: 'images',
-                field_name_prefix: 'company[adwords_images_attributes][2]' })
-          - company.ad_images.marketing.where.not(default: true).each.with_index do |ad_image, i|
-            = render( \
-                'shared/image_card',
-                { model: 'AdwordsImage',
-                  image_data: ad_image,
-                  upload_enabled: false,
-                  field_name_prefix: "company[adwords_images_attributes][#{ 3 + i }]" })
+          / collection must be specified for new uploads only
+          = render('adwords_images/secondary', collection: 'images', i: 2)
+          - company.ad_images.marketing.where.not(default: true).each.with_index do |ad_image, j|
+            = render('adwords_images/secondary', image_data: ad_image, i: j + 3)
 
       #image-library__logos.tab-pane class=('active' if active_collection == 'logos')
 
@@ -170,18 +152,8 @@
           label.col-sm-3.col-md-4.control-label Default Logos
           .col-sm-9.col-md-8
             ul.image-cards
-              = render( \
-                  'shared/image_card',
-                  { model: 'AdwordsImage',
-                    image_data: company.ad_images.default.logo.square.take || { type: 'SquareLogo', default: true },
-                    field_name_prefix: ( \
-                      "company[adwords_images_attributes][#{ 3 + company.ad_images.marketing.where.not(default: true).count }]") })
-              = render( \
-                  'shared/image_card',
-                  { model: 'AdwordsImage',
-                    image_data: company.ad_images.default.logo.landscape.take || { type: 'LandscapeLogo', default: true },
-                    field_name_prefix: ( \
-                      "company[adwords_images_attributes][#{ 4 + company.ad_images.marketing.where.not(default: true).count }]") })
+              = render('adwords_images/default_logo', company:, type: 'SquareLogo', i: logos_offset)
+              = render('adwords_images/default_logo', company:, type: 'LandscapeLogo', i: logos_offset + 1)
 
         .row
           /.visible-sm-block.col-sm-12
@@ -194,17 +166,10 @@
               |&nbsp;&nbsp;Upload a logo
 
         ul.image-cards
-          = render( \
-              'shared/image_card',
-              { model: 'AdwordsImage',
-                collection: 'logos',
-                field_name_prefix: ( \
-                  "company[adwords_images_attributes][#{ 5 + company.ad_images.marketing.where.not(default: true).count }]") })
-          - company.ad_images.logo.where.not(default: true).each.with_index do |ad_image, i|
+          = render('adwords_images/secondary', collection: 'images', i: logos_offset + 2)
+          - company.ad_images.logo.where.not(default: true).each.with_index do |ad_image, j|
             = render( \
-                'shared/image_card',
-                { model: 'AdwordsImage',
-                  image_data: ad_image,
-                  upload_enabled: false,
-                  field_name_prefix: ( \
-                    "company[adwords_images_attributes][#{ 6 + company.ad_images.marketing.where.not(default: true).count }]") })
+                'adwords_images/default_logo',
+                company:,
+                type: 'LandscapeLogo',
+                i: j + logos_offset + 3)
