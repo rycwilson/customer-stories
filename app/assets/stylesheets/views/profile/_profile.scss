@@ -17,6 +17,10 @@ main.user-profile form {
       border-bottom-left-radius: $input-border-radius;
     }
   }
+
+  .col-sm-8 {
+    float: right;
+  }
 }
 
 .user-profile__photo {
