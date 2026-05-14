@@ -51,24 +51,12 @@ class CompaniesController < ApplicationController
             turbo_stream.replace('toaster', partial: 'shared/toaster'),
             turbo_stream.replace(
               'company-profile-form',
-              partial: 'companies/settings/company_profile', locals: { company: @company }
+              partial: 'companies/settings/company_profile', 
+              locals: { company: @company }
             )
           ]
-          if @company.previous_changes[:square_logo_url].present?
-            turbo_stream_actions << turbo_stream.update(
-              'company-admin-logo',
-              html: " \
-                <img src=\"#{@company.square_logo_url}\" alt=\"#{@company.name} logo\" />
-                <i class=\"fa fa-caret-down\"></i> \
-              ".html_safe
-            )
-          end
-          if @company.previous_changes[:header_color_1].present? && @company.ctas.primary.present?
-            turbo_stream_actions << turbo_stream.update(
-              "edit-cta-#{@company.ctas.primary.take.id}",
-              partial: 'ctas/edit', locals: { company: @company, cta: @company.ctas.primary.take }
-            )
-          end
+          turbo_stream_actions << update_square_logo if update_square_logo?
+          turbo_stream_actions << update_header_cta if update_header_cta?
           render(turbo_stream: turbo_stream_actions)
         end
       end
@@ -254,5 +242,30 @@ class CompaniesController < ApplicationController
         }
       end
       .delete_if { |image_ads| image_ads[:ads_params].empty? } # no affected ads
+  end
+
+  def update_square_logo?
+    @company.previous_changes[:square_logo_url].present?
+  end
+
+  def update_square_logo
+    turbo_stream.update(
+      'company-admin-logo',
+      html: " \
+        <img src=\"#{@company.square_logo_url}\" alt=\"#{@company.name} logo\" />
+        <i class=\"fa fa-caret-down\"></i> \
+      ".html_safe
+    )
+  end
+
+  def update_header_cta?
+    @company.previous_changes[:header_color_1].present? && @company.ctas.primary.present?
+  end
+
+  def update_header_cta
+    turbo_stream.update(
+      "edit-cta-#{@company.ctas.primary.take.id}",
+      partial: 'ctas/edit', locals: { company: @company, cta: @company.ctas.primary.take }
+    )
   end
 end
