@@ -21,6 +21,7 @@ gem 'jbuilder', '~> 2.7'
 gem 'slim-rails', '~> 3.0'
 gem 'stimulus-rails', '~> 1.3'
 gem 'turbo-rails', '~> 2.0'
+gem 'view_component'
 
 # Database and caching
 gem 'faker', '~> 3.2'
@@ -79,7 +80,7 @@ end
 group :development do
   gem 'better_errors'
   gem 'binding_of_caller' # needed for better_errors advanced features
-  gem 'rubocop', '~> 1.77', require: false
+  gem 'rubocop', '~> 1.86', require: false
   gem 'ruby-lsp'
   gem 'spring', '>= 3.0'
   gem 'web-console'

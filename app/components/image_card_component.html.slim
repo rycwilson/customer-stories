@@ -1,0 +1,86 @@
+= content_tag( \
+    @model.in?(['User', 'Customer']) ? :div : :li,
+    class: [ \
+      'image-card',
+      { "image-card--#{@image_data[:type]}" => @image_data[:type].present? },
+      { 'gads-default' => default_ad_image? },
+      { hidden: (@model == 'AdwordsImage' and @image_data.blank?) },
+      { selected: @selected } ],
+    data: { \
+      image_id: @image_data[:id],
+      controller: 'image-card',
+      image_card_form_outlet: (parent_form_id unless @model.in?(%w[AdwordsImage User Company])),
+      image_card_ads_outlet: ('#gads-form' if @model == 'AdwordsImage'),
+      image_card_user_profile_outlet: ('#user-profile-form' if @model == 'User'),
+      image_card_company_profile_outlet: ('#company-profile-form' if @model == 'Company'),
+      ads_target:,
+      action: ('click->image-card#toggleSelected' if @model == 'AdwordsAd') }) do
+  
+  = render('shared/loading_spinner') if @upload_enabled
+
+  / This will be hidden input tags for a given model
+  = content
+  
+  - if @model == 'AdwordsAd' then '' else
+
+    = content_tag( \
+        :div, 
+        class: "form-group fileinput fileinput-#{image_exists? ? 'exists' : 'new'}", 
+        data: { provides: 'fileinput', image_card_target: 'formGroup' }) do
+
+      .image-card__header
+        - if @upload_enabled
+          / attaching data-trigger attribute to .fileinput-preview does not work
+          button type="button" data-trigger="fileinput"
+            i.fa.fa-fw class="fa-#{@model == 'User' ? 'camera' : 'upload'}"
+        - elsif secondary_ad_image?
+          button.make-default type="button" data-action="image-card#makeDefault"
+            i.fa.fa-fw.fa-refresh
+          |&nbsp;
+          button.btn-remove type="button" data-action="image-card#deleteImage"
+            i.fa.fa-fw.fa-remove
+        |&nbsp;
+        /button.btn-remove type="button" data-dismiss="fileinput"
+          i.fa.fa-fw.fa-remove
+
+      .image-card__frame
+        /.image-card__errors
+          i.fa.fa-warning
+          .help-block.with-errors
+        - if image_replaceable?
+          .fileinput-new.thumbnail
+            = image_tag(placeholder_url, alt: alt_text)
+          .fileinput-preview.fileinput-exists.thumbnail data-image-card-target="preview"
+            - if image_exists?
+              = image_tag(@image_data[:image_url] || @image_data[:url], alt: alt_text)
+        
+        / only non-default company ad images are not replaceable
+        - elsif @image_data[:image_url].present?
+          .thumbnail
+            = image_tag(@image_data[:image_url], alt: alt_text)
+        - else
+          .fileinput-preview.fileinput-exists.thumbnail data-image-card-target="preview"
+        .btn-file
+          input {
+            type="file"
+            accept="image/jpeg,image/png"
+            data-image-card-target="fileInput"
+            data-s3=(s3_direct_post.to_json if @upload_enabled)
+            data-validate="false"
+            data-collection=@collection
+            data-image-type=(@image_data[:type] if @image_data[:type].present?)
+            data-max-file-size="5242880" 
+            data-min-dimensions=(min_dimensions.to_json unless @model == 'Customer')
+            data-min-width=(min_dimensions[:width] if min_dimensions)
+            data-min-height=(min_dimensions[:height] if min_dimensions)
+            data-aspect-ratio-tolerance=RESPONSIVE_AD_ASPECT_RATIO_TOLERANCE
+            data-required-image=('true' if @required) }
+
+      - if secondary_ad_image?
+        .image-card__footer
+          button.btn.btn-sm.btn-default type="button" data-action="image-card#cancelChanges"
+            | Cancel
+          button.btn.btn-sm.btn-danger type="submit"
+            | Delete
+          button.btn.btn-sm.btn-success type="submit"
+            | Make default
