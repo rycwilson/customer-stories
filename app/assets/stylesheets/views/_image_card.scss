@@ -1,15 +1,15 @@
 .image-card {
   position: relative;
   
-  @at-root li#{&} {
-    display: inline-block;
-    margin: 0.5rem;
+  // @at-root li#{&} {
+  //   display: inline-block;
+  //   margin: 0.5rem;
     
-    &.gads-default,
-    &--company-logo {
-      margin: 0 0.5rem;
-    }
-  }
+  //   &.gads-default,
+  //   &--company-logo {
+  //     margin: 0 0.5rem;
+  //   }
+  // }
   
   &--uploading {
     @include spinner('sm');

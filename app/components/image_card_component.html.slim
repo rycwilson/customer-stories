@@ -1,5 +1,5 @@
 = content_tag( \
-    @model.in?(['User', 'Customer']) ? :div : :li,
+    :div,
     class: [ \
       'image-card',
       { "image-card--#{@image_data[:type]}" => @image_data[:type].present? },
@@ -20,9 +20,19 @@
 
   / This will be hidden input tags for a given model
   = content
-  
-  - if @model == 'AdwordsAd' then '' else
 
+  - if @model == 'AdwordsAd'
+    .image-card__frame
+      .thumbnail
+        img src="#{@image_data[:image_url]}" alt="#{alt_text}"
+        .check
+          div
+            div
+            span.fa-stack.fa-lg
+              i.fa.fa-circle-o.fa-stack-2x
+              i.fa.fa-check.fa-stack-1x
+
+  - else
     = content_tag( \
         :div, 
         class: "form-group fileinput fileinput-#{image_exists? ? 'exists' : 'new'}", 

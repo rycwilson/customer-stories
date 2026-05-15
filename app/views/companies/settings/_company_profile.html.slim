@@ -61,16 +61,18 @@
         class: 'control-label col-md-4 visible-md-inline-block visible-lg-inline-block')
     .col-sm-12.col-md-8
       ul.image-cards.list-unstyled
-        = render(ImageCardComponent.new('Company', image_data: { type: 'SquareLogo', url: company.square_logo_url }, required: true)) do
-          = form.hidden_field( \
-              :square_logo_url,
-              disabled: true,
-              data: { image_card_target: 'input urlInput' })
-        = render(ImageCardComponent.new('Company', image_data: { type: 'LandscapeLogo', url: company.landscape_logo_url })) do
-          = form.hidden_field( \
-              :landscape_logo_url,
-              disabled: true,
-              data: { image_card_target: 'input urlInput' })
+        li
+          = render(ImageCardComponent.new('Company', image_data: { type: 'SquareLogo', url: company.square_logo_url }, required: true)) do
+            = form.hidden_field( \
+                :square_logo_url,
+                disabled: true,
+                data: { image_card_target: 'input urlInput' })
+        li 
+          = render(ImageCardComponent.new('Company', image_data: { type: 'LandscapeLogo', url: company.landscape_logo_url })) do
+            = form.hidden_field( \
+                :landscape_logo_url,
+                disabled: true,
+                data: { image_card_target: 'input urlInput' })
 
   .row
     .visible-sm-block.col-sm-12

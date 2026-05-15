@@ -125,8 +125,10 @@
             | Default Images
           .col-sm-9.col-md-8
             ul.image-cards.list-unstyled
-              = render('adwords_images/default_image', company:, type: 'SquareImage', i: 0)
-              = render('adwords_images/default_image', company:, type: 'LandscapeImage', i: 1)
+              li
+                = render('adwords_images/default_image', company:, type: 'SquareImage', i: 0)
+              li 
+                = render('adwords_images/default_image', company:, type: 'LandscapeImage', i: 1)
 
         .row
           /.visible-sm-block.col-sm-12
@@ -140,9 +142,11 @@
 
         ul.image-cards.list-unstyled
           / collection must be specified for new uploads only
-          = render('adwords_images/secondary', collection: 'images', i: 2)
+          li 
+            = render('adwords_images/secondary', collection: 'images', i: 2)
           - company.ad_images.marketing.where.not(default: true).each.with_index do |ad_image, j|
-            = render('adwords_images/secondary', image_data: ad_image, i: j + 3)
+            li
+              = render('adwords_images/secondary', image_data: ad_image, i: j + 3)
 
       #image-library__logos.tab-pane class=('active' if active_collection == 'logos')
 
@@ -151,9 +155,11 @@
             label Default Logos
           label.col-sm-3.col-md-4.control-label Default Logos
           .col-sm-9.col-md-8
-            ul.image-cards
-              = render('adwords_images/default_logo', company:, type: 'SquareLogo', i: logos_offset)
-              = render('adwords_images/default_logo', company:, type: 'LandscapeLogo', i: logos_offset + 1)
+            ul.image-cards.list-unstyled 
+              li
+                = render('adwords_images/default_logo', company:, type: 'SquareLogo', i: logos_offset)
+              li
+                = render('adwords_images/default_logo', company:, type: 'LandscapeLogo', i: logos_offset + 1)
 
         .row
           /.visible-sm-block.col-sm-12
@@ -165,11 +171,13 @@
               i.fa.fa-fw.fa-upload
               |&nbsp;&nbsp;Upload a logo
 
-        ul.image-cards
-          = render('adwords_images/secondary', collection: 'images', i: logos_offset + 2)
+        ul.image-cards.list-unstyled
+          li
+            = render('adwords_images/secondary', collection: 'images', i: logos_offset + 2)
           - company.ad_images.logo.where.not(default: true).each.with_index do |ad_image, j|
-            = render( \
-                'adwords_images/default_logo',
-                company:,
-                type: 'LandscapeLogo',
-                i: j + logos_offset + 3)
+            li
+              = render( \
+                  'adwords_images/default_logo',
+                  company:,
+                  type: 'LandscapeLogo',
+                  i: j + logos_offset + 3)

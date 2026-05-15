@@ -1,4 +1,8 @@
 #company-profile-form {
+  .image-cards li {
+    margin: 0 0.5rem;
+  }
+  
   @media (min-width: 768px) and (max-width: 991px) {
     max-width: 42rem;
   }

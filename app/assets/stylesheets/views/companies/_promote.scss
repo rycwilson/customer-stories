@@ -68,40 +68,6 @@
 
   .image-card {
     margin: 8px;
-  }
-
-  .image-card--SquareImage .image-card__frame {
-    width: 105px;
-    height: 105px;
-  }
-
-  .image-card--LandscapeImage .image-card__frame {
-    width: 147px;
-    height: 77px;
-  }
-
-  .image-card--SquareLogo .image-card__frame {
-    width: 88px;
-    height: 88px;
-  }
-
-  .image-card--LandscapeLogo & {
-    width: 174px;
-    height: 43.5px;
-  }
-
-  .thumbnail {
-    padding: 0;
-    border: none;
-  }
-
-  img {
-    cursor: pointer;
-    box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.16), 0 0 0 1px rgba(0, 0, 0, 0.08)
-  }
-
-  li {
-    position: relative;
 
     .check {
       display: none;
@@ -138,6 +104,36 @@
       }
     }
   }
+
+  .image-card--SquareImage .image-card__frame {
+    width: 105px;
+    height: 105px;
+  }
+
+  .image-card--LandscapeImage .image-card__frame {
+    width: 147px;
+    height: 77px;
+  }
+
+  .image-card--SquareLogo .image-card__frame {
+    width: 88px;
+    height: 88px;
+  }
+
+  .image-card--LandscapeLogo & {
+    width: 174px;
+    height: 43.5px;
+  }
+
+  .thumbnail {
+    padding: 0;
+    border: none;
+  }
+
+  img {
+    cursor: pointer;
+    box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.16), 0 0 0 1px rgba(0, 0, 0, 0.08)
+  }
 }
 
 .popover.image-requirements {
@@ -159,6 +155,11 @@
 }
 
 #gads-form {
+  li {
+    display: inline-block;
+    margin: 0 0.5rem;
+  }
+
   .short-headline {
     [class*="col-"] > div {
       @include flex-row-center-between;
