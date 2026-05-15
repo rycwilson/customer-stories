@@ -28,7 +28,7 @@
           .help-block.with-errors
         .fileinput-preview.thumbnail
           = image_tag( \
-              story.og_image_url.present? ? story.og_image_url : RESPONSIVE_AD_LANDSCAPE_IMAGE_PLACEHOLDER, 
+              story.og_image_url.present? ? story.og_image_url : AdwordsAd::RESPONSIVE_AD_LANDSCAPE_IMAGE_PLACEHOLDER, 
               alt: 'og:image' )
         .btn-file
           input {
@@ -44,7 +44,7 @@
                 data: { \
                   'min-dimensions' => '600x314', 
                   'max-file-size' => '5242880' }})
-                  'aspect-ratio-tolerance': =RESPONSIVE_AD_ASPECT_RATIO_TOLERANCE
+                  'aspect-ratio-tolerance' => AdwordsAd::RESPONSIVE_AD_ASPECT_RATIO_TOLERANCE
 
   .form-group
     .col-sm-12

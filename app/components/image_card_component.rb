@@ -1,14 +1,6 @@
 # frozen_string_literal: true
 
 class ImageCardComponent < ViewComponent::Base
-  RESPONSIVE_AD_ASPECT_RATIO_TOLERANCE = 0.01
-  RESPONSIVE_AD_SQUARE_IMAGE_MIN = 300
-  RESPONSIVE_AD_LANDSCAPE_IMAGE_MIN = '600x314'
-  RESPONSIVE_AD_LANDSCAPE_IMAGE_ASPECT_RATIO = 1.91
-  RESPONSIVE_AD_SQUARE_LOGO_MIN = 128
-  RESPONSIVE_AD_LANDSCAPE_LOGO_MIN = '128x32'
-  RESPONSIVE_AD_LANDSCAPE_LOGO_ASPECT_RATIO = 4
-
   # slim_template <<-SLIM
   # (Remember to escape interpolated strings)
   # SLIM
@@ -105,20 +97,20 @@ class ImageCardComponent < ViewComponent::Base
   def min_dimensions(type = nil)
     min_dimensions = {
       'SquareImage' => {
-        width: RESPONSIVE_AD_SQUARE_IMAGE_MIN,
+        width: AdwordsAd::RESPONSIVE_AD_SQUARE_IMAGE_MIN
       },
       'LandscapeImage' => {
-        width: RESPONSIVE_AD_LANDSCAPE_IMAGE_MIN.split('x')[0].to_i,
-        height: RESPONSIVE_AD_LANDSCAPE_IMAGE_MIN.split('x')[1].to_i,
-        aspect_ratio: RESPONSIVE_AD_LANDSCAPE_IMAGE_ASPECT_RATIO
+        width: AdwordsAd::RESPONSIVE_AD_LANDSCAPE_IMAGE_MIN&.split('x').try(:[], 0).to_i,
+        height: AdwordsAd::RESPONSIVE_AD_LANDSCAPE_IMAGE_MIN&.split('x').try(:[], 1).to_i,
+        aspect_ratio: AdwordsAd::RESPONSIVE_AD_LANDSCAPE_IMAGE_ASPECT_RATIO
       },
       'SquareLogo' => {
-        width: RESPONSIVE_AD_SQUARE_LOGO_MIN,
+        width: AdwordsAd::RESPONSIVE_AD_SQUARE_LOGO_MIN,
       },
       'LandscapeLogo' => {
-        width: RESPONSIVE_AD_LANDSCAPE_LOGO_MIN.split('x')[0].to_i,
-        height: RESPONSIVE_AD_LANDSCAPE_LOGO_MIN.split('x')[1].to_i,
-        aspect_ratio: RESPONSIVE_AD_LANDSCAPE_LOGO_ASPECT_RATIO
+        width: AdwordsAd::RESPONSIVE_AD_LANDSCAPE_LOGO_MIN&.split('x').try(:[], 0).to_i,
+        height: AdwordsAd::RESPONSIVE_AD_LANDSCAPE_LOGO_MIN&.split('x').try(:[], 1).to_i,
+        aspect_ratio: AdwordsAd::RESPONSIVE_AD_LANDSCAPE_LOGO_ASPECT_RATIO
       }
     }
     type ? min_dimensions[type] : min_dimensions

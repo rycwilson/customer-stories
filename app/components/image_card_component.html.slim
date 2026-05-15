@@ -73,7 +73,7 @@
             data-min-dimensions=(min_dimensions.to_json unless @model == 'Customer')
             data-min-width=(min_dimensions[:width] if min_dimensions)
             data-min-height=(min_dimensions[:height] if min_dimensions)
-            data-aspect-ratio-tolerance=RESPONSIVE_AD_ASPECT_RATIO_TOLERANCE
+            data-aspect-ratio-tolerance=AdwordsAd::RESPONSIVE_AD_ASPECT_RATIO_TOLERANCE
             data-required-image=('true' if @required) }
 
       - if secondary_ad_image?
