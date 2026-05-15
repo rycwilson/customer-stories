@@ -62,13 +62,20 @@
     .col-sm-12.col-md-8
       ul.image-cards.list-unstyled
         li
-          = render(ImageCardComponent.new('Company', image_data: { type: 'SquareLogo', url: company.square_logo_url }, required: true)) do
+          = render( \
+              ImageCardComponent.new( \
+                'Company', 
+                image_data: { type: 'SquareLogo', url: company.square_logo_url }, 
+                required: true )) do
             = form.hidden_field( \
                 :square_logo_url,
                 disabled: true,
                 data: { image_card_target: 'input urlInput' })
         li 
-          = render(ImageCardComponent.new('Company', image_data: { type: 'LandscapeLogo', url: company.landscape_logo_url })) do
+          = render( \
+              ImageCardComponent.new( \
+                'Company', 
+                image_data: { type: 'LandscapeLogo', url: company.landscape_logo_url } )) do
             = form.hidden_field( \
                 :landscape_logo_url,
                 disabled: true,
