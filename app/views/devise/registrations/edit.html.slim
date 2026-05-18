@@ -25,7 +25,10 @@ main.user-profile.container-fluid.hidden-xs
 
       .col-sm-4.text-right
         .user-profile__photo
-          = render(ImageCardComponent.new('User', image_data: { type: 'SquareLogo', url: current_user.photo_url })) do 
+          = render( \
+              ImageCardComponent.new( \
+                'User', 
+                image_data: { type: 'SquareLogo', url: current_user.photo_url } )) do 
             = form.hidden_field( \
                 :photo_url,
                 disabled: true,
