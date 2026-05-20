@@ -13,10 +13,13 @@ class ImageCardComponent < ViewComponent::Base
     required: false,
     selected: false
   )
+    if image_data[:type].present? && !collection
+      collection = image_data[:type].split(/(?=[A-Z])/).last.downcase.pluralize
+    end
     @model = model
     @image_data = image_data
     @required = required
-    @collection = collection || @image_data[:type]&.split(/(?=[A-Z])/)&.last&.downcase&.pluralize
+    @collection = collection
     @selected = selected
     @upload_enabled = upload_enabled
   end
@@ -105,7 +108,7 @@ class ImageCardComponent < ViewComponent::Base
         aspect_ratio: AdwordsAd::RESPONSIVE_AD_LANDSCAPE_IMAGE_ASPECT_RATIO
       },
       'SquareLogo' => {
-        width: AdwordsAd::RESPONSIVE_AD_SQUARE_LOGO_MIN,
+        width: AdwordsAd::RESPONSIVE_AD_SQUARE_LOGO_MIN
       },
       'LandscapeLogo' => {
         width: AdwordsAd::RESPONSIVE_AD_LANDSCAPE_LOGO_MIN&.split('x').try(:[], 0).to_i,
