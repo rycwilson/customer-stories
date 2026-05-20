@@ -5,7 +5,7 @@
   "main": "index.js",
   "type": "module",
   "scripts": {
-    "test": "vitest",
+    "test": "vitest --run --reporter verbose",
     "build:landing-js": "esbuild app/typescript/emit/landing.js --outfile=app/assets/builds/landing/bundle.js --minify --bundle",
     "build:landing-css": "./sass-build.sh app/assets/stylesheets/landing/main.scss:app/assets/builds/landing/main.css",
     "build:app-js": "esbuild app/typescript/emit/app.js --outfile=app/assets/builds/app/bundle.js --minify --bundle",
