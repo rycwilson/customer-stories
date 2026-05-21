@@ -1,0 +1,14 @@
+// Separate typescript config for test files.
+// The idea is that we exclude test files from the build process in tsconfig.json,
+// but include them here so we still get typescript editor support (linting, type-checking)
+
+{
+  "extends": "../../../tsconfig.json",
+  "include": ["./**/*.ts"],
+  "exclude": [],
+  "compilerOptions": {
+    "rootDir": ".",
+    "noEmit": true,
+    "types": ["../../../node_modules/vitest/globals"]
+  }
+}
