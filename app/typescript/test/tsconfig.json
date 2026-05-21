@@ -1,1 +1,4 @@
-{ "extends": "./tsconfig.test.json" }
+{ 
+  "_comment": "This file is a shim that ensures tsserver finds the right config for test files.",
+  "extends": "./tsconfig.test.json" 
+}
