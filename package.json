@@ -1,5 +1,5 @@
 {
-  "name": "csp-assets",
+  "name": "customer-stories",
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
@@ -96,7 +96,7 @@
     "eslint": "^9.39.4",
     "jsdom": "^26.1.0",
     "sass": "^1.89.2",
-    "typescript": "^5.2.2",
+    "typescript": "^6.0.3",
     "typescript-eslint": "^8.59.4",
     "vitest": "^3.2.4"
   },
