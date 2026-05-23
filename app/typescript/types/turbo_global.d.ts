@@ -2,7 +2,9 @@
 import { TurboGlobal } from '@hotwired/turbo';
 
 declare module '@hotwired/turbo' {
-  interface TurboGlobal {
-    navigator: any;
+  interface Navigator {
+    history: {
+      restorationIdentifier: string;
+    }
   }
 }
