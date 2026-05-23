@@ -1,19 +1,52 @@
-# Copilot Instructions
-
-## Project Context
+# Project overview
 <!-- Goals, Motivation, Scope, Audience, Key Deliverables, Functional Requirements -->
 <!-- Architectural patterns and conventions, naming conventions, code org principles -->
 <!-- Important gem dependencies that shape architectural patterns -->
-<!-- refers to files, folders, other projects -->
-- SaaS application built with Ruby/Rails and TypeScript
+- Customer Stories (CSP) is a SaaS platform (customerstories.net) for B2B marketing automation. It provides registered users within a company umbrella account with tools to curate, publish, and promote the company's customer success stories. 
 
-## Development Practices
+- The target user of CSP is someone who is responsible for a company's Customer Reference Program. It could also be someone with a Customer Success focus. Or both as part of a cross-functional team. Within the context of CSP the user is referred to as a Curator.
 
-## Coding Practices
+- A company account dashboard includes:
+  - Sales CRM integration
+  - Survey templates for story contributors (roles such as customer, partner, sales)
+  - Story composition controls (third-party video integration, image uploader, HTML editor, highlighted testimonials)
+  - Story promotion controls (with underlying Google Ads connection)
+  - Story visitor analytics
+  - Plugin generator for publishing stories on the company's own website
+  - Story tags controls
+  - Call-to-action (CTA) element controls
+  - User and company profile management
 
-## Git Operations
+- The architecture is multi-tenant with company accounts given a custom subdomain e.g. acme.customerstories.net. A single database is shared amongst all accounts. 
 
-## Communication Style
+## Languages, frameworks
+- Ruby on Rails server
+- PostgreSQL database
+- TypeScript/Hotwire client
+- RSpec/Capybara and Vitest for testing
+
+## Services, integrations
+- AWS S3/Cloudfront (asset storage/delivery)
+- AWS SES (email delivery)
+- Zapier (automation)
+- Google Ads API connection
+
+## Directory structure
+- Typical Rails structure
+- TypeScript sources in `app/typescript`
+- Compiled assets in `app/assets/builds`
+- Custom stylesheets (for a given company/account) in `app/assets/stylesheets/custom/[account_subdomain]`
+  - 
+
+## CI/CD
+- build steps (details forthcoming)
+- tests (details forthcoming)
+- Server hosted on Render
+- Database hosted on Neon
+
+## Coding practices
+
+## Communication style
 - Prefer concise, direct answers
 - Use Markdown formatting for explanations and examples
 - Ask clarifying questions when needed
