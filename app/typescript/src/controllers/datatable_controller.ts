@@ -4,9 +4,18 @@ import type CustomerWinsController from './customer_wins_controller';
 import type ContributionsController from './contributions_controller';
 import type PromotedStoriesController from './promoted_stories_controller';
 import DataTable from 'datatables.net-bs';
-import type { Api, Config } from 'datatables.net-bs';
-import 'datatables.net-rowgroup-bs';
+import type { Api, Config } from 'datatables.net';
+// import 'datatables.net-rowgroup';
 import { deleteRow } from '../tables';
+
+// The datatables.net-rowgroup import is not successfully augmenting the Api<T> type.
+// Workaround is to just add that code here. 
+// TODO: Upgrade to Datatables 2
+declare module 'datatables.net' {
+	interface Api<T> {
+		rowGroup(): any
+	}
+}
 
 interface SearchParams {
   filters: { column: string, q: string, regEx: boolean, smartSearch: boolean }[],
