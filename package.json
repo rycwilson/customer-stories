@@ -55,6 +55,7 @@
     "font-awesome": "^4.7.0",
     "html2rtf": "^0.2.1",
     "imagesloaded": "4.1",
+    "jquery": "3.7.1",
     "jquery-csv": "^1.0.21",
     "jquery-textfill": "^0.6.0",
     "jquery-ui": "^1.14.0",
@@ -97,6 +98,11 @@
     "typescript": "^6.0.3",
     "typescript-eslint": "^8.59.4",
     "vitest": "^3.2.4"
+  },
+  "overrides": {
+    "blueimp-file-upload": {
+      "jquery-ui": "^1.14.0"
+    }
   },
   "notes": {
     "bootstrap-switch": "3.3.4 is the last version that works with bootstrap 3: https://github.com/Bttstrp/bootstrap-switch/issues/717"
