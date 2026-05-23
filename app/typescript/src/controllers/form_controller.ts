@@ -10,7 +10,7 @@ import type ContributorInvitationController from './contributor_invitation_contr
 import type CompanyTagsController from './company_tags_controller';
 import type CtaController from './cta_controller';
 import type AdsController from './ads_controller';
-import type { TomOptions } from 'tom-select/dist/types/types';
+import type { TomOptions } from 'tom-select/dist/esm/types/core.d.ts';
 import { validateForm, serializeForm } from '../utils';
 import { validateFileSize, validateImageDimensions } from '../user_uploads';
 

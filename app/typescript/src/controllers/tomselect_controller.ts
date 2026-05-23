@@ -1,8 +1,8 @@
 import { Controller } from "@hotwired/stimulus";
 import type InvitationTemplateController from "./invitation_template_controller";
 import TomSelect, { tsBaseOptions, addDynamicPlaceholder } from '../tomselect';
-import type { TomOption, TomItem } from 'tom-select/dist/types/types/core.d.ts';
-import { type CBOptions } from 'tom-select/dist/types/plugins/clear_button/types';
+import type { TomOption, TomItem } from 'tom-select/dist/esm/types/core.d.ts';
+import type { CBOptions } from 'tom-select/dist/esm/plugins/clear_button/types.d.ts';
 import { kebabize, capitalize } from "../utils";
 
 export default class TomselectController extends Controller<TomSelectInput> {

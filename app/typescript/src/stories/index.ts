@@ -1,8 +1,8 @@
 import Cookies from 'js-cookie';
 import imagesLoaded from 'imagesloaded';
 import TomSelect, { tsBaseOptions, addDynamicPlaceholder } from '../tomselect';
-import type { TomOption, TomItem } from 'tom-select/dist/types/types';
-import { type CBOptions } from 'tom-select/dist/types/plugins/clear_button/types';
+import type { TomOption, TomItem } from 'tom-select/dist/esm/types/core.d.ts';
+import type { CBOptions } from 'tom-select/dist/esm/plugins/clear_button/types.d.ts';
 import { init as initStoryCard } from './story_card';
 import { setCustomButtonProps } from '../utils';
 import { FetchRequest } from '@rails/request.js';
@@ -165,7 +165,7 @@ function initFilters() {
 function onAddMultiSelectItem(ts: TomSelect, item: TomItem) {
   const clearBtn = item.querySelector('.remove');
   if (clearBtn) {
-    clearBtn.addEventListener('click', (e) => {
+    clearBtn.addEventListener('click', (e: Event) => {
       e.stopPropagation();    // don't highlight active or open dropdown
       const tagType = item.dataset.value.split('-')[0];
       searchParams.delete(tagType);
