@@ -1121,21 +1121,6 @@ bootoast@^1.1.4:
   resolved "https://registry.yarnpkg.com/bootoast/-/bootoast-1.1.4.tgz#47c0f0f53c103644f65be1dd3cdf3657db01d5cd"
   integrity sha512-gIC3QRxeH9agovFxy2rIMagoPapEwiPtAkBqVGU6lhCT+diWrjd295vUNdhyr/w/ObFz2uGwp+/ZGTLyVmJ14A==
 
-bootstrap-datepicker@^1.9.0:
-  version "1.10.1"
-  resolved "https://registry.yarnpkg.com/bootstrap-datepicker/-/bootstrap-datepicker-1.10.1.tgz#0a8bec42957ea1ce1272b91bcf2b53696629fb86"
-  integrity sha512-GIe+fsLp9Hi30oW7L2v2Q9/a4+aojrIA2p4ZagtLuKw2lpfQgjJjM0L6vl/lYQydGXWUbpoKbEC/O5tzWIkEKQ==
-  dependencies:
-    jquery ">=3.4.0 <4.0.0"
-
-bootstrap-daterangepicker@^3.1.0:
-  version "3.1.0"
-  resolved "https://registry.yarnpkg.com/bootstrap-daterangepicker/-/bootstrap-daterangepicker-3.1.0.tgz#632e6fb2de4b6360c5c0a9d5f6adb9aace051fe8"
-  integrity sha512-oaQZx6ZBDo/dZNyXGVi2rx5GmFXThyQLAxdtIqjtLlYVaQUfQALl5JZMJJZzyDIX7blfy4ppZPAJ10g8Ma4d/g==
-  dependencies:
-    jquery ">=1.10"
-    moment "^2.9.0"
-
 bootstrap-horizon@^1.0.1:
   version "1.0.1"
   resolved "https://registry.yarnpkg.com/bootstrap-horizon/-/bootstrap-horizon-1.0.1.tgz#5511147d4ee1c1092c5ee73b3c75f3df449cf9fe"
@@ -1832,15 +1817,10 @@ jquery.inputmask@^3.2.7:
   resolved "https://registry.yarnpkg.com/jquery.inputmask/-/jquery.inputmask-3.3.4.tgz#ff4a8fd196f9fe28a17fd77a2da579c15a78a606"
   integrity sha512-HEhTAOGntIBPSoBU+HdyJCGV/Us16/TirRL7c+cJD9yC8tsDxLWIvNLJpaHJQcVw/e3n3lg1tAGgnMxYlGCMrw==
 
-"jquery@1.8 - 4", jquery@>=1.10, "jquery@>=1.12.0 <5.0.0", jquery@>=1.7, jquery@>=1.8.0:
+"jquery@1.8 - 4", "jquery@>=1.12.0 <5.0.0", jquery@>=1.7, jquery@>=1.8.0:
   version "4.0.0"
   resolved "https://registry.yarnpkg.com/jquery/-/jquery-4.0.0.tgz#95c33ac29005ff72ec444c5ba1cf457e61404fbb"
   integrity sha512-TXCHVR3Lb6TZdtw1l3RTLf8RBWVGexdxL6AC8/e0xZKEpBflBsjh9/8LXw+dkNFuOyW9B7iB3O1sP7hS0Kiacg==
-
-"jquery@>=3.4.0 <4.0.0":
-  version "3.7.1"
-  resolved "https://registry.yarnpkg.com/jquery/-/jquery-3.7.1.tgz#083ef98927c9a6a74d05a6af02806566d16274de"
-  integrity sha512-m4avr8yL8kmFN8psrbFFFmB/If14iN5o9nw/NgnnM+kybDJpRsAynV2BsfpTYrTRysYUdADVD7CkUUizgkpLfg==
 
 js-cookie@^3.0.1:
   version "3.0.7"
@@ -1977,11 +1957,6 @@ minimatch@^3.1.5:
   integrity sha512-VgjWUsnnT6n+NUk6eZq77zeFdpW2LWDzP6zFGrCbHXiYNul5Dzqk2HHQ5uFH2DNW5Xbp8+jVzaeNt94ssEEl4w==
   dependencies:
     brace-expansion "^1.1.7"
-
-moment@^2.9.0:
-  version "2.30.1"
-  resolved "https://registry.yarnpkg.com/moment/-/moment-2.30.1.tgz#f8c91c07b7a786e30c59926df530b4eac96974ae"
-  integrity sha512-uEmtNhbDOrWPFS+hdjFCBfy9f2YoyzRpwcl+DqpC6taX21FzsTLQVbMV/W7PzNSX6x/bhC1zA3c2UQ5NzH6how==
 
 mrmime@^2.0.0:
   version "2.0.1"
