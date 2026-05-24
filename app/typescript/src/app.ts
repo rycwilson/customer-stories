@@ -3,15 +3,19 @@ import '@hotwired/turbo';
 import * as turboCallbacks from './turbo_callbacks';
 
 import './jquery';
-import 'blueimp-file-upload';
-import 'summernote';
 
-// all needed for sortable
+// The sortable widget is used for drag-dropping, others are dependencies
+import 'jquery-ui/ui/version';
+import 'jquery-ui/ui/widget';
 import 'jquery-ui/ui/data';
 import 'jquery-ui/ui/scroll-parent';
 import 'jquery-ui/ui/widgets/mouse';
 import 'jquery-ui/ui/widgets/sortable';
 
+// The patch applied to blueimp-file-upload removes a nested version of jquery-ui that 
+// conflicted with the version of jquery-ui already in use.
+import 'blueimp-file-upload';
+import 'summernote';
 import './bootstrap';
 import './controllers';
 
