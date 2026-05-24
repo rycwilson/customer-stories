@@ -1,7 +1,7 @@
 import TomSelect from 'tom-select';
-import clearButton from 'tom-select/dist/js/plugins/clear_button';
-import removeButton from 'tom-select/dist/js/plugins/remove_button';
-import dragDrop from 'tom-select/dist/js/plugins/drag_drop';
+import clearButton from 'tom-select/dist/esm/plugins/clear_button/plugin.js';
+import removeButton from 'tom-select/dist/esm/plugins/remove_button/plugin.js';
+import dragDrop from 'tom-select/dist/esm/plugins/drag_drop/plugin.js';
 
 // do not change the 'clear_button' name, else styles won't work
 TomSelect.define('clear_button', clearButton);
