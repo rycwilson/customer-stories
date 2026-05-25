@@ -1,4 +1,5 @@
 import type DashboardController from "./dashboard_controller";
+import DataTable from 'datatables.net-bs';
 import { Controller } from "@hotwired/stimulus";
 import { getJSON } from '../utils';
 import { 
@@ -72,7 +73,7 @@ export default class ResourceController extends Controller<HTMLElement> {
   }
   
   get tableInitialized() {
-    return this.hasDatatableTarget && $.fn.dataTable.isDataTable(this.datatableTarget);
+    return this.hasDatatableTarget && DataTable.isDataTable(this.datatableTarget);
   }
 
   get sharedSearchObjects(): SearchObject[] {
