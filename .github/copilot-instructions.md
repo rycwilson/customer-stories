@@ -46,6 +46,10 @@
 
 ## Coding practices
 
+## Research behavior
+<!-- This is meant to prevent reasoning loops... -->
+- Limit tool calls (including parallel calls) to 5 steps per turn. If the task requires more, report your findings and ask for permission to continue and/or for further clarification to narrow the scope.
+
 ## Communication style
 - Prefer concise, direct answers
 - Use Markdown formatting for explanations and examples
