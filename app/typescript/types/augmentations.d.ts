@@ -23,7 +23,7 @@ declare global {
   }
 }
 
-// We need to agument this type since `restorationIdentifier` was not included.
+// We need to augment this type since `restorationIdentifier` was not included in its definition.
 // See dashboard_controller.ts and company_settings_controller.ts for usage.
 declare module '@hotwired/turbo' {
   interface Navigator {
