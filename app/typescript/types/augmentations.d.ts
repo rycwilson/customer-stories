@@ -1,4 +1,4 @@
-// The global augmentations could also be in ./global.d.ts (without the `decalre global` wrapper). 
+// The global augmentations could also be in ./global.d.ts (without need for `declare global`). 
 // They're here for the sake of organization.
 declare global {
   interface Window {

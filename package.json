@@ -2,8 +2,10 @@
   "name": "customer-stories",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
+  "author": "Ryan Wilson",
+  "license": "ISC",
   "type": "module",
+  "main": "index.js",
   "scripts": {
     "test": "vitest --run --reporter verbose",
     "build:landing-js": "esbuild app/typescript/emit/landing.js --outfile=app/assets/builds/landing/bundle.js --minify --bundle",
@@ -27,8 +29,6 @@
     "type": "git",
     "url": "git+https://github.com/dlindblodev/csp.git"
   },
-  "author": "Ryan Wilson",
-  "license": "ISC",
   "bugs": {
     "url": "https://github.com/dlindblodev/csp/issues"
   },
@@ -100,11 +100,10 @@
     "vitest": "^3.2.4"
   },
   "overrides": {
-    "blueimp-file-upload": {
-      "jquery-ui": "^1.14.0"
-    }
   },
   "notes": {
+    "jquery": "Do not upgrade to 4.0.0 as this will cause several libraries to break",
+    "blueimp-file-upload": "The patch in patches/ removes a nested version of jquery-ui that conflicted with the version of jquery-ui already in use",
     "bootstrap-switch": "3.3.4 is the last version that works with bootstrap 3: https://github.com/Bttstrp/bootstrap-switch/issues/717"
   }
 }
