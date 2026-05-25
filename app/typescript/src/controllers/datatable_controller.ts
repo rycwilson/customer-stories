@@ -8,15 +8,6 @@ import type { Api, Config } from 'datatables.net';
 // import 'datatables.net-rowgroup';
 import { deleteRow } from '../tables';
 
-// The datatables.net-rowgroup import is not successfully augmenting the Api<T> type.
-// Workaround is to just add that code here. 
-// TODO: Upgrade to Datatables 2
-declare module 'datatables.net' {
-	interface Api<T> {
-		rowGroup(): any
-	}
-}
-
 interface SearchParams {
   filters: { column: string, q: string, regEx: boolean, smartSearch: boolean }[],
   searchSelectResults?: { [column: string]: string },

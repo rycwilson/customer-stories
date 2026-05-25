@@ -1,10 +1,8 @@
-declare module 'tom-select/dist/js/plugins/clear_button';
-declare module 'tom-select/dist/js/plugins/remove_button';
-declare module 'tom-select/dist/js/plugins/drag_drop';
+// Bootoast has no type data, so need to declare its existence
 declare module 'bootoast';
 
 declare namespace ImagesLoaded {
-  // extend to include properties that aren't included in @types/imagesloaded
+  // augment to include properties that aren't included in @types/imagesloaded
   interface ImagesLoaded {
     elements: HTMLElement[];
     hasAnyBroken: boolean;
@@ -16,12 +14,6 @@ declare namespace ImagesLoaded {
 }
 
 declare var CSP: CustomerStoriesApp;
-
-interface Window {
-  $: object;
-  jQuery: object;
-  Stimulus: import("@hotwired/stimulus").Application;
-}
 
 interface CustomerStoriesApp {
   customerWins: CustomerWin[] | undefined;
@@ -86,20 +78,7 @@ type TomSelectKind = 'search' | 'curator' | 'status' | 'customer' | 'category' |
 interface StringIndexable {
   [key: string]: any;
 }
-interface JQuery<HTMLElement>{
-  tab: (action: string) => void;
-  popover: (options: object) => void;
-  modal: (action: string) => void;
-}
 
-interface JQueryStatic {
-  summernote: {
-    ui: any,
-    plugins: any,
-    range: any,
-    interface: any, 
-  }
-}
 
 interface TurboFrameAttributes {
   id: string;

@@ -1,15 +1,6 @@
 import type { Config } from 'datatables.net';
-// import 'datatables.net-rowgroup';
+// import 'datatables.net-rowgroup';  // see app/typescript/types/augmentations.d.ts
 import { minifyHtml } from '../utils';
-
-// The datatables.net-rowgroup import is not successfully augmenting the Config type.
-// Workaround is to just add that code here. 
-// TODO: Upgrade to Datatables 2
-declare module 'datatables.net' {
-	interface Config {
-		rowGroup?: any;
-	}
-}
 
 // export function toggleColumnVisibility(dt: Api<any>, rowGroupDataSource: string) {
 //   dt.column(Cols.Customer).visible(!rowGroupDataSource);
