@@ -70,7 +70,7 @@
     "tom-select": "^2.3.1"
   },
   "devDependencies": {
-    "@eslint/js": "^9.39.4",
+    "@eslint/js": "^10.0.1",
     "@stimulus/test": "^2.0.0",
     "@testing-library/dom": "^10.4.1",
     "@testing-library/jest-dom": "^6.7.0",
@@ -92,15 +92,15 @@
     "@vitest/ui": "^3.2.4",
     "concurrently": "^9.1.2",
     "esbuild": "0.19.3",
-    "eslint": "^9.39.4",
+    "eslint": "^10.4.1",
+    "globals": "^17.6.0",
     "jsdom": "^26.1.0",
     "sass": "^1.89.2",
     "typescript": "^6.0.3",
-    "typescript-eslint": "^8.59.4",
+    "typescript-eslint": "^8.60.1",
     "vitest": "^3.2.4"
   },
-  "overrides": {
-  },
+  "overrides": {},
   "notes": {
     "jquery": "Do not upgrade to 4.0.0 as this will cause several libraries to break",
     "blueimp-file-upload": "The patch in patches/ removes a nested version of jquery-ui that conflicted with the version of jquery-ui already in use",
