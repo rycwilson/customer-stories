@@ -44,16 +44,14 @@ function appFactory(): CustomerStoriesApp {
     authToken: <string>(<HTMLMetaElement>document.head.querySelector('meta[name="csrf-token"]')).getAttribute('content'),
     init() {
       Rails.start();
-      // addTurboListeners();
+      addTurboListeners(false);
     }
   }
 }
 
-function foo() {
-  console.log('foo');
-}
+function addTurboListeners(shouldAdd: boolean) {
+  if (!shouldAdd) return;
 
-function addTurboListeners() {
   document.documentElement.addEventListener('turbo:load', turboCallbacks.onLoad)
   document.documentElement.addEventListener('turbo:click', turboCallbacks.onClick)
   document.documentElement.addEventListener('turbo:before-visit', turboCallbacks.beforeVisit)
