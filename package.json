@@ -7,6 +7,7 @@
   "type": "module",
   "main": "index.js",
   "scripts": {
+    "lint": "eslint app/typescript/",
     "test": "vitest --run --reporter verbose",
     "build:landing-js": "esbuild app/typescript/emit/landing.js --outfile=app/assets/builds/landing/bundle.js --minify --bundle",
     "build:landing-css": "./sass-build.sh app/assets/stylesheets/landing/main.scss:app/assets/builds/landing/main.css",

@@ -13,6 +13,7 @@ enum Cols {
   Story
 }
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export function toggleColumnVisibility(dt: Api<any>, rowGroupDataSource: string) {
   dt.column(Cols.Contributor)
     .visible(rowGroupDataSource !== 'contributor.full_name');
