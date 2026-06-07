@@ -24,7 +24,6 @@ gem 'turbo-rails', '~> 2.0'
 gem 'view_component'
 
 # Database and caching
-gem 'faker', '~> 3.2'
 gem 'pg', '~> 1.4'
 # gem 'connection_pool'
 # gem 'dalli'
@@ -65,18 +64,21 @@ gem 'reverse_markdown', '~> 2.0'
 
 group :development, :test do
   gem 'amazing_print', '~> 2.0'
-  gem 'capybara', '~> 3.37'
   gem 'factory_bot_rails', '~> 6.2'
+  gem 'faker', '~> 3.2'
   gem 'pry-byebug', '~> 3.9'
   gem 'pry-rails', '~> 0.3'
   gem 'pry-remote'
-  gem 'rspec-rails', '~> 6.0'
-  gem 'selenium-webdriver', '~> 4.1'
-  # gem 'shoulda-matchers', '~> 5.0'
   # gem 'pry-theme'
+  gem 'rspec-rails', '~> 6.0'
 end
 
-# all gems provided by default in rails 6
+group :test do
+  gem 'capybara', '~> 3.37'
+  gem 'selenium-webdriver', '~> 4.1'
+  gem 'simplecov', '~> 0.22', require: false  
+end
+
 group :development do
   gem 'better_errors'
   gem 'binding_of_caller' # needed for better_errors advanced features
