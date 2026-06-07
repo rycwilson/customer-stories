@@ -6,8 +6,8 @@ class Admin < ApplicationRecord
 
   attr_accessor :admin_access_code
   validates :admin_access_code,
-    on: :create,
-    presence: true,
-    inclusion: { in: ["narrate_csp_admin"] }
+            on: :create,
+            presence: true,
+            inclusion: { in: ["narrate_csp_admin"] }
 
 end

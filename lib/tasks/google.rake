@@ -24,8 +24,8 @@ namespace :google do
         company.sync_gads_campaigns
         
         if [company.topic_campaign, company.retarget_campaign].all? do |c|
-            c.campaign_id.present? && c.ad_group.ad_group_id.present?
-          end
+          c.campaign_id.present? && c.ad_group.ad_group_id.present?
+        end
           
           # TODO: keep existing ads, re-use assets as much as possible
           # => give ads a name: "story 123 topic" => correlate between environments

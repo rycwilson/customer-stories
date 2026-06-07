@@ -238,7 +238,7 @@ class ContributionsController < ApplicationController
     # contributor email depends on the action (create or update)
     # note: Ruby 2.3 offers .dig method for checking hashes
     contributor_email =
-        params[:contributor].try(:[], :email) || Contribution.find(params[:id]).contributor.email
+      params[:contributor].try(:[], :email) || Contribution.find(params[:id]).contributor.email
     if OptOut.find_by(email: contributor_email)
       @flash_status = "danger"
       @flash_mesg = "Email address has opted out of Customer Stories emails"

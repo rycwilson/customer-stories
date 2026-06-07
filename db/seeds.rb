@@ -176,13 +176,13 @@ SeedData::CUSTOMERS.each do |customer_data|
       contribution = success.contributions.create!(contributor:, referrer:)
       
       template = case contributor.role
-      when 'Customer'
-        customer_template
-      when 'Customer Success'
-        customer_success_template
-      when 'Sales'
-        sales_template
-      end
+                 when 'Customer'
+                   customer_template
+                 when 'Customer Success'
+                   customer_success_template
+                 when 'Sales'
+                   sales_template
+                 end
       contribution.update!(invitation_template: template) if template
     end
 
