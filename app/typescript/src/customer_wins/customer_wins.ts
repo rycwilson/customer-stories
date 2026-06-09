@@ -1,6 +1,6 @@
 import type { Config, Api } from 'datatables.net';
 // import 'datatables.net-rowgroup';  // see app/typescript/types/augmentations.d.ts
-import { minifyHtml } from '../utils';
+import { trimHtml } from '../utils';
 
 enum Cols {
   Customer = 1,
@@ -240,7 +240,7 @@ export function actionsDropdownTemplate(
       })
       .join('')
   );
-  return minifyHtml(`
+  return trimHtml(`
     <a id="customer-win-actions-dropdown-${id}" 
       href="#" 
       class="dropdown-toggle" 

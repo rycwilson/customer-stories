@@ -188,7 +188,7 @@ function initDropdown(
   type: 'contributions' | 'placeholders', 
   contributions: Contribution[], 
   answers: ContributorAnswer[], 
-  context: object
+  _context: object
 ): JQuery<HTMLElement, any> {
   const questions = distinctObjects(answers.map(answer => answer.question), 'id');
   const ui = $.summernote.ui;

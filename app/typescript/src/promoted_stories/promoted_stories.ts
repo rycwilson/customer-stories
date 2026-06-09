@@ -1,6 +1,6 @@
 import type { Config } from 'datatables.net';
 // import 'datatables.net-rowgroup';  // see app/typescript/types/augmentations.d.ts
-import { minifyHtml } from '../utils';
+import { trimHtml } from '../utils';
 
 // export function toggleColumnVisibility(dt: Api<any>, rowGroupDataSource: string) {
 //   dt.column(Cols.Customer).visible(!rowGroupDataSource);
@@ -139,7 +139,7 @@ export function actionsDropdownTemplate(
   meta?: { row: number, col: number, settings: object }
 ): string {
   const { id, path, editPath } = ad;
-  return minifyHtml(`
+  return trimHtml(`
     <a id="promoted-story-actions-dropdown-${id}" 
       href="#" 
       class="dropdown-toggle" 

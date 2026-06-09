@@ -3,7 +3,7 @@ import type InvitationTemplateController from "./invitation_template_controller"
 import TomSelect, { tsBaseOptions, addDynamicPlaceholder } from '../tomselect';
 import type { TomOption, TomItem } from 'tom-select/dist/esm/types/core.d.ts';
 import type { CBOptions } from 'tom-select/dist/esm/plugins/clear_button/types.d.ts';
-import { kebabize, capitalize } from "../utils";
+import { convertCase, capitalize } from "../utils";
 
 export default class TomselectController extends Controller<TomSelectInput> {
   static outlets = ['invitation-template']
@@ -45,7 +45,7 @@ export default class TomselectController extends Controller<TomSelectInput> {
   }
 
   get kebabKind() { 
-    return !this.kindValue ? '' : kebabize(this.kindValue as string); 
+    return !this.kindValue ? '' : convertCase(this.kindValue as string, 'kebab'); 
   }
 
   init() {

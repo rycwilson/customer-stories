@@ -2,7 +2,7 @@ import Cookies from 'js-cookie';
 import { Controller } from '@hotwired/stimulus';
 import type DashboardController from "./dashboard_controller";
 import type ResourceController from "./resource_controller";
-import { kebabize } from '../utils';
+import { convertCase } from '../utils';
 
 export default class TableDisplayOptionsController extends Controller {
   static outlets = ['dashboard', 'customer-wins', 'contributions', 'promoted-stories', 'visitors'];
@@ -60,7 +60,7 @@ export default class TableDisplayOptionsController extends Controller {
   onChangeFilter({ target }: { target: TomSelectInput | HTMLInputElement }) {
     const filterKey = target.type === 'checkbox' ? 
       target.id : 
-      kebabize(target.dataset.tomselectKindValue);
+      convertCase(target.dataset.tomselectKindValue, 'kebab');
     const filterVal = target.type === 'checkbox' ? 
       target.checked : 
       (filterKey === 'curator' ? +target.value || null : target.value);

@@ -1,5 +1,5 @@
 import ResourceController from './resource_controller';
-import { getJSON, toSnakeCase } from '../utils';
+import { convertCase, getJSON } from '../utils';
 import { fromRatio } from 'tinycolor2';
 import { capitalize, formatPercent } from '../utils';
 
@@ -34,7 +34,7 @@ export default class VisitorsController extends ResourceController {
       'time_zone': Intl.DateTimeFormat().resolvedOptions().timeZone,
       ...Object.fromEntries(
         Object.entries(this.filtersValue).map(([key, value]) => (
-          [`visitors_${toSnakeCase(key)}`, value === null ? '' : String(value)]
+          [`visitors_${convertCase(key, 'snake')}`, value === null ? '' : String(value)]
         ))
       ) 
     });

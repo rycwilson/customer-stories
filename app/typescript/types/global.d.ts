@@ -75,10 +75,11 @@ type ScreenSize = 'xs' | 'sm' | 'md-lg';
 type TomSelectInput = HTMLSelectElement & TomInput;
 type TomSelectKind = 'search' | 'curator' | 'status' | 'customer' | 'category' | 'product' | 'story' | 'storyTag' | 'contributor' | 'referrer' | 'invitationTemplate' | 'dateRange';
 
+type StringCase = 'pascal' | 'kebab' | 'snake' | 'camel' | null;
+
 interface StringIndexable {
   [key: string]: any;
 }
-
 
 interface TurboFrameAttributes {
   id: string;

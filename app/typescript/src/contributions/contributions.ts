@@ -1,6 +1,6 @@
 import type { Config, Api } from 'datatables.net';
 // import 'datatables.net-rowgroup'; // see app/typescript/types/augmentations.d.ts
-import { minifyHtml } from '../utils';
+import { trimHtml } from '../utils';
 
 enum Cols {
   Contributor = 1,
@@ -308,7 +308,7 @@ export function actionsDropdownTemplate(
   const isPreInvite = status === 'pre_request';
   const didNotRespond = status === 'did_not_respond';
   const wasSubmitted = status && status.includes('submitted');
-  return minifyHtml(`
+  return trimHtml(`
     <a id="contributions-action-dropdown-${id}" 
       href="#" 
       class="dropdown-toggle" 
