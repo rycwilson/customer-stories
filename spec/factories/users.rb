@@ -7,6 +7,7 @@ FactoryBot.define do
     email { Faker::Internet.email }
     password { Faker::Internet.password }
     sign_up_code { 'csp_beta' }
+    confirmed_at { DateTime.now }
     skip_callbacks { true }
 
     factory :curator do
