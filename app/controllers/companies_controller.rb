@@ -4,6 +4,11 @@ class CompaniesController < ApplicationController
   before_action :set_company, except: %i[new create promote get_curators get_invitation_templates]
 
   def new
+    if current_user&.company.present?
+      redirect_to edit_company_url(subdomain: current_user.company.subdomain)
+      return
+    end
+    
     @company = Company.new
     render :edit
   end
