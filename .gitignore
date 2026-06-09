@@ -10,6 +10,7 @@
 /tmp
 /yarn-error.log
 /.sass-cache
+/coverage
 
 # dependencies
 /node_modules
