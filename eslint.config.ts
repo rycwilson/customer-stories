@@ -25,4 +25,22 @@ export default defineConfig([
     extends: ["js/recommended", ...tseslint.configs.recommended],
     languageOptions: { globals: globals.browser },
   },
+
+  {
+    files: ["app/typescript/**/*.ts"],
+    rules: {
+      // Allow unused variables (in some cases) when their names begin with an underscore.
+      // This is a common convention for indicating that a variable is intentionally unused, 
+      "no-unused-vars": "off",
+      "@typescript-eslint/no-unused-vars": [
+        "error",
+        {
+          "varsIgnorePattern": "^_",
+          "argsIgnorePattern": "^_",
+          "caughtErrorsIgnorePattern": "^_",
+          "destructuredArrayIgnorePattern": "^_",
+        }
+      ]
+    }
+  }
 ]);
