@@ -56,7 +56,7 @@ export function validateForm(e: SubmitEvent): boolean {
     isValid = formControlIsValid(control) && isValid;
   });
 
-  // The "was-validated" class comes from tomselect and is necessary because tomselect 
+  // The "was-validated" class comes from tom-select and is necessary because tom-select 
   // will add the "invalid" class for blank required fields whether or not validation has occurred
   form.classList.add('was-validated');
 

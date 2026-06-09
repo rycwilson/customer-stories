@@ -11,7 +11,7 @@ import {
   distinctObjects,
   parseDatasetObject,
   setCustomButtonProps,
-} from '../src/utils';
+} from '../../src/utils';
 
 describe('parseDatasetObject', () => {
   let el: HTMLElement;

@@ -47,13 +47,13 @@ describe('convertCase', () => {
       expect(convertCase(input, targetCase)).toBe(caseExamples[targetCase]);
     })
   )
-  it('converts pascal/kebab/snake to camel case correctly', convertsTo('camel'));
+  it('converts to camel case correctly', convertsTo('camel'));
 
-  it('converts kebab/snake/camel to pascal case correctly', convertsTo('pascal'));
+  it('converts to pascal case correctly', convertsTo('pascal'));
 
-  it('converts snake/camel/pascal to kebab case correctly', convertsTo('kebab'));
+  it('converts to kebab case correctly', convertsTo('kebab'));
 
-  it('converts camel/pascal/kebab to snake case correctly', convertsTo('snake'));
+  it('converts to snake case correctly', convertsTo('snake'));
 
   it('returns the input when input is an unsupported format', () => {
     const unsupported = ['has spaces', 'has-mixedCase', '', '123startsWithNumber', 'special$chars'];
