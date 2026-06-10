@@ -62,7 +62,7 @@ gem 'reverse_markdown', '~> 2.0'
 # gem 'local_time'
 # gem 'multi_json'
 
-group :development, :test do
+group :test, :development do
   gem 'amazing_print', '~> 2.0'
   gem 'factory_bot_rails', '~> 6.2'
   gem 'faker', '~> 3.2'

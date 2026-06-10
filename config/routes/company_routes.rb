@@ -36,7 +36,7 @@ authenticate(:user) do
       resources :results, only: %i[create destroy]
       collection { post '/import', to: 'successes#import' }
     end
-    resources :stories, only: %i[new edit create update destroy], shallow: true
+    resources :stories, except: %i[index show], shallow: true
     # resources :stories, only: [:create]
     resources :contributions, except: %i[new update], shallow: true do
       # need to distinguish '/contributions/:id' routes from '/contributions/:token' routes;

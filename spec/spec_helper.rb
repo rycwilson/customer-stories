@@ -104,5 +104,6 @@ RSpec.configure do |config|
   config.before(:each, type: :system) do
     # default object is the example instance
     driven_by :selenium_chrome_headless
+    # driven_by :selenium_chrome_headless, using: :headless_chrome, screen_size: [1400, 1400]
   end
 end

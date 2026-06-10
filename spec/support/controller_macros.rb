@@ -1,3 +1,4 @@
+# These are controller test patterns, hence not presently used
 module ControllerMacros
   def login_admin
     before(:each) do
