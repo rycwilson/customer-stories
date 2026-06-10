@@ -1,52 +1,76 @@
 require 'rails_helper'
 
-RSpec.configure do |config|
-  config.include Rails.application.routes.url_helpers, type: :request
-end
-
 RSpec.describe 'Companies', type: :request do
   let(:company) do 
+    # Exception handling was added as sometimes the company factory will create an invalid subdomain
     begin
       create(:company)
     rescue ActiveRecord::RecordInvalid => e
       binding.pry
     end
   end
-  let(:curator) { create(:curator, company_id: company.id) }
+  let(:curator) { create(:curator, company:) }
 
-  shared_examples 'company document' do |path|
-    before { get root_url(subdomain: company.subdomain) + path }
-
+  shared_examples 'html document' do
     it 'loads successfully' do
-      # get root_url(subdomain: company.subdomain) + path
       expect(response).to have_http_status(:ok)
       expect(response.content_type).to eq('text/html; charset=utf-8')
-      expect(response.body).to match(/<title>Customer Stories: Account (Dashboard|Settings)<\/title>/)
     end
   end
 
-  shared_examples 'redirect to auth' do |path|
+  shared_examples 'dashboard tab' do |path|
+    before { get root_url(subdomain: company.subdomain) + path }
+    
+    it_behaves_like 'html document'
+
+    it 'loads the dashboard page' do
+      expect(response.body).to match(/<title>Customer Stories: Account Dashboard<\/title>/)
+    end
+
+    it 'activates the correct tab/panel pair' do
+      assert_select(
+        "a[aria-controls=\"#{path}\"][aria-expanded=\"true\"][href=\"##{path}\"][role=\"tab\"]",
+        text: path.capitalize
+      )
+      assert_select "div[id=\"#{path}\"][class*=\"active\"][role=\"tabpanel\"]"
+    end
+  end
+
+  shared_examples 'redirect to sign-in' do |path|
+    before { get root_url(subdomain: company.subdomain) + path }
+
     it 'redirects to the sign in page' do
-      get root_url(subdomain: company.subdomain) + path
-      expect(response).to redirect_to(new_user_session_url(subdomain: company.subdomain))
+      default_sign_in_url = new_user_session_url(subdomain: company.subdomain)
+      custom_sign_in_url = new_csp_user_session_url(subdomain: company.subdomain)
+      expect(response).to redirect_to(default_sign_in_url)
+      follow_redirect!
+      expect(response).to redirect_to(custom_sign_in_url)
     end
   end
 
-  context 'when curator is signed in' do
-    before { sign_in(curator) }
+  context 'when user is authenticated' do
+    before { sign_in curator }
 
-    describe('GET /prospect') { it_behaves_like 'company document', 'prospect' }
-    describe('GET /curate') { it_behaves_like 'company document', 'curate' }
-    describe('GET /promote') { it_behaves_like 'company document', 'promote' }
-    describe('GET /measure') { it_behaves_like 'company document', 'measure' }
-    describe('GET /settings') { it_behaves_like 'company document', 'settings' }
+    %w[curate promote measure].each do |path|
+      describe("GET /#{path}") { it_behaves_like 'dashboard tab', path }
+    end
+
+    # Tab navigation on the settings page is handled with page fragments and cookies,
+    # so can't test here
+    describe('GET /settings') do
+      before { get "#{root_url(subdomain: company.subdomain)}settings" }
+
+      it_behaves_like 'html document'
+
+      it 'loads the account settings page' do
+        expect(response.body).to match(/<title>Customer Stories: Account Settings<\/title>/)
+      end
+    end
   end
 
-  context 'when curator is not signed in' do
-    describe('GET /prospect') { it_behaves_like 'redirect to auth', 'prospect' }
-    describe('GET /curate') { it_behaves_like 'redirect to auth', 'curate' }
-    describe('GET /promote') { it_behaves_like 'redirect to auth', 'promote' }
-    describe('GET /measure') { it_behaves_like 'redirect to auth', 'measure' }
-    describe('GET /settings') { it_behaves_like 'redirect to auth', 'settings' }
+  context 'when user is not authenticated' do
+    %w[curate promote measure settings].each do |path|
+      describe("GET /#{path}") { it_behaves_like 'redirect to sign-in', path }
+    end
   end
 end
