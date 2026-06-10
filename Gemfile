@@ -70,7 +70,7 @@ group :development, :test do
   gem 'pry-rails', '~> 0.3'
   gem 'pry-remote'
   # gem 'pry-theme'
-  gem 'rspec-rails', '~> 6.0'
+  gem 'rspec-rails', '~> 7.0'
 end
 
 group :test do
