@@ -9,6 +9,7 @@
   "scripts": {
     "lint": "eslint app/typescript/",
     "test": "vitest --run --reporter verbose",
+    "coverage": "vitest run --coverage --reporter=lcov",
     "build:landing-js": "esbuild app/typescript/emit/landing.js --outfile=app/assets/builds/landing/bundle.js --minify --bundle",
     "build:landing-css": "./sass-build.sh app/assets/stylesheets/landing/main.scss:app/assets/builds/landing/main.css",
     "build:app-js": "esbuild app/typescript/emit/app.js --outfile=app/assets/builds/app/bundle.js --minify --bundle",
@@ -89,8 +90,8 @@
     "@types/rails__ujs": "^6.0.2",
     "@types/summernote": "^0.8.8",
     "@types/tinycolor2": "^1.4.6",
-    "@vitest/coverage-v8": "^4.1.8",
-    "@vitest/ui": "^3.2.4",
+    "@vitest/coverage-v8": "~>4.0",
+    "@vitest/ui": "~>4.0",
     "concurrently": "^9.1.2",
     "esbuild": "0.19.3",
     "eslint": "^10.4.1",
@@ -100,7 +101,7 @@
     "sass": "^1.89.2",
     "typescript": "^6.0.3",
     "typescript-eslint": "^8.60.1",
-    "vitest": "^3.2.4"
+    "vitest": "~>4.0"
   },
   "overrides": {},
   "notes": {
