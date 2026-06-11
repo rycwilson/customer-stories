@@ -18,7 +18,7 @@ RSpec.describe 'Contributions', type: :request do
         headers: { Accept: 'application/json' }
       )
     end
-    it_behaves_like 'a json endpoint'
+    it_behaves_like 'a json response'
   end
 
   describe 'GET /successes/:success_id/contributions' do
@@ -28,7 +28,7 @@ RSpec.describe 'Contributions', type: :request do
         headers: { Accept: 'application/json' }
       )
     end
-    it_behaves_like 'a json endpoint'
+    it_behaves_like 'a json response'
   end
   
   it 'GET contributions#new' do

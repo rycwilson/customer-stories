@@ -15,7 +15,7 @@ RSpec.describe 'Companies', type: :request do
   shared_examples 'a dashboard visit' do |path|
     before { get root_url(subdomain: company.subdomain) + path }
     
-    it_behaves_like 'an html document'
+    it_behaves_like 'an html response'
 
     it 'loads the dashboard page' do
       expect(response.body).to match(/<title>Customer Stories: Account Dashboard<\/title>/)
@@ -43,7 +43,7 @@ RSpec.describe 'Companies', type: :request do
     describe('GET /settings') do
       before { get "#{root_url(subdomain: company.subdomain)}settings" }
 
-      it_behaves_like 'an html document'
+      it_behaves_like 'an html response'
 
       it 'loads the account settings page' do
         expect(response.body).to match(/<title>Customer Stories: Account Settings<\/title>/)
