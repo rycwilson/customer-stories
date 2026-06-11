@@ -1,5 +1,3 @@
-= render('shared/navbars/stories_header', { company: @company, story: nil, is_preview: false })
-
 - if @is_dashboard
   = turbo_frame_tag('stories')
     = render( \
@@ -11,6 +9,7 @@
           is_dashboard: true })
 
 - else
+  = render('shared/navbars/stories_header', { company: @company, story: nil, is_preview: false })
   .container
     = render( \
         'stories/shared/search_and_filters_xs_sm',
