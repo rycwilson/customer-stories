@@ -5,7 +5,7 @@ class CompaniesController < ApplicationController
 
   def new
     if current_user&.company.present?
-      redirect_to edit_company_url(subdomain: current_user.company.subdomain)
+      redirect_to root_url(subdomain: current_user.company.subdomain)
       return
     end
     
