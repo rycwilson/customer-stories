@@ -56,6 +56,31 @@
   }
 }
 
+@mixin outline-button($color: $brand-primary) {
+  // align text color changes with border color changes
+  // see [path to bootstrap-sass]/assets/stylesheets/bootstrap/_mixins.scss
+  &:focus,
+  &.focus {
+    color: darken($color, 25%);
+  }
+
+  &:hover {
+    color: darken($color, 12%);
+  }
+
+  &:active,
+  &.active,
+  .open > &.dropdown-toggle {
+    color: darken($color, 12%);
+
+    &:hover,
+    &:focus,
+    &.focus {
+      color: darken($color, 25%);
+    }
+  }
+}
+
 .btn-default {
   // 2% is the different between the default background (#fff) and $light-gray
   @include button-variant(darken($btn-default-color, 2%), $light-gray, darken($btn-default-border, 2%));
@@ -67,29 +92,7 @@
 
 .btn-secondary {
   @include button-variant($brand-primary, $light-gray, $brand-primary);
-
-  // align text color changes with border color changes
-  // see [path to bootstrap-sass]/assets/stylesheets/bootstrap/_mixins.scss
-  &:focus,
-  &.focus {
-    color: darken($brand-primary, 25%);
-  }
-
-  &:hover {
-    color: darken($brand-primary, 12%);
-  }
-
-  &:active,
-  &.active,
-  .open > &.dropdown-toggle {
-    color: darken($brand-primary, 12%);
-
-    &:hover,
-    &:focus,
-    &.focus {
-      color: darken($brand-primary, 25%);
-    }
-  }
+  @include outline-button($brand-primary);
 }
 
 // only change to bootstrap is to make the border the same color as the background
@@ -107,4 +110,9 @@
 
 .btn-danger {
   @include button-variant($btn-danger-color, $btn-danger-bg, $btn-danger-bg);
+}
+
+.btn-danger--outline {
+  @include button-variant($btn-danger-bg, $light-gray, $btn-danger-bg);
+  @include outline-button($btn-danger-bg);
 }

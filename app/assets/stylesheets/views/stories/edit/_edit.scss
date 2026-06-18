@@ -290,6 +290,8 @@
 }
 
 .story-settings__publish {
+  margin-bottom: 4rem;
+
   :last-child > div {
     display: flex;
     justify-content: space-around;
@@ -302,6 +304,12 @@
         font-weight: normal;
       }
     }
+  }
+}
+
+.story-settings__remove {
+  button {
+    padding: 8px 16px;
   }
 }
 
