@@ -4,7 +4,7 @@
 
 Rails.application.routes.default_url_options = {
   protocol: Rails.env.production? ? 'https' : 'http',
-  host: ENV['HOST_NAME']
+  host: ENV.fetch('HOST_NAME', nil)
 }
 
 Rails.application.routes.draw do
