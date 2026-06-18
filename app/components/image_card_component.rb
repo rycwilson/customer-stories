@@ -29,7 +29,7 @@ class ImageCardComponent < ViewComponent::Base
   end
 
   def image_replaceable?
-    @model.in?(%w[User Company Customer]) || default_ad_image?
+    @model.in?(%w[User Company Customer Story]) || default_ad_image?
   end
 
   def default_ad_image?
@@ -51,6 +51,8 @@ class ImageCardComponent < ViewComponent::Base
         'https://placehold.co/128x128/e2e3e3/777?font=open+sans&text=%E2%89%A5%20128%C3%97128'
       when 'LandscapeLogo'
         'https://placehold.co/512x128/e2e3e3/999?font=open+sans&text=%E2%89%A5%20512%C3%97128'
+      when 'OpenGraph'
+        'https://placehold.co/1200x630/e2e3e3/777?font=open+sans&text=%E2%89%A5%201200%C3%97630'
       else 
         ''
       end
@@ -71,14 +73,14 @@ class ImageCardComponent < ViewComponent::Base
   end
   
   def parent_form_id
-    return nil unless @model.in?(%w[User Customer])
+    return nil unless @model.in?(%w[User Customer Story])
 
-    case @model
-    when 'User'
-      '#user-profile-form'
-    when 'Customer'
-      '#customer-form'
-    end
+    form_ids = {
+      'User' => '#user-profile-form',
+      'Customer' => '#customer-form',
+      'Story' => '#story-settings-form'
+    }
+    form_ids[@model]
   end
 
   def ads_target
@@ -114,6 +116,11 @@ class ImageCardComponent < ViewComponent::Base
         width: AdwordsAd::RESPONSIVE_AD_LANDSCAPE_LOGO_MIN&.split('x').try(:[], 0).to_i,
         height: AdwordsAd::RESPONSIVE_AD_LANDSCAPE_LOGO_MIN&.split('x').try(:[], 1).to_i,
         aspect_ratio: AdwordsAd::RESPONSIVE_AD_LANDSCAPE_LOGO_ASPECT_RATIO
+      },
+      'OpenGraph' => {
+        width: 1200,
+        height: 630,
+        aspect_ratio: 1.91
       }
     }
     type ? min_dimensions[type] : min_dimensions
