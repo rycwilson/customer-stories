@@ -13,8 +13,8 @@
 
   .form-group
     .visible-sm-block.visible-md-block.col-sm-12
-      = form.label(:title)
-    = form.label(:title, class: 'control-label visible-lg-inline-block col-lg-2')
+      = form.label(:title, 'Title')
+    = form.label(:title, 'Title', class: 'control-label visible-lg-inline-block col-lg-2')
     .col-sm-12.col-lg-10
       = form.text_field(:title, id: 'story-title-lg', class: 'form-control', data: { story_target: 'titleInput' })
 
@@ -52,8 +52,8 @@
   
   .form-group 
     .visible-sm-block.visible-md-block.col-sm-12
-      = form.label(:narrative, 'Story body')
-    = form.label(:narrative, 'Story body', class: 'control-label visible-lg-inline-block col-lg-2')
+      = form.label(:narrative, 'Body')
+    = form.label(:narrative, 'Body', class: 'control-label visible-lg-inline-block col-lg-2')
     .col-sm-12.col-lg-10
       = form.text_area( \
           :narrative,

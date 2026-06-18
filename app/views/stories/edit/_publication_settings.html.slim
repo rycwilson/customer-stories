@@ -1,24 +1,13 @@
-/ format: :json,
 = form_with( \
     model: story,
+    id: 'story-settings-form',
+    class: 'form-horizontal', 
+    data: { asset_host: Rails.application.config.asset_host }, 
     html: { \
-      id: 'story-settings-form',
-      class: 'form-horizontal', 
-      autocomplete: 'off',
-      data: { \
-        asset_host: Rails.application.config.asset_host }}) do |story_form|
+      novalidate: true,
+      autocomplete: 'off' }) do |story_form|
 
   = story_form.fields_for(:success) do |success_form|
-
-    .form-group
-      .visible-sm-block.col-sm-12
-        = success_form.label(:cta_ids, 'CTAs')
-      = success_form.label( \
-          :cta_ids, 'CTAs',
-          class: 'control-label visible-md-inline-block visible-lg-inline-block col-md-4')
-      .col-sm-12.col-md-8
-        = render('stories/edit/select_cta_ids', { company:, form: success_form })
-        
     .form-group
       .visible-sm-block.col-sm-12
         = success_form.label(:story_category_ids, 'Category Tags')
@@ -27,9 +16,17 @@
           'Category Tags',
           class: 'control-label visible-md-inline-block visible-lg-inline-block col-md-4')
       .col-sm-12.col-md-8
-        = render( \
-            'stories/shared/select_story_tags', 
-            { company:, success_form:, tag_ids: :story_category_ids, company_tags: company.story_categories })
+        = success_form.collection_select( \
+            :story_category_ids,
+            company.story_categories,
+            :id,
+            :name,
+            {},
+            { multiple: true,
+              class: 'form-control',
+              data: { \
+                controller: 'tomselect',
+                tomselect_kind_value: 'category' }}) 
 
     .form-group
       .visible-sm-block.col-sm-12
@@ -39,26 +36,98 @@
           'Product Tags',
           class: 'control-label visible-md-inline-block visible-lg-inline-block col-md-4')
       .col-sm-12.col-md-8
-        = render( \
-            'stories/shared/select_story_tags', 
-            { company:, success_form:, tag_ids: :product_ids, company_tags: company.products })
+        = success_form.collection_select( \
+            :product_ids,
+            company.products,
+            :id,
+            :name,
+            {},
+            { multiple: true,
+              class: 'form-control',
+              data: { \
+                controller: 'tomselect',
+                tomselect_kind_value: 'product' }})
+    
+    .form-group
+      .visible-sm-block.col-sm-12
+        = success_form.label(:cta_ids, 'CTAs')
+      = success_form.label( \
+          :cta_ids, 'CTA Links & Forms',
+          class: 'control-label visible-md-inline-block visible-lg-inline-block col-md-4')
+      .col-sm-12.col-md-8
+        = success_form.grouped_collection_select( \
+            :cta_ids,
+            company.ctas.group_by(&:type).map do |type, ctas| [type == 'CtaLink' ? 'Links' : 'Web Forms', ctas] end,
+            :second,
+            :first,
+            :id,
+            :display_text,
+            {},
+            { multiple: true,
+              class: 'form-control',
+              data: { \
+                controller: 'tomselect',
+                tomselect_kind_value: 'cta' }})
 
   .og-tags.row
     .visible-sm-block.col-sm-12
-      label Open Graph Tags
-    label.control-label.visible-md-inline-block.visible-lg-inline-block.col-md-4 Open Graph Tags
+      label Open Graph Data
+    label.control-label.visible-md-inline-block.visible-lg-inline-block.col-md-4 Open Graph Data
     .col-sm-12.col-md-8
-      = render('stories/edit/og_meta_tags', { story:, story_form: })
+      .og-tags__background
+        .form-group
+          .col-sm-12
+            = story_form.label(:og_title, 'Title')
+            = story_form.text_field(:og_title, class: 'form-control', placeholder: 'og:title')
+        .form-group
+          .col-sm-12
+            = story_form.label(:og_description, 'Description')
+            = story_form.text_area(:og_description, class: 'form-control', rows: 3, placeholder: 'og:description')
+        .form-group
+          .col-sm-12
+            = story_form.label(:og_image_url, 'Image')
+            = render( \
+                ImageCardComponent.new( \
+                  'Story', 
+                  image_data: { type: 'OpenGraph', url: story.og_image_url } )) do
+              = story_form.hidden_field( \
+                  :og_image_url,
+                  disabled: true,
+                  data: { image_card_target: 'input urlInput' })
 
   .hidden-link.form-group
     .visible-sm-block.col-sm-12
-      = story_form.label(:hidden_link, 'Hidden Link')
+      = story_form.label(:hidden_link, 'Early Access URL')
     = story_form.label( \
         :hidden_link,
-        'Hidden Link',
+        'Early Access URL',
         class: 'control-label visible-md-inline-block visible-lg-inline-block col-md-4')
     .col-sm-12.col-md-8
-      = render('stories/edit/hidden_link', { story:, form: story_form })
+      .input-group
+        = story_form.text_field( \
+            :hidden_link,
+            { class: 'form-control',
+              placeholder: 'Click the Refresh button to generate a URL',
+              readonly: true,
+              data: { story_target: 'hiddenLinkInput' }})
+        span.input-group-btn
+          button.hidden-link__refresh.btn.btn-default {
+            type="button"
+            style="border-radius: 0; border-left: 0"
+            data-controller="tooltip"
+            data-tooltip-options-value={ title: 'Refresh', container: 'body', placement: 'top' }.to_json
+            data-action="story#refreshHiddenLink" }
+            i.fa.fa-refresh
+        span.input-group-btn
+          button.hidden-link__copy.btn.btn-default {
+            type="button"
+            class=('disabled' if story.hidden_link.blank?)
+            data-controller="tooltip"
+            data-tooltip-options-value={ title: 'Copy', container: 'body', placement: 'top' }.to_json
+            data-story-target="hiddenLinkCopyBtn" }
+            i.fa.fa-clipboard
+      span.help-block style="margin-bottom: 0"
+        | Share a private link to the story before publishing. Refreshing will invalidate any previous links.
 
   .story-settings__publish.form-group
     .visible-sm-block.col-sm-12
@@ -69,7 +138,22 @@
         - [:logo_published, :preview_published, :published].each do |field|
           = render('stories/edit/publish_switch', { story_form:, field: })
 
-  .row.hidden-xs
+  .story-settings__remove.form-group
+    .visible-sm-block.col-sm-12
+      label Remove
+    label.control-label.visible-md-inline-block.visible-lg-inline-block.col-md-4 Remove
+    .col-sm-12.col-md-8
+      div style="display:flex; justify-content:space-evenly"
+        button.btn.btn-secondary type="button"
+          i.fa.fa-fw.fa-archive
+          | &nbsp;&nbsp;
+          | Archive this Story
+        button.btn.btn-danger--outline type="button" data-action="story#onClickDelete"
+          i.fa.fa-fw.fa-trash
+          | &nbsp;&nbsp;
+          | Delete this Story
+
+  .row.hidden-xs.hidden
     .col-sm-12.col-md-offset-4.col-md-8
       = story_form.submit('Save changes', class: 'btn btn-success')
 
