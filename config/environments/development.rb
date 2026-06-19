@@ -5,6 +5,8 @@ Rails.application.configure do
 
   config.hosts << '.lvh.me'
   # config.hosts += ['.lvh.me', /.*\.nip\.io/]
+  
+  config.log_level = :info  # :debug, :warn, :error, :fatal, :unknown
 
   # for viewing via mobile on local network:
   # get localhost IP from system preferences => network (here it's 192.168.1.3)
