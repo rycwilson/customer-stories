@@ -1,8 +1,15 @@
+/= turbo_frame_tag('story-settings-frame') do
+
 = form_with( \
     model: story,
     id: 'story-settings-form',
     class: 'form-horizontal', 
-    data: { asset_host: Rails.application.config.asset_host }, 
+    data: { \
+      controller: 'toast',
+      story_target: 'settingsForm',
+      toast_flash_value: (flash.to_h if flash.any? && turbo_frame_request_id == 'story-settings-frame'),
+      toast_errors_value: (@errors if @errors.present? && turbo_frame_request_id == 'story-settings-frame'),
+      action: 'change->story#updateSettings' },
     html: { \
       novalidate: true,
       autocomplete: 'off' }) do |story_form|
@@ -18,15 +25,16 @@
       .col-sm-12.col-md-8
         = success_form.collection_select( \
             :story_category_ids,
-            company.story_categories,
+            company.story_categories.sort_by(&:name),
             :id,
             :name,
-            {},
+            { include_blank: story.category_tags.empty? },
             { multiple: true,
               class: 'form-control',
               data: { \
                 controller: 'tomselect',
-                tomselect_kind_value: 'category' }}) 
+                tomselect_kind_value: 'category',
+                dynamic_placeholder: 'Select tags' } }) 
 
     .form-group
       .visible-sm-block.col-sm-12
@@ -41,12 +49,13 @@
             company.products,
             :id,
             :name,
-            {},
+            { include_blank: story.product_tags.empty? },
             { multiple: true,
               class: 'form-control',
               data: { \
                 controller: 'tomselect',
-                tomselect_kind_value: 'product' }})
+                tomselect_kind_value: 'product',
+                dynamic_placeholder: 'Select tags' } })
     
     .form-group
       .visible-sm-block.col-sm-12
@@ -57,17 +66,20 @@
       .col-sm-12.col-md-8
         = success_form.grouped_collection_select( \
             :cta_ids,
-            company.ctas.group_by(&:type).map do |type, ctas| [type == 'CtaLink' ? 'Links' : 'Web Forms', ctas] end,
+            company.ctas.group_by(&:type).map do |type, ctas| \
+              [type == 'CtaLink' ? 'Links' : 'Web Forms', ctas.sort_by(&:display_text)] \
+            end,
             :second,
             :first,
             :id,
             :display_text,
-            {},
+            { include_blank: true },
             { multiple: true,
               class: 'form-control',
               data: { \
                 controller: 'tomselect',
-                tomselect_kind_value: 'cta' }})
+                tomselect_kind_value: 'cta',
+                dynamic_placeholder: 'Select CTAs' } })
 
   .og-tags.row
     .visible-sm-block.col-sm-12
@@ -148,14 +160,19 @@
           i.fa.fa-fw.fa-archive
           | &nbsp;&nbsp;
           | Archive this Story
-        button.btn.btn-danger--outline type="button" data-action="story#onClickDelete"
+        /button.btn.btn-danger--outline type="button" data-action="story#onClickDelete"
           i.fa.fa-fw.fa-trash
           | &nbsp;&nbsp;
           | Delete this Story
-
-  .row.hidden-xs.hidden
-    .col-sm-12.col-md-offset-4.col-md-8
-      = story_form.submit('Save changes', class: 'btn btn-success')
+        = link_to( \
+            story_path(story),
+            class: 'btn btn-danger--outline',
+            data: { \
+              turbo_method: 'delete',
+              turbo_confirm: 'Are you sure you want to delete this Story? This action cannot be undone.' }) do
+            i.fa.fa-fw.fa-trash
+            | &nbsp;&nbsp;
+            | Delete this Story
 
 / #story-settings__ads-inputs
     topic

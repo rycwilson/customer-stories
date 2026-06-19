@@ -98,9 +98,7 @@ class StoriesController < ApplicationController
       end
     end
 
-    # since a stories layout exists and will be used here by default,
-    # must explicitly specify application layout and layout: false for turbo frame requests
-    render(layout: turbo_frame_request? ? false : 'application')
+    render(layout: 'application')   # override stories layout for dashboard view
   end
 
   def create
@@ -115,77 +113,100 @@ class StoriesController < ApplicationController
   end
 
   def update
-    # puts 'stories#update'
-    # awesome_print(story_params.to_h)
+    # puts 'stories#update'e
+    puts JSON.pretty_generate(story_params.to_h)
+
     @story = Story.friendly.find(params[:id])
 
-    # the video url in standardized format is sent in a hidden field
-    params[:story][:video_url] = params[:story][:formatted_video_url] if params[:story][:video_url]
-    @story.update(story_params)
-    redirect_to edit_story_path(@story) and return
-
-    # @story = Story.find_by_id params[:id]
-    if params[:settings]
-      @story.success.cta_ids = params[:ctas]
-      if @story.update(story_params)
-        # TODO: a better way of handling google errors
-        # => only way to get errors back from the associated ad is to validate it,
-        #    but present scheme dictates that the ad exists even if it has no ad_id
-        #    (and that's how it would be validated: presence of ad_id)
-        # => adding errors to self.story.errors[:base] doesn't seem to work
-        # => if all companies push to google regardless of promote_tr?,
-        #     model validations can be made easier by checking for AdwordsAd.ad_id on create
-      else
-      end
+    # As things currently stand we can expect that `turbo_frame_request?` will always be true here
+    if @story.update story_params
+      flash.now[:notice] = 'Story was updated.'
       respond_to do |format|
-        format.js do
-          # 's3DirectPostFields' => @story.previous_changes[:og_image_url] && set_s3_direct_post.fields,
-          @res_data = {
-            'story' => @story.as_json({
-                                        only: %i[id title slug logo_published preview_published published],
-                                        methods: [:csp_story_path],
-                                        include: {
-                                          success: {
-                                            only: [],
-                                            include: {
-                                              customer: { only: [:name] }
-                                            }
-                                          }
-                                        }
-                                      }),
-            'storyErrors' => @story.errors.full_messages,
-            'storyWasPublished' => @story.previous_changes[:published].try(:[], 1) && 'Story published',
-            'previewStateChanged' => (@story.previous_changes[:logo_published].try(:[], 1) && 'Logo published') ||
-                                     (@story.previous_changes[:logo_published].try(:[], 0) && 'Logo unpublished') ||
-                                     (@story.previous_changes[:preview_published].try(:[], 1) && 'Preview published') ||
-                                     (@story.previous_changes[:preview_published].try(:[], 0) && 'Preview unpublished'),
-            'publishStateChanged' => (@story.previous_changes[:published].try(:[], 1) && 'Story published') ||
-                                     (@story.previous_changes[:published].try(:[], 0) && 'Story unpublished')
-            # 'promoteEnabled' => @story.company.promote_tr?,
-            # 'newAds' => new_ads(@story, story_params.to_h),
-            # 'gadsWereCreated' => gads_were_created?(@story, story_params.to_h),
-            # 'gadsErrors' => gads_errors?(@story, story_params.to_h),
-            # 'adsWereDestroyed' => ads_were_destroyed?(story_params.to_h),
-            # 'gadsWereRemoved' => gads_were_removed?(@story, story_params.to_h),
-          }
-          render({ action: 'edit/settings/update' })
+        # Don't re-render the form as this may cause multi-select options to shift around
+        format.turbo_stream do
+          render turbo_stream: turbo_stream.replace('toaster', partial: 'shared/toaster')
         end
+        format.html { head :no_content }
       end
-
-    elsif params[:story][:form] == 'content'
-      # the video url in standardized format is sent in a hidden field
-      params[:story][:video_url] = params[:story][:formatted_video_url]
-      @story.update(story_params)
-      respond_to do |format|
-        format.js { render({ action: 'edit/content/update' }) }
-      end
+    else
+      @errors = @story.errors.full_messages
+      render(
+        partial: frame_partials[turbo_frame_request_id], 
+        locals: { company: @company, story: @story },
+        layout: false, 
+        status: :unprocessable_entity
+      )
     end
+
+    
+    # the video url in standardized format is sent in a hidden field
+    # params[:story][:video_url] = params[:story][:formatted_video_url] if params[:story][:video_url]
+    # @story.update(story_params)
+    # redirect_to edit_story_path(@story) and return
+
+    # # @story = Story.find_by_id params[:id]
+    # if params[:settings]
+    #   @story.success.cta_ids = params[:ctas]
+    #   if @story.update(story_params)
+    #     # TODO: a better way of handling google errors
+    #     # => only way to get errors back from the associated ad is to validate it,
+    #     #    but present scheme dictates that the ad exists even if it has no ad_id
+    #     #    (and that's how it would be validated: presence of ad_id)
+    #     # => adding errors to self.story.errors[:base] doesn't seem to work
+    #     # => if all companies push to google regardless of promote_tr?,
+    #     #     model validations can be made easier by checking for AdwordsAd.ad_id on create
+    #   else
+    #   end
+    #   respond_to do |format|
+    #     format.js do
+    #       # 's3DirectPostFields' => @story.previous_changes[:og_image_url] && set_s3_direct_post.fields,
+    #       @res_data = {
+    #         'story' => @story.as_json({
+    #                                     only: %i[id title slug logo_published preview_published published],
+    #                                     methods: [:csp_story_path],
+    #                                     include: {
+    #                                       success: {
+    #                                         only: [],
+    #                                         include: {
+    #                                           customer: { only: [:name] }
+    #                                         }
+    #                                       }
+    #                                     }
+    #                                   }),
+    #         'storyErrors' => @story.errors.full_messages,
+    #         'storyWasPublished' => @story.previous_changes[:published].try(:[], 1) && 'Story published',
+    #         'previewStateChanged' => (@story.previous_changes[:logo_published].try(:[], 1) && 'Logo published') ||
+    #                                  (@story.previous_changes[:logo_published].try(:[], 0) && 'Logo unpublished') ||
+    #                                  (@story.previous_changes[:preview_published].try(:[], 1) && 'Preview published') ||
+    #                                  (@story.previous_changes[:preview_published].try(:[], 0) && 'Preview unpublished'),
+    #         'publishStateChanged' => (@story.previous_changes[:published].try(:[], 1) && 'Story published') ||
+    #                                  (@story.previous_changes[:published].try(:[], 0) && 'Story unpublished')
+    #         # 'promoteEnabled' => @story.company.promote_tr?,
+    #         # 'newAds' => new_ads(@story, story_params.to_h),
+    #         # 'gadsWereCreated' => gads_were_created?(@story, story_params.to_h),
+    #         # 'gadsErrors' => gads_errors?(@story, story_params.to_h),
+    #         # 'adsWereDestroyed' => ads_were_destroyed?(story_params.to_h),
+    #         # 'gadsWereRemoved' => gads_were_removed?(@story, story_params.to_h),
+    #       }
+    #       render({ action: 'edit/settings/update' })
+    #     end
+    #   end
+
+    # elsif params[:story][:form] == 'content'
+    #   # the video url in standardized format is sent in a hidden field
+    #   params[:story][:video_url] = params[:story][:formatted_video_url]
+    #   @story.update(story_params)
+    #   respond_to do |format|
+    #     format.js { render({ action: 'edit/content/update' }) }
+    #   end
+    # end
   end
 
   def destroy
     @story = Story.friendly.find params[:id]
-    @story.destroy
-    respond_to(&:js)
+    # @story.destroy
+    # respond_to(&:js)
+    redirect_to dashboard_path('curate'), notice: 'Story was deleted.'
   end
 
   def track
@@ -200,11 +221,15 @@ class StoriesController < ApplicationController
       :title, :summary, :quote, :quote_attr_name, :quote_attr_title, :video_url, :success_id,
       :formatted_video_url, :narrative, :published, :logo_published, :preview_published,
       :hidden_link, :og_title, :og_description, :og_image_url, :og_image_width, :og_image_height,
-      :og_image_alt,
+      :og_image_alt, 
       success_attributes: [
         :id, :name, :placeholder, :customer_id, :curator_id,
-        { product_ids: [], story_category_ids: [],
-          customer_attributes: %i[id name logo_url show_name_with_logo company_id] }
+        { 
+          product_ids: [],
+          story_category_ids: [],
+          cta_ids: [],
+          customer_attributes: %i[id name logo_url show_name_with_logo company_id]
+        }
       ],
       results_attributes: %i[id description _destroy],
       topic_ad_attributes: %i[id adwords_ad_group_id ad_id status _destroy],
@@ -314,5 +339,14 @@ class StoriesController < ApplicationController
     elsif !@story.published? && !company.curators.include?(current_user)
       redirect_to root_url(subdomain: request.subdomain, host: request.domain)
     end
+  end
+
+  def frame_partials
+    # frame id => path to partial
+    {
+      'story-narrative-content-frame' => 'stories/edit/narrative_content',
+      'story-testimonials-frame' => 'stories/edit/testimonials',
+      'story-settings-frame' => 'stories/edit/story_settings'
+    }
   end
 end

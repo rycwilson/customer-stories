@@ -1,4 +1,5 @@
 import { Controller } from '@hotwired/stimulus';
+// import { FetchRequest } from '@rails/request.js';
 
 export default class StoryController extends Controller<HTMLDivElement> {
   static targets = [
@@ -7,7 +8,8 @@ export default class StoryController extends Controller<HTMLDivElement> {
     'hiddenLinkInput', 
     'hiddenLinkCopyBtn',
     'contributions',
-    'resultsList'
+    'resultsList',
+    'settingsForm',
   ];
   declare readonly titleInputTargets: HTMLInputElement[];
   declare readonly narrativeTextareaTargets: HTMLTextAreaElement[];
@@ -15,10 +17,25 @@ export default class StoryController extends Controller<HTMLDivElement> {
   declare readonly hiddenLinkCopyBtnTarget: HTMLButtonElement;
   declare readonly contributionsTarget: HTMLDivElement;
   declare readonly resultsListTarget: HTMLUListElement;
+  declare readonly settingsFormTarget: HTMLFormElement;
 
- 
+  static values = {
+    path: String,
+  }
+  declare readonly pathValue: string;
+
   connect() {
     this.contributionsTarget.setAttribute('data-resource-init-value', 'true');
+  }
+
+  updateSettings(_e: Event) {
+    this.settingsFormTarget.requestSubmit();
+  }
+
+  onClickDelete() {
+    if (window.confirm('Are you sure you want to delete this Story? This action cannot be undone.')) {
+      console.log('ok')
+    }
   }
 
   refreshHiddenLink() {

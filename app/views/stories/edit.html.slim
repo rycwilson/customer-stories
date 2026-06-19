@@ -2,10 +2,14 @@ main.dashboard.hidden-xs data-controller="dashboard" data-dashboard-modal-outlet
 
   = render('shared/navbars/company_nav', { company: @company, workflow_stage: @workflow_stage })
 
-  #story {
-    data-controller="story"
-    data-dashboard-target="story"
-    data-action="contributions:loading->dashboard#onResourceLoading contributions:ready->dashboard#onResourceReady" }
+  = content_tag( \
+      :div,
+      id: 'story',
+      data: { \
+        controller: 'story',
+        story_path_value: story_path(@story),
+        dashboard_target: 'story',
+        action: 'contributions:loading->dashboard#onResourceLoading contributions:ready->dashboard#onResourceReady' }) do
 
     = render('shared/loading_spinner')
 
@@ -101,5 +105,5 @@ main.dashboard.hidden-xs data-controller="dashboard" data-dashboard-modal-outlet
             aria-labelledby="story-settings-tab"
             role="tabpanel" }
             
-            = render('stories/edit/publication_settings', { company: @company, story: @story })
+            = render('stories/edit/story_settings', { company: @company, story: @story })
 

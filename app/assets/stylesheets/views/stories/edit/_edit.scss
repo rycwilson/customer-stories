@@ -290,7 +290,7 @@
 }
 
 .story-settings__publish {
-  margin-bottom: 4rem;
+  margin-bottom: 3.5rem;
 
   :last-child > div {
     display: flex;
@@ -308,6 +308,7 @@
 }
 
 .story-settings__remove {
+  a,
   button {
     padding: 8px 16px;
   }
