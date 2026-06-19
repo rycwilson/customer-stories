@@ -12,7 +12,8 @@ export default TomSelect;
 
 export const addDynamicPlaceholder = (ts: TomSelect) => {
   if (ts.input.dataset.dynamicPlaceholder) {
-    // set placeholder via css => allows for removing when selections are present
+    // Setting the placeholder via css allows for removing when selections are present
+    // See _tomselect.scss, selector `&:not(.has-items):not(.focus)`
     ts.control.setAttribute('data-placeholder', ts.input.dataset.dynamicPlaceholder);
   }
 }
