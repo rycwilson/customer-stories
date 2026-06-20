@@ -113,14 +113,21 @@ class StoriesController < ApplicationController
   end
 
   def update
-    # puts 'stories#update'e
-    puts JSON.pretty_generate(story_params.to_h)
-
+    # puts JSON.pretty_generate(story_params.to_h)
     @story = Story.friendly.find(params[:id])
 
-    # As things currently stand we can expect that `turbo_frame_request?` will always be true here
     if @story.update story_params
-      flash.now[:notice] = 'Story was updated.'
+      flash.now[:notice] = 
+        if @story.saved_change_to_logo_published?
+          "Story has been #{'un' unless @story.logo_published?}listed."
+        elsif @story.saved_change_to_preview_published?
+          "Story preview has been #{'un' unless @story.preview_published?}published."
+        elsif @story.saved_change_to_published?
+          "Story has been #{'un' unless @story.published?}published."
+        else
+          'Story has been updated.'
+        end
+
       respond_to do |format|
         # Don't re-render the form as this may cause multi-select options to shift around
         format.turbo_stream do
@@ -204,9 +211,8 @@ class StoriesController < ApplicationController
 
   def destroy
     @story = Story.friendly.find params[:id]
-    # @story.destroy
-    # respond_to(&:js)
-    redirect_to dashboard_path('curate'), notice: 'Story was deleted.'
+    @story.destroy
+    redirect_to dashboard_path('curate'), status: :see_other, notice: 'Story was deleted.'
   end
 
   def track

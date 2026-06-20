@@ -7,7 +7,6 @@ main.dashboard.hidden-xs data-controller="dashboard" data-dashboard-modal-outlet
       id: 'story',
       data: { \
         controller: 'story',
-        story_path_value: story_path(@story),
         dashboard_target: 'story',
         action: 'contributions:loading->dashboard#onResourceLoading contributions:ready->dashboard#onResourceReady' }) do
 
