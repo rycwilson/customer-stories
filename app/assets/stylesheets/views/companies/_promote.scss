@@ -164,12 +164,6 @@
     [class*="col-"] > div {
       @include flex-row-center-between;
     }
-    
-    button {
-      width: 96px;
-      margin-top: 0;
-      margin-left: 15px;
-    }
   }
 
   .image-collection {

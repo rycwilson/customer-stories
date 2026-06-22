@@ -110,7 +110,15 @@ form {
     margin-bottom: 1.25rem;
   }
   
-  &.form-horizontal:not(#invitation-template-form) [type="submit"]:not(.btn-sm) {
+  input,
+  select,
+  textarea {
+    & ~ .btn-success {
+      margin-left: 1rem;
+    }
+  }
+
+  &.form-horizontal [class*="col-"] > button[type="submit"] {
     margin-top: 0.75rem;
   }
 }

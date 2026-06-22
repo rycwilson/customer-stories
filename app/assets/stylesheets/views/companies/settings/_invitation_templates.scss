@@ -28,8 +28,6 @@
   }
 
   .btn-group {
-    margin-left: 1rem;
-
     // specificity needed to override bootstrap
     > .btn:not(:first-child):not(:last-child):not(.dropdown-toggle):has(+ .hidden) {
       border-top-right-radius: $border-radius-base;

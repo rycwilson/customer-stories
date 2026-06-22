@@ -22,12 +22,17 @@
       transform: translate(-50%, -50%);
     }
   }
-  
-  &--uploading .fileinput-preview img,
-  // .has-error .fileinput-preview,
+
+  // Don't show until successfully validated and uploaded
   .fileinput-preview img[src*="data:image"] {
     display: none;
   }
+  
+  &--uploading .fileinput-preview img,
+  // .has-error .fileinput-preview,
+  // .fileinput-preview img[src*="data:image"] {
+  //   display: none;
+  // }
 
   .fileinput, 
   .fileinput-new,
@@ -108,6 +113,11 @@
   .image-card--LandscapeLogo & {
     width: 248px;
     height: calc(62px + #{$thumbnail-padding + 6px});
+  }
+
+  .image-card--OpenGraph & {
+    width: 100%;
+    height: 238px;
   }
 
   .thumbnail {
