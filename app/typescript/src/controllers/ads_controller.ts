@@ -48,8 +48,9 @@ export default class AdsController extends FormController<AdsController> {
 
   onValidatedShortHeadline({ relatedTarget: input }: { relatedTarget: HTMLInputElement }) {
     if (input.name.includes('short_headline')) {
-      const shouldHideSubmitBtn = $(input).data()['bs.validator.errors'].length || input.value === input.dataset.initialValue;
-      this.shortHeadlineSubmitBtnTarget.classList.toggle('hidden', shouldHideSubmitBtn);
+      const hasNotChanged = input.value === input.dataset.initialValue;
+      const hasErrors = $(input).data()['bs.validator.errors'].length > 0;
+      this.shortHeadlineSubmitBtnTarget.classList.toggle('hidden', hasNotChanged || hasErrors);
     }
   }
 

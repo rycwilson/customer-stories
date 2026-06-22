@@ -2,7 +2,7 @@
 
   .form-horizontal {
     data-controller="company-ctas toast"
-    data-toast-flash-value=(flash.to_h.to_json if flash.any? and turbo_frame_request_id == 'company-ctas') }
+    data-toast-flash-value=(flash.to_h.to_json if flash.any? && turbo_frame_request_id == 'company-ctas') }
 
     .form-group
       .visible-sm-block.col-sm-12
