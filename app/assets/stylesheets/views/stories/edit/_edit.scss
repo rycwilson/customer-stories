@@ -180,11 +180,17 @@
 // need specificity to override .form-group rules
 #story-settings-form .og-tags {
   margin-bottom: 25px;
+
   .form-group {
     margin-bottom: 15px;
     
     label {
       font-weight: 400;
+    }
+
+    [class*="col-"] > div {
+      display: flex;
+      align-items: flex-start;
     }
 
     &:last-child {
@@ -203,89 +209,6 @@
     // width: calc(210px + 30px);  // 210 + padding
     // height: calc(115px + 30px);  // 115 + height of label and upload button
     padding: 0;
-  }
-}
-
-.og-image.fileinput,
-.og-image .fileinput-preview {
-  margin: 0;  // override jasny bootstrap
-}
-
-.og-image__header {
-  @include flex-row-center-between;
-  
-  label {
-    margin-bottom: 0;
-  } 
-
-  button {
-    font-size: 13px; 
-    padding: 5px; 
-    color: #666;
-
-    &:hover, 
-    &:active {
-      color: #222;
-    }
-  }
-}
-
-.og-image__frame {
-  // position: relative;
-  width: 210px;
-  height: 117px;
-
-  .has-error & .thumbnail {
-    display: none;
-  }
-
-  // .uploading-spinner {
-  //   @include absolute-centered;
-  //   display: none;
-  //   font-size: 24px;
-  //   z-index: 1;
-  // }
-  
-  .thumbnail {
-    width: 100%;
-    height: 100%;
-  }
-  
-  .og-image.has-error & .og-image__thumbnail {
-    border-color: #a94442;
-  }
-}
-
-.og-image__errors {
-  width: 100%;
-  height: 100%;
-  display: none;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  background-color: #fff;
-  color: #a94442;
-  padding: 30px;
-  border: 1px solid #a94442;
-  border-radius: $border-radius-base;
-
-  .has-error & {
-    display: flex;
-  }
-
-  i {
-    font-size: 20px;
-    margin-bottom: 8px;
-  }
-
-  div {
-    text-align: center;
-    font-size: 13px;
-    margin-bottom: 0;
-  }
-  
-  ul, li {
-    margin: 0
   }
 }
 

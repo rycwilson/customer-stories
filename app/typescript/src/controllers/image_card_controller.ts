@@ -3,7 +3,7 @@ import { type SubclassController } from './form_controller';
 import { initS3FileInput, onS3Done } from '../user_uploads';
 
 export default class ImageCardController extends Controller<HTMLDivElement | HTMLLIElement> {
-  static outlets = ['form', 'ads', 'user-profile','company-profile'];
+  static outlets = ['form', 'ads', 'user-profile','company-profile', 'story-settings'];
   declare readonly formOutlet: Controller;
   declare readonly hasFormOutlet: boolean;
   declare readonly adsOutlet: Controller;
@@ -12,6 +12,8 @@ export default class ImageCardController extends Controller<HTMLDivElement | HTM
   declare readonly hasUserProfileOutlet: boolean;
   declare readonly companyProfileOutlet: Controller;
   declare readonly hasCompanyProfileOutlet: boolean;
+  declare readonly storySettingsOutlet: Controller;
+  declare readonly hasStorySettingsOutlet: boolean;
 
   static values = {
     inputsEnabled: { type: Boolean, default: false },
@@ -78,6 +80,7 @@ export default class ImageCardController extends Controller<HTMLDivElement | HTM
     if (this.hasAdsOutlet) return this.adsOutlet;
     if (this.hasUserProfileOutlet) return this.userProfileOutlet;
     if (this.hasCompanyProfileOutlet) return this.companyProfileOutlet;
+    if (this.hasStorySettingsOutlet) return this.storySettingsOutlet;
   }
 
   connect() {
@@ -247,6 +250,14 @@ export default class ImageCardController extends Controller<HTMLDivElement | HTM
   }
 
   companyProfileOutletDisconnected(_: SubclassController, form: HTMLFormElement) {
+    this.removeValidationListeners(form);
+  }
+
+  storySettingsOutletConnected(_: SubclassController, form: HTMLFormElement) {
+    this.addValidationListeners(form);
+  }
+
+  storySettingsOutletDisconnected(_: SubclassController, form: HTMLFormElement) {
     this.removeValidationListeners(form);
   }
 

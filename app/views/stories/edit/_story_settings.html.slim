@@ -5,11 +5,16 @@
       id: 'story-settings-form',
       class: 'form-horizontal', 
       data: { \
-        controller: 'toast',
-        story_target: 'settingsForm',
+        controller: 'story-settings toast',
         toast_flash_value: (flash.to_h if flash.any? && turbo_frame_request_id == 'story-settings-frame'),
         toast_errors_value: (@errors if @errors.present? && turbo_frame_request_id == 'story-settings-frame'),
-        action: 'change->story#updateSettings bootstrap-switch:switch->story#updateSettings' },
+        action: [ \
+          'image-card:ready-to-validate->story-settings#updateValidator',
+          'image-card:validated->story-settings#updateValidator',
+          'image-card:upload-ready->story-settings#onUploadReady',
+          'change->story-settings#submit',
+          'bootstrap-switch:switch->story-settings#submit',
+          'turbo:submit-end->story-settings#reset'].join(' ') },
       html: { \
         novalidate: true,
         autocomplete: 'off' }) do |story_form|
@@ -90,11 +95,34 @@
           .form-group
             .col-sm-12
               = story_form.label(:og_title, 'Title')
-              = story_form.text_field(:og_title, class: 'form-control', placeholder: 'og:title')
+              div
+                = story_form.text_field( \
+                    :og_title,
+                    class: 'form-control',
+                    maxlength: 90,
+                    placeholder: 'og:title',
+                    oninput: \
+            "this.nextElementSibling.classList.toggle('hidden', this.value === this.dataset.initialValue)",
+                    data: { \
+                      story_settings_target: 'ogTitleInput',
+                      initial_value: story.og_title })
+                button.btn.btn-success.hidden Save changes
+
           .form-group
             .col-sm-12
               = story_form.label(:og_description, 'Description')
-              = story_form.text_area(:og_description, class: 'form-control', rows: 3, placeholder: 'og:description')
+              div
+                = story_form.text_area( \
+                    :og_description,
+                    class: 'form-control',
+                    rows: 3,
+                    maxlength: 200,
+                    oninput: \
+            "this.nextElementSibling.classList.toggle('hidden', this.value === this.dataset.initialValue)",
+                    data: { \
+                      story_settings_target: 'ogDescriptionTextarea',
+                      initial_value: story.og_description })
+                button.btn.btn-success.hidden Save changes
           .form-group
             .col-sm-12
               = story_form.label(:og_image_url, 'Image')
@@ -121,7 +149,7 @@
               { class: 'form-control',
                 placeholder: 'Click the Refresh button to generate a URL',
                 readonly: true,
-                data: { story_target: 'hiddenLinkInput' }})
+                data: { story_settings_target: 'hiddenLinkInput' }})
           span.input-group-btn
             = button_tag( \
                 class: 'hidden-link__refresh btn btn-default',
@@ -130,7 +158,7 @@
                 data: { \
                   controller: 'tooltip',
                   tooltip_options_value: { title: 'Refresh', container: 'body', placement: 'top' },
-                  action: 'story#refreshHiddenLink' }) do
+                  action: 'story-settings#refreshHiddenLink' }) do
               i.fa.fa-refresh
           span.input-group-btn
             = button_tag( \
@@ -139,12 +167,12 @@
                 disabled: story.hidden_link.blank?,
                 data: { \
                   controller: "tooltip",
-                  action: "story#copyHiddenLink",
+                  action: "story-settings#copyHiddenLink",
                   tooltip_options_value: { title: 'Copy to clipboard', container: 'body', placement: 'top' },
-                  story_target: "hiddenLinkCopyBtn" }) do
+                  story_settings_target: "hiddenLinkCopyBtn" }) do
               i.fa.fa-clipboard
         span.help-block style="margin-bottom: 0"
-          | Allows access to the story prior to publishing.
+          | Allows for viewing the story prior to publishing.
 
     .story-settings__publish.form-group
       .visible-sm-block.col-sm-12

@@ -10,6 +10,7 @@ import type ContributorInvitationController from './contributor_invitation_contr
 import type CompanyTagsController from './company_tags_controller';
 import type CtaController from './cta_controller';
 import type AdsController from './ads_controller';
+import type StorySettingsController from './story_settings_controller';
 import type { TomOptions } from 'tom-select/dist/esm/types/core.d.ts';
 import { validateForm, serializeForm } from '../utils';
 import { validateFileSize, validateImageDimensions } from '../user_uploads';
@@ -24,7 +25,8 @@ export type SubclassController = (
   ContributorInvitationController |
   CompanyTagsController |
   CtaController |
-  AdsController
+  AdsController | 
+  StorySettingsController
 );
 
 export default class FormController<Ctrl extends SubclassController> extends Controller<HTMLFormElement> {
@@ -117,7 +119,7 @@ export default class FormController<Ctrl extends SubclassController> extends Con
     // return true;
   }
 
-  updateState(e?: Event) {
+  updateState(_e?: Event) {
     this.element.classList.toggle('is-dirty', this.isDirty);
     if (this.submitBtn) {
       this.submitBtn.classList.toggle('disabled', !this.isDirty);
@@ -139,7 +141,7 @@ export default class FormController<Ctrl extends SubclassController> extends Con
     }
   }
 
-  animateSubmitBtn(e: SubmitEvent) {
+  animateSubmitBtn(_e: SubmitEvent) {
     const submitBtn = this.submitBtn;
     if (!submitBtn?.dataset.content || !submitBtn?.dataset.disableWithHtml) return;
     submitBtn.classList.add('submitting');
@@ -153,7 +155,7 @@ export default class FormController<Ctrl extends SubclassController> extends Con
     { target: select }: { target: TomSelectInput }
   ) {
     const isNew = isNaN(+select.value);
-    const customerId = +select.value || null;
+    // const customerId = +select.value || null;
 
     // Enable/disable select elements via the [name] attribute => precludes ui changes
     select.setAttribute('name', isNew ? '' : select.dataset.fieldName);

@@ -115,6 +115,9 @@ application.register('stories', StoriesController);
 import StoryController from './story_controller.js';
 application.register('story', StoryController);
 
+import StorySettingsController from './story_settings_controller.js';
+application.register('story-settings', StorySettingsController);
+
 import ListGroupController from './list_group_controller.js';
 application.register('list-group', ListGroupController);
 
