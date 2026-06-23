@@ -11,10 +11,10 @@
         action: [ \
           'image-card:ready-to-validate->story-settings#updateValidator',
           'image-card:validated->story-settings#updateValidator',
-          'image-card:upload-ready->story-settings#onUploadReady',
-          'change->story-settings#submit',
-          'bootstrap-switch:switch->story-settings#submit',
-          'turbo:submit-end->story-settings#reset'].join(' ') },
+          'image-card:upload-ready->story-settings#submitForm',
+          'change->story-settings#submitForm',
+          'bootstrap-switch:switch->story-settings#submitForm',
+          'turbo:submit-end->story-settings#resetForm'].join(' ') },
       html: { \
         novalidate: true,
         autocomplete: 'off' }) do |story_form|
@@ -183,8 +183,7 @@
           - { 'Listed' => :logo_published,
               'Previewed' => :preview_published,
               'Published' => :published }.each do |label_text, attr| 
-            = content_tag( \
-                :div,
+            = tag.div( \
                 data: { \
                   controller: "bootstrap-switch #{'tooltip' if attr == :preview_published}",
                   bootstrap_switch_disabled_value: ('true' if attr == :preview_published),

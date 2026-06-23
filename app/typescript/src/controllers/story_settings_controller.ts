@@ -7,15 +7,17 @@ export default class StorySettingsController extends FormController<StorySetting
     'hiddenLinkCopyBtn',
     'ogTitleInput',
     'ogDescriptionTextarea',
+    'ogImageCard'
   ];
   declare readonly hiddenLinkInputTarget: HTMLInputElement;
   declare readonly hiddenLinkCopyBtnTarget: HTMLButtonElement;
   declare readonly ogTitleInputTarget: HTMLInputElement;
   declare readonly ogDescriptionTextareaTarget: HTMLTextAreaElement;
+  declare readonly ogImageCardTarget: HTMLDivElement;
 
   // connect() {}
 
-  submit({ target }: { target: HTMLElement }) {
+  submitForm({ target }: { target: HTMLElement }) {
     // Ignore 'change' event when it comes from one of the OG fields.
     // These elements will have a submit button associated with them.
     const name = 'name' in target ? target.name as string : null;
@@ -24,12 +26,14 @@ export default class StorySettingsController extends FormController<StorySetting
     this.element.requestSubmit();
   }
 
-  reset() {
+  resetForm() {
     [this.ogTitleInputTarget, this.ogDescriptionTextareaTarget].forEach(input => {
       input.dataset.initialValue = input.value;
       const submitBtn = input.nextElementSibling as HTMLButtonElement;
       if (submitBtn) submitBtn.classList.add('hidden');
     });
+
+    this.ogImageCardTarget.classList.remove('image-card--uploading');
   }
 
   // https://stackoverflow.com/questions/105034/how-to-create-a-guid-uuid
@@ -42,7 +46,7 @@ export default class StorySettingsController extends FormController<StorySetting
       this.hiddenLinkInputTarget.value = hiddenLink;
       this.hiddenLinkCopyBtnTarget.classList.remove('disabled');
       this.hiddenLinkCopyBtnTarget.disabled = false;
-      this.submit({ target: this.hiddenLinkInputTarget });
+      this.submitForm({ target: this.hiddenLinkInputTarget });
       btn.blur();
     }
   }

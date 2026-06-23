@@ -205,6 +205,11 @@ export function validateImageDimensions(this: FormController<any>, $fileInput: J
       width: landscapeLogoMinWidth,
       height: landscapeLogoMinHeight ,
       aspect_ratio: landscapeLogoAspectRatio
+    },
+    OpenGraph: {
+      width: openGraphMinWidth,
+      height: openGraphMinHeight,
+      aspect_ratio: openGraphAspectRatio
     }
   } = $fileInput.data('minDimensions');
   const isSquareImage = width >= squareImageMin && height >= squareImageMin && hasAspectRatio(1);
@@ -219,12 +224,18 @@ export function validateImageDimensions(this: FormController<any>, $fileInput: J
     height >= landscapeLogoMinHeight && 
     hasAspectRatio(landscapeLogoAspectRatio)
   );
+  const isOpenGraph = (
+    width >= openGraphMinWidth &&
+    height >= openGraphMinHeight &&
+    hasAspectRatio(openGraphAspectRatio)
+  );
   if (imageType) {
     isValid = (
       (imageType === 'SquareImage' && isSquareImage) ||
       (imageType === 'LandscapeImage' && isLandscapeImage) ||
       (imageType === 'SquareLogo' && isSquareLogo) ||
-      (imageType === 'LandscapeLogo' && isLandscapeLogo)
+      (imageType === 'LandscapeLogo' && isLandscapeLogo) ||
+      (imageType === 'OpenGraph' && isOpenGraph)
     );
   } else if (collection === 'images' && (isSquareImage || isLandscapeImage)) {
     isValid = true;

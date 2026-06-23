@@ -160,8 +160,8 @@ export default class ImageCardController extends Controller<HTMLDivElement | HTM
     }
   }
   
-  onValidatedFileInput(e: any) {
-    const input = e.relatedTarget;
+onValidatedFileInput(e: { type: 'validated'; [key: string]: unknown }) {
+  const input = e.relatedTarget;
     if (input === this.fileInputTarget) {
       console.log('validated.bs.validator')
       this.dispatch('validated', { detail: { fileInput: input } });
