@@ -1,4 +1,4 @@
-= content_tag :div, 'class' => 'new-contact hidden', "data-#{controller_id}-target" => "#{contact_type}Fields" do
+= tag.div('class' => 'new-contact hidden', "data-#{controller_id}-target" => "#{contact_type}Fields") do
   = parent_form_or_fields.fields_for( \
       contact_type.to_sym,
       parent_form_or_fields.object.send("build_#{contact_type}")) do |user_fields|

@@ -46,8 +46,7 @@
     .layout-main
       .tab-content
       
-        = content_tag( \
-            :div,
+        = tag.div( \
             id: 'customer-wins',
             class: "tab-pane resource-ctrl #{'active' if active_tab == '#customer-wins'}",
             aria_labelledby: 'customer-wins-tab',
@@ -72,8 +71,7 @@
 
           = render('successes/table', company:)
 
-        = content_tag( \
-            :div,
+        = tag.div( \
             id: 'contributions',
             class: "tab-pane resource-ctrl #{'active' if active_tab == '#contributions'}",
             aria_labelledby: 'contributions-tab',

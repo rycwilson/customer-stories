@@ -36,8 +36,7 @@
 
   div
     div
-      = content_tag( \
-          :button,
+      = tag.button( \
           type: 'button',
           class: 'table-controls__back-to-table btn btn-default',
           data: { \
@@ -45,8 +44,7 @@
             action: "#{resource_ctrl_id}#backToTable" }) do
         i.fa.fa-arrow-left
     
-    = content_tag( \
-        :div,
+    = tag.div( \
         class: "#{resource_ctrl_id}__table-nav",
         data: { \
           controller: 'table-nav',
@@ -60,8 +58,7 @@
         .help-block data-table-nav-target="position"
         .btn-group
           - %w[prevRowViewBtn nextRowViewBtn].each do |btn|
-            = content_tag( \
-                :button,
+            = tag.button( \
                 type: 'button',
                 class: 'btn btn-default',
                 role: 'link',

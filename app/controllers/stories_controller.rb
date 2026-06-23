@@ -104,7 +104,7 @@ class StoriesController < ApplicationController
   def create
     @story = Story.new(story_params)
     if @story.save
-      redirect_to edit_story_path(@story), status: :see_other, notice: 'Story was created successfully.'
+      redirect_to edit_story_path(@story), status: :see_other, notice: 'Story has been created.'
     else
       # flash.now[:alert] = "There were some errors"
       @errors = @story.errors.full_messages
@@ -114,7 +114,7 @@ class StoriesController < ApplicationController
 
   def update
     # puts JSON.pretty_generate(story_params.to_h)
-    @story = Story.friendly.find(params[:id])
+    @story = Story.friendly.find params[:id]
 
     if @story.update story_params
       flash.now[:notice] = 

@@ -58,8 +58,7 @@
     .layout-main
       .tab-content
       
-        = content_tag( \
-            :div,
+        = tag.div( \
             id: 'promoted-stories',
             class: "tab-pane resource-ctrl #{'active' if active_tab == '#promoted-stories'}",
             aria_labelledby: 'promoted-stories-tab',

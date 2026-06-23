@@ -41,8 +41,7 @@ export default class AdsController extends FormController<AdsController> {
     super.disconnect();
   }
 
-  submitForm(e: CustomEvent) {
-    console.log(e)
+  submitForm(_e: CustomEvent) {
     this.element.requestSubmit()
   }
 

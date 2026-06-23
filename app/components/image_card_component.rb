@@ -73,9 +73,9 @@ class ImageCardComponent < ViewComponent::Base
   end
   
   def parent_form_id
-    return nil unless @model.in?(%w[User Customer Story])
-
     form_ids = {
+      'Company' => '#company-profile-form',
+      'AdwordsImage' => '#gads-form',
       'User' => '#user-profile-form',
       'Customer' => '#customer-form',
       'Story' => '#story-settings-form'

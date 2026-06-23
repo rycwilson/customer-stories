@@ -1,7 +1,6 @@
 - story = local_assigns.fetch(:story, nil)
 
-= content_tag( \
-    :table,
+= tag.table( \
     id: "#{story ? 'story-contributions-table' : 'contributions-table'}",
     class: 'table',
     data: { \

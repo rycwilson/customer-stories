@@ -1,14 +1,15 @@
 main.dashboard.hidden-xs data-controller="dashboard" data-dashboard-modal-outlet="#main-modal"
 
-  = render('shared/navbars/company_nav', { company: @company, workflow_stage: @workflow_stage })
+  = render('shared/navbars/company_nav', company: @company, workflow_stage: @workflow_stage)
 
-  = content_tag( \
-      :div,
+  = tag.div( \
       id: 'story',
       data: { \
         controller: 'story',
         dashboard_target: 'story',
-        action: 'contributions:loading->dashboard#onResourceLoading contributions:ready->dashboard#onResourceReady' }) do
+        action: [ \
+          'contributions:loading->dashboard#onResourceLoading',
+          'contributions:ready->dashboard#onResourceReady' ].join(' ') }) do
 
     = render('shared/loading_spinner')
 

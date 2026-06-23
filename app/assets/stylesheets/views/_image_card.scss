@@ -24,15 +24,11 @@
   }
 
   // Don't show until successfully validated and uploaded
+  &--uploading .fileinput-preview img,
+  // .has-error .fileinput-preview,
   .fileinput-preview img[src*="data:image"] {
     display: none;
   }
-  
-  &--uploading .fileinput-preview img,
-  // .has-error .fileinput-preview,
-  // .fileinput-preview img[src*="data:image"] {
-  //   display: none;
-  // }
 
   .fileinput, 
   .fileinput-new,
