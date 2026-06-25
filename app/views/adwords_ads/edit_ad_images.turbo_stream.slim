@@ -32,7 +32,7 @@
     .tab-content
 
       #ad-images__marketing.tab-pane.active
-        ul.image-cards.list-unstyled data-max="#{AdwordsAd::RESPONSIVE_AD_MAX_MARKETING_IMAGES.to_s}"
+        ul.image-cards.list-unstyled data-max="#{AdwordsAd::MAX_MARKETING_IMAGES.to_s}"
           - @ad.company.ad_images.marketing.sort_by { |image| sort_ad_images(@ad, image) }.each.with_index do |ad_image, i|
             li 
               = render( \
@@ -49,7 +49,7 @@
                     { class: 'hidden', data: { image_card_target: 'adImageCheckbox' } })
                   
       #ad-images__logos.tab-pane
-        ul.image-cards.list-unstyled data-max="#{AdwordsAd::RESPONSIVE_AD_MAX_LOGOS.to_s}"
+        ul.image-cards.list-unstyled data-max="#{AdwordsAd::MAX_LOGOS.to_s}"
           - @ad.company.ad_images.logo.sort_by { |image| sort_ad_images(@ad, image) }.each.with_index do |ad_image, i|
             li 
               = render( \

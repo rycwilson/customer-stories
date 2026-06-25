@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 class ImageCardComponent < ViewComponent::Base
+  # For smaller templates, ok to define them here:
   # slim_template <<-SLIM
   # (Remember to escape interpolated strings)
   # SLIM
@@ -22,6 +23,53 @@ class ImageCardComponent < ViewComponent::Base
     @collection = collection
     @selected = selected
     @upload_enabled = upload_enabled
+  end
+
+  def container_attributes
+    {
+      class: [
+        'image-card',
+        { 
+          "image-card--#{@image_data[:type]}" => @image_data[:type].present?,
+          'gads-default' => default_ad_image?,
+          hidden: @model == 'AdwordsImage' && @image_data.blank?,
+          selected: @selected
+        } 
+      ],
+      data: {
+        image_id: @image_data[:id],
+        controller: 'image-card',
+        image_card_ads_outlet: (parent_form_id if @model == 'AdwordsImage'),
+        image_card_user_profile_outlet: (parent_form_id if @model == 'User'),
+        image_card_company_profile_outlet: (parent_form_id if @model == 'Company'),
+        image_card_story_settings_outlet: (parent_form_id if @model == 'Story'),
+        # Forms that do not have a subclass controller:
+        image_card_form_outlet: (parent_form_id if @model.in?(%w[Customer])),
+        ads_target:,
+        story_settings_target: 'ogImageCard',
+        action: ('click->image-card#toggleSelected' if @model == 'AdwordsAd') 
+      }
+    }
+  end
+
+  def file_input_attributes
+    {
+      type: 'file',
+      accept: 'image/jpeg,image/png',
+      data: {
+        image_card_target: 'fileInput',
+        s3: (s3_direct_post if @upload_enabled),
+        validate: 'false',
+        collection: @collection,
+        image_type: (@image_data[:type] if @image_data[:type].present?),
+        max_file_size: AdwordsImage::MAX_FILE_SIZE,
+        min_dimensions: (min_dimensions unless @model == 'Customer'),
+        min_width: (min_dimensions[:width] if min_dimensions),
+        min_height: (min_dimensions[:height] if min_dimensions),
+        aspect_ratio_tolerance: AdwordsImage::ASPECT_RATIO_TOLERANCE,
+        required_image: ('true' if @required)
+      }
+    }
   end
 
   def image_exists?
@@ -102,20 +150,20 @@ class ImageCardComponent < ViewComponent::Base
   def min_dimensions(type = nil)
     min_dimensions = {
       'SquareImage' => {
-        width: AdwordsAd::RESPONSIVE_AD_SQUARE_IMAGE_MIN
+        width: AdwordsImage::SQUARE_IMAGE_MIN
       },
       'LandscapeImage' => {
-        width: AdwordsAd::RESPONSIVE_AD_LANDSCAPE_IMAGE_MIN&.split('x').try(:[], 0).to_i,
-        height: AdwordsAd::RESPONSIVE_AD_LANDSCAPE_IMAGE_MIN&.split('x').try(:[], 1).to_i,
-        aspect_ratio: AdwordsAd::RESPONSIVE_AD_LANDSCAPE_IMAGE_ASPECT_RATIO
+        width: AdwordsImage::LANDSCAPE_IMAGE_MIN&.split('x').try(:[], 0).to_i,
+        height: AdwordsImage::LANDSCAPE_IMAGE_MIN&.split('x').try(:[], 1).to_i,
+        aspect_ratio: AdwordsImage::LANDSCAPE_IMAGE_ASPECT_RATIO
       },
       'SquareLogo' => {
-        width: AdwordsAd::RESPONSIVE_AD_SQUARE_LOGO_MIN
+        width: AdwordsImage::SQUARE_LOGO_MIN
       },
       'LandscapeLogo' => {
-        width: AdwordsAd::RESPONSIVE_AD_LANDSCAPE_LOGO_MIN&.split('x').try(:[], 0).to_i,
-        height: AdwordsAd::RESPONSIVE_AD_LANDSCAPE_LOGO_MIN&.split('x').try(:[], 1).to_i,
-        aspect_ratio: AdwordsAd::RESPONSIVE_AD_LANDSCAPE_LOGO_ASPECT_RATIO
+        width: AdwordsImage::LANDSCAPE_LOGO_MIN&.split('x').try(:[], 0).to_i,
+        height: AdwordsImage::LANDSCAPE_LOGO_MIN&.split('x').try(:[], 1).to_i,
+        aspect_ratio: AdwordsImage::LANDSCAPE_LOGO_ASPECT_RATIO
       },
       'OpenGraph' => {
         width: 1200,

@@ -174,15 +174,20 @@
         span.help-block style="margin-bottom: 0"
           | Allows for viewing the story prior to publishing.
 
+    .row 
+      .visible-md-inline-block.visible-lg-inline-block.col-md-4
+      .col-sm-12.col-md-8
+        hr
+
     .story-settings__publish.form-group
       .visible-sm-block.col-sm-12
-        label Status
-      label.control-label.visible-md-inline-block.visible-lg-inline-block.col-md-4 Status
+        label Publish
+      label.control-label.visible-md-inline-block.visible-lg-inline-block.col-md-4 Publish
       .col-sm-12.col-md-8
         div
-          - { 'Listed' => :logo_published,
-              'Previewed' => :preview_published,
-              'Published' => :published }.each do |label_text, attr| 
+          - { 'Customer' => :logo_published,
+              'Preview' => :preview_published,
+              'Story' => :published }.each do |label_text, attr| 
             = tag.div( \
                 data: { \
                   controller: "bootstrap-switch #{'tooltip' if attr == :preview_published}",
@@ -201,8 +206,8 @@
 
     .story-settings__remove.form-group
       .visible-sm-block.col-sm-12
-        label
-      label.control-label.visible-md-inline-block.visible-lg-inline-block.col-md-4
+        label Remove
+      label.control-label.visible-md-inline-block.visible-lg-inline-block.col-md-4 Remove
       .col-sm-12.col-md-8
         div
           button.btn.btn-secondary type="button"

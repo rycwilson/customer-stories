@@ -1,21 +1,10 @@
 # frozen_string_literal: true
 
 class AdwordsAd < ApplicationRecord
-  RESPONSIVE_AD_SHORT_HEADLINE_MAX = 30
-  RESPONSIVE_AD_LONG_HEADLINE_MAX = 90
-  RESPONSIVE_AD_MAX_MARKETING_IMAGES = 15
-  RESPONSIVE_AD_MAX_LOGOS = 5
-  RESPONSIVE_AD_ASPECT_RATIO_TOLERANCE = 0.01
-  RESPONSIVE_AD_SQUARE_IMAGE_MIN = 300
-  RESPONSIVE_AD_SQUARE_IMAGE_PLACEHOLDER = 'placeholders/300x300.png'
-  RESPONSIVE_AD_LANDSCAPE_IMAGE_ASPECT_RATIO = 1.91
-  RESPONSIVE_AD_LANDSCAPE_IMAGE_MIN = '600x314'
-  RESPONSIVE_AD_LANDSCAPE_IMAGE_PLACEHOLDER = 'placeholders/600x314.png'
-  RESPONSIVE_AD_SQUARE_LOGO_MIN = 128
-  RESPONSIVE_AD_SQUARE_LOGO_PLACEHOLDER = 'placeholders/128x128.png'
-  RESPONSIVE_AD_LANDSCAPE_LOGO_ASPECT_RATIO = 4
-  RESPONSIVE_AD_LANDSCAPE_LOGO_MIN = '512x128'
-  RESPONSIVE_AD_LANDSCAPE_LOGO_PLACEHOLDER = 'placeholders/512x128.png'
+  SHORT_HEADLINE_MAX = 30
+  LONG_HEADLINE_MAX = 90
+  MAX_MARKETING_IMAGES = 15
+  MAX_LOGOS = 5
 
   belongs_to :story
   belongs_to :adwords_ad_group
@@ -134,7 +123,7 @@ class AdwordsAd < ApplicationRecord
   end
 
   def assign_defaults
-    self.long_headline = story.title.truncate(RESPONSIVE_AD_LONG_HEADLINE_MAX, omission: '')
+    self.long_headline = story.title.truncate(LONG_HEADLINE_MAX, omission: '')
     adwords_images << story.company.adwords_images.default
   end
 

@@ -23,15 +23,15 @@ class AdwordsAdsController < ApplicationController
     @image_url =
       @story.ads.first&.images&.marketing&.landscape&.take&.image_url or
       @company.ad_images.default.marketing.landscape.take&.image_url or
-      helpers.asset_url(AdwordsAd::RESPONSIVE_AD_LANDSCAPE_IMAGE_PLACEHOLDER)
+      helpers.asset_url(AdwordsImage::LANDSCAPE_IMAGE_PLACEHOLDER)
     @square_image_url =
       @story.ads.first&.images&.marketing&.square&.take&.image_url or
       @company.ad_images.default.marketing.square.take&.image_url or
-      helpers.asset_url(AdwordsAd::RESPONSIVE_AD_SQUARE_IMAGE_PLACEHOLDER)
+      helpers.asset_url(AdwordsImage::SQUARE_IMAGE_PLACEHOLDER)
     @logo_url =
       @story.ads.first&.images&.logo&.square&.take&.image_url or
       @company.ad_images.default.logo.square.take&.image_url or
-      helpers.asset_url(AdwordsAd::RESPONSIVE_AD_SQUARE_LOGO_PLACEHOLDER)
+      helpers.asset_url(AdwordsImage::SQUARE_LOGO_PLACEHOLDER)
     set_ad_parameters(@long_headline)
   end
 

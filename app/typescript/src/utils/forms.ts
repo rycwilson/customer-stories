@@ -46,8 +46,12 @@ function formControlIsValid(control: HTMLInputElement | TomSelectInput) {
 }
 
 export function validateForm(e: SubmitEvent): boolean {
-  const form = <HTMLFormElement>e.target;
-  const requiredFields: (HTMLInputElement | TomSelectInput)[] = [...form.querySelectorAll('input[required], select[required]')];
+  const form = e.target;
+  if (!(form instanceof HTMLFormElement)) throw new Error('Expected form element');
+
+  const requiredFields: (HTMLInputElement | TomSelectInput)[] = (
+    [...form.querySelectorAll('input[required], select[required]')]
+  );
   let isValid = true;
   requiredFields.forEach(control => {
     // Some select controls are disabled by toggling the [name] attribute, precludes ui (style) changes

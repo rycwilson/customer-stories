@@ -1,4 +1,17 @@
 class AdwordsImage < ApplicationRecord
+  ASPECT_RATIO_TOLERANCE = 0.01
+  SQUARE_IMAGE_MIN = 300
+  SQUARE_IMAGE_PLACEHOLDER = 'placeholders/300x300.png'
+  LANDSCAPE_IMAGE_ASPECT_RATIO = 1.91
+  LANDSCAPE_IMAGE_MIN = '600x314'
+  LANDSCAPE_IMAGE_PLACEHOLDER = 'placeholders/600x314.png'
+  SQUARE_LOGO_MIN = 128
+  SQUARE_LOGO_PLACEHOLDER = 'placeholders/128x128.png'
+  LANDSCAPE_LOGO_ASPECT_RATIO = 4
+  LANDSCAPE_LOGO_MIN = '512x128'
+  LANDSCAPE_LOGO_PLACEHOLDER = 'placeholders/512x128.png'
+  MAX_FILE_SIZE = 5.megabytes
+
   attr_accessor :is_default_card # for distinguishing default (static) image cards from dynamic
 
   belongs_to :company

@@ -1,22 +1,4 @@
-= tag.div( \
-    class: [ \
-      'image-card',
-      { "image-card--#{@image_data[:type]}" => @image_data[:type].present? },
-      { 'gads-default' => default_ad_image? },
-      { hidden: (@model == 'AdwordsImage' and @image_data.blank?) },
-      { selected: @selected } ],
-    data: { \
-      image_id: @image_data[:id],
-      controller: 'image-card',
-      image_card_ads_outlet: (parent_form_id if @model == 'AdwordsImage'),
-      image_card_user_profile_outlet: (parent_form_id if @model == 'User'),
-      image_card_company_profile_outlet: (parent_form_id if @model == 'Company'),
-      image_card_story_settings_outlet: (parent_form_id if @model == 'Story'),
-      # Forms that do not have a subclass controller: \
-      image_card_form_outlet: (parent_form_id if @model.in?(%w[Customer])),
-      ads_target:,
-      story_settings_target: 'ogImageCard',
-      action: ('click->image-card#toggleSelected' if @model == 'AdwordsAd') }) do
+= tag.div(**container_attributes) do
   
   = render('shared/loading_spinner') if @upload_enabled
 
@@ -72,20 +54,7 @@
         - else
           .fileinput-preview.fileinput-exists.thumbnail data-image-card-target="preview"
         .btn-file
-          input {
-            type="file"
-            accept="image/jpeg,image/png"
-            data-image-card-target="fileInput"
-            data-s3=(s3_direct_post.to_json if @upload_enabled)
-            data-validate="false"
-            data-collection=@collection
-            data-image-type=(@image_data[:type] if @image_data[:type].present?)
-            data-max-file-size="5242880" 
-            data-min-dimensions=(min_dimensions.to_json unless @model == 'Customer')
-            data-min-width=(min_dimensions[:width] if min_dimensions)
-            data-min-height=(min_dimensions[:height] if min_dimensions)
-            data-aspect-ratio-tolerance=AdwordsAd::RESPONSIVE_AD_ASPECT_RATIO_TOLERANCE.to_s
-            data-required-image=('true' if @required) }
+          = tag.input(**file_input_attributes)
 
       - if secondary_ad_image?
         .image-card__footer
