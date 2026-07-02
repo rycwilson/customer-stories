@@ -13,7 +13,7 @@ declare namespace ImagesLoaded {
   }
 }
 
-declare var CSP: CustomerStoriesApp;
+declare const CSP: CustomerStoriesApp;
 
 interface CustomerStoriesApp {
   customerWins: CustomerWin[] | undefined;

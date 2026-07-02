@@ -5,6 +5,7 @@ declare global {
     $: JQueryStatic;
     jQuery: JQueryStatic;
     Stimulus: import("@hotwired/stimulus").Application;
+    CSP: CustomerStoriesApp;
   }
 
   interface JQuery<HTMLElement> {
