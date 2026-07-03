@@ -232,7 +232,7 @@ export default class DatatableController extends Controller<HTMLTableElement> {
       const infoClone = info.cloneNode() as HTMLElement;
       infoClone.id = `${info.id}--clone`;
       infoClone.textContent = (
-        info.textContent?.match(/(?<entries>\d+ to \d+ of \d+)/)?.groups?.entries || null
+        info.textContent?.match(/(?<entries>\d+ to \d+ of \d+)/)?.groups?.entries ?? null
       );
       this.dispatch(
         'info-cloned',

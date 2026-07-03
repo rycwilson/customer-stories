@@ -63,7 +63,7 @@ export function dataTableConfig(
       CSP.contributions?.map(contribution => ({ 
         ...contribution,
         actions_dropdown_html: actionsDropdownTemplate(contribution) 
-      })) || [],
+      })) ?? [],
     
     language: {
       emptyTable: 'No Contributors found',

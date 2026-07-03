@@ -173,7 +173,7 @@ export default class extends Controller<HTMLFormElement> {
       const gapHeight = [
         getComputedStyle(this.childRow.firstElementChild).paddingTop, 
         getComputedStyle(this.childRow.firstElementChild).paddingBottom,
-        getComputedStyle(this.noteTarget.nextElementSibling || this.noteTarget).marginBottom
+        getComputedStyle(this.noteTarget.nextElementSibling ?? this.noteTarget).marginBottom
       ].reduce((totalGapHeight, segmentHeight) => totalGapHeight + parseInt(segmentHeight, 10), 0);
       const reservedHeight = this.parentRow.clientHeight + gapHeight + headerHeight + footerHeight + chromeHeight;
       return window.innerHeight - reservedHeight;

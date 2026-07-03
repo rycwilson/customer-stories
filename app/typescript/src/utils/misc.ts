@@ -65,7 +65,7 @@ export function parseDatasetObject(
   ...requiredProps: string[]
 ) {
   try {
-    const parsedData = JSON.parse(element.dataset[prop] || '');
+    const parsedData = JSON.parse(element.dataset[prop] ?? '');
     const hasRequiredProps = requiredProps.every(prop => (
       Object.prototype.hasOwnProperty.call(parsedData, prop)
     ));

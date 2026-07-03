@@ -23,7 +23,7 @@ export function convertCase(str: string = '', targetCase: StringCase): string {
   const toWordParts = (str: string, inputCase: Exclude<StringCase, null>): string[] => {
     if (inputCase === 'kebab') return str.split('-');
     if (inputCase === 'snake') return str.split('_');
-    return str.match(/[A-Z]+(?![a-z])|[A-Z]?[a-z0-9]+/g) || [];
+    return str.match(/[A-Z]+(?![a-z])|[A-Z]?[a-z0-9]+/g) ?? [];
   }
   const inputCase = detectCase(str);
   if (!inputCase) return str;

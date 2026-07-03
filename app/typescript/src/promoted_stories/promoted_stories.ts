@@ -21,7 +21,7 @@ export function dataTableConfig(rowGroupDataSource: string): Config {
     data: CSP.promotedStories?.map(ad => ({ 
       ...ad,
       actions_dropdown_html: actionsDropdownTemplate(ad)
-    })) || [],
+    })) ?? [],
 
     // autoWidth: false,
     // dom: 'tp',
