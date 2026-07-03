@@ -2,7 +2,7 @@
   
   = render('shared/loading_spinner') if @upload_enabled
 
-  / This will be hidden input tags for a given model
+  / Hidden input tags for a given model
   = content
 
   - if @model == 'AdwordsAd'
@@ -17,10 +17,7 @@
               i.fa.fa-check.fa-stack-1x
 
   - else
-    = tag.div( \
-        class: "form-group fileinput fileinput-#{image_exists? ? 'exists' : 'new'}",
-        data: { provides: 'fileinput', image_card_target: 'formGroup' }) do
-
+    = tag.div(**form_group_attributes) 
       .image-card__header
         - if @upload_enabled
           / attaching data-trigger attribute to .fileinput-preview does not work

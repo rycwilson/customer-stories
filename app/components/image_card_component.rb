@@ -52,6 +52,13 @@ class ImageCardComponent < ViewComponent::Base
     }
   end
 
+  def form_group_attributes
+    {
+      class: "form-group fileinput fileinput-#{image_exists? ? 'exists' : 'new'}",
+      data: { provides: 'fileinput', image_card_target: 'formGroup' }
+    }
+  end
+
   def file_input_attributes
     {
       type: 'file',
