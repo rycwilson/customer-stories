@@ -164,9 +164,10 @@ export default class PluginsController extends Controller<HTMLFormElement> {
       }
     }
     window.open(
-      `/plugins/demo?${searchParams.toString()}`, 
-      'pluginDemoWindow', 
-      `width=${width},height=${height},top=${top},left=${left},noopener,noreferrer`
+      `/plugins/demo?${searchParams.toString()}`,
+      '_blank'
+      // 'pluginDemoWindow', 
+      // `width=${width},height=${height},top=${top},left=${left},noopener,noreferrer`
     );
   }
 
