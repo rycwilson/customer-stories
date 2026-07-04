@@ -56,7 +56,7 @@ export default class ToastController extends Controller {
     }
     if (type && message) {
       const timeout = type === 'danger' ? false : baseOptions.timeout;
-      const position = type === 'danger' ? 'top-center' : 'bottom-center';
+      const position = ['danger', 'warning'].includes(type) ? 'top-center' : 'bottom-center';
       if (this.hasModalOutlet && this.modalOutlet.element.checkVisibility()) {
         $(this.modalOutlet.element).one('hidden.bs.modal', () => {
           bootoast.toast({ ...baseOptions, type, message, timeout, position });
