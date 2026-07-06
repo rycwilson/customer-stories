@@ -16,10 +16,13 @@ FLAGS="
 
 # Remove --custom from arguments, rebuild $@
 CUSTOM_FLAG=0
+CUSTOM_SUBDOMAIN=""
 ARGS=
 for arg in "$@"; do
   if [ "$arg" = "--custom" ]; then
     CUSTOM_FLAG=1
+  elif [ "${arg#--subdomain=}" != "$arg" ]; then
+    CUSTOM_SUBDOMAIN="${arg#--subdomain=}"
   else
     ARGS="$ARGS \"$(printf '%s' "$arg" | sed 's/"/\\"/g')\""
   fi
@@ -31,7 +34,12 @@ eval set -- $ARGS
 
 if [ "$CUSTOM_FLAG" -eq 1 ]; then
   PAIRS=
-  for f in app/assets/stylesheets/custom/*/*main*.scss; do
+  SEARCH_ROOT="app/assets/stylesheets/custom"
+  if [ -n "$CUSTOM_SUBDOMAIN" ]; then
+    SEARCH_ROOT="$SEARCH_ROOT/$CUSTOM_SUBDOMAIN"
+  fi
+
+  for f in "$SEARCH_ROOT"/*main*.scss; do
     [ -f "$f" ] || continue
     subd=$(basename "$(dirname "$f")")
     outdir="app/assets/builds/custom/$subd"
@@ -39,6 +47,16 @@ if [ "$CUSTOM_FLAG" -eq 1 ]; then
     mkdir -p "$outdir"
     PAIRS="$PAIRS \"$f\":\"$outdir/${outname}.css\""
   done
+
+  if [ -z "$PAIRS" ]; then
+    if [ -n "$CUSTOM_SUBDOMAIN" ]; then
+      echo "No custom stylesheets found for subdomain: $CUSTOM_SUBDOMAIN" >&2
+    else
+      echo "No custom stylesheets found under app/assets/stylesheets/custom" >&2
+    fi
+    exit 0
+  fi
+
   # shellcheck disable=SC2086
   eval sass $FLAGS $PAIRS "$@"
 else

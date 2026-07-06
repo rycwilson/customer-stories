@@ -18,7 +18,7 @@
     "build:stories-js": "esbuild app/typescript/src/stories/index.ts app/typescript/src/stories/index2.ts app/typescript/src/stories/show.ts --outdir=app/assets/builds/stories --minify --bundle",
     "build:stories-css": "./sass-build.sh app/assets/stylesheets/views/stories/index.scss:app/assets/builds/stories/main.css app/assets/stylesheets/views/stories/index2.scss:app/assets/builds/stories/main2.css",
     "build:plugins-css": "./sass-build.sh app/assets/stylesheets/views/plugins/index.scss:app/assets/builds/plugins/main.css",
-    "build:custom-css": "./sass-build.sh --custom",
+    "build:custom-css": "./sass-build.sh --custom ${CUSTOM_SUBDOMAIN:+--subdomain=$CUSTOM_SUBDOMAIN}",
     "_comment_jsbundling_rails": "Running bin/rails assets:precompile will call \"yarn build\"",
     "_comment_build_js": "Build from ts entrypoints, not emitted js. This avoids watch-mode races where esbuild can read emitted js before tsc finishes writing it. Run tsc without emitting for type-checking (esbuild will only strip types without checking them).",
     "build": "npx tsc --noEmit && yarn build:landing-js && yarn build:app-js && yarn build:app-ads-js && yarn build:stories-js",
@@ -26,7 +26,7 @@
     "build:css": "yarn build:landing-css --no-source-map && yarn build:app-css --no-source-map && yarn build:stories-css --no-source-map && yarn build:plugins-css --no-source-map && yarn build:custom-css --no-source-map",
     "_comment_develop_in_watch_mode": "Procfile.dev will call these commands",
     "watch:js": "concurrently \"npx tsc --noEmit --watch\" \"yarn build:landing-js --watch --sourcemap\" \"yarn build:app-js --watch --sourcemap\" \"yarn build:app-ads-js --watch --sourcemap\" \"yarn build:stories-js --watch --sourcemap\"",
-    "watch:css": "concurrently \"yarn build:landing-css --watch\" \"yarn build:app-css --watch\" \"yarn build:stories-css --watch\" \"yarn build:plugins-css --watch\" \"yarn build:custom-css --watch\""
+    "watch:css": "set -- \"yarn build:landing-css --watch\" \"yarn build:app-css --watch\" \"yarn build:stories-css --watch\" \"yarn build:plugins-css --watch\"; if [ \"$ENABLE_CUSTOM_CSS\" = \"1\" ]; then set -- \"$@\" \"yarn build:custom-css --watch\"; fi; concurrently \"$@\""
   },
   "repository": {
     "type": "git",
