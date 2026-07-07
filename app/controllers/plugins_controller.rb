@@ -6,7 +6,7 @@ class PluginsController < ApplicationController
 
   def main
     @type = params[:type] || 'tabbed_carousel' # trunity still using old tabbed carousel
-    @uid = params[:uid]
+    # @uid = params[:uid]   // This was a hack to work around multiple plugin script tags in the DOM 
 
     # set the stylesheet url here, as it's impossible to use the asset path helper in cs.js in a company-specific way
     @stylesheet_url = if helpers.custom_stylesheet?(@company, 'plugins')
@@ -19,12 +19,18 @@ class PluginsController < ApplicationController
 
   def show
     respond_to do |format|
-      # format.json {
-      #   render json: {
-      #     is_demo: params[:is_demo],
-      #     stories: JSON.parse(params[:stories]),
-      #   }
-      # }
+      # binding.pry
+      format.json {
+        render json: {
+          is_demo: params[:is_demo],
+          stories: JSON.parse(params[:stories]),
+        }
+      }
+      # format.json do
+      #   # Allow cross-origin fetch from client websites embedding the plugin.
+      #   response.set_header('Access-Control-Allow-Origin', '*')
+      #   render json: { html: plugin_view(@company) }
+      # end
       format.js do
         json = { html: plugin_view(@company) }.to_json
         jsonp = "#{params[:callback]}(#{json})"

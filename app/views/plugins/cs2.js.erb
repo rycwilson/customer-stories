@@ -1,38 +1,197 @@
 (() => {
+  'use strict';
 
-  //const plugin = <%= raw @plugin.to_json %>
-  const isDemo = true
-  const stylesheetLink = Object.assign(
-    document.createElement('link'), 
-    { rel: 'stylesheet', type: 'text/css', href: '<%= @stylesheet_url %>' }
-  )
-
-  // const container = document.querySelector(`.cs-${plugin.type}${isDemo ? '' : `-${plugin.id}`}`)
-  const script = document.querySelector(isDemo ? 'script' : `script[data-id="${plugin.id}`)
-
-  stylesheetLink.onload = () => {
-    //console.log('stylesheet loaded')
+  const stylesheetUrl = '<%= @stylesheet_url %>';
+  if (!stylesheetUrl) {
+    console.error('Missing stylesheet for Customer Stories component');
+    return;
   }
 
-  document.head.appendChild(stylesheetLink)
-  
-  getHtml()
-    .then((data) => {
-      console.log(data)
-    })
+  const isDemo         = /plugins\/demo|weebly/.test(window.location.href);
+  const type           = '<%= @type %>';
+  const showUrl        = '<%= URI.join(root_url(subdomain: @company.subdomain), plugin_view_path(@type)) %>';
+  const initUrl        = '<%= URI.join(root_url(subdomain: @company.subdomain), plugin_init_path(@type)) %>';
+  const overlaysUrl    = '<%= asset_url("plugins/cs_overlays.js") %>';
+  const loadingIconUrl = '<%= asset_url("icons/180-ring.svg") %>';
+  const xsBreakpoint   = 768;
 
-  async function getHtml() {
-    const response = await fetch(
-      '<%= URI.join(root_url(subdomain: @company.subdomain), plugin_view_path(@type)) %>.json?' +
-      new URLSearchParams({
-        is_demo: isDemo,
-        stories: JSON.stringify([1,2,3])
-      }), 
-      {
-        method: 'GET',
+  // Wait for DOM if needed, then run.
+  const ready = document.readyState === 'loading'
+    ? new Promise(resolve => document.addEventListener('DOMContentLoaded', resolve, { once: true }))
+    : Promise.resolve();
+
+  ready.then(run).catch(console.error);
+
+  // ---------------------------------------------------------------------------
+  // Main flow
+  // ---------------------------------------------------------------------------
+
+  async function run() {
+    const { container, script } = resolveElements();
+    if (!container) {
+      console.error('Missing container for Customer Stories component');
+      return;
+    }
+
+    if (!container.classList.contains('cs-plugin')) container.classList.add('cs-plugin');
+
+    // Attach onload before appending to avoid missing the event for cached stylesheets.
+    await loadStylesheet(stylesheetUrl);
+
+    const html = await fetchPluginHtml(script);
+    container.innerHTML = html;
+    container.querySelectorAll('*').forEach(el => el.classList.add('cs'));
+
+    adjustForWeebly();
+
+    const preSelectedStoryIndex = findPreSelectedStoryIndex(container);
+    await waitForImages(container);
+    await initPlugin(container, script, preSelectedStoryIndex);
+  }
+
+  function resolveElements() {
+    const selectors = {
+      gallery: {
+        script: 'script[src*="gallery/cs"]',
+        container: ['#cs-gallery']
+      },
+      carousel: {
+        script: 'script[src*="carousel/cs"], script[src*="varmour/cs"]',
+        container: ['#cs-carousel', '#cs-varmour-container']
+      },
+      tabbed_carousel: {
+        script: 'script[src*="tabbed_carousel/cs"], script[src*="tab/cs"], script[src*="widget/cs"]',
+        container: ['#cs-tabbed-carousel', '#cs-tab-container', '#cs-container']
       }
-    )
-    return response.json()
+    };
+
+    const config = selectors[type];
+    if (!config) return { container: null, script: null };
+
+    const scripts = [...document.querySelectorAll(config.script)];
+    const script = scripts.at(-1) ?? null;
+    const container = config.container.map(sel => document.querySelector(sel)).find(Boolean) ?? null;
+    return { container, script };
   }
-  
-})()
+
+  function loadStylesheet(href) {
+    return new Promise(resolve => {
+      const link = Object.assign(
+        document.createElement('link'),
+        { rel: 'stylesheet', type: 'text/css', href }
+      );
+
+      // Resolve on either load or error so a CSS failure never blocks the plugin.
+      link.onload = resolve;
+      link.onerror = resolve;
+      document.head.appendChild(link);
+    });
+  }
+
+  // ---------------------------------------------------------------------------
+  // Plugin HTML
+  // ---------------------------------------------------------------------------
+
+  async function fetchPluginHtml(script) {
+    const params = new URLSearchParams({
+      is_demo:           isDemo || false,
+      stories:           script?.dataset.stories      ?? '',
+      title:             script?.dataset.title        ?? '',
+      skip:              script?.dataset.skip         ?? '',
+      category:          script?.dataset.category     ?? '',
+      product:           script?.dataset.product      ?? '',
+      preselected_story: preSelectedStorySlug         ?? '',
+      background:        script?.dataset.background   ?? '',
+      tab_color:         script?.dataset.tabColor     ?? '',
+      text_color:        script?.dataset.textColor ?? script?.dataset.fontColor ?? '',
+      logos_only:        script?.dataset.logosOnly    ?? '',
+      grayscale:         script?.dataset.grayscale    ?? '',
+      window_width:      window.innerWidth
+    });
+
+    const response = await fetch(`${showUrl}?${params}`, {
+      headers: { Accept: 'application/json' }
+    });
+    if (!response.ok) throw new Error(`fetchPluginHtml failed: ${response.status}`);
+    const { html } = await response.json();
+    return html;
+  }
+
+  // ---------------------------------------------------------------------------
+  // Pre-selected story
+  // ---------------------------------------------------------------------------
+
+  function findPreSelectedStoryIndex(container) {
+    if (!preSelectedStorySlug) return undefined;
+    const link = container.querySelector(`a[href*="${preSelectedStorySlug}"]`);
+    if (!link) return undefined;
+    return container.id === 'cs-gallery'
+      ? [...(link.parentElement?.children ?? [])].indexOf(link)
+      : [...(link.parentElement?.parentElement?.children ?? [])].indexOf(link.parentElement);
+  }
+
+  function showLoadingScreen() {
+    const isMobile = window.innerWidth < xsBreakpoint;
+    const div = document.createElement('div');
+    div.id = 'cs-loading-pre-select';
+    Object.assign(div.style, {
+      zIndex: '100001', display: 'block', position: 'fixed',
+      height: `${window.innerHeight}px`, top: '0', left: '0', right: '0',
+      backgroundColor: isMobile ? 'rgba(242,242,242,0.9)' : 'rgba(0,0,0,0.75)',
+      transition: 'opacity 0.12s'
+    });
+    div.innerHTML = `
+      <div style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%)">
+        <img src="${loadingIconUrl}"
+             style="height:50px!important;color:${isMobile ? '#555' : 'rgba(255,255,255,0.85)'}!important">
+      </div>`;
+    document.body.appendChild(div);
+    setTimeout(() => {
+      document.getElementById('cs-loading-pre-select')?.remove();
+      history.replaceState({}, null, window.location.pathname);
+    }, 7000);
+  }
+
+  // ---------------------------------------------------------------------------
+  // Image loading
+  // ---------------------------------------------------------------------------
+
+  function waitForImages(container) {
+    const images = [...container.querySelectorAll('img')];
+    if (!images.length) return Promise.resolve();
+    return Promise.all(images.map(img => new Promise(resolve => {
+      img.addEventListener('load', resolve, { once: true });
+      img.addEventListener('error', resolve, { once: true });
+      // Reset src to re-trigger load for cached images (webkit quirk).
+      const src = img.src;
+      img.src = '';
+      img.src = src;
+    })));
+  }
+
+  // ---------------------------------------------------------------------------
+  // Plugin initialisation
+  // ---------------------------------------------------------------------------
+
+  // TODO: cspInitOverlays, cspInitGallery, cspInitCarousel, cspInitTabbedCarousel
+  // are defined in the dynamically-loaded init scripts and currently depend on jQuery.
+  // They will need to be refactored to accept a native container element before this
+  // function can be completed without jQuery.
+  async function initPlugin(container, script, preSelectedStoryIndex) {
+    trackPluginVisitor(container);
+
+    await loadScript(overlaysUrl);
+    await loadScript(initUrl);
+
+    // jQuery-dependent init calls — to be wired up once init scripts are refactored.
+  }
+
+  function loadScript(src) {
+    return new Promise((resolve, reject) => {
+      const el = Object.assign(document.createElement('script'), { src });
+      el.onload = resolve;
+      el.onerror = () => reject(new Error(`Failed to load script: ${src}`));
+      document.head.appendChild(el);
+    });
+  }
+})();
