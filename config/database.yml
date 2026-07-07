@@ -1,21 +1,20 @@
-# PostgreSQL. Versions 8.2 and up are supported.
+# PostgreSQL. Versions 9.3 and up are supported.
 #
 # Install the pg driver:
 #   gem install pg
-# On OS X with Homebrew:
+# On macOS with Homebrew:
 #   gem install pg -- --with-pg-config=/usr/local/bin/pg_config
-# On OS X with MacPorts:
-#   gem install pg -- --with-pg-config=/opt/local/lib/postgresql84/bin/pg_config
 # On Windows:
 #   gem install pg
 #       Choose the win32 build.
 #       Install PostgreSQL and put its /bin directory on your path.
 #
 # Configure Using Gemfile
-# gem 'pg'
+# gem "pg"
 #
 
-# The ENV['DATABASE_URL'] connection string will contain details such as protocol, username, password, host, port, db name
+# The ENV['DATABASE_URL'] connection string will contain details such as:
+# protocol, username, password, host, port, db name
 # Check Rails.application.config.database_configuration
 default: &default
   adapter: postgresql
@@ -23,7 +22,14 @@ default: &default
 
   # Pool should be >= max Puma threads. Extra connections allow for console sessions and background jobs
   # If running Puma in cluster mode, db connections will be workers x pool => make sure db can handle
-  pool: 5
+  # For details on connection pooling, see Rails configuration guide
+  # https://guides.rubyonrails.org/configuring.html#database-pooling
+  pool: <%= ENV.fetch("RAILS_MAX_THREADS") { 5 } %>
+  <% if ENV["DB_HOST"] %>
+  host: <%= ENV["DB_HOST"] %>
+  username: postgres
+  password: postgres
+  <% end %>
 
   # ActiveRecord::ConnectionTimeoutError if a connection pool does not become avaiable within 5s
   # timeout: 5000
@@ -32,13 +38,13 @@ development:
   <<: *default
   database: csp_development
 
-  # The specified database role being used to connect to postgres.
-  # To create additional roles in postgres see `$ createuser --help`.
-  # When left blank, postgres will use the default role. This is
-  # the same name as the operating system user that initialized the database.
+  # The specified database role being used to connect to PostgreSQL.
+  # To create additional roles in PostgreSQL see `$ createuser --help`.
+  # When left blank, PostgreSQL will use the default role. This is
+  # the same name as the operating system user running Rails.
   #username: csp
 
-  # The password associated with the postgres role (username).
+  # The password associated with the PostgreSQL role (username).
   #password:
 
   # Connect on a TCP socket. Omitted by default since the client uses a
@@ -66,25 +72,28 @@ test:
   <<: *default
   database: csp_test
 
-# As with config/secrets.yml, you never want to store sensitive information,
+# As with config/credentials.yml, you never want to store sensitive information,
 # like your database password, in your source code. If your source code is
 # ever seen by anyone, they now have access to your database.
 #
-# Instead, provide the password as a unix environment variable when you boot
-# the app. Read http://guides.rubyonrails.org/configuring.html#configuring-a-database
-# for a full rundown on how to provide these environment variables in a
-# production deployment.
+# Instead, provide the password or a full connection URL as an environment
+# variable when you boot the app. For example:
 #
-# On Heroku and other platform providers, you may have a full connection URL
-# available as an environment variable. For example:
+#   DATABASE_URL="postgres://myuser:mypass@localhost/somedatabase"
 #
-# You can use this database configuration with:
+# If the connection URL is provided in the special DATABASE_URL environment
+# variable, Rails will automatically merge its configuration values on top of
+# the values provided in this file. Alternatively, you can specify a connection
+# URL environment variable explicitly:
 #
 #   production:
-#     url: <%= ENV['DATABASE_URL'] %>
+#     url: <%= ENV["MY_APP_DATABASE_URL"] %>
+#
+# Read https://guides.rubyonrails.org/configuring.html#configuring-a-database
+# for a full overview on how database connection configuration can be specified.
 #
 production:
   <<: *default
   database: csp_production
   username: csp
-  password: <%= ENV['CSP_DATABASE_PASSWORD'] %>
+  password: <%= ENV["CSP_DATABASE_PASSWORD"] %>
