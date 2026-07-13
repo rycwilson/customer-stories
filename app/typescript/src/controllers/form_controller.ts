@@ -10,6 +10,7 @@ import type ContributorInvitationController from './contributor_invitation_contr
 import type CompanyTagsController from './company_tags_controller';
 import type CtaController from './cta_controller';
 import type AdsController from './ads_controller';
+import type StoryNarrativeContentController from './story_narrative_content_controller';
 import type StorySettingsController from './story_settings_controller';
 import type { TomOptions } from 'tom-select/dist/esm/types/core.d.ts';
 import { validateForm, serializeForm } from '../utils';
@@ -26,6 +27,7 @@ export type SubclassController = (
   CompanyTagsController |
   CtaController |
   AdsController | 
+  StoryNarrativeContentController |
   StorySettingsController
 );
 

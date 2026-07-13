@@ -121,6 +121,9 @@ application.register('story-settings', StorySettingsController);
 import ListGroupController from './list_group_controller.js';
 application.register('list-group', ListGroupController);
 
+import StoryNarrativeContentController from './story_narrative_content_controller.js';
+application.register('story-narrative-content', StoryNarrativeContentController);
+
 import SummernoteController from './summernote_controller.js';
 application.register('summernote', SummernoteController);
 
