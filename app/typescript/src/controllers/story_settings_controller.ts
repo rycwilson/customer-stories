@@ -17,10 +17,15 @@ export default class StorySettingsController extends FormController<StorySetting
 
   // connect() {}
 
+  // The submitForm action is attached to the form and triggered by:
+  // 1 - an uploaded image
+  // 2 - a `change` event on fields that may be auto-submitted
+  // 3 - a `switch` event from BootstrapSwitchController
   submitForm({ target }: { target: HTMLElement }) {
+    const name = 'name' in target ? target.name as string : null;
+    
     // Ignore 'change' event when it comes from one of the OG fields.
     // These elements will have a submit button associated with them.
-    const name = 'name' in target ? target.name as string : null;
     if (name?.match(/story\[og_[a-z_]+\]/)) return;
     
     this.element.requestSubmit();
