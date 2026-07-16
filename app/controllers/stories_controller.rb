@@ -237,7 +237,7 @@ class StoriesController < ApplicationController
           customer_attributes: %i[id name logo_url show_name_with_logo company_id]
         }
       ],
-      results_attributes: %i[id description _destroy],
+      results_attributes: %i[id description position _destroy],
       topic_ad_attributes: %i[id adwords_ad_group_id ad_id status _destroy],
       retarget_ad_attributes: %i[id adwords_ad_group_id ad_id status _destroy]
     )

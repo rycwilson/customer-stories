@@ -1,13 +1,14 @@
 import { Controller } from '@hotwired/stimulus';
+// import 
 
-export default class ListGroupController extends Controller<HTMLUListElement> {
+export default class ListGroupController extends Controller<HTMLUListElement | HTMLOListElement> {
   static values = {
     collapsible: { type: Boolean, default: false }
   }
   declare readonly collapsibleValue: boolean;
 
   static targets = ['item', 'itemText', 'itemInput', 'undoButton', 'collapse'];
-  declare readonly itemTargets: HTMLAnchorElement[];
+  declare readonly itemTargets: HTMLLIElement[];
   declare itemTextTargets: HTMLParagraphElement[];
   declare readonly itemInputTargets: HTMLInputElement[];
   declare undoButtonTargets: HTMLButtonElement[];
@@ -15,19 +16,19 @@ export default class ListGroupController extends Controller<HTMLUListElement> {
 
   allCollapsed: boolean | undefined = undefined;
 
+  get isSortable() {
+    return $(this.element).data('uiSortable');
+  }
+
   connect() {
     this.initSortable();
     if (this.collapsibleValue) this.initCollapsible();
   }
 
   disconnect() {
-    if ($(this.element).data('uiSortable')) {
+    if (this.isSortable) {
       $(this.element).sortable('destroy');
     }
-  }
-
-  get isSortable() {
-    return $(this.element).data('uiSortable');
   }
 
   initCollapsible() {
@@ -50,29 +51,35 @@ export default class ListGroupController extends Controller<HTMLUListElement> {
     });
   }
 
-  onAjaxComplete() {
-    
-  }
-
   initSortable() {
-    if (this.itemTargets.length < 2) return; 
-    const ctrl = this;
-    $(this.element).sortable({
+    // if (this.itemTargets.length < 2) return;
+
+    const options = {
       items: '.list-group-item',
       helper: (e: Event, item: JQuery<HTMLAnchorElement, any>) => (
         item.clone().css('width', item.css('width')).find('button').remove().end()
       ),
-      start(e: Event, ui: any) {
-        // console.log('start', e)
+      start: (_e: Event, ui: JQueryUI.SortableUIParams) => {
+        $(ui.item).data('previndex', ui.item.index());
       },
-      stop: (e: Event, ui: any) => {
-        // console.log('stop', e)
-        ctrl.itemTargets.forEach(item => {
-          const collapsible = ctrl.collapseTargets.find(_collapsible => item.href.includes(`#${_collapsible.id}`));
+      update: (_e: Event, ui: JQueryUI.SortableUIParams) => {
+        // console.log('update', _e, ui);
+        const newIndex = ui.item.index();
+        const oldIndex = $(ui.item).data('previndex');
+        this.dispatch('sorted', { detail: { item: ui.item, oldIndex, newIndex } });
+        $(ui.item).removeData('previndex');
+      },
+      change: (_e: Event, _ui: JQueryUI.SortableUIParams) => {
+      },
+      stop: (_e: Event, _ui: JQueryUI.SortableUIParams) => {
+        // console.log('stop');
+        this.itemTargets.forEach(item => {
+          const collapsible = this.collapseTargets.find(_collapsible => item.href.includes(`#${_collapsible.id}`));
           $(item).after(collapsible);
         });
       }
-    });
+    }
+    $(this.element).sortable(options);
   }
   
   onItemInput({ target: input }: { target: HTMLInputElement }) {

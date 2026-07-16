@@ -10,20 +10,21 @@
       label.col-md-2.control-label.visible-md-inline-block.visible-lg-inline-block Main
       .col-sm-12.col-md-10
         - if primary_cta = company.ctas.primary.take
-          .list-group data-controller="list-group" data-list-group-collapsible-value="true" style="margin-bottom:0"
-            a.list-group-item {
-              data-toggle="collapse"
-              data-list-group-target="item"
-              href="#edit-cta-#{primary_cta.id}"
-              aria-expanded="false" 
-              aria-labelledby="primary-cta-label-md-lg" }
-              p = "#{primary_cta.type == 'CtaLink' ? '[LINK]' : '[FORM]'} #{primary_cta.description}"
-              button.btn type="button"
-                i.fa.fa-fw.fa-chevron-down
-              button.btn type="button"
-                i.fa.fa-fw.fa-chevron-up
-            .collapse id="edit-cta-#{primary_cta.id}" data-list-group-target="collapse"
-              = render('ctas/edit', company:, cta: primary_cta)
+          ul.list-group.list-unstyled data-controller="list-group" data-list-group-collapsible-value="true" style="margin-bottom:0"
+            li 
+              a.list-group-item {
+                data-toggle="collapse"
+                data-list-group-target="item"
+                href="#edit-cta-#{primary_cta.id}"
+                aria-expanded="false" 
+                aria-labelledby="primary-cta-label-md-lg" }
+                p = "#{primary_cta.type == 'CtaLink' ? '[LINK]' : '[FORM]'} #{primary_cta.description}"
+                button.btn type="button"
+                  i.fa.fa-fw.fa-chevron-down
+                button.btn type="button"
+                  i.fa.fa-fw.fa-chevron-up
+              .collapse id="edit-cta-#{primary_cta.id}" data-list-group-target="collapse"
+                = render('ctas/edit', company:, cta: primary_cta)
         - else 
           = link_to( \
               new_company_cta_path(company) + '?primary=true',
@@ -47,18 +48,19 @@
       label.col-md-2.control-label.visible-md-inline-block.visible-lg-inline-block Sidebar
       .col-sm-12.col-md-10
         - if company.ctas.sidebar.present?
-          .list-group data-controller="list-group" data-list-group-collapsible-value="true" aria-labelledby="additional-ctas-label-md-lg"
+          ol.list-group.list-unstyled data-controller="list-group" data-list-group-collapsible-value="true" aria-labelledby="additional-ctas-label-md-lg"
             - company.ctas.sidebar.each do |cta|
-              a.list-group-item data-toggle="collapse" data-list-group-target="item" href="#edit-cta-#{cta.id}" aria-expanded="false"
-                - if company.ctas.sidebar.count > 1
-                  i.fa.fa-fw.fa-arrows-v
-                p = "#{cta.type == 'CtaLink' ? '[LINK]' : '[FORM]'} #{cta.description}"
-                button.btn type="button"
-                  i.fa.fa-fw.fa-chevron-down
-                button.btn type="button"
-                  i.fa.fa-fw.fa-chevron-up
-              .collapse id="edit-cta-#{cta.id}" data-list-group-target="collapse"
-                = render('ctas/edit', company:, cta:)
+              li 
+                a.list-group-item data-toggle="collapse" data-list-group-target="item" href="#edit-cta-#{cta.id}" aria-expanded="false"
+                  - if company.ctas.sidebar.count > 1
+                    i.fa.fa-fw.fa-arrows-v
+                  p = "#{cta.type == 'CtaLink' ? '[LINK]' : '[FORM]'} #{cta.description}"
+                  button.btn type="button"
+                    i.fa.fa-fw.fa-chevron-down
+                  button.btn type="button"
+                    i.fa.fa-fw.fa-chevron-up
+                .collapse id="edit-cta-#{cta.id}" data-list-group-target="collapse"
+                  = render('ctas/edit', company:, cta:)
         = link_to( \
             new_company_cta_path(company),
             class: 'btn btn-secondary',

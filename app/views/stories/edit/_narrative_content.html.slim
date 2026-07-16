@@ -1,70 +1,134 @@
-= form_with( \
-    model: story,
-    format: :json,
-    id: 'story-narrative-content-form',
-    class: 'form-horizontal',
-    data: { \
-      asset_host: Rails.application.config.asset_host },
-    html: { \
-      autocomplete: 'off' }) do |form|
-  
-  // a buffer input for uploading story images to AWS; see the summernote onImageUpload callback
-  input#narrative__img-upload.hidden type="file"
+= turbo_frame_tag('story-narrative-content-frame') do
 
-  .form-group
-    .visible-sm-block.visible-md-block.col-sm-12
-      = form.label(:title, 'Title')
-    = form.label(:title, 'Title', class: 'control-label visible-lg-inline-block col-lg-2')
-    .col-sm-12.col-lg-10
-      = form.text_field(:title, id: 'story-title-lg', class: 'form-control', data: { story_target: 'titleInput' })
+  = form_with( \
+      model: story,
+      id: 'story-narrative-content-form',
+      class: 'form-horizontal',
+      data: { \
+        controller: 'story-narrative-content toast',
+        toast_flash_value: (flash.to_h if flash.any? && turbo_frame_request_id == 'story-narrative-content-frame'),
+        toast_errors_value: (@errors if @errors.present? && turbo_frame_request_id == 'story-narrative-content-frame'),
+        action: [ \
+          'turbo:submit-start->story-narrative-content#onSubmitStart',
+          'turbo:submit-end->story-narrative-content#onSubmitEnd',
+          'list-group:sorted->story-narrative-content#onSortedResults' ].join(' ') },
+      html: { \
+        novalidate: true,
+        autocomplete: 'off' }) do |form|
+    
+    // a buffer input for uploading story images to AWS; see the summernote onImageUpload callback
+    input#narrative__img-upload.hidden type="file"
 
-  .form-group 
-    .visible-sm-block.visible-md-block.col-sm-12
-      = form.label(:results)
-    = form.label(:results, class: 'control-label visible-lg-inline-block col-lg-2')
-    .col-sm-12.col-lg-10
-      .list-group data-story-target="resultsList" data-controller="list-group"
-        = form.fields_for(:results) do |results_form|
-          a.list-group-item href="javascript:;" data-list-group-target="item"
-            i.fa.fa-fw.fa-arrows-v
-            = results_form.text_field( \
-                :description,
-                class: 'form-control',
+    .form-group
+      .visible-sm-block.visible-md-block.col-sm-12
+        = form.label(:title, 'Title')
+      = form.label(:title, 'Title', class: 'control-label visible-lg-inline-block col-lg-2')
+      .col-sm-12.col-lg-10
+        div style="display:flex; align-items:flex-start"
+          = form.text_field(:title, class: 'form-control', placeholder: 'Add a title for the story')
+          = tag.button( \
+              type: 'submit',
+              class: 'btn btn-success',
+              data: { field_name: "story[title]" } ) do
+              | Save changes
+
+    .form-group 
+      .visible-sm-block.visible-md-block.col-sm-12
+        = form.label(:results)
+      = form.label(:results, class: 'control-label visible-lg-inline-block col-lg-2')
+      .col-sm-12.col-lg-10
+        div style="display:flex; align-items:flex-start"
+          = tag.input( \
+              class: 'form-control',
+              name: "story[results_attributes][#{story.results.count}][description]",
+              placeholder: 'Add a key customer result to be highlighted with the story',
+              minlength: 5,
+              maxlength: 20,
+              data: { \
+                action: 'input->story-narrative-content#onNewResultInput' })
+          = tag.button( \
+              'Add Result',
+              type: 'submit',
+              class: 'btn btn-success hidden',
+              data: { field_name: "story[results_attributes][#{story.results.count}][description]" })
+        .help-block style="margin-bottom:1.5rem"
+          | Must be between 30 and 200 characters
+
+        ol.list-group data-controller="list-group"
+          = form.fields_for(:results) do |result_fields|
+            = tag.li( \
+                class: 'list-group-item',
                 data: { \
-                  list_group_target: 'itemInput',
-                  action: 'input->list-group#onItemInput',
-                  initial_value: results_form.object.description })
-            = results_form.check_box(:_destroy, { class: 'hidden' }, true, false)
-            p.list-group-item-text data-list-group-target="itemText"
-              = results_form.object.description
-            button.btn {
-              type="button" 
-              data-action="list-group#remove"
-              data-controller="tooltip"
-              data-tooltip-options-value={ title: "Delete" }.to_json }
-              i.fa.fa-fw.fa-remove
-            button.btn {
-              type="button" 
-              data-action="list-group#undo"
-              data-list-group-target="undoButton"
-              data-controller="tooltip" }
-              i.fa.fa-fw.fa-undo
-  
-  .form-group 
-    .visible-sm-block.visible-md-block.col-sm-12
-      = form.label(:narrative, 'Body')
-    = form.label(:narrative, 'Body', class: 'control-label visible-lg-inline-block col-lg-2')
-    .col-sm-12.col-lg-10
-      = form.text_area( \
-          :narrative,
-          class: 'form-control',
-          data: { \
-            controller: 'summernote',
-            summernote_enabled_value: true,
-            summernote_config_key_value: 'story',
-            summernote_config_args_value: [nil].to_json,
-            story_target: 'narrativeTextarea' })
+                  list_group_target: 'item',
+                  story_narrative_content_target: 'result' }) do
+              = result_fields.hidden_field(:id)
+              /= result_fields.hidden_field(:position)
+              input type="hidden" name="story[results_attributes][#{result_fields.index}][position]" value="#{result_fields.index}"
+              i.fa.fa-fw.fa-arrows-v
+              = result_fields.text_field( \
+                  :description,
+                  class: 'form-control',
+                  data: { \
+                    list_group_target: 'itemInput',
+                    action: 'input->list-group#onItemInput',
+                    initial_value: result_fields.object.description })
+              = result_fields.check_box(:_destroy, { class: 'hidden' }, true, false)
+              p.list-group-item-text data-list-group-target="itemText"
+                = result_fields.object.description
+              button.btn {
+                type="button" 
+                data-action="list-group#remove"
+                data-controller="tooltip"
+                data-tooltip-options-value={ title: "Delete" }.to_json }
+                i.fa.fa-fw.fa-remove
+              button.btn {
+                type="button" 
+                data-action="list-group#undo"
+                data-list-group-target="undoButton"
+                data-controller="tooltip" }
+                i.fa.fa-fw.fa-undo
 
-  .row.hidden-xs
-    .col-sm-12.col-lg-offset-2.col-lg-10
-      = form.submit('Save changes', class: 'btn btn-success')
+    /.form-group 
+      .col-sm-12.col-lg-10.col-lg-offset-2
+            
+        .list-group data-story-target="resultsList" data-controller="list-group"
+          = form.fields_for(:results) do |results_form|
+            a.list-group-item href="javascript:;" data-list-group-target="item"
+              i.fa.fa-fw.fa-arrows-v
+              = results_form.text_field( \
+                  :description,
+                  class: 'form-control',
+                  data: { \
+                    list_group_target: 'itemInput',
+                    action: 'input->list-group#onItemInput',
+                    initial_value: results_form.object.description })
+              = results_form.check_box(:_destroy, { class: 'hidden' }, true, false)
+              p.list-group-item-text data-list-group-target="itemText"
+                = results_form.object.description
+              button.btn {
+                type="button" 
+                data-action="list-group#remove"
+                data-controller="tooltip"
+                data-tooltip-options-value={ title: "Delete" }.to_json }
+                i.fa.fa-fw.fa-remove
+              button.btn {
+                type="button" 
+                data-action="list-group#undo"
+                data-list-group-target="undoButton"
+                data-controller="tooltip" }
+                i.fa.fa-fw.fa-undo
+    
+    .form-group 
+      .visible-sm-block.visible-md-block.col-sm-12
+        = form.label(:narrative, 'Body')
+      = form.label(:narrative, 'Body', class: 'control-label visible-lg-inline-block col-lg-2')
+      .col-sm-12.col-lg-10
+        = form.text_area( \
+            :narrative,
+            class: 'form-control',
+            data: { \
+              controller: 'summernote',
+              summernote_enabled_value: true,
+              summernote_config_key_value: 'story',
+              summernote_config_args_value: [nil].to_json,
+              story_target: 'narrativeTextarea' })
