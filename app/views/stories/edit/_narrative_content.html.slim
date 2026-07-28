@@ -72,51 +72,23 @@
                     list_group_target: 'itemInput',
                     action: 'input->list-group#onItemInput',
                     initial_value: result_fields.object.description })
-              = result_fields.check_box(:_destroy, { class: 'hidden' }, true, false)
+              /= result_fields.check_box(:_destroy, { class: 'hidden' }, true, false)
               p.list-group-item-text data-list-group-target="itemText"
                 = result_fields.object.description
-              button.btn {
-                type="button" 
-                data-action="list-group#remove"
-                data-controller="tooltip"
-                data-tooltip-options-value={ title: "Delete" }.to_json }
-                i.fa.fa-fw.fa-remove
-              button.btn {
-                type="button" 
-                data-action="list-group#undo"
-                data-list-group-target="undoButton"
-                data-controller="tooltip" }
-                i.fa.fa-fw.fa-undo
+              .list-group-item__controls
+                - [[ 'edit', 'pencil' ], [ 'delete', 'remove' ]].each do |(action, icon)|
+                  - next if action == 'edit'  # allow dynamic editing
 
-    /.form-group 
-      .col-sm-12.col-lg-10.col-lg-offset-2
-            
-        .list-group data-story-target="resultsList" data-controller="list-group"
-          = form.fields_for(:results) do |results_form|
-            a.list-group-item href="javascript:;" data-list-group-target="item"
-              i.fa.fa-fw.fa-arrows-v
-              = results_form.text_field( \
-                  :description,
-                  class: 'form-control',
-                  data: { \
-                    list_group_target: 'itemInput',
-                    action: 'input->list-group#onItemInput',
-                    initial_value: results_form.object.description })
-              = results_form.check_box(:_destroy, { class: 'hidden' }, true, false)
-              p.list-group-item-text data-list-group-target="itemText"
-                = results_form.object.description
-              button.btn {
-                type="button" 
-                data-action="list-group#remove"
-                data-controller="tooltip"
-                data-tooltip-options-value={ title: "Delete" }.to_json }
-                i.fa.fa-fw.fa-remove
-              button.btn {
-                type="button" 
-                data-action="list-group#undo"
-                data-list-group-target="undoButton"
-                data-controller="tooltip" }
-                i.fa.fa-fw.fa-undo
+                  = tag.button( \
+                      type: 'button',
+                      class: 'btn',
+                      data: { \
+                        controller: 'tooltip',
+                        action: "list-group##{action}Item",
+                        tooltip_options_value: { \
+                          title: "#{action.capitalize} item",
+                          delay: { show: 500, hide: 0 } }})
+                    - tag.i class: "fa fa-fw fa-#{icon}"
     
     .form-group 
       .visible-sm-block.visible-md-block.col-sm-12

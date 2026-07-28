@@ -3,8 +3,10 @@ import { Controller } from '@hotwired/stimulus';
 
 export default class ListGroupController extends Controller<HTMLUListElement | HTMLOListElement> {
   static values = {
+    sortEnabled: { type: Boolean, default: true },
     collapsible: { type: Boolean, default: false }
   }
+  declare readonly sortEnabledValue: boolean;
   declare readonly collapsibleValue: boolean;
 
   static targets = ['item', 'itemText', 'itemInput', 'undoButton', 'collapse'];
@@ -17,18 +19,20 @@ export default class ListGroupController extends Controller<HTMLUListElement | H
   allCollapsed: boolean | undefined = undefined;
 
   get isSortable() {
-    return $(this.element).data('uiSortable');
+    return this.sortEnabledValue && $(this.element).data('uiSortable');
+  }
+
+  get hasCollapsible() {
+    return this.collapseTargets.length > 0;
   }
 
   connect() {
-    this.initSortable();
+    if (this.sortEnabledValue) this.initSortable();
     if (this.collapsibleValue) this.initCollapsible();
   }
 
   disconnect() {
-    if (this.isSortable) {
-      $(this.element).sortable('destroy');
-    }
+    if (this.isSortable) $(this.element).sortable('destroy');
   }
 
   initCollapsible() {
@@ -52,65 +56,79 @@ export default class ListGroupController extends Controller<HTMLUListElement | H
   }
 
   initSortable() {
-    // if (this.itemTargets.length < 2) return;
+    if (this.itemTargets.length < 2) return;
 
     const options = {
       items: '.list-group-item',
+      // classes: {
+      //   'ui-sortable-helper': 'ui-sortable-helper',
+      //   'ui-sortable-placeholder': 'ui-sortable-placeholder',
+      // },
       helper: (e: Event, item: JQuery<HTMLAnchorElement, any>) => (
         item.clone().css('width', item.css('width')).find('button').remove().end()
       ),
       start: (_e: Event, ui: JQueryUI.SortableUIParams) => {
+        ui.item.addClass('dragging');
         $(ui.item).data('previndex', ui.item.index());
       },
       update: (_e: Event, ui: JQueryUI.SortableUIParams) => {
         // console.log('update', _e, ui);
         const newIndex = ui.item.index();
         const oldIndex = $(ui.item).data('previndex');
+
         this.dispatch('sorted', { detail: { item: ui.item, oldIndex, newIndex } });
         $(ui.item).removeData('previndex');
       },
       change: (_e: Event, _ui: JQueryUI.SortableUIParams) => {
       },
-      stop: (_e: Event, _ui: JQueryUI.SortableUIParams) => {
+      stop: (_e: Event, ui: JQueryUI.SortableUIParams) => {
+        setTimeout(() => ui.item.removeClass('dragging'), 200);
         // console.log('stop');
-        this.itemTargets.forEach(item => {
-          const collapsible = this.collapseTargets.find(_collapsible => item.href.includes(`#${_collapsible.id}`));
-          $(item).after(collapsible);
-        });
+        // if (this.hasCollapsible) {
+        //   this.itemTargets.forEach(item => {
+        //     const collapsible = this.collapseTargets.find(_collapsible => item.href.includes(`#${_collapsible.id}`));
+        //     $(item).after(collapsible);
+        //   });
+        // }
       }
     }
     $(this.element).sortable(options);
   }
   
   onItemInput({ target: input }: { target: HTMLInputElement }) {
-    const item = <HTMLAnchorElement>this.itemTargets.find(item => item.contains(input));
-    const undoButton = <HTMLButtonElement>this.undoButtonTargets.find(button => item.contains(button));
-    item.classList.toggle('will-be-updated', input.value !== input.dataset.initialValue);
-    undoButton.setAttribute('data-tooltip-options-value', JSON.stringify({ title: 'Undo Changes' }));
+    // const item = <HTMLAnchorElement>this.itemTargets.find(item => item.contains(input));
+    // const undoButton = <HTMLButtonElement>this.undoButtonTargets.find(button => item.contains(button));
+    // item.classList.toggle('will-be-updated', input.value !== input.dataset.initialValue);
+    // undoButton.setAttribute('data-tooltip-options-value', JSON.stringify({ title: 'Undo Changes' }));
   }
 
-  remove({ currentTarget: button }: { currentTarget: HTMLButtonElement }) {
-    const item = <HTMLAnchorElement>this.itemTargets.find(item => item.contains(button));
-    const itemText = <HTMLParagraphElement>this.itemTextTargets.find(p => item.contains(p));
-    const undoButton = <HTMLButtonElement>this.undoButtonTargets.find(button => item.contains(button));
-    item.classList.add('will-be-removed');
-    itemText.innerHTML = `<s>${itemText.textContent}</s>`;
-    undoButton.setAttribute('data-tooltip-options-value', JSON.stringify({ title: 'Undo Delete' }));
-    $(this.element).sortable('destroy')
-    $(this.element).sortable({ items: '.list-group-item:not(.will-be-removed)' });
+  editItem({ currentTarget: button }: { currentTarget: HTMLButtonElement }) {
+    const item = <HTMLLIElement>this.itemTargets.find(item => item.contains(button));
+    item.classList.add('will-be-updated');
+  }
+
+  deleteItem({ currentTarget: button }: { currentTarget: HTMLButtonElement }) {
+    // const item = <HTMLAnchorElement>this.itemTargets.find(item => item.contains(button));
+    // const itemText = <HTMLParagraphElement>this.itemTextTargets.find(p => item.contains(p));
+    // const undoButton = <HTMLButtonElement>this.undoButtonTargets.find(button => item.contains(button));
+    // item.classList.add('will-be-removed');
+    // itemText.innerHTML = `<s>${itemText.textContent}</s>`;
+    // undoButton.setAttribute('data-tooltip-options-value', JSON.stringify({ title: 'Undo Delete' }));
+    // $(this.element).sortable('destroy')
+    // $(this.element).sortable({ items: '.list-group-item:not(.will-be-removed)' });
   }
 
   undo({ currentTarget: button }: { currentTarget: HTMLButtonElement }) {
-    const item = <HTMLAnchorElement>this.itemTargets.find(item => item.contains(button));
-    if (item.classList.contains('will-be-removed')) {
-      const itemText = <HTMLParagraphElement>this.itemTextTargets.find(p => item.contains(p));
-      itemText.innerHTML = itemText.innerText;
-    } else {
-      const itemInput = <HTMLInputElement>this.itemInputTargets.find(input => item.contains(input));
-      itemInput.value = <string>itemInput.dataset.initialValue;
-    }
-    item.classList.remove('will-be-updated', 'will-be-removed');
-    $(this.element).sortable('destroy')
-    $(this.element).sortable({ items: '.list-group-item:not(.will-be-removed)' });
+  //   const item = <HTMLAnchorElement>this.itemTargets.find(item => item.contains(button));
+  //   if (item.classList.contains('will-be-removed')) {
+  //     const itemText = <HTMLParagraphElement>this.itemTextTargets.find(p => item.contains(p));
+  //     itemText.innerHTML = itemText.innerText;
+  //   } else {
+  //     const itemInput = <HTMLInputElement>this.itemInputTargets.find(input => item.contains(input));
+  //     itemInput.value = <string>itemInput.dataset.initialValue;
+  //   }
+  //   item.classList.remove('will-be-updated', 'will-be-removed');
+  //   $(this.element).sortable('destroy')
+  //   $(this.element).sortable({ items: '.list-group-item:not(.will-be-removed)' });
   }
 }

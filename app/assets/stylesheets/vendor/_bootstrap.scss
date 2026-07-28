@@ -1,3 +1,79 @@
+.list-group-item {
+  $btn-size: 2.5em;
+  $icon-font-size: 1.25em;
+
+  position: relative;
+  display: flex;
+  align-items: center;
+  min-height: 50px;
+  padding: 0 1.5rem 0;
+  cursor: pointer;
+  // transition: background-color 1s ease-in-out, padding-left 1s ease-in-out, padding-right 1s ease-in-out;
+
+  i.fa-arrows-v,
+  .controls i {
+    font-size: $icon-font-size;
+  }
+  
+  i.fa-arrows-v,
+  .list-group-item__controls {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    visibility: hidden;
+    opacity: 0;
+  }
+
+  i.fa-arrows-v {
+    left: 0.75rem;
+  }
+
+  .list-group-item__controls {
+    right: 0.5rem;
+
+    button {
+      width: $btn-size;
+      height: $btn-size;
+      background: transparent;
+      padding: 0;
+    }
+  }
+
+  &:hover,
+  &.ui-sortable-helper,
+  &.will-be-updated {
+    background-color: $light-blue;
+    padding-right: 5.5em;
+    transition: background-color .15s ease-out, padding-left .15s ease-out, padding-right .15s ease-out;
+
+    &.ui-sortable-handle {
+      padding-left: 2.75em;
+    }
+    
+    i.fa-arrows-v,
+    &:not(.ui-sortable-helper) .list-group-item__controls {
+      visibility: visible;
+      opacity: 1;
+      transition: opacity .15s ease-out;
+    }
+    
+    // Dragging state
+    &.dragging,             // This is the original element that is hidden while a temp element is dragged
+    &.ui-sortable-helper {  // This is the temp element being dragged
+      transition: none;
+
+      i.fa-arrows-v,
+      .list-group-item__controls {
+        transition: none;
+      }
+    }
+  }
+
+  &.will-be-updated {
+
+  }
+}
+
 table {
   background-color: #fff;
 
