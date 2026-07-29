@@ -54,41 +54,44 @@
         .help-block style="margin-bottom:1.5rem"
           | Must be between 30 and 200 characters
 
-        ol.list-group data-controller="list-group"
+        = tag.ol class: [ \
+                   'list-group list-unstyled',
+                   { 'list-group--sortable': story.results.count > 1 } ],
+                 data: { controller: 'list-group' }
           = form.fields_for(:results) do |result_fields|
-            = tag.li( \
-                class: 'list-group-item',
-                data: { \
-                  list_group_target: 'item',
-                  story_narrative_content_target: 'result' }) do
-              = result_fields.hidden_field(:id)
-              /= result_fields.hidden_field(:position)
-              input type="hidden" name="story[results_attributes][#{result_fields.index}][position]" value="#{result_fields.index}"
-              i.fa.fa-fw.fa-arrows-v
-              = result_fields.text_field( \
-                  :description,
-                  class: 'form-control',
-                  data: { \
-                    list_group_target: 'itemInput',
-                    action: 'input->list-group#onItemInput',
-                    initial_value: result_fields.object.description })
-              /= result_fields.check_box(:_destroy, { class: 'hidden' }, true, false)
-              p.list-group-item-text data-list-group-target="itemText"
-                = result_fields.object.description
-              .list-group-item__controls
-                - [[ 'edit', 'pencil' ], [ 'delete', 'remove' ]].each do |(action, icon)|
-                  - next if action == 'edit'  # allow dynamic editing
+            = tag.li class: 'list-group-item',
+                     data: { \
+                       list_group_target: 'item',
+                       story_narrative_content_target: 'result' }
+              .list-group-item__item
+                = result_fields.hidden_field(:id)
+                /= result_fields.hidden_field(:position)
+                input type="hidden" name="story[results_attributes][#{result_fields.index}][position]" value="#{result_fields.index}"
+                = tag.i(class: 'fa fa-fw fa-arrows-v') if story.results.count > 1
+                = result_fields.text_field( \
+                    :description,
+                    class: 'form-control',
+                    data: { \
+                      list_group_target: 'itemInput',
+                      action: 'input->list-group#onItemInput',
+                      initial_value: result_fields.object.description })
+                /= result_fields.check_box(:_destroy, { class: 'hidden' }, true, false)
+                p.list-group-item-text data-list-group-target="itemText"
+                  = result_fields.object.description
+                .list-group-item__controls
+                  - [[ 'edit', 'pencil' ], [ 'delete', 'remove' ]].each do |(action, icon)|
+                    - next if action == 'edit'  # allow dynamic editing
 
-                  = tag.button( \
-                      type: 'button',
-                      class: 'btn',
-                      data: { \
-                        controller: 'tooltip',
-                        action: "list-group##{action}Item",
-                        tooltip_options_value: { \
-                          title: "#{action.capitalize} item",
-                          delay: { show: 500, hide: 0 } }})
-                    - tag.i class: "fa fa-fw fa-#{icon}"
+                    = tag.button( \
+                        type: 'button',
+                        class: 'btn',
+                        data: { \
+                          controller: 'tooltip',
+                          action: "list-group##{action}Item",
+                          tooltip_options_value: { \
+                            title: "#{action.capitalize} item",
+                            delay: { show: 500, hide: 0 } }})
+                      - tag.i class: "fa fa-fw fa-#{icon}"
     
     .form-group 
       .visible-sm-block.visible-md-block.col-sm-12

@@ -1,7 +1,9 @@
 // @import 'contributions';
 
 #story-narrative-content {
-  @import 'results';
+  .list-group {
+    margin-bottom: 0;
+  }
   
   [id*="story-narrative"] + .note-editor {
     // .modal.link-dialog {
