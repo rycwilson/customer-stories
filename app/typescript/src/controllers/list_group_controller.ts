@@ -1,13 +1,14 @@
 import { Controller } from '@hotwired/stimulus';
+import { handleDisabledElement } from '@rails/ujs';
 // import 
 
 export default class ListGroupController extends Controller<HTMLUListElement | HTMLOListElement> {
   static values = {
     sortEnabled: { type: Boolean, default: true },
-    collapsible: { type: Boolean, default: false }
+    collapseEnabled: { type: Boolean, default: false }
   }
   declare readonly sortEnabledValue: boolean;
-  declare readonly collapsibleValue: boolean;
+  declare readonly collapseEnabledValue: boolean;
 
   static targets = ['item', 'itemText', 'itemInput', 'undoButton', 'collapse'];
   declare readonly itemTargets: HTMLLIElement[];
@@ -15,8 +16,6 @@ export default class ListGroupController extends Controller<HTMLUListElement | H
   declare readonly itemInputTargets: HTMLInputElement[];
   declare undoButtonTargets: HTMLButtonElement[];
   declare collapseTargets: HTMLDivElement[];
-
-  allCollapsed: boolean | undefined = undefined;
 
   get isSortable() {
     return this.sortEnabledValue && $(this.element).data('uiSortable');
@@ -28,7 +27,7 @@ export default class ListGroupController extends Controller<HTMLUListElement | H
 
   connect() {
     if (this.sortEnabledValue) this.initSortable();
-    if (this.collapsibleValue) this.initCollapsible();
+    if (this.collapseEnabledValue) this.initCollapsible();
   }
 
   disconnect() {
@@ -36,20 +35,18 @@ export default class ListGroupController extends Controller<HTMLUListElement | H
   }
 
   initCollapsible() {
-    this.allCollapsed = true;
     this.collapseTargets.forEach(collapsible => {
       $(collapsible).on('shown.bs.collapse hidden.bs.collapse', (e: Event) => {
         if (e.type === 'shown') {
+          // Add a class name for managing css transitions
+          collapsible.parentElement?.classList.add('list-group-item--expanded');
           collapsible.scrollIntoView({ block: 'center' });
-          (<HTMLInputElement>collapsible.querySelector('[name*="description"]')).focus();
+          collapsible.querySelector<HTMLInputElement>('[name*="display_text"]')?.focus();
         } else {
-          (<HTMLAnchorElement>collapsible.previousElementSibling).blur();
-        }
-        this.allCollapsed = this.itemTargets.filter(item => item.getAttribute('aria-expanded') === 'true').length === 0;
-        if (this.isSortable && !this.allCollapsed) {
-          $(this.element).sortable('destroy');
-        } else if (this.allCollapsed && !this.isSortable) {
-          this.initSortable();
+          // Delayed class name removal prevents a style transistion that would otherwise occur
+          setTimeout(() => {
+            collapsible.parentElement?.classList.remove('list-group-item--expanded');
+          }, 200);
         }
       });
     });
@@ -68,11 +65,12 @@ export default class ListGroupController extends Controller<HTMLUListElement | H
         item.clone().css('width', item.css('width')).find('button').remove().end()
       ),
       start: (_e: Event, ui: JQueryUI.SortableUIParams) => {
+        // The ui.item (.ui-sortable-handle) will be hidden while it's being dragged.
+        // Add a class name for managing css transitions (see `stop` callback below)
         ui.item.addClass('dragging');
         $(ui.item).data('previndex', ui.item.index());
       },
       update: (_e: Event, ui: JQueryUI.SortableUIParams) => {
-        // console.log('update', _e, ui);
         const newIndex = ui.item.index();
         const oldIndex = $(ui.item).data('previndex');
 
@@ -82,14 +80,8 @@ export default class ListGroupController extends Controller<HTMLUListElement | H
       change: (_e: Event, _ui: JQueryUI.SortableUIParams) => {
       },
       stop: (_e: Event, ui: JQueryUI.SortableUIParams) => {
+        // Delayed class name removal prevents a style transistion that would otherwise occur
         setTimeout(() => ui.item.removeClass('dragging'), 200);
-        // console.log('stop');
-        // if (this.hasCollapsible) {
-        //   this.itemTargets.forEach(item => {
-        //     const collapsible = this.collapseTargets.find(_collapsible => item.href.includes(`#${_collapsible.id}`));
-        //     $(item).after(collapsible);
-        //   });
-        // }
       }
     }
     $(this.element).sortable(options);
