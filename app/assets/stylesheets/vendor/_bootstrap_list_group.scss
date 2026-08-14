@@ -5,7 +5,7 @@
     }
   }
 
-  &--submitting-sort {
+  &--sorting {
     cursor: not-allowed;
 
     .list-group-item {
@@ -53,22 +53,7 @@
   }
 }
 
-.list-group-item__handle {
-  @include flex-row-center;
-  position: absolute;
-  top: 0;
-  left: 0;
-  bottom: 0;
-  width: 2.75em;
-  cursor: pointer;
-
-  &--disabled {
-    pointer-events: none;
-  }
-}
-
 .list-group-item__item {
-  $btn-size: 2.5em;
   $icon-font-size: 1.25em;
   
   position: relative;
@@ -159,18 +144,20 @@
   .fa-chevron-down {
     right: 1.25rem;
   }
+}
 
-  .list-group-item__controls {
-    right: 0.5rem;
+.list-group-item__handle {
+  @include flex-row-center;
+  position: absolute;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  width: 2.75em;
+  cursor: pointer;
 
-    button {
-      width: $btn-size;
-      height: $btn-size;
-      background: transparent;
-      padding: 0;
-    }
+  &--disabled {
+    pointer-events: none;
   }
-
 }
 
 .list-group-item__content {
@@ -202,5 +189,16 @@
     > button {
       display: revert;
     }
+  }
+}
+
+.list-group-item__controls {
+  right: 0.5rem;
+
+  button {
+    width: 2.5em;
+    height: 2.5em;
+    background: transparent;
+    padding: 0;
   }
 }
