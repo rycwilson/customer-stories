@@ -117,17 +117,7 @@ class StoriesController < ApplicationController
     @story = Story.friendly.find params[:id]
 
     if @story.update story_params
-      flash.now[:notice] = 
-        if @story.saved_change_to_logo_published?
-          "Story has been #{'un' unless @story.logo_published?}listed."
-        elsif @story.saved_change_to_preview_published?
-          "Story preview has been #{'un' unless @story.preview_published?}published."
-        elsif @story.saved_change_to_published?
-          "Story has been #{'un' unless @story.published?}published."
-        else
-          'Story has been updated.'
-        end
-
+      flash.now[:notice] = successful_update_flash_message
       respond_to do |format|
         # Don't re-render the form as this may cause multi-select options to shift around
         format.turbo_stream do
@@ -140,7 +130,6 @@ class StoriesController < ApplicationController
               locals: { story: @story }
             )
           end
-          # turbo_stream_actions << 
           render turbo_stream: turbo_stream_actions
         end
         format.html { head :no_content }
@@ -365,5 +354,30 @@ class StoriesController < ApplicationController
       'story-testimonials-frame' => 'stories/edit/testimonials',
       'story-settings-frame' => 'stories/edit/story_settings'
     }
+  end
+
+  def successful_update_flash_message
+    if @story.saved_change_to_logo_published?
+      "Story has been #{'un' unless @story.logo_published?}listed."
+    elsif @story.saved_change_to_preview_published?
+      "Story preview has been #{'un' unless @story.preview_published?}published."
+    elsif @story.saved_change_to_published?
+      "Story has been #{'un' unless @story.published?}published."
+    elsif @story.saved_change_to_new_results?
+      previous = @story.new_results_before_last_save
+      current = @story.new_results
+      if current.count > previous.count
+        'Result has been added to the story.'
+      elsif current.count < previous.count
+        'Result was removed from the story.'
+      elsif current.all? { |result| previous.include?(result) } && 
+            current.any? { |result| previous.index(result) != current.index(result) }
+        'Results have been reordered.'
+      else
+        'Result has been updated.'
+      end
+    else
+      'Story has been updated.'
+    end
   end
 end
