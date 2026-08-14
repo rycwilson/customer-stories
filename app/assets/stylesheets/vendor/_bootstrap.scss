@@ -47,7 +47,6 @@
     }
   }
 
-  // &--updating,
   &--deleting {
     opacity: 0.65;
     pointer-events: none;
@@ -73,14 +72,8 @@
   $icon-font-size: 1.25em;
   
   position: relative;
-  // display: flex;
-  // align-items: center;
   height: 5rem;
   padding: 0 1.5rem 0;
-
-  // .list-group--sortable & {
-  //   cursor: pointer;
-  // }
 
   // Dragging state
   // .dragging is the original <li> that is hidden while a temp element is dragged
@@ -142,28 +135,6 @@
     }
   }
 
-  // input[type="text"] {
-  //   visibility: hidden;
-  //   opacity: 0;
-  // }
-
-  // &:hover {
-    // input,
-    // p {
-    //   transition: opacity .15s ease-out;
-    // }
-
-    // input[type="text"] {
-    //   visibility: visible;
-    //   opacity: 1;
-    // }
-
-    // p {
-    //   visibility: hidden;
-    //   opacity: 0;
-    // }
-  // }
-
   .fa-arrows-v,
   .fa-chevron-up,
   .fa-chevron-down,
@@ -203,34 +174,16 @@
 }
 
 .list-group-item__content {
-  // position: relative;
   height: 100%;
   display: flex;
   align-items: center;
   
-  // input,
-  // p {
-  //   position: absolute;
-  //   top: 50%;
-  //   transform: translateY(-50%)
-  // }
-
-  // input {
-  //   visibility: hidden;
-  //   opacity: 0;
-  // }
-
   p {
     margin-bottom: 0;
   }
 
   > :not(p) {
     display: none;
-  }
-
-  input {
-    margin-right: 1rem;
-    // cursor: revert;
   }
 
   > button {
@@ -250,24 +203,6 @@
       display: revert;
     }
   }
-    
-
-  // &:hover {
-  //   input,
-  //   p {
-  //     transition: opacity .15s ease-out;
-  //   }
-
-  //   input {
-  //     visibility: visible;
-  //     opacity: 1;
-  //   }
-    
-  //   p {
-  //     visibility: hidden;
-  //     opacity: 0;
-  //   }
-  // }
 }
 
 table {

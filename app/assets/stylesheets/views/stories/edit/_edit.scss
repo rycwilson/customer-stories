@@ -1,21 +1,27 @@
-// @import 'contributions';
-
 .story__results {
-  &:has(.list-group--has-active) #new-result-input {
+  &:has(.list-group--has-active) > :first-child input {
     pointer-events: none;
   }
-
+  
   > :first-child {
     @include flex-row-center;
     
     & + .help-block {
       margin-bottom: 1.5rem;
     }
+
+    input:placeholder-shown {
+      border-top-right-radius: $border-radius-base;
+      border-bottom-right-radius: $border-radius-base;
+    }
   }
 
   .input-group {
     flex-grow: 1;
-    margin-right: 1rem;
+    
+    &:has(input:not(:placeholder-shown)) {
+      margin-right: 1rem;
+    }
   }
 
   .input-group-addon {
