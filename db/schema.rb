@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.2].define(version: 2025_06_26_182228) do
+ActiveRecord::Schema[7.2].define(version: 2026_07_28_132919) do
   create_schema "heroku_ext"
 
   # These are extensions that must be enabled in order to support this database
@@ -436,6 +436,7 @@ ActiveRecord::Schema[7.2].define(version: 2025_06_26_182228) do
     t.string "og_image_width"
     t.string "og_image_height"
     t.integer "status_new", default: 1, null: false
+    t.jsonb "new_results", default: [], null: false
     t.index ["success_id"], name: "index_stories_on_success_id"
     t.index ["title"], name: "index_stories_on_title", unique: true
   end
