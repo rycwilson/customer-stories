@@ -1,4 +1,5 @@
 import { Controller } from '@hotwired/stimulus';
+import type { TurboSubmitStartEvent } from '@hotwired/turbo';
 import type ModalController from './modal_controller';
 import type NewCustomerWinController from './new_customer_win_controller';
 import type NewContributionController from './new_contribution_controller';
@@ -143,9 +144,10 @@ export default class FormController<Ctrl extends SubclassController> extends Con
     }
   }
 
-  animateSubmitBtn(_e: SubmitEvent) {
-    const submitBtn = this.submitBtn;
+  animateSubmit(e: TurboSubmitStartEvent, submitEl?: HTMLButtonElement | HTMLInputElement) {
+    const submitBtn = submitEl || this.submitBtn;
     if (!submitBtn?.dataset.content || !submitBtn?.dataset.disableWithHtml) return;
+
     submitBtn.classList.add('submitting');
     submitBtn.innerHTML = 
       submitBtn.dataset.disableWithHtml.replace('[content]', submitBtn.dataset.content);  

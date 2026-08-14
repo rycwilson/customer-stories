@@ -17,7 +17,7 @@
           new_story_modal_outlet: '#main-modal',
           action: [ \
             'submit->new-story#validate',
-            'turbo:submit-start->new-story#animateSubmitBtn'].join(' ') },
+            'turbo:submit-start->new-story#animateSubmit'].join(' ') },
         html: { \
           novalidate: true,
           autocomplete: 'off' }) do |form|

@@ -8,7 +8,7 @@
         action: [ \
           'input->new-contribution#updateState',
           'submit->new-contribution#validate',
-          'turbo:submit-start->new-contribution#animateSubmitBtn'].join(' ') },
+          'turbo:submit-start->new-contribution#animateSubmit'].join(' ') },
       html: { \
         novalidate: true,
         autocomplete: 'off' }) do |form|

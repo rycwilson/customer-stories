@@ -16,7 +16,7 @@ main.user-profile.container-fluid.hidden-xs
           'image-card:upload-ready->user-profile#updateState',
           'input->user-profile#updateState',
           'submit->user-profile#validate',
-          'turbo:submit-start->user-profile#animateSubmitBtn'].join(' ') },
+          'turbo:submit-start->user-profile#animateSubmit'].join(' ') },
       html: { \
         novalidate: true,
         autocomplete: 'off' }) do |form|
