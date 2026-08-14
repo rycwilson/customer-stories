@@ -81,7 +81,11 @@ export default class CompanyTagsController extends FormController<CompanyTagsCon
 
         // Since we've hijacked form submission, we need to manually disable and animate the button
         this.submitBtnTarget.disabled = true;
-        this.element.addEventListener('submit', super.animateSubmitBtn.bind(this), { once: true });
+        this.element.addEventListener(
+          'submit',
+          super.animateSubmit.bind(this) as EventListener,
+          { once: true }
+        );
         this.element.requestSubmit();
       });
     }
