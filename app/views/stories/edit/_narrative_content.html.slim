@@ -61,8 +61,8 @@
 
     .form-group
       .visible-sm-block.visible-md-block.col-sm-12
-        = form.label(:new_results)
-      = form.label(:new_results, class: 'control-label visible-lg-inline-block col-lg-2')
+        = form.label(:new_results, 'Results')
+      = form.label(:new_results, 'Results', class: 'control-label visible-lg-inline-block col-lg-2')
       .col-sm-12.col-lg-10
 
         = render('stories/edit/results', story:)
