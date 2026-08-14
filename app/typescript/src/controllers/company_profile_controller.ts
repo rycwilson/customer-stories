@@ -21,12 +21,11 @@ export default class CompanyProfileController extends FormController<CompanyProf
   //   super.disconnect();
   // }
 
-  onUploadReady(e: CustomEvent) {
-    const { card } = e.detail;
+  onUploadReady({ detail: { card } }: CustomEvent<{ card: HTMLElement }>) {
     [...this.companyHeaderDemoTarget.children].forEach((link: Element) => {
       if (card.className.includes(link.className)) {
-        const url = (<HTMLInputElement>card.querySelector(':scope > input[name*="url"]')).value;
-        (<HTMLImageElement>link.querySelector(':scope > img')).src = url;
+        const urlInput = <HTMLInputElement>link.querySelector(':scope > input[name*="url"]');
+        (<HTMLImageElement>link.querySelector(':scope > img')).src = urlInput.value;
       }
     });
     this.updateState();

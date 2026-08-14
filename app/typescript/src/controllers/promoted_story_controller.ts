@@ -16,7 +16,7 @@ export default class PromotedStoryController extends DatatableRowController<Prom
     return $(checkbox);
   }
 
-  async updateStatus({ detail: { state: shouldEnable } }: { detail: { state: boolean } }) {
+  async updateStatus({ detail: { state: shouldEnable } }: CustomEvent<{ state: boolean }>) {
     const newStatus = shouldEnable ? 'ENABLED' : 'PAUSED';
     this.$statusSwitch.bootstrapSwitch('disabled', true);
     this.statusLabelTarget.textContent = '\u00A0'; // unbreakable space prevents the elment from collapsing

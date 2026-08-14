@@ -8,14 +8,12 @@ export default class StoryNarrativeContentController extends FormController<Stor
     'newResultInput',
     'newResultSubmit',
     'resultsList',
-    'deleteResultSubmit',
   ];
   declare readonly titleInputTarget: HTMLInputElement;
   declare readonly titleSubmitTarget: HTMLButtonElement;
   declare readonly newResultInputTarget: HTMLInputElement;
   declare readonly newResultSubmitTarget: HTMLButtonElement;
   declare readonly resultsListTarget: HTMLOListElement;
-  declare readonly deleteResultSubmitTarget: HTMLButtonElement;
 
   // The same submission object is included in both 
   // TurboSubmitStartEvent and TurboSubmitStopEvent events
@@ -111,33 +109,27 @@ export default class StoryNarrativeContentController extends FormController<Stor
   }
 
   onSortedResults(
-    { detail: { item, oldIndex, newIndex } }: 
-    CustomEvent<{ item: HTMLElement, oldIndex: number, newIndex: number }>
+    _e: CustomEvent<{ item: HTMLLIElement, oldIndex: number, newIndex: number }>
   ) {
-    console.log(`from ${oldIndex} to ${newIndex}`, item);
-    this.resultsListTarget.classList.add('list-group--submitting-sort');
+    this.resultsListTarget.classList.add('list-group--sorting');
     this.element.requestSubmit();
   }
 
-  deleteResult({ detail: { input } }: { detail: { input: HTMLInputElement } }) {
+  deleteResult(e: CustomEvent<{ item: HTMLLIElement, input: HTMLInputElement }>) {
+    const { input } = e.detail;
     input.name = '';
     this.element.requestSubmit();
   }
 
-  onToggleEditResult(
-    { detail: { item, isEditable, cancelButton, sortHandle } }: 
-    { 
-      detail: { 
-        item: HTMLLIElement
-        isEditable: boolean,
-        cancelButton: HTMLButtonElement, 
-        sortHandle?: HTMLElement
-      }
-    }
-  ) {
-    console.log(item, isEditable, cancelButton, sortHandle)
+  onToggleEditResult(e: CustomEvent<{ 
+    item: HTMLLIElement
+    isEditable: boolean,
+    cancelButton: HTMLButtonElement, 
+    sortHandle?: HTMLElement
+  }>) {
+    const { item, isEditable, cancelButton, sortHandle } = e.detail;
     this.activeResult = isEditable ? 
-      { item, cancelButton, ...(sortHandle ? { sortHandle } : {}) } : 
+      { item, cancelButton, ...(sortHandle && { sortHandle }) } : 
       null;
   }
 }

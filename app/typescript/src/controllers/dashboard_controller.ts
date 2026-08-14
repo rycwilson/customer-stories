@@ -93,7 +93,8 @@ export default class DashboardController extends Controller {
     document.documentElement.removeEventListener('turbo:visit', this.tabRestorationListener)
   }
 
-  onResourceLoading({ currentTarget: tabPanel }: { currentTarget: HTMLDivElement }) {
+  onResourceLoading(e: CustomEvent) {
+    const tabPanel = <HTMLElement>e.currentTarget;
     this.spinnerTimers[tabPanel.id] = window.setTimeout(() => {
       if (!tabPanel.classList.contains('ready')) {
         tabPanel.classList.add('loading');
@@ -101,7 +102,7 @@ export default class DashboardController extends Controller {
     }, 1000);
   }
 
-  onResourceReady({ detail: { resourceName } }: { detail: { resourceName: ResourceName }}) {
+  onResourceReady({ detail: { resourceName } }: CustomEvent<{ resourceName: ResourceName }>) {
     // console.log('resource ready', resourceName)
     this.readyState[resourceName] = true;
   }
@@ -149,8 +150,8 @@ export default class DashboardController extends Controller {
     );
   }
 
-  onChangeStoriesCurator({ detail: { 'curator': curatorId } }: { detail: { 'curator': number | null }}) {
-    this.filtersValue = { 'curator': curatorId };
+  onChangeStoriesCurator(e: CustomEvent<{ 'curator': number | null }>) {
+    this.filtersValue = e.detail;
   }
 
   activeTabValueChanged(activeTab: DashboardTab) {

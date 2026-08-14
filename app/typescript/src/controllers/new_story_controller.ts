@@ -22,12 +22,13 @@ export default class NewStoryController extends FormController<NewStoryControlle
     this.storyTitleTarget.focus();
   }
 
-  onTurboSubmitEnd({ detail: { fetchResponse: { response } } } : { detail: { fetchResponse: FetchResponse } }) {
+  onTurboSubmitEnd(e: CustomEvent<{ fetchResponse: FetchResponse }>) {
+    const { response } = e.detail.fetchResponse;
     const redirectUrl = response.headers.get('Location');
     if (response.ok && redirectUrl) {
       document.documentElement.addEventListener(
         'turbo:load', 
-        (e: TurboVisitEvent) => {
+        (_e: TurboVisitEvent) => {
           const toaster = document.getElementById('toaster');
           if (toaster) {
             toaster.setAttribute('data-toast-flash-value', JSON.stringify({ notice: 'Story created successfully' }));

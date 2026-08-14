@@ -41,7 +41,7 @@ export default class AdsController extends FormController<AdsController> {
     super.disconnect();
   }
 
-  submitForm(_e: CustomEvent) {
+  submitForm(_e: CustomEvent<{ card: HTMLElement }>) {
     this.element.requestSubmit()
   }
 
@@ -69,7 +69,8 @@ export default class AdsController extends FormController<AdsController> {
     card.setAttribute('data-image-card-open-file-dialog-value', 'true');
   }
 
-  keepPreviousDefault({ detail: { prevDefaultImageId } }: { detail: { prevDefaultImageId: string } }) {
+  keepPreviousDefault(e: CustomEvent<{ prevDefaultImageId: string }>) {
+    const { prevDefaultImageId } = e.detail;
     const i = [
       ...this.defaultImageCardTargets, this.newImageCardTarget, this.newLogoCardTarget, ...this.imageCardTargets
     ].length;
@@ -79,9 +80,8 @@ export default class AdsController extends FormController<AdsController> {
     `);
   }
 
-  setNewDefault({
-    detail: { card, imageType, toggleDefault } }: { detail: { card: HTMLLIElement, imageType: AdImage, toggleDefault: boolean }
-  }) {
+  setNewDefault(e: CustomEvent<{ card: HTMLLIElement, imageType: AdImage, toggleDefault: boolean }>) {
+    const { card, imageType, toggleDefault } = e.detail;
     const sameType = (_card: HTMLLIElement) => (new RegExp(`--${imageType}`)).test(_card.className);
     this.defaultImageCardTargets.forEach(defaultImageCard => {
       if (sameType(defaultImageCard)) {

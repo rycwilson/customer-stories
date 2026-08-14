@@ -10,7 +10,8 @@ export default class CompanyTagsController extends FormController<CompanyTagsCon
   // connect() {
   // }
 
-  onAddTag({ detail: { tagName, source, cancel = false} }: { detail: { tagName: string, source: string, cancel?: boolean } }) {
+  onAddTag(e: CustomEvent<{ tagName: string, source: string, cancel?: boolean }>) {
+    const { tagName, source, cancel = false } = e.detail;
     if (cancel) {
       const inputsContainer = this.element.querySelector(`[data-new-tag="${source}__${tagName}"]`);
       if (inputsContainer) inputsContainer.remove();
@@ -26,7 +27,8 @@ export default class CompanyTagsController extends FormController<CompanyTagsCon
     this.updateState();
   }
 
-  onRemoveTag({ detail: { tagName, source, cancel } }: { detail: { tagName: string, source: string, cancel: boolean } }) {
+  onRemoveTag(e: CustomEvent<{ tagName: string, source: string, cancel: boolean }>) {
+    const { tagName, source, cancel } = e.detail;
     const nameInput = this.hiddenFieldTargets.find(input => (
       input.name.includes(`[${source}_attributes]`) && input.value === tagName
     ));

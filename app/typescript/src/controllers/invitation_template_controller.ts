@@ -78,13 +78,13 @@ export default class InvitationTemplateController extends FormController<Invitat
   }
 
   // Set initial state here instead of in connect(), since the initial view is not a form element
-  onInitTemplateBody({ detail: components }: { detail: SummernoteComponents }) {
+  onInitTemplateBody(_e: CustomEvent<SummernoteComponents>) {
     this.initialState = serializeForm(this.element);
   } 
 
-  updateState(e: InputEvent | CustomEvent) {
+  updateState(e: InputEvent | CustomEvent<SummernoteComponents>) {
     // Summernote will emit both 'input' and 'change' events; ignore the former.
-    // The change event is needed because 'input' event is not always emitted, e.g. adding a newline
+  // The change event is needed because 'input' event is not always emitted, e.g. adding a newline
     if (e.type === 'input' && (e.target as HTMLElement).tagName !== 'INPUT') return;
 
     // Allow summernote to update the textarea before inspecting the form data

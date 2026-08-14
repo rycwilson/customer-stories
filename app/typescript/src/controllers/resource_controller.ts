@@ -259,7 +259,7 @@ export default class ResourceController extends Controller<HTMLElement> {
     }
   }
 
-  onRowDeleted({ detail: { id, storyId } }: { detail: { id: number, storyId?: number } }) {
+  onRowDeleted({ detail: { id, storyId } }: CustomEvent<{ id: number, storyId?: number }>) {
     CSP[this.resourceName] = CSP[this.resourceName].filter(
       (item: CustomerWin | Contribution) => item.id !== id
     );

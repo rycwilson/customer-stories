@@ -8,8 +8,7 @@ export default class ListGroupController extends Controller<HTMLUListElement | H
   declare readonly sortEnabledValue: boolean;
   declare readonly collapseEnabledValue: boolean;
 
-  static targets = ['newItemSubmit', 'item', 'itemInput', 'cancelButton', 'collapse', 'sortHandle'];
-  declare readonly newItemSubmitTarget: HTMLButtonElement;
+  static targets = ['item', 'itemInput', 'cancelButton', 'collapse', 'sortHandle'];
   declare readonly itemTargets: HTMLLIElement[];
   declare readonly itemInputTargets: HTMLInputElement[];
   declare readonly cancelButtonTargets: HTMLButtonElement[];
@@ -17,17 +16,23 @@ export default class ListGroupController extends Controller<HTMLUListElement | H
   declare readonly sortHandleTargets: HTMLElement[];
 
   get isSortable() {
-    return this.sortEnabledValue && $(this.element).data('uiSortable');
-  }
-
-  connect() {
-    // this.toggleSortable(this.sortEnabledValue);
-    if (this.sortEnabledValue) this.initSortable();
-    if (this.collapseEnabledValue) this.initCollapsible();
+    return $(this.element).data('uiSortable');
   }
 
   disconnect() {
     if (this.isSortable) $(this.element).sortable('destroy');
+  }
+
+  sortEnabledValueChanged(shouldEnable: boolean) {
+    if (shouldEnable) {
+      this.initSortable();
+    } else if (this.isSortable) {
+      $(this.element).sortable('destroy');
+    }
+  }
+
+  collapseEnabledValueChanged(shouldEnable: boolean) {
+    if (shouldEnable) this.initCollapsible();
   }
 
   initCollapsible() {
@@ -37,9 +42,6 @@ export default class ListGroupController extends Controller<HTMLUListElement | H
           // Add a class name for managing css transitions
           this.parentElement?.classList.add('list-group-item--expanded');
           this.scrollIntoView({ block: 'center' });
-          // const input = this.querySelectorAll<HTMLInputElement>('input[type="text"]')[0];
-          // input?.focus();
-          // input?.setSelectionRange(input.value.length, input.value.length);
         } else {
           // Delayed class name removal prevents a style transistion that would otherwise occur
           setTimeout(() => {
@@ -66,16 +68,12 @@ export default class ListGroupController extends Controller<HTMLUListElement | H
       start: (_e: Event, ui: JQueryUI.SortableUIParams) => {
         // The ui.item (.ui-sortable-handle) will be hidden while it's being dragged.
         // Add a class name for managing css transitions (see `stop` callback below)
-
-        // ui.item.find('[data-action="list-group#cancelEdit"]').trigger('click')
-
         ui.item.addClass('ui-sortable-handle--dragging');
         ui.item.data('previndex', ui.item.index());
       },
       update: (_e: Event, ui: JQueryUI.SortableUIParams) => {
         const newIndex = ui.item.index();
         const oldIndex = $(ui.item).data('previndex');
-
         this.dispatch('sorted', { detail: { item: ui.item, oldIndex, newIndex } });
         $(ui.item).removeData('previndex');
       },
@@ -89,6 +87,7 @@ export default class ListGroupController extends Controller<HTMLUListElement | H
 
     $(this.element).sortable(options);
     
+    // When dragging, cancel any ongoing edits. Avoids complexity of managing ui for multiple changes 
     $(this.element).find('.list-group-item__handle').each((i: number, handle: HTMLElement) => {
       $(handle).mousedown(() => {
         const item = <HTMLLIElement>this.itemTargets.find(item => item.contains(handle));
@@ -97,9 +96,6 @@ export default class ListGroupController extends Controller<HTMLUListElement | H
       });
     });
   }
-
-  // onItemInput({ target: input }: { target: HTMLInputElement }) {
-  // }
   
   editItem({ currentTarget: button }: { currentTarget: HTMLButtonElement }) {
     const item = <HTMLLIElement>this.itemTargets.find(item => item.contains(button));
@@ -137,7 +133,7 @@ export default class ListGroupController extends Controller<HTMLUListElement | H
     if (confirm('Delete this item? This action cannot be undone.')) {
       button.blur();
       item.classList.add('list-group-item--deleting');
-      this.dispatch('delete', { detail: { input } });
+      this.dispatch('delete', { detail: { item, input } });
     } else {
       button.blur();
       this.element.classList.remove('list-group--has-active');

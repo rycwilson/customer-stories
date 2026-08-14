@@ -19,11 +19,10 @@
 
     / For identifying the field being submitted in TurboSubmitStartEvent and TurboSubmitStopEvent events: 
     / Some submit events do not have a submitter, e.g. deleting a Result.
-    = tag.button( \
+    / = tag.button( \
         type: 'submit',
         class: 'hidden',
         data: { \
-          story_narrative_content_target: 'deleteResultSubmit',
           field_name: "story[new_results][]" })
     
     // a buffer input for uploading story images to AWS; see the summernote onImageUpload callback

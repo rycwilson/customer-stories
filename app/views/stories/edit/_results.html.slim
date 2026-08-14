@@ -32,12 +32,12 @@
   .help-block
     | Must be between MIN and MAX characters
 
-  = tag.ol class: [ \
-              'list-group list-unstyled',
-              { 'list-group--sortable': story.results.count > 1 } ],
-            data: { \
-              controller: 'list-group',
-              story_narrative_content_target: 'resultsList' }
+  = tag.ol( \
+      class: ['list-group list-unstyled', { 'list-group--sortable': story.results.count > 1 }],
+      data: { \
+        controller: 'list-group',
+        list_group_sort_enabled_value: true,
+        story_narrative_content_target: 'resultsList' })
 
     /= form.fields_for(:results) do |result_fields|
     - story.new_results.each_with_index do |result, i|
@@ -46,14 +46,6 @@
         .list-group-item__item
           .list-group-item__handle data-list-group-target="sortHandle"
             = tag.i(class: 'fa fa-fw fa-arrows-v') if story.new_results.count > 1
-          /= result_fields.text_field( \
-              :description,
-              class: 'form-control',
-              data: { \
-                list_group_target: 'itemInput',
-                action: 'input->list-group#onItemInput',
-                initial_value: result_fields.object.description })
-
           .list-group-item__content
             p
               /= result_fields.object.description

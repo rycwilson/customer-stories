@@ -131,8 +131,7 @@ export default class extends Controller<HTMLDivElement> {
     });
   }
 
-  onChangeFilter(e: CustomEvent) {
-    const { kind, id } = e.detail;
+  onChangeFilter({ detail: { kind, id } }: CustomEvent<{ kind: string, id: string }>) {
     this.clearSearch();
     this.fetchStories((turboFrameSrc: URL) => {
       if (id) {
