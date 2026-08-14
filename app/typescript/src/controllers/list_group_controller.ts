@@ -1,6 +1,4 @@
 import { Controller } from '@hotwired/stimulus';
-import { handleDisabledElement } from '@rails/ujs';
-// import 
 
 export default class ListGroupController extends Controller<HTMLUListElement | HTMLOListElement> {
   static values = {
@@ -10,22 +8,20 @@ export default class ListGroupController extends Controller<HTMLUListElement | H
   declare readonly sortEnabledValue: boolean;
   declare readonly collapseEnabledValue: boolean;
 
-  static targets = ['item', 'itemText', 'itemInput', 'undoButton', 'collapse'];
+  static targets = ['newItemSubmit', 'item', 'itemInput', 'cancelButton', 'collapse', 'sortHandle'];
+  declare readonly newItemSubmitTarget: HTMLButtonElement;
   declare readonly itemTargets: HTMLLIElement[];
-  declare itemTextTargets: HTMLParagraphElement[];
   declare readonly itemInputTargets: HTMLInputElement[];
-  declare undoButtonTargets: HTMLButtonElement[];
-  declare collapseTargets: HTMLDivElement[];
+  declare readonly cancelButtonTargets: HTMLButtonElement[];
+  declare readonly collapseTargets: HTMLDivElement[];
+  declare readonly sortHandleTargets: HTMLElement[];
 
   get isSortable() {
     return this.sortEnabledValue && $(this.element).data('uiSortable');
   }
 
-  get hasCollapsible() {
-    return this.collapseTargets.length > 0;
-  }
-
   connect() {
+    // this.toggleSortable(this.sortEnabledValue);
     if (this.sortEnabledValue) this.initSortable();
     if (this.collapseEnabledValue) this.initCollapsible();
   }
@@ -35,17 +31,19 @@ export default class ListGroupController extends Controller<HTMLUListElement | H
   }
 
   initCollapsible() {
-    this.collapseTargets.forEach(collapsible => {
-      $(collapsible).on('shown.bs.collapse hidden.bs.collapse', (e: Event) => {
+    this.collapseTargets.forEach(div => {
+      $(div).on('shown.bs.collapse hidden.bs.collapse', function (this: HTMLDivElement, e: Event) {
         if (e.type === 'shown') {
           // Add a class name for managing css transitions
-          collapsible.parentElement?.classList.add('list-group-item--expanded');
-          collapsible.scrollIntoView({ block: 'center' });
-          collapsible.querySelector<HTMLInputElement>('[name*="display_text"]')?.focus();
+          this.parentElement?.classList.add('list-group-item--expanded');
+          this.scrollIntoView({ block: 'center' });
+          // const input = this.querySelectorAll<HTMLInputElement>('input[type="text"]')[0];
+          // input?.focus();
+          // input?.setSelectionRange(input.value.length, input.value.length);
         } else {
           // Delayed class name removal prevents a style transistion that would otherwise occur
           setTimeout(() => {
-            collapsible.parentElement?.classList.remove('list-group-item--expanded');
+            this.parentElement?.classList.remove('list-group-item--expanded');
           }, 200);
         }
       });
@@ -57,6 +55,7 @@ export default class ListGroupController extends Controller<HTMLUListElement | H
 
     const options = {
       items: '.list-group-item',
+      handle: '.list-group-item__handle',
       // classes: {
       //   'ui-sortable-helper': 'ui-sortable-helper',
       //   'ui-sortable-placeholder': 'ui-sortable-placeholder',
@@ -67,8 +66,11 @@ export default class ListGroupController extends Controller<HTMLUListElement | H
       start: (_e: Event, ui: JQueryUI.SortableUIParams) => {
         // The ui.item (.ui-sortable-handle) will be hidden while it's being dragged.
         // Add a class name for managing css transitions (see `stop` callback below)
-        ui.item.addClass('dragging');
-        $(ui.item).data('previndex', ui.item.index());
+
+        // ui.item.find('[data-action="list-group#cancelEdit"]').trigger('click')
+
+        ui.item.addClass('ui-sortable-handle--dragging');
+        ui.item.data('previndex', ui.item.index());
       },
       update: (_e: Event, ui: JQueryUI.SortableUIParams) => {
         const newIndex = ui.item.index();
@@ -81,46 +83,64 @@ export default class ListGroupController extends Controller<HTMLUListElement | H
       },
       stop: (_e: Event, ui: JQueryUI.SortableUIParams) => {
         // Delayed class name removal prevents a style transistion that would otherwise occur
-        setTimeout(() => ui.item.removeClass('dragging'), 200);
+        setTimeout(() => ui.item.removeClass('ui-sortable-handle--dragging'), 200);
       }
     }
+
     $(this.element).sortable(options);
-  }
-  
-  onItemInput({ target: input }: { target: HTMLInputElement }) {
-    // const item = <HTMLAnchorElement>this.itemTargets.find(item => item.contains(input));
-    // const undoButton = <HTMLButtonElement>this.undoButtonTargets.find(button => item.contains(button));
-    // item.classList.toggle('will-be-updated', input.value !== input.dataset.initialValue);
-    // undoButton.setAttribute('data-tooltip-options-value', JSON.stringify({ title: 'Undo Changes' }));
+    
+    $(this.element).find('.list-group-item__handle').each((i: number, handle: HTMLElement) => {
+      $(handle).mousedown(() => {
+        const item = <HTMLLIElement>this.itemTargets.find(item => item.contains(handle));
+        const cancelButton = <HTMLButtonElement>this.cancelButtonTargets.find(button => item.contains(button));
+        cancelButton.click();
+      });
+    });
   }
 
+  // onItemInput({ target: input }: { target: HTMLInputElement }) {
+  // }
+  
   editItem({ currentTarget: button }: { currentTarget: HTMLButtonElement }) {
     const item = <HTMLLIElement>this.itemTargets.find(item => item.contains(button));
-    item.classList.add('will-be-updated');
+    const input = <HTMLInputElement>this.itemInputTargets.find(input => item.contains(input));
+    const sortHandle = this.isSortable ?
+      (<HTMLElement>this.sortHandleTargets.find(handle => item.contains(handle)) ?? null) :
+      null;
+    const cancelButton = <HTMLButtonElement>this.cancelButtonTargets.find(button => item.contains(button));
+    this.element.classList.add('list-group--has-active');
+    item.classList.add('list-group-item--active');
+    this.dispatch(
+      'toggle-edit', 
+      { detail: { item, isEditable: true, cancelButton, ...(sortHandle ? { sortHandle } : {}) } }
+    );
+
+    setTimeout(() => {
+      input.focus();
+      input.setSelectionRange(input.value.length, input.value.length);
+    });
+  }
+  
+  cancelEdit({ currentTarget: button }: { currentTarget: HTMLButtonElement }) {
+    const item = <HTMLLIElement>this.itemTargets.find(item => item.contains(button));
+    const input = <HTMLInputElement>this.itemInputTargets.find(input => item.contains(input));
+    item.classList.remove('list-group-item--active');   
+    this.element.classList.remove('list-group--has-active');
+    this.dispatch('toggle-edit', { detail: { item, isEditable: false } });
+    setTimeout(() => input.value = input.dataset.initialValue || '');
   }
 
   deleteItem({ currentTarget: button }: { currentTarget: HTMLButtonElement }) {
-    // const item = <HTMLAnchorElement>this.itemTargets.find(item => item.contains(button));
-    // const itemText = <HTMLParagraphElement>this.itemTextTargets.find(p => item.contains(p));
-    // const undoButton = <HTMLButtonElement>this.undoButtonTargets.find(button => item.contains(button));
-    // item.classList.add('will-be-removed');
-    // itemText.innerHTML = `<s>${itemText.textContent}</s>`;
-    // undoButton.setAttribute('data-tooltip-options-value', JSON.stringify({ title: 'Undo Delete' }));
-    // $(this.element).sortable('destroy')
-    // $(this.element).sortable({ items: '.list-group-item:not(.will-be-removed)' });
-  }
-
-  undo({ currentTarget: button }: { currentTarget: HTMLButtonElement }) {
-  //   const item = <HTMLAnchorElement>this.itemTargets.find(item => item.contains(button));
-  //   if (item.classList.contains('will-be-removed')) {
-  //     const itemText = <HTMLParagraphElement>this.itemTextTargets.find(p => item.contains(p));
-  //     itemText.innerHTML = itemText.innerText;
-  //   } else {
-  //     const itemInput = <HTMLInputElement>this.itemInputTargets.find(input => item.contains(input));
-  //     itemInput.value = <string>itemInput.dataset.initialValue;
-  //   }
-  //   item.classList.remove('will-be-updated', 'will-be-removed');
-  //   $(this.element).sortable('destroy')
-  //   $(this.element).sortable({ items: '.list-group-item:not(.will-be-removed)' });
+    const item = <HTMLLIElement>this.itemTargets.find(item => item.contains(button));
+    const input = <HTMLInputElement>this.itemInputTargets.find(input => item.contains(input));
+    this.element.classList.add('list-group--has-active');
+    if (confirm('Delete this item? This action cannot be undone.')) {
+      button.blur();
+      item.classList.add('list-group-item--deleting');
+      this.dispatch('delete', { detail: { input } });
+    } else {
+      button.blur();
+      this.element.classList.remove('list-group--has-active');
+    }
   }
 }

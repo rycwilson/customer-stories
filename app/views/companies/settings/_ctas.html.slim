@@ -32,10 +32,11 @@
               style: 'margin-bottom:0')
             li.list-group-item data-list-group-target="item"
               .list-group-item__item
-                = tag.a href: "#edit-cta-#{primary_cta.id}",
-                        aria: { expanded: 'false' },
-                        data: { toggle: 'collapse' }
-                  p = "#{primary_cta.type == 'CtaLink' ? '[LINK]' : '[FORM]'} #{primary_cta.description}"
+                .list-group-item__content
+                  = tag.a href: "#edit-cta-#{primary_cta.id}",
+                          aria: { expanded: 'false' },
+                          data: { toggle: 'collapse' }
+                    p = "#{primary_cta.type == 'CtaLink' ? '[LINK]' : '[FORM]'} #{primary_cta.description}"
                 i.fa.fa-fw.fa-chevron-up data-toggle="collapse" data-target="#edit-cta-#{primary_cta.id}"
                 i.fa.fa-fw.fa-chevron-down data-toggle="collapse" data-target="#edit-cta-#{primary_cta.id}"
               .collapse id="edit-cta-#{primary_cta.id}" data-list-group-target="collapse"
@@ -80,10 +81,11 @@
               li.list-group-item data-list-group-target="item"
                 .list-group-item__item
                   = tag.i(class: 'fa fa-fw fa-arrows-v') if company.ctas.sidebar.count > 1
-                  = tag.a href: "#edit-cta-#{cta.id}",
-                          aria: { expanded: 'false' },
-                          data: { toggle: 'collapse' }
-                    p = "#{cta.type == 'CtaLink' ? '[LINK]' : '[FORM]'} #{cta.description}"
+                  .list-group-item__content
+                    = tag.a href: "#edit-cta-#{cta.id}",
+                            aria: { expanded: 'false' },
+                            data: { toggle: 'collapse' }
+                      p = "#{cta.type == 'CtaLink' ? '[LINK]' : '[FORM]'} #{cta.description}"
                   i.fa.fa-fw.fa-chevron-up data-toggle="collapse" data-target="#edit-cta-#{cta.id}"
                   i.fa.fa-fw.fa-chevron-down data-toggle="collapse" data-target="#edit-cta-#{cta.id}"
                 .collapse id="edit-cta-#{cta.id}" data-list-group-target="collapse"

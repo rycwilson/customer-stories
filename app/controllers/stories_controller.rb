@@ -131,7 +131,17 @@ class StoriesController < ApplicationController
       respond_to do |format|
         # Don't re-render the form as this may cause multi-select options to shift around
         format.turbo_stream do
-          render turbo_stream: turbo_stream.replace('toaster', partial: 'shared/toaster')
+          turbo_stream_actions = [turbo_stream.replace('toaster', partial: 'shared/toaster')]
+          if @story.saved_change_to_new_results?
+            # replace with list partial for either new, modified, or sorted results
+            turbo_stream_actions << turbo_stream.replace(
+              "story-#{@story.id}-results",
+              partial: 'stories/edit/results',
+              locals: { story: @story }
+            )
+          end
+          # turbo_stream_actions << 
+          render turbo_stream: turbo_stream_actions
         end
         format.html { head :no_content }
       end
@@ -227,7 +237,8 @@ class StoriesController < ApplicationController
       :title, :summary, :quote, :quote_attr_name, :quote_attr_title, :video_url, :success_id,
       :formatted_video_url, :narrative, :published, :logo_published, :preview_published,
       :hidden_link, :og_title, :og_description, :og_image_url, :og_image_width, :og_image_height,
-      :og_image_alt, 
+      :og_image_alt,
+      new_results: [],
       success_attributes: [
         :id, :name, :placeholder, :customer_id, :curator_id,
         { 

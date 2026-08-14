@@ -1,5 +1,28 @@
+.list-group {
+  &--has-active {
+    .list-group-item:not(.list-group-item--active) {
+      pointer-events: none;
+    }
+  }
+
+  &--submitting-sort {
+    cursor: not-allowed;
+
+    .list-group-item {
+      opacity: 0.65;
+      pointer-events: none;
+    }
+  }
+}
+
 .list-group-item {
   padding: 0;
+
+  &.ui-sortable-placeholder {
+    visibility: visible !important;
+    height: 5rem;
+    background-color: $blueish-gray-lighter;
+  }
 
   .collapse {
     position: relative;
@@ -23,6 +46,26 @@
       border-top-left-radius: $border-radius-base;
     }
   }
+
+  // &--updating,
+  &--deleting {
+    opacity: 0.65;
+    pointer-events: none;
+  }
+}
+
+.list-group-item__handle {
+  @include flex-row-center;
+  position: absolute;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  width: 2.75em;
+  cursor: pointer;
+
+  &--disabled {
+    pointer-events: none;
+  }
 }
 
 .list-group-item__item {
@@ -30,38 +73,48 @@
   $icon-font-size: 1.25em;
   
   position: relative;
-  display: flex;
-  align-items: center;
+  // display: flex;
+  // align-items: center;
   height: 5rem;
   padding: 0 1.5rem 0;
-  cursor: pointer;
+
+  // .list-group--sortable & {
+  //   cursor: pointer;
+  // }
 
   // Dragging state
   // .dragging is the original <li> that is hidden while a temp element is dragged
   // .ui-sortable-helper is the temp <li> being dragged
 
-  .list-group-item:not(.ui-sortable-helper):not(.ui-sortable-handle.dragging) &:hover {
-    transition: background-color .15s ease-out, padding-left .15s ease-out, padding-right .15s ease-out;
+  .list-group-item:not(.ui-sortable-helper):not(.ui-sortable-handle--dragging) &:hover {
+    transition: background-color .15s ease-out, padding-left .15s ease-out; //, padding-right .15s ease-out;
   }
   
   &:hover,
   .list-group--sortable .ui-sortable-helper &,
-  .list-group--collapsible .list-group-item:has(.collapse.in) & {
+  .list-group--collapsible .list-group-item:has(.collapse.in) &,
+  .list-group-item--active &,
+  .list-group-item--deleting & {
     background-color: $light-blue;
   }
 
-  .list-group--sortable &:hover,
+  .list-group-item--active &,
+  .list-group--sortable .list-group-item:not(.list-group-item--active) &:hover,
+  .list-group--sortable .list-group-item--deleting &,
   .list-group--sortable .ui-sortable-helper &,
   .list-group--sortable.list-group--collapsible .list-group-item:has(.collapse.in) & {
     padding-left: 2.75em;
   }
   
-  &:has(.list-group-item__controls):hover {
+  .list-group-item:not(.list-group-item--active) &:has(.list-group-item__controls):hover {
     padding-right: 3.5em;
   }
 
-  &:hover .list-group-item__controls,
+  .list-group-item:not(.list-group-item--active) &:hover .list-group-item__controls,
+  .list-group-item--deleting & .list-group-item__controls,
   .list-group--sortable &:hover .fa-arrows-v,
+  .list-group--sortable .list-group-item--deleting & .fa-arrows-v,
+  .list-group-item--active & .fa-arrows-v,
   .list-group--sortable .ui-sortable-helper & .fa-arrows-v,
   .list-group--sortable.list-group--collapsible .list-group-item:has(.collapse.in) & .fa-arrows-v,
   .list-group--collapsible .list-group-item:has(.collapse.in):not(.ui-sortable-helper) & .fa-chevron-up,
@@ -70,9 +123,9 @@
     opacity: 1;
   }
 
-  .list-group .list-group-item:not(.ui-sortable-helper):not(.ui-sortable-handle.dragging) &:hover .list-group-item__controls,
-  .list-group--sortable .list-group-item:not(.ui-sortable-helper):not(.ui-sortable-handle.dragging) &:hover .fa-arrows-v,
-  .list-group--collapsible .list-group-item:not(:has(.collapse.in)):not(.ui-sortable-handle.dragging):not(.list-group-item--expanded) &:hover .fa-chevron-down {
+  .list-group .list-group-item:not(.ui-sortable-helper):not(.ui-sortable-handle--dragging) &:hover .list-group-item__controls,
+  .list-group--sortable .list-group-item:not(.ui-sortable-helper):not(.ui-sortable-handle--dragging) &:hover .fa-arrows-v,
+  .list-group--collapsible .list-group-item:not(:has(.collapse.in)):not(.ui-sortable-handle--dragging):not(.list-group-item--expanded) &:hover .fa-chevron-down {
     transition: opacity .15s ease-out;
   }
 
@@ -89,9 +142,27 @@
     }
   }
 
-  input[type="text"] {
-    display: none;
-  }
+  // input[type="text"] {
+  //   visibility: hidden;
+  //   opacity: 0;
+  // }
+
+  // &:hover {
+    // input,
+    // p {
+    //   transition: opacity .15s ease-out;
+    // }
+
+    // input[type="text"] {
+    //   visibility: visible;
+    //   opacity: 1;
+    // }
+
+    // p {
+    //   visibility: hidden;
+    //   opacity: 0;
+    // }
+  // }
 
   .fa-arrows-v,
   .fa-chevron-up,
@@ -129,9 +200,74 @@
     }
   }
 
+}
+
+.list-group-item__content {
+  // position: relative;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  
+  // input,
+  // p {
+  //   position: absolute;
+  //   top: 50%;
+  //   transform: translateY(-50%)
+  // }
+
+  // input {
+  //   visibility: hidden;
+  //   opacity: 0;
+  // }
+
   p {
     margin-bottom: 0;
   }
+
+  > :not(p) {
+    display: none;
+  }
+
+  input {
+    margin-right: 1rem;
+    // cursor: revert;
+  }
+
+  > button {
+    padding: 7px 12px;
+  }
+
+  .list-group-item--active & {
+    p {
+      display: none;
+    }
+
+    .input-group {
+      display: table;
+    }
+
+    > button {
+      display: revert;
+    }
+  }
+    
+
+  // &:hover {
+  //   input,
+  //   p {
+  //     transition: opacity .15s ease-out;
+  //   }
+
+  //   input {
+  //     visibility: visible;
+  //     opacity: 1;
+  //   }
+    
+  //   p {
+  //     visibility: hidden;
+  //     opacity: 0;
+  //   }
+  // }
 }
 
 table {

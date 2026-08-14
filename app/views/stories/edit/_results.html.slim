@@ -1,0 +1,109 @@
+= tag.div(id: "story-#{story.id}-results", class: 'story__results', data: { action: 'list-group:toggle-edit->story-narrative-content#onToggleEditResult' }) do
+
+  div
+    .input-group
+      = tag.input( \
+          id: 'new-result-input',
+          class: 'form-control',
+          placeholder: 'Add a key customer result to be highlighted with the story',
+          minlength: 5,
+          maxlength: 20,
+          data: { \
+            story_narrative_content_target: 'newResultInput',
+            action: 'story-narrative-content#onNewResultInput' })
+      .input-group-addon.hidden
+        = tag.button( \
+            type: 'button',
+            class: 'btn btn-default',
+            data: { \
+              controller: 'tooltip',
+              tooltip_options_value: { title: 'Discard', delay: { show: 500, hide: 0 } },
+              action: "story-narrative-content#cancelNewResult" }) do
+          | &times;
+    = tag.button( \
+        type: 'submit',
+        class: 'btn btn-sm btn-success hidden',
+        style: 'padding: 7px 12px',
+        data: { \
+          content: 'Add Result',
+          story_narrative_content_target: 'newResultSubmit',
+          field_name: 'story[new_results][]',
+          disable_with_html: disabled_submit_button_html })
+  .help-block
+    | Must be between MIN and MAX characters
+
+  = tag.ol class: [ \
+              'list-group list-unstyled',
+              { 'list-group--sortable': story.results.count > 1 } ],
+            data: { \
+              controller: 'list-group',
+              story_narrative_content_target: 'resultsList' }
+
+    /= form.fields_for(:results) do |result_fields|
+    - story.new_results.each_with_index do |result, i|
+      = tag.li(class: 'list-group-item', data: { list_group_target: 'item' }) do
+
+        .list-group-item__item
+          .list-group-item__handle data-list-group-target="sortHandle"
+            = tag.i(class: 'fa fa-fw fa-arrows-v') if story.new_results.count > 1
+          /= result_fields.text_field( \
+              :description,
+              class: 'form-control',
+              data: { \
+                list_group_target: 'itemInput',
+                action: 'input->list-group#onItemInput',
+                initial_value: result_fields.object.description })
+
+          .list-group-item__content
+            p
+              /= result_fields.object.description
+              = result
+            /.input-group
+              span.input-group-addon
+                button type="button" class="btn" data-action="list-group#cancelEdit" 
+                  |&times;
+            .input-group
+              = text_field_tag( \
+                  "story[new_results][]",
+                  result,
+                  id: "story_new_results_#{i}",
+                  class: 'form-control',
+                  data: { \
+                    list_group_target: 'itemInput',
+                    # action: 'input->list-group#onItemInput',
+                    initial_value: result })
+              .input-group-addon
+                = tag.button( \
+                    type: 'button',
+                    class: 'btn btn-default',
+                    data: { \
+                      controller: 'tooltip',
+                      tooltip_options_value: { title: 'Discard changes', delay: { show: 500, hide: 0 } },
+                      list_group_target: 'cancelButton',
+                      action: 'list-group#cancelEdit' }) do
+                  | &times;
+            /= result_fields.check_box(:_destroy, { class: 'hidden' }, true, false)
+            /button.btn.btn-sm.btn-default type="button" data-action="list-group#cancelEdit" 
+              | Cancel
+            = tag.button( \
+                type: 'submit',
+                class: 'btn btn-sm btn-success',
+                style: 'padding: 7px 12px',
+                # disabled: true,
+                data: { \
+                  content: 'Save changes',
+                  field_name: "story[new_results][]",
+                  disable_with_html: disabled_submit_button_html })
+
+          .list-group-item__controls
+            = tag.button( \
+                type: 'button',
+                class: 'btn',
+                data: { action: "list-group#editItem" }) do
+              i.fa.fa-fw.fa-pencil
+            = tag.button( \
+                type: 'button',
+                class: 'btn',
+                data: { \
+                  action: "list-group#deleteItem" }) do
+              i.fa.fa-fw.fa-trash
