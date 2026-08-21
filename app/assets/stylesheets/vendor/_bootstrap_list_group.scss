@@ -84,32 +84,37 @@
     padding-left: 2.75em;
   }
   
-  .list-group-item:not(.list-group-item--active) &:has(.list-group-item__controls):hover {
-    padding-right: 3.5em;
+  .list-group-item:not(.list-group-item--active) &:has(.list-group-item__actions):hover {
+    padding-right: 5.75em;
   }
 
-  .list-group-item:not(.list-group-item--active) &:hover .list-group-item__controls,
-  .list-group-item--deleting & .list-group-item__controls,
+  .list-group-item:has(.collapse) &:hover,
+  .list-group-item:has(.collapse.in) & {
+    padding-right: 3.25em;
+  }
+
+  .list-group-item:not(.list-group-item--active) &:hover .list-group-item__actions,
+  .list-group-item--deleting & .list-group-item__actions,
   .list-group--sortable &:hover .fa-arrows-v,
   .list-group--sortable .list-group-item--deleting & .fa-arrows-v,
   .list-group-item--active & .fa-arrows-v,
   .list-group--sortable .ui-sortable-helper & .fa-arrows-v,
   .list-group--sortable.list-group--collapsible .list-group-item:has(.collapse.in) & .fa-arrows-v,
-  .list-group--collapsible .list-group-item:has(.collapse.in):not(.ui-sortable-helper) & .fa-chevron-up,
-  .list-group--collapsible .list-group-item:not(:has(.collapse.in)):not(.ui-sortable-helper) &:hover .fa-chevron-down {
+  .list-group-item:has(.collapse.in):not(.ui-sortable-helper) & .fa-chevron-up,
+  .list-group-item:not(:has(.collapse.in)):not(.ui-sortable-helper) &:hover .fa-chevron-down {
     visibility: visible;
     opacity: 1;
   }
 
-  .list-group .list-group-item:not(.ui-sortable-helper):not(.ui-sortable-handle--dragging) &:hover .list-group-item__controls,
+  // The .list-group-item--collapsed class is for managing this transition setting only and should only be used here
+  // It will break things if used in the visibility rule above. See list_controller.ts
+  .list-group .list-group-item:not(.ui-sortable-helper):not(.ui-sortable-handle--dragging) &:hover .list-group-item__actions,
   .list-group--sortable .list-group-item:not(.ui-sortable-helper):not(.ui-sortable-handle--dragging) &:hover .fa-arrows-v,
-  .list-group--collapsible .list-group-item:not(:has(.collapse.in)):not(.ui-sortable-handle--dragging):not(.list-group-item--expanded) &:hover .fa-chevron-down {
+  .list-group-item--collapsed:not(.ui-sortable-handle--dragging) &:hover .fa-chevron-down {
     transition: opacity .15s ease-out;
   }
 
   .list-group--collapsible & {
-    padding-right: 0;
-
     a {
       align-self: stretch;
       flex-grow: 1;
@@ -123,7 +128,7 @@
   .fa-arrows-v,
   .fa-chevron-up,
   .fa-chevron-down,
-  .list-group-item__controls {
+  .list-group-item__actions {
     position: absolute;
     top: 50%;
     transform: translateY(-50%);
@@ -166,6 +171,7 @@
   align-items: center;
   
   p {
+    @include max-lines(2);
     margin-bottom: 0;
   }
 
@@ -192,7 +198,7 @@
   }
 }
 
-.list-group-item__controls {
+.list-group-item__actions {
   right: 0.5rem;
 
   button {

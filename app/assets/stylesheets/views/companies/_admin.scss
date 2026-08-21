@@ -132,19 +132,6 @@ body {
   &:has(.list-group--has-active) > :first-child input {
     pointer-events: none;
   }
-  
-  > :first-child {
-    @include flex-row-center;
-    
-    & + .help-block {
-      margin-bottom: 1.5rem;
-    }
-
-    input:placeholder-shown {
-      border-top-right-radius: $border-radius-base;
-      border-bottom-right-radius: $border-radius-base;
-    }
-  }
 
   .input-group {
     flex-grow: 1;
@@ -170,5 +157,18 @@ body {
       padding: 0;
       font-size:1.5em;
     }
+  }
+}
+
+.crud-list__new-item {
+  @include flex-row-center;
+  
+  form .form-group & + .help-block {
+    margin-bottom: 1.5rem;
+  }
+
+  input:placeholder-shown {
+    border-top-right-radius: $border-radius-base;
+    border-bottom-right-radius: $border-radius-base;
   }
 }
