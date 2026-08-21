@@ -21,26 +21,29 @@
 
     .form-group
       .visible-sm-block.col-sm-12
-        label Main
+        label Main 
       label.col-md-2.control-label.visible-md-inline-block.visible-lg-inline-block Main
       .col-sm-12.col-md-10
 
         - if primary_cta = company.ctas.primary.take
-          = tag.ul( \
-              class: 'list-group list-group--collapsible list-unstyled',
-              data: { controller: 'list-group', list_group_collapse_enabled_value: true },
-              style: 'margin-bottom:0')
-            li.list-group-item data-list-group-target="item"
-              .list-group-item__item
-                .list-group-item__content
-                  = tag.a href: "#edit-cta-#{primary_cta.id}",
-                          aria: { expanded: 'false' },
-                          data: { toggle: 'collapse' }
-                    p = "#{primary_cta.type == 'CtaLink' ? '[LINK]' : '[FORM]'} #{primary_cta.description}"
-                i.fa.fa-fw.fa-chevron-up data-toggle="collapse" data-target="#edit-cta-#{primary_cta.id}"
-                i.fa.fa-fw.fa-chevron-down data-toggle="collapse" data-target="#edit-cta-#{primary_cta.id}"
-              .collapse id="edit-cta-#{primary_cta.id}" data-list-group-target="collapse"
-                = render('ctas/edit', company:, cta: primary_cta)
+          = tag.div(class: 'crud-list', data: { controller: 'list', list_collapse_enabled_value: true }) do
+            = tag.ul( \
+                class: 'list-group list-group--collapsible list-unstyled',
+                style: 'margin-bottom:0',
+                data: { \
+                  list_target: 'list' }) do
+              li.list-group-item data-list-target="item"
+                .list-group-item__item
+                  .list-group-item__content
+                    = tag.a href: "#edit-cta-#{primary_cta.id}",
+                            aria: { expanded: 'false' },
+                            data: { toggle: 'collapse' }
+                      p = "#{primary_cta.type == 'CtaLink' ? '[LINK]' : '[FORM]'} #{primary_cta.description}"
+                  i.fa.fa-fw.fa-chevron-up data-toggle="collapse" data-target="#edit-cta-#{primary_cta.id}"
+                  i.fa.fa-fw.fa-chevron-down data-toggle="collapse" data-target="#edit-cta-#{primary_cta.id}"
+                .collapse id="edit-cta-#{primary_cta.id}" data-list-target="collapse"
+                  = render('ctas/edit', company:, cta: primary_cta)
+
         - else 
           = link_to( \
               new_company_cta_path(company) + '?primary=true',
@@ -67,26 +70,37 @@
       .col-sm-12.col-md-10
 
         - if company.ctas.sidebar.present?
-          
-          = content_tag( \
-              company.ctas.sidebar.count > 1 ? :ol : :ul,
-              class: [ \
-                'list-group list-group--collapsible list-unstyled',
-                { 'list-group--sortable':  company.ctas.sidebar.count > 1 } ],
-              data: { \
-                controller: 'list-group',
-                list_group_collapse_enabled_value: true })
 
-            - company.ctas.sidebar.each do |cta|
-              li.list-group-item data-list-group-target="item"
-                .list-group-item__item
-                  = tag.i(class: 'fa fa-fw fa-arrows-v') if company.ctas.sidebar.count > 1
-                  .list-group-item__content
-                    = tag.a href: "#edit-cta-#{cta.id}",
-                            aria: { expanded: 'false' },
-                            data: { toggle: 'collapse' }
-                      p = "#{cta.type == 'CtaLink' ? '[LINK]' : '[FORM]'} #{cta.description}"
-                  i.fa.fa-fw.fa-chevron-up data-toggle="collapse" data-target="#edit-cta-#{cta.id}"
-                  i.fa.fa-fw.fa-chevron-down data-toggle="collapse" data-target="#edit-cta-#{cta.id}"
-                .collapse id="edit-cta-#{cta.id}" data-list-group-target="collapse"
-                  = render('ctas/edit', company:, cta:)
+          = tag.div( \
+              class: 'crud-list',
+              data: { \
+                controller: 'list',
+                list_sort_enabled_value: company.ctas.sidebar.count > 1,
+                list_collapse_enabled_value: true }) do
+          
+            = content_tag( \
+                company.ctas.sidebar.count > 1 ? :ol : :ul,
+                class: [ \
+                  'list-group list-group--collapsible list-unstyled',
+                  { 'list-group--sortable':  company.ctas.sidebar.count > 1 } ],
+                data: { \
+                  list_target: 'list' }) do
+
+              - company.ctas.sidebar.each do |cta|
+                li.list-group-item.list-group-item--collapsed data-list-target="item"
+
+                  .list-group-item__item
+                    - if company.ctas.sidebar.count > 1
+                      .list-group-item__handle data-list-target="sortHandle"
+                        = tag.i(class: 'fa fa-fw fa-arrows-v') if company.ctas.sidebar.count > 1
+                    .list-group-item__content
+                      / using data-target instead of href in the <a> tag effectively removes outline styling
+                      / TODO: accessibility?
+                      = tag.a aria: { expanded: 'false' },
+                              data: { toggle: 'collapse', target: "#edit-cta-#{cta.id}" }
+                        p = "#{cta.type == 'CtaLink' ? '[LINK]' : '[FORM]'} #{cta.description}"
+                    i.fa.fa-fw.fa-chevron-up data-toggle="collapse" data-target="#edit-cta-#{cta.id}"
+                    i.fa.fa-fw.fa-chevron-down data-toggle="collapse" data-target="#edit-cta-#{cta.id}"
+                  
+                  .collapse id="edit-cta-#{cta.id}" data-list-target="collapse"
+                    = render('ctas/edit', company:, cta:)
