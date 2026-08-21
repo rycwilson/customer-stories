@@ -40,6 +40,9 @@ application.register('contributions', ContributionsController);
 import ContributorInvitationController from './contributor_invitation_controller.js';
 application.register('contributor-invitation', ContributorInvitationController);
 
+import ContributorPromptsController from './contributor_prompts_controller.js';
+application.register('contributor-prompts', ContributorPromptsController);
+
 import CtaController from "./cta_controller.js";
 application.register("cta", CtaController);
 
@@ -117,6 +120,9 @@ application.register('story', StoryController);
 
 import StorySettingsController from './story_settings_controller.js';
 application.register('story-settings', StorySettingsController);
+
+import ListController from './list_controller.js';
+application.register('list', ListController);
 
 import ListGroupController from './list_group_controller.js';
 application.register('list-group', ListGroupController);

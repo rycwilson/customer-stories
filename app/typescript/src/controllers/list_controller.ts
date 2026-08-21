@@ -1,6 +1,6 @@
 import { Controller } from '@hotwired/stimulus';
 
-export default class ListGroupController extends Controller<HTMLUListElement | HTMLOListElement> {
+export default class ListController extends Controller {
   static values = {
     sortEnabled: { type: Boolean, default: true },
     collapseEnabled: { type: Boolean, default: false }
@@ -8,7 +8,10 @@ export default class ListGroupController extends Controller<HTMLUListElement | H
   declare readonly sortEnabledValue: boolean;
   declare readonly collapseEnabledValue: boolean;
 
-  static targets = ['item', 'itemInput', 'cancelButton', 'collapse', 'sortHandle'];
+  static targets = ['newItemInput', 'newItemSubmit', 'list', 'item', 'itemInput', 'cancelButton', 'collapse', 'sortHandle'];
+  declare readonly newItemInputTarget: HTMLInputElement;
+  declare readonly newItemSubmitTarget: HTMLButtonElement;
+  declare readonly listTarget: HTMLUListElement | HTMLOListElement;
   declare readonly itemTargets: HTMLLIElement[];
   declare readonly itemInputTargets: HTMLInputElement[];
   declare readonly cancelButtonTargets: HTMLButtonElement[];
@@ -19,18 +22,18 @@ export default class ListGroupController extends Controller<HTMLUListElement | H
   hiddenCollapseHandler = this.onHiddenCollapse.bind(this);
 
   get isSortable() {
-    return $(this.element).data('uiSortable');
+    return $(this.listTarget).data('uiSortable');
   }
 
   disconnect() {
-    if (this.isSortable) $(this.element).sortable('destroy');
+    if (this.isSortable) $(this.listTarget).sortable('destroy');
   }
 
   sortEnabledValueChanged(shouldEnable: boolean) {
     if (shouldEnable) {
       this.initSortable();
     } else if (this.isSortable) {
-      $(this.element).sortable('destroy');
+      $(this.listTarget).sortable('destroy');
     }
   }
 
@@ -107,6 +110,34 @@ export default class ListGroupController extends Controller<HTMLUListElement | H
         cancelButton.click();
       });
     });
+  }
+
+  onNewItemInput({ target: input }: { target: HTMLInputElement }) {
+    // const min = input.minLength;
+    // const max = input.maxLength;
+    // if (isNaN(min) || isNaN(max)) return;
+    
+    const len = input.value.trim().length;
+    // const isValid = len >= min && len <= max;
+    this.toggleNewItem(len > 0);
+  }
+
+  
+  toggleNewItem(shouldEnable: boolean) {
+    const cancelButton = <HTMLElement>this.newItemInputTarget.nextElementSibling;
+    cancelButton.classList.toggle('hidden', !shouldEnable);
+    this.newItemSubmitTarget.classList.toggle('hidden', !shouldEnable);
+    this.newItemInputTarget.name = shouldEnable ? 'story[new_results][]' : '';
+    
+    // The new result isn't strictly part of the list, but we want to disable click events 
+    // in the list while the new result field has a value and this effectively does so.
+    this.listTarget.classList.toggle('list-group--has-active', shouldEnable);
+  }
+  
+  cancelNewItem() {
+    this.newItemInputTarget.value = '';
+    this.newItemInputTarget.dispatchEvent(new Event('input', { bubbles: true }));
+    // this.newItemInputTarget.focus();
   }
   
   editItem({ currentTarget: button }: { currentTarget: HTMLButtonElement }) {

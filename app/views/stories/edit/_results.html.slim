@@ -1,16 +1,25 @@
-= tag.div(id: "story-#{story.id}-results", class: 'story__results', data: { action: 'list-group:toggle-edit->story-narrative-content#onToggleEditResult' }) do
+= tag.div( \
+    id: "story-#{story.id}-results",
+    class: 'crud-list',
+    data: { \
+      controller: 'list',
+      action: [ \
+        'list:toggle-edit->story-narrative-content#onToggleEditResult',
+        'list-group:toggle-edit->story-narrative-content#onToggleEditResult' ].join(' ' ) }) do
 
   div
     .input-group
       = tag.input( \
-          id: 'new-result-input',
           class: 'form-control',
           placeholder: 'Add a key customer result to be highlighted with the story',
           minlength: 5,
           maxlength: 20,
           data: { \
+            list_target: 'newItemInput',
             story_narrative_content_target: 'newResultInput',
-            action: 'story-narrative-content#onNewResultInput' })
+            action: [ \
+              'list#onNewItemInput',
+              'story-narrative-content#onNewResultInput' ].join(' ') })
       .input-group-addon.hidden
         = tag.button( \
             type: 'button',
@@ -18,7 +27,9 @@
             data: { \
               controller: 'tooltip',
               tooltip_options_value: { title: 'Discard', delay: { show: 500, hide: 0 } },
-              action: "story-narrative-content#cancelNewResult" }) do
+              action: [ \
+                'list#cancelNewItem',
+                'story-narrative-content#cancelNewResult' ].join(' ') }) do
           | &times;
     = tag.button( \
         type: 'submit',
@@ -26,6 +37,7 @@
         style: 'padding: 7px 12px',
         data: { \
           content: 'Add Result',
+          list_target: 'newItemSubmit',
           story_narrative_content_target: 'newResultSubmit',
           field_name: 'story[new_results][]',
           disable_with_html: disabled_submit_button_html })
@@ -35,16 +47,16 @@
   = tag.ol( \
       class: ['list-group list-unstyled', { 'list-group--sortable': story.results.count > 1 }],
       data: { \
-        controller: 'list-group',
-        list_group_sort_enabled_value: true,
+        #controller: 'list-group',
+        list_target: 'list',
         story_narrative_content_target: 'resultsList' })
 
     /= form.fields_for(:results) do |result_fields|
     - story.new_results.each_with_index do |result, i|
-      = tag.li(class: 'list-group-item', data: { list_group_target: 'item' }) do
+      = tag.li(class: 'list-group-item', data: { list_target: 'item', list_group_target: 'item' }) do
 
         .list-group-item__item
-          .list-group-item__handle data-list-group-target="sortHandle"
+          .list-group-item__handle data-list-target="sortHandle" data-list-group-target="sortHandle"
             = tag.i(class: 'fa fa-fw fa-arrows-v') if story.new_results.count > 1
           .list-group-item__content
             p
@@ -61,6 +73,7 @@
                   id: "story_new_results_#{i}",
                   class: 'form-control',
                   data: { \
+                    list_target: 'itemInput',
                     list_group_target: 'itemInput',
                     # action: 'input->list-group#onItemInput',
                     initial_value: result })
@@ -71,8 +84,9 @@
                     data: { \
                       controller: 'tooltip',
                       tooltip_options_value: { title: 'Discard changes', delay: { show: 500, hide: 0 } },
+                      list_target: 'cancelButton',
                       list_group_target: 'cancelButton',
-                      action: 'list-group#cancelEdit' }) do
+                      action: 'list#cancelEdit list-group#cancelEdit' }) do
                   | &times;
             /= result_fields.check_box(:_destroy, { class: 'hidden' }, true, false)
             /button.btn.btn-sm.btn-default type="button" data-action="list-group#cancelEdit" 
@@ -87,15 +101,15 @@
                   field_name: "story[new_results][]",
                   disable_with_html: disabled_submit_button_html })
 
-          .list-group-item__controls
+          .list-group-item__actions
             = tag.button( \
                 type: 'button',
                 class: 'btn',
-                data: { action: "list-group#editItem" }) do
+                data: { action: "list#editItem list-group#editItem" }) do
               i.fa.fa-fw.fa-pencil
             = tag.button( \
                 type: 'button',
                 class: 'btn',
                 data: { \
-                  action: "list-group#deleteItem" }) do
+                  action: "list#deleteItem list-group#deleteItem" }) do
               i.fa.fa-fw.fa-trash
