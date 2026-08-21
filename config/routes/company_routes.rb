@@ -27,6 +27,7 @@ authenticate(:user) do
     member do
       patch 'tags'
       patch 'ads'
+      patch 'contributor_prompts'
       get 'activity', constraints: ->(req) { req.format == :json }
     end
     resources :customers, only: %i[edit create update destroy], shallow: true

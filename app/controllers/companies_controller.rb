@@ -105,6 +105,34 @@ class CompaniesController < ApplicationController
     )
   end
 
+  def prompts
+    if @company.update company_params
+      flash.now[:notice] = 'Contributor Prompts have been updated'
+      respond_to do |format|
+        format.turbo_stream do
+          turbo_stream_actions = [
+            turbo_stream.replace('toaster', partial: 'shared/toaster'),
+            turbo_stream.replace(
+              'contributor-prompts-list',
+              partial: 'companies/settings/contributor_questions',
+              locals: { company: @company }
+            )
+          ]
+          render turbo_stream: turbo_stream_actions
+        end
+        format.html { head :no_content }
+      end
+    else
+      @errors = @company.errors.full_messages
+      render(
+        partial: 'companies/settings/contributor_questions', 
+        locals: { company: @company, errors: @errors },
+        layout: false, 
+        status: :unprocessable_entity
+      )
+    end
+  end
+
   def activity
     company = Company.find(params[:id])
     Time.zone = params[:time_zone] || 'UTC'
