@@ -76,7 +76,7 @@
     background-color: $light-blue;
   }
 
-  .list-group-item--active &,
+  .list-group--sortable .list-group-item--active &,
   .list-group--sortable .list-group-item:not(.list-group-item--active) &:hover,
   .list-group--sortable .list-group-item--deleting &,
   .list-group--sortable .ui-sortable-helper &,
