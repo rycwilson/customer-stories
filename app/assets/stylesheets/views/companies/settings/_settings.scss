@@ -3,6 +3,17 @@
 @import '../../plugins/config';
 @import './company_profile';
 
+#contributor-prompts-form {
+  @media (min-width: 768px) and (max-width: 1999px) {
+    max-width: 62rem;
+  }
+
+  @media (min-width: 1200px) {
+    left: -2%;
+    max-width: 75rem;
+  }
+}
+
 body.companies.edit {
   // for safari
   input::-webkit-contacts-auto-fill-button {
