@@ -11,8 +11,8 @@
         action: [ \
           'turbo:submit-start->story-narrative-content#onSubmitStart',
           'turbo:submit-end->story-narrative-content#onSubmitEnd',
-          'list-group:sorted->story-narrative-content#onSortedResults',
-          'list-group:delete->story-narrative-content#deleteResult' ].join(' ') },
+          'list:sorted->story-narrative-content#onSortedResults',
+          'list:delete->story-narrative-content#deleteResult' ].join(' ') },
       html: { \
         novalidate: true,
         autocomplete: 'off' }) do |form|

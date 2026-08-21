@@ -4,10 +4,9 @@
     data: { \
       controller: 'list',
       action: [ \
-        'list:toggle-edit->story-narrative-content#onToggleEditResult',
-        'list-group:toggle-edit->story-narrative-content#onToggleEditResult' ].join(' ' ) }) do
+        'list:toggle-edit->story-narrative-content#onToggleEditResult' ].join(' ' ) }) do
 
-  div
+  .crud-list__new-item
     .input-group
       = tag.input( \
           class: 'form-control',
@@ -53,19 +52,16 @@
 
     /= form.fields_for(:results) do |result_fields|
     - story.new_results.each_with_index do |result, i|
-      = tag.li(class: 'list-group-item', data: { list_target: 'item', list_group_target: 'item' }) do
+      = tag.li(class: 'list-group-item', data: { list_target: 'item' }) do
 
         .list-group-item__item
-          .list-group-item__handle data-list-target="sortHandle" data-list-group-target="sortHandle"
-            = tag.i(class: 'fa fa-fw fa-arrows-v') if story.new_results.count > 1
+          - if story.new_results.count > 1
+            .list-group-item__handle data-list-target="sortHandle"
+              = tag.i(class: 'fa fa-fw fa-arrows-v')
           .list-group-item__content
             p
               /= result_fields.object.description
               = result
-            /.input-group
-              span.input-group-addon
-                button type="button" class="btn" data-action="list-group#cancelEdit" 
-                  |&times;
             .input-group
               = text_field_tag( \
                   "story[new_results][]",
@@ -74,8 +70,6 @@
                   class: 'form-control',
                   data: { \
                     list_target: 'itemInput',
-                    list_group_target: 'itemInput',
-                    # action: 'input->list-group#onItemInput',
                     initial_value: result })
               .input-group-addon
                 = tag.button( \
@@ -85,8 +79,7 @@
                       controller: 'tooltip',
                       tooltip_options_value: { title: 'Discard changes', delay: { show: 500, hide: 0 } },
                       list_target: 'cancelButton',
-                      list_group_target: 'cancelButton',
-                      action: 'list#cancelEdit list-group#cancelEdit' }) do
+                      action: 'list#cancelEdit' }) do
                   | &times;
             /= result_fields.check_box(:_destroy, { class: 'hidden' }, true, false)
             /button.btn.btn-sm.btn-default type="button" data-action="list-group#cancelEdit" 
@@ -102,14 +95,7 @@
                   disable_with_html: disabled_submit_button_html })
 
           .list-group-item__actions
-            = tag.button( \
-                type: 'button',
-                class: 'btn',
-                data: { action: "list#editItem list-group#editItem" }) do
+            = tag.button(type: 'button', class: 'btn', data: { action: 'list#editItem' }) do
               i.fa.fa-fw.fa-pencil
-            = tag.button( \
-                type: 'button',
-                class: 'btn',
-                data: { \
-                  action: "list#deleteItem list-group#deleteItem" }) do
+            = tag.button(type: 'button', class: 'btn', data: { action: 'list#deleteItem' }) do
               i.fa.fa-fw.fa-trash
