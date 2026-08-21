@@ -12,10 +12,7 @@
         action: [].join(' ') }) do |form|
 
     .form-group
-      .visible-sm-block.visible-md-block.col-sm-12
-        label Prompts
-      label.control-label.visible-lg-inline-block.col-lg-2 Prompts
-      .col-sm-12.col-lg-10
+      .col-sm-12.col-lg-offset-1.col-lg-10
 
         = tag.div( \
             id: 'contributor-prompts-list',
@@ -24,7 +21,7 @@
               controller: 'list',
               list_sort_enabled_value: false }) do
 
-          div
+          .crud-list__new-item
             .input-group
               = tag.input( \
                   class: 'form-control',
