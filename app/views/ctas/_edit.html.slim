@@ -20,7 +20,16 @@
       data: { cta_target: 'companyField' })
 
   .form-group 
-    = label_tag("cta_#{cta.id}[display_text]", 'Display text')
+    = label_tag("cta_#{cta.id}[description]", 'Description')
+    = text_field_tag( \
+        "cta_#{cta.id}[description]", 
+        cta.description, 
+        class: 'form-control',
+        placeholder: 'Description',
+        autocomplete: 'off')
+
+  .form-group 
+    = label_tag("cta_#{cta.id}[display_text]", 'Display copy')
     = text_field_tag( \
         "cta_#{cta.id}[display_text]", 
         cta.display_text, 
@@ -48,15 +57,6 @@
           placeholder: '<script> or <form> tags',
           autocomplete: 'off',
           rows: 3)
-
-  .form-group 
-    = label_tag("cta_#{cta.id}[description]", 'Description')
-    = text_field_tag( \
-        "cta_#{cta.id}[description]", 
-        cta.description, 
-        class: 'form-control',
-        placeholder: 'Description',
-        autocomplete: 'off')
 
   .form-group 
     .checkbox
