@@ -31,12 +31,12 @@ export default class StoryNarrativeContentController extends FormController<Stor
     
     // console.log(`submitting ${fieldName}`)
     
-    if (this.activeSubmissions[fieldName]) {
-      // console.log(`stopping ${fieldName}`)
-      formSubmission.stopped = true;
-      formSubmission.stop();
-      return;
-    }
+    // if (this.activeSubmissions[fieldName]) {
+    //   // console.log(`stopping ${fieldName}`)
+    //   formSubmission.stopped = true;
+    //   formSubmission.stop();
+    //   return;
+    // }
 
     if (this.activeResult) {
       this.activeResult.cancelButton.disabled = true;
@@ -51,7 +51,7 @@ export default class StoryNarrativeContentController extends FormController<Stor
       if (key !== fieldName) body.delete(key);
     }
 
-    this.activeSubmissions[fieldName] = formSubmission;
+    // this.activeSubmissions[fieldName] = formSubmission;
     this.animateSubmit(e, submitter);
   }
 
