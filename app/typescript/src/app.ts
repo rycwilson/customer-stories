@@ -1,4 +1,4 @@
-import Rails from '@rails/ujs';
+// import Rails from '@rails/ujs';
 import '@hotwired/turbo';
 import * as turboCallbacks from './turbo_callbacks';
 
@@ -43,7 +43,7 @@ function appFactory(): CustomerStoriesApp {
     // screenSize: null,
     authToken: <string>(<HTMLMetaElement>document.head.querySelector('meta[name="csrf-token"]')).getAttribute('content'),
     init() {
-      Rails.start();
+      // Rails.start();
       addTurboListeners(false);
     }
   }
