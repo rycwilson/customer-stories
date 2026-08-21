@@ -1,1 +1,112 @@
-h3 Contributor Prompts
+= turbo_frame_tag('contributor-prompts-frame') do
+
+  = form_with( \
+      model: company,
+      url: contributor_prompts_company_path(company),
+      id: 'contributor-prompts-form',
+      class: 'form-horizontal',
+      data: { \
+        controller: 'contributor-prompts toast',
+        toast_flash_value: (flash.to_h if flash.any? && turbo_frame_request_id == 'contributor-prompts-frame'),
+        toast_errors_value: (@errors if @errors && turbo_frame_request_id == 'contributor-prompts-frame'),
+        action: [].join(' ') }) do |form|
+
+    .form-group
+      .visible-sm-block.visible-md-block.col-sm-12
+        label Prompts
+      label.control-label.visible-lg-inline-block.col-lg-2 Prompts
+      .col-sm-12.col-lg-10
+
+        = tag.div( \
+            id: 'contributor-prompts-list',
+            class: 'crud-list',
+            data: { \
+              controller: 'list',
+              list_sort_enabled_value: false }) do
+
+          div
+            .input-group
+              = tag.input( \
+                  class: 'form-control',
+                  placeholder: 'Add a new Contributor Prompt',
+                  minlength: 5,
+                  maxlength: 20,
+                  data: { \
+                    list_target: 'newItemInput',
+                    action: 'list#onNewItemInput' })
+              .input-group-addon.hidden
+                = tag.button( \
+                    type: 'button',
+                    class: 'btn btn-default',
+                    data: { \
+                      controller: 'tooltip',
+                      tooltip_options_value: { title: 'Discard', delay: { show: 500, hide: 0 } },
+                      action: "list#cancelNewItem" }) do
+                  | &times;
+            = tag.button( \
+                type: 'submit',
+                class: 'btn btn-sm btn-success hidden',
+                style: 'padding: 7px 12px',
+                data: { \
+                  content: 'Add Prompt',
+                  list_target: 'newItemSubmit',
+                  # field_name: 'story[new_results][]',
+                  disable_with_html: disabled_submit_button_html })
+
+          .help-block
+
+          = tag.ul( \
+              class: 'list-group list-unstyled',
+              data: { \
+                list_target: 'list',
+                contributor_prompts_target: 'promptsList' })
+
+            - company.contributor_questions.each do |prompt|
+              
+              = tag.li(class: 'list-group-item', data: { list_target: 'item' }) do
+
+                .list-group-item__item
+                  .list-group-item__content 
+                    p 
+                      = prompt.question
+                    .input-group
+                      = text_field_tag( \
+                          '',
+                          prompt.question,
+                          class: 'form-control',
+                          data: { \
+                            list_target: 'itemInput',
+                            list_group_target: 'itemInput',
+                            initial_value: prompt.question })
+                      .input-group-addon
+                        = tag.button( \
+                            type: 'button',
+                            class: 'btn btn-default',
+                            data: { \
+                              controller: 'tooltip',
+                              tooltip_options_value: { title: 'Discard changes', delay: { show: 500, hide: 0 } },
+                              list_target: 'cancelButton',
+                              action: 'list#cancelEdit' }) do
+                          | &times;
+                    = tag.button( \
+                        type: 'submit',
+                        class: 'btn btn-sm btn-success',
+                        style: 'padding: 7px 12px',
+                        # disabled: true,
+                        data: { \
+                          content: 'Save changes',
+                          field_name: '',
+                          disable_with_html: disabled_submit_button_html })
+
+                  .list-group-item__actions
+                    = tag.button( \
+                        type: 'button',
+                        class: 'btn',
+                        data: { action: 'list#editItem' }) do
+                      i.fa.fa-fw.fa-pencil
+                    = tag.button( \
+                        type: 'button',
+                        class: 'btn',
+                        data: { \
+                          action: 'list#deleteItem' }) do
+                      i.fa.fa-fw.fa-trash
