@@ -124,11 +124,23 @@ class StoriesController < ApplicationController
         format.turbo_stream do
           turbo_stream_actions = [turbo_stream.replace('toaster', partial: 'shared/toaster')]
           if @story.saved_change_to_new_results?
-            # replace with list partial for either new, modified, or sorted results
+            if @story.new_results_before_last_save.count < @story.new_results.count
+              cookies.delete "csp-hide-customer-results-#{@story.id}"
+            end
             turbo_stream_actions << turbo_stream.replace(
               'customer-results',
               partial: 'stories/edit/results',
               locals: { story: @story }
+            )
+            turbo_stream_actions << turbo_stream.replace(
+              'toggle-results-sm-md',
+              partial: 'stories/edit/toggle_results',
+              locals: { id: 'toggle-results-sm-md', story: @story }
+            )
+            turbo_stream_actions << turbo_stream.replace(
+              'toggle-results-lg',
+              partial: 'stories/edit/toggle_results',
+              locals: { id: 'toggle-results-lg', story: @story }
             )
           end
           render turbo_stream: turbo_stream_actions

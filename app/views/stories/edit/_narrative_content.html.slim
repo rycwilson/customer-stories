@@ -24,7 +24,7 @@
         class: 'hidden',
         data: { \
           field_name: "story[new_results][]" })
-    
+
     // a buffer input for uploading story images to AWS; see the summernote onImageUpload callback
     input#narrative__img-upload.hidden type="file"
 
@@ -60,13 +60,16 @@
 
     .form-group
       .visible-sm-block.visible-md-block.col-sm-12
-        = form.label(:new_results, 'Results')
-      = form.label(:new_results, 'Results', class: 'control-label visible-lg-inline-block col-lg-2')
+        = form.label(:new_results) do 
+          | Results&nbsp;&nbsp; 
+          = render('stories/edit/toggle_results', id: 'toggle-results-sm-md', story:)
+      = form.label(:new_results, class: 'control-label visible-lg-inline-block col-lg-2') do 
+          | Results 
+          = render('stories/edit/toggle_results', id: 'toggle-results-lg', story:)
       .col-sm-12.col-lg-10
-
         = render('stories/edit/results', story:)
     
-    .form-group 
+    .form-group
       .visible-sm-block.visible-md-block.col-sm-12
         = form.label(:narrative, 'Story')
       = form.label(:narrative, 'Story', class: 'control-label visible-lg-inline-block col-lg-2')

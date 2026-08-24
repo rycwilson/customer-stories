@@ -1,5 +1,6 @@
 import type { TurboSubmitStartEvent, TurboSubmitEndEvent, FormSubmission } from '@hotwired/turbo';
 import FormController from './form_controller';
+import Cookies from 'js-cookie';
 
 export default class StoryNarrativeContentController extends FormController<StoryNarrativeContentController> {
   static targets = [
@@ -8,12 +9,14 @@ export default class StoryNarrativeContentController extends FormController<Stor
     'newResultInput',
     'newResultSubmit',
     'resultsList',
+    'toggleResultsButton'
   ];
   declare readonly titleInputTarget: HTMLInputElement;
   declare readonly titleSubmitTarget: HTMLButtonElement;
   declare readonly newResultInputTarget: HTMLInputElement;
   declare readonly newResultSubmitTarget: HTMLButtonElement;
   declare readonly resultsListTarget: HTMLOListElement;
+  declare readonly toggleResultsButtonTargets: HTMLButtonElement[];
 
   // The same submission object is included in both 
   // TurboSubmitStartEvent and TurboSubmitStopEvent events
@@ -29,6 +32,7 @@ export default class StoryNarrativeContentController extends FormController<Stor
     
     if (!submitter || !fieldName) return;
     
+    this.toggleResultsButtonTargets.forEach(btn => btn.disabled = true);
     // console.log(`submitting ${fieldName}`)
     
     // if (this.activeSubmissions[fieldName]) {
@@ -133,5 +137,18 @@ export default class StoryNarrativeContentController extends FormController<Stor
     this.activeResult = isEditable ? 
       { item, cancelButton, ...(sortHandle && { sortHandle }) } : 
       null;
+  }
+
+  toggleResults({ currentTarget: button }: { currentTarget: HTMLButtonElement }) {
+    const shouldShow = this.resultsListTarget.classList.contains('hidden');
+    this.resultsListTarget.classList.toggle('hidden', !shouldShow);
+    this.toggleResultsButtonTargets.forEach(btn => {
+      btn.textContent = `${shouldShow ? 'Hide' : 'Show'} ${this.resultsListTarget.children.length}`;
+    });
+    if (shouldShow) {
+      Cookies.remove(`csp-hide-customer-results-${button.dataset.storyId}`);
+    } else {
+      Cookies.set(`csp-hide-customer-results-${button.dataset.storyId}`, 'true');
+    }
   }
 }
