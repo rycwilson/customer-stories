@@ -112,7 +112,7 @@ export default class ListController extends Controller {
     });
   }
 
-  onNewItemInput({ target: input }: { target: HTMLInputElement }) {
+  onInputNewItem({ target: input }: { target: HTMLInputElement }) {
     // const min = input.minLength;
     // const max = input.maxLength;
     // if (isNaN(min) || isNaN(max)) return;
