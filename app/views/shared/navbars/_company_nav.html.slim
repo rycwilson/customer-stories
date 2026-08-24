@@ -112,7 +112,7 @@ nav.company-nav.navbar-fixed-top.hidden-xs
           li class=('disabled' unless company&.persisted?)
             a href="#{company&.persisted? ? '/settings#story-tags' : 'javascript:;'}"
               i.fa.fa-fw.fa-tags
-              | Story Tags
+              | Tags
           li class=('hidden' if company&.new_record?)
             = link_to(company&.persisted? ? edit_company_path + '#account' : new_company_path) do
               i.fa.fa-fw.fa-gear

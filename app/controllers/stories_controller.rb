@@ -125,7 +125,7 @@ class StoriesController < ApplicationController
           if @story.saved_change_to_new_results?
             # replace with list partial for either new, modified, or sorted results
             turbo_stream_actions << turbo_stream.replace(
-              "story-#{@story.id}-results",
+              'customer-results',
               partial: 'stories/edit/results',
               locals: { story: @story }
             )

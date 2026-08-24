@@ -174,10 +174,10 @@ export default class ListController extends Controller {
   deleteItem({ currentTarget: button }: { currentTarget: HTMLButtonElement }) {
     const item = <HTMLLIElement>this.itemTargets.find(item => item.contains(button));
     const input = <HTMLInputElement>this.itemInputTargets.find(input => item.contains(input));
-    this.element.classList.add('list-group--has-active');
+    // this.element.classList.add('list-group--has-active');
     if (confirm('Delete this item? This action cannot be undone.')) {
       button.blur();
-      item.classList.add('list-group-item--deleting');
+      // item.classList.add('list-group-item--deleting');
       this.dispatch('delete', { detail: { item, input } });
     } else {
       button.blur();

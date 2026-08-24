@@ -116,8 +116,10 @@ export default class StoryNarrativeContentController extends FormController<Stor
   }
 
   deleteResult(e: CustomEvent<{ item: HTMLLIElement, input: HTMLInputElement }>) {
-    const { input } = e.detail;
+    const { item, input } = e.detail;
     input.name = '';
+    this.resultsListTarget.classList.add('list-group--has-active');
+    item.classList.add('list-group-item--deleting');
     this.element.requestSubmit();
   }
 

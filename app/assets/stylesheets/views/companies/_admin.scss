@@ -129,9 +129,9 @@ body {
 }
 
 .crud-list {
-  &:has(.list-group--has-active) > :first-child input {
-    pointer-events: none;
-  }
+  // &:has(.list-group--has-active) > :first-child input {
+  //   pointer-events: none;
+  // }
 
   .input-group {
     flex-grow: 1;
