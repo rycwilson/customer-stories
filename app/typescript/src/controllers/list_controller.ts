@@ -122,7 +122,6 @@ export default class ListController extends Controller {
     this.toggleNewItem(len > 0);
   }
 
-  
   toggleNewItem(shouldEnable: boolean) {
     const cancelButton = <HTMLElement>this.newItemInputTarget.nextElementSibling;
     cancelButton.classList.toggle('hidden', !shouldEnable);
@@ -131,7 +130,10 @@ export default class ListController extends Controller {
     
     // The new result isn't strictly part of the list, but we want to disable click events 
     // in the list while the new result field has a value and this effectively does so.
-    this.listTarget.classList.toggle('list-group--has-active', shouldEnable);
+    // TODO: In the case of Results, it's a single field on Story, and we want to prevent concurrent edits.
+    // Between disabling controls and losing data, it may be better to allow the user to enable
+    // whichever field they want to edit, but at risk of losing data in the other field.
+    // this.listTarget.classList.toggle('list-group--has-active', shouldEnable);
   }
   
   cancelNewItem() {
