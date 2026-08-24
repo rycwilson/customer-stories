@@ -5,6 +5,7 @@
       url: contributor_prompts_company_path(company),
       id: 'contributor-prompts-form',
       class: 'form-horizontal',
+      style: 'padding-top:2.25rem',
       data: { \
         controller: 'contributor-prompts toast',
         toast_flash_value: (flash.to_h if flash.any? && turbo_frame_request_id == 'contributor-prompts-frame'),
@@ -21,7 +22,7 @@
               controller: 'list',
               list_sort_enabled_value: false }) do
 
-          .crud-list__new-item
+          .crud-list__new-item style="margin-bottom:2.25rem"
             .input-group
               = tag.input( \
                   class: 'form-control',
@@ -51,6 +52,41 @@
                   disable_with_html: disabled_submit_button_html })
 
           .help-block
+
+          .crud-list__actions.text-right style="display:flex; justify-content:end; margin-bottom:1.5rem"
+            .dropdown 
+              = tag.button( \
+                  type: 'button',
+                  id: 'contributor-prompt-tags',
+                  class: 'btn btn-default dropdown-toggle',
+                  data: { toggle: 'dropdown' },
+                  aria: { haspopup: true, expanded: false }) do
+                i.fa.fa-tags
+                |&nbsp;&nbsp;Tagged&nbsp;&nbsp;
+                span.caret
+              = tag.ul( \
+                  class: 'dropdown-menu dropdown-menu-right',
+                  style: 'max-height: 300px; overflow-y: auto;',
+                  aria: { labelledby: 'contributor-prompt-tags' }) do
+                li.dropdown-header Role
+                li 
+                  a href=""
+                    .checkbox 
+                      label 
+                        input type="checkbox" 
+                        | Customer
+                li
+                  a href="" Sales
+                li.divider role="separator"
+                li.dropdown-header Category 
+                - company.categories.each do |category|
+                  li 
+                    a href="" = category.name
+                li.divider role="separator"
+                li.dropdown-header Product 
+                - company.products.each do |product|
+                  li 
+                    a href="" = product.name
 
           = tag.ul( \
               class: 'list-group list-unstyled',
