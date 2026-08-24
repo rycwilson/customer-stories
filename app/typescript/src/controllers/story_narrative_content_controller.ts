@@ -146,9 +146,9 @@ export default class StoryNarrativeContentController extends FormController<Stor
       btn.textContent = `${shouldShow ? 'Hide' : 'Show'} ${this.resultsListTarget.children.length}`;
     });
     if (shouldShow) {
-      Cookies.remove(`csp-hide-customer-results-${button.dataset.storyId}`);
+      Cookies.remove(`csp-hide-results-${button.dataset.storyId}`);
     } else {
-      Cookies.set(`csp-hide-customer-results-${button.dataset.storyId}`, 'true');
+      Cookies.set(`csp-hide-results-${button.dataset.storyId}`, 'true');
     }
   }
 }

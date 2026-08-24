@@ -1,7 +1,7 @@
 = tag.div(id:)
-  - if cookies["csp-hide-customer-results-#{story.id}"] || story.new_results.count >= 3
+  - if cookies["csp-hide-results-#{story.id}"] || story.new_results.count >= 3
     = button_tag( \
-        "#{cookies["csp-hide-customer-results-#{story.id}"] ? 'Show' : 'Hide'} #{story.new_results.count}",
+        "#{cookies["csp-hide-results-#{story.id}"] ? 'Show' : 'Hide'} #{story.new_results.count}",
         type: 'button',
         class: 'btn btn-link',
         data: { \

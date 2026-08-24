@@ -124,24 +124,19 @@ class StoriesController < ApplicationController
         format.turbo_stream do
           turbo_stream_actions = [turbo_stream.replace('toaster', partial: 'shared/toaster')]
           if @story.saved_change_to_new_results?
-            if @story.new_results_before_last_save.count < @story.new_results.count
-              cookies.delete "csp-hide-customer-results-#{@story.id}"
-            end
+            cookies.delete("csp-hide-results-#{@story.id}") if result_was_added?
             turbo_stream_actions << turbo_stream.replace(
               'customer-results',
               partial: 'stories/edit/results',
               locals: { story: @story }
             )
-            turbo_stream_actions << turbo_stream.replace(
-              'toggle-results-sm-md',
-              partial: 'stories/edit/toggle_results',
-              locals: { id: 'toggle-results-sm-md', story: @story }
-            )
-            turbo_stream_actions << turbo_stream.replace(
-              'toggle-results-lg',
-              partial: 'stories/edit/toggle_results',
-              locals: { id: 'toggle-results-lg', story: @story }
-            )
+            %w[sm-md lg].each do |size|
+              turbo_stream_actions << turbo_stream.replace(
+                "toggle-results-#{size}",
+                partial: 'stories/edit/toggle_results',
+                locals: { id: "toggle-results-#{size}", story: @story }
+              )
+            end
           end
           render turbo_stream: turbo_stream_actions
         end
@@ -392,5 +387,9 @@ class StoriesController < ApplicationController
     else
       'Story has been updated.'
     end
+  end
+
+  def result_was_added?
+    @story.new_results_before_last_save.count < @story.new_results.count
   end
 end

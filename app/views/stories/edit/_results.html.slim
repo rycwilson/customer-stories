@@ -47,7 +47,7 @@
   = tag.ol( \
       class: [ \
         'list-group list-unstyled',
-        { 'hidden': cookies["csp-hide-customer-results-#{story.id}"],
+        { 'hidden': cookies["csp-hide-results-#{story.id}"],
           'list-group--sortable': story.new_results.count > 1 }],
       data: { \
         list_target: 'list',
