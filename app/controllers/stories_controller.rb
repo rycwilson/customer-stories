@@ -115,6 +115,7 @@ class StoriesController < ApplicationController
   def update
     # puts JSON.pretty_generate(story_params.to_h)
     @story = Story.friendly.find params[:id]
+    params[:story][:new_results] ||= [] if turbo_frame_request_id == 'story-narrative-content-frame'
 
     if @story.update story_params
       flash.now[:notice] = successful_update_flash_message
