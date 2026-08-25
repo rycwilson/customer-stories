@@ -84,26 +84,13 @@ export default class StoryNarrativeContentController extends FormController<Stor
     // btn.classList.toggle('disabled', !isValid);
     // this.titleSubmitTarget.disabled = !isValid;
   }
-
-  onNewResultInput({ target: input }: { target: HTMLInputElement }) {
-    // const min = input.minLength;
-    // const max = input.maxLength;
-    // if (isNaN(min) || isNaN(max)) return;
-    
-    const len = input.value.trim().length;
-    // const isValid = len >= min && len <= max;
-    this.toggleNewResult(len > 0);
-  }
   
-  toggleNewResult(shouldEnable: boolean) {
-    const cancelButton = <HTMLElement>this.newResultInputTarget.nextElementSibling;
-    cancelButton.classList.toggle('hidden', !shouldEnable);
-    this.newResultSubmitTarget.classList.toggle('hidden', !shouldEnable);
-    this.newResultInputTarget.name = shouldEnable ? 'story[new_results][]' : '';
+  onToggleNewResult({ detail: { isActive } }: CustomEvent<{ isActive: boolean }>) {
+    this.newResultInputTarget.name = isActive ? 'story[new_results][]' : '';
     
     // The new result isn't strictly part of the list, but we want to disable click events 
     // in the list while the new result field has a value and this effectively does so.
-    this.resultsListTarget.classList.toggle('list-group--has-active', shouldEnable);
+    this.resultsListTarget.classList.toggle('list-group--has-active', isActive);
   }
 
   cancelNewResult() {

@@ -5,7 +5,8 @@
     data: { \
       controller: 'list',
       action: [ \
-        'list:toggle-edit->story-narrative-content#onToggleEditResult' ].join(' ' ) }) do
+        'list:toggle-edit->story-narrative-content#onToggleEditResult',
+        'list:toggle-new-item->story-narrative-content#onToggleNewResult' ].join(' ' ) }) do
 
   .crud-list__new-item
     .input-group
@@ -17,9 +18,7 @@
           data: { \
             list_target: 'newItemInput',
             story_narrative_content_target: 'newResultInput',
-            action: [ \
-              'list#onInputNewItem',
-              'story-narrative-content#onNewResultInput' ].join(' ') })
+            action: [ 'list#onInputNewItem' ].join(' ') })
       .input-group-addon.hidden
         = tag.button( \
             type: 'button',

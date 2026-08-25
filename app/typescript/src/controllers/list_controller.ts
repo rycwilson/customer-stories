@@ -123,10 +123,10 @@ export default class ListController extends Controller {
   }
 
   toggleNewItem(shouldEnable: boolean) {
-    const cancelButton = <HTMLElement>this.newItemInputTarget.nextElementSibling;
-    cancelButton.classList.toggle('hidden', !shouldEnable);
+    const cancelButtonAddon = <HTMLElement>this.newItemInputTarget.nextElementSibling;
+    cancelButtonAddon.classList.toggle('hidden', !shouldEnable);
     this.newItemSubmitTarget.classList.toggle('hidden', !shouldEnable);
-    this.newItemInputTarget.name = shouldEnable ? 'story[new_results][]' : '';
+    this.dispatch('toggle-new-item', { detail: { isActive: shouldEnable } });
     
     // The new result isn't strictly part of the list, but we want to disable click events 
     // in the list while the new result field has a value and this effectively does so.
