@@ -21,13 +21,19 @@ class SiteController < ApplicationController
   end
 
   def not_found
-    if current_user&.company.present?
-      redirect_to root_url(subdomain: current_user.company.subdomain)
-    elsif user_signed_in?
-      redirect_to new_company_url(subdomain: '')
-    else
-      @company = Company.find_by_subdomain request.subdomain
-      render '404_not_found', layout: false
+    respond_to do |format|
+      format.html do 
+        if current_user&.company.present?
+          redirect_to root_url(subdomain: current_user.company.subdomain)
+        elsif user_signed_in?
+          redirect_to new_company_url(subdomain: '')
+        else
+          # @company = Company.find_by_subdomain request.subdomain
+          render '404_not_found', status: :not_found, layout: false
+        end
+      end
+      format.json { render json: { error: 'Not Found' }, status: :not_found }
+      format.any { head :not_found }
     end
   end
 

@@ -10,7 +10,7 @@ html lang="en-US"
     .dialog
       h1 404
       p Sorry, we couldn't find that page.
-      = link_to root_url(subdomain: @company&.subdomain) do
+      /= link_to root_url(subdomain: @company&.subdomain) do
         - if @company
           | #{@company.name} Customer Stories
         - else
