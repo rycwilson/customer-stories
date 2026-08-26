@@ -49,24 +49,31 @@ class CompaniesController < ApplicationController
   def update
     # TODO: handle case of absent primary CTA
     if @company.update company_params
-      flash.now[:notice] = 'Account settings have been updated'
       respond_to do |format|
         format.turbo_stream do
           turbo_stream_actions = [
-            turbo_stream.replace('toaster', partial: 'shared/toaster'),
-            turbo_stream.replace(
-              'company-profile-form',
-              partial: 'companies/settings/company_profile', 
+            turbo_stream.update(
+              turbo_frame_request_id,
+              partial: frame_partials[turbo_frame_request_id],
               locals: { company: @company }
             )
           ]
-          turbo_stream_actions << update_square_logo if update_square_logo?
-          turbo_stream_actions << update_header_cta if update_header_cta?
-          render(turbo_stream: turbo_stream_actions)
+
+          if turbo_frame_request_id == 'company-profile-frame'
+            turbo_stream_actions << render_header_logo if updated_square_logo?
+            turbo_stream_actions << render_main_cta if updated_main_cta?
+          end
+           
+          flash.now[:notice] = successful_update_flash_message
+          turbo_stream_actions << turbo_stream.replace('toaster', partial: 'shared/toaster')
+          render turbo_stream: turbo_stream_actions
         end
       end
     else
-      @errors = @company.errors.full_messages
+      render(
+        partial: frame_partials[turbo_frame_request_id],
+        locals: { company: @company, errors: @company.errors.full_messages }
+      )
     end
   end
 
@@ -105,33 +112,33 @@ class CompaniesController < ApplicationController
     )
   end
 
-  def prompts
-    if @company.update company_params
-      flash.now[:notice] = 'Contributor Prompts have been updated'
-      respond_to do |format|
-        format.turbo_stream do
-          turbo_stream_actions = [
-            turbo_stream.replace('toaster', partial: 'shared/toaster'),
-            turbo_stream.replace(
-              'contributor-prompts-list',
-              partial: 'companies/settings/contributor_questions',
-              locals: { company: @company }
-            )
-          ]
-          render turbo_stream: turbo_stream_actions
-        end
-        format.html { head :no_content }
-      end
-    else
-      @errors = @company.errors.full_messages
-      render(
-        partial: 'companies/settings/contributor_questions', 
-        locals: { company: @company, errors: @errors },
-        layout: false, 
-        status: :unprocessable_entity
-      )
-    end
-  end
+  # def prompts
+  #   if @company.update company_params
+  #     flash.now[:notice] = 'Contributor Prompts have been updated'
+  #     respond_to do |format|
+  #       format.turbo_stream do
+  #         turbo_stream_actions = [
+  #           turbo_stream.replace('toaster', partial: 'shared/toaster'),
+  #           turbo_stream.replace(
+  #             'contributor-prompts-list',
+  #             partial: 'companies/settings/contributor_questions',
+  #             locals: { company: @company }
+  #           )
+  #         ]
+  #         render turbo_stream: turbo_stream_actions
+  #       end
+  #       format.html { head :no_content }
+  #     end
+  #   else
+  #     @errors = @company.errors.full_messages
+  #     render(
+  #       partial: 'companies/settings/contributor_questions', 
+  #       locals: { company: @company, errors: @errors },
+  #       layout: false, 
+  #       status: :unprocessable_entity
+  #     )
+  #   end
+  # end
 
   def activity
     company = Company.find(params[:id])
@@ -207,9 +214,10 @@ class CompaniesController < ApplicationController
 
   def company_params
     params.require(:company).permit(
-      :name, :subdomain, :website, :logo_url, :square_logo_url, :landscape_logo_url, :gtm_id,
+      :id, :name, :subdomain, :website, :logo_url, :square_logo_url, :landscape_logo_url, :gtm_id,
       :header_logo_type, :header_color_1, :header_color_2, :header_text_color,
       :adwords_short_headline,
+      contributor_questions_attributes: %i[id question _destroy],
       story_categories_attributes: %i[id name _destroy],
       products_attributes: %i[id name _destroy],
       adwords_images_attributes: %i[id type image_url default is_default_card _destroy]
@@ -277,11 +285,11 @@ class CompaniesController < ApplicationController
       .delete_if { |image_ads| image_ads[:ads_params].empty? } # no affected ads
   end
 
-  def update_square_logo?
+  def updated_square_logo?
     @company.previous_changes[:square_logo_url].present?
   end
 
-  def update_square_logo
+  def render_header_logo
     turbo_stream.update(
       'company-admin-logo',
       html: " \
@@ -291,14 +299,38 @@ class CompaniesController < ApplicationController
     )
   end
 
-  def update_header_cta?
+  def updated_main_cta?
     @company.previous_changes[:header_color_1].present? && @company.ctas.primary.present?
   end
 
-  def update_header_cta
+  def render_main_cta
     turbo_stream.update(
       "edit-cta-#{@company.ctas.primary.take.id}",
       partial: 'ctas/edit', locals: { company: @company, cta: @company.ctas.primary.take }
     )
+  end
+
+  def frame_partials
+    {
+      'contributor-prompts-frame' => 'companies/settings/contributor_questions',
+      'company-ctas-frame' => 'companies/settings/ctas',
+      'company-tags-frame' => 'companies/settings/tags',
+      'company-profile-frame' => 'companies/settings/company_profile'
+    }
+  end
+
+  def successful_update_flash_message
+    return '' if turbo_frame_request_id.blank?
+
+    case turbo_frame_request_id
+    when 'contributor-prompts-frame'
+      'Contributor Prompts have been updated'
+    when 'company-tags-frame'
+      'Tags have been updated'
+    when 'company-profile-frame'
+      'Account Settings have been updated'
+    when 'company-ctas-frame'
+      'CTAs have been updated'
+    end
   end
 end

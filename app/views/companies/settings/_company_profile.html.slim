@@ -6,6 +6,8 @@
       turbo: (false if company.new_record?),
       controller: 'company-profile toast',
       asset_host: Rails.application.config.asset_host,
+      toast_errors_value: \
+        (errors if defined?(errors) && turbo_frame_request_id == 'company-profile-frame'),
       action: [ \
         'input->company-profile#updateState',
         'change->company-profile#updateState',

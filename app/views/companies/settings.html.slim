@@ -71,7 +71,11 @@ main.container-fluid.hidden-xs {
     .tab-content
 
       #account-panel.tab-pane role="tabpanel"
-        = render('companies/settings/company_profile', company: @company)
+        - if @company.persisted?
+          = turbo_frame_tag('company-profile-frame') do
+            = render('companies/settings/company_profile', company: @company)
+        - else 
+          = render('companies/settings/company_profile', company: @company)
 
       - unless action_name == 'new'
           

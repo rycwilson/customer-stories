@@ -178,10 +178,10 @@ export default class ListController extends Controller {
     if (confirm('Delete this item? This action cannot be undone.')) {
       button.blur();
       // item.classList.add('list-group-item--deleting');
-      this.dispatch('delete', { detail: { item, input } });
+      this.dispatch('delete-item', { detail: { item, input } });
     } else {
       button.blur();
-      this.element.classList.remove('list-group--has-active');
+      // this.element.classList.remove('list-group--has-active');
     }
   }
 }
