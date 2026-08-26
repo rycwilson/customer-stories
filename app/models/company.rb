@@ -61,7 +61,9 @@ class Company < ApplicationRecord
   accepts_nested_attributes_for :products, allow_destroy: true
 
   has_many :contributor_questions, dependent: :destroy
+  accepts_nested_attributes_for :contributor_questions, allow_destroy: true
   alias_method :questions, :contributor_questions
+  alias_method :prompts, :contributor_questions
 
   has_many :invitation_templates, dependent: :destroy
   alias_method :templates, :invitation_templates

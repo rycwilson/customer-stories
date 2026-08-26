@@ -2,15 +2,16 @@
 
   = form_with( \
       model: company,
-      url: contributor_prompts_company_path(company),
       id: 'contributor-prompts-form',
       class: 'form-horizontal',
       style: 'padding-top:2.25rem',
       data: { \
         controller: 'contributor-prompts toast',
-        toast_flash_value: (flash.to_h if flash.any? && turbo_frame_request_id == 'contributor-prompts-frame'),
-        toast_errors_value: (@errors if @errors && turbo_frame_request_id == 'contributor-prompts-frame'),
-        action: [].join(' ') }) do |form|
+        toast_errors_value: \
+          (errors if defined?(errors) && turbo_frame_request_id == 'contributor-prompts-frame'),
+        action: [\
+          'list:toggle-new-item->contributor-prompts#onToggleNewPrompt',
+          'list:delete-item->contributor-prompts#deletePrompt' ].join(' ') }) do |form|
 
     .form-group
       .col-sm-12.col-lg-offset-1.col-lg-10
@@ -24,15 +25,19 @@
 
           .crud-list__new-item style="margin-bottom:2.25rem"
             .input-group
-              = tag.input( \
-                  class: 'form-control',
-                  placeholder: 'Add a new Contributor Prompt',
-                  minlength: 5,
-                  maxlength: 20,
-                  autocomplete: 'off',
-                  data: { \
-                    list_target: 'newItemInput',
-                    action: 'list#onInputNewItem' })
+              = form.fields_for(:contributor_questions, company.prompts.build) do |prompt_fields|
+                = prompt_fields.text_field( \
+                    :question,
+                    name: '',
+                    class: 'form-control',
+                    placeholder: 'Add a new Contributor Prompt',
+                    minlength: 5,
+                    maxlength: 20,
+                    autocomplete: 'off',
+                    data: { \
+                      list_target: 'newItemInput',
+                      contributor_prompts_target: 'newPromptInput',
+                      action: 'list#onInputNewItem' })
               .input-group-addon.hidden
                 = tag.button( \
                     type: 'button',
@@ -91,26 +96,29 @@
 
           = tag.ul( \
               class: 'list-group list-unstyled',
-              data: { \
-                list_target: 'list',
-                contributor_prompts_target: 'promptsList' })
+              data: { list_target: 'list', contributor_prompts_target: 'promptsList' })
 
-            - company.contributor_questions.each do |prompt|
+            = form.fields_for(:contributor_questions) do |prompt_fields|
+              - next if prompt_fields.object.new_record?
               
               = tag.li(class: 'list-group-item', data: { list_target: 'item' }) do
-
+                
                 .list-group-item__item
                   .list-group-item__content 
                     p 
-                      = prompt.question
+                      = prompt_fields.object.question
                     .input-group
-                      = text_field_tag( \
-                          '',
-                          prompt.question,
+                      = prompt_fields.text_field( \
+                          :question,
                           class: 'form-control',
+                          autocomplete: 'off',
                           data: { \
                             list_target: 'itemInput',
-                            initial_value: prompt.question })
+                            initial_value: prompt_fields.object.question })
+                      = prompt_fields.check_box( \
+                          :_destroy,
+                          class: 'hidden',
+                          data: { contributor_prompts_target: '_destroyCheckbox' })
                       .input-group-addon
                         = tag.button( \
                             type: 'button',
