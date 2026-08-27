@@ -11,7 +11,7 @@
           'image-card:ready-to-validate->form#updateValidator',
           'image-card:upload-ready->form#updateState',
           'submit->form#validate',
-          'turbo:submit-start->form#animateSubmit'].join(' ') },
+          'turbo:submit-start->form#onSubmitStart'].join(' ') },
       html: { \
         novalidate: true,
         autocomplete: 'off' }) do |form|

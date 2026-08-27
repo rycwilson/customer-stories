@@ -10,7 +10,7 @@
         action: [ \
           'input->new-customer-win#updateState',
           'submit->new-customer-win#validate',
-          'turbo:submit-start->new-customer-win#animateSubmit'].join(' ') },
+          'turbo:submit-start->new-customer-win#onSubmitStart'].join(' ') },
       html: { \
         novalidate: true,
         autocomplete: 'off' }) do |form|

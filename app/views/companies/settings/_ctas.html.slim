@@ -12,57 +12,55 @@
       novalidate: true,
       autocomplete: 'off' }) do |form|
 
-  .form-group style="margin-bottom:2.9rem"
-    .col-sm-12
-      = link_to( \
-          new_company_cta_path(company),
-          class: 'btn btn-secondary',
-          aria: { label: 'New Call-to-Action' },
-          data: { \ 
-            turbo_stream: true,
-            controller: 'modal-trigger',
-            modal_trigger_modal_outlet: '#main-modal',
-            modal_trigger_params_value: { title: 'New Call-to-Action', className: 'new-cta' } }) do
-        i.fa.fa-plus
-        |&nbsp;&nbsp;New
-
   .form-group
     .col-sm-12
 
-      .crud-list__actions.text-right style="display:flex; justify-content:end; margin-bottom:1.5rem"
-          .dropdown 
-            = tag.button( \
-                type: 'button',
-                id: 'cta-tags',
-                class: 'btn btn-default dropdown-toggle',
-                data: { toggle: 'dropdown' },
-                aria: { haspopup: true, expanded: false }) do
-              i.fa.fa-tags
-              |&nbsp;&nbsp;Tagged&nbsp;&nbsp;
-              span.caret
-            = tag.ul( \
-                class: 'dropdown-menu dropdown-menu-right',
-                style: 'max-height: 300px; overflow-y: auto;',
-                aria: { labelledby: 'cta-tags' }) do
-              li.dropdown-header Role
+      .crud-list__actions style="display:flex; justify-content:end; margin-bottom:1.5rem"
+        = link_to( \
+            new_company_cta_path(company),
+            class: 'btn btn-secondary',
+            aria: { label: 'New Call-to-Action' },
+            style: 'margin-right: 1rem;',
+            data: { \ 
+              turbo_stream: true,
+              controller: 'modal-trigger',
+              modal_trigger_modal_outlet: '#main-modal',
+              modal_trigger_params_value: { title: 'New Call-to-Action', className: 'new-cta' } }) do
+          i.fa.fa-plus
+          |&nbsp;&nbsp;New
+        .dropdown 
+          = tag.button( \
+              type: 'button',
+              id: 'cta-tags',
+              class: 'btn btn-default dropdown-toggle',
+              data: { toggle: 'dropdown' },
+              aria: { haspopup: true, expanded: false }) do
+            i.fa.fa-tags
+            |&nbsp;&nbsp;Tagged&nbsp;&nbsp;
+            span.caret
+          = tag.ul( \
+              class: 'dropdown-menu dropdown-menu-right',
+              style: 'max-height: 300px; overflow-y: auto;',
+              aria: { labelledby: 'cta-tags' }) do
+            li.dropdown-header Role
+            li 
+              a href=""
+                .checkbox 
+                  label 
+                    input type="checkbox" 
+                    | Customer
+            li
+              a href="" Sales
+            li.divider role="separator"
+            li.dropdown-header Category 
+            - company.categories.each do |category|
               li 
-                a href=""
-                  .checkbox 
-                    label 
-                      input type="checkbox" 
-                      | Customer
-              li
-                a href="" Sales
-              li.divider role="separator"
-              li.dropdown-header Category 
-              - company.categories.each do |category|
-                li 
-                  a href="" = category.name
-              li.divider role="separator"
-              li.dropdown-header Product 
-              - company.products.each do |product|
-                li 
-                  a href="" = product.name
+                a href="" = category.name
+            li.divider role="separator"
+            li.dropdown-header Product 
+            - company.products.each do |product|
+              li 
+                a href="" = product.name
 
       = tag.div( \
           class: 'crud-list',

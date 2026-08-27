@@ -1,5 +1,5 @@
 import { Controller } from '@hotwired/stimulus';
-import type { TurboSubmitStartEvent } from '@hotwired/turbo';
+import type { TurboSubmitStartEvent, TurboSubmitEndEvent } from '@hotwired/turbo';
 import type ModalController from './modal_controller';
 import type NewCustomerWinController from './new_customer_win_controller';
 import type NewContributionController from './new_contribution_controller';
@@ -117,6 +117,22 @@ export default class FormController<Ctrl extends SubclassController> extends Con
 
   disconnect() {
     $(this.element).validator('destroy');
+  }
+
+  onSubmitStart(e: TurboSubmitStartEvent) {
+    console.log('start', e)
+    const { formSubmission } = e.detail;
+    const { body, submitter } = formSubmission;
+    
+    this.animateSubmit(e, submitter);
+  }
+
+  onSubmitEnd(_e: TurboSubmitEndEvent) {
+  }
+
+  turboSubmit(e: CustomEvent<{ submitter?: HTMLButtonElement | HTMLInputElement }>) {
+    const { submitter } = e.detail;
+    this.element.requestSubmit(submitter);
   }
 
   validate(e: SubmitEvent): boolean {
