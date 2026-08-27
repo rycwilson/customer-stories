@@ -43,9 +43,6 @@ application.register('contributor-invitation', ContributorInvitationController);
 import ContributorPromptsController from './contributor_prompts_controller.js';
 application.register('contributor-prompts', ContributorPromptsController);
 
-import CtaController from "./cta_controller.js";
-application.register("cta", CtaController);
-
 // import CustomerController from './customer_controller.js';
 // application.register('customer', CustomerController);
 
