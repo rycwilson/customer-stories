@@ -3,17 +3,6 @@
 @import '../../plugins/config';
 @import './company_profile';
 
-#contributor-prompts-form {
-  @media (min-width: 768px) and (max-width: 1999px) {
-    max-width: 62rem;
-  }
-
-  @media (min-width: 1200px) {
-    left: -2%;
-    max-width: 75rem;
-  }
-}
-
 body.companies.edit {
   // for safari
   input::-webkit-contacts-auto-fill-button {
@@ -34,13 +23,34 @@ body.companies.edit {
   }
 }
 
+#contributor-prompts-form {
+  max-width: 60rem;
+
+  @media (min-width: 768px) and (max-width: 1200px) {
+    margin: 0 auto;
+  }
+
+  @media (min-width: 1200px) {
+    margin-left: 12.5%;
+  }
+}
+
+
 #company-tags-form {
-  @media (min-width: 768px) and (max-width: 991px) {
+  @media (min-width: 768px) and (max-width: 992px) {
+    margin: 0 auto;
     max-width: 55rem;
   }
 
   @media (min-width: 992px) {
-    left: -2%;
     max-width: 65rem;
+  }
+
+  @media (min-width: 992px) and (max-width: 1200px) {
+    margin-left: 5%;
+  }
+
+  @media (min-width: 1200px) {
+    margin-left: 7.5%;
   }
 }

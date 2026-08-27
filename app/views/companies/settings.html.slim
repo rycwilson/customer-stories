@@ -70,28 +70,29 @@ main.container-fluid.hidden-xs {
   .layout-main
     .tab-content
 
-      #account-panel.tab-pane role="tabpanel"
-        - if @company.persisted?
-          = turbo_frame_tag('company-profile-frame') do
-            = render('companies/settings/company_profile', company: @company)
-        - else 
-          = render('companies/settings/company_profile', company: @company)
-
       - unless action_name == 'new'
           
         #contributor-invitations-panel.tab-pane role="tabpanel"
           #invitation-template-form.form-horizontal data-controller="invitation-template"
-            = render('invitation_templates/template_toolbar', company: @company)
+            = render('invitation_templates/template_toolbar', company: @company, errors: @errors)
 
         #contributor-prompts-panel.tab-pane role="tabpanel"
-          = render('companies/settings/contributor_questions', company: @company)
+          = turbo_frame_tag('contributor-prompts-frame')
+            = render('companies/settings/contributor_questions', company: @company, errors: @errors)
         
         #website-plugin-panel.tab-pane role="tabpanel"
-          = render('plugins/config', company: @company)
+          = render('plugins/config', company: @company, errors: @errors)
 
         #cta-links-forms-panel.tab-pane role="tabpanel"
           = turbo_frame_tag('company-ctas-frame')
             = render('companies/settings/ctas', company: @company, errors: @errors)
 
         #story-tags-panel.tab-pane role="tabpanel"
-          = render('companies/settings/tags', company: @company)
+          = render('companies/settings/tags', company: @company, errors: @errors)
+
+      #account-panel.tab-pane role="tabpanel"
+        - if @company.new_record?
+          = render('companies/settings/company_profile', company: @company, errors: @errors)
+        - else 
+          = turbo_frame_tag('company-profile-frame') do
+            = render('companies/settings/company_profile', company: @company, errors: @errors)

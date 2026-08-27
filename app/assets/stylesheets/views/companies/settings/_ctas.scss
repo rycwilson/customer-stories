@@ -28,13 +28,14 @@
 
 #cta-links-forms-panel {
   .form-horizontal {
-    @media (min-width: 768px) and (max-width: 991px) {
-      max-width: 42rem;
+    max-width: 50rem;
+
+    @media (min-width: 768px) and (max-width: 992px) {
+      margin: 0 auto;
     }
 
     @media (min-width: 992px) {
-      left: -2%;
-      max-width: 55rem;
+      margin-left: 15%;
     }
   }
 

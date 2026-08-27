@@ -47,7 +47,7 @@ body {
       > a {
         display: flex;
         align-items: center;
-        height: 3.75em;
+        height: 3.5em;
         border: 2px solid transparent;
         padding: 1rem 2rem;
         font-size: 14px;
@@ -119,9 +119,6 @@ body {
 #story-settings-form,
 #contributor-invitations-panel .form-horizontal,
 .plugin-config,
-#contributor-prompts-form,
-#cta-links-forms-panel .form-horizontal,
-#company-tags-form,
 #company-profile-form,
 #win-story-form {
   position: relative;
