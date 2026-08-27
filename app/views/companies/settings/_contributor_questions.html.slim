@@ -7,9 +7,10 @@
       controller: 'contributor-prompts toast',
       toast_errors_value: \
         (errors if defined?(errors) && turbo_frame_request_id == 'contributor-prompts-frame'),
-      action: [\
-        'list:toggle-new-item->contributor-prompts#onToggleNewPrompt',
-        'list:delete-item->contributor-prompts#deletePrompt' ].join(' ') }) do |form|
+      action: [ \
+        'turbo:submit-start->contributor-prompts#onSubmitStart',
+        'turbo:submit-end->contributor-prompts#onSubmitEnd',
+        'list:ready-to-submit->contributor-prompts#turboSubmit' ].join(' ') }) do |form|
 
   .form-group
     .col-sm-12
@@ -19,9 +20,10 @@
           class: 'crud-list',
           data: { \
             controller: 'list',
-            list_sort_enabled_value: false }) do
+            list_sort_enabled_value: false,
+            list_new_item_field_name_value: 'company[contributor_questions_attributes][0][question]' }) do
 
-        .crud-list__new-item style="margin-bottom:2.25rem"
+        .crud-list__new-item style="margin-bottom:2.25rem" data-list-target="newItem"
           .input-group
             = form.fields_for(:contributor_questions, company.prompts.build) do |prompt_fields|
               = prompt_fields.text_field( \
@@ -34,7 +36,6 @@
                   autocomplete: 'off',
                   data: { \
                     list_target: 'newItemInput',
-                    contributor_prompts_target: 'newPromptInput',
                     action: 'list#onInputNewItem' })
             .input-group-addon.hidden
               = tag.button( \
@@ -42,6 +43,7 @@
                   class: 'btn btn-default',
                   data: { \
                     controller: 'tooltip',
+                    list_target: 'cancelButton',
                     tooltip_options_value: { title: 'Discard', delay: { show: 500, hide: 0 } },
                     action: "list#cancelNewItem" }) do
                 | &times;
@@ -52,7 +54,7 @@
               data: { \
                 content: 'Add Prompt',
                 list_target: 'newItemSubmit',
-                # field_name: 'story[new_results][]',
+                action: 'list#onClickSubmit',
                 disable_with_html: disabled_submit_button_html })
 
         .help-block
@@ -92,10 +94,7 @@
                 li 
                   a href="" = product.name
 
-        = tag.ul( \
-            class: 'list-group list-unstyled',
-            data: { list_target: 'list', contributor_prompts_target: 'promptsList' })
-
+        = tag.ul(class: 'list-group list-unstyled', data: { list_target: 'list' }) do
           = form.fields_for(:contributor_questions) do |prompt_fields|
             - next if prompt_fields.object.new_record?
             
@@ -116,7 +115,7 @@
                     = prompt_fields.check_box( \
                         :_destroy,
                         class: 'hidden',
-                        data: { contributor_prompts_target: '_destroyCheckbox' })
+                        data: { list_target: '_destroyCheckbox' })
                     .input-group-addon
                       = tag.button( \
                           type: 'button',
@@ -135,6 +134,7 @@
                       data: { \
                         content: 'Save changes',
                         field_name: '',
+                        action: 'list#onClickSubmit',
                         disable_with_html: disabled_submit_button_html })
 
                 .list-group-item__actions

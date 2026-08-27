@@ -1,12 +1,12 @@
-/ id attribute is necessary for turbo stream replace action
 = tag.div( \
+    # id attribute is necessary for turbo stream replace action,
     id: 'customer-results',
     class: 'crud-list',
     data: { \
       controller: 'list',
+      list_new_item_field_name_value: 'story[new_results][]',
       action: [ \
-        'list:toggle-edit->story-narrative-content#onToggleEditResult',
-        'list:toggle-new-item->story-narrative-content#onToggleNewResult' ].join(' ' ) }) do
+        'list:toggle-edit->story-narrative-content#onToggleEditResult' ].join(' ' ) }) do
 
   .crud-list__new-item
     .input-group
@@ -26,9 +26,7 @@
             data: { \
               controller: 'tooltip',
               tooltip_options_value: { title: 'Discard', delay: { show: 500, hide: 0 } },
-              action: [ \
-                'list#cancelNewItem',
-                'story-narrative-content#cancelNewResult' ].join(' ') }) do
+              action: 'list#cancelNewItem' }) do
           | &times;
     = tag.button( \
         type: 'submit',
