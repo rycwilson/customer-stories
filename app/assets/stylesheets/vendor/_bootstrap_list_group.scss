@@ -27,18 +27,16 @@
   .collapse {
     position: relative;
 
-    form:not(.button_to){
-      padding: 1.5rem;
-      background: $blueish-gray-lighter;
-      border: 1px solid $list-group-border;
-      border-top: none;
-      
-      border-bottom-right-radius: $border-radius-base;
-      border-bottom-left-radius: $border-radius-base;
+    padding: 1.5rem;
+    background: $blueish-gray-lighter;
+    border: 1px solid $list-group-border;
+    border-top: none;
+    
+    border-bottom-right-radius: $border-radius-base;
+    border-bottom-left-radius: $border-radius-base;
 
-      hr {
-        margin: 1.5rem 0;
-      }
+    hr {
+      margin: 1.5rem 0;
     }
 
     &.in + .list-group-item {
@@ -57,7 +55,7 @@
   $icon-font-size: 1.25em;
   
   position: relative;
-  height: 5rem;
+  height: 3.5em;
   padding: 0 1.5rem 0;
 
   // Dragging state
