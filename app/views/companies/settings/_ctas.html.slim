@@ -7,10 +7,10 @@
       toast_errors_value: \
         (errors if defined?(errors) && turbo_frame_request_id == 'company-ctas-frame'),
       action: [ \
-        'turbo:submit-start->company-ctas#onTurboSubmitStart' ].join(' '),
+        'turbo:submit-start->company-ctas#onTurboSubmitStart' ].join(' ') },
     html: { \
       novalidate: true,
-      autocomplete: 'off' } }) do |form|
+      autocomplete: 'off' }) do |form|
 
   .form-group style="margin-bottom:2.9rem"
     .col-sm-12
