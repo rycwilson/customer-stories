@@ -320,17 +320,13 @@ class CompaniesController < ApplicationController
   end
 
   def successful_update_flash_message
-    return '' if turbo_frame_request_id.blank?
-
-    case turbo_frame_request_id
-    when 'contributor-prompts-frame'
-      'Contributor Prompts have been updated'
-    when 'company-tags-frame'
-      'Tags have been updated'
-    when 'company-profile-frame'
-      'Account Settings have been updated'
-    when 'company-ctas-frame'
-      'CTAs have been updated'
-    end
+    return '' unless turbo_frame_request?
+    
+    {
+      'contributor-prompts-frame' => 'Contributor Prompts have been updated',
+      'company-tags-frame' => 'Tags have been updated',
+      'company-ctas-frame' => 'CTAs have been updated',
+      'company-profile-frame' => 'Account Settings have been updated'
+    }[turbo_frame_request_id]
   end
 end
