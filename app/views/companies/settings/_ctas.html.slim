@@ -1,110 +1,100 @@
-= turbo_frame_tag('company-ctas-frame') do
+= form_with( \
+    model: company,
+    id: 'company-ctas-form',
+    class: 'form-horizontal',
+    data: { \
+      controller: 'company-ctas toast',
+      toast_errors_value: \
+        (errors if defined?(errors) && turbo_frame_request_id == 'company-ctas-frame'),
+      action: [ \
+        'turbo:submit-start->company-ctas#onTurboSubmitStart' ].join(' '),
+    html: { \
+      novalidate: true,
+      autocomplete: 'off' } }) do |form|
 
-  = tag.div( \
-      class: 'form-horizontal',
-      data: { \
-        controller: 'company-ctas toast',
-        toast_flash_value: ( \
-          flash.to_h if flash.any? && turbo_frame_request_id == 'company-ctas-frame'),
-        toast_errors_value: ( \
-          @errors if @errors.present? && turbo_frame_request_id == 'company-ctas-frame') }) do
-    
-    .form-group style="margin-bottom:2.9rem"
-      .col-sm-12.col-md-offset-2.col-md-10 
-        = link_to( \
-            new_company_cta_path(company),
-            class: 'btn btn-secondary',
-            aria: { label: 'New Call-to-Action' },
-            data: { \ 
-              turbo_stream: true,
-              controller: 'modal-trigger',
-              modal_trigger_modal_outlet: '#main-modal',
-              modal_trigger_params_value: { title: 'New Call-to-Action', className: 'new-cta' } }) do
-          i.fa.fa-plus
-          |&nbsp;&nbsp;New
+  .form-group style="margin-bottom:2.9rem"
+    .col-sm-12
+      = link_to( \
+          new_company_cta_path(company),
+          class: 'btn btn-secondary',
+          aria: { label: 'New Call-to-Action' },
+          data: { \ 
+            turbo_stream: true,
+            controller: 'modal-trigger',
+            modal_trigger_modal_outlet: '#main-modal',
+            modal_trigger_params_value: { title: 'New Call-to-Action', className: 'new-cta' } }) do
+        i.fa.fa-plus
+        |&nbsp;&nbsp;New
 
-    .form-group
-      .visible-sm-block.col-sm-12
-        label Main 
-      label.col-md-2.control-label.visible-md-inline-block.visible-lg-inline-block Main
-      .col-sm-12.col-md-10
+  .form-group
+    .col-sm-12
 
-        - if primary_cta = company.ctas.primary.take
-          = tag.div(class: 'crud-list', data: { controller: 'list', list_collapse_enabled_value: true }) do
+      .crud-list__actions.text-right style="display:flex; justify-content:end; margin-bottom:1.5rem"
+          .dropdown 
+            = tag.button( \
+                type: 'button',
+                id: 'cta-tags',
+                class: 'btn btn-default dropdown-toggle',
+                data: { toggle: 'dropdown' },
+                aria: { haspopup: true, expanded: false }) do
+              i.fa.fa-tags
+              |&nbsp;&nbsp;Tagged&nbsp;&nbsp;
+              span.caret
             = tag.ul( \
-                class: 'list-group list-group--collapsible list-unstyled',
-                style: 'margin-bottom:0',
-                data: { \
-                  list_target: 'list' }) do
-              li.list-group-item data-list-target="item"
-                .list-group-item__item
-                  .list-group-item__content
-                    = tag.a href: "#edit-cta-#{primary_cta.id}",
-                            aria: { expanded: 'false' },
-                            data: { toggle: 'collapse' }
-                      p = "#{primary_cta.type == 'CtaLink' ? '[LINK]' : '[FORM]'} #{primary_cta.description}"
-                  i.fa.fa-fw.fa-chevron-up data-toggle="collapse" data-target="#edit-cta-#{primary_cta.id}"
-                  i.fa.fa-fw.fa-chevron-down data-toggle="collapse" data-target="#edit-cta-#{primary_cta.id}"
-                .collapse id="edit-cta-#{primary_cta.id}" data-list-target="collapse"
-                  = render('ctas/edit', company:, cta: primary_cta)
+                class: 'dropdown-menu dropdown-menu-right',
+                style: 'max-height: 300px; overflow-y: auto;',
+                aria: { labelledby: 'cta-tags' }) do
+              li.dropdown-header Role
+              li 
+                a href=""
+                  .checkbox 
+                    label 
+                      input type="checkbox" 
+                      | Customer
+              li
+                a href="" Sales
+              li.divider role="separator"
+              li.dropdown-header Category 
+              - company.categories.each do |category|
+                li 
+                  a href="" = category.name
+              li.divider role="separator"
+              li.dropdown-header Product 
+              - company.products.each do |product|
+                li 
+                  a href="" = product.name
 
-        - else 
-          = link_to( \
-              new_company_cta_path(company) + '?primary=true',
-              class: 'btn btn-secondary',
-              style: 'margin-bottom:2.25rem',
-              aria: { label: 'New Call-to-Action' },
-              data: { \ 
-                turbo_stream: true,
-                controller: 'modal-trigger',
-                modal_trigger_modal_outlet: '#main-modal',
-                modal_trigger_params_value: { \
-                  title: 'New Call-to-Action',
-                  className: 'new-cta' } }) do
-            i.fa.fa-plus
-            |&nbsp;&nbsp;New
-          /.list-group style="margin-bottom:10px"
-            a.list-group-item--empty href="" aria-labelled-by="primary-cta-label-md-lg"
-              p None
+      = tag.div( \
+          class: 'crud-list',
+          data: { \
+            controller: 'list',
+            list_sort_enabled_value: company.ctas.count > 1,
+            list_collapse_enabled_value: true }) do
+      
+        = tag.ol( \
+            class: [ \
+              'list-group list-group--collapsible list-unstyled',
+              { 'list-group--sortable':  company.ctas.count > 1 } ],
+            data: { \
+              list_target: 'list' }) do
 
-    .form-group
-      .visible-sm-block.col-sm-12
-        label Sidebar
-      label.col-md-2.control-label.visible-md-inline-block.visible-lg-inline-block Sidebar
-      .col-sm-12.col-md-10
+          = form.fields_for(:ctas) do |cta_fields|
+            li.list-group-item.list-group-item--collapsed data-list-target="item"
 
-        - if company.ctas.sidebar.present?
-
-          = tag.div( \
-              class: 'crud-list',
-              data: { \
-                controller: 'list',
-                list_sort_enabled_value: company.ctas.sidebar.count > 1,
-                list_collapse_enabled_value: true }) do
-          
-            = content_tag( \
-                company.ctas.sidebar.count > 1 ? :ol : :ul,
-                class: [ \
-                  'list-group list-group--collapsible list-unstyled',
-                  { 'list-group--sortable':  company.ctas.sidebar.count > 1 } ],
-                data: { \
-                  list_target: 'list' }) do
-
-              - company.ctas.sidebar.each do |cta|
-                li.list-group-item.list-group-item--collapsed data-list-target="item"
-
-                  .list-group-item__item
-                    - if company.ctas.sidebar.count > 1
-                      .list-group-item__handle data-list-target="sortHandle"
-                        = tag.i(class: 'fa fa-fw fa-arrows-v') if company.ctas.sidebar.count > 1
-                    .list-group-item__content
-                      / using data-target instead of href in the <a> tag effectively removes outline styling
-                      / TODO: accessibility?
-                      = tag.a aria: { expanded: 'false' },
-                              data: { toggle: 'collapse', target: "#edit-cta-#{cta.id}" }
-                        p = "#{cta.type == 'CtaLink' ? '[LINK]' : '[FORM]'} #{cta.description}"
-                    i.fa.fa-fw.fa-chevron-up data-toggle="collapse" data-target="#edit-cta-#{cta.id}"
-                    i.fa.fa-fw.fa-chevron-down data-toggle="collapse" data-target="#edit-cta-#{cta.id}"
-                  
-                  .collapse id="edit-cta-#{cta.id}" data-list-target="collapse"
-                    = render('ctas/edit', company:, cta:)
+              .list-group-item__item
+                - if company.ctas.count > 1
+                  .list-group-item__handle data-list-target="sortHandle"
+                    = tag.i(class: 'fa fa-fw fa-arrows-v')
+                
+                .list-group-item__content
+                  / Using data-target instead of href in the <a> tag effectively removes outline styling
+                  / TODO: accessibility?
+                  = tag.a aria: { expanded: 'false' },
+                          data: { toggle: 'collapse', target: "#edit-cta-#{cta_fields.object.id}" }
+                    p = "#{cta_fields.object.type == 'CtaLink' ? '[LINK]' : '[FORM]'} #{cta_fields.object.description}"
+                
+                i.fa.fa-fw.fa-chevron-up data-toggle="collapse" data-target="#edit-cta-#{cta_fields.object.id}"
+                i.fa.fa-fw.fa-chevron-down data-toggle="collapse" data-target="#edit-cta-#{cta_fields.object.id}"
+              
+              .collapse id="edit-cta-#{cta_fields.object.id}" data-list-target="collapse"
+                = render('ctas/edit', company:, form:, cta_fields:)

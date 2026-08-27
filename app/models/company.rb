@@ -70,7 +70,8 @@ class Company < ApplicationRecord
 
   has_many :outbound_actions, dependent: :destroy
   has_many :ctas, class_name: 'CallToAction', dependent: :destroy
-  accepts_nested_attributes_for :ctas
+  accepts_nested_attributes_for :ctas, allow_destroy: true
+  
   has_one :plugin, dependent: :destroy
 
   has_many :adwords_campaigns, dependent: :destroy

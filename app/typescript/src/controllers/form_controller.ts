@@ -9,8 +9,8 @@ import type CompanyProfileController from './company_profile_controller';
 import type InvitationTemplateController from './invitation_template_controller';
 import type ContributorInvitationController from './contributor_invitation_controller';
 import type ContributorPromptsController from './contributor_prompts_controller';
+import type CompanyCtasController from './company_ctas_controller';
 import type CompanyTagsController from './company_tags_controller';
-import type CtaController from './cta_controller';
 import type AdsController from './ads_controller';
 import type StoryNarrativeContentController from './story_narrative_content_controller';
 import type StorySettingsController from './story_settings_controller';
@@ -27,8 +27,8 @@ export type SubclassController = (
   InvitationTemplateController |
   ContributorInvitationController |
   ContributorPromptsController |
+  CompanyCtasController |
   CompanyTagsController |
-  CtaController |
   AdsController | 
   StoryNarrativeContentController |
   StorySettingsController
