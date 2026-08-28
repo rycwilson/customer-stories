@@ -1,103 +1,128 @@
 / TODO: If the description is optional, what to show as the list item heading?
-= turbo_stream.append 'main-modal-body' do
+= turbo_stream.send(:append, 'main-modal-body') do
 
-  / To avoid the fields being named `cta_link` or `cta_form`, provide a scope. (This means the url needs to be explicitly set.)
   = form_with( \
-      model: @cta,
+      model: @company,
       url: company_ctas_path(@company),
-      scope: 'cta',
+      method: :post,
       id: 'new-cta-form',
       data: { \
-        controller: 'cta',
+        controller: 'company-ctas',
+        company_ctas_modal_outlet: '#main-modal',
+        
+        #'submit->company-ctas#validate',
         action: [ \
-          'submit->cta#validate',
-          'turbo:submit-start->cta#animateSubmit'].join(' ') },
+          'turbo:submit-end->company-ctas#onSubmitEnd' ].join(' ') },
       html: { \
         novalidate: true,
         autocomplete: 'off' }) do |form|
+    
+    = form.fields_for(:ctas, @cta) do |cta_fields|
+      
+      div data-company-ctas-target="cta"
 
-    .form-group data-action="change->cta#toggleType"
-      label Type
-      div
-        = form.label(:type_ctalink, class: 'radio-inline') do
-          = form.radio_button(:type, 'CtaLink', checked: true)
-          | Link
-        = form.label(:type_ctaform, class: 'radio-inline') do
-          = form.radio_button(:type, 'CtaForm')
-          | Web Form
-      /.radio style="margin-top:0"
-        = form.label(:type_ctalink) do
-          = form.radio_button(:type, 'CtaLink', checked: true)
-          | Link
-      /.radio
-        = form.label(:type_ctaform) do
-          = form.radio_button(:type, 'CtaForm')
-          | Web Form
+        .form-group data-action="change->company-ctas#toggleType"
+          label Type
+          div
+            = cta_fields.label(:type_ctalink, class: 'radio-inline') do
+              = cta_fields.radio_button(:type, 'CtaLink', checked: true)
+              | Link
+            = cta_fields.label(:type_ctaform, class: 'radio-inline') do
+              = cta_fields.radio_button(:type, 'CtaForm')
+              | Web Form
+          /.radio style="margin-top:0"
+            = cta_fields.label(:type_ctalink) do
+              = cta_fields.radio_button(:type, 'CtaLink', checked: true)
+              | Link
+          /.radio
+            = cta_fields.label(:type_ctaform) do
+              = cta_fields.radio_button(:type, 'CtaForm')
+              | Web Form
 
-    .form-group 
-      = form.label(:display_text, 'Display Text')
-      = form.text_field( \
-          :display_text,
-          class: 'form-control',
-          placeholder: 'Display Text',
-          required: true,
-          data: { action: 'cta#updateCustomButtonText' })
-      .help-block 
-
-    / TODO: the `required` attribute of these tags must be toggleable
-    .form-group data-cta-target="typeSpecificField"
-      = form.label(:link_url, 'Website URL')
-      = form.text_field(:link_url, class: 'form-control', placeholder: 'Website URL')
-
-    .form-group.hidden data-cta-target="typeSpecificField"
-      = form.label(:form_html, 'HTML')
-      = form.text_area(:form_html, class: 'form-control', placeholder: '<script> or <form> tags', rows: 3)
-
-    .form-group 
-      = form.label(:description, 'Description')
-      = form.text_field(:description, class: 'form-control', placeholder: 'Description')
-      .help-block 
-        | Optional
-
-    .form-group
-      .checkbox
-        = form.label(:primary) do
-          = form.check_box(:primary, { data: { action: 'cta#togglePrimary' } }, true, false)
-          | Make this the Main CTA
-
-    .cta__custom-button class=('hidden' unless @cta.primary?) data-cta-target="customButton"
-      div
-        = form.fields_for(:company) do |company_fields|
-          = company_fields.label(:primary_cta_background_color, 'Button')
-          = company_fields.color_field( \
-              :primary_cta_background_color,
+        .form-group 
+          = cta_fields.label(:description)
+          = cta_fields.text_field( \
+              :description,
               class: 'form-control',
-              disabled: !@cta.primary?,
-              data: { cta_target: 'customButtonBackgroundColorInput companyField' })
-          = company_fields.label(:primary_cta_text_color, 'Text')
-          = company_fields.color_field( \
-              :primary_cta_text_color,
-              class: 'form-control',
-              disabled: !@cta.primary?,
-              data: { cta_target: 'customButtonTextColorInput companyField' })
-      div style="background-color:#{@company.header_color_1}"
-        button.btn.btn-lg.btn-custom {
-          type="button" 
-          data-cta-target="customButtonDemo"
-          data-bg-color="#{@company.primary_cta_background_color}"
-          data-color="#{@company.primary_cta_text_color}" }
-          | Display Text
-      .help-block CTA button will appear in the header as shown
+              placeholder: 'Description',
+              autocomplete: 'off')
 
-= turbo_stream.append 'main-modal-content' do 
+        .form-group 
+          = cta_fields.label(:display_text)
+          = cta_fields.text_field( \
+              :display_text,
+              class: 'form-control',
+              placeholder: 'Display text',
+              autocomplete: 'off',
+              data: { action: 'company-ctas#updateCustomButtonText' })
+
+        = tag.div( \
+            class: ['form-group', { hidden: cta_fields.object.type != 'CtaLink' }],
+            data: { company_ctas_target: 'typeSpecificField' }) do
+          = cta_fields.label(:link_url, 'Website URL')
+          = cta_fields.text_field( \
+              :link_url,
+              value: 'https://example.com',
+              class: 'form-control',
+              placeholder: 'Website URL',
+              autocomplete: 'off' )
+
+        = tag.div( \
+            class: ['form-group', { hidden: cta_fields.object.type != 'CtaForm' }],
+            data: { company_ctas_target: 'typeSpecificField' }) do
+          = cta_fields.label(:form_html, 'HTML')
+          = cta_fields.text_area( \
+              :form_html,
+              class: 'form-control',
+              placeholder: '<script> or <form> tags',
+              autocomplete: 'off',
+              rows: 3 )
+
+        .form-group 
+          .checkbox
+            = cta_fields.label(:primary) do
+              = cta_fields.check_box( \
+                  :primary,
+                  { data: { action: 'company-ctas#togglePrimary' } })
+              = "#{cta_fields.object.primary? ? 'Remove as' : 'Make this the'} Main CTA"
+
+        = tag.div( \
+            class: ['cta__custom-button', { hidden: !cta_fields.object.primary? }],
+            data: { company_ctas_target: 'customButton' }) do
+
+          div
+            = form.label(:primary_cta_background_color, 'Button')
+            = form.color_field( \
+                :primary_cta_background_color,
+                class: 'form-control',
+                disabled: !cta_fields.object.primary?,
+                data: { company_ctas_target: 'customButtonColorInput' })
+            = form.label(:primary_cta_text_color, 'Text')
+            = form.color_field( \
+                :primary_cta_text_color,
+                class: 'form-control',
+                disabled: !cta_fields.object.primary?,
+                data: { company_ctas_target: 'customButtonColorInput' })
+
+          div style="background-color:#{@company.header_color_1}"
+            = button_tag( \
+                'Click me!',
+                class: 'btn btn-lg btn-custom',
+                type: 'button',
+                data: { \
+                  company_ctas_target: 'customButtonDemo',
+                  bg_color: @company.primary_cta_background_color,
+                  color: @company.primary_cta_text_color })
+          
+          .help-block CTA button will appear in the header as shown
+
+= turbo_stream.send(:append, 'main-modal-content') do 
   .modal-footer data-modal-target="footer"
     button.btn.btn-default type="button" data-dismiss="modal" Cancel
-    = button_tag( \
-        '',
+    = tag.button( \
         type: 'submit',
         class: 'btn btn-success',
         form: 'new-cta-form',
         data: { \
-          content: 'Create CTA',
-          cta_target: 'submitBtn',
+          content: 'Create',
           disable_with_html: disabled_submit_button_html })

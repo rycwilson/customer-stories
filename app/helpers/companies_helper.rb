@@ -18,4 +18,9 @@ module CompaniesHelper
       HTML
     }
   end
+
+  def cta_item_text(cta)
+    meta = [cta.type == 'CtaLink' ? 'LINK' : 'FORM', cta.primary? ? 'MAIN' : nil].compact.join(', ')
+    "[#{meta}] #{cta.description}"
+  end
 end

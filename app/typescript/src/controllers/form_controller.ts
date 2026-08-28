@@ -122,12 +122,18 @@ export default class FormController<Ctrl extends SubclassController> extends Con
   onSubmitStart(e: TurboSubmitStartEvent) {
     console.log('start', e)
     const { formSubmission } = e.detail;
-    const { body, submitter } = formSubmission;
+    const { submitter } = formSubmission;
+    
+    // this.submitTargets
+    //   // The submitter will disable itself, no need to disable it twice
+    //   .filter(submitEl => submitEl !== submitter)
+    //   .forEach(submitEl => submitEl.disabled = true);
     
     this.animateSubmit(e, submitter);
   }
 
-  onSubmitEnd(_e: TurboSubmitEndEvent) {
+  onSubmitEnd(e: TurboSubmitEndEvent) {
+    console.log('end', e)
   }
 
   turboSubmit(e: CustomEvent<{ submitter?: HTMLButtonElement | HTMLInputElement }>) {

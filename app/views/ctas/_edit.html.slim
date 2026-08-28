@@ -1,5 +1,7 @@
 div data-company-ctas-target="cta"
 
+  = cta_fields.hidden_field(:id)
+
   .form-group 
     = cta_fields.label(:description)
     = cta_fields.text_field( \
@@ -40,7 +42,9 @@ div data-company-ctas-target="cta"
       = cta_fields.label(:primary) do
         = cta_fields.check_box( \
             :primary,
-            { data: { action: 'company-ctas#togglePrimary' } })
+            { data: { action: 'company-ctas#togglePrimary' } },
+            not cta_fields.object.primary?,
+            cta_fields.object.primary? )
         = "#{cta_fields.object.primary? ? 'Remove as' : 'Make this the'} Main CTA"
 
   = tag.div( \
@@ -77,17 +81,17 @@ div data-company-ctas-target="cta"
 
   div style="display:flex; justify-content:#{cta_fields.object.primary? ? 'flex-end' : 'space-between'}"
     - unless cta_fields.object.primary?
-      / TODO button_to would be better here, but first need to position the button outside of the form (no nested forms)
+      / Use link_to instead of button_to to avoid issues with nested forms
       = link_to( \
           'Delete',
           company_cta_path(company, cta_fields.object),
           class: 'btn btn-sm btn-danger',
-          data: { turbo_method: 'delete' })
-    = tag.button( \
+          data: { turbo_method: 'delete', turbo_confirm: 'Delete this CTA?' })
+    = tag.input( \
         type: 'submit',
-        class: 'btn btn-sm btn-success disabled',
-        # form: "cta-#{cta_fields.object.id}-form",
-        disabled: true,
+        class: 'btn btn-sm btn-success',
+        # disabled: true,
+        formaction: company_cta_path(company, cta_fields.object),
         data: { \
           content: 'Save changes',
           company_ctas_target: 'submitBtn',
