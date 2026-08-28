@@ -11,6 +11,7 @@
         action: [ \
           'turbo:submit-start->story-narrative-content#onSubmitStart',
           'turbo:submit-end->story-narrative-content#onSubmitEnd',
+          'list:toggle-edit->story-narrative-content#onToggleEditResult',
           'list:sorted->story-narrative-content#onSortedResults',
           'list:delete-item->story-narrative-content#deleteResult' ].join(' ') },
       html: { \
