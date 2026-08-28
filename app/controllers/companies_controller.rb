@@ -72,7 +72,8 @@ class CompaniesController < ApplicationController
     else
       render(
         partial: frame_partials[turbo_frame_request_id],
-        locals: { company: @company, errors: @company.errors.full_messages }
+        locals: { company: @company, errors: @company.errors.full_messages },
+        status: :unprocessable_entity
       )
     end
   end
