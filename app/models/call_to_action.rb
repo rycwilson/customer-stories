@@ -5,6 +5,8 @@ class CallToAction < ApplicationRecord
   has_and_belongs_to_many :successes, join_table: 'ctas_successes'
   has_many :stories, through: :successes
 
+  before_save :demote_current_primary, if: -> { primary? && will_save_change_to_primary? }
+
   accepts_nested_attributes_for(
     :company,
     reject_if: ->(company_attrs) { !color_attributes_only?(company_attrs) },
@@ -26,4 +28,10 @@ class CallToAction < ApplicationRecord
   end
 
   private_class_method :color_attributes_only?
+
+  private 
+
+  def demote_current_primary
+    self.class.where(company_id:).where.not(id:).update_all(primary: false)
+  end
 end
