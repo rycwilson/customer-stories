@@ -157,6 +157,12 @@ body {
   }
 }
 
+.crud-list__actions {
+  display: flex;
+  justify-content: end;
+  margin-bottom: 1.5rem;
+}
+
 .crud-list__new-item {
   @include flex-row-center;
   

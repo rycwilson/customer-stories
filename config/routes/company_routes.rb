@@ -25,6 +25,7 @@ authenticate(:user) do
   get '/settings', to: 'companies#edit', as: 'edit_company'
   resources :companies, only: %i[show update] do
     member do
+      patch 'prompts', to: 'contributor_questions#create'
       patch 'tags'
       patch 'ads'
       get 'activity', constraints: ->(req) { req.format == :json }
@@ -50,6 +51,7 @@ authenticate(:user) do
     end
     resources :ctas, only: %i[new show create update destroy]
     resources :invitation_templates
+    resources :contributor_questions, only: %i[create update destroy]
     resources :visitors, only: [:index], constraints: ->(req) { req.format == :json }
     member { get :set_reset_gads }
     member { put :widget }

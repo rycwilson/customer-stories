@@ -78,7 +78,7 @@ main.container-fluid.hidden-xs {
 
         #contributor-prompts-panel.tab-pane role="tabpanel"
           = turbo_frame_tag('contributor-prompts-frame')
-            = render('companies/settings/contributor_questions', company: @company, errors: @errors)
+            = render('contributor_prompts', company: @company, errors: @errors)
         
         #website-plugin-panel.tab-pane role="tabpanel"
           = render('plugins/config', company: @company, errors: @errors)

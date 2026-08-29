@@ -20,6 +20,7 @@ export default class ListController extends Controller {
     'itemInput',
     '_destroyCheckbox',
     'cancelButton',
+    'deleteLink',
     'collapse',
   ];
   declare readonly newItemTarget: HTMLDivElement;
@@ -30,6 +31,7 @@ export default class ListController extends Controller {
   declare readonly sortHandleTargets: HTMLElement[];
   declare readonly itemInputTargets: HTMLInputElement[];
   declare readonly cancelButtonTargets: HTMLButtonElement[];
+  declare readonly deleteLinkTargets: HTMLAnchorElement[];
   declare readonly _destroyCheckboxTargets: HTMLInputElement[];
   declare readonly collapseTargets: HTMLDivElement[];
 
@@ -65,6 +67,7 @@ export default class ListController extends Controller {
 
   onClickSubmit(e: PointerEvent) {
     e.preventDefault();
+
     const button = <HTMLButtonElement>e.target;
     const isNewItem = this.newItemTarget.contains(button);
     let cancelButton: HTMLButtonElement | null = null;
@@ -84,7 +87,7 @@ export default class ListController extends Controller {
       cancelButton.disabled = true;
       $(cancelButton).tooltip('destroy');
     }
-    this.dispatch('ready-to-submit', { detail: { submitter: button } });
+    this.dispatch('save-item', { detail: { submitter: button } });
   }
   
   onShownCollapse(e: CustomEvent) {
@@ -185,16 +188,12 @@ export default class ListController extends Controller {
   }
   
   editItem({ currentTarget: button }: { currentTarget: HTMLButtonElement }) {
-    const { item, input } = this.itemElements(button)!;
-    const sortHandle = this.isSortable ?
-      (<HTMLElement>this.sortHandleTargets.find(handle => item.contains(handle)) ?? null) :
-      null;
-    const cancelButton = <HTMLButtonElement>this.cancelButtonTargets.find(button => item.contains(button));
+    const { item, input, cancelButton, sortHandle } = this.itemElements(button)!;
     // this.listTarget.classList.add('list-group--has-active');
     item.classList.add('list-group-item--active');
     this.dispatch(
       'toggle-edit', 
-      { detail: { item, isEditable: true, cancelButton, ...(sortHandle ? { sortHandle } : {}) } }
+      { detail: { item, isEditable: true, cancelButton, ...(sortHandle && { sortHandle }) } }
     );
 
     setTimeout(() => {
@@ -211,30 +210,40 @@ export default class ListController extends Controller {
     setTimeout(() => input.value = input.dataset.initialValue || '');
   }
 
-  deleteItem({ currentTarget: button }: { currentTarget: HTMLButtonElement }) {
-    const { item } = this.itemElements(button)!;
-    const _destroyCheckbox = this._destroyCheckboxTargets.find(checkbox => item.contains(checkbox))
-    this.listTarget.classList.add('list-group--has-active');
-    if (confirm('Delete this item? This action cannot be undone.')) {
-      button.blur();
-      if (_destroyCheckbox) _destroyCheckbox.checked = true;
+  deleteItem(e: PointerEvent) {
+    // this.listTarget.classList.add('list-group--has-active');
+    const button = <HTMLButtonElement>e.currentTarget;
+    if (confirm(button.dataset.confirm)) {
+      const { item, input, _destroyCheckbox, deleteLink } = this.itemElements(button);
+      // button?.blur();
+      if (deleteLink) {
+        deleteLink.click();
+      } else if (_destroyCheckbox) {
+        _destroyCheckbox.checked = true;
+      }
       item.classList.add('list-group-item--deleting');
-      this.dispatch('ready-to-submit');
+      this.dispatch('delete-item', { detail: { submitter: button, input } });
     } else {
-      button.blur();
-      this.listTarget.classList.remove('list-group--has-active');
+      // button?.blur();
+      // this.listTarget.classList.remove('list-group--has-active');
     }
   }
 
-  itemElements(childButton: HTMLButtonElement) {
-    const item = this.itemTargets.find(item => item.contains(childButton));
-    if (!item) return null;
+  itemElements(childElement: HTMLElement) {
+    // Currently it's only the submit button or delete button that's passed as the childElement.
+    const button = childElement;
 
+    const item = <HTMLLIElement>this.itemTargets.find(item => item.contains(button));
     const input = <HTMLInputElement>this.itemInputTargets.find(input => item.contains(input));
-    const sortHandle = this.isSortable ?
-      <HTMLElement>this.sortHandleTargets.find(handle => item.contains(handle)) :
-      null;
     const cancelButton = <HTMLButtonElement>this.cancelButtonTargets.find(button => item.contains(button));
-    return { item, input, sortHandle, cancelButton };
+    const sortHandle = this.isSortable && this.sortHandleTargets.find(handle => item.contains(handle));
+    const deleteLink = this.deleteLinkTargets.find(link => item.contains(link));
+    return { 
+      item,
+      input,
+      cancelButton,
+      ...(sortHandle && { sortHandle }),
+      ...(deleteLink && { deleteLink }),
+    };
   }
 }
