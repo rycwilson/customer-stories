@@ -215,7 +215,6 @@ export default class ListController extends Controller {
     const button = <HTMLButtonElement>e.currentTarget;
     if (confirm(button.dataset.confirm)) {
       const { item, input, _destroyCheckbox, deleteLink } = this.itemElements(button);
-      // button?.blur();
       if (deleteLink) {
         deleteLink.click();
       } else if (_destroyCheckbox) {
@@ -224,7 +223,6 @@ export default class ListController extends Controller {
       item.classList.add('list-group-item--deleting');
       this.dispatch('delete-item', { detail: { submitter: button, input } });
     } else {
-      // button?.blur();
       // this.listTarget.classList.remove('list-group--has-active');
     }
   }
@@ -237,6 +235,10 @@ export default class ListController extends Controller {
     const input = <HTMLInputElement>this.itemInputTargets.find(input => item.contains(input));
     const cancelButton = <HTMLButtonElement>this.cancelButtonTargets.find(button => item.contains(button));
     const sortHandle = this.isSortable && this.sortHandleTargets.find(handle => item.contains(handle));
+
+    // `deleteLink` is useful because while the form's action can be overridden with formaction,
+    // the delete (trash can) button is a button[type="button"] and not an input[type="submit"]
+    // which is required for formaction to work.
     const deleteLink = this.deleteLinkTargets.find(link => item.contains(link));
     return { 
       item,
