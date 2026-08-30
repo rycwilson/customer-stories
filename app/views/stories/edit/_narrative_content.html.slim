@@ -12,19 +12,12 @@
           'turbo:submit-start->story-narrative-content#onSubmitStart',
           'turbo:submit-end->story-narrative-content#onSubmitEnd',
           'list:toggle-edit->story-narrative-content#onToggleEditResult',
-          'list:sorted->story-narrative-content#onSortedResults',
+          'list:save-item->story-narrative-content#turboSubmit',
+          'list:sorted->story-narrative-content#turboSubmit',
           'list:delete-item->story-narrative-content#deleteResult' ].join(' ') },
       html: { \
         novalidate: true,
         autocomplete: 'off' }) do |form|
-
-    / For identifying the field being submitted in TurboSubmitStartEvent and TurboSubmitStopEvent events: 
-    / Some submit events do not have a submitter, e.g. deleting a Result.
-    / = tag.button( \
-        type: 'submit',
-        class: 'hidden',
-        data: { \
-          field_name: "story[new_results][]" })
 
     // a buffer input for uploading story images to AWS; see the summernote onImageUpload callback
     input#narrative__img-upload.hidden type="file"

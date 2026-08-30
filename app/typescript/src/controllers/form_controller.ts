@@ -119,6 +119,13 @@ export default class FormController<Ctrl extends SubclassController> extends Con
     $(this.element).validator('destroy');
   }
 
+  turboSubmit(e: CustomEvent<{ submitter?: HTMLButtonElement | HTMLInputElement }>) {
+    const { submitter } = e.detail;
+    if (submitter && submitter.type === 'button') submitter.type = 'submit';
+    console.log(`turboSubmit()`, submitter)
+    this.element.requestSubmit(submitter);
+  }
+
   onSubmitStart(e: TurboSubmitStartEvent) {
     console.log('start', e)
     const { formSubmission } = e.detail;

@@ -68,18 +68,19 @@ export default class ListController extends Controller {
   onClickSubmit(e: PointerEvent) {
     e.preventDefault();
 
-    const button = <HTMLButtonElement>e.target;
+    const button = <HTMLButtonElement>e.currentTarget;
+
     const isNewItem = this.newItemTarget.contains(button);
     let cancelButton: HTMLButtonElement | null = null;
     if (isNewItem) {
-      // this.listTarget.classList.add('list-group--has-active');
+      this.listTarget.classList.add('list-group--has-active');
       cancelButton = <HTMLButtonElement>this.cancelButtonTargets.find(button => (
         this.newItemTarget.contains(button)
       ));
     } else if (this.itemElements(button)) {
-      const sortHandle = this.itemElements(button)!.sortHandle;
+      const sortHandle = this.itemElements(button).sortHandle;
       sortHandle?.classList.add('list-group-item__handle--disabled');
-      cancelButton = this.itemElements(button)!.cancelButton;
+      cancelButton = this.itemElements(button).cancelButton;
     } else {
       // handle collapse events
     }
@@ -211,7 +212,7 @@ export default class ListController extends Controller {
   }
 
   deleteItem(e: PointerEvent) {
-    // this.listTarget.classList.add('list-group--has-active');
+    this.listTarget.classList.add('list-group--has-active');
     const button = <HTMLButtonElement>e.currentTarget;
     if (confirm(button.dataset.confirm)) {
       const { item, input, _destroyCheckbox, deleteLink } = this.itemElements(button);
@@ -223,7 +224,7 @@ export default class ListController extends Controller {
       item.classList.add('list-group-item--deleting');
       this.dispatch('delete-item', { detail: { submitter: button, input } });
     } else {
-      // this.listTarget.classList.remove('list-group--has-active');
+      this.listTarget.classList.remove('list-group--has-active');
     }
   }
 

@@ -6,16 +6,15 @@
       controller: 'list',
       list_new_item_field_name_value: 'story[new_results][]' }) do
 
-  .crud-list__new-item
+  .crud-list__new-item data-list-target="newItem"
     .input-group
       = tag.input( \
           class: 'form-control',
-          placeholder: 'Add a key customer result to be highlighted with the story',
+          placeholder: 'Add a key Customer Result to be highlighted with the story',
           minlength: 5,
           maxlength: 20,
           data: { \
             list_target: 'newItemInput',
-            story_narrative_content_target: 'newResultInput',
             action: [ 'list#onInputNewItem' ].join(' ') })
       .input-group-addon.hidden
         = tag.button( \
@@ -23,6 +22,7 @@
             class: 'btn btn-default',
             data: { \
               controller: 'tooltip',
+              list_target: 'cancelButton',
               tooltip_options_value: { title: 'Discard', delay: { show: 500, hide: 0 } },
               action: 'list#cancelNewItem' }) do
           | &times;
@@ -33,7 +33,7 @@
         data: { \
           content: 'Add Result',
           list_target: 'newItemSubmit',
-          story_narrative_content_target: 'newResultSubmit',
+          action: 'list#onClickSubmit',
           field_name: 'story[new_results][]',
           disable_with_html: disabled_submit_button_html })
   .help-block
@@ -87,11 +87,18 @@
                 # disabled: true,
                 data: { \
                   content: 'Save changes',
+                  action: 'list#onClickSubmit',
                   field_name: "story[new_results][]",
                   disable_with_html: disabled_submit_button_html })
 
           .list-group-item__actions
             = tag.button(type: 'button', class: 'btn', data: { action: 'list#editItem' }) do
               i.fa.fa-fw.fa-pencil
-            = tag.button(type: 'button', class: 'btn', data: { action: 'list#deleteItem' }) do
+            = tag.button( \
+                type: 'button',
+                class: 'btn',
+                data: { \
+                  action: 'list#deleteItem',
+                  confirm: 'Delete this Customer Result?',
+                  field_name: 'story[new_results][]' }) do
               i.fa.fa-fw.fa-trash

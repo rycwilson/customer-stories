@@ -6,15 +6,11 @@ export default class StoryNarrativeContentController extends FormController<Stor
   static targets = [
     'titleInput',
     'titleSubmit',
-    'newResultInput',
-    'newResultSubmit',
     'resultsList',
     'toggleResultsButton'
   ];
   declare readonly titleInputTarget: HTMLInputElement;
   declare readonly titleSubmitTarget: HTMLButtonElement;
-  declare readonly newResultInputTarget: HTMLInputElement;
-  declare readonly newResultSubmitTarget: HTMLButtonElement;
   declare readonly resultsListTarget: HTMLOListElement;
   declare readonly toggleResultsButtonTargets: HTMLButtonElement[];
 
@@ -30,11 +26,6 @@ export default class StoryNarrativeContentController extends FormController<Stor
     const { body, submitter } = formSubmission;
     const fieldName = submitter?.dataset.fieldName;
     
-    if (!submitter || !fieldName) return;
-    
-    this.toggleResultsButtonTargets.forEach(btn => btn.disabled = true);
-    // console.log(`submitting ${fieldName}`)
-    
     // if (this.activeSubmissions[fieldName]) {
     //   // console.log(`stopping ${fieldName}`)
     //   formSubmission.stopped = true;
@@ -42,21 +33,25 @@ export default class StoryNarrativeContentController extends FormController<Stor
     //   return;
     // }
 
-    if (this.activeResult) {
-      this.activeResult.cancelButton.disabled = true;
-      $(this.activeResult.cancelButton).tooltip('destroy');
-      this.activeResult.sortHandle?.classList.add('list-group-item__handle--disabled');
-    }
+    // if (this.activeResult) {
+    //   this.activeResult.cancelButton.disabled = true;
+    //   $(this.activeResult.cancelButton).tooltip('destroy');
+    //   this.activeResult.sortHandle?.classList.add('list-group-item__handle--disabled');
+    // }
 
     // Remove all other fields from the submission body to avoid unnecessary data in the payload.
-    const keep = new Set(['_method', 'authenticity_token']);
-    for (const key of [...body.keys()]) {
-      if (keep.has(key)) continue;
-      if (key !== fieldName) body.delete(key);
-    }
+    // console.log('submitting field:', fieldName)
+    // const keep = new Set(['_method', 'authenticity_token']);
+    // for (const key of [...body.keys()]) {
+    //   if (keep.has(key)) continue;
+    //   if (key !== fieldName) body.delete(key);
+    // }
 
     // this.activeSubmissions[fieldName] = formSubmission;
-    this.animateSubmit(e, submitter);
+
+    this.toggleResultsButtonTargets.forEach(btn => btn.disabled = true);
+
+    super.onSubmitStart(e);
   }
 
   onSubmitEnd(e: TurboSubmitEndEvent) {
@@ -92,10 +87,16 @@ export default class StoryNarrativeContentController extends FormController<Stor
     this.element.requestSubmit();
   }
 
-  deleteResult(e: CustomEvent<{ item: HTMLLIElement, input: HTMLInputElement }>) {
-    const { input } = e.detail;
+  deleteResult(e: CustomEvent<{ submitter: HTMLButtonElement, input: HTMLInputElement }>) {
+    const { submitter, input } = e.detail;
     input.name = '';
-    this.element.requestSubmit();
+
+    // - We need the submitter to access submitter.dataset.fieldName in this.onSubmitStart();
+    // this allows us to filter the fields submitted with the form.
+    // - The delete button is not intended to directly submit the form, so it is type="button";
+    // Here we'll change it to type="submit" as this is what requestSubmit expects.
+    submitter.type = 'submit';
+    this.element.requestSubmit(submitter);
   }
 
   onToggleEditResult(e: CustomEvent<{ 

@@ -116,12 +116,14 @@ class StoriesController < ApplicationController
     # puts JSON.pretty_generate(story_params.to_h)
     @story = Story.friendly.find params[:id]
     params[:story][:new_results] ||= [] if turbo_frame_request_id == 'story-narrative-content-frame'
-
+    
     if @story.update story_params
-      flash.now[:notice] = successful_update_flash_message
       respond_to do |format|
+        format.html { head :no_content }
+
         # Don't re-render the form as this may cause multi-select options to shift around
         format.turbo_stream do
+          flash.now[:notice] = successful_update_flash_message
           turbo_stream_actions = [turbo_stream.replace('toaster', partial: 'shared/toaster')]
           if @story.saved_change_to_new_results?
             cookies.delete("csp-hide-results-#{@story.id}") if result_was_added?
@@ -140,7 +142,6 @@ class StoriesController < ApplicationController
           end
           render turbo_stream: turbo_stream_actions
         end
-        format.html { head :no_content }
       end
     else
       @errors = @story.errors.full_messages
