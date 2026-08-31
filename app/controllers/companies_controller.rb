@@ -113,34 +113,6 @@ class CompaniesController < ApplicationController
     )
   end
 
-  # def prompts
-  #   if @company.update company_params
-  #     flash.now[:notice] = 'Contributor Prompts have been updated'
-  #     respond_to do |format|
-  #       format.turbo_stream do
-  #         turbo_stream_actions = [
-  #           turbo_stream.replace('toaster', partial: 'shared/toaster'),
-  #           turbo_stream.replace(
-  #             'contributor-prompts-list',
-  #             partial: 'companies/settings/contributor_questions',
-  #             locals: { company: @company }
-  #           )
-  #         ]
-  #         render turbo_stream: turbo_stream_actions
-  #       end
-  #       format.html { head :no_content }
-  #     end
-  #   else
-  #     @errors = @company.errors.full_messages
-  #     render(
-  #       partial: 'companies/settings/contributor_questions', 
-  #       locals: { company: @company, errors: @errors },
-  #       layout: false, 
-  #       status: :unprocessable_entity
-  #     )
-  #   end
-  # end
-
   def activity
     company = Company.find(params[:id])
     Time.zone = params[:time_zone] || 'UTC'
@@ -313,8 +285,6 @@ class CompaniesController < ApplicationController
 
   def frame_partials
     {
-      'contributor-prompts-frame' => 'companies/settings/contributor_questions',
-      'company-ctas-frame' => 'companies/settings/ctas',
       'company-tags-frame' => 'companies/settings/tags',
       'company-profile-frame' => 'companies/settings/company_profile'
     }
@@ -322,11 +292,9 @@ class CompaniesController < ApplicationController
 
   def successful_update_flash_message
     return '' unless turbo_frame_request?
-    
+
     {
-      'contributor-prompts-frame' => 'Contributor Prompts have been updated',
       'company-tags-frame' => 'Tags have been updated',
-      'company-ctas-frame' => 'CTAs have been updated',
       'company-profile-frame' => 'Account Settings have been updated'
     }[turbo_frame_request_id]
   end

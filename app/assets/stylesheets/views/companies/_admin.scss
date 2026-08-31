@@ -170,7 +170,7 @@ body {
     margin-bottom: 1.5rem;
   }
 
-  input:placeholder-shown {
+  .input-group:has(.input-group-addon.hidden) .form-control:first-child {
     border-top-right-radius: $border-radius-base;
     border-bottom-right-radius: $border-radius-base;
   }

@@ -190,7 +190,7 @@
       display: table;
     }
 
-    input[type="submit"]  {
+    [type="submit"]  {
       display: revert;
     }
   }
@@ -200,9 +200,10 @@
   right: 0.5rem;
 
   button {
+    background: transparent;
+    border-width: 0;
+    padding: 0;
     width: 2.5em;
     height: 2.5em;
-    background: transparent;
-    padding: 0;
   }
 }
