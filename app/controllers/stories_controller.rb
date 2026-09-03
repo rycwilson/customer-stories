@@ -115,7 +115,12 @@ class StoriesController < ApplicationController
   def update
     # puts JSON.pretty_generate(story_params.to_h)
     @story = Story.friendly.find params[:id]
-    params[:story][:new_results] ||= [] if turbo_frame_request_id == 'story-narrative-content-frame'
+
+    if turbo_frame_request_id == 'story-narrative-content-frame'
+      params[:story][:new_results] ||= [] 
+
+    elsif turbo_frame_request_id == 'story-settings-frame'
+    end
     
     if @story.update story_params
       respond_to do |format|

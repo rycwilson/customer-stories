@@ -19,7 +19,7 @@ class ContributorQuestionsController < ApplicationController
       respond_to do |format|
         format.turbo_stream do
           flash.now[:notice] = 'Contributor Prompt has been updated'
-          render turbo_stream: shared_turbo_stream_actions, status: :ok
+          render turbo_stream: shared_turbo_stream_actions
         end
       end
     else
@@ -46,7 +46,6 @@ class ContributorQuestionsController < ApplicationController
     params
       .require(:company)
       .permit(
-        :id,
         contributor_questions_attributes: [:id, :question, :_destroy]
       )
   end

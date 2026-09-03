@@ -38,12 +38,12 @@
         .stories-filter__tag-group id="category-filters"
           - @company.story_categories.featured.each do |category|
             .checkbox
-              label for="category-#{category.id}"
+              label for=dom_id(category)
                 = check_box_tag( \
                     'category[]',
                     category.id,
                     false,
-                    { id: "category-#{category.id}" })
+                    { id: dom_id(category) })
                 = category.name
 
     - if @company.products.featured.present?
@@ -54,12 +54,12 @@
         .stories-filter__tag-group id="product-filters"
           - @company.products.featured.each do |product|
             .checkbox
-              label for="product-#{product.id}"
+              = tag.label for: dom_id(product)
                 = check_box_tag( \
                     'product[]',
                     product.id,
                     false,
-                    { id: "product-#{product.id}" })
+                    { id: dom_id(product) })
                 = product.name
 
   div 

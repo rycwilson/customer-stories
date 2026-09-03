@@ -18,12 +18,15 @@ class CtasController < ApplicationController
       respond_to do |format|
         format.turbo_stream do
           flash.now[:notice] = 'CTA created successfully'
-          render turbo_stream: [
-            turbo_stream.replace('toaster', partial: 'shared/toaster'),
-            turbo_stream.update(
-              'company-ctas-frame', partial: 'ctas/index', locals: { company: @company }
-            )
-          ]
+          render( 
+            turbo_stream: [
+              turbo_stream.replace('toaster', partial: 'shared/toaster'),
+              turbo_stream.update(
+                'company-ctas-frame', partial: 'companies/ctas', locals: { company: @company }
+              )
+            ],
+            status: :created
+          )
         end
       end
     else
@@ -32,7 +35,7 @@ class CtasController < ApplicationController
         format.turbo_stream do
           # render turbo_stream:
           #   turbo_stream.update(
-          #     'company-ctas-frame', partial: 'ctas/index', locals: { company: @company }
+          #     'company-ctas-frame', partial: 'companies/ctas', locals: { company: @company }
           #   )
         end
       end
@@ -49,14 +52,14 @@ class CtasController < ApplicationController
           render turbo_stream: [
             turbo_stream.replace('toaster', partial: 'shared/toaster'),
             turbo_stream.update(
-              'company-ctas-frame', partial: 'ctas/index', locals: { company: @company }
+              'company-ctas-frame', partial: 'companies/ctas', locals: { company: @company }
             )
           ]
         end
       end
     else 
       @errors = @company.errors.full_messages
-      # TODO: render ctas/index with current cta open
+      # TODO: render companies/ctas with current cta open
     end
   end
 
@@ -65,11 +68,11 @@ class CtasController < ApplicationController
     respond_to do |format| 
       format.html { head(:no_content) }
       format.turbo_stream do
-        flash.now[:notice] = 'CTA was deleted'
+        flash.now[:info] = 'CTA was deleted'
         render turbo_stream: [
           turbo_stream.replace('toaster', partial: 'shared/toaster'),
           turbo_stream.update(
-            'company-ctas-frame', partial: 'ctas/index', locals: { company: @company }
+            'company-ctas-frame', partial: 'companies/ctas', locals: { company: @company }
           )
         ]
       end
@@ -82,7 +85,6 @@ class CtasController < ApplicationController
     params
       .require(:company)
       .permit(
-        :id,
         :primary_cta_background_color,
         :primary_cta_text_color,
         ctas_attributes: [:id, :type, :description, :display_text, :link_url, :form_html, :primary]

@@ -1,7 +1,7 @@
-/ A company form is used both for convenience and because primary CTA fields are defined on Company
+/ A company form is used both for convenience (fields_for ctas) and because primary CTA fields are
+/ defined on Company. The form's action is defined via formaction attributes on all submit inputs.
 = form_with( \
     model: company,
-    # url: defined by formaction attribute on all submit buttons in the form
     id: 'company-ctas-form',
     class: 'form-horizontal',
     data: { \
@@ -14,8 +14,6 @@
     html: { \
       novalidate: true,
       autocomplete: 'off' }) do |form|
-
-  = form.hidden_field(:id)
 
   .form-group
     .col-sm-12
@@ -93,11 +91,11 @@
                   / Using data-target instead of href in the <a> tag effectively removes outline styling
                   / TODO: accessibility?
                   = tag.a aria: { expanded: 'false' },
-                          data: { toggle: 'collapse', target: "#edit-cta-#{cta_fields.object.id}" }
+                          data: { toggle: 'collapse', target: "##{dom_id(cta_fields.object, :edit)}" }
                     p = cta_item_text(cta_fields.object)
                 
-                i.fa.fa-fw.fa-chevron-up data-toggle="collapse" data-target="#edit-cta-#{cta_fields.object.id}"
-                i.fa.fa-fw.fa-chevron-down data-toggle="collapse" data-target="#edit-cta-#{cta_fields.object.id}"
+                i.fa.fa-fw.fa-chevron-up data-toggle="collapse" data-target="##{dom_id(cta_fields.object, :edit)}"
+                i.fa.fa-fw.fa-chevron-down data-toggle="collapse" data-target="##{dom_id(cta_fields.object, :edit)}"
               
-              .collapse id="edit-cta-#{cta_fields.object.id}" data-list-target="collapse"
+              .collapse id="#{dom_id(cta_fields.object, :edit)}" data-list-target="collapse"
                 = render('ctas/edit', company:, form:, cta_fields:)
