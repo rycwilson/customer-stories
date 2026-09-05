@@ -1,4 +1,4 @@
-module Tagable 
+module Taggable 
   extend ActiveSupport::Concern
 
   included do

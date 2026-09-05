@@ -1,5 +1,5 @@
 # frozen_string_literal: true
 
 class Product < ApplicationRecord
-  include Tagable
+  include Taggable
 end
