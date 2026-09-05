@@ -59,6 +59,13 @@ class Company < ApplicationRecord
   alias_method :categories, :story_categories
   has_many :products, dependent: :destroy
   accepts_nested_attributes_for :products, allow_destroy: true
+  
+  has_many :tags, dependent: :destroy
+  accepts_nested_attributes_for :tags, allow_destroy: true
+  has_many :category_tags, class_name: 'Tag::Category', dependent: :destroy
+  accepts_nested_attributes_for :category_tags, allow_destroy: true
+  has_many :product_tags, class_name: 'Tag::Product', dependent: :destroy
+  accepts_nested_attributes_for :product_tags, allow_destroy: true
 
   has_many :contributor_questions, dependent: :destroy
   accepts_nested_attributes_for :contributor_questions, allow_destroy: true

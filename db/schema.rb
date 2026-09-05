@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.2].define(version: 2026_07_28_132919) do
+ActiveRecord::Schema[7.2].define(version: 2026_09_04_223313) do
   create_schema "heroku_ext"
 
   # These are extensions that must be enabled in order to support this database
@@ -137,6 +137,13 @@ ActiveRecord::Schema[7.2].define(version: 2026_07_28_132919) do
     t.index ["story_id", "call_to_action_id"], name: "idx_on_story_id_call_to_action_id_d9d6b6f3f2"
   end
 
+  create_table "call_to_actions_tags", id: false, force: :cascade do |t|
+    t.bigint "call_to_action_id", null: false
+    t.bigint "tag_id", null: false
+    t.index ["call_to_action_id", "tag_id"], name: "index_call_to_actions_tags_on_call_to_action_id_and_tag_id", unique: true
+    t.index ["tag_id", "call_to_action_id"], name: "index_call_to_actions_tags_on_tag_id_and_call_to_action_id"
+  end
+
   create_table "companies", id: :serial, force: :cascade do |t|
     t.string "name"
     t.datetime "created_at", precision: nil, null: false
@@ -230,6 +237,13 @@ ActiveRecord::Schema[7.2].define(version: 2026_07_28_132919) do
     t.bigint "contributor_question_id", null: false
     t.bigint "story_category_id", null: false
     t.index ["contributor_question_id", "story_category_id"], name: "index_cq_sc_on_cq_id_and_sc_id"
+  end
+
+  create_table "contributor_questions_tags", id: false, force: :cascade do |t|
+    t.bigint "contributor_question_id", null: false
+    t.bigint "tag_id", null: false
+    t.index ["contributor_question_id", "tag_id"], name: "idx_on_contributor_question_id_tag_id_9f838cc409", unique: true
+    t.index ["tag_id", "contributor_question_id"], name: "idx_on_tag_id_contributor_question_id_e599ec2921"
   end
 
   create_table "ctas_successes", id: :serial, force: :cascade do |t|
@@ -475,6 +489,23 @@ ActiveRecord::Schema[7.2].define(version: 2026_07_28_132919) do
     t.index ["customer_id"], name: "index_successes_on_customer_id"
   end
 
+  create_table "successes_tags", id: false, force: :cascade do |t|
+    t.bigint "success_id", null: false
+    t.bigint "tag_id", null: false
+    t.index ["success_id", "tag_id"], name: "index_successes_tags_on_success_id_and_tag_id", unique: true
+    t.index ["tag_id", "success_id"], name: "index_successes_tags_on_tag_id_and_success_id"
+  end
+
+  create_table "tags", force: :cascade do |t|
+    t.string "name"
+    t.string "slug"
+    t.string "type"
+    t.bigint "company_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["company_id", "type", "name"], name: "index_tags_on_company_id_and_type_and_name", unique: true
+  end
+
   create_table "templates_questions", id: :serial, force: :cascade do |t|
     t.integer "invitation_template_id"
     t.integer "contributor_question_id"
@@ -586,6 +617,7 @@ ActiveRecord::Schema[7.2].define(version: 2026_07_28_132919) do
   add_foreign_key "story_categories_successes", "successes"
   add_foreign_key "successes", "customers"
   add_foreign_key "successes", "users", column: "curator_id"
+  add_foreign_key "tags", "companies"
   add_foreign_key "users", "companies"
   add_foreign_key "visitor_actions", "companies"
   add_foreign_key "visitor_actions", "successes"

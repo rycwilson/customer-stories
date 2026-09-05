@@ -35,6 +35,8 @@ class Success < ApplicationRecord
   has_and_belongs_to_many :story_categories
   alias_method :categories, :story_categories
 
+  has_and_belongs_to_many :tags
+
   has_many :contributions, inverse_of: :success, dependent: :destroy
   has_many(
     :contributions_for_win_story,
