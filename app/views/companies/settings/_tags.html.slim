@@ -1,56 +1,61 @@
-= turbo_frame_tag('company-tags') do
+= turbo_frame_tag('company-tags-frame') do
 
   = form_with( \
       model: company,
-      url: tags_company_path(company),
       id: 'company-tags-form',
       class: 'form-horizontal',
       data: { \
         controller: 'company-tags toast',
-        toast_flash_value: (flash.to_h if flash.any? && turbo_frame_request_id == 'company-tags'),
-        toast_errors_value: (@errors if @errors && turbo_frame_request_id == 'company-tags'),
+        toast_errors_value: (@errors if @errors && turbo_frame_request_id == 'company-tags-frame'),
         action: [ \
           'tomselect:add-tag->company-tags#onAddTag',
           'tomselect:remove-tag->company-tags#onRemoveTag',
-          'turbo:submit-start->company-tags#onTurboSubmitStart'].join(' ') }) do |form|
+          'turbo:submit-start->company-tags#onSubmitStart' ].join(' ') }) do |form|
 
-    - ['story_categories', 'products'].each do |source|
-      - label_text = source == 'story_categories' ? 'Category' : source.singularize.capitalize
+    - %w[category_tags product_tags].each do |source|
+      - label_text = source.match(/(?<type>[a-z]+)_tags/)[:type].capitalize
 
       = form.fields_for(source) do |tag_fields|
-        / leave the order of inputs in place as the stimulus controller behavior depends on it
-        = tag_fields.hidden_field(:id, data: { source:, company_tags_target: 'hiddenField' })
-        = tag_fields.hidden_field(:name, data: { source:, company_tags_target: 'hiddenField' })
-        = tag_fields.check_box( \
+        = tag_fields.hidden_field( \
+            :id,
+            disabled: true,
+            data: { tag_name: tag_fields.object.name, company_tags_target: 'tagInput' })
+        = tag_fields.hidden_field( \
             :_destroy,
-            { checked: false, hidden: true, data: { source:, company_tags_target: 'hiddenField' } },
-            true,
-            false)
+            value: '1',
+            disabled: true,
+            data: { tag_name: tag_fields.object.name, company_tags_target: 'tagInput' })
 
       .form-group
         .visible-sm-block.col-sm-12
-          label 
+          / Tomselect will only modify the first label it finds, so we proactively set `for` for each label)
+          label for="company-#{source}-ts-control"
             = label_text
-        label.col-md-2.control-label.visible-md-inline-block.visible-lg-inline-block 
+        = tag.label( \
+            for: "company-#{source}-ts-control",
+            class: 'col-md-2 control-label visible-md-inline-block visible-lg-inline-block') do
           = label_text
         .col-sm-12.col-md-10
-          input.form-control {
-            id="company-#{source}-tags"
-            value=company.send(source).map(&:name).join(',')
-            autocomplete="off"
-            data-controller="tomselect"
-            data-tomselect-source-value="#{source}"
-            data-tomselect-custom-options-value={ create: true, selectOnTab: true, persist: false }.to_json
-            data-dynamic-placeholder="Add tags" }
+          = tag.input( \
+              id: "company-#{source}",
+              class: 'form-control',
+              value: company.send(source).map(&:name).join(','),
+              autocomplete: 'off',
+              data: { \
+                controller: 'tomselect',
+                tomselect_source_value: source,
+                tomselect_custom_options_value: { create: true, selectOnTab: true, persist: false },
+                dynamic_placeholder: 'Add tags' })
 
     .row
       .col-sm-12.col-md-offset-2.col-md-10
         = button_tag( \
             '',
             type: 'submit',
-            class: 'btn btn-success disabled',
+            class: 'btn btn-success',
             form: 'company-tags-form',
             disabled: true,
+            name: nil,
             data: { \
               content: 'Save changes',
               company_tags_target: 'submitBtn',

@@ -52,7 +52,7 @@ class CompaniesController < ApplicationController
       respond_to do |format|
         format.turbo_stream do
           turbo_stream_actions = [
-            turbo_stream.update(
+            turbo_stream.replace(
               turbo_frame_request_id,
               partial: frame_partials[turbo_frame_request_id],
               locals: { company: @company }
@@ -73,19 +73,10 @@ class CompaniesController < ApplicationController
       render(
         partial: frame_partials[turbo_frame_request_id],
         locals: { company: @company, errors: @company.errors.full_messages },
+        layout: false,
         status: :unprocessable_entity
       )
     end
-  end
-
-  def tags
-    if @company.update company_params
-      flash.now[:notice] = 'Story tags have been updated'
-    else
-      # TODO: What about tags errors?
-      @errors = @company.errors.full_messages
-    end
-    render(partial: 'companies/settings/tags', locals: { company: @company, errors: @errors })
   end
 
   def ads
@@ -190,9 +181,9 @@ class CompaniesController < ApplicationController
       :id, :name, :subdomain, :website, :logo_url, :square_logo_url, :landscape_logo_url, :gtm_id,
       :header_logo_type, :header_color_1, :header_color_2, :header_text_color,
       :adwords_short_headline,
+      category_tags_attributes: %i[id name _destroy],
+      product_tags_attributes: %i[id name _destroy],
       contributor_questions_attributes: %i[id question _destroy],
-      story_categories_attributes: %i[id name _destroy],
-      products_attributes: %i[id name _destroy],
       adwords_images_attributes: %i[id type image_url default is_default_card _destroy]
     )
   end

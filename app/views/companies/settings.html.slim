@@ -54,7 +54,7 @@ main.container-fluid.hidden-xs {
 
         li role="presentation"
           a {
-            href="#story-tags-panel" 
+            href="#tags-panel" 
             role="tab"
             data-toggle="tab"
             data-company-settings-target="tab"
@@ -87,12 +87,8 @@ main.container-fluid.hidden-xs {
           = turbo_frame_tag('company-ctas-frame')
             = render('ctas', company: @company, errors: @errors)
 
-        #story-tags-panel.tab-pane role="tabpanel"
+        #tags-panel.tab-pane role="tabpanel"
           = render('companies/settings/tags', company: @company, errors: @errors)
 
       #account-panel.tab-pane role="tabpanel"
-        - if @company.new_record?
-          = render('companies/settings/company_profile', company: @company, errors: @errors)
-        - else 
-          = turbo_frame_tag('company-profile-frame') do
-            = render('companies/settings/company_profile', company: @company, errors: @errors)
+        = render('companies/settings/company_profile', company: @company, errors: @errors)

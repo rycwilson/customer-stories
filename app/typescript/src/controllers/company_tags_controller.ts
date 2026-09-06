@@ -1,99 +1,36 @@
-import type { TurboSubmitStartEvent, TurboSubmitEndEvent } from "@hotwired/turbo";
 import FormController from "./form_controller";
 
 export default class CompanyTagsController extends FormController<CompanyTagsController> {
-  static targets = [...FormController.targets, 'hiddenField'];  
-  declare hiddenFieldTargets: HTMLInputElement[];
+  static targets = [...FormController.targets, 'tagInput', 'newTagInput'];  
+  declare tagInputTargets: HTMLInputElement[];
+  declare newTagInputTargets: HTMLInputElement[];
 
-  private didSubmit = false;
-
-  // connect() {
-  // }
-
-  onAddTag(e: CustomEvent<{ tagName: string, source: string, cancel?: boolean }>) {
-    const { tagName, source, cancel = false } = e.detail;
+  onAddTag(e: CustomEvent<{ item: HTMLElement, cancel?: boolean }>) {
+    const { item, cancel = false } = e.detail;
+    const tagName = item.dataset.value;
     if (cancel) {
-      const inputsContainer = this.element.querySelector(`[data-new-tag="${source}__${tagName}"]`);
-      if (inputsContainer) inputsContainer.remove();
+      this.newTagInputTargets.find(input => input.dataset.itemId === item.id)!.parentElement!.remove();
     } else {
-      const i = this.hiddenFieldTargets.length;
+      const i = (this.tagInputTargets.length / 2) + this.newTagInputTargets.length;
       this.element.insertAdjacentHTML('beforeend', `
-        <div data-new-tag="${source}__${tagName}">
-          <input type="hidden" name="company[${source}_attributes][${i}][id]" value="" data-company-tags-target="hiddenField">
-          <input type="hidden" name="company[${source}_attributes][${i}][name]" value="${tagName}" data-company-tags-target="hiddenField">
-        </div>
+        <input
+          type="hidden"
+          name="company[${item.dataset.source}_attributes][${i}][name]"
+          value="${tagName}"
+          data-item-id="${item.id}"
+          data-company-tags-target="newTagInput" />
       `);
     }
+
     this.updateState();
   }
 
-  onRemoveTag(e: CustomEvent<{ tagName: string, source: string, cancel: boolean }>) {
-    const { tagName, source, cancel } = e.detail;
-    const nameInput = this.hiddenFieldTargets.find(input => (
-      input.name.includes(`[${source}_attributes]`) && input.value === tagName
-    ));
-    const _destroyInput = nameInput?.nextElementSibling;
-    if (_destroyInput instanceof HTMLInputElement) {
-      _destroyInput.checked = !cancel;
-    }
+  onRemoveTag(e: CustomEvent<{ item: HTMLElement, cancel: boolean }>) {
+    const { item, cancel } = e.detail;
+    const tagName = item.dataset.value;
+    const inputs = this.tagInputTargets.filter(input => input.dataset.tagName === tagName);
+    inputs.forEach(input => { input.disabled = cancel });
+
     this.updateState();
-  }
-
-  // TODO confirm
-  // Copilot says: "you can modify the FormData object directly. However, since the FormData object is already passed to 
-  // Turbo's submission process, you cannot directly modify it in place. Instead, you need to update the form itself 
-  // (e.g., by adding or modifying hidden inputs) so that Turbo picks up the changes when it submits the form."
-  onTurboSubmitStart(e: TurboSubmitStartEvent) {
-    // Without the `didSubmit` flag this callback will always stop the form submission
-    if (this.didSubmit) {
-      return;
-    }
-
-    const { formSubmission } = e.detail;
-
-    // Group inputs by tag so they can be disabled if the tag is not being added or removed
-    const tagInputGroups = this.hiddenFieldTargets.reduce((
-      groups: { [key: string]: HTMLInputElement[] }, 
-      input: HTMLInputElement
-    ) => {
-      const match = input.name.match(/company\[(?<source>\w+)_attributes\]\[(?<key>\d+)\]/);
-      const source = match?.groups?.source;
-      const key = match?.groups?.key;
-      if (source && key) {
-        const inputs = groups[`${source}_${key}`];
-        groups[`${source}_${key}`] = inputs ? [...inputs, input] : [input];
-      }
-      return groups;
-    }, {});
-    
-    for (const [_, inputs] of Object.entries(tagInputGroups)) {
-      const idInput = inputs.find(input => input.name.includes('[id]'));
-      const _destroyInput = inputs.find(input => input.name.includes('[_destroy]'));
-      const isNewTag = idInput?.value === '';
-      const isRemovedTag = _destroyInput?.checked;
-      inputs.forEach(input => { input.disabled = !isNewTag && !isRemovedTag });
-    }
-
-    // Stop form submission while DOM updates complete (disabled inputs), then submit if necessary
-    formSubmission.stop();
-    const inputsToSubmit = this.hiddenFieldTargets.filter(input => !input.disabled);
-    if (inputsToSubmit.length) {
-      setTimeout(() => {
-        this.didSubmit = true;
-
-        // Since we've hijacked form submission, we need to manually disable and animate the button
-        this.submitBtnTarget.disabled = true;
-        this.element.addEventListener(
-          'submit',
-          super.animateSubmit.bind(this) as EventListener,
-          { once: true }
-        );
-        this.element.requestSubmit();
-      });
-    }
-  }
-
-  onTurboSubmitEnd(e: TurboSubmitEndEvent) {
-    this.didSubmit = false;
   }
 }

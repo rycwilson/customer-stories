@@ -26,7 +26,6 @@ authenticate(:user) do
   resources :companies, only: %i[show update] do
     member do
       patch 'prompts', to: 'contributor_questions#create'
-      patch 'tags'
       patch 'ads'
       get 'activity', constraints: ->(req) { req.format == :json }
     end

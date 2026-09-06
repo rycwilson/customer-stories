@@ -1,162 +1,166 @@
-= form_with( \
-    model: company,
-    id: 'company-profile-form',
-    class: 'form-horizontal',
-    data: { \
-      turbo: (false if company.new_record?),
-      controller: 'company-profile toast',
-      asset_host: Rails.application.config.asset_host,
-      toast_errors_value: \
-        (errors if defined?(errors) && turbo_frame_request_id == 'company-profile-frame'),
-      action: [ \
-        'turbo:submit-start->company-profile#onSubmitStart',
-        'input->company-profile#updateState',
-        'change->company-profile#updateState',
-        'image-card:ready-to-validate->company-profile#updateValidator',
-        'image-card:validated->company-profile#updateValidator',
-        'image-card:upload-ready->company-profile#onUploadReady',
-        'submit->company-profile#validate' ].join(' ') },
-    html: { \
-      autocomplete: 'off',
-      novalidate: true }) do |form|
-  
-  .form-group
-    .visible-sm-block.col-sm-12
-      = form.label(:name, 'Company Name')
-    = form.label(:name, 'Company Name', class: 'control-label col-md-4 visible-md-inline-block visible-lg-inline-block')
-    .col-sm-12.col-md-8
-      = form.text_field(:name, class: 'form-control', required: true, placeholder: 'Your company', autofocus: company.new_record?)
-      .help-block.with-errors
-  
-  .form-group
-    .visible-sm-block.col-sm-12
-      = form.label(:website)
-    = form.label( \
-        :website,
-        'Company Website',
-        class: 'control-label col-md-4 visible-md-inline-block visible-lg-inline-block')
-    .col-sm-12.col-md-8
-      = form.text_field(:website, class: 'form-control', required: true, placeholder: "Your company's web address")
-      .help-block.with-errors
+/ TODO: Skip the turbo frame for @company.new_record?
+
+= turbo_frame_tag('company-profile-frame') do
+
+  = form_with( \
+      model: company,
+      id: 'company-profile-form',
+      class: 'form-horizontal',
+      data: { \
+        turbo: (false if company.new_record?),
+        controller: 'company-profile toast',
+        asset_host: Rails.application.config.asset_host,
+        toast_errors_value: \
+          (errors if defined?(errors) && turbo_frame_request_id == 'company-profile-frame'),
+        action: [ \
+          'turbo:submit-start->company-profile#onSubmitStart',
+          'input->company-profile#updateState',
+          'change->company-profile#updateState',
+          'image-card:ready-to-validate->company-profile#updateValidator',
+          'image-card:validated->company-profile#updateValidator',
+          'image-card:upload-ready->company-profile#onUploadReady',
+          'submit->company-profile#validate' ].join(' ') },
+      html: { \
+        autocomplete: 'off',
+        novalidate: true }) do |form|
+    
+    .form-group
+      .visible-sm-block.col-sm-12
+        = form.label(:name, 'Company Name')
+      = form.label(:name, 'Company Name', class: 'control-label col-md-4 visible-md-inline-block visible-lg-inline-block')
+      .col-sm-12.col-md-8
+        = form.text_field(:name, class: 'form-control', required: true, placeholder: 'Your company', autofocus: company.new_record?)
+        .help-block.with-errors
+    
+    .form-group
+      .visible-sm-block.col-sm-12
+        = form.label(:website)
+      = form.label( \
+          :website,
+          'Company Website',
+          class: 'control-label col-md-4 visible-md-inline-block visible-lg-inline-block')
+      .col-sm-12.col-md-8
+        = form.text_field(:website, class: 'form-control', required: true, placeholder: "Your company's web address")
+        .help-block.with-errors
 
 
-  .form-group
-    .visible-sm-block.col-sm-12
-      = form.label(:subdomain)
-    = form.label(:subdomain, 'Custom Domain', class: 'control-label col-md-4 visible-md-inline-block visible-lg-inline-block')
-    .col-sm-12.col-md-8
-      = form.text_field( \
-          :subdomain,
-          value: company.persisted? ? "#{form.object.subdomain}.customerstories.net" : '',
-          class: 'form-control',
-          required: true,
-          placeholder: "your-custom-domain.customerstories.net",
-          disabled: company.persisted?)
-      .help-block.with-errors
-
-  .form-group 
-    .visible-sm-block.col-sm-12
-      label Company Logos
-    = form.label( \
-        :description,
-        'Company Logos',
-        class: 'control-label col-md-4 visible-md-inline-block visible-lg-inline-block')
-    .col-sm-12.col-md-8
-      ul.image-cards.list-unstyled
-        li
-          = render( \
-              ImageCardComponent.new( \
-                'Company', 
-                image_data: { type: 'SquareLogo', url: company.square_logo_url }, 
-                required: true )) do
-            = form.hidden_field( \
-                :square_logo_url,
-                disabled: true,
-                data: { image_card_target: 'input urlInput' })
-        li 
-          = render( \
-              ImageCardComponent.new( \
-                'Company', 
-                image_data: { type: 'LandscapeLogo', url: company.landscape_logo_url } )) do
-            = form.hidden_field( \
-                :landscape_logo_url,
-                disabled: true,
-                data: { image_card_target: 'input urlInput' })
-
-  .row
-    .visible-sm-block.col-sm-12
-      label Custom Header  
-    label.control-label.col-md-4.visible-md-inline-block.visible-lg-inline-block Custom Header
-    .col-sm-12.col-md-8 data-action="change->company-profile#onChangeHeaderLogoType"
-      = label_tag('company_header_logo_type_squarelogo', class: 'radio-inline') do 
-        = form.radio_button(:header_logo_type, 'SquareLogo')
-        | Square Logo
-      = label_tag('company_header_logo_type_landscapelogo', class: 'radio-inline') do
-        = form.radio_button(:header_logo_type, 'LandscapeLogo')
-        | Landscape Logo
-
-  .row.custom-header-colors
-    .col-sm-12.col-md-offset-4.col-md-8
-      div
-        = form.label(:header_color_1, 'Upper')
-        = form.color_field( \
-            :header_color_1,
+    .form-group
+      .visible-sm-block.col-sm-12
+        = form.label(:subdomain)
+      = form.label(:subdomain, 'Custom Domain', class: 'control-label col-md-4 visible-md-inline-block visible-lg-inline-block')
+      .col-sm-12.col-md-8
+        = form.text_field( \
+            :subdomain,
+            value: company.persisted? ? "#{form.object.subdomain}.customerstories.net" : '',
             class: 'form-control',
-            data: { action: 'company-profile#onInputCompanyHeaderBackgroundColor' })
-      div
-        = form.label(:header_color_2, 'Lower')
-        = form.color_field( \
-            :header_color_2,
-            class: 'form-control',
-            data: { action: 'company-profile#onInputStoriesHeaderBackgroundColor' })
-      div
-        = form.label(:header_text_color, 'Heading')
-        = form.color_field(:header_text_color,
-            class: 'form-control',
+            required: true,
+            placeholder: "your-custom-domain.customerstories.net",
+            disabled: company.persisted?)
+        .help-block.with-errors
+
+    .form-group 
+      .visible-sm-block.col-sm-12
+        label Company Logos
+      = form.label( \
+          :description,
+          'Company Logos',
+          class: 'control-label col-md-4 visible-md-inline-block visible-lg-inline-block')
+      .col-sm-12.col-md-8
+        ul.image-cards.list-unstyled
+          li
+            = render( \
+                ImageCardComponent.new( \
+                  'Company', 
+                  image_data: { type: 'SquareLogo', url: company.square_logo_url }, 
+                  required: true )) do
+              = form.hidden_field( \
+                  :square_logo_url,
+                  disabled: true,
+                  data: { image_card_target: 'input urlInput' })
+          li 
+            = render( \
+                ImageCardComponent.new( \
+                  'Company', 
+                  image_data: { type: 'LandscapeLogo', url: company.landscape_logo_url } )) do
+              = form.hidden_field( \
+                  :landscape_logo_url,
+                  disabled: true,
+                  data: { image_card_target: 'input urlInput' })
+
+    .row
+      .visible-sm-block.col-sm-12
+        label Custom Header  
+      label.control-label.col-md-4.visible-md-inline-block.visible-lg-inline-block Custom Header
+      .col-sm-12.col-md-8 data-action="change->company-profile#onChangeHeaderLogoType"
+        = label_tag('company_header_logo_type_squarelogo', class: 'radio-inline') do 
+          = form.radio_button(:header_logo_type, 'SquareLogo')
+          | Square Logo
+        = label_tag('company_header_logo_type_landscapelogo', class: 'radio-inline') do
+          = form.radio_button(:header_logo_type, 'LandscapeLogo')
+          | Landscape Logo
+
+    .row.custom-header-colors
+      .col-sm-12.col-md-offset-4.col-md-8
+        div
+          = form.label(:header_color_1, 'Upper')
+          = form.color_field( \
+              :header_color_1,
+              class: 'form-control',
+              data: { action: 'company-profile#onInputCompanyHeaderBackgroundColor' })
+        div
+          = form.label(:header_color_2, 'Lower')
+          = form.color_field( \
+              :header_color_2,
+              class: 'form-control',
+              data: { action: 'company-profile#onInputStoriesHeaderBackgroundColor' })
+        div
+          = form.label(:header_text_color, 'Heading')
+          = form.color_field(:header_text_color,
+              class: 'form-control',
+              data: { \
+                company_profile_target: 'storiesHeadingColorInput',
+                action: 'company-profile#onInputStoriesHeadingColor' })
+
+    .form-group
+      .col-sm-12.col-md-offset-4.col-md-8
+        .company-header-demo data-company-profile-target="companyHeaderDemo" style="background-color:#{company.header_color_1}"
+          a.LandscapeLogo {
+            href="javascript:;"
+            class=('hidden' if company.header_logo_type == 'SquareLogo') }
+            = image_tag( \
+                company.landscape_logo_url || LOGO_PLACEHOLDER,
+                class: company.landscape_logo_url.blank? ? 'generic' : '',
+                alt: 'Company Logo')
+          a.SquareLogo {
+            href="javascript:;"
+            class=('hidden' if company.header_logo_type == 'LandscapeLogo') }
+            = image_tag( \
+                company.square_logo_url || LOGO_PLACEHOLDER,
+                class: company.square_logo_url.blank? ? 'generic' : '',
+                alt: 'Company Logo')
+        div {
+          class="stories-header-demo stories-header-demo--bg-#{color_shade(company.header_color_2)}"
+          data-company-profile-target="storiesHeaderDemo"
+          style="#{stories_header_custom_colors(company)}" }
+          h3 data-company-profile-target="storiesHeadingDemo"
+            | Customer Stories
+
+    /.form-group
+      .visible-sm-block.col-sm-offset-1.col-sm-11
+        = form.label(:gtm_id, 'Google Tag Manager ID')
+      = form.label(:gtm_id, 'Google Tag Manager ID', class: 'control-label col-md-3 visible-md-inline-block visible-lg-inline-block')
+      .col-sm-offset-1.col-sm-11.col-md-9.col-lg-6
+        = form.text_field(:gtm_id, class: 'form-control')
+
+    .row
+      .col-sm-12.col-md-offset-4.col-md-8
+        = button_tag( \
+            '',
+            type: 'submit',
+            class: 'btn btn-success disabled',
+            form: 'company-profile-form',
+            disabled: true,
             data: { \
-              company_profile_target: 'storiesHeadingColorInput',
-              action: 'company-profile#onInputStoriesHeadingColor' })
-
-  .form-group
-    .col-sm-12.col-md-offset-4.col-md-8
-      .company-header-demo data-company-profile-target="companyHeaderDemo" style="background-color:#{company.header_color_1}"
-        a.LandscapeLogo {
-          href="javascript:;"
-          class=('hidden' if company.header_logo_type == 'SquareLogo') }
-          = image_tag( \
-              company.landscape_logo_url || LOGO_PLACEHOLDER,
-              class: company.landscape_logo_url.blank? ? 'generic' : '',
-              alt: 'Company Logo')
-        a.SquareLogo {
-          href="javascript:;"
-          class=('hidden' if company.header_logo_type == 'LandscapeLogo') }
-          = image_tag( \
-              company.square_logo_url || LOGO_PLACEHOLDER,
-              class: company.square_logo_url.blank? ? 'generic' : '',
-              alt: 'Company Logo')
-      div {
-        class="stories-header-demo stories-header-demo--bg-#{color_shade(company.header_color_2)}"
-        data-company-profile-target="storiesHeaderDemo"
-        style="#{stories_header_custom_colors(company)}" }
-        h3 data-company-profile-target="storiesHeadingDemo"
-          | Customer Stories
-
-  /.form-group
-    .visible-sm-block.col-sm-offset-1.col-sm-11
-      = form.label(:gtm_id, 'Google Tag Manager ID')
-    = form.label(:gtm_id, 'Google Tag Manager ID', class: 'control-label col-md-3 visible-md-inline-block visible-lg-inline-block')
-    .col-sm-offset-1.col-sm-11.col-md-9.col-lg-6
-      = form.text_field(:gtm_id, class: 'form-control')
-
-  .row
-    .col-sm-12.col-md-offset-4.col-md-8
-      = button_tag( \
-          '',
-          type: 'submit',
-          class: 'btn btn-success disabled',
-          form: 'company-profile-form',
-          disabled: true,
-          data: { \
-            content: 'Save changes',
-            company_profile_target: 'submitBtn',
-            disable_with_html: disabled_submit_button_html })
+              content: 'Save changes',
+              company_profile_target: 'submitBtn',
+              disable_with_html: disabled_submit_button_html })

@@ -3,7 +3,7 @@ import type InvitationTemplateController from "./invitation_template_controller"
 import TomSelect, { tsBaseOptions, addDynamicPlaceholder } from '../tomselect';
 import type { TomOption, TomItem } from 'tom-select/dist/esm/types/core.d.ts';
 import type { CBOptions } from 'tom-select/dist/esm/plugins/clear_button/types.d.ts';
-import { convertCase, capitalize } from "../utils";
+import { convertCase, capitalize, randomString } from "../utils";
 
 export default class TomselectController extends Controller<TomSelectInput> {
   static outlets = ['invitation-template']
@@ -190,8 +190,6 @@ export default class TomselectController extends Controller<TomSelectInput> {
         }
       },
 
-      onItemRemove() {},
-      
       onChange(newVal: string | number) {
         ctrl.dispatch(`change-${ctrl.kebabKind || 'unknown'}`, { detail: { kind: ctrl.kindValue, id: newVal } });
       },
@@ -221,7 +219,7 @@ export default class TomselectController extends Controller<TomSelectInput> {
         } 
       },
       
-      onDropdownOpen(this: TomSelect, dropdown: HTMLDivElement) {
+      onDropdownOpen(this: TomSelect, _dropdown: HTMLDivElement) {
         ctrl.dispatch('dropdown-did-open');
         if (ctrl.isSearch) {
           // if a search string exists, manually set the current results
@@ -233,7 +231,7 @@ export default class TomselectController extends Controller<TomSelectInput> {
         }
       },
       
-      onDropdownClose(this: TomSelect, dropdown: HTMLDivElement) {
+      onDropdownClose(this: TomSelect, _dropdown: HTMLDivElement) {
         if (ctrl.isSearch) {
           // default behavior is that text input is cleared when the dropdown closes, 
           // but we want to keep it since the search results are reflected in the table
@@ -246,36 +244,40 @@ export default class TomselectController extends Controller<TomSelectInput> {
       },
       
       onItemAdd(this: TomSelect, value: string, item: TomItem) {
-        // console.log(`onItemAdd(${value}, ${item})`);
-      },
-
-      // the following two callbacks apply to the company tags inputs
-      onOptionAdd(this: TomSelect, value: string, option: TomOption) {
-        if (this.control_input.id.includes('tags')) {
-          // wait for the option element to render else getItem() will return null
-          setTimeout(() => {
-            const item = <HTMLElement>this.getItem(value);
-            item.classList.toggle('to-be-added');
-            ctrl.dispatch('add-tag', { detail: { tagName: value, source: item.dataset.source } });
-          });
+        const isNewCompanyTag = 
+          this.control_input.id.startsWith('company-') && this.control_input.id.includes('tags');
+        if (isNewCompanyTag) {
+          item.id = randomString();
+          item.classList.add('to-be-added');
+          ctrl.dispatch('add-tag', { detail: { item } });
         }
       },
-
-      onDelete(values: string[], e: PointerEvent) {
-        // console.log('onDelete')
-        if (e.target instanceof HTMLElement && e.target.closest('#company-tags-form')) {
-          const [tagName] = values;
-          const item = <HTMLElement>(<HTMLAnchorElement>e.target).closest('.item');
+      
+      // We must use onDelete instead of onItemRemove so that we can stop the removal by returning false
+      onDelete(this: TomSelect, values: string[], { target: link }: { target: HTMLAnchorElement }) {
+        const isCompanyTag = 
+          this.control_input.id.startsWith('company-') && this.control_input.id.includes('tags');
+        if (isCompanyTag) {
+          const item = <HTMLElement>link.parentElement;
           if (item.classList.contains('to-be-added')) {
-            ctrl.dispatch('add-tag', { detail: { tagName, source: item.dataset.source, cancel: true } });
-            return true;  // allow the default behavior of removing the item
+            ctrl.dispatch('add-tag', { detail: { item, cancel: true } });
+            return true;    // allow the default behavior of removing the item
           } else {
             item.classList.toggle('to-be-removed');
-            ctrl.dispatch('remove-tag', { detail: { tagName, source: item.dataset.source, cancel: !item.classList.contains('to-be-removed') } });
+            ctrl.dispatch(
+              'remove-tag', 
+              { detail: { item, cancel: !item.classList.contains('to-be-removed') } }
+            );
             return false;   // prevent the default behavior of removing the item
           }
         }
       }
+
+      // onItemRemove(this: TomSelect, value: string, item: TomItem) {
+      // },
+      
+      // onOptionAdd(this: TomSelect, value: string, option: TomOption) {
+      // },
     }
   }
 }
