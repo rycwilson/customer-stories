@@ -245,8 +245,7 @@ class StoriesController < ApplicationController
       success_attributes: [
         :id, :name, :placeholder, :customer_id, :curator_id,
         { 
-          product_ids: [],
-          story_category_ids: [],
+          tag_ids: [],
           cta_ids: [],
           customer_attributes: %i[id name logo_url show_name_with_logo company_id]
         }

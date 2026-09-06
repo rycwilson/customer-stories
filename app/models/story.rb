@@ -34,8 +34,11 @@ class Story < ApplicationRecord
   has_many :visitors, lambda {
     select('visitors.*, visitor_actions.timestamp, visitor_sessions.clicky_session_id').distinct
   }, through: :page_views
-  has_many :category_tags, through: :success, source: :story_categories
-  has_many :product_tags, through: :success, source: :products
+
+  has_many :tags, through: :success
+  has_many :category_tags, through: :success
+  has_many :product_tags, through: :success
+  
   has_many :results, dependent: :destroy
   has_many :ctas, through: :success, source: :ctas
   has_many :adwords_ads, dependent: :destroy do # topic and retarget

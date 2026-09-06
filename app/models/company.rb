@@ -148,7 +148,7 @@ class Company < ApplicationRecord
   def tag_select_options(
     tag_type, with_stories_count: true, only_featured: false, for_multi_select: false
   )
-    tags = send(tag_type.to_s.pluralize) if tag_type.in? %i[category product]
+    tags = send("#{tag_type}_tags") if tag_type.in? %i[category product]
     return [] if tags.blank?
 
     options = tags.send(only_featured ? :featured : :itself).map do |tag|
@@ -158,7 +158,7 @@ class Company < ApplicationRecord
         else
           tag.name
         end,
-        for_multi_select ? ApplicationController.helpers.dom_id(tag) : tag.id,
+        for_multi_select ? ApplicationController.helpers.tag_dom_id(tag) : tag.id,
         { data: { slug: tag.slug } }
       ]
     end

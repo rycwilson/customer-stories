@@ -36,6 +36,17 @@ class Success < ApplicationRecord
   alias_method :categories, :story_categories
 
   has_and_belongs_to_many :tags
+  has_and_belongs_to_many(
+    :category_tags,
+    class_name: 'Tag::Category',
+    # foreign_key: 'success_id',
+    association_foreign_key: 'tag_id'
+  )
+  has_and_belongs_to_many(
+    :product_tags,
+    class_name: 'Tag::Product',
+    association_foreign_key: 'tag_id'
+  )
 
   has_many :contributions, inverse_of: :success, dependent: :destroy
   has_many(
