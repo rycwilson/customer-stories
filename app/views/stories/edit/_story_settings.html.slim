@@ -17,59 +17,80 @@
           'turbo:submit-end->story-settings#resetForm' ].join(' ') },
       html: { \
         novalidate: true,
-        autocomplete: 'off' }) do |story_form|
+        autocomplete: 'off' }) do |form|
 
-    = story_form.fields_for(:success) do |success_form|
-      .form-group
+    = form.fields_for(:success) do |success_fields|
+
+      .hidden-link.form-group
         .visible-sm-block.col-sm-12
-          = success_form.label(:story_category_ids, 'Category Tags')
-        = success_form.label( \
-            :story_category_ids,
-            'Category Tags',
+          = form.label(:hidden_link, 'Private Link')
+        = form.label( \
+            :hidden_link,
+            'Private Link',
             class: 'control-label visible-md-inline-block visible-lg-inline-block col-md-4')
         .col-sm-12.col-md-8
-          = success_form.collection_select( \
-              :story_category_ids,
-              company.story_categories.sort_by(&:name),
-              :id,
-              :name,
-              { include_blank: story.category_tags.empty? },
-              { multiple: true,
-                class: 'form-control',
+          .input-group
+            = form.text_field( \
+                :hidden_link,
+                { class: 'form-control',
+                  placeholder: 'Click the Refresh button to generate a URL',
+                  readonly: true,
+                  data: { story_settings_target: 'hiddenLinkInput' }})
+            span.input-group-btn
+              = button_tag( \
+                  class: 'hidden-link__refresh btn btn-default',
+                  type: 'button',
+                  style: 'border-radius: 0; border-left: 0',
+                  data: { \
+                    controller: 'tooltip',
+                    tooltip_options_value: { title: 'Refresh', container: 'body', placement: 'top' },
+                    action: 'story-settings#refreshHiddenLink' }) do
+                i.fa.fa-refresh
+            span.input-group-btn
+              = button_tag( \
+                  class: "btn btn-default #{'disabled' if story.hidden_link.blank?}",
+                  type: "button",
+                  disabled: story.hidden_link.blank?,
+                  data: { \
+                    controller: "tooltip",
+                    action: "story-settings#copyHiddenLink",
+                    tooltip_options_value: { title: 'Copy to clipboard', container: 'body', placement: 'top' },
+                    story_settings_target: "hiddenLinkCopyBtn" }) do
+                i.fa.fa-clipboard
+          span.help-block style="margin-bottom: 0"
+            | Allows for viewing the story prior to publishing.
+
+      .form-group
+        .visible-sm-block.col-sm-12
+          label for="story-tags-ts-control" Tags
+        = tag.label( \
+            'Tags',
+            for: 'story-tags-ts-control',
+            class: 'control-label visible-md-inline-block visible-lg-inline-block col-md-4')
+        .col-md-8
+          = select_tag( \
+              'story_tags',
+              grouped_options_for_select( \
+                { 'Category' => company.tag_select_options(:category, with_stories_count: false, for_multi_select: true), 
+                  'Product' => company.tag_select_options(:product, with_stories_count: false, for_multi_select: true) } \
+                  .delete_if { |_, options| options.empty? },
+                story.tags.map { |tag| tag_dom_id(tag) }),
+              { id: 'story-tags',
+                multiple: true,
                 data: { \
                   controller: 'tomselect',
-                  tomselect_kind_value: 'category',
-                  dynamic_placeholder: 'Select tags' } }) 
+                  tomselect_kind_value: 'tag',
+                  dynamic_placeholder: 'Select Tags' } })
 
       .form-group
         .visible-sm-block.col-sm-12
-          = success_form.label(:product_ids, 'Product Tags')
-        = success_form.label( \
-            :product_ids,
-            'Product Tags',
+          = success_fields.label(:cta_ids, 'CTAs')
+        = success_fields.label( \
+            :cta_ids,
+            'CTAs',
             class: 'control-label visible-md-inline-block visible-lg-inline-block col-md-4')
         .col-sm-12.col-md-8
-          = success_form.collection_select( \
-              :product_ids,
-              company.products,
-              :id,
-              :name,
-              { include_blank: story.product_tags.empty? },
-              { multiple: true,
-                class: 'form-control',
-                data: { \
-                  controller: 'tomselect',
-                  tomselect_kind_value: 'product',
-                  dynamic_placeholder: 'Select tags' } })
-      
-      .form-group
-        .visible-sm-block.col-sm-12
-          = success_form.label(:cta_ids, 'CTAs')
-        = success_form.label( \
-            :cta_ids, 'CTA Links & Forms',
-            class: 'control-label visible-md-inline-block visible-lg-inline-block col-md-4')
-        .col-sm-12.col-md-8
-          = success_form.grouped_collection_select( \
+          = success_fields.grouped_collection_select( \
               :cta_ids,
               company.ctas.group_by(&:type).map do |type, ctas| \
                 [type == 'CtaLink' ? 'Links' : 'Web Forms', ctas.sort_by(&:display_text)] \
@@ -88,15 +109,15 @@
 
     .og-tags.row
       .visible-sm-block.col-sm-12
-        label Open Graph Data
-      label.control-label.visible-md-inline-block.visible-lg-inline-block.col-md-4 Open Graph Data
+        label Open Graph
+      label.control-label.visible-md-inline-block.visible-lg-inline-block.col-md-4 Open Graph
       .col-sm-12.col-md-8
         .og-tags__background
           .form-group
             .col-sm-12
-              = story_form.label(:og_title, 'Title')
+              = form.label(:og_title, 'Title')
               div
-                = story_form.text_field( \
+                = form.text_field( \
                     :og_title,
                     class: 'form-control',
                     maxlength: 90,
@@ -106,13 +127,21 @@
                     data: { \
                       story_settings_target: 'ogTitleInput',
                       initial_value: story.og_title })
-                button.btn.btn-success.hidden Save changes
+                = button_tag( \
+                    '',
+                    type: 'submit',
+                    class: 'btn btn-sm btn-success hidden',
+                    style: 'padding: 7px 12px',
+                    # disabled: true,
+                    data: { \
+                      content: 'Save changes',
+                      disable_with_html: disabled_submit_button_html })
 
           .form-group
             .col-sm-12
-              = story_form.label(:og_description, 'Description')
+              = form.label(:og_description, 'Description')
               div
-                = story_form.text_area( \
+                = form.text_area( \
                     :og_description,
                     class: 'form-control',
                     rows: 3,
@@ -122,57 +151,27 @@
                     data: { \
                       story_settings_target: 'ogDescriptionTextarea',
                       initial_value: story.og_description })
-                button.btn.btn-success.hidden Save changes
+                = button_tag( \
+                    '',
+                    type: 'submit',
+                    class: 'btn btn-sm btn-success hidden',
+                    style: 'padding: 7px 12px',
+                    # disabled: true,
+                    data: { \
+                      content: 'Save changes',
+                      disable_with_html: disabled_submit_button_html })
+
           .form-group
             .col-sm-12
-              = story_form.label(:og_image_url, 'Image')
+              = form.label(:og_image_url, 'Image')
               = render( \
                   ImageCardComponent.new( \
                     'Story', 
                     image_data: { type: 'OpenGraph', url: story.og_image_url } )) do
-                = story_form.hidden_field( \
+                = form.hidden_field( \
                     :og_image_url,
                     disabled: true,
                     data: { image_card_target: 'input urlInput' })
-
-    .hidden-link.form-group
-      .visible-sm-block.col-sm-12
-        = story_form.label(:hidden_link, 'Private Link')
-      = story_form.label( \
-          :hidden_link,
-          'Private Link',
-          class: 'control-label visible-md-inline-block visible-lg-inline-block col-md-4')
-      .col-sm-12.col-md-8
-        .input-group
-          = story_form.text_field( \
-              :hidden_link,
-              { class: 'form-control',
-                placeholder: 'Click the Refresh button to generate a URL',
-                readonly: true,
-                data: { story_settings_target: 'hiddenLinkInput' }})
-          span.input-group-btn
-            = button_tag( \
-                class: 'hidden-link__refresh btn btn-default',
-                type: 'button',
-                style: 'border-radius: 0; border-left: 0',
-                data: { \
-                  controller: 'tooltip',
-                  tooltip_options_value: { title: 'Refresh', container: 'body', placement: 'top' },
-                  action: 'story-settings#refreshHiddenLink' }) do
-              i.fa.fa-refresh
-          span.input-group-btn
-            = button_tag( \
-                class: "btn btn-default #{'disabled' if story.hidden_link.blank?}",
-                type: "button",
-                disabled: story.hidden_link.blank?,
-                data: { \
-                  controller: "tooltip",
-                  action: "story-settings#copyHiddenLink",
-                  tooltip_options_value: { title: 'Copy to clipboard', container: 'body', placement: 'top' },
-                  story_settings_target: "hiddenLinkCopyBtn" }) do
-              i.fa.fa-clipboard
-        span.help-block style="margin-bottom: 0"
-          | Allows for viewing the story prior to publishing.
 
     .row 
       .visible-md-inline-block.visible-lg-inline-block.col-md-4
@@ -194,8 +193,8 @@
                   bootstrap_switch_disabled_value: ('true' if attr == :preview_published),
                   tooltip_options_value: \
                     ({ title: 'Contact us', container: 'body' }.to_json if attr == :preview_published) }) do
-              = story_form.label(attr, label_text)
-              = story_form.check_box( \
+              = form.label(attr, label_text)
+              = form.check_box( \
                   attr,
                   class: 'form-control',
                   disabled: attr == :preview_published,
@@ -224,49 +223,3 @@
               i.fa.fa-fw.fa-trash
               | &nbsp;&nbsp;
               | Delete this Story
-
-  / #story-settings__ads-inputs
-      topic
-      <input type="hidden"
-              name="story[topic_ad_attributes][id]"
-              value="<%= story.topic_ad.try(:id) %>" disabled>
-      <input type="hidden"
-              name="story[topic_ad_attributes][_destroy]"
-              value="false" disabled>
-      <input type="checkbox" class="hidden"
-              name="story[topic_ad_attributes][_destroy]"
-              value="true" disabled>
-      <input type="hidden"
-              name="story[topic_ad_attributes][adwords_ad_group_id]"
-              value="<%= story.company.topic_campaign.ad_group.id %>" disabled>
-      <input type="hidden"
-              name="story[topic_ad_attributes][ad_id]"
-              value="<%= story.topic_ad.try(:ad_id) %>" disabled>
-      retarget
-      <input type="hidden"
-              name="story[retarget_ad_attributes][id]"
-              value="<%= story.retarget_ad.try(:id) %>" disabled>
-      <input type="hidden"
-              name="story[retarget_ad_attributes][_destroy]"
-              value="false" disabled>
-      <input type="checkbox" class="hidden"
-              name="story[retarget_ad_attributes][_destroy]"
-              value="true" disabled>
-      <input type="hidden"
-              name="story[retarget_ad_attributes][adwords_ad_group_id]"
-              value="<%= story.company.retarget_campaign.ad_group.id %>" disabled>
-      <input type="hidden"
-              name="story[retarget_ad_attributes][ad_id]"
-              value="<%= story.retarget_ad.try(:ad_id) %>" disabled>
-
-    // new stories start in ENABLED state
-    //<% if story.company.promote_tr? %>
-      <input type="hidden"
-              name="story[topic_ad_attributes][status]"
-              value="ENABLED" disabled>
-      <input type="hidden"
-              name="story[retarget_ad_attributes][status]"
-              value="ENABLED" disabled>
-      <% end %>
-
-  /= hidden_field_tag('settings', true)

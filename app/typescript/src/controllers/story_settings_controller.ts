@@ -1,5 +1,5 @@
 import FormController from "./form_controller";
-import { copyToClipboard } from "../utils";
+import { copyToClipboard, randomString } from "../utils";
 
 export default class StorySettingsController extends FormController<StorySettingsController> {
   static targets = [
@@ -45,9 +45,7 @@ export default class StorySettingsController extends FormController<StorySetting
   refreshHiddenLink({ currentTarget: btn }: { currentTarget: HTMLButtonElement }) {
     const confirmMesg = "Generate a new private link? This will invalidate any previous links.";
     if (this.hiddenLinkInputTarget.value === '' || window.confirm(confirmMesg)) {
-      const hiddenLink = (
-        window.location.origin + '/' + Date.now().toString(36) + Math.random().toString(36).substring(2)
-      );
+      const hiddenLink = window.location.origin + '/' + randomString();
       this.hiddenLinkInputTarget.value = hiddenLink;
       this.hiddenLinkCopyBtnTarget.classList.remove('disabled');
       this.hiddenLinkCopyBtnTarget.disabled = false;
