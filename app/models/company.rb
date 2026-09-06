@@ -61,10 +61,9 @@ class Company < ApplicationRecord
   accepts_nested_attributes_for :products, allow_destroy: true
   
   has_many :tags, dependent: :destroy
-  accepts_nested_attributes_for :tags, allow_destroy: true
   has_many :category_tags, class_name: 'Tag::Category', dependent: :destroy
-  accepts_nested_attributes_for :category_tags, allow_destroy: true
   has_many :product_tags, class_name: 'Tag::Product', dependent: :destroy
+  accepts_nested_attributes_for :category_tags, allow_destroy: true
   accepts_nested_attributes_for :product_tags, allow_destroy: true
 
   has_many :contributor_questions, dependent: :destroy
@@ -149,17 +148,17 @@ class Company < ApplicationRecord
   def tag_select_options(
     tag_type, with_stories_count: true, only_featured: false, for_multi_select: false
   )
-    tags = send(tag_type.to_s.pluralize) if %i[category product].include?(tag_type)
+    tags = send(tag_type.to_s.pluralize) if tag_type.in? %i[category product]
     return [] if tags.blank?
 
-    options = (only_featured ? tags.featured : tags).map do |tag|
+    options = tags.send(only_featured ? :featured : :itself).map do |tag|
       [
         if with_stories_count
-          "#{tag.name} (#{(only_featured ? tag.stories.featured : tag.stories).count})"
+          "#{tag.name} (#{tag.stories.send(only_featured ? :featured : :itself).count})"
         else
           tag.name
         end,
-        for_multi_select ? "#{tag_type}-#{tag.id}" : tag.id,
+        for_multi_select ? ApplicationController.helpers.dom_id(tag) : tag.id,
         { data: { slug: tag.slug } }
       ]
     end
