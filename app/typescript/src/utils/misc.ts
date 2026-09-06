@@ -75,6 +75,10 @@ export function parseDatasetObject(
   }
 }
 
+export function randomString() {
+  return Date.now().toString(36) + Math.random().toString(36).substring(2);
+}
+
 export function debounce(callback: VoidFunction, wait: number, immediate = false) {
   let timeout: number | null;
   return () => {
