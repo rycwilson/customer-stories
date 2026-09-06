@@ -87,4 +87,8 @@ module ApplicationHelper
       </div>
     HTML
   end
+
+  def tag_dom_id(tag)
+    dom_id(tag).sub(/^tag_/, '')
+  end
 end
