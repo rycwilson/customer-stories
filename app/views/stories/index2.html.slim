@@ -1,7 +1,7 @@
 = render('shared/navbars/stories_header', { company: @company, story: nil, is_preview: false })
 
 .container.stories-container.hidden-xs
-  - if @company.story_categories.featured.present? or @company.products.featured.present?
+  - if @company.tags.featured.present?
   .stories-filter
     .stories-filter__controls
       div
@@ -30,37 +30,37 @@
       button type="button" class="btn-link" data-action="stories#clearFilters"
         | Clear all 
 
-    - if @company.story_categories.featured.present?
+    - if @company.category_tags.featured.present?
       div
         .stories-filter__tag-header role="button" aria-expanded="true" aria-controls="category-filters"
           .caret
           span Topic
         .stories-filter__tag-group id="category-filters"
-          - @company.story_categories.featured.each do |category|
+          - @company.category_tags.featured.each do |category|
             .checkbox
-              label for=dom_id(category)
+              = tag.label for: tag_dom_id(tag)
                 = check_box_tag( \
                     'category[]',
-                    category.id,
+                    tag.id,
                     false,
-                    { id: dom_id(category) })
-                = category.name
+                    { id: tag_dom_id(tag) })
+                = tag.name
 
-    - if @company.products.featured.present?
+    - if @company.product_tags.featured.present?
       div
         .stories-filter__tag-header role="button" aria-expanded="true" aria-controls="product-filters"
           .caret
           span Product
         .stories-filter__tag-group id="product-filters"
-          - @company.products.featured.each do |product|
+          - @company.product_tags.featured.each do |tag|
             .checkbox
-              = tag.label for: dom_id(product)
+              = tag.label for: tag_dom_id(tag)
                 = check_box_tag( \
                     'product[]',
-                    product.id,
+                    tag.id,
                     false,
-                    { id: dom_id(product) })
-                = product.name
+                    { id: tag_dom_id(tag) })
+                = tag.name
 
   div 
     form.stories-search

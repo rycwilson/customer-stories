@@ -82,10 +82,10 @@ class ApplicationController < ActionController::Base
       if is_dashboard
         [param.to_sym, value&.to_i]
       elsif param == 'category'
-        category_tag = company.categories.where(slug: value).take
+        category_tag = company.category_tags.where(slug: value).take
         [param.to_sym, category_tag.id] if category_tag
       elsif param == 'product'
-        product_tag = company.products.where(slug: value).take
+        product_tag = company.product_tags.where(slug: value).take
         [param.to_sym, product_tag.id] if product_tag
       end
     end.to_h

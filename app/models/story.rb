@@ -35,6 +35,8 @@ class Story < ApplicationRecord
     select('visitors.*, visitor_actions.timestamp, visitor_sessions.clicky_session_id').distinct
   }, through: :page_views
 
+  # has_many :category_tags, through: :success, source: :story_categories
+  # has_many :product_tags, through: :success, source: :products
   has_many :tags, through: :success
   has_many :category_tags, through: :success
   has_many :product_tags, through: :success
@@ -206,10 +208,14 @@ class Story < ApplicationRecord
   friendly_id :title, use: %i[slugged finders history]
 
   def self.includes_for_filters(base_relation, filters)
-    relation = base_relation # typically company.stories
-    relation = relation.includes(:success) if filters[:curator].present? || filters[:customer].present?
-    relation = relation.includes(:category_tags) if filters[:category].present?
-    relation = relation.includes(:product_tags) if filters[:product].present?
+    relation = base_relation  # typically company.stories
+    if filters[:curator].present? || 
+       filters[:customer].present? || 
+       filters[:catgory].present? || 
+       filters[:product].present?
+      relation = relation.includes(:success) 
+    end
+    relation = relation.includes(:tags) if filters[:catgory].present? || filters[:product].present?
     relation
   end
 
@@ -224,10 +230,8 @@ class Story < ApplicationRecord
         base_relation.where(status_new: id)
       when :customer
         base_relation.where(successes: { customer_id: id })
-      when :category
-        base_relation.where(story_categories: { id: id })
-      when :product
-        base_relation.where(products: { id: id })
+      when :category, :product
+        base_relation.where(tags: { id: id })
       end
     end
   end
@@ -367,7 +371,7 @@ class Story < ApplicationRecord
        'name' => customer.name,
        'logo' => { '@type' => 'ImageObject',
                    'url' => customer.logo_url } }] +
-      success.products.map do |product|
+      success.product_tags.map do |product|
         { '@type' => 'Product',
           'name' => product.name }
       end
@@ -376,9 +380,9 @@ class Story < ApplicationRecord
   def related_stories
     published_stories = company.stories.published
     same_product_stories =
-      published_stories.joins(:product_tags).where(products: { id: product_tags.pluck(:id) })
+      published_stories.joins(:product_tags).where(tags: { id: product_tags.pluck(:id) })
     same_category_stories =
-      published_stories.joins(:category_tags).where(story_categories: { id: category_tags.pluck(:id) })
+      published_stories.joins(:category_tags).where(tags: { id: category_tags.pluck(:id) })
     same_tag_stories = (same_product_stories | same_category_stories) - [self]
     if same_product_stories.length >= 2
       same_product_stories.sample(2)

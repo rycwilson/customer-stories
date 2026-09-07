@@ -54,11 +54,11 @@ class Company < ApplicationRecord
   has_many :visitor_sessions, -> { distinct }, through: :visitor_actions
   has_many :visitors, -> { distinct }, through: :visitor_sessions
 
-  has_many :story_categories, dependent: :destroy
-  accepts_nested_attributes_for :story_categories, allow_destroy: true
-  alias_method :categories, :story_categories
-  has_many :products, dependent: :destroy
-  accepts_nested_attributes_for :products, allow_destroy: true
+  # has_many :story_categories, dependent: :destroy
+  # accepts_nested_attributes_for :story_categories, allow_destroy: true
+  # alias_method :categories, :story_categories
+  # has_many :products, dependent: :destroy
+  # accepts_nested_attributes_for :products, allow_destroy: true
   
   has_many :tags, dependent: :destroy
   has_many :category_tags, class_name: 'Tag::Category', dependent: :destroy
@@ -198,7 +198,7 @@ class Company < ApplicationRecord
   end
 
   def products_jsonld
-    products.map do |product|
+    product_tags.map do |product|
       { '@type' => 'Product',
         'name' => product.name }
     end

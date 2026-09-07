@@ -120,6 +120,11 @@ class StoriesController < ApplicationController
       params[:story][:new_results] ||= [] 
 
     elsif turbo_frame_request_id == 'story-settings-frame'
+      if params[:story_tags]
+        params[:story][:success_attributes][:tag_ids] = params[:story_tags].map do |tag_dom_id|
+          tag_dom_id.match(/(?<type>[a-z]+)_(?<id>\d+)/)[:id].to_i
+        end
+      end
     end
     
     if @story.update story_params
@@ -261,8 +266,7 @@ class StoriesController < ApplicationController
     results =
       stories.where('LOWER(title) LIKE ? OR LOWER(narrative) LIKE ?', "%#{q}%", "%#{q}%") +
       stories.joins(:customer).where('LOWER(customers.name) LIKE ?', "%#{q}%") +
-      stories.joins(:category_tags, :product_tags)
-             .where('LOWER(story_categories.name) LIKE ? OR LOWER(products.name) LIKE ?', "%#{q}%", "%#{q}%") +
+      stories.joins(:tags).where('LOWER(tags.name) LIKE ?', "%#{q}%", "%#{q}%") +
       stories.joins(:results).where('LOWER(results.description) LIKE ?', "%#{q}%")
     results.uniq
   end

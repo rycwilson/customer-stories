@@ -1,11 +1,11 @@
 .search-and-filters.visible-xs-block {
-  class=('visible-sm-block' unless company.story_categories.featured.blank? && company.products.featured.blank?) }
+  class=('visible-sm-block' unless company.category_tags.featured.blank? && company.product_tags.featured.blank?) }
   
   = render('stories/shared/search_form', { company:, is_header_search: false })
 
   hr
 
-  - if company.story_categories.featured.present? && company.products.featured.present?
+  - if company.category_tags.featured.present? && company.product_tags.featured.present?
     .filter-controls
       div data-filters-match-type="#{filters_match_type}"
         | Match:&nbsp;&nbsp;&nbsp;
@@ -50,7 +50,7 @@
       .filter-results.text-right
         span.help-block
 
-  - elsif company.story_categories.featured.present?
+  - elsif company.category_tags.featured.present?
     = render( \
         'stories/shared/select_story_tag', 
         { company:, 
@@ -60,7 +60,7 @@
           preselected_id: filters[:category],
           is_dashboard: false })
 
-  - elsif company.products.featured.present?
+  - elsif company.product_tags.featured.present?
     = render( \
         'stories/shared/select_story_tag', 
         { company:,

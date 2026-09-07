@@ -21,10 +21,10 @@
 
   = render('stories/shared/search_form', { company:, is_header_search: false })
 
-  hr style=('border-color:transparent' unless is_dashboard || (company.story_categories.featured.present? && company.products.featured.present?))
+  hr style=('border-color:transparent' unless is_dashboard || (company.category_tags.featured.present? && company.product_tags.featured.present?))
 
   /- if is_dashboard
-  - if company.story_categories.featured.present? && company.products.featured.present?
+  - if company.category_tags.featured.present? && company.product_tags.featured.present?
     .filter-controls
       div data-action="change->stories#onChangeFilterMatchType"
         | Match:&nbsp;&nbsp;&nbsp;

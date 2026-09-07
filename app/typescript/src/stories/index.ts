@@ -385,7 +385,7 @@ function syncFilters(changedSelect: TomSelectInput, otherSelects: TomSelectInput
     const multiSelect = otherSelects.find(select => select.multiple);
     if (multiSelect) {
       const newTagTypeIds = Object.entries(activeFilters)
-        .flatMap(([tagType, { id: tagId }]) => tagId ? `${tagType}-${tagId}` : [])
+        .flatMap(([tagType, { id: tagId }]) => tagId ? `${tagType}_${tagId}` : [])
         .sort(byTagType.bind(null, 'category'));
         multiSelect.tomselect.setValue(newTagTypeIds, true);
     }

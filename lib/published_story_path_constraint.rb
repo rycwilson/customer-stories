@@ -16,7 +16,7 @@ class PublishedStoryPathConstraint
     else 
       customer = company.customers&.friendly.find request.params[:customer] rescue nil
       story = customer&.stories&.friendly.find request.params[:title] rescue nil
-      product = company.products&.friendly.find(request.params[:product]) rescue nil
+      product = company.product_tags&.friendly.find(request.params[:product]) rescue nil
       if customer and story&.published?
         product ? story.product_tags.include?(product) : request.params[:product].nil?
       else 

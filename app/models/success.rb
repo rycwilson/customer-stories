@@ -31,9 +31,9 @@ class Success < ApplicationRecord
   # but delete it when running bin/rails db:seed
   # has_many :results, dependent: :destroy
 
-  has_and_belongs_to_many :products
-  has_and_belongs_to_many :story_categories
-  alias_method :categories, :story_categories
+  # has_and_belongs_to_many :products
+  # has_and_belongs_to_many :story_categories
+  # alias_method :categories, :story_categories
 
   has_and_belongs_to_many :tags
   has_and_belongs_to_many(

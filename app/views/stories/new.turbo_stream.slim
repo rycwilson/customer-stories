@@ -112,10 +112,10 @@
         = success_fields.hidden_field(:id, disabled: true)
 
         /.form-group 
-          = form.label(:story_category_ids, 'Category Tags')
+          = form.label(:category_tag_ids, 'Category Tags')
           = success_fields.collection_select( \
-              :story_category_ids,
-              @company.story_categories,
+              :category_tag_ids,
+              @company.category_tags,
               :id,
               :name,
               {},
@@ -129,10 +129,10 @@
             | Optional
 
         /.form-group 
-          = form.label(:product_ids, 'Product Tags')
+          = form.label(:product_tagids, 'Product Tags')
           = success_fields.collection_select( \
-              :product_ids,
-              @company.products,
+              :product_tagids,
+              @company.product_tags,
               :id,
               :name,
               {},

@@ -88,14 +88,14 @@
                 a href="" Sales
               li.divider role="separator"
               li.dropdown-header Category 
-              - company.categories.each do |category|
+              - company.category_tags.each do |tag|
                 li 
-                  a href="" = category.name
+                  a href="" = tag.name
               li.divider role="separator"
               li.dropdown-header Product 
-              - company.products.each do |product|
+              - company.product_tags.each do |tag|
                 li 
-                  a href="" = product.name
+                  a href="" = tag.name
 
         = tag.ul(class: 'list-group list-unstyled', data: { list_target: 'list' }) do
           = form.fields_for(:contributor_questions) do |prompt_fields|

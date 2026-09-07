@@ -1,13 +1,14 @@
+- select_id = SecureRandom.urlsafe_base64(8)
+
 .stories-filter.form-group
   = label_tag(select_id, tag.to_s.capitalize)
   = select_tag( \
       name,
       options_for_select( \
-        company.tag_select_options(tag, only_featured: !is_dashboard),
+        company.tag_select_options(tag, only_featured:),
         preselected_id),
       { id: select_id,
-        include_blank: true,
-        placeholder: "Select #{tag}",
+        include_blank: "Select #{tag}",
         class: "stories-filter__select stories-filter__select--#{tag}",
         data: { \
           controller: 'tomselect',
