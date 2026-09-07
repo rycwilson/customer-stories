@@ -1,12 +1,16 @@
-ul#stories-gallery.list-unstyled.text-center.hidden {
-  class=('no-filters' if no_filters_present)
-  data-is-sync-filtered=('true' if filtered_story_ids.present?)
-  data-stories-target="gallery" }
+= tag.ul( \
+    id: 'stories-gallery',
+    class: "hidden list-unstyled text-center #{'no-filters' if company.tags.featured.blank?}",
+    data: { \
+      stories_target: 'gallery',
+      is_sync_filtered: ('true' if filtered_story_ids.present?) })
 
   - stories.each do |story|
 
     / TODO semantic markup: https://stackoverflow.com/questions/19307443/semantic-html-of-an-articles-list#answer-54258592
-    li role="article" class=('hidden' if filtered_story_ids.present? && filtered_story_ids.exclude?(story.id))
+    = tag.li( \
+        role: 'article',
+        class: ('hidden' if filtered_story_ids.present? && filtered_story_ids.exclude?(story.id)))
 
       = render( \
           'stories/shared/story_card',

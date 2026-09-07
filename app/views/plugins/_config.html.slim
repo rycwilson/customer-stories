@@ -156,9 +156,8 @@ form.plugin-config.form-horizontal name="pluginConfig" data-controller="plugins"
             { company:, 
               tag: :category,
               name: 'plugin[category]',
-              select_id: nil,
               preselected_id: nil,
-              is_dashboard: false })
+              only_featured: true })
 
       .plugin-config__product.hidden data-action="change->plugins#onChangeFilter"
         = render( \
@@ -166,9 +165,8 @@ form.plugin-config.form-horizontal name="pluginConfig" data-controller="plugins"
             { company:, 
               tag: :product,
               name: 'plugin[product]',
-              select_id: nil, 
               preselected_id: nil,
-              is_dashboard: false })
+              only_featured: true })
 
   .plugin-config__appearance.form-group
     .visible-sm-block.col-sm-12

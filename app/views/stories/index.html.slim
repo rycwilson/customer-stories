@@ -31,7 +31,6 @@
         { company: @company,
           stories: @company.stories.featured,
           filtered_story_ids: @filtered_story_ids,
-          no_filters_present: @company.story_categories.featured.blank? && @company.products.featured.blank?,
           is_dashboard: false })
 
   = render('stories/shared/footer', company: @company)

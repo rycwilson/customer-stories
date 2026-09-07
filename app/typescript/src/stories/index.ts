@@ -64,7 +64,7 @@ function setActiveFilters() {
     activeFilters,
     Object.fromEntries(
       [...searchParams]
-        .filter(([tagType, tagSlug]) => /^(category|product)$/.test(tagType))
+        .filter(([tagType, _tagSlug]) => /^(category|product)$/.test(tagType))
         .map(([tagType, tagSlug]) => {
           const tagSelect = <HTMLSelectElement>[...filters].find(select => tagType === singleSelectTagType(select));
           const tagOption = <HTMLOptionElement>tagSelect.querySelector(`option[data-slug="${tagSlug}"]`);
@@ -196,17 +196,26 @@ function initFilterControls() {
   }));
 }
 
-function onChangeFilter(changedSelect: TomSelectInput, otherSelects: TomSelectInput[], value: string | string[]) {
+function onChangeFilter(
+  changedSelect: TomSelectInput,
+  otherSelects: TomSelectInput[],
+  value: string | string[]
+) {
   const isMulti = value instanceof Array;
+  const getTagType = (optionVal: string) => {
+    return optionVal.match(/(?<type>\w+)_\d+$/)!.groups!.type;
+  };
   const getTagSlug = (select: TomSelectInput, value: string) => {
     if (!value) return '';
-    const options = Object.values(select.tomselect.options) as TomOption[];
-    const tagOption = options.find(option => option.value === value) as TomOption;
+
+    const options: TomOption[] = Object.values(select.tomselect.options);
+    const tagOption = <TomOption>options.find((option: TomOption) => option.value === value);
     return tagOption.slug;
   };
 
   if (isMulti) {
-    const tagTypeIds = value;   // e.g. ['category-1', 'category-2', 'product-3'] 
+    const tagTypeIds = value;   // e.g. ['category_123', 'category_124', 'product_123'] 
+    // console.log('tagTypeIds:', tagTypeIds)
     
     // reverse => ensures FIFO behavior
     // reduce => ensure only one instance of a given tag type
@@ -214,26 +223,27 @@ function onChangeFilter(changedSelect: TomSelectInput, otherSelects: TomSelectIn
     const newTagTypeIds = tagTypeIds
       .reverse()   
       .reduce((acc: string[], tagTypeId) => {
-        const tagType = tagTypeId.split('-')[0];
-        const isRepeatedType = acc.find(_tagTypeId => _tagTypeId.includes(tagType));
+        const tagType = getTagType(tagTypeId)
+        const isRepeatedType = acc.find(ttId => ttId.includes(tagType));
         return isRepeatedType ? acc : [...acc, tagTypeId];
       }, [])
       .sort(byTagType.bind(null, 'category'));
+    // console.log('newTagTypeIds:', newTagTypeIds)
 
-    // delete search param for any tag type that is no longer selected
-    for (const [tagType, tagSlug] of searchParams) {
+    // Delete search param for any tag type that is no longer selected
+    for (const [tagType, _tagSlug] of searchParams) {
       if (!newTagTypeIds.find(tagTypeId => tagTypeId.includes(tagType))) {
         searchParams.delete(tagType);
       }
     }
 
     if (newTagTypeIds.length) {
-      // overwrite multi-select value to remove duplicate tag types
+      // Overwrite multi-select value to remove duplicate tag types
       changedSelect.tomselect.setValue(newTagTypeIds, true);
 
-      // add or overwrite search params
+      // Add or overwrite search params
       newTagTypeIds.forEach((tagTypeId: string) => {
-        const tagType = tagTypeId.split('-')[0];
+        const tagType = getTagType(tagTypeId);
         const tagSlug = getTagSlug(changedSelect, tagTypeId);
         searchParams.set(tagType, tagSlug);
       });

@@ -1,15 +1,22 @@
-#curate.tab-pane {
-  class=('active' if workflow_stage == 'curate')
-  data-dashboard-target="tabPanel"
-  data-action="stories:loading->dashboard#onResourceLoading stories:ready->dashboard#onResourceReady"
-  role="tabpanel" }
+= tag.div( \
+    id: 'curate',
+    class: "tab-pane #{'active' if workflow_stage == 'curate'}",
+    data: { \
+      dashboard_target: 'tabPanel',
+      action: 'stories:loading->dashboard#onResourceLoading stories:ready->dashboard#onResourceReady',
+      role: 'tabpanel' })
 
   = render('shared/loading_spinner')
 
-  .container-fluid {
-    data-controller="stories"
-    data-dashboard-target="stories"
-    data-action="tomselect:did-initialize->stories#onInitFilter" }
+  = tag.div( \
+      class: 'container-fluid',
+      data: { \
+        controller: 'stories',
+        dashboard_target: 'stories',
+        action: [ \
+          'tomselect:did-initialize->stories#onInitFilter',
+          "#{%w[curator status customer category product].map do |filter| \
+            "tomselect:change-#{filter}->stories#onChangeFilter"; end.join(' ')}" ].join(' ') })
 
     = render( \
         'stories/shared/search_and_filters_md_lg',

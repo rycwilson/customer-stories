@@ -70,12 +70,10 @@ class CompaniesController < ApplicationController
         end
       end
     else
-      render(
-        partial: frame_partials[turbo_frame_request_id],
-        locals: { company: @company, errors: @company.errors.full_messages },
-        layout: false,
-        status: :unprocessable_entity
-      )
+      render partial: frame_partials[turbo_frame_request_id],
+             locals: { company: @company, errors: @company.errors.full_messages },
+             layout: false,
+             status: :unprocessable_entity
     end
   end
 
@@ -283,10 +281,12 @@ class CompaniesController < ApplicationController
 
   def successful_update_flash_message
     return '' unless turbo_frame_request?
-
-    {
-      'company-tags-frame' => 'Tags have been updated',
-      'company-profile-frame' => 'Account Settings have been updated'
-    }[turbo_frame_request_id]
+      
+    case turbo_frame_request_id
+    when 'company-tags-frame'
+      'Tags have been updated'
+    when 'company-profile-frame'
+      'Account Settings have been updated'
+    end
   end
 end

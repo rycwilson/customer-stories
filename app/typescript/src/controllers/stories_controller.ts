@@ -68,10 +68,10 @@ export default class extends Controller<HTMLDivElement> {
   }
   
   // TODO: before intial load, make sure all images on the page (namely the search icon) are loaded
-  fetchStories(updateSearchParams: ((src: URL) => void) | undefined = undefined) {
+  fetchStories(updateSearchParams: (src: URL) => void) {
     if (this.turboFrameTarget.src) {
       const newSrc = new URL(this.turboFrameTarget.src);
-      if (updateSearchParams) updateSearchParams(newSrc);
+      updateSearchParams(newSrc);
       this.turboFrameTarget.src = newSrc.toString();
     }
   }

@@ -35,12 +35,12 @@
         = select_tag( \
             '',
             grouped_options_for_select( \
-              { \
-                'Category' => company.tag_select_options(:category, only_featured: true, for_multi_select: true), 
-                'Product' => company.tag_select_options(:product, only_featured: true, for_multi_select: true) \
-              }.delete_if { |tag_type, options| options.blank? },
-              filters.map { |tag_type, tag_id| "#{tag_type}-#{tag_id}" }),
-            { class: 'stories-filter__select stories-filter__select--grouped',
+              { 'Category' => company.tag_select_options(:category, only_featured: true, for_multi_select: true), 
+                'Product' => company.tag_select_options(:product, only_featured: true, for_multi_select: true) } \
+                .delete_if { |_, options| options.empty? },
+              filters.map { |tag_type, tag_id| "#{tag_type}_#{tag_id}" }),
+            { name: nil,
+              class: 'stories-filter__select stories-filter__select--grouped',
               multiple: true,
               style: 'width: 100%',
               data: { \
@@ -56,9 +56,8 @@
         { company:, 
           tag: :category,
           name: nil,
-          select_id: SecureRandom.urlsafe_base64, 
           preselected_id: filters[:category],
-          is_dashboard: false })
+          only_featured: true })
 
   - elsif company.product_tags.featured.present?
     = render( \
@@ -66,6 +65,5 @@
         { company:,
           tag: :product,
           name: nil,
-          select_id: SecureRandom.urlsafe_base64, 
           preselected_id: filters[:product],
-          is_dashboard: false })
+          only_featured: true })
