@@ -209,13 +209,11 @@ class Story < ApplicationRecord
 
   def self.includes_for_filters(base_relation, filters)
     relation = base_relation  # typically company.stories
-    if filters[:curator].present? || 
-       filters[:customer].present? || 
-       filters[:catgory].present? || 
-       filters[:product].present?
-      relation = relation.includes(:success) 
+    if filters[:curator].present? || filters[:customer].present?
+      relation = relation.includes(:success)
     end
-    relation = relation.includes(:tags) if filters[:catgory].present? || filters[:product].present?
+    relation = relation.includes(:category_tags) if filters[:category].present?
+    relation = relation.includes(:product_tags) if filters[:product].present?
     relation
   end
 
@@ -230,8 +228,10 @@ class Story < ApplicationRecord
         base_relation.where(status_new: id)
       when :customer
         base_relation.where(successes: { customer_id: id })
-      when :category, :product
-        base_relation.where(tags: { id: id })
+      when :category
+        base_relation.where(category_tags: { id: id })
+      when :product
+        base_relation.where(product_tags: { id: id })
       end
     end
   end

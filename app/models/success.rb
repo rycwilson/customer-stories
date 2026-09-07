@@ -39,8 +39,9 @@ class Success < ApplicationRecord
   has_and_belongs_to_many(
     :category_tags,
     class_name: 'Tag::Category',
-    # foreign_key: 'success_id',
-    association_foreign_key: 'tag_id'
+    # join_table: 'successes_tags', # Correctly inferred via this model and Tag::Category model
+    # foreign_key: 'success_id',  # Correctly inferred via this model
+    association_foreign_key: 'tag_id' # Derived from Tag::Category so must be specified
   )
   has_and_belongs_to_many(
     :product_tags,
