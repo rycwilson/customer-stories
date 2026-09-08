@@ -60,14 +60,9 @@ class Users::SessionsController < Devise::SessionsController
     if true_user.admin? and imitable_user = User.find_by_id(params[:imitable_user_id])
       impersonate_user(imitable_user)
       session['authorized_subdomains'] = ['', imitable_user.company.subdomain]
-      # TODO both redirects result in a 401 - why?
-      # redirect_to edit_csp_user_registration_url(subdomain: current_user.company.subdomain)
-      # redirect_to url_for(subdomain: current_user.company.subdomain, controller: 'users/registrations', action: 'edit')
-      respond_to do |format|
-        format.js { render js: "window.location.replace('#{edit_csp_user_registration_url(subdomain: current_user.company.subdomain)}')" }
-      end
+      redirect_to edit_csp_user_registration_url(subdomain: current_user.company.subdomain)
     else
-      redirect_to edit_csp_user_registraation_path
+      redirect_to edit_csp_user_registration_path
     end
   end
 
