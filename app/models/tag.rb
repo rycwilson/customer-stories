@@ -3,9 +3,8 @@ class Tag < ApplicationRecord
 
   belongs_to :company
   has_and_belongs_to_many :successes
-  has_and_belongs_to_many :contributor_questions, dependent: :destroy
+  has_and_belongs_to_many :contributor_questions
   has_many :stories, through: :successes
-  has_many :customers, through: :successes
 
   validates :name, presence: true, uniqueness: { scope: [:company, :type] }
 
