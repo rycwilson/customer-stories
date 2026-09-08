@@ -3,8 +3,10 @@
     class: "tab-pane #{'active' if workflow_stage == 'curate'}",
     data: { \
       dashboard_target: 'tabPanel',
-      action: 'stories:loading->dashboard#onResourceLoading stories:ready->dashboard#onResourceReady',
-      role: 'tabpanel' })
+      role: 'tabpanel',
+      action: [ \
+        'stories:loading->dashboard#onResourceLoading',
+        'stories:ready->dashboard#onResourceReady'].join(' ') })
 
   = render('shared/loading_spinner')
 

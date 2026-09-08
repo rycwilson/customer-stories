@@ -1,27 +1,27 @@
 - template = local_assigns.fetch(:template, nil)
 - is_default = company.invitation_templates.default.include?(template)
 
-/ a dynamic select element id will ensure focus is not retained when element is replaced 
+/ A dynamic select element id will ensure focus is not retained when element is replaced 
 / (initializing tomselect when focused will result in an auto-opened dropdown)
-- template_select_id = "template-select-#{DateTime.now.to_i}"
+- select_id = SecureRandom.urlsafe_base64(8)
 
 .form-group
   .visible-sm-block.visible-md-block.col-sm-12
-    label for=template_select_id
-      | Email Template
-  label.control-label.col-lg-3.visible-lg-inline-block for=template_select_id
-    | Email Template
+    label for=select_id
+      | Template
+  label.control-label.col-lg-3.visible-lg-inline-block for=select_id
+    | Template
   .col-sm-12.col-lg-9
     .invitation-template__toolbar
       
       / Do not include the clear button plugin initially, else it will flicker when loading
       = select_tag( \
-          nil,
+          '',
           invitation_template_select_options(company, template),
-          { include_blank: true,
-            id: template_select_id,
+          { include_blank: template&.new_record? ? "– New Template –" : 'Select template',
+            id: select_id,
             class: 'form-control',
-            placeholder: template&.new_record? ? "– New Template –" : 'Select template',
+            name: nil,
             data: { \
               controller: 'tomselect',
               tomselect_invitation_template_outlet: '#invitation-template-form',
@@ -56,8 +56,17 @@
               data-controller="tooltip"
               data-tooltip-options-value={ title: template.persisted? ? 'Delete' : 'Discard' }.to_json }
               i.fa.fa-fw.fa-remove
-        button.btn.btn-success.disabled type="submit" data-invitation-template-target="submitBtn"
-          = template.new_record? ? 'Create' : 'Save changes'
+        = button_tag( \
+            '',
+            type: 'submit',
+            class: 'btn btn-success btn-sm',
+            style: 'padding: 7px 14px',
+            disabled: true,
+            name: nil,
+            data: { \
+              content: template.new_record? ? 'Create' : 'Save changes',
+              invitation_template_target: 'submitBtn',
+              disable_with_html: disabled_submit_button_html })
 
       = link_to( \
           new_company_invitation_template_path(company),
