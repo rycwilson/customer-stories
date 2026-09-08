@@ -1,3 +1,13 @@
+body.stories.edit {
+  [name="story[title]"],
+  [name="story[og_title]"],
+  [name="story[og_description]"] {
+    & + .btn-success {
+      margin-left: 1rem;
+    }
+  }
+}
+
 #toggle-results-sm-md,
 #toggle-results-lg {
   > button {

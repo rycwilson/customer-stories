@@ -3,7 +3,7 @@
     margin-bottom: 1.25rem;
   }
 
-  @media (min-width: 768px) and (max-width: 1199px) {
+  @media (min-width: 768px) and (max-width: 1200px) {
     max-width: 60rem;
   }
 
@@ -17,10 +17,19 @@
   hr {
     margin: 1.5rem 0;
   }
+
+  [name="invitation_template[request_subject]"] {
+    font-size: 13px;
+  }
 }
 
 .invitation-template__toolbar {
   @include flex-row-center-between;
+
+  .ts-wrapper,
+  .btn-group {
+    margin-right: 1rem;
+  }
 
   .ts-wrapper {
     width: auto;
@@ -33,11 +42,6 @@
       border-top-right-radius: $border-radius-base;
       border-bottom-right-radius: $border-radius-base;
     }
-  }
-
-  [data-invitation-template-target="newTemplateBtn"],
-  [data-invitation-template-target="submitBtn"] {
-    margin-left: 1rem;
   }
 }
 
