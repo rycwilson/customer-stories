@@ -18,14 +18,14 @@
 
   div data-invitation-template-target="formFields"
     .row
-      .col-sm-12.col-lg-offset-3.col-lg-9
+      .col-sm-12.col-md-offset-2.col-md-10
         hr
 
     .form-group
-      .visible-sm-block.visible-md-block.col-sm-12
+      .visible-sm-block.col-sm-12
         = form.label(:name)
-      = form.label(:name, class: 'col-lg-3 visible-lg-inline-block control-label')
-      .col-sm-12.col-lg-9
+      = form.label(:name, class: 'col-md-2 visible-md-inline-block visible-lg-inline-block control-label')
+      .col-sm-12.col-md-10
         = form.text_field( \
             :name,
             class: 'form-control',
@@ -33,10 +33,10 @@
             data: { invitation_template_target: 'nameField'})
 
     .form-group 
-      .visible-sm-block.visible-md-block.col-sm-12
+      .visible-sm-block.col-sm-12
         = form.label(:request_subject, 'Subject')
-      = form.label(:request_subject, 'Subject', class: 'col-lg-3 visible-lg-inline-block control-label')
-      .col-sm-12.col-lg-9
+      = form.label(:request_subject, 'Subject', class: 'col-md-2 visible-md-inline-block visible-lg-inline-block control-label')
+      .col-sm-12.col-md-10
         .input-group
           = form.text_field(:request_subject, class: 'form-control')
           .input-group-btn
@@ -52,10 +52,10 @@
                 a href="javascript:;" Contributor full name
 
     .form-group
-      .visible-sm-block.visible-md-block.col-sm-12
+      .visible-sm-block.col-sm-12
         = form.label(:request_body, 'Body')
-      = form.label(:request_subject, 'Body', class: 'col-lg-3 visible-lg-inline-block control-label')
-      .col-sm-12.col-lg-9
+      = form.label(:request_subject, 'Body', class: 'col-md-2 visible-md-inline-block visible-lg-inline-block control-label')
+      .col-sm-12.col-md-10
         = form.text_area( \
             :request_body,
             data: { \

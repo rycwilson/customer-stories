@@ -6,12 +6,12 @@
 - select_id = SecureRandom.urlsafe_base64(8)
 
 .form-group
-  .visible-sm-block.visible-md-block.col-sm-12
+  .visible-sm-block.col-sm-12
     label for=select_id
       | Template
-  label.control-label.col-lg-3.visible-lg-inline-block for=select_id
+  label.control-label.col-md-2.visible-md-inline-block.visible-lg-inline-block for=select_id
     | Template
-  .col-sm-12.col-lg-9
+  .col-sm-12.col-md-10
     .invitation-template__toolbar
       
       / Do not include the clear button plugin initially, else it will flicker when loading

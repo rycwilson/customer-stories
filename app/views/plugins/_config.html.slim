@@ -3,8 +3,8 @@ form.plugin-config.form-horizontal name="pluginConfig" data-controller="plugins"
   .plugin-config__type.form-group data-action="change->plugins#onChangePluginType change->plugins#toggleSettingsDisplay"
     .visible-sm-block.col-sm-12
       label Type
-    label.col-md-3.control-label.visible-md-inline-block.visible-lg-inline-block Type
-    .col-sm-12.col-md-9
+    label.col-md-2.control-label.visible-md-inline-block.visible-lg-inline-block Type
+    .col-sm-12.col-md-10
       .btn-group 
         = label_tag('plugin_type_gallery', class: 'radio-inline') do
           = radio_button_tag('plugin[type]', 'gallery', true)
@@ -17,7 +17,7 @@ form.plugin-config.form-horizontal name="pluginConfig" data-controller="plugins"
           | Tabbed Carousel
 
   .form-group
-    .col-sm-12.col-md-offset-3.col-md-9
+    .col-sm-12.col-md-offset-2.col-md-10
       
       .plugin-config__gallery
         .form-inline
@@ -121,8 +121,8 @@ form.plugin-config.form-horizontal name="pluginConfig" data-controller="plugins"
   .plugin-config__content.form-group data-action="change->plugins#toggleSettingsDisplay"
     .visible-sm-block.col-sm-12
       label Content 
-    label.col-md-3.control-label.visible-md-inline-block.visible-lg-inline-block Content
-    .col-sm-12.col-md-9
+    label.col-md-2.control-label.visible-md-inline-block.visible-lg-inline-block Content
+    .col-sm-12.col-md-10
       .btn-group
         = label_tag('plugin_content_stories', class: 'radio-inline') do
           = radio_button_tag('plugin[content]', 'stories', true)
@@ -135,7 +135,7 @@ form.plugin-config.form-horizontal name="pluginConfig" data-controller="plugins"
           | Filter Product
 
   .form-group
-    .col-sm-12.col-md-offset-3.col-md-9
+    .col-sm-12.col-md-offset-2.col-md-10
 
       .plugin-config__stories
         = select_tag( \
@@ -171,8 +171,8 @@ form.plugin-config.form-horizontal name="pluginConfig" data-controller="plugins"
   .plugin-config__appearance.form-group
     .visible-sm-block.col-sm-12
       label Appearance
-    label.col-md-3.control-label.visible-md-inline-block.visible-lg-inline-block Appearance
-    .col-sm-12.col-md-9
+    label.col-md-2.control-label.visible-md-inline-block.visible-lg-inline-block Appearance
+    .col-sm-12.col-md-10
       .btn-group
         = label_tag('plugin_logos_only', class: 'checkbox-inline') do
           = check_box_tag( \
@@ -194,8 +194,8 @@ form.plugin-config.form-horizontal name="pluginConfig" data-controller="plugins"
   .plugin-config__code-actions.form-group
     .visible-sm-block.col-sm-12
       label Code
-    label.col-md-3.control-label.visible-md-inline-block.visible-lg-inline-block Code
-    .col-sm-12.col-md-9
+    label.col-md-2.control-label.visible-md-inline-block.visible-lg-inline-block Code
+    .col-sm-12.col-md-10
       / a.btn.btn-secondary href="/plugins/demo" disabled=('true' if company.stories.featured.blank?)
       a.btn.btn-default href="" data-action="plugins#openDemo"
         i.fa.fa-external-link
@@ -206,7 +206,7 @@ form.plugin-config.form-horizontal name="pluginConfig" data-controller="plugins"
         i.fa.fa-check
 
   .plugin-config__code.form-group
-    .col-sm-12.col-md-offset-3.col-md-9
+    .col-sm-12.col-md-offset-2.col-md-10
       textarea.form-control style="width:100%;" rows="6" readonly="" data-plugins-target="codeTextArea"
         = "<div id=\"cs-gallery\" class=\"cs-plugin\"></div>\
             \n<script src=\"#{Rails.env.development? ? 'http' : 'https'}://\

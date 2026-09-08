@@ -27,25 +27,13 @@
 }
 
 #cta-links-forms-panel {
-  .form-horizontal {
-    max-width: 50rem;
+  // .list-group {
+  //   position: relative;
 
-    @media (min-width: 768px) and (max-width: 992px) {
-      margin: 0 auto;
-    }
-
-    @media (min-width: 992px) {
-      margin-left: 15%;
-    }
-  }
-
-  .list-group {
-    position: relative;
-
-    @include bs-md {
-      top: ($padding-base-vertical + 1) * -1; // this matches the padding-top on the control label (see _forms.scss)
-    }
-  }
+  //   @include bs-md {
+  //     top: ($padding-base-vertical + 1) * -1; // this matches the padding-top on the control label (see _forms.scss)
+  //   }
+  // }
 
   .list-group-item {
   //   &--empty {
@@ -62,7 +50,7 @@
   //   }
   
     // Prevent the outer .form-horizontal from setting negative margins on the form groups inside the collapsible element
-    .collapse[id*="edit-cta-"] {
+    .collapse {
       .form-group {
         margin-right: 0;
         margin-left: 0;

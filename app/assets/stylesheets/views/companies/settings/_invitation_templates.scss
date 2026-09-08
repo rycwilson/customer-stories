@@ -2,15 +2,6 @@
   > .form-group:has(.invitation-template__toolbar) {
     margin-bottom: 1.25rem;
   }
-
-  @media (min-width: 768px) and (max-width: 1200px) {
-    max-width: 60rem;
-  }
-
-  @media (min-width: 1200px) {
-    left: -5%;
-    max-width: 80rem;
-  }
 }
 
 #invitation-template-form {

@@ -27,7 +27,7 @@
     .form-group
       .visible-sm-block.col-sm-12
         = form.label(:name, 'Company Name')
-      = form.label(:name, 'Company Name', class: 'control-label col-md-4 visible-md-inline-block visible-lg-inline-block')
+      = form.label(:name, 'Company Name', class: 'control-label col-md-3 visible-md-inline-block visible-lg-inline-block')
       .col-sm-12.col-md-8
         = form.text_field(:name, class: 'form-control', required: true, placeholder: 'Your company', autofocus: company.new_record?)
         .help-block.with-errors
@@ -38,7 +38,7 @@
       = form.label( \
           :website,
           'Company Website',
-          class: 'control-label col-md-4 visible-md-inline-block visible-lg-inline-block')
+          class: 'control-label col-md-3 visible-md-inline-block visible-lg-inline-block')
       .col-sm-12.col-md-8
         = form.text_field(:website, class: 'form-control', required: true, placeholder: "Your company's web address")
         .help-block.with-errors
@@ -47,7 +47,7 @@
     .form-group
       .visible-sm-block.col-sm-12
         = form.label(:subdomain)
-      = form.label(:subdomain, 'Custom Domain', class: 'control-label col-md-4 visible-md-inline-block visible-lg-inline-block')
+      = form.label(:subdomain, 'Custom Domain', class: 'control-label col-md-3 visible-md-inline-block visible-lg-inline-block')
       .col-sm-12.col-md-8
         = form.text_field( \
             :subdomain,
@@ -64,7 +64,7 @@
       = form.label( \
           :description,
           'Company Logos',
-          class: 'control-label col-md-4 visible-md-inline-block visible-lg-inline-block')
+          class: 'control-label col-md-3 visible-md-inline-block visible-lg-inline-block')
       .col-sm-12.col-md-8
         ul.image-cards.list-unstyled
           li
@@ -90,7 +90,7 @@
     .row
       .visible-sm-block.col-sm-12
         label Custom Header  
-      label.control-label.col-md-4.visible-md-inline-block.visible-lg-inline-block Custom Header
+      label.control-label.col-md-3.visible-md-inline-block.visible-lg-inline-block Custom Header
       .col-sm-12.col-md-8 data-action="change->company-profile#onChangeHeaderLogoType"
         = label_tag('company_header_logo_type_squarelogo', class: 'radio-inline') do 
           = form.radio_button(:header_logo_type, 'SquareLogo')
@@ -100,7 +100,7 @@
           | Landscape Logo
 
     .row.custom-header-colors
-      .col-sm-12.col-md-offset-4.col-md-8
+      .col-sm-12.col-md-offset-3.col-md-8
         div
           = form.label(:header_color_1, 'Upper')
           = form.color_field( \
@@ -122,7 +122,7 @@
                 action: 'company-profile#onInputStoriesHeadingColor' })
 
     .form-group
-      .col-sm-12.col-md-offset-4.col-md-8
+      .col-sm-12.col-md-offset-3.col-md-8
         .company-header-demo data-company-profile-target="companyHeaderDemo" style="background-color:#{company.header_color_1}"
           a.LandscapeLogo {
             href="javascript:;"
@@ -153,7 +153,7 @@
         = form.text_field(:gtm_id, class: 'form-control')
 
     .row
-      .col-sm-12.col-md-offset-4.col-md-8
+      .col-sm-12.col-md-offset-3.col-md-8
         = button_tag( \
             '',
             type: 'submit',
