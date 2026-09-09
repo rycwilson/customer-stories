@@ -62,7 +62,7 @@ div data-company-ctas-target="cta"
         autocomplete: 'off',
         rows: 3)
 
-  .form-group 
+  .form-group style="margin-bottom:1.5rem"
     = cta_fields.label(:tag_ids, 'Tags')
     = cta_fields.select( \
         :tag_ids,
@@ -81,7 +81,7 @@ div data-company-ctas-target="cta"
     .help-block 
       | Optional
 
-  .form-group 
+  .form-group style="margin-bottom:1.5rem"
     .checkbox
       = cta_fields.label(:primary) do
         = cta_fields.check_box( \
@@ -92,24 +92,29 @@ div data-company-ctas-target="cta"
         = "#{cta_fields.object.persisted? && cta_fields.object.primary? ? 'Remove as' : 'Make this the'} Main CTA"
 
   = tag.div( \
+      style: 'position:relative; margin-bottom:4rem',
       class: ['cta__custom-button', { hidden: action_name == 'new' || !cta_fields.object.primary? }],
       data: { company_ctas_target: 'customButton' }) do
 
     div
-      = company_form.label(:primary_cta_background_color, 'Button')
-      = company_form.color_field( \
-          :primary_cta_background_color,
-          class: 'form-control',
-          disabled: action_name == 'new' || !cta_fields.object.primary?,
-          data: { company_ctas_target: 'customButtonColorInput' })
-      = company_form.label(:primary_cta_text_color, 'Text')
-      = company_form.color_field( \
-          :primary_cta_text_color,
-          class: 'form-control',
-          disabled: action_name == 'new' || !cta_fields.object.primary?,
-          data: { company_ctas_target: 'customButtonColorInput' })
+      .cta__color-field
+        = company_form.label(:primary_cta_background_color, 'Button')
+        = company_form.color_field( \
+            :primary_cta_background_color,
+            class: 'form-control',
+            style: 'display:inline-block; width:34px; padding:0',
+            disabled: action_name == 'new' || !cta_fields.object.primary?,
+            data: { company_ctas_target: 'customButtonColorInput' })
+      .cta__color-field
+        = company_form.label(:primary_cta_text_color, 'Text')
+        = company_form.color_field( \
+            :primary_cta_text_color,
+            class: 'form-control',
+            style: 'display:inline-block; width:34px; padding:0',
+            disabled: action_name == 'new' || !cta_fields.object.primary?,
+            data: { company_ctas_target: 'customButtonColorInput' })
 
-    div style="background-color:#{company.header_color_1}"
+    div style="background-color:#{company.header_color_1}; flex-grow:1"
       = button_tag( \
           action_name == 'new' ? 'Click me!' : cta_fields.object.display_text,
           class: 'btn btn-lg btn-custom',
@@ -118,7 +123,8 @@ div data-company-ctas-target="cta"
             company_ctas_target: 'customButtonDemo',
             bg_color: company.primary_cta_background_color,
             color: company.primary_cta_text_color })
-    .help-block 
+    
+    .help-block style="position:absolute; bottom:-23px"
       | CTA button will appear in the header as shown
 
   - if cta_fields.object.persisted?
