@@ -38,6 +38,23 @@ div data-company-ctas-target="cta"
           rows: 3 )
 
   .form-group 
+    = cta_fields.label(:tag_ids, 'Tags')
+    = cta_fields.select( \
+        :tag_ids,
+        grouped_options_for_select( \
+          { 'Category' => company.tag_select_options(:category, with_stories_count: false, for_multi_select: true),
+            'Product' => company.tag_select_options(:product, with_stories_count: false, for_multi_select: true) } \
+            .delete_if { |_, options| options.empty? },
+          cta_fields.object.tags.map { |tag| tag_dom_id(tag) }),
+        {},
+        id: dom_id(cta_fields.object),
+        multiple: true,
+        data: { \
+          controller: 'tomselect',
+          tomselect_kind_value: 'tag',
+          dynamic_placeholder: 'Select Tags' })
+
+  .form-group 
     .checkbox
       = cta_fields.label(:primary) do
         = cta_fields.check_box( \

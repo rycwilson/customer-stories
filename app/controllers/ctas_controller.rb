@@ -82,12 +82,22 @@ class CtasController < ApplicationController
   private
 
   def company_params
-    params
-      .require(:company)
-      .permit(
-        :primary_cta_background_color,
-        :primary_cta_text_color,
-        ctas_attributes: [:id, :type, :description, :display_text, :link_url, :form_html, :primary]
-      )
+    permitted =
+      params.require(:company)
+            .permit(
+              :primary_cta_background_color,
+              :primary_cta_text_color,
+              ctas_attributes: [
+                :id, :type, :description, :display_text, :link_url, :form_html, :primary,
+                { tag_ids: [] }
+              ]
+            )
+    permitted[:ctas_attributes].transform_values do |cta| 
+      cta[:tag_ids] = cta[:tag_ids].compact_blank.map do |option_val| 
+        option_val.match(/(?<type>[a-z]+)_(?<id>\d+)/)[:id]
+      end
+      cta
+    end
+    permitted
   end
 end

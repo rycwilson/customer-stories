@@ -3,6 +3,7 @@
 class CallToAction < ApplicationRecord
   belongs_to :company
   has_and_belongs_to_many :successes, join_table: 'ctas_successes'
+  has_and_belongs_to_many :tags
   has_many :stories, through: :successes
 
   before_save :demote_current_primary, if: -> { primary? && will_save_change_to_primary? }
