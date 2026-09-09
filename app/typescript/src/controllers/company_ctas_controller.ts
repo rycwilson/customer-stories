@@ -1,15 +1,20 @@
+import type { TurboSubmitEndEvent } from '@hotwired/turbo';
 import FormController from './form_controller';
+import ModalController from './modal_controller';
 import { debounce, setCustomButtonProps } from '../utils';
 import tinycolor from 'tinycolor2';
 
 export default class CompanyCtasController extends FormController<CompanyCtasController> {
+  static outlets = ['modal'];
+  declare readonly modalOutlet: ModalController;
+  declare readonly hasModalOutlet: boolean;
+
   static targets = [
     'cta',
     'customButton', 
     'customButtonColorInput',
     'customButtonDemo', 
     'typeSpecificField',
-    'companyField'
   ]
   declare readonly ctaTargets: HTMLDivElement[];
   declare readonly customButtonTargets: HTMLDivElement[];
@@ -18,6 +23,10 @@ export default class CompanyCtasController extends FormController<CompanyCtasCon
   declare readonly typeSpecificFieldTargets: HTMLDivElement[];
 
   colorHandlers = new WeakMap<HTMLInputElement, VoidFunction>();
+
+  get isNewCTA() {
+    return this.hasModalOutlet;
+  }
 
   connect() {
     super.connect();
@@ -39,10 +48,18 @@ export default class CompanyCtasController extends FormController<CompanyCtasCon
     ));
   }
 
-  toggleType() {
-    this.typeSpecificFieldTargets.forEach(field => field.classList.toggle('hidden'));
+  onSubmitEnd(e: TurboSubmitEndEvent) {
+    const { success } = e.detail;
+    if (this.isNewCTA && success) this.modalOutlet.hide();
+    
+    super.onSubmitEnd(e);
   }
-  
+
+  // Applies to new CTA only
+  toggleType() {
+    this.typeSpecificFieldTargets.forEach(div => div.classList.toggle('hidden'));
+  }
+
   togglePrimary({ target: _checkbox }: { target: HTMLInputElement }) {
     const cta = this.ctaTargets.find(cta => cta.contains(_checkbox));
     const customButton = this.customButtonTargets.find(div => cta?.contains(div));
@@ -55,8 +72,6 @@ export default class CompanyCtasController extends FormController<CompanyCtasCon
     const customButtonDemo = (
       <HTMLButtonElement>this.customButtonDemoTargets.find(button => cta?.contains(button))
     );
-    console.log(customButtonDemo)
-    
     if (isBackground) {
       const textColorInput = <HTMLInputElement>this.customButtonColorInputTargets.find(colorInput => (
         cta?.contains(colorInput) && colorInput !== input)
