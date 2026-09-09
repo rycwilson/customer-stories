@@ -98,4 +98,4 @@
                 i.fa.fa-fw.fa-chevron-down data-toggle="collapse" data-target="##{dom_id(cta_fields.object, :edit)}"
               
               .collapse id="#{dom_id(cta_fields.object, :edit)}" data-list-target="collapse"
-                = render('ctas/edit', company:, form:, cta_fields:)
+                = render('ctas/cta_fields', company:, company_form: form, cta_fields:)

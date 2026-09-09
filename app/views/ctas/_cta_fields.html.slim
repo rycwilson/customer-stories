@@ -1,0 +1,144 @@
+div data-company-ctas-target="cta"
+
+  - if action_name == 'new'
+    .form-group data-action="change->company-ctas#toggleType"
+      label Type
+      div
+        = cta_fields.label(:type_ctalink, class: 'radio-inline') do
+          = cta_fields.radio_button(:type, 'CtaLink', checked: true)
+          | Link
+        = cta_fields.label(:type_ctaform, class: 'radio-inline') do
+          = cta_fields.radio_button(:type, 'CtaForm')
+          | Web Form
+      /.radio style="margin-top:0"
+        = cta_fields.label(:type_ctalink) do
+          = cta_fields.radio_button(:type, 'CtaLink', checked: true)
+          | Link
+      /.radio
+        = cta_fields.label(:type_ctaform) do
+          = cta_fields.radio_button(:type, 'CtaForm')
+          | Web Form
+
+  .form-group 
+    = cta_fields.label(:description)
+    = cta_fields.text_field( \
+        :description,
+        class: 'form-control',
+        placeholder: 'Enter a brief description of the CTA',
+        autocomplete: 'off')
+
+  .form-group 
+    = cta_fields.label(:display_text)
+    = cta_fields.text_field( \
+        :display_text,
+        class: 'form-control',
+        placeholder: 'Enter the button/link text',
+        autocomplete: 'off',
+        data: { action: 'company-ctas#updateCustomButtonText' })
+
+  = tag.div( \
+      class: [ \
+        'form-group',
+        { hidden: action_name == 'new' ? false : cta_fields.object.type != 'CtaLink' } ],
+      data: { company_ctas_target: 'typeSpecificField' }) do
+    = cta_fields.label(:link_url, 'URL')
+    = cta_fields.text_field( \
+        :link_url,
+        value: 'https://example.com',
+        class: 'form-control',
+        placeholder: 'Enter the website URL',
+        autocomplete: 'off' )
+
+  = tag.div( \
+      class: [ \
+        'form-group',
+        { hidden: action_name == 'new' ? true : cta_fields.object.type != 'CtaForm' } ],
+      data: { company_ctas_target: 'typeSpecificField' }) do
+    = cta_fields.label(:form_html, 'HTML')
+    = cta_fields.text_area( \
+        :form_html,
+        class: 'form-control',
+        placeholder: 'Enter the <script> or <form> tags',
+        autocomplete: 'off',
+        rows: 3)
+
+  .form-group 
+    = cta_fields.label(:tag_ids, 'Tags')
+    = cta_fields.select( \
+        :tag_ids,
+        grouped_options_for_select( \
+          { 'Category' => company.tag_select_options(:category, with_stories_count: false, for_multi_select: true),
+            'Product' => company.tag_select_options(:product, with_stories_count: false, for_multi_select: true) } \
+            .delete_if { |_, options| options.empty? },
+          action_name == 'new' ? [] : cta_fields.object.tags.map { |tag| tag_dom_id(tag) }),
+        {},
+        id: dom_id(cta_fields.object),
+        multiple: true,
+        data: { \
+          controller: 'tomselect',
+          tomselect_kind_value: 'tag',
+          dynamic_placeholder: 'Select Tags' })
+    .help-block 
+      | Optional
+
+  .form-group 
+    .checkbox
+      = cta_fields.label(:primary) do
+        = cta_fields.check_box( \
+            :primary,
+            { data: { action: 'company-ctas#togglePrimary' } },
+            action_name == 'new' ? true : !cta_fields.object.primary?,
+            action_name == 'new' ? false : cta_fields.object.primary?)
+        = "#{cta_fields.object.persisted? && cta_fields.object.primary? ? 'Remove as' : 'Make this the'} Main CTA"
+
+  = tag.div( \
+      class: ['cta__custom-button', { hidden: action_name == 'new' || !cta_fields.object.primary? }],
+      data: { company_ctas_target: 'customButton' }) do
+
+    div
+      = company_form.label(:primary_cta_background_color, 'Button')
+      = company_form.color_field( \
+          :primary_cta_background_color,
+          class: 'form-control',
+          disabled: action_name == 'new' || !cta_fields.object.primary?,
+          data: { company_ctas_target: 'customButtonColorInput' })
+      = company_form.label(:primary_cta_text_color, 'Text')
+      = company_form.color_field( \
+          :primary_cta_text_color,
+          class: 'form-control',
+          disabled: action_name == 'new' || !cta_fields.object.primary?,
+          data: { company_ctas_target: 'customButtonColorInput' })
+
+    div style="background-color:#{company.header_color_1}"
+      = button_tag( \
+          action_name == 'new' ? 'Click me!' : cta_fields.object.display_text,
+          class: 'btn btn-lg btn-custom',
+          type: 'button',
+          data: { \
+            company_ctas_target: 'customButtonDemo',
+            bg_color: company.primary_cta_background_color,
+            color: company.primary_cta_text_color })
+    .help-block 
+      | CTA button will appear in the header as shown
+
+  - if cta_fields.object.persisted?
+
+    hr
+
+    div style="display:flex; justify-content:#{cta_fields.object.primary? ? 'flex-end' : 'space-between'}"
+      - unless cta_fields.object.primary?
+        / Use link_to instead of button_to to avoid issues with nested forms
+        = link_to( \
+            'Delete',
+            company_cta_path(company, cta_fields.object),
+            class: 'btn btn-sm btn-danger',
+            data: { turbo_method: 'delete', turbo_confirm: 'Delete this CTA?' })
+      = tag.input( \
+          type: 'submit',
+          class: 'btn btn-sm btn-success',
+          # disabled: true,
+          formaction: company_cta_path(company, cta_fields.object),
+          data: { \
+            content: 'Save changes',
+            company_ctas_target: 'submitBtn',
+            disable_with_html: disabled_submit_button_html })
