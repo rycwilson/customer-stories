@@ -52,8 +52,12 @@ select.tomselected + .ts-wrapper {
     border-color: $brand-primary;
   }
 
-  // caret color
   > .ts-control {
+    input::placeholder {
+      color: $input-color-placeholder;
+    }
+
+    // caret color
     &::after {
       border-color: #6c757d transparent transparent transparent;
     }
@@ -158,11 +162,11 @@ input.tomselected + .ts-wrapper.multi {
     }
   }
 
-  // don't show the placeholder once an item is selected
-  // => use pseudo element instead of dynanmically changing placeholder attribute
-  &:not(.has-items):not(.focus) {
+  // Don't show the placeholder once an item is selected;
+  // Use a pseudo element instead of dynamically changing placeholder attribute
+  &:not(.has-items) {
     .ts-control::before {
-      color: #6c757d;
+      color: $input-color-placeholder;
       content: attr(data-placeholder);
     }     
   }
