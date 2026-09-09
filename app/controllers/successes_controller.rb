@@ -49,7 +49,7 @@ class SuccessesController < ApplicationController
   end
 
   def create
-    puts JSON.pretty_generate(success_params.to_h)
+    # puts JSON.pretty_generate(success_params.to_h)
     win_attrs = find_dup_customer(success_params.to_h.deep_dup, @company)
 
     %i[referrer_attributes contributor_attributes].each_with_index do |new_user_key, index|
@@ -65,7 +65,7 @@ class SuccessesController < ApplicationController
 
     @success = Success.new(win_attrs)
     if @success.save
-      flash.now[:notice] = 'Customer Win was created successfully'
+      flash.now[:notice] = 'Customer Win created successfully'
       @row_data = render_to_string( \
         partial: 'successes/show',
         formats: [:json],
@@ -240,6 +240,7 @@ class SuccessesController < ApplicationController
       :win_story_completed,
       :customer_id,
       :curator_id,
+      tag_ids: [],
       customer_attributes: %i[id name company_id],
       contributions_attributes: [
         :contributor_id, :referrer_id, :invitation_template_id, :success_contact,
