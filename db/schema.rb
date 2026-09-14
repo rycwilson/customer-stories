@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.2].define(version: 2026_09_04_223313) do
+ActiveRecord::Schema[7.2].define(version: 2026_09_14_124426) do
   create_schema "heroku_ext"
 
   # These are extensions that must be enabled in order to support this database
@@ -128,6 +128,7 @@ ActiveRecord::Schema[7.2].define(version: 2026_09_04_223313) do
     t.datetime "created_at", precision: nil, null: false
     t.datetime "updated_at", precision: nil, null: false
     t.boolean "primary", default: false
+    t.integer "position"
     t.index ["company_id"], name: "index_call_to_actions_on_company_id"
   end
 
