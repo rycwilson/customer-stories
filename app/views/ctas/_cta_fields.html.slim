@@ -88,7 +88,7 @@ div data-company-ctas-target="cta"
       = cta_fields.label(:primary) do
         = cta_fields.check_box( \
             :primary,
-            { data: { action: 'company-ctas#togglePrimary' } },
+            { data: { action: 'company-ctas#onChangePrimary' } },
             action_name == 'new' ? true : !cta_fields.object.primary?,
             action_name == 'new' ? false : cta_fields.object.primary?)
         = "#{cta_fields.object.persisted? && cta_fields.object.primary? ? 'Remove as' : 'Make this the'} Main CTA"
@@ -98,6 +98,8 @@ div data-company-ctas-target="cta"
       class: ['cta__custom-button', { hidden: action_name == 'new' || !cta_fields.object.primary? }],
       data: { company_ctas_target: 'customButton' }) do
 
+    / Multiple CTAs will contain the same company color attribute inputs;
+    / Ensure only one set of inputs is enabled at a time (see CompanyCtasController)
     div
       .cta__color-field
         = company_form.label(:primary_cta_background_color, 'Button')
@@ -105,7 +107,7 @@ div data-company-ctas-target="cta"
             :primary_cta_background_color,
             class: 'form-control',
             style: 'display:inline-block; width:34px; padding:0',
-            disabled: action_name == 'new' || !cta_fields.object.primary?,
+            disabled: true,
             data: { company_ctas_target: 'customButtonColorInput' })
       .cta__color-field
         = company_form.label(:primary_cta_text_color, 'Text')
@@ -113,7 +115,7 @@ div data-company-ctas-target="cta"
             :primary_cta_text_color,
             class: 'form-control',
             style: 'display:inline-block; width:34px; padding:0',
-            disabled: action_name == 'new' || !cta_fields.object.primary?,
+            disabled: true,
             data: { company_ctas_target: 'customButtonColorInput' })
 
     div style="background-color:#{company.header_color_1}; flex-grow:1"

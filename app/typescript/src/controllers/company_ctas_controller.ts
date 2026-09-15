@@ -77,6 +77,17 @@ export default class CompanyCtasController extends FormController<CompanyCtasCon
     super.onSubmitEnd(e);
   }
 
+  onToggleCollapse(e: CustomEvent<{ item: HTMLLIElement, collapse: HTMLElement }>) {
+    const { collapse } = e.detail;
+    const isShown = collapse.classList.contains('in');
+    const customButton = <HTMLElement>this.customButtonTargets.find(div => collapse.contains(div));
+    const isPrimary = customButton.checkVisibility();
+    const colorInputs = this.customButtonColorInputTargets.filter(input => (
+      customButton.contains(input)
+    ));
+    colorInputs.forEach(input => input.disabled = !(isShown && isPrimary));
+  }
+
   onSorted(_e: CustomEvent) {
     this.positionInputTargets.forEach((input: HTMLInputElement, i: number) => {
       input.value = (i + 1).toString();

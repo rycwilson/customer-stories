@@ -13,6 +13,8 @@
         action: [ \
           'turbo:submit-start->company-ctas#onSubmitStart',
           'turbo:submit-end->company-ctas#onSubmitEnd',
+          'list:shown-item->company-ctas#onToggleCollapse',
+          'list:hidden-item->company-ctas#onToggleCollapse',
           'list:sorted->company-ctas#onSorted' ].join(' ') },
       html: { \
         novalidate: true,
