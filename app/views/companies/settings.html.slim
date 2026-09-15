@@ -84,8 +84,7 @@ main.container-fluid.hidden-xs {
           = render('plugins/config', company: @company, errors: @errors)
 
         #cta-links-forms-panel.tab-pane role="tabpanel"
-          = turbo_frame_tag('company-ctas-frame')
-            = render('ctas', company: @company, errors: @errors)
+          = render('ctas', company: @company, errors: @errors)
 
         #tags-panel.tab-pane role="tabpanel"
           = render('companies/settings/tags', company: @company, errors: @errors)

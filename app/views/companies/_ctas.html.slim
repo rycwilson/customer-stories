@@ -1,101 +1,122 @@
-/ A company form is used both for convenience (fields_for ctas) and because primary CTA fields are
-/ defined on Company. The form's action is defined via formaction attributes on all submit inputs.
-= form_with( \
-    model: company,
-    id: 'company-ctas-form',
-    class: 'form-horizontal',
-    data: { \
-      controller: 'company-ctas toast',
-      toast_errors_value: \
-        (errors if defined?(errors) && turbo_frame_request_id == 'company-ctas-frame'),
-      action: [ \
-        'turbo:submit-start->company-ctas#onSubmitStart',
-        'turbo:submit-end->company-ctas#onSubmitEnd' ].join(' ') },
-    html: { \
-      novalidate: true,
-      autocomplete: 'off' }) do |form|
+= turbo_frame_tag('company-ctas-frame')
 
-  .form-group
-    .col-sm-12.col-md-offset-1.col-md-10
+  / A company form is used both for convenience (fields_for ctas) and because primary CTA fields are
+  / defined on Company. The form's action is defined via formaction attributes on all submit inputs.
+  = form_with( \
+      model: company,
+      id: 'company-ctas-form',
+      class: 'form-horizontal',
+      data: { \
+        controller: 'company-ctas toast',
+        toast_errors_value: \
+          (errors if defined?(errors) && turbo_frame_request_id == 'company-ctas-frame'),
+        action: [ \
+          'turbo:submit-start->company-ctas#onSubmitStart',
+          'turbo:submit-end->company-ctas#onSubmitEnd',
+          'list:sorted->company-ctas#onSorted' ].join(' ') },
+      html: { \
+        novalidate: true,
+        autocomplete: 'off' }) do |form|
 
-      .crud-list__actions
-        = link_to( \
-            new_company_cta_path(company),
-            class: 'btn btn-secondary',
-            aria: { label: 'New Call-to-Action' },
-            style: 'margin-right: 1rem;',
-            data: { \ 
-              turbo_stream: true,
-              controller: 'modal-trigger',
-              modal_trigger_modal_outlet: '#main-modal',
-              modal_trigger_params_value: { title: 'New Call-to-Action', className: 'new-cta' } }) do
-          i.fa.fa-plus
-          |&nbsp;&nbsp;New
-        .dropdown 
-          = tag.button( \
-              type: 'button',
-              id: 'cta-tags',
-              class: 'btn btn-default dropdown-toggle',
-              data: { toggle: 'dropdown' },
-              aria: { haspopup: true, expanded: false }) do
-            i.fa.fa-tags
-            |&nbsp;&nbsp;Tagged&nbsp;&nbsp;
-            span.caret
-          = tag.ul( \
-              class: 'dropdown-menu dropdown-menu-right',
-              style: 'max-height: 300px; overflow-y: auto;',
-              aria: { labelledby: 'cta-tags' }) do
-            li.dropdown-header Role
-            li 
-              a href=""
-                .checkbox 
-                  label 
-                    input type="checkbox" 
-                    | Customer
-            li
-              a href="" Sales
-            li.divider role="separator"
-            li.dropdown-header Category 
-            - company.category_tags.each do |tag|
+    .form-group
+      .col-sm-12.col-md-offset-1.col-md-10
+
+        .crud-list__actions
+          = link_to( \
+              new_company_cta_path(company),
+              class: 'btn btn-secondary',
+              aria: { label: 'New Call-to-Action' },
+              style: 'margin-right: 1rem;',
+              data: { \ 
+                turbo_stream: true,
+                controller: 'modal-trigger',
+                modal_trigger_modal_outlet: '#main-modal',
+                modal_trigger_params_value: { title: 'New Call-to-Action', className: 'new-cta' } }) do
+            i.fa.fa-plus
+            |&nbsp;&nbsp;New
+          .dropdown 
+            = tag.button( \
+                type: 'button',
+                id: 'cta-tags',
+                class: 'btn btn-default dropdown-toggle',
+                data: { toggle: 'dropdown' },
+                aria: { haspopup: true, expanded: false }) do
+              i.fa.fa-tags
+              |&nbsp;&nbsp;Tagged&nbsp;&nbsp;
+              span.caret
+            = tag.ul( \
+                class: 'dropdown-menu dropdown-menu-right',
+                style: 'max-height: 300px; overflow-y: auto;',
+                aria: { labelledby: 'cta-tags' }) do
+              li.dropdown-header Role
               li 
-                a href="" = tag.name
-            li.divider role="separator"
-            li.dropdown-header Product 
-            - company.product_tags.each do |tag|
-              li 
-                a href="" = tag.name
+                a href=""
+                  .checkbox 
+                    label 
+                      input type="checkbox" 
+                      | Customer
+              li
+                a href="" Sales
+              li.divider role="separator"
+              li.dropdown-header Category 
+              - company.category_tags.each do |tag|
+                li 
+                  a href="" = tag.name
+              li.divider role="separator"
+              li.dropdown-header Product 
+              - company.product_tags.each do |tag|
+                li 
+                  a href="" = tag.name
 
-      = tag.div( \
-          class: 'crud-list',
-          data: { \
-            controller: 'list',
-            list_sort_enabled_value: company.ctas.count > 1,
-            list_collapse_enabled_value: true }) do
-      
-        = tag.ol( \
-            class: [ \
-              'list-group list-group--collapsible list-unstyled',
-              { 'list-group--sortable':  company.ctas.count > 1 } ],
+        = tag.div( \
+            class: 'crud-list',
             data: { \
-              list_target: 'list' }) do
+              controller: 'list',
+              list_sort_enabled_value: company.ctas.count > 1,
+              list_collapse_enabled_value: true }) do
+        
+          = tag.ol( \
+              class: [ \
+                'list-group list-group--collapsible list-unstyled',
+                { 'list-group--sortable':  company.ctas.count > 1 } ],
+              data: { \
+                list_target: 'list' }) do
 
-          = form.fields_for(:ctas) do |cta_fields|
-            li.list-group-item.list-group-item--collapsed data-list-target="item"
+            = form.fields_for(:ctas) do |cta_fields|
+              li.list-group-item.list-group-item--collapsed data-list-target="item"
 
-              .list-group-item__item
-                - if company.ctas.count > 1
-                  .list-group-item__handle data-list-target="sortHandle"
-                    = tag.i(class: 'fa fa-fw fa-arrows-v')
+                .list-group-item__item
+                  - if company.ctas.count > 1
+                    .list-group-item__handle data-list-target="sortHandle"
+                      = tag.i(class: 'fa fa-fw fa-arrows-v')
+                  
+                  .list-group-item__content
+                    / Using data-target instead of href in the <a> tag effectively removes outline styling
+                    / TODO: accessibility?
+                    = tag.a aria: { expanded: 'false' },
+                            data: { toggle: 'collapse', target: "##{dom_id(cta_fields.object, :edit)}" }
+                      p = cta_item_text(cta_fields.object)
+
+                  .list-group-item__actions
+                    div
+                      i.fa.fa-fw.fa-chevron-up data-toggle="collapse" data-target="##{dom_id(cta_fields.object, :edit)}"
+                      i.fa.fa-fw.fa-chevron-down data-toggle="collapse" data-target="##{dom_id(cta_fields.object, :edit)}"
+                    
+                    = link_to( \
+                        'I am hidden',
+                        company_cta_path(company, cta_fields.object),
+                        class: 'hidden',
+                        data: { \
+                          list_target: 'deleteLink',
+                          turbo_method: 'delete' })
+
+                    = tag.button( \
+                        type: 'button',
+                        class: 'btn',
+                        data: { \
+                          action: 'list#deleteItem',
+                          confirm: 'Delete this CTA?' }) do 
+                      i.fa.fa-fw.fa-trash
                 
-                .list-group-item__content
-                  / Using data-target instead of href in the <a> tag effectively removes outline styling
-                  / TODO: accessibility?
-                  = tag.a aria: { expanded: 'false' },
-                          data: { toggle: 'collapse', target: "##{dom_id(cta_fields.object, :edit)}" }
-                    p = cta_item_text(cta_fields.object)
-                
-                i.fa.fa-fw.fa-chevron-up data-toggle="collapse" data-target="##{dom_id(cta_fields.object, :edit)}"
-                i.fa.fa-fw.fa-chevron-down data-toggle="collapse" data-target="##{dom_id(cta_fields.object, :edit)}"
-              
-              .collapse id="#{dom_id(cta_fields.object, :edit)}" data-list-target="collapse"
-                = render('ctas/cta_fields', company:, company_form: form, cta_fields:)
+                .collapse id="#{dom_id(cta_fields.object, :edit)}" data-list-target="collapse"
+                  = render('ctas/cta_fields', company:, company_form: form, cta_fields:)

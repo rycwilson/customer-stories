@@ -51,7 +51,7 @@ class CtasController < ApplicationController
           flash.now[:notice] = 'CTA has been updated'
           render turbo_stream: [
             turbo_stream.replace('toaster', partial: 'shared/toaster'),
-            turbo_stream.update(
+            turbo_stream.replace(
               'company-ctas-frame', partial: 'companies/ctas', locals: { company: @company }
             )
           ]

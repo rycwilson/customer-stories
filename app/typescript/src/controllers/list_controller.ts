@@ -147,14 +147,16 @@ export default class ListController extends Controller {
 
     $(this.listTarget).sortable(options);
     
-    // When dragging, cancel any ongoing edits. Avoids complexity of managing ui for multiple changes 
-    $(this.listTarget).find('.list-group-item__handle').each((i: number, handle: HTMLElement) => {
-      $(handle).mousedown(() => {
-        const item = <HTMLLIElement>this.itemTargets.find(item => item.contains(handle));
-        const cancelButton = <HTMLButtonElement>this.cancelButtonTargets.find(button => item.contains(button));
-        cancelButton.click();
+    if (!this.collapseEnabledValue) {
+      // When dragging, cancel any ongoing edits. Avoids complexity of managing ui for multiple changes 
+      $(this.listTarget).find('.list-group-item__handle').each((i: number, handle: HTMLElement) => {
+        $(handle).mousedown(() => {
+          const item = <HTMLLIElement>this.itemTargets.find(item => item.contains(handle));
+          const cancelButton = <HTMLButtonElement>this.cancelButtonTargets.find(button => item.contains(button));
+          cancelButton.click();
+        });
       });
-    });
+    }
   }
 
   onInputNewItem({ target: input }: { target: HTMLInputElement }) {
@@ -216,6 +218,7 @@ export default class ListController extends Controller {
     const button = <HTMLButtonElement>e.currentTarget;
     if (confirm(button.dataset.confirm)) {
       const { item, input, _destroyCheckbox, deleteLink } = this.itemElements(button);
+      console.log('deleteLink:', deleteLink)
       if (deleteLink) {
         deleteLink.click();
       } else if (_destroyCheckbox) {

@@ -9,8 +9,6 @@
       data: { \
         controller: 'company-ctas',
         company_ctas_modal_outlet: '#main-modal',
-        
-        #'submit->company-ctas#validate',
         action: [ \
           'turbo:submit-end->company-ctas#onSubmitEnd' ].join(' ') },
       html: { \

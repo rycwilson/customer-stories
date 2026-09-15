@@ -51,13 +51,17 @@ class CompaniesController < ApplicationController
     if @company.update company_params
       respond_to do |format|
         format.turbo_stream do
-          turbo_stream_actions = [
-            turbo_stream.replace(
-              turbo_frame_request_id,
-              partial: frame_partials[turbo_frame_request_id],
-              locals: { company: @company }
-            )
-          ]
+          turbo_stream_actions = []
+          
+          unless turbo_frame_request_id == 'company-ctas-frame'
+            turbo_stream_actions = [
+              turbo_stream.replace(
+                turbo_frame_request_id,
+                partial: frame_partials[turbo_frame_request_id],
+                locals: { company: @company }
+              )
+            ]
+          end
 
           if turbo_frame_request_id == 'company-profile-frame'
             turbo_stream_actions << render_header_logo if updated_square_logo?
@@ -179,6 +183,7 @@ class CompaniesController < ApplicationController
       :id, :name, :subdomain, :website, :logo_url, :square_logo_url, :landscape_logo_url, :gtm_id,
       :header_logo_type, :header_color_1, :header_color_2, :header_text_color,
       :adwords_short_headline,
+      ctas_attributes: %i[id position],
       category_tags_attributes: %i[id name _destroy],
       product_tags_attributes: %i[id name _destroy],
       contributor_questions_attributes: %i[id question _destroy],
@@ -283,6 +288,8 @@ class CompaniesController < ApplicationController
     return '' unless turbo_frame_request?
       
     case turbo_frame_request_id
+    when 'company-ctas-frame'
+      'CTAs have been reordered'
     when 'company-tags-frame'
       'Tags have been updated'
     when 'company-profile-frame'

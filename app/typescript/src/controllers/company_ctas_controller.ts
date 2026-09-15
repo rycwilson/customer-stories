@@ -1,4 +1,4 @@
-import type { TurboSubmitEndEvent } from '@hotwired/turbo';
+import type { TurboSubmitStartEvent, TurboSubmitEndEvent } from '@hotwired/turbo';
 import FormController from './form_controller';
 import ModalController from './modal_controller';
 import { debounce, setCustomButtonProps } from '../utils';
@@ -15,12 +15,14 @@ export default class CompanyCtasController extends FormController<CompanyCtasCon
     'customButtonColorInput',
     'customButtonDemo', 
     'typeSpecificField',
+    'positionInput'
   ]
   declare readonly ctaTargets: HTMLDivElement[];
   declare readonly customButtonTargets: HTMLDivElement[];
   declare readonly customButtonColorInputTargets: HTMLInputElement[];
   declare readonly customButtonDemoTargets: HTMLButtonElement[];
   declare readonly typeSpecificFieldTargets: HTMLDivElement[];
+  declare readonly positionInputTargets: HTMLInputElement[];
 
   colorHandlers = new WeakMap<HTMLInputElement, VoidFunction>();
 
@@ -48,11 +50,20 @@ export default class CompanyCtasController extends FormController<CompanyCtasCon
     ));
   }
 
+  // onSubmitStart(e: TurboSubmitStartEvent) {
+  //   super.onSubmitStart(e);
+  // }
+
   onSubmitEnd(e: TurboSubmitEndEvent) {
-    const { success } = e.detail;
-    if (this.isNewCTA && success) this.modalOutlet.hide();
-    
+    if (this.isNewCTA && e.detail.success) this.modalOutlet.hide();
     super.onSubmitEnd(e);
+  }
+
+  onSorted(_e: CustomEvent) {
+    this.positionInputTargets.forEach((input: HTMLInputElement, i: number) => {
+      input.value = (i + 1).toString();
+    })
+    this.element.requestSubmit();
   }
 
   // Applies to new CTA only
@@ -60,10 +71,13 @@ export default class CompanyCtasController extends FormController<CompanyCtasCon
     this.typeSpecificFieldTargets.forEach(div => div.classList.toggle('hidden'));
   }
 
-  togglePrimary({ target: _checkbox }: { target: HTMLInputElement }) {
-    const cta = this.ctaTargets.find(cta => cta.contains(_checkbox));
-    const customButton = this.customButtonTargets.find(div => cta?.contains(div));
-    customButton?.classList.toggle('hidden');
+  togglePrimary({ target: checkbox }: { target: HTMLInputElement }) {
+    const cta = <HTMLElement>this.ctaTargets.find(cta => cta.contains(checkbox));
+    const customButton = <HTMLElement>this.customButtonTargets.find(div => cta.contains(div));
+
+    // We need to execute a simple toggle since `checkbox.checked` will mean different things
+    // depending on whether or not it's the primary CTA
+    customButton.classList.toggle('hidden');
     this.customButtonColorInputTargets.forEach(input => input.disabled = !input.disabled);
   }
 

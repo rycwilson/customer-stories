@@ -18,17 +18,19 @@ div data-company-ctas-target="cta"
         = cta_fields.label(:type_ctaform) do
           = cta_fields.radio_button(:type, 'CtaForm')
           | Web Form
+  - else 
+    = cta_fields.hidden_field(:position, data: { company_ctas_target: 'positionInput' })
 
   .form-group 
-    = cta_fields.label(:description)
+    = cta_fields.label(:description, 'Name')
     = cta_fields.text_field( \
         :description,
         class: 'form-control',
-        placeholder: 'Enter a brief description of the CTA',
+        placeholder: 'Enter a name for the CTA',
         autocomplete: 'off')
 
   .form-group 
-    = cta_fields.label(:display_text)
+    = cta_fields.label(:display_text, cta_fields.object.primary? ? 'Button text' : 'Link text')
     = cta_fields.text_field( \
         :display_text,
         class: 'form-control',
@@ -78,7 +80,7 @@ div data-company-ctas-target="cta"
           controller: 'tomselect',
           tomselect_kind_value: 'tag',
           dynamic_placeholder: 'Select Tags' })
-    .help-block 
+    .help-block.help-block--optional
       | Optional
 
   .form-group style="margin-bottom:1.5rem"
@@ -131,17 +133,19 @@ div data-company-ctas-target="cta"
 
     hr
 
-    div style="display:flex; justify-content:#{cta_fields.object.primary? ? 'flex-end' : 'space-between'}"
-      - unless cta_fields.object.primary?
+    / div style="display:flex; justify-content:#{cta_fields.object.primary? ? 'flex-end' : 'space-between'}"
+    .text-right
+      /- unless cta_fields.object.primary?
         / Use link_to instead of button_to to avoid issues with nested forms
         = link_to( \
             'Delete',
             company_cta_path(company, cta_fields.object),
             class: 'btn btn-sm btn-danger',
             data: { turbo_method: 'delete', turbo_confirm: 'Delete this CTA?' })
-      = tag.input( \
+      = button_tag( \
+          '',
           type: 'submit',
-          class: 'btn btn-sm btn-success',
+          class: 'form__submit btn btn-success',
           # disabled: true,
           formaction: company_cta_path(company, cta_fields.object),
           data: { \
