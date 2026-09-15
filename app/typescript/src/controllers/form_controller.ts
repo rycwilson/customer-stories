@@ -122,12 +122,12 @@ export default class FormController<Ctrl extends SubclassController> extends Con
   turboSubmit(e: CustomEvent<{ submitter?: HTMLButtonElement | HTMLInputElement }>) {
     const { submitter } = e.detail;
     if (submitter && submitter.type === 'button') submitter.type = 'submit';
-    console.log(`turboSubmit()`, submitter)
+    // console.log(`turboSubmit()`, submitter)
     this.element.requestSubmit(submitter);
   }
 
   onSubmitStart(e: TurboSubmitStartEvent) {
-    console.log('start', e)
+    // console.log('start', e)
     const { formSubmission } = e.detail;
     const { submitter } = formSubmission;
     
@@ -135,7 +135,7 @@ export default class FormController<Ctrl extends SubclassController> extends Con
     //   // The submitter will disable itself, no need to disable it twice
     //   .filter(submitEl => submitEl !== submitter)
     //   .forEach(submitEl => submitEl.disabled = true);
-    
+    // console.log('submitter:', submitter)
     this.animateSubmit(e, submitter);
   }
 
@@ -143,10 +143,6 @@ export default class FormController<Ctrl extends SubclassController> extends Con
     console.log('end', e)
   }
 
-  turboSubmit(e: CustomEvent<{ submitter?: HTMLButtonElement | HTMLInputElement }>) {
-    const { submitter } = e.detail;
-    this.element.requestSubmit(submitter);
-  }
 
   validate(e: SubmitEvent): boolean {
     return validateForm(e);

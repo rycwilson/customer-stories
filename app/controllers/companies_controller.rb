@@ -52,7 +52,7 @@ class CompaniesController < ApplicationController
       respond_to do |format|
         format.turbo_stream do
           turbo_stream_actions = []
-          
+
           unless turbo_frame_request_id == 'company-ctas-frame'
             turbo_stream_actions = [
               turbo_stream.replace(

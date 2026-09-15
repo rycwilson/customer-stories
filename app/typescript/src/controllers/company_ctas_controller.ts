@@ -26,10 +26,6 @@ export default class CompanyCtasController extends FormController<CompanyCtasCon
 
   colorHandlers = new WeakMap<HTMLInputElement, VoidFunction>();
 
-  get isNewCTA() {
-    return this.hasModalOutlet;
-  }
-
   connect() {
     super.connect();
 
@@ -55,7 +51,8 @@ export default class CompanyCtasController extends FormController<CompanyCtasCon
   // }
 
   onSubmitEnd(e: TurboSubmitEndEvent) {
-    if (this.isNewCTA && e.detail.success) this.modalOutlet.hide();
+    if (this.hasModalOutlet && e.detail.success) this.modalOutlet.hide();
+
     super.onSubmitEnd(e);
   }
 
@@ -67,11 +64,11 @@ export default class CompanyCtasController extends FormController<CompanyCtasCon
   }
 
   // Applies to new CTA only
-  toggleType() {
+  onChangeType() {
     this.typeSpecificFieldTargets.forEach(div => div.classList.toggle('hidden'));
   }
 
-  togglePrimary({ target: checkbox }: { target: HTMLInputElement }) {
+  onChangePrimary({ target: checkbox }: { target: HTMLInputElement }) {
     const cta = <HTMLElement>this.ctaTargets.find(cta => cta.contains(checkbox));
     const customButton = <HTMLElement>this.customButtonTargets.find(div => cta.contains(div));
 

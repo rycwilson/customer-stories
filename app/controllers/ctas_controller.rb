@@ -4,7 +4,7 @@ class CtasController < ApplicationController
   before_action(:set_company, except: :show)
 
   def new
-    @cta = @company.ctas.build type: 'CtaLink', primary: params[:primary].present?
+    @cta = @company.ctas.build type: 'CtaLink'
   end
 
   # return html for cta forms

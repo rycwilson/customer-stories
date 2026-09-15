@@ -1,7 +1,7 @@
 div data-company-ctas-target="cta"
 
   - if action_name == 'new'
-    .form-group data-action="change->company-ctas#toggleType"
+    .form-group data-action="change->company-ctas#onChangeType"
       label Type
       div
         = cta_fields.label(:type_ctalink, class: 'radio-inline') do
