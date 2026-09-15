@@ -142,13 +142,12 @@ div data-company-ctas-target="cta"
             company_cta_path(company, cta_fields.object),
             class: 'btn btn-sm btn-danger',
             data: { turbo_method: 'delete', turbo_confirm: 'Delete this CTA?' })
-      = button_tag( \
-          '',
-          type: 'submit',
+      = tag.button( \
           class: 'form__submit btn btn-success',
           # disabled: true,
           formaction: company_cta_path(company, cta_fields.object),
           data: { \
             content: 'Save changes',
-            company_ctas_target: 'submitBtn',
+            cta_prefix: cta_fields.object_name,
+            # company_ctas_target: 'submitBtn',
             disable_with_html: disabled_submit_button_html })

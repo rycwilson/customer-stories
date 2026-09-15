@@ -46,9 +46,30 @@ export default class CompanyCtasController extends FormController<CompanyCtasCon
     ));
   }
 
-  // onSubmitStart(e: TurboSubmitStartEvent) {
-  //   super.onSubmitStart(e);
-  // }
+  onSubmitStart(e: TurboSubmitStartEvent) {
+    const { formSubmission } = e.detail;
+    const { body, submitter } = formSubmission;
+
+    // When updating a single CTA, don't send the whole list.
+    // A change to the primary CTA will be handled in the server.
+    if (body.get('_method') === 'patch') {
+      const ctaPrefix = <string>submitter!.dataset.ctaPrefix; 
+      const keep = new Set([
+        '_method',
+        'authenticity_token',
+        'company[primary_cta_background_color]',
+        'company[primary_cta_text_color]'
+      ]);
+      for (const key of [...body.keys()]) {
+        if (keep.has(key) || key.startsWith(ctaPrefix)) continue;
+        body.delete(key);
+      }
+    }
+
+    for (const [name, value] of body.entries()) console.log(name, value)
+
+    super.onSubmitStart(e);
+  }
 
   onSubmitEnd(e: TurboSubmitEndEvent) {
     if (this.hasModalOutlet && e.detail.success) this.modalOutlet.hide();
