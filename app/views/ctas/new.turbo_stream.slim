@@ -10,6 +10,7 @@
         controller: 'company-ctas',
         company_ctas_modal_outlet: '#main-modal',
         action: [ \
+          'turbo:submit-start->company-ctas#onSubmitStart',
           'turbo:submit-end->company-ctas#onSubmitEnd' ].join(' ') },
       html: { \
         novalidate: true,
