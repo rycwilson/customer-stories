@@ -96,6 +96,7 @@ export default class ListController extends Controller {
     const item = <HTMLLIElement>collapse.parentElement;
     collapse.scrollIntoView({ block: 'center' });
     this.collapseTargets.filter(div => div !== collapse).forEach(div => $(div).collapse('hide'));
+    this.dispatch('shown-item', { detail: { item, collapse } })
 
     // Add a class name for managing css transitions
     item.classList.remove('list-group-item--collapsed');
@@ -104,7 +105,7 @@ export default class ListController extends Controller {
   onHiddenCollapse(e: CustomEvent) {
     const collapse = <HTMLElement>e.target;
     const item = <HTMLLIElement>collapse.parentElement;
-    this.dispatch('hidden-collapse', { detail: { item, collapse } });
+    this.dispatch('hidden-item', { detail: { item, collapse } });
 
     // Delayed class name removal prevents a style transistion that would otherwise occur
     setTimeout(() => {
