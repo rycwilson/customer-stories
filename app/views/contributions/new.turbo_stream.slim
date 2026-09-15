@@ -121,7 +121,7 @@
             data: { \
               controller: 'tomselect',
               tomselect_kind_value: 'invitationTemplate' } })
-      .help-block 
+      .help-block.help-block--optional 
         | Optional
 
     .form-group
@@ -141,7 +141,7 @@
               new_contribution_target: 'referrerSelect',
               action: 'new-contribution#onChangeContact',
               field_name: "#{form.object_name}[referrer_id]" } })
-      .help-block 
+      .help-block.help-block--optional 
         | Optional
 
     = render( \

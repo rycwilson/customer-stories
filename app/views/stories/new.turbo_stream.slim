@@ -102,7 +102,7 @@
                 new_story_target: 'customerWinSelect',
                 action: 'new-story#onChangeCustomerWin',
                 field_name: "#{form.object_name}[success_id]" } }.compact)
-        .help-block 
+        .help-block.help-block--optional 
           | Optional
 
       = form.fields_for(:success, @success || form.object.build_success(curator_id: current_user.id)) do |success_fields|

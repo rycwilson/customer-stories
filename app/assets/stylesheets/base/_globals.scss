@@ -142,3 +142,11 @@ form {
     transition: bottom 0.3s ease-in-out;
   }
 }
+
+input:not(:placeholder-shown),
+textarea:not(:placeholder-shown),
+.ts-wrapper.has-items {
+  & + .help-block--optional {
+    display: none;
+  }
+}
