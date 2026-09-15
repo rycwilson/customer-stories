@@ -129,6 +129,7 @@ select.tomselected + .ts-wrapper.multi,
 input.tomselected + .ts-wrapper.multi {
   .ts-control > .item {
     background: $blueish-gray-lighter;
+    font-size: $font-size-small;
 
     &.active {
       background: $brand-primary;

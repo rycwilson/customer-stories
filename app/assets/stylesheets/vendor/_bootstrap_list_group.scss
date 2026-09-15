@@ -18,6 +18,10 @@
 .list-group-item {
   padding: 0;
 
+  &:has(.collapse) {
+    cursor: pointer;
+  }
+
   &.ui-sortable-placeholder {
     visibility: visible !important;
     height: 5rem;
@@ -52,8 +56,6 @@
 }
 
 .list-group-item__item {
-  $icon-font-size: 1.25em;
-  
   position: relative;
   height: 3.5em;
   padding: 0 1.5rem 0;
@@ -82,24 +84,24 @@
     padding-left: 2.75em;
   }
   
-  .list-group-item:not(.list-group-item--active) &:has(.list-group-item__actions):hover {
-    padding-right: 5.75em;
-  }
-
-  .list-group-item:has(.collapse) &:hover,
+  .list-group-item:not(.list-group-item--active) &:hover,
   .list-group-item:has(.collapse.in) & {
-    padding-right: 3.25em;
+    padding-right: 6em;   // assumes two button/icons
   }
 
+  // .list-group-item:has(.collapse) &:hover,
+  // .list-group-item:has(.collapse.in) & {
+  //   padding-right: 3.25em;
+  // }
+
+  .list-group--sortable &:hover .list-group-item__handle,
+  .list-group--sortable .list-group-item--deleting & .list-group-item__handle,
+  .list-group-item--active & .list-group-item__handle,
+  .list-group--sortable .ui-sortable-helper & .list-group-item__handle,
+  .list-group--sortable.list-group--collapsible .list-group-item:has(.collapse.in) & .list-group-item__handle,
   .list-group-item:not(.list-group-item--active) &:hover .list-group-item__actions,
-  .list-group-item--deleting & .list-group-item__actions,
-  .list-group--sortable &:hover .fa-arrows-v,
-  .list-group--sortable .list-group-item--deleting & .fa-arrows-v,
-  .list-group-item--active & .fa-arrows-v,
-  .list-group--sortable .ui-sortable-helper & .fa-arrows-v,
-  .list-group--sortable.list-group--collapsible .list-group-item:has(.collapse.in) & .fa-arrows-v,
-  .list-group-item:has(.collapse.in):not(.ui-sortable-helper) & .fa-chevron-up,
-  .list-group-item:not(:has(.collapse.in)):not(.ui-sortable-helper) &:hover .fa-chevron-down {
+  .list-group-item:has(.collapse.in) & .list-group-item__actions,
+  .list-group-item--deleting & .list-group-item__actions {
     visibility: visible;
     opacity: 1;
   }
@@ -107,7 +109,7 @@
   // The .list-group-item--collapsed class is for managing this transition setting only and should only be used here
   // It will break things if used in the visibility rule above. See list_controller.ts
   .list-group .list-group-item:not(.ui-sortable-helper):not(.ui-sortable-handle--dragging) &:hover .list-group-item__actions,
-  .list-group--sortable .list-group-item:not(.ui-sortable-helper):not(.ui-sortable-handle--dragging) &:hover .fa-arrows-v,
+  .list-group--sortable .list-group-item:not(.ui-sortable-helper):not(.ui-sortable-handle--dragging) &:hover .list-group-item__handle,
   .list-group-item--collapsed:not(.ui-sortable-handle--dragging) &:hover .fa-chevron-down {
     transition: opacity .15s ease-out;
   }
@@ -123,51 +125,53 @@
     }
   }
 
-  .fa-arrows-v,
-  .fa-chevron-up,
-  .fa-chevron-down,
-  .list-group-item__actions {
-    position: absolute;
-    top: 50%;
-    transform: translateY(-50%);
-    visibility: hidden;
-    opacity: 0;
+}
 
-    &.fa,
-    i {
-      font-size: $icon-font-size;
-    }
-  }
+.list-group-item__meta {
+  font-size: $font-size-small;
+  color: $gray-light;
+}
 
-  .fa-arrows-v {
-    left: 0.75rem;
-  }
+.list-group-item__handle,
+.list-group-item__actions {
+  visibility: hidden;
+  opacity: 0;
 
-  .fa-chevron-up,
-  .fa-chevron-down {
-    right: 1.25rem;
+  i {
+    font-size: 1.25em;
+    color: $gray;
   }
 }
 
-.list-group-item__handle {
-  @include flex-row-center;
+.list-group-item__handle,
+.list-group-item__content,
+.list-group-item__actions {
+  display: flex;
+  align-items: center;
+  height: 100%;
+}
+
+.list-group-item__handle,
+.list-group-item__actions {
   position: absolute;
   top: 0;
+}
+
+.list-group-item__handle {
   left: 0;
-  bottom: 0;
+  justify-content: center;
   width: 2.75em;
-  cursor: pointer;
 
   &--disabled {
     pointer-events: none;
   }
+
+  &:hover i {
+    color: $gray-darker;
+  }
 }
 
 .list-group-item__content {
-  height: 100%;
-  display: flex;
-  align-items: center;
-  
   p {
     @include max-lines(2);
     margin-bottom: 0;
@@ -199,11 +203,47 @@
 .list-group-item__actions {
   right: 0.5rem;
 
+  > * {
+    width: 2.5em;
+    height: 100%;
+
+    &:hover i {
+      color: $gray-darker;
+    }
+  }
+
+  :has([class*="chevron"]) {
+    position: relative;
+    
+    i {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -60%);
+      
+      &.fa-chevron-up {
+        display: none;
+      }
+    }
+    
+    .list-group-item:has(.collapse.in):not(.ui-sortable-helper) & {
+      .fa-chevron-down {
+        display: none;
+      }
+
+      .fa-chevron-up {
+        display: inline-block;
+      }
+    }
+  }
+
+  .list-group-item__content:hover + & :has([class*="chevron"]) i {
+    color: $gray-darker;
+  }
+
   button {
     background: transparent;
     border-width: 0;
     padding: 0;
-    width: 2.5em;
-    height: 2.5em;
   }
 }
