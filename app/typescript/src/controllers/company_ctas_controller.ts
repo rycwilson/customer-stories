@@ -71,11 +71,12 @@ export default class CompanyCtasController extends FormController<CompanyCtasCon
   onChangePrimary({ target: checkbox }: { target: HTMLInputElement }) {
     const cta = <HTMLElement>this.ctaTargets.find(cta => cta.contains(checkbox));
     const customButton = <HTMLElement>this.customButtonTargets.find(div => cta.contains(div));
+    const colorInputs = this.customButtonColorInputTargets.filter(input => customButton.contains(input));
 
     // We need to execute a simple toggle since `checkbox.checked` will mean different things
     // depending on whether or not it's the primary CTA
     customButton.classList.toggle('hidden');
-    this.customButtonColorInputTargets.forEach(input => input.disabled = !input.disabled);
+    colorInputs.forEach(input => input.disabled = !input.disabled);
   }
 
   onInputCustomButtonColor(input: HTMLInputElement, isBackground = false) {
