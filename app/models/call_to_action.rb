@@ -5,8 +5,14 @@ class CallToAction < ApplicationRecord
   has_and_belongs_to_many :successes, join_table: 'ctas_successes'
   has_and_belongs_to_many :tags
 
-  before_save :demote_current_primary, if: -> { primary? && will_save_change_to_primary? }
-  before_create :update_position
+  before_save(
+    :demote_current_primary,
+    :update_positions,
+    if: -> { primary? && will_save_change_to_primary? }
+  )
+
+  # If creating a new CTA with primary=true the above callbacks will have already run
+  before_create :update_positions, unless: -> { primary? }
 
   validates :display_text, :company, presence: true
   validates :link_url, presence: true, if: -> { type == 'CtaLink' }
@@ -20,13 +26,14 @@ class CallToAction < ApplicationRecord
   private
 
   def demote_current_primary
-    company.ctas.where.not(id:).update_all(primary: false)
+    company.ctas.primary.where.not(id:).update(primary: false)
     company.ctas.reset
   end
 
-  def update_position
-    self.position = 1
-    company.ctas.where.not(id:).update_all("position = position + 1")
+  def update_positions
+    others = company.ctas.where.not(id:)
+    self.position = others.primary.present? ? 2 : 1 
+    others.sidebar.update_all('position = position + 1')
     company.ctas.reset  
   end
 end

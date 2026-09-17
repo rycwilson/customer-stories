@@ -85,7 +85,12 @@
                 list_target: 'list' }) do
 
             = form.fields_for(:ctas) do |cta_fields|
-              li.list-group-item.list-group-item--collapsed data-list-target="item"
+              = tag.li( \
+                  class: [ \
+                    'list-group-item',
+                    'list-group-item--collapsed',
+                    { 'list-group-item--primary': cta_fields.object.primary? }],
+                  data: { list_target: 'item' })
 
                 .list-group-item__item
                   - if company.ctas.count > 1

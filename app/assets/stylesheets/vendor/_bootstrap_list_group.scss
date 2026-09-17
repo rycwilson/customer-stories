@@ -13,6 +13,13 @@
       pointer-events: none;
     }
   }
+
+  &:has(> input[type="hidden"]) {
+    .list-group-item:nth-last-child(2) {
+      border-bottom-left-radius: $border-radius-base;
+      border-bottom-right-radius: $border-radius-base;
+    }
+  }
 }
 
 .list-group-item {
@@ -26,6 +33,27 @@
     visibility: visible !important;
     height: 5rem;
     background-color: $blueish-gray-lighter;
+  }
+
+  &--primary,
+  // The hidden id inputs that are automatically added will appear between .list-group-item elements
+  .list-group:has(> input[type="hidden"]) &:nth-last-child(2) {
+    border-bottom-left-radius: $border-radius-base;
+    border-bottom-right-radius: $border-radius-base;
+  }
+
+  &--primary {
+    margin-bottom: 1.5rem;
+
+    + input + .list-group-item {
+      border-top-left-radius: $border-radius-base;
+      border-top-right-radius: $border-radius-base;
+    }
+  }
+  
+  &--deleting {
+    opacity: 0.65;
+    pointer-events: none;
   }
 
   .collapse {
@@ -47,11 +75,6 @@
       border-top-right-radius: $border-radius-base;
       border-top-left-radius: $border-radius-base;
     }
-  }
-
-  &--deleting {
-    opacity: 0.65;
-    pointer-events: none;
   }
 }
 
@@ -77,10 +100,10 @@
   }
 
   .list-group--sortable .list-group-item--active &,
-  .list-group--sortable .list-group-item:not(.list-group-item--active) &:hover,
-  .list-group--sortable .list-group-item--deleting &,
+  .list-group--sortable .list-group-item:not(.list-group-item--active):not(.list-group-item--primary) &:hover,
+  .list-group--sortable .list-group-item--deleting:not(.list-group-item--primary) &,
   .list-group--sortable .ui-sortable-helper &,
-  .list-group--sortable.list-group--collapsible .list-group-item:has(.collapse.in) & {
+  .list-group--sortable.list-group--collapsible .list-group-item:has(.collapse.in):not(.list-group-item--primary) & {
     padding-left: 2.75em;
   }
   
@@ -89,16 +112,11 @@
     padding-right: 6em;   // assumes two button/icons
   }
 
-  // .list-group-item:has(.collapse) &:hover,
-  // .list-group-item:has(.collapse.in) & {
-  //   padding-right: 3.25em;
-  // }
-
-  .list-group--sortable &:hover .list-group-item__handle,
-  .list-group--sortable .list-group-item--deleting & .list-group-item__handle,
-  .list-group-item--active & .list-group-item__handle,
+  .list-group--sortable .list-group-item:not(.list-group-item--primary) &:hover .list-group-item__handle,
+  .list-group--sortable .list-group-item--deleting:not(.list-group-item--primary) & .list-group-item__handle,
+  .list-group--sortable .list-group-item--active:not(.list-group-item--primary) & .list-group-item__handle,
   .list-group--sortable .ui-sortable-helper & .list-group-item__handle,
-  .list-group--sortable.list-group--collapsible .list-group-item:has(.collapse.in) & .list-group-item__handle,
+  .list-group--sortable.list-group--collapsible .list-group-item:has(.collapse.in):not(.list-group-item--primary) & .list-group-item__handle,
   .list-group-item:not(.list-group-item--active) &:hover .list-group-item__actions,
   .list-group-item:has(.collapse.in) & .list-group-item__actions,
   .list-group-item--deleting & .list-group-item__actions {
@@ -124,7 +142,6 @@
       color: inherit;
     }
   }
-
 }
 
 .list-group-item__meta {
