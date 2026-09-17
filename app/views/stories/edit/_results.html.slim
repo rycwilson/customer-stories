@@ -27,11 +27,10 @@
               action: 'list#cancelNewItem' }) do
           | &times;
     = tag.button( \
-        type: 'submit',
-        class: 'btn btn-sm btn-success hidden',
+        class: 'form__submit btn btn-sm btn-success hidden',
         style: 'padding: 7px 12px',
         data: { \
-          content: 'Add Result',
+          content: 'Add',
           list_target: 'newItemSubmit',
           action: 'list#onClickSubmit',
           field_name: 'story[new_results][]',
@@ -81,8 +80,7 @@
                       action: 'list#cancelEdit' }) do
                   | &times;
             = tag.button( \
-                type: 'submit',
-                class: 'btn btn-sm btn-success',
+                class: 'form__submit btn btn-sm btn-success',
                 style: 'padding: 7px 12px',
                 # disabled: true,
                 data: { \

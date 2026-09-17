@@ -56,13 +56,10 @@
               data-controller="tooltip"
               data-tooltip-options-value={ title: template.persisted? ? 'Delete' : 'Discard' }.to_json }
               i.fa.fa-fw.fa-remove
-        = button_tag( \
-            '',
-            type: 'submit',
-            class: 'btn btn-success btn-sm',
+        = tag.button( \
+            class: 'form__submit btn btn-success btn-sm',
             style: 'padding: 7px 14px',
             disabled: true,
-            name: nil,
             data: { \
               content: template.new_record? ? 'Create' : 'Save changes',
               invitation_template_target: 'submitBtn',

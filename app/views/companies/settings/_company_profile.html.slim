@@ -154,10 +154,8 @@
 
     .row
       .col-sm-12.col-md-offset-3.col-md-8
-        = button_tag( \
-            '',
-            type: 'submit',
-            class: 'btn btn-success disabled',
+        = tag.button( \
+            class: 'form__submit btn btn-success disabled',
             form: 'company-profile-form',
             disabled: true,
             data: { \

@@ -30,7 +30,7 @@ $fa-font-path: 'font-awesome/fonts';
   background: #9cffff;
 }
 
-[type="submit"] {
+.form__submit {
   @include submitting;
 }
 

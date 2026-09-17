@@ -150,10 +150,8 @@ main.user-profile.container-fluid.hidden-xs
       .col-sm-offset-4.col-sm-8
         .form-group
           .col-sm-offset-3.col-sm-9
-            = button_tag( \
-                '',
-                type: 'submit',
-                class: 'btn btn-success disabled',
+            = tag.button( \
+                class: 'form__submit btn btn-success disabled',
                 form: 'user-profile-form',
                 disabled: true,
                 data: { \

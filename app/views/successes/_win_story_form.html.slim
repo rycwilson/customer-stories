@@ -75,10 +75,11 @@
   .row.win-story__footer data-win-story-target="footer"
     .col-sm-12.col-md-offset-3.col-md-9
       - ['Mark as Completed', 'Save changes'].each do |button_content|
-        = button_tag( \
-            '',
-            type: 'submit',
-            class: "btn btn-success disabled #{button_content.include?('Mark') ? 'btn-mark-completed' : 'btn-save'}",
+        = tag.button( \
+            class: \
+              'form__submit btn btn-success disabled',
+              { 'btn-mark-completed' => button_content.include?('Mark'),
+                'btn-save' => button_content,include?('Save') },
             disabled: true,
             data: { \
               content: button_content,

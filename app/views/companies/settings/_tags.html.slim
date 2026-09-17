@@ -49,13 +49,10 @@
 
     .row
       .col-sm-12.col-md-offset-2.col-md-10
-        = button_tag( \
-            '',
-            type: 'submit',
-            class: 'btn btn-success',
+        = tag.button( \
+            class: 'form__submit btn btn-success',
             form: 'company-tags-form',
             disabled: true,
-            name: nil,
             data: { \
               content: 'Save changes',
               company_tags_target: 'submitBtn',

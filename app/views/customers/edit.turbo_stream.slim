@@ -43,10 +43,8 @@
 = turbo_stream.append 'main-modal-content' do 
   .modal-footer data-modal-target="footer"
     button.btn.btn-default type="button" data-dismiss="modal" Cancel
-    = button_tag( \
-        '',
-        type: 'submit',
-        class: 'btn btn-success disabled',
+    = tag.button( \
+        class: 'form__submit btn btn-success disabled',
         form: 'customer-form',
         disabled: true,
         data: { content: 'Save changes', disable_with_html: disabled_submit_button_html })
