@@ -121,6 +121,7 @@
         }
       })
         .done(function (data) {
+          // console.log('data:', data)
           $container.html(data.html);
           $container.find('*').addClass('cs');
           if (preSelectedStorySlug) {
@@ -134,6 +135,7 @@
           var $images = $container.find('img'), loadedImages = 0;
           $images.on('load', function (e) {
             if (++loadedImages === $images.length) {
+              // console.log('loaded all images')
               initPlugin('<%= @type %>', $container, $script, isDemo, env, preSelectedStoryIndex);
             }
           });
@@ -155,11 +157,12 @@
     var initOverlays = $.Deferred(),
         maxGalleryRows = parseInt($script.data('max-rows'), 10),
         tabbedCarouselDelay = ((type === 'tabbed_carousel') && parseInt($script.data('delay'), 10) || 0);
-    
+    // console.log('initializing plugin...')
     trackPluginVisitor($container, isDemo, env);
 
     if (type !== 'tabbed_carousel') {
       $.getScript("<%= asset_url('plugins/cs_overlays.js') %>", function () {
+          // console.log('initializing overlays...')
           cspInitOverlays($, $container, '<%= @company.subdomain %>', isDemo, env);
           initOverlays.resolve();
         });
@@ -174,6 +177,7 @@
           dataType: 'script'
         })
           .done(function (data, status, xhr) {
+            // console.log(`initializing ${type}...`)
             if (type === 'gallery') cspInitGallery($, $container, maxGalleryRows, preSelectedStoryIndex);
             else if (type === 'carousel') cspInitCarousel($, $container, preSelectedStoryIndex, '<%= @company.subdomain %>');
             else if (type === 'tabbed_carousel') {
