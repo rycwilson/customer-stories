@@ -8,12 +8,14 @@ Rails.application.routes.default_url_options = {
 }
 
 Rails.application.routes.draw do
-  root 'site#landing', constraints: { subdomain: '' }
-  get(
-    '/:page',
-    to: 'site#landing',
-    constraints: { subdomain: '', page: /product|plans|company|team|terms|privacy|our-story/ }
-  )
+  constraints(subdomain: '', format: /html|nil/) do
+    root 'site#landing'
+    get(
+      '/:page',
+      to: 'site#landing',
+      constraints: { page: /product|plans|company|team|terms|privacy|our-story/ }
+    )
+  end
 
   # get '/sitemap', to: 'site#sitemap'
   # get '/:google', to: 'site#google_verify', constraints: { google: /google\w+/ }
