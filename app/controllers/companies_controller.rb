@@ -10,7 +10,7 @@ class CompaniesController < ApplicationController
     end
     
     @company = Company.new
-    render :edit
+    render :settings
   end
 
   def show
