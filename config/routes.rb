@@ -46,6 +46,5 @@ Rails.application.routes.draw do
     end
   end
 
-  # NOTE: parends ensure root path matches (for unfound subdomains)
-  get '(*all)', to: 'site#not_found', via: :all
+  match '(*all)', to: 'site#not_found', via: :all
 end
