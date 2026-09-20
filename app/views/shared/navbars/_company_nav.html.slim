@@ -58,7 +58,7 @@ nav.company-nav.navbar-fixed-top.hidden-xs
             = button_to(destroy_user_session_path, method: :delete, data: { turbo: 'false' }) do
               i.fa.fa-fw.fa-sign-out
               | Sign out
-          - if true_user.admin?
+          - if company&.persisted? and true_user.admin?
             li.divider role="separator"
             li.dropdown-header.dropdown-header--admin
               = "Admin:\u00a0\u00a0Impersonate User"
