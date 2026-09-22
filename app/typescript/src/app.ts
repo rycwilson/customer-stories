@@ -52,20 +52,26 @@ function appFactory(): CustomerStoriesApp {
 function addTurboListeners(shouldAdd: boolean) {
   if (!shouldAdd) return;
 
-  document.documentElement.addEventListener('turbo:load', turboCallbacks.onLoad)
-  document.documentElement.addEventListener('turbo:click', turboCallbacks.onClick)
-  document.documentElement.addEventListener('turbo:before-visit', turboCallbacks.beforeVisit)
-  document.documentElement.addEventListener('turbo:visit', turboCallbacks.onVisit)
-  document.documentElement.addEventListener('turbo:submit-start', turboCallbacks.onSubmitStart)
-  document.documentElement.addEventListener('turbo:submit-end', turboCallbacks.onSubmitEnd)
-  document.documentElement.addEventListener('turbo:before-render', turboCallbacks.beforeRender)
-  document.documentElement.addEventListener('turbo:render', turboCallbacks.onRender)
-  document.documentElement.addEventListener('turbo:frame-load', turboCallbacks.onFrameLoad)
-  document.documentElement.addEventListener('turbo:before-frame-render', turboCallbacks.beforeFrameRender)
-  document.documentElement.addEventListener('turbo:frame-render', turboCallbacks.onFrameRender)
-  document.documentElement.addEventListener('turbo:before-fetch-request', turboCallbacks.beforeFetchRequest)
-  document.documentElement.addEventListener('turbo:before-fetch-response', turboCallbacks.beforeFetchResponse)
-  document.documentElement.addEventListener('turbo:before-cache', turboCallbacks.beforeCache)
+  const listeners = [
+    ['turbo:load', 'onLoad'],
+    ['turbo:click', 'onClick'],
+    ['turbo:before-visit', 'beforeVisit'],
+    ['turbo:visit', 'onVisit'],
+    ['turbo:submit-start', 'onSubmitStart'],
+    ['turbo:submit-end', 'onSubmitEnd'],
+    ['turbo:before-render', 'beforeRender'],
+    ['turbo:render', 'onRender'],
+    ['turbo:frame-load', 'onFrameLoad'],
+    ['turbo:before-frame-render', 'beforeFrameRender'],
+    ['turbo:frame-render', 'onFrameRender'],
+    ['turbo:before-fetch-request', 'beforeFetchRequest'],
+    ['turbo:before-fetch-response', 'beforeFetchResponse'],
+    ['turbo:before-cache', 'beforeCache'],
+  ] as const;
+  
+  listeners.forEach(([event, callback]) => {
+    document.documentElement.addEventListener(event, turboCallbacks[callback]);
+  });
 }
 
 // function onMenuItemClick(e) {

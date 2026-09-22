@@ -12,7 +12,7 @@ import type {
   TurboSubmitEndEvent,
   TurboBeforeCacheEvent } from '@hotwired/turbo';
 
-export function onLoad(e: TurboLoadEvent) {
+export function onLoad(_e: TurboLoadEvent) {
   // console.log(...logCommon(e), e)
   // const scrollPosition = sessionStorage.getItem("scrollPosition");
   // if (scrollPosition) {
@@ -21,29 +21,27 @@ export function onLoad(e: TurboLoadEvent) {
   // }
 }
 
-export function onClick(e: TurboClickEvent) {
+export function onClick(_e: TurboClickEvent) {
   // console.log('turbo:click', e)
 }
 
-export function beforeVisit(e: TurboBeforeVisitEvent) {
-  console.log('turbo:before-visit\n', `${location.pathname}\n`, e)
+export function beforeVisit(_e: TurboBeforeVisitEvent) {
 }
 
-export function onVisit(e: TurboVisitEvent) {
+export function onVisit(_e: TurboVisitEvent) {
   // console.log(...logCommon(e), `${e.detail.action} ${e.detail.url}\n`, e)
 }
 
-export function onSubmitStart(e: TurboSubmitStartEvent) {
+export function onSubmitStart(_e: TurboSubmitStartEvent) {
   // console.log('turbo:submit-start', e)
   sessionStorage.setItem("scrollPosition", window.scrollY.toString());
 }
 
-export function onSubmitEnd(e: TurboSubmitEndEvent) {
-  console.log('turbo:submit-end', e)
+export function onSubmitEnd(_e: TurboSubmitEndEvent) {
 }
 
-export function beforeRender(e: TurboBeforeRenderEvent) {
-  console.log('turbo:before-render', e)
+export function beforeRender(_e: TurboBeforeRenderEvent) {
+  // console.log('turbo:before-render', e)
   // e.preventDefault()   // pause render
   // e.detail.resume()   // resume render
 
@@ -53,56 +51,52 @@ export function beforeRender(e: TurboBeforeRenderEvent) {
   // }
 }
 
-export function onRender(e: TurboRenderEvent) {
+export function onRender(_e: TurboRenderEvent) {
   // console.log(...logCommon(e), e);
 }
 
-export function onFrameLoad(e: TurboFrameLoadEvent) {
+export function onFrameLoad(_e: TurboFrameLoadEvent) {
   // console.log(...logCommon(e), e);
 }
 
-export function beforeFrameRender(e: TurboBeforeFrameRenderEvent) {
+export function beforeFrameRender(_e: TurboBeforeFrameRenderEvent) {
   // logCommon(e)
   // console.log(e)
 }
 
-export function onFrameRender(e: TurboFrameRenderEvent) {
+export function onFrameRender(_e: TurboFrameRenderEvent) {
   // console.log(...logCommon(e), e);
 }
 
 // no custom event type for this
-export function beforeFetchRequest(e: CustomEvent) {
-  console.log( 
-    ...logCommon(e),
-    `${e.detail.fetchOptions.method} ${e.detail.url.pathname}\n`,
-    e
-  );
+export function beforeFetchRequest(_e: CustomEvent) {
+  // console.log( 
+  //   ...logCommon(e),
+  //   `${e.detail.fetchOptions.method} ${e.detail.url.pathname}\n`,
+  //   e
+  // );
 }
 
 // no custom event type for this
 export function beforeFetchResponse(e: CustomEvent) {
   const { response } = e.detail.fetchResponse;
-  console.log(
-    ...logCommon(e),
-    `${response.status} ${response.statusText}\n`,
-    e
-  )
+  // console.log(
+  //   ...logCommon(e),
+  //   `${response.status} ${response.statusText}\n`,
+  //   e
+  // )
 }
 
 // no custom event type for this
-export function beforeCache(e: TurboBeforeCacheEvent) {
+export function beforeCache(_e: TurboBeforeCacheEvent) {
   // console.log(...logCommon(e), e)
 }
 
 function logCommon(e: CustomEvent) {
   const { target } = e;
-  if (target instanceof HTMLHtmlElement) {
-
-  } else if (target instanceof HTMLFormElement) {
-  }
   return [
     `location: ${location.pathname}\n`,
-    `type: ${e.type}\n`, 
+    `typ_e: ${e.type}\n`, 
     `target: ${target}\n`
   ];
 }
