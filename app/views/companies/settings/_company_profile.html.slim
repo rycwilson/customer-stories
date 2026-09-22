@@ -4,8 +4,6 @@
 / like a sign-out and bounces through /users/sign_in -> after_sign_in_path_for before
 / landing back on the new subdomain, still signed in.
 
-/ data: { asset_host: Rails.application.config.asset_host },
-
 - form = capture do
   = form_with( \
       model: company,
@@ -181,4 +179,3 @@
     = form
 - else 
   = form
-  
