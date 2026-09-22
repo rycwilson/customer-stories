@@ -81,12 +81,6 @@ hr {
   }
 }
 
-// .form-group.required {
-//   label:not(.radio-inline):not(.checkbox-inline):not([for="csv-file-input"]):after {
-//     color: $state-danger-text;
-//     content: "\A0\A0*";
-//   }
-// }
 form {
   .form-group,
   .row {
@@ -95,7 +89,6 @@ form {
       font-size: $font-size-small;
     }
   }
-
   
   .form-group {
     [required] + .help-block:not(.help-block--instructional):not(.help-block--optional) {
@@ -109,13 +102,13 @@ form {
 
   .row {
     margin-bottom: 1.25rem;
-
-    &:has(.form__submit) {
-      margin-top: 3rem;
-    }
   }
+}
 
-  &.form-horizontal [class*="col-"] > button[type="submit"] {
+.form__submit {
+  @include submitting;
+  
+  .row > [class*="col-"] > & {
     margin-top: 0.75rem;
   }
 }

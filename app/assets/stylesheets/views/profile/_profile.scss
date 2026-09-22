@@ -1,26 +1,25 @@
 main.user-profile form {
   position: relative;
-  left: -2.5%;
+  left: -4%;
   margin: 0 auto;
   width: 70rem;
   
-  .input-group,
-  input {
-    max-width: 28rem;
+  input,
+  .input-group {
+    max-width: 35rem;
   }
   
   .input-group:not(:has(.input-group-btn)) {
     width: 100%;
     
     input {
-      border-top-right-radius: $input-border-radius;
-      border-bottom-left-radius: $input-border-radius;
+      border-radius: $input-border-radius;
     }
   }
 
-  .col-sm-8 {
-    float: right;
-  }
+  // .col-sm-8 {
+  //   float: right;
+  // }
 }
 
 .user-profile__photo {
@@ -54,7 +53,7 @@ main.user-profile form {
   }
 }
 
-// allow these labels to overflow to the left
+// Allow these labels to overflow to the left
 .user-profile__current-password,
 .user-profile__password,
 .user-profile__password-confirmation {

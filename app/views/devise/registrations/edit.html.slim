@@ -44,7 +44,7 @@ main.user-profile.container-fluid.hidden-xs
                 required: true,
                 autocomplete: 'given-name',
                 tabindex: 0,
-                data: { user_profile_target: 'userField', initial_value: form.object.first_name })
+                data: { user_profile_target: 'userInput', initial_value: form.object.first_name })
             .help-block.with-errors
 
       .col-sm-8
@@ -56,7 +56,7 @@ main.user-profile.container-fluid.hidden-xs
                 class: 'form-control',
                 required: true,
                 autocomplete: 'family-name',
-                data: { user_profile_target: 'userField', initial_value: form.object.last_name })
+                data: { user_profile_target: 'userInput', initial_value: form.object.last_name })
             .help-block.with-errors
 
       .col-sm-8
@@ -67,7 +67,7 @@ main.user-profile.container-fluid.hidden-xs
                 :title,
                 class: 'form-control',
                 autocomplete: 'organization-title',
-                data: { user_profile_target: 'userField', initial_value: form.object.title })
+                data: { user_profile_target: 'userInput', initial_value: form.object.title })
 
       .col-sm-offset-4.col-sm-8
         .form-group
@@ -80,7 +80,7 @@ main.user-profile.container-fluid.hidden-xs
                 class: 'form-control',
                 autocomplete: 'tel',
                 required: true,
-                data: { user_profile_target: 'userField', initial_value: form.object.phone })
+                data: { user_profile_target: 'userInput', initial_value: form.object.phone })
             .help-block
 
       .col-sm-offset-4.col-sm-8
@@ -94,8 +94,8 @@ main.user-profile.container-fluid.hidden-xs
                   autocomplete: 'username',
                   required: true,
                   disabled: true,
-                  data: { user_profile_target: 'emailField' })
-              .input-group-btn data-user-profile-target="editBtn"
+                  data: { user_profile_target: 'emailInput' })
+              .input-group-btn data-user-profile-target="editButtonWrapper"
                 button.btn.btn-default type="button" data-action="user-profile#changeEmail"
                   i.fa.fa-pencil
             .help-block
@@ -112,8 +112,8 @@ main.user-profile.container-fluid.hidden-xs
                   autocomplete: 'current-password',
                   required: true,
                   disabled: true,
-                  data: { user_profile_target: 'currentPasswordField' })
-              .input-group-btn data-user-profile-target="editBtn"
+                  data: { user_profile_target: 'currentPasswordInput' })
+              .input-group-btn data-user-profile-target="editButtonWrapper"
                 button.btn.btn-default type="button"  data-action="user-profile#changePassword"
                   i.fa.fa-pencil
             .help-block 
@@ -129,7 +129,7 @@ main.user-profile.container-fluid.hidden-xs
                 minlength: 8,
                 required: true,
                 disabled: true,
-                data: { user_profile_target: 'passwordField' })
+                data: { user_profile_target: 'passwordInput' })
             .help-block.help-block--instructional
               | Must be at least 8 characters
 
@@ -143,12 +143,12 @@ main.user-profile.container-fluid.hidden-xs
                 autocomplete: 'new-password',
                 required: true,
                 disabled: true,
-                data: { user_profile_target: 'passwordConfirmationField' })
+                data: { user_profile_target: 'passwordConfirmationInput' })
             .help-block
               | Passwords must match
 
       .col-sm-offset-4.col-sm-8
-        .form-group
+        .row
           .col-sm-offset-3.col-sm-9
             = tag.button( \
                 class: 'form__submit btn btn-success disabled',
