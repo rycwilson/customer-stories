@@ -20,7 +20,8 @@ body {
   .registrations.update,    // when there is an error and 422 response
   #story,
   &.companies.new,
-  &.companies.edit {
+  &.companies.edit,
+  &.companies.create {
     > .container-fluid {
       display: flex;
       align-items: flex-start;
