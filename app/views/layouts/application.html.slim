@@ -25,9 +25,9 @@ html lang="en-US" prefix="og: http://ogp.me/ns# fb: http://ogp.me/ns/fb#"
     = javascript_include_tag('app/bundle', 'data-turbo-track' => 'reload', defer: true)
     = favicon_link_tag('favicon.ico')
 
-  body {
-    class="#{@company&.subdomain} #{controller_name} #{action_name}"
-    data-current-user="#{current_user.to_json(only: [:id], methods: [:full_name])}" }
+  = tag.body( \
+      class: class_names(@company&.subdomain, controller_name, action_name),
+      data: { current_user: current_user.to_json(only: [:id], methods: [:full_name]) })
 
     - if company_admin_page?
       .visible-xs-block.text-center style="margin-top: 3rem"

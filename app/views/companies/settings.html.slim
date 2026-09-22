@@ -1,17 +1,11 @@
-= render('shared/navbars/company_nav', company: @company, workflow_stage: @workflow_stage)
+= render('shared/navbars/company_nav', company: @company)
 
-main.container-fluid.hidden-xs {
-  data-controller="company-settings" 
-  data-company-settings-modal-outlet="#main-modal" 
-  data-action="company-ctas:did-render->company-settings#onCtasFrameLoad" }
+main.container-fluid.hidden-xs data-controller="company-settings"
 
   .sidebar
     / no active tab set here; it will be set by the client based on page fragment identifier
-    ul.nav.nav--company {
-      class=('nav--new-company' if action_name == 'new')
-      data-controller="nav-list"
-      role="tablist" }
-      - unless action_name == 'new'
+    ul.nav.nav--company data-controller="nav-list" role="tablist"
+      - unless @company.new_record?
         li role="presentation"
           a {
             href="#contributor-invitations-panel" 
@@ -70,7 +64,7 @@ main.container-fluid.hidden-xs {
   .layout-main
     .tab-content
 
-      - unless action_name == 'new'
+      - unless @company.new_record?
           
         #contributor-invitations-panel.tab-pane role="tabpanel"
           #invitation-template-form.form-horizontal data-controller="invitation-template"
