@@ -3,37 +3,38 @@ import tinycolor from 'tinycolor2';
 
 export default class CompanyProfileController extends FormController<CompanyProfileController> {
   static targets = [
-    'companyHeaderDemo', 
+    'logoTypeRadio',
+    'companyHeaderDemo',
+    'logoDemo', 
     'storiesHeaderDemo', 
     'storiesHeadingDemo', 
     'storiesHeadingColorInput'
   ];
+  declare readonly logoTypeRadioTargets: HTMLInputElement[];
   declare readonly companyHeaderDemoTarget: HTMLDivElement;
+  declare readonly logoDemoTargets: HTMLAnchorElement[];
   declare readonly storiesHeaderDemoTarget: HTMLDivElement;
   declare readonly storiesHeadingDemoTarget: HTMLHeadingElement;
   declare readonly storiesHeadingColorInputTarget: HTMLInputElement;
 
-  // connect() {
-  //   super.connect();
-  // }
-
-  // disconnect() {
-  //   super.disconnect();
-  // }
-
   onUploadReady({ detail: { card } }: CustomEvent<{ card: HTMLElement }>) {
-    [...this.companyHeaderDemoTarget.children].forEach((link: Element) => {
-      if (card.className.includes(link.className)) {
-        const urlInput = <HTMLInputElement>link.querySelector(':scope > input[name*="url"]');
-        (<HTMLImageElement>link.querySelector(':scope > img')).src = urlInput.value;
-      }
-    });
-    this.updateState();
+    const type = (
+      <RegExpMatchArray>card.className.match(/(?<type>SquareLogo|LandscapeLogo)/)
+    ).groups!.type;
+    const url = (<HTMLInputElement>card.querySelector(':scope > input[name*="url"]')).value;
+    const logoDemo = <HTMLAnchorElement>this.logoDemoTargets.find(link => (
+      link.classList.contains(type)
+    ));
+    const img = (<HTMLImageElement>logoDemo.querySelector(':scope > img'));
+    img.src = url;
+    this.logoTypeRadioTargets.find(radio => radio.value === type)!.click();
+    // this.updateState();
   }
 
-  onChangeHeaderLogoType({ target: input }: { target: HTMLInputElement }) {
-    [...this.companyHeaderDemoTarget.children].forEach((link: Element) => {
-      link.classList.toggle('hidden', !link.classList.contains(input.value));
+  onChangeHeaderLogoType({ target: radio }: { target: HTMLInputElement }) {
+    const type = radio.value;
+    this.logoDemoTargets.forEach(link => {
+      link.classList.toggle('hidden', !link.classList.contains(type));
     });
   }
 

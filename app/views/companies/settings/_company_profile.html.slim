@@ -1,7 +1,12 @@
-/ TODO: Skip the turbo frame for @company.new_record?
+/ Turbo is disabled for company creation because its fetch-based form submission uses
+/ credentials: "same-origin"; when the server's redirect crosses to the new subdomain (a
+/ different origin), the browser drops the session cookie for that request, which looks
+/ like a sign-out and bounces through /users/sign_in -> after_sign_in_path_for before
+/ landing back on the new subdomain, still signed in.
 
-= turbo_frame_tag('company-profile-frame') do
+/ data: { asset_host: Rails.application.config.asset_host },
 
+- form = capture do
   = form_with( \
       model: company,
       id: 'company-profile-form',
@@ -9,17 +14,15 @@
       data: { \
         turbo: (false if company.new_record?),
         controller: 'company-profile toast',
-        asset_host: Rails.application.config.asset_host,
-        toast_errors_value: \
-          (errors if defined?(errors) && turbo_frame_request_id == 'company-profile-frame'),
+        toast_errors_value: (errors if defined? errors),
         action: [ \
+          'submit->company-profile#validate',
           'turbo:submit-start->company-profile#onSubmitStart',
           'input->company-profile#updateState',
           'change->company-profile#updateState',
           'image-card:ready-to-validate->company-profile#updateValidator',
           'image-card:validated->company-profile#updateValidator',
-          'image-card:upload-ready->company-profile#onUploadReady',
-          'submit->company-profile#validate' ].join(' ') },
+          'image-card:upload-ready->company-profile#onUploadReady' ].join(' ') },
       html: { \
         autocomplete: 'off',
         novalidate: true }) do |form|
@@ -43,7 +46,6 @@
         = form.text_field(:website, class: 'form-control', required: true, placeholder: "Your company's web address")
         .help-block.with-errors
 
-
     .form-group
       .visible-sm-block.col-sm-12
         = form.label(:subdomain)
@@ -66,7 +68,7 @@
           'Company Logos',
           class: 'control-label col-md-3 visible-md-inline-block visible-lg-inline-block')
       .col-sm-12.col-md-8
-        ul.image-cards.list-unstyled
+        ul.company-logo-cards.list-unstyled
           li
             = render( \
                 ImageCardComponent.new( \
@@ -89,14 +91,20 @@
 
     .row
       .visible-sm-block.col-sm-12
-        label Custom Header  
+        label style="margin:0" Custom Header  
       label.control-label.col-md-3.visible-md-inline-block.visible-lg-inline-block Custom Header
       .col-sm-12.col-md-8 data-action="change->company-profile#onChangeHeaderLogoType"
         = label_tag('company_header_logo_type_squarelogo', class: 'radio-inline') do 
-          = form.radio_button(:header_logo_type, 'SquareLogo')
+          = form.radio_button( \
+              :header_logo_type,
+              'SquareLogo',
+              data: { company_profile_target: 'logoTypeRadio' })
           | Square Logo
         = label_tag('company_header_logo_type_landscapelogo', class: 'radio-inline') do
-          = form.radio_button(:header_logo_type, 'LandscapeLogo')
+          = form.radio_button( \
+              :header_logo_type,
+              'LandscapeLogo',
+              data: { company_profile_target: 'logoTypeRadio' })
           | Landscape Logo
 
     .row.custom-header-colors
@@ -106,17 +114,20 @@
           = form.color_field( \
               :header_color_1,
               class: 'form-control',
+              style: 'display:inline-block; width:34px; padding:0',
               data: { action: 'company-profile#onInputCompanyHeaderBackgroundColor' })
         div
           = form.label(:header_color_2, 'Lower')
           = form.color_field( \
               :header_color_2,
               class: 'form-control',
+              style: 'display:inline-block; width:34px; padding:0',
               data: { action: 'company-profile#onInputStoriesHeaderBackgroundColor' })
         div
           = form.label(:header_text_color, 'Heading')
           = form.color_field(:header_text_color,
               class: 'form-control',
+              style: 'display:inline-block; width:34px; padding:0',
               data: { \
                 company_profile_target: 'storiesHeadingColorInput',
                 action: 'company-profile#onInputStoriesHeadingColor' })
@@ -124,16 +135,18 @@
     .form-group
       .col-sm-12.col-md-offset-3.col-md-8
         .company-header-demo data-company-profile-target="companyHeaderDemo" style="background-color:#{company.header_color_1}"
-          a.LandscapeLogo {
-            href="javascript:;"
-            class=('hidden' if company.header_logo_type == 'SquareLogo') }
+          = tag.a( \
+              href: 'javascript:;',
+              class: class_names('LandscapeLogo', hidden: company.header_logo_type == 'SquareLogo'),
+              data: { company_profile_target: 'logoDemo' })
             = image_tag( \
                 company.landscape_logo_url || LOGO_PLACEHOLDER,
                 class: company.landscape_logo_url.blank? ? 'generic' : '',
                 alt: 'Company Logo')
-          a.SquareLogo {
-            href="javascript:;"
-            class=('hidden' if company.header_logo_type == 'LandscapeLogo') }
+          = tag.a( \
+              href: 'javascript:;',
+              class: class_names('SquareLogo', hidden: company.header_logo_type == 'LandscapeLogo'),
+              data: { company_profile_target: 'logoDemo' })
             = image_tag( \
                 company.square_logo_url || LOGO_PLACEHOLDER,
                 class: company.square_logo_url.blank? ? 'generic' : '',
@@ -155,10 +168,17 @@
     .row
       .col-sm-12.col-md-offset-3.col-md-8
         = tag.button( \
-            class: 'form__submit btn btn-success disabled',
+            class: 'form__submit btn btn-success',
             form: 'company-profile-form',
-            disabled: true,
+            # disabled: true,
             data: { \
-              content: 'Save changes',
+              content: company.new_record? ? 'Create Account' : 'Save changes',
               company_profile_target: 'submitBtn',
               disable_with_html: disabled_submit_button_html })
+
+- if company.persisted?
+  = turbo_frame_tag('company-profile-frame')
+    = form
+- else 
+  = form
+  

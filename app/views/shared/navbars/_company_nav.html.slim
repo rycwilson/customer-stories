@@ -13,7 +13,7 @@ nav.company-nav.navbar-fixed-top.hidden-xs
       ul.nav.nav-tabs.nav-workflow data-controller="nav-list" role="tablist" data-turbo=('false' if is_dashboard)
         - ['prospect', 'curate', 'story', 'promote', 'measure'].each do |tab_name|
           li {
-            class=('active' if defined?(workflow_stage) && workflow_stage == tab_name)
+            class=('active' if is_dashboard && workflow_stage == tab_name)
             class=('hidden' if (tab_name == 'story' && @story.nil?) || (tab_name != 'story' && @story.present?))
             role="presentation" }
             / 
@@ -27,7 +27,7 @@ nav.company-nav.navbar-fixed-top.hidden-xs
               aria-expanded=((workflow_stage == tab_name ? 'true' : 'false') if is_dashboard)
               role=('tab' if is_dashboard) }
               = tab_name.capitalize
-            - if defined?(workflow_stage) && workflow_stage == 'story'
+            - if is_dashboard && workflow_stage == 'story'
               i.fa.fa-chevron-right
 
               / use a button instead of a link to avoid style conflicts with nav links
