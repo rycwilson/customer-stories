@@ -10,11 +10,14 @@ Rails.application.routes.default_url_options = {
 Rails.application.routes.draw do
   constraints(subdomain: '', format: /html|nil/) do
     root 'site#landing'
-    get(
-      '/:page',
-      to: 'site#landing',
-      constraints: { page: /product|plans|company|team|terms|privacy|our-story/ }
-    )
+    get '/:page',
+        to: 'site#landing',
+        constraints: { page: /product|plans|company|team|terms|privacy|our-story/ }
+    authenticate(:user) do
+      # draw :zapier_routes
+      get '/settings', to: 'companies#new', as: 'new_company'
+      post '/settings', to: 'companies#create'
+    end
   end
 
   # get '/sitemap', to: 'site#sitemap'
@@ -24,12 +27,6 @@ Rails.application.routes.draw do
 
   constraints(->(req) { req.subdomain.blank? or CompanySubdomain.matches?(req) }) do
     draw :devise_routes
-  end
-
-  authenticate(:user) do
-    # draw :zapier_routes
-    get('/settings', to: 'companies#new', as: 'new_company', constraints: { subdomain: '' })
-    post('/settings', to: 'companies#create', as: 'companies', constraints: { subdomain: '' })
   end
 
   constraints(CompanySubdomain) do
