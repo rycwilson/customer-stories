@@ -33,11 +33,13 @@ class CompaniesController < ApplicationController
   end
 
   def create
-    @company = Company.new(company_params)
+    @company = Company.new company_params
     if @company.save
       @company.curators << current_user
       session['authorized_subdomains'] = ['', @company.subdomain]
-      redirect_to edit_company_url(subdomain: @company.subdomain), flash: { notice: 'Company registered successfully' }
+      redirect_to edit_company_url(subdomain: @company.subdomain),
+                  status: :see_other,
+                  flash: { notice: 'Company account created successfully' }
     else
       @errors = @company.errors.full_messages
       render :settings, status: :unprocessable_entity
