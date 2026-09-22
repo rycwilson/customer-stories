@@ -109,6 +109,10 @@ form {
 
   .row {
     margin-bottom: 1.25rem;
+
+    &:has(.form__submit) {
+      margin-top: 3rem;
+    }
   }
 
   &.form-horizontal [class*="col-"] > button[type="submit"] {
