@@ -39,10 +39,8 @@ class CompaniesController < ApplicationController
       session['authorized_subdomains'] = ['', @company.subdomain]
       redirect_to edit_company_url(subdomain: @company.subdomain), flash: { notice: 'Company registered successfully' }
     else
-      # validation(s): presence / uniqueness of name, presence of subdomain
-      flash.now[:danger] = @company.errors.full_messages.join(', ')
-      # redirect_to(register_company_path)
-      render :edit
+      @errors = @company.errors.full_messages
+      render :settings, status: :unprocessable_entity
     end
   end
 
