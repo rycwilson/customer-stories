@@ -1,11 +1,7 @@
 import { Controller } from '@hotwired/stimulus';
-import type ModalController from './modal_controller';
 import Cookies from 'js-cookie';
 
 export default class CompanySettingsController extends Controller {
-  static outlets = ['modal'];
-  declare modalOutlet: ModalController;
-
   static targets = ['tab'];
   declare tabTargets: HTMLAnchorElement[];
 
@@ -53,11 +49,6 @@ export default class CompanySettingsController extends Controller {
     } else {  
       showPage(defaultTab);
     }
-  }
-
-  onCtasFrameLoad(e: Event) {
-    // window.scrollTo(0, 0);
-    if (this.modalOutlet.element.classList.contains('in')) this.modalOutlet.hide();
   }
   
   addTabListeners() {

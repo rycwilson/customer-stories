@@ -28,7 +28,6 @@ class SiteController < ApplicationController
         elsif user_signed_in?
           redirect_to new_company_url(subdomain: '')
         else
-          # @company = Company.find_by_subdomain request.subdomain
           render '404_not_found', status: :not_found, layout: false
         end
       end
