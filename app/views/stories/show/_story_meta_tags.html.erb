@@ -65,7 +65,7 @@
     "alternativeHeadline": <%= raw story.results.pluck('description').to_json %>,
     "articleBody": "<%= story.narrative %>",
     // "url": "<%= story.csp_story_url %>",
-    "genre": "<%= success.story_categories.take.try(:name) %>",
+    "genre": "<%= success.category_tags.take.try(:name) %>",
     "keywords": "<%= meta_keywords(success) %>",
     "dateCreated": "<%= story.created_at %>",
     "dateModified": "<%= story.updated_at %>",
