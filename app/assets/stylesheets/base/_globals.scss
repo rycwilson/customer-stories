@@ -96,11 +96,12 @@ form {
     }
   }
 
+  
   .form-group {
-    [required]:not([name="user[password]"]) + .help-block {
+    [required] + .help-block:not(.help-block--instructional):not(.help-block--optional) {
       display: none;
     }
-
+    
     &.has-error [required] + .help-block {
       display: block
     }
