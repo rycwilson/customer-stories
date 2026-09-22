@@ -16,7 +16,7 @@ Rails.application.routes.draw do
     authenticate(:user) do
       # draw :zapier_routes
       get '/settings', to: 'companies#new', as: 'new_company'
-      post '/settings', to: 'companies#create'
+      post '/settings', to: 'companies#create', as: 'companies'
     end
   end
 
