@@ -28,11 +28,11 @@ class SiteController < ApplicationController
         elsif user_signed_in?
           redirect_to new_company_url(subdomain: '')
         else
-          render '404_not_found', status: :not_found, layout: false
+          render '404', status: :not_found, layout: false
         end
       end
       format.json { render json: { error: 'Not Found' }, status: :not_found }
-      format.any { head :not_found }
+      format.any { render plain: '', status: :not_found }
     end
   end
 

@@ -144,8 +144,20 @@ class ApplicationController < ActionController::Base
 
   private
 
-  def render_server_error
-    render 'application/500_server_error', status: :internal_server_error, layout: false
+  def render_server_error(exception)
+    Rails.logger.error("#{exception.class}: #{exception.message}")
+    Rails.logger.error(exception.backtrace&.join("\n"))
+    return if performed?
+
+    respond_to do |format|
+      format.html do
+        render '500', status: :internal_server_error, layout: false
+      end
+      format.json do 
+        render json: { error: 'Internal Server Error' }, status: :internal_server_error
+      end
+      format.any { render plain: '', status: :internal_server_error }
+    end
   end
 
   def skip_subdomain_authorization?
