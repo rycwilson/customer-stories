@@ -110,7 +110,7 @@
           tag: :category,
           name: nil,
           preselected_id: filters[:category],
-          only_featured: false })
+          only_featured: !is_dashboard })
 
   - if is_dashboard || company.product_tags.featured.present?
     = render( \
@@ -119,4 +119,4 @@
           tag: :product,
           name: nil,
           preselected_id: filters[:product],
-          only_featured: false })
+          only_featured: !is_dashboard })
