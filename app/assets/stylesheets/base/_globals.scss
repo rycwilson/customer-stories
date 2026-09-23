@@ -59,10 +59,6 @@ input[type="checkbox"] {
   accent-color: $nav-blue;
 }
 
-input[type="color"] {
-  cursor: pointer;
-}
-
 hr {
   border-top: 1px solid #dfdfdf;
 }
@@ -110,6 +106,21 @@ form {
   
   .row > [class*="col-"] > & {
     margin-top: 0.75rem;
+  }
+}
+
+input[type="color" i] {
+  display: inline-block;
+  padding: 0;
+  width: 34px;
+  cursor: pointer;
+
+  &::-webkit-color-swatch-wrapper {
+    padding: 0;
+  }
+
+  &::-webkit-color-swatch {
+    border-color: transparent;
   }
 }
 

@@ -112,20 +112,17 @@
           = form.color_field( \
               :header_color_1,
               class: 'form-control',
-              style: 'display:inline-block; width:34px; padding:0',
               data: { action: 'company-profile#onInputCompanyHeaderBackgroundColor' })
         div
           = form.label(:header_color_2, 'Lower')
           = form.color_field( \
               :header_color_2,
               class: 'form-control',
-              style: 'display:inline-block; width:34px; padding:0',
               data: { action: 'company-profile#onInputStoriesHeaderBackgroundColor' })
         div
           = form.label(:header_text_color, 'Heading')
           = form.color_field(:header_text_color,
               class: 'form-control',
-              style: 'display:inline-block; width:34px; padding:0',
               data: { \
                 company_profile_target: 'storiesHeadingColorInput',
                 action: 'company-profile#onInputStoriesHeadingColor' })
