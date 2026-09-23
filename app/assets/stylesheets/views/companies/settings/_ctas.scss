@@ -22,6 +22,10 @@
   align-items: center;
   justify-content: flex-end;
 
+  &:first-child {
+    margin-bottom: 2px;
+  }
+
   label {
     margin-right: 1em;
   }
