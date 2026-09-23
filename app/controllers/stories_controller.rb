@@ -18,18 +18,30 @@ class StoriesController < ApplicationController
                  else
                    @company.stories.filtered(@filters, @filters_match_type)
                  end
+      render('index', layout: false)
     else
       # set_or_redirect_to_story_preview(params[:preview], session[:preview_story_slug])
       if request.xhr? && params[:q].present?
         respond_to do |format|
-          format.json { render(json: search(@company.stories.featured, params[:q]).pluck(:id).uniq) }
+          format.json do 
+            render json: search(@company.stories.featured, params[:q]).pluck(:id).uniq
+          end
         end
         return
       elsif @filters.present?
-        @filtered_story_ids = @company.stories.featured.filtered(@filters, @filters_match_type).pluck(:id)
+        @filtered_story_ids = 
+          @company.stories.featured.filtered(@filters, @filters_match_type).pluck(:id)
+      end
+      if @company.stories.featured.any?
+        render(@v2 ? 'index2' : 'index', layout: 'stories')
+      elsif user_signed_in?
+        redirect_to dashboard_path('curate'),
+                    status: :see_other,
+                    flash: { warning: "Nothing has been published to #{ENV.fetch('HOST_NAME')}" }
+      else 
+        redirect_to root_url(subdomain: '')
       end
     end
-    render(@v2 ? 'index2' : 'index', layout: @is_dashboard ? false : 'stories')
   end
 
   # GET new_success_story / new_company_story
