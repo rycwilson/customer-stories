@@ -1,177 +1,185 @@
-- if @story.errors.any?
+= turbo_stream.update 'main-modal-body' do
 
-  = turbo_stream.replace 'toaster' do
-    = render('shared/toaster')
+  / Note `model: [@success, @story]` does not work as it will infer a collection => must specify url
+  = form_with( \
+      model: @story,  
+      url: @success ? success_story_path(@success) : company_stories_path(@company),
+      id: 'new-story-form',
+      class: ('was-validated' if @story.errors.any?),
+      data: { \
+        controller: 'new-story',
+        new_story_modal_outlet: '#main-modal',
+        action: [ \
+          'submit->new-story#validate',
+          'turbo:submit-start->new-story#onSubmitStart' ].join(' ') },
+      html: { \
+        novalidate: true,
+        autocomplete: 'off' }) do |form|
 
-- else
+    = tag.div class: class_names('form-group', 'has-error': @story.errors&.include?(:title))
+      = form.label :title, class: 'control-label'
+      = form.text_field( \
+          :title,
+          class: 'form-control',
+          required: true,
+          placeholder: 'Enter the story title')
+      .help-block.help-block--validation
+      - if title_error = @story.errors&.group_by_attribute[:title]&.first
+        .help-block 
+          - if title_error.type == :blank
+            | Required
+          - elsif title_error.type == :taken
+            | This title has already been taken
+          - else 
+            | This field has an error
 
-  = turbo_stream.append 'main-modal-body' do
+    = form.fields_for(:success, form.object.build_success) do |success_fields|
+      / By explicitly rendering the id field here, we avoid automatic rendering of the id field due to the fields_for block
+      / => here the id field will be used to create a new customer win (unlike instances below where the field is disabled)
+      / => note that Rails 7 adds the `include_id` option to prevent automatically rendering the id field
+      = success_fields.hidden_field(:id, disabled: @success.present?, data: { new_story_target: 'successField' })
+      = success_fields.hidden_field(:name, disabled: @success.present?, data: { new_story_target: 'successName successField' })
+      = success_fields.check_box( \
+          :placeholder,
+          { checked: @success.nil?, hidden: true, disabled: @success.present?, data: { new_story_target: 'successPlaceholder successField' } },
+          true,
+          false)
 
-    / Note `model: [@success, @story]` does not work as it will infer a collection => must specify url
-    = form_with( \
-        model: @story,  
-        url: @success ? success_story_path(@success) : company_stories_path(@company),
-        id: 'new-story-form',
-        data: { \
-          controller: 'new-story',
-          new_story_modal_outlet: '#main-modal',
-          action: [ \
-            'submit->new-story#validate',
-            'turbo:submit-start->new-story#onSubmitStart'].join(' ') },
-        html: { \
-          novalidate: true,
-          autocomplete: 'off' }) do |form|
-
-      .form-group
-        = form.label(:title, 'Story Title', class: 'control-label')
-        / tabindex: '-1' allows manual focus
-        / TODO but it prevents the field from being focused when cycling with tab
-        = form.text_field( \
-            :title,
-            class: 'form-control',
-            required: true,
-            tabindex: '-1',
-            data: { new_story_target: 'storyTitle' })
-        .help-block.with-errors
-
-      = form.fields_for(:success, form.object.build_success) do |success_fields|
-        / By explicitly rendering the id field here, we avoid automatic rendering of the id field due to the fields_for block
-        / => here the id field will be used to create a new customer win (unlike instances below where the field is disabled)
-        / => note that Rails 7 adds the `include_id` option to prevent automatically rendering the id field
-        = success_fields.hidden_field(:id, disabled: @success.present?, data: { new_story_target: 'successField' })
-        = success_fields.hidden_field(:name, disabled: @success.present?, data: { new_story_target: 'successName successField' })
-        = success_fields.check_box( \
-            :placeholder,
-            { checked: @success.nil?, hidden: true, disabled: @success.present?, data: { new_story_target: 'successPlaceholder successField' } },
-            true,
-            false)
-
-        = success_fields.fields_for(:customer, @company.customers.build) do |customer_fields|
-          = customer_fields.hidden_field(:id, disabled: @success.present?, data: { new_story_target: 'customerField'})
-          = customer_fields.hidden_field(:name, disabled: @success.present?, data: { new_story_target: 'customerName customerField' })
-          = customer_fields.hidden_field(:company_id, disabled: @success.present?, data: { new_story_target: 'customerField' })
-      
-      = form.fields_for(:success, @success || form.object.build_success) do |success_fields|
-        / By explicitly rendering the id field here, we avoid automatic rendering of the id field due to the fields_for block
-        / => this allows us to permanently disable it since it is only used in the case of a new customer win
-        / => note that Rails 7 adds the `include_id` option to prevent automatically rendering the id field
-        = success_fields.hidden_field(:id, disabled: true)
-
-        / tomselect_prevent_focus_value: @success.present?,
-        / call compact on the options hash to ensure element receives the default name attribute if @success.present? == false
-        .form-group
-          = success_fields.label(:customer_id, 'Customer', class: 'control-label')
-          = success_fields.collection_select( \
-              :customer_id,
-              @company.customers,
-              :id,
-              :name,
-              { include_blank: true },
-              { name: ('' if @success.present?),
-                class: 'form-control',
-                placeholder: 'Select or enter the name of a new Customer',
-                required: true,
-                data: { \
-                  controller: 'tomselect',
-                  new_story_target: 'customerSelect',
-                  tomselect_kind_value: 'customer',
-                  tomselect_custom_options_value: { create: true, persist: false, selectOnTab: true },
-                  action: 'new-story#onChangeCustomer',
-                  field_name: "#{success_fields.object_name}[customer_id]" } }.compact)
-          .help-block.with-errors 
+      = success_fields.fields_for(:customer, @company.customers.build) do |customer_fields|
+        = customer_fields.hidden_field(:id, disabled: @success.present?, data: { new_story_target: 'customerField'})
+        = customer_fields.hidden_field(:name, disabled: @success.present?, data: { new_story_target: 'customerName customerField' })
+        = customer_fields.hidden_field(:company_id, disabled: @success.present?, data: { new_story_target: 'customerField' })
+    
+    = form.fields_for(:success, @success || form.object.build_success) do |success_fields|
+      / By explicitly rendering the id field here, we avoid automatic rendering of the id field due to the fields_for block
+      / => this allows us to permanently disable it since it is only used in the case of a new customer win
+      / => note that Rails 7 adds the `include_id` option to prevent automatically rendering the id field
+      = success_fields.hidden_field(:id, disabled: true)
 
       / tomselect_prevent_focus_value: @success.present?,
-      .form-group data-action="tomselect:dropdown-did-open->new-story#filterCustomerWinOptions"
-        = form.label(:success_id, 'Customer Win')
-        
-        / can't use collection_select here because we need to add data-customer-id to the options 
-        / (the Curate page may not have access to the successes table)      
-        = form.select( \
-            :success_id,
-            options_for_select( \
-              @company.successes.real.map(&:select_option),
-              @success ? "success-#{@success.id}" : nil ),
+      / call compact on the options hash to ensure element receives the default name attribute if @success.present? == false
+      = tag.div( \
+          class: class_names( \
+            'form-group',
+            'has-error': @story.errors&.include?('success.customer.name') ))
+        = success_fields.label(:customer_id, 'Customer', class: 'control-label')
+        = success_fields.collection_select( \
+            :customer_id,
+            @company.customers,
+            :id,
+            :name,
             { include_blank: true },
-            { name: ('' if @success.nil?),
+            { name: ('' if @success.present?),
               class: 'form-control',
-              placeholder: 'Select or enter the name of a new Customer Win',
+              placeholder: 'Select or enter the name of a new Customer',
+              required: true,
               data: { \
                 controller: 'tomselect',
-                tomselect_kind_value: 'customerWin',
-                tomselect_custom_options_value: { create: true, persist: false },
-                new_story_target: 'customerWinSelect',
-                action: 'new-story#onChangeCustomerWin',
-                field_name: "#{form.object_name}[success_id]" } }.compact)
-        .help-block.help-block--optional 
+                new_story_target: 'customerSelect',
+                tomselect_kind_value: 'customer',
+                tomselect_custom_options_value: { create: true, persist: false, selectOnTab: true },
+                action: 'new-story#onChangeCustomer',
+                field_name: "#{success_fields.object_name}[customer_id]" } }.compact)
+        .help-block.help-block--validation
+        - if customer_error = @story.errors&.group_by_attribute[:'success.customer.name']&.first
+          .help-block 
+            - if customer_error.type == :blank
+              | Required
+            - elsif customer_error.type == :taken
+              | Customer already exists
+            - else 
+              | This field has an error
+
+    / tomselect_prevent_focus_value: @success.present?,
+    .form-group data-action="tomselect:dropdown-did-open->new-story#filterCustomerWinOptions"
+      = form.label(:success_id, 'Customer Win')
+      
+      / can't use collection_select here because we need to add data-customer-id to the options 
+      / (the Curate page may not have access to the successes table)      
+      = form.select( \
+          :success_id,
+          options_for_select( \
+            @company.successes.real.map(&:select_option),
+            @success ? "success-#{@success.id}" : nil ),
+          { include_blank: true },
+          { name: ('' if @success.nil?),
+            class: 'form-control',
+            placeholder: 'Select or enter the name of a new Customer Win',
+            data: { \
+              controller: 'tomselect',
+              tomselect_kind_value: 'customerWin',
+              tomselect_custom_options_value: { create: true, persist: false },
+              new_story_target: 'customerWinSelect',
+              action: 'new-story#onChangeCustomerWin',
+              field_name: "#{form.object_name}[success_id]" } }.compact)
+      .help-block.help-block--optional 
+        | Optional
+
+    = form.fields_for(:success, @success || form.object.build_success(curator_id: current_user.id)) do |success_fields|
+      / By explicitly rendering the id field here, we avoid automatic rendering of the id field due to the fields_for block
+      / => this allows us to permanently disable it since it is only used in the case of a new customer win
+      / => note that Rails 7 adds the `include_id` option to prevent automatically rendering the id field
+      = success_fields.hidden_field(:id, disabled: true)
+
+      /.form-group 
+        = form.label(:category_tag_ids, 'Category Tags')
+        = success_fields.collection_select( \
+            :category_tag_ids,
+            @company.category_tags,
+            :id,
+            :name,
+            {},
+            { class: 'form-control',
+              multiple: true,
+              data: { \
+                controller: 'tomselect',
+                tomselect_kind_value: 'storyTag',
+                dynamic_placeholder: 'Select' } })
+        .help-block 
           | Optional
 
-      = form.fields_for(:success, @success || form.object.build_success(curator_id: current_user.id)) do |success_fields|
-        / By explicitly rendering the id field here, we avoid automatic rendering of the id field due to the fields_for block
-        / => this allows us to permanently disable it since it is only used in the case of a new customer win
-        / => note that Rails 7 adds the `include_id` option to prevent automatically rendering the id field
-        = success_fields.hidden_field(:id, disabled: true)
+      /.form-group 
+        = form.label(:product_tagids, 'Product Tags')
+        = success_fields.collection_select( \
+            :product_tagids,
+            @company.product_tags,
+            :id,
+            :name,
+            {},
+            { class: 'form-control',
+              multiple: true,
+              data: { \
+                controller: 'tomselect',
+                tomselect_kind_value: 'storyTag',
+                dynamic_placeholder: 'Select' } })
+        .help-block 
+          | Optional
 
-        /.form-group 
-          = form.label(:category_tag_ids, 'Category Tags')
-          = success_fields.collection_select( \
-              :category_tag_ids,
-              @company.category_tags,
-              :id,
-              :name,
-              {},
-              { class: 'form-control',
-                multiple: true,
-                data: { \
-                  controller: 'tomselect',
-                  tomselect_kind_value: 'storyTag',
-                  dynamic_placeholder: 'Select' } })
-          .help-block 
-            | Optional
+      .form-group.disabled
+        = success_fields.label(:curator_id, 'Curator')
+        = success_fields.collection_select( \
+            :curator_id,
+            @company.curators,
+            :id,
+            :full_name,
+            { include_blank: 'Select' },
+            { name: ('' if @success&.curator.present?),
+              class: 'form-control',
+              required: true,
+              data: { \
+                controller: 'tomselect',
+                tomselect_kind_value: 'curator',
+                tomselect_custom_options_value: { plugins: {} },
+                field_name: "#{success_fields.object_name}[curator_id]" } }.compact)
 
-        /.form-group 
-          = form.label(:product_tagids, 'Product Tags')
-          = success_fields.collection_select( \
-              :product_tagids,
-              @company.product_tags,
-              :id,
-              :name,
-              {},
-              { class: 'form-control',
-                multiple: true,
-                data: { \
-                  controller: 'tomselect',
-                  tomselect_kind_value: 'storyTag',
-                  dynamic_placeholder: 'Select' } })
-          .help-block 
-            | Optional
-
-        .form-group
-          = success_fields.label(:curator_id, 'Curator')
-          = success_fields.collection_select( \
-              :curator_id,
-              @company.curators,
-              :id,
-              :full_name,
-              { include_blank: true },
-              { name: ('' if @success&.curator.present?),
-                class: 'form-control',
-                placeholder: 'Select',
-                required: true,
-                data: { \
-                  controller: 'tomselect',
-                  tomselect_kind_value: 'curator',
-                  tomselect_custom_options_value: { plugins: {} },
-                  field_name: "#{success_fields.object_name}[curator_id]" } }.compact)
-          .help-block
-
-  = turbo_stream.append 'main-modal-content' do 
-    .modal-footer data-modal-target="footer"
-      button.btn.btn-default type="button" data-dismiss="modal" Cancel
-      
-      // `form.submit` or `submit_tag` will result in an input element with a value attribute
-      // that can't be html. So use a button instead.
-      // Button text content is set via data attribute / css.
-      = tag.button( \
-          class: 'form__submit btn btn-success',
-          form: 'new-story-form',
-          data: { content: 'Create', disable_with_html: disabled_submit_button_html })
+= turbo_stream.append 'main-modal-content' do 
+  .modal-footer data-modal-target="footer" id="main-modal-footer"
+    button.btn.btn-default type="button" data-dismiss="modal" Cancel
+    
+    // `form.submit` or `submit_tag` will result in an input element with a value attribute
+    // that can't be html. So use a button instead.
+    // Button text content is set via data attribute / css.
+    = tag.button( \
+        class: 'form__submit btn btn-success',
+        form: 'new-story-form',
+        data: { content: 'Create', disable_with_html: disabled_submit_button_html })

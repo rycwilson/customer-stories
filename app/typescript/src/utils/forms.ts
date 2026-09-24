@@ -7,7 +7,7 @@ const correctionHandlers = new WeakMap<HTMLInputElement | TomSelectInput, (e: Ev
 const handleValidationCorrection = (formGroup: HTMLElement | null, helpBlock: HTMLElement | null) => {
   return ({ target: control }: { target: HTMLInputElement | TomSelectInput }) => {
     if (formControlIsValid(control)) {
-      formGroup?.classList.remove('has-error');
+      formGroup?.classList.remove('has-error', 'has-error--validation');
       if (helpBlock) helpBlock.textContent = '';
       correctionHandlers.delete(control);
     }
@@ -28,8 +28,8 @@ function formControlIsValid(control: HTMLInputElement | TomSelectInput) {
   const isValid = control.checkValidity();
   if (!isValid) {
     const formGroup = control.closest('.form-group');
-    const helpBlock = formGroup.querySelector('.help-block');
-    formGroup?.classList.add('has-error');
+    const helpBlock = formGroup.querySelector('.help-block--validation');
+    formGroup?.classList.add('has-error', 'has-error--validation');
     if (helpBlock) helpBlock.textContent = control.validationMessage;
 
     const eventName = control instanceof HTMLSelectElement ? 'change' : 'input';

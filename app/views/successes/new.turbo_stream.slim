@@ -8,9 +8,9 @@
         controller: 'new-customer-win',
         new_customer_win_customer_wins_outlet: "#customer-wins",
         action: [ \
-          'input->new-customer-win#updateState',
           'submit->new-customer-win#validate',
-          'turbo:submit-start->new-customer-win#onSubmitStart'].join(' ') },
+          'turbo:submit-start->new-customer-win#onSubmitStart',
+          'input->new-customer-win#updateState' ].join(' ') },
       html: { \
         novalidate: true,
         autocomplete: 'off' }) do |form|
@@ -24,7 +24,7 @@
           disabled: true,
           data: { new_customer_win_target: 'customerField' })
 
-    .form-group class="#{'has-error' if @success.errors.any? { |e| e.attribute == :customer }}"
+    = tag.div class: class_names('form-group', 'has-error': @success.errors&.include?(:customer))
       = form.label(:customer_id, 'Customer', class: 'control-label') 
       = form.collection_select( \
           :customer_id,
@@ -42,18 +42,26 @@
               tomselect_custom_options_value: { create: true, persist: false, plugins: {} },
               action: 'new-customer-win#onChangeCustomer',
               field_name: "#{form.object_name}[customer_id]" } })
-      .help-block 
-        = 'Required' if @success.errors.any? { |e| e.attribute == :customer }
+      .help-block.help-block--validation 
+      - if @success.errors&.include?(:customer)
+        .help-block 
+          - if @success.errors.group_by_attribute[:customer].first.type == :blank
+            | Required
 
-    .form-group class="#{'has-error' if @success.errors.any? { |e| e.attribute == :name }}"
+    = tag.div class: class_names('form-group', 'has-error': @success.errors&.include?(:name))
       = form.label(:name, class: 'control-label') 
       = form.text_field( \
           :name,
           class: 'form-control',
           required: true,
           placeholder: 'Name of Deal or Opportunity from CRM')
-      .help-block
-        = 'Required' if @success.errors.any? { |e| e.attribute == :name }
+      .help-block.help-block--validation
+      - if @success.errors&.include?(:name)
+        .help-block 
+          - if @success.errors.group_by_attribute[:name].first.type == :blank
+            | Required
+          - elsif @success.errors.group_by_attribute[:name].first.type == :taken
+            | Name is already taken for this Customer
 
     .form-group
       = form.label(:win_story_html, 'Description')
@@ -62,7 +70,26 @@
           rows: 4,
           class: 'form-control',
           placeholder: 'Description of Deal or Opportunity from CRM')
-      .help-block 
+      .help-block.help-block--optional 
+        | Optional
+
+    .form-group 
+      = form.label(:tag_ids, 'Tags')
+      = form.select( \
+          :tag_ids,
+          grouped_options_for_select( \
+            { 'Category' => @company.tag_select_options(:category, with_stories_count: false, for_multi_select: true),
+              'Product' => @company.tag_select_options(:product, with_stories_count: false, for_multi_select: true) } \
+              .delete_if { |_, options| options.empty? },
+            [] ),
+          {},
+          id: dom_id(form.object),
+          multiple: true,
+          data: { \
+            controller: 'tomselect',
+            tomselect_kind_value: 'tag',
+            dynamic_placeholder: 'Select Tags' })
+      .help-block.help-block--optional 
         | Optional
 
     = form.fields_for(:contributions, form.object.contributions.build) do |contribution_fields|
@@ -132,23 +159,20 @@
           controller_id: 'new-customer-win', 
           contact_type: 'contributor')
 
-    .form-group.disabled class="#{'has-error' if @success.errors.any? { |e| e.attribute == :curator }}"
+    .form-group.disabled
       = form.label(:curator_id, 'Curator')
       = form.collection_select( \
           :curator_id,
           @company.curators,
           :id,
           :full_name,
-          { include_blank: true },
+          { include_blank: 'Select' },
           { class: 'form-control',
-            placeholder: 'Select',
             required: true,
             data: { \
               controller: 'tomselect',
               tomselect_kind_value: 'curator',
               tomselect_custom_options_value: { plugins: {} } }})
-      .help-block   
-        = 'Required' if @success.errors.any? { |e| e.attribute == :curator }
 
 / NOTE: Footer must have an id so that subsequent appends replace it correctly
 = turbo_stream.append 'main-modal-content' do 

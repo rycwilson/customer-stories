@@ -88,8 +88,6 @@ class SuccessesController < ApplicationController
         # end
       end
     else
-      # TODO: test that server side validation works when there is a duplicate name
-      @errors = @success.errors.full_messages
       render :new
     end
 

@@ -1,3 +1,4 @@
+/ 'submit->new-contribution#validate',
 = turbo_stream.append 'main-modal-body' do
   = form_with( \
       model: @success&.contributions&.build || Contribution.new,
@@ -7,8 +8,7 @@
         controller: 'new-contribution',
         action: [ \
           'turbo:submit-start->new-contribution#onSubmitStart',
-          'input->new-contribution#updateState',
-          'submit->new-contribution#validate' ].join(' ') },
+          'input->new-contribution#updateState' ].join(' ') },
       html: { \
         novalidate: true,
         autocomplete: 'off' }) do |form|
@@ -27,7 +27,7 @@
         = customer_fields.hidden_field(:name, disabled: true, data: { new_contribution_target: 'customerName customerField' })
         = customer_fields.hidden_field(:company_id, value: @company.id, disabled: true, data: { new_contribution_target: 'customerField' })
 
-      .form-group
+      = tag.div class: class_names('form-group', 'has-error': @success.errors&.include?(:customer))
         = success_fields.label(:customer_id, 'Customer', style: "#{@story ? 'pointer-events:none' : ''}", class: 'control-label')
         = success_fields.collection_select( \
             :customer_id,
@@ -46,7 +46,11 @@
                 tomselect_prevent_focus_value: @story ? true : false,
                 action: 'new-contribution#onChangeCustomer',
                 field_name: "#{success_fields.object_name}[customer_id]" } })
-        .help-block.with-errors 
+        .help-block.help-block--validation
+        - if @success.errors&.include?(:customer)
+          .help-block 
+            - if @success.errors.group_by_attribute[:customer].first.type == :blank
+              | Required
 
     - if @story.present?
       .form-group

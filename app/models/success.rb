@@ -97,7 +97,7 @@ class Success < ApplicationRecord
   # created with name = '' and placeholder = true.
   # TODO: modify associations so that stories can exist independently
   validate :named_or_placeholder
-  validates_uniqueness_of(:name, scope: :customer_id, unless: -> { placeholder })
+  validates_uniqueness_of :name, scope: :customer, unless: -> { placeholder? }
 
   # validate :tag_has_same_company
 
@@ -248,7 +248,7 @@ class Success < ApplicationRecord
 
   def named_or_placeholder
     if name.blank? && !placeholder?
-      errors.add(:name, 'must be present if object is not a placeholder')
+      errors.add(:name, :blank)
     elsif name.present? && placeholder?
       errors.add(:placeholder, 'object cannot have a name')
     end

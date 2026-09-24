@@ -87,11 +87,11 @@ form {
   }
   
   .form-group {
-    [required] + .help-block:not(.help-block--instructional):not(.help-block--optional) {
+    .help-block--validation {
       display: none;
     }
     
-    &.has-error [required] + .help-block {
+    &.has-error--validation .help-block--validation {
       display: block
     }
   }
