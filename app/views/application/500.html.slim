@@ -6,10 +6,25 @@ html lang="en-US"
     title 500 Server Error
     = stylesheet_link_tag('app/errors')
     = favicon_link_tag('favicon.ico')
-  body.server-error
+  body
     .dialog
       h1 500
       p Oops, there was a server error.
       
-      - if user_signed_in?
-        = link_to 'Back to Dashboard', dashboard_path('curate')
+      - if current_user&.company.present?
+        - if current_user.company.stories.featured.any?
+          = link_to( \
+              "#{current_user.company.name} Customer Stories",
+              root_url(subdomain: current_user.company.subdomain))
+        = link_to( \
+            "#{current_user.company.name} Dashboard",
+            dashboard_url('curate', subdomain: current_user.company.subdomain))
+        
+      - elsif user_signed_in?
+        = link_to('Create your Company Account', new_company_url)
+        = link_to(root_url) do
+          = image_tag('landing/logo_full_med_blue.webp', alt: 'Customer Stories logo')
+      
+      - else
+        = link_to(root_url) do
+          = image_tag('landing/logo_full_med_blue.webp', alt: 'Customer Stories logo')

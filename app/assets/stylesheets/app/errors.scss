@@ -7,7 +7,7 @@ body {
   .dialog {
     margin: 6rem auto 0;
     width: 95%;
-    max-width: 33em;
+    max-width: 35em;
     text-align: center;
 
     h1 {
@@ -21,21 +21,13 @@ body {
     }
   
     img {
-      height: 50px;
+      height: 2.75em;
     }
   
     a {
+      display: block;
+      margin-bottom: 1.25em;
       font-size: 1.25em;
     }
   }
-
-  // &.not-found {
-  //   background-color: white;
-  //   // padding-top: 10rem;
-
-  // }
-
-  // &.server-error {
-  //   background-color: $light-gray;
-  // }
 }
