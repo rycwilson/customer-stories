@@ -112,13 +112,11 @@ class StoriesController < ApplicationController
   end
 
   def create
-    @story = Story.new(story_params)
+    @story = Story.new story_params
     if @story.save
-      redirect_to edit_story_path(@story), status: :see_other, notice: 'Story has been created.'
+      redirect_to edit_story_path(@story), status: :see_other, notice: 'Story created successfully'
     else
-      # flash.now[:alert] = "There were some errors"
-      @errors = @story.errors.full_messages
-      render(:new, status: :unprocessable_entity)
+      render :new, status: :unprocessable_entity
     end
   end
 

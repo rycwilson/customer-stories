@@ -94,6 +94,16 @@ form {
     &.has-error--validation .help-block--validation {
       display: block
     }
+
+    // Since tomselect does not support readonly, .disabled is added to the form group
+    &.disabled {
+      pointer-events: none;
+
+      .ts-control {
+        opacity: 1;
+        background-color: rgb(235.65, 236.76, 237.32);
+      }
+    }
   }
 
   .row {

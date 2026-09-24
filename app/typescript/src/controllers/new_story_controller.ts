@@ -2,8 +2,7 @@ import FormController from "./form_controller";
 import type { TurboSubmitEndEvent, TurboVisitEvent, FetchResponse } from "@hotwired/turbo";
 
 export default class NewStoryController extends FormController<NewStoryController> {
-  static targets = [...FormController.targets, 'storyTitle', 'successPlaceholder']
-  declare readonly storyTitleTarget: HTMLInputElement;
+  static targets = [...FormController.targets, 'successPlaceholder']
   declare readonly curatorSelectTarget: TomSelectInput;
 
   handleShownModal = this.onShownModal.bind(this);
@@ -19,7 +18,6 @@ export default class NewStoryController extends FormController<NewStoryControlle
   }
 
   onShownModal() {
-    this.storyTitleTarget.focus();
   }
 
   onTurboSubmitEnd(e: CustomEvent<{ fetchResponse: FetchResponse }>) {

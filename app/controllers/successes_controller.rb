@@ -65,14 +65,13 @@ class SuccessesController < ApplicationController
 
     @success = Success.new(win_attrs)
     if @success.save
-      flash.now[:notice] = 'Customer Win created successfully'
-      @row_data = render_to_string( \
+      @row_data = render_to_string(
         partial: 'successes/show',
         formats: [:json],
         locals: { win: Success.for_datatable(@success.id).take }
       )
       @row_view_html = render_to_string(partial: 'successes/edit', locals: { win: @success })
-
+      
       # TODO: We also need to pass any newly created customer or contributions to the response
       # @contributions_row_data = @success.contributions.present? && render_to_string( \
       #   partial: 'contributions/show',
@@ -80,7 +79,9 @@ class SuccessesController < ApplicationController
       #   locals: { contributions: @success.contributions }
       # )
       respond_to do |format|
-        format.turbo_stream {}
+        format.turbo_stream do
+          flash.now[:notice] = 'Customer Win created successfully'
+        end
 
         # What a pure json response utilizing jbuilder would look like:
         # format.json do
