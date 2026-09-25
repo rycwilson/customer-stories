@@ -14,26 +14,39 @@
         controller: 'company-profile toast',
         toast_errors_value: (errors if defined? errors),
         action: [ \
-          'submit->company-profile#validate',
-          'turbo:submit-start->company-profile#onSubmitStart',
           'input->company-profile#updateState',
           'change->company-profile#updateState',
           'image-card:ready-to-validate->company-profile#updateValidator',
           'image-card:validated->company-profile#updateValidator',
-          'image-card:upload-ready->company-profile#onUploadReady' ].join(' ') },
+          'image-card:upload-ready->company-profile#onUploadReady',
+          'submit->company-profile#validate',
+          'turbo:submit-start->company-profile#onSubmitStart' ].join(' ') },
       html: { \
         autocomplete: 'off',
         novalidate: true }) do |form|
     
-    .form-group
+    = tag.div class: class_names('form-group', 'has-error': @company.errors&.include?(:name))
       .visible-sm-block.col-sm-12
         = form.label(:name, 'Company Name')
-      = form.label(:name, 'Company Name', class: 'control-label col-md-3 visible-md-inline-block visible-lg-inline-block')
+      = form.label( \
+          :name,
+          'Company Name',
+          class: 'control-label col-md-3 visible-md-inline-block visible-lg-inline-block')
       .col-sm-12.col-md-8
-        = form.text_field(:name, class: 'form-control', required: true, placeholder: 'Your company')
-        .help-block.with-errors
+        = form.text_field( \
+            :name,
+            class: 'form-control',
+            required: true,
+            placeholder: 'Enter the name of your company or organization')
+        .help-block.help-block--validation
+        - if @company.errors&.include?(:name)
+          .help-block 
+            - if @company.errors.group_by_attribute[:name].first.type == :blank
+              | Required
+            - elsif @company.errors.group_by_attribute[:name].first.type == :taken
+              | Name is not available
     
-    .form-group
+    = tag.div class: class_names('form-group', 'has-error': @company.errors&.include?(:website))
       .visible-sm-block.col-sm-12
         = form.label(:website)
       = form.label( \
@@ -41,8 +54,18 @@
           'Company Website',
           class: 'control-label col-md-3 visible-md-inline-block visible-lg-inline-block')
       .col-sm-12.col-md-8
-        = form.text_field(:website, class: 'form-control', required: true, placeholder: "Your company's web address")
-        .help-block.with-errors
+        = form.text_field( \
+            :website,
+            class: 'form-control',
+            required: true,
+            placeholder: "Enter your company's web address")
+        .help-block.help-block--validation
+        - if @company.errors&.include?(:website)
+          .help-block 
+            - if @company.errors.group_by_attribute[:website].first.type == :blank
+              | Required
+            - elsif @company.errors.group_by_attribute[:website].first.type == :taken
+              | Website is not available
 
     .form-group
       .visible-sm-block.col-sm-12
@@ -56,7 +79,6 @@
             required: true,
             placeholder: "your-custom-domain.customerstories.net",
             disabled: company.persisted?)
-        .help-block.with-errors
 
     .form-group 
       .visible-sm-block.col-sm-12
