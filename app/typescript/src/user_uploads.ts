@@ -158,11 +158,6 @@ export function initS3FileInput(input: HTMLInputElement, onUploadDone: (url: str
   });
 };
 
-function imageDidPersist(img: HTMLImageElement): boolean {
-  const src = img.getAttribute('src');
-  return Boolean(src && src.includes('http'));
-}
-
 // http://stackoverflow.com/questions/39488774
 export function validateFileSize(this: FormController<any>, $fileInput: JQuery<HTMLInputElement, any>): string | undefined {
   console.log('validating file size...')
