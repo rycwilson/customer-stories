@@ -48,15 +48,18 @@ function formControlIsValid(control: HTMLInputElement | TomSelectInput) {
 export function validateForm(e: SubmitEvent): boolean {
   const form = e.target;
   if (!(form instanceof HTMLFormElement)) throw new Error('Expected form element');
-
-  const requiredFields: (HTMLInputElement | TomSelectInput)[] = (
-    [...form.querySelectorAll('input[required], select[required]')]
-  );
+  
   let isValid = true;
+  
+  // TODO: This only covers required fields, but optional fields can still require validation.
+  const requiredFields: (HTMLInputElement | TomSelectInput)[] = ([
+    ...form.querySelectorAll('input[required], select[required]')
+  ]);
   requiredFields.forEach(control => {
-    // Some select controls are disabled by toggling the [name] attribute, precludes ui (style) changes
-    // inputs that are disabled via the [disabled] attribute are always valid
-    if (control.disabled || !control.name || control.name === 'user[password_confirmation]') return;
+    // Some select controls are disabled by toggling [name], which precludes ui (style) changes.
+    if (control.disabled || !control.name || control.name === 'user[password_confirmation]') {
+      return;
+    }
     isValid = formControlIsValid(control) && isValid;
   });
 
