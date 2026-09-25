@@ -71,7 +71,7 @@ main.container-fluid.hidden-xs data-controller="company-settings"
             = render('invitation_templates/template_toolbar', company: @company, errors: @errors)
 
         #contributor-prompts-panel.tab-pane role="tabpanel"
-          = turbo_frame_tag('contributor-prompts-frame')
+          = turbo_frame_tag('contributor-prompts-frame') do
             = render('contributor_prompts', company: @company, errors: @errors)
         
         #website-plugin-panel.tab-pane role="tabpanel"

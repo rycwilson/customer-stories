@@ -1,5 +1,5 @@
 - if @is_dashboard
-  = turbo_frame_tag('stories')
+  = turbo_frame_tag('stories') do
     = render( \
         'stories/shared/gallery',
         { company: @company,
