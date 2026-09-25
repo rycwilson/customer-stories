@@ -4,6 +4,10 @@ main.user-profile form {
   margin: 0 auto;
   width: 70rem;
   
+  > .row {
+    position: relative;
+  }
+
   input,
   .input-group {
     max-width: 35rem;
@@ -19,6 +23,9 @@ main.user-profile form {
 }
 
 .user-profile__photo {
+  position: absolute;
+  right: calc(100% + 15px);
+  
   .image-card {
     display: inline-block;
   }

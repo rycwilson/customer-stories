@@ -15,14 +15,14 @@ main.user-profile.container-fluid.hidden-xs
           'image-card:upload-ready->user-profile#updateState',
           'input->user-profile#updateState',
           'submit->user-profile#validate',
-          'turbo:submit-start->user-profile#onSubmitStart'].join(' ') },
+          'turbo:submit-start->user-profile#onSubmitStart' ].join(' ') },
       html: { \
         novalidate: true,
         autocomplete: 'off' }) do |form|
 
     .row
-
-      .col-sm-4.text-right
+      .col-sm-offset-4.col-sm-8
+        
         .user-profile__photo
           = render( \
               ImageCardComponent.new( \
@@ -32,8 +32,7 @@ main.user-profile.container-fluid.hidden-xs
                 :photo_url,
                 disabled: true,
                 data: { image_card_target: 'input urlInput' })
-
-      .col-sm-8
+        
         .form-group
           = form.label(:first_name, 'First Name', class: 'control-label col-sm-3')
           .col-sm-9
@@ -44,9 +43,8 @@ main.user-profile.container-fluid.hidden-xs
                 autocomplete: 'given-name',
                 tabindex: 0,
                 data: { user_profile_target: 'userInput', initial_value: form.object.first_name })
-            .help-block.with-errors
-
-      .col-sm-8
+            .help-block.help-block--validation
+        
         .form-group
           = form.label(:last_name, 'Last Name', class: 'control-label col-sm-3')
           .col-sm-9
@@ -56,9 +54,8 @@ main.user-profile.container-fluid.hidden-xs
                 required: true,
                 autocomplete: 'family-name',
                 data: { user_profile_target: 'userInput', initial_value: form.object.last_name })
-            .help-block.with-errors
-
-      .col-sm-8
+            .help-block.help-block--validation
+          
         .form-group
           = form.label(:title, 'Job Title', class: 'control-label col-sm-3')
           .col-sm-9 
@@ -67,8 +64,8 @@ main.user-profile.container-fluid.hidden-xs
                 class: 'form-control',
                 autocomplete: 'organization-title',
                 data: { user_profile_target: 'userInput', initial_value: form.object.title })
+            .help-block.help-block--validation
 
-      .col-sm-offset-4.col-sm-8
         .form-group
           = form.label(:phone, class: 'control-label col-sm-3')
           .col-sm-9 
@@ -78,11 +75,9 @@ main.user-profile.container-fluid.hidden-xs
                 :phone,
                 class: 'form-control',
                 autocomplete: 'tel',
-                required: true,
                 data: { user_profile_target: 'userInput', initial_value: form.object.phone })
-            .help-block
+            .help-block.help-block--validation
 
-      .col-sm-offset-4.col-sm-8
         .form-group
           = form.label(:email, class: 'control-label col-sm-3')
           .col-sm-9 
@@ -93,13 +88,13 @@ main.user-profile.container-fluid.hidden-xs
                   autocomplete: 'username',
                   required: true,
                   disabled: true,
+                  placeholder: 'Enter your email',
                   data: { user_profile_target: 'emailInput' })
               .input-group-btn data-user-profile-target="editButtonWrapper"
                 button.btn.btn-default type="button" data-action="user-profile#changeEmail"
                   i.fa.fa-pencil
-            .help-block
+            .help-block.help-block--validation
 
-      .col-sm-offset-4.col-sm-8
         .user-profile__current-password.form-group
           = form.label(:current_password, 'Password', class: 'control-label col-sm-3')
           .col-sm-9
@@ -111,13 +106,13 @@ main.user-profile.container-fluid.hidden-xs
                   autocomplete: 'current-password',
                   required: true,
                   disabled: true,
+                  placeholder: 'Enter your password',
                   data: { user_profile_target: 'currentPasswordInput' })
               .input-group-btn data-user-profile-target="editButtonWrapper"
                 button.btn.btn-default type="button"  data-action="user-profile#changePassword"
                   i.fa.fa-pencil
-            .help-block 
-      
-      .col-sm-offset-4.col-sm-8
+            .help-block.help-block--validation
+    
         .user-profile__password.form-group
           = form.label(:password, 'New Password', class: 'control-label col-sm-3')
           .col-sm-9
@@ -128,11 +123,11 @@ main.user-profile.container-fluid.hidden-xs
                 minlength: 8,
                 required: true,
                 disabled: true,
+                placeholder: 'Enter your new password',
                 data: { user_profile_target: 'passwordInput' })
             .help-block.help-block--instructional
               | Must be at least 8 characters
 
-      .col-sm-offset-4.col-sm-8
         .user-profile__password-confirmation.form-group
           = form.label(:password_confirmation, 'Confirm New Password', class: 'control-label col-sm-3')
           .col-sm-9
@@ -142,15 +137,14 @@ main.user-profile.container-fluid.hidden-xs
                 autocomplete: 'new-password',
                 required: true,
                 disabled: true,
+                placeholder: 'Confirm your new password',
                 data: { user_profile_target: 'passwordConfirmationInput' })
-            .help-block
-              | Passwords must match
+            .help-block.help-block--validation
 
-      .col-sm-offset-4.col-sm-8
         .row
           .col-sm-offset-3.col-sm-9
             = tag.button( \
-                class: 'form__submit btn btn-success disabled',
+                class: 'form__submit btn btn-success',
                 form: 'user-profile-form',
                 disabled: true,
                 data: { \
