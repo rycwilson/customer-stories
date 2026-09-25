@@ -56,7 +56,7 @@ export function onS3Done(this: ImageCardController, url: string) {
 export function initS3FileInput(input: HTMLInputElement, onUploadDone: (url: string) => void) {
   const $fileInput = $(input);
   const s3 = JSON.parse(<string>input.dataset.s3);
-  const assetHost: string | undefined = input.form!.dataset.assetHost;  // undefined in development environment
+  const assetHost: string | undefined = input.dataset.assetHost;
   const $formGroup = $fileInput.closest('.form-group') as unknown as JQuery<HTMLDivElement, any>;
   $fileInput.fileupload({
     fileInput: $fileInput,

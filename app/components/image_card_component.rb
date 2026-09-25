@@ -65,6 +65,7 @@ class ImageCardComponent < ViewComponent::Base
       accept: 'image/jpeg,image/png',
       data: {
         image_card_target: 'fileInput',
+        asset_host: Rails.application.config.asset_host,
         s3: (s3_direct_post if @upload_enabled),
         validate: 'false',
         collection: @collection,
