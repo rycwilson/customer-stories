@@ -8,8 +8,7 @@ main.user-profile.container-fluid.hidden-xs
       id: 'user-profile-form',
       class: 'form-horizontal',
       data: { \
-        controller: 'user-profile toast',
-        asset_host: Rails.application.config.asset_host,
+        controller: 'user-profile',
         action: [ \
           'image-card:ready-to-validate->user-profile#updateValidator',
           'image-card:validated->user-profile#updateValidator',

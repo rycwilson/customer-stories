@@ -66,7 +66,6 @@ export function validateForm(e: SubmitEvent): boolean {
 
   if (!isValid) {
     e.preventDefault();
-    e.stopPropagation();  // stops rails-ujs from disabling the submit button
     requiredFields.find(control => !control.checkValidity())?.focus();
   }
   return isValid;

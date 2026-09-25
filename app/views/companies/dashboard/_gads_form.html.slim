@@ -14,7 +14,6 @@
           (flash.to_h if flash.present? && turbo_frame_request_id == 'company-ads-settings'),
         toast_errors_value: \
           (@errors if @errors && turbo_frame_request_id == 'company-ads-settings'),
-        asset_host: Rails.application.config.asset_host,
         action: [ \
           'image-card:make-default->ads#setNewDefault',
           'image-card:ready-to-validate->ads#updateValidator',

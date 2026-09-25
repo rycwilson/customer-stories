@@ -5,7 +5,6 @@
       id: 'customer-form',
       data: { \
         controller: 'form',
-        asset_host: Rails.application.config.asset_host,
         action: [ \
           'input->form#updateState',
           'image-card:ready-to-validate->form#updateValidator',

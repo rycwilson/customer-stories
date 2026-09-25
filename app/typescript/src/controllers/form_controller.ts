@@ -146,7 +146,6 @@ export default class FormController<Ctrl extends SubclassController> extends Con
 
   validate(e: SubmitEvent): boolean {
     return validateForm(e);
-    // return true;
   }
 
   updateState(_e?: Event) {
