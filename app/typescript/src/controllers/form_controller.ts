@@ -140,9 +140,8 @@ export default class FormController<Ctrl extends SubclassController> extends Con
   }
 
   onSubmitEnd(e: TurboSubmitEndEvent) {
-    console.log('end', e)
+    // console.log('end', e)
   }
-
 
   validate(e: SubmitEvent): boolean {
     return validateForm(e);
@@ -155,10 +154,6 @@ export default class FormController<Ctrl extends SubclassController> extends Con
       this.submitBtn.disabled = !this.isDirty;
     }
   }
-
-  // onAjaxComplete(this: Ctrl, { detail: [xhr, status] }: { detail: [xhr: XMLHttpRequest, status: string] }) {
-    // console.log('superclass', xhr, status)
-  // }
 
   updateValidator(this: Ctrl, { type: eventType, detail: { fileInput } }: { type: string, detail: { fileInput: HTMLInputElement } }) {
     // console.log('updating validator', eventType)
