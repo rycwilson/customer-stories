@@ -43,6 +43,12 @@ export default class ImageCardController extends Controller<HTMLDivElement | HTM
   declare imageLoadTimer: number;
 
   changeFileInputHandler = this.onChangeFileInput.bind(this);
+  validatorHandlers = {
+    'validate.bs.validator': this.onValidateFileInput.bind(this),
+    'valid.bs.validator': this.onValidFileInput.bind(this),
+    'invalid.bs.validator': this.onInvalidFileInput.bind(this),
+    'validated.bs.validator': this.onValidatedFileInput.bind(this),
+  };
 
   // jasny-bootstrap will remove and replace the img tag when uploading
   get imgTarget() {
@@ -52,15 +58,6 @@ export default class ImageCardController extends Controller<HTMLDivElement | HTM
   get isDefaultImage() {
     // return this.element.className.includes('--default');
     return this.element.classList.contains('gads-default');
-  }
-
-  get validatorHandlers() {
-    return {
-      'validate.bs.validator': this.onValidateFileInput.bind(this),
-      'valid.bs.validator': this.onValidFileInput.bind(this),
-      'invalid.bs.validator': this.onInvalidFileInput.bind(this),
-      'validated.bs.validator': this.onValidatedFileInput.bind(this),
-    };
   }
 
   connect() {
@@ -76,12 +73,7 @@ export default class ImageCardController extends Controller<HTMLDivElement | HTM
       }
     }
 
-    setTimeout(() => {
-      this.dispatch(
-        'ready-for-validator', 
-        { detail: { input: this.fileInputTarget, handlers: this.validatorHandlers } }
-      )
-    });
+    setTimeout(this.readyForValidator.bind(this));
   }
   
   disconnect() {
@@ -93,6 +85,13 @@ export default class ImageCardController extends Controller<HTMLDivElement | HTM
     }
   }
 
+  readyForValidator() {
+    this.dispatch(
+      'ready-for-validator', 
+      { detail: { input: this.fileInputTarget, handlers: this.validatorHandlers } }
+    )
+  }
+
   onChangeFileInput() {
     console.log('change.bs.fileinput')
     if (!this.imageDidLoad()) {
@@ -102,7 +101,7 @@ export default class ImageCardController extends Controller<HTMLDivElement | HTM
 
   imageDidLoad() {
     if (this.imgTarget?.complete) {
-      // console.log('image did load')
+      console.log('image did load')
       clearInterval(this.imageLoadTimer);
 
       // set dimensions for validation
@@ -115,14 +114,13 @@ export default class ImageCardController extends Controller<HTMLDivElement | HTM
 
   onValidateFileInput({ relatedTarget: input }: { relatedTarget: HTMLInputElement }) {
     if (input !== this.fileInputTarget) return;
-
-    // console.log('validate.bs.validator')
+    console.log('validate.bs.validator')
   }
   
   onValidFileInput({ relatedTarget: input }: { relatedTarget: HTMLInputElement }) {
     if (input !== this.fileInputTarget) return;
     
-    // console.log('valid.bs.validator')
+    console.log('valid.bs.validator')
     const imageType = <string>input.dataset.imageType;
     const isDefaultReplacement = this.isDefaultImage && this.hasIdInputTarget
     this.element.classList.add(`image-card--${input.dataset.imageType}`, 'image-card--uploading');
@@ -152,7 +150,7 @@ export default class ImageCardController extends Controller<HTMLDivElement | HTM
     const input = e.relatedTarget;
     if (input !== this.fileInputTarget) return;
     
-    // console.log('validated.bs.validator')
+    console.log('validated.bs.validator')
     this.dispatch('validated', { detail: { fileInput: input } });
   }
 

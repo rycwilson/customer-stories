@@ -25,6 +25,13 @@ interface ValidatorHandlers {
   'validated.bs.validator': VoidFunction;
 }
 
+const validatorEvents = [
+  'validate.bs.validator',
+  'valid.bs.validator',
+  'invalid.bs.validator',
+  'validated.bs.validator'
+] as const;
+
 export type SubclassController = (
   NewCustomerWinController | 
   NewContributionController | 
@@ -90,7 +97,7 @@ export default class FormController<Ctrl extends SubclassController> extends Con
 
   declare initialState: string;
 
-  validatorHandlers = new WeakMap<HTMLInputElement, ValidatorHandlers>();
+  validatorHandlers = new Map<HTMLInputElement, ValidatorHandlers>();
 
   get isDirty() {
     return serializeForm(this.element) !== this.initialState;
@@ -121,16 +128,15 @@ export default class FormController<Ctrl extends SubclassController> extends Con
         'max-file-size': validateFileSize,
         'min-dimensions': validateImageDimensions,
         'required-image': function ($fileInput: JQuery<HTMLInputElement, any>) {
-          console.log('checking for required image (skipping)...', $fileInput)
+          // console.log('checking for required image (skipping)...', $fileInput)
         }
       }
     });
   }
 
   disconnect() {
-    if (this.imageCardTargets.length) {
-      this.removeValidatorListeners();
-    }
+    // This is redundant. Bootstrap Validator will call `.off('.bs.validator')` when destroyed.
+    // if (this.imageCardTargets.length) this.removeValidatorListeners();
     $(this.element).validator('destroy');
   }
 
@@ -154,7 +160,7 @@ export default class FormController<Ctrl extends SubclassController> extends Con
     this.animateSubmit(e, submitter);
   }
 
-  onSubmitEnd(e: TurboSubmitEndEvent) {
+  onSubmitEnd(_e: TurboSubmitEndEvent) {
     // console.log('end', e)
   }
 
@@ -185,26 +191,26 @@ export default class FormController<Ctrl extends SubclassController> extends Con
   addValidatorListeners(e: CustomEvent<{ input: HTMLInputElement, handlers: ValidatorHandlers }>) {
     const { input, handlers } = e.detail;
     this.validatorHandlers.set(input, handlers);
-    $(this.element)
-      .on('validate.bs.validator', handlers['validate.bs.validator'])
-      .on('valid.bs.validator', handlers['valid.bs.validator'])
-      .on('invalid.bs.validator', handlers['invalid.bs.validator'])
-      .on('validated.bs.validator', handlers['validated.bs.validator']);
+    validatorEvents.forEach(event => { $(this.element).on(event, handlers[event]) })
   }
 
-  removeValidatorListeners() {
-    [...this.element.elements]
-      .filter(el => el instanceof HTMLInputElement && el.type === 'file')
-      .forEach(input => {
-        const handlers = this.validatorHandlers.get(input as HTMLInputElement);
-        if (handlers) {
-          $(this.element)
-            .off('validate.bs.validator', handlers['validate.bs.validator'])
-            .off('valid.bs.validator', handlers['valid.bs.validator'])
-            .off('invalid.bs.validator', handlers['invalid.bs.validator'])
-            .off('validated.bs.validator', handlers['validated.bs.validator']);
-        }
-      });
+  removeValidatorListeners(input?: HTMLInputElement) {
+    const removeListenersForInput = (input: HTMLInputElement) => {
+      const handlers = this.validatorHandlers.get(input);
+      if (handlers) {
+        validatorEvents.forEach(event => { $(this.element).off(event, handlers[event]) });
+      }
+    };
+    if (input) {
+      removeListenersForInput(input);
+    
+    // Below will not be executed. See `disconnect` callback.
+    } else {
+      const inputs = [...this.element.elements].filter(el => (
+        el instanceof HTMLInputElement && el.type === 'file'
+      )) as HTMLInputElement[];
+      inputs.forEach(removeListenersForInput);
+    }
   }
 
   animateSubmit(e: TurboSubmitStartEvent, submitEl?: HTMLButtonElement | HTMLInputElement) {
