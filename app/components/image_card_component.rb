@@ -42,12 +42,6 @@ class ImageCardComponent < ViewComponent::Base
         image_id: @image_data[:id],
         controller: 'image-card',
         "#{@form_controller_id}-target" => ('imageCard' if @form_controller_id),
-        # image_card_ads_outlet: (parent_form_id if @model == 'AdwordsImage'),
-        # image_card_user_profile_outlet: (parent_form_id if @model == 'User'),
-        # image_card_company_profile_outlet: (parent_form_id if @model == 'Company'),
-        # image_card_story_settings_outlet: (parent_form_id if @model == 'Story'),
-        # Forms that do not have a subclass controller:
-        # image_card_form_outlet: (parent_form_id if @model.in?(%w[Customer])),
         image_card_upload_enabled_value: @upload_enabled,
         ads_target:,
         story_settings_target: 'ogImageCard',
@@ -131,17 +125,6 @@ class ImageCardComponent < ViewComponent::Base
       signature_expiration: 1.week.from_now # max expiration setting
     )
     { url: post.url, host: URI.parse(post.url).host, 'postData' => post.fields }
-  end
-  
-  def parent_form_id
-    form_ids = {
-      'Company' => '#company-profile-form',
-      'AdwordsImage' => '#gads-form',
-      'User' => '#user-profile-form',
-      'Customer' => '#customer-form',
-      'Story' => '#story-settings-form'
-    }
-    form_ids[@model]
   end
 
   def ads_target

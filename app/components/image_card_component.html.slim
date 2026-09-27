@@ -34,9 +34,6 @@
           i.fa.fa-fw.fa-remove
 
       .image-card__frame
-        /.image-card__errors
-          i.fa.fa-warning
-          .help-block.with-errors
         - if image_replaceable?
           .fileinput-new.thumbnail
             = image_tag(placeholder_url, alt: alt_text)
