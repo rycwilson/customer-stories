@@ -78,11 +78,11 @@ export default class UserProfileController extends FormController<UserProfileCon
     let isValid = super.validate(e);
     const changingPassword = !this.passwordConfirmationInputTarget.disabled;
 
-    // We want to validate the password confirmation separately so that it only displays a
-    // "Passwords must match" error message, i.e. presence and format errors can be flagged 
-    // on the password input alone, and not repeated for the confirmation input.
+    // We want to validate the password confirmation separately so that it can only display 
+    // a "Passwords must match" error message. Presence and format errors can be flagged on 
+    // the password input alone, and not repeated for the confirmation input.
     if (changingPassword) {
-      const formGroup = this.passwordConfirmationInputTarget.closest('.form-group')!;
+      const formGroup = <HTMLElement>this.passwordConfirmationInputTarget.closest('.form-group');
       const helpBlock = formGroup.querySelector('.help-block--validation');
       if (isValid) {
         if (this.passwordsDoNotMatch) {
