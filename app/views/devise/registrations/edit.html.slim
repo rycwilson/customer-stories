@@ -24,15 +24,7 @@ main.user-profile.container-fluid.hidden-xs
     .row
       .col-sm-offset-4.col-sm-8
         
-        .user-profile__photo
-          = render( \
-              ImageCardComponent.new( \
-                'User', 
-                image_data: { type: 'SquareLogo', url: current_user.photo_url } )) do 
-            = form.hidden_field( \
-                :photo_url,
-                disabled: true,
-                data: { image_card_target: 'input urlInput' })
+        = render('user_photo', user: current_user)
         
         .form-group
           = form.label(:first_name, 'First Name', class: 'control-label col-sm-3')
