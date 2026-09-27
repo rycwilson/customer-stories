@@ -162,7 +162,8 @@
               = form.label(:og_image_url, 'Image')
               = render( \
                   ImageCardComponent.new( \
-                    'Story', 
+                    'Story',
+                    form_controller_id: 'story-settings',
                     image_data: { type: 'OpenGraph', url: story.og_image_url } )) do
                 = form.hidden_field( \
                     :og_image_url,

@@ -31,7 +31,11 @@
           = form.label(:show_name_with_logo)
             = form.check_box(:show_name_with_logo)
             = 'Show name'
-      = render(ImageCardComponent.new('Customer', image_data: { url: @customer.logo_url })) do
+      = render( \
+          ImageCardComponent.new( \
+            'Customer',
+            form_controller_id: 'form',
+            image_data: { url: @customer.logo_url } )) do
         .customer-name 
           span = @customer.name
         = form.hidden_field( \

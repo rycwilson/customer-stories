@@ -17,7 +17,7 @@
               i.fa.fa-check.fa-stack-1x
 
   - else
-    = tag.div(**form_group_attributes) 
+    = tag.div(**form_group_attributes) do
       .image-card__header
         - if @upload_enabled
           / attaching data-trigger attribute to .fileinput-preview does not work

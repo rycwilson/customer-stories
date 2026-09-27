@@ -3,6 +3,7 @@
 = render( \
     ImageCardComponent.new( \
       'AdwordsImage', 
+      form_controller_id: 'ads',
       image_data:,
       collection: local_assigns.fetch(:collection, nil),
       upload_enabled: image_data.blank?)) do

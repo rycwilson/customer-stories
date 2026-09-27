@@ -2,7 +2,7 @@
 - ad_image = type == 'SquareImage' ? defaults.square.take : defaults.landscape.take
 - image_data = ad_image || { type:, default: true }
 
-= render(ImageCardComponent.new('AdwordsImage', image_data:)) do
+= render(ImageCardComponent.new('AdwordsImage', form_controller_id: 'ads', image_data:)) do
 
   = render( \
       'adwords_images/hidden_field_tags', \

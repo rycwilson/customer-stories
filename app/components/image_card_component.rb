@@ -8,6 +8,7 @@ class ImageCardComponent < ViewComponent::Base
 
   def initialize(
     model,
+    form_controller_id: nil,
     image_data: {},
     collection: nil,
     upload_enabled: true, 
@@ -18,6 +19,7 @@ class ImageCardComponent < ViewComponent::Base
       collection = image_data[:type].split(/(?=[A-Z])/).last.downcase.pluralize
     end
     @model = model
+    @form_controller_id = form_controller_id
     @image_data = image_data
     @required = required
     @collection = collection
@@ -39,12 +41,14 @@ class ImageCardComponent < ViewComponent::Base
       data: {
         image_id: @image_data[:id],
         controller: 'image-card',
-        image_card_ads_outlet: (parent_form_id if @model == 'AdwordsImage'),
-        image_card_user_profile_outlet: (parent_form_id if @model == 'User'),
-        image_card_company_profile_outlet: (parent_form_id if @model == 'Company'),
-        image_card_story_settings_outlet: (parent_form_id if @model == 'Story'),
+        "#{@form_controller_id}-target" => ('imageCard' if @form_controller_id),
+        # image_card_ads_outlet: (parent_form_id if @model == 'AdwordsImage'),
+        # image_card_user_profile_outlet: (parent_form_id if @model == 'User'),
+        # image_card_company_profile_outlet: (parent_form_id if @model == 'Company'),
+        # image_card_story_settings_outlet: (parent_form_id if @model == 'Story'),
         # Forms that do not have a subclass controller:
-        image_card_form_outlet: (parent_form_id if @model.in?(%w[Customer])),
+        # image_card_form_outlet: (parent_form_id if @model.in?(%w[Customer])),
+        image_card_upload_enabled_value: @upload_enabled,
         ads_target:,
         story_settings_target: 'ogImageCard',
         action: ('click->image-card#toggleSelected' if @model == 'AdwordsAd') 
