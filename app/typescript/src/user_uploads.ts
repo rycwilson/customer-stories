@@ -1,4 +1,4 @@
-import type FormController from './controllers/form_controller'
+// import type FormController from './controllers/form_controller'
 import type ImageCardController from './controllers/image_card_controller';
 
 interface JasnyFileInputContainer extends HTMLDivElement {
@@ -43,9 +43,12 @@ export function onS3Done(this: ImageCardController, url: string) {
     'load', 
     () => {
       // remove the spinner for cases in which the form is not immediately sent upon successful upload
-      if (this.hasFormOutlet || this.hasUserProfileOutlet || this.hasCompanyProfileOutlet) {
-        this.element.classList.remove('image-card--uploading');
-      }
+
+      // TODO: !!!
+      // if (this.hasFormOutlet || this.hasUserProfileOutlet || this.hasCompanyProfileOutlet) {
+      //   this.element.classList.remove('image-card--uploading');
+      // }
+
       this.dispatch('upload-ready', { detail: { card: this.element } });
     },
     { once: true }
@@ -159,20 +162,17 @@ export function initS3FileInput(input: HTMLInputElement, onUploadDone: (url: str
 };
 
 // http://stackoverflow.com/questions/39488774
-export function validateFileSize(this: FormController<any>, $fileInput: JQuery<HTMLInputElement, any>): string | undefined {
+export function validateFileSize($fileInput: JQuery<HTMLInputElement, any>): string | undefined {
   console.log('validating file size...')
   if ($fileInput.prop('files')[0].size > $fileInput.data('maxFileSize')) {
-    const error = 'File size must be less than 5.2MB';
-    console.error(error)
-    setTimeout(() => this.element.setAttribute('data-toast-flash-value', JSON.stringify({ alert: error + Date.now() })));
+    const error = 'Must be < 5.2MB';
     return error;
   } else {
     // valid
   }
 }
 
-// only want to validate new images => a url indicates an existing image
-export function validateImageDimensions(this: FormController<any>, $fileInput: JQuery<HTMLInputElement, any>): string | undefined {
+export function validateImageDimensions($fileInput: JQuery<HTMLInputElement, any>): string | undefined {
   console.log('validating image dimensions...')
   let isValid, imageType;
   imageType = $fileInput.data('imageType');
@@ -243,13 +243,8 @@ export function validateImageDimensions(this: FormController<any>, $fileInput: J
     $fileInput.attr('data-image-type', imageType!);
   } else {
     const error = (minWidth && minHeight) ?
-      `Image must be at least ${minWidth}px \u00d7 ${minHeight}px` :
-      'Image does not meet size requirements';
-    console.error(error)
-
-    // use setTimeout to ensure one flash message does not squash another (e.g. both file size and image dimensions fail to validate)
-    // timestamp is for ensuring flashValueChanged is called in the controller (see ToastController)
-    setTimeout(() => this.element.setAttribute('data-toast-flash-value', JSON.stringify({ alert: error + Date.now() })));
+      `Must be >= ${minWidth}px \u00d7 ${minHeight}px` :
+      'Does not meet size requirements';
     return error;
   }
 }

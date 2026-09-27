@@ -1,28 +1,17 @@
 import { Controller } from '@hotwired/stimulus';
-import { type SubclassController } from './form_controller';
 import { initS3FileInput, onS3Done } from '../user_uploads';
 
 export default class ImageCardController extends Controller<HTMLDivElement | HTMLLIElement> {
-  static outlets = ['form', 'ads', 'user-profile','company-profile', 'story-settings'];
-  declare readonly formOutlet: Controller;
-  declare readonly hasFormOutlet: boolean;
-  declare readonly adsOutlet: Controller;
-  declare readonly hasAdsOutlet: boolean;
-  declare readonly userProfileOutlet: Controller;
-  declare readonly hasUserProfileOutlet: boolean;
-  declare readonly companyProfileOutlet: Controller;
-  declare readonly hasCompanyProfileOutlet: boolean;
-  declare readonly storySettingsOutlet: Controller;
-  declare readonly hasStorySettingsOutlet: boolean;
-
   static values = {
     inputsEnabled: { type: Boolean, default: false },
     openFileDialog: { type: Boolean, default: false },
-    toggleDefault: { type: Boolean, default: false }   // whether to make the image the default for that type
+    toggleDefault: { type: Boolean, default: false },   // whether to make the image the default for that type
+    uploadEnabled: Boolean,
   }
   declare inputsEnabledValue: boolean;
   declare openFileDialogValue: boolean;
   declare toggleDefaultValue: boolean;
+  declare readonly uploadEnabledValue: boolean;
 
   static targets = [
     'formGroup', 
@@ -54,12 +43,6 @@ export default class ImageCardController extends Controller<HTMLDivElement | HTM
   declare imageLoadTimer: number;
 
   changeFileInputHandler = this.onChangeFileInput.bind(this);
-  // clearFileInputHandler = this.onClearFileInput.bind(this);
-  // resetFileInputHandler = this.onResetFileInput.bind(this);
-  validateFileInputHandler = this.onValidateFileInput.bind(this);
-  validFileInputHandler = this.onValidFileInput.bind(this);
-  invalidFileInputHandler = this.onInvalidFileInput.bind(this);
-  validatedFileInputHandler = this.onValidatedFileInput.bind(this);
 
   // jasny-bootstrap will remove and replace the img tag when uploading
   get imgTarget() {
@@ -71,21 +54,18 @@ export default class ImageCardController extends Controller<HTMLDivElement | HTM
     return this.element.classList.contains('gads-default');
   }
 
-  get fileUploadEnabled() {
-    return this.hasFormGroupTarget;
-  }
-
-  get parentFormOutlet() {
-    if (this.hasFormOutlet) return this.formOutlet;
-    if (this.hasAdsOutlet) return this.adsOutlet;
-    if (this.hasUserProfileOutlet) return this.userProfileOutlet;
-    if (this.hasCompanyProfileOutlet) return this.companyProfileOutlet;
-    if (this.hasStorySettingsOutlet) return this.storySettingsOutlet;
+  get validatorHandlers() {
+    return {
+      'validate.bs.validator': this.onValidateFileInput.bind(this),
+      'valid.bs.validator': this.onValidFileInput.bind(this),
+      'invalid.bs.validator': this.onInvalidFileInput.bind(this),
+      'validated.bs.validator': this.onValidatedFileInput.bind(this),
+    };
   }
 
   connect() {
     // jquery event listeners necessary for hooking into jquery plugin events
-    if (this.fileUploadEnabled) {
+    if (this.uploadEnabledValue) {
       $(this.formGroupTarget)
         .on('change.bs.fileinput', this.changeFileInputHandler)
         // .on('reseted.bs.fileinput', this.resetFileInputHandler);
@@ -95,10 +75,17 @@ export default class ImageCardController extends Controller<HTMLDivElement | HTM
         initS3FileInput(this.fileInputTarget, onS3Done.bind(this));
       }
     }
+
+    setTimeout(() => {
+      this.dispatch(
+        'ready-for-validator', 
+        { detail: { input: this.fileInputTarget, handlers: this.validatorHandlers } }
+      )
+    });
   }
   
   disconnect() {
-    if (this.fileUploadEnabled) {
+    if (this.uploadEnabledValue) {
       $(this.formGroupTarget)
         .off('change.bs.fileinput', this.changeFileInputHandler)
         // .off('reseted.bs.fileinput', this.resetFileInputHandler)
@@ -115,7 +102,7 @@ export default class ImageCardController extends Controller<HTMLDivElement | HTM
 
   imageDidLoad() {
     if (this.imgTarget?.complete) {
-      console.log('image did load')
+      // console.log('image did load')
       clearInterval(this.imageLoadTimer);
 
       // set dimensions for validation
@@ -127,45 +114,46 @@ export default class ImageCardController extends Controller<HTMLDivElement | HTM
   }
 
   onValidateFileInput({ relatedTarget: input }: { relatedTarget: HTMLInputElement }) {
-    if (input === this.fileInputTarget) {
-      console.log('validate.bs.validator')
-    }
+    if (input !== this.fileInputTarget) return;
+
+    // console.log('validate.bs.validator')
   }
   
   onValidFileInput({ relatedTarget: input }: { relatedTarget: HTMLInputElement }) {
-    if (input === this.fileInputTarget) {
-      console.log('valid.bs.validator')
-      const imageType = <string>input.dataset.imageType;
-      const isDefaultReplacement = this.isDefaultImage && this.hasIdInputTarget
-      this.element.classList.add(`image-card--${input.dataset.imageType}`, 'image-card--uploading');
-      this.element.classList.remove('hidden');
-      if (this.hasTypeInputTarget) {
-        this.typeInputTarget.value = imageType;
-      }
-      if (isDefaultReplacement) {
-        this.dispatch('replace-default', { detail: { prevDefaultImageId: this.idInputTarget.value } });
-        this.idInputTarget.value = '';
-      }
-      $(input).fileupload('send', { files: input.files });
+    if (input !== this.fileInputTarget) return;
+    
+    // console.log('valid.bs.validator')
+    const imageType = <string>input.dataset.imageType;
+    const isDefaultReplacement = this.isDefaultImage && this.hasIdInputTarget
+    this.element.classList.add(`image-card--${input.dataset.imageType}`, 'image-card--uploading');
+    this.element.classList.remove('hidden');
+    if (this.hasTypeInputTarget) {
+      this.typeInputTarget.value = imageType;
     }
+    if (isDefaultReplacement) {
+      this.dispatch('replace-default', { detail: { prevDefaultImageId: this.idInputTarget.value } });
+      this.idInputTarget.value = '';
+    }
+    $(input).fileupload('send', { files: input.files });
   }
   
-  onInvalidFileInput({ relatedTarget: input }: { relatedTarget: HTMLInputElement }) {
-    if (input === this.fileInputTarget) {
-      console.log('invalid.bs.validator')
-      if (this.parentFormOutlet) {
-        (<HTMLFormElement>this.parentFormOutlet.element).reset();
-      }
-      $(this.formGroupTarget).fileinput('reset');
-    }
+  onInvalidFileInput(
+    { relatedTarget: input, detail: errors }: 
+    { relatedTarget: HTMLInputElement, detail: string[] }
+  ) {
+    if (input !== this.fileInputTarget) return;
+
+    console.log('invalid.bs.validator')
+    this.dispatch('invalid');
+    $(this.formGroupTarget).fileinput('reset');
   }
   
-onValidatedFileInput(e: { type: 'validated'; [key: string]: unknown }) {
-  const input = e.relatedTarget;
-    if (input === this.fileInputTarget) {
-      console.log('validated.bs.validator')
-      this.dispatch('validated', { detail: { fileInput: input } });
-    }
+  onValidatedFileInput(e: { type: 'validated'; [key: string]: unknown }) {
+    const input = e.relatedTarget;
+    if (input !== this.fileInputTarget) return;
+    
+    // console.log('validated.bs.validator')
+    this.dispatch('validated', { detail: { fileInput: input } });
   }
 
   makeDefault() {
@@ -220,61 +208,4 @@ onValidatedFileInput(e: { type: 'validated'; [key: string]: unknown }) {
       this.openFileDialogValue = false;
     }
   } 
-
-  formOutletConnected(_: SubclassController, form: HTMLFormElement) {
-    this.addValidationListeners(form);
-  }
-
-  formOutletDisconnected(_: SubclassController, form: HTMLFormElement) {
-    this.removeValidationListeners(form);
-  }
-
-  adsOutletConnected(_: SubclassController, form: HTMLFormElement) {
-    this.addValidationListeners(form);
-  }
-
-  adsOutletDisconnected(_: SubclassController, form: HTMLFormElement) {
-    this.removeValidationListeners(form);
-  }
-
-  userProfileOutletConnected(_: SubclassController, form: HTMLFormElement) {
-    this.addValidationListeners(form);
-  }
-
-  userProfileOutletDisconnected(_: SubclassController, form: HTMLFormElement) {
-    this.removeValidationListeners(form);
-  }
-
-  companyProfileOutletConnected(_: SubclassController, form: HTMLFormElement) {
-    this.addValidationListeners(form);
-  }
-
-  companyProfileOutletDisconnected(_: SubclassController, form: HTMLFormElement) {
-    this.removeValidationListeners(form);
-  }
-
-  storySettingsOutletConnected(_: SubclassController, form: HTMLFormElement) {
-    this.addValidationListeners(form);
-  }
-
-  storySettingsOutletDisconnected(_: SubclassController, form: HTMLFormElement) {
-    this.removeValidationListeners(form);
-  }
-
-  // Bootstrap Validator events trigger on the form
-  private addValidationListeners(formElement: HTMLFormElement) {
-    $(formElement)
-      .on('validate.bs.validator', this.validateFileInputHandler)
-      .on('valid.bs.validator', this.validFileInputHandler)
-      .on('invalid.bs.validator', this.invalidFileInputHandler)
-      .on('validated.bs.validator', this.validatedFileInputHandler);
-  }
-
-  private removeValidationListeners(formElement: HTMLFormElement) {
-    $(formElement)
-      .off('validate.bs.validator', this.validateFileInputHandler)
-      .off('valid.bs.validator', this.validFileInputHandler)
-      .off('invalid.bs.validator', this.invalidFileInputHandler)
-      .off('validated.bs.validator', this.validatedFileInputHandler);
-  }
 }

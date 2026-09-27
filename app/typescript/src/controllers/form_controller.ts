@@ -18,6 +18,13 @@ import type { TomOptions } from 'tom-select/dist/esm/types/core.d.ts';
 import { validateForm, serializeForm } from '../utils';
 import { validateFileSize, validateImageDimensions } from '../user_uploads';
 
+interface ValidatorHandlers {
+  'validate.bs.validator': VoidFunction;
+  'valid.bs.validator': VoidFunction;
+  'invalid.bs.validator': VoidFunction;
+  'validated.bs.validator': VoidFunction;
+}
+
 export type SubclassController = (
   NewCustomerWinController | 
   NewContributionController | 
@@ -39,7 +46,8 @@ export default class FormController<Ctrl extends SubclassController> extends Con
   declare readonly modalOutlet: ModalController;
   declare readonly hasModalOutlet: boolean;
 
-  static targets = [    
+  static targets = [
+    'imageCard',    
     'customerSelect',
     'customerField',
     'customerName',
@@ -56,6 +64,8 @@ export default class FormController<Ctrl extends SubclassController> extends Con
     'customerContactBoolField',
     'submitBtn'
   ];
+
+  declare readonly imageCardTargets: HTMLElement[];
 
   // shared fields
   declare readonly customerSelectTarget: TomSelectInput;
@@ -79,6 +89,8 @@ export default class FormController<Ctrl extends SubclassController> extends Con
   declare readonly hasCuratorSelectTarget: boolean;
 
   declare initialState: string;
+
+  validatorHandlers = new WeakMap<HTMLInputElement, ValidatorHandlers>();
 
   get isDirty() {
     return serializeForm(this.element) !== this.initialState;
@@ -106,8 +118,8 @@ export default class FormController<Ctrl extends SubclassController> extends Con
       focus: false,
       disable: false,
       custom: {
-        'max-file-size': validateFileSize.bind(this),
-        'min-dimensions': validateImageDimensions.bind(this),
+        'max-file-size': validateFileSize,
+        'min-dimensions': validateImageDimensions,
         'required-image': function ($fileInput: JQuery<HTMLInputElement, any>) {
           console.log('checking for required image (skipping)...', $fileInput)
         }
@@ -116,6 +128,9 @@ export default class FormController<Ctrl extends SubclassController> extends Con
   }
 
   disconnect() {
+    if (this.imageCardTargets.length) {
+      this.removeValidatorListeners();
+    }
     $(this.element).validator('destroy');
   }
 
@@ -155,14 +170,41 @@ export default class FormController<Ctrl extends SubclassController> extends Con
     }
   }
 
-  updateValidator(this: Ctrl, { type: eventType, detail: { fileInput } }: { type: string, detail: { fileInput: HTMLInputElement } }) {
-    // console.log('updating validator', eventType)
-    const readyToValidate = eventType === 'image-card:ready-to-validate';
+  updateValidator(
+    { type: eventType, detail: { fileInput } }: 
+    { type: string, detail: { fileInput: HTMLInputElement } }
+  ) {
+    const readyToValidate = eventType === 'image-card:ready-to-validate';   // or may be :validated
     fileInput.setAttribute('data-validate', readyToValidate.toString());
     $(this.element).validator('update');
     if (readyToValidate) {
       $(this.element).validator('validate');
     }
+  }
+
+  addValidatorListeners(e: CustomEvent<{ input: HTMLInputElement, handlers: ValidatorHandlers }>) {
+    const { input, handlers } = e.detail;
+    this.validatorHandlers.set(input, handlers);
+    $(this.element)
+      .on('validate.bs.validator', handlers['validate.bs.validator'])
+      .on('valid.bs.validator', handlers['valid.bs.validator'])
+      .on('invalid.bs.validator', handlers['invalid.bs.validator'])
+      .on('validated.bs.validator', handlers['validated.bs.validator']);
+  }
+
+  removeValidatorListeners() {
+    [...this.element.elements]
+      .filter(el => el instanceof HTMLInputElement && el.type === 'file')
+      .forEach(input => {
+        const handlers = this.validatorHandlers.get(input as HTMLInputElement);
+        if (handlers) {
+          $(this.element)
+            .off('validate.bs.validator', handlers['validate.bs.validator'])
+            .off('valid.bs.validator', handlers['valid.bs.validator'])
+            .off('invalid.bs.validator', handlers['invalid.bs.validator'])
+            .off('validated.bs.validator', handlers['validated.bs.validator']);
+        }
+      });
   }
 
   animateSubmit(e: TurboSubmitStartEvent, submitEl?: HTMLButtonElement | HTMLInputElement) {
@@ -173,6 +215,10 @@ export default class FormController<Ctrl extends SubclassController> extends Con
     submitBtn.innerHTML = 
       submitBtn.dataset.disableWithHtml.replace('[content]', submitBtn.dataset.content);  
     setTimeout(() => submitBtn.classList.add('btn--working'), 1000);
+  }
+
+  onInvalidImage() {
+    this.element.reset();
   }
 
   onChangeCustomer(
