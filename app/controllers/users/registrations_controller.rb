@@ -50,7 +50,18 @@ class Users::RegistrationsController < Devise::RegistrationsController
     resource_updated = update_resource(resource, account_update_params)
     yield resource if block_given?
     if resource_updated
-      if account_update_params[:password].present?
+      if resource.saved_change_to_attribute?(:photo_url)
+        flash.now[:notice] = 'Photo uploaded successfully'
+        render turbo_stream: [
+          turbo_stream.replace('toaster', partial: 'shared/toaster'),
+          turbo_stream.replace(
+            'user-photo',
+            partial: 'devise/registrations/user_photo',
+            locals: { user: resource }
+          )
+        ]
+        return
+      elsif account_update_params[:password].present?
         flash[:notice] = 'Password changed successfully'
       elsif account_update_params[:email].present? && resource.email != account_update_params[:email]
         flash[:notice] = 'Email changed successfully'

@@ -22,10 +22,10 @@ main.user-profile form {
   }
 }
 
-.user-profile__photo {
+#user-photo {
   position: absolute;
   right: calc(100% + 15px);
-  
+
   .image-card {
     display: inline-block;
   }

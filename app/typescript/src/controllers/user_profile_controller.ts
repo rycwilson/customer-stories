@@ -1,7 +1,9 @@
 import FormController from './form_controller';
+import type { TurboSubmitStartEvent } from '@hotwired/turbo';
 
 export default class UserProfileController extends FormController<UserProfileController> {
   static targets = [
+    ...super.targets,
     'userInput',
     'emailInput',
     'currentPasswordInput',
@@ -23,7 +25,28 @@ export default class UserProfileController extends FormController<UserProfileCon
   get passwordsDoNotMatch() {
     return this.passwordInputTarget.value !== this.passwordConfirmationInputTarget.value;
   }
+
+  get imageCard() {
+    return this.imageCardTargets[0];
+  }
+
+  onSubmitStart(e: TurboSubmitStartEvent) {
+    if (this.imageCard.classList.contains('image-card--uploading')) {
+      const { body } = e.detail.formSubmission;
+      const keep = new Set(['_method', 'authenticity_token', 'user[photo_url]']);
+      for (const key of [...body.keys()]) {
+        if (keep.has(key)) continue;
+        body.delete(key);
+      }
+    } else {
+      super.onSubmitStart(e);
+    }
+  }
   
+  onPhotoUploadReady() {
+    this.element.requestSubmit();
+  }
+
   resetUserInputs() {
     this.userInputTargets.forEach(input => {
       input.value = <string>input.dataset.initialValue;
