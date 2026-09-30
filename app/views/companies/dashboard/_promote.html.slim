@@ -1,8 +1,11 @@
-#promote.tab-pane {
-  class=('active' if workflow_stage == 'promote')
-  data-dashboard-target="tabPanel"
-  data-action="promoted-stories:loading->dashboard#onResourceLoading promoted-stories:ready->dashboard#onResourceReady"
-  role="tabpanel" }
+= tag.div(id: 'promote',
+          class: "tab-pane #{'active' if workflow_stage == 'promote'}",
+          role: 'tabpanel',
+          data: { \
+            dashboard_target: 'tabPanel',
+            action: [ \
+              'promoted-stories:loading->dashboard#onResourceLoading',
+              'promoted-stories:ready->dashboard#onResourceReady'].join(' ') }) do
 
   = render('shared/loading_spinner')
 

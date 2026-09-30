@@ -1,12 +1,13 @@
-#measure.tab-pane {
-  class=('active' if workflow_stage == 'measure')
-  data-dashboard-target="tabPanel"
-  data-action=[ \
-    'visitors:loading->dashboard#onResourceLoading',
-    'visitors:ready->dashboard#onResourceReady',
-    'activity:loading->dashboard#onResourceLoading',
-    'activity:ready->dashboard#onResourceReady'].join(' ')
-  role="tabpanel" }
+= tag.div(id: 'measure',
+          class: "tab-pane #{'active' if workflow_stage == 'measure'}",
+          role: 'tabpanel',
+          data: { \
+            dashboard_target: 'tabPanel',
+            action: [ \
+              'visitors:loading->dashboard#onResourceLoading',
+              'visitors:ready->dashboard#onResourceReady',
+              'activity:loading->dashboard#onResourceLoading',
+              'activity:ready->dashboard#onResourceReady'].join(' ') }) do
 
   = render('shared/loading_spinner')
 
