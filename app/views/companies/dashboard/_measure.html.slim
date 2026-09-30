@@ -11,7 +11,12 @@
   = render('shared/loading_spinner')
 
   .container-fluid
-    .sidebar--sans-text
+    .sidebar data-dashboard-target="sidebar"
+      .sidebar__toggle
+        .thingy
+        button.btn.btn-default type="button" data-action="dashboard#toggleSidebar"
+          i.fa.fa-bars
+
       ul.nav role="tablist"
         - [ ['#visitors', 'fa-bar-chart', 'Visitors'],
             ['#activity', 'fa-line-chart', 'Recent Activity'] ].each do |panel_id, icon_class, label|

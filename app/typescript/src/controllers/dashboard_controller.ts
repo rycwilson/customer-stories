@@ -18,6 +18,7 @@ export default class DashboardController extends Controller {
   declare readonly toastOutlet: ToastController;
 
   static targets = [
+    'sidebar',
     'tab', 
     'tabContent',
     'tabPanel',
@@ -35,6 +36,7 @@ export default class DashboardController extends Controller {
     'visitors',
     'activity',
   ];
+  declare readonly sidebarTargets: HTMLDivElement[];
   declare readonly tabTargets: HTMLAnchorElement[];
   declare readonly tabContentTarget: HTMLDivElement;
   declare readonly tabPanelTargets: HTMLDivElement[];
@@ -91,6 +93,10 @@ export default class DashboardController extends Controller {
   disconnect() {
     removeEventListener('popstate', this.tabRestorationListener);
     document.documentElement.removeEventListener('turbo:visit', this.tabRestorationListener)
+  }
+
+  toggleSidebar(_e: PointerEvent) {
+    this.sidebarTargets.forEach(sidebar => sidebar.classList.toggle('collapsed'));
   }
 
   onResourceLoading(e: CustomEvent) {

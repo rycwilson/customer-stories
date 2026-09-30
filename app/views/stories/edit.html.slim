@@ -15,7 +15,12 @@ main.dashboard.hidden-xs data-controller="dashboard" data-dashboard-modal-outlet
 
     .container-fluid
     
-      .sidebar
+      .sidebar data-dashboard-target="sidebar"
+        .sidebar__toggle
+          .thingy
+          button.btn.btn-default type="button" data-action="dashboard#toggleSidebar"
+            i.fa.fa-bars
+
         ul.nav
           li
             = link_to dashboard_path('curate') do 

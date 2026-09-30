@@ -7,7 +7,12 @@
   = render('shared/loading_spinner')
 
   .container-fluid
-    .sidebar--sans-text
+    .sidebar data-dashboard-target="sidebar"
+      .sidebar__toggle
+        .thingy
+        button.btn.btn-default type="button" data-action="dashboard#toggleSidebar"
+          i.fa.fa-bars
+
       ul.nav data-controller="nav-list"
         - [ ['#promoted-stories', 'fa-bullhorn', 'Promoted Stories'],
             ['#promote-settings', 'fa-gear', 'Settings'] ].each do |panel_id, icon_class, label|

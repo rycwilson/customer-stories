@@ -36,48 +36,24 @@ body {
   // }
 // }
 
+.layout-main {
+  flex: 1 1 0%;
+  align-self: stretch;
+  border-left: 1px solid #dfdfdf;
+  padding: 0 0 5rem 3.25rem;
+}
+
 .sidebar {
   position: sticky;
   top: 8rem;
-  flex: 0 0 24.5rem;
-  margin-right: 1.25rem;
+  flex: 0 0 20em;
+  transition: flex-basis .15s ease-in;
+  padding-right: 3.25rem;
+  min-width: 0;
 
-  .nav {
-    > li {
-      margin: 0;    
-
-      > a {
-        display: flex;
-        align-items: center;
-        height: 3.5em;
-        border: 2px solid transparent;
-        padding: 1rem 2rem;
-        font-size: 14px;
-        color: $gray;
-
-        i {
-          font-size: 1.25em;
-          margin-right: 1.25rem;
-        }
-
-        &:hover, 
-        &:focus {
-          background-color: darken($blueish-gray-lighter, 4%);
-          color: $gray-darker;
-        }
-      }
-      
-      &.active {
-        > a, 
-        > a:hover, 
-        > a:focus {
-          border-left-color: $brand-primary;
-          color: $brand-primary;
-          font-weight: 600;
-          background-color: $blueish-gray-lighter;
-        }
-      }
-    }
+  &.collapsed {
+    flex: 0 0 6.75em;
+    transition: flex-basis .15s ease-out;
   }
 
   &--sans-text {
@@ -105,10 +81,69 @@ body {
   }
 }
 
-.layout-main {
-  flex-grow: 1;
-  margin-left: 1.25rem;
-  padding-bottom: 10rem;
+// Specificity needed to override bootstrap
+.sidebar .nav > li {
+  &.active {
+    > a, 
+    > a:hover, 
+    > a:focus {
+      border-left-color: $brand-primary;
+      color: $brand-primary;
+      font-weight: 600;
+      background-color: $blueish-gray-lighter;
+    }
+  }
+
+  > a {
+    display: flex;
+    align-items: center;
+    overflow: hidden;
+    border: 2px solid transparent;
+    padding: 0;
+    min-width: 0;
+    height: 3.5em;
+    color: $gray;
+    
+    &:hover, 
+    &:focus {
+      background-color: darken($blueish-gray-lighter, 4%);
+      color: $gray-darker;
+    }
+
+    i {
+      flex: 0 0 auto;
+      margin: 0 1em;
+      font-size: 1.25em;
+    }
+    
+    span {
+      white-space: nowrap;
+    }
+  }
+}
+
+.sidebar__toggle {
+  position: absolute;
+  right: -1.15em;
+
+  // When .layout-main is scrolled the border will appear about the sidebar toggle button.
+  // This keeps it concealed:
+  .thingy {
+    position: absolute;
+    left: 50%;
+    transform: translate(-50%, -100%);
+    height: 3rem;
+    width: 2px;
+    background: $light-gray;
+  }
+
+  button {
+    @include flex-row-center-center;
+    border: 1px solid #dfdfdf;
+    border-radius: 50%;
+    width: 2.3em;
+    height: 2.3em;
+  }
 }
 
 .form-horizontal {

@@ -2,7 +2,12 @@
 
 main.container-fluid.hidden-xs data-controller="company-settings"
 
-  .sidebar
+  .sidebar data-company-settings-target="sidebar"
+    .sidebar__toggle
+      .thingy
+      button.btn.btn-default type="button" data-action="company-settings#toggleSidebar"
+        i.fa.fa-bars
+
     / no active tab set here; it will be set by the client based on page fragment identifier
     ul.nav.nav--company data-controller="nav-list" role="tablist"
       - unless @company.new_record?
