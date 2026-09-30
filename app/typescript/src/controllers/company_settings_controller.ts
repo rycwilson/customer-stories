@@ -53,7 +53,7 @@ export default class CompanySettingsController extends Controller {
   }
 
   toggleSidebar(_e: PointerEvent) {
-    this.sidebarTarget.classList.toggle('collapsed');
+    this.sidebarTarget.classList.toggle('sidebar--collapsed');
   }
   
   addTabListeners() {

@@ -20,7 +20,12 @@ main.container-fluid.hidden-xs data-controller="company-settings"
             = tag.a( \
                 href: panel_id,
                 role: 'tab',
-                data: { toggle: 'tab', company_settings_target: 'tab', nav_list_target: 'tab' }) do 
+                data: { \
+                  toggle: 'tab',
+                  company_settings_target: 'tab',
+                  nav_list_target: 'tab',
+                  controller: 'tooltip',
+                  tooltip_options_value: nav_link_tooltip_options(label) }) do 
               i.fa.fa-fw class=icon_class
               span = label
       
@@ -28,7 +33,12 @@ main.container-fluid.hidden-xs data-controller="company-settings"
         = tag.a( \
             href: '#account-panel',
             role: 'tab',
-            data: { toggle: 'tab', company_settings_target: 'tab', nav_list_target: 'tab' }) do 
+            data: { \
+              toggle: 'tab',
+              company_settings_target: 'tab',
+              nav_list_target: 'tab',
+              controller: 'tooltip',
+              tooltip_options_value: nav_link_tooltip_options('Account Settings') }) do 
           i.fa.fa-fw.fa-gear
           span Account Settings
 

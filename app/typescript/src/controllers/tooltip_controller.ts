@@ -1,4 +1,5 @@
 import { Controller } from '@hotwired/stimulus';
+import { debounce } from '../utils';
 
 interface TooltipOptions {
   title: string,
@@ -10,57 +11,69 @@ const baseOptions: TooltipOptions = { title: 'I am a tooltip', container: 'body'
 
 export default class TooltipController extends Controller {
   static values = {
+    enabled: { type: Boolean, default: true },
     options: { type: Object, default: {} }
   }
+  declare enabledValue: boolean;
   declare optionsValue: TooltipOptions;
-  
-  declare navItemObserver: MutationObserver | undefined;
+
+  declare sidebar: HTMLElement | null;
+  declare sidebarObserver: MutationObserver | undefined;
 
   get tooltipElement() {
     return $(this.element).data('bs.tooltip').$tip;
   }
 
-  connect() {
-    $(this.element).tooltip({ ...baseOptions, ...this.optionsValue });
+  get hasTooltip() {
+    return !!$(this.element).data('bs.tooltip');
+  }
 
-    // Don't show tooltip on active tab
-    if (this.element.role === 'tab') {
-      const navItem = this.element.parentElement;
-      if (navItem instanceof HTMLLIElement) {
-        this.toggleNavLink(navItem);
-        this.navItemObserver = new MutationObserver(() => this.toggleNavLink(navItem));
-        this.navItemObserver.observe(navItem, { attributes: true, attributeFilter: ['class'] });
-      }
-    }
+  connect() {
+    this.sidebar = this.element.closest<HTMLElement>('.sidebar');
+    if (this.enabledValue) this.init();
+    if (this.sidebar) this.watchSidebarForChanges();
   }
 
   disconnect() {
     $(this.element).tooltip('destroy');
-    this.navItemObserver?.disconnect();
+    this.sidebarObserver?.disconnect();
   }
 
-  optionsValueChanged(options: TooltipOptions) {
-    $(this.element).tooltip('destroy');
-    $(this.element).tooltip({ ...baseOptions, ...options });
-  }
-
-  toggleNavLink(navItem: HTMLLIElement) {
-    // This approach results in erratic hover and tooltip behavior in the first nav item
-    // if (navItem.classList.contains('active')) {
-    //   $(this.element).tooltip('hide');
-    //   $(this.element).tooltip('disable')
-    // } else {
-    //   $(this.element).tooltip('enable');
-    // }
-
-    // Instead:
-    // NOTE using a dom node for `container` is more reliable than using a string selector
-    $(this.element).tooltip('destroy');
-    if (navItem.classList.contains('active')) return;
+  init() {
     $(this.element).tooltip({ 
       ...baseOptions, 
       ...this.optionsValue,
-      container: this.element.closest('.sidebar--sans-text')
+      ...(this.sidebar ? { container: this.sidebar } : {})
     });
+  }
+
+  enabledValueChanged(shouldEnable: boolean, wasEnabled: boolean | undefined) {
+    if (wasEnabled === undefined) return; // ignore the default assignment
+    
+    if (shouldEnable && !this.hasTooltip) {
+      this.init();
+    } else {
+      $(this.element).tooltip('destroy');
+    }
+  }
+
+  optionsValueChanged(_options: TooltipOptions, oldValue: TooltipOptions | undefined) {
+    if (oldValue === undefined) return; // ignore the default assignment
+
+    $(this.element).tooltip('destroy');
+    this.init();
+  }
+
+  watchSidebarForChanges() {
+    if (!this.sidebar) return;
+
+    const navItem = this.element.parentElement as HTMLLIElement;
+    const collapsed = () => this.sidebar!.classList.contains('sidebar--collapsed');
+    const isActiveTab = () => navItem!.classList.contains('active');
+    const update = () => this.enabledValue = collapsed() && !isActiveTab();
+    update();
+    this.sidebarObserver = new MutationObserver(debounce(update, 100));
+    this.sidebarObserver.observe(this.sidebar, { attributes: true, attributeFilter: ['class'] });
+    this.sidebarObserver.observe(navItem, { attributes: true, attributeFilter: ['class'] });
   }
 }

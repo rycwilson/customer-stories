@@ -96,7 +96,9 @@ export default class DashboardController extends Controller {
   }
 
   toggleSidebar(_e: PointerEvent) {
-    this.sidebarTargets.forEach(sidebar => sidebar.classList.toggle('collapsed'));
+    this.sidebarTargets.forEach(sidebar => {
+      sidebar.classList.toggle('sidebar--collapsed');
+    });
   }
 
   onResourceLoading(e: CustomEvent) {
