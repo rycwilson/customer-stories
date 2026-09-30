@@ -9,52 +9,23 @@
   .container-fluid
     .sidebar--sans-text
       ul.nav data-controller="nav-list"
-        li class=('active' if active_tab == '#promoted-stories')
-          a {
-            href="#promoted-stories"
-            data-toggle="tab"
-            data-action="dashboard#setNavCookie"
-            data-controller="tooltip"
-            data-tooltip-options-value=nav_link_tooltip_options('Promoted Stories').to_json
-            aria-controls="promoted-stories"
-            aria-expanded="#{active_tab == '#promoted-stories' ? 'true' : 'false'}"
-            role="tab" }
-            i.fa.fa-fw.fa-bullhorn
-        li class=('active' if active_tab == '#promote-settings')
-          a {
-            href="#promote-settings"
-            data-toggle="tab"
-            data-action="dashboard#setNavCookie"
-            data-controller="tooltip"
-            data-tooltip-options-value=nav_link_tooltip_options('Promoted Stories Settings').to_json
-            aria-controls="promote-settings"
-            aria-expanded="#{active_tab == '#promote-settings' ? 'true' : 'false'}"
-            role="tab" }
-            i.fa.fa-fw.fa-gear
-      /- if current_user.admin?
-        .admin-sidebar
-          h4.text-danger Admin
-          p The connection to Google Ads is presently disabled.
-          #gads-set-reset.text-center
-            button.btn.btn-secondary.disabled {
-              type="button" 
-              disabled=""
-              data-action="/companies/#{company.id}/set_reset_gads" }
-              span Set/Reset
-              i.fa.fa-spin.fa-circle-o-notch style="display:none"
-          div style="opacity: 0.5"
-            label Checklist
-            ul#gads-checklist
-              li 
-                | company.promote_tr = true
-              li 
-                | default headline
-              li
-                | default images w/ valid asset_id
-            #gads-results__wrapper
-              label Results
-              ul#gads-results
-
+        - [ ['#promoted-stories', 'fa-bullhorn', 'Promoted Stories'],
+            ['#promote-settings', 'fa-gear', 'Settings'] ].each do |panel_id, icon_class, label|
+            
+          li class="#{'active' if active_tab == panel_id}" role="presentation"
+            = tag.a(href: panel_id,
+                    role: 'tab',
+                    data: { \
+                      toggle: 'tag',
+                      action: 'dashboard#setNavCookie',
+                      controller: 'tooltip',
+                      tooltip_options_value: nav_link_tooltip_options(label) },
+                    aria: { \
+                      controls: panel_id.sub('#', ''),
+                      expanded: (active_tab == panel_id) }) do
+              i.fa.fa-fw class=icon_class
+              span = label
+                  
     .layout-main
       .tab-content
       

@@ -6,60 +6,27 @@ main.container-fluid.hidden-xs data-controller="company-settings"
     / no active tab set here; it will be set by the client based on page fragment identifier
     ul.nav.nav--company data-controller="nav-list" role="tablist"
       - unless @company.new_record?
-        li role="presentation"
-          a {
-            href="#contributor-invitations-panel" 
-            role="tab"
-            data-toggle="tab"
-            data-company-settings-target="tab"
-            data-nav-list-target="tab" }
-            i.fa.fa-fw.fa-envelope-o
-            |&nbsp;Contributor Invitations
-        
-        li role="presentation"
-          a {
-            href="#contributor-prompts-panel" 
-            role="tab"
-            data-toggle="tab"
-            data-company-settings-target="tab"
-            data-nav-list-target="tab" }
-            i.fa.fa-fw.fa-lightbulb-o
-            |&nbsp;Contributor Prompts
-
-        li role="presentation"
-          a {
-            href="#website-plugin-panel" 
-            role="tab"
-            data-toggle="tab"
-            data-company-settings-target="tab"
-            data-nav-list-target="tab" }
-            i.fa.fa-fw.fa-plug
-            |&nbsp;Website Plugin
-              
-        li role="presentation"
-          a {
-            href="#cta-links-forms-panel" 
-            role="tab"
-            data-toggle="tab"
-            data-company-settings-target="tab"
-            data-nav-list-target="tab" }
-            i.fa.fa-fw.fa-hand-pointer-o
-            |&nbsp;CTA Links & Forms
-
-        li role="presentation"
-          a {
-            href="#tags-panel" 
-            role="tab"
-            data-toggle="tab"
-            data-company-settings-target="tab"
-            data-nav-list-target="tab" }
-            i.fa.fa-fw.fa-tags
-            |&nbsp;Tags
+        - [ ['#contributor-invitations-panel', 'fa-envelope-o', 'Contributor Invitations'],
+            ['#contributor-prompts-panel', 'fa-lightbulb-o', 'Contributor Prompts'],
+            ['#website-plugin-panel', 'fa-plug', 'Website Plugin'],
+            ['#cta-links-forms-panel', 'fa-hand-pointer-o', 'CTA Links & Forms'],
+            ['#tags-panel', 'fa-tags', 'Tags'] ].each do |panel_id, icon_class, label| 
+          li role="presentation"
+            = tag.a( \
+                href: panel_id,
+                role: 'tab',
+                data: { toggle: 'tab', company_settings_target: 'tab', nav_list_target: 'tab' }) do 
+              i.fa.fa-fw class=icon_class
+              span = label
       
-      li role="presentation" 
-        a href="#account-panel" data-toggle="tab" data-company-settings-target="tab" style="#{@company.new_record? ? 'pointer-events:none' : ''}"
+      li role="presentation"
+        = tag.a( \
+            href: '#account-panel',
+            role: 'tab',
+            data: { toggle: 'tab', company_settings_target: 'tab', nav_list_target: 'tab' }) do 
           i.fa.fa-fw.fa-gear
-          |&nbsp;Account Settings
+          span
+            | Account Settings
 
   .layout-main
     .tab-content
