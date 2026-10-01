@@ -744,13 +744,6 @@
   dependencies:
     "@types/jquery" "*"
 
-"@types/bootstrap-validator@^0.11.6":
-  version "0.11.6"
-  resolved "https://registry.yarnpkg.com/@types/bootstrap-validator/-/bootstrap-validator-0.11.6.tgz#441245ac09ce678cc41a768ea40570c26e65fecf"
-  integrity sha512-sAzOyKZEW8Qiiv7x/tQoYi0vbEridhm9cLKxbhUivfPL8RuAaO1Ui1HmvyIO8s2P4B5MCQGu8s9EMCKthtTdog==
-  dependencies:
-    "@types/jquery" "*"
-
 "@types/chai@^5.2.2":
   version "5.2.3"
   resolved "https://registry.yarnpkg.com/@types/chai/-/chai-5.2.3.tgz#8e9cd9e1c3581fa6b341a5aed5588eb285be0b4a"
@@ -1180,11 +1173,6 @@ bootstrap-switch@3.3.4:
   version "3.3.4"
   resolved "https://registry.yarnpkg.com/bootstrap-switch/-/bootstrap-switch-3.3.4.tgz#70e0aeb2a877c0dc766991de108e2170fc29a2ff"
   integrity sha512-7YQo+Ir6gCUqC36FFp1Zvec5dRF/+obq+1drMtdIMi9Xc84Kx63Evi0kdcp4HfiGsZpiz6IskyYDNlSKcxsL7w==
-
-bootstrap-validator@^0.11.9:
-  version "0.11.9"
-  resolved "https://registry.yarnpkg.com/bootstrap-validator/-/bootstrap-validator-0.11.9.tgz#fb7058eef53623e78f5aa7967026f98f875a9404"
-  integrity sha512-BJlnaTeFNr5+SNtZ71DNaiFx7qY0X2c7m/KvZE1GiVXbyD8PihJlALvS6TeRGUs8mY8qga/LrhG80N9dw8UWqA==
 
 brace-expansion@^5.0.5:
   version "5.0.6"
