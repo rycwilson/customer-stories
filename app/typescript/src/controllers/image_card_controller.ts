@@ -1,5 +1,5 @@
 import { Controller } from '@hotwired/stimulus';
-import { initS3FileInput, onS3Done } from '../user_uploads';
+import { initS3FileInput, validateImage, onS3Done } from '../user_uploads';
 
 export default class ImageCardController extends Controller<HTMLDivElement | HTMLLIElement> {
   static values = {
@@ -14,7 +14,8 @@ export default class ImageCardController extends Controller<HTMLDivElement | HTM
   declare readonly uploadEnabledValue: boolean;
 
   static targets = [
-    'formGroup', 
+    'formGroup',
+    'fileInputWidget', 
     'preview',
     'input',
     'idInput',
@@ -24,9 +25,10 @@ export default class ImageCardController extends Controller<HTMLDivElement | HTM
     '_destroyInput',
     'fileInput', 
     'adImageCheckbox',
+    'helpBlock',
   ];
   declare readonly formGroupTarget: HTMLDivElement;
-  declare readonly hasFormGroupTarget: boolean;
+  declare readonly fileInputWidgetTarget: HTMLDivElement;
   declare readonly previewTarget: HTMLDivElement;
   declare readonly inputTargets: HTMLInputElement[];
   declare readonly idInputTarget: HTMLInputElement;
@@ -39,20 +41,13 @@ export default class ImageCardController extends Controller<HTMLDivElement | HTM
   declare readonly _destroyInputTarget: HTMLInputElement;
   declare readonly fileInputTarget: HTMLInputElement;
   declare readonly adImageCheckboxTarget: HTMLInputElement;
-
-  declare imageLoadTimer: number;
+  declare readonly helpBlockTarget: HTMLDivElement;
 
   changeFileInputHandler = this.onChangeFileInput.bind(this);
-  validatorHandlers = {
-    'validate.bs.validator': this.onValidateFileInput.bind(this),
-    'valid.bs.validator': this.onValidFileInput.bind(this),
-    'invalid.bs.validator': this.onInvalidFileInput.bind(this),
-    'validated.bs.validator': this.onValidatedFileInput.bind(this),
-  };
 
-  // jasny-bootstrap will remove and replace the img tag when uploading
+  // jasny-bootstrap will replace the img tag when uploading
   get imgTarget() {
-    return <HTMLImageElement>this.previewTarget.querySelector(':scope > img');
+    return this.previewTarget.querySelector<HTMLImageElement>(':scope > img');
   }
 
   get isDefaultImage() {
@@ -63,69 +58,78 @@ export default class ImageCardController extends Controller<HTMLDivElement | HTM
   connect() {
     // jquery event listeners necessary for hooking into jquery plugin events
     if (this.uploadEnabledValue) {
-      $(this.formGroupTarget)
-        .on('change.bs.fileinput', this.changeFileInputHandler)
+      $(this.fileInputWidgetTarget)
+        .fileinput({ name: 'user[photo_filename]' })
+        .on('change.bs.fileinput', this.changeFileInputHandler);
         // .on('reseted.bs.fileinput', this.resetFileInputHandler);
         // .on('clear.bs.fileinput', this.clearFileInputHandler);
   
-      if (this.fileInputTarget.hasAttribute('data-s3')) {
-        initS3FileInput(this.fileInputTarget, onS3Done.bind(this));
-      }
+      initS3FileInput(this.fileInputTarget, onS3Done.bind(this));
     }
 
-    setTimeout(this.readyForValidator.bind(this));
+    if (this.element.dataset.userProfileTarget) {
+      const userPhoto = <HTMLElement>document.getElementById('user-photo');
+      const observer = new MutationObserver((mutations) => {
+        mutations.forEach(mutation => {
+          console.log(mutation)
+          if (mutation.type === 'attributes') {
+            console.log('old classname:', mutation.oldValue);
+            console.log('new classname:', (<HTMLElement>mutation.target).className)
+          } else if (mutation.type === 'childList') {
+            if (mutation.addedNodes.length) console.log('added nodes:', mutation.addedNodes);
+            if (mutation.removedNodes.length) console.log('removed nodes:', mutation.removedNodes);
+          }
+        });
+        observer.observe(userPhoto, { childList: true, subtree: true });
+        observer.observe(this.formGroupTarget, { attributes: true, attributeOldValue: true });
+        observer.observe(this.fileInputWidgetTarget, { attributes: true, attributeOldValue: true });
+      });
+    }
   }
   
   disconnect() {
     if (this.uploadEnabledValue) {
-      $(this.formGroupTarget)
+      $(this.fileInputWidgetTarget)
         .off('change.bs.fileinput', this.changeFileInputHandler)
         // .off('reseted.bs.fileinput', this.resetFileInputHandler)
         // .off('clear.bs.fileinput', this.clearFileInputHandler)
     }
   }
 
-  readyForValidator() {
-    this.dispatch(
-      'ready-for-validator', 
-      { detail: { input: this.fileInputTarget, handlers: this.validatorHandlers } }
-    )
-  }
-
-  onChangeFileInput() {
-    console.log('change.bs.fileinput')
-    if (!this.imageDidLoad()) {
-      this.imageLoadTimer = window.setInterval(this.imageDidLoad.bind(this), 100);
+  onChangeFileInput(_e: Event, file: File) {
+    let loadTimer: number | undefined;
+    const imageDidLoad = (img: HTMLImageElement) => {
+      if (img.complete) {
+        if (loadTimer) clearInterval(loadTimer);
+        return true;
+      }
     }
-  }
+    const beforeUpload = () => {
+      const img = this.imgTarget as HTMLImageElement;
+      if (!img) return;
 
-  imageDidLoad() {
-    if (this.imgTarget?.complete) {
-      console.log('image did load')
-      clearInterval(this.imageLoadTimer);
-
-      // set dimensions for validation
-      this.fileInputTarget.setAttribute('data-width', this.imgTarget.naturalWidth.toString());
-      this.fileInputTarget.setAttribute('data-height', this.imgTarget.naturalHeight.toString());
-      this.dispatch('ready-to-validate', { detail: { fileInput: this.fileInputTarget } });
-      return true;
+      if (imageDidLoad(img)) {
+        validateImage(this.fileInputTarget, file, img);
+        if (this.fileInputTarget.checkValidity()) this.uploadFile();
+        return;
+      } else {
+        // const errorTimeout = setTimeout(() => console.log('something wrong?'), 5000)
+        loadTimer = window.setInterval(imageDidLoad, 100);
+      }
     }
+
+    // Defer the handler to ensure fileinput widget has completed its DOM updates
+    setTimeout(beforeUpload.bind(this));
   }
 
-  onValidateFileInput({ relatedTarget: input }: { relatedTarget: HTMLInputElement }) {
-    if (input !== this.fileInputTarget) return;
-    console.log('validate.bs.validator')
-  }
-  
-  onValidFileInput({ relatedTarget: input }: { relatedTarget: HTMLInputElement }) {
-    if (input !== this.fileInputTarget) return;
-    
-    console.log('valid.bs.validator')
-    const imageType = <string>input.dataset.imageType;
+  uploadFile() {
+    const input = this.fileInputTarget;
+    const imageType: string | undefined = input.dataset.imageType;
     const isDefaultReplacement = this.isDefaultImage && this.hasIdInputTarget
-    this.element.classList.add(`image-card--${input.dataset.imageType}`, 'image-card--uploading');
+    this.element.classList.toggle(`image-card--${input.dataset.imageType}`, !!imageType)
+    this.element.classList.add('image-card--uploading');
     this.element.classList.remove('hidden');
-    if (this.hasTypeInputTarget) {
+    if (imageType && this.hasTypeInputTarget) {
       this.typeInputTarget.value = imageType;
     }
     if (isDefaultReplacement) {
@@ -135,23 +139,10 @@ export default class ImageCardController extends Controller<HTMLDivElement | HTM
     $(input).fileupload('send', { files: input.files });
   }
   
-  onInvalidFileInput(
-    { relatedTarget: input, detail: errors }: 
-    { relatedTarget: HTMLInputElement, detail: string[] }
-  ) {
-    if (input !== this.fileInputTarget) return;
-
-    console.log('invalid.bs.validator')
-    this.dispatch('invalid');
-    $(this.formGroupTarget).fileinput('reset');
-  }
-  
-  onValidatedFileInput(e: { type: 'validated'; [key: string]: unknown }) {
-    const input = e.relatedTarget;
-    if (input !== this.fileInputTarget) return;
-    
-    console.log('validated.bs.validator')
-    this.dispatch('validated', { detail: { fileInput: input } });
+  onInvalidImage() {
+    // $(this.fileInputWidgetTarget).fileinput('reset');
+    this.formGroupTarget.classList.add('has-error', 'has-error--validation');
+    this.helpBlockTarget.textContent = this.fileInputTarget.validationMessage;
   }
 
   makeDefault() {

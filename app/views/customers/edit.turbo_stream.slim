@@ -7,7 +7,6 @@
         controller: 'form',
         action: [ \
           'input->form#updateState',
-          'image-card:ready-to-validate->form#updateValidator',
           'image-card:upload-ready->form#updateState',
           'submit->form#validate',
           'turbo:submit-start->form#onSubmitStart'].join(' ') },

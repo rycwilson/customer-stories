@@ -9,8 +9,6 @@
         toast_flash_value: (flash.to_h if flash.any? && turbo_frame_request_id == 'story-settings-frame'),
         toast_errors_value: (@errors if @errors.present? && turbo_frame_request_id == 'story-settings-frame'),
         action: [ \
-          'image-card:ready-to-validate->story-settings#updateValidator',
-          'image-card:validated->story-settings#updateValidator',
           'image-card:upload-ready->story-settings#submitForm',
           'change->story-settings#submitForm',
           'bootstrap-switch:switch->story-settings#submitForm',

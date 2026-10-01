@@ -16,21 +16,6 @@ import type StoryNarrativeContentController from './story_narrative_content_cont
 import type StorySettingsController from './story_settings_controller';
 import type { TomOptions } from 'tom-select/dist/esm/types/core.d.ts';
 import { validateForm, serializeForm } from '../utils';
-import { validateFileSize, validateImageDimensions } from '../user_uploads';
-
-interface ValidatorHandlers {
-  'validate.bs.validator': VoidFunction;
-  'valid.bs.validator': VoidFunction;
-  'invalid.bs.validator': VoidFunction;
-  'validated.bs.validator': VoidFunction;
-}
-
-const validatorEvents = [
-  'validate.bs.validator',
-  'valid.bs.validator',
-  'invalid.bs.validator',
-  'validated.bs.validator'
-] as const;
 
 export type SubclassController = (
   NewCustomerWinController | 
@@ -97,8 +82,6 @@ export default class FormController<Ctrl extends SubclassController> extends Con
 
   declare initialState: string;
 
-  validatorHandlers = new Map<HTMLInputElement, ValidatorHandlers>();
-
   get isDirty() {
     return serializeForm(this.element) !== this.initialState;
   }
@@ -119,26 +102,10 @@ export default class FormController<Ctrl extends SubclassController> extends Con
 
   connect() {
     this.initialState = serializeForm(this.element);
-
-    // validator will only run for file inputs (see app/typescript/src/bootstrap.ts)
-    $(this.element).validator({
-      focus: false,
-      disable: false,
-      custom: {
-        'max-file-size': validateFileSize,
-        'min-dimensions': validateImageDimensions,
-        'required-image': function ($fileInput: JQuery<HTMLInputElement, any>) {
-          // console.log('checking for required image (skipping)...', $fileInput)
-        }
-      }
-    });
   }
 
-  disconnect() {
-    // This is redundant. Bootstrap Validator will call `.off('.bs.validator')` when destroyed.
-    // if (this.imageCardTargets.length) this.removeValidatorListeners();
-    $(this.element).validator('destroy');
-  }
+  // disconnect() {
+  // }
 
   turboSubmit(e: CustomEvent<{ submitter?: HTMLButtonElement | HTMLInputElement }>) {
     const { submitter } = e.detail;
@@ -173,43 +140,6 @@ export default class FormController<Ctrl extends SubclassController> extends Con
     if (this.submitBtn) {
       this.submitBtn.classList.toggle('disabled', !this.isDirty);
       this.submitBtn.disabled = !this.isDirty;
-    }
-  }
-
-  updateValidator(
-    { type: eventType, detail: { fileInput } }: 
-    { type: string, detail: { fileInput: HTMLInputElement } }
-  ) {
-    const readyToValidate = eventType === 'image-card:ready-to-validate';   // or may be :validated
-    fileInput.setAttribute('data-validate', readyToValidate.toString());
-    $(this.element).validator('update');
-    if (readyToValidate) {
-      $(this.element).validator('validate');
-    }
-  }
-
-  addValidatorListeners(e: CustomEvent<{ input: HTMLInputElement, handlers: ValidatorHandlers }>) {
-    const { input, handlers } = e.detail;
-    this.validatorHandlers.set(input, handlers);
-    validatorEvents.forEach(event => { $(this.element).on(event, handlers[event]) })
-  }
-
-  removeValidatorListeners(input?: HTMLInputElement) {
-    const removeListenersForInput = (input: HTMLInputElement) => {
-      const handlers = this.validatorHandlers.get(input);
-      if (handlers) {
-        validatorEvents.forEach(event => { $(this.element).off(event, handlers[event]) });
-      }
-    };
-    if (input) {
-      removeListenersForInput(input);
-    
-    // Below will not be executed. See `disconnect` callback.
-    } else {
-      const inputs = [...this.element.elements].filter(el => (
-        el instanceof HTMLInputElement && el.type === 'file'
-      )) as HTMLInputElement[];
-      inputs.forEach(removeListenersForInput);
     }
   }
 

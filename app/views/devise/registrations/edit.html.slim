@@ -10,9 +10,6 @@ main.user-profile.company__container.container-fluid.hidden-xs
       data: { \
         controller: 'user-profile',
         action: [ \
-          'image-card:ready-for-validator->user-profile#addValidatorListeners',
-          'image-card:ready-to-validate->user-profile#updateValidator',
-          'image-card:validated->user-profile#updateValidator',
           'image-card:upload-ready->user-profile#onPhotoUploadReady',
           'input->user-profile#updateState',
           'submit->user-profile#validate',

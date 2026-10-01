@@ -5,6 +5,13 @@ interface JasnyFileInputContainer extends HTMLDivElement {
   fileinput: ((options: object) => void) & ((action: string) => void)
 }
 
+type FileInputData = DOMStringMap & {
+  maxFileSize: string,
+  minDimensions?: string,
+  imageType?: string,
+  collection?: string,
+}
+
 // need to validate input file name
 // http://stackoverflow.com/questions/22387874/jquery-validate-plugin-bootstrap-jasny-bootstrap-file-input-regex-validation
 // export function initS3Upload($form?: JQuery<HTMLFormElement, any>, $input?: JQuery<HTMLInputElement, any>) {
@@ -39,13 +46,13 @@ export function onS3Done(this: ImageCardController, url: string) {
   this.fileInputTarget.value = '';
 
   // pre-load the image so it will be in browser cache when response arrives (no flicker)
-  this.imgTarget.addEventListener(
+  this.imgTarget!.addEventListener(
     'load', 
     () => {
       // remove the spinner for cases in which the form is not immediately sent upon successful upload
 
       // TODO: !!!
-      // if (this.hasFormOutlet || this.hasUserProfileOutlet || this.hasCompanyProfileOutlet) {
+      // if (this.hasFormOutlet || this.hasCompanyProfileOutlet) {
       //   this.element.classList.remove('image-card--uploading');
       // }
 
@@ -53,7 +60,7 @@ export function onS3Done(this: ImageCardController, url: string) {
     },
     { once: true }
   )
-  this.imgTarget.setAttribute('src', url);
+  this.imgTarget!.setAttribute('src', url);
 }
 
 export function initS3FileInput(input: HTMLInputElement, onUploadDone: (url: string) => void) {
@@ -161,90 +168,84 @@ export function initS3FileInput(input: HTMLInputElement, onUploadDone: (url: str
   });
 };
 
-// http://stackoverflow.com/questions/39488774
-export function validateFileSize($fileInput: JQuery<HTMLInputElement, any>): string | undefined {
-  console.log('validating file size...')
-  if ($fileInput.prop('files')[0].size > $fileInput.data('maxFileSize')) {
-    const error = 'Must be < 5.2MB';
-    return error;
-  } else {
-    // valid
+export function validateImage(input: HTMLInputElement, file: File, img: HTMLImageElement) {
+  const { maxFileSize, minDimensions } = input.dataset as FileInputData;
+  let error = '';
+  if (!input.accept.includes(file.type)) {
+    error = 'Must be .png or .jpeg';
+  } else if (file.size > +maxFileSize) {
+    error = 'Must be < 5.2MB';
+  } else if (minDimensions) {
+    error = validateImageDimensions(img.naturalWidth, img.naturalHeight, input);
   }
+  input.setCustomValidity(error);
 }
 
-export function validateImageDimensions($fileInput: JQuery<HTMLInputElement, any>): string | undefined {
-  console.log('validating image dimensions...')
-  let isValid, imageType;
-  imageType = $fileInput.data('imageType');
-  const collection = $fileInput.data('collection');
-  const width = +<string>$fileInput.attr('data-width');  // this will have been set when the image was loaded into the broswer (see ImageCardController)
-  const height = +<string>$fileInput.attr('data-height');
-  const minWidth: string | undefined = $fileInput.data('minWidth');
-  const minHeight: string | undefined = $fileInput.data('minHeight');
-  console.log(width, height)
-  const hasAspectRatio = (requiredAspectRatio: number) => {
-    const aspectRatio = width / height;
-    const aspectRatioTolerance = Number($fileInput.data('aspect-ratio-tolerance')); 
-    const plusMinus = aspectRatioTolerance * requiredAspectRatio;
-    return aspectRatio >= (requiredAspectRatio - plusMinus) && aspectRatio <= (requiredAspectRatio + plusMinus);
-  }
-  const { 
-    SquareImage: { width: squareImageMin }, 
-    LandscapeImage: { 
-      width: landscapeImageMinWidth, 
-      height: landscapeImageMinHeight, 
-      aspect_ratio: landscapeImageAspectRatio
-    }, 
-    SquareLogo: { width: squareLogoMin }, 
-    LandscapeLogo: {
-      width: landscapeLogoMinWidth,
-      height: landscapeLogoMinHeight ,
-      aspect_ratio: landscapeLogoAspectRatio
-    },
-    OpenGraph: {
-      width: openGraphMinWidth,
-      height: openGraphMinHeight,
-      aspect_ratio: openGraphAspectRatio
-    }
-  } = $fileInput.data('minDimensions');
-  const isSquareImage = width >= squareImageMin && height >= squareImageMin && hasAspectRatio(1);
-  const isLandscapeImage = (
-    width >= landscapeImageMinWidth &&
-    height >= landscapeImageMinHeight &&
-    hasAspectRatio(landscapeImageAspectRatio)
-  );
-  const isSquareLogo = width >= squareLogoMin && height >= squareLogoMin && hasAspectRatio(1);
-  const isLandscapeLogo = (
-    width >= landscapeLogoMinWidth &&
-    height >= landscapeLogoMinHeight && 
-    hasAspectRatio(landscapeLogoAspectRatio)
-  );
-  const isOpenGraph = (
-    width >= openGraphMinWidth &&
-    height >= openGraphMinHeight &&
-    hasAspectRatio(openGraphAspectRatio)
-  );
+function validateImageDimensions(width: number, height: number, input: HTMLInputElement) {
+  const { minDimensions, imageType, collection } = input.dataset as FileInputData;
+  if (!minDimensions) return '';
+
+  console.log('validating dimensions...', imageType || 'no type specified', width, height)
+
+  const min = JSON.parse(minDimensions);
+  let error = '', isValid;
+
   if (imageType) {
-    isValid = (
-      (imageType === 'SquareImage' && isSquareImage) ||
-      (imageType === 'LandscapeImage' && isLandscapeImage) ||
-      (imageType === 'SquareLogo' && isSquareLogo) ||
-      (imageType === 'LandscapeLogo' && isLandscapeLogo) ||
-      (imageType === 'OpenGraph' && isOpenGraph)
-    );
-  } else if (collection === 'images' && (isSquareImage || isLandscapeImage)) {
-    isValid = true;
-    imageType = `${isSquareImage ? 'Square' : 'Landscape'}Image`;
-  } else if (collection === 'logos' && (isSquareLogo || isLandscapeLogo)) {
-    isValid = true;
-    imageType = `${isSquareLogo ? 'Square' : 'Landscape'}Logo`;
-  }
-  if (isValid) {
-    $fileInput.attr('data-image-type', imageType!);
+    isValid = isValidImage(
+      width,
+      height,
+      min[imageType].width,
+      min[imageType].height || min[imageType].width,
+      min[imageType].tolerance
+    )
   } else {
-    const error = (minWidth && minHeight) ?
-      `Must be >= ${minWidth}px \u00d7 ${minHeight}px` :
-      'Does not meet size requirements';
-    return error;
+    isValid = isValidGoogleImage(collection === 'images' ? 'Image' : 'Logo', width, height, min);
+    input.dataset.imageType = isValid ? 
+      `${imageOrientation(width, height, min['SquareImage'].tolerance)}Image` :
+      undefined;
   }
+
+  if (!isValid) {
+    error = imageType ?
+      `Must be >= ${min[imageType].width}px \u00d7 ${min[imageType].height}px` :
+      `${width}px \u00d7 ${height}px is not valid`
+  }
+  return error;
+}
+
+function imageOrientation(
+  width: number, height: number, aspectRatioTolerance: number
+): 'Square' | 'Landscape' {
+  const aspectRatio = width / height;
+  return Math.abs(aspectRatio - 1) <= aspectRatioTolerance ? 'Square' : 'Landscape';
+};
+
+function isValidImage(
+  width: number, height: number, minWidth: number, minHeight: number, aspectRatioTolerance: number
+): boolean {
+  const aspectRatio = width / height;
+  const requiredAspectRatio = minWidth / minHeight;
+  const plusMinus = aspectRatioTolerance * requiredAspectRatio;
+  const hasAspectRatio = (
+    aspectRatio >= (requiredAspectRatio - plusMinus) && 
+    aspectRatio <= (requiredAspectRatio + plusMinus)
+  )
+  return width >= minWidth && height >= minHeight && hasAspectRatio;
+}
+
+function isValidGoogleImage(
+  subType: 'Image' | 'Logo',
+  width: number,
+  height: number,
+  min: { [key: string]: { width: number, height?: number, tolerance: number }  }
+) {
+  return [`Square${subType}`, `Landcape${subType}`].some(googleType => {
+    return isValidImage(
+      width,
+      height,
+      min[googleType].width,
+      min[googleType].height || min[googleType].width,
+      min[googleType].tolerance
+    );
+  });
 }

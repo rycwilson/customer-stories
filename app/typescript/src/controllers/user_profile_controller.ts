@@ -1,8 +1,6 @@
 import FormController from './form_controller';
-import type { FormSubmission, TurboSubmitStartEvent, TurboSubmitEndEvent } from '@hotwired/turbo';
+import type { TurboSubmitStartEvent } from '@hotwired/turbo';
 import { submitOnly } from '../utils';
-
-type CustomFormSubmission = FormSubmission & { photoFileInput?: HTMLInputElement };
 
 export default class UserProfileController extends FormController<UserProfileController> {
   static targets = [
@@ -37,27 +35,11 @@ export default class UserProfileController extends FormController<UserProfileCon
     const uploadingPhoto = this.imageCard.classList.contains('image-card--uploading'); 
     if (uploadingPhoto) {
       const { formSubmission: { body } } = e.detail;
-      
-      // A successful response will replace #user-photo, so we want to capture the existing
-      // file input and remove the validator listeners associated with it.
-      // formSubmission.photoFileInput = [...this.element.elements].find(el => (
-        //   el instanceof HTMLInputElement && el.type === 'file'
-        // )) as HTMLInputElement;
-
       submitOnly(body as FormData, (param) => param === 'user[photo_url]');      
     } else {
       super.onSubmitStart(e);
     }
   }
-
-  // onSubmitEnd(e: TurboSubmitEndEvent) {
-    // const { success, formSubmission }: { success: boolean; formSubmission: CustomFormSubmission }
-    //   = e.detail;
-    // if (success && formSubmission.photoFileInput) {
-    //   this.removeValidatorListeners(formSubmission.photoFileInput);
-    // }
-    // super.onSubmitEnd(e);
-  // }
   
   onPhotoUploadReady() {
     this.element.requestSubmit();

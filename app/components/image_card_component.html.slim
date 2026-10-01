@@ -80,11 +80,13 @@
                   min_dimensions: (min_dimensions unless @model == 'Customer'),
                   required_image: ('true' if @required) })
 
-      - if secondary_ad_image?
-        .image-card__footer
-          button.btn.btn-sm.btn-default type="button" data-action="image-card#cancelChanges"
-            | Cancel
-          button.btn.btn-sm.btn-danger type="submit"
-            | Delete
-          button.btn.btn-sm.btn-success type="submit"
-            | Make default
+        - if secondary_ad_image?
+          .image-card__footer
+            button.btn.btn-sm.btn-default type="button" data-action="image-card#cancelChanges"
+              | Cancel
+            button.btn.btn-sm.btn-danger type="submit"
+              | Delete
+            button.btn.btn-sm.btn-success type="submit"
+              | Make default
+
+      .help-block.help-block--validation data-image-card-target="helpBlock"

@@ -16,8 +16,6 @@
           (@errors if @errors && turbo_frame_request_id == 'company-ads-settings'),
         action: [ \
           'image-card:make-default->ads#setNewDefault',
-          'image-card:ready-to-validate->ads#updateValidator',
-          'image-card:validated->ads#updateValidator',
           'image-card:replace-default->ads#keepPreviousDefault',
           'image-card:upload-ready->ads#submitForm'].join(' ') }) do |form|
     

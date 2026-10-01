@@ -16,10 +16,6 @@
         action: [ \
           'input->company-profile#updateState',
           'change->company-profile#updateState',
-          'image-card:ready-for-validator->company-profile#addValidatorListeners',
-          'image-card:ready-to-validate->company-profile#updateValidator',
-          'image-card:invalid->company-profile#onInvalidImage',
-          'image-card:validated->company-profile#updateValidator',
           'image-card:upload-ready->company-profile#onUploadReady',
           'submit->company-profile#validate',
           'turbo:submit-start->company-profile#onSubmitStart' ].join(' ') },
