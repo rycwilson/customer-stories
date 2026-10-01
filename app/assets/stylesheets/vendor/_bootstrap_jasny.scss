@@ -5,3 +5,7 @@
 .btn-file {
   overflow: visible;
 }
+
+.form-group.has-error .fileinput .thumbnail {
+  border-color: $state-danger-text;
+}
