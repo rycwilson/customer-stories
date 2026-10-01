@@ -1,18 +1,17 @@
-= tag.div( \
-    class: [ \
-      'image-card',
-      { "image-card--#{@image_data[:type]}" => @image_data[:type].present?,
-        'gads-default' => default_ad_image?,
-        hidden: @model == 'AdwordsImage' && @image_data.blank?,
-        selected: @selected }],
-    data: { \
-      image_id: @image_data[:id],
-      controller: 'image-card',
-      "#{@form_controller_id}-target" => ('imageCard' if @form_controller_id),
-      image_card_upload_enabled_value: @upload_enabled,
-      ads_target:,
-      story_settings_target: 'ogImageCard',
-      action: ('click->image-card#toggleSelected' if @model == 'AdwordsAd') })
+= tag.div(class: [ \
+            'image-card',
+            { "image-card--#{@image_data[:type]}" => @image_data[:type].present?,
+              'gads-default' => default_ad_image?,
+              hidden: @model == 'AdwordsImage' && @image_data.blank?,
+              selected: @selected }],
+          data: { \
+            image_id: @image_data[:id],
+            controller: 'image-card',
+            "#{@form_controller_id}-target" => ('imageCard' if @form_controller_id),
+            image_card_upload_enabled_value: @upload_enabled,
+            ads_target:,
+            story_settings_target: 'ogImageCard',
+            action: ('click->image-card#toggleSelected' if @model == 'AdwordsAd') })
   
   = render('shared/loading_spinner') if @upload_enabled
 
@@ -66,19 +65,18 @@
           - else
             .fileinput-preview.fileinput-exists.thumbnail data-image-card-target="preview"
           .btn-file
-            = tag.input( \
-                type: 'file',
-                accept: 'image/jpeg,image/png',
-                data: { \
-                  image_card_target: 'fileInput',
-                  asset_host: asset_host(),
-                  s3: (s3_direct_post if @upload_enabled),
-                  validate: 'false',
-                  collection: @collection,
-                  image_type: @image_data[:type],
-                  max_file_size: AdwordsImage::MAX_FILE_SIZE,
-                  min_dimensions: (min_dimensions unless @model == 'Customer'),
-                  required_image: ('true' if @required) })
+            = tag.input(type: 'file',
+                        accept: 'image/jpeg,image/png',
+                        data: { \
+                          image_card_target: 'fileInput',
+                          action: 'invalid->image-card#onInvalidImage',
+                          asset_host: asset_host(),
+                          s3: (s3_direct_post if @upload_enabled),
+                          collection: @collection,
+                          image_type: @image_data[:type],
+                          max_file_size: AdwordsImage::MAX_FILE_SIZE,
+                          min_dimensions: (min_dimensions unless @model == 'Customer'),
+                          required_image: ('true' if @required) })
 
         - if secondary_ad_image?
           .image-card__footer

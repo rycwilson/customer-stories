@@ -1,9 +1,10 @@
 #user-photo
-  = render( \
-      ImageCardComponent.new( \
-        'User',
-        form_controller_id: 'user-profile',
-        image_data: { type: 'SquareLogo', url: user.photo_url } )) do 
+
+  = render(ImageCardComponent.new( \
+      'User',
+      form_controller_id: 'user-profile',
+      image_data: { type: 'UserPhoto', url: user.photo_url } )) do 
+
     = hidden_field_tag( \
         'user[photo_url]',
         user.photo_url,
