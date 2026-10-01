@@ -85,3 +85,12 @@ export function serializeForm(form: HTMLFormElement) {
   );
   return params.toString();
 }
+
+// body has type URLSearchParams when GET, else FormData
+export function submitOnly(body: URLSearchParams | FormData, predicate: (key: string) => boolean) {
+  const keep = new Set(['_method', 'authenticity_token']);
+  for (const k of body.keys()) {
+    if (keep.has(k) || predicate(k)) continue;
+    body.delete(k);
+  }
+}

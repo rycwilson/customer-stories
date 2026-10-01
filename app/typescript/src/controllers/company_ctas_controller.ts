@@ -1,7 +1,7 @@
 import type { TurboSubmitStartEvent, TurboSubmitEndEvent } from '@hotwired/turbo';
 import FormController from './form_controller';
 import ModalController from './modal_controller';
-import { debounce, setCustomButtonProps } from '../utils';
+import { debounce, setCustomButtonProps, submitOnly } from '../utils';
 import tinycolor from 'tinycolor2';
 
 export default class CompanyCtasController extends FormController<CompanyCtasController> {
@@ -53,17 +53,13 @@ export default class CompanyCtasController extends FormController<CompanyCtasCon
     // When updating a single CTA, don't send the whole list.
     // A change to the primary CTA will be handled in the server.
     if (body.get('_method') === 'patch') {
-      const ctaPrefix = <string>submitter!.dataset.ctaPrefix; 
-      const keep = new Set([
-        '_method',
-        'authenticity_token',
-        'company[primary_cta_background_color]',
-        'company[primary_cta_text_color]'
-      ]);
-      for (const key of [...body.keys()]) {
-        if (keep.has(key) || key.startsWith(ctaPrefix)) continue;
-        body.delete(key);
-      }
+      submitOnly(
+        body as FormData,
+        (param: string) => (
+          param.startsWith(<string>submitter!.dataset.ctaPrefix) || 
+          !!param.match(/company\[primary_cta_/)
+        )
+      );
     }
 
     for (const [name, value] of body.entries()) console.log(name, value)

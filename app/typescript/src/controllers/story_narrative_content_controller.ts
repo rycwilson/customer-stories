@@ -39,14 +39,6 @@ export default class StoryNarrativeContentController extends FormController<Stor
     //   this.activeResult.sortHandle?.classList.add('list-group-item__handle--disabled');
     // }
 
-    // Remove all other fields from the submission body to avoid unnecessary data in the payload.
-    // console.log('submitting field:', fieldName)
-    // const keep = new Set(['_method', 'authenticity_token']);
-    // for (const key of [...body.keys()]) {
-    //   if (keep.has(key)) continue;
-    //   if (key !== fieldName) body.delete(key);
-    // }
-
     // this.activeSubmissions[fieldName] = formSubmission;
 
     this.toggleResultsButtonTargets.forEach(btn => btn.disabled = true);
