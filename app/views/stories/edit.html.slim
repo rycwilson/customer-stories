@@ -47,37 +47,36 @@ main.dashboard.hidden-xs data-controller="dashboard" data-dashboard-modal-outlet
       .company__main
         .tab-content
 
-          #story-narrative-content.tab-pane {
-            class=('active in' if @active_tab == '#story-narrative-content')
-            aria-labelledby="story-narrative-content-tab"
-            role="tabpanel" }
+          = tag.div(class: "tab-pane #{'active in' if @active_tab == '#story-narrative-content'}",
+                    id: 'story-narrative-content',
+                    role: 'tabpanel',
+                    aria: { labelledby: 'story-narrative-content-tab' }) do
             = render('/stories/edit/narrative_content', { company: @company, story: @story })
             
-          #story-testimonials.tab-pane {
-            class=('active in' if @active_tab == '#story-testimonials')
-            aria-labelledby="story-testimonials-tab"
-            role="tabpanel" }
+          = tag.div(class: "tab-pane #{'active in' if @active_tab == '#story-testimonials'}",
+                    id: 'story-testimonials',
+                    role: 'tabpanel',
+                    aria: { labelledby: 'story-testimonials-tab' }) do
             = render('stories/edit/testimonials', { company: @company, story: @story })
             
-          #story-contributions.tab-pane {
-            class=('active' if @active_tab == '#story-contributions') 
-            data-resource-name="storyContributions"
-            data-story-id=@story.id
-            data-story-target="contributions"
-            data-controller="contributions"
-            data-contributions-init-value="true"
-            data-contributions-data-path-value=success_contributions_path(@story.success)
-            data-contributions-row-group-data-source-value=""
-            data-contributions-filters-value=contributions_filters(@story.curator.id).to_json
-            aria-labelledby="story-contributions-tab"
-            role="tabpanel" }
-            
+          = tag.div(class: "tab-pane #{'active in' if @active_tab == '#story-contributions'}",
+                    id: 'story-contributions',
+                    role: 'tabpanel',
+                    aria: { labelledby: 'story-contributions-tab' },
+                    data: { \
+                      resource_name: 'storyContributions',
+                      story_id: @story.id,
+                      story_target: 'contributions',
+                      controller: 'contributions',
+                      contributions_init_value: 'true',
+                      contributions_data_path_value: success_contributions_path(@story.success),
+                      contributions_row_group_data_source_value: '',
+                      contributions_filters_value: contributions_filters(@story.curator.id) }) do
             = render('contributions/table', company: @company, story: @story)
 
-          #story-settings.tab-pane {
-            class=('active' if @active_tab == '#story-settings')
-            aria-labelledby="story-settings-tab"
-            role="tabpanel" }
-            
+          = tag.div(class: "tab-pane #{'active in' if @active_tab == '#story-settings'}",
+                    id: 'story-settings',
+                    role: 'tabpanel',
+                    aria: { labelledby: 'story-settings-tab' }) do
             = render('stories/edit/story_settings', { company: @company, story: @story })
 
