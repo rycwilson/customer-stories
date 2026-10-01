@@ -207,8 +207,8 @@ function validateImageDimensions(width: number, height: number, input: HTMLInput
 
   if (!isValid) {
     error = imageType ?
-      `Must be >= ${min[imageType].width}px \u00d7 ${min[imageType].height}px` :
-      `${width}px \u00d7 ${height}px is not valid`
+      `Must be \u2265 ${min[imageType].width}\u00d7${min[imageType].height || min[imageType].width}` :
+      `${width}\u00d7${height} is not valid`
   }
   return error;
 }
