@@ -223,10 +223,6 @@ export default class FormController<Ctrl extends SubclassController> extends Con
     setTimeout(() => submitBtn.classList.add('btn--working'), 1000);
   }
 
-  onInvalidImage() {
-    this.element.reset();
-  }
-
   onChangeCustomer(
     this: NewCustomerWinController | NewContributionController | NewStoryController, 
     { target: select }: { target: TomSelectInput }

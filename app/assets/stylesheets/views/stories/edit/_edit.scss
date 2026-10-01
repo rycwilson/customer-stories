@@ -174,12 +174,6 @@ body.stories.edit {
   }
 }
 
-#story-settings {
-  // this prevents content shifting when toggling the customer logo/name
-  // TODO this (or something like it) needs to be implemented more broadly
-  min-height: 100vh;
-}
-
 #story-settings-form {
   // @include hide-until-init;
 

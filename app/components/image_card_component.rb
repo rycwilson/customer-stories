@@ -27,58 +27,6 @@ class ImageCardComponent < ViewComponent::Base
     @upload_enabled = upload_enabled
   end
 
-  def container_attributes
-    {
-      class: [
-        'image-card',
-        { 
-          "image-card--#{@image_data[:type]}" => @image_data[:type].present?,
-          'gads-default' => default_ad_image?,
-          hidden: @model == 'AdwordsImage' && @image_data.blank?,
-          selected: @selected
-        } 
-      ],
-      data: {
-        image_id: @image_data[:id],
-        controller: 'image-card',
-        "#{@form_controller_id}-target" => ('imageCard' if @form_controller_id),
-        image_card_upload_enabled_value: @upload_enabled,
-        ads_target:,
-        story_settings_target: 'ogImageCard',
-        action: ('click->image-card#toggleSelected' if @model == 'AdwordsAd') 
-      }
-    }
-  end
-
-  def form_group_attributes
-    {
-      class: "form-group fileinput fileinput-#{image_exists? ? 'exists' : 'new'}",
-      data: { provides: 'fileinput', image_card_target: 'formGroup' }
-    }
-  end
-
-  def file_input_attributes
-    {
-      type: 'file',
-      accept: 'image/jpeg,image/png',
-      data: {
-        image_card_target: 'fileInput',
-        asset_host: 
-          (Rails.application.config.asset_host if @upload_enabled && Rails.env.production?),
-        s3: (s3_direct_post if @upload_enabled),
-        validate: 'false',
-        collection: @collection,
-        image_type: (@image_data[:type] if @image_data[:type].present?),
-        max_file_size: AdwordsImage::MAX_FILE_SIZE,
-        min_dimensions: (min_dimensions unless @model == 'Customer'),
-        min_width: (min_dimensions[:width] if min_dimensions),
-        min_height: (min_dimensions[:height] if min_dimensions),
-        aspect_ratio_tolerance: AdwordsImage::ASPECT_RATIO_TOLERANCE,
-        required_image: ('true' if @required)
-      }
-    }
-  end
-
   def image_exists?
     @image_data[:image_url].present? || @image_data[:url].present?
   end
@@ -118,6 +66,10 @@ class ImageCardComponent < ViewComponent::Base
     end
   end
 
+  def asset_host
+    Rails.application.config.asset_host if @upload_enabled && Rails.env.production?
+  end
+
   def s3_direct_post
     post = S3_BUCKET.presigned_post(
       key: "uploads/#{SecureRandom.uuid}/${filename}",
@@ -145,26 +97,28 @@ class ImageCardComponent < ViewComponent::Base
 
   def min_dimensions(type = nil)
     min_dimensions = {
+      'OpenGraph' => {
+        width: 1200,
+        height: 630,
+        tolerance: AdwordsImage::ASPECT_RATIO_TOLERANCE
+      },
       'SquareImage' => {
-        width: AdwordsImage::SQUARE_IMAGE_MIN
+        width: AdwordsImage::SQUARE_IMAGE_MIN,
+        tolerance: AdwordsImage::ASPECT_RATIO_TOLERANCE
       },
       'LandscapeImage' => {
         width: AdwordsImage::LANDSCAPE_IMAGE_MIN&.split('x').try(:[], 0).to_i,
         height: AdwordsImage::LANDSCAPE_IMAGE_MIN&.split('x').try(:[], 1).to_i,
-        aspect_ratio: AdwordsImage::LANDSCAPE_IMAGE_ASPECT_RATIO
+        tolerance: AdwordsImage::ASPECT_RATIO_TOLERANCE
       },
       'SquareLogo' => {
-        width: AdwordsImage::SQUARE_LOGO_MIN
+        width: AdwordsImage::SQUARE_LOGO_MIN,
+        tolerance: AdwordsImage::ASPECT_RATIO_TOLERANCE
       },
       'LandscapeLogo' => {
         width: AdwordsImage::LANDSCAPE_LOGO_MIN&.split('x').try(:[], 0).to_i,
         height: AdwordsImage::LANDSCAPE_LOGO_MIN&.split('x').try(:[], 1).to_i,
-        aspect_ratio: AdwordsImage::LANDSCAPE_LOGO_ASPECT_RATIO
-      },
-      'OpenGraph' => {
-        width: 1200,
-        height: 630,
-        aspect_ratio: 1.91
+        tolerance: AdwordsImage::ASPECT_RATIO_TOLERANCE
       }
     }
     type ? min_dimensions[type] : min_dimensions

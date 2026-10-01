@@ -9,7 +9,7 @@ main.company__container.container-fluid.hidden-xs data-controller="company-setti
         i.fa.fa-bars
 
     / no active tab set here; it will be set by the client based on page fragment identifier
-    ul.nav.nav--company data-controller="nav-list" role="tablist"
+    ul.nav data-controller="nav-list" role="tablist"
       - unless @company.new_record?
         - [ ['#contributor-invitations-panel', 'fa-envelope-o', 'Contributor Invitations'],
             ['#contributor-prompts-panel', 'fa-lightbulb-o', 'Contributor Prompts'],
