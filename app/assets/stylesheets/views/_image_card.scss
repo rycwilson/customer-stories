@@ -96,7 +96,8 @@
     height: calc(150px + #{$thumbnail-padding + 2px});
   }
 
-  .image-card--SquareLogo & {
+  .image-card--SquareLogo &,
+  .image-card--UserPhoto & {
     width: calc(120px + #{$thumbnail-padding + 2px});
     height: calc(120px + #{$thumbnail-padding + 2px});
   }

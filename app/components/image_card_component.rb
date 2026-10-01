@@ -97,6 +97,10 @@ class ImageCardComponent < ViewComponent::Base
 
   def min_dimensions(type = nil)
     min_dimensions = {
+      'UserPhoto' => {
+        width: 400,
+        tolerance: AdwordsImage::ASPECT_RATIO_TOLERANCE
+      },
       'OpenGraph' => {
         width: 1200,
         height: 630,
