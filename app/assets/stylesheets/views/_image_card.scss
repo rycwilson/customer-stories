@@ -30,15 +30,15 @@
     display: none;
   }
 
+  .form-group {
+    margin: 0;
+  }
+
   .fileinput, 
   .fileinput-new,
   .fileinput-preview {
     position: relative;
     margin: 0;  // override jasny bootstrap
-  }
-
-  .form-group {
-    width: 100%;
   }
 }
 

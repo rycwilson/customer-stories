@@ -44,3 +44,22 @@ body.companies.edit {
     max-width: 70rem;
   }
 }
+
+.btn--copy {
+  i:last-child {
+    display: none;
+  }
+
+  &.did-copy {
+    pointer-events: none;
+
+    i:first-child,
+    span {
+      display: none;
+    }
+
+    i:last-child {
+      display: inline-block;
+    }
+  }
+}

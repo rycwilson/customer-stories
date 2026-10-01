@@ -1,6 +1,6 @@
 = render('shared/navbars/company_nav', company: @company)
 
-main.container-fluid.hidden-xs data-controller="company-settings"
+main.company__container.container-fluid.hidden-xs data-controller="company-settings"
 
   .sidebar data-company-settings-target="sidebar"
     .sidebar__toggle
@@ -42,7 +42,7 @@ main.container-fluid.hidden-xs data-controller="company-settings"
           i.fa.fa-fw.fa-gear
           span Account Settings
 
-  .layout-main
+  .company__main
     .tab-content
 
       - unless @company.new_record?

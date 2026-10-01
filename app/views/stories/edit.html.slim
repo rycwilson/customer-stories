@@ -13,7 +13,7 @@ main.dashboard.hidden-xs data-controller="dashboard" data-dashboard-modal-outlet
 
     = render('shared/loading_spinner')
 
-    .container-fluid
+    .company__container.container-fluid
     
       .sidebar data-dashboard-target="sidebar"
         .sidebar__toggle
@@ -44,7 +44,7 @@ main.dashboard.hidden-xs data-controller="dashboard" data-dashboard-modal-outlet
                 i.fa.fa-fw class=icon_class
                 span = label
 
-      .layout-main
+      .company__main
         .tab-content
 
           #story-narrative-content.tab-pane {

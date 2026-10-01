@@ -9,7 +9,7 @@
 
   = render('shared/loading_spinner')
 
-  .container-fluid
+  .company__container.container-fluid
     .sidebar data-dashboard-target="sidebar"
       .sidebar__toggle
         .thingy
@@ -24,7 +24,7 @@
             = tag.a(href: panel_id,
                     role: 'tab',
                     data: { \
-                      toggle: 'tag',
+                      toggle: 'tab',
                       action: 'dashboard#setNavCookie',
                       controller: 'tooltip',
                       tooltip_options_value: nav_link_tooltip_options(label) },
@@ -34,7 +34,7 @@
               i.fa.fa-fw class=icon_class
               span = label
                   
-    .layout-main
+    .company__main
       .tab-content
       
         = tag.div( \

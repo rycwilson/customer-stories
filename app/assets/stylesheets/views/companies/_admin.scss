@@ -3,38 +3,30 @@
 @import './settings/settings';
 @import '../image_card';
 
-body {
-  padding-top: 8rem;
+.company__container {
+  padding: 0 2.5rem;
+  max-width: 1200px;
 
-  &,
-  .dashboard > .tab-content > .tab-pane,
-  #story {
-    > .container-fluid {
-      padding: 0 2.5rem;
-      max-width: 1200px;
-    }
+  :not(#curate) > & {
+    display: flex;
+    align-items: flex-start;
   }
-  
-  .dashboard > .tab-content > .tab-pane:not(#curate),
-  .companies.new,
-  .registrations.update,    // when there is an error and 422 response
-  #story,
-  &.companies.new,
-  &.companies.edit,
-  &.companies.create {
-    > .container-fluid {
-      display: flex;
-      align-items: flex-start;
-      transition: opacity .15s ease-out;
-    }
-  } 
+
+  // These pages load data and will transition from the loading spinner
+  #prospect > &,
+  #curate > &,
+  #story > &,
+  #promote > &,
+  #measure > & {
+    transition: opacity .15s ease-out;
+  }
 }
 
-.layout-main {
+.company__main {
   flex: 1 1 0%;
   align-self: stretch;
   border-left: 1px solid darken($btn-default-border, 2%);
-  padding: 0 0 5rem 3.25rem;
+  padding: 0 0 3.25rem 3.25rem;
 }
 
 .sidebar {
@@ -113,7 +105,7 @@ body {
   position: absolute;
   right: -1.15em;
 
-  // When .layout-main is scrolled the border will appear about the sidebar toggle button.
+  // When .company__main is scrolled the border will appear about the sidebar toggle button.
   // This keeps it concealed:
   .thingy {
     position: absolute;
@@ -132,9 +124,7 @@ body {
   }
 }
 
-.form-horizontal {
-  padding-top: 2rem;
-}
+
 
 #gads-form,
 #story-narrative-content-form,
