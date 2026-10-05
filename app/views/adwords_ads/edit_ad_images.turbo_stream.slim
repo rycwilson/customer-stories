@@ -39,7 +39,7 @@
                   ImageCardComponent.new( \
                     'AdwordsAd',
                     image_object: ad_image,
-                    upload_enabled: false,
+                    uploadable: false,
                     selected: @ad.images.include?(ad_image) )) do 
                 = hidden_field_tag('adwords_ad[adwords_image_ids][]', '')
                 = check_box_tag( \
@@ -56,7 +56,7 @@
                   ImageCardComponent.new( \
                     'AdwordsAd',
                     image_object: ad_image,
-                    upload_enabled: false,
+                    uploadable: false,
                     selected: @ad.images.include?(ad_image) )) do 
                 = hidden_field_tag('adwords_ad[adwords_image_ids][]', '')
                 = check_box_tag( \

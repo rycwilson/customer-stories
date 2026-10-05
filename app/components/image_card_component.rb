@@ -14,9 +14,9 @@ class ImageCardComponent < ViewComponent::Base
     model,
     image_object: {},
     form_controller_id: nil,
-    form_controller_target: [],
+    form_controller_target: '',
     collection: nil,
-    upload_enabled: true,
+    uploadable: true,
     required: false,
     selected: false
   )
@@ -29,7 +29,7 @@ class ImageCardComponent < ViewComponent::Base
     @form_controller_target = form_controller_target
     @required = required
     @collection = collection
-    @upload_enabled = upload_enabled
+    @uploadable = uploadable
     @selected = selected
   end
 
@@ -38,7 +38,7 @@ class ImageCardComponent < ViewComponent::Base
   end
 
   def fileinput_widget_attributes
-    return {} unless @upload_enabled
+    return {} unless @uploadable
 
     {
       class: "fileinput fileinput-#{image_exists? ? 'exists' : 'new'}",
@@ -70,7 +70,7 @@ class ImageCardComponent < ViewComponent::Base
   end
 
   def asset_host
-    Rails.application.config.asset_host if @upload_enabled && Rails.env.production?
+    Rails.application.config.asset_host if @uploadable && Rails.env.production?
   end
 
   def s3_direct_post
@@ -88,7 +88,7 @@ class ImageCardComponent < ViewComponent::Base
 
   # TODO: Despite the nil default, a type should always be passed
   def min_dimensions(type = nil)
-    return nil if !@upload_enabled || @model == 'Customer'
+    return nil if !@uploadable || @model == 'Customer'
 
     min_dimensions = {
       'UserPhoto' => {
@@ -113,7 +113,7 @@ class ImageCardComponent < ViewComponent::Base
         height: AdwordsImage::LANDSCAPE_LOGO_MIN&.split('x').try(:[], 1).to_i
       }
     }
-    
+
     min_dimensions.each_key do |k| 
       # For square images, fill in the height key.
       min_dimensions[k]

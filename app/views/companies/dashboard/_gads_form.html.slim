@@ -37,7 +37,7 @@
         'AdwordsImage', 
         form_controller_id: 'ads',
         image_object:,
-        upload_enabled: false )) do |component|
+        uploadable: false )) do |component|
       = component.with_header_actions do
         button type="button" data-action="ads#setNewDefaultImage"
           i.fa.fa-fw.fa-refresh

@@ -9,7 +9,7 @@
               ("imageCard #{@form_controller_target}" if @form_controller_id),
             action: ('click->image-card#toggleSelected' if @model == 'AdwordsAd') })
   
-  = render('shared/loading_spinner') if @upload_enabled
+  = render('shared/loading_spinner') if @uploadable
 
   - form_controls.each do |control|
     = control
@@ -30,7 +30,7 @@
       
       = tag.div(**fileinput_widget_attributes) do
         .image-card__header
-          - if @upload_enabled
+          - if @uploadable
             button type="button" data-trigger="fileinput"
               i.fa.fa-fw class="fa-#{@model == 'User' ? 'camera' : 'upload'}"
           = header_actions
@@ -39,7 +39,7 @@
             i.fa.fa-fw.fa-remove
         
         .image-card__frame
-          - if @upload_enabled
+          - if @uploadable
             .fileinput-new.thumbnail
               = image_tag(placeholder_url, alt: alt_text)
             .fileinput-preview.fileinput-exists.thumbnail data-image-card-target="preview"
@@ -56,7 +56,7 @@
                   image_card_target: 'fileInput',
                   action: 'invalid->image-card#onInvalidImage',
                   asset_host: asset_host(),
-                  s3: (s3_direct_post if @upload_enabled),
+                  s3: (s3_direct_post if @uploadable),
                   collection: @collection,
                   image_type: @image_object[:type],
                   max_file_size: AdwordsImage::MAX_FILE_SIZE,
