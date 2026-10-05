@@ -33,14 +33,15 @@
       = render( \
           ImageCardComponent.new( \
             'Customer',
-            form_controller_id: 'form',
-            image_data: { url: @customer.logo_url } )) do
-        .customer-name 
-          span = @customer.name
-        = form.hidden_field( \
-            :logo_url,
-            disabled: true,
-            data: { image_card_target: 'input urlInput' })
+            image_object: { url: @customer.logo_url },
+            form_controller_id: 'form' )) do |component|
+        - component.with_form_control do
+          .customer-name 
+            span = @customer.name
+          = form.hidden_field( \
+              :logo_url,
+              disabled: true,
+              data: { image_card_target: 'input urlInput' })
 
 = turbo_stream.append 'main-modal-content' do 
   .modal-footer data-modal-target="footer"

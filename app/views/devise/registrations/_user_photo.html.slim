@@ -3,11 +3,12 @@
   = render(ImageCardComponent.new( \
       'User',
       form_controller_id: 'user-profile',
-      image_data: { type: 'UserPhoto', url: user.photo_url } )) do 
+      image_object: { type: 'UserPhoto', url: user.photo_url } )) do |component|
 
-    = hidden_field_tag( \
-        'user[photo_url]',
-        user.photo_url,
-        id: 'user_photo_url',
-        disabled: true,
-        data: { image_card_target: 'input urlInput' })
+    - component.with_form_control do
+      = hidden_field_tag( \
+          'user[photo_url]',
+          user.photo_url,
+          id: 'user_photo_url',
+          disabled: true,
+          data: { image_card_target: 'input urlInput' })

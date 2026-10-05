@@ -6,46 +6,49 @@ class ImageCardComponent < ViewComponent::Base
   # (Remember to escape interpolated strings)
   # SLIM
 
+  renders_one :header_actions
+  renders_many :form_controls
+  renders_one :footer_actions
+
   def initialize(
     model,
+    image_object: {},
     form_controller_id: nil,
-    image_data: {},
+    form_controller_target: [],
     collection: nil,
-    upload_enabled: true, 
+    upload_enabled: true,
     required: false,
     selected: false
   )
-    if image_data[:type].present? && !collection
-      collection = image_data[:type].split(/(?=[A-Z])/).last.downcase.pluralize
+    if image_object[:type].present? && !collection
+      collection = image_object[:type].split(/(?=[A-Z])/).last.downcase.pluralize
     end
     @model = model
+    @image_object = image_object
     @form_controller_id = form_controller_id
-    @image_data = image_data
+    @form_controller_target = form_controller_target
     @required = required
     @collection = collection
-    @selected = selected
     @upload_enabled = upload_enabled
+    @selected = selected
   end
 
   def image_exists?
-    @image_data[:image_url].present? || @image_data[:url].present?
+    @image_object[:image_url].present? || @image_object[:url].present?
   end
 
-  def image_replaceable?
-    @model.in?(%w[User Company Customer Story]) || default_ad_image?
-  end
+  def fileinput_widget_attributes
+    return {} unless @upload_enabled
 
-  def default_ad_image?
-    @model == 'AdwordsImage' && @image_data[:default]
-  end
-
-  def secondary_ad_image?
-    @model == 'AdwordsImage' && @image_data[:id].present? && !@image_data[:default]
+    {
+      class: "fileinput fileinput-#{image_exists? ? 'exists' : 'new'}",
+      data: { image_card_target: 'fileInputWidget' }
+    }
   end
 
   def placeholder_url
-    if @image_data[:type].present?
-      case @image_data[:type]
+    if @image_object[:type].present?
+      case @image_object[:type]
       when 'SquareImage'
         'https://placehold.co/300/e2e3e3/777?font=open+sans&text=%E2%89%A5%20300%C3%97300'
       when 'LandscapeImage'
@@ -79,52 +82,53 @@ class ImageCardComponent < ViewComponent::Base
     { url: post.url, host: URI.parse(post.url).host, 'postData' => post.fields }
   end
 
-  def ads_target
-    return nil unless @model == 'AdwordsImage'
-    
-    if @image_data[:default]
-      'defaultImageCard'
-    elsif @image_data[:id]
-      'imageCard'
-    else
-      "new#{@collection.singularize.capitalize}Card"
-    end
-  end
-
   def alt_text
-    @image_data[:type]&.split(/(?=[A-Z])/)&.join(' ')
+    @image_object[:type]&.split(/(?=[A-Z])/)&.join(' ')
   end
 
+  # TODO: Despite the nil default, a type should always be passed
   def min_dimensions(type = nil)
+    return nil if !@upload_enabled || @model == 'Customer'
+
     min_dimensions = {
       'UserPhoto' => {
-        width: 400,
-        tolerance: AdwordsImage::ASPECT_RATIO_TOLERANCE
+        width: 400
       },
       'OpenGraph' => {
         width: 1200,
-        height: 630,
-        tolerance: AdwordsImage::ASPECT_RATIO_TOLERANCE
+        height: 630
       },
       'SquareImage' => {
-        width: AdwordsImage::SQUARE_IMAGE_MIN,
-        tolerance: AdwordsImage::ASPECT_RATIO_TOLERANCE
+        width: AdwordsImage::SQUARE_IMAGE_MIN
       },
       'LandscapeImage' => {
         width: AdwordsImage::LANDSCAPE_IMAGE_MIN&.split('x').try(:[], 0).to_i,
-        height: AdwordsImage::LANDSCAPE_IMAGE_MIN&.split('x').try(:[], 1).to_i,
-        tolerance: AdwordsImage::ASPECT_RATIO_TOLERANCE
+        height: AdwordsImage::LANDSCAPE_IMAGE_MIN&.split('x').try(:[], 1).to_i
       },
       'SquareLogo' => {
-        width: AdwordsImage::SQUARE_LOGO_MIN,
-        tolerance: AdwordsImage::ASPECT_RATIO_TOLERANCE
+        width: AdwordsImage::SQUARE_LOGO_MIN
       },
       'LandscapeLogo' => {
         width: AdwordsImage::LANDSCAPE_LOGO_MIN&.split('x').try(:[], 0).to_i,
-        height: AdwordsImage::LANDSCAPE_LOGO_MIN&.split('x').try(:[], 1).to_i,
-        tolerance: AdwordsImage::ASPECT_RATIO_TOLERANCE
+        height: AdwordsImage::LANDSCAPE_LOGO_MIN&.split('x').try(:[], 1).to_i
       }
     }
-    type ? min_dimensions[type] : min_dimensions
+    
+    min_dimensions.each_key do |k| 
+      # For square images, fill in the height key.
+      min_dimensions[k]
+        .merge!(min_dimensions[k][:height] ? {} : { height: min_dimensions[k][:width] })
+      
+      # All images have a common aspect ratio tolerance.
+      min_dimensions[k].merge!({ tolerance: AdwordsImage::ASPECT_RATIO_TOLERANCE })
+    end
+
+    if type
+      min_dimensions[type]
+    else
+      min_dimensions.select do |type, _|
+        type.in? %w[SquareImage LandscapeImage SquareLogo LandcapeLogo]
+      end
+    end
   end
 end

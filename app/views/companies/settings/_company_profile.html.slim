@@ -92,22 +92,25 @@
                 ImageCardComponent.new( \
                   'Company', 
                   form_controller_id: 'company-profile',
-                  image_data: { type: 'SquareLogo', url: company.square_logo_url }, 
-                  required: true )) do
-              = form.hidden_field( \
-                  :square_logo_url,
-                  disabled: true,
-                  data: { image_card_target: 'input urlInput' })
+                  image_object: { type: 'SquareLogo', url: company.square_logo_url }, 
+                  required: true )) do |component|
+              - component.with_form_control do
+                = form.hidden_field( \
+                    :square_logo_url,
+                    disabled: true,
+                    data: { image_card_target: 'input urlInput' })
           li 
             = render( \
                 ImageCardComponent.new( \
                   'Company', 
                   form_controller_id: 'company-profile',
-                  image_data: { type: 'LandscapeLogo', url: company.landscape_logo_url } )) do
-              = form.hidden_field( \
-                  :landscape_logo_url,
-                  disabled: true,
-                  data: { image_card_target: 'input urlInput' })
+                  image_object: \
+                    { type: 'LandscapeLogo', url: company.landscape_logo_url })) do |component|
+              - component.with_form_control do
+                = form.hidden_field( \
+                    :landscape_logo_url,
+                    disabled: true,
+                    data: { image_card_target: 'input urlInput' })
 
     .row
       .visible-sm-block.col-sm-12
@@ -194,7 +197,7 @@
               disable_with_html: disabled_submit_button_html })
 
 - if company.persisted?
-  = turbo_frame_tag('company-profile-frame')
+  = turbo_frame_tag('company-profile-frame') do
     = form
 - else 
   = form

@@ -161,12 +161,14 @@
               = render( \
                   ImageCardComponent.new( \
                     'Story',
+                    image_object: { type: 'OpenGraph', url: story.og_image_url },
                     form_controller_id: 'story-settings',
-                    image_data: { type: 'OpenGraph', url: story.og_image_url } )) do
-                = form.hidden_field( \
-                    :og_image_url,
-                    disabled: true,
-                    data: { image_card_target: 'input urlInput' })
+                    form_controller_target: 'ogImageCard' )) do |component|
+                - component.with_form_control do
+                  = form.hidden_field( \
+                      :og_image_url,
+                      disabled: true,
+                      data: { image_card_target: 'input urlInput' })
 
     .row 
       .visible-md-inline-block.visible-lg-inline-block.col-md-4

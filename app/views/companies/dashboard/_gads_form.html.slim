@@ -1,23 +1,79 @@
+- default_ad_image_card = lambda do |i, image_object|
+  - capture do 
+    = render(ImageCardComponent.new( \
+        'AdwordsImage',
+        image_object:,
+        form_controller_id: 'ads',
+        form_controller_target: 'defaultImageCard' )) do |component|
+      = %w[id type image_url default].each do |param|
+        = component.with_form_control do 
+          = hidden_field_tag( \
+              "company[adwords_images_attributes][#{i}][#{param}]",
+              image_object[param],
+              disabled: true,
+              data: { \
+                image_card_target: ( \
+                  "input #{ param.match(/(\A|_)([a-z]+)\z/)[2] + 'Input' unless param == 'id' }"),
+                ads_target: ('defaultInput' if param == 'default') })
+
+- new_ad_image_card = lambda do |i, base_type|
+  - capture do 
+    = render(ImageCardComponent.new( \
+        'AdwordsImage',
+        form_controller_id: 'ads',
+        form_controller_target: "new#{base_type}Card" )) do |component|
+      - %w[type image_url].each do |param|
+        = component.with_form_control do
+          = hidden_field_tag( \
+              "company[adwords_images_attributes][#{i}][#{param}]",
+              '',
+              disabled: true,
+              data: { \
+                image_card_target: "input #{ param.match(/(\A|_)([a-z]+)\z/)[2] }Input" })
+
+- ad_image_card = lambda do |i, image_object|
+  - capture do 
+    = render(ImageCardComponent.new( \
+        'AdwordsImage', 
+        form_controller_id: 'ads',
+        image_object:,
+        upload_enabled: false )) do |component|
+      = component.with_header_actions do
+        button type="button" data-action="ads#setNewDefaultImage"
+          i.fa.fa-fw.fa-refresh
+        |&nbsp;
+        button type="button" data-action="ads#deleteImage"
+          i.fa.fa-fw.fa-trash
+      - %w[id default _destroy].each do |param|
+        = component.with_form_control do
+          = hidden_field_tag( \
+              "company[adwords_images_attributes][#{i}][#{param}]",
+              image_object[param],
+              disabled: true,
+              data: { \
+                image_card_target: 'input',
+                ads_target: ( \
+                  "#{ param.match(/(\A|_)([a-z]+)\z/)[2] }Input" unless param == 'id' )})
+      = component.with_footer_actions do 
+        button.btn.btn-sm.btn-default type="button" data-action="ads#resetImageCard"
+          | Cancel
+        button.btn.btn-sm.btn-danger type="submit"
+          | Delete
+        button.btn.btn-sm.btn-success type="submit"
+          | Make default
+
 / index of the first logo (default square), varies with the number of non-default marketing images
 - logos_offset = 3 + company.ad_images.marketing.where.not(default: true).count
 
-= turbo_frame_tag('company-ads-settings') do
+= turbo_frame_tag('company-ads-frame') do
 
   = form_with( \
       model: company,
-      url: ads_company_path(company),
       id: 'gads-form',
       class: 'form-horizontal',
       data: { \
-        controller: 'ads toast',
-        toast_flash_value: \
-          (flash.to_h if flash.present? && turbo_frame_request_id == 'company-ads-settings'),
-        toast_errors_value: \
-          (@errors if @errors && turbo_frame_request_id == 'company-ads-settings'),
-        action: [ \
-          'image-card:make-default->ads#setNewDefault',
-          'image-card:replace-default->ads#keepPreviousDefault',
-          'image-card:upload-ready->ads#submitForm'].join(' ') }) do |form|
+        controller: 'ads',
+        action: 'image-card:upload-ready->ads#submitForm' }) do |form|
     
     = form.hidden_field( \
         :active_collection,
@@ -55,61 +111,60 @@
         | Image Collection
       .col-sm-9.col-md-8
         .btn-group data-controller="btn-group"
-          a.btn.btn-secondary {
-            href="#image-library__marketing"
-            class=('active' if active_collection == 'images')
-            data-toggle="tab" 
-            data-btn-group-target="btn"
-            data-action="ads#updateActiveCollection"
-            data-collection="images" 
-            role="tab" }
+          = tag.a(href: '#image-library__marketing',
+                  class: "btn btn-secondary #{'active' if active_collection == 'images'}",
+                  role: 'tab',
+                  data: { \
+                    toggle: 'tab',
+                    btn_group_target: 'btn',
+                    action: 'ads#updateActiveCollection',
+                    collection: 'images' }) do
             i.fa.fa-fw.fa-image
-            | &nbsp;&nbsp;Marketing Images
-          a.btn.btn-secondary {
-            href="#image-library__logos"
-            class=('active' if active_collection == 'logos')
-            data-toggle="tab" 
-            data-btn-group-target="btn"
-            data-action="ads#updateActiveCollection"
-            data-collection="logos"
-            role="tab" }
+            |&nbsp;&nbsp;Marketing Images
+          = tag.a(href: '#image-library__logos',
+                  class: "btn btn-secondary #{'active' if active_collection == 'logos'}",
+                  role: 'tab',
+                  data: { \
+                    toggle: 'tab',
+                    btn_group_target: 'btn',
+                    action: 'ads#updateActiveCollection',
+                    collection: 'logos' }) do
             i.fa.fa-fw.fa-flag
-            | &nbsp;&nbsp;Logos
+            |&nbsp;&nbsp;Logos
+            
       .col-sm-offset-3.col-sm-9.col-md-offset-4.col-md-8
-        span.help-block {
-          data-ads-target="requirementsHelpBlock"
-          class=('hidden' if active_collection != 'images') }
-          a {
-            href="javascript:;"
-            role="button"
-            data-toggle="popover" 
-            data-placement="right" 
-            data-trigger="focus"
-            data-collection="images"
-            data-square-min="300x300" 
-            data-square-ratio="1:1"
-            data-landscape-min="600x314" 
-            data-landscape-ratio="1.91:1"
-            data-ads-target="imageRequirements" }
-            | Requirements
-        span.help-block.pull-right {
-          data-ads-target="requirementsHelpBlock"
-          class=('hidden' if active_collection != 'logos') }
-          a {
-            href="javascript:;" 
-            role="button"
-            data-toggle="popover" 
-            data-placement="right" 
-            data-trigger="focus"
-            data-collection="logos"
-            data-square-min="128x128" 
-            data-square-ratio="1:1" 
-            data-square-suggest="1200x1200"
-            data-landscape-min="512x128" 
-            data-landscape-ratio="4:1" 
-            data-landscape-suggest="1200x300"
-            data-ads-target="imageRequirements" }
-            | Optional/Requirements
+        = tag.span(class: "help-block #{'hidden' if active_collection != 'images'}",
+                   data: { ads_target: 'requirementsHelpBlock' }) do
+          = tag.a('Requirements',
+                  href: 'javascript:;',
+                  role: 'button',
+                  data: { \
+                    toggle: 'popover',
+                    placement: 'right',
+                    trigger: 'focus',
+                    collection: 'images',
+                    square_min: '300x300',
+                    square_ratio: '1:1',
+                    landscape_min: '600x314',
+                    landscape_ratio: '1.91:1',
+                    ads_target: 'imageRequirements' })
+        = tag.span(class: "help-block pull-right #{'hidden' if active_collection != 'logos'}",
+                   data: { ads_target: 'requirementsHelpBlock' }) do
+          = tag.a('Optional/Requirements',
+                  href: 'javascript:;',
+                  role: 'button',
+                  data: { \
+                    toggle: 'popover',
+                    placement: 'right',
+                    trigger: 'focus',
+                    collection: 'logos',
+                    square_min: '128x128',
+                    square_ratio: '1:1',
+                    square_suggest: '1200x1200',
+                    landscape_min: '512x128',
+                    landscape_ratio: '4:1',
+                    landscape_suggest: '1200x300',
+                    ads_target: 'imageRequirements' })
 
     .image-library.tab-content
 
@@ -122,10 +177,10 @@
             | Default Images
           .col-sm-9.col-md-8
             ul.image-cards.list-unstyled
-              li
-                = render('adwords_images/default_image', company:, type: 'SquareImage', i: 0)
-              li 
-                = render('adwords_images/default_image', company:, type: 'LandscapeImage', i: 1)
+              - [ [0, company.default_square_ad_image],
+                  [1, company.default_landscape_ad_image ]].each do |(i, image_object)|
+                li
+                  = default_ad_image_card.call(i, image_object)
 
         .row
           /.visible-sm-block.col-sm-12
@@ -138,12 +193,11 @@
               |&nbsp;&nbsp;Upload an image
 
         ul.image-cards.list-unstyled
-          / collection must be specified for new uploads only
           li 
-            = render('adwords_images/secondary', collection: 'images', i: 2)
-          - company.ad_images.marketing.where.not(default: true).each.with_index do |ad_image, j|
+            = new_ad_image_card.call(2, 'Image')
+          - company.ad_images.marketing.where.not(default: true).each.with_index do |ad_image, i|
             li
-              = render('adwords_images/secondary', image_data: ad_image, i: j + 3)
+              = ad_image_card.call(i + 3, ad_image)
 
       #image-library__logos.tab-pane class=('active' if active_collection == 'logos')
 
@@ -153,10 +207,10 @@
           label.col-sm-3.col-md-4.control-label Default Logos
           .col-sm-9.col-md-8
             ul.image-cards.list-unstyled 
-              li
-                = render('adwords_images/default_logo', company:, type: 'SquareLogo', i: logos_offset)
-              li
-                = render('adwords_images/default_logo', company:, type: 'LandscapeLogo', i: logos_offset + 1)
+              - [ [logos_offset, company.default_square_ad_logo], \
+                  [logos_offset + 1, company.default_landscape_ad_logo ]].each do |(i, image_object)|
+                li
+                  = default_ad_image_card.call(i, image_object)
 
         .row
           /.visible-sm-block.col-sm-12
@@ -170,11 +224,7 @@
 
         ul.image-cards.list-unstyled
           li
-            = render('adwords_images/secondary', collection: 'images', i: logos_offset + 2)
-          - company.ad_images.logo.where.not(default: true).each.with_index do |ad_image, j|
+            = new_ad_image_card.call(logos_offset + 2, 'Logo')
+          - company.ad_images.logo.where.not(default: true).each.with_index do |ad_image, i|
             li
-              = render( \
-                  'adwords_images/default_logo',
-                  company:,
-                  type: 'LandscapeLogo',
-                  i: j + logos_offset + 3)
+              = ad_image_card.call(i + logos_offset + 3, ad_image)

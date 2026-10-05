@@ -190,70 +190,56 @@ export function validateImage(input: HTMLInputElement, file: File, img: HTMLImag
 }
 
 function validateImageDimensions(width: number, height: number, input: HTMLInputElement) {
-  const { minDimensions, imageType, collection } = input.dataset as FileInputData;
+  const { minDimensions, imageType, _collection } = input.dataset as FileInputData;
   if (!minDimensions) return '';
-
-  console.log('validating dimensions...', imageType || 'no type specified', width, height)
-
+  
+  // console.log('validating dimensions...', imageType || 'no type specified', width, height)
   const min = JSON.parse(minDimensions);
   let error = '', isValid;
 
   if (imageType) {
-    isValid = isValidImage(
-      width,
-      height,
-      min[imageType].width,
-      min[imageType].height || min[imageType].width,
-      min[imageType].tolerance
-    )
+    isValid = isValidImage(width, height, min);
   } else {
-    isValid = isValidGoogleImage(collection === 'images' ? 'Image' : 'Logo', width, height, min);
-    input.dataset.imageType = isValid ? 
-      `${imageOrientation(width, height, min['SquareImage'].tolerance)}Image` :
-      undefined;
+    const adImageType = validGoogleImageType(width, height, min);
+    if (adImageType) {
+      isValid = true;
+      input.dataset.imageType = adImageType;
+    }
   }
 
   if (!isValid) {
     error = imageType ?
-      `Must be \u2265 ${min[imageType].width}\u00d7${min[imageType].height || min[imageType].width}` :
+      `Must be \u2265 ${min.width}\u00d7${min.height}` :
       `${width}\u00d7${height} is not valid`
   }
   return error;
 }
 
-function imageOrientation(
-  width: number, height: number, aspectRatioTolerance: number
-): 'Square' | 'Landscape' {
-  const aspectRatio = width / height;
-  return Math.abs(aspectRatio - 1) <= aspectRatioTolerance ? 'Square' : 'Landscape';
-};
+// function imageOrientation(width: number, height: number, tolerance: number): 'Square' | 'Landscape' {
+//   const aspectRatio = width / height;
+//   return Math.abs(aspectRatio - 1) <= tolerance ? 'Square' : 'Landscape';
+// };
 
-function isValidImage(
-  width: number, height: number, minWidth: number, minHeight: number, aspectRatioTolerance: number
-): boolean {
+function isValidImage(width: number, height: number, min: ImageConstraints): boolean {
   const aspectRatio = width / height;
-  const requiredAspectRatio = minWidth / minHeight;
-  const plusMinus = aspectRatioTolerance * requiredAspectRatio;
+  const requiredAspectRatio = min.width / min.height;
+  const plusMinus = min.tolerance * requiredAspectRatio;
   const hasAspectRatio = (
     aspectRatio >= (requiredAspectRatio - plusMinus) && 
     aspectRatio <= (requiredAspectRatio + plusMinus)
   )
-  return width >= minWidth && height >= minHeight && hasAspectRatio;
+  return width >= min.width && height >= min.height && hasAspectRatio;
 }
 
-function isValidGoogleImage(
-  subType: 'Image' | 'Logo',
+function validGoogleImageType(
   width: number,
   height: number,
-  min: { [key: string]: { width: number, height?: number, tolerance: number }  }
+  min: Record<AdImageType, ImageConstraints>
 ) {
-  return [`Square${subType}`, `Landcape${subType}`].some(googleType => {
-    return isValidImage(
-      width,
-      height,
-      min[googleType].width,
-      min[googleType].height || min[googleType].width,
-      min[googleType].tolerance
-    );
-  });
+  let validType = null;
+  for (const type in min) {
+    const constraints = min[type as AdImageType];
+    if (isValidImage(width, height, constraints)) validType = type;
+  }
+  return validType;
 }

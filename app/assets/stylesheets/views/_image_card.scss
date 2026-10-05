@@ -69,11 +69,9 @@
   }
 
   // .image-card--uploading .form-group:not(.has-error) &,
-  .image-card--uploading .form-group &,
-  [class*="to-be-"] &,
   // .has-error & button:not(:last-child),
-  // :not(.gads-default) & .btn-remove:last-child
-  .gads-default & .btn-remove {
+  .image-card--uploading .form-group &,
+  [class*="to-be-"] & {
     display: none;
   }
 
@@ -164,12 +162,12 @@
   right: 0;
   bottom: 0;
   left: 0;
-  justify-content: center;
   display: none;
+  justify-content: center;
   padding: 8px;
-  background-color: rgba(75, 75, 75, 0.7);
   border-bottom-left-radius: $thumbnail-border-radius;
   border-bottom-right-radius: $thumbnail-border-radius;
+  background-color: rgba(75, 75, 75, 0.7);
 
   button {
     margin: 0 3px;
@@ -199,13 +197,13 @@
     width: 90%;
   }
 
-  .to-be-default > & {
+  .to-be-default & {
     .btn-danger {
       display: none;
     }
   }
 
-  .to-be-removed > & {
+  .to-be-removed & {
     .btn-success {
       display: none;
     }

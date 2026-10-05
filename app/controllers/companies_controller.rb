@@ -52,13 +52,16 @@ class CompaniesController < ApplicationController
       respond_to do |format|
         format.turbo_stream do
           turbo_stream_actions = []
+          if turbo_frame_request_id == 'company-ads-frame' 
+            active_collection = params[:company][:active_collection] || 'images'
+          end
 
           unless turbo_frame_request_id == 'company-ctas-frame'
             turbo_stream_actions = [
               turbo_stream.replace(
                 turbo_frame_request_id,
                 partial: frame_partials[turbo_frame_request_id],
-                locals: { company: @company }
+                locals: { company: @company, active_collection: }.compact
               )
             ]
           end
@@ -279,6 +282,7 @@ class CompaniesController < ApplicationController
 
   def frame_partials
     {
+      'company-ads-frame' => 'companies/dashboard/gads_form',
       'company-tags-frame' => 'companies/settings/tags',
       'company-profile-frame' => 'companies/settings/company_profile'
     }
@@ -288,6 +292,17 @@ class CompaniesController < ApplicationController
     return '' unless turbo_frame_request?
       
     case turbo_frame_request_id
+    when 'company-ads-frame'
+      'Ad settings have been updated'
+      # if @company.saved_change_to_adwords_short_headline?
+      #   'Headline has been updated'
+      # elsif company_params[:adwords_images_attributes].values.any? { |ad| ad[:id].blank? }
+      #   'Image has been added'
+      # elsif company_params[:adwords_images_attributes].values.any? { |ad| ad[:_destroy] == 'true' }
+      #   'Image was deleted'
+      # else
+      #   'Default image has been updated'
+      # end
     when 'company-ctas-frame'
       'CTAs have been reordered'
     when 'company-tags-frame'

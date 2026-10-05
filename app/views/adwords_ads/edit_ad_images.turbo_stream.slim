@@ -38,7 +38,7 @@
               = render( \
                   ImageCardComponent.new( \
                     'AdwordsAd',
-                    image_data: ad_image,
+                    image_object: ad_image,
                     upload_enabled: false,
                     selected: @ad.images.include?(ad_image) )) do 
                 = hidden_field_tag('adwords_ad[adwords_image_ids][]', '')
@@ -55,7 +55,7 @@
               = render( \
                   ImageCardComponent.new( \
                     'AdwordsAd',
-                    image_data: ad_image,
+                    image_object: ad_image,
                     upload_enabled: false,
                     selected: @ad.images.include?(ad_image) )) do 
                 = hidden_field_tag('adwords_ad[adwords_image_ids][]', '')

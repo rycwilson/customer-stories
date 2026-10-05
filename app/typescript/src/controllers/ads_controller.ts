@@ -8,6 +8,8 @@ export default class AdsController extends FormController<AdsController> {
     'defaultImageCard',
     'newImageCard', 
     'newLogoCard',
+    'defaultInput',
+    'destroyInput',
     'requirementsHelpBlock',
     'activeCollectionInput'
   ];
@@ -16,8 +18,11 @@ export default class AdsController extends FormController<AdsController> {
   declare readonly imageRequirementsTargets: HTMLAnchorElement[];
   declare readonly imageCardTargets: HTMLLIElement[];
   declare readonly defaultImageCardTargets: HTMLLIElement[];
+  declare readonly hasDefaultImageCardTargets: boolean;
   declare readonly newImageCardTarget: HTMLLIElement;
   declare readonly newLogoCardTarget: HTMLLIElement;
+  declare readonly defaultInputTargets: HTMLInputElement[];
+  declare readonly destroyInputTargets: HTMLInputElement[];
   declare readonly requirementsHelpBlockTargets: HTMLSpanElement[];
   declare readonly activeCollectionInputTarget: HTMLInputElement;
 
@@ -69,34 +74,53 @@ export default class AdsController extends FormController<AdsController> {
     card.setAttribute('data-image-card-open-file-dialog-value', 'true');
   }
 
-  keepPreviousDefault(e: CustomEvent<{ prevDefaultImageId: string }>) {
-    const { prevDefaultImageId } = e.detail;
-    const i = [
-      ...this.defaultImageCardTargets, this.newImageCardTarget, this.newLogoCardTarget, ...this.imageCardTargets
-    ].length;
-    this.element.insertAdjacentHTML('beforeend', `
-      <input type="hidden" name="company[adwords_images_attributes][${i}][id]" value="${prevDefaultImageId}">
-      <input type="hidden" name="company[adwords_images_attributes][${i}][default]" value="false">
-    `);
+  setNewDefaultImage({ currentTarget: button }: { currentTarget: HTMLButtonElement }) {
+    const { card: newDefaultCard, defaultInput: newDefaultInput } = this.imageCardElements(button);
+    const imageType = newDefaultCard.className.match(
+      /image-card--(?<type>SquareImage|LandscapeImage|SquareLogo|LandscapeLogo)/
+    )!.groups!.type;
+    newDefaultInput.value = 'true';
+    newDefaultCard.setAttribute('data-image-card-inputs-enabled-value', 'true');
+    newDefaultCard.classList.add('to-be-default');
+    
+    const oldDefaultCard = this.defaultImageCardTargets?.find(card => (
+      card.className.includes(`image-card--${imageType}`)
+    ));
+    if (oldDefaultCard) {
+      const oldDefaultInput = 
+        <HTMLInputElement>this.defaultInputTargets.find(input => oldDefaultCard.contains(input));
+      oldDefaultCard.setAttribute('data-image-card-inputs-enabled-value', 'true')
+      oldDefaultInput.value = 'false';
+    }
   }
 
-  setNewDefault(e: CustomEvent<{ card: HTMLLIElement, imageType: AdImage, toggleDefault: boolean }>) {
-    const { card, imageType, toggleDefault } = e.detail;
-    const sameType = (_card: HTMLLIElement) => (new RegExp(`--${imageType}`)).test(_card.className);
-    this.defaultImageCardTargets.forEach(defaultImageCard => {
-      if (sameType(defaultImageCard)) {
-        defaultImageCard.setAttribute('data-image-card-toggle-default-value', toggleDefault ? 'false' : 'true');
-        defaultImageCard.setAttribute('data-image-card-inputs-enabled-value', toggleDefault ? 'true' : 'false');
-      }
-    });
-    if (toggleDefault) {
-      this.imageCardTargets.forEach(imageCard => {
-        if (card !== imageCard && sameType(imageCard)) {
-          imageCard.setAttribute('data-image-card-toggle-default-value', 'false');
-          imageCard.setAttribute('data-image-card-inputs-enabled-value', 'false');
-        }
-      });
+  deleteImage({ currentTarget: button }: { currentTarget: HTMLButtonElement }) {
+    const { card, destroyInput } = this.imageCardElements(button);
+    destroyInput.value = 'true';
+    card.setAttribute('data-image-card-inputs-enabled-value', 'true');
+    card.classList.add('to-be-removed');
+  }
+
+  resetImageCard({ currentTarget: button }: { currentTarget: HTMLButtonElement }) {
+    const { card, defaultInput, destroyInput } = this.imageCardElements(button);
+    if (card?.classList.contains('to-be-default')) {
+      defaultInput.value = 'false';
+    } else if (card?.classList.contains('to-be-removed')) {
+      destroyInput.value = 'false';
     }
+    card.setAttribute('data-image-card-inputs-enabled-value', 'false');
+    card.classList.remove('to-be-default', 'to-be-removed');
+  }
+
+  imageCardElements(childButton: HTMLButtonElement) {
+    const card = <HTMLElement>this.imageCardTargets.find(card => card.contains(childButton));
+    const defaultInput = this.defaultInputTargets.find(input => card.contains(input));
+    const destroyInput = this.destroyInputTargets.find(input => card.contains(input));
+    return { 
+      card,
+      defaultInput: defaultInput as HTMLInputElement || undefined,
+      destroyInput: destroyInput as HTMLInputElement || undefined 
+    };
   }
 
   updateActiveCollection({ target: btn }: { target: HTMLAnchorElement }) {

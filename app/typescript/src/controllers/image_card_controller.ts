@@ -5,40 +5,29 @@ export default class ImageCardController extends Controller<HTMLDivElement | HTM
   static values = {
     inputsEnabled: { type: Boolean, default: false },
     openFileDialog: { type: Boolean, default: false },
-    toggleDefault: { type: Boolean, default: false },   // whether to make the image the default for that type
-    uploadEnabled: Boolean,
   }
   declare inputsEnabledValue: boolean;
   declare openFileDialogValue: boolean;
-  declare toggleDefaultValue: boolean;
-  declare readonly uploadEnabledValue: boolean;
 
   static targets = [
     'formGroup',
     'fileInputWidget', 
     'preview',
     'input',
-    'idInput',
-    'urlInput',
     'typeInput', 
-    'defaultInput',
-    '_destroyInput',
+    'urlInput',
     'fileInput', 
     'adImageCheckbox',
     'helpBlock',
   ];
   declare readonly formGroupTarget: HTMLDivElement;
   declare readonly fileInputWidgetTarget: HTMLDivElement;
+  declare readonly hasFileInputWidgetTarget: boolean;
   declare readonly previewTarget: HTMLDivElement;
   declare readonly inputTargets: HTMLInputElement[];
-  declare readonly idInputTarget: HTMLInputElement;
-  declare readonly hasIdInputTarget: boolean;
   declare readonly urlInputTarget: HTMLInputElement;
   declare readonly typeInputTarget: HTMLInputElement;
   declare readonly hasTypeInputTarget: boolean;
-  declare readonly defaultInputTarget: HTMLInputElement;
-  declare readonly hasDefaultInputTarget: boolean;
-  declare readonly _destroyInputTarget: HTMLInputElement;
   declare readonly fileInputTarget: HTMLInputElement;
   declare readonly adImageCheckboxTarget: HTMLInputElement;
   declare readonly helpBlockTarget: HTMLDivElement;
@@ -50,14 +39,9 @@ export default class ImageCardController extends Controller<HTMLDivElement | HTM
     return this.previewTarget.querySelector<HTMLImageElement>(':scope > img');
   }
 
-  get isDefaultImage() {
-    // return this.element.className.includes('--default');
-    return this.element.classList.contains('gads-default');
-  }
-
   connect() {
     // jquery event listeners necessary for hooking into jquery plugin events
-    if (this.uploadEnabledValue) {
+    if (this.hasFileInputWidgetTarget) {
       $(this.fileInputWidgetTarget)
         .fileinput({ name: 'user[photo_filename]' })
         .on('change.bs.fileinput', this.changeFileInputHandler);
@@ -88,7 +72,7 @@ export default class ImageCardController extends Controller<HTMLDivElement | HTM
   }
   
   disconnect() {
-    if (this.uploadEnabledValue) {
+    if (this.hasFileInputWidgetTarget) {
       $(this.fileInputWidgetTarget)
         .off('change.bs.fileinput', this.changeFileInputHandler)
         // .off('reseted.bs.fileinput', this.resetFileInputHandler)
@@ -109,8 +93,17 @@ export default class ImageCardController extends Controller<HTMLDivElement | HTM
       if (!img) return;
 
       if (imageDidLoad(img)) {
+        this.element.classList.remove('hidden');
         validateImage(this.fileInputTarget, file, img);
-        if (this.fileInputTarget.checkValidity()) this.uploadFile();
+        if (this.fileInputTarget.checkValidity()) {
+          // For images with unknown type, validation will add imageType to the file input dataset.
+          if (this.hasTypeInputTarget) {
+            const imageType = <string>this.fileInputTarget.dataset.imageType;
+            this.element.classList.add(`image-card--${imageType}`);
+            this.typeInputTarget.value = imageType;
+          }
+          this.uploadFile();
+        }
         return;
       } else {
         // const errorTimeout = setTimeout(() => console.log('something wrong?'), 5000)
@@ -123,20 +116,10 @@ export default class ImageCardController extends Controller<HTMLDivElement | HTM
   }
 
   uploadFile() {
-    const input = this.fileInputTarget;
-    const imageType: string | undefined = input.dataset.imageType;
-    const isDefaultReplacement = this.isDefaultImage && this.hasIdInputTarget
-    this.element.classList.toggle(`image-card--${input.dataset.imageType}`, !!imageType)
+    // this.dispatch('uploading');
     this.element.classList.add('image-card--uploading');
     this.element.classList.remove('hidden');
-    if (imageType && this.hasTypeInputTarget) {
-      this.typeInputTarget.value = imageType;
-    }
-    if (isDefaultReplacement) {
-      this.dispatch('replace-default', { detail: { prevDefaultImageId: this.idInputTarget.value } });
-      this.idInputTarget.value = '';
-    }
-    $(input).fileupload('send', { files: input.files });
+    $(this.fileInputTarget).fileupload('send', { files: this.fileInputTarget.files });
   }
   
   onInvalidImage() {
@@ -145,45 +128,10 @@ export default class ImageCardController extends Controller<HTMLDivElement | HTM
     this.helpBlockTarget.textContent = this.fileInputTarget.validationMessage;
   }
 
-  makeDefault() {
-    this.toggleDefaultValue = true;
-    this.inputsEnabledValue = true;
-    this.dispatchMakeDefaultEvent();
-  }
-
   inputsEnabledValueChanged(shouldEnable: boolean, wasEnabled: boolean) {
     if (shouldEnable === wasEnabled || wasEnabled === undefined) return;
-    this.inputTargets.forEach((input: HTMLInputElement) => input.disabled = !shouldEnable);
-  }
-  
-  toggleDefaultValueChanged(shouldToggleOn: boolean, wasToggledOn: boolean) {
-    if (wasToggledOn === undefined || !this.hasDefaultInputTarget) return;
-    this.defaultInputTarget.value = shouldToggleOn.toString();
-    if (!this.isDefaultImage) this.formGroupTarget.classList.toggle('to-be-default', shouldToggleOn);
-  }
 
-  deleteImage() {
-    this._destroyInputTarget.value = 'true';
-    this.inputsEnabledValue = true;
-    this.formGroupTarget.classList.add('to-be-removed');
-  }
-
-  cancelChanges() {
-    if (this.toggleDefaultValue) {
-      this.toggleDefaultValue = false;
-      this.dispatchMakeDefaultEvent();
-    } else {
-      this._destroyInputTarget.value = 'false';
-    }
-    this.inputsEnabledValue = false;
-    this.formGroupTarget.classList.remove('to-be-default', 'to-be-removed');
-  }
-
-  dispatchMakeDefaultEvent() {
-    this.dispatch(
-      'make-default', 
-      { detail: { card: this.element, imageType: this.fileInputTarget.dataset.imageType, toggleDefault: this.toggleDefaultValue } }
-    );
+    this.inputTargets.forEach(input => input.disabled = !shouldEnable);
   }
 
   toggleSelected({ currentTarget: card }: { currentTarget: HTMLLIElement }) {
