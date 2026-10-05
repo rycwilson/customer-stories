@@ -553,6 +553,22 @@ class Company < ApplicationRecord
     ad_images.default.send(image_type).square.blank? and ad_images.default.send(image_type).landscape.blank?
   end
 
+  def default_square_ad_image
+    ad_images.default.marketing.square.take || ad_images.build(type: 'SquareImage', default: true)
+  end
+
+  def default_landscape_ad_image
+    ad_images.default.marketing.landscape.take || ad_images.build(type: 'LandscapeImage', default: true)
+  end
+
+  def default_square_ad_logo
+    ad_images.default.logo.square.take || ad_images.build(type: 'SquareLogo', default: true)
+  end
+
+  def default_landscape_ad_logo
+    ad_images.default.logo.landscape.take || ad_images.build(type: 'LandscapeLogo', default: true)
+  end
+
   private
 
   def matching_ad
