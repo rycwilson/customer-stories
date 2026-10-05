@@ -7,9 +7,17 @@ interface JasnyFileInputContainer extends HTMLDivElement {
 
 type FileInputData = DOMStringMap & {
   maxFileSize: string,
-  minDimensions?: string,
   imageType?: string,
+  minDimensions?: string,
   collection?: string,
+}
+
+type AdImageType = 'SquareImage' | 'LandscapeImage' | 'SquareLogo' | 'LandscapeLogo';
+
+interface ImageConstraints { 
+  width: number,
+  height: number,
+  tolerance: number
 }
 
 // need to validate input file name

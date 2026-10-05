@@ -70,7 +70,6 @@ type VisitorsFilters = DashboardFilters & {
 type ResourceControllerWithDatatable = (
   CustomerWinsController | ContributionsController | PromotedStoriesController
 );
-type AdImage = 'SquareImage' | 'LandscapeImage' | 'SquareLogo' | 'LandscapeLogo';
 type ScreenSize = 'xs' | 'sm' | 'md-lg';
 type TomSelectInput = HTMLSelectElement & TomInput;
 type TomSelectKind = 'search' | 'curator' | 'status' | 'customer' | 'category' | 'product' | 'story' | 'storyTag' | 'contributor' | 'referrer' | 'invitationTemplate' | 'dateRange';
