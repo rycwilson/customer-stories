@@ -12,6 +12,7 @@ import type ContributorPromptsController from './contributor_prompts_controller'
 import type CompanyCtasController from './company_ctas_controller';
 import type CompanyTagsController from './company_tags_controller';
 import type AdsController from './ads_controller';
+import type AdController from './ad_controller';
 import type StoryNarrativeContentController from './story_narrative_content_controller';
 import type StorySettingsController from './story_settings_controller';
 import type { TomOptions } from 'tom-select/dist/esm/types/core.d.ts';
@@ -29,6 +30,7 @@ export type SubclassController = (
   CompanyCtasController |
   CompanyTagsController |
   AdsController | 
+  AdController |
   StoryNarrativeContentController |
   StorySettingsController
 );

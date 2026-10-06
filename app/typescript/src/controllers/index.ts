@@ -7,6 +7,9 @@ import { application } from "./application.js"
 import ActivityController from './activity_controller.js';
 application.register('activity', ActivityController);
 
+import AdController from './ad_controller.js';
+application.register('ad', AdController);
+
 import AdsController from './ads_controller.js';
 application.register('ads', AdsController);
 
