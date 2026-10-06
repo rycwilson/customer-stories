@@ -102,7 +102,6 @@ class ImageCardComponent < ViewComponent::Base
     @image_object[:type]&.split(/(?=[A-Z])/)&.join(' ')
   end
 
-  # TODO: Despite the nil default, a type should always be passed
   def min_dimensions(type = nil)
     return nil if !@uploadable || @model == 'Customer'
 
