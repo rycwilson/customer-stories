@@ -10,6 +10,10 @@
   //     margin: 0 0.5rem;
   //   }
   // }
+
+  &--selectable {
+    cursor: pointer;
+  }
   
   &--uploading {
     @include spinner('sm');
@@ -39,6 +43,40 @@
   .fileinput-preview {
     position: relative;
     margin: 0;  // override jasny bootstrap
+  }
+
+  
+  i {
+    -webkit-text-stroke: 1px #fff;  // should match background color
+  }
+}
+
+.image-card__checkmark {
+  display: none;
+  position: absolute;
+  bottom: -1rem;
+  right: -1rem;
+  align-items: center;
+  padding: 4px;
+  font-size: 12px;
+  color: $brand-primary;
+
+  .image-card--selected & {
+    display: flex;
+  }
+
+  > div {
+    position: relative;
+
+    > div {
+      position: absolute;
+      top: 2px;
+      left: 4px;
+      height: 24px;
+      width: 24px;
+      background: #fff;
+      border-radius: 14px;
+    }
   }
 }
 
