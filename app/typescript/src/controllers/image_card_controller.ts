@@ -24,9 +24,9 @@ export default class ImageCardController extends Controller<HTMLDivElement | HTM
   declare readonly hasFileInputWidgetTarget: boolean;
   declare readonly previewTarget: HTMLDivElement;
   declare readonly inputTargets: HTMLInputElement[];
-  declare readonly urlInputTarget: HTMLInputElement;
   declare readonly typeInputTarget: HTMLInputElement;
   declare readonly hasTypeInputTarget: boolean;
+  declare readonly urlInputTarget: HTMLInputElement;
   declare readonly fileInputTarget: HTMLInputElement;
   declare readonly helpBlockTarget: HTMLDivElement;
 
@@ -110,7 +110,7 @@ export default class ImageCardController extends Controller<HTMLDivElement | HTM
     }
 
     // Defer the handler to ensure fileinput widget has completed its DOM updates
-    setTimeout(beforeUpload.bind(this));
+    setTimeout(beforeUpload);
   }
 
   uploadFile() {

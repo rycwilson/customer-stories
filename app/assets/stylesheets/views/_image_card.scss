@@ -44,11 +44,6 @@
     position: relative;
     margin: 0;  // override jasny bootstrap
   }
-
-  
-  i {
-    -webkit-text-stroke: 1px #fff;  // should match background color
-  }
 }
 
 .image-card__checkmark {
@@ -77,6 +72,10 @@
       background: #fff;
       border-radius: 14px;
     }
+  }
+
+  i {
+    -webkit-text-stroke: 1px #fff;  // should match background color
   }
 }
 
