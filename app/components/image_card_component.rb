@@ -18,6 +18,7 @@ class ImageCardComponent < ViewComponent::Base
     collection: nil,
     uploadable: true,
     required: false,
+    selectable: false,
     selected: false
   )
     if image_object[:type].present? && !collection
@@ -30,6 +31,7 @@ class ImageCardComponent < ViewComponent::Base
     @required = required
     @collection = collection
     @uploadable = uploadable
+    @selectable = selectable
     @selected = selected
   end
 
@@ -67,6 +69,20 @@ class ImageCardComponent < ViewComponent::Base
     else
       asset_url(LOGO_PLACEHOLDER)
     end
+  end
+
+  def checkmark_html
+    <<~HTML.squish
+      <div class="image-card__checkmark">
+        <div>
+          <div></div>
+          <span class="fa-stack fa-lg">
+            <i class="fa fa-circle-o fa-stack-2x"></i>
+            <i class="fa fa-check fa-stack-1x"></i>
+          </span>
+        </div>
+      </div>
+    HTML
   end
 
   def asset_host

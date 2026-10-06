@@ -134,9 +134,9 @@ export default class ImageCardController extends Controller<HTMLDivElement | HTM
     this.inputTargets.forEach(input => input.disabled = !shouldEnable);
   }
 
-  toggleSelected({ currentTarget: card }: { currentTarget: HTMLLIElement }) {
-    card.classList.toggle('selected');
-    this.adImageCheckboxTarget.checked = !this.adImageCheckboxTarget.checked;
+  toggleSelected({ currentTarget: card }: { currentTarget: HTMLElement }) {
+    card.classList.toggle('image-card--selected');
+    this.dispatch('selected', { detail: { card } })
   }
 
   openFileDialogValueChanged(shouldOpen: boolean) {
