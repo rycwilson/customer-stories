@@ -17,7 +17,6 @@ export default class ImageCardController extends Controller<HTMLDivElement | HTM
     'typeInput', 
     'urlInput',
     'fileInput', 
-    'adImageCheckbox',
     'helpBlock',
   ];
   declare readonly formGroupTarget: HTMLDivElement;
@@ -29,7 +28,6 @@ export default class ImageCardController extends Controller<HTMLDivElement | HTM
   declare readonly typeInputTarget: HTMLInputElement;
   declare readonly hasTypeInputTarget: boolean;
   declare readonly fileInputTarget: HTMLInputElement;
-  declare readonly adImageCheckboxTarget: HTMLInputElement;
   declare readonly helpBlockTarget: HTMLDivElement;
 
   changeFileInputHandler = this.onChangeFileInput.bind(this);
