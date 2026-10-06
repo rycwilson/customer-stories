@@ -95,21 +95,16 @@ class AdwordsAdsController < ApplicationController
   end
 
   def update
-    topic_ad = AdwordsAd.find params[:id]
-    if topic_ad.update(ad_params) and topic_ad.story.retarget_ad.update(ad_params)
-      if ad_params[:status].present?
-        status = topic_ad.status.downcase
-        flash.now[status == 'enabled' ? :notice : :info] = "Promoted Story is now #{status}"
-      elsif ad_params[:adwords_image_ids].present?
-        flash.now[:notice] = 'Promoted Story images have been updated'
-      end
+    @topic_ad = AdwordsAd.find params[:id]
+    if @topic_ad.update(ad_params) and @topic_ad.story.retarget_ad.update(ad_params)
+      set_flash_message
       respond_to do |format|
         format.turbo_stream do
           render turbo_stream: turbo_stream.replace('toaster', partial: 'shared/toaster')
         end
       end
     else
-      @errors = topic_ad.errors.full_messages
+      @errors = @topic_ad.errors.full_messages
     end
   end
 
@@ -117,6 +112,15 @@ class AdwordsAdsController < ApplicationController
 
   def ad_params
     params.require(:adwords_ad).permit(:status, :long_headline, :main_color, :accent_color, adwords_image_ids: [])
+  end
+
+  def set_flash_message
+    if @topic_ad.saved_change_to_status?
+      status = @topic_ad.status.downcase
+      flash.now[status == 'enabled' ? :notice : :info] = "Promoted Story is now #{status}"
+    elsif ad_params[:adwords_image_ids].present?
+      flash.now[:notice] = 'Promoted Story images have been updated'
+    end
   end
 
   # padding for the lower half is 25px 11px
