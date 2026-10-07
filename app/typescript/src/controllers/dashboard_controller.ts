@@ -149,8 +149,13 @@ export default class DashboardController extends Controller {
   }
 
   onTabClick({ currentTarget: tab }: { currentTarget: HTMLAnchorElement }) {
-    const tabName = tab.getAttribute('aria-controls') as DashboardTab;
-    $(tab).one('shown.bs.tab', () => setTimeout(() => this.activeTabValue = tabName as DashboardTab));
+    const tabName = tab.getAttribute('aria-controls');
+    if (tabName === 'story') return;
+
+    $(tab).one(
+      'shown.bs.tab',
+      () => setTimeout(() => this.activeTabValue = tabName as DashboardTab)
+    );
     history.pushState(
       { turbo: { restorationIdentifier: Turbo.navigator.history.restorationIdentifier } }, 
       '', 

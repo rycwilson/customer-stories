@@ -129,8 +129,10 @@ export default class FormController<Ctrl extends SubclassController> extends Con
     this.animateSubmit(e, submitter);
   }
 
-  onSubmitEnd(_e: TurboSubmitEndEvent) {
-    // console.log('end', e)
+  onSubmitEnd(e: TurboSubmitEndEvent) {
+    if (e.detail.success && this.hasModalOutlet) {
+      this.modalOutlet.hide()
+    }
   }
 
   validate(e: SubmitEvent): boolean {

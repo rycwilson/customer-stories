@@ -67,11 +67,8 @@ export default class CompanyCtasController extends FormController<CompanyCtasCon
     super.onSubmitStart(e);
   }
 
-  onSubmitEnd(e: TurboSubmitEndEvent) {
-    if (this.hasModalOutlet && e.detail.success) this.modalOutlet.hide();
-
-    super.onSubmitEnd(e);
-  }
+  // onSubmitEnd(_e: TurboSubmitEndEvent) {
+  // }
 
   onToggleCollapse(e: CustomEvent<{ item: HTMLLIElement, collapse: HTMLElement }>) {
     const { collapse } = e.detail;

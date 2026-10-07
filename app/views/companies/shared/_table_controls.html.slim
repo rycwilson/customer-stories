@@ -9,7 +9,7 @@
     div
       = render('companies/shared/search_select', resource_ctrl_id:, resource_name:, search_options:)
 
-      - if defined?(new_item)
+      - if local_assigns.has_key?(:new_item)
         = link_to( \
             new_item[:path],
             class: 'btn btn-secondary', 

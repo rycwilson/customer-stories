@@ -9,7 +9,7 @@
       data: { \
         controller: 'company-ctas toast',
         toast_errors_value: \
-          (errors if defined?(errors) && turbo_frame_request_id == 'company-ctas-frame'),
+          (errors if local_assigns.has_key?(:errors) && turbo_frame_request_id == 'company-ctas-frame'),
         action: [ \
           'turbo:submit-start->company-ctas#onSubmitStart',
           'turbo:submit-end->company-ctas#onSubmitEnd',

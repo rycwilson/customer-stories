@@ -1,4 +1,4 @@
-- is_dashboard = defined?(workflow_stage)
+- is_dashboard = local_assigns.has_key?(:workflow_stage)
 
 nav.company__navbar.navbar-fixed-top.hidden-xs 
   .container-fluid

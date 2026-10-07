@@ -12,7 +12,7 @@
       data: { \
         turbo: (false if company.new_record?),
         controller: 'company-profile toast',
-        toast_errors_value: (errors if defined? errors),
+        toast_errors_value: (errors if local_assigns.has_key?(:errors)),
         action: [ \
           'input->company-profile#updateState',
           'change->company-profile#updateState',
