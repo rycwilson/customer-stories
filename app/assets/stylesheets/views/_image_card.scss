@@ -27,10 +27,8 @@
     }
   }
 
-  // Don't show until successfully validated and uploaded
-  &--uploading .fileinput-preview img,
-  // .has-error .fileinput-preview,
-  .fileinput-preview img[src*="data:image"] {
+  // Don't show until successfully uploaded
+  &--uploading .fileinput-preview img {
     display: none;
   }
 
