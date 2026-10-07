@@ -29,15 +29,13 @@
 
 = turbo_stream.append 'main-modal-body' do
 
-  = form_with( \
-      model: @ad,
-      id: 'edit-ad-images-form',
-      data: { \
-        controller: 'ad',
-        action: [ \
-          'image-card:selected->ad#toggleAdImage',
-          'turbo:submit-start->ad#onSubmitStart',
-          'turbo:submit-end->modal#hide' ].join(' ') }) do |form|
+  = form_with(model: @ad,
+              id: 'edit-ad-images-form',
+              data: { \
+                controller: 'ad',
+                action: [ 'image-card:selected->ad#toggleAdImage',
+                          'turbo:submit-start->ad#onSubmitStart',
+                          'turbo:submit-end->modal#hide' ].join(' ') }) do |form|
 
     .text-center
       .btn-group data-controller="btn-group"
