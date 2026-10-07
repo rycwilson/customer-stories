@@ -1,0 +1,12 @@
+/ Generate a form instead of a link to avoid style conflict with nav links
+= button_to( \
+    customer.name,
+    edit_customer_path(customer),
+    method: :get,
+    class: 'btn-link',
+    form: { id: 'customer-navbar-link', data: { turbo_stream: true } },
+    data: { \
+      controller: 'modal-trigger',
+      modal_trigger_modal_outlet: '#main-modal',
+      modal_trigger_params_value: \
+        { title: 'Edit Customer', 'className' => 'edit-customer' }})
