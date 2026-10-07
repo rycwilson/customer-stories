@@ -25,11 +25,15 @@
       .image-card__header
         - if @uploadable
           button type="button" data-trigger="fileinput"
-            i.fa.fa-fw class="fa-#{@model == 'User' ? 'camera' : 'upload'}"
+            i.fa class="fa-#{@model == 'User' ? 'camera' : 'upload'}"
+        button.btn-remove type="button" data-action="image-card#resetFileInputWidget"
+          i.fa.fa-remove
         = header_actions
-        |&nbsp;
-        /button.btn-remove type="button" data-dismiss="fileinput"
-          i.fa.fa-fw.fa-remove
+      
+      .image-card__error
+        i.fa.fa-warning
+      
+      .image-card__mask
       
       .image-card__frame
         - if @uploadable

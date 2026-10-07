@@ -1,3 +1,5 @@
+$thumbnail-padding-and-border: $thumbnail-padding + 1px;
+
 .image-card {
   position: relative;
   
@@ -79,70 +81,101 @@
 
 .image-card__header {
   position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  z-index: 1;
+  top: $thumbnail-padding-and-border;
+  left: $thumbnail-padding-and-border;
+  right: $thumbnail-padding-and-border;
+  z-index: 100;
   display: flex;
   justify-content: flex-end;
-  margin: 12px 10px;
   background-color: transparent;
 
+  // .image-card--uploading .form-group:not(.has-error) &,
+  .has-error & button:not(.btn-remove),
+  .image-card--uploading &,
+  [class*="to-be-"] & {
+    display: none;
+  }
+
   button {
-    border: none;
+    margin-top: 0.25em;
+    margin-right: 0.25em;
+    border: 0;
     border-radius: 50%;
-    padding: 6px;
-    background: none;
+    padding: 0;
+    width: 2em;
+    height: 2em;
     background-color: rgba(64, 64, 64, 0.5);
-    font-size: 16px;
+    font-size: 1.25em;
     color: rgba(255, 255, 255, 0.85);
 
     &:hover {
       background-color: rgba(64, 64, 64, 0.75);
       color: #fff;
     }
+
+    &.btn-remove {
+      display: none;
+    }
   }
 
-  // .image-card--uploading .form-group:not(.has-error) &,
-  // .has-error & button:not(:last-child),
-  .image-card--uploading .form-group &,
-  [class*="to-be-"] & {
-    display: none;
+  .has-error & .btn-remove {
+    display: inline-block;
   }
+}
 
-  // .has-error & .btn-remove:last-child {
-  //   display: block;
-  //   margin: -5% -5% 0;
-  //   background-color: transparent;
-  //   color: $state-danger-text;
+.image-card__error {
+  position: absolute;
+  z-index: 10;
+  top: $thumbnail-padding-and-border;
+  right: $thumbnail-padding-and-border;
+  bottom: $thumbnail-padding-and-border;
+  left: $thumbnail-padding-and-border;
+  display: none;
+  background: transparent;
+  font-size: 1.75em;
+  color: $state-danger-text;
 
-  //   &:hover {
-  //     background-color: transparent;
-  //     color: darken($state-danger-text, 10%);
-  //   }
-  // }
+  .has-error & {
+    @include flex-row-center-center;
+  }
+}
+
+.image-card__mask {
+  position: absolute;
+  z-index: 1;
+  top: $thumbnail-padding-and-border;
+  right: $thumbnail-padding-and-border;
+  bottom: $thumbnail-padding-and-border;
+  left: $thumbnail-padding-and-border;
+  display: none;
+  background: rgba(255, 255, 255, 0.5);
+  backdrop-filter: blur(12px);
+
+  .has-error & {
+    display: revert;
+  }
 }
 
 .image-card__frame {
   .image-card--SquareImage & {
-    width: calc(150px + #{$thumbnail-padding + 2px});
-    height: calc(150px + #{$thumbnail-padding + 2px});
+    width: 15rem;
+    height: 15rem;
   }
 
   .image-card--SquareLogo &,
   .image-card--UserPhoto & {
-    width: calc(120px + #{$thumbnail-padding + 2px});
-    height: calc(120px + #{$thumbnail-padding + 2px});
+    width: 13rem;
+    height: 13rem;
   }
 
   .image-card--LandscapeImage & {
-    width: 210px;
-    height: calc(110px + #{$thumbnail-padding + 2px});
+    width: calc(210px + #{2 * $thumbnail-padding-and-border});
+    height: calc(110px + #{2 * $thumbnail-padding-and-border});
   }
 
   .image-card--LandscapeLogo & {
-    width: 248px;
-    height: calc(62px + #{$thumbnail-padding + 6px});
+    width: calc(248px + #{2 * $thumbnail-padding-and-border});
+    height: calc(62px + #{2 * $thumbnail-padding-and-border});
   }
 
   .image-card--OpenGraph & {
@@ -153,43 +186,10 @@
   .thumbnail {
     width: 100%;
     height: 100%;
-    padding: calc(#{$thumbnail-padding + 2px});
+    padding: $thumbnail-padding;
     transition: border 0s;
   }
 }
-
-// .image-card__errors {
-//   flex-direction: column;
-//   align-items: center;
-//   justify-content: center;
-//   display: none;
-//   border: 1px solid $state-danger-text;
-//   border-radius: $border-radius-base;
-//   width: 100%;
-//   height: 100%;
-//   padding: 30px;
-//   background: #fff;
-//   color: $state-danger-text;
-
-//   .has-error & {
-//     display: flex;
-//   }
-
-//   i {
-//     font-size: 20px;
-//     margin-bottom: 8px;
-//   }
-
-//   div {
-//     text-align: center;
-//     font-size: 13px;
-//     margin-bottom: 0;
-//   }
-  
-//   li {
-//     margin: 0
-//   }
-// }
 
 .image-card__footer {
   position: absolute;

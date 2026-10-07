@@ -1,5 +1,5 @@
 import { Controller } from '@hotwired/stimulus';
-import { initS3FileInput, validateImage, onS3Done } from '../user_uploads';
+import { initS3FileInput, validateImage, onUploadDone } from '../user_uploads';
 
 export default class ImageCardController extends Controller<HTMLDivElement | HTMLLIElement> {
   static values = {
@@ -32,7 +32,8 @@ export default class ImageCardController extends Controller<HTMLDivElement | HTM
   declare readonly fileInputTarget: HTMLInputElement;
   declare readonly helpBlockTarget: HTMLDivElement;
 
-  changeFileInputHandler = this.onChangeFileInput.bind(this);
+  fileInputHandler = this.onChangeFileInput.bind(this);
+  uploadHandler = (file: File) => this.uploadFile.bind(this, file);
 
   // jasny-bootstrap will replace the img tag when uploading
   get imgTarget() {
@@ -44,11 +45,11 @@ export default class ImageCardController extends Controller<HTMLDivElement | HTM
     if (this.hasFileInputWidgetTarget) {
       $(this.fileInputWidgetTarget)
         .fileinput({ name: 'user[photo_filename]' })
-        .on('change.bs.fileinput', this.changeFileInputHandler);
+        .on('change.bs.fileinput', this.fileInputHandler);
         // .on('reseted.bs.fileinput', this.resetFileInputHandler);
         // .on('clear.bs.fileinput', this.clearFileInputHandler);
   
-      initS3FileInput(this.fileInputTarget, onS3Done.bind(this));
+      initS3FileInput(this.fileInputTarget, onUploadDone.bind(this));
     }
 
     if (this.element.dataset.userProfileTarget) {
@@ -74,25 +75,30 @@ export default class ImageCardController extends Controller<HTMLDivElement | HTM
   disconnect() {
     if (this.hasFileInputWidgetTarget) {
       $(this.fileInputWidgetTarget)
-        .off('change.bs.fileinput', this.changeFileInputHandler)
+        .off('change.bs.fileinput', this.fileInputHandler)
         // .off('reseted.bs.fileinput', this.resetFileInputHandler)
         // .off('clear.bs.fileinput', this.clearFileInputHandler)
     }
   }
 
   onChangeFileInput(_e: Event, file: File) {
-    let loadTimer: number | undefined;
-    const imageDidLoad = (img: HTMLImageElement) => {
-      if (img.complete) {
-        if (loadTimer) clearInterval(loadTimer);
-        return true;
-      }
-    }
-    const beforeUpload = () => {
+    // Defer the handler to ensure fileinput widget has completed its DOM updates
+    setTimeout(this.uploadHandler(file));
+  }
+
+  beforeUpload(file: File) {
+    return new Promise<boolean>(resolve => {
       const img = this.imgTarget as HTMLImageElement;
       if (!img) return;
 
-      if (imageDidLoad(img)) {
+      let loadTimer: number | undefined;
+      const imageDidLoad = () => {
+        if (img.complete) {
+          if (loadTimer) clearInterval(loadTimer);
+          return true;
+        }
+      }
+      if (imageDidLoad()) {
         this.element.classList.remove('hidden');
         validateImage(this.fileInputTarget, file, img);
         if (this.fileInputTarget.checkValidity()) {
@@ -102,30 +108,38 @@ export default class ImageCardController extends Controller<HTMLDivElement | HTM
             this.element.classList.add(`image-card--${imageType}`);
             this.typeInputTarget.value = imageType;
           }
-          this.uploadFile();
+          resolve(true);
+        } else {
+          resolve(false);
         }
-        return;
       } else {
-        // const errorTimeout = setTimeout(() => console.log('something wrong?'), 5000)
         loadTimer = window.setInterval(imageDidLoad, 100);
       }
-    }
-
-    // Defer the handler to ensure fileinput widget has completed its DOM updates
-    setTimeout(beforeUpload);
+    });
   }
 
-  uploadFile() {
-    // this.dispatch('uploading');
-    this.element.classList.add('image-card--uploading');
-    this.element.classList.remove('hidden');
-    $(this.fileInputTarget).fileupload('send', { files: this.fileInputTarget.files });
+  uploadFile(file: File) {
+    this.beforeUpload(file).then(isValid => {
+      if (!isValid) return;
+
+    
+      // this.dispatch('uploading');
+      // const errorTimeout = setTimeout(() => console.log('something wrong?'), 10000)
+      this.element.classList.add('image-card--uploading');
+      this.element.classList.remove('hidden');
+      $(this.fileInputTarget).fileupload('send', { files: this.fileInputTarget.files });
+    });
   }
   
   onInvalidImage() {
-    // $(this.fileInputWidgetTarget).fileinput('reset');
     this.formGroupTarget.classList.add('has-error', 'has-error--validation');
     this.helpBlockTarget.textContent = this.fileInputTarget.validationMessage;
+  }
+
+  resetFileInputWidget() {
+    $(this.fileInputWidgetTarget).fileinput('reset');
+    this.formGroupTarget.classList.remove('has-error', 'has-error--validation');
+    this.helpBlockTarget.textContent = '';
   }
 
   inputsEnabledValueChanged(shouldEnable: boolean, wasEnabled: boolean) {

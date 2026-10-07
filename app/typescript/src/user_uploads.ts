@@ -46,7 +46,7 @@ interface ImageConstraints {
 
 
 
-export function onS3Done(this: ImageCardController, url: string) {
+export function onUploadDone(this: ImageCardController, url: string) {
   this.urlInputTarget.value = url;
   this.inputsEnabledValue = true;
 
@@ -67,7 +67,7 @@ export function onS3Done(this: ImageCardController, url: string) {
   this.imgTarget!.setAttribute('src', url);
 }
 
-export function initS3FileInput(input: HTMLInputElement, onUploadDone: (url: string) => void) {
+export function initS3FileInput(input: HTMLInputElement, onDone: (url: string) => void) {
   const $fileInput = $(input);
   const s3 = JSON.parse(<string>input.dataset.s3);
   const assetHost: string | undefined = input.dataset.assetHost;
@@ -128,7 +128,7 @@ export function initS3FileInput(input: HTMLInputElement, onUploadDone: (url: str
       const url = assetHost ? `${assetHost}/${key}` : `https://${s3.host}/${key}`;
       console.log('s3 done:', url)
       // let $imageUrlInput;
-      onUploadDone(url);
+      onDone(url);
 
       /*
       * find the image_url input, may be different for:
@@ -189,7 +189,7 @@ function validateImageDimensions(width: number, height: number, input: HTMLInput
   const { minDimensions, imageType, _collection } = input.dataset as FileInputData;
   if (!minDimensions) return '';
   
-  // console.log('validating dimensions...', imageType || 'no type specified', width, height)
+  console.log('validating dimensions...', imageType || 'no type specified', width, height)
   const min = JSON.parse(minDimensions);
   let error = '', isValid;
 

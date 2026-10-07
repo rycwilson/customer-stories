@@ -16,6 +16,7 @@ class ImageCardComponent < ViewComponent::Base
     form_controller_id: nil,
     form_controller_target: '',
     collection: nil,
+    required: false,
     uploadable: true,
     auto_saves: true,
     selectable: false,
@@ -28,8 +29,8 @@ class ImageCardComponent < ViewComponent::Base
     @image_object = image_object
     @form_controller_id = form_controller_id
     @form_controller_target = form_controller_target
-    @required = required
     @collection = collection
+    @required = required
     @uploadable = uploadable
     @auto_saves = auto_saves
     @selectable = selectable
