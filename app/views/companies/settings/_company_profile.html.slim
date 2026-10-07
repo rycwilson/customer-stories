@@ -92,7 +92,8 @@
                 ImageCardComponent.new( \
                   'Company', 
                   form_controller_id: 'company-profile',
-                  image_object: { type: 'SquareLogo', url: company.square_logo_url }, 
+                  image_object: { type: 'SquareLogo', url: company.square_logo_url },
+                  auto_saves: false,
                   required: true )) do |component|
               - component.with_form_control do
                 = form.hidden_field( \
@@ -105,7 +106,8 @@
                   'Company', 
                   form_controller_id: 'company-profile',
                   image_object: \
-                    { type: 'LandscapeLogo', url: company.landscape_logo_url })) do |component|
+                    { type: 'LandscapeLogo', url: company.landscape_logo_url },
+                  auto_saves: false )) do |component|
               - component.with_form_control do
                 = form.hidden_field( \
                     :landscape_logo_url,

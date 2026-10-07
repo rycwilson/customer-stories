@@ -6,6 +6,7 @@
               hidden: @image_object.blank? }],
           data: { \
             controller: 'image-card',
+            image_card_auto_saves_value: @auto_saves,
             "#{@form_controller_id}-target" => \
               ("imageCard #{@form_controller_target}" if @form_controller_id),
             action: ('click->image-card#toggleSelected' if @selectable) })

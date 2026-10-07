@@ -5,9 +5,11 @@ export default class ImageCardController extends Controller<HTMLDivElement | HTM
   static values = {
     inputsEnabled: { type: Boolean, default: false },
     openFileDialog: { type: Boolean, default: false },
+    autoSaves: Boolean
   }
   declare inputsEnabledValue: boolean;
   declare openFileDialogValue: boolean;
+  declare autoSavesValue: boolean;
 
   static targets = [
     'formGroup',

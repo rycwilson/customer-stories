@@ -50,20 +50,16 @@ export function onS3Done(this: ImageCardController, url: string) {
   this.urlInputTarget.value = url;
   this.inputsEnabledValue = true;
 
-  // if the input buffer's value isn't set to blank, it will force a request with data-type=html
+  // If the input buffer's value isn't set to blank, it will force a request with data-type=html
   this.fileInputTarget.value = '';
 
-  // pre-load the image so it will be in browser cache when response arrives (no flicker)
+  // Avoid flicker by pre-loading the image so it will be in browser cache when response arrives
   this.imgTarget!.addEventListener(
     'load', 
     () => {
-      // remove the spinner for cases in which the form is not immediately sent upon successful upload
-
-      // TODO: !!!
-      // if (this.hasFormOutlet || this.hasCompanyProfileOutlet) {
-      //   this.element.classList.remove('image-card--uploading');
-      // }
-
+      if (!this.autoSavesValue) {
+        this.element.classList.remove('image-card--uploading');
+      }
       this.dispatch('upload-ready', { detail: { card: this.element } });
     },
     { once: true }

@@ -34,7 +34,8 @@
           ImageCardComponent.new( \
             'Customer',
             image_object: { url: @customer.logo_url },
-            form_controller_id: 'form' )) do |component|
+            form_controller_id: 'form',
+            auto_saves: false )) do |component|
         - component.with_form_control do
           .customer-name 
             span = @customer.name
