@@ -5,11 +5,13 @@
       id: 'customer-form',
       data: { \
         controller: 'form',
+        form_modal_outlet: '#main-modal',
         action: [ \
           'input->form#updateState',
           'image-card:upload-ready->form#updateState',
           'submit->form#validate',
-          'turbo:submit-start->form#onSubmitStart'].join(' ') },
+          'turbo:submit-start->form#onSubmitStart',
+          'turbo:submit-end->form#onSubmitEnd' ].join(' ') },
       html: { \
         novalidate: true,
         autocomplete: 'off' }) do |form|
@@ -17,11 +19,11 @@
     .form-group
       = form.label(:name, class: 'control-label')
       = form.text_field(:name, class: 'form-control', required: true)
-      .help-block.with-errors
+      .help-block.help-block--validation
 
     .form-group
       = form.label(:description)
-      = form.text_area(:description, class: 'form-control', style: 'width: 100%', rows: 4) 
+      = form.text_area(:description, class: 'form-control', style: 'width: 100%', rows: 4)
 
     .form-group.logo
       div
@@ -30,12 +32,11 @@
           = form.label(:show_name_with_logo)
             = form.check_box(:show_name_with_logo)
             = 'Show name'
-      = render( \
-          ImageCardComponent.new( \
-            'Customer',
-            image_object: { url: @customer.logo_url },
-            form_controller_id: 'form',
-            auto_saves: false )) do |component|
+      = render(ImageCardComponent.new( \
+              'Customer',
+              image_object: { url: @customer.logo_url },
+              form_controller_id: 'form',
+              auto_saves: false )) do |component|
         - component.with_form_control do
           .customer-name 
             span = @customer.name

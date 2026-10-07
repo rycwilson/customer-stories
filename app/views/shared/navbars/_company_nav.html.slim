@@ -10,35 +10,26 @@ nav.company__navbar.navbar-fixed-top.hidden-xs
             
     - else
       / https://stackoverflow.com/questions/556153
-      ul.nav.nav-tabs.nav-workflow data-controller="nav-list" role="tablist" data-turbo=('false' if is_dashboard)
+      ul.nav.nav-tabs.nav-workflow data-controller="nav-list" role="tablist"
         - ['prospect', 'curate', 'story', 'promote', 'measure'].each do |tab_name|
-          li {
-            class=('active' if is_dashboard && workflow_stage == tab_name)
-            class=('hidden' if (tab_name == 'story' && @story.nil?) || (tab_name != 'story' && @story.present?))
-            role="presentation" }
-            / 
-            a {
-              href="#{is_dashboard ? '#' : '/'}#{tab_name == 'story' ? 'curate' : tab_name}" 
-              data-toggle=('tab' if is_dashboard) 
-              data-action=('dashboard#onTabClick' if is_dashboard)
-              data-dashboard-target=('tab' if is_dashboard)
-              data-nav-list-target="tab"
-              aria-controls=((tab_name == 'story' ? 'curate' : tab_name) if is_dashboard)
-              aria-expanded=((workflow_stage == tab_name ? 'true' : 'false') if is_dashboard)
-              role=('tab' if is_dashboard) }
-              = tab_name.capitalize
-            - if is_dashboard && workflow_stage == 'story'
-              i.fa.fa-chevron-right
+          
+          = tag.li(class: class_names( \
+                     active: is_dashboard && workflow_stage == tab_name,
+                     hidden: @story ? tab_name != 'story' : tab_name == 'story'),
+                   role: 'presentation') do
 
-              / use a button instead of a link to avoid style conflicts with nav links
-              form method="get" action="#{edit_customer_path(@story.customer)}" data-turbo="true"
-                button.btn-link {
-                  aria-label="Edit Customer"
-                  data-turbo-stream="true"
-                  data-controller="modal-trigger"
-                  data-modal-trigger-modal-outlet="#main-modal"
-                  data-modal-trigger-params-value={ title: 'Edit Customer', 'className' => 'edit-customer' }.to_json }
-                  = @story.customer.name
+            = tag.a(href: "#{is_dashboard ? '#' : '/'}#{tab_name}",
+                    role: ('tab' if is_dashboard),
+                    data: ({ toggle: 'tab',
+                             action: 'dashboard#onTabClick',
+                             nav_list_target: 'tab' } if is_dashboard),
+                    aria: ({ controls: tab_name,
+                             expanded: workflow_stage == tab_name } if is_dashboard)) do
+              = tab_name.capitalize
+            
+            - if is_dashboard && tab_name == 'story' && @story.present?
+              i.fa.fa-chevron-right
+              = render('shared/customer_navbar_link', customer: @story.customer)
               i.fa.fa-chevron-right
               span = @story.title
 
