@@ -28,7 +28,7 @@ export default class CompanyProfileController extends FormController<CompanyProf
     const img = (<HTMLImageElement>logoDemo.querySelector(':scope > img'));
     img.src = url;
     this.logoTypeRadioTargets.find(radio => radio.value === type)!.click();
-    // this.updateState();
+    this.updateState();
   }
 
   onChangeHeaderLogoType({ target: radio }: { target: HTMLInputElement }) {
