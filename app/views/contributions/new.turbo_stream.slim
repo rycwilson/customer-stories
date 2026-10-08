@@ -7,8 +7,9 @@
       data: { \
         controller: 'new-contribution',
         action: [ \
-          'turbo:submit-start->new-contribution#handleSubmitStart',
-          'input->new-contribution#updateState' ].join(' ') },
+          'input->new-contribution#updateState',
+          'submit->new-contribution#validate',
+          'turbo:submit-start->new-contribution#handleSubmitStart' ].join(' ') },
       html: { \
         novalidate: true,
         autocomplete: 'off' }) do |form|
@@ -27,7 +28,7 @@
         = customer_fields.hidden_field(:name, disabled: true, data: { new_contribution_target: 'customerName customerField' })
         = customer_fields.hidden_field(:company_id, value: @company.id, disabled: true, data: { new_contribution_target: 'customerField' })
 
-      = tag.div class: class_names('form-group', 'has-error': @success.errors&.include?(:customer))
+      = tag.div class: class_names('form-group', 'has-error': @success&.errors&.include?(:customer))
         = success_fields.label(:customer_id, 'Customer', style: "#{@story ? 'pointer-events:none' : ''}", class: 'control-label')
         = success_fields.collection_select( \
             :customer_id,
@@ -47,7 +48,7 @@
                 action: 'new-contribution#handleChangeCustomer',
                 field_name: "#{success_fields.object_name}[customer_id]" } })
         .help-block.help-block--validation
-        - if @success.errors&.include?(:customer)
+        - if @success&.errors&.include?(:customer)
           .help-block 
             - if @success.errors.group_by_attribute[:customer].first.type == :blank
               | Required
@@ -69,12 +70,10 @@
         = form.label(:success_id, 'Customer Win', class: 'control-label')
         = form.select( \
             :success_id,
-            options_for_select( \
-              @company.successes.real.map(&:select_option),
-              selected: @success&.id),
-            { include_blank: true },
+            @company.successes.real.map do |win| \
+              [win.name, win.id, { data: { customer_id: win.customer_id } }] end,
+            { include_blank: 'Select or enter the name of a new Customer Win' },
             { class: 'form-control',
-              placeholder: 'Select or enter the name of a new Customer Win',
               required: true,
               data: { \
                 controller: 'tomselect',
@@ -83,7 +82,7 @@
                 new_contribution_target: 'customerWinSelect',
                 action: 'new-contribution#handleChangeCustomerWin',
                 field_name: "#{form.object_name}[success_id]" } })
-        .help-block.with-errors
+        .help-block.help-block--validation
 
     .form-group
       = form.label(:contributor_id, 'Contributor', class: 'control-label')
@@ -92,11 +91,10 @@
           @company.contacts(as_select_options: true),
           :id,
           :full_name,
-          { include_blank: true,
+          { include_blank: 'Select or add a new Contact',
             selected: @contributor_id || [],
             disabled: @success ? @success.contributors.reorder(nil).pluck(:id) : [] },
           { class: 'form-control',
-            placeholder: 'Select or add a new Contact',
             required: true,
             data: { \
               controller: 'tomselect',
@@ -104,7 +102,7 @@
               new_contribution_target: 'contributorSelect',
               action: 'new-contribution#handleChangeContact',
               field_name: "#{form.object_name}[contributor_id]" } })
-      .help-block.with-errors
+      .help-block.help-block--validation
 
     = render( \
         'companies/shared/new_contact', 
@@ -119,9 +117,8 @@
           @company.invitation_templates.sort_by { |t| t.name },
           :id,
           :name,
-          { include_blank: true },
+          { include_blank: 'Select' },
           { class: 'form-control',
-            placeholder: 'Select',
             data: { \
               controller: 'tomselect',
               tomselect_kind_value: 'invitationTemplate' } })
@@ -135,10 +132,9 @@
           @company.contacts(as_select_options: true),
           :id,
           :full_name,
-          { include_blank: true },
+          { include_blank: 'Select or add a new Contact' },
           { name: '',
             class: 'form-control',
-            placeholder: 'Select or add a new Contact',
             data: { \
               controller: 'tomselect',
               tomselect_kind_value: 'referrer',
