@@ -150,6 +150,3 @@ application.register('visitors', VisitorsController);
 
 import WinStoryController from './win_story_controller.js';
 application.register('win-story', WinStoryController);
-
-import ImageUploadController from './image_upload_controller.js';
-application.register('image-upload', ImageUploadController);
