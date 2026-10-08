@@ -44,6 +44,44 @@ $thumbnail-padding-and-border: $thumbnail-padding + 1px;
     position: relative;
     margin: 0;  // override jasny bootstrap
   }
+
+  .thumbnail {
+    box-sizing: content-box;
+    transition: border 0s;
+  }
+
+  &--SquareImage .thumbnail {
+    width: 15rem;
+    height: 15rem;
+  }
+  
+  &--SquareLogo .thumbnail,
+  &--UserPhoto .thumbnail {
+    width: 12.5rem;
+    height: 12.5rem;
+  }
+  
+  &--LandscapeImage .thumbnail {
+    // 1.91:1
+    width: 22.9rem;
+    height: 12rem;
+  }
+  
+  &--LandscapeLogo .thumbnail {
+    // 4:1
+    width: 24rem;
+    height: 6rem;
+  }
+  
+  &--OpenGraph .thumbnail {
+    // 1.91:1
+    width: 100%;
+    height: 238px;
+  }
+}
+
+.image-card__caption {
+  display: none;
 }
 
 .image-card__checkmark {
@@ -153,41 +191,6 @@ $thumbnail-padding-and-border: $thumbnail-padding + 1px;
 
   .has-error & {
     display: revert;
-  }
-}
-
-.image-card__frame {
-  .image-card--SquareImage & {
-    width: 15rem;
-    height: 15rem;
-  }
-
-  .image-card--SquareLogo &,
-  .image-card--UserPhoto & {
-    width: 13rem;
-    height: 13rem;
-  }
-
-  .image-card--LandscapeImage & {
-    width: calc(210px + #{2 * $thumbnail-padding-and-border});
-    height: calc(110px + #{2 * $thumbnail-padding-and-border});
-  }
-
-  .image-card--LandscapeLogo & {
-    width: calc(248px + #{2 * $thumbnail-padding-and-border});
-    height: calc(62px + #{2 * $thumbnail-padding-and-border});
-  }
-
-  .image-card--OpenGraph & {
-    width: 100%;
-    height: 238px;
-  }
-
-  .thumbnail {
-    width: 100%;
-    height: 100%;
-    padding: $thumbnail-padding;
-    transition: border 0s;
   }
 }
 

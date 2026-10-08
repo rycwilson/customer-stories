@@ -1,55 +1,67 @@
 #customer-form {
-  .form-group.logo {
+  $image-frame-base-height: 12rem;
+  $image-caption-height: 3em;
+
+  .customer__logo {
     > div:first-child {
       @include flex-row-center-between;
       margin-bottom: 5px;
-
+    
       label,
       .checkbox {
         margin: 0;
       }
     }
-
-    .customer-name {
-      display: none;
-      z-index: 1;
-    }
     
-    &:has([type="checkbox"]:checked) {
-      .customer-name {
-        @include flex-row-center-center;
-        position: absolute;
-        bottom: 0;
-        right: 0;
-        left: 0;
-        height: 6rem;
+    &--with-name {
+
+      .image-card__caption {
+        display: flex;
+        justify-content: center;
+        height: $image-caption-height;
         font-family: 'Lato';
         font-size: 1.25em;
       }
-
+  
       .image-card__frame {
-        height: 18rem;
-
+        height: calc($image-frame-base-height + $image-caption-height);
+  
         .thumbnail {
-          padding: 2rem 0 0;
+          height: calc(100% - $image-caption-height);
         }
       }
     }
   }
 
-  .fileinput {
-    width: 100%;
+  // This stretches the .thumbnail within to full width
+  .image-card__frame {
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    border: 1px solid #ccc;   // match form control
+    border-radius: $border-radius-base;
+    height: $image-frame-base-height;
   }
 
-  .image-card__frame {
-    height: 14rem;
+  // The nested specificity (.fileinput .thumbnail > img) is needed to override jasny bootstrap
+  // The customer logo differs from other image uploads in that it has not been assigned any
+  // dimensional requirements. 
+  .fileinput {
+    width: 100%;
 
     .thumbnail {
-      padding: 2rem 0;
+      position: relative;
+      border: 0;    // let .image-card__frame define the border so that it may encapsulate the caption
+      padding: calc(#{2 * $thumbnail-padding}) 0;
+      height: 100%;
       
-      img {
+      > img {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
         max-width: 75%;
-        max-height: 10rem;
+        max-height: calc(100% - #{4 * $thumbnail-padding});
       }
     }
   }

@@ -42,9 +42,13 @@
           .fileinput-preview.fileinput-exists.thumbnail data-image-card-target="preview"
             - if image_exists?
               = image_tag(@image_object[:image_url] || @image_object[:url], alt: alt_text)
+          .image-card__caption 
+            = caption
         - else
           .thumbnail
             = image_tag(@image_object[:image_url], alt: alt_text)
+          .image-card__caption 
+            = caption
         .btn-file
           = tag.input( \
               type: 'file',

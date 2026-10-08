@@ -177,6 +177,11 @@ export default class FormController<Ctrl extends SubclassController> extends Con
     } 
   }
 
+  // Method is for the customer form only (which does not have its own controller)
+  toggleShowName({ currentTarget: formGroup }: { currentTarget: HTMLElement }) {
+    formGroup.classList.toggle('customer__logo--with-name');
+  }
+
   onChangeCustomerWin(
     this: NewContributionController | NewStoryController,
     { target: select }: { target: TomSelectInput }

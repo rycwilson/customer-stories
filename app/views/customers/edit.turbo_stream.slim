@@ -25,25 +25,27 @@
       = form.label(:description)
       = form.text_area(:description, class: 'form-control', style: 'width: 100%', rows: 4)
 
-    .form-group.logo
+    = tag.div( \
+        class: "form-group customer__logo #{'customer__logo--with-name' if @customer.show_name_with_logo?}",
+        data: { action: "change->form#toggleShowName" }) 
       div
         = form.label(:logo_url, 'Logo')
-        .checkbox
+        .checkbox data-action="form#toggleShowName"
           = form.label(:show_name_with_logo)
             = form.check_box(:show_name_with_logo)
             = 'Show name'
       = render(ImageCardComponent.new( \
-              'Customer',
-              image_object: { url: @customer.logo_url },
-              form_controller_id: 'form',
-              auto_saves: false )) do |component|
+          'Customer',
+          image_object: { url: @customer.logo_url },
+          form_controller_id: 'form',
+          auto_saves: false )) do |component|
         - component.with_form_control do
-          .customer-name 
-            span = @customer.name
           = form.hidden_field( \
               :logo_url,
               disabled: true,
               data: { image_card_target: 'input urlInput' })
+        - component.with_caption do 
+          span = @customer.name
 
 = turbo_stream.append 'main-modal-content' do 
   .modal-footer data-modal-target="footer"

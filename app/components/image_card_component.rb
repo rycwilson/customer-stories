@@ -8,6 +8,7 @@ class ImageCardComponent < ViewComponent::Base
 
   renders_one :header_actions
   renders_many :form_controls
+  renders_one :caption
   renders_one :footer_actions
 
   def initialize(

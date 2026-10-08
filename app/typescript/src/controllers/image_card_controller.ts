@@ -121,7 +121,6 @@ export default class ImageCardController extends Controller<HTMLDivElement | HTM
   uploadFile(file: File) {
     this.beforeUpload(file).then(isValid => {
       if (!isValid) return;
-
     
       // this.dispatch('uploading');
       // const errorTimeout = setTimeout(() => console.log('something wrong?'), 10000)
