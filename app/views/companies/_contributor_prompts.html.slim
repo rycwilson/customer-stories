@@ -8,8 +8,8 @@
       toast_errors_value: \
         (errors if local_assigns.has_key?(:errors) && turbo_frame_request_id == 'contributor-prompts-frame'),
       action: [ \
-        'turbo:submit-start->contributor-prompts#onSubmitStart',
-        'turbo:submit-end->contributor-prompts#onSubmitEnd',
+        'turbo:submit-start->contributor-prompts#handleSubmitStart',
+        'turbo:submit-end->contributor-prompts#handleSubmitEnd',
         'list:save-item->contributor-prompts#turboSubmit' ].join(' ') }) do |form|
 
   .form-group
@@ -36,7 +36,7 @@
                   autocomplete: 'off',
                   data: { \
                     list_target: 'newItemInput',
-                    action: 'list#onInputNewItem' })
+                    action: 'list#handleInputNewItem' })
             .input-group-addon.hidden
               = tag.button( \
                   type: 'button',
@@ -55,7 +55,7 @@
                 content: 'Create',
                 list_target: 'newItemSubmit',
                 contributor_prompts_target: 'submit',
-                action: 'list#onClickSubmit',
+                action: 'list#handleClickSubmit',
                 disable_with_html: disabled_submit_button_html })
 
         .help-block
@@ -136,7 +136,7 @@
                         contributor_prompts_target: 'submit',
                         content: 'Save changes',
                         field_name: '',
-                        action: 'list#onClickSubmit',
+                        action: 'list#handleClickSubmit',
                         disable_with_html: disabled_submit_button_html })
 
                 .list-group-item__actions

@@ -26,7 +26,7 @@ export default class InvitationTemplateController extends FormController<Invitat
   // disconnect() {
   // }
 
-  onChangeTemplate(e: Event) {
+  handleChangeTemplate(e: Event) {
     if (this.templateSelectTarget.value) this.fetchTemplate();
   }
     
@@ -68,17 +68,17 @@ export default class InvitationTemplateController extends FormController<Invitat
     this.templateSelectTarget.setAttribute('placeholder', 'Select template');
     this.templateSelectTarget.setAttribute('data-tomselect-reset-value', 'true');
     setTimeout(() => this.templateSelectTarget.setAttribute('data-tomselect-reset-value', 'false'));
-    this.onClearTemplateSelect();
+    this.handleClearTemplateSelect();
   }
 
-  onClearTemplateSelect(e?: Event) {
+  handleClearTemplateSelect(e?: Event) {
     this.templateSelectTarget.tomselect.wrapper.querySelector('.clear-button')?.remove();
     [this.btnGroupTarget, this.submitBtnTarget, this.formFieldsTarget].forEach(el => el.remove());
     this.newTemplateBtnTarget.classList.remove('hidden');
   }
 
   // Set initial state here instead of in connect(), since the initial view is not a form element
-  onInitTemplateBody(_e: CustomEvent<SummernoteComponents>) {
+  handleInitTemplateBody(_e: CustomEvent<SummernoteComponents>) {
     this.initialState = serializeForm(this.element);
   } 
 

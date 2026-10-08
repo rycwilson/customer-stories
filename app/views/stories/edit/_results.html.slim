@@ -15,7 +15,7 @@
           maxlength: 20,
           data: { \
             list_target: 'newItemInput',
-            action: [ 'list#onInputNewItem' ].join(' ') })
+            action: [ 'list#handleInputNewItem' ].join(' ') })
       .input-group-addon.hidden
         = tag.button( \
             type: 'button',
@@ -32,7 +32,7 @@
         data: { \
           content: 'Add',
           list_target: 'newItemSubmit',
-          action: 'list#onClickSubmit',
+          action: 'list#handleClickSubmit',
           field_name: 'story[new_results][]',
           disable_with_html: disabled_submit_button_html })
   .help-block
@@ -85,7 +85,7 @@
                 # disabled: true,
                 data: { \
                   content: 'Save changes',
-                  action: 'list#onClickSubmit',
+                  action: 'list#handleClickSubmit',
                   field_name: "story[new_results][]",
                   disable_with_html: disabled_submit_button_html })
 

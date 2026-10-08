@@ -7,7 +7,7 @@
       data: { \
         controller: 'new-contribution',
         action: [ \
-          'turbo:submit-start->new-contribution#onSubmitStart',
+          'turbo:submit-start->new-contribution#handleSubmitStart',
           'input->new-contribution#updateState' ].join(' ') },
       html: { \
         novalidate: true,
@@ -44,7 +44,7 @@
                 tomselect_kind_value: 'customer',
                 tomselect_custom_options_value: { create: true, persist: false, plugins: {} },
                 tomselect_prevent_focus_value: @story ? true : false,
-                action: 'new-contribution#onChangeCustomer',
+                action: 'new-contribution#handleChangeCustomer',
                 field_name: "#{success_fields.object_name}[customer_id]" } })
         .help-block.help-block--validation
         - if @success.errors&.include?(:customer)
@@ -81,7 +81,7 @@
                 tomselect_kind_value: 'customerWin',
                 tomselect_custom_options_value: { create: true, persist: false, plugins: {} },
                 new_contribution_target: 'customerWinSelect',
-                action: 'new-contribution#onChangeCustomerWin',
+                action: 'new-contribution#handleChangeCustomerWin',
                 field_name: "#{form.object_name}[success_id]" } })
         .help-block.with-errors
 
@@ -102,7 +102,7 @@
               controller: 'tomselect',
               tomselect_kind_value: 'contributor',
               new_contribution_target: 'contributorSelect',
-              action: 'new-contribution#onChangeContact',
+              action: 'new-contribution#handleChangeContact',
               field_name: "#{form.object_name}[contributor_id]" } })
       .help-block.with-errors
 
@@ -143,7 +143,7 @@
               controller: 'tomselect',
               tomselect_kind_value: 'referrer',
               new_contribution_target: 'referrerSelect',
-              action: 'new-contribution#onChangeContact',
+              action: 'new-contribution#handleChangeContact',
               field_name: "#{form.object_name}[referrer_id]" } })
       .help-block.help-block--optional 
         | Optional

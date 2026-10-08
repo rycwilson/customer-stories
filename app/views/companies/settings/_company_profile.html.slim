@@ -16,9 +16,9 @@
         action: [ \
           'input->company-profile#updateState',
           'change->company-profile#updateState',
-          'image-card:upload-ready->company-profile#onUploadReady',
+          'image-card:upload-ready->company-profile#handleUploadReady',
           'submit->company-profile#validate',
-          'turbo:submit-start->company-profile#onSubmitStart' ].join(' ') },
+          'turbo:submit-start->company-profile#handleSubmitStart' ].join(' ') },
       html: { \
         autocomplete: 'off',
         novalidate: true }) do |form|
@@ -118,7 +118,7 @@
       .visible-sm-block.col-sm-12
         label style="margin:0" Custom Header  
       label.control-label.col-md-3.visible-md-inline-block.visible-lg-inline-block Custom Header
-      .col-sm-12.col-md-8 data-action="change->company-profile#onChangeHeaderLogoType"
+      .col-sm-12.col-md-8 data-action="change->company-profile#handleChangeHeaderLogoType"
         = label_tag('company_header_logo_type_squarelogo', class: 'radio-inline') do 
           = form.radio_button( \
               :header_logo_type,
@@ -139,20 +139,20 @@
           = form.color_field( \
               :header_color_1,
               class: 'form-control',
-              data: { action: 'company-profile#onInputCompanyHeaderBackgroundColor' })
+              data: { action: 'company-profile#handleInputCompanyHeaderBackgroundColor' })
         div
           = form.label(:header_color_2, 'Lower')
           = form.color_field( \
               :header_color_2,
               class: 'form-control',
-              data: { action: 'company-profile#onInputStoriesHeaderBackgroundColor' })
+              data: { action: 'company-profile#handleInputStoriesHeaderBackgroundColor' })
         div
           = form.label(:header_text_color, 'Heading')
           = form.color_field(:header_text_color,
               class: 'form-control',
               data: { \
                 company_profile_target: 'storiesHeadingColorInput',
-                action: 'company-profile#onInputStoriesHeadingColor' })
+                action: 'company-profile#handleInputStoriesHeadingColor' })
 
     .form-group
       .col-sm-12.col-md-offset-3.col-md-8

@@ -1,5 +1,5 @@
 import { Controller } from '@hotwired/stimulus';
-import { initS3FileInput, validateImage, onUploadDone } from '../user_uploads';
+import { initS3FileInput, validateImage, handleUploadDone } from '../user_uploads';
 
 export default class ImageCardController extends Controller<HTMLDivElement | HTMLLIElement> {
   static values = {
@@ -32,8 +32,7 @@ export default class ImageCardController extends Controller<HTMLDivElement | HTM
   declare readonly fileInputTarget: HTMLInputElement;
   declare readonly helpBlockTarget: HTMLDivElement;
 
-  fileInputHandler = this.onChangeFileInput.bind(this);
-  uploadHandler = (file: File) => this.uploadFile.bind(this, file);
+  onChangeFileInput = this.handleChangeFileInput.bind(this);
 
   // jasny-bootstrap will replace the img tag when uploading
   get imgTarget() {
@@ -45,11 +44,11 @@ export default class ImageCardController extends Controller<HTMLDivElement | HTM
     if (this.hasFileInputWidgetTarget) {
       $(this.fileInputWidgetTarget)
         .fileinput({ name: 'user[photo_filename]' })
-        .on('change.bs.fileinput', this.fileInputHandler);
+        .on('change.bs.fileinput', this.onChangeFileInput);
         // .on('reseted.bs.fileinput', this.resetFileInputHandler);
         // .on('clear.bs.fileinput', this.clearFileInputHandler);
   
-      initS3FileInput(this.fileInputTarget, onUploadDone.bind(this));
+      initS3FileInput(this.fileInputTarget, handleUploadDone.bind(this));
     }
 
     if (this.element.dataset.userProfileTarget) {
@@ -75,15 +74,15 @@ export default class ImageCardController extends Controller<HTMLDivElement | HTM
   disconnect() {
     if (this.hasFileInputWidgetTarget) {
       $(this.fileInputWidgetTarget)
-        .off('change.bs.fileinput', this.fileInputHandler)
+        .off('change.bs.fileinput', this.onChangeFileInput)
         // .off('reseted.bs.fileinput', this.resetFileInputHandler)
         // .off('clear.bs.fileinput', this.clearFileInputHandler)
     }
   }
 
-  onChangeFileInput(_e: Event, file: File) {
+  handleChangeFileInput(_e: Event, file: File) {
     // Defer the handler to ensure fileinput widget has completed its DOM updates
-    setTimeout(this.uploadHandler(file));
+    setTimeout(() => this.uploadFile(file));
   }
 
   beforeUpload(file: File) {
@@ -130,7 +129,7 @@ export default class ImageCardController extends Controller<HTMLDivElement | HTM
     });
   }
   
-  onInvalidImage() {
+  handleInvalidImage() {
     this.formGroupTarget.classList.add('has-error', 'has-error--validation');
     this.helpBlockTarget.textContent = this.fileInputTarget.validationMessage;
   }

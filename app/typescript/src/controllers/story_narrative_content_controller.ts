@@ -20,7 +20,7 @@ export default class StoryNarrativeContentController extends FormController<Stor
 
   activeResult: { item: HTMLLIElement, cancelButton: HTMLButtonElement, sortHandle?: HTMLElement } | null = null;
 
-  onSubmitStart(e: TurboSubmitStartEvent) {
+  handleSubmitStart(e: TurboSubmitStartEvent) {
     // console.log('start', e)
     const { formSubmission }: { formSubmission: FormSubmission & { stopped?: boolean } } = e.detail;
     const { body, submitter } = formSubmission;
@@ -43,10 +43,10 @@ export default class StoryNarrativeContentController extends FormController<Stor
 
     this.toggleResultsButtonTargets.forEach(btn => btn.disabled = true);
 
-    super.onSubmitStart(e);
+    super.handleSubmitStart(e);
   }
 
-  onSubmitEnd(e: TurboSubmitEndEvent) {
+  handleSubmitEnd(e: TurboSubmitEndEvent) {
     // console.log('end', e)
     const { formSubmission }: { formSubmission: FormSubmission & { stopped?: boolean } } = e.detail;
     const { submitter } = formSubmission;
@@ -60,7 +60,7 @@ export default class StoryNarrativeContentController extends FormController<Stor
     submitter.classList.add('hidden');
   }
 
-  onTitleInput({ target: input }: { target: HTMLInputElement }) {
+  handleTitleInput({ target: input }: { target: HTMLInputElement }) {
     const min = input.minLength;
     const max = input.maxLength;
     if (isNaN(min) || isNaN(max)) return;
@@ -72,7 +72,7 @@ export default class StoryNarrativeContentController extends FormController<Stor
     // this.titleSubmitTarget.disabled = !isValid;
   }
 
-  onSortedResults(
+  handleSortedResults(
     _e: CustomEvent<{ item: HTMLLIElement, oldIndex: number, newIndex: number }>
   ) {
     this.resultsListTarget.classList.add('list-group--sorting');
@@ -83,7 +83,7 @@ export default class StoryNarrativeContentController extends FormController<Stor
     const { submitter, input } = e.detail;
     input.name = '';
 
-    // - We need the submitter to access submitter.dataset.fieldName in this.onSubmitStart();
+    // - We need the submitter to access submitter.dataset.fieldName in this.handleSubmitStart();
     // this allows us to filter the fields submitted with the form.
     // - The delete button is not intended to directly submit the form, so it is type="button";
     // Here we'll change it to type="submit" as this is what requestSubmit expects.
@@ -91,7 +91,7 @@ export default class StoryNarrativeContentController extends FormController<Stor
     this.element.requestSubmit(submitter);
   }
 
-  onToggleEditResult(e: CustomEvent<{ 
+  handleToggleEditResult(e: CustomEvent<{ 
     item: HTMLLIElement
     isEditable: boolean,
     cancelButton: HTMLButtonElement, 

@@ -5,8 +5,8 @@
       dashboard_target: 'tabPanel',
       role: 'tabpanel',
       action: [ \
-        'stories:loading->dashboard#onResourceLoading',
-        'stories:ready->dashboard#onResourceReady'].join(' ') })
+        'stories:loading->dashboard#handleResourceLoading',
+        'stories:ready->dashboard#handleResourceReady'].join(' ') })
 
   = render('shared/loading_spinner')
 
@@ -16,9 +16,9 @@
         controller: 'stories',
         dashboard_target: 'stories',
         action: [ \
-          'tomselect:did-initialize->stories#onInitFilter',
+          'tomselect:did-initialize->stories#handleInitFilter',
           "#{%w[curator status customer category product].map do |filter| \
-            "tomselect:change-#{filter}->stories#onChangeFilter"; end.join(' ')}" ].join(' ') })
+            "tomselect:change-#{filter}->stories#handleChangeFilter"; end.join(' ')}" ].join(' ') })
 
     = render( \
         'stories/shared/search_and_filters_md_lg',

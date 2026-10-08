@@ -9,9 +9,9 @@
         toast_flash_value: (flash.to_h if flash.any? && turbo_frame_request_id == 'story-narrative-content-frame'),
         toast_errors_value: (@errors if @errors.present? && turbo_frame_request_id == 'story-narrative-content-frame'),
         action: [ \
-          'turbo:submit-start->story-narrative-content#onSubmitStart',
-          'turbo:submit-end->story-narrative-content#onSubmitEnd',
-          'list:toggle-edit->story-narrative-content#onToggleEditResult',
+          'turbo:submit-start->story-narrative-content#handleSubmitStart',
+          'turbo:submit-end->story-narrative-content#handleSubmitEnd',
+          'list:toggle-edit->story-narrative-content#handleToggleEditResult',
           'list:save-item->story-narrative-content#turboSubmit',
           'list:sorted->story-narrative-content#turboSubmit',
           'list:delete-item->story-narrative-content#deleteResult' ].join(' ') },
@@ -37,7 +37,7 @@
               maxlength: 200,
               data: { \
                 story_narrative_content_target: 'titleInput',
-                action: 'input->story-narrative-content#onTitleInput' })
+                action: 'input->story-narrative-content#handleTitleInput' })
           = tag.button( \
               class: 'form__submit btn btn-sm btn-success hidden',
               style: 'padding: 7px 12px',

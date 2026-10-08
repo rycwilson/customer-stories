@@ -34,7 +34,7 @@
               data: { \
                 controller: 'ad',
                 action: [ 'image-card:selected->ad#toggleAdImage',
-                          'turbo:submit-start->ad#onSubmitStart',
+                          'turbo:submit-start->ad#handleSubmitStart',
                           'turbo:submit-end->modal#hide' ].join(' ') }) do |form|
 
     .text-center

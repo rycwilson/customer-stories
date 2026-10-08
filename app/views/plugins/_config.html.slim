@@ -1,6 +1,6 @@
 form.plugin-config.form-horizontal name="pluginConfig" data-controller="plugins"
 
-  .plugin-config__type.form-group data-action="change->plugins#onChangePluginType change->plugins#toggleSettingsDisplay"
+  .plugin-config__type.form-group data-action="change->plugins#handleChangePluginType change->plugins#toggleSettingsDisplay"
     .visible-sm-block.col-sm-12
       label Type
     label.col-md-2.control-label.visible-md-inline-block.visible-lg-inline-block Type
@@ -37,7 +37,7 @@ form.plugin-config.form-horizontal name="pluginConfig" data-controller="plugins"
                   data: { \
                     plugins_target: 'maxGalleryRowsInput',
                     input_spinner_target: 'input', 
-                    action: 'keypress->input-spinner#onKeypress change->plugins#updateSetting' })
+                    action: 'keypress->input-spinner#handleKeypress change->plugins#updateSetting' })
               = render('shared/input_spinner_buttons')
           .form-group
             = label_tag('plugin_gallery_no_max_rows', class: 'checkbox-inline')
@@ -113,7 +113,7 @@ form.plugin-config.form-horizontal name="pluginConfig" data-controller="plugins"
                   data: { \
                     input_spinner_target: 'input',
                     plugins_target: 'tabbedCarouselDelayInput',
-                    action: 'keypress->input-spinner#onKeypress change->plugins#updateSetting' }) 
+                    action: 'keypress->input-spinner#handleKeypress change->plugins#updateSetting' }) 
               = render('shared/input_spinner_buttons')
             .help-block
               | Seconds from page load to appearance of the carousel tab
@@ -148,9 +148,9 @@ form.plugin-config.form-horizontal name="pluginConfig" data-controller="plugins"
                 tomselect_kind_value: 'story',
                 tomselect_sortable_value: true,
                 dynamic_placeholder: 'Select stories',
-                action: 'plugins#onChangeStories' } })
+                action: 'plugins#handleChangeStories' } })
 
-      .plugin-config__category.hidden data-action="change->plugins#onChangeFilter"
+      .plugin-config__category.hidden data-action="change->plugins#handleChangeFilter"
         = render( \
             'stories/shared/select_story_tag', 
             { company:, 
@@ -159,7 +159,7 @@ form.plugin-config.form-horizontal name="pluginConfig" data-controller="plugins"
               preselected_id: nil,
               only_featured: true })
 
-      .plugin-config__product.hidden data-action="change->plugins#onChangeFilter"
+      .plugin-config__product.hidden data-action="change->plugins#handleChangeFilter"
         = render( \
             'stories/shared/select_story_tag', 
             { company:, 

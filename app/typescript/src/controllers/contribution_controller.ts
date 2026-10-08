@@ -22,7 +22,7 @@ export default class ContributionController extends DatatableRowController<Contr
     // );
   // }
 
-  onChangeInvitationTemplate({ target: select }: { target: TomSelectInput }) {
+  handleChangeInvitationTemplate({ target: select }: { target: TomSelectInput }) {
     const templateId = +select.value || null;
     fetch(this.rowDataValue.path, {
       method: 'PATCH',

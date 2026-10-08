@@ -179,8 +179,8 @@ export function dataTableConfig(rowGroupDataSource: string): Config {
         .attr('data-customer-win-modal-outlet', '#main-modal')
         .attr('data-customer-win-row-data-value', JSON.stringify(rowData))
         .attr('data-action', [
-          'dropdown:dropdown-is-shown->customer-win#onShownDropdown',
-          'dropdown:dropdown-is-hidden->customer-win#onHiddenDropdown',
+          'dropdown:dropdown-is-shown->customer-win#handleShownDropdown',
+          'dropdown:dropdown-is-hidden->customer-win#handleHiddenDropdown',
           'click->customer-win#openView'
         ].join(' '))
         .attr('data-controller', 'customer-win');

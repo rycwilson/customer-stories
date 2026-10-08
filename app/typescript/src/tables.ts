@@ -103,7 +103,7 @@ export function deleteRow(this: DatatableController, tr: HTMLTableRowElement, pa
   });
 }
 
-export function onInfoCloned(this: ResourceControllerWithDatatable, e: CustomEvent) {
+export function handleInfoCloned(this: ResourceControllerWithDatatable, e: CustomEvent) {
   const { clone, pageInfo } = e.detail;
   
   // NOTE: The page end value from datatables is exclusive,
@@ -120,7 +120,7 @@ export function onInfoCloned(this: ResourceControllerWithDatatable, e: CustomEve
   this.tableNavOutlet.infoTarget.replaceChildren(clone);
 }
 
-export function onPaginateCloned(this: ResourceControllerWithDatatable, e: CustomEvent) {
+export function handlePaginateCloned(this: ResourceControllerWithDatatable, e: CustomEvent) {
   const { clone } = e.detail;
   this.tableNavOutlet.paginateTarget.replaceChildren(clone);
 }

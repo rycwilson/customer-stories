@@ -39,7 +39,7 @@ export default class InputSpinnerController extends Controller<HTMLDivElement> {
     this.inputTarget.readOnly = this.incrementBtnTarget.disabled = this.decrementBtnTarget.disabled = !enabled;
   }
 
-  onKeypress(e: Event) {
+  handleKeypress(e: Event) {
     e.preventDefault();
   }
 }

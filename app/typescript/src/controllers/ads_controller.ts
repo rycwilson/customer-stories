@@ -27,21 +27,21 @@ export default class AdsController extends FormController<AdsController> {
   declare readonly activeCollectionInputTarget: HTMLInputElement;
 
   validatedShortHeadlineHandler = this.onValidatedShortHeadline.bind(this);
-  shownTabHandler = this.onShownTab.bind(this);
+  onShownTab = this.handleShownTab.bind(this);
 
   connect() {
     super.connect();
 
     // jquery event listeners necessary for hooking into jquery plugin events
     $(this.element)
-      .on('shown.bs.tab', this.shownTabHandler)
+      .on('shown.bs.tab', this.onShownTab)
       .on('validated.bs.validator', this.validatedShortHeadlineHandler)
     this.imageRequirementsTargets.forEach(this.initPopover);
   }
 
   disconnect() {
     $(this.element)
-      .off('shown.bs.tab', this.shownTabHandler)
+      .off('shown.bs.tab', this.onShownTab)
       .off('validated.bs.validator', this.validatedShortHeadlineHandler)
     super.disconnect();
   }
@@ -58,7 +58,7 @@ export default class AdsController extends FormController<AdsController> {
     }
   }
 
-  onShownTab() {
+  handleShownTab() {
     this.requirementsHelpBlockTargets.forEach(span => span.classList.toggle('hidden'));
   }
   

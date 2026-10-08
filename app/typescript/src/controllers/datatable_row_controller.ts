@@ -76,11 +76,11 @@ extends Controller<HTMLTableRowElement> {
     // TODO update CSP.promotedStories
   }
 
-  onShownDropdown(e: CustomEvent) {
+  handleShownDropdown(e: CustomEvent) {
     this.element.classList.add('active');
   }
 
-  onHiddenDropdown(e: CustomEvent) {
+  handleHiddenDropdown(e: CustomEvent) {
     if (!this.row.child.isShown()) {
       this.element.classList.remove('active');
     }

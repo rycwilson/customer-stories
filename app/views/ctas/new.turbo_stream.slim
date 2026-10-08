@@ -10,8 +10,8 @@
         controller: 'company-ctas',
         company_ctas_modal_outlet: '#main-modal',
         action: [ \
-          'turbo:submit-start->company-ctas#onSubmitStart',
-          'turbo:submit-end->company-ctas#onSubmitEnd' ].join(' ') },
+          'turbo:submit-start->company-ctas#handleSubmitStart',
+          'turbo:submit-end->company-ctas#handleSubmitEnd' ].join(' ') },
       html: { \
         novalidate: true,
         autocomplete: 'off' }) do |form|

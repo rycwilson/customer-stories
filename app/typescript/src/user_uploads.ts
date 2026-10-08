@@ -46,7 +46,7 @@ interface ImageConstraints {
 
 
 
-export function onUploadDone(this: ImageCardController, url: string) {
+export function handleUploadDone(this: ImageCardController, url: string) {
   this.urlInputTarget.value = url;
   this.inputsEnabledValue = true;
 

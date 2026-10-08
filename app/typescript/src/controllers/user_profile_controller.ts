@@ -31,17 +31,17 @@ export default class UserProfileController extends FormController<UserProfileCon
     return this.imageCardTargets[0];
   }
 
-  onSubmitStart(e: TurboSubmitStartEvent) {
+  handleSubmitStart(e: TurboSubmitStartEvent) {
     const uploadingPhoto = this.imageCard.classList.contains('image-card--uploading'); 
     if (uploadingPhoto) {
       const { formSubmission: { body } } = e.detail;
       submitOnly(body as FormData, (param) => param === 'user[photo_url]');      
     } else {
-      super.onSubmitStart(e);
+      super.handleSubmitStart(e);
     }
   }
   
-  onPhotoUploadReady() {
+  handlePhotoUploadReady() {
     this.element.requestSubmit();
   }
 

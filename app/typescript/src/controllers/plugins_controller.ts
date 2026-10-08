@@ -36,7 +36,7 @@ export default class PluginsController extends Controller<HTMLFormElement> {
     });
   }
 
-  onChangePluginType({ target: input }: { target: HTMLInputElement }) {
+  handleChangePluginType({ target: input }: { target: HTMLInputElement }) {
     const pluginType = input.value.replace('_', '-');
     this.logosOnlyCheckboxTarget.checked = false;
     this.logosOnlyCheckboxTarget.disabled = pluginType !== 'gallery';
@@ -95,7 +95,7 @@ export default class PluginsController extends Controller<HTMLFormElement> {
     }
   }
 
-  onChangeFilter({ target: select }: { target: TomSelectInput }) {
+  handleChangeFilter({ target: select }: { target: TomSelectInput }) {
     const filter: 'category' | 'product' = select.dataset.tomselectKindValue;
     const filterRegExp = new RegExp(`\\sdata-${filter}="(\\w|-)*"`);
     const isFirstSelection = select.value && !this.codeTextAreaTarget.value.match(filterRegExp);
@@ -110,7 +110,7 @@ export default class PluginsController extends Controller<HTMLFormElement> {
     // .replace(/\u00A0data-stories="\[((\d+(,)?)+)?\]"/, '')
   }
 
-  onChangeStories({ target: select }: { target: TomSelectInput }) {
+  handleChangeStories({ target: select }: { target: TomSelectInput }) {
     const isFirstSelection = !this.codeTextAreaTarget.value.match(/data-stories/);
     const stories = [...select.options].filter(option => option.selected).map(option => +option.value);
     this.codeTextAreaTarget.value = this.codeTextAreaTarget.value

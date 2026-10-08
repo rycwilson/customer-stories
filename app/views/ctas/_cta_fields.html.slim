@@ -1,7 +1,7 @@
 div data-company-ctas-target="cta"
 
   - if action_name == 'new'
-    .form-group data-action="change->company-ctas#onChangeType"
+    .form-group data-action="change->company-ctas#handleChangeType"
       label Type
       div
         = cta_fields.label(:type_ctalink, class: 'radio-inline') do
@@ -88,7 +88,7 @@ div data-company-ctas-target="cta"
       = cta_fields.label(:primary) do
         = cta_fields.check_box( \
             :primary,
-            { data: { action: 'company-ctas#onChangePrimary' } },
+            { data: { action: 'company-ctas#handleChangePrimary' } },
             action_name == 'new' ? true : !cta_fields.object.primary?,
             action_name == 'new' ? false : cta_fields.object.primary?)
         = "#{cta_fields.object.persisted? && cta_fields.object.primary? ? 'Remove as' : 'Make this the'} Main CTA"

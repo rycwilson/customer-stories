@@ -61,7 +61,7 @@ export default class DashboardController extends Controller {
   declare activeTabValue: DashboardTab | null;
   declare filtersValue: DashboardFilters | undefined;
   
-  tabRestorationListener = this.onTabRestoration.bind(this);
+  onPopStateOrTurboVisit = this.handleTabRestoration.bind(this);
   spinnerTimers: { [key: string]: number } = { 
     prospect: 0,
     curate: 0,
@@ -79,20 +79,20 @@ export default class DashboardController extends Controller {
       visitors: false,
       activity: false
     },
-    { set: this.onChangeReadyState.bind(this) }
+    { set: this.handleChangeReadyState.bind(this) }
   )
 
   initialize() {
   }
   
   connect() {
-    addEventListener('popstate', this.tabRestorationListener);
-    document.documentElement.addEventListener('turbo:visit', this.tabRestorationListener)
+    addEventListener('popstate', this.onPopStateOrTurboVisit);
+    document.documentElement.addEventListener('turbo:visit', this.onPopStateOrTurboVisit)
   }
 
   disconnect() {
-    removeEventListener('popstate', this.tabRestorationListener);
-    document.documentElement.removeEventListener('turbo:visit', this.tabRestorationListener)
+    removeEventListener('popstate', this.onPopStateOrTurboVisit);
+    document.documentElement.removeEventListener('turbo:visit', this.onPopStateOrTurboVisit)
   }
 
   toggleSidebar(_e: PointerEvent) {
@@ -101,7 +101,7 @@ export default class DashboardController extends Controller {
     });
   }
 
-  onResourceLoading(e: CustomEvent) {
+  handleResourceLoading(e: CustomEvent) {
     const tabPanel = <HTMLElement>e.currentTarget;
     this.spinnerTimers[tabPanel.id] = window.setTimeout(() => {
       if (!tabPanel.classList.contains('ready')) {
@@ -110,12 +110,12 @@ export default class DashboardController extends Controller {
     }, 1000);
   }
 
-  onResourceReady({ detail: { resourceName } }: CustomEvent<{ resourceName: ResourceName }>) {
+  handleResourceReady({ detail: { resourceName } }: CustomEvent<{ resourceName: ResourceName }>) {
     // console.log('resource ready', resourceName)
     this.readyState[resourceName] = true;
   }
 
-  onChangeReadyState(
+  handleChangeReadyState(
     resources: { [key in ResourceName]: boolean }, resourceName: ResourceName, isReady: boolean
   ) {
     const setReady = (
@@ -148,7 +148,7 @@ export default class DashboardController extends Controller {
     return true;
   }
 
-  onTabClick({ currentTarget: tab }: { currentTarget: HTMLAnchorElement }) {
+  handleTabClick({ currentTarget: tab }: { currentTarget: HTMLAnchorElement }) {
     const tabName = tab.getAttribute('aria-controls');
     if (tabName === 'story') return;
 
@@ -163,7 +163,7 @@ export default class DashboardController extends Controller {
     );
   }
 
-  onChangeStoriesCurator(e: CustomEvent<{ 'curator': number | null }>) {
+  handleChangeStoriesCurator(e: CustomEvent<{ 'curator': number | null }>) {
     this.filtersValue = e.detail;
   }
 
@@ -244,7 +244,7 @@ export default class DashboardController extends Controller {
     // TODO: open the customer win child row
   }
 
-  onTabRestoration(e: TurboVisitEvent | PopStateEvent) {
+  handleTabRestoration(e: TurboVisitEvent | PopStateEvent) {
     const tab = location.pathname.slice(1);
     const isTabTarget = Object.values(DashboardTab).includes(tab as DashboardTab);
     if (isTabTarget) {

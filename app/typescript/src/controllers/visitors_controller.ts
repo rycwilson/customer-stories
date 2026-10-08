@@ -80,7 +80,7 @@ export default class VisitorsController extends ResourceController {
     }
   }
 
-  onChangeSearchSelect(e: CustomEvent) {
+  handleChangeSearchSelect(e: CustomEvent) {
     const { id: filter } = e.detail;
     if (filter) {
       const [filterKey, filterVal] = filter.split('-');

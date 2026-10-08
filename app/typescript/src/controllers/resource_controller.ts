@@ -8,8 +8,8 @@ import {
   getRowView,
   turnToPage,
   addRow,
-  onInfoCloned,
-  onPaginateCloned,
+  handleInfoCloned as handleTableInfoCloned,
+  handlePaginateCloned as handleTablePaginateCloned,
   initDisplayOptions } from '../tables';
 
 type ResourceFilters = (
@@ -117,16 +117,16 @@ export default class ResourceController extends Controller<HTMLElement> {
     }
   }
 
-  onTableInfoCloned = onInfoCloned.bind(this);
-  onTablePaginateCloned = onPaginateCloned.bind(this);
+  handleTableInfoCloned = handleTableInfoCloned.bind(this);
+  handleTablePaginateCloned = handleTablePaginateCloned.bind(this);
 
-  onTomselectSearch(e: CustomEvent) {
+  handleTomselectSearch(e: CustomEvent) {
     if (this.hasDatatableTarget) {
       searchTable.call(this, e.detail.searchSelectResults);
     }
   }
 
-  onChangeSearchSelect(e: CustomEvent) {
+  handleChangeSearchSelect(e: CustomEvent) {
     // this.addSyncListener((ctrl) => ctrl.searchSelectTarget.tomselect.setValue(this.searchSelectTarget.value));
     if (this.hasDatatableTarget) {
       searchTable.call(this);
@@ -259,7 +259,7 @@ export default class ResourceController extends Controller<HTMLElement> {
     }
   }
 
-  onRowDeleted({ detail: { id, storyId } }: CustomEvent<{ id: number, storyId?: number }>) {
+  handleRowDeleted({ detail: { id, storyId } }: CustomEvent<{ id: number, storyId?: number }>) {
     CSP[this.resourceName] = CSP[this.resourceName].filter(
       (item: CustomerWin | Contribution) => item.id !== id
     );

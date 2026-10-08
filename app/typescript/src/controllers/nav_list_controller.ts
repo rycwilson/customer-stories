@@ -11,7 +11,7 @@ export default class extends Controller {
   static targets = ['tab'];
   declare readonly tabTargets: HTMLAnchorElement[];
 
-  showTabHandler = this.onShowTab.bind(this);
+  onShownTab = this.handleShownTab.bind(this);
 
   connect() {
     // this.tabTargets.forEach(tab => {
@@ -25,7 +25,7 @@ export default class extends Controller {
     // this.tabTargets.forEach(tab => $(tab).off('show.bs.tab', this.showTabHandler));
   }
 
-  onShowTab({ target: tab }: { target: HTMLAnchorElement }) {
+  handleShownTab({ target: tab }: { target: HTMLAnchorElement }) {
     tab.classList.remove('transition');
     setTimeout(() => {
       this.tabTargets.filter(_tab => _tab !== tab).forEach(_tab => _tab.classList.add('transition'));

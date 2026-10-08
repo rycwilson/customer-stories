@@ -28,7 +28,7 @@
               tomselect_kind_value: 'invitationTemplate',
               tomselect_custom_options_value: template&.persisted? ? {} : { plugins: {} },
               invitation_template_target: 'templateSelect',
-              action: 'invitation-template#onChangeTemplate' }})
+              action: 'invitation-template#handleChangeTemplate' }})
 
       - if template.present?
         .btn-group data-invitation-template-target="btnGroup"

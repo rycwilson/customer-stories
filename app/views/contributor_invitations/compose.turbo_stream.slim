@@ -15,7 +15,7 @@
         data: { \ 
           controller: 'contributor-invitation', 
           modal_target: 'form',
-          action: 'ajax:beforeSend->contributor-invitation#validate ajax:complete->contributor-invitation#onAjaxComplete',
+          action: 'ajax:beforeSend->contributor-invitation#validate ajax:complete->contributor-invitation#handleAjaxComplete',
           submit_btn_text: 'Send Invitation' }}) do |form|
 
     .form-group.required

@@ -4,20 +4,20 @@ export default class DropdownController extends Controller<HTMLTableCellElement>
   static targets = ['dropdownMenu'];
   declare readonly dropdownMenuTarget: HTMLUListElement;
 
-  shownHandler = this.onShown.bind(this);
-  hiddenHandler = this.onHidden.bind(this);
+  onShown = this.handleShown.bind(this);
+  onHidden = this.handleHidden.bind(this);
 
   connect() {
-    $(this.element).on('shown.bs.dropdown', this.shownHandler);
-    $(this.element).on('hidden.bs.dropdown', this.hiddenHandler);
+    $(this.element).on('shown.bs.dropdown', this.onShown);
+    $(this.element).on('hidden.bs.dropdown', this.onHidden);
   }
 
   disconnect() {
-    $(this.element).off('shown.bs.dropdown', this.shownHandler);
-    $(this.element).off('hidden.bs.dropdown', this.hiddenHandler);
+    $(this.element).off('shown.bs.dropdown', this.onShown);
+    $(this.element).off('hidden.bs.dropdown', this.onHidden);
   }
   
-  onShown() {
+  handleShown() {
     const windowBottom = window.scrollY + window.innerHeight;
     // const dropdownBottom = $(this.dropdownMenu).offset().top + $(this.dropdownMenu).outerHeight();
     const dropdownBottom = (
@@ -32,7 +32,7 @@ export default class DropdownController extends Controller<HTMLTableCellElement>
     this.dispatch('dropdown-is-shown');
   }
 
-  onHidden() {
+  handleHidden() {
     this.dropdownMenuTarget.classList.remove('flip', 'shown');
     this.dispatch('dropdown-is-hidden');
   }

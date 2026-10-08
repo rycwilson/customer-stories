@@ -8,9 +8,9 @@
         controller: 'company-tags toast',
         toast_errors_value: (@errors if @errors && turbo_frame_request_id == 'company-tags-frame'),
         action: [ \
-          'tomselect:add-tag->company-tags#onAddTag',
-          'tomselect:remove-tag->company-tags#onRemoveTag',
-          'turbo:submit-start->company-tags#onSubmitStart' ].join(' ') }) do |form|
+          'tomselect:add-tag->company-tags#handleAddTag',
+          'tomselect:remove-tag->company-tags#handleRemoveTag',
+          'turbo:submit-start->company-tags#handleSubmitStart' ].join(' ') }) do |form|
 
     - %w[category_tags product_tags].each do |source|
       - label_text = source.match(/(?<type>[a-z]+)_tags/)[:type].capitalize

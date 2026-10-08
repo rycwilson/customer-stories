@@ -105,14 +105,14 @@ export default class extends Controller<HTMLDivElement> {
     this.filterTypes.filter(type => type !== 'curator').forEach(type => Cookies.remove(`csp-${type}-filter`));
   }
 
-  onInitFilter(e: Event) {
+  handleInitFilter(e: Event) {
     if (++this.readyFilters === this.filterSelectTargets.length) {
       // this.searchAndFiltersTargets.forEach(container => container.setAttribute('data-init', 'true'));
       this.searchAndFiltersTarget.setAttribute('data-init', 'true');
     }
   }
 
-  onChangeFilterMatchType({ target: input }: { target: EventTarget }) {
+  handleChangeFilterMatchType({ target: input }: { target: EventTarget }) {
     if (!(input instanceof HTMLInputElement)) return;
     Cookies.set('csp-dashboard-filters-match-type', input.value);
     if (this.activeFilters.length) {
@@ -120,7 +120,7 @@ export default class extends Controller<HTMLDivElement> {
     };
   }
 
-  onSubmitSearch(e: Event) {
+  handleSubmitSearch(e: Event) {
     e.preventDefault()
     this.clearFilters();
     this.fetchStories((turboFrameSrc: URL) => {
@@ -131,7 +131,7 @@ export default class extends Controller<HTMLDivElement> {
     });
   }
 
-  onChangeFilter({ detail: { kind, id } }: CustomEvent<{ kind: string, id: string }>) {
+  handleChangeFilter({ detail: { kind, id } }: CustomEvent<{ kind: string, id: string }>) {
     this.clearSearch();
     this.fetchStories((turboFrameSrc: URL) => {
       if (id) {

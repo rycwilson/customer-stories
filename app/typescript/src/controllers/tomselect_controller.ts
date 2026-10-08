@@ -126,7 +126,7 @@ export default class TomselectController extends Controller<TomSelectInput> {
               <button 
                 type="button"
                 class="btn ${config.className}"
-                data-action="tomselect#onManualClear"
+                data-action="tomselect#handleManualClear"
                 data-controller="tooltip"
                 data-tooltip-options-value='${ JSON.stringify(tooltipOptions) }'>
                 &times;

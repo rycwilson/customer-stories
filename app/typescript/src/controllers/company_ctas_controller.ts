@@ -31,8 +31,8 @@ export default class CompanyCtasController extends FormController<CompanyCtasCon
 
     this.customButtonColorInputTargets.forEach(input => {
       const handler = input.name.includes('background') ? 
-        debounce(this.onInputCustomButtonColor.bind(this, input, true), 200) :
-        debounce(this.onInputCustomButtonColor.bind(this, input), 200)
+        debounce(this.handleInputCustomButtonColor.bind(this, input, true), 200) :
+        debounce(this.handleInputCustomButtonColor.bind(this, input), 200)
       this.colorHandlers.set(input, handler);
       input.addEventListener('input', this.colorHandlers.get(input)!);
     });
@@ -46,7 +46,7 @@ export default class CompanyCtasController extends FormController<CompanyCtasCon
     ));
   }
 
-  onSubmitStart(e: TurboSubmitStartEvent) {
+  nadleSubmitStart(e: TurboSubmitStartEvent) {
     const { formSubmission } = e.detail;
     const { body, submitter } = formSubmission;
 
@@ -64,13 +64,13 @@ export default class CompanyCtasController extends FormController<CompanyCtasCon
 
     for (const [name, value] of body.entries()) console.log(name, value)
 
-    super.onSubmitStart(e);
+    super.handleSubmitStart(e);
   }
 
-  // onSubmitEnd(_e: TurboSubmitEndEvent) {
+  // handleSubmitEnd(_e: TurboSubmitEndEvent) {
   // }
 
-  onToggleCollapse(e: CustomEvent<{ item: HTMLLIElement, collapse: HTMLElement }>) {
+  handleToggleCollapse(e: CustomEvent<{ item: HTMLLIElement, collapse: HTMLElement }>) {
     const { collapse } = e.detail;
     const isShown = collapse.classList.contains('in');
     const customButton = <HTMLElement>this.customButtonTargets.find(div => collapse.contains(div));
@@ -81,7 +81,7 @@ export default class CompanyCtasController extends FormController<CompanyCtasCon
     colorInputs.forEach(input => input.disabled = !(isShown && isPrimary));
   }
 
-  onSorted(_e: CustomEvent) {
+  handleSorted(_e: CustomEvent) {
     this.positionInputTargets.forEach((input: HTMLInputElement, i: number) => {
       input.value = (i + 1).toString();
     })
@@ -89,11 +89,11 @@ export default class CompanyCtasController extends FormController<CompanyCtasCon
   }
 
   // Applies to new CTA only
-  onChangeType() {
+  handleChangeType() {
     this.typeSpecificFieldTargets.forEach(div => div.classList.toggle('hidden'));
   }
 
-  onChangePrimary({ target: checkbox }: { target: HTMLInputElement }) {
+  handleChangePrimary({ target: checkbox }: { target: HTMLInputElement }) {
     const cta = <HTMLElement>this.ctaTargets.find(cta => cta.contains(checkbox));
     const customButton = <HTMLElement>this.customButtonTargets.find(div => cta.contains(div));
     const colorInputs = this.customButtonColorInputTargets.filter(input => customButton.contains(input));
@@ -104,7 +104,7 @@ export default class CompanyCtasController extends FormController<CompanyCtasCon
     colorInputs.forEach(input => input.disabled = !input.disabled);
   }
 
-  onInputCustomButtonColor(input: HTMLInputElement, isBackground = false) {
+  handleInputCustomButtonColor(input: HTMLInputElement, isBackground = false) {
     const cta = this.ctaTargets.find(cta => cta.contains(input));
     const customButtonDemo = (
       <HTMLButtonElement>this.customButtonDemoTargets.find(button => cta?.contains(button))

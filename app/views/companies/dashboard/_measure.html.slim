@@ -4,10 +4,10 @@
           data: { \
             dashboard_target: 'tabPanel',
             action: [ \
-              'visitors:loading->dashboard#onResourceLoading',
-              'visitors:ready->dashboard#onResourceReady',
-              'activity:loading->dashboard#onResourceLoading',
-              'activity:ready->dashboard#onResourceReady'].join(' ') }) do
+              'visitors:loading->dashboard#handleResourceLoading',
+              'visitors:ready->dashboard#handleResourceReady',
+              'activity:loading->dashboard#handleResourceLoading',
+              'activity:ready->dashboard#handleResourceReady'].join(' ') }) do
 
   = render('shared/loading_spinner')
 

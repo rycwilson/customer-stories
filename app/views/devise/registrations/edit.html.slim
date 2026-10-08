@@ -10,11 +10,11 @@ main.user-profile.company__container.container-fluid.hidden-xs
       data: { \
         controller: 'user-profile',
         action: [ \
-          'image-card:upload-ready->user-profile#onPhotoUploadReady',
+          'image-card:upload-ready->user-profile#handlePhotoUploadReady',
           'input->user-profile#updateState',
           'submit->user-profile#validate',
-          'turbo:submit-start->user-profile#onSubmitStart',
-          'turbo:submit-end->user-profile#onSubmitEnd' ].join(' ') },
+          'turbo:submit-start->user-profile#handleSubmitStart',
+          'turbo:submit-end->user-profile#handleSubmitEnd' ].join(' ') },
       html: { \
         novalidate: true,
         autocomplete: 'off' }) do |form|

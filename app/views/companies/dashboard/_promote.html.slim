@@ -4,8 +4,8 @@
           data: { \
             dashboard_target: 'tabPanel',
             action: [ \
-              'promoted-stories:loading->dashboard#onResourceLoading',
-              'promoted-stories:ready->dashboard#onResourceReady'].join(' ') }) do
+              'promoted-stories:loading->dashboard#handleResourceLoading',
+              'promoted-stories:ready->dashboard#handleResourceReady'].join(' ') }) do
 
   = render('shared/loading_spinner')
 

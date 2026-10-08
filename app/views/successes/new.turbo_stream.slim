@@ -9,7 +9,7 @@
         new_customer_win_customer_wins_outlet: "#customer-wins",
         action: [ \
           'submit->new-customer-win#validate',
-          'turbo:submit-start->new-customer-win#onSubmitStart',
+          'turbo:submit-start->new-customer-win#handleSubmitStart',
           'input->new-customer-win#updateState' ].join(' ') },
       html: { \
         novalidate: true,
@@ -40,7 +40,7 @@
               new_customer_win_target: 'customerSelect',
               tomselect_kind_value: 'customer',
               tomselect_custom_options_value: { create: true, persist: false, plugins: {} },
-              action: 'new-customer-win#onChangeCustomer',
+              action: 'new-customer-win#handleChangeCustomer',
               field_name: "#{form.object_name}[customer_id]" } })
       .help-block.help-block--validation 
       - if @success.errors&.include?(:customer)
@@ -113,7 +113,7 @@
                 controller: 'tomselect',
                 tomselect_kind_value: 'referrer',
                 new_customer_win_target: 'referrerSelect',
-                action: 'new-customer-win#onChangeContact',
+                action: 'new-customer-win#handleChangeContact',
                 field_name: "#{contribution_fields.object_name}[referrer_id]" } })
         .help-block.help-block--optional 
           | Optional
@@ -148,7 +148,7 @@
                 controller: 'tomselect',
                 tomselect_kind_value: 'contributor',
                 new_customer_win_target: 'contributorSelect',
-                action: 'new-customer-win#onChangeContact new-customer-win#onChangeCustomerContact',
+                action: 'new-customer-win#handleChangeContact new-customer-win#handleChangeCustomerContact',
                 field_name: "#{contribution_fields.object_name}[contributor_id]" } })
         .help-block.help-block--optional
           | Optional 
@@ -189,7 +189,7 @@
   /.form-group.source
     label.control-label Source
     div
-      .btn-group data-action="change->new-customer-win#onChangeSource" role="tablist"
+      .btn-group data-action="change->new-customer-win#handleChangeSource" role="tablist"
         = label_tag('source_create', class: 'radio-inline') do
           = radio_button_tag( \
               'source', 

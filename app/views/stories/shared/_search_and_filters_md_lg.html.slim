@@ -26,7 +26,7 @@
   /- if is_dashboard
   - if company.category_tags.featured.present? && company.product_tags.featured.present?
     .filter-controls
-      div data-action="change->stories#onChangeFilterMatchType"
+      div data-action="change->stories#handleChangeFilterMatchType"
         | Match:&nbsp;&nbsp;&nbsp;
         label.radio-inline for="match-all-md-lg"
           input {

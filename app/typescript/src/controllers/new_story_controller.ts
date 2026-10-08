@@ -5,19 +5,20 @@ export default class NewStoryController extends FormController<NewStoryControlle
   static targets = [...FormController.targets, 'successPlaceholder']
   declare readonly curatorSelectTarget: TomSelectInput;
 
-  handleShownModal = this.onShownModal.bind(this);
+  onShownModal = this.handleShownModal.bind(this);
 
   connect() {
     super.connect();
-    $(this.modalOutlet.element).on('shown.bs.modal', this.handleShownModal);
+    $(this.modalOutlet.element).on('shown.bs.modal', this.onShownModal);
   }
 
   disconnect() {
-    $(this.modalOutlet.element).off('shown.bs.modal', this.handleShownModal);
+    $(this.modalOutlet.element).off('shown.bs.modal', this.onShownModal);
     super.disconnect();
   }
 
-  onShownModal() {
+  handleShownModal() {
+    // console.log('shown.bs.modal', this)
   }
 
   onTurboSubmitEnd(e: CustomEvent<{ fetchResponse: FetchResponse }>) {

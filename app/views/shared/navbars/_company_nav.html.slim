@@ -21,7 +21,7 @@ nav.company__navbar.navbar-fixed-top.hidden-xs
             = tag.a(href: "#{is_dashboard ? '#' : '/'}#{tab_name}",
                     role: ('tab' if is_dashboard),
                     data: ({ toggle: 'tab',
-                             action: 'dashboard#onTabClick',
+                             action: 'dashboard#handleTabClick',
                              nav_list_target: 'tab' } if is_dashboard),
                     aria: ({ controls: tab_name,
                              expanded: workflow_stage == tab_name } if is_dashboard)) do

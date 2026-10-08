@@ -274,8 +274,8 @@ export function dataTableConfig(
         )
         .attr('data-contribution-row-data-value', JSON.stringify(rowData))
         .attr('data-action', [
-          'dropdown:dropdown-is-shown->contribution#onShownDropdown',
-          'dropdown:dropdown-is-hidden->contribution#onHiddenDropdown',
+          'dropdown:dropdown-is-shown->contribution#handleShownDropdown',
+          'dropdown:dropdown-is-hidden->contribution#handleHiddenDropdown',
           'click->contribution#openView'
         ].join(' '))
         .attr('data-controller', 'contribution');

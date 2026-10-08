@@ -2,10 +2,10 @@
   class=('active' if workflow_stage == 'prospect')
   data-dashboard-target="tabPanel"
   data-action=[ \
-    'customer-wins:loading->dashboard#onResourceLoading',
-    'customer-wins:ready->dashboard#onResourceReady',
-    'contributions:loading->dashboard#onResourceLoading',
-    'contributions:ready->dashboard#onResourceReady'].join(' ')
+    'customer-wins:loading->dashboard#handleResourceLoading',
+    'customer-wins:ready->dashboard#handleResourceReady',
+    'contributions:loading->dashboard#handleResourceLoading',
+    'contributions:ready->dashboard#handleResourceReady'].join(' ')
   role="tabpanel" }
 
   = render('shared/loading_spinner')
@@ -70,10 +70,10 @@
               customer_wins_display_options_html_value: \
                 customer_wins_display_options_html(company),
               action: [ \
-                'datatable:info-cloned->customer-wins#onTableInfoCloned',
-                'datatable:paginate-cloned->customer-wins#onTablePaginateCloned',
+                'datatable:info-cloned->customer-wins#handleTableInfoCloned',
+                'datatable:paginate-cloned->customer-wins#handleTablePaginateCloned',
                 'customer-win:row-clicked->customer-wins#openRowView',
-                'datatable:row-deleted->customer-wins#onRowDeleted',
+                'datatable:row-deleted->customer-wins#handleRowDeleted',
                 'table-nav:step-row-view->customer-wins#stepRowView'].join(' ') }) do
 
           = render('successes/table', company:)
@@ -97,10 +97,10 @@
               contributions_invitation_template_select_html_value: \
                 invitation_template_select_html(company),
               action: [ \
-                'datatable:info-cloned->contributions#onTableInfoCloned',
-                'datatable:paginate-cloned->contributions#onTablePaginateCloned',
+                'datatable:info-cloned->contributions#handleTableInfoCloned',
+                'datatable:paginate-cloned->contributions#handleTablePaginateCloned',
                 'contribution:row-clicked->contributions#openRowView',
-                'datatable:row-deleted->contributions#onRowDeleted',
+                'datatable:row-deleted->contributions#handleRowDeleted',
                 'table-nav:step-row-view->contributions#stepRowView'].join(' ') }) do
 
           = render('contributions/table', company:)

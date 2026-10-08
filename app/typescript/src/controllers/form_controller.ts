@@ -116,7 +116,7 @@ export default class FormController<Ctrl extends SubclassController> extends Con
     this.element.requestSubmit(submitter);
   }
 
-  onSubmitStart(e: TurboSubmitStartEvent) {
+  handleSubmitStart(e: TurboSubmitStartEvent) {
     // console.log('start', e)
     const { formSubmission } = e.detail;
     const { submitter } = formSubmission;
@@ -129,7 +129,7 @@ export default class FormController<Ctrl extends SubclassController> extends Con
     this.animateSubmit(e, submitter);
   }
 
-  onSubmitEnd(e: TurboSubmitEndEvent) {
+  handleSubmitEnd(e: TurboSubmitEndEvent) {
     if (e.detail.success && this.hasModalOutlet) {
       this.modalOutlet.hide()
     }
@@ -157,7 +157,7 @@ export default class FormController<Ctrl extends SubclassController> extends Con
     setTimeout(() => submitBtn.classList.add('btn--working'), 1000);
   }
 
-  onChangeCustomer(
+  handleChangeCustomer(
     this: NewCustomerWinController | NewContributionController | NewStoryController, 
     { target: select }: { target: TomSelectInput }
   ) {
@@ -182,7 +182,7 @@ export default class FormController<Ctrl extends SubclassController> extends Con
     formGroup.classList.toggle('customer__logo--with-name');
   }
 
-  onChangeCustomerWin(
+  handleChangeCustomerWin(
     this: NewContributionController | NewStoryController,
     { target: select }: { target: TomSelectInput }
   ) {
@@ -257,7 +257,7 @@ export default class FormController<Ctrl extends SubclassController> extends Con
     }
   }
 
-  onChangeContact(
+  handleChangeContact(
     this: NewCustomerWinController | NewContributionController, 
     { target: select }: { target: TomSelectInput }
   ) {

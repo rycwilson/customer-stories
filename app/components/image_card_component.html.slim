@@ -55,7 +55,7 @@
               accept: 'image/jpeg,image/png',
               data: { \
                 image_card_target: 'fileInput',
-                action: 'invalid->image-card#onInvalidImage',
+                action: 'invalid->image-card#handleInvalidImage',
                 asset_host: asset_host(),
                 s3: (s3_direct_post if @uploadable),
                 collection: @collection,

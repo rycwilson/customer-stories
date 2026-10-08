@@ -17,7 +17,7 @@ export default class CompanyProfileController extends FormController<CompanyProf
   declare readonly storiesHeadingDemoTarget: HTMLHeadingElement;
   declare readonly storiesHeadingColorInputTarget: HTMLInputElement;
 
-  onUploadReady({ detail: { card } }: CustomEvent<{ card: HTMLElement }>) {
+  handleUploadReady({ detail: { card } }: CustomEvent<{ card: HTMLElement }>) {
     const type = (
       <RegExpMatchArray>card.className.match(/(?<type>SquareLogo|LandscapeLogo)/)
     ).groups!.type;
@@ -31,18 +31,18 @@ export default class CompanyProfileController extends FormController<CompanyProf
     this.updateState();
   }
 
-  onChangeHeaderLogoType({ target: radio }: { target: HTMLInputElement }) {
+  handleChangeHeaderLogoType({ target: radio }: { target: HTMLInputElement }) {
     const type = radio.value;
     this.logoDemoTargets.forEach(link => {
       link.classList.toggle('hidden', !link.classList.contains(type));
     });
   }
 
-  onInputCompanyHeaderBackgroundColor({ target: input }: { target: HTMLInputElement }) {
+  handleInputCompanyHeaderBackgroundColor({ target: input }: { target: HTMLInputElement }) {
     this.companyHeaderDemoTarget.style.backgroundColor = input.value;
   }
 
-  onInputStoriesHeaderBackgroundColor({ target: input }: { target: HTMLInputElement }) {
+  handleInputStoriesHeaderBackgroundColor({ target: input }: { target: HTMLInputElement }) {
     const backgroundShade = tinycolor(input.value).isDark() ? 'dark' : 'light';
     const classModifier = `--bg-${backgroundShade}`;
     const backgroundShadeChanged = !this.storiesHeaderDemoTarget.className.includes(classModifier);
@@ -55,7 +55,7 @@ export default class CompanyProfileController extends FormController<CompanyProf
     }
   }
 
-  onInputStoriesHeadingColor({ target: input }: { target: HTMLInputElement }) {
+  handleInputStoriesHeadingColor({ target: input }: { target: HTMLInputElement }) {
     this.storiesHeadingDemoTarget.style.color = input.value;
   } 
 }

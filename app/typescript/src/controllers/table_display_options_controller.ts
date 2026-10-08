@@ -21,7 +21,7 @@ export default class TableDisplayOptionsController extends Controller {
   declare readonly rowGroupDataSourceInputTargets: HTMLInputElement[];
   declare readonly hasRowGroupDataSourceInputTarget: boolean;
 
-  clickAwayHandler: (e: Event) => void = this.onClickAway.bind(this);
+  onClickAway = this.handleClickAway.bind(this);
 
   get resourceOutlet(): ResourceController {
     if (this.hasCustomerWinsOutlet) return this.customerWinsOutlet;
@@ -37,19 +37,19 @@ export default class TableDisplayOptionsController extends Controller {
 
     // Use capture to ensure that any other event handlers that may stop propagation
     // (e.g. column sorting on datatables) do not prevent this from firing.
-    document.addEventListener('click', this.clickAwayHandler, true);
+    document.addEventListener('click', this.onClickAway, true);
   }
 
   disconnect() {
-    document.removeEventListener('click', this.clickAwayHandler, true);
+    document.removeEventListener('click', this.onClickAway, true);
   }
 
-  onChangeCurator({ target }: { target: TomSelectInput }) {
-    this.onChangeFilter({ target });
+  handleChangeCurator({ target }: { target: TomSelectInput }) {
+    this.handleChangeFilter({ target });
     setTimeout(() => { this.dashboardOutlet.filtersValue = { curator: +target.value || null}; });
   }
 
-  onChangeRowGroupDataSource({ target }: { target: HTMLInputElement }) {
+  handleChangeRowGroupDataSource({ target }: { target: HTMLInputElement }) {
     (this.resourceOutlet as ResourceControllerWithDatatable).rowGroupDataSourceValue = target.value;
     Cookies.set(`csp-${this.resourceOutlet.identifier}-row-group-data-source`, target.value);
   }
@@ -57,7 +57,7 @@ export default class TableDisplayOptionsController extends Controller {
   // Filter keys are kebab-cased due to:
   // 1 - For checkboxees, the key is derived from the element id
   // 2 - The key is used in cookies which use kebab-case
-  onChangeFilter({ target }: { target: TomSelectInput | HTMLInputElement }) {
+  handleChangeFilter({ target }: { target: TomSelectInput | HTMLInputElement }) {
     const filterKey = target.type === 'checkbox' ? 
       target.id : 
       convertCase(target.dataset.tomselectKindValue, 'kebab');
@@ -69,7 +69,7 @@ export default class TableDisplayOptionsController extends Controller {
     Cookies.set(`csp-${filterKey}-filter`, String(filterVal === null ? '' : filterVal));
   }
   
-  onClickAway(e: Event) {
+  handleClickAway(e: Event) {
     const target = e.target as HTMLElement;
     if (!this.element || this.element.contains(target) || this.resourceOutlet.displayOptionsBtnTarget.contains(target)) {
       return false;

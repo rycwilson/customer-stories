@@ -5,7 +5,7 @@ export default class CompanyTagsController extends FormController<CompanyTagsCon
   declare tagInputTargets: HTMLInputElement[];
   declare newTagInputTargets: HTMLInputElement[];
 
-  onAddTag(e: CustomEvent<{ item: HTMLElement, cancel?: boolean }>) {
+  handleAddTag(e: CustomEvent<{ item: HTMLElement, cancel?: boolean }>) {
     const { item, cancel = false } = e.detail;
     const tagName = item.dataset.value;
     if (cancel) {
@@ -25,7 +25,7 @@ export default class CompanyTagsController extends FormController<CompanyTagsCon
     this.updateState();
   }
 
-  onRemoveTag(e: CustomEvent<{ item: HTMLElement, cancel: boolean }>) {
+  handleRemoveTag(e: CustomEvent<{ item: HTMLElement, cancel: boolean }>) {
     const { item, cancel } = e.detail;
     const tagName = item.dataset.value;
     const inputs = this.tagInputTargets.filter(input => input.dataset.tagName === tagName);

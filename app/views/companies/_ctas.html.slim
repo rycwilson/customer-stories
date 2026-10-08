@@ -11,11 +11,11 @@
         toast_errors_value: \
           (errors if local_assigns.has_key?(:errors) && turbo_frame_request_id == 'company-ctas-frame'),
         action: [ \
-          'turbo:submit-start->company-ctas#onSubmitStart',
-          'turbo:submit-end->company-ctas#onSubmitEnd',
-          'list:shown-item->company-ctas#onToggleCollapse',
-          'list:hidden-item->company-ctas#onToggleCollapse',
-          'list:sorted->company-ctas#onSorted' ].join(' ') },
+          'turbo:submit-start->company-ctas#handleSubmitStart',
+          'turbo:submit-end->company-ctas#handleSubmitEnd',
+          'list:shown-item->company-ctas#handleToggleCollapse',
+          'list:hidden-item->company-ctas#handleToggleCollapse',
+          'list:sorted->company-ctas#handleSorted' ].join(' ') },
       html: { \
         novalidate: true,
         autocomplete: 'off' }) do |form|

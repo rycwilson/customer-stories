@@ -10,9 +10,9 @@
         company_settings_target: 'invitationTemplateForm',
         action: [ \
           'input->invitation-template#updateState',
-          'summernote:init->invitation-template#onInitTemplateBody',
+          'summernote:init->invitation-template#handleInitTemplateBody',
           'summernote:change->invitation-template#updateState',
-          'tomselect:clear->invitation-template#onClearTemplateSelect'].join(' ') }}) do |form|
+          'tomselect:clear->invitation-template#handleClearTemplateSelect'].join(' ') }}) do |form|
 
   = render('invitation_templates/template_toolbar', company: @company, template: @template)
 

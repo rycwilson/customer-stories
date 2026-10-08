@@ -11,7 +11,7 @@
         new_story_modal_outlet: '#main-modal',
         action: [ \
           'submit->new-story#validate',
-          'turbo:submit-start->new-story#onSubmitStart' ].join(' ') },
+          'turbo:submit-start->new-story#handleSubmitStart' ].join(' ') },
       html: { \
         novalidate: true,
         autocomplete: 'off' }) do |form|
@@ -78,7 +78,7 @@
                 new_story_target: 'customerSelect',
                 tomselect_kind_value: 'customer',
                 tomselect_custom_options_value: { create: true, persist: false, selectOnTab: true },
-                action: 'new-story#onChangeCustomer',
+                action: 'new-story#handleChangeCustomer',
                 field_name: "#{success_fields.object_name}[customer_id]" } }.compact)
         .help-block.help-block--validation
         - if customer_error = @story.errors&.group_by_attribute[:'success.customer.name']&.first
@@ -110,7 +110,7 @@
               tomselect_kind_value: 'customerWin',
               tomselect_custom_options_value: { create: true, persist: false },
               new_story_target: 'customerWinSelect',
-              action: 'new-story#onChangeCustomerWin',
+              action: 'new-story#handleChangeCustomerWin',
               field_name: "#{form.object_name}[success_id]" } }.compact)
       .help-block.help-block--optional 
         | Optional

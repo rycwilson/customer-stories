@@ -35,8 +35,8 @@ export default class ListController extends Controller {
   declare readonly _destroyCheckboxTargets: HTMLInputElement[];
   declare readonly collapseTargets: HTMLDivElement[];
 
-  shownCollapseHandler = this.onShownCollapse.bind(this);
-  hiddenCollapseHandler = this.onHiddenCollapse.bind(this);
+  onShownCollapse = this.handleShownCollapse.bind(this);
+  onHiddenCollapse = this.handleHiddenCollapse.bind(this);
 
   get isSortable() {
     return $(this.listTarget).data('uiSortable');
@@ -60,12 +60,12 @@ export default class ListController extends Controller {
 
   initCollapsible() {
     this.collapseTargets.forEach(div => {
-      $(div).on('shown.bs.collapse', this.shownCollapseHandler);
-      $(div).on('hidden.bs.collapse', this.hiddenCollapseHandler);
+      $(div).on('shown.bs.collapse', this.onShownCollapse);
+      $(div).on('hidden.bs.collapse', this.onHiddenCollapse);
     });
   }
 
-  onClickSubmit(e: PointerEvent) {
+  handleClickSubmit(e: PointerEvent) {
     e.preventDefault();
 
     const button = <HTMLButtonElement>e.currentTarget;
@@ -91,7 +91,7 @@ export default class ListController extends Controller {
     this.dispatch('save-item', { detail: { submitter: button } });
   }
   
-  onShownCollapse(e: CustomEvent) {
+  handleShownCollapse(e: CustomEvent) {
     const collapse = <HTMLElement>e.target;
     const item = <HTMLLIElement>collapse.parentElement;
     collapse.scrollIntoView({ block: 'center' });
@@ -102,7 +102,7 @@ export default class ListController extends Controller {
     item.classList.remove('list-group-item--collapsed');
   }
   
-  onHiddenCollapse(e: CustomEvent) {
+  handleHiddenCollapse(e: CustomEvent) {
     const collapse = <HTMLElement>e.target;
     const item = <HTMLLIElement>collapse.parentElement;
     this.dispatch('hidden-item', { detail: { item, collapse } });
@@ -160,7 +160,7 @@ export default class ListController extends Controller {
     }
   }
 
-  onInputNewItem({ target: input }: { target: HTMLInputElement }) {
+  handleInputNewItem({ target: input }: { target: HTMLInputElement }) {
     // const min = input.minLength;
     // const max = input.maxLength;
     // if (isNaN(min) || isNaN(max)) return;

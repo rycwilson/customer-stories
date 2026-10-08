@@ -118,7 +118,7 @@ function initFilters() {
     onInitialize(this: TomSelect) {
       if (select.multiple) addDynamicPlaceholder(this);
     },
-    onChange: onChangeFilter.bind(null, select, otherSelects),
+    onChange: handleChangeFilter.bind(null, select, otherSelects),
     onItemAdd(value: string, item: TomItem) {
       if (select.multiple) {
         // disable highlighting of item when clicked
@@ -196,7 +196,7 @@ function initFilterControls() {
   }));
 }
 
-function onChangeFilter(
+function handleChangeFilter(
   changedSelect: TomSelectInput,
   otherSelects: TomSelectInput[],
   value: string | string[]
