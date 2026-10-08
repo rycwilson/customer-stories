@@ -26,19 +26,20 @@
   flex: 1 1 0%;
   align-self: stretch;
   border-left: 1px solid darken($btn-default-border, 2%);
-  padding: 0 0 3.25rem 3.25rem;
+  padding: 0 0 3rem 3rem;
 }
 
 .sidebar {
-  $gutter: 3.25rem;
+  $gutter: 3rem;
   $icon-width: 22.5px;  // font-awesome .fa.fw (fixed width)
-  $icon-margin: 1em;
-  $link-highlight-width: 2px;
+  $icon-margin: 13px;
+  $link-border-width: 1.5px;
+  $collapsed-sidebar-width: calc(#{2 * $link-border-width} + #{2 * $icon-margin} + #{$icon-width} + #{$gutter});
 
   position: sticky;
   top: 8rem;
   flex: 0 0 20em;
-  transition: flex-basis .15s ease-in;
+  transition: flex-basis .15s ease-out;
   padding-right: $gutter;
   min-width: 0;
 
@@ -51,39 +52,22 @@
     width: max-content;
   }
 
-  &--collapsed {
-    // Note there's a font-size of 1.25em on the icon, so to get the correct spacing
-    // we must multiply the $icon-margin by the font-size factor 1.25
-    flex: 0 0 calc(#{$link-highlight-width} + #{$icon-margin * 1.25 * 2} + #{$icon-width} + #{$gutter});
-    transition: flex-basis .15s ease-out;
-  }
-
   // Specificity `.nav > li > a` needed to override bootstrap
   .nav > li {
-    &.active {
-      > a, 
-      > a:hover, 
-      > a:focus {
-        border-left-color: $brand-primary;
-        background-color: $blueish-gray-lighter;
-        font-weight: 600;
-        color: $brand-primary;
-      }
-    }
-  
     > a {
       display: flex;
       align-items: center;
       overflow: hidden;
-      border: $link-highlight-width solid transparent;
+      transition: border-color .15s ease-out, border-radius .15s ease-out;
+      border: $link-border-width solid transparent;
       padding: 0;
       min-width: 0;
-      height: 3.5em;
+      height: calc(#{$collapsed-sidebar-width} - #{$gutter});
       color: $gray;
       
       &:hover, 
       &:focus {
-        border-left-color: $light-gray;
+        // border-left-color: $light-gray;
         background-color: darken($blueish-gray-lighter, 4%);
         color: $gray-darker;
       }
@@ -98,11 +82,53 @@
         white-space: nowrap;
       }
     }
+
+    &.active > a {
+      &, 
+      &:hover, 
+      &:focus {
+        border-left-color: $brand-primary;
+        // border-radius: $border-radius-base;
+        background-color: $blueish-gray-lighter;
+        font-weight: 600;
+        color: $brand-primary;
+      }
+    }
+  }
+
+  &--collapsed {
+    // Note there's a font-size of 1.25em on the icon, so to get the correct spacing
+    // we must multiply the $icon-margin by the font-size factor 1.25
+    flex: 0 0 $collapsed-sidebar-width;
+    transition: flex-basis .15s ease-in;
+
+    .nav > li {
+
+      > a {
+        transition: border-color .15s ease-in, border-radius .15s ease-in;
+
+        &,
+        &:hover, 
+        &:focus {
+          border-radius: 50%;
+        }
+      }
+
+      &.active > a {
+        &,
+        &:hover,
+        &:focus {
+          border-color: $brand-primary;
+          // border-radius: 50%;
+        }
+      }
+    }
   }
 }
 
 .sidebar__toggle {
   position: absolute;
+  top: -5px;
   right: -1.15em;
 
   // When .company__main is scrolled the border will appear about the sidebar toggle button.

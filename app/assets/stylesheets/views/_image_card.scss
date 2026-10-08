@@ -21,17 +21,16 @@ $thumbnail-padding-and-border: $thumbnail-padding + 1px;
     @include spinner('sm');
     
     > .spinner {
+      @include flex-row-center-center;
       position: absolute;
-      z-index: 1;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
+      z-index: 1000;
+      top: 1px;
+      right: 1px;
+      bottom: 1px;
+      left: 1px;
+      border-radius: $border-radius-base;
+      background: #fff;
     }
-  }
-
-  // Don't show until successfully uploaded
-  &--uploading .fileinput-preview img {
-    display: none;
   }
 
   .form-group {
@@ -48,6 +47,10 @@ $thumbnail-padding-and-border: $thumbnail-padding + 1px;
   .thumbnail {
     box-sizing: content-box;
     transition: border 0s;
+  }
+
+  .image-card__caption {
+    display: none;
   }
 
   &--SquareImage .thumbnail {
@@ -67,17 +70,13 @@ $thumbnail-padding-and-border: $thumbnail-padding + 1px;
   }
   
   &--LandscapeLogo .thumbnail {
-    width: 24rem;
+    width: 23rem;
     aspect-ratio: 4 / 1;
   }
   
   &--OpenGraph .thumbnail {
     aspect-ratio: 1.91 / 1;
   }
-}
-
-.image-card__caption {
-  display: none;
 }
 
 .image-card__checkmark {
@@ -115,17 +114,15 @@ $thumbnail-padding-and-border: $thumbnail-padding + 1px;
 
 .image-card__header {
   position: absolute;
+  z-index: 100;
   top: $thumbnail-padding-and-border;
   left: $thumbnail-padding-and-border;
   right: $thumbnail-padding-and-border;
-  z-index: 100;
   display: flex;
   justify-content: flex-end;
   background-color: transparent;
 
-  // .image-card--uploading .form-group:not(.has-error) &,
   .has-error & button:not(.btn-remove),
-  .image-card--uploading &,
   [class*="to-be-"] & {
     display: none;
   }
@@ -231,15 +228,8 @@ $thumbnail-padding-and-border: $thumbnail-padding + 1px;
     width: 90%;
   }
 
-  .to-be-default & {
-    .btn-danger {
-      display: none;
-    }
-  }
-
-  .to-be-removed & {
-    .btn-success {
-      display: none;
-    }
+  .to-be-default & .btn-danger,
+  .to-be-removed & .btn-success {
+    display: none;
   }
 }
