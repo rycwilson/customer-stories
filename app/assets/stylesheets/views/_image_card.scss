@@ -52,31 +52,27 @@ $thumbnail-padding-and-border: $thumbnail-padding + 1px;
 
   &--SquareImage .thumbnail {
     width: 15rem;
-    height: 15rem;
+    aspect-ratio: 1 / 1;
   }
   
   &--SquareLogo .thumbnail,
   &--UserPhoto .thumbnail {
     width: 12.5rem;
-    height: 12.5rem;
+    aspect-ratio: 1 / 1;
   }
   
   &--LandscapeImage .thumbnail {
-    // 1.91:1
-    width: 22.9rem;
-    height: 12rem;
+    width: 23rem;
+    aspect-ratio: 1.91 / 1;
   }
   
   &--LandscapeLogo .thumbnail {
-    // 4:1
     width: 24rem;
-    height: 6rem;
+    aspect-ratio: 4 / 1;
   }
   
   &--OpenGraph .thumbnail {
-    // 1.91:1
-    width: 100%;
-    height: 238px;
+    aspect-ratio: 1.91 / 1;
   }
 }
 
