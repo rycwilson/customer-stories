@@ -158,7 +158,7 @@ export function actionsDropdownTemplate(
         data-turbo-stream="true"
         data-controller="modal-trigger" 
         data-modal-trigger-modal-outlet="#main-modal"
-        data-modal-trigger-params-value='${JSON.stringify({ title: 'Promoted Story Images', className: 'ad-images' })}'
+        data-modal-trigger-options-value='${JSON.stringify({ title: 'Promoted Story Images', className: 'ad-images' })}'
         role="button">
         <i class="fa fa-fw fa-image"></i>
         Assign Images

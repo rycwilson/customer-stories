@@ -7,29 +7,28 @@ export default class extends Controller<HTMLButtonElement> {
 
   static values = { 
     enabled: { type: Boolean, default: true },
-    params: { type: Object, default: { title: '', className: '' } },
+    options: { type: Object, default: { title: '', className: '' } },
   };
   declare readonly enabledValue: boolean;
-  declare readonly paramsValue: { title: string, className: string };
+  declare readonly optionsValue: { title: string, className?: string };
 
-  handleClick = this.showModal.bind(this);
+  onTrigger = this.showModal.bind(this);
 
   connect() {
     if (this.enabledValue) {
-      this.element.addEventListener('click', this.handleClick);
+      this.element.addEventListener('click', this.onTrigger);
     }
   }
 
   disconnect() {
-    this.element.removeEventListener('click', this.handleClick);
+    this.element.removeEventListener('click', this.onTrigger);
   }
 
-  showModal(e: Event) {
-    this.modalOutlet.titleTarget.textContent = this.paramsValue.title;
-    this.modalOutlet.element.classList.add(this.paramsValue.className);
-    
-    // alllow style changes to render before showing modal
-    setTimeout(() => this.modalOutlet.show());
+  showModal(_e: Event) {
+    const { title, className } = this.optionsValue;
+    this.modalOutlet.titleTarget.textContent = title;
+    if (className) this.modalOutlet.element.classList.add(className);
+    setTimeout(this.modalOutlet.show.bind(this.modalOutlet));
   }
 
   beforeFetchModalContent(e: MouseEvent) {

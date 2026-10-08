@@ -12,25 +12,20 @@ export default class ModalController extends Controller<HTMLDivElement> {
     bodyContent: { type: String, default: '' },
   };
 
-  declare spinnerTimer: number;
   declare initialClassName: string;
 
-  handleHidden: (this: ModalController, e: any) => void = this.onHidden.bind(this);
+  onHidden = this.handleHidden.bind(this)
 
   connect() {
     this.initialClassName = this.element.className;
     $(this.element).modal({ show: false })
-    $(this.element).on('hidden.bs.modal', this.handleHidden);
+    $(this.element).on('hidden.bs.modal', this.onHidden);
   }
 
   disconnect() {
-    $(this.element).off('hidden.bs.modal', this.handleHidden);
+    $(this.element).off('hidden.bs.modal', this.onHidden);
   }
-  
-  // onAjaxSuccess({ detail: [data, status, xhr] }: { detail: [data: any, status: string, xhr: XMLHttpRequest] }) {
-  //   this.hide();
-  // }
-  
+    
   show() {
     $(this.element).modal('show');
   }
@@ -39,7 +34,7 @@ export default class ModalController extends Controller<HTMLDivElement> {
     $(this.element).modal('hide');
   }
 
-  onHidden() {
+  handleHidden() {
     this.element.className = this.initialClassName;
     this.titleTarget.textContent = '';
     [...this.bodyTarget.children]

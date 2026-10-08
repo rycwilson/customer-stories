@@ -19,7 +19,7 @@
               controller: 'modal-trigger',
               action: "#{resource_ctrl_id}#validateNewItem",
               modal_trigger_modal_outlet: '#main-modal', 
-              modal_trigger_params_value: { \
+              modal_trigger_options_value: { \
                 title: "New #{new_item[:name]}", 'className' => new_item[:modal_class_name] }}) do
             i.fa.fa-plus
             |&nbsp;&nbsp;New

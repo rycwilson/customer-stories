@@ -164,7 +164,7 @@ export function dataTableConfig(rowGroupDataSource: string): Config {
               data-turbo-stream
               data-controller="modal-trigger"
               data-modal-trigger-modal-outlet="#main-modal"
-              data-modal-trigger-params-value='${JSON.stringify({ title: 'Edit Customer', className: 'edit-customer' })}'>
+              data-modal-trigger-options-value='${JSON.stringify({ title: 'Edit Customer', className: 'edit-customer' })}'>
               ${customer.name}
             </a>
           </td>
@@ -282,7 +282,7 @@ export function actionsDropdownTemplate(
               data-turbo-stream
               data-controller="modal-trigger" 
               data-modal-trigger-modal-outlet="#main-modal"
-              data-modal-trigger-params-value='${JSON.stringify({ title: 'New Customer Story', className: 'new-story' })}'>
+              data-modal-trigger-options-value='${JSON.stringify({ title: 'New Customer Story', className: 'new-story' })}'>
               <i class="fa fa-play fa-fw action"></i>
               Start Customer Story
             </a>
