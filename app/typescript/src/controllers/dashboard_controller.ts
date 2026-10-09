@@ -3,6 +3,7 @@ import Cookies from 'js-cookie';
 import type ModalController from './modal_controller';
 import type ToastController from './toast_controller';
 import { visit as turboVisit, type TurboVisitEvent } from '@hotwired/turbo';
+import { onToggleSidebar } from '../utils';
 
 // excludes stories#edit, which also renders the dashboard
 enum DashboardTab {
@@ -93,12 +94,6 @@ export default class DashboardController extends Controller {
   disconnect() {
     removeEventListener('popstate', this.onPopStateOrTurboVisit);
     document.documentElement.removeEventListener('turbo:visit', this.onPopStateOrTurboVisit)
-  }
-
-  toggleSidebar(_e: PointerEvent) {
-    this.sidebarTargets.forEach(sidebar => {
-      sidebar.classList.toggle('sidebar--collapsed');
-    });
   }
 
   handleResourceLoading(e: CustomEvent) {

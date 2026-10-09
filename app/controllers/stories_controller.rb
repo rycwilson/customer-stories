@@ -78,6 +78,7 @@ class StoriesController < ApplicationController
     @story = Story.friendly.find(params[:id])
     @story.video = @story.video_info
     @active_tab = cookies['csp-edit-story-tab'] || '#story-narrative-content'
+    @sidebar_collapsed = cookies['csp-sidebar-collapsed'].present?
 
     # if request.path != curate_story_path(@story.customer.slug, @story.slug) # friendly path changed
     #   # old story title slug requested, redirect to current

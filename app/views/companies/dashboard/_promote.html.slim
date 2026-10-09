@@ -10,7 +10,8 @@
   = render('shared/loading_spinner')
 
   .company__container.container-fluid
-    .sidebar data-dashboard-target="sidebar"
+    = tag.div(class: ['sidebar', 'sidebar--collapsed': @sidebar_collapsed],
+              data: { dashboard_target: 'sidebar' })
       .sidebar__toggle
         .thingy
         button.btn.btn-default type="button" data-action="dashboard#toggleSidebar"

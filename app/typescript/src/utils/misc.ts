@@ -1,3 +1,5 @@
+import type { DashboardController, CompanySettingsController } from '../controllers';
+import Cookies from 'js-cookie';
 import tinycolor from 'tinycolor2';
 import { FetchRequest } from '@rails/request.js';
 
@@ -29,6 +31,14 @@ export async function getJSON(dataPath: string, params?: URLSearchParams) {
   if (response.ok) {
     return await response.json;
   }
+}
+
+export function onToggleSidebar(this: DashboardController | CompanySettingsController , _e: PointerEvent) {
+  const shouldCollapse = !this.sidebarTargets[0].classList.contains('sidebar--collapsed');
+  this.sidebarTargets.forEach(sidebar => (
+    sidebar.classList.toggle('sidebar--collapsed', shouldCollapse)
+  ));
+  Cookies.set('csp-sidebar-collapsed', shouldCollapse ? 'true' : '');
 }
 
 // https://medium.com/@mariusc23/hide-header-on-scroll-down-show-on-scroll-up-67bbaae9a78c

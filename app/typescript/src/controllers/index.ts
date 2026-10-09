@@ -27,6 +27,7 @@ application.register('company-ctas', CompanyCtasController);
 
 import CompanySettingsController from './company_settings_controller.js';
 application.register('company-settings', CompanySettingsController);
+export type { default as CompanySettingsController } from './company_settings_controller.js';
 
 import CompanyProfileController from './company_profile_controller.js';
 application.register('company-profile', CompanyProfileController);
@@ -57,6 +58,7 @@ application.register('customer-wins', CustomerWinsController);
 
 import DashboardController from './dashboard_controller.js';
 application.register('dashboard', DashboardController);
+export type { default as DashboardController } from './dashboard_controller.js';
 
 import DatatableController from './datatable_controller.js';
 application.register('datatable', DatatableController);

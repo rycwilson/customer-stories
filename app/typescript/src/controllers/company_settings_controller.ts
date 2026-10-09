@@ -1,10 +1,13 @@
 import { Controller } from '@hotwired/stimulus';
+import { onToggleSidebar } from '../utils';
 import Cookies from 'js-cookie';
 
 export default class CompanySettingsController extends Controller {
   static targets = ['tab', 'sidebar'];
-  declare tabTargets: HTMLAnchorElement[];
-  declare sidebarTarget: HTMLElement;
+  declare readonly tabTargets: HTMLAnchorElement[];
+  declare readonly sidebarTargets: HTMLElement[];
+
+  toggleSidebar = onToggleSidebar.bind(this);
 
   get activeTab() {
     return <HTMLAnchorElement>this.tabTargets.find(tab => (<HTMLLIElement>tab.parentElement).classList.contains('active'));
@@ -50,10 +53,6 @@ export default class CompanySettingsController extends Controller {
     } else {  
       showPage(defaultTab);
     }
-  }
-
-  toggleSidebar(_e: PointerEvent) {
-    this.sidebarTarget.classList.toggle('sidebar--collapsed');
   }
   
   addTabListeners() {

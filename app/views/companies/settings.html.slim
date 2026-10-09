@@ -2,7 +2,8 @@
 
 main.company__container.container-fluid.hidden-xs data-controller="company-settings"
 
-  .sidebar data-company-settings-target="sidebar"
+  = tag.div(class: ['sidebar', 'sidebar--collapsed': @sidebar_collapsed],
+            data: { company_settings_target: 'sidebar' })
     .sidebar__toggle
       .thingy
       button.btn.btn-default type="button" data-action="company-settings#toggleSidebar"

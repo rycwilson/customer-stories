@@ -19,6 +19,7 @@ class CompaniesController < ApplicationController
     @prospect_tab = cookies['csp-prospect-tab'] || '#customer-wins'
     @promote_tab = cookies['csp-promote-tab'] || '#promoted-stories'
     @measure_tab = cookies['csp-measure-tab'] || '#visitors'
+    @sidebar_collapsed = cookies['csp-sidebar-collapsed'].present?
     # @recent_activity = @company.recent_activity(30)
     # @story_views_30_day_count = @company.page_views.story.since(30.days.ago).count
     set_row_group_data_sources
@@ -29,6 +30,7 @@ class CompaniesController < ApplicationController
   end
 
   def edit
+    @sidebar_collapsed = cookies['csp-sidebar-collapsed'].present?
     render :settings
   end
 
