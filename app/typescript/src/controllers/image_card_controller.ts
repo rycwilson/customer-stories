@@ -7,10 +7,6 @@ export default class ImageCardController extends Controller<HTMLDivElement | HTM
     openFileDialog: { type: Boolean, default: false },
     autoSaves: Boolean
   }
-  declare inputsEnabledValue: boolean;
-  declare openFileDialogValue: boolean;
-  declare autoSavesValue: boolean;
-
   static targets = [
     'formGroup',
     'fileInputWidget', 
@@ -21,18 +17,21 @@ export default class ImageCardController extends Controller<HTMLDivElement | HTM
     'fileInput', 
     'helpBlock',
   ];
-  declare readonly formGroupTarget: HTMLDivElement;
-  declare readonly fileInputWidgetTarget: HTMLDivElement;
-  declare readonly hasFileInputWidgetTarget: boolean;
-  declare readonly previewTarget: HTMLDivElement;
-  declare readonly inputTargets: HTMLInputElement[];
-  declare readonly typeInputTarget: HTMLInputElement;
-  declare readonly hasTypeInputTarget: boolean;
-  declare readonly urlInputTarget: HTMLInputElement;
-  declare readonly fileInputTarget: HTMLInputElement;
-  declare readonly helpBlockTarget: HTMLDivElement;
 
-  onChangeFileInput = this.handleChangeFileInput.bind(this);
+  declare inputsEnabledValue: boolean;
+  declare readonly fileInputTarget: HTMLInputElement;
+  declare readonly urlInputTarget: HTMLInputElement;
+  declare readonly autoSavesValue: boolean;
+  private declare readonly formGroupTarget: HTMLDivElement;
+  private declare readonly fileInputWidgetTarget: HTMLDivElement;
+  private declare readonly hasFileInputWidgetTarget: boolean;
+  private declare readonly previewTarget: HTMLDivElement;
+  private declare readonly inputTargets: HTMLInputElement[];
+  private declare readonly typeInputTarget: HTMLInputElement;
+  private declare readonly hasTypeInputTarget: boolean;
+  private declare readonly helpBlockTarget: HTMLDivElement;
+  private declare openFileDialogValue: boolean;
+  private readonly onChangeFileInput = this.handleChangeFileInput.bind(this);
 
   // jasny-bootstrap will replace the img tag when uploading
   get imgTarget() {
@@ -79,13 +78,54 @@ export default class ImageCardController extends Controller<HTMLDivElement | HTM
         // .off('clear.bs.fileinput', this.clearFileInputHandler)
     }
   }
+  
+  openFileDialogValueChanged(shouldOpen: boolean) {
+    if (shouldOpen) {
+      this.fileInputTarget.click();
+      this.openFileDialogValue = false;
+    }
+  } 
+  
+  inputsEnabledValueChanged(shouldEnable: boolean, wasEnabled: boolean) {
+    if (shouldEnable === wasEnabled || wasEnabled === undefined) return;
+    
+    this.inputTargets.forEach(input => input.disabled = !shouldEnable);
+  }
 
-  handleChangeFileInput(_e: Event, file: File) {
+  handleInvalidImage() {
+    this.formGroupTarget.classList.add('has-error', 'has-error--validation');
+    this.helpBlockTarget.textContent = this.fileInputTarget.validationMessage;
+  }
+
+  resetFileInputWidget() {
+    $(this.fileInputWidgetTarget).fileinput('reset');
+    this.formGroupTarget.classList.remove('has-error', 'has-error--validation');
+    this.helpBlockTarget.textContent = '';
+  }
+
+  toggleSelected({ currentTarget: card }: { currentTarget: HTMLElement }) {
+    card.classList.toggle('image-card--selected');
+    this.dispatch('selected', { detail: { card } })
+  }
+
+  private handleChangeFileInput(_e: Event, file: File) {
     // Defer the handler to ensure fileinput widget has completed its DOM updates
     setTimeout(() => this.uploadFile(file));
   }
 
-  beforeUpload(file: File) {
+  private uploadFile(file: File) {
+    this.beforeUpload(file).then(isValid => {
+      if (!isValid) return;
+    
+      // this.dispatch('uploading');
+      // const errorTimeout = setTimeout(() => console.log('something wrong?'), 10000)
+      this.element.classList.add('image-card--uploading');
+      this.element.classList.remove('hidden');
+      $(this.fileInputTarget).fileupload('send', { files: this.fileInputTarget.files });
+    });
+  }
+
+  private beforeUpload(file: File) {
     return new Promise<boolean>(resolve => {
       const img = this.imgTarget as HTMLImageElement;
       if (!img) return;
@@ -116,45 +156,4 @@ export default class ImageCardController extends Controller<HTMLDivElement | HTM
       }
     });
   }
-
-  uploadFile(file: File) {
-    this.beforeUpload(file).then(isValid => {
-      if (!isValid) return;
-    
-      // this.dispatch('uploading');
-      // const errorTimeout = setTimeout(() => console.log('something wrong?'), 10000)
-      this.element.classList.add('image-card--uploading');
-      this.element.classList.remove('hidden');
-      $(this.fileInputTarget).fileupload('send', { files: this.fileInputTarget.files });
-    });
-  }
-  
-  handleInvalidImage() {
-    this.formGroupTarget.classList.add('has-error', 'has-error--validation');
-    this.helpBlockTarget.textContent = this.fileInputTarget.validationMessage;
-  }
-
-  resetFileInputWidget() {
-    $(this.fileInputWidgetTarget).fileinput('reset');
-    this.formGroupTarget.classList.remove('has-error', 'has-error--validation');
-    this.helpBlockTarget.textContent = '';
-  }
-
-  inputsEnabledValueChanged(shouldEnable: boolean, wasEnabled: boolean) {
-    if (shouldEnable === wasEnabled || wasEnabled === undefined) return;
-
-    this.inputTargets.forEach(input => input.disabled = !shouldEnable);
-  }
-
-  toggleSelected({ currentTarget: card }: { currentTarget: HTMLElement }) {
-    card.classList.toggle('image-card--selected');
-    this.dispatch('selected', { detail: { card } })
-  }
-
-  openFileDialogValueChanged(shouldOpen: boolean) {
-    if (shouldOpen) {
-      this.fileInputTarget.click();
-      this.openFileDialogValue = false;
-    }
-  } 
 }

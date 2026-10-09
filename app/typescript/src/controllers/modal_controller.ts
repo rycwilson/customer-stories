@@ -2,19 +2,16 @@ import { Controller } from '@hotwired/stimulus';
 
 export default class ModalController extends Controller<HTMLDivElement> {
   static targets = ['title', 'body', 'footer'];
-  declare readonly titleTarget: HTMLHeadingElement;
-  declare readonly bodyTarget: HTMLDivElement;
-  declare readonly hasBodyTarget: boolean;
-  declare readonly footerTarget: HTMLDivElement;
-
   static values = { 
-    title: { type: String, default: 'title is missing' },
+    title: { type: String, default: 'Title is missing!' },
     bodyContent: { type: String, default: '' },
   };
 
-  declare initialClassName: string;
-
-  onHidden = this.handleHidden.bind(this)
+  declare readonly titleTarget: HTMLHeadingElement;
+  declare readonly bodyTarget: HTMLDivElement;
+  declare readonly footerTarget: HTMLDivElement;
+  declare private initialClassName: string;
+  private onHidden = this.handleHidden.bind(this)
 
   connect() {
     this.initialClassName = this.element.className;
@@ -34,7 +31,7 @@ export default class ModalController extends Controller<HTMLDivElement> {
     $(this.element).modal('hide');
   }
 
-  handleHidden() {
+  private handleHidden() {
     this.element.className = this.initialClassName;
     this.titleTarget.textContent = '';
     [...this.bodyTarget.children]

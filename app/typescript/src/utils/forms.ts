@@ -1,6 +1,24 @@
-// This module exports the following functions:
-// - `validateForm` validates form controls on submit.
-// - `serializeForm` serializes form data into a URL-encoded string, excluding the authenticity token.
+import type { NewCustomerWinController, NewContributionController, NewStoryController } from '../controllers';
+import type { TomOptions } from 'tom-select/dist/esm/types/core.d.ts';
+
+export const sharedTargets = [
+  'customerSelect',
+  'customerField',
+  'customerName',
+  'customerWinSelect',
+  'successField',
+  'successName', 
+  'contributorSelect', 
+  'contributorFields',
+  'contributorField',
+  'referrerSelect',
+  'referrerFields',
+  'referrerField',
+  'curatorSelect',
+  'submitBtn',
+  'submit',
+  'imageCard'    
+]
 
 const correctionHandlers = new WeakMap<HTMLInputElement | TomSelectInput, (e: Event) => void>();
 
@@ -92,5 +110,152 @@ export function submitOnly(body: URLSearchParams | FormData, predicate: (key: st
   for (const k of body.keys()) {
     if (keep.has(k) || predicate(k)) continue;
     body.delete(k);
+  }
+}
+
+export function handleChangeCustomer(
+  this: NewCustomerWinController | NewContributionController | NewStoryController, 
+  { target: select }: { target: TomSelectInput }
+) {
+  const isNew = isNaN(+select.value);
+  // const customerId = +select.value || null;
+
+  // Enable/disable select elements via the [name] attribute => precludes ui changes
+  select.setAttribute('name', isNew ? '' : select.dataset.fieldName);
+
+  // Hidden fields for a new customer
+  this.customerFieldTargets.forEach((field: HTMLInputElement) => field.disabled = !isNew);
+  this.customerNameTarget.value = isNew ? select.value.trim() : '';
+
+  // Reset customer win select options
+  if (this.hasCustomerWinSelectTarget) {
+    (this as NewContributionController | NewStoryController)
+      .customerWinSelectTarget.tomselect.clear(true);
+  } 
+}
+
+export function handleChangeCustomerWin(
+  this: NewContributionController | NewStoryController,
+  { target: select }: { target: TomSelectInput }
+) {
+  const isNew = isNaN(+select.value);
+  const winId = +select.value || null;
+  const wasCleared = !(isNew || winId);
+
+  // Enable/disable select elements via the [name] attribute => precludes ui changes
+  select.setAttribute('name', isNew || wasCleared ? '' : select.dataset.fieldName);
+
+  // Hidden fields for a new customer win
+  // For a new story, `placeholder: true` and `name: nil` for the associated success if none was specified
+  // TODO successName and successPlaceholder needn't be targets -- just look for the name
+  this.successFieldTargets.forEach((field: HTMLInputElement) => {
+    if (field === this.successNameTarget) {
+      field.disabled = !isNew;
+      field.value = isNew ? select.value.trim() : '';
+    } else if (
+      this.hasSuccessPlaceholderTarget &&
+      field === (this as NewStoryController).successPlaceholderTarget
+    ) {
+      field.checked = wasCleared;
+      field.disabled = !!winId || isNew;
+    } else {
+      field.disabled = !!winId
+    }
+  });
+
+  const updateContributorOptions = function (this: NewContributionController, winId: number) {
+    const tsOptions = this.contributorSelectTarget.tomselect.options as TomOptions;
+
+    // new story form can't presently have a contributor select, because it may not have access to the contributions data
+    if (!CSP['contributions']) throw new Error('updateContributorOptions should only be called from Prospect section');
+    const winContributorIds: number[] = CSP['contributions']
+      .filter((contribution: Contribution) => contribution.customer_win!.id === winId)
+      .map((contribution: Contribution) => contribution.contributor!.id);
+    winContributorIds.forEach(contributorId => {
+      const newOptionSettings = { value: contributorId, text: tsOptions[contributorId].text, disabled: true  };
+      this.contributorSelectTarget.tomselect.updateOption(contributorId.toString(), newOptionSettings);
+    });
+  }
+  const resetContributorOptions = function (this: NewContributionController) {
+    const tsOptions = this.contributorSelectTarget.tomselect.options as TomOptions;
+    Object.entries(tsOptions).forEach(([value, option]) => {
+      if (option.disabled) {
+        this.contributorSelectTarget.tomselect.updateOption(value, { value, text: option.text, disabled: false });
+      }
+    });
+  }
+
+  if (winId) {
+    // set the customer select to the customer associated with the selected customer win
+    let customerId;
+    if (CSP['customerWins']) {
+      const win = CSP['customerWins'].find((win: CustomerWin) => win.id === winId) as CustomerWin;
+      customerId = win.customer.id;
+    } else {
+      const option = select.tomselect.options[winId];
+      customerId = +(option as { customerId: string }).customerId;
+    }
+    this.customerSelectTarget.tomselect.setValue(customerId, true);
+
+    // Disable contributor option for any contributors that already have a contribution for this customer win
+    if (this.hasContributorSelectTarget) {
+      updateContributorOptions.bind(this as NewContributionController)(winId);
+    }
+  } else if (this.hasContributorSelectTarget) {
+    resetContributorOptions.bind(this as NewContributionController)();
+  }
+}
+
+export function handleChangeContact(
+  this: NewCustomerWinController | NewContributionController, 
+  { target: select }: { target: TomSelectInput }
+) {
+  const contactType = select.dataset.tomselectKindValue as Extract<TomSelectKind, 'contributor' | 'referrer'>;
+  const isNewContact = select.value === '0';
+  const isExistingContact = select.value && !isNewContact;
+
+  // Enable/disable select elements via the [name] attribute => precludes ui changes
+  select.setAttribute('name', select.value && !isNewContact ? select.dataset.fieldName as string : '');
+  this[`${contactType}FieldTargets`].forEach(input => {
+    input.value = /success_contact|sign_up_code/.test(input.name) ? input.value : '';
+    input.disabled = input.name.includes('success_contact') ? (!isExistingContact && !isNewContact) : !isNewContact;
+    input.required = isNewContact && input.type !== 'hidden';
+  });
+  if (isNewContact) {
+    this[`${contactType}FieldsTarget`].classList.remove('hidden');
+    const firstName = this[`${contactType}FieldTargets`].find((input: HTMLInputElement) => input.name.includes('first'));
+    firstName?.focus();
+  } else {
+    this[`${contactType}FieldsTarget`].classList.add('hidden');
+  }
+}
+
+export function filterCustomerWinOptions(this: NewContributionController | NewStoryController) {
+  const isNewCustomer = isNaN(+this.customerSelectTarget.value);
+  const customerId = +this.customerSelectTarget.value || null;
+  for (const [_, option] of Object.entries(this.customerWinSelectTarget.tomselect.options as TomOptions)) {
+    option.$div.classList.toggle(
+      'hidden',
+      isNewCustomer || (customerId && customerId !== +option.customerId)
+    );
+  }
+}
+
+// For newly created contacts, autofill the password with the email
+export function autofillNewContactPasswords(this: NewCustomerWinController | NewContributionController) {
+  if (!this.contributorFieldTargets || !this.referrerFieldTargets) return;
+  const referrerEmail = <HTMLInputElement>this.referrerFieldTargets.find(input => input.name.includes('email'));
+  const referrerPassword = <HTMLInputElement>this.referrerFieldTargets.find(input => input.name.includes('password'));
+  const contributorEmail = <HTMLInputElement>this.contributorFieldTargets.find(input => input.name.includes('email'));
+  const contributorPassword = <HTMLInputElement>this.contributorFieldTargets.find(input => input.name.includes('password'));
+  if (!referrerEmail || !referrerPassword || !contributorEmail || !contributorPassword) {
+    throw new Error('Missing email or password inputs') 
+  } else {
+    [[referrerEmail, referrerPassword], [contributorEmail, contributorPassword]].forEach(([emailInput, passwordInput]) => {
+      emailInput.addEventListener('input', (e) => {
+        const email = (e.currentTarget as HTMLInputElement).value;
+        passwordInput.value = email;
+      });
+    });
   }
 }

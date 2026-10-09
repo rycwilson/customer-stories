@@ -84,18 +84,22 @@ application.register('modal', ModalController);
 
 import ModalTriggerController from './modal_trigger_controller.js';
 application.register('modal-trigger', ModalTriggerController);
+export type { default as ModalController } from './modal_controller.js';
 
 import NavListController from './nav_list_controller.js';
 application.register('nav-list', NavListController);
 
 import NewCustomerWinController from './new_customer_win_controller.js';
 application.register('new-customer-win', NewCustomerWinController);
+export type { default as NewCustomerWinController } from './new_customer_win_controller.js';
 
 import NewContributionController from './new_contribution_controller.js';
 application.register('new-contribution', NewContributionController);
+export type { default as NewContributionController } from './new_contribution_controller.js';
 
 import NewStoryController from './new_story_controller.js';
 application.register('new-story', NewStoryController);
+export type { default as NewStoryController } from './new_story_controller.js';
 
 import TableNavController from './table_nav_controller.js';
 application.register('table-nav', TableNavController);

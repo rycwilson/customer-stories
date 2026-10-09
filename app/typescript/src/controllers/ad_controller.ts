@@ -2,7 +2,8 @@ import FormController from './form_controller';
 
 export default class AdController extends FormController<AdController> {
   static targets = [...super.targets, 'adImageCheckbox'];
-  declare readonly adImageCheckboxTargets: HTMLInputElement[];
+
+  private declare readonly adImageCheckboxTargets: HTMLInputElement[];
 
   toggleAdImage(e: CustomEvent<{ card: HTMLElement }>) {
     const { card } = e.detail;

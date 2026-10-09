@@ -10,12 +10,13 @@ export default class CompanyProfileController extends FormController<CompanyProf
     'storiesHeadingDemo', 
     'storiesHeadingColorInput'
   ];
-  declare readonly logoTypeRadioTargets: HTMLInputElement[];
-  declare readonly companyHeaderDemoTarget: HTMLDivElement;
-  declare readonly logoDemoTargets: HTMLAnchorElement[];
-  declare readonly storiesHeaderDemoTarget: HTMLDivElement;
-  declare readonly storiesHeadingDemoTarget: HTMLHeadingElement;
-  declare readonly storiesHeadingColorInputTarget: HTMLInputElement;
+
+  private declare readonly logoTypeRadioTargets: HTMLInputElement[];
+  private declare readonly companyHeaderDemoTarget: HTMLDivElement;
+  private declare readonly logoDemoTargets: HTMLAnchorElement[];
+  private declare readonly storiesHeaderDemoTarget: HTMLDivElement;
+  private declare readonly storiesHeadingDemoTarget: HTMLHeadingElement;
+  private declare readonly storiesHeadingColorInputTarget: HTMLInputElement;
 
   handleUploadReady({ detail: { card } }: CustomEvent<{ card: HTMLElement }>) {
     const type = (

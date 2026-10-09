@@ -1,88 +1,34 @@
 import { Controller } from '@hotwired/stimulus';
 import type { TurboSubmitStartEvent, TurboSubmitEndEvent } from '@hotwired/turbo';
-import type ModalController from './modal_controller';
-import type NewCustomerWinController from './new_customer_win_controller';
-import type NewContributionController from './new_contribution_controller';
-import type NewStoryController from './new_story_controller';
-import type UserProfileController from './user_profile_controller';
-import type CompanyProfileController from './company_profile_controller';
-import type InvitationTemplateController from './invitation_template_controller';
-import type ContributorInvitationController from './contributor_invitation_controller';
-import type ContributorPromptsController from './contributor_prompts_controller';
-import type CompanyCtasController from './company_ctas_controller';
-import type CompanyTagsController from './company_tags_controller';
-import type AdsController from './ads_controller';
-import type AdController from './ad_controller';
-import type StoryNarrativeContentController from './story_narrative_content_controller';
-import type StorySettingsController from './story_settings_controller';
-import type { TomOptions } from 'tom-select/dist/esm/types/core.d.ts';
-import { validateForm, serializeForm } from '../utils';
+import type { ModalController } from '.';
+import { 
+  sharedTargets,
+  validateForm,
+  serializeForm,
+  handleChangeCustomer as onChangeCustomer,
+  handleChangeCustomerWin as onChangeCustomerWin,
+  handleChangeContact as onChangeContact,
+  filterCustomerWinOptions as onCustomerWinsDropdownDidOpen
+ } from '../utils';
 
-export type SubclassController = (
-  NewCustomerWinController | 
-  NewContributionController | 
-  NewStoryController |
-  UserProfileController |
-  CompanyProfileController |
-  InvitationTemplateController |
-  ContributorInvitationController |
-  ContributorPromptsController |
-  CompanyCtasController |
-  CompanyTagsController |
-  AdsController | 
-  AdController |
-  StoryNarrativeContentController |
-  StorySettingsController
-);
-
-export default class FormController<Ctrl extends SubclassController> extends Controller<HTMLFormElement> {
+export default class FormController<_Ctrl> extends Controller<HTMLFormElement> {
   static outlets = ['modal'];
-  declare readonly modalOutlet: ModalController;
-  declare readonly hasModalOutlet: boolean;
+  static targets = sharedTargets;
 
-  static targets = [
-    'imageCard',    
-    'customerSelect',
-    'customerField',
-    'customerName',
-    'customerWinSelect',
-    'successField',
-    'successName', 
-    'contributorSelect', 
-    'contributorFields',
-    'contributorField',
-    'referrerSelect',
-    'referrerFields',
-    'referrerField',
-    'curatorSelect',
-    'customerContactBoolField',
-    'submitBtn'
-  ];
-
-  declare readonly imageCardTargets: HTMLElement[];
-
-  // shared fields
-  declare readonly customerSelectTarget: TomSelectInput;
-  declare readonly customerFieldTargets: HTMLInputElement[];
-  declare readonly customerNameTarget: HTMLInputElement;
-
-  declare readonly customerWinSelectTarget: TomSelectInput;
-  declare readonly successFieldTargets: HTMLInputElement[];
-  declare readonly successNameTarget: HTMLInputElement;
-  declare readonly successPlaceholderTarget: HTMLInputElement;
-
-  declare readonly submitBtnTarget: HTMLInputElement | HTMLButtonElement;
-  declare readonly hasSubmitBtnTarget: boolean;
-
-  declare readonly hasCustomerSelectTarget: boolean;
   declare readonly hasCustomerWinSelectTarget: boolean;
-  declare readonly hasContributorSelectTarget: boolean;
-  declare readonly hasReferrerSelectTarget: boolean;
-  declare readonly hasSuccessFieldTargets: boolean;
   declare readonly hasSuccessPlaceholderTarget: boolean;
-  declare readonly hasCuratorSelectTarget: boolean;
-
-  declare initialState: string;
+  declare readonly hasContributorSelectTarget: boolean;
+  protected declare readonly modalOutlet: ModalController;
+  protected declare readonly hasModalOutlet: boolean;
+  protected declare readonly imageCardTargets: HTMLElement[];
+  protected declare readonly submitBtnTarget: HTMLInputElement | HTMLButtonElement;
+  protected handleChangeCustomer = onChangeCustomer;
+  protected handleChangeCustomerWin = onChangeCustomerWin;
+  protected handleChangeContact = onChangeContact;
+  protected filterCustomerWinOptions = onCustomerWinsDropdownDidOpen
+  protected declare initialState: string;
+  private declare readonly hasSubmitBtnTarget: boolean;
+  private declare readonly submitTargets: (HTMLInputElement | HTMLButtonElement)[];
 
   get isDirty() {
     return serializeForm(this.element) !== this.initialState;
@@ -106,13 +52,9 @@ export default class FormController<Ctrl extends SubclassController> extends Con
     this.initialState = serializeForm(this.element);
   }
 
-  // disconnect() {
-  // }
-
   turboSubmit(e: CustomEvent<{ submitter?: HTMLButtonElement | HTMLInputElement }>) {
     const { submitter } = e.detail;
     if (submitter && submitter.type === 'button') submitter.type = 'submit';
-    // console.log(`turboSubmit()`, submitter)
     this.element.requestSubmit(submitter);
   }
 
@@ -157,154 +99,8 @@ export default class FormController<Ctrl extends SubclassController> extends Con
     setTimeout(() => submitBtn.classList.add('btn--working'), 1000);
   }
 
-  handleChangeCustomer(
-    this: NewCustomerWinController | NewContributionController | NewStoryController, 
-    { target: select }: { target: TomSelectInput }
-  ) {
-    const isNew = isNaN(+select.value);
-    // const customerId = +select.value || null;
-
-    // Enable/disable select elements via the [name] attribute => precludes ui changes
-    select.setAttribute('name', isNew ? '' : select.dataset.fieldName);
-
-    // Hidden fields for a new customer
-    this.customerFieldTargets.forEach((field: HTMLInputElement) => field.disabled = !isNew);
-    this.customerNameTarget.value = isNew ? select.value.trim() : '';
-
-    // Reset customer win select options
-    if (this.hasCustomerWinSelectTarget) {
-      this.customerWinSelectTarget.tomselect.clear(true);
-    } 
-  }
-
   // Method is for the customer form only (which does not have its own controller)
   toggleShowName({ currentTarget: formGroup }: { currentTarget: HTMLElement }) {
     formGroup.classList.toggle('customer__logo--with-name');
-  }
-
-  handleChangeCustomerWin(
-    this: NewContributionController | NewStoryController,
-    { target: select }: { target: TomSelectInput }
-  ) {
-    const isNew = isNaN(+select.value);
-    const winId = +select.value || null;
-    const wasCleared = !(isNew || winId);
-    const updateCuratorSelect = function (this: NewStoryController) {
-      this.curatorSelectTarget.setAttribute('name', isNew || wasCleared ? this.curatorSelectTarget.dataset.fieldName : '');
-    };
-
-    // Enable/disable select elements via the [name] attribute => precludes ui changes
-    select.setAttribute('name', isNew || wasCleared ? '' : select.dataset.fieldName);
-    if (this.hasCuratorSelectTarget) {
-      updateCuratorSelect.bind(this as NewStoryController)();
-    }
-
-    // Hidden fields for a new customer win
-    // For a new story, `placeholder: true` and `name: nil` for the associated success if none was specified
-    // TODO successName and successPlaceholder needn't be targets -- just look for the name
-    this.successFieldTargets.forEach((field: HTMLInputElement) => {
-      if (field === this.successNameTarget) {
-        field.disabled = !isNew;
-        field.value = isNew ? select.value.trim() : '';
-      } else if (field === this.successPlaceholderTarget) {
-        field.checked = wasCleared;
-        field.disabled = !!winId || isNew;
-      } else {
-        field.disabled = !!winId
-      }
-    });
-
-    const updateContributorOptions = function (this: NewContributionController, winId: number) {
-      const tsOptions = this.contributorSelectTarget.tomselect.options as TomOptions;
-
-      // new story form can't presently have a contributor select, because it may not have access to the contributions data
-      if (!CSP['contributions']) throw new Error('updateContributorOptions should only be called from Prospect section');
-      const winContributorIds: number[] = CSP['contributions']
-        .filter((contribution: Contribution) => contribution.customer_win!.id === winId)
-        .map((contribution: Contribution) => contribution.contributor!.id);
-      winContributorIds.forEach(contributorId => {
-        const newOptionSettings = { value: contributorId, text: tsOptions[contributorId].text, disabled: true  };
-        this.contributorSelectTarget.tomselect.updateOption(contributorId.toString(), newOptionSettings);
-      });
-    }
-    const resetContributorOptions = function (this: NewContributionController) {
-      const tsOptions = this.contributorSelectTarget.tomselect.options as TomOptions;
-      Object.entries(tsOptions).forEach(([value, option]) => {
-        if (option.disabled) {
-          this.contributorSelectTarget.tomselect.updateOption(value, { value, text: option.text, disabled: false });
-        }
-      });
-    }
-
-    if (winId) {
-      // set the customer select to the customer associated with the selected customer win
-      let customerId;
-      if (CSP['customerWins']) {
-        const win = CSP['customerWins'].find((win: CustomerWin) => win.id === winId) as CustomerWin;
-        customerId = win.customer.id;
-      } else {
-        const option = select.tomselect.options[winId];
-        customerId = +(option as { customerId: string }).customerId;
-      }
-      this.customerSelectTarget.tomselect.setValue(customerId, true);
-
-      // Disable contributor option for any contributors that already have a contribution for this customer win
-      if (this.hasContributorSelectTarget) {
-        updateContributorOptions.bind(this as NewContributionController)(winId);
-      }
-    } else if (this.hasContributorSelectTarget) {
-      resetContributorOptions.bind(this as NewContributionController)();
-    }
-  }
-
-  handleChangeContact(
-    this: NewCustomerWinController | NewContributionController, 
-    { target: select }: { target: TomSelectInput }
-  ) {
-    const contactType = select.dataset.tomselectKindValue as Extract<TomSelectKind, 'contributor' | 'referrer'>;
-    const isNewContact = select.value === '0';
-    const isExistingContact = select.value && !isNewContact;
-
-    // Enable/disable select elements via the [name] attribute => precludes ui changes
-    select.setAttribute('name', select.value && !isNewContact ? select.dataset.fieldName as string : '');
-    this[`${contactType}FieldTargets`].forEach(input => {
-      input.value = /success_contact|sign_up_code/.test(input.name) ? input.value : '';
-      input.disabled = input.name.includes('success_contact') ? (!isExistingContact && !isNewContact) : !isNewContact;
-      input.required = isNewContact && input.type !== 'hidden';
-    });
-    if (isNewContact) {
-      this[`${contactType}FieldsTarget`].classList.remove('hidden');
-      const firstName = this[`${contactType}FieldTargets`].find((input: HTMLInputElement) => input.name.includes('first'));
-      firstName?.focus();
-    } else {
-      this[`${contactType}FieldsTarget`].classList.add('hidden');
-    }
-  }
-
-  filterCustomerWinOptions(this: NewContributionController | NewStoryController) {
-    const isNewCustomer = isNaN(+this.customerSelectTarget.value);
-    const customerId = +this.customerSelectTarget.value || null;
-    for (const [id, option] of Object.entries(this.customerWinSelectTarget.tomselect.options as TomOptions)) {
-      option.$div.classList.toggle('hidden', isNewCustomer || (customerId && customerId !== +option.customerId));
-    }
-  }
-
-  // For newly created contacts, autofill the password with the email
-  autofillNewContactPasswords(this: NewCustomerWinController | NewContributionController) {
-    if (!this.contributorFieldTargets || !this.referrerFieldTargets) return;
-    const referrerEmail = <HTMLInputElement>this.referrerFieldTargets.find(input => input.name.includes('email'));
-    const referrerPassword = <HTMLInputElement>this.referrerFieldTargets.find(input => input.name.includes('password'));
-    const contributorEmail = <HTMLInputElement>this.contributorFieldTargets.find(input => input.name.includes('email'));
-    const contributorPassword = <HTMLInputElement>this.contributorFieldTargets.find(input => input.name.includes('password'));
-    if (!referrerEmail || !referrerPassword || !contributorEmail || !contributorPassword) {
-      throw new Error('Missing email or password inputs') 
-    } else {
-      [[referrerEmail, referrerPassword], [contributorEmail, contributorPassword]].forEach(([emailInput, passwordInput]) => {
-        emailInput.addEventListener('input', (e) => {
-          const email = (e.currentTarget as HTMLInputElement).value;
-          passwordInput.value = email;
-        });
-      });
-    }
   }
 }

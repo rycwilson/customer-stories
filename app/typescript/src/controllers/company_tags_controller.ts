@@ -2,8 +2,9 @@ import FormController from "./form_controller";
 
 export default class CompanyTagsController extends FormController<CompanyTagsController> {
   static targets = [...FormController.targets, 'tagInput', 'newTagInput'];  
-  declare tagInputTargets: HTMLInputElement[];
-  declare newTagInputTargets: HTMLInputElement[];
+
+  private declare tagInputTargets: HTMLInputElement[];
+  private declare newTagInputTargets: HTMLInputElement[];
 
   handleAddTag(e: CustomEvent<{ item: HTMLElement, cancel?: boolean }>) {
     const { item, cancel = false } = e.detail;
@@ -21,7 +22,6 @@ export default class CompanyTagsController extends FormController<CompanyTagsCon
           data-company-tags-target="newTagInput" />
       `);
     }
-
     this.updateState();
   }
 
@@ -30,7 +30,6 @@ export default class CompanyTagsController extends FormController<CompanyTagsCon
     const tagName = item.dataset.value;
     const inputs = this.tagInputTargets.filter(input => input.dataset.tagName === tagName);
     inputs.forEach(input => { input.disabled = cancel });
-
     this.updateState();
   }
 }

@@ -1,14 +1,10 @@
 import type { TurboSubmitStartEvent, TurboSubmitEndEvent } from '@hotwired/turbo';
 import FormController from './form_controller';
-import ModalController from './modal_controller';
 import { debounce, setCustomButtonProps, submitOnly } from '../utils';
 import tinycolor from 'tinycolor2';
 
 export default class CompanyCtasController extends FormController<CompanyCtasController> {
   static outlets = ['modal'];
-  declare readonly modalOutlet: ModalController;
-  declare readonly hasModalOutlet: boolean;
-
   static targets = [
     'cta',
     'customButton', 
@@ -17,14 +13,14 @@ export default class CompanyCtasController extends FormController<CompanyCtasCon
     'typeSpecificField',
     'positionInput'
   ]
-  declare readonly ctaTargets: HTMLDivElement[];
-  declare readonly customButtonTargets: HTMLDivElement[];
-  declare readonly customButtonColorInputTargets: HTMLInputElement[];
-  declare readonly customButtonDemoTargets: HTMLButtonElement[];
-  declare readonly typeSpecificFieldTargets: HTMLDivElement[];
-  declare readonly positionInputTargets: HTMLInputElement[];
 
-  colorHandlers = new WeakMap<HTMLInputElement, VoidFunction>();
+  private declare readonly ctaTargets: HTMLDivElement[];
+  private declare readonly customButtonTargets: HTMLDivElement[];
+  private declare readonly customButtonColorInputTargets: HTMLInputElement[];
+  private declare readonly customButtonDemoTargets: HTMLButtonElement[];
+  private declare readonly typeSpecificFieldTargets: HTMLDivElement[];
+  private declare readonly positionInputTargets: HTMLInputElement[];
+  private colorHandlers = new WeakMap<HTMLInputElement, VoidFunction>();
 
   connect() {
     super.connect();
@@ -46,7 +42,7 @@ export default class CompanyCtasController extends FormController<CompanyCtasCon
     ));
   }
 
-  nadleSubmitStart(e: TurboSubmitStartEvent) {
+  handleSubmitStart(e: TurboSubmitStartEvent) {
     const { formSubmission } = e.detail;
     const { body, submitter } = formSubmission;
 
@@ -121,7 +117,13 @@ export default class CompanyCtasController extends FormController<CompanyCtasCon
     setCustomButtonProps(customButtonDemo);
   }
 
-  checkHeadingContrast(bgColorInput: HTMLInputElement, textColorInput: HTMLInputElement) {
+  updateCustomButtonText({ target: input }: { target: HTMLInputElement }) {
+    const cta = this.ctaTargets.find(cta => cta.contains(input));
+    const customButtonDemo = this.customButtonDemoTargets.find(button => cta?.contains(button));
+    if (customButtonDemo) customButtonDemo.innerText = input.value;
+  }
+
+  private checkHeadingContrast(bgColorInput: HTMLInputElement, textColorInput: HTMLInputElement) {
     const bgColor = bgColorInput.value;
     const textColor = textColorInput.value;
     const lightTextColor = '#ffffff';
@@ -134,11 +136,5 @@ export default class CompanyCtasController extends FormController<CompanyCtasCon
       return;
     }
     textColorInput.dispatchEvent(new Event('input'));
-  }
-
-  updateCustomButtonText({ target: input }: { target: HTMLInputElement }) {
-    const cta = this.ctaTargets.find(cta => cta.contains(input));
-    const customButtonDemo = this.customButtonDemoTargets.find(button => cta?.contains(button));
-    if (customButtonDemo) customButtonDemo.innerText = input.value;
   }
 }

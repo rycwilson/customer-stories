@@ -9,11 +9,12 @@ export default class StorySettingsController extends FormController<StorySetting
     'ogDescriptionTextarea',
     'ogImageCard'
   ];
-  declare readonly hiddenLinkInputTarget: HTMLInputElement;
-  declare readonly hiddenLinkCopyBtnTarget: HTMLButtonElement;
-  declare readonly ogTitleInputTarget: HTMLInputElement;
-  declare readonly ogDescriptionTextareaTarget: HTMLTextAreaElement;
-  declare readonly ogImageCardTarget: HTMLDivElement;
+
+  private declare readonly hiddenLinkInputTarget: HTMLInputElement;
+  private declare readonly hiddenLinkCopyBtnTarget: HTMLButtonElement;
+  private declare readonly ogTitleInputTarget: HTMLInputElement;
+  private declare readonly ogDescriptionTextareaTarget: HTMLTextAreaElement;
+  private declare readonly ogImageCardTarget: HTMLDivElement;
 
   // connect() {}
 
