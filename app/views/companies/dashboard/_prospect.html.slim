@@ -8,7 +8,7 @@
     'contributions:ready->dashboard#handleResourceReady'].join(' ')
   role="tabpanel" }
 
-  = render('shared/loading_spinner')
+  = spinner_html.html_safe
 
   .company__container.container-fluid
     = tag.div(class: ['sidebar', 'sidebar--collapsed': @sidebar_collapsed],

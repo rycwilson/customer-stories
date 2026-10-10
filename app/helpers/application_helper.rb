@@ -82,4 +82,17 @@ module ApplicationHelper
   def tag_dom_id(tag)
     dom_id(tag).sub(/^tag_/, '')
   end
+
+  def spinner_html
+    <<~HTML.squish
+      <div class="spinner">
+        <div class="lds-ring">
+          <div></div>
+          <div></div>
+          <div></div>
+          <div></div>
+        </div>
+      </div>
+    HTML
+  end
 end

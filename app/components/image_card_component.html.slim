@@ -11,7 +11,7 @@
               ("imageCard #{@form_controller_target}" if @form_controller_id),
             action: ('click->image-card#toggleSelected' if @selectable) })
   
-  = render('shared/loading_spinner') if @uploadable
+  = helpers.spinner_html.html_safe if @uploadable
 
   - if @selectable
     = checkmark_html.html_safe

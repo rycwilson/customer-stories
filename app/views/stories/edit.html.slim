@@ -11,7 +11,7 @@ main.dashboard.hidden-xs data-controller="dashboard" data-dashboard-modal-outlet
           'contributions:loading->dashboard#handleResourceLoading',
           'contributions:ready->dashboard#handleResourceReady' ].join(' ') }) do
 
-    = render('shared/loading_spinner')
+    = spinner_html.html_safe
 
     .company__container.container-fluid
     

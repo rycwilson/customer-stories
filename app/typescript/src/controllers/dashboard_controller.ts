@@ -105,9 +105,12 @@ export default class DashboardController extends Controller {
     }, 1000);
   }
 
-  handleResourceReady({ detail: { resourceName } }: CustomEvent<{ resourceName: ResourceName }>) {
+  handleResourceReady(e: CustomEvent<{ resourceName: ResourceName }>) {
     // console.log('resource ready', resourceName)
+    const panel = <HTMLElement>e.currentTarget;
+    const { resourceName } = e.detail;
     this.readyState[resourceName] = true;
+    setTimeout(() => panel.querySelector(':scope > .spinner')?.remove());
   }
 
   handleChangeReadyState(

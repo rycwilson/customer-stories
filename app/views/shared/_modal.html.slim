@@ -7,7 +7,7 @@
           span aria-hidden="true"
             | &times;
       .modal-body id="main-modal-body" data-modal-target="body"
-        = render('shared/loading_spinner')
+        = spinner_html.html_safe
 
       /.modal-body data-modal-target="body" data-action="new-customer-win:source-changed->modal#setSubmitBtnText"
         / nesting placeholder content won't work correctly when dynamically setting the id ansd src attributes,

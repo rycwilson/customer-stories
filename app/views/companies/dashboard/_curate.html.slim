@@ -8,7 +8,7 @@
         'stories:loading->dashboard#handleResourceLoading',
         'stories:ready->dashboard#handleResourceReady'].join(' ') })
 
-  = render('shared/loading_spinner')
+  = spinner_html.html_safe
 
   = tag.div( \
       class: 'company__container container-fluid',
