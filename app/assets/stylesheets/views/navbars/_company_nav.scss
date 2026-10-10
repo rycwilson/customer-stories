@@ -152,6 +152,10 @@
           }
         }
 
+        form > button {
+          text-wrap: nowrap;
+        }
+        
         &:first-of-type {
           margin-right: 0.5rem;
         }
@@ -160,6 +164,7 @@
           opacity: 1;
         }
       }
+
 
       // @mixin tab-arrows($width) {
       //   > div {
