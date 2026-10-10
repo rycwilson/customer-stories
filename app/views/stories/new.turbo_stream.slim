@@ -101,10 +101,9 @@
           options_for_select( \
             @company.successes.real.map(&:select_option),
             @success ? "success-#{@success.id}" : nil ),
-          { include_blank: true },
+          { include_blank: 'Select or enter the name of a new Customer Win' },
           { name: ('' if @success.nil?),
             class: 'form-control',
-            placeholder: 'Select or enter the name of a new Customer Win',
             data: { \
               controller: 'tomselect',
               tomselect_kind_value: 'customerWin',

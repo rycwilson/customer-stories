@@ -8,9 +8,9 @@ export default class extends Controller<HTMLButtonElement> {
     options: { type: Object, default: { title: '', className: '' } },
   };
 
-  declare private readonly modalOutlet: ModalController;
-  declare private readonly enabledValue: boolean;
-  declare private readonly optionsValue: { title: string, className?: string };
+  private declare readonly modalOutlet: ModalController;
+  private declare readonly enabledValue: boolean;
+  private declare readonly optionsValue: { title: string, className?: string };
   private onTrigger = this.showModal.bind(this);
 
   connect() {

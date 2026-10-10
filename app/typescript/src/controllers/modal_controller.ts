@@ -10,7 +10,7 @@ export default class ModalController extends Controller<HTMLDivElement> {
   declare readonly titleTarget: HTMLHeadingElement;
   declare readonly bodyTarget: HTMLDivElement;
   declare readonly footerTarget: HTMLDivElement;
-  declare private initialClassName: string;
+  private declare initialClassName: string;
   private onHidden = this.handleHidden.bind(this)
 
   connect() {

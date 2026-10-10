@@ -1,7 +1,6 @@
 import { Controller } from "@hotwired/stimulus";
 import Cookies from 'js-cookie';
-import type ModalController from './modal_controller';
-import type ToastController from './toast_controller';
+import type { ModalController, ToastController } from '.';
 import { visit as turboVisit, type TurboVisitEvent } from '@hotwired/turbo';
 import { onToggleSidebar } from '../utils';
 
@@ -15,9 +14,6 @@ enum DashboardTab {
 
 export default class DashboardController extends Controller {
   static outlets = ['modal', 'toast'];
-  declare readonly modalOutlet: ModalController;
-  declare readonly toastOutlet: ToastController;
-
   static targets = [
     'sidebar',
     'tab', 
@@ -37,40 +33,43 @@ export default class DashboardController extends Controller {
     'visitors',
     'activity',
   ];
-  declare readonly sidebarTargets: HTMLDivElement[];
-  declare readonly tabTargets: HTMLAnchorElement[];
-  declare readonly tabContentTarget: HTMLDivElement;
-  declare readonly tabPanelTargets: HTMLDivElement[];
-  declare readonly customerWinsTarget: HTMLDivElement;
-  declare readonly customerWinsTabTarget: HTMLAnchorElement;
-  declare readonly customerWinsSearchSelectTarget: TomSelectInput;
-  declare readonly contributionsTarget: HTMLDivElement;
-  declare readonly contributionsTabTarget: HTMLAnchorElement;
-  declare readonly contributionsSearchSelectTarget: TomSelectInput;
-  declare readonly storiesTarget: HTMLDivElement;
-  declare readonly storyTarget: HTMLDivElement;
-  declare readonly promotedStoriesTarget: HTMLDivElement;
-  declare readonly promotedStoriesTabTarget: HTMLAnchorElement;
-  declare readonly promotedStoriesSearchSelectTarget: TomSelectInput;
-  declare readonly visitorsTarget: HTMLDivElement;
-  declare readonly activityTarget: HTMLDivElement;
-
   static values = { 
     activeTab: { type: String, default: '' },
     filters: { type: Object, default: undefined }
   };    
-  declare activeTabValue: DashboardTab | null;
+
+  declare readonly modalOutlet: ModalController;
+  declare readonly toastOutlet: ToastController;
   declare filtersValue: DashboardFilters | undefined;
-  
-  onPopStateOrTurboVisit = this.handleTabRestoration.bind(this);
-  spinnerTimers: { [key: string]: number } = { 
+  declare readonly sidebarTargets: HTMLElement[];
+  toggleSidebar = onToggleSidebar.bind(this);
+
+  private declare readonly tabTargets: HTMLAnchorElement[];
+  private declare readonly tabContentTarget: HTMLDivElement;
+  private declare readonly tabPanelTargets: HTMLDivElement[];
+  private declare readonly customerWinsTarget: HTMLDivElement;
+  private declare readonly customerWinsTabTarget: HTMLAnchorElement;
+  private declare readonly customerWinsSearchSelectTarget: TomSelectInput;
+  private declare readonly contributionsTarget: HTMLDivElement;
+  private declare readonly contributionsTabTarget: HTMLAnchorElement;
+  private declare readonly contributionsSearchSelectTarget: TomSelectInput;
+  private declare readonly storiesTarget: HTMLDivElement;
+  private declare readonly storyTarget: HTMLDivElement;
+  private declare readonly promotedStoriesTarget: HTMLDivElement;
+  private declare readonly promotedStoriesTabTarget: HTMLAnchorElement;
+  private declare readonly promotedStoriesSearchSelectTarget: TomSelectInput;
+  private declare readonly visitorsTarget: HTMLDivElement;
+  private declare readonly activityTarget: HTMLDivElement;
+  private declare activeTabValue: DashboardTab | null;
+  private readonly onPopStateOrTurboVisit = this.handleTabRestoration.bind(this);
+  private readonly spinnerTimers: { [key: string]: number } = { 
     prospect: 0,
     curate: 0,
     story: 0, 
     promote: 0,
     measure: 0 
   };
-  readyState = new Proxy(
+  private readyState = new Proxy(
     {
       customerWins: false,
       contributions: false,
@@ -82,9 +81,6 @@ export default class DashboardController extends Controller {
     },
     { set: this.handleChangeReadyState.bind(this) }
   )
-
-  initialize() {
-  }
   
   connect() {
     addEventListener('popstate', this.onPopStateOrTurboVisit);

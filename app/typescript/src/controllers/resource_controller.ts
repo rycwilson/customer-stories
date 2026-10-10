@@ -23,23 +23,6 @@ type SearchObject = { column: string, q: string, regEx: boolean, smartSearch: bo
 
 export default class ResourceController extends Controller<HTMLElement> {
   static outlets = ['dashboard'];
-  declare readonly dashboardOutlet: DashboardController;
-
-  static targets = [
-    'searchSelect', 
-    'displayOptionsBtn',
-    'datatable',
-    'tableNav',
-    'rowView'
-  ];
-  declare readonly searchSelectTarget: TomSelectInput;
-  declare readonly datatableTarget: HTMLDivElement;
-  declare readonly hasDatatableTarget: boolean;
-  declare readonly tableNavTarget: HTMLDivElement;
-  declare readonly displayOptionsBtnTarget: HTMLButtonElement;
-  declare readonly hasDisplayOptionsBtnTarget: boolean;
-  declare readonly rowViewTarget: HTMLElement;
-
   static values = {
     init: { type: Boolean, default: false },
     dataPath: String,
@@ -49,6 +32,23 @@ export default class ResourceController extends Controller<HTMLElement> {
     newRow: { type: Object, default: undefined },
     rowView: { type: Object, default: undefined }
   }
+  static targets = [
+    'searchSelect', 
+    'displayOptionsBtn',
+    'datatable',
+    'tableNav',
+    'rowView'
+  ];
+
+  declare readonly dashboardOutlet: DashboardController;
+  declare readonly searchSelectTarget: TomSelectInput;
+  declare readonly datatableTarget: HTMLDivElement;
+  declare readonly hasDatatableTarget: boolean;
+  declare readonly tableNavTarget: HTMLDivElement;
+  declare readonly displayOptionsBtnTarget: HTMLButtonElement;
+  declare readonly hasDisplayOptionsBtnTarget: boolean;
+  declare readonly rowViewTarget: HTMLElement;
+
   declare readonly initValue: boolean;
   declare readonly dataPathValue: string;
   declare filtersValue: ResourceFilters;

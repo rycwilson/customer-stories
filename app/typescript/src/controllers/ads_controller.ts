@@ -4,7 +4,6 @@ export default class AdsController extends FormController<AdsController> {
   static targets = [
     'shortHeadlineSubmitBtn',
     'imageRequirements', 
-    'imageCard',
     'defaultImageCard',
     'newImageCard', 
     'newLogoCard',
@@ -13,20 +12,19 @@ export default class AdsController extends FormController<AdsController> {
     'requirementsHelpBlock',
     'activeCollectionInput'
   ];
-  declare readonly shortHeadlineInputTarget: HTMLInputElement;
-  declare readonly shortHeadlineSubmitBtnTarget: HTMLButtonElement;
-  declare readonly imageRequirementsTargets: HTMLAnchorElement[];
-  declare readonly imageCardTargets: HTMLLIElement[];
-  declare readonly defaultImageCardTargets: HTMLLIElement[];
-  declare readonly hasDefaultImageCardTargets: boolean;
-  declare readonly newImageCardTarget: HTMLLIElement;
-  declare readonly newLogoCardTarget: HTMLLIElement;
-  declare readonly defaultInputTargets: HTMLInputElement[];
-  declare readonly destroyInputTargets: HTMLInputElement[];
-  declare readonly requirementsHelpBlockTargets: HTMLSpanElement[];
-  declare readonly activeCollectionInputTarget: HTMLInputElement;
 
-  validatedShortHeadlineHandler = this.onValidatedShortHeadline.bind(this);
+  private declare readonly shortHeadlineSubmitBtnTarget: HTMLButtonElement;
+  private declare readonly imageRequirementsTargets: HTMLAnchorElement[];
+  private declare readonly defaultImageCardTargets: HTMLLIElement[];
+  private declare readonly hasDefaultImageCardTargets: boolean;
+  private declare readonly newImageCardTarget: HTMLLIElement;
+  private declare readonly newLogoCardTarget: HTMLLIElement;
+  private declare readonly defaultInputTargets: HTMLInputElement[];
+  private declare readonly destroyInputTargets: HTMLInputElement[];
+  private declare readonly requirementsHelpBlockTargets: HTMLSpanElement[];
+  private declare readonly activeCollectionInputTarget: HTMLInputElement;
+
+  // validatedShortHeadlineHandler = this.onValidatedShortHeadline.bind(this);
   onShownTab = this.handleShownTab.bind(this);
 
   connect() {
@@ -35,14 +33,14 @@ export default class AdsController extends FormController<AdsController> {
     // jquery event listeners necessary for hooking into jquery plugin events
     $(this.element)
       .on('shown.bs.tab', this.onShownTab)
-      .on('validated.bs.validator', this.validatedShortHeadlineHandler)
+      // .on('validated.bs.validator', this.validatedShortHeadlineHandler)
     this.imageRequirementsTargets.forEach(this.initPopover);
   }
 
   disconnect() {
     $(this.element)
       .off('shown.bs.tab', this.onShownTab)
-      .off('validated.bs.validator', this.validatedShortHeadlineHandler)
+      // .off('validated.bs.validator', this.validatedShortHeadlineHandler)
     super.disconnect();
   }
 
@@ -50,13 +48,13 @@ export default class AdsController extends FormController<AdsController> {
     this.element.requestSubmit()
   }
 
-  onValidatedShortHeadline({ relatedTarget: input }: { relatedTarget: HTMLInputElement }) {
-    if (input.name.includes('short_headline')) {
-      const hasNotChanged = input.value === input.dataset.initialValue;
-      const hasErrors = $(input).data()['bs.validator.errors'].length > 0;
-      this.shortHeadlineSubmitBtnTarget.classList.toggle('hidden', hasNotChanged || hasErrors);
-    }
-  }
+  // onValidatedShortHeadline({ relatedTarget: input }: { relatedTarget: HTMLInputElement }) {
+  //   if (input.name.includes('short_headline')) {
+  //     const hasNotChanged = input.value === input.dataset.initialValue;
+  //     const hasErrors = $(input).data()['bs.validator.errors'].length > 0;
+  //     this.shortHeadlineSubmitBtnTarget.classList.toggle('hidden', hasNotChanged || hasErrors);
+  //   }
+  // }
 
   handleShownTab() {
     this.requirementsHelpBlockTargets.forEach(span => span.classList.toggle('hidden'));

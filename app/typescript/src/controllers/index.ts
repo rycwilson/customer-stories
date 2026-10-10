@@ -141,6 +141,7 @@ application.register('table-display-options', TableDisplayOptionsController);
 
 import ToastController from './toast_controller.js';
 application.register('toast', ToastController);
+export type { default as ToastController } from './toast_controller.js';
 
 import TomselectController from './tomselect_controller.js';
 application.register('tomselect', TomselectController);
