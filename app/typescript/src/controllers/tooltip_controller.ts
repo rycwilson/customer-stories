@@ -2,8 +2,8 @@ import { Controller } from '@hotwired/stimulus';
 import { debounce } from '../utils';
 
 interface TooltipOptions {
-  title: string,
-  container: string,
+  title?: string,
+  container?: string,
   placement?: string,
 }
 
@@ -12,26 +12,29 @@ const baseOptions: TooltipOptions = { title: 'I am a tooltip', container: 'body'
 export default class TooltipController extends Controller {
   static values = {
     enabled: { type: Boolean, default: true },
-    options: { type: Object, default: {} }
+    options: Object
   }
-  declare enabledValue: boolean;
-  declare optionsValue: TooltipOptions;
 
-  declare sidebar: HTMLElement | null;
-  declare sidebarObserver: MutationObserver | undefined;
+  private declare enabledValue: boolean;
+  private declare optionsValue: TooltipOptions;
+  private declare sidebar: HTMLElement | null;
+  private declare sidebarObserver: MutationObserver | undefined;
 
-  get tooltipElement() {
+  private get tooltipElement() {
     return $(this.element).data('bs.tooltip').$tip;
   }
 
-  get hasTooltip() {
+  private get hasTooltip() {
     return !!$(this.element).data('bs.tooltip');
   }
 
   connect() {
     this.sidebar = this.element.closest<HTMLElement>('.sidebar');
-    if (this.enabledValue) this.init();
-    if (this.sidebar) this.watchSidebarForChanges();
+    if (this.sidebar) {
+      this.watchSidebarForChanges();
+    } else if (this.enabledValue) {
+      this.init();
+    }
   }
 
   disconnect() {
@@ -49,17 +52,18 @@ export default class TooltipController extends Controller {
 
   enabledValueChanged(shouldEnable: boolean, wasEnabled: boolean | undefined) {
     if (wasEnabled === undefined) return; // ignore the default assignment
-    
+
     if (shouldEnable && !this.hasTooltip) {
       this.init();
     } else {
+      console.log('destroying...')
       $(this.element).tooltip('destroy');
     }
   }
 
-  optionsValueChanged(_options: TooltipOptions, oldValue: TooltipOptions | undefined) {
-    if (oldValue === undefined) return; // ignore the default assignment
-
+  optionsValueChanged(options: TooltipOptions, prevOptions: TooltipOptions) {
+    if (Object.keys(prevOptions).length === 0) return; // ignore the initial assignment
+    
     $(this.element).tooltip('destroy');
     this.init();
   }
