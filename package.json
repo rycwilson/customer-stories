@@ -49,9 +49,8 @@
     "bootstrap-sass": "3.3.6",
     "bootstrap-switch": "3.3.4",
     "css-element-queries": "^1.0.2",
-    "datatables.net-bs": "^1.12.1",
-    "datatables.net-plugins": "^1.13.6",
-    "datatables.net-rowgroup-bs": "^1.4.0",
+    "datatables.net-bs": "1.13.11",
+    "datatables.net-rowgroup-bs": "1.4.1",
     "flot": "^0.8.3",
     "flot-orderbars": "^1.0.0",
     "font-awesome": "^4.7.0",
@@ -103,7 +102,13 @@
     "vitest": "~>4.0"
   },
   "overrides": {},
+  "resolutions": {
+    "jquery": "3.7.1",
+    "datatables.net": "1.13.11",
+    "datatables.net-rowgroup": "1.4.1"
+  },
   "notes": {
+    "datatatables.net-rowgroup-bs": "Pinned to 1.4 for compatibility with datatables 1",
     "jquery": "Do not upgrade to 4.0.0 as this will cause several libraries to break",
     "blueimp-file-upload": "The patch in patches/ removes a nested version of jquery-ui that conflicted with the version of jquery-ui already in use",
     "bootstrap-switch": "3.3.4 is the last version that works with bootstrap 3: https://github.com/Bttstrp/bootstrap-switch/issues/717"

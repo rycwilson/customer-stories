@@ -5,7 +5,7 @@ import type ContributionsController from './contributions_controller';
 import type PromotedStoriesController from './promoted_stories_controller';
 import DataTable from 'datatables.net-bs';
 import type { Api, Config } from 'datatables.net';
-// import 'datatables.net-rowgroup';
+import 'datatables.net-rowgroup-bs';
 import { deleteRow } from '../tables';
 
 interface SearchParams {
