@@ -442,12 +442,6 @@ Lint/EmptyFile:
   Exclude:
     - 'lib/tasks/jobs.rake'
 
-# Offense count: 1
-# Configuration parameters: AllowedParentClasses.
-Lint/MissingSuper:
-  Exclude:
-    - 'app/components/image_card_component.rb'
-
 # Offense count: 2
 # Configuration parameters: AllowedMethods, AllowedPatterns.
 Lint/NestedMethodDefinition:

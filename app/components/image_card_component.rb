@@ -23,6 +23,7 @@ class ImageCardComponent < ViewComponent::Base
     selectable: false,
     selected: false
   )
+    super()
     if image_object[:type].present? && !collection
       collection = image_object[:type].split(/(?=[A-Z])/).last.downcase.pluralize
     end
