@@ -12,6 +12,7 @@
   = spinner_html.html_safe
 
   .company__container.container-fluid
+
     = render(SidebarComponent.new( \
         'dashboard', active_tab:, collapsed: sidebar_collapsed)) do |component|
       - [ ['#visitors', 'fa-bar-chart', 'Visitors'],
@@ -26,28 +27,28 @@
     .company__main
       .tab-content
 
-        #visitors.tab-pane {
-          class=('active in' if active_tab == '#visitors') 
-          data-dashboard-target="visitors"
-          data-resource-name="visitors"
-          data-controller="visitors"
-          data-visitors-dashboard-outlet=".dashboard"
-          data-visitors-data-path-value=company_visitors_path(company)
-          data-visitors-filters-value=@visitors_filters.to_json
-          data-visitors-display-options-html-value=visitors_display_options_html(company)
-          aria-labelledby="visitors-tab"
-          role="tabpanel" }
-
+        = tag.div(id: 'visitors',
+                  class: "tab-pane #{'active in' if active_tab == '#visitors'}",
+                  role: 'tabpanel',
+                  aria_labelledby: 'visitors-tab',
+                  data: { \
+                    dashboard_target: 'visitors',
+                    resource_name: 'visitors',
+                    controller: 'visitors',
+                    visitors_dashboard_outlet: '.dashboard',
+                    visitors_data_path_value: company_visitors_path(company),
+                    visitors_filters_value: @visitors_filters,
+                    visitors_display_options_html_value: visitors_display_options_html(company) })
           = render('companies/measure/visitors', company:)
 
-        #activity.tab-pane {
-          class=('active in' if active_tab == '#activity')
-          data-dashboard-target="activity"
-          data-resource-name="activity"
-          data-controller="activity"
-          data-activity-dashboard-outlet=".dashboard"
-          data-activity-filters-value={ 'curator': curator&.id }.to_json
-          aria-labelledby="activity-tab"
-          role="tabpanel" }
-
+        = tag.div(id: 'activity',
+                  class: "tab-pane #{'active in' if active_tab == '#activity'}",
+                  role: 'tabpanel',
+                  aria_labelledby: 'activity-tab',
+                  data: { \
+                    dashboard_target: 'activity',
+                    resource_name: 'activity',
+                    controller: 'activity',
+                    activity_dashboard_outlet: '.dashboard',
+                    activity_filters_value: { curator: curator&.id } })
           = render('companies/measure/activity')

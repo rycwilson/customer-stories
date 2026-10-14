@@ -13,14 +13,14 @@
     label.control-label Group 
     div
       - [['1', 'Customer'], ['', 'None']].each do |(column, label_text)|
+        - checked = (column == row_group_column) || (column.blank? && row_group_column.nil?)
         .radio 
           label
             = tag.input( \
                 type: 'radio',
                 name: 'customer-wins-row-group-column',
                 value: column,
-                checked: \
-                  (true if (column == row_group_column) || (column.blank? && row_group_column.nil?)))
+                checked: )
             = label_text
 
   .form-group data-action="change->table-display-options#handleChangeFilter"
