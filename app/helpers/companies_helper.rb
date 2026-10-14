@@ -5,20 +5,6 @@ module CompaniesHelper
     escape_once(render('invitation_templates/inline_select', { company: }))
   end
 
-  def nav_link_tooltip_options(title)
-    {
-      title:,
-      placement: 'right',
-      delay: { show: 700, hide: 0 },
-      template: <<~HTML.squish
-        <div class="tooltip" role="tooltip">
-          <!-- <div class="tooltip-arrow"></div> -->
-          <div class="tooltip-inner"></div>
-        </div>
-      HTML
-    }
-  end
-
   def cta_item_text(cta)
     meta = [cta.type == 'CtaLink' ? 'LINK' : 'FORM', cta.primary? ? 'MAIN' : nil].compact.join(', ')
     "<small class=\"list-group-item__meta\">[ #{meta} ]</small>&nbsp;&nbsp;".html_safe + cta.description

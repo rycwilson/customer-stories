@@ -2,46 +2,22 @@
 
 main.company__container.container-fluid.hidden-xs data-controller="company-settings"
 
-  = tag.div(class: ['sidebar', 'sidebar--collapsed': @sidebar_collapsed],
-            data: { company_settings_target: 'sidebar' })
-    .sidebar__toggle
-      .thingy
-      button.btn.btn-default type="button" data-action="company-settings#toggleSidebar"
-        i.fa.fa-bars
-
-    / no active tab set here; it will be set by the client based on page fragment identifier
-    ul.nav data-controller="nav-list" role="tablist"
-      - unless @company.new_record?
-        - [ ['#contributor-invitations-panel', 'fa-envelope-o', 'Contributor Invitations'],
-            ['#contributor-prompts-panel', 'fa-lightbulb-o', 'Contributor Prompts'],
-            ['#website-plugin-panel', 'fa-plug', 'Website Plugin'],
-            ['#cta-links-forms-panel', 'fa-hand-pointer-o', 'CTA Links & Forms'],
-            ['#tags-panel', 'fa-tags', 'Tags'] ].each do |panel_id, icon_class, label| 
-          li role="presentation"
-            = tag.a( \
-                href: panel_id,
-                role: 'tab',
-                data: { \
-                  toggle: 'tab',
-                  company_settings_target: 'tab',
-                  nav_list_target: 'tab',
-                  controller: 'tooltip',
-                  tooltip_options_value: nav_link_tooltip_options(label) }) do 
-              i.fa.fa-fw class=icon_class
-              span = label
-      
-      li role="presentation"
-        = tag.a( \
-            href: '#account-panel',
-            role: 'tab',
-            data: { \
-              toggle: 'tab',
-              company_settings_target: 'tab',
-              nav_list_target: 'tab',
-              controller: 'tooltip',
-              tooltip_options_value: nav_link_tooltip_options('Account Settings') }) do 
-          i.fa.fa-fw.fa-gear
-          span Account Settings
+  / No active tab set here; it will be set by the client based on page fragment identifier
+  = render(SidebarComponent.new( \
+      'company-settings', collapsed: @sidebar_collapsed)) do |component|
+    - [ ['#contributor-invitations-panel', 'fa-envelope-o', 'Contributor Invitations'],
+        ['#contributor-prompts-panel', 'fa-lightbulb-o', 'Contributor Prompts'],
+        ['#website-plugin-panel', 'fa-plug', 'Website Plugin'],
+        ['#cta-links-forms-panel', 'fa-hand-pointer-o', 'CTA Links & Forms'],
+        ['#tags-panel', 'fa-tags', 'Tags'],
+        ['#account-panel', 'fa-gear', 'Account Settings'] ] \
+        .each do |panel_selector, icon_class, label_text|
+      - next if @company.new_record? && panel_selector != '#account-panel'
+      - component.with_tab( \
+          panel_selector:,
+          icon_class:,
+          label_text:,
+          data: { company_settings_target: 'tab', nav_list_target: 'tab' })
 
   .company__main
     .tab-content

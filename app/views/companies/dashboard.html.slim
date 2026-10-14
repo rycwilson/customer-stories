@@ -16,7 +16,8 @@
              company: @company,
              curator: @curator,
              workflow_stage: @workflow_stage,
-             active_tab: @prospect_tab)
+             active_tab: @prospect_active_tab,
+             sidebar_collapsed: @sidebar_collapsed)
 
     = render('companies/dashboard/curate',
              company: @company,
@@ -27,10 +28,12 @@
              company: @company,
              curator: @curator,
              workflow_stage: @workflow_stage,
-             active_tab: @promote_tab)
+             active_tab: @promote_active_tab,
+             sidebar_collapsed: @sidebar_collapsed)
 
     = render('companies/dashboard/measure',
              company: @company,
              curator: @curator,
              workflow_stage: @workflow_stage,
-             active_tab: @measure_tab)
+             active_tab: @measure_active_tab,
+             sidebar_collapsed: @sidebar_collapsed)

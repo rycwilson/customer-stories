@@ -2,6 +2,9 @@
 
 class CompaniesController < ApplicationController
   before_action :set_company, except: %i[new create promote get_curators get_invitation_templates]
+  before_action(only: [:show, :edit]) do 
+    @sidebar_collapsed = cookies['csp-sidebar-collapsed'].present?
+  end
 
   def new
     if current_user&.company.present?
@@ -16,10 +19,9 @@ class CompaniesController < ApplicationController
   def show
     set_curator
     @workflow_stage = params[:workflow_stage]
-    @prospect_tab = cookies['csp-prospect-tab'] || '#customer-wins'
-    @promote_tab = cookies['csp-promote-tab'] || '#promoted-stories'
-    @measure_tab = cookies['csp-measure-tab'] || '#visitors'
-    @sidebar_collapsed = cookies['csp-sidebar-collapsed'].present?
+    @prospect_active_tab = cookies['csp-prospect-tab'] || '#customer-wins'
+    @promote_active_tab = cookies['csp-promote-tab'] || '#promoted-stories'
+    @measure_active_tab = cookies['csp-measure-tab'] || '#visitors'
     # @recent_activity = @company.recent_activity(30)
     # @story_views_30_day_count = @company.page_views.story.since(30.days.ago).count
     
@@ -36,7 +38,6 @@ class CompaniesController < ApplicationController
   end
 
   def edit
-    @sidebar_collapsed = cookies['csp-sidebar-collapsed'].present?
     render :settings
   end
 

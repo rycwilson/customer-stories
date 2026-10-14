@@ -12,30 +12,16 @@
   = spinner_html.html_safe
 
   .company__container.container-fluid
-    = tag.div(class: ['sidebar', 'sidebar--collapsed': @sidebar_collapsed],
-              data: { dashboard_target: 'sidebar' })
-      .sidebar__toggle
-        .thingy
-        button.btn.btn-default type="button" data-action="dashboard#toggleSidebar"
-          i.fa.fa-bars
-
-      ul.nav role="tablist"
-        - [ ['#visitors', 'fa-bar-chart', 'Visitors'],
-            ['#activity', 'fa-line-chart', 'Recent Activity'] ].each do |panel_id, icon_class, label|
-          
-          li class="#{'active' if active_tab == panel_id}" role="presentation"
-            = tag.a(href: panel_id,
-                    role: 'tab',
-                    data: { \
-                      toggle: 'tab',
-                      action: 'dashboard#setNavCookie',
-                      controller: 'tooltip',
-                      tooltip_options_value: nav_link_tooltip_options(label) },
-                    aria: { \
-                      controls: panel_id.sub('#', ''),
-                      expanded: (active_tab == panel_id) }) do
-              i.fa.fa-fw class=icon_class
-              span = label
+    = render(SidebarComponent.new( \
+        'dashboard', active_tab:, collapsed: sidebar_collapsed)) do |component|
+      - [ ['#visitors', 'fa-bar-chart', 'Visitors'],
+          ['#activity', 'fa-line-chart', 'Recent Activity'] ] \
+          .each do |panel_selector, icon_class, label_text|
+        - component.with_tab( \
+            panel_selector:,
+            icon_class:,
+            label_text:,
+            data: { action: 'dashboard#setNavCookie', nav_list_target: 'tab' })
 
     .company__main
       .tab-content

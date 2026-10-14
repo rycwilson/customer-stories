@@ -1,39 +1,25 @@
 = tag.div(id: 'promote',
-          class: "tab-pane #{'active' if workflow_stage == 'promote'}",
+          class: ['tab-pane', active: workflow_stage == 'promote'],
           role: 'tabpanel',
           data: { \
             dashboard_target: 'tabPanel',
             action: [ \
               'promoted-stories:loading->dashboard#handleResourceLoading',
-              'promoted-stories:ready->dashboard#handleResourceReady'].join(' ') }) do
+              'promoted-stories:ready->dashboard#handleResourceReady' ].join(' ') }) do
 
   = spinner_html.html_safe
 
   .company__container.container-fluid
-    = tag.div(class: ['sidebar', 'sidebar--collapsed': @sidebar_collapsed],
-              data: { dashboard_target: 'sidebar' })
-      .sidebar__toggle
-        .thingy
-        button.btn.btn-default type="button" data-action="dashboard#toggleSidebar"
-          i.fa.fa-bars
-
-      ul.nav data-controller="nav-list"
-        - [ ['#promoted-stories', 'fa-bullhorn', 'Promoted Stories'],
-            ['#promote-settings', 'fa-gear', 'Settings'] ].each do |panel_id, icon_class, label|
-            
-          li class="#{'active' if active_tab == panel_id}" role="presentation"
-            = tag.a(href: panel_id,
-                    role: 'tab',
-                    data: { \
-                      toggle: 'tab',
-                      action: 'dashboard#setNavCookie',
-                      controller: 'tooltip',
-                      tooltip_options_value: nav_link_tooltip_options(label) },
-                    aria: { \
-                      controls: panel_id.sub('#', ''),
-                      expanded: (active_tab == panel_id) }) do
-              i.fa.fa-fw class=icon_class
-              span = label
+    = render(SidebarComponent.new( \
+        'dashboard', active_tab:, collapsed: sidebar_collapsed)) do |component|
+      - [ ['#promoted-stories', 'fa-bullhorn', 'Promoted Stories'],
+          ['#promote-settings', 'fa-gear', 'Settings'] ] \
+          .each do |panel_selector, icon_class, label_text|
+        - component.with_tab( \
+            panel_selector:,
+            icon_class:,
+            label_text:,
+            data: { action: 'dashboard#setNavCookie', nav_list_target: 'tab' })
                   
     .company__main
       .tab-content
@@ -61,14 +47,12 @@
                         controller: 'datatable',
                         datatable_resource_ctrl_id_value: 'promoted-stories',
                         promote_tr: company.promote_tr }) do
-
             = render('companies/shared/table_controls',
                      company:, 
                      caption: 'Promoted Stories',
                      resource_name: 'promotedStories',
                      resource_ctrl_id: 'promoted-stories',
                      search_options: { 'Customer' => company.customers.map(&:select_option) })
-
             thead
               tr
                 th
@@ -79,5 +63,8 @@
                 th Curator
                 th
 
-        #promote-settings.tab-pane class=('active' if active_tab == '#promote-settings')
+        = tag.div(id: 'promote-settings',
+                  class: ['tab-pane', active: active_tab == '#promote-settings'],
+                  aria_labelledby: 'promote-settings-tab',
+                  role: 'tabpanel',)
           = render('companies/dashboard/gads_form', company:, active_collection: 'images')
