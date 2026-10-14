@@ -11,7 +11,7 @@
   = spinner_html.html_safe
 
   .company__container.container-fluid
-    = tag.div(class: ['sidebar', 'sidebar--collapsed': @sidebar_collapsed],
+    = tag.div(class: ['sidebar', 'sidebar--collapsed': sidebar_collapsed],
               data: { dashboard_target: 'sidebar' })
       .sidebar__toggle
         .thingy
@@ -32,7 +32,8 @@
             aria-controls="customer-wins"
             aria-expanded="#{active_tab == '#customer-wins' ? 'true' : 'false'}"
             role="tab" }
-            i.fa.fa-fw.fa-rocket
+            /i.fa.fa-fw.fa-rocket
+            div
             span Customer Wins
             
         li class=('active' if active_tab == '#contributions')

@@ -70,6 +70,17 @@
         // border-left-color: $light-gray;
         background-color: darken($blueish-gray-lighter, 4%);
         color: $gray-darker;
+
+        div {
+          background: no-repeat center/22.5px url('icons/stories_icon_222.png');
+        }
+      }
+
+      div {
+        flex: 0 0 auto;
+        width: calc(#{$icon-width} + #{2 * $icon-margin});
+        height: 100%;
+        background: no-repeat center/22.5px url('icons/stories_icon_555.png');
       }
   
       i {
@@ -92,6 +103,10 @@
         background-color: $blueish-gray-lighter;
         font-weight: 600;
         color: $brand-primary;
+      }
+
+      div {
+        background: no-repeat center/22.5px url('icons/stories_icon_0372aa.png');
       }
     }
   }
