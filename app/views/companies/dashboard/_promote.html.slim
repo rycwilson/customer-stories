@@ -40,7 +40,7 @@
       
         = tag.div( \
             id: 'promoted-stories',
-            class: "tab-pane resource-ctrl #{'active' if active_tab == '#promoted-stories'}",
+            class: ['tab-pane', active: active_tab == '#promoted-stories'],
             aria_labelledby: 'promoted-stories-tab',
             role: 'tabpanel',
             data: { \
@@ -49,23 +49,25 @@
               controller: 'promoted-stories',
               promoted_stories_dashboard_outlet: '.dashboard',
               promoted_stories_data_path_value: company_adwords_ads_path(company),
-              promoted_stories_row_group_data_source_value: @row_group_data_source[:promoted_stories],
+              promoted_stories_row_group_column_value: @row_group_columns[:promoted_stories],
               promoted_stories_filters_value: { 'curator': curator&.id },
-              promoted_stories_display_options_html_value: promoted_stories_display_options_html(company) }) do
+              promoted_stories_display_options_html_value: \
+                promoted_stories_display_options_html(company, @row_group_columns[:promoted_stories]) }) do
 
-          table#promoted-stories-table.table {
-            data-promoted-stories-target="datatable"
-            data-controller="datatable"
-            data-datatable-promoted-stories-outlet="#promoted-stories"
-            data-promote-tr="#{company.promote_tr}" }
+          = tag.table(id: 'promoted-stories-table',
+                      class: 'table',
+                      data: { \
+                        promoted_stories_target: 'datatable',
+                        controller: 'datatable',
+                        datatable_resource_ctrl_id_value: 'promoted-stories',
+                        promote_tr: company.promote_tr }) do
 
-            = render( \
-                'companies/shared/table_controls',
-                { company:, 
-                  caption: 'Promoted Stories',
-                  resource_name: 'promotedStories',
-                  resource_ctrl_id: 'promoted-stories',
-                  search_options: { 'Customer' => company.customers.map(&:select_option) } })
+            = render('companies/shared/table_controls',
+                     company:, 
+                     caption: 'Promoted Stories',
+                     resource_name: 'promotedStories',
+                     resource_ctrl_id: 'promoted-stories',
+                     search_options: { 'Customer' => company.customers.map(&:select_option) })
 
             thead
               tr

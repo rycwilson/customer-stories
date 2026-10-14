@@ -1,8 +1,8 @@
 # frozen_string_literal: true
 
 module AdwordsAdsHelper
-  def promoted_stories_display_options_html(company)
-    html = render('adwords_ads/display_options', company:)
+  def promoted_stories_display_options_html(company, row_group_column)
+    html = render('adwords_ads/display_options', company:, row_group_column:)
     escape_once(html)
   end
 

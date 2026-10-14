@@ -1,12 +1,8 @@
 import { Controller } from '@hotwired/stimulus';
-import { debounce } from '../utils';
-import type CustomerWinsController from './customer_wins_controller';
-import type ContributionsController from './contributions_controller';
-import type PromotedStoriesController from './promoted_stories_controller';
 import DataTable from 'datatables.net-bs';
 import type { Api, Config } from 'datatables.net';
 import 'datatables.net-rowgroup-bs';
-import { deleteRow } from '../tables';
+import { baseConfig, deleteRow } from '../tables';
 
 interface SearchParams {
   filters: { column: string, q: string, regEx: boolean, smartSearch: boolean }[],
@@ -15,126 +11,81 @@ interface SearchParams {
 }
 
 export default class DatatableController extends Controller<HTMLTableElement> {
-  static outlets = ['customer-wins', 'contributions', 'promoted-stories'];
-  declare readonly hasCustomerWinsOutlet: boolean;
-  declare readonly customerWinsOutlet: CustomerWinsController;
-  declare readonly hasContributionsOutlet: boolean;
-  declare readonly contributionsOutlet: ContributionsController;
-  declare readonly hasPromotedStoriesOutlet: boolean;
-  declare readonly promotedStoriesOutlet: PromotedStoriesController;
-
-  // static targets = ['row'];   // rowTargets exclude row groups
-  // declare readonly rowTargets: HTMLTableRowElement[];
-
   static values = { 
     init: { type: Boolean, default: false },
     searchParams: { type: Object, default: undefined },
     rowGroupEnabled: { type: Boolean, default: true },
-    rowGroupDataSource: String,
+    rowGroupColumn: { type: Number, default: undefined },
     reload: { type: String, default: undefined },
     redraw: { type: Boolean, default: undefined },
     page: { type: Number, default: undefined },
-    rowLookup: { type: Object, default: undefined }
+    rowLookup: { type: Object, default: undefined },
+    resourceCtrlId: String
   };
-  declare initValue: boolean;
-  declare searchParamsValue: SearchParams;
-  declare rowGroupDataSourceValue: string;
-  declare rowGroupEnabledValue: boolean;
-  declare reloadValue: string;
-  declare redrawValue: boolean;
-  declare pageValue: number;
-  declare rowLookupValue: { id?: number, position?: number };
+  
+  // static targets = ['row'];   // rowTargets exclude row groups
+  // declare readonly rowTargets: HTMLTableRowElement[];
 
   declare dt: Api<any>;
+  private declare readonly initValue: boolean;
+  private declare readonly searchParamsValue: SearchParams;
+  private declare readonly rowGroupEnabledValue: boolean;
+  private declare readonly rowGroupColumnValue: number;
+  private declare reloadValue: string;
+  private declare redrawValue: boolean;
+  private declare readonly pageValue: number;
+  private declare readonly rowLookupValue: { id?: number, position?: number };
+  private declare readonly resourceCtrlIdValue: string;
+
   declare searchDebounceTimer: number;
 
-  // NOTE: This may trigger multiple times, presumably due to datatables manipulation
+  // NOTE: This may trigger multiple times, presumably due to datatables DOM manipulation
   // connect() {
   // }
 
-  get resourceOutlet(): ResourceControllerWithDatatable {
-    if (this.hasCustomerWinsOutlet) return this.customerWinsOutlet;
-    if (this.hasContributionsOutlet) return this.contributionsOutlet;
-    if (this.hasPromotedStoriesOutlet) return this.promotedStoriesOutlet;
-    throw new Error('No valid resource outlet found.')
-  }
-
-  get baseConfig(): Config {
-    const ctrl = this;
-    return {
-      deferRender: true,
-      autoWidth: false,
-      dom: 'tip',
-      pageLength: 20,
-      drawCallback(this: JQuery<HTMLTableElement, any>, settings: object) {
-        // console.log(ctrl.resourceOutlet.identifier, 'draw')
-
-        this.find('th.sorting').each((i: number, th: HTMLTableCellElement) => {
-          th.removeEventListener('click', ctrl.handleColumnSort, true);
-          th.addEventListener('click', ctrl.handleColumnSort, true);
-        });
-        debounce(ctrl.clonePaginationComponents.bind(ctrl), 75)();
-        ctrl.dispatch('drawn');
-      },
-      initComplete(this: any, settings: object) {
-        // console.log(ctrl.resourceOutlet.identifier, 'init')
-
-        ctrl.dispatch('init', { detail: { dt: this.api() } });
-      }
-    }
-  };
-
-  get rowGroupColumnIndex(): number | undefined {
-    if (!this.rowGroupDataSourceValue) return;
-    
-    let columnName = this.rowGroupDataSourceValue.split('.')[0];
-    
-    // For looking up the column index, we must reference column names, not data properties,
-    // and the customer win column is still named 'success' due to select options e.g. 'success-1'
-    if (columnName === 'customer_win') columnName = 'success';
-
-    // TODO: Upgrade to datatables v2
-    // https://stackoverflow.com/questions/76804086
-    return this.dt.columns(`${columnName}:name`).indexes()[0];
-  }
-
   initValueChanged(shouldInit: boolean) {
-    if (shouldInit) {
-      this.dt = new DataTable(
-        this.element, 
-        { ...this.baseConfig, ...this.resourceOutlet.tableConfig }
-      );
-    }
+    if (!shouldInit) return;
+
+    this.dispatch('ready', {  detail: { construct: this.construct.bind(this) } })
+  }
+
+  construct(config: Config) {
+    this.dt = new DataTable(this.element, { ...baseConfig.bind(this)(), ...config });
   }
 
   searchParamsValueChanged(params: SearchParams) {
-    // console.log(this.resourceOutlet.identifier, params)
+    // console.log(this.resourceCtrlIdValue, params)
     clearTimeout(this.searchDebounceTimer);
     this.searchDebounceTimer = window.setTimeout(() => this.search(params), 200);
   }
 
-  rowGroupDataSourceValueChanged(source: string) {
-    // ResourceController will pass down the value when it connects.
-    // Don't handle the change unless the table is initialized.
+  rowGroupColumnValueChanged(column: number, prevColumn: number) {
+    if (this.resourceCtrlIdValue === 'customer-wins') console.log(column, prevColumn)
     if (!this.dt) return;
 
-    // Get either the only current sort (row group disabled), 
+    // Get either the only current sort (row groups disabled), 
     // or the current secondary sort (row groups enabled)
     const [sortColumnIndex, sortDirection] = this.dt.order().pop() as [number, 'asc' | 'desc'];
 
-    this.resourceOutlet.toggleColumns(this.dt, source);
-
-    if (this.rowGroupColumnIndex) {
+    if (column) {
+      const src = this.dt.column(column).dataSrc();
+      if (src instanceof Object && '_' in src) {
+        this.dt.rowGroup().dataSrc(src['_']);
+      } else {
+        console.error('Expected orthogonal data for row group change')
+        return;
+      }
       this.dt.rowGroup().enable();
-      this.dt.rowGroup().dataSrc(source);
       this.dt.order([
-        [this.rowGroupColumnIndex, sortColumnIndex === this.rowGroupColumnIndex ? sortDirection : 'asc'], 
+        [column, sortColumnIndex === column ? sortDirection : 'asc'], 
         [sortColumnIndex, sortDirection]
-      ]); 
+      ]);
+      this.dt.column(column).visible(false, false);
     } else {
       this.dt.rowGroup().disable();
       this.dt.order([[sortColumnIndex, sortDirection]]); // current sort
     }
+    if (prevColumn) this.dt.column(prevColumn).visible(true, false);
     // this.dt.draw();
   }
 
@@ -163,7 +114,7 @@ export default class DatatableController extends Controller<HTMLTableElement> {
   rowGroupEnabledValueChanged(shouldEnable: boolean) {
     if (!this.dt) return;
 
-    if (shouldEnable && this.rowGroupColumnIndex !== undefined) {
+    if (shouldEnable && this.rowGroupColumnValue) {
       this.dt.rowGroup().enable();
     } else {
       this.dt.rowGroup().disable();
@@ -271,7 +222,7 @@ export default class DatatableController extends Controller<HTMLTableElement> {
       page: Math.floor(index / this.dt.page.len()), 
       position: position || index + 1,
       turboFrame: { 
-        id: `edit-${this.resourceOutlet.identifier.slice(0, -1)}`,
+        id: `edit-${this.resourceCtrlIdValue.slice(0, -1)}`,
         src: data[index].edit_path 
       },
       actionsDropdownHtml: data[index].actions_dropdown_html

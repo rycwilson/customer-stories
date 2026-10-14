@@ -1,6 +1,7 @@
 import type { Config, Api } from 'datatables.net';
 // import 'datatables.net-rowgroup'; // see app/typescript/types/augmentations.d.ts
 import { trimHtml } from '../utils';
+import ContributorInvitationController from '../controllers/contributor_invitation_controller';
 
 enum Cols {
   Contributor = 1,
@@ -13,21 +14,9 @@ enum Cols {
   Story
 }
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-export function toggleColumnVisibility(dt: Api<any>, rowGroupDataSource: string) {
-  dt.column(Cols.Contributor)
-    .visible(rowGroupDataSource !== 'contributor.full_name');
-  dt.column(Cols.Customer)
-    .visible(rowGroupDataSource !== 'customer.name' && rowGroupDataSource !== 'customer_win.name');
-  dt.column(Cols.Win)
-    .visible(rowGroupDataSource !== 'customer_win.name');
-  dt.column(Cols.Role)
-    .visible(rowGroupDataSource !== 'invitation_template.name');
-}
-
 export function dataTableConfig(
   invitationTemplateSelectHtml: string,
-  rowGroupDataSource: string,
+  rowGroupColumn?: number,
   storyId?: number
 ): Config {
   if (storyId && !CSP['storyContributions']?.[storyId]) {
@@ -35,21 +24,6 @@ export function dataTableConfig(
   } else if (!storyId && !CSP.contributions) {
     console.error('Contributions data is not defined');
   }
-
-  const rowGroupColumn = storyId ? undefined : (() => {
-    switch (rowGroupDataSource) {
-      case 'contributor.full_name':
-        return Cols.Contributor;
-      case 'customer.name':
-        return Cols.Customer;
-      case 'customer_win.name':
-        return Cols.Win;
-      case 'invitation_template.name':
-        return Cols.Role;
-      default:
-        return undefined; // should not happen
-    }
-  })();
 
   return {
     data: storyId ? 
@@ -71,10 +45,10 @@ export function dataTableConfig(
     },
 
     order: (() => {
-      switch (rowGroupDataSource) {
-        case 'customer_win.name':
+      switch (rowGroupColumn) {
+        case Cols.Customer:
           return [[Cols.Customer, 'asc'], [Cols.Status, 'asc']];
-        case '':
+        case undefined:
           return [[Cols.Status, 'asc']];
         default:
           return [[rowGroupColumn!, 'asc'], [Cols.Status, 'asc']]
@@ -187,12 +161,7 @@ export function dataTableConfig(
       {
         targets: (() => {
           const targets = [Cols.Curator, Cols.Story, rowGroupColumn].filter(col => col);  
-          if (storyId) {
-            return [...targets, Cols.Customer, Cols.Win];
-          } else if (rowGroupColumn === Cols.Win) {
-            return [...targets, Cols.Customer];
-          }
-          return targets;
+          return storyId ? [...targets, Cols.Customer, Cols.Win] : targets;
         })() as number[],
         visible: false,
       },
@@ -217,8 +186,15 @@ export function dataTableConfig(
     ],
 
     rowGroup: { 
-      enable: !!rowGroupDataSource,
-      dataSrc: rowGroupDataSource,
+      enable: !!rowGroupColumn,
+      dataSrc: (() => {
+        switch (rowGroupColumn) {
+          case Cols.Contributor: return 'contributor.full_name';
+          case Cols.Customer: return 'customer.name';
+          case Cols.Win: return 'customer_win.name';
+          default: return undefined;
+        }
+      })(),
 
       // This function will run whenever the data source changes
       startRender: function (
@@ -238,10 +214,8 @@ export function dataTableConfig(
           }
           case 'customer_win.name': {
             const firstRowData: Contribution = rows.data()[0];
-            const { customer, customer_win: win, story } = firstRowData;
-            return wrapper(5, `
-              <span>${customer!.name}</span>
-              <span>&nbsp;&nbsp;&ndash;&nbsp;&nbsp;</span>
+            const { customer_win: win, story } = firstRowData;
+            return wrapper(6, `
               ${story ? 
                 `<a href="${story.edit_path}">${story.title}</a>` :
                 `<a 

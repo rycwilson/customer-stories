@@ -39,8 +39,8 @@ module SuccessesHelper
     }
   end
 
-  def customer_wins_display_options_html(company)
-    html = render('successes/display_options', company:)
+  def customer_wins_display_options_html(company, row_group_column)
+    html = render('successes/display_options', company:, row_group_column:)
     escape_once(html)
   end
 end

@@ -28,31 +28,34 @@ export default class ResourceController extends Controller<HTMLElement> {
     dataPath: String,
     filters: { type: Object },
     displayOptionsHtml: String,
+    rowGroupColumn: { type: Number, default: undefined },
     rowId: { type: Number, default: undefined },
     newRow: { type: Object, default: undefined },
     rowView: { type: Object, default: undefined }
   }
   static targets = [
     'searchSelect', 
-    'displayOptionsBtn',
+    'displayOptionsButton',
     'datatable',
     'tableNav',
     'rowView'
   ];
 
   declare readonly dashboardOutlet: DashboardController;
+
   declare readonly searchSelectTarget: TomSelectInput;
   declare readonly datatableTarget: HTMLDivElement;
   declare readonly hasDatatableTarget: boolean;
   declare readonly tableNavTarget: HTMLDivElement;
-  declare readonly displayOptionsBtnTarget: HTMLButtonElement;
-  declare readonly hasDisplayOptionsBtnTarget: boolean;
+  declare readonly displayOptionsButtonTarget: HTMLButtonElement;
+  declare readonly hasDisplayOptionsButtonTarget: boolean;
   declare readonly rowViewTarget: HTMLElement;
 
   declare readonly initValue: boolean;
   declare readonly dataPathValue: string;
   declare filtersValue: ResourceFilters;
   declare readonly displayOptionsHtmlValue: string;
+  declare readonly rowGroupColumnValue: number;
   declare rowIdValue: number;
   declare newRowValue: (
     { rowData: CustomerWinRowData | ContributionRowData, rowViewHtml: string } | undefined
@@ -87,7 +90,7 @@ export default class ResourceController extends Controller<HTMLElement> {
   }
 
   connect() {
-    if (this.hasDisplayOptionsBtnTarget) initDisplayOptions.call(this);
+    if (this.hasDisplayOptionsButtonTarget) initDisplayOptions.call(this);
   }
 
   initValueChanged(shouldInit: boolean) {
@@ -117,6 +120,10 @@ export default class ResourceController extends Controller<HTMLElement> {
     }
   }
 
+  initTable() {
+
+  }
+
   handleTableInfoCloned = handleTableInfoCloned.bind(this);
   handleTablePaginateCloned = handleTablePaginateCloned.bind(this);
 
@@ -133,9 +140,12 @@ export default class ResourceController extends Controller<HTMLElement> {
     }
   }
 
-  rowGroupDataSourceValueChanged(source: string) {
-    // Both will be ignored by the datatables controller if the table is not yet initialized
-    this.datatableTarget.setAttribute('data-datatable-row-group-data-source-value', source);
+  rowGroupColumnValueChanged(column: number | undefined, oldVal: number) {
+    if (column) {
+      this.datatableTarget.setAttribute('data-datatable-row-group-column-value', column.toString());
+    } else { 
+      this.datatableTarget.removeAttribute('data-datatable-row-group-column-value')
+    }
     this.datatableTarget.setAttribute('data-datatable-redraw-value', 'true');
   }
   
@@ -247,9 +257,9 @@ export default class ResourceController extends Controller<HTMLElement> {
   }
   
   validateNewItem(e: Event) {
-    const btn = <HTMLButtonElement>e.currentTarget;
+    const button = <HTMLButtonElement>e.currentTarget;
     if (this.filtersValue.curator && this.filtersValue.curator !== CSP.currentUser!.id) {
-      const label = btn?.ariaLabel?.match(/^New (?<label>.+)$/)?.groups?.label;
+      const label = button?.ariaLabel?.match(/^New (?<label>.+)$/)?.groups?.label;
       const mesg = `Can't add a new ${label || 'item'} when Curator preference is set to another user`;
       e.preventDefault();
       e.stopImmediatePropagation();

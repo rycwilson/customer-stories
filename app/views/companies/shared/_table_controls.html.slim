@@ -25,12 +25,11 @@
             |&nbsp;&nbsp;New
 
       - if has_preferences
-        / Use a button_tag here so that we may interpolate the data attribute
         = button_tag( \
             type: 'button', 
             class: 'btn btn-default', 
             aria: { label: 'Display Options' }, 
-            data: { "#{resource_ctrl_id}_target" => 'displayOptionsBtn' }) do
+            data: { "#{resource_ctrl_id}_target" => 'displayOptionsButton' }) do
             i.fa.fa-gear
             |&nbsp;&nbsp;Preferences
 

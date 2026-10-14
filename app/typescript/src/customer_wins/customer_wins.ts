@@ -11,19 +11,8 @@ enum Cols {
   Actions
 }
 
-export function toggleColumnVisibility(dt: Api<any>, rowGroupDataSource: string) {
-  dt.column(Cols.Customer).visible(!rowGroupDataSource);
-}
-
-export function dataTableConfig(rowGroupDataSource: string): Config {
+export function dataTableConfig(rowGroupColumn?: number): Config {
   if (!CSP.customerWins) console.error('Customer Wins data is not defined');
-
-  const rowGroupColumn = (() => {
-    switch (rowGroupDataSource) {
-      case 'customer.name': return Cols.Customer;
-      default: return undefined;
-    }
-  })();
 
   return {
     // Since table rows are generated dynamically and their associated actions dropdown
@@ -148,8 +137,13 @@ export function dataTableConfig(rowGroupDataSource: string): Config {
     ],
 
     rowGroup: {
-      enable: !!rowGroupDataSource,
-      dataSrc: rowGroupDataSource,
+      enable: !!rowGroupColumn,
+      dataSrc: (() => {
+        switch (rowGroupColumn) {
+          case Cols.Customer: return 'customer.name';
+          default: return undefined;
+        }
+      })(),
       startRender: function (
         this: { dataSrc: () => string, s: { dt: Api<any> } },
         rows: Api<any>, 

@@ -9,20 +9,21 @@
           ctrl_id: 'table-display-options',
           select_id: 'contributions-curator' )
 
-  .form-group data-action="change->table-display-options#handleChangeRowGroupDataSource"
+  .form-group data-action="change->table-display-options#handleRowGroupColumnChanged"
     label.control-label Group 
     div 
-      - [['contributor.full_name', 'Contributor'],
-         ['customer.name', 'Customer'],
-         ['customer_win.name', 'Customer Win'],
-         ['', 'None']].each do |(data_source, label_text)|
+      - [ ['1', 'Contributor'],
+          ['2', 'Customer'],
+          ['3', 'Customer Win'],
+          ['', 'None'] ].each do |(column, label_text)|
         .radio 
           label
-            input {
-              type="radio"
-              name="contributions-row-group-data-source"
-              value=data_source
-              data-table-display-options-target="rowGroupDataSourceInput" }
+            = tag.input( \
+                type: 'radio',
+                name: 'contributions-row-group-column',
+                value: column,
+                checked: \
+                  (true if column == row_group_column || column.blank? && row_group_column.nil?))
             = label_text
 
   .form-group data-action="change->table-display-options#handleChangeFilter"

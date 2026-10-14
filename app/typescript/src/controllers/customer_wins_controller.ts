@@ -1,22 +1,15 @@
 import type TableNavController from "./table_nav_controller";
 import ResourceController from "./resource_controller";
-import { dataTableConfig, toggleColumnVisibility } from '../customer_wins/customer_wins';
+import { dataTableConfig } from '../customer_wins/customer_wins';
 
 export default class CustomerWinsController extends ResourceController {
   static outlets = [...super.outlets, 'table-nav'];
   declare readonly tableNavOutlet: TableNavController;
 
-  static values = {
-    ... super.values, 
-    rowGroupDataSource: { type: String }
-  };
-  declare rowGroupDataSourceValue: 'customer.name' | '';
   declare filtersValue: CustomerWinsFilters;
 
-  toggleColumns = toggleColumnVisibility;
-
   get tableConfig() {
-    return dataTableConfig(this.rowGroupDataSourceValue);
+    return dataTableConfig(this.rowGroupColumnValue);
   }
 
   filtersValueChanged(newFilters: CustomerWinsFilters, oldFilters: CustomerWinsFilters) {

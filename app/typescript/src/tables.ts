@@ -1,13 +1,45 @@
 import type ResourceController from './controllers/resource_controller';
 import type DatatableController from './controllers/datatable_controller';
+import type { Config } from 'datatables.net';
 import { FetchRequest } from '@rails/request.js';
+import { debounce } from './utils';
 
-export function init(this: ResourceController) {
+export function baseConfig(this: DatatableController) {
+  const ctrl = this;
+  return {
+    deferRender: true,
+    autoWidth: false,
+    dom: 'tip',
+    pageLength: 20,
+    drawCallback(this: JQuery<HTMLTableElement, any>, _settings: object) {
+      // console.log(ctrl.resourceOutlet.identifier, 'draw')
+
+      this.find('th.sorting').each((i: number, th: HTMLTableCellElement) => {
+        th.removeEventListener('click', ctrl.handleColumnSort, true);
+        th.addEventListener('click', ctrl.handleColumnSort, true);
+      });
+      debounce(ctrl.clonePaginationComponents.bind(ctrl), 75)();
+      ctrl.dispatch('drawn');
+    },
+    initComplete(this: any, _settings: object) {
+      ctrl.dispatch('init-complete', { detail: { dt: this.api() } });
+    }
+  }
+};
+
+export function init(this: ResourceControllerWithDatatable) {
   if (!this.hasDatatableTarget) return Promise.reject('No table found');
 
   const table = this.datatableTarget;
-  return new Promise<void>((resolve: () => void) => {
-    table.addEventListener('datatable:init', resolve, { once: true });
+  return new Promise<void>((resolve: VoidFunction) => {
+    table.addEventListener(
+      'datatable:ready', 
+      (e: CustomEvent<{ construct: (config: Config) => void }>) => {
+        table.addEventListener('datatable:init-complete', resolve, { once: true });
+        e.detail.construct(this.tableConfig);
+      },
+      { once: true }
+    );
     table.setAttribute('data-datatable-init-value', 'true');
   });
 }
@@ -126,11 +158,11 @@ export function handlePaginateCloned(this: ResourceControllerWithDatatable, e: C
 }
 
 export function initDisplayOptions(this: ResourceController, isReset = false) {
-  const btn = this.displayOptionsBtnTarget;
+  const button = this.displayOptionsButtonTarget;
   if (isReset) {
-    $(btn).data()['bs.popover'].options.content = this.displayOptionsHtmlValue;
+    $(button).data()['bs.popover'].options.content = this.displayOptionsHtmlValue;
   } else {
-    $(btn).popover({
+    $(button).popover({
       content: this.displayOptionsHtmlValue,
       html: true,
       animation: false,

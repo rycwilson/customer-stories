@@ -6,7 +6,7 @@
     data: { \
       contributions_target: 'datatable',
       controller: 'datatable',
-      datatable_contributions_outlet: "#{story ? '#story-contributions' : '#contributions'}",
+      datatable_resource_ctrl_id_value: 'contributions',
       action: [ \
         'contribution:delete-row->datatable#deleteRow'].join(' ') }) do
 

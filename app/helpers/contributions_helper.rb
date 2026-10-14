@@ -45,8 +45,8 @@ module ContributionsHelper
     }
   end
 
-  def contributions_display_options_html(company)
-    html = render('contributions/display_options', company:)
+  def contributions_display_options_html(company, row_group_column)
+    html = render('contributions/display_options', company:, row_group_column:)
     escape_once(html)
   end
 end

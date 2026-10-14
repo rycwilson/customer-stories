@@ -1,6 +1,6 @@
 import type TableNavController from "./table_nav_controller";
 import ResourceController from './resource_controller';
-import { dataTableConfig, toggleColumnVisibility } from '../contributions/contributions';
+import { dataTableConfig } from '../contributions/contributions';
 
 export default class ContributionsController extends ResourceController {
   static outlets = [...super.outlets, 'table-nav'];
@@ -8,28 +8,18 @@ export default class ContributionsController extends ResourceController {
 
   static values = {
     ... super.values, 
-    rowGroupDataSource: { type: String, default: 'customer.name' },
     
     // For including an inline select in the table row (currently unused)
     invitationTemplateSelectHtml: { type: String, default: '' },
   };
   declare filtersValue: ContributionsFilters;
-  declare rowGroupDataSourceValue: (
-    'contributor.full_name' | 
-    'customer.name' | 
-    'customer_win.name' | 
-    'invitation_template.name' |
-    ''
-  );
   declare readonly invitationTemplateSelectHtmlValue: string;
-
-  toggleColumns = toggleColumnVisibility;
 
   get tableConfig() {
     const storyId = this.element.dataset.storyId ? +this.element.dataset.storyId : undefined;
     return dataTableConfig(
       this.invitationTemplateSelectHtmlValue,
-      this.rowGroupDataSourceValue,
+      this.rowGroupColumnValue,
       storyId
     );
   }

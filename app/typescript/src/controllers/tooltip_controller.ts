@@ -56,7 +56,6 @@ export default class TooltipController extends Controller {
     if (shouldEnable && !this.hasTooltip) {
       this.init();
     } else {
-      console.log('destroying...')
       $(this.element).tooltip('destroy');
     }
   }

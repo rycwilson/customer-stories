@@ -18,8 +18,6 @@ export default class TableDisplayOptionsController extends Controller {
 
   static targets = ['curatorSelect', 'rowGroupDataSourceInput'];
   declare readonly curatorSelectTarget: TomSelectInput;
-  declare readonly rowGroupDataSourceInputTargets: HTMLInputElement[];
-  declare readonly hasRowGroupDataSourceInputTarget: boolean;
 
   onClickAway = this.handleClickAway.bind(this);
 
@@ -33,7 +31,6 @@ export default class TableDisplayOptionsController extends Controller {
 
   connect() {
     this.setFilters();
-    if (this.hasRowGroupDataSourceInputTarget) this.setRowGroupDataSource();
 
     // Use capture to ensure that any other event handlers that may stop propagation
     // (e.g. column sorting on datatables) do not prevent this from firing.
@@ -46,12 +43,12 @@ export default class TableDisplayOptionsController extends Controller {
 
   handleChangeCurator({ target }: { target: TomSelectInput }) {
     this.handleChangeFilter({ target });
-    setTimeout(() => { this.dashboardOutlet.filtersValue = { curator: +target.value || null}; });
+    setTimeout(() => { this.dashboardOutlet.filtersValue = { curator: +target.value || null }; });
   }
 
-  handleChangeRowGroupDataSource({ target }: { target: HTMLInputElement }) {
-    (this.resourceOutlet as ResourceControllerWithDatatable).rowGroupDataSourceValue = target.value;
-    Cookies.set(`csp-${this.resourceOutlet.identifier}-row-group-data-source`, target.value);
+  handleRowGroupColumnChanged({ target }: { target: HTMLInputElement }) {
+    (this.resourceOutlet as ResourceControllerWithDatatable).rowGroupColumnValue = +target.value || undefined;
+    Cookies.set(`csp-${this.resourceOutlet.identifier}-row-group-column`, target.value);
   }
 
   // Filter keys are kebab-cased due to:
@@ -71,7 +68,7 @@ export default class TableDisplayOptionsController extends Controller {
   
   handleClickAway(e: Event) {
     const target = e.target as HTMLElement;
-    if (!this.element || this.element.contains(target) || this.resourceOutlet.displayOptionsBtnTarget.contains(target)) {
+    if (!this.element || this.element.contains(target) || this.resourceOutlet.displayOptionsButtonTarget.contains(target)) {
       return false;
     }
     // $(this.element).popover('hide')
@@ -79,7 +76,7 @@ export default class TableDisplayOptionsController extends Controller {
   }
 
   hide() {
-    this.resourceOutlet.displayOptionsBtnTarget.click();
+    this.resourceOutlet.displayOptionsButtonTarget.click();
   }
 
   setFilters() {
@@ -93,13 +90,6 @@ export default class TableDisplayOptionsController extends Controller {
         const checkbox = <HTMLInputElement>this.element.querySelector(`#${filterKey}`);
         if (checkbox) checkbox.checked = filterVal;
       }
-    });
-  }
-
-  setRowGroupDataSource() {
-    const source = (this.resourceOutlet as ResourceControllerWithDatatable).rowGroupDataSourceValue;
-    this.rowGroupDataSourceInputTargets.forEach(input => {
-      input.checked = (input.value === source);
     });
   }
 }

@@ -22,7 +22,13 @@ class CompaniesController < ApplicationController
     @sidebar_collapsed = cookies['csp-sidebar-collapsed'].present?
     # @recent_activity = @company.recent_activity(30)
     # @story_views_30_day_count = @company.page_views.story.since(30.days.ago).count
-    set_row_group_data_sources
+    
+    @row_group_columns = { 
+      customer_wins: cookies['csp-customer-wins-row-group-column'],
+      contributions: cookies['csp-contributions-row-group-column'],
+      promoted_stories: cookies['csp-promoted-stories-row-group-column']
+    }.reject { |k, v| v.blank? }
+
     @filters = filters_from_cookies
     set_visitors_filters
     @filters_match_type = cookies['csp-dashboard-filters-match-type'] || 'all'
@@ -212,20 +218,6 @@ class CompaniesController < ApplicationController
         [type, cookie_val.to_i]
       end
     end.to_h.compact
-  end
-
-  def set_row_group_data_sources
-    customer_wins = cookies['csp-customer-wins-row-group-data-source']
-                    &.match(/\A(?<source>customer\.name|)\z/)
-                    &.[](:source)
-    contributions =
-      cookies['csp-contributions-row-group-data-source']
-      &.match(/\A(?<source>contributor\.full_name|customer\.name|customer_win\.name|invitation_template\.name|)\z/)
-      &.[](:source)
-    promoted_stories = cookies['csp-promoted-stories-row-group-data-source']
-                       &.match(/\A(?<source>customer\.name|)\z/)
-                       &.[](:source)
-    @row_group_data_source = { customer_wins:, contributions:, promoted_stories: }
   end
 
   def ad_images_removed?(company_params)

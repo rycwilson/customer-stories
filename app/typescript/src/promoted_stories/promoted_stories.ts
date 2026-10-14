@@ -2,10 +2,6 @@ import type { Config } from 'datatables.net';
 // import 'datatables.net-rowgroup';  // see app/typescript/types/augmentations.d.ts
 import { trimHtml } from '../utils';
 
-// export function toggleColumnVisibility(dt: Api<any>, rowGroupDataSource: string) {
-//   dt.column(Cols.Customer).visible(!rowGroupDataSource);
-// }
-
 enum Cols {
   Customer = 1,
   Title,
@@ -14,7 +10,7 @@ enum Cols {
   Actions
 }
 
-export function dataTableConfig(rowGroupDataSource: string): Config {
+export function dataTableConfig(_rowGroupColumn?: number): Config {
   if (!CSP.promotedStories) console.error('Promoted Stories data is not defined');
 
   return {
