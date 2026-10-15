@@ -67,6 +67,17 @@ RSpec.configure do |config|
   config.include Rails.application.routes.url_helpers, type: :request
 end
 
+# Use Firefox Developer Edition so Selenium Manager doesn't try to download Firefox
+%i[selenium selenium_firefox_dev_headless].each do |name|
+  Capybara.register_driver name do |app|
+    options = Selenium::WebDriver::Firefox::Options.new(
+      binary: '/Applications/Firefox Developer Edition.app/Contents/MacOS/firefox'
+    )
+    options.add_argument('-headless')
+    Capybara::Selenium::Driver.new(app, browser: :firefox, options:)
+  end
+end
+
 Capybara.configure do |config|
   # config.server = :puma # Until your setup is working
   # config.server = :puma, { Silent: true } # To clean up your test output

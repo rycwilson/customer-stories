@@ -16,8 +16,6 @@
 require 'simplecov'
 SimpleCov.start
 
-# Previous content of test helper now starts here
-#
 # See http://rubydoc.info/gems/rspec-core/RSpec/Core/Configuration
 RSpec.configure do |config|
   # rspec-expectations config goes here. You can use an alternate
@@ -105,5 +103,7 @@ RSpec.configure do |config|
     # default object is the example instance
     driven_by :selenium_chrome_headless
     # driven_by :selenium_chrome_headless, using: :headless_chrome, screen_size: [1400, 1400]
+    
+    # driven_by :selenium_firefox_dev_headless
   end
 end
