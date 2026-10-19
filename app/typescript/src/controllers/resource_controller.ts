@@ -1,4 +1,6 @@
 import type DashboardController from "./dashboard_controller";
+import type Resource from "../lib/resource";
+import { Deals, Contributions, PromotedStories } from '../lib';
 import DataTable from 'datatables.net-bs';
 import { Controller } from "@hotwired/stimulus";
 import { getJSON } from '../utils';
@@ -64,6 +66,8 @@ export default class ResourceController extends Controller<HTMLElement> {
 
   declare currentPage: number;
 
+  private declare resource: Resource | undefined;
+
   get resourceName() {
     return this.element.dataset.resourceName as ResourceName;
   }
@@ -91,6 +95,17 @@ export default class ResourceController extends Controller<HTMLElement> {
 
   connect() {
     if (this.hasDisplayOptionsButtonTarget) initDisplayOptions.call(this);
+
+    this.resource = (() => {
+      switch (this.element.dataset.resourceName) {
+        case 'customerWins':
+          return new Deals();
+        case 'contributions':
+          return new Contributions();
+        case 'promotedStories':
+          return new PromotedStories();
+      }
+    })();
   }
 
   initValueChanged(shouldInit: boolean) {

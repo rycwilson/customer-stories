@@ -80,6 +80,10 @@ interface StringIndexable {
   [key: string]: any;
 }
 
+interface DataTableConfigOptions {
+  rowGroupColumn?: number,
+}
+
 interface TurboFrameAttributes {
   id: string;
   src: string;
