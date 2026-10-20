@@ -89,19 +89,23 @@ export function randomString() {
   return Date.now().toString(36) + Math.random().toString(36).substring(2);
 }
 
-export function debounce(callback: VoidFunction, wait: number, immediate = false) {
+export function debounce<A extends unknown[]>(
+  callback: (...args: A) => void,
+  wait: number,
+  immediate = false
+) {
   let timeout: number | null;
-  return () => {
+  return (...args: A) => {
     const later = () => {
       timeout = null;
-      if (!immediate) callback.call(null);
+      if (!immediate) callback(...args);
     };
     if (immediate && !timeout) {
-      callback.call(null);
-    } else {
-      if (timeout) clearTimeout(timeout);
-      timeout = window.setTimeout(later, wait);
+      callback(...args);
+    } else if (timeout) {
+      clearTimeout(timeout);
     }
+    timeout = window.setTimeout(later, wait);
   };
 }
 
