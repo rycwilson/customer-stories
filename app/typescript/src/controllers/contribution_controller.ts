@@ -1,4 +1,5 @@
 import DatatableRowController from "./datatable_row_controller";
+import { type ContributionRowData } from '../lib';
 import type ModalController from './modal_controller';
 
 export default class ContributionController extends DatatableRowController<ContributionController, ContributionRowData> {

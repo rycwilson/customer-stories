@@ -19,4 +19,10 @@ export default abstract class Resource {
     const res = await req.perform();
     if (res.ok) return await res.json;
   }
+
+  // Transform source row data to RowData used by ResourceController
+  // This involves transformation to cameCase and filtering out unneeded fields
+  protected abstract transformSourceData(row: SourceData): RowData;
+  
+  protected abstract actionsDropdownTemplate(row: SourceData): string;
 }

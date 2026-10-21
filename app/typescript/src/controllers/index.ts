@@ -62,6 +62,7 @@ export type { default as DashboardController } from './dashboard_controller.js';
 
 import DatatableController from './datatable_controller.js';
 application.register('datatable', DatatableController);
+export type { default as DatatableController } from './datatable_controller.js';
 
 // import DatatableRowController from './datatable_row_controller.js';
 // application.register('datatable-row', DatatableRowController);
@@ -105,6 +106,7 @@ export type { default as NewStoryController } from './new_story_controller.js';
 
 import TableNavController from './table_nav_controller.js';
 application.register('table-nav', TableNavController);
+export type { default as TableNavController } from './table_nav_controller.js';
 
 import PluginsController from "./plugins_controller.js";
 application.register("plugins", PluginsController);

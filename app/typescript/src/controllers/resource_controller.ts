@@ -1,7 +1,8 @@
 import type DashboardController from "./dashboard_controller";
 import type Resource from "../lib/resource";
-import { Deals, Contributions, PromotedStories } from '../lib';
-import DataTable from 'datatables.net-bs';
+import type { CustomerWin, CustomerWinRowData, Contribution, ContributionRowData } from '../lib';
+import { Stories, Deals, Contributions, PromotedStories, Visitors } from '../lib';
+import DataTable, { type Config } from 'datatables.net-bs';
 import { Controller } from "@hotwired/stimulus";
 import { getJSON } from '../utils';
 import { 

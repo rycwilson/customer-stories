@@ -1,6 +1,54 @@
 import type { Api, Config } from 'datatables.net';
+import type { Story, CustomerWin } from '../lib';
 import Resource from './resource';
 import { trimHtml } from '../utils';
+
+export interface Contribution {
+  // attributes
+  id: number;
+  status?: string;
+  contribution?: string;
+  feedback?: string;
+  submittedAt?: string;
+  request_subject?: string;
+  request_body?: string;
+  request_sent_at?: string;
+  
+  // methods
+  display_status?: string;
+  timestamp?: number;
+  
+  path?: string;
+  edit_path?: string;
+
+  // associations
+  customer?: Customer
+  customer_win?: CustomerWin;
+  curator?: User;
+  story?: Story;
+  contributor?: User;
+  referrer?: User;
+  invitation_template?: InvitationTemplate;
+  invitation?: { path: string };
+  answers?: ContributorAnswer[];
+}
+
+export interface ContributionRowData {
+  id: number;
+  status: string;
+  path: string;
+  editPath: string;
+  turboFrame: TurboFrameAttributes;
+  invitationTemplate?: InvitationTemplate;
+  invitation?: { path: string };
+  story?: Story;
+}
+
+export type ContributionsFilters = DashboardFilters & { 
+  'show-completed': boolean, 
+  'show-published': boolean,
+  contribution?: number
+};
 
 enum Columns {
   Contributor = 1,

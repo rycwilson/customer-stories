@@ -1,6 +1,6 @@
+import type { VisitorsFilters } from '../lib';
 import ResourceController from './resource_controller';
 import { convertCase, getJSON } from '../utils';
-import { fromRatio } from 'tinycolor2';
 import { capitalize, formatPercent } from '../utils';
 
 type VisitorsBySource = [promote: number, link: number, search: number, other: number];

@@ -1,3 +1,4 @@
+import type { CustomerWin, Contribution } from '../lib';
 import type { NewCustomerWinController, NewContributionController, NewStoryController } from '../controllers';
 import type { TomOptions } from 'tom-select/dist/esm/types/core.d.ts';
 

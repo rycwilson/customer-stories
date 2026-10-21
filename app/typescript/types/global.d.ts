@@ -16,31 +16,53 @@ declare namespace ImagesLoaded {
 declare const CSP: CustomerStoriesApp;
 
 interface CustomerStoriesApp {
-  customerWins: CustomerWin[] | undefined;
-  contributions: Contribution[] | undefined;
-  stories: Story[] | undefined;
-  storyContributions: { [key: number]: Contribution[] };
-  promotedStories: PromotedStory[] | undefined;
+  stories: import('../src/lib').Story[] | undefined;
+  contributions: import('../src/lib').Contribution[] | undefined;
+  customerWins: import('../src/lib').CustomerWin[] | undefined;
+  promotedStories: import('../src/lib').AdwordsAd[] | undefined;
+  storyContributions: Record<number, import('../src/lib').Contribution[]>;
   visitors: any;
   activity: any;
   currentUser: User | null;
   authToken: string;
-  // screenSize: string;
   init(): void;
 }
 
 type ResourceName = (
-  'customerWins' |
+  'stories' |
   'contributions' |
   'storyContributions' |
-  'stories' |
+  'customerWins' |
   'promotedStories' |
   'visitors' |
   'activity'
 )
 
+type ResourceFilters = (
+  import('../src/lib').StoriesFilters |
+  import('../src/lib').CustomerWinsFilters |
+  import('../src/lib').ContributionsFilters |
+  import('../src/lib').PromotedStoriesFilters |
+  import('../src/lib').VisitorsFilters
+);
+
+type SourceData = (
+  import('../src/lib').Story |
+  import('../src/lib').CustomerWin |
+  import('../src/lib').Contribution |
+  import('../src/lib').AdwordsAd
+)
+
+type RowData = (
+  import('../src/lib').StoryRowData |
+  import('../src/lib').CustomerWinRowData |
+  import('../src/lib').ContributionRowData |
+  import('../src/lib').AdwordsAdRowData
+)
+
 type FlashHash = Partial<{ readonly [key in 'notice' | 'alert' | 'info' | 'warning']: string }>;
 type Toast = { flash?: FlashHash, errors?: string[] }
+
 type RowView = {
   page?: number;
   position: number;
@@ -48,24 +70,8 @@ type RowView = {
   html?: string;
   actionsDropdownHtml?: string;
 }
+
 type DashboardFilters = { curator?: number | null };
-type CustomerWinsFilters = DashboardFilters & {
-  'show-wins-with-story': boolean,
-  success?: number
-};
-type ContributionsFilters = DashboardFilters & { 
-  'show-completed': boolean, 
-  'show-published': boolean,
-  contribution?: number
-};
-type PromotedStoriesFilters = DashboardFilters & {};
-type VisitorsFilters = DashboardFilters & {
-  'date-range': string, 
-  'show-visitor-source': boolean,
-  story?: number,
-  category?: number,
-  product?: number
-};
 
 type ResourceControllerWithDatatable = (
   CustomerWinsController | ContributionsController | PromotedStoriesController
@@ -104,108 +110,9 @@ interface User {
   email?: string;
 }
 
-interface CustomerWin {
-  id: number;
-  name: string;
-  curator: User; 
-  customer: Customer; 
-  display_status: string;
-  timestamp: number;
-  path: string;
-  edit_path: string;
-  actions_dropdown_html: string; // added during table config
-  story?: Story;
-  new_story_path?: string;
-}
-
-// CustomerWin data from server is transformed to CustomerWinRowData for DatatableRowController
-interface CustomerWinRowData {
-  id: number;
-  curator: User;
-  customer: Customer;
-  status: string;
-  path: string;
-  editPath: string;
-  turboFrame: TurboFrameAttributes;
-  story?: Story;
-  newStoryPath?: string;
-}
-
 interface Customer {
   id: number;
   name: string;
-}
-
-interface Story {
-  id: number;
-  title: string;
-  published?: boolean;
-  slug?: string;
-  csp_story_path?: string;
-  edit_path?: string;
-}
-
-interface AdwordsAd {
-  id: number;
-  status: string;
-  approvalStatus: string;
-  longHeadline: string;
-  mainColor: string;
-  accentColor: string;
-  storyId: number;
-  customer: Customer;
-  story: { id: number, title: string };
-  curator: { id: number, name: string };
-  path: string;
-  editPath: string;
-}
-
-interface AdwordsAdRowData {
-  id: number;
-  path: string;
-  editPath: string;
-  turboFrame: TurboFrameAttributes;
-}
-
-interface Contribution {
-  // attributes
-  id: number;
-  status?: string;
-  contribution?: string;
-  feedback?: string;
-  submittedAt?: string;
-  request_subject?: string;
-  request_body?: string;
-  request_sent_at?: string;
-  
-  // methods
-  display_status?: string;
-  timestamp?: number;
-  
-  path?: string;
-  edit_path?: string;
-
-  // associations
-  customer?: Customer
-  customer_win?: CustomerWin;
-  curator?: User;
-  story?: Story;
-  contributor?: User;
-  referrer?: User;
-  invitation_template?: InvitationTemplate;
-  invitation?: { path: string };
-  answers?: ContributorAnswer[];
-}
-
-interface ContributionRowData {
-  id: number;
-  status: string;
-  path: string;
-  editPath: string;
-  turboFrame: TurboFrameAttributes;
-  invitationTemplate?: InvitationTemplate;
-  invitation?: { path: string };
-  story?: Story;
 }
 
 interface InvitationTemplate {

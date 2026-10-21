@@ -1,3 +1,4 @@
+import type { AdwordsAdRowData } from '../lib';
 import DatatableRowController from './datatable_row_controller';
 import { FetchRequest } from '@rails/request.js';
 

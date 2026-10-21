@@ -30,7 +30,7 @@ export default class extends Controller<HTMLFormElement> {
   };
   declare isExpandedValue: boolean;
   declare isEditableValue: boolean;
-  declare contributionsValue: Contribution[];
+  declare contributionsValue: import('../lib').Contribution[];
   declare answersValue: ContributorAnswer[];
 
   declare editor: HTMLElement;

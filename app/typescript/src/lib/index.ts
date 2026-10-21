@@ -1,3 +1,11 @@
+export { default as Resource } from './resource';
+export { default as Stories } from './stories';
+export type { Story, StoriesFilters } from './stories';
 export { default as Deals } from './deals';
+export type { CustomerWin, CustomerWinRowData, CustomerWinsFilters } from './deals';
 export { default as Contributions } from './contributions';
+export type { Contribution, ContributionRowData, ContributionsFilters } from './contributions';
 export { default as PromotedStories } from './promoted_stories';
+export type { AdwordsAd, AdwordsAdRowData } from './promoted_stories';
+export type { VisitorsSourceData, VisitorsFilters } from './visitors';
+export { default as Visitors } from './visitors';

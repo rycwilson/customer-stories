@@ -1,3 +1,4 @@
+import type { CustomerWinRowData, Contribution } from '../lib';
 import DatatableRowController from './datatable_row_controller';
 import type ModalController from './modal_controller';
 

@@ -2,6 +2,37 @@ import type { Api, Config } from 'datatables.net';
 import Resource from './resource';
 import { trimHtml } from '../utils';
 
+export interface CustomerWin {
+  id: number;
+  name: string;
+  curator: User; 
+  customer: Customer; 
+  display_status: string;
+  timestamp: number;
+  path: string;
+  edit_path: string;
+  actions_dropdown_html: string; // added during table config
+  story?: import('.').Story;
+  new_story_path?: string;
+}
+
+export interface CustomerWinRowData {
+  id: number;
+  curator: User;
+  customer: Customer;
+  status: string;
+  path: string;
+  editPath: string;
+  turboFrame: TurboFrameAttributes;
+  story?: import('.').Story;
+  newStoryPath?: string;
+}
+
+export type CustomerWinsFilters = DashboardFilters & {
+  'show-wins-with-story': boolean,
+  success?: number
+};
+
 enum Columns {
   Customer = 1,
   Win,

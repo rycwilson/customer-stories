@@ -1,5 +1,6 @@
 import { Controller } from '@hotwired/stimulus';
 import { type FrameElement } from '@hotwired/turbo';
+import { type StoriesFilters } from '../lib';
 import Cookies from 'js-cookie';
 import imagesLoaded from 'imagesloaded';
 

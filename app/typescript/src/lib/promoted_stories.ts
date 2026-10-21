@@ -2,6 +2,30 @@ import type { Config } from 'datatables.net';
 import Resource from './resource';
 import { trimHtml } from '../utils';
 
+export interface AdwordsAd {
+  id: number;
+  status: string;
+  approvalStatus: string;
+  longHeadline: string;
+  mainColor: string;
+  accentColor: string;
+  storyId: number;
+  customer: Customer;
+  story: { id: number, title: string };
+  curator: { id: number, name: string };
+  path: string;
+  editPath: string;
+}
+
+export interface AdwordsAdRowData {
+  id: number;
+  path: string;
+  editPath: string;
+  turboFrame: TurboFrameAttributes;
+}
+
+export type PromotedStoriesFilters = DashboardFilters & {};
+
 enum Columns {
   Customer = 1,
   Title,

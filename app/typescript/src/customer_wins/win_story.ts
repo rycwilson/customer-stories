@@ -1,9 +1,13 @@
+import type { Contribution } from '../lib';
 import { distinctObjects } from '../utils';
 import type SummernoteController from '../controllers/summernote_controller';
 import { type CustomSummernoteOptions, SummernoteComponents, baseConfig, baseCallbacks } from '../summernote';
 
 export function summernoteConfig(
-  ctrl: SummernoteController, height: number, contributions: Contribution[], answers: ContributorAnswer[]
+  ctrl: SummernoteController,
+  height: number,
+  contributions: Contribution[],
+  answers: ContributorAnswer[]
 ): CustomSummernoteOptions {
   const config: CustomSummernoteOptions = {
     height,
