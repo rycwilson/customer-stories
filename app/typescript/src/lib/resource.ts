@@ -1,4 +1,5 @@
-import type { Config } from 'datatables.net';
+import { type Config } from 'datatables.net';
+import { type SearchObject } from './datatables';
 import { FetchRequest } from '@rails/request.js';
 
 export default abstract class Resource {

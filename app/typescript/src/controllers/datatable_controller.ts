@@ -1,14 +1,6 @@
 import { Controller } from '@hotwired/stimulus';
-import DataTable from 'datatables.net-bs';
-import type { Api, Config } from 'datatables.net';
-import 'datatables.net-rowgroup-bs';
-import { baseConfig, deleteRow } from '../tables';
-
-interface SearchParams {
-  filters: { column: string, q: string, regEx: boolean, smartSearch: boolean }[],
-  searchSelectResults?: { [column: string]: string },
-  searchVal?: string
-}
+import { type SearchParams, DataTableWrapper } from '../lib/datatables';
+import { FetchRequest } from '@rails/request.js';
 
 export default class DatatableController extends Controller<HTMLTableElement> {
   static values = { 
