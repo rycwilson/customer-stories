@@ -1,3 +1,4 @@
+import type { DashboardController, ResourceController, TabularResourceController } from '.';
 import Cookies from 'js-cookie';
 import { Controller } from '@hotwired/stimulus';
 import type DashboardController from "./dashboard_controller";
@@ -7,11 +8,13 @@ import { convertCase } from '../utils';
 export default class TableDisplayOptionsController extends Controller {
   static outlets = ['dashboard', 'customer-wins', 'contributions', 'promoted-stories', 'visitors'];
   declare readonly dashboardOutlet: DashboardController;
-  declare readonly customerWinsOutlet: ResourceController;
+  declare readonly customerWinsOutlet: TabularResourceController;
   declare readonly hasCustomerWinsOutlet: boolean;
-  declare readonly contributionsOutlet: ResourceController;
+  declare readonly contributionsOutlet: TabularResourceController;
   declare readonly hasContributionsOutlet: boolean;
-  declare readonly promotedStoriesOutlet: ResourceController;
+  declare readonly storiesOutlet: ResourceController;
+  declare readonly hasStoriesOutlet: boolean;
+  declare readonly promotedStoriesOutlet: TabularResourceController;
   declare readonly hasPromotedStoriesOutlet: boolean;
   declare readonly visitorsOutlet: ResourceController;
   declare readonly hasVisitorsOutlet: boolean;
@@ -47,7 +50,7 @@ export default class TableDisplayOptionsController extends Controller {
   }
 
   handleRowGroupColumnChanged({ target }: { target: HTMLInputElement }) {
-    (this.resourceOutlet as ResourceControllerWithDatatable).rowGroupColumnValue = +target.value || undefined;
+    (this.resourceOutlet as TabularResourceController).rowGroupColumnValue = +target.value || undefined;
     Cookies.set(`csp-${this.resourceOutlet.identifier}-row-group-column`, target.value);
   }
 

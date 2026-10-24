@@ -58,7 +58,7 @@ application.register('customer-wins', CustomerWinsController);
 
 import DashboardController from './dashboard_controller.js';
 application.register('dashboard', DashboardController);
-export type { default as DashboardController } from './dashboard_controller.js';
+export { DashboardController };
 
 import DatatableController from './datatable_controller.js';
 application.register('datatable', DatatableController);
@@ -119,9 +119,11 @@ application.register('promoted-stories', PromotedStoriesController);
 
 import ResourceController from './resource_controller.js';
 application.register('resource', ResourceController);
+export { ResourceController };
 
 import StoriesController from './stories_controller.js';
 application.register('stories', StoriesController);
+export { StoriesController };
 
 import StoryController from './story_controller.js';
 application.register('story', StoryController);
@@ -140,6 +142,10 @@ application.register('summernote', SummernoteController);
 
 import TableDisplayOptionsController from './table_display_options_controller.js';
 application.register('table-display-options', TableDisplayOptionsController);
+
+import TabularResourceController from './tabular_resource_controller.js';
+application.register('tabular-resource-controller', TabularResourceController);
+export { TabularResourceController }
 
 import ToastController from './toast_controller.js';
 application.register('toast', ToastController);

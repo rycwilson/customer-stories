@@ -1,3 +1,5 @@
+import type { Story, CustomerWin } from '.';
+import { TabularResource } from '.';
 import type { Api, Config } from 'datatables.net';
 import type { Story, CustomerWin } from '../lib';
 import Resource from './resource';
@@ -61,12 +63,12 @@ enum Columns {
   Story
 }
 
-export default class Contributions extends Resource {
+export default class Contributions extends TabularResource {
   static readonly columnIndices = Columns;
 
   dataTableConfig(
     options: DataTableConfigOptions & { storyId?: number, invitationTemplateSelectHtml?: string }
-  ): Config {
+  ) {
     const { 
       rowGroupColumn,
       storyId,
@@ -115,7 +117,7 @@ export default class Contributions extends Resource {
         {
           name: 'contribution',
           data: 'id',
-          render: (contributionId: number, type: string, row: Contribution) => {
+          render: (contributionId: number, type: string, _row: Contribution) => {
             const toggleBtn = `
               <button type="button" class="btn" data-action="contribution#toggleChildRow">
                 <i class="fa fa-caret-right"></i>
@@ -152,7 +154,7 @@ export default class Contributions extends Resource {
         {
           name: 'role',
           data: {
-            _: (row: Contribution, type: string, set: any) => {
+            _: (row: Contribution, _type: string, _set: any) => {
               return row.invitation_template?.name?.match(/Customer|Customer\sSuccess|Sales/) ?
                 row.invitation_template.name : 
                 '';
@@ -311,6 +313,26 @@ export default class Contributions extends Resource {
           .attr('data-controller', 'contribution');
       }
     }
+  }
+
+  searchObjects(filters: ContributionsFilters) {
+    return [
+      ...super.searchObjects(filters),
+      ...Object.entries(filters).flatMap(([filter, value]) => {
+        switch (filter) {
+          case 'show-completed': {
+            const checked = value;
+            return { column: 'status', q: checked ? '' : '^((?!completed).)*$', regEx: true, smartSearch: false };
+          }
+          case 'show-published': {
+            const checked = value;
+            return { column: 'storyPublished', q: checked ? '' : 'false', regEx: false, smartSearch: false };
+          }
+          default:
+            return [];
+        }
+      })
+    ]
   }
 
   transformSourceData(row: Contribution) {

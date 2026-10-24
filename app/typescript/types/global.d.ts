@@ -38,14 +38,6 @@ type ResourceName = (
   'activity'
 )
 
-type ResourceFilters = (
-  import('../src/lib').StoriesFilters |
-  import('../src/lib').CustomerWinsFilters |
-  import('../src/lib').ContributionsFilters |
-  import('../src/lib').PromotedStoriesFilters |
-  import('../src/lib').VisitorsFilters
-);
-
 type SourceData = (
   import('../src/lib').Story |
   import('../src/lib').CustomerWin |
@@ -63,19 +55,10 @@ type RowData = (
 type FlashHash = Partial<{ readonly [key in 'notice' | 'alert' | 'info' | 'warning']: string }>;
 type Toast = { flash?: FlashHash, errors?: string[] }
 
-type RowView = {
-  page?: number;
-  position: number;
-  turboFrame?: TurboFrameAttributes;
-  html?: string;
-  actionsDropdownHtml?: string;
-}
+
 
 type DashboardFilters = { curator?: number | null };
 
-type ResourceControllerWithDatatable = (
-  CustomerWinsController | ContributionsController | PromotedStoriesController
-);
 type ScreenSize = 'xs' | 'sm' | 'md-lg';
 type TomSelectInput = HTMLSelectElement & TomInput;
 type TomSelectKind = 'search' | 'curator' | 'status' | 'customer' | 'category' | 'product' | 'story' | 'storyTag' | 'contributor' | 'referrer' | 'invitationTemplate' | 'dateRange';

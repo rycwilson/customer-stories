@@ -1,5 +1,5 @@
 import type { Api, Config } from 'datatables.net';
-import Resource from './resource';
+import TabularResource from './tabular_resource';
 import { trimHtml } from '../utils';
 
 export interface CustomerWin {
@@ -42,7 +42,7 @@ enum Columns {
   Actions
 }
 
-export default class Deals extends Resource {
+export default class Deals extends TabularResource {
   static readonly columnIndices = Columns;
 
   dataTableConfig(options: DataTableConfigOptions): Config {
@@ -217,6 +217,25 @@ export default class Deals extends Resource {
           .attr('data-controller', 'customer-win');
       }
     }
+  }
+
+  searchObjects(filters: CustomerWinsFilters) {
+    return [
+      ...super.searchObjects(filters),
+      ...Object.entries(filters).flatMap(([filter, value]) => {
+        switch (filter) {
+          case 'show-wins-with-story':
+            const checked = value;
+            // return { column: 'story', q: value ? 'not null' : 'null', regEx: true, smartSearch: false };
+            return [{ column: 'story', q: checked ? '' : '^false$', regEx: true, smartSearch: false }];
+          case 'success':
+            const id = value;
+            return [{ column: 'success', q: `^${id}$`, regEx: true, smartSearch: false }];
+          default:
+            return [];
+        }
+      })
+    ]
   }
 
   protected transformSourceData(row: CustomerWin) {

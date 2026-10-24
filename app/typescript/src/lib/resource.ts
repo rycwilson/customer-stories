@@ -1,6 +1,11 @@
-import { type Config } from 'datatables.net';
-import { type SearchObject } from './datatables';
 import { FetchRequest } from '@rails/request.js';
+
+export type ResourceFilters = (
+  import('.').StoriesFilters |
+  import('.').CustomerWinsFilters |
+  import('.').ContributionsFilters |
+  import('.').VisitorsFilters
+);
 
 type FetchedData = SourceData[] | import('.').VisitorsSourceData
 
@@ -10,30 +15,22 @@ export default abstract class Resource {
   constructor(container: HTMLElement) {
     this.container = container;
   }
-
-  abstract dataTableConfig(options: DataTableConfigOptions): Config;
-  
-  searchObjects(filters: ResourceFilters): SearchObject[] {
-    const curatorId = filters.curator;
-    return [{ 
-      column: 'curator',
-      q: curatorId ? `^${curatorId}$` : '',
-      regEx: true,
-      smartSearch: false
-    }];
-  }
   
   async init(dataPath: string, ..._rest: (ResourceFilters | HTMLElement)[]): Promise<FetchedData> {
-    // Only Visitors overrides this method. All others will return SourceData[]
     return await this.getJSON<SourceData[]>(dataPath);
   }
 
   async getJSON<T>(dataPath: string, params?: URLSearchParams): Promise<T> {
-    // console.log('Fetching data from...', dataPath)
+    // console.log(`Fetching data from ${dataPath}...`)
     const req = new FetchRequest('get', `${dataPath}.json${params ? `?${params.toString()}` : ''}`);
     const res = await req.perform();
-    if (res.ok) return await res.json;
-    else throw new Error('Error fetching JSON data');
+    if (res.ok) {
+      const data = await res.json;
+      // console.log(data);
+      return data;
+    } else {
+      throw new Error(`Error fetching JSON data from ${dataPath}`);
+    }
   }
 
   initDisplayOptions(button: HTMLButtonElement, content: string, isReset = false) {
@@ -70,11 +67,4 @@ export default abstract class Resource {
       });
     }
   }
-
-  // Transform source row data to RowData used by ResourceController
-  // This involves transformation to cameCase and filtering out unneeded fields
-  protected abstract transformSourceData(row: SourceData): RowData;
-  
-  protected abstract actionsDropdownTemplate(row: SourceData): string;
-
 }

@@ -1,4 +1,4 @@
-import Resource from './resource';
+import { Resource } from '.';
 import { convertCase, capitalize, formatPercent } from '../utils';
 
 type VisitorsBySource = [ promote: number, link: number, search: number, other: number ];
