@@ -3,6 +3,18 @@ import Cookies from 'js-cookie';
 import tinycolor from 'tinycolor2';
 import { FetchRequest } from '@rails/request.js';
 
+export async function waitForImages(images: HTMLImageElement[]) {
+  const promises = images.map(img => {
+    if (img.complete) return Promise.resolve();
+
+    return new Promise(resolve => {
+      img.addEventListener('load', resolve, { once: true });
+      img.addEventListener('error', resolve, { once: true }); // Prevent hanging on broken links
+    });
+  });
+  await Promise.all(promises);
+}
+
 // Using css variables to capture style allows for use of the custom-button-variant mixin,
 // which itself is just a copy of bootstrap's button-variant mixin that has been modified to use css variables.
 // Thus standard bootstrap styling is conserved while allowing for dynamic custom button colors.
