@@ -4,13 +4,22 @@ import type { ModalController, ToastController } from '.';
 import { visit as turboVisit, type TurboVisitEvent } from '@hotwired/turbo';
 import { onToggleSidebar } from '../utils';
 
-// excludes stories#edit, which also renders the dashboard
 enum DashboardTab {
-  Prospect = 'prospect',
   Curate = 'curate',
   Promote = 'promote',
-  Measure = 'measure'
+  Measure = 'measure',
+  Story = 'story'
 }
+
+type ResourceId = (
+  'stories' |
+  'customer-wins' |
+  'contributions' |
+  'story-contributions' |
+  'promoted-stories' |
+  'visitors' |
+  'activity'
+);
 
 export default class DashboardController extends Controller {
   static outlets = ['modal', 'toast'];
@@ -62,24 +71,23 @@ export default class DashboardController extends Controller {
   private declare readonly activityTarget: HTMLDivElement;
   private declare activeTabValue: DashboardTab | null;
   private readonly onPopStateOrTurboVisit = this.handleTabRestoration.bind(this);
-  private readonly spinnerTimers: { [key: string]: number } = { 
-    prospect: 0,
+  private readonly spinnerTimers: { [key in DashboardTab]: number } = { 
     curate: 0,
     story: 0, 
     promote: 0,
     measure: 0 
   };
-  private readyState = new Proxy(
+  private readonly readyState = new Proxy(
     {
-      customerWins: false,
-      contributions: false,
-      storyContributions: false,
       stories: false,
-      promotedStories: false,
+      'customer-wins': false,
+      contributions: false,
+      'story-contributions': false,
+      'promoted-stories': false,
       visitors: false,
       activity: false
     },
-    { set: this.handleChangeReadyState.bind(this) }
+    { set: this.handleReadyStateChanged.bind(this) }
   )
   
   connect() {
@@ -92,51 +100,44 @@ export default class DashboardController extends Controller {
     document.documentElement.removeEventListener('turbo:visit', this.onPopStateOrTurboVisit)
   }
 
-  handleResourceLoading(e: CustomEvent) {
-    const tabPanel = <HTMLElement>e.currentTarget;
-    this.spinnerTimers[tabPanel.id] = window.setTimeout(() => {
-      if (!tabPanel.classList.contains('ready')) {
-        tabPanel.classList.add('loading');
+  handleResourceLoading(
+    { target: resourcePanel, currentTarget: dashboardPanel }: { target: HTMLElement, currentTarget: HTMLElement }
+  ) {
+    console.log(`loading: ${resourcePanel.id}`)
+    this.spinnerTimers[dashboardPanel.id as DashboardTab] = window.setTimeout(() => {
+      if (!dashboardPanel.classList.contains('ready')) {
+        dashboardPanel.classList.add('loading');
       };
     }, 1000);
   }
 
-  handleResourceReady(e: CustomEvent<{ resourceName: ResourceName }>) {
-    // console.log('resource ready', resourceName)
-    const panel = <HTMLElement>e.currentTarget;
-    const { resourceName } = e.detail;
-    this.readyState[resourceName] = true;
-    setTimeout(() => panel.querySelector(':scope > .spinner')?.remove());
+  handleResourceReady({ target: resourcePanel }: { target: HTMLElement }) {
+    console.log(`ready: ${resourcePanel.id}`)
+    this.readyState[resourcePanel.id as ResourceId] = true;
   }
 
-  handleChangeReadyState(
-    resources: { [key in ResourceName]: boolean }, resourceName: ResourceName, isReady: boolean
+  handleReadyStateChanged(
+    resources: { [key in ResourceId]: boolean }, resourceId: ResourceId, isReady: boolean
   ) {
-    const setReady = (
-      containerId: (
-        DashboardTab.Prospect | 
-        DashboardTab.Curate | 
-        'story' | 
-        DashboardTab.Promote | 
-        DashboardTab.Measure
-      )
-    ) => {
-      const container = containerId === 'story' ? this.storyTarget : this.getTabPanel(containerId);
-      container.classList.add('ready');
-      window.clearTimeout(this.spinnerTimers[containerId]);
-      container.classList.remove('loading');
+    const setReady = (panelId: DashboardTab) => {
+      const panel = panelId === 'story' ? 
+        this.storyTarget :
+        <HTMLElement>this.tabPanelTargets.find(panel => panel.id === panelId);
+      panel.classList.add('ready');
+      window.clearTimeout(this.spinnerTimers[panelId]);
+      panel.classList.remove('loading');
+      setTimeout(() => panel.querySelector(':scope > .spinner')?.remove(), 500);
     };
-    if (resources[resourceName] === isReady) return true;  // no change => ignore
-    resources[resourceName] = isReady;
-    if (/customerWins|contributions/.test(resourceName) && resources.customerWins && resources.contributions) {
-      setReady(DashboardTab.Prospect);
-    } else if (resourceName === 'stories') {
+    if (resources[resourceId] === isReady) return true;  // no change => ignore
+    resources[resourceId] = isReady;
+    const curateResources: readonly ResourceId[] = ['stories', 'customer-wins', 'contributions'];
+    if (curateResources.includes(resourceId) && curateResources.every(id => resources[id])) {
       setReady(DashboardTab.Curate);
-    } else if (resourceName === 'storyContributions') {
-      setReady('story');
-    } else if (resourceName === 'promotedStories') {
+    } else if (resourceId === 'story-contributions') {
+      setReady(DashboardTab.Story);
+    } else if (resourceId === 'promoted-stories') {
       setReady(DashboardTab.Promote);
-    } else if (resourceName === 'visitors') {
+    } else if (resourceId === 'visitors') {
       setReady(DashboardTab.Measure);
     }
     return true;
@@ -157,12 +158,10 @@ export default class DashboardController extends Controller {
     );
   }
 
-  handleChangeStoriesCurator(e: CustomEvent<{ 'curator': number | null }>) {
-    this.filtersValue = e.detail;
-  }
-
   activeTabValueChanged(activeTab: DashboardTab) {
-    if (activeTab) this.initTabPanel(activeTab);
+    if (activeTab) {
+      this.initTabPanel(activeTab);
+    }
   }
 
   filtersValueChanged(newFilters: DashboardFilters, oldVal: DashboardFilters) {
@@ -225,7 +224,7 @@ export default class DashboardController extends Controller {
 
   showContributor({ detail: { contributionId } }: { detail: { contributionId: number } }) {
     this.contributionsTarget
-      .setAttribute('data-contributions-row-id-value', contributionId.toString());
+      .setAttribute('data-resource-row-id-value', contributionId.toString());
     $(this.contributionsTabTarget).tab('show');
   }
 
@@ -262,9 +261,11 @@ export default class DashboardController extends Controller {
   }
 
   initTabPanel(tab: DashboardTab) {
-    if (tab === DashboardTab.Prospect) {
-      this.customerWinsTarget.setAttribute('data-customer-wins-init-value', 'true');
-      this.contributionsTarget.setAttribute('data-contributions-init-value', 'true');
+    console.log(`Initializing ${tab} panel...`);
+    if (tab === DashboardTab.Curate) {
+      [this.storiesTarget, this.contributionsTarget, this.customerWinsTarget].forEach(target => {
+        target.setAttribute(`data-${target.id}-init-value`, 'true');
+      })
     } else if (tab === DashboardTab.Promote) {
       this.promotedStoriesTarget.setAttribute('data-promoted-stories-init-value', 'true');
     } else if (tab === DashboardTab.Measure) {
@@ -272,20 +273,16 @@ export default class DashboardController extends Controller {
     }
   }
 
-  getTabPanel(panelId: DashboardTab) {
-    return this.tabPanelTargets.find(panel => panel.id === panelId) as HTMLDivElement;
-  }
-
   get showingCustomerWins() {
     return (
-      this.activeTabValue === DashboardTab.Prospect && 
+      this.activeTabValue === DashboardTab.Curate && 
       this.customerWinsTabTarget.getAttribute('aria-expanded') === 'true'
     );
   }
 
   get showingContributors() {
     return (
-      this.activeTabValue === DashboardTab.Prospect && 
+      this.activeTabValue === DashboardTab.Curate && 
       this.contributionsTabTarget.getAttribute('aria-expanded') === 'true'
     );
   }

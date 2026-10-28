@@ -7,8 +7,9 @@
         "tomselect:search->#{resource_ctrl_id}#handleTomselectSearch"].join(' ') }) do
   
   = select_tag( \
-      nil,
+      '',
       grouped_options_for_select(search_options),
+      name: nil,
       include_blank: true,
       placeholder: 'Search',
       class: 'form-control',

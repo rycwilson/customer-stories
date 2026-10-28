@@ -21,33 +21,24 @@ import './controllers';
 
 import { parseDatasetObject } from './utils';
 
-window.CSP ||= appFactory();
-window.CSP.init();
-
-// this observer will report when the body element is replaced
-// const observer = new MutationObserver(mutations => {
-//   mutations.forEach(mutation => console.log(mutation));
-// });
-// observer.observe(document.documentElement, { childList: true, subtree: false } )
-
-function appFactory(): CustomerStoriesApp {
-  return {
-    customerWins: undefined,
-    contributions: undefined,
-    stories: undefined,
-    storyContributions: {},
-    promotedStories: undefined,
-    visitors: undefined,
-    activity: undefined,
-    currentUser: parseDatasetObject(document.body, 'currentUser', 'id', 'full_name'),
-    // screenSize: null,
-    authToken: <string>(<HTMLMetaElement>document.head.querySelector('meta[name="csrf-token"]')).getAttribute('content'),
-    init() {
-      // Rails.start();
-      addTurboListeners(false);
-    }
+window.CSP ||= {
+  customerWins: undefined,
+  contributions: undefined,
+  stories: undefined,
+  storyContributions: {},
+  promotedStories: undefined,
+  visitors: undefined,
+  activity: undefined,
+  currentUser: parseDatasetObject(document.body, 'currentUser', 'id', 'full_name'),
+  // screenSize: null,
+  authToken: <string>(<HTMLMetaElement>document.head.querySelector('meta[name="csrf-token"]')).getAttribute('content'),
+  init() {
+    // Rails.start();
+    addTurboListeners(false);
   }
 }
+
+window.CSP.init();
 
 function addTurboListeners(shouldAdd: boolean) {
   if (!shouldAdd) return;

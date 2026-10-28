@@ -1,5 +1,5 @@
 = tag.div(id: 'measure',
-          class: "tab-pane #{'active' if workflow_stage == 'measure'}",
+          class: ['tab-pane', active: workflow_stage == 'measure'],
           role: 'tabpanel',
           data: { \
             dashboard_target: 'tabPanel',
