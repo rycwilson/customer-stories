@@ -93,10 +93,10 @@
               customer_wins_display_options_html_value: \
                 customer_wins_display_options_html(company, @row_group_columns[:customer_wins]),
               action: [ \
-                'datatable-info-cloned->customer_wins#handleTableInfoCloned',
-                'datatable-paginate-cloned->customer_wins#handleTablePaginateCloned',
-                'customer-win:row-clicked->customer_wins#openRowView',
-                'datatable:row-deleted->customer_wins#handleRowDeleted',
-                'table-nav:step-row-view->customer_wins#stepRowView' ].join(' ') }) do
+                'datatable-info-cloned->customer-wins#handleTableInfoCloned',
+                'datatable-paginate-cloned->customer-wins#handleTablePaginateCloned',
+                'customer-win:row-clicked->customer-wins#openRowView',
+                'datatable:row-deleted->customer-wins#handleRowDeleted',
+                'table-nav:step-row-view->customer-wins#stepRowView' ].join(' ') }) do
 
           = render('successes/table', company:)
