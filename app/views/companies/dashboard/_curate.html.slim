@@ -3,13 +3,9 @@
           role: 'tabpanel',
           data: { \
             dashboard_target: 'tabPanel',
-            action: [ \
-              'stories:loading->dashboard#handleResourceLoading',
-              'stories:ready->dashboard#handleResourceReady',
-              'customer-wins:loading->dashboard#handleResourceLoading',
-              'customer-wins:ready->dashboard#handleResourceReady',
-              'contributions:loading->dashboard#handleResourceLoading',
-              'contributions:ready->dashboard#handleResourceReady' ].join(' ') }) do
+            action: %w[stories customer-wins contributions].map do |resource_id| \
+              [ "#{resource_id}:loading->dashboard#handleResourceLoading",
+                "#{resource_id}:ready->dashboard#handleResourceReady" ].join(' ') end.join(' ') }) do
 
   = spinner_html.html_safe
 
