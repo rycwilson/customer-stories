@@ -1,5 +1,5 @@
 import type { Api, Config } from 'datatables.net';
-import TabularResource from './tabular_resource';
+import { type DataTableConfigOptions, TabularResource } from '.';
 import { trimHtml } from '../utils';
 
 export interface CustomerWin {
@@ -139,7 +139,7 @@ export default class Deals extends TabularResource {
             _: 'display_status',
 
             // function accepts `FunctionColumnData` interface
-            display: this.actionsDropdownTemplate
+            display: this.actionsDropdownTemplate.bind(this)
           },
           createdCell: (td: Node) => {
             $(td).attr('data-controller', 'dropdown');
@@ -255,9 +255,9 @@ export default class Deals extends TabularResource {
 
   actionsDropdownTemplate(
     row: CustomerWin, 
-    type?: string,
-    s?: undefined,
-    meta?: { row: number, col: number, settings: object }
+    _type?: string,
+    _s?: undefined,
+    _meta?: { row: number, col: number, settings: object }
   ): string {
     const { id, display_status: status, story, new_story_path: newStoryPath } = row;
     const noContributorsAdded = status && /0.+Contributors\sadded/.test(status);

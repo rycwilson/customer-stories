@@ -13,7 +13,7 @@ type StoryRow = (
   [customer: string, title: string, ...VisitorsBySource]
 );
 
-export type VisitorsSourceData = { by_date: DateRow[], by_story: StoryRow[] };
+export type VisitorsSourceData = { by_date: DateRow[], by_story: StoryRow[] } | undefined;
 
 export type VisitorsFilters = DashboardFilters & {
   'date-range': string, 
@@ -65,7 +65,7 @@ export default class Visitors extends Resource {
   }
 
   get hasData() {
-    return this.data?.by_date.length > 0;
+    return (this.data?.by_date ?? []).length > 0
   }
 
   searchParams() {
@@ -108,18 +108,6 @@ export default class Visitors extends Resource {
     }
   }
 
-  dataTableConfig() {
-    return {};
-  }
-
-  transformSourceData(_row: SourceData) {
-    return {};
-  }
-
-  actionsDropdownTemplate(_row: SourceData) {
-    return ''
-  }
-
   private drawChartsWhenVisible(callback?: VoidFunction, options?: IntersectionObserverInit) {
     if (this.visibilityObserver) this.visibilityObserver.disconnect();
     this.visibilityObserver = new IntersectionObserver(entries => {
@@ -141,17 +129,19 @@ export default class Visitors extends Resource {
   }
 
   private drawColumnChart() {
+    if (!this.hasData) return;
+
     const isStacked = !!this.filters['show-visitor-source'];
     const chart = new google.visualization.ColumnChart(this.columnChartContainer);
-    const groupUnit = this.data.by_date[0][0];
-    const total = this.data.by_date.reduce((sum, [,, ...visitors]: DateRow) => (
+    const groupUnit = this.data!.by_date[0][0];
+    const total = this.data!.by_date.reduce((sum, [,, ...visitors]: DateRow) => (
       sum + visitors.reduce((a, b) => a + b)
     ), 0);
     const countSource = (nthSource: number) => {
       if (!isStacked || nthSource < 1 || nthSource > 4) return 0;
 
       const index = nthSource + 1;
-      return this.data.by_date.reduce((sum, row: DateRow) => {
+      return this.data!.by_date.reduce((sum, row: DateRow) => {
         const element = row[index];
         if (typeof element !== 'number') return sum;
         return sum + element;
@@ -166,7 +156,7 @@ export default class Visitors extends Resource {
       isStacked ?
         ['Visitor Source', promoteLabel, linkLabel, searchLabel, otherLabel] :
         ['Group Start Date', 'Visitors'],
-      ...this.data.by_date.map(([_groupUnit, groupStartDate, ...visitors]) => {
+      ...this.data!.by_date.map(([_groupUnit, groupStartDate, ...visitors]) => {
         const [year, month, day] = groupStartDate.split('-').map(Number);
         const date = new Date(year, month - 1, day);
         ticks.push(date);
@@ -221,6 +211,8 @@ export default class Visitors extends Resource {
   }
 
   private drawTableChart() {
+    if (!this.hasData) return;
+
     const isStacked = !!this.filters['show-visitor-source'];
     const table = new google.visualization.Table(this.tableChartContainer);
     const data = new google.visualization.DataTable()
@@ -234,7 +226,7 @@ export default class Visitors extends Resource {
       data.addColumn('number', 'Other');
     }
     data.addRows(
-      this.data.by_story.map(([customer, title, ...visitors]: StoryRow) => {
+      this.data!.by_story.map(([customer, title, ...visitors]: StoryRow) => {
         const row: (string | number | { v: number, f: string })[] = [customer, title];
         if (isStacked) {
           const total = visitors.reduce((sum, count) => sum + count);

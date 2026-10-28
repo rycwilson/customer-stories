@@ -1,4 +1,4 @@
-import { ResourceController } from '.';
+import ResourceController from './resource_controller';
 import DataTable, { type Config } from 'datatables.net';
 import { TabularResource } from '../lib';
 
@@ -39,30 +39,28 @@ export default class TabularResourceController extends ResourceController {
     return DataTable.isDataTable(this.tableTarget);
   }
 
-  connect() {
-    super.connect();
-    const options = { rowGroupColumn: this.rowGroupColumnValue };
-    this.tableConfig = this.resource.dataTableConfig(options);
-  }
-
   async initValueChanged(shouldInit: boolean) {
     if (!shouldInit) return;
 
-    const _data = await super.initValueChanged(shouldInit, true);
+    // console.log(`Initializing TabularResourceController ${this.identifier}...`)
+    this.dispatch('loading');
+    const data = await this.resource.init(this.dataPathValue);
+    this.setAppData(data);
     await this.initTable();
     await this.searchTable();
-    this.dispatch('ready', { detail: { resourceName: this.resourceName } })
+    this.dispatch('ready');
   }
-
+  
   initTable() {
+    const options = { rowGroupColumn: this.rowGroupColumnValue };
     const initialize = (resolve: VoidFunction, e: Event) => {
-      const { construct } = 
-        (e as CustomEvent<{ construct: (element: HTMLTableElement, config: Config) => void }>).detail;
+      const { construct } = (e as CustomEvent<{ construct: (config: Config) => void }>).detail;
       this.tableTarget.addEventListener('datatable-init-complete', resolve, { once: true })
-      construct(this.tableTarget, this.tableConfig);
+      construct(this.resource.dataTableConfig(options));
     }
     return new Promise<void>(resolve => {
-      this.tableTarget.addEventListener('datatable:ready', initialize.bind(this, resolve), { once: true });
+      this.tableTarget
+        .addEventListener('datatable:ready', initialize.bind(this, resolve), { once: true });
       this.tableTarget.setAttribute('data-datatable-init-value', 'true');
     });
   }
@@ -86,7 +84,9 @@ export default class TabularResourceController extends ResourceController {
   }
 
   filtersValueChanged() {
-    this.searchTable();
+    if (this.tableInitialized) {
+      this.searchTable();
+    }
   }
 
   backToTable() {

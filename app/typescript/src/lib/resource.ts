@@ -21,12 +21,12 @@ export default abstract class Resource {
   }
 
   async getJSON<T>(dataPath: string, params?: URLSearchParams): Promise<T> {
-    // console.log(`Fetching data from ${dataPath}...`)
+    console.log(`Fetching data from ${dataPath}...`)
     const req = new FetchRequest('get', `${dataPath}.json${params ? `?${params.toString()}` : ''}`);
     const res = await req.perform();
     if (res.ok) {
       const data = await res.json;
-      // console.log(data);
+      console.log(data);
       return data;
     } else {
       throw new Error(`Error fetching JSON data from ${dataPath}`);
@@ -48,14 +48,14 @@ export default abstract class Resource {
         template: `
           <div
             class="popover ${this.container.id}" 
-            data-controller="table-display-options" 
-            data-table-display-options-resource-outlet="#${this.container.id}"
-            data-table-display-options-dashboard-outlet=".dashboard"
+            data-controller="display-options" 
+            data-display-options-${this.container.id}-outlet="#${this.container.id}"
+            data-display-options-dashboard-outlet=".dashboard"
             role="tooltip">
             <div class="arrow"></div>
             <div class="popover-title__wrapper">
               <h3 class="popover-title label-secondary"></h3>
-              <button type="button" class="close" data-action="table-display-options#hide" aria-label="Close">
+              <button type="button" class="close" data-action="display-options#hide" aria-label="Close">
                 <span aria-hidden="true">&times;</span>
               </button>
             </div>

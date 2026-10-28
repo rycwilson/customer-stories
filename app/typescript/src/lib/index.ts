@@ -1,7 +1,7 @@
 export { type ResourceFilters, default as Resource } from './resource';
 export { default as TabularResource } from './tabular_resource';
 
-export { type SearchObject, SearchParams } from './datatables';
+export { type DataTableConfigOptions, SearchObject, SearchParams } from './datatables';
 export { DataTableWrapper } from './datatables';
 
 export type { Story, StoriesFilters } from './stories';

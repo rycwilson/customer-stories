@@ -1,13 +1,9 @@
-import type { 
-  Resource,
-  ResourceFilters,
-  VisitorsSourceData,
-  VisitorsFilters } from '../lib';
-import { Stories, Deals, Contributions, PromotedStories, Visitors } from '../lib';
+import type { Resource, ResourceFilters, VisitorsSourceData } from '../lib';
+import { Stories, Deals, Contributions, PromotedStories, Visitors, Activity } from '../lib';
 import { Controller } from "@hotwired/stimulus";
 import { convertCase } from '../utils';
 
-export default class ResourceController extends Controller<HTMLDivElement> {
+export default class ResourceController extends Controller<HTMLElement> {
   static outlets = ['dashboard'];
   static values = {
     init: { type: Boolean, default: false },
@@ -15,26 +11,18 @@ export default class ResourceController extends Controller<HTMLDivElement> {
     filters: { type: Object },
     displayOptionsHtml: String,
   };
-  static targets = [
-    'searchSelect',
-    'displayOptionsButton',
-    'columnChart',
-    'tableChart'
-  ];
+  static targets = ['searchSelect', 'displayOptionsButton'];
   
   declare filtersValue: ResourceFilters;
   declare readonly displayOptionsButtonTarget: HTMLButtonElement;
+  declare readonly dashboardOutlet: import('.').DashboardController;
 
   protected declare resource: Resource
   protected declare readonly initValue: boolean;
   protected declare readonly dataPathValue: string;
-  protected declare readonly dashboardOutlet: import('.').DashboardController;
   protected declare readonly searchSelectTarget: TomSelectInput;
   protected declare readonly hasDisplayOptionsButtonTarget: boolean;
   protected declare readonly displayOptionsHtmlValue: string;  
-  
-  declare readonly columnChartTarget: HTMLElement | undefined;
-  declare readonly tableChartTarget: HTMLElement | undefined;
 
   get resourceName() {
     return convertCase(this.element.id, 'camel') as ResourceName;
@@ -44,36 +32,36 @@ export default class ResourceController extends Controller<HTMLDivElement> {
     return 'Display Preferences';
   }
 
-  connect() {
+  initialize() {
     this.resource = (() => {
-      // TODO: resourceName can be replaced with this.element.id
-      switch (this.element.dataset.resourceName) {
+      // console.log(`Initializing resource controller ${this.identifier}...`)
+      switch (this.identifier) {
         case 'stories': return new Stories(this.element);
         case 'contributions': return new Contributions(this.element);
-        case 'customerWins': return new Deals(this.element);
-        case 'promotedStories': return new PromotedStories(this.element);
+        case 'customer-wins': return new Deals(this.element);
+        case 'promoted-stories': return new PromotedStories(this.element);
         case 'visitors': return new Visitors(this.element);
-        default: throw new Error('Resource name is missing');
+        case 'activity': return new Activity(this.element);
+        default: throw new Error('Unable to determine Resource type');
       }
     })();
-
+  }
+  
+  connect() {
+    // console.log(`Connecting ${this.identifier}...`)
     if (this.hasDisplayOptionsButtonTarget) {
       this.resource.initDisplayOptions(this.displayOptionsButtonTarget, this.displayOptionsHtmlValue);
     }
   }
 
-  async initValueChanged(shouldInit: boolean, calledFromSubclass: boolean = false) {
+  async initValueChanged(shouldInit: boolean) {
     if (!shouldInit) return;
 
+    // console.log(`Initializing resource ${this.identifier}...`)
     this.dispatch('loading');
-    const optional = this.resourceName === 'visitors' ?
-      [this.filtersValue, this.columnChartTarget!, this.tableChartTarget!] : 
-      [];
-    const data = await this.resource.init(this.dataPathValue, ...optional);
+    const data = await this.resource.init(this.dataPathValue);
     this.setAppData(data);
-    if (!calledFromSubclass) {
-      this.dispatch('ready', { detail: { resourceName: this.resourceName } })
-    }
+    this.dispatch('ready')
   }
 
   setAppData(data: SourceData[] | VisitorsSourceData) {
@@ -84,27 +72,13 @@ export default class ResourceController extends Controller<HTMLDivElement> {
     } 
   }
 
-  filtersValueChanged(filters: ResourceFilters) {
-    if (this.resourceName === 'visitors') {
-      (this.resource as Visitors).handleFiltersChanged(filters as VisitorsFilters);
-    }
+  filtersValueChanged(_filters: ResourceFilters, _prevFilters: ResourceFilters) {
   }
 
   handleTomselectSearched(_e: CustomEvent) {
   }
 
-  handleSearchSelectChanged(e: CustomEvent<{ id: string, kind: string }>) {
-    if (this.element.id === 'visitors') {
-      const { id: filter } = e.detail;
-      const filters = this.filtersValue as VisitorsFilters;
-      if (filter) {
-        const [filterKey, filterVal] = filter.split('-');
-        this.filtersValue = { ...filters, ...{ [filterKey]: +filterVal } };
-      } else {
-        const { story: _s, category: _c, product: _p, ...rest } = filters;
-        this.filtersValue = rest;
-      }
-    }
+  handleSearchSelectChanged(_e: CustomEvent<{ id: string, kind: string }>) {
   }
   
   validateNewItem(e: Event) {

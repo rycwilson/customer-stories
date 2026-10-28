@@ -31,7 +31,6 @@
             role: 'tabpanel',
             data: { \
               dashboard_target: 'promotedStories',
-              resource_name: 'promotedStories',
               controller: 'promoted-stories',
               promoted_stories_dashboard_outlet: '.dashboard',
               promoted_stories_data_path_value: company_adwords_ads_path(company),
@@ -43,9 +42,9 @@
           = tag.table(id: 'promoted-stories-table',
                       class: 'table',
                       data: { \
-                        promoted_stories_target: 'datatable',
+                        promoted_stories_target: 'table',
                         controller: 'datatable',
-                        datatable_resource_ctrl_id_value: 'promoted-stories',
+                        datatable_resource_id_value: 'promoted-stories',
                         promote_tr: company.promote_tr }) do
             = render(ResourceControlsComponent.new( \
                 'promoted-stories',

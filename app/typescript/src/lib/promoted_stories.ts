@@ -1,5 +1,4 @@
-import type { Config } from 'datatables.net';
-import Resource from './resource';
+import { type DataTableConfigOptions, TabularResource } from '.';
 import { trimHtml } from '../utils';
 
 export interface AdwordsAd {
@@ -34,12 +33,12 @@ enum Columns {
   Actions
 }
 
-export default class PromotedStories extends Resource {
+export default class PromotedStories extends TabularResource {
   static readonly columnIndices = Columns;
 
-  dataTableConfig(options: DataTableConfigOptions): Config {
+  dataTableConfig(options: DataTableConfigOptions) {
     if (!CSP.promotedStories) console.error('Promoted Stories data is not defined');
-
+    
     const { rowGroupColumn: _rowGroupColumn } = options;
     const cols = PromotedStories.columnIndices;
 
@@ -90,7 +89,7 @@ export default class PromotedStories extends Resource {
           name: 'status',
           data: 'status',
           createdCell: (td: Node) => $(td).addClass('status'),
-          render: (status, type, row: AdwordsAd) => {
+          render: (status: 'ENABLED' | 'PAUSED', type: string, _row: AdwordsAd) => {
             return type !== 'display' ?
               status : `
                 <div class="switch-wrapper">
@@ -158,9 +157,9 @@ export default class PromotedStories extends Resource {
 
   actionsDropdownTemplate(
     ad: AdwordsAd, 
-    type?: string,
-    s?: undefined,
-    meta?: { row: number, col: number, settings: object }
+    _type?: string,
+    _s?: undefined,
+    _meta?: { row: number, col: number, settings: object }
   ): string {
     const { id, path, editPath } = ad;
     return trimHtml(`

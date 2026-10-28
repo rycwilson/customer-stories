@@ -1,8 +1,6 @@
-import type { Story, CustomerWin } from '.';
+import type { Story, CustomerWin, DataTableConfigOptions } from '.';
 import { TabularResource } from '.';
 import type { Api, Config } from 'datatables.net';
-import type { Story, CustomerWin } from '../lib';
-import Resource from './resource';
 import { trimHtml } from '../utils';
 
 export interface Contribution {
@@ -68,7 +66,7 @@ export default class Contributions extends TabularResource {
 
   dataTableConfig(
     options: DataTableConfigOptions & { storyId?: number, invitationTemplateSelectHtml?: string }
-  ) {
+  ): Config {
     const { 
       rowGroupColumn,
       storyId,
@@ -202,7 +200,7 @@ export default class Contributions extends TabularResource {
           name: 'actions',
           data: {
             _: 'status',
-            display: this.actionsDropdownTemplate
+            display: this.actionsDropdownTemplate.bind(this)
           },
           createdCell: (td: Node) => $(td).attr('data-controller', 'dropdown')
         },
@@ -350,9 +348,9 @@ export default class Contributions extends TabularResource {
 
   actionsDropdownTemplate(
     contribution: Contribution, 
-    type?: string,
-    s?: undefined,
-    meta?: { row: number, col: number, settings: object }
+    _type?: string,
+    _s?: undefined,
+    _meta?: { row: number, col: number, settings: object }
   ): string {
     const { id, status, invitationTemplate, invitation } = this.transformSourceData(contribution);
     const isPreInvite = status === 'pre_request';

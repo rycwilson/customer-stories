@@ -4,9 +4,9 @@
     id: "#{story ? 'story-contributions-table' : 'contributions-table'}",
     class: 'table',
     data: { \
-      contributions_target: 'datatable',
+      contributions_target: 'table',
       controller: 'datatable',
-      datatable_resource_ctrl_id_value: 'contributions',
+      datatable_resource_id_value: 'contributions',
       action: [ \
         'contribution:delete-row->datatable#deleteRow'].join(' ') }) do
 

@@ -5,7 +5,6 @@ import type ContributionController from './contribution_controller';
 import type PromotedStoryController from './promoted_story_controller';
 
 type RowController = CustomerWinController | ContributionController | PromotedStoryController;
-type RowData = CustomerWinRowData | ContributionRowData | AdwordsAdRowData;
 
 export default class DatatableRowController<Ctrl extends RowController, Data extends RowData>
 extends Controller<HTMLTableRowElement> {
@@ -25,7 +24,7 @@ extends Controller<HTMLTableRowElement> {
   }
 
   get row() {
-    return this.datatableOutlet.dt.row(this.element); 
+    return this.datatableOutlet.dtWrapper.row(this.element); 
   }
 
   initialize() {
@@ -43,7 +42,7 @@ extends Controller<HTMLTableRowElement> {
   openView({ target }: { target: Element }) {
     if (target.closest('.toggle-child') || target.closest('[data-controller="dropdown"]')) return;
 
-    const rows = this.datatableOutlet.dt.rows({ search: 'applied' });
+    const rows = this.datatableOutlet.dtWrapper.currentRows;
     const data = rows.data().toArray();
     const index = data.findIndex(row => row.id === this.rowDataValue.id);
     const rowView = {
@@ -59,14 +58,15 @@ extends Controller<HTMLTableRowElement> {
     this.dispatch('delete-row', { detail: { tr: this.element, path, storyId: story?.id } });
   }
 
-  toggleChildRow() {
-    if (this.row.child.isShown()) {
-      this.row.child.hide();
+  toggleChildRow(_e: CustomEvent) {
+    const row = this.row;
+    if (row.child.isShown()) {
+      row.child.hide();
     } else {
-      this.row.child(this.childRowContent, 'child-row');
-      this.row.child.show();
+      row.child(this.childRowContent, 'child-row');
+      row.child.show();
       const childRow = this.element.nextElementSibling as HTMLTableRowElement;
-      childRow && childRow.scrollIntoView({ block: 'center' });
+      childRow?.scrollIntoView({ block: 'center' });
     }
   }
 
@@ -76,11 +76,11 @@ extends Controller<HTMLTableRowElement> {
     // TODO update CSP.promotedStories
   }
 
-  handleShownDropdown(e: CustomEvent) {
+  handleShownDropdown(_e: CustomEvent) {
     this.element.classList.add('active');
   }
 
-  handleHiddenDropdown(e: CustomEvent) {
+  handleHiddenDropdown(_e: CustomEvent) {
     if (!this.row.child.isShown()) {
       this.element.classList.remove('active');
     }

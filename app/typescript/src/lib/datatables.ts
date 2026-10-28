@@ -4,14 +4,18 @@ import 'datatables.net-rowgroup-bs';
 import { debounce } from '../utils';
 // import { baseConfig, deleteRow } from '../tables';
 
-export interface SearchObject { 
+export type DataTableConfigOptions = {
+  rowGroupColumn?: number,
+}
+
+export type SearchObject = { 
   column: string, 
   q: string,
   regEx: boolean,
   smartSearch: boolean 
 }
 
-export interface SearchParams {
+export type SearchParams = {
   filters: SearchObject[],
   searchSelectResults?: { [column: string]: string },
   searchVal?: string
@@ -22,9 +26,10 @@ export class DataTableWrapper {
   private table: HTMLTableElement;
   private dt: Api<any>;
   private onColumnSort = this.handleColumnSort.bind(this);
-  private debouncedCloneTableComponents = debounce(this.cloneTableComponents, 100);
+  private debouncedCloneTableComponents = debounce(this.cloneTableComponents.bind(this), 100);
   
   constructor(element: HTMLTableElement, config: Config) {
+    // console.log(`Constructing DataTable for ${element.id}`)
     this.table = element;
     this.dt = new DataTable(element, { ...this.baseConfig, ...config });
   }

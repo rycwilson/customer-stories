@@ -1,26 +1,18 @@
-= tag.table( \
-    id: 'successes-table',
-    class: 'table',
-    data: { \
-      controller: 'datatable',
-      customer_wins_target: 'datatable',
-      datatable_resource_ctrl_id_value: 'customer-wins',
-      action: [ \
-        'customer-win:delete-row->datatable#deleteRow'].join(' '),
-      aria_labelledby: 'customer-wins-table-caption' }) do
+= tag.table(id: 'successes-table',
+            class: 'table',
+            data: { \
+              controller: 'datatable',
+              customer_wins_target: 'table',
+              datatable_resource_id_value: 'customer-wins',
+              action: [ \
+                'customer-win:delete-row->datatable#deleteRow'].join(' '),
+              aria_labelledby: 'customer-wins-table-caption' }) do
 
   / NOTE: The current user is the curator for a new Customer Win, not the curator_id filter
-  = render( \
-      'companies/shared/table_controls',
-      company:,
-      caption: 'Customer Wins',
-      resource_name: 'customerWins',
-      resource_ctrl_id: 'customer-wins',
-      new_item: { \
-        name: 'Customer Win',
-        path: new_company_success_path(company),
-        modal_class_name: 'new-customer-win' },
-      search_options: company.successes.search_options)  
+  = render(ResourceControlsComponent.new( \
+      'customer-wins',
+      search_options: company.successes.search_options,
+      new_resource_path: new_company_success_path(company) ))
 
   thead
     tr

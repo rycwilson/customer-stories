@@ -1,8 +1,9 @@
-import type { ResourceFilters, SearchObject } from '.';
+import type { ResourceFilters, DataTableConfigOptions, SearchObject } from '.';
 import { Resource } from '.';
+import { type Config } from 'datatables.net';
 
 export default abstract class TabularResource extends Resource {
-  abstract dataTableConfig(options: DataTableConfigOptions): import('datatables.net').Config;
+  abstract dataTableConfig(options: DataTableConfigOptions): Config;
 
   searchObjects(filters: ResourceFilters): SearchObject[] {
     const curatorId = filters.curator;

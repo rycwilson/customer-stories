@@ -1,4 +1,4 @@
-import type ResourceController from './resource_controller';
+import { type TabularResourceController } from '.';
 import FormController from './form_controller';
 import { autofillNewContactPasswords } from '../utils';
 
@@ -20,7 +20,7 @@ export default class NewCustomerWinController extends FormController<NewCustomer
   private declare readonly customerContactBoolFieldTarget: HTMLInputElement;
   private declare readonly responseTarget: HTMLDivElement;
   private declare readonly hasResponseTarget: boolean;
-  private declare readonly customerWinsOutlet: ResourceController;
+  private declare readonly customerWinsOutlet: TabularResourceController;
   private responseObserver = new MutationObserver(_ => {
     if (this.hasResponseTarget) {
       const rowData = JSON.parse(this.responseTarget.dataset.rowData as string);

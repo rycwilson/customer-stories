@@ -1,10 +1,9 @@
-= tag.div( \
-    id: "#{resource_ctrl_id}-search",
-    class: 'search-table', 
-    data: { \
-      action: [ \
-        "tomselect:change-search->#{resource_ctrl_id}#handleChangeSearchSelect",
-        "tomselect:search->#{resource_ctrl_id}#handleTomselectSearch"].join(' ') }) do
+= tag.div(id: "#{resource_id}-search",
+          class: 'search-table',
+          data: { \
+            action: [ \
+              "tomselect:change-search->#{resource_id}#handleSearchSelectChanged",
+              "tomselect:search->#{resource_id}#handleTomselectSearched" ].join(' ') }) do
   
   = select_tag( \
       '',
@@ -16,5 +15,5 @@
       data: { \
         controller: 'tomselect', 
         tomselect_kind_value: 'search', 
-        "#{resource_ctrl_id}_target" => 'searchSelect',
-        dashboard_target: "#{resource_name}SearchSelect" })
+        "#{resource_id}_target" => 'searchSelect',
+        dashboard_target: "#{resource_id.underscore.camelize.sub(/\A./, &:downcase)}SearchSelect" })
