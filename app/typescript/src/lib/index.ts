@@ -18,3 +18,5 @@ export { default as PromotedStories } from './promoted_stories';
 
 export type { VisitorsSourceData, VisitorsFilters } from './visitors';
 export { default as Visitors } from './visitors';
+
+export { default as Activity } from './activity';
