@@ -1,35 +1,33 @@
-import type { DashboardController, ResourceController, TabularResourceController } from '.';
+import type { DashboardController, StoriesController, ResourceController, TabularResourceController } from '.';
 import Cookies from 'js-cookie';
 import { Controller } from '@hotwired/stimulus';
-import type DashboardController from "./dashboard_controller";
-import type ResourceController from "./resource_controller";
 import { convertCase } from '../utils';
 
-export default class TableDisplayOptionsController extends Controller {
-  static outlets = ['dashboard', 'customer-wins', 'contributions', 'promoted-stories', 'visitors'];
-  declare readonly dashboardOutlet: DashboardController;
-  declare readonly customerWinsOutlet: TabularResourceController;
-  declare readonly hasCustomerWinsOutlet: boolean;
-  declare readonly contributionsOutlet: TabularResourceController;
-  declare readonly hasContributionsOutlet: boolean;
-  declare readonly storiesOutlet: ResourceController;
-  declare readonly hasStoriesOutlet: boolean;
-  declare readonly promotedStoriesOutlet: TabularResourceController;
-  declare readonly hasPromotedStoriesOutlet: boolean;
-  declare readonly visitorsOutlet: ResourceController;
-  declare readonly hasVisitorsOutlet: boolean;
-
-  static targets = ['curatorSelect', 'rowGroupDataSourceInput'];
-  declare readonly curatorSelectTarget: TomSelectInput;
-
-  onClickAway = this.handleClickAway.bind(this);
+export default class DisplayOptionsController extends Controller {
+  static outlets = [
+    'dashboard', 'stories', 'customer-wins', 'contributions', 'promoted-stories', 'visitors'
+  ];
+  
+  private declare readonly dashboardOutlet: DashboardController;
+  private declare readonly storiesOutlet: StoriesController;
+  private declare readonly hasStoriesOutlet: boolean;
+  private declare readonly customerWinsOutlet: TabularResourceController;
+  private declare readonly hasCustomerWinsOutlet: boolean;
+  private declare readonly contributionsOutlet: TabularResourceController;
+  private declare readonly hasContributionsOutlet: boolean;
+  private declare readonly promotedStoriesOutlet: TabularResourceController;
+  private declare readonly hasPromotedStoriesOutlet: boolean;
+  private declare readonly visitorsOutlet: ResourceController;
+  private declare readonly hasVisitorsOutlet: boolean;
+  private readonly onClickAway = this.handleClickAway.bind(this);
 
   get resourceOutlet(): ResourceController {
+    if (this.hasStoriesOutlet) return this.storiesOutlet;
     if (this.hasCustomerWinsOutlet) return this.customerWinsOutlet;
     if (this.hasContributionsOutlet) return this.contributionsOutlet;
     if (this.hasPromotedStoriesOutlet) return this.promotedStoriesOutlet;
     if (this.hasVisitorsOutlet) return this.visitorsOutlet;
-    throw new Error(`No valid resource outlet found for ${this.identifier} controller.`)
+    throw new Error(`No valid resource outlet found for display-options controller.`)
   }
 
   connect() {
@@ -44,8 +42,8 @@ export default class TableDisplayOptionsController extends Controller {
     document.removeEventListener('click', this.onClickAway, true);
   }
 
-  handleChangeCurator({ target }: { target: TomSelectInput }) {
-    this.handleChangeFilter({ target });
+  handleCuratorChanged({ target }: { target: TomSelectInput }) {
+    this.handleFilterChanged({ target });
     setTimeout(() => { this.dashboardOutlet.filtersValue = { curator: +target.value || null }; });
   }
 
@@ -57,7 +55,7 @@ export default class TableDisplayOptionsController extends Controller {
   // Filter keys are kebab-cased due to:
   // 1 - For checkboxees, the key is derived from the element id
   // 2 - The key is used in cookies which use kebab-case
-  handleChangeFilter({ target }: { target: TomSelectInput | HTMLInputElement }) {
+  handleFilterChanged({ target }: { target: TomSelectInput | HTMLInputElement }) {
     const filterKey = target.type === 'checkbox' ? 
       target.id : 
       convertCase(target.dataset.tomselectKindValue, 'kebab');
@@ -69,6 +67,18 @@ export default class TableDisplayOptionsController extends Controller {
     Cookies.set(`csp-${filterKey}-filter`, String(filterVal === null ? '' : filterVal));
   }
   
+  handleChangeMatchType({ target: input }: { target: HTMLInputElement }) {
+    this.storiesOutlet.matchTypeValue = input.value as 'all' | 'any';
+    Cookies.set('csp-dashboard-filters-match-type', input.value);
+  }
+
+  clearFilters() {
+    this.storiesOutlet.clearFilters();
+    this.element.querySelectorAll<TomSelectInput>('select').forEach(select => {
+      select.tomselect?.clear(true);
+    });
+  }
+
   handleClickAway(e: Event) {
     const target = e.target as HTMLElement;
     if (!this.element || this.element.contains(target) || this.resourceOutlet.displayOptionsButtonTarget.contains(target)) {
@@ -84,7 +94,7 @@ export default class TableDisplayOptionsController extends Controller {
 
   setFilters() {
     Object.entries(this.resourceOutlet.filtersValue).forEach(([filterKey, filterVal]) => {
-      if (filterKey.match(/curator|date-range/)) {
+      if (filterKey.match(/^(curator|date-range|status|customer|category|product)$/)) {
         const select = this.element.querySelector(`#${this.resourceOutlet.identifier}-${filterKey}`);
         if (select instanceof HTMLSelectElement) { 
           select.value = filterVal ? String(filterVal) : ''; 

@@ -1,15 +1,15 @@
 .form-horizontal 
 
-  .form-group data-action="change->table-display-options#handleChangeCurator"
+  .form-group data-action="change->display-options#handleCuratorChanged"
     label.control-label for="contributions-curator" Curator
     div 
       = render( \
           'companies/shared/curator_select',
           company:,
-          ctrl_id: 'table-display-options',
+          ctrl_id: 'display-options',
           select_id: 'contributions-curator' )
 
-  .form-group data-action="change->table-display-options#handleRowGroupColumnChanged"
+  .form-group data-action="change->display-options#handleRowGroupColumnChanged"
     label.control-label Group 
     div 
       - [ ['1', 'Contributor'],
@@ -26,7 +26,7 @@
                   (true if column == row_group_column || column.blank? && row_group_column.nil?))
             = label_text
 
-  .form-group data-action="change->table-display-options#handleChangeFilter"
+  .form-group data-action="change->display-options#handleFilterChanged"
     label.control-label Show 
     div 
       .checkbox 

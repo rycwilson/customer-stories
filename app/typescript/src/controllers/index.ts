@@ -27,7 +27,7 @@ application.register('company-ctas', CompanyCtasController);
 
 import CompanySettingsController from './company_settings_controller.js';
 application.register('company-settings', CompanySettingsController);
-export type { default as CompanySettingsController } from './company_settings_controller.js';
+export type { CompanySettingsController };
 
 import CompanyProfileController from './company_profile_controller.js';
 application.register('company-profile', CompanyProfileController);
@@ -47,9 +47,6 @@ application.register('contributor-invitation', ContributorInvitationController);
 import ContributorPromptsController from './contributor_prompts_controller.js';
 application.register('contributor-prompts', ContributorPromptsController);
 
-// import CustomerController from './customer_controller.js';
-// application.register('customer', CustomerController);
-
 import CustomerWinController from './customer_win_controller.js';
 application.register('customer-win', CustomerWinController);
 
@@ -58,11 +55,11 @@ application.register('customer-wins', CustomerWinsController);
 
 import DashboardController from './dashboard_controller.js';
 application.register('dashboard', DashboardController);
-export { DashboardController };
+export type { DashboardController };
 
 import DatatableController from './datatable_controller.js';
 application.register('datatable', DatatableController);
-export type { default as DatatableController } from './datatable_controller.js';
+export type { DatatableController };
 
 // import DatatableRowController from './datatable_row_controller.js';
 // application.register('datatable-row', DatatableRowController);
@@ -87,26 +84,26 @@ application.register('modal', ModalController);
 
 import ModalTriggerController from './modal_trigger_controller.js';
 application.register('modal-trigger', ModalTriggerController);
-export type { default as ModalController } from './modal_controller.js';
+export type { ModalController };
 
 import NavListController from './nav_list_controller.js';
 application.register('nav-list', NavListController);
 
 import NewCustomerWinController from './new_customer_win_controller.js';
 application.register('new-customer-win', NewCustomerWinController);
-export type { default as NewCustomerWinController } from './new_customer_win_controller.js';
+export type { NewCustomerWinController };
 
 import NewContributionController from './new_contribution_controller.js';
 application.register('new-contribution', NewContributionController);
-export type { default as NewContributionController } from './new_contribution_controller.js';
+export type { NewContributionController };
 
 import NewStoryController from './new_story_controller.js';
 application.register('new-story', NewStoryController);
-export type { default as NewStoryController } from './new_story_controller.js';
+export type { NewStoryController };
 
 import TableNavController from './table_nav_controller.js';
 application.register('table-nav', TableNavController);
-export type { default as TableNavController } from './table_nav_controller.js';
+export type { TableNavController };
 
 import PluginsController from "./plugins_controller.js";
 application.register("plugins", PluginsController);
@@ -119,11 +116,11 @@ application.register('promoted-stories', PromotedStoriesController);
 
 import ResourceController from './resource_controller.js';
 application.register('resource', ResourceController);
-export { ResourceController };
+export type { ResourceController };
 
 import StoriesController from './stories_controller.js';
 application.register('stories', StoriesController);
-export { StoriesController };
+export type { StoriesController };
 
 import StoryController from './story_controller.js';
 application.register('story', StoryController);
@@ -140,12 +137,13 @@ application.register('story-narrative-content', StoryNarrativeContentController)
 import SummernoteController from './summernote_controller.js';
 application.register('summernote', SummernoteController);
 
-import TableDisplayOptionsController from './table_display_options_controller.js';
-application.register('table-display-options', TableDisplayOptionsController);
+import DisplayOptionsController from './display_options_controller.js';
+application.register('display-options', DisplayOptionsController);
+export type { DisplayOptionsController };
 
 import TabularResourceController from './tabular_resource_controller.js';
 application.register('tabular-resource-controller', TabularResourceController);
-export { TabularResourceController }
+export type { TabularResourceController }
 
 import ToastController from './toast_controller.js';
 application.register('toast', ToastController);
