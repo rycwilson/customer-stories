@@ -47,12 +47,9 @@
                         controller: 'datatable',
                         datatable_resource_ctrl_id_value: 'promoted-stories',
                         promote_tr: company.promote_tr }) do
-            = render('companies/shared/table_controls',
-                     company:, 
-                     caption: 'Promoted Stories',
-                     resource_name: 'promotedStories',
-                     resource_ctrl_id: 'promoted-stories',
-                     search_options: { 'Customer' => company.customers.map(&:select_option) })
+            = render(ResourceControlsComponent.new( \
+                'promoted-stories',
+                search_options: { 'Customer' => company.customers.map(&:select_option) }))
             thead
               tr
                 th

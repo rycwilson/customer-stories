@@ -10,18 +10,10 @@
       action: [ \
         'contribution:delete-row->datatable#deleteRow'].join(' ') }) do
 
-  = render( \
-      'companies/shared/table_controls',
-      company:, 
-      caption: story ? 'Story Contributors' : 'Contributors',
-      resource_name: 'contributions',
-      resource_ctrl_id: 'contributions',
-      has_preferences: story.nil?,
-      new_item: { \
-        name: 'Contributor',
-        path: new_success_contribution_path(story ? story.success_id : 0),
-        modal_class_name: 'new-contribution' },
-      search_options: story ? {} : company.contributions.search_options)
+  = render(ResourceControlsComponent.new( \
+      'contributions',
+      search_options: story ? {} : company.contributions.search_options,
+      new_resource_path: new_success_contribution_path(story ? story.success_id : 0) )) do
 
   thead
     tr
