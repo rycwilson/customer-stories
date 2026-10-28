@@ -70,8 +70,8 @@
               contributions_invitation_template_select_html_value: \
                 invitation_template_select_html(company),
               action: [ \
-                'datatable:info-cloned->contributions#handleTableInfoCloned',
-                'datatable:paginate-cloned->contributions#handleTablePaginateCloned',
+                'datatable-info-cloned->contributions#handleTableInfoCloned',
+                'datatable-paginate-cloned->contributions#handleTablePaginateCloned',
                 'contribution:row-clicked->contributions#openRowView',
                 'datatable:row-deleted->contributions#handleRowDeleted',
                 'table-nav:step-row-view->contributions#stepRowView' ].join(' ') }) do
@@ -93,8 +93,8 @@
               customer_wins_display_options_html_value: \
                 customer_wins_display_options_html(company, @row_group_columns[:customer_wins]),
               action: [ \
-                'datatable:info-cloned->customer_wins#handleTableInfoCloned',
-                'datatable:paginate-cloned->customer_wins#handleTablePaginateCloned',
+                'datatable-info-cloned->customer_wins#handleTableInfoCloned',
+                'datatable-paginate-cloned->customer_wins#handleTablePaginateCloned',
                 'customer-win:row-clicked->customer_wins#openRowView',
                 'datatable:row-deleted->customer_wins#handleRowDeleted',
                 'table-nav:step-row-view->customer_wins#stepRowView' ].join(' ') }) do

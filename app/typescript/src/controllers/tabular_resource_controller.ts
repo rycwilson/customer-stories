@@ -67,7 +67,6 @@ export default class TabularResourceController extends ResourceController {
 
   searchTable(searchSelectResults?: Record<string, string>) {
     return new Promise<void>((resolve: VoidFunction) => {
-      // table.addEventListener('datatable:drawn', resolve, { once: true });
       this.tableTarget.addEventListener('datatable-drawn', resolve, { once: true });
       this.tableTarget.setAttribute(
         'data-datatable-search-params-value', 
