@@ -1,205 +1,135 @@
-import { Controller } from '@hotwired/stimulus';
 import { type FrameElement } from '@hotwired/turbo';
 import { type StoriesFilters } from '../lib';
 import Cookies from 'js-cookie';
-import imagesLoaded from 'imagesloaded';
+import { waitForImages } from '../utils';
+import ResourceController from './resource_controller';
+import {
+  STORY_FILTER_KEYS,
+  activeFilterCount,
+  buildStoriesParams,
+  haveSameActiveFilters } from '../utils/stories_filters';
 
-type StoriesFilters = DashboardFilters & { 
-  status?: string,
-  customer?: string,
-  category?: string,
-  product?: string,
-};
+// The stories "table" is a gallery of cards in a turbo frame, so there is no datatable to
+// initialize. Filters live in a popover (see `display-options`) and, along with the search
+// string, are translated to the turbo frame's `src` query params.
+export default class StoriesController extends ResourceController {
+  static targets = ['turboFrame', 'gallery', 'card', 'searchInput', 'filtersCount', 'results'];
+  static values = { 
+    ...ResourceController.values,
+    matchType: { type: String, default: 'all' } 
+  };
 
-export default class extends Controller<HTMLDivElement> {
-  static targets = [
-    'turboFrame',
-    'gallery', 
-    'card', 
-    'searchAndFilters',   // one container for xs and sm, another for md and lg
-    'searchInput',
-    'searchString',
-    'searchResults',
-    'filterResults',
-    'matchTypeInput',
-    'filterSelect', 
-  ];
   declare readonly turboFrameTarget: FrameElement;
   declare readonly galleryTarget: HTMLUListElement;
   declare readonly hasGalleryTarget: boolean;
   declare readonly cardTargets: HTMLDivElement[];
-  declare readonly searchAndFiltersTarget: HTMLDivElement;
   declare readonly searchInputTarget: HTMLInputElement;
-  declare readonly searchStringTarget: HTMLSpanElement;
-  declare readonly searchResultsTarget: HTMLSpanElement;
-  declare readonly filterResultsTarget: HTMLSpanElement;
-  declare readonly matchTypeInputTargets: HTMLInputElement[];
-  declare readonly filterSelectTargets: TomSelectInput[];
+  declare readonly filtersCountTarget: HTMLSpanElement;
+  declare readonly resultsTarget: HTMLSpanElement;
 
-  static values = { 
-    filters: { type: Object, default: undefined } 
-  };
+  declare matchTypeValue: 'all' | 'any';
   declare filtersValue: StoriesFilters;
-  
-  readyFilters = 0;
-  frameObserver = new MutationObserver((mutations) => {
-    if (this.turboFrameTarget.hasAttribute('busy')) {
-      this.dispatch('loading');
-      this.frameObserver.disconnect();
-    }
-  });
 
-  connect() {
-    this.frameObserver.observe(this.turboFrameTarget, { attributes: true });
-    this.turboFrameTarget.addEventListener('turbo:frame-render', this.onRenderStories.bind(this));
-  }
-  
-  disconnect() {
-    // no need for this since listener is attached to the frame (which will disappear along with its listeners when this disconnects)
-    // document.documentElement.removeEventListener('turbo:frame-render', this.onGalleryRender.bind(this));
-    this.frameObserver.disconnect();
-  }
-  
-  get activeFilters() {
-    return this.filterSelectTargets.filter(select => select.value);
-  }
-  
-  get filterTypes() {
-    return this.filterSelectTargets.map(select => select.dataset.tomselectKindValue).filter(type => type) as string[]; 
-  }
-  
-  // TODO: before intial load, make sure all images on the page (namely the search icon) are loaded
-  fetchStories(updateSearchParams: (src: URL) => void) {
-    if (this.turboFrameTarget.src) {
-      const newSrc = new URL(this.turboFrameTarget.src);
-      updateSearchParams(newSrc);
-      this.turboFrameTarget.src = newSrc.toString();
-    }
+  get displayOptionsTitle() {
+    return 'Filters';
   }
 
-  clearSearch(e: CustomEvent | undefined = undefined) {
-    const isUserInput = Boolean(e);
-    this.searchInputTarget.value = '';
-    this.searchAndFiltersTarget.classList.remove('has-search-results');
-    if (isUserInput) {
-      this.fetchStories((turboFrameSrc: URL) => turboFrameSrc.searchParams.delete('q'));
-    }
+  get cardImages() {
+    return this.cardTargets.map(card => card.querySelector('img')).filter(card => !!card);
   }
 
-  clearFilters(e: CustomEvent | undefined = undefined) {
-    if (this.activeFilters.length === 0) return;
-    const isUserInput = Boolean(e);
-    this.filterSelectTargets.forEach(select => {
-      const isSilentChange = select.dataset.tomselectKindValue !== 'curator';
-      select.tomselect.clear(isSilentChange);
-    });
-    if (isUserInput) {
-      this.fetchStories((turboFrameSrc: URL) => {
-        this.filterTypes.forEach(param => turboFrameSrc.searchParams.delete(param || ''));
-      })
-    } else {
-      this.searchAndFiltersTarget.classList.remove('has-combined-results');
-    }
-
-    // the curator should be actively "blank", not just removed
-    Cookies.set('csp-curator-filter', '') ;
-    this.filterTypes.filter(type => type !== 'curator').forEach(type => Cookies.remove(`csp-${type}-filter`));
-  }
-
-  handleInitFilter(e: Event) {
-    if (++this.readyFilters === this.filterSelectTargets.length) {
-      // this.searchAndFiltersTargets.forEach(container => container.setAttribute('data-init', 'true'));
-      this.searchAndFiltersTarget.setAttribute('data-init', 'true');
-    }
-  }
-
-  handleChangeFilterMatchType({ target: input }: { target: EventTarget }) {
-    if (!(input instanceof HTMLInputElement)) return;
-    Cookies.set('csp-dashboard-filters-match-type', input.value);
-    if (this.activeFilters.length) {
-      this.fetchStories((turboFrameSrc: URL) => turboFrameSrc.searchParams.set('match_type', input.value));
-    };
-  }
-
-  handleSubmitSearch(e: Event) {
-    e.preventDefault()
-    this.clearFilters();
-    this.fetchStories((turboFrameSrc: URL) => {
-      for (const [param, value] of turboFrameSrc.searchParams.entries()) {
-        turboFrameSrc.searchParams.delete(param);
-      }
-      turboFrameSrc.searchParams.set('q', this.searchInputTarget.value.trim());
-    });
-  }
-
-  handleChangeFilter({ detail: { kind, id } }: CustomEvent<{ kind: string, id: string }>) {
-    this.clearSearch();
-    this.fetchStories((turboFrameSrc: URL) => {
-      if (id) {
-        turboFrameSrc.searchParams.set(kind, id);
-        turboFrameSrc.searchParams.delete('q');
-      } else {
-        turboFrameSrc.searchParams.delete(kind);
-      }
-      if (this.activeFilters.length > 1 && !turboFrameSrc.searchParams.get('match_type')) {
-        turboFrameSrc.searchParams.set('match_type', this.matchTypeInputTargets.find(input => input.checked)!.value);
-      }
-    });
-    if (kind === 'curator') {
-      this.dispatch('change-curator', { detail: { [kind]: +id || null } });
-    }
-    if (!id && kind !== 'curator') {
-      Cookies.remove(`csp-${kind}-filter`);
-    } else {
-      Cookies.set(`csp-${kind}-filter`, String(id));
-    }
-  }
-  
-  onRenderStories(e: Event) {
-    // const frame = e.target as FrameElement;
-    imagesLoaded('#stories-gallery', (instance) => {
-      this.galleryTarget.classList.remove('hidden');
-      this.dispatch('ready', { detail: { resourceName: 'stories' } });
-    })
-    const showResults = (target: HTMLSpanElement) => {
-      const results = this.cardTargets.length;
-      target.textContent = `${results} ${results === 1 ? 'story' : 'stories'}`;
-    }
-    const turboFrameSrc = new URL(this.turboFrameTarget.src || '');
-    // for (let key of searchParams.keys()) console.log(key)
-    const searchString = turboFrameSrc.searchParams.get('q') || '';
-    const filters = this.filterTypes.filter(type => turboFrameSrc.searchParams.has(type));
-    if (searchString) {
-      this.searchStringTarget.textContent = `"${searchString}"`;
-      this.searchAndFiltersTarget.classList.remove('has-combined-results');
-      showResults(this.searchResultsTarget);
-      this.searchAndFiltersTarget.classList.add('has-search-results');
-    } else if (filters.length > 1) {
-      this.searchAndFiltersTarget.classList.remove('has-search-results');
-      showResults(this.filterResultsTarget);
-      this.searchAndFiltersTarget.classList.add('has-combined-results');
-    } else {
-      this.searchAndFiltersTarget.classList.remove('has-search-results', 'has-combined-results');
-    }
-  }
-
-  filtersValueChanged(newVal: StoriesFilters, oldVal: StoriesFilters) {
-    if (JSON.stringify(newVal) === JSON.stringify(oldVal)) return;
-    const curatorSelect = this.filterSelectTargets.find(select => (
-      select.dataset.tomselectKindValue === 'curator'
+  get turboFrameSource() {
+    const filtersEntries = Object.entries(this.filtersValue).map(([key, value]) => (
+      [key, value?.toString() ?? '']
     ));
-    curatorSelect.tomselect.setValue(
-      newVal['curator'] ? String(newVal['curator']) : '',
-      !this.hasGalleryTarget
-    );
-    if (!this.hasGalleryTarget) {
-      const newSrc = new URL(location.origin + this.turboFrameTarget.src);
-      if (newVal['curator']) {
-        newSrc.searchParams.set('curator', String(newVal['curator']));
-      } else {
-        newSrc.searchParams.delete('curator');
-      }
-      this.turboFrameTarget.src = '/?' + newSrc.searchParams.toString();
+    const searchParams = new URLSearchParams(filtersEntries);
+    if (filtersEntries.length > 1) {
+      searchParams.set('match_type', this.matchTypeValue);
+    } 
+    return `${this.dataPathValue}?${searchParams.toString()}`;
+  }
+
+  searchString = '';
+  private filtersInitialized = false;
+
+  async initValueChanged(shouldInit: boolean) {
+    if (!shouldInit) return;
+  
+    await this.loadTurboFrame(async (resolve, _e: Event) => {
+      await waitForImages(this.cardImages);
+      this.galleryTarget.classList.remove('hidden');
+      resolve();
+    })
+    this.dispatch('ready');
+  }
+
+  loadTurboFrame(onFrameRendered: (resolve: VoidFunction, e: Event) => void) {
+    this.dispatch('loading');
+    return new Promise<void>(resolve => {
+      this.turboFrameTarget
+        .addEventListener('turbo:frame-render', onFrameRendered.bind(this, resolve), { once: true })
+      this.turboFrameTarget.src = this.turboFrameSource;
+    });
+  }
+
+  handleFrameRendered(_e: Event) {
+    console.log('turbo:frame-render')
+  }
+
+  fetchStories() {
+    const params = buildStoriesParams(this.filtersValue, this.searchString, this.matchTypeValue);
+    const src = `/?${params}`;
+    if (src !== this.turboFrameTarget.getAttribute('src')) this.turboFrameTarget.src = src;
+  }
+
+  clearSearch(e: Event | undefined = undefined) {
+    this.searchString = '';
+    this.searchInputTarget.value = '';
+    this.searchInputTarget.form?.classList.remove('has-query');
+    const isUserInput = Boolean(e);
+    if (isUserInput) this.fetchStories();
+  }
+
+  // Search and filters are mutually exclusive: searching clears the filters.
+  handleSubmitSearch(e: Event) {
+    e.preventDefault();
+    const searchString = this.searchInputTarget.value.trim();
+    if (!searchString) return this.clearSearch(e);
+
+    this.searchString = searchString;
+    this.searchInputTarget.form?.classList.add('has-query');
+    if (activeFilterCount(this.filtersValue)) {
+      this.clearFilters();    // fetches via filtersValueChanged
+    } else {
+      this.fetchStories();
+    }
+  }
+
+  clearFilters() {
+    const hadCurator = Boolean(this.filtersValue.curator);
+    this.filtersValue = {};
+    // the curator should be actively "blank", not just removed
+    STORY_FILTER_KEYS.forEach(key => Cookies.set(`csp-${key}-filter`, ''));
+    if (hadCurator) this.dashboardOutlet.filtersValue = { curator: null };
+  }
+
+  filtersValueChanged(filters: StoriesFilters, prevFilters: StoriesFilters) {
+    const count = activeFilterCount(filters);
+    this.filtersCountTarget.textContent = count ? ` (${count})` : '';
+
+    // The initial filters are already reflected in the server-rendered frame src
+    if (!this.filtersInitialized) {
+      this.filtersInitialized = true;
+      return;
+    }
+    if (haveSameActiveFilters(filters, prevFilters)) return;
+    if (count) this.clearSearch();
+    this.fetchStories();
+  }
+
+  matchTypeValueChanged(newVal: string, oldVal: string | undefined) {
+    if (this.filtersInitialized && newVal !== oldVal && activeFilterCount(this.filtersValue) > 1) {
+      this.fetchStories();
     }
   }
 }

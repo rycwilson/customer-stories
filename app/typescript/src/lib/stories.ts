@@ -1,5 +1,4 @@
-// import type { Api, Config } from 'datatables.net';
-import Resource from './resource';
+import { Resource } from '.';
 
 export interface Story {
   id: number;
@@ -16,32 +15,21 @@ export interface StoryRowData {
 }
 
 export type StoriesFilters = DashboardFilters & {
-  status?: number | string | null,
-  customer?: number | string | null,
-  category?: number | string | null,
-  product?: number | string | null
+  status?: string,
+  customer?: number,
+  category?: number,
+  product?: number
 };
 
-enum Columns {
-  Customer = 1,
-  Title,
-  Curator,
-  Status,
-  Actions
-}
+// enum Columns {
+//   Customer = 1,
+//   Title,
+//   Curator,
+//   Status,
+//   Actions
+// }
 
 export default class Stories extends Resource {
-  static readonly columnIndices = Columns;
-
-  dataTableConfig() {
-    return {};
-  }
-
-  transformSourceData(_row: Story) {
-    return {};
-  }
-
-  actionsDropdownTemplate(_row: Story) {
-    return ''
-  }
+  // async init() {
+  // }
 }

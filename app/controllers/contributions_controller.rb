@@ -77,7 +77,7 @@ class ContributionsController < ApplicationController
     # end
     # respond_to { |format| format.js {} }
     redirect_back(
-      fallback_location: dashboard_path('prospect'),
+      fallback_location: dashboard_path('curate'),
       flash: { notice: 'Contributor was added successfully' }
     )
   end

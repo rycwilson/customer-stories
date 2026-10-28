@@ -1,5 +1,11 @@
 module StoriesHelper
 
+  # Content for the dashboard stories filters popover (a "display options" popover)
+  def stories_display_options_html(company, match_type)
+    html = render('stories/display_options', company:, match_type:)
+    escape_once(html)
+  end
+
   def company_header_logo_url(company)
     if company.header_logo_type == 'SquareLogo' && company.square_logo_url.present?
       company.square_logo_url

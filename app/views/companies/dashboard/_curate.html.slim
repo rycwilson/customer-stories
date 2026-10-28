@@ -1,34 +1,109 @@
-= tag.div( \
-    id: 'curate',
-    class: "tab-pane #{'active' if workflow_stage == 'curate'}",
-    data: { \
-      dashboard_target: 'tabPanel',
-      role: 'tabpanel',
-      action: [ \
-        'stories:loading->dashboard#handleResourceLoading',
-        'stories:ready->dashboard#handleResourceReady'].join(' ') })
+= tag.div(id: 'curate',
+          class: ['tab-pane', active: workflow_stage == 'curate'],
+          role: 'tabpanel',
+          data: { \
+            dashboard_target: 'tabPanel',
+            action: [ \
+              'stories:loading->dashboard#handleResourceLoading',
+              'stories:ready->dashboard#handleResourceReady',
+              'customer-wins:loading->dashboard#handleResourceLoading',
+              'customer-wins:ready->dashboard#handleResourceReady',
+              'contributions:loading->dashboard#handleResourceLoading',
+              'contributions:ready->dashboard#handleResourceReady' ].join(' ') }) do
 
   = spinner_html.html_safe
 
-  = tag.div( \
-      class: 'company__container container-fluid',
-      data: { \
-        controller: 'stories',
-        dashboard_target: 'stories',
-        action: [ \
-          'tomselect:did-initialize->stories#handleInitFilter',
-          "#{%w[curator status customer category product].map do |filter| \
-            "tomselect:change-#{filter}->stories#handleChangeFilter"; end.join(' ')}" ].join(' ') })
+  .company__container.container-fluid
 
-    = render( \
-        'stories/shared/search_and_filters_md_lg',
-        { company: @company,
-          filters_match_type: @filters_match_type,
-          filters: @filters,
-          is_dashboard: true })
+    = render(SidebarComponent.new( \
+        'dashboard', active_tab:, collapsed: sidebar_collapsed)) do |component|
+      - [ ['#stories', 'fa-comments', 'Customer Stories', nil],
+          ['#contributions', 'fa-users', 'Contributors', 'contributionsTab'],
+          ['#customer-wins', 'fa-handshake-o', 'Deals', 'customerWinsTab'] ] \
+          .each do |panel_selector, icon_class, label_text, dashboard_target|
+        - component.with_tab( \
+            panel_selector:,
+            icon_class:,
+            label_text:,
+            data: { \
+              action: 'dashboard#setNavCookie',
+              nav_list_target: 'tab',
+              dashboard_target: }.compact)
 
-    = turbo_frame_tag( \
-        'stories', 
-        src: '/' + "?#{URI.encode_www_form(@filters)}#{@filters.length > 1 ? '&match_type=' + @filters_match_type : ''}", 
-        loading: 'lazy', 
-        data: { stories_target: 'turboFrame' })
+    .company__main
+      .tab-content
+
+        = tag.div(id: 'stories',
+                  class: ['tab-pane', active: active_tab == '#stories'],
+                  aria_labelledby: 'stories-tab',
+                  role: 'tabpanel',
+                  data: { \
+                    dashboard_target: 'stories',
+                    controller: 'stories',
+                    stories_dashboard_outlet: '.dashboard',
+                    stories_data_path_value: '/',
+                    stories_filters_value: filters,
+                    stories_match_type_value: filters_match_type,
+                    stories_display_options_html_value: \
+                      stories_display_options_html(company, filters_match_type) }) do
+          
+          = render(ResourceControlsComponent.new( \
+              'stories',
+              new_resource_path: new_company_story_path(company) ))
+
+          / src: "/?#{URI.encode_www_form(filters)}#{filters.length > 1 ? "&match_type=#{filters_match_type}" : ''}", 
+          = turbo_frame_tag( \
+              'stories-frame', 
+              data: { \
+                stories_target: 'turboFrame',
+                action: 'turbo:frame-render->stories#handleFrameRendered' })
+
+        = tag.div( \
+            id: 'contributions',
+            class: ['tab-pane', active: active_tab == '#contributions'],
+            aria_labelledby: 'contributions-tab',
+            role: 'tabpanel',
+            data: { \
+              dashboard_target: 'contributions',
+              controller: 'contributions',
+              contributions_dashboard_outlet: '.dashboard',
+              contributions_table_nav_outlet: '.contributions__table-nav',
+              contributions_data_path_value: company_contributions_path(company),
+              contributions_row_group_column_value: @row_group_columns[:contributions],
+              contributions_filters_value: contributions_filters(curator&.id),
+              contributions_display_options_html_value: \
+                contributions_display_options_html(company, @row_group_columns[:contributions]),
+              contributions_invitation_template_select_html_value: \
+                invitation_template_select_html(company),
+              action: [ \
+                'datatable:info-cloned->contributions#handleTableInfoCloned',
+                'datatable:paginate-cloned->contributions#handleTablePaginateCloned',
+                'contribution:row-clicked->contributions#openRowView',
+                'datatable:row-deleted->contributions#handleRowDeleted',
+                'table-nav:step-row-view->contributions#stepRowView' ].join(' ') }) do
+
+          = render('contributions/table', company:)
+
+        = tag.div( \
+            id: 'customer-wins',
+            class: ['tab-pane', active: active_tab == '#customer-wins'],
+            aria_labelledby: 'customer-wins-tab',
+            role: 'tabpanel',
+            data: { \
+              dashboard_target: 'customerWins',
+              controller: 'customer-wins',
+              customer_wins_dashboard_outlet: '.dashboard',
+              customer_wins_table_nav_outlet: '.customer-wins__table-nav',
+              customer_wins_data_path_value: '/successes',
+              customer_wins_row_group_column_value: @row_group_columns[:customer_wins],
+              customer_wins_filters_value: customer_wins_filters(curator&.id),
+              customer_wins_display_options_html_value: \
+                customer_wins_display_options_html(company, @row_group_columns[:customer_wins]),
+              action: [ \
+                'datatable:info-cloned->customer_wins#handleTableInfoCloned',
+                'datatable:paginate-cloned->customer_wins#handleTablePaginateCloned',
+                'customer-win:row-clicked->customer_wins#openRowView',
+                'datatable:row-deleted->customer_wins#handleRowDeleted',
+                'table-nav:step-row-view->customer_wins#stepRowView' ].join(' ') }) do
+
+          = render('successes/table', company:)

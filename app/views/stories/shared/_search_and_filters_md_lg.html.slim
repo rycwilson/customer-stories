@@ -2,28 +2,10 @@
   class=('has-combined-results' if filters.length > 1)
   data-stories-target="searchAndFilters" }
 
-  - if is_dashboard
-    .search-and-filters__dashboard-header
-      a href="/" data-turbo="false"
-        | Customer Stories
-      = link_to( \
-          new_company_story_path(company),
-          class: 'btn btn-secondary', 
-          aria: { label: 'New Customer Story' },
-          data: { \
-            turbo_stream: true,
-            controller: 'modal-trigger',
-            modal_trigger_modal_outlet: '#main-modal', 
-            modal_trigger_options_value: { title: 'New Customer Story', 'className' => 'new-story' }}) do
-          i.fa.fa-plus
-          |&nbsp;&nbsp;New
-    hr
-
   = render('stories/shared/search_form', { company:, is_header_search: false })
 
-  hr style=('border-color:transparent' unless is_dashboard || (company.category_tags.featured.present? && company.product_tags.featured.present?))
+  hr style=('border-color:transparent' unless (company.category_tags.featured.present? && company.product_tags.featured.present?))
 
-  /- if is_dashboard
   - if company.category_tags.featured.present? && company.product_tags.featured.present?
     .filter-controls
       div data-action="change->stories#handleChangeFilterMatchType"
@@ -54,69 +36,20 @@
         | Applied Filters:
       span data-stories-target="filterResults"
 
-  - if is_dashboard 
-    .stories-filter.form-group
-      = label_tag('select-curator--stories', 'Curator')
-      = select_tag( \
-          nil,
-          options_from_collection_for_select( \
-            company.curators, :id, :curator_name_with_stories_count, filters[:curator]),
-          { id: 'select-curator--stories',
-            include_blank: true,
-            placeholder: 'Select curator',
-            class: 'stories-filter__select form-control',
-            data: { \
-              controller: 'tomselect', 
-              tomselect_kind_value: 'curator', 
-              stories_target: 'filterSelect' } })
-
-    .stories-filter.form-group
-      = label_tag('select-status--stories', 'Status')
-      = select_tag( \
-          nil,
-          options_for_select( \
-            Story.status_news.map { |k, v| k == 'is_published' ? \
-              ["Published (#{company.stories.is_published.count})", v] : \
-              ["#{k.capitalize} (#{company.stories.send(k).count})", v] }, 
-            filters[:status]),
-          { id:'select-status--stories', 
-            include_blank: true, 
-            placeholder: 'Select status',
-            class: 'stories-filter__select form-control', 
-            data: { \
-              controller: 'tomselect',
-              tomselect_kind_value: 'status',
-              stories_target: 'filterSelect' } })
-      
-    .stories-filter.form-group
-      = label_tag('select-customer--stories', 'Customer')
-      = select_tag( \
-          nil,
-          options_from_collection_for_select( \
-            company.customers, :id, :name_with_stories_count, filters[:customer]),
-          { id: 'select-customer--stories',
-            include_blank: true,
-            placeholder: 'Select customer',
-            class: 'stories-filter__select form-control',
-            data: { \
-              controller: 'tomselect',
-              tomselect_kind_value: 'customer',
-              stories_target: 'filterSelect' } })
-
-  - if is_dashboard || company.category_tags.featured.present?
+  - if company.category_tags.featured.present?
     = render( \
         'stories/shared/select_story_tag', 
         { company:, 
           tag: :category,
           name: nil,
           preselected_id: filters[:category],
-          only_featured: !is_dashboard })
+          only_featured: true })
 
-  - if is_dashboard || company.product_tags.featured.present?
+  - if company.product_tags.featured.present?
     = render( \
         'stories/shared/select_story_tag', 
         { company:, 
           tag: :product,
           name: nil,
           preselected_id: filters[:product],
-          only_featured: !is_dashboard })
+          only_featured: true })

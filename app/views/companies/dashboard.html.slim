@@ -5,24 +5,20 @@
             dashboard_modal_outlet: '#main-modal',
             dashboard_toast_outlet: '#toaster',
             action: [ \
-              'stories:change-curator->dashboard#handleChangeStoriesCurator',
               'win-story:show-contributor->dashboard#showContributor',
               'toast->dashboard#showToast'].join(' ') }) do
 
   = render('shared/navbars/company_nav', company: @company, workflow_stage: @workflow_stage)
   
   .tab-content data-dashboard-target="tabContent"
-    = render('companies/dashboard/prospect',
+    = render('companies/dashboard/curate',
              company: @company,
              curator: @curator,
              workflow_stage: @workflow_stage,
-             active_tab: @prospect_active_tab,
-             sidebar_collapsed: @sidebar_collapsed)
-
-    = render('companies/dashboard/curate',
-             company: @company,
-             workflow_stage: @workflow_stage,
-             story: @story)
+             active_tab: @curate_active_tab,
+             sidebar_collapsed: @sidebar_collapsed,
+             filters: @filters,
+             filters_match_type: @filters_match_type)
 
     = render('companies/dashboard/promote',
              company: @company,

@@ -16,10 +16,12 @@ get '/plugins/track', to: 'plugins#track'
 get '/plugins/demo', to: 'plugins#demo'
 
 authenticate(:user) do
+  # the Prospect tab was merged into Curate
+  get '/prospect', to: redirect('/curate')
   get(
     '/:workflow_stage',
     to: 'companies#show',
-    workflow_stage: /prospect|curate|promote|measure/,
+    workflow_stage: /curate|promote|measure/,
     as: 'dashboard'
   )
   get '/settings', to: 'companies#edit', as: 'edit_company'

@@ -249,6 +249,16 @@
   }
 }
 
+// The stories search form takes the place of the search select in the table controls
+.table-controls .search-stories {
+  flex-grow: 1;
+  max-width: 22em;
+
+  &.has-query .search-stories__clear {
+    display: revert;
+  }
+}
+
 .search-table {
   @include flex-row-center;
   flex-grow: 1;
@@ -322,7 +332,7 @@ td.toggle-child {
   }
 }
 
-.popover[data-controller="table-display-options"],
+.popover[data-controller="display-options"],
 .popover[data-controller="visitors-display-options"]  {
   max-width: revert;
   padding: 0;

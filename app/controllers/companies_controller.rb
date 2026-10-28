@@ -19,7 +19,7 @@ class CompaniesController < ApplicationController
   def show
     set_curator
     @workflow_stage = params[:workflow_stage]
-    @prospect_active_tab = cookies['csp-prospect-tab'] || '#customer-wins'
+    @curate_active_tab = cookies['csp-curate-tab'] || '#stories'
     @promote_active_tab = cookies['csp-promote-tab'] || '#promoted-stories'
     @measure_active_tab = cookies['csp-measure-tab'] || '#visitors'
     # @recent_activity = @company.recent_activity(30)
