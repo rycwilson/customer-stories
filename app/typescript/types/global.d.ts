@@ -21,7 +21,7 @@ interface CustomerStoriesApp {
   customerWins: import('../src/lib').CustomerWin[] | undefined;
   promotedStories: import('../src/lib').AdwordsAd[] | undefined;
   storyContributions: Record<number, import('../src/lib').Contribution[]>;
-  visitors: any;
+  visitors: import('../src/lib/').VisitorsSourceData;
   activity: any;
   currentUser: User | null;
   authToken: string;
@@ -55,8 +55,6 @@ type RowData = (
 type FlashHash = Partial<{ readonly [key in 'notice' | 'alert' | 'info' | 'warning']: string }>;
 type Toast = { flash?: FlashHash, errors?: string[] }
 
-
-
 type DashboardFilters = { curator?: number | null };
 
 type ScreenSize = 'xs' | 'sm' | 'md-lg';
@@ -67,10 +65,6 @@ type StringCase = 'pascal' | 'kebab' | 'snake' | 'camel' | null;
 
 interface StringIndexable {
   [key: string]: any;
-}
-
-interface DataTableConfigOptions {
-  rowGroupColumn?: number,
 }
 
 interface TurboFrameAttributes {
