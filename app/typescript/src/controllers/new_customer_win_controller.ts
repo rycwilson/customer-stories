@@ -25,8 +25,8 @@ export default class NewCustomerWinController extends FormController<NewCustomer
     if (this.hasResponseTarget) {
       const rowData = JSON.parse(this.responseTarget.dataset.rowData as string);
       const rowViewHtml = this.responseTarget.dataset.rowViewHtml as string;
-      this.customerWinsOutlet.element.addEventListener('datatable:drawn', () => {
-        setTimeout(() => this.customerWinsOutlet.dashboardOutlet.modalOutlet.hide());
+      this.customerWinsOutlet.element.addEventListener('datatable-drawn', () => {
+        // setTimeout(() => this.customerWinsOutlet.dashboardOutlet.modalOutlet.hide());
       }, { once: true });
       this.customerWinsOutlet.newRowValue = { rowData, rowViewHtml }
       this.responseTarget.remove();

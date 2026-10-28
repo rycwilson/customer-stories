@@ -106,11 +106,11 @@ export default class StoriesController extends ResourceController {
   }
 
   clearFilters() {
-    const hadCurator = Boolean(this.filtersValue.curator);
+    // const hadCurator = Boolean(this.filtersValue.curator);
     this.filtersValue = {};
     // the curator should be actively "blank", not just removed
     STORY_FILTER_KEYS.forEach(key => Cookies.set(`csp-${key}-filter`, ''));
-    if (hadCurator) this.dashboardOutlet.filtersValue = { curator: null };
+    // if (hadCurator) this.dashboardOutlet.filtersValue = { curator: null };
   }
 
   filtersValueChanged(filters: StoriesFilters, prevFilters: StoriesFilters) {

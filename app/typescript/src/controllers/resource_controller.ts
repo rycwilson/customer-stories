@@ -4,7 +4,6 @@ import { Controller } from "@hotwired/stimulus";
 import { convertCase } from '../utils';
 
 export default class ResourceController extends Controller<HTMLElement> {
-  static outlets = ['dashboard'];
   static values = {
     init: { type: Boolean, default: false },
     dataPath: String,
@@ -15,7 +14,6 @@ export default class ResourceController extends Controller<HTMLElement> {
   
   declare filtersValue: ResourceFilters;
   declare readonly displayOptionsButtonTarget: HTMLButtonElement;
-  declare readonly dashboardOutlet: import('.').DashboardController;
 
   protected declare resource: Resource
   protected declare readonly initValue: boolean;

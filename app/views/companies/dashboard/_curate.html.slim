@@ -36,7 +36,6 @@
                   data: { \
                     dashboard_target: 'stories',
                     controller: 'stories',
-                    stories_dashboard_outlet: '.dashboard',
                     stories_data_path_value: '/',
                     stories_filters_value: filters,
                     stories_match_type_value: filters_match_type,
@@ -62,7 +61,6 @@
             data: { \
               dashboard_target: 'contributions',
               controller: 'contributions',
-              contributions_dashboard_outlet: '.dashboard',
               contributions_table_nav_outlet: '.contributions__table-nav',
               contributions_data_path_value: company_contributions_path(company),
               contributions_row_group_column_value: @row_group_columns[:contributions],
@@ -88,7 +86,6 @@
             data: { \
               dashboard_target: 'customerWins',
               controller: 'customer-wins',
-              customer_wins_dashboard_outlet: '.dashboard',
               customer_wins_table_nav_outlet: '.customer-wins__table-nav',
               customer_wins_data_path_value: '/successes',
               customer_wins_row_group_column_value: @row_group_columns[:customer_wins],
