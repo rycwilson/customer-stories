@@ -176,7 +176,7 @@ export class DataTableWrapper {
       );
       this.table.dispatchEvent(new CustomEvent(
         'datatable-info-cloned',
-        { detail: { clone: infoClone, pageInfo: this.dt.page.info() } }
+        { detail: { clone: infoClone, pageInfo: this.dt.page.info() }, bubbles: true },
       ));
     }
     if (paginate instanceof HTMLElement) {
@@ -197,7 +197,7 @@ export class DataTableWrapper {
       nextBtnClone.addEventListener('click', (_e) => nextBtn.click());
       this.table.dispatchEvent(new CustomEvent(
         'datatable-paginate-cloned',
-        { detail: { clone: paginateClone } }
+        { detail: { clone: paginateClone }, bubbles: true }
       ));
     }
   }
