@@ -1,47 +1,18 @@
-import type TableNavController from "./table_nav_controller";
-import ResourceController from "./resource_controller";
-import { dataTableConfig } from '../customer_wins/customer_wins';
+import { type CustomerWinsFilters } from '../lib';
+import TabularResourceController from './tabular_resource_controller';
 
-export default class CustomerWinsController extends ResourceController {
-  static outlets = [...super.outlets, 'table-nav'];
-  declare readonly tableNavOutlet: TableNavController;
-
-  declare filtersValue: CustomerWinsFilters;
-
-  get tableConfig() {
-    return dataTableConfig(this.rowGroupColumnValue);
-  }
-
-  filtersValueChanged(newFilters: CustomerWinsFilters, oldFilters: CustomerWinsFilters) {
-    const addedNewRecord = !oldFilters.success && newFilters.success;
-    const removedNewRecord = oldFilters.success && !newFilters.success;
+export default class CustomerWinsController extends TabularResourceController {
+  filtersValueChanged(filters: CustomerWinsFilters, prevFilters: CustomerWinsFilters) {
+    const addedNewRecord = !prevFilters.success && filters.success;
+    const removedNewRecord = prevFilters.success && !filters.success;
     if (addedNewRecord) {
       setTimeout(() => {
-        const { ['success']: _, ...rest } = this.filtersValue;
+        const { ['success']: _, ...rest } = this.filtersValue as CustomerWinsFilters;
         this.filtersValue = rest;
       })
     } else if (removedNewRecord) {
       return;
     }
-    super.filtersValueChanged(newFilters, oldFilters);
-  }
-
-  get filtersToSearchObjects() {
-    return [
-      ...this.sharedSearchObjects,
-      ...Object.entries(this.filtersValue).flatMap(([key, value]) => {
-        switch (key) {
-          case 'show-wins-with-story':
-            const checked = value;
-            // return { column: 'story', q: value ? 'not null' : 'null', regEx: true, smartSearch: false };
-            return [{ column: 'story', q: checked ? '' : '^false$', regEx: true, smartSearch: false }];
-          case 'success':
-            const id = value;
-            return [{ column: 'success', q: `^${id}$`, regEx: true, smartSearch: false }];
-          default:
-            return [];
-        }
-      })
-    ]
+    super.filtersValueChanged(filters, prevFilters);
   }
 }

@@ -1,194 +1,152 @@
-import type ResourceController from './controllers/resource_controller';
-import type DatatableController from './controllers/datatable_controller';
-import type { Config } from 'datatables.net';
-import { FetchRequest } from '@rails/request.js';
-import { debounce } from './utils';
+// import type ResourceController from './controllers/resource_controller';
+// import type { Config } from 'datatables.net';
 
-export function baseConfig(this: DatatableController) {
-  const ctrl = this;
-  return {
-    deferRender: true,
-    autoWidth: false,
-    dom: 'tip',
-    pageLength: 20,
-    drawCallback(this: JQuery<HTMLTableElement, any>, _settings: object) {
-      // console.log(ctrl.resourceOutlet.identifier, 'draw')
 
-      this.find('th.sorting').each((i: number, th: HTMLTableCellElement) => {
-        th.removeEventListener('click', ctrl.handleColumnSort, true);
-        th.addEventListener('click', ctrl.handleColumnSort, true);
-      });
-      debounce(ctrl.clonePaginationComponents.bind(ctrl), 75)();
-      ctrl.dispatch('drawn');
-    },
-    initComplete(this: any, _settings: object) {
-      ctrl.dispatch('init-complete', { detail: { dt: this.api() } });
-    }
-  }
-};
+// export function init(this: ResourceControllerWithDatatable) {
+//   if (!this.hasDatatableTarget) return Promise.reject('No table found');
 
-export function init(this: ResourceControllerWithDatatable) {
-  if (!this.hasDatatableTarget) return Promise.reject('No table found');
+//   const table = this.datatableTarget;
+//   return new Promise<void>((resolve: VoidFunction) => {
+//     table.addEventListener(
+//       'datatable:ready', 
+//       (e: CustomEvent<{ construct: (config: Config) => void }>) => {
+//         table.addEventListener('datatable:init-complete', resolve, { once: true });
+//         e.detail.construct(this.tableConfig);
+//       },
+//       { once: true }
+//     );
+//     table.setAttribute('data-datatable-init-value', 'true');
+//   });
+// }
 
-  const table = this.datatableTarget;
-  return new Promise<void>((resolve: VoidFunction) => {
-    table.addEventListener(
-      'datatable:ready', 
-      (e: CustomEvent<{ construct: (config: Config) => void }>) => {
-        table.addEventListener('datatable:init-complete', resolve, { once: true });
-        e.detail.construct(this.tableConfig);
-      },
-      { once: true }
-    );
-    table.setAttribute('data-datatable-init-value', 'true');
-  });
-}
+// export function search(this: ResourceController, searchSelectResults?: { [key: string]: string }) {
+//   if (!this.hasDatatableTarget) return Promise.reject('No table found');
 
-export function search(this: ResourceController, searchSelectResults?: { [key: string]: string }) {
-  if (!this.hasDatatableTarget) return Promise.reject('No table found');
+//   // console.log(this.resourceName + ' filtersValue:', this.filtersValue)
+//   const table = this.datatableTarget;
+//   return new Promise<void>((resolve: () => void) => {
+//     table.addEventListener('datatable:drawn', resolve, { once: true });
+//     table.setAttribute(
+//       'data-datatable-search-params-value', 
+//       JSON.stringify({
+//         ...{ filters: (this as ResourceControllerWithDatatable).filtersToSearchObjects },
+//         ...(
+//           searchSelectResults ? 
+//           { searchSelectResults } :
+//           { searchVal: this.searchSelectTarget.value }
+//         )
+//       })
+//     );
+//   });
+// }
 
-  // console.log(this.resourceName + ' filtersValue:', this.filtersValue)
-  const table = this.datatableTarget;
-  return new Promise<void>((resolve: () => void) => {
-    table.addEventListener('datatable:drawn', resolve, { once: true });
-    table.setAttribute(
-      'data-datatable-search-params-value', 
-      JSON.stringify({
-        ...{ filters: (this as ResourceControllerWithDatatable).filtersToSearchObjects },
-        ...(
-          searchSelectResults ? 
-          { searchSelectResults } :
-          { searchVal: this.searchSelectTarget.value }
-        )
-      })
-    );
-  });
-}
-
-export function getRowView(
-  this: ResourceController, 
-  { id, position }: { id?: number, position?: number }
-) {
-  if (!this.hasDatatableTarget) return Promise.reject('No table found');
-  if (!id && !position) return Promise.reject('Either id or position must be provided');
+// export function getRowView(
+//   this: ResourceController, 
+//   { id, position }: { id?: number, position?: number }
+// ) {
+//   if (!this.hasDatatableTarget) return Promise.reject('No table found');
+//   if (!id && !position) return Promise.reject('Either id or position must be provided');
   
-  return new Promise<RowView>(
-    (resolve) => {
-      this.element.addEventListener(
-        'datatable:row-lookup',
-        (e: Event) => {
-          const { detail: rowView } = e as CustomEvent;
-          resolve(rowView);
-        },
-        { once: true }
-      );
-      this.datatableTarget
-        .setAttribute('data-datatable-row-lookup-value', JSON.stringify({ id, position }) );
-    }
-  );
-}
+//   return new Promise<RowView>(
+//     (resolve) => {
+//       this.element.addEventListener(
+//         'datatable:row-lookup',
+//         (e: Event) => {
+//           const { detail: rowView } = e as CustomEvent;
+//           resolve(rowView);
+//         },
+//         { once: true }
+//       );
+//       this.datatableTarget
+//         .setAttribute('data-datatable-row-lookup-value', JSON.stringify({ id, position }) );
+//     }
+//   );
+// }
 
-export function turnToPage(this: ResourceController, page: number) {
-  if (!this.hasDatatableTarget) return Promise.reject('No table found');
+// export function turnToPage(this: ResourceController, page: number) {
+//   if (!this.hasDatatableTarget) return Promise.reject('No table found');
 
-  const table = this.datatableTarget;
-  return new Promise<void>(resolve => {
-    table.addEventListener(
-      'datatable:drawn',
-      () => { this.currentPage = page; resolve(); }, { once: true }
-    );
-    table.setAttribute('data-datatable-page-value', page.toString());
-  });
-}
+//   const table = this.datatableTarget;
+//   return new Promise<void>(resolve => {
+//     table.addEventListener(
+//       'datatable:drawn',
+//       () => { this.currentPage = page; resolve(); }, { once: true }
+//     );
+//     table.setAttribute('data-datatable-page-value', page.toString());
+//   });
+// }
 
-export function addRow(this: ResourceController, data: CustomerWin | Contribution, draw = false) {
-  if (!this.hasDatatableTarget) return Promise.reject('No table found');
+// export function addRow(this: ResourceController, data: CustomerWin | Contribution, draw = false) {
+//   if (!this.hasDatatableTarget) return Promise.reject('No table found');
 
-  console.log(`addRow(${JSON.stringify(data)}, ${draw})`);
-  const table = this.datatableTarget;
-  CSP[this.resourceName].push(data);
-  table.setAttribute('data-datatable-reload-value', this.resourceName);
-  return new Promise<void>((resolve: () => void) => {
-    if (!draw) {
-      resolve();
-    } else {
-      table.addEventListener('datatable:drawn', resolve, { once: true });
-      table.setAttribute('data-datatable-redraw-value', 'true'); 
-    }
-  });
-}
+//   console.log(`addRow(${JSON.stringify(data)}, ${draw})`);
+//   const table = this.datatableTarget;
+//   CSP[this.resourceName].push(data);
+//   table.setAttribute('data-datatable-reload-value', this.resourceName);
+//   return new Promise<void>((resolve: () => void) => {
+//     if (!draw) {
+//       resolve();
+//     } else {
+//       table.addEventListener('datatable:drawn', resolve, { once: true });
+//       table.setAttribute('data-datatable-redraw-value', 'true'); 
+//     }
+//   });
+// }
 
-export function deleteRow(this: DatatableController, tr: HTMLTableRowElement, path: string) {
-  return new Promise<number>(async (resolve) => {
-    const req = new FetchRequest('DELETE', path);
-    const res = await req.perform();
-    if (res.ok) {
-      const row = this.dt.row(tr);
-      const id = row.data().id;
-      if (row.child.isShown()) row.child.hide();
-      row.remove();
-      this.dt.draw(false);
-      resolve(id);
-    } else {
-      // reject(`Failed to delete row at ${path}: ${response.status} ${response.statusText}`);
-    }
-  });
-}
-
-export function handleInfoCloned(this: ResourceControllerWithDatatable, e: CustomEvent) {
-  const { clone, pageInfo } = e.detail;
+// export function handleInfoCloned(this: ResourceControllerWithDatatable, e: CustomEvent) {
+//   const { clone, pageInfo } = e.detail;
   
-  // NOTE: The page end value from datatables is exclusive,
-  // so it is the index of the last row on the page + 1.
-  // => Transform this before passing to table nav controller
-  this.tableNavTarget.setAttribute(
-    'data-table-nav-page-info-value',
-    JSON.stringify({ ...pageInfo, end: pageInfo.end - 1 })
-  );
-  this.currentPage = pageInfo.page;
+//   // NOTE: The page end value from datatables is exclusive,
+//   // so it is the index of the last row on the page + 1.
+//   // => Transform this before passing to table nav controller
+//   this.tableNavTarget.setAttribute(
+//     'data-table-nav-page-info-value',
+//     JSON.stringify({ ...pageInfo, end: pageInfo.end - 1 })
+//   );
+//   this.currentPage = pageInfo.page;
   
-  // Pass the clone via an outlet since it is a complex object with attached event listeners,
-  // thus can't be passed by data attribute
-  this.tableNavOutlet.infoTarget.replaceChildren(clone);
-}
+//   // Pass the clone via an outlet since it is a complex object with attached event listeners,
+//   // thus can't be passed by data attribute
+//   this.tableNavOutlet.infoTarget.replaceChildren(clone);
+// }
 
-export function handlePaginateCloned(this: ResourceControllerWithDatatable, e: CustomEvent) {
-  const { clone } = e.detail;
-  this.tableNavOutlet.paginateTarget.replaceChildren(clone);
-}
+// export function handlePaginateCloned(this: ResourceControllerWithDatatable, e: CustomEvent) {
+//   const { clone } = e.detail;
+//   this.tableNavOutlet.paginateTarget.replaceChildren(clone);
+// }
 
-export function initDisplayOptions(this: ResourceController, isReset = false) {
-  const button = this.displayOptionsButtonTarget;
-  if (isReset) {
-    $(button).data()['bs.popover'].options.content = this.displayOptionsHtmlValue;
-  } else {
-    $(button).popover({
-      content: this.displayOptionsHtmlValue,
-      html: true,
-      animation: false,
-      container: 'body',
-      viewport: { selector: 'body', padding: 70 },
-      title: 'Display Preferences',
-      placement: 'auto left',
-      template: `
-        <div
-          class="popover ${this.identifier}" 
-          data-controller="table-display-options" 
-          data-table-display-options-${this.identifier}-outlet="#${this.identifier}"
-          data-table-display-options-dashboard-outlet=".dashboard"
-          role="tooltip">
-          <div class="arrow"></div>
-          <div class="popover-title__wrapper">
-            <h3 class="popover-title label-secondary"></h3>
-            <button type="button" class="close" data-action="table-display-options#hide" aria-label="Close">
-              <span aria-hidden="true">&times;</span>
-            </button>
-          </div>
-          <div class="popover-content">
-            <!-- content goes here (setting above) -->
-          </div>
-        </div>
-      `,
-    });
-  }
-}
+// export function initDisplayOptions(this: ResourceController, isReset = false) {
+//   const button = this.displayOptionsButtonTarget;
+//   if (isReset) {
+//     $(button).data()['bs.popover'].options.content = this.displayOptionsHtmlValue;
+//   } else {
+//     $(button).popover({
+//       content: this.displayOptionsHtmlValue,
+//       html: true,
+//       animation: false,
+//       container: 'body',
+//       viewport: { selector: 'body', padding: 70 },
+//       title: this.displayOptionsTitle,
+//       placement: 'auto left',
+//       template: `
+//         <div
+//           class="popover ${this.identifier}" 
+//           data-controller="table-display-options" 
+//           data-table-display-options-resource-outlet="#${this.element.id}"
+//           data-table-display-options-dashboard-outlet=".dashboard"
+//           role="tooltip">
+//           <div class="arrow"></div>
+//           <div class="popover-title__wrapper">
+//             <h3 class="popover-title label-secondary"></h3>
+//             <button type="button" class="close" data-action="table-display-options#hide" aria-label="Close">
+//               <span aria-hidden="true">&times;</span>
+//             </button>
+//           </div>
+//           <div class="popover-content">
+//             <!-- content goes here (setting above) -->
+//           </div>
+//         </div>
+//       `,
+//     });
+//   }
+// }

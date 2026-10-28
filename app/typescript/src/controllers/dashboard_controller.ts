@@ -101,9 +101,9 @@ export default class DashboardController extends Controller {
   }
 
   handleResourceLoading(
-    { target: resourcePanel, currentTarget: dashboardPanel }: { target: HTMLElement, currentTarget: HTMLElement }
+    { target: _resourcePanel, currentTarget: dashboardPanel }: { target: HTMLElement, currentTarget: HTMLElement }
   ) {
-    console.log(`loading: ${resourcePanel.id}`)
+    // console.log(`loading: ${resourcePanel.id}`)
     this.spinnerTimers[dashboardPanel.id as DashboardTab] = window.setTimeout(() => {
       if (!dashboardPanel.classList.contains('ready')) {
         dashboardPanel.classList.add('loading');
@@ -112,7 +112,7 @@ export default class DashboardController extends Controller {
   }
 
   handleResourceReady({ target: resourcePanel }: { target: HTMLElement }) {
-    console.log(`ready: ${resourcePanel.id}`)
+    // console.log(`ready: ${resourcePanel.id}`)
     this.readyState[resourcePanel.id as ResourceId] = true;
   }
 

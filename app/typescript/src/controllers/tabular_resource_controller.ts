@@ -1,6 +1,6 @@
 import ResourceController from './resource_controller';
 import DataTable, { type Config } from 'datatables.net';
-import { TabularResource } from '../lib';
+import { ResourceFilters, TabularResource } from '../lib';
 
 type RowView = {
   page?: number;
@@ -82,7 +82,7 @@ export default class TabularResourceController extends ResourceController {
     });
   }
 
-  filtersValueChanged() {
+  filtersValueChanged(filters: ResourceFilters, prevFilters: ResourceFilters) {
     if (this.tableInitialized) {
       this.searchTable();
     }
