@@ -332,8 +332,7 @@ td.toggle-child {
   }
 }
 
-.popover[data-controller="display-options"],
-.popover[data-controller="visitors-display-options"]  {
+.popover[data-controller="display-options"] {
   max-width: revert;
   padding: 0;
 
