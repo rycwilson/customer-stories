@@ -73,7 +73,7 @@ export default class StoriesController extends ResourceController {
   }
 
   handleFrameRendered(_e: Event) {
-    console.log('turbo:frame-render')
+    // console.log('turbo:frame-render')
   }
 
   fetchStories() {

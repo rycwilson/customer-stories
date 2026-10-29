@@ -261,7 +261,7 @@ export default class DashboardController extends Controller {
   }
 
   initTabPanel(tab: DashboardTab) {
-    console.log(`Initializing ${tab} panel...`);
+    // console.log(`Initializing ${tab} panel...`);
     if (tab === DashboardTab.Curate) {
       [this.storiesTarget, this.contributionsTarget, this.customerWinsTarget].forEach(target => {
         target.setAttribute(`data-${target.id}-init-value`, 'true');

@@ -21,12 +21,12 @@ export default abstract class Resource {
   }
 
   async getJSON<T>(dataPath: string, params?: URLSearchParams): Promise<T> {
-    console.log(`Fetching data from ${dataPath}...`)
+    // console.log(`Fetching data from ${dataPath}...`)
     const req = new FetchRequest('get', `${dataPath}.json${params ? `?${params.toString()}` : ''}`);
     const res = await req.perform();
     if (res.ok) {
       const data = await res.json;
-      console.log(data);
+      // console.log(data);
       return data;
     } else {
       throw new Error(`Error fetching JSON data from ${dataPath}`);
