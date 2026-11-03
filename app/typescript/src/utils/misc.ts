@@ -153,3 +153,28 @@ export function distinctObjects<T extends object, K extends keyof T>(objects: T[
   // Keeps the last occurrence of the duplicate
   return [...new Map(objects.map(item => [item[attr], item])).values()];
 }
+
+export function shallowEqual<T extends Record<string, any>>(objA: T, objB: any): boolean {
+  // 1. Check for referential equality (same memory address)
+  if (Object.is(objA, objB)) return true;
+
+  // 2. Ensure both are objects and neither is null
+  if (typeof objA !== 'object' || objA === null || typeof objB !== 'object' || objB === null) {
+    return false;
+  }
+
+  const keysA = Object.keys(objA);
+  const keysB = Object.keys(objB);
+
+  // 3. Check if they have the same number of properties
+  if (keysA.length !== keysB.length) return false;
+
+  // 4. Verify every key in objA exists in objB and has the same value
+  for (const key of keysA) {
+    if (!Object.prototype.hasOwnProperty.call(objB, key) || !Object.is(objA[key], objB[key])) {
+      return false;
+    }
+  }
+
+  return true;
+}
