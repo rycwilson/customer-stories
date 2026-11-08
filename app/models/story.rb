@@ -152,9 +152,12 @@ class Story < ApplicationRecord
         ].join(' '))
       )
   }
+  
   scope :filtered, lambda { |filters, match_type = 'all'|
     # The default object here is the relation that called the scope (typically company.stories)
     return all if filters.blank?
+
+    global_filters = [:curator]
 
     # Preload associations to avoid N+1 queries and ensure consistent query structure
     # Uses .includes (LEFT JOIN) instead of .joins (INNER JOIN) to prevent excluding
@@ -163,9 +166,12 @@ class Story < ApplicationRecord
     # which is an error in the case of a "match any" query for both category and product tags)
     base_relation = Story.includes_for_filters(self, filters)
 
-    # an array of ActiveRecord::Relation objects
-    queries = Story.build_filter_queries(base_relation, filters)
-    return base_relation if queries.empty?
+    global_queries = Story.filters_queries(base_relation, filters.slice(*global_filters))
+    relation = global_queries.reduce(base_relation, &:merge)
+
+    # An array of ActiveRecord::Relation objects
+    stories_queries = Story.filters_queries(relation, filters.except(*global_filters))
+    return relation if stories_queries.empty?
 
     match_type == 'all' ? queries.reduce(&:merge) : queries.reduce(&:or)
   }
@@ -217,7 +223,7 @@ class Story < ApplicationRecord
     relation
   end
 
-  def self.build_filter_queries(base_relation, filters)
+  def self.filters_queries(base_relation, filters)
     filters.filter_map do |type, id|
       next if id.blank?
 
@@ -229,9 +235,9 @@ class Story < ApplicationRecord
       when :customer
         base_relation.where(successes: { customer_id: id })
       when :category
-        base_relation.where(category_tags: { id: id })
+        base_relation.where(category_tags: { id: })
       when :product
-        base_relation.where(product_tags: { id: id })
+        base_relation.where(product_tags: { id: })
       end
     end
   end
