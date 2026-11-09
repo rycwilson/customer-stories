@@ -9,6 +9,7 @@ class User < ApplicationRecord
   has_many :referred_contributions, class_name: 'Contribution', foreign_key: 'referrer_id'
 
   has_many :successes, class_name: 'Success', foreign_key: 'curator_id'
+  has_many :customers, -> { distinct }, through: :successes
   has_many :stories, through: :successes
 
   scope :imitable, -> { where(imitable: true) }
