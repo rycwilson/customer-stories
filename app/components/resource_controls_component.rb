@@ -26,24 +26,19 @@ class ResourceControlsComponent < ViewComponent::Base
                 i.fa.fa-plus
                 |&nbsp;&nbsp;New
 
-          = button_tag( \
-              type: 'button', 
-              class: 'btn btn-default', 
-              aria: { label: 'Display Options' }, 
-              data: { \
-                "#{@resource_id}_target" => \
-                  ('displayOptionsButton' if @resource_id.in?(%w[stories promoted-stories])) }) do
-            i.fa.fa-filter
-            |&nbsp;&nbsp;Filters
-            = tag.span(data: { "#{@resource_id}-target" => 'filtersCount' })
+          - if filters?
+            = button_tag(type: 'button', 
+                        class: 'btn btn-default', 
+                        aria: { label: 'Filters' }, 
+                        data: { "#{@resource_id}_target" => 'filtersButton' }) do
+              i.fa.fa-filter
+              |&nbsp;&nbsp;Filters
+              = tag.span(data: { "#{@resource_id}_target" => 'activeFiltersCount' })
 
-          = button_tag( \
-              type: 'button', 
-              class: 'btn btn-default', 
-              aria: { label: 'Display Options' }, 
-              data: { \
-                "#{@resource_id}_target" => \
-                  ('displayOptionsButton' unless @resource_id.in?(%w[stories story-contributions])) }) do
+          = button_tag(type: 'button', 
+                       class: 'btn btn-default', 
+                       aria: { label: 'Preferences' }, 
+                       data: { "#{@resource_id}_target" => 'preferencesButton' }) do
             i.fa.fa-gear
             |&nbsp;&nbsp;Preferences
 
@@ -51,8 +46,8 @@ class ResourceControlsComponent < ViewComponent::Base
         div
           div
             = tag.button(type: 'button',
-                          class: 'table-controls__back-to-table btn btn-default',
-                          data: { action: "#{@resource_id}#backToTable" }) do
+                         class: 'table-controls__back-to-table btn btn-default',
+                         data: { action: "#{@resource_id}#backToTable" }) do
               i.fa.fa-arrow-left
 
           = tag.div(class: "#{@resource_id}__table-nav",
@@ -64,12 +59,12 @@ class ResourceControlsComponent < ViewComponent::Base
               .btn-group
                 - %w[prevRowViewBtn nextRowViewBtn].each do |btn|
                   = tag.button(type: 'button',
-                              class: 'btn btn-default',
-                              role: 'link',
-                              data: { \
-                                table_nav_target: btn,
-                                action: 'table-nav#stepRowView',
-                                step: (btn == 'prevRowViewBtn' ? '-1' : '1') }) do
+                               class: 'btn btn-default',
+                               role: 'link',
+                               data: { \
+                                 table_nav_target: btn,
+                                 action: 'table-nav#stepRowView',
+                                 step: (btn == 'prevRowViewBtn' ? '-1' : '1') }) do
                     i.fa class="fa-chevron-#{btn == 'prevRowViewBtn' ? 'left' : 'right'}"
       
       - elsif @resource_id == 'stories'
@@ -93,5 +88,9 @@ class ResourceControlsComponent < ViewComponent::Base
 
   def tabular?
     @resource_id.in? %w[customer-wins contributions story-contributions promoted-stories]
+  end
+
+  def filters?
+    @resource_id.in? %w[stories]
   end
 end
