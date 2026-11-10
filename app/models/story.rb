@@ -152,7 +152,7 @@ class Story < ApplicationRecord
         ].join(' '))
       )
   }
-  
+
   scope :filtered, lambda { |filters, match_type = 'all'|
     # The default object here is the relation that called the scope (typically company.stories)
     return all if filters.blank?
@@ -170,8 +170,8 @@ class Story < ApplicationRecord
     relation = global_queries.reduce(base_relation, &:merge)
 
     # An array of ActiveRecord::Relation objects
-    stories_queries = Story.filters_queries(relation, filters.except(*global_filters))
-    return relation if stories_queries.empty?
+    queries = Story.filters_queries(relation, filters.except(*global_filters))
+    return relation if queries.empty?
 
     match_type == 'all' ? queries.reduce(&:merge) : queries.reduce(&:or)
   }
