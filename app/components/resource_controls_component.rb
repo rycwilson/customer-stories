@@ -82,8 +82,9 @@ class ResourceControlsComponent < ViewComponent::Base
   def resource_name
     @resource_id
       .gsub('-', ' ')
-      .gsub('contributions', 'contributors')
       .gsub(/(\A|\s)([a-z])/) { (::Regexp.last_match(1) + ::Regexp.last_match(2).upcase).to_s }
+      .sub(/^Stories$/, 'Customer Stories')
+      .gsub('Contributions', 'Contributors')
   end
 
   def tabular?
