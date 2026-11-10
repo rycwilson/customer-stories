@@ -45,8 +45,13 @@ module ContributionsHelper
     }
   end
 
-  def contributions_display_options_html(company, row_group_column)
-    html = render('contributions/display_options', company:, row_group_column:)
+  def contributions_filters_popover_html(company)
+    html = render('contributions/filters_popover', company:)
+    escape_once(html)
+  end
+
+  def contributions_preferences_popover_html(company, row_group_column)
+    html = render('contributions/preferences_popover', company:, row_group_column:)
     escape_once(html)
   end
 end

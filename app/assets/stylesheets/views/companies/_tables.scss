@@ -332,37 +332,73 @@ td.toggle-child {
   }
 }
 
-.popover[data-controller="display-options"] {
-  max-width: revert;
+.stories-filters__controls,
+.stories-filters__match-type {
+  @include flex-row-center;
+}
+
+.stories-filters__controls {
+  justify-content: space-between;
+  padding-top: 5px;
+
+  .btn-link {
+    padding: 0;
+  }
+}
+
+.stories-filters__match-type .radio-inline {
+  padding-top: 0;
+}
+
+// Dashboard popovers
+[class*="-filters"][class*="popover"],
+[class*="-preferences"][class*="popover"] {
+  border: none;
   padding: 0;
+  max-width: revert;
+  // overflow: hidden;   // so background color on .popover-content doesn't bleed over border-radius
+  font-family: inherit;
+  font-size: $font-size-small;
+
+  &,
+  .popover-title,
+  .popover-content {
+    border-radius: 0;
+  }
+
+  &.bottom > .arrow {
+    &,
+    &::after {
+      border-bottom-color: darken($light-gray, 10%);
+    }
+  }
 
   .popover-title__wrapper {
-    position: relative;
+    @include flex-row-center-between;
+    background-color: darken($light-gray, 10%);
+  }
+  
+  .popover-title {
+    border: none;
+    padding: 12px 14px;
+    background-color: transparent;
+    font-size: 15px;
   }
 
   button.close {
-    position: absolute;
-    top: 0;
-    right: 0;
-    bottom: 0;
-    padding: 0 14px;
-    color: white;
-    opacity: 0.4;
+    padding: 0 0.5em;
+  }
 
-    &:hover,
-    &:focus {
-      opacity: 0.8;
-    }
+  .form-horizontal {
+    padding: 0;
 
-    span {
-      position: relative;
-      top: -0.15em;
+    .control-label {
+      text-align: left;
     }
   }
 
-  h3 {
-    background-color: $brand-primary;
-    color: white;
+  .form-control {
+    font-size: $font-size-small;
   }
 
   .form-group {
@@ -370,8 +406,12 @@ td.toggle-child {
     margin-left: 0;
     margin-right: 0;
 
+    &:last-child {
+      margin-bottom: 0;
+    }
+
     > :last-child {
-      width: 30rem;
+      width: 28rem;
 
       .checkbox + .checkbox {
         margin-top: 0.25em;
@@ -385,13 +425,15 @@ td.toggle-child {
     
   .control-label {
     flex-grow: 1;
-    margin-right: 1.25em;
+    margin-right: 1.75em;
   }
 
   .popover-content {
-    padding: 1em 1.75em;
-    // background-color: $light-gray;
+    padding: 1.75em 1.75em 2.25em;
+    background-color: $light-gray;
   }
+
+
 
   // &.customer-wins {
   // }

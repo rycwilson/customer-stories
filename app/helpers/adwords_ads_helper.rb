@@ -1,8 +1,14 @@
 # frozen_string_literal: true
 
 module AdwordsAdsHelper
-  def promoted_stories_display_options_html(company, row_group_column)
-    html = render('adwords_ads/display_options', company:, row_group_column:)
+  def promoted_stories_filters_popover_html(company)
+    html = render('adwords_ads/filters_popover', company:)
+    escape_once(html)
+  end
+
+  def promoted_stories_preferences_popover_html(company, row_group_column)
+    html = render('adwords_ads/preferences_popover', company:, row_group_column:)
+    puts html
     escape_once(html)
   end
 

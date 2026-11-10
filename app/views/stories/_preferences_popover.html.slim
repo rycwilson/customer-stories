@@ -1,0 +1,33 @@
+.form-horizontal
+
+  .form-group data-action="change->stories#handleFilterChanged"
+    label.control-label for="stories-curator" Curator
+    div
+      = render('companies/shared/curator_select', company:, ctrl_id: 'stories')
+
+  .form-group data-action="change->stories#toggleView"
+    /fieldset 
+      legend View
+      - ['table', 'grid'].each do |view|
+        div
+          = tag.input(id: "stories-#{view}",
+                      type: 'radio',
+                      name: 'stories-view',
+                      value: view,
+                      checked: view == 'grid',
+                      disabled: view == 'table')
+          label for="stories-#{view}" 
+            = view.capitalize
+    
+    label.control-label View
+    div
+      - ['table', 'grid'].each do |view|
+        .radio 
+          label for="stories-#{view}"
+            = tag.input(id: "stories-#{view}",
+                        type: 'radio',
+                        name: 'stories-view',
+                        value: view,
+                        checked: view == 'grid',
+                        disabled: view == 'table')
+            = view.capitalize

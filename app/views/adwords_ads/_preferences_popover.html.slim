@@ -1,0 +1,20 @@
+.form-horizontal 
+  
+  .form-group data-action="change->promoted-stories#handleFilterChanged"
+    label.control-label for="promoted-stories-curator" Curator
+    div 
+      = render('companies/shared/curator_select', company:, ctrl_id: 'promoted-stories')
+
+  .form-group data-action="change->promoted-stories#handleRowGroupColumnChanged"
+    label.control-label Group 
+    div
+      - [['1', 'Customer'], ['', 'None']].each do |(column, label_text)|
+        - checked = (column == row_group_column) || (column.blank? && row_group_column.nil?)
+        .radio 
+          label for="promoted-stories-row-group-column-#{label_text.downcase}"
+            = tag.input(id: "promoted-stories-row-group-column-#{label_text.downcase}",
+                        type: 'radio',
+                        name: 'promoted-stories-row-group-column',
+                        value: column,
+                        checked:)
+            = label_text

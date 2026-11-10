@@ -1,0 +1,32 @@
+.form-horizontal
+
+  .form-group data-action="change->visitors#handleCuratorChanged"
+    label.control-label for="visitors-curator" Curator
+    div
+      = render('companies/shared/curator_select', company:, ctrl_id: 'visitors')
+
+  .form-group data-action="change->visitors#handleFilterChanged"
+    label.control-label for="visitors-date-range" Date Range
+    div
+      = select_tag( \
+          'visitors-date-range',
+          options_for_select([ \
+            ['Last 7 Days', 'last-7'],
+            ['Last 30 Days', 'last-30'],
+            ['Last 90 Days', 'last-90'],
+            ['This Quarter', 'this-quarter'],
+            ['Last Quarter', 'previous-quarter'],
+            ['This Year', 'this-year'],
+            ['Last Year', 'previous-year'] ]),
+          data: { \
+            controller: 'tomselect',
+            tomselect_kind_value: 'dateRange',
+            tomselect_custom_options_value: '{ &quot;plugins&quot;: {} }' })
+  
+  .form-group data-action="change->visitors#handleFilterChanged"
+    label.control-label Show
+    div
+      .checkbox 
+        label for="show-visitor-source"
+          input#show-visitor-source type="checkbox"
+          | Visitor source

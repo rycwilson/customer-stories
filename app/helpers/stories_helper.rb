@@ -1,8 +1,12 @@
 module StoriesHelper
 
-  # Content for the dashboard stories filters popover (a "display options" popover)
-  def stories_display_options_html(company, match_type)
-    html = render('stories/display_options', company:, match_type:)
+  def stories_filters_popover_html(company, curator, filters, match_type)
+    html = render('stories/filters_popover', company:, curator:, filters:, match_type:).squish
+    escape_once(html)
+  end
+
+  def stories_preferences_popover_html(company)
+    html = render('stories/preferences_popover', company:).squish
     escape_once(html)
   end
 

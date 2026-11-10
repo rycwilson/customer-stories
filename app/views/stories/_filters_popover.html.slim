@@ -1,0 +1,71 @@
+- owner = curator || company
+
+.form-horizontal
+
+  .form-group data-action="change->stories#handleFiltersMatchTypeChanged"
+    label.control-label for="stories-match-type" Match
+    .stories-filters__controls
+      .stories-filters__match-type
+        - %w[all any].each do |type|
+          label.radio-inline
+            = tag.input(type: 'radio', name: 'stories-match-type', value: type, checked: type == match_type)
+            = type
+      button.btn-link type="button" data-action="stories#clearFilters"
+        | clear all
+
+  .form-group data-action="change->stories#handleFilterChanged"
+    label.control-label for="stories-status" Status
+    div
+      = select_tag('stories-status',
+                   options_for_select( \
+                     Story.status_news.map { |k, v| k == 'is_published' ? \
+                       ["Published (#{owner.stories.is_published.count})", v] : \
+                       ["#{k.capitalize} (#{owner.stories.send(k).count})", v] }, 
+                     filters[:status]),
+                   include_blank: 'Select', 
+                   class: 'form-control', 
+                   data: { \
+                    controller: 'tomselect',
+                    tomselect_kind_value: 'status',
+                    stories_target: 'filterControl' })
+
+  .form-group data-action="change->stories#handleFilterChanged"
+    label.control-label for="stories-customer" Customer
+    div
+      = select_tag('stories-customer',
+                   options_from_collection_for_select( \
+                     owner.customers.sort_by(&:name),
+                     :id, 
+                     ->(customer) { customer.name_with_stories_count(curator) },
+                     filters[:customer]),
+                   include_blank: 'Select',
+                   class: 'form-control',
+                   data: { \
+                    controller: 'tomselect',
+                    tomselect_kind_value: 'customer',
+                    stories_target: 'filterControl' })
+
+  .form-group data-action="change->stories#handleFilterChanged"
+    label.control-label for="stories-category" Category
+    div   
+      = select_tag('stories-category',
+                   options_for_select(company.tag_select_options(:category, curator:)),
+                   id: 'stories-category',
+                   include_blank: 'Select',
+                   class: 'form-control',
+                   data: { \
+                    controller: 'tomselect',
+                    tomselect_kind_value: 'category',
+                    stories_target: 'filterControl' })
+
+  .form-group data-action="change->stories#handleFilterChanged"
+    label.control-label for="stories-product" Product
+    div   
+      = select_tag('stories-product',
+                   options_for_select(company.tag_select_options(:product, curator:)),
+                   include_blank: 'Select',
+                   class: 'form-control',
+                   data: { \
+                    controller: 'tomselect',
+                    tomselect_kind_value: 'product',
+                    stories_target: 'filterControl' })

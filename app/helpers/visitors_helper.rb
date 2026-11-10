@@ -1,8 +1,13 @@
 # frozen_string_literal: true
 
 module VisitorsHelper
-  def visitors_display_options_html(company)
-    html = render('visitors/display_options', company:)
+  def visitors_filters_popover_html(company)
+    html = render('visitors/filters_popover', company:)
+    escape_once(html)
+  end
+
+  def visitors_preferences_popover_html(company)
+    html = render('visitors/preferences_popover', company:)
     escape_once(html)
   end
 end

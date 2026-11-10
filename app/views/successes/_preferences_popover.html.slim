@@ -1,0 +1,28 @@
+.form-horizontal 
+
+  .form-group data-action="change->customer-wins#handleFilterChanged"
+    label.control-label for="customer-wins-curator" Curator
+    div
+      = render('companies/shared/curator_select', company:, ctrl_id: 'customer-wins')
+      
+  .form-group data-action="change->customer-wins#handleRowGroupColumnChanged"
+    label.control-label Group 
+    div
+      - [['1', 'Customer'], ['', 'None']].each do |(column, label_text)|
+        - checked = (column == row_group_column) || (column.blank? && row_group_column.nil?)
+        .radio 
+          label for="customer-wins-row-group-column-#{label_text.downcase}"
+            = tag.input(id: "customer-wins-row-group-column-#{label_text.downcase}",
+                        type: 'radio',
+                        name: 'customer-wins-row-group-column',
+                        value: column,
+                        checked:)
+            = label_text
+
+  .form-group data-action="change->customer-wins#handleFilterChanged"
+    label.control-label Show
+    div
+      .checkbox 
+        label for="show-wins-with-story"
+          input#show-wins-with-story type="checkbox" checked="true" 
+          | Customer Wins with Story started
