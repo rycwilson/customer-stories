@@ -65,6 +65,16 @@ export default class TabularResourceController extends ResourceController {
     });
   }
 
+  setPreferences() {
+    if (!this.popover) return;
+
+    super.setPreferences();
+    const rowGroupInput = <HTMLInputElement>this.popover.querySelector(
+      `[name="${this.identifier}-row-group-column"][value="${this.rowGroupColumnValue ?? ''}"]`
+    );
+    rowGroupInput.checked = true;
+  }
+
   searchTable(searchSelectResults?: Record<string, string>) {
     return new Promise<void>((resolve: VoidFunction) => {
       this.tableTarget.addEventListener('datatable-drawn', resolve, { once: true });
@@ -109,6 +119,11 @@ export default class TabularResourceController extends ResourceController {
 
   handleSearchSelectChanged() {
     this.searchTable();
+  }
+  
+  handleRowGroupColumnChanged({ target }: { target: HTMLInputElement }) {
+    this.rowGroupColumnValue = +target.value || undefined;
+    Cookies.set(`${this.identifier}-row-group-column`, target.value);
   }
 
   addRow(data: SourceData, draw = false) {

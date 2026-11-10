@@ -36,7 +36,8 @@
                     controller: 'visitors',
                     visitors_data_path_value: company_visitors_path(company),
                     visitors_filters_value: @visitors_filters,
-                    visitors_display_options_html_value: visitors_display_options_html(company) })
+                    visitors_filters_html_value: visitors_filters_popover_html(company),
+                    visitors_preferences_html_value: visitors_preferences_popover_html(company) })
           = render(ResourceControlsComponent.new( \
               'visitors',
               search_options: { \

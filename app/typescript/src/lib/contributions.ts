@@ -62,6 +62,7 @@ enum Columns {
 }
 
 export default class Contributions extends TabularResource {
+  static filtersKeys: (keyof ContributionsFilters)[] = ['show-completed', 'show-published'];
   static readonly columnIndices = Columns;
 
   dataTableConfig(

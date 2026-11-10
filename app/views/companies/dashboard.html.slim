@@ -6,7 +6,8 @@
             dashboard_toast_outlet: '#toaster',
             action: [ \
               'win-story:show-contributor->dashboard#showContributor',
-              'toast->dashboard#showToast'].join(' ') }) do
+              'toast->dashboard#showToast',
+              'dashboard-filter-changed->dashboard#handleFilterChanged' ].join(' ') }) do
 
   = render('shared/navbars/company_nav', company: @company, workflow_stage: @workflow_stage)
   
@@ -17,8 +18,8 @@
              workflow_stage: @workflow_stage,
              active_tab: @curate_active_tab,
              sidebar_collapsed: @sidebar_collapsed,
-             filters: @filters,
-             filters_match_type: @filters_match_type)
+             stories_filters: @stories_filters,
+             stories_filters_match_type: @stories_filters_match_type)
 
     = render('companies/dashboard/promote',
              company: @company,

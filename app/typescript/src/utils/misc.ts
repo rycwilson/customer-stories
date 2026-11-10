@@ -3,7 +3,7 @@ import Cookies from 'js-cookie';
 import tinycolor from 'tinycolor2';
 import { FetchRequest } from '@rails/request.js';
 
-export async function waitForImages(images: HTMLImageElement[]) {
+export async function imagesLoaded(images: HTMLImageElement[]) {
   const promises = images.map(img => {
     if (img.complete) return Promise.resolve();
 

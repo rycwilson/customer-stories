@@ -10,9 +10,11 @@ class StoriesController < ApplicationController
     @v2 = params[:v2].present?
     @is_dashboard = turbo_frame_request?
     @filters = story_filters_from_params(@company, is_dashboard: @is_dashboard)
-    @filters_match_type = cookies["csp-#{'dashboard-' if @is_dashboard}filters-match-type"] || 'all'
+    @filters_match_type = 
+      params[:match_type] ||
+      cookies["#{'dashboard-' if @is_dashboard}stories-filters-match-type"] ||
+      'all'
     if @is_dashboard
-      # @filters[:curator] ||= current_user.id
       @stories = if params[:q].present?
                    search(@company.stories, params[:q])
                  else

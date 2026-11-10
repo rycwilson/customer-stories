@@ -1,15 +1,17 @@
 import { FetchRequest } from '@rails/request.js';
 
-export type ResourceFilters = (
-  import('.').StoriesFilters |
-  import('.').CustomerWinsFilters |
-  import('.').ContributionsFilters |
-  import('.').VisitorsFilters
-);
+export type ResourceFilters =
+  | import('.').StoriesFilters
+  | import('.').CustomerWinsFilters
+  | import('.').ContributionsFilters
+  | import('.').AdwordsAdsFilters
+  | import('.').VisitorsFilters;
 
 type FetchedData = SourceData[] | import('.').VisitorsSourceData
 
 export default abstract class Resource {
+  static declare filtersKeys: KeysOfUnion<ResourceFilters>[];
+
   container: HTMLElement;
 
   constructor(container: HTMLElement) {
@@ -33,29 +35,27 @@ export default abstract class Resource {
     }
   }
 
-  initDisplayOptions(button: HTMLButtonElement, content: string, isReset = false) {
+  initDisplayOptions(title: string, button: HTMLButtonElement, content: string, isReset = false) {
     if (isReset) {
       $(button).data()['bs.popover'].options.content = content;
     } else {
       $(button).popover({
-        content: content,
+        content,
         html: true,
         animation: false,
-        container: 'body',
-        viewport: { selector: 'body', padding: 70 },
-        title: this.container.id === 'stories' ? 'Filters' : 'Display Preferences',
-        placement: 'auto left',
+        container: this.container,
+        viewport: { selector: this.container.closest('.company__container') },
+        title: title,
+        placement: 'bottom',
         template: `
           <div
-            class="popover ${this.container.id}" 
-            data-controller="display-options" 
-            data-display-options-${this.container.id}-outlet="#${this.container.id}"
-            data-display-options-dashboard-outlet=".dashboard"
+            class="popover ${this.container.id}-${title.toLowerCase()}"
+            data-${this.container.id}-target="${title.toLowerCase()}Popover"
             role="tooltip">
             <div class="arrow"></div>
             <div class="popover-title__wrapper">
-              <h3 class="popover-title label-secondary"></h3>
-              <button type="button" class="close" data-action="display-options#hide" aria-label="Close">
+              <h4 class="popover-title"></h4>
+              <button type="button" class="close" data-action="${this.container.id}#hidePopover" aria-label="Close">
                 <span aria-hidden="true">&times;</span>
               </button>
             </div>

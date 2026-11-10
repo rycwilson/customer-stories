@@ -30,6 +30,5 @@ export type StoriesFilters = DashboardFilters & {
 // }
 
 export default class Stories extends Resource {
-  // async init() {
-  // }
+  static filtersKeys: (keyof StoriesFilters)[] = ['status', 'customer', 'category', 'product'];
 }

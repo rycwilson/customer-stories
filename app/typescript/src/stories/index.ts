@@ -181,7 +181,7 @@ function initFilterControls() {
   matchTypeInputs.forEach(input => input.addEventListener('change', (e: Event | CustomEvent) => {
     if ('detail' in e && e.detail.silent) return;
     if (input.checked) {
-      Cookies.set('csp-filters-match-type', input.value);
+      Cookies.set('stories-filters-match-type', input.value);
       const mirrorInput = <HTMLInputElement>[...matchTypeInputs].find(_input => (
         (_input.value === input.value) && (_input !== input))
       );

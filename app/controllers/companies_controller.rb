@@ -22,18 +22,17 @@ class CompaniesController < ApplicationController
     @curate_active_tab = cookies['csp-curate-tab'] || '#stories'
     @promote_active_tab = cookies['csp-promote-tab'] || '#promoted-stories'
     @measure_active_tab = cookies['csp-measure-tab'] || '#visitors'
+    
     # @recent_activity = @company.recent_activity(30)
     # @story_views_30_day_count = @company.page_views.story.since(30.days.ago).count
-    
-    @row_group_columns = { 
-      customer_wins: cookies['csp-customer-wins-row-group-column'],
-      contributions: cookies['csp-contributions-row-group-column'],
-      promoted_stories: cookies['csp-promoted-stories-row-group-column']
-    }.reject { |k, v| v.blank? }
-
-    @filters = filters_from_cookies
+    @row_group_columns = %w[customer_wins contributions promoted_stories]
+      .filter_map do |resource_id|
+        column = cookies["#{resource_id.dasherize}-row-group-column"]
+        [resource_id, column] if column.present?
+      end.to_h
+    @stories_filters = filters_from_cookies
+    @stories_filters_match_type = cookies['dashboard-stories-filters-match-type'] || 'all'
     set_visitors_filters
-    @filters_match_type = cookies['csp-dashboard-filters-match-type'] || 'all'
     render :dashboard
   end
 
@@ -210,10 +209,14 @@ class CompaniesController < ApplicationController
 
   def filters_from_cookies
     %i[curator status customer category product].map do |type|
-      cookie_val = cookies["csp-#{type}-filter"]
+      cookie_val = if type == :curator 
+                     cookies['dashboard-curator-filter']
+                   else
+                     cookies["stories-#{type}-filter"]
+                   end
       if cookie_val.blank?
         # Set curator to current_user unless the curator filter was explicitly cleared.
-        # It is the only filter that will set a cookie to '' on clear.
+        # It is the only filter that will set a cookie to '' on clear instead of deleting.
         [type, type == :curator && cookie_val.nil? ? current_user.id : nil]
       else
         [type, cookie_val.to_i]

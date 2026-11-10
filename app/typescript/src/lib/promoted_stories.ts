@@ -23,7 +23,7 @@ export interface AdwordsAdRowData {
   turboFrame: TurboFrameAttributes;
 }
 
-export type PromotedStoriesFilters = DashboardFilters & {};
+export type AdwordsAdsFilters = DashboardFilters & { status: string };
 
 enum Columns {
   Customer = 1,
@@ -34,6 +34,7 @@ enum Columns {
 }
 
 export default class PromotedStories extends TabularResource {
+  static filtersKeys: (keyof AdwordsAdsFilters)[] = ['status'];
   static readonly columnIndices = Columns;
 
   dataTableConfig(options: DataTableConfigOptions) {

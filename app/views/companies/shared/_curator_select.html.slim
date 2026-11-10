@@ -1,14 +1,16 @@
 = select_tag( \
-    local_assigns.fetch(:select_id, nil),
+    "#{ctrl_id}-curator",
     options_from_collection_for_select( \
       company.curators,
       :id,
       :full_name,
       local_assigns.fetch(:curator_id, nil) ),
-    { include_blank: true,
-      placeholder: 'Select',
+    { include_blank: 'Select',
       class: 'form-control',
       data: { \
         controller: 'tomselect',
         "#{ctrl_id}-target": 'curatorSelect',
         tomselect_kind_value: 'curator' } })
+- if ctrl_id =~ /stories|customer-wins|contributions|promoted-stories|visitors/
+  .help-block style="margin-bottom:0"
+    | Setting is applied globally

@@ -37,10 +37,12 @@
                     dashboard_target: 'stories',
                     controller: 'stories',
                     stories_data_path_value: '/',
-                    stories_filters_value: filters,
-                    stories_match_type_value: filters_match_type,
-                    stories_display_options_html_value: \
-                      stories_display_options_html(company, filters_match_type) }) do
+                    stories_filters_value: stories_filters,
+                    stories_filters_match_type_value: stories_filters_match_type,
+                    stories_filters_html_value: \
+                      stories_filters_popover_html(company, curator, stories_filters, stories_filters_match_type),
+                    stories_preferences_html_value: \
+                      stories_preferences_popover_html(company) }) do
           
           = render(ResourceControlsComponent.new( \
               'stories',
@@ -50,8 +52,7 @@
           = turbo_frame_tag( \
               'stories-frame', 
               data: { \
-                stories_target: 'turboFrame',
-                action: 'turbo:frame-render->stories#handleFrameRendered' })
+                stories_target: 'turboFrame' })
 
         = tag.div( \
             id: 'contributions',
@@ -63,10 +64,11 @@
               controller: 'contributions',
               contributions_table_nav_outlet: '.contributions__table-nav',
               contributions_data_path_value: company_contributions_path(company),
-              contributions_row_group_column_value: @row_group_columns[:contributions],
+              contributions_row_group_column_value: @row_group_columns['contributions'],
               contributions_filters_value: contributions_filters(curator&.id),
-              contributions_display_options_html_value: \
-                contributions_display_options_html(company, @row_group_columns[:contributions]),
+              contributions_filters_html_value: contributions_filters_popover_html(company),
+              contributions_preferences_html_value: \
+                contributions_preferences_popover_html(company, @row_group_columns['contributions']),
               contributions_invitation_template_select_html_value: \
                 invitation_template_select_html(company),
               action: [ \
@@ -88,10 +90,11 @@
               controller: 'customer-wins',
               customer_wins_table_nav_outlet: '.customer-wins__table-nav',
               customer_wins_data_path_value: '/successes',
-              customer_wins_row_group_column_value: @row_group_columns[:customer_wins],
+              customer_wins_row_group_column_value: @row_group_columns['customer_wins'],
               customer_wins_filters_value: customer_wins_filters(curator&.id),
-              customer_wins_display_options_html_value: \
-                customer_wins_display_options_html(company, @row_group_columns[:customer_wins]),
+              customer_wins_filters_html_value: customer_wins_filters_popover_html(company),
+              customer_wins_preferences_html_value: \
+                customer_wins_preferences_popover_html(company, @row_group_columns['customer_wins']),
               action: [ \
                 'datatable-info-cloned->customer-wins#handleTableInfoCloned',
                 'datatable-paginate-cloned->customer-wins#handleTablePaginateCloned',

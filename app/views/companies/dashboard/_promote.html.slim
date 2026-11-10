@@ -33,10 +33,11 @@
               dashboard_target: 'promotedStories',
               controller: 'promoted-stories',
               promoted_stories_data_path_value: company_adwords_ads_path(company),
-              promoted_stories_row_group_column_value: @row_group_columns[:promoted_stories],
+              promoted_stories_row_group_column_value: @row_group_columns['promoted_stories'],
               promoted_stories_filters_value: { 'curator': curator&.id },
-              promoted_stories_display_options_html_value: \
-                promoted_stories_display_options_html(company, @row_group_columns[:promoted_stories]) }) do
+              promoted_stories_filters_html_value: promoted_stories_filters_popover_html(company),
+              promoted_stories_preferences_html_value: \
+                promoted_stories_preferences_popover_html(company, @row_group_columns['promoted_stories']) }) do
 
           = tag.table(id: 'promoted-stories-table',
                       class: 'table',

@@ -13,7 +13,7 @@ export { default as Deals } from './deals';
 export type { Contribution, ContributionRowData, ContributionsFilters } from './contributions';
 export { default as Contributions } from './contributions';
 
-export type { AdwordsAd, AdwordsAdRowData } from './promoted_stories';
+export type { AdwordsAd, AdwordsAdRowData, AdwordsAdsFilters } from './promoted_stories';
 export { default as PromotedStories } from './promoted_stories';
 
 export type { VisitorsSourceData, VisitorsFilters } from './visitors';

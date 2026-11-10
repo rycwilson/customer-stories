@@ -46,9 +46,9 @@ class ApplicationController < ActionController::Base
   end
 
   def set_curator
-    @curator = if params[:curator] || cookies['csp-curator-filter']
+    @curator = if params[:curator] || cookies['dashboard-curator-filter']
                  @company.curators.find_by(
-                   id: (params[:curator] || cookies['csp-curator-filter']).to_i
+                   id: (params[:curator] || cookies['dashboard-curator-filter']).to_i
                  )
                else
                  current_user
@@ -78,9 +78,10 @@ class ApplicationController < ActionController::Base
   def story_filters_from_params(company, is_dashboard: false)
     params.permit(params.keys).to_h.filter_map do |param, value|
       next unless param.in? %w[curator status customer category product]
+      next if value.blank?
 
       if is_dashboard
-        [param.to_sym, value&.to_i]
+        [param.to_sym, value.to_i]
       elsif param == 'category'
         category_tag = company.category_tags.where(slug: value).take
         [param.to_sym, category_tag.id] if category_tag

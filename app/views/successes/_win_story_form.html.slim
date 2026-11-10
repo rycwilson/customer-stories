@@ -52,12 +52,10 @@
       = form.label(:curator_id, 'Curator')
     = form.label(:curator_id, 'Curator', class: 'control-label visible-md-inline-block visible-lg-inline-block col-md-3')
     .col-sm-12.col-md-9
-      = render( \
-          'companies/shared/curator_select',
-          company:,
-          ctrl_id: 'win-story',
-          select_id: 'win-story-curator',
-          curator_id: win.curator_id )
+      = render('companies/shared/curator_select',
+               company:,
+               ctrl_id: 'win-story',
+               curator_id: win.curator_id)
   
   .form-group 
     .visible-sm-block.col-sm-12
