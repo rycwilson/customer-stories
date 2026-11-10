@@ -4,7 +4,11 @@ table {
   background-color: #fff;
 
   &.table > thead > tr > th {
-    border-bottom-color: darken($blueish-gray-lighter, 10%);
+    border-bottom: 1px solid darken($blueish-gray-lighter, 8%);
+  }
+
+  &.table > tbody > tr > td {
+    border-top-color: $blueish-gray-lighter;
   }
 }
 
@@ -75,10 +79,10 @@ ul.dropdown-menu {
   }
 }
 
-.radio-inline + .radio-inline,
-.checkbox-inline + .checkbox-inline {
-  margin-left: 1.25em;
-}
+// .radio-inline + .radio-inline,
+// .checkbox-inline + .checkbox-inline {
+//   margin-left: 1.25em;
+// }
 
 .collapsing {
   -webkit-transition: none;

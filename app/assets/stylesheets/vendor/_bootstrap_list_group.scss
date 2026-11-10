@@ -32,7 +32,7 @@
   &.ui-sortable-placeholder {
     visibility: visible !important;
     height: 5rem;
-    background-color: $blueish-gray-lighter;
+    background-color: $light-gray;
   }
 
   &--primary,
@@ -60,7 +60,7 @@
     position: relative;
 
     padding: 1.5rem;
-    background: $blueish-gray-lighter;
+    background: $blueish-gray-lighter(8%);
     border: 1px solid $list-group-border;
     border-top: none;
     
