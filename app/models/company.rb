@@ -146,7 +146,7 @@ class Company < ApplicationRecord
   end
 
   def tag_select_options(
-    tag_type, with_stories_count: true, only_featured: false, for_multi_select: false
+    tag_type, curator: nil, with_stories_count: true, only_featured: false, for_multi_select: false
   )
     tags = send("#{tag_type}_tags") if tag_type.in? %i[category product]
     return [] if tags.blank?
@@ -154,7 +154,7 @@ class Company < ApplicationRecord
     options = tags.send(only_featured ? :featured : :itself).map do |tag|
       [
         if with_stories_count
-          "#{tag.name} (#{tag.stories.send(only_featured ? :featured : :itself).count})"
+          "#{tag.name} (#{tag.stories.send(only_featured ? :featured : :itself).select { |s| curator.nil? || s.curator == curator }.count})"
         else
           tag.name
         end,

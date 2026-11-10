@@ -32,8 +32,14 @@ class Customer < ApplicationRecord
     new_record? || name_changed? || slug.blank?
   end
 
-  def name_with_stories_count
-    "#{name} (#{stories.count})"
+  def name_with_stories_count(curator = nil)
+    count = if curator.present?
+              Story.joins(:success)
+                   .where(successes: { customer: self, curator: }).count
+            else
+              stories.count
+            end
+    "#{name} (#{count})"
   end
 
   def select_option
