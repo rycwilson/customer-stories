@@ -2,7 +2,7 @@ import { Controller } from "@hotwired/stimulus";
 import Cookies from 'js-cookie';
 import type { ModalController, ToastController } from '.';
 import { visit as turboVisit, type TurboVisitEvent } from '@hotwired/turbo';
-import { onToggleSidebar } from '../utils';
+import { onToggleSidebar, shallowEqual } from '../utils';
 
 enum DashboardTab {
   Curate = 'curate',
@@ -44,12 +44,12 @@ export default class DashboardController extends Controller {
   ];
   static values = { 
     activeTab: { type: String, default: '' },
-    filters: { type: Object, default: undefined }
+    filters: Object
   };    
 
   declare readonly modalOutlet: ModalController;
   declare readonly toastOutlet: ToastController;
-  declare filtersValue: DashboardFilters | undefined;
+  declare filtersValue: DashboardFilters;
   declare readonly sidebarTargets: HTMLElement[];
   toggleSidebar = onToggleSidebar.bind(this);
 
@@ -164,9 +164,18 @@ export default class DashboardController extends Controller {
     }
   }
 
-  filtersValueChanged(newFilters: DashboardFilters, oldVal: DashboardFilters) {
-    if (JSON.stringify(newFilters) === JSON.stringify(oldVal)) return;
+  // TODO: When a dashboard filter changes, all the popover html content must be updated
+  handleFilterChanged(e: CustomEvent<Partial<DashboardFilters>>) {
+    const filter = e.detail;
+    this.filtersValue = { ...this.filtersValue, ...filter };
+    Cookies.set(`dashboard-curator-filter`, String(filter.curator ?? ''));
+  }
 
+  filtersValueChanged(filters: DashboardFilters, prevFilters: DashboardFilters) {
+    if (prevFilters === undefined) return;  // ignore on initialize
+    if (shallowEqual<DashboardFilters>(filters, prevFilters)) return;
+    
+    // Dashboard filters won't change from the Story tab, so targets are all guaranteed to be present
     [
       this.customerWinsTarget,
       this.contributionsTarget,
@@ -175,14 +184,12 @@ export default class DashboardController extends Controller {
       this.visitorsTarget
     ]
       .forEach(target => {
-        const oldFilters = (
-          JSON.parse(
-            <string>target.getAttribute(`data-${target.dataset.controller}-filters-value`)
-          )
-        );
         target.setAttribute(
-          `data-${target.dataset.controller}-filters-value`,
-          JSON.stringify({ ...oldFilters, ...newFilters })
+          `data-${target.id}-filters-value`,
+          JSON.stringify({ 
+            ...JSON.parse(<string>target.getAttribute(`data-${target.id}-filters-value`)),
+            ...filters 
+          })
         );
       });
   }
