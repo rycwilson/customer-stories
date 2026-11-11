@@ -137,10 +137,6 @@ application.register('story-narrative-content', StoryNarrativeContentController)
 import SummernoteController from './summernote_controller.js';
 application.register('summernote', SummernoteController);
 
-import DisplayOptionsController from './display_options_controller.js';
-application.register('display-options', DisplayOptionsController);
-export type { DisplayOptionsController };
-
 import TabularResourceController from './tabular_resource_controller.js';
 application.register('tabular-resource-controller', TabularResourceController);
 export type { TabularResourceController }
