@@ -7,10 +7,8 @@
   padding: 0 2.5rem;
   max-width: 1200px;
 
-  :not(#curate) > & {
-    display: flex;
-    align-items: flex-start;
-  }
+  display: flex;
+  align-items: flex-start;
 
   // These pages load data and will transition from the loading spinner
   #curate > &,
@@ -70,16 +68,16 @@
         background-color: darken($blueish-gray-lighter, 4%);
         color: $gray-darker;
 
-        div {
-          background: no-repeat center/22.5px url('icons/stories_icon_222.png');
+        .stories-icon {
+          background: no-repeat center/22.5px url('icons/customer_stories_222.png');
         }
       }
 
-      div {
+      .stories-icon {
         flex: 0 0 auto;
         width: calc(#{$icon-width} + #{2 * $icon-margin});
         height: 100%;
-        background: no-repeat center/22.5px url('icons/stories_icon_555.png');
+        background: no-repeat center/22.5px url('icons/customer_stories_555.png');
       }
   
       i {
@@ -104,8 +102,8 @@
         color: $brand-primary;
       }
 
-      div {
-        background: no-repeat center/22.5px url('icons/stories_icon_0372aa.png');
+      .stories-icon {
+        background: no-repeat center/22.5px url('icons/customer_stories_0372aa.png');
       }
     }
   }
