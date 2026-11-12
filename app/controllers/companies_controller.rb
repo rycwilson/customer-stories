@@ -22,7 +22,8 @@ class CompaniesController < ApplicationController
     @curate_active_tab = cookies['csp-curate-tab'] || '#stories'
     @promote_active_tab = cookies['csp-promote-tab'] || '#promoted-stories'
     @measure_active_tab = cookies['csp-measure-tab'] || '#visitors'
-    
+    @dashboard_filters = dashboard_filters
+
     # @recent_activity = @company.recent_activity(30)
     # @story_views_30_day_count = @company.page_views.story.since(30.days.ago).count
     @row_group_columns = %w[customer_wins contributions promoted_stories]
@@ -30,7 +31,7 @@ class CompaniesController < ApplicationController
         column = cookies["#{resource_id.dasherize}-row-group-column"]
         [resource_id, column] if column.present?
       end.to_h
-    @stories_filters = filters_from_cookies
+    @stories_filters = @dashboard_filters.merge(stories_filters)  
     @stories_filters_match_type = cookies['dashboard-stories-filters-match-type'] || 'all'
     set_visitors_filters
     render :dashboard
@@ -207,21 +208,23 @@ class CompaniesController < ApplicationController
           .permit(:tab_color, :text_color, :show, :show_delay, :show_freq, :hide, :hide_delay)
   end
 
-  def filters_from_cookies
-    %i[curator status customer category product].map do |type|
-      cookie_val = if type == :curator 
-                     cookies['dashboard-curator-filter']
-                   else
-                     cookies["stories-#{type}-filter"]
-                   end
-      if cookie_val.blank?
-        # Set curator to current_user unless the curator filter was explicitly cleared.
-        # It is the only filter that will set a cookie to '' on clear instead of deleting.
-        [type, type == :curator && cookie_val.nil? ? current_user.id : nil]
-      else
-        [type, cookie_val.to_i]
-      end
-    end.to_h.compact
+  def dashboard_filters
+    { 
+      curator: case cookies['dashboard-curator-filter']
+               when nil
+                 current_user.id
+               when ''
+                 nil
+               else
+                 cookies['dashboard-curator-filter'].to_i
+               end
+    }
+  end
+
+  def stories_filters
+    %i[status customer category product].to_h do |type| 
+      [type, cookies["stories-#{type}-filter"]&.to_i]
+    end.compact
   end
 
   def ad_images_removed?(company_params)
