@@ -9,7 +9,7 @@ class StoriesController < ApplicationController
   def index
     @v2 = params[:v2].present?
     @is_dashboard = turbo_frame_request?
-    @filters = story_filters_from_params(@company, is_dashboard: @is_dashboard)
+    @filters = stories_filters_from_params(@company, is_dashboard: @is_dashboard)
     @filters_match_type = 
       params[:match_type] ||
       cookies["#{'dashboard-' if @is_dashboard}stories-filters-match-type"] ||
@@ -25,7 +25,7 @@ class StoriesController < ApplicationController
       # set_or_redirect_to_story_preview(params[:preview], session[:preview_story_slug])
       if request.xhr? && params[:q].present?
         respond_to do |format|
-          format.json do 
+          format.json do
             render json: search(@company.stories.featured, params[:q]).pluck(:id).uniq
           end
         end

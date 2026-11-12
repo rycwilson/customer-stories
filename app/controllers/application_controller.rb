@@ -75,9 +75,8 @@ class ApplicationController < ActionController::Base
     }.compact
   end
 
-  def story_filters_from_params(company, is_dashboard: false)
-    params.permit(params.keys).to_h.filter_map do |param, value|
-      next unless param.in? %w[curator status customer category product]
+  def stories_filters_from_params(company, is_dashboard: false)
+    params.permit(:curator, *Story::FILTER_KEYS).to_h.filter_map do |param, value|
       next if value.blank?
 
       if is_dashboard

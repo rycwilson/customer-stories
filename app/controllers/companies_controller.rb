@@ -31,7 +31,9 @@ class CompaniesController < ApplicationController
         column = cookies["#{resource_id.dasherize}-row-group-column"]
         [resource_id, column] if column.present?
       end.to_h
-    @stories_filters = @dashboard_filters.merge(stories_filters)  
+    @stories_filters = @dashboard_filters.merge(
+      Story::FILTER_KEYS.to_h { |key| [key, cookies["stories-#{key}-filter"]&.to_i] }.compact
+    )  
     @stories_filters_match_type = cookies['dashboard-stories-filters-match-type'] || 'all'
     set_visitors_filters
     render :dashboard
@@ -219,12 +221,6 @@ class CompaniesController < ApplicationController
                  cookies['dashboard-curator-filter'].to_i
                end
     }
-  end
-
-  def stories_filters
-    %i[status customer category product].to_h do |type| 
-      [type, cookies["stories-#{type}-filter"]&.to_i]
-    end.compact
   end
 
   def ad_images_removed?(company_params)

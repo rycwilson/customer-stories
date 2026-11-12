@@ -3,7 +3,9 @@
 class Story < ApplicationRecord
   extend OrderAsSpecified
   include FriendlyId
-
+  
+  FILTER_KEYS = %i[status customer category product].freeze
+  
   # virtual attribute for accepting a standard format video url
   attr_accessor :formatted_video_url
 
