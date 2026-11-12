@@ -45,6 +45,9 @@ class StoriesController < ApplicationController
     end
   end
 
+  def popover_content
+  end
+
   # GET new_success_story / new_company_story
   def new
     @success = @company.successes.find_by(id: params[:success_id]) # success_id may or may not be present

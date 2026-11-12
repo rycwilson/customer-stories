@@ -1,6 +1,4 @@
-# frozen_string_literal: true
-
-get '/', to: 'stories#index'
+get '/', to: 'stories#index', constraints: ->(req) { req.format == :html }
 get '/stories', to: 'stories#index', constraints: ->(req) { req.format == :json }
 
 get '/plugins/:type/cs', to: 'plugins#main'
@@ -16,7 +14,11 @@ get '/plugins/track', to: 'plugins#track'
 get '/plugins/demo', to: 'plugins#demo'
 
 authenticate(:user) do
-  # the Prospect tab was merged into Curate
+  scope '/stories', constraints: ->(req) { req.headers['Turbo-Frame'].present? } do
+    get '/', to: 'stories#index'
+    get '/popover_content', to: 'stories#popover_content'
+  end
+
   get '/prospect', to: redirect('/curate')
   get(
     '/:workflow_stage',
