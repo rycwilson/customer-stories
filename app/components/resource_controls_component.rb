@@ -4,7 +4,7 @@ class ResourceControlsComponent < ViewComponent::Base
       div
         div
           h4.caption id="#{@resource_id}-table-caption"
-            = resource_name
+            = @caption || resource_name
         div
           - if @resource_id == 'stories'
             = render('stories/shared/search_form', is_header_search: true)
@@ -72,9 +72,10 @@ class ResourceControlsComponent < ViewComponent::Base
           .help-block data-stories-target="results"
   SLIM
 
-  def initialize(resource_id, search_options: nil, new_resource_path: nil)
+  def initialize(resource_id, caption: nil, search_options: nil, new_resource_path: nil)
     super()
     @resource_id = resource_id
+    @caption = caption
     @search_options = search_options
     @new_resource_path = new_resource_path
   end

@@ -46,6 +46,7 @@
           
           = render(ResourceControlsComponent.new( \
               'stories',
+              caption: link_to('Customer Stories', root_url(subdomain: company.subdomain)),
               new_resource_path: new_company_story_path(company) ))
 
           / src: "/?#{URI.encode_www_form(filters)}#{filters.length > 1 ? "&match_type=#{filters_match_type}" : ''}", 
