@@ -276,13 +276,14 @@ class StoriesController < ApplicationController
   end
 
   def search(stories, query)
-    q = Story.sanitize_sql_like(query.strip.downcase)
-    results =
-      stories.where('LOWER(title) LIKE ? OR LOWER(narrative) LIKE ?', "%#{q}%", "%#{q}%") +
-      stories.joins(:customer).where('LOWER(customers.name) LIKE ?', "%#{q}%") +
-      stories.joins(:tags).where('LOWER(tags.name) LIKE ?', "%#{q}%", "%#{q}%") +
-      stories.joins(:results).where('LOWER(results.description) LIKE ?', "%#{q}%")
-    results.uniq
+    pattern = "%#{Story.sanitize_sql_like(query.strip)}%"
+    stories.left_joins(:customer, :tags)
+           .where(
+             'stories.title ILIKE :p OR stories.narrative ILIKE :p ' \
+             'OR customers.name ILIKE :p OR tags.name ILIKE :p',
+             p: pattern
+           )
+           .distinct
   end
 
   def new_ads(story, story_params)
