@@ -4,8 +4,7 @@ import ResourceController from './resource_controller';
 export default class VisitorsController extends ResourceController {
   static targets = [...super.targets, 'columnChart', 'tableChart'];
 
-  declare filtersValue: VisitorsFilters;
-  
+  protected declare filtersValue: VisitorsFilters;
   protected declare resource: Visitors;
   
   private declare readonly columnChartTarget: HTMLDivElement;
