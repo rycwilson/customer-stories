@@ -50,7 +50,7 @@ extends Controller<HTMLTableRowElement> {
       turboFrame: this.rowDataValue.turboFrame,
       actionsDropdownHtml: data[index].actions_dropdown_html
     }
-    this.dispatch('row-clicked', { detail: rowView });
+    this.dispatch('row-clicked', { detail: { rowView } });
   }
 
   delete(this: CustomerWinController | ContributionController) {
