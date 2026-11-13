@@ -22,16 +22,17 @@ export default class StoriesController extends ResourceController {
     filtersMatchType: { type: String, default: 'all' } 
   };
 
-  declare readonly turboFrameTarget: FrameElement;
-  declare readonly galleryTarget: HTMLUListElement;
-  declare readonly hasGalleryTarget: boolean;
-  declare readonly cardTargets: HTMLDivElement[];
-  declare readonly searchInputTarget: HTMLInputElement;
-  declare readonly activeFiltersCountTarget: HTMLSpanElement;
-  declare readonly resultsTarget: HTMLSpanElement;
+  protected declare filtersValue: StoriesFilters;
 
-  declare filtersMatchTypeValue: 'all' | 'any';
-  declare filtersValue: StoriesFilters;
+  private declare readonly turboFrameTarget: FrameElement;
+  private declare readonly galleryTarget: HTMLUListElement;
+  private declare readonly cardTargets: HTMLDivElement[];
+  private declare readonly searchInputTarget: HTMLInputElement;
+  private declare readonly activeFiltersCountTarget: HTMLSpanElement;
+  private declare filtersMatchTypeValue: 'all' | 'any';
+  private searchString = '';
+  private silentClear = false;
+  private hasSearchResults = false;
 
   get cardImages() {
     return this.cardTargets.map(card => card.querySelector('img')).filter(card => !!card);
