@@ -114,8 +114,8 @@ export default class TabularResourceController extends ResourceController {
     });
   }
 
-  handleTomselectSearched(e: CustomEvent) {
-    this.searchTable(e.detail.searchSelectResults);
+  handleTomselectSearched(_e: CustomEvent<{ searchResults: { [key: string]: string } }>) {
+    // this.searchTable(e.detail.searchResults);
   }
 
   handleSearchSelectChanged() {
