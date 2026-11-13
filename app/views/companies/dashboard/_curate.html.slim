@@ -15,7 +15,7 @@
         'dashboard', active_tab:, collapsed: sidebar_collapsed)) do |component|
       - [ ['#stories', 'fa-comments', 'Customer Stories', nil],
           ['#contributions', 'fa-users', 'Contributors', 'contributionsTab'],
-          ['#customer-wins', 'fa-handshake-o', 'Deals', 'customerWinsTab'] ] \
+          ['#customer-wins', 'fa-handshake-o', 'Customer Wins', 'customerWinsTab'] ] \
           .each do |panel_selector, icon_class, label_text, dashboard_target|
         - component.with_tab( \
             panel_selector:,
