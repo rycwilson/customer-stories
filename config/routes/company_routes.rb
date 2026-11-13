@@ -18,8 +18,6 @@ authenticate(:user) do
     get '/', to: 'stories#index'
     get '/popover_content', to: 'stories#popover_content'
   end
-
-  get '/prospect', to: redirect('/curate')
   get(
     '/:workflow_stage',
     to: 'companies#show',
