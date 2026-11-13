@@ -1,6 +1,7 @@
 import ResourceController from './resource_controller';
 import DataTable, { type Config } from 'datatables.net';
 import { ResourceFilters, TabularResource } from '../lib';
+import Cookies from 'js-cookie';
 
 type RowView = {
   page?: number;
