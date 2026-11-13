@@ -13,7 +13,12 @@ RSpec.feature 'Filter stories' do
       :story, 
       3, 
       logo_published: true,   # so it's featured in the stories gallery
-      success: create(:success, company: company, story_categories: company.story_categories, products: company.products)
+      success: create(
+        :success,
+        company:,
+        category_tags: company.category_tags,
+        product_tags: company.product_tags
+      )
     )
   end
   given(:category_select) do 
@@ -23,7 +28,7 @@ RSpec.feature 'Filter stories' do
     find(:select) { |select| select_has_label(select, 'Product') }
   end
   given(:category_option_label) do 
-    cat = company.story_categories.first
+    cat = company.category_tags.first
     "#{cat.name} (#{cat.stories.count})"
   end
   
