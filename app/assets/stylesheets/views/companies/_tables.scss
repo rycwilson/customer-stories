@@ -249,14 +249,9 @@
   }
 }
 
-// The stories search form takes the place of the search select in the table controls
 .table-controls .search-stories {
   flex-grow: 1;
   max-width: 22em;
-  
-  &.has-query .search-stories__clear {
-    display: revert;
-  }
   
   .input-group {
     input {

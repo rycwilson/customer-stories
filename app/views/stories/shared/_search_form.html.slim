@@ -1,14 +1,15 @@
-form.search-stories data-action="submit->stories#handleSubmitSearch"
+form.search-stories data-action="submit->stories#handleSearchSubmitted"
   .input-group
-    = text_field_tag( \
-        :q, 
-        nil, 
-        { type: 'search', 
-          class: 'search-stories__input form-control', 
-          placeholder: 'Search stories', 
-          autocomplete: 'off',
-          data: { stories_target: 'searchInput' }}) 
-    button.btn.search-stories__clear type="button" data-action="stories#clearSearch"
+    = text_field_tag(:q, 
+                      '', 
+                      type: 'search',
+                      class: 'search-stories__input form-control',                       
+                      placeholder: 'Search', 
+                      autocomplete: 'off',
+                      data: { \
+                        stories_target: 'searchInput',
+                        action: 'stories#handleSearchInput' }) 
+    button.btn.search-stories__clear type="button"
       | &times;
     span.input-group-btn
       button.btn.btn-default type="submit"

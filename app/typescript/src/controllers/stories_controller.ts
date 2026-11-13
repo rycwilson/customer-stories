@@ -48,17 +48,19 @@ export default class StoriesController extends ResourceController {
   }
 
   get turboFrameSource() {
-    const filtersEntries = Object.entries(this.filtersValue).map(([key, value]) => (
-      [key, String(value ?? '')]
-    ));
-    const searchParams = new URLSearchParams(filtersEntries);
-    if (filtersEntries.length > 1) {
-      searchParams.set('match_type', this.filtersMatchTypeValue);
-    } 
+    let searchEntries, filtersEntries;
+    if (this.searchString) {
+      searchEntries = [['q', this.searchString]];
+    } else {
+      filtersEntries =
+        Object.entries(this.filtersValue).map(([key, value]) => [key, String(value ?? '')]);
+      if (filtersEntries.length > 1) {
+        filtersEntries.push(['match_type', this.filtersMatchTypeValue]);
+      }
+    }
+    const searchParams = new URLSearchParams(searchEntries || filtersEntries);
     return `${this.dataPathValue}?${searchParams.toString()}`;
   }
-
-  searchString = '';
 
   async initValueChanged(shouldInit: boolean) {
     if (!shouldInit) return;
@@ -78,7 +80,7 @@ export default class StoriesController extends ResourceController {
         this.handleFrameRendered.bind(this, resolve),
         { once: true }
       );
-      console.log(`loading ${this.turboFrameSource}`)
+      console.log(`loading stories from ${this.turboFrameSource}`)
       this.turboFrameTarget.src = this.turboFrameSource;
     });
   }
@@ -95,12 +97,10 @@ export default class StoriesController extends ResourceController {
 
   }
 
-  clearSearch(e?: Event) {
+  clearSearch() {
     this.searchString = '';
     this.searchInputTarget.value = '';
-    this.searchInputTarget.form?.classList.remove('has-query');
-    const isUserInput = Boolean(e);
-    // if (isUserInput) this.fetchStories();
+    this.hasSearchResults = false;
   }
 
   setFilters() {
@@ -117,40 +117,40 @@ export default class StoriesController extends ResourceController {
     const newFilters = { ...this.filtersValue };
     (this.resource.constructor as typeof Stories).filtersKeys.forEach(key => {
       delete newFilters[key as keyof StoriesFilters];
+      Cookies.remove(`stories-${key}-filter`);
     });
-    this.filterControlTargets.forEach(control => {
-      control.tomselect?.clear(true);
-      Cookies.remove(`${control.name}-filter`);
-    });
+    if (this.popover) {
+      this.filterControlTargets.forEach(control => control.tomselect?.clear(true));
+    }
     this.filtersValue = newFilters;
   }
 
-  // Search and filters are mutually exclusive: searching clears the filters.
-  handleSubmitSearch(e: Event) {
+  handleSearchInput({ target: _input }: { target: HTMLInputElement }) {
+  }
+
+  async handleSearchSubmitted(e: Event) {
     e.preventDefault();
     const searchString = this.searchInputTarget.value.trim();
-    if (!searchString) return this.clearSearch(e);
+    if (!searchString && !this.hasSearchResults) return;
 
     this.searchString = searchString;
-    this.searchInputTarget.form?.classList.add('has-query');
-    if (activeFilterCount(this.filtersValue)) {
-      this.clearFilters();    // fetches via filtersValueChanged
-    } else {
-      // this.fetchStories();
+    if (this.activeFiltersCount) {
+      this.silentClear = true;
+      this.clearFilters();
     }
+    await this.loadTurboFrame();
+    this.hasSearchResults = true;
   }
 
   async filtersValueChanged(filters: StoriesFilters, prevFilters: StoriesFilters) {
     if (!this.initialized) return;
     if (shallowEqual<StoriesFilters>(filters, prevFilters)) return;
-    
-    const params = new URLSearchParams();
-    for (const [key, value] of Object.entries(this.filtersValue)) {
-      params.set(key, String(value ?? ''));
+    if (this.silentClear) {
+      this.silentClear = false;
+      return;
     }
-    if (this.activeFiltersCount > 1) params.set('match_type', this.filtersMatchTypeValue);
 
-    // this.clearSearch();
+    this.clearSearch();
     await this.loadTurboFrame();
   }
 
