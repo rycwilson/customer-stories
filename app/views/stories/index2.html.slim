@@ -36,15 +36,11 @@
           .caret
           span Topic
         .stories-filter__tag-group id="category-filters"
-          - @company.category_tags.featured.each do |category|
+          - @company.category_tags.featured.each do |category_tag|
             .checkbox
-              = tag.label for: tag_dom_id(tag)
-                = check_box_tag( \
-                    'category[]',
-                    tag.id,
-                    false,
-                    { id: tag_dom_id(tag) })
-                = tag.name
+              = tag.label for: tag_dom_id(category_tag)
+                = check_box_tag( 'category[]', category_tag.id, false, { id: tag_dom_id(category_tag) })
+                = category_tag.name
 
     - if @company.product_tags.featured.present?
       div
@@ -52,15 +48,11 @@
           .caret
           span Product
         .stories-filter__tag-group id="product-filters"
-          - @company.product_tags.featured.each do |tag|
+          - @company.product_tags.featured.each do |product_tag|
             .checkbox
-              = tag.label for: tag_dom_id(tag)
-                = check_box_tag( \
-                    'product[]',
-                    tag.id,
-                    false,
-                    { id: tag_dom_id(tag) })
-                = tag.name
+              = tag.label for: tag_dom_id(product_tag)
+                = check_box_tag('product[]', product_tag.id, false, { id: tag_dom_id(product_tag) })
+                = product_tag.name
 
   div 
     form.stories-search
