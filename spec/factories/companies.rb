@@ -18,8 +18,8 @@ FactoryBot.define do
 
     factory :company_with_tags do
       after(:create) do |company|
-        create_list(:story_category, 3, company:)
-        create_list(:product, 3, company:)
+        create_list(:category_tag, 3, company:)
+        create_list(:product_tag, 3, company:)
       end
     end
   end
