@@ -49,10 +49,10 @@ export default class DashboardController extends Controller {
 
   declare readonly modalOutlet: ModalController;
   declare readonly toastOutlet: ToastController;
-  declare filtersValue: DashboardFilters;
   declare readonly sidebarTargets: HTMLElement[];
   toggleSidebar = onToggleSidebar.bind(this);
-
+  
+  private declare filtersValue: DashboardFilters;
   private declare readonly tabTargets: HTMLAnchorElement[];
   private declare readonly tabContentTarget: HTMLDivElement;
   private declare readonly tabPanelTargets: HTMLDivElement[];

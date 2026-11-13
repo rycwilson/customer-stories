@@ -253,9 +253,19 @@
 .table-controls .search-stories {
   flex-grow: 1;
   max-width: 22em;
-
+  
   &.has-query .search-stories__clear {
     display: revert;
+  }
+  
+  .input-group {
+    input {
+      border-radius: $border-radius-base 0 0 $border-radius-base;
+    }
+
+    .input-group-btn button[type="submit"]  {
+      border-radius: 0 $border-radius-base $border-radius-base 0;
+    }
   }
 }
 

@@ -21,7 +21,7 @@ export default class ResourceController extends Controller<HTMLElement> {
     'preferencesPopover',
   ];
   
-  declare filtersValue: ResourceFilters;
+  protected declare filtersValue: ResourceFilters;
   declare readonly filtersButtonTarget: HTMLButtonElement;
   declare readonly filtersPopoverTarget: HTMLDivElement;
   declare readonly hasFiltersPopoverTarget: boolean;
