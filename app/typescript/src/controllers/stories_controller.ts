@@ -3,11 +3,6 @@ import type { Stories, StoriesFilters } from '../lib';
 import Cookies from 'js-cookie';
 import { imagesLoaded, shallowEqual } from '../utils';
 import ResourceController from './resource_controller';
-import {
-  STORY_FILTER_KEYS,
-  activeFilterCount,
-  buildStoriesParams,
-  haveSameActiveFilters } from '../utils/stories_filters';
 
 // The stories "table" is a gallery of cards in a turbo frame, so there is no datatable to
 // initialize. Filters live in a popover (see `display-options`) and, along with the search
