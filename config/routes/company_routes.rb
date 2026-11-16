@@ -14,10 +14,6 @@ get '/plugins/track', to: 'plugins#track'
 get '/plugins/demo', to: 'plugins#demo'
 
 authenticate(:user) do
-  scope '/stories', constraints: ->(req) { req.headers['Turbo-Frame'].present? } do
-    get '/', to: 'stories#index'
-    get '/popover_content', to: 'stories#popover_content'
-  end
   get(
     '/:workflow_stage',
     to: 'companies#show',
@@ -38,8 +34,13 @@ authenticate(:user) do
       resources :results, only: %i[create destroy]
       collection { post '/import', to: 'successes#import' }
     end
-    resources :stories, except: %i[index show], shallow: true
-    # resources :stories, only: [:create]
+    resources :stories, except: [:index, :show], shallow: true do
+      collection do
+        # :index must be excluded above, else the default index route (w/out constraint) will match
+        get '/', action: :index, constraints: ->(req) { req.headers['Turbo-Frame'].present? }
+        get :popover_content
+      end
+    end
     resources :contributions, except: %i[new update], shallow: true do
       # need to distinguish '/contributions/:id' routes from '/contributions/:token' routes;
       # hence :update is excluded above and added below
