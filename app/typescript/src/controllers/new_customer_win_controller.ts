@@ -10,7 +10,6 @@ export default class NewCustomerWinController extends FormController<NewCustomer
   // When narrowing the `this` context (as in FormController.prototype.handleChangeContact), 
   // declarations must appear in each subclass. 
   declare readonly customerFieldTargets: HTMLInputElement[];
-  declare readonly customerNameTarget: HTMLInputElement;
   declare readonly contributorSelectTarget: TomSelectInput;
   declare readonly contributorFieldsTarget: HTMLDivElement;
   declare readonly contributorFieldTargets: HTMLInputElement[];

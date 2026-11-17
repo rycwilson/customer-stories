@@ -5,7 +5,6 @@ import type { TomOptions } from 'tom-select/dist/esm/types/core.d.ts';
 export const sharedTargets = [
   'customerSelect',
   'customerField',
-  'customerName',
   'customerWinSelect',
   'successField',
   'successName', 
@@ -114,7 +113,7 @@ export function submitOnly(body: URLSearchParams | FormData, predicate: (key: st
   }
 }
 
-export function handleChangeCustomer(
+export function handleCustomerChanged(
   this: NewCustomerWinController | NewContributionController | NewStoryController, 
   { target: select }: { target: TomSelectInput }
 ) {
@@ -125,8 +124,12 @@ export function handleChangeCustomer(
   select.setAttribute('name', isNew ? '' : select.dataset.fieldName);
 
   // Hidden fields for a new customer
-  this.customerFieldTargets.forEach((field: HTMLInputElement) => field.disabled = !isNew);
-  this.customerNameTarget.value = isNew ? select.value.trim() : '';
+  this.customerFieldTargets.forEach((field: HTMLInputElement) => {
+    field.disabled = !isNew;
+    if (field.name.includes('[name]')) {
+      field.value = isNew ? select.value.trim() : '';
+    }
+  });
 
   // Reset customer win select options
   if (this.hasCustomerWinSelectTarget) {
@@ -135,30 +138,23 @@ export function handleChangeCustomer(
   } 
 }
 
-export function handleChangeCustomerWin(
-  this: NewContributionController | NewStoryController,
-  { target: select }: { target: TomSelectInput }
-) {
+export function handleWinChanged(this: NewContributionController | NewStoryController, e: CustomEvent) {
+  const select: TomSelectInput = e.target;
   const isNew = isNaN(+select.value);
   const winId = +select.value || null;
   const wasCleared = !(isNew || winId);
+  console.log(isNew, winId, wasCleared)
 
   // Enable/disable select elements via the [name] attribute => precludes ui changes
   select.setAttribute('name', isNew || wasCleared ? '' : select.dataset.fieldName);
 
-  // Hidden fields for a new customer win
-  // For a new story, `placeholder: true` and `name: nil` for the associated success if none was specified
-  // TODO successName and successPlaceholder needn't be targets -- just look for the name
+  // Hidden fields for a new win
   this.successFieldTargets.forEach((field: HTMLInputElement) => {
-    if (field === this.successNameTarget) {
-      field.disabled = !isNew;
+    if (field.name.includes('[placeholder]')) {
+      field.disabled = !!winId || isNew;  // field value is always true
+    } else if (field.name.includes('[name]')) {
       field.value = isNew ? select.value.trim() : '';
-    } else if (
-      this.hasSuccessPlaceholderTarget &&
-      field === (this as NewStoryController).successPlaceholderTarget
-    ) {
-      field.checked = wasCleared;
-      field.disabled = !!winId || isNew;
+      field.disabled = !isNew;
     } else {
       field.disabled = !!winId
     }
@@ -187,15 +183,7 @@ export function handleChangeCustomerWin(
   }
 
   if (winId) {
-    // set the customer select to the customer associated with the selected customer win
-    let customerId;
-    if (CSP['customerWins']) {
-      const win = CSP['customerWins'].find((win: CustomerWin) => win.id === winId) as CustomerWin;
-      customerId = win.customer.id;
-    } else {
-      const option = select.tomselect.options[winId];
-      customerId = +(option as { customerId: string }).customerId;
-    }
+    const customerId = +select.tomselect.options[winId].customerId;
     this.customerSelectTarget.tomselect.setValue(customerId, true);
 
     // Disable contributor option for any contributors that already have a contribution for this customer win
@@ -207,7 +195,7 @@ export function handleChangeCustomerWin(
   }
 }
 
-export function handleChangeContact(
+export function handleContactChanged(
   this: NewCustomerWinController | NewContributionController, 
   { target: select }: { target: TomSelectInput }
 ) {

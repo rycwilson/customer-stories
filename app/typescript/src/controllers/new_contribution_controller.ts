@@ -7,10 +7,8 @@ export default class NewContributionController extends FormController<NewContrib
   // declarations must appear in each subclass
   declare readonly customerSelectTarget: TomSelectInput;
   declare readonly customerFieldTargets: HTMLInputElement[];
-  declare readonly customerNameTarget: HTMLInputElement;
   declare readonly customerWinSelectTarget: TomSelectInput;
   declare readonly successFieldTargets: HTMLInputElement[];
-  declare readonly successNameTarget: HTMLInputElement;
   declare readonly contributorSelectTarget: TomSelectInput;
   declare readonly contributorFieldsTarget: HTMLDivElement;
   declare readonly contributorFieldTargets: HTMLInputElement[];

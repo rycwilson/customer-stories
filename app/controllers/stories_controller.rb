@@ -50,8 +50,22 @@ class StoriesController < ApplicationController
 
   # GET new_success_story / new_company_story
   def new
-    @success = @company.successes.find_by(id: params[:success_id]) # success_id may or may not be present
-    @story = @success.present? ? @success.build_story : Story.new
+    @success = @company.successes.find_by(id: params[:success_id])
+    @story = @success&.build_story || Story.new
+    @story.build_success(curator: current_user) if @story.success.nil?
+  end
+
+  def create
+    @story = Story.new story_params
+    if @story.save
+      redirect_to edit_story_path(@story), status: :see_other, notice: 'Story created successfully'
+    else
+      # Use story.success.customer instead of story.customer because the has_many/through
+      # association will not load when the success record is not saved.
+      @new_customer = @story.success.customer if new_named_record?(@story.success.customer)
+      @new_win = @story.success if new_named_record?(@story.success)
+      render :new, status: :unprocessable_entity
+    end
   end
 
   def show
@@ -115,15 +129,6 @@ class StoriesController < ApplicationController
     end
 
     render(layout: 'application')   # override stories layout for dashboard view
-  end
-
-  def create
-    @story = Story.new story_params
-    if @story.save
-      redirect_to edit_story_path(@story), status: :see_other, notice: 'Story created successfully'
-    else
-      render :new, status: :unprocessable_entity
-    end
   end
 
   def update
@@ -244,7 +249,7 @@ class StoriesController < ApplicationController
   def destroy
     @story = Story.friendly.find params[:id]
     @story.destroy
-    redirect_to dashboard_path('curate'), status: :see_other, notice: 'Story was deleted.'
+    redirect_to dashboard_path('curate'), status: :see_other, info: 'Story was deleted.'
   end
 
   def track

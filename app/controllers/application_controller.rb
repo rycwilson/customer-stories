@@ -191,4 +191,8 @@ class ApplicationController < ActionController::Base
   def unauthorized_subdomain?
     session['authorized_subdomains']&.exclude?(request.subdomain)
   end
+
+  def new_named_record?(record)
+    record&.new_record? && record.name.present?
+  end
 end

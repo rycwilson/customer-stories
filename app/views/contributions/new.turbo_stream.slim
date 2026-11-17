@@ -16,7 +16,7 @@
 
     = form.fields_for(:success, @success || form.object.build_success) do |success_fields|
       = success_fields.hidden_field(:id, value: '', disabled: true, data: { new_contribution_target: 'successField' })
-      = success_fields.hidden_field(:name, disabled: true, data: { new_contribution_target: 'successName successField' })
+      = success_fields.hidden_field(:name, disabled: true, data: { new_contribution_target: 'successField' })
       = success_fields.hidden_field( \
           :curator_id,
           value: success_fields.object.curator_id || current_user.id,
@@ -25,7 +25,7 @@
       /= success_fields.hidden_field(:customer_id, data: { new_contribution_target: 'successCustomerId' })
       = success_fields.fields_for(:customer, success_fields.object.customer || success_fields.object.build_customer) do |customer_fields|
         = customer_fields.hidden_field(:id, value: '', disabled: true, data: { new_contribution_target: 'customerField'})
-        = customer_fields.hidden_field(:name, disabled: true, data: { new_contribution_target: 'customerName customerField' })
+        = customer_fields.hidden_field(:name, disabled: true, data: { new_contribution_target: 'customerField' })
         = customer_fields.hidden_field(:company_id, value: @company.id, disabled: true, data: { new_contribution_target: 'customerField' })
 
       = tag.div class: class_names('form-group', 'has-error': @success&.errors&.include?(:customer))
@@ -80,7 +80,7 @@
                 tomselect_kind_value: 'customerWin',
                 tomselect_custom_options_value: { create: true, persist: false, plugins: {} },
                 new_contribution_target: 'customerWinSelect',
-                action: 'new-contribution#handleChangeCustomerWin',
+                action: 'new-contribution#handleWinChanged',
                 field_name: "#{form.object_name}[success_id]" } })
         .help-block.help-block--validation
 
@@ -100,7 +100,7 @@
               controller: 'tomselect',
               tomselect_kind_value: 'contributor',
               new_contribution_target: 'contributorSelect',
-              action: 'new-contribution#handleChangeContact',
+              action: 'new-contribution#handleContactChanged',
               field_name: "#{form.object_name}[contributor_id]" } })
       .help-block.help-block--validation
 
@@ -139,7 +139,7 @@
               controller: 'tomselect',
               tomselect_kind_value: 'referrer',
               new_contribution_target: 'referrerSelect',
-              action: 'new-contribution#handleChangeContact',
+              action: 'new-contribution#handleContactChanged',
               field_name: "#{form.object_name}[referrer_id]" } })
       .help-block.help-block--optional 
         | Optional

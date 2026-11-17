@@ -5,9 +5,9 @@ import {
   sharedTargets,
   validateForm,
   serializeForm,
-  handleChangeCustomer as onChangeCustomer,
-  handleChangeCustomerWin as onChangeCustomerWin,
-  handleChangeContact as onChangeContact,
+  handleCustomerChanged,
+  handleWinChanged,
+  handleContactChanged,
   filterCustomerWinOptions as onCustomerWinsDropdownDidOpen
  } from '../utils';
 
@@ -16,15 +16,14 @@ export default class FormController<_Ctrl> extends Controller<HTMLFormElement> {
   static targets = sharedTargets;
 
   declare readonly hasCustomerWinSelectTarget: boolean;
-  declare readonly hasSuccessPlaceholderTarget: boolean;
   declare readonly hasContributorSelectTarget: boolean;
   protected declare readonly modalOutlet: ModalController;
   protected declare readonly hasModalOutlet: boolean;
   protected declare readonly imageCardTargets: HTMLElement[];
   protected declare readonly submitBtnTarget: HTMLInputElement | HTMLButtonElement;
-  protected handleChangeCustomer = onChangeCustomer;
-  protected handleChangeCustomerWin = onChangeCustomerWin;
-  protected handleChangeContact = onChangeContact;
+  protected handleCustomerChanged = handleCustomerChanged;
+  protected handleWinChanged = handleWinChanged;
+  protected handleContactChanged = handleContactChanged;
   protected filterCustomerWinOptions = onCustomerWinsDropdownDidOpen
   protected declare initialState: string;
   private declare readonly hasSubmitBtnTarget: boolean;
